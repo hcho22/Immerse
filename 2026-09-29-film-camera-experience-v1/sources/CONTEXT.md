@@ -558,7 +558,7 @@ _Avoid_: Draft, incomplete album
 - Joining, purchasing a Subscription, or claiming a Guest Identity never automatically contributes a Participant's Subscriber Load.
 - An existing Participant who subscribes while a Photo Group Film is open is offered Add Shared Exposures after Account sign-in.
 - An eligible Participant may choose Add Shared Exposures immediately or later while the Film remains open, provided they have not already contributed and the Camera Load Limit has not been reached.
-- The contribution button states the selected Camera's full Exposure Limit, such as **Add 27 Shared Exposures**, **Add 48 Shared Exposures**, or **Add 12 Shared Exposures**.
+- The contribution button states the selected Camera's full Exposure Limit, such as **Add 27 Shared Exposures** or **Add 12 Shared Exposures**.
 - Add Shared Exposures uses the included Subscription benefit at no extra charge, never changes the Group Film's Camera, and never transfers an existing personal Film or its captures.
 - Before confirming Add Shared Exposures, the Participant is shown the exact Exposure count and told that the Exposures become shared, the contribution cannot be taken back, and unused Exposures expire when the Host closes the Film.
 - A confirmed Subscriber Load cannot be canceled, retracted, or returned to its contributor, even before any of its Exposures are consumed.
