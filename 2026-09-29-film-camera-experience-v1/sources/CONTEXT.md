@@ -420,7 +420,7 @@ _Avoid_: Draft, incomplete album
 - **Movie Orientation** is irreversibly locked before the first recording begins; for a Movie Group Film, it is fixed as part of **Camera Lock**.
 - Movie capture and presentation retain the selected **Camera**'s native frame proportions, rotated for portrait rather than replaced with modern widescreen proportions; a 4:3 Camera uses 4:3 landscape or 3:4 portrait, not 9:16.
 - The **Developed Movie** uses that Movie Orientation throughout, fitting opposite-orientation clips within its frame with borders rather than cropping or stretching them.
-- Each **Movie Camera** provides one fixed tape- or cartridge-like **Duration Limit** in v1; the user does not select a different capacity.
+- Each **Movie Camera** provides one fixed Camera-defined **Duration Limit** in v1; the user does not select a different capacity.
 - A **Movie Film** consumes its **Duration Limit** only while actively recording; paused time consumes nothing.
 - An interruption such as a call, screen lock, or leaving the app ends the current **Recorded Clip**; recoverable footage is saved as a completed clip, only its successfully saved duration consumes personal or Group Film recording time, and it remains hidden under the Film's existing reveal rules.
 - Recording never resumes automatically after an interruption; the user must explicitly start a new **Recorded Clip**, subject to the existing capacity and **Recording Turn** rules.
@@ -429,9 +429,7 @@ _Avoid_: Draft, incomplete album
 - Each Recorded Clip produces one **Developed Clip**, retained independently of the assembled Developed Movie after original source cleanup.
 - A **Developed Movie** orders every **Recorded Clip** chronologically and preserves each start/stop boundary as a cut.
 - A **Movie Film** is not a reorderable editing timeline.
-- Super 8 and 16mm Cameras do not capture **Live Audio** or require microphone permission in v1.
-- VHS and Hi8 Cameras capture **Live Audio** with their Recorded Clips.
-- VHS and Hi8 require microphone permission before recording may begin; denied permission blocks recording without consuming personal or Group Film recording time, rather than silently producing a clip without Live Audio.
+- Neither v1 Movie Camera captures **Live Audio** or requires microphone permission.
 - A silent **Developed Movie** may remain silent or use one built-in **Soundtrack**.
 - For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
 - Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
@@ -661,17 +659,14 @@ _Avoid_: Draft, incomplete album
 
 - **1990s Disposable**: 27 Exposures, fixed focus, optional flash, and roll-level Development.
 - **1970s Instant**: a 10-Exposure pack with individual Exposure Development.
-- **1960s Half Frame**: 48 vertical half-frame Exposures and roll-level Development.
 - **1960s 6×6 Medium Format**: 12 square Exposures, a waist-level-viewfinder presentation, deliberate focus and exposure controls, and roll-level Development.
 
 ### Movie Cameras
 
 - **1960s Super 8 Home Movie**: 3:20 of handheld cartridge footage with pronounced grain and flicker.
 - **1960s 16mm Cinema**: 2:45 of deliberately framed, finer-grained motion film with a cinematic cadence.
-- **1980s VHS Camcorder**: 5:00 of 4:3 analog tape footage with home-video noise and period date/time character.
-- **1990s Hi8 Camcorder**: 8:00 of compact 4:3 analog tape footage with clearer image and stereo-era camcorder character.
 
-The v1 tape capacities are intentionally compressed for a completable mobile experience; authenticity applies to each Camera's behavior and character rather than reproducing full historical tape length.
+The v1 Movie capacities are intentionally compressed for a completable mobile experience; authenticity applies to each Camera's behavior and character rather than reproducing full historical film lengths.
 
 ## Example dialogue
 
@@ -723,7 +718,6 @@ The v1 tape capacities are intentionally compressed for a completable mobile exp
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.
 - A universal no-preview rule conflicted with historically instant formats — resolved: each **Camera** owns a **Reveal Rule**, and Camera authenticity takes precedence over uniform behavior.
 - CCD and MiniDV nostalgia conflicted with v1's delayed analog Development and Darkroom model — resolved: v1 is analog-only, and nostalgic digital formats are deferred.
-- Historical VHS and Hi8 tape capacities were too long for mandatory completion before Development — resolved: v1 uses compressed, Camera-defined mobile capacities while preserving format behavior and character.
 - "Export" could mean sharing the developed Group Film or saving original source captures — resolved: any Participant with access may export released developed media, but may save only their own originals.
 - Saving developed images to native Photos was a condition of keeping personal Films device-local — resolved: v1 offers Save Developed to Photos for revealed media, while personal Film state and reversible edit history remain device-local without app-managed cloud backup.
 - Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved: Trial creation and activation require an Account and account-scoped eligibility, but a captured Trial Film may be preserved and finished locally after Account deletion; paid personal use may remain account-free, and Group Film guest entry is unchanged.

@@ -157,7 +157,7 @@ Guest contribution ownership must remain enforceable without general album acces
 
 ## 6. Camera catalog and immutable packages
 
-**Requirements FR-01 · Tasks CAM-01–CAM-12**
+**Requirements FR-01 · Tasks CAM-01–CAM-03, CAM-05–CAM-07, CAM-10–CAM-12**
 
 ### 6.1 Photo Cameras
 
@@ -177,7 +177,7 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 | 1960s 16mm Cinema | 2:45 / 165 seconds | Deliberate framing, finer grain, cinematic cadence | Silent; optional built-in soundtrack after Development |
 
 
-Both Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical tape lengths. There is no capacity selector.
+Both Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical film lengths. There is no capacity selector.
 
 **Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. Instant is unavailable in Group setup. No separate stock picker exists. All five Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
 
@@ -223,7 +223,7 @@ Personal capture works offline once entitled; a Trial requires prior online acti
 
 ### FR-05 — Movie recording, orientation, and audio
 
-**Tasks MOV-01–MOV-11**
+**Tasks MOV-01–MOV-07, MOV-09–MOV-11**
 
 Consume only successfully saved active recording time. Paused or idle time costs nothing. Clips remain chronological and every recording boundary becomes a cut in exactly one Developed Movie. There is no editable timeline, trimming, reordering, voice-over, or arbitrary music import.
 
@@ -568,7 +568,7 @@ Additional historical Cameras and digital-era experiences may be evaluated for v
 | Film must end with the trip | Personal Films can span events and be renamed. |
 | 1990s point-and-shoot option | Replaced by 1960s 6×6 Medium Format, inspired by the 500-series concept. |
 | Generic 35mm / overlapping instant choices | Consolidated to the three named Photo formats in section 6. |
-| Battery/wall-clock Movie budget | Fixed cartridge/tape-like duration; only saved recorded footage consumes it. |
+| Battery/wall-clock Movie budget | Fixed Camera-defined duration; only saved recorded footage consumes it. |
 | Give Camera by handing over phone | Join Film on each Participant's own iOS device. |
 | Closing Time | Manual irreversible Host closure; code expires on closure. |
 | Per-Participant Capture Allowance | Shared first-come Photo pool; one person may consume all. |
