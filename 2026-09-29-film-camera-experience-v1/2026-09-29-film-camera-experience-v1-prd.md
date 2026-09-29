@@ -166,7 +166,6 @@ Guest contribution ownership must remain enforceable without general album acces
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | 27 exposures | Fixed focus, optional flash; disposable-film character | Roll-level Development | Yes |
 | 1970s Instant | 10 exposures | Individual instant-print experience | Each exposure develops individually | No |
-| 1960s Half Frame | 48 exposures | Vertical half-frame composition | Roll-level Development | Yes |
 | 1960s 6×6 Medium Format | 12 exposures | Square framing, waist-level presentation, deliberate focus/exposure | Roll-level Development | Yes |
 
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas.
@@ -177,10 +176,9 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 | --- | --- | --- | --- |
 | 1960s Super 8 Home Movie | 3:20 / 200 seconds | Handheld cartridge character, pronounced grain/flicker | Silent; optional built-in soundtrack after Development |
 | 1960s 16mm Cinema | 2:45 / 165 seconds | Deliberate framing, finer grain, cinematic cadence | Silent; optional built-in soundtrack after Development |
-| 1980s VHS Camcorder | 5:00 / 300 seconds | 4:3 analog tape, home-video noise, period date/time character | Live Audio; microphone required |
-| 1990s Hi8 Camcorder | 8:00 / 480 seconds | 4:3 tape, clearer image, stereo-era camcorder character | Live Audio; microphone required |
 
-All four Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical tape lengths. There is no capacity selector.
+
+All tow Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical tape lengths. There is no capacity selector.
 
 **Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. Instant is unavailable in Group setup. No separate stock picker exists. All eight Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
 
