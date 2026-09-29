@@ -26,7 +26,7 @@ Interrupt Development and resume the same saved result. Open a revealed personal
 
 ## Scope and unresolved matters
 
-This is not a native iOS app and does not validate AVFoundation capture, film rendering quality, microphone audio, export fidelity, Photos permissions, StoreKit, Apple/Google sign-in, cloud concurrency, or push delivery. The review console can change roles and skip captures solely for inspection. It is not a product feature or a production security boundary. Whole identity deletion, bulk withdrawal, member removal, upload failures, long-term Group retention, storage economics, final pricing, and launch compliance are outside this UI study. Existing domain rules remain in `../CONTEXT.md`.
+This is not a native iOS app and does not validate AVFoundation capture, film rendering quality, the absence of microphone permission prompts, export fidelity, Photos permissions, StoreKit, Apple/Google sign-in, cloud concurrency, or push delivery. The review console can change roles and skip captures solely for inspection. It is not a product feature or a production security boundary. Whole identity deletion, bulk withdrawal, member removal, upload failures, long-term Group retention, storage economics, final pricing, and launch compliance are outside this UI study. Existing domain rules remain in `../CONTEXT.md`.
 
 No persistent storage is used. Reloading or Reset clears every demo mutation. Prototype code is intentionally disposable; do not promote it directly to production.
 

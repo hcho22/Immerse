@@ -72,15 +72,14 @@ Dependency: DEC-04–DEC-05, ARC-02–ARC-03. PRD FR-01.
 - [ ] CAM-01 — Model immutable complete Camera packages: medium, framing, behavior, capacity, audio, treatment, and Reveal Rule.
 - [ ] CAM-02 — Implement 1990s Disposable: 27 exposures, fixed focus, supported optional flash, roll Development.
 - [ ] CAM-03 — Implement 1970s Instant: 10 exposures, per-exposure Development, personal-only eligibility.
-- [ ] CAM-04 — Implement 1960s Half Frame: 48 vertical half-frame exposures, roll Development.
 - [ ] CAM-05 — Implement 1960s 6×6 Medium Format: 12 square exposures, waist-level presentation, deliberate focus/exposure.
 - [ ] CAM-06 — Implement 1960s Super 8 Home Movie: 200-second fixed capacity, pronounced grain/flicker, silent capture.
 - [ ] CAM-07 — Implement 1960s 16mm Cinema: 165-second fixed capacity, finer grain/cinematic character, silent capture.
-- [ ] CAM-08 — Implement 1980s VHS Camcorder: 300-second capacity, 4:3 tape/date-time character, required live audio.
-- [ ] CAM-09 — Implement 1990s Hi8 Camcorder: 480-second capacity, 4:3 clearer tape character, required live audio.
 - [ ] CAM-10 — Create curated sample media and plain-language capacity/control/reveal/audio descriptions for every Camera.
 - [ ] CAM-11 — Use descriptive historical-format names; exclude digital formats, separate stock selection, and unapproved manufacturer branding.
 - [ ] CAM-12 — Validate format-distinct developed treatments and bounded authentic imperfections without synthetic catastrophic capture destruction.
+
+Retired v1 task IDs: CAM-04, CAM-08, and CAM-09. See the PRD's v1 scope and Camera catalog.
 
 ## SET — New Film and Load Film
 
@@ -120,11 +119,12 @@ Dependency: CAM, CAP, SET, relevant DEC-04/DEC-11 decisions. PRD FR-05.
 - [ ] MOV-04 — Support portrait/landscape clips, locking each clip's orientation at recording start.
 - [ ] MOV-05 — Lock final Movie Orientation before recording and fit opposite clips with borders using native frame proportions.
 - [ ] MOV-06 — End clips on call, lock, or background; salvage valid footage and require explicit next recording rather than auto-resume.
-- [ ] MOV-07 — Make Super 8/16mm silent without microphone permission requests or capture.
-- [ ] MOV-08 — Require microphone permission for VHS/Hi8; block denied recordings without debit or silent fallback.
+- [ ] MOV-07 — Make both v1 Movie Cameras silent without microphone permission requests or capture.
 - [ ] MOV-09 — Offer silence or one licensed built-in instrumental for silent developed Movies; prohibit imported music/voice-over.
 - [ ] MOV-10 — Preserve Developed Clips separately from sources and the assembled Movie for privacy-safe future reassembly.
 - [ ] MOV-11 — Validate chronological playback, audio, orientation, borders, and full-Movie export against approved output specifications.
+
+Retired v1 task ID: MOV-08. See the PRD's v1 scope and Camera catalog.
 
 ## DEV — Completion and one-time Development
 
@@ -361,7 +361,7 @@ Dependency: IDN, ARC-05, CAP durability. PRD FR-21.
 
 Dependency: relevant implemented slices; test continuously rather than waiting until the end. PRD section 13.
 
-- [ ] QA-01 — Verify all eight Camera capacities, genuine control differences, reveal/audio behavior, and immutable Camera selection on real devices.
+- [ ] QA-01 — Verify all five Camera capacities, genuine control differences, reveal/audio behavior, and immutable Camera selection on real devices.
 - [ ] QA-02 — Verify personal full/early completion, exact waste warnings, multiple unfinished Films, Instant final print, and no sealed previews.
 - [ ] QA-03 — Verify deterministic Development restart across app termination and no treatment rerolls or media loss.
 - [ ] QA-04 — Verify every Darkroom control, per-exposure isolation, reset, own-only Private Prints, and exclusion of prohibited editing.

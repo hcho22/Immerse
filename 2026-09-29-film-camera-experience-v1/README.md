@@ -36,6 +36,6 @@ The existing artifact is a throwaway browser prototype, not a native iOS app. Au
 - Source snapshots: CONTEXT.md and PROTOTYPE-NOTES.md.
 - This README.
 
-The tracker contains 231 items: five completed discovery/prototype items and 226 unchecked implementation, decision, architecture, and verification tasks. The package contains 17 Markdown files, including all eleven standalone ADRs.
+The tracker contains 227 items: five completed discovery/prototype items and 222 unchecked implementation, decision, architecture, and verification tasks. The package contains 17 Markdown files, including all eleven standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.

@@ -65,8 +65,8 @@ The documented specification includes:
 
 - Start a Film as the primary action, with A — Film Journal as the selected design direction.
 - A complete Camera package chosen before capture and fixed for that Film.
-- Four Photo Cameras: Disposable, Instant, Half Frame, and 6×6 Medium Format, with capacities of 27, 10, 48, and 12 exposures respectively.
-- Four Movie Cameras: Super 8, 16mm, VHS, and Hi8, with fixed recorded-duration budgets.
+- Three Photo Cameras: Disposable, Instant, and 6×6 Medium Format, with capacities of 27, 10, and 12 exposures respectively.
+- Two Movie Cameras: Super 8 and 16mm, with fixed recorded-duration budgets.
 - No developed-effect viewfinder preview; delayed review according to Camera-specific Reveal Rules. Instant reveals each print individually.
 - Explicit early completion that permanently wastes unused capacity after a warning.
 - Brief, one-time, resumable Development rather than arbitrary multi-hour waiting.
@@ -377,7 +377,7 @@ One-time alternatives and free entry points exist, while the proposed recurring 
 
 ### 9.6 A larger specification can weaken a calm product
 
-Eight Cameras, advanced Darkroom controls, shared capacity, exclusive Movie turns, identity claiming, moderation, and deletion workflows create substantial complexity. Some are necessary consequences of shipping Groups, but none should be mistaken for proof of demand.
+Five Cameras, advanced Darkroom controls, shared capacity, exclusive Movie turns, identity claiming, moderation, and deletion workflows create substantial complexity. Some are necessary consequences of shipping Groups, but none should be mistaken for proof of demand.
 
 **Decision implication:** Validate the emotional loop before building all supporting systems. Privacy protections cannot be cut merely to ship Groups faster; deferring Groups is the cleaner scope choice if those systems are not justified yet.
 
@@ -513,7 +513,7 @@ Research suggests revisiting these assumptions explicitly:
 | Camera experiences are meaningfully different from competitors' filter apps | Several competitors already describe and implement Camera-oriented experiences. |
 | Group reveal is a likely defining differentiator | Multiple products already serve finite/shared/delayed event capture. |
 | Account-free Guest participation is sufficient convenience | Some competitors eliminate full installation as well. |
-| Eight Cameras plus Photo/Movie coverage establishes breadth worth subscribing to | Breadth already exists; preference and recurring use must be demonstrated. |
+| Five Cameras plus Photo/Movie coverage establishes breadth worth subscribing to | Breadth already exists; preference and recurring use must be demonstrated. |
 | Detailed Group privacy and capacity rules belong in the first release | They are necessary if Groups ship, but do not justify shipping Groups before demand is validated. |
 | The unified journal may be the differentiator | Plausible, but completion and revisitation must be observed. |
 

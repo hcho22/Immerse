@@ -23,7 +23,7 @@ The source model is more detailed than the short ADRs. In particular, ADR 0001's
 
 Most vintage camera apps emphasize interchangeable visual filters. They reproduce some appearance of old photographs but not the deliberate behavior, limits, anticipation, and shared memories of using an actual camera.
 
-Users want a phone to feel like a disposable camera, an instant pack, a half-frame roll, a medium-format camera, a Super 8 cartridge, or a camcorder. The opportunity is to make choosing and using a Camera the experience—not selecting a look after capturing unlimited, immediately reviewable content.
+Users want a phone to feel like a disposable camera, an instant pack, a medium-format camera, a Super 8 cartridge, or a 16mm cinema camera. The opportunity is to make choosing and using a Camera the experience—not selecting a look after capturing unlimited, immediately reviewable content.
 
 **Product positioning:** “Every camera you've ever loved, inside your phone.”
 
@@ -53,7 +53,7 @@ Users should understand the selected Camera before loading, understand why captu
 | Area | Included in v1 | Excluded or deferred |
 | --- | --- | --- |
 | Capture | Native iOS, in-app new captures, rear and front lenses | Existing-media import; Android, web capture, App Clips |
-| Formats | Four analog Photo Cameras and four analog Movie Cameras | CCD digicams, MiniDV, additional v2 formats |
+| Formats | Three analog Photo Cameras and two analog Movie Cameras | CCD digicams, MiniDV, Half Frame, VHS, Hi8 (including live-audio Movie capture with microphone permission), additional v2 formats |
 | Personal Films | Photo rolls, Instant packs, Movies; multiple unfinished Films | Personal cloud sync or app-managed cloud backup |
 | Group Films | Photo pools; serialized Movie recording; code/QR joining | Instant Groups; same-device Give Camera mode |
 | Editing | Reversible per-photo analog Darkroom; own Group Private Prints | Saturation slider, film replacement, AI retouching, Movie timeline editing |
@@ -119,46 +119,45 @@ Guest contribution ownership must remain enforceable without general album acces
 14. As a Movie user, I want chronological cuts rather than a project requiring editing.
 15. As a Movie user, I want portrait and landscape clips fitted without distorting them.
 16. As a silent-film user, I want silence or an appropriate built-in instrumental soundtrack.
-17. As a VHS or Hi8 user, I want real captured audio and a clear microphone-permission requirement.
-18. As a user, I want interrupted recording to preserve recoverable footage without automatically resuming.
-19. As a user, I want Development to be a brief ritual rather than a fake multi-hour wait.
-20. As a user, I want interrupted Development to resume without losing captures or changing their look.
-21. As a photographer, I want physical-darkroom-style adjustments per exposure without changing the Camera.
-22. As a photographer, I want Reset to recover the exact original developed result.
-23. As a Host, I want to name a shared Film for my event and lock one Camera for everyone.
-24. As a Participant, I want to join by code or QR on my own phone without an account.
-25. As a Participant, I want to understand sharing and Host review before confirming membership.
-26. As a Guest, I want to convert to an Account without losing ownership or adding exposures automatically.
-27. As a subscriber, I want to decide whether to contribute my one Camera load to the shared Photo pool.
-28. As a Participant, I want to use any available shared exposures without personal quotas.
-29. As a Group Movie Participant, I want to know who is recording and when I may take my turn.
-30. As a Host, I want to keep an event open manually or close it irreversibly with an unused-capacity warning.
-31. As a Host, I want Development to wait for eligible pending captures rather than silently losing them.
-32. As a Host, I want to privately review before releasing the Film.
-33. As a Host, I want to discard unsafe content without editing or reordering someone else's work.
-34. As a Participant, I want to report an inappropriate released capture to the Host.
-35. As a contributor, I want to withdraw my own revealed capture permanently for everyone.
-36. As a contributor, I want to remove all my unreleased work without waiting for the Host or previewing it.
-37. As a former Participant, I want my withdrawal rights to survive leaving or removal.
-38. As a Group photographer, I want a private edited print without changing the shared developed photograph.
-39. As a current member, I want to export released developed memories, including others' visible captures.
-40. As a contributor, I want an optional opportunity to save my own originals, with a clear deadline.
-41. As a personal user, I want optional Photos export and honest information about device-local loss.
-42. As a user, I want Archive to hide a Film only for me, without deleting it or leaving a Group.
-43. As a personal owner, I want to delete a whole Film after a warning, including sealed Films without preview.
-44. As a trial user, I want one complete Photo OR Movie experience, not a partial sample of each.
-45. As a paid personal user, I want to use the app without creating a separate app Account.
-46. As an expired subscriber, I want to finish and keep existing memories without renewing.
-47. As a user, I want identity deletion to remove my Group contributions without destroying other people's work.
-48. As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure.
-49. As a user, I want identity deletion to preserve eligible local personal Films without revealing them.
-50. As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion.
-51. As a Participant, I want only an optional text-only release alert—not capture reminders or photo notifications.
-52. As a user, I want the Film Journal library to show memories and progress without leaking sealed images.
+17. As a user, I want interrupted recording to preserve recoverable footage without automatically resuming.
+18. As a user, I want Development to be a brief ritual rather than a fake multi-hour wait.
+19. As a user, I want interrupted Development to resume without losing captures or changing their look.
+20. As a photographer, I want physical-darkroom-style adjustments per exposure without changing the Camera.
+21. As a photographer, I want Reset to recover the exact original developed result.
+22. As a Host, I want to name a shared Film for my event and lock one Camera for everyone.
+23. As a Participant, I want to join by code or QR on my own phone without an account.
+24. As a Participant, I want to understand sharing and Host review before confirming membership.
+25. As a Guest, I want to convert to an Account without losing ownership or adding exposures automatically.
+26. As a subscriber, I want to decide whether to contribute my one Camera load to the shared Photo pool.
+27. As a Participant, I want to use any available shared exposures without personal quotas.
+28. As a Group Movie Participant, I want to know who is recording and when I may take my turn.
+29. As a Host, I want to keep an event open manually or close it irreversibly with an unused-capacity warning.
+30. As a Host, I want Development to wait for eligible pending captures rather than silently losing them.
+31. As a Host, I want to privately review before releasing the Film.
+32. As a Host, I want to discard unsafe content without editing or reordering someone else's work.
+33. As a Participant, I want to report an inappropriate released capture to the Host.
+34. As a contributor, I want to withdraw my own revealed capture permanently for everyone.
+35. As a contributor, I want to remove all my unreleased work without waiting for the Host or previewing it.
+36. As a former Participant, I want my withdrawal rights to survive leaving or removal.
+37. As a Group photographer, I want a private edited print without changing the shared developed photograph.
+38. As a current member, I want to export released developed memories, including others' visible captures.
+39. As a contributor, I want an optional opportunity to save my own originals, with a clear deadline.
+40. As a personal user, I want optional Photos export and honest information about device-local loss.
+41. As a user, I want Archive to hide a Film only for me, without deleting it or leaving a Group.
+42. As a personal owner, I want to delete a whole Film after a warning, including sealed Films without preview.
+43. As a trial user, I want one complete Photo OR Movie experience, not a partial sample of each.
+44. As a paid personal user, I want to use the app without creating a separate app Account.
+45. As an expired subscriber, I want to finish and keep existing memories without renewing.
+46. As a user, I want identity deletion to remove my Group contributions without destroying other people's work.
+47. As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure.
+48. As a user, I want identity deletion to preserve eligible local personal Films without revealing them.
+49. As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion.
+50. As a Participant, I want only an optional text-only release alert—not capture reminders or photo notifications.
+51. As a user, I want the Film Journal library to show memories and progress without leaking sealed images.
 
 ## 6. Camera catalog and immutable packages
 
-**Requirements FR-01 · Tasks CAM-01–CAM-12**
+**Requirements FR-01 · Tasks CAM-01–CAM-03, CAM-05–CAM-07, CAM-10–CAM-12**
 
 ### 6.1 Photo Cameras
 
@@ -178,9 +177,9 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 | 1960s 16mm Cinema | 2:45 / 165 seconds | Deliberate framing, finer grain, cinematic cadence | Silent; optional built-in soundtrack after Development |
 
 
-All tow Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical tape lengths. There is no capacity selector.
+Both Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical film lengths. There is no capacity selector.
 
-**Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. Instant is unavailable in Group setup. No separate stock picker exists. All eight Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
+**Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. Instant is unavailable in Group setup. No separate stock picker exists. All five Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
 
 ## 7. Functional requirements — personal experience
 
@@ -224,7 +223,7 @@ Personal capture works offline once entitled; a Trial requires prior online acti
 
 ### FR-05 — Movie recording, orientation, and audio
 
-**Tasks MOV-01–MOV-11**
+**Tasks MOV-01–MOV-07, MOV-09–MOV-11**
 
 Consume only successfully saved active recording time. Paused or idle time costs nothing. Clips remain chronological and every recording boundary becomes a cut in exactly one Developed Movie. There is no editable timeline, trimming, reordering, voice-over, or arbitrary music import.
 
@@ -232,9 +231,9 @@ Allow portrait and landscape recording, including selfies. Lock each clip's orie
 
 Calls, screen lock, and leaving the app end the active clip. Save recoverable footage, debit only successfully saved duration, and keep it sealed. Never automatically resume; another clip requires an explicit recording action and available capacity/access.
 
-Super 8 and 16mm do not capture Live Audio or require microphone permission. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. VHS and Hi8 require microphone permission before recording. Denial blocks recording with no duration consumption; there is no silent fallback. Additional sound-editing tools are out of scope.
+Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. No v1 Camera requires microphone permission or records audio. Additional sound-editing tools are out of scope.
 
-**Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Silent formats operate with microphone denied. VHS/Hi8 do not start unauthorized silent recording. Exact codecs, frame rates, resolutions, and audio channel guarantees are not yet specified.
+**Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, frame rates, resolutions, and audio channel guarantees are not yet specified.
 
 ### FR-06 — Completion, early Development, Instant reveal, and recovery
 
@@ -294,7 +293,7 @@ Guest claiming is optional. Linking to an Account preserves capture ownership, m
 
 **Tasks POL-01–POL-10**
 
-Start with exactly one full subscription-backed Host Load: 27 Disposable, 48 Half Frame, or 12 Medium Format exposures. It is not a bonus added to a separate free load. Each subscribed Account, including the Host, may contribute at most one full selected-Camera load to that Group over its lifetime. At most ten lifetime loads total, including the Host's; membership limit and load limit are independent.
+Start with exactly one full subscription-backed Host Load: 27 Disposable or 12 Medium Format exposures. It is not a bonus added to a separate free load. Each subscribed Account, including the Host, may contribute at most one full selected-Camera load to that Group over its lifetime. At most ten lifetime loads total, including the Host's; membership limit and load limit are independent.
 
 An eligible subscribed Participant explicitly chooses Add Shared Exposures at joining or later while open. Button labels show the exact contribution, such as “Add 27 Shared Exposures.” Confirm the amount, fully shared nature, irreversibility, and loss of unused capacity at closure. Declining does not affect membership or use of the existing pool. This uses an included subscription benefit at no extra charge, changes no Camera, and transfers no personal Film.
 
@@ -302,7 +301,7 @@ All contributed exposures go to a first-come, first-served shared pool. One pers
 
 Consumption, member departure/removal, or subscription expiration never frees a lifetime load slot. Host cannot reload. At zero exposures the Group enters Capacity Pause, not closure or Development. A new eligible load resumes capture. If none can be added, further capture requires a separate Group Film at no per-Film charge for an eligible Host, with new membership confirmation.
 
-**Acceptance:** Maximum lifetime capacities are 270, 480, or 120 exposures respectively; a change in member count does not reset these limits. Concurrent Add actions from one Account cannot add two loads. Expired subscribers cannot add a new load, but existing loads remain usable.
+**Acceptance:** Maximum lifetime capacities are 270 or 120 exposures respectively; a change in member count does not reset these limits. Concurrent Add actions from one Account cannot add two loads. Expired subscribers cannot add a new load, but existing loads remain usable.
 
 ### FR-11 — Shared photo reservation and upload
 
@@ -420,7 +419,7 @@ For subscribers, warn that identity deletion does not cancel Apple subscription 
 
 **Tasks BIL-01–BIL-07**
 
-Offer one all-inclusive monthly or yearly plan, all eight Cameras, unlimited new personal and Group Films, and one load per eligible Photo Group per subscribed Account. No per-Film charge, feature tiers, exposure wallet, or monthly reset of event capacity. Exact prices and billing offers are not yet selected.
+Offer one all-inclusive monthly or yearly plan, all five Cameras, unlimited new personal and Group Films, and one load per eligible Photo Group per subscribed Account. No per-Film charge, feature tiers, exposure wallet, or monthly reset of event capacity. Exact prices and billing offers are not yet selected.
 
 Paid personal purchase/capture/development/edit/export does not require a separate app Account. Trial creation, Group hosting, and subscriber load contribution require an Apple/Google Account. Guest participation remains account-free.
 
@@ -509,7 +508,7 @@ Testing below is planned work, not completed production coverage. Assert observa
 3. Reveal/security tests: Guests and Participants cannot access sealed/Private Review media through API, cache, thumbnail, exports, notifications, or role switching.
 4. Identity/ownership tests: Guest claim, removed-identity blocks, voluntary rejoin, former-member withdrawal, fixed Host, deletion pending and Host deletion.
 5. Media/privacy tests: source/master/Private Print cleanup, stale Movie retirement, unchanged surviving Developed Clips, no delayed-upload resurrection, verified-master gates before source deletion.
-6. Native device tests: front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, microphone audio, playback/export fidelity.
+6. Native device tests: front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
 7. Entitlement tests: Account-free paid use, purchase restoration, expiry, cross-device Trial contention, offline first save, unused cancellation, deletion-preserved captured Trials.
 8. UX/accessibility tests: Film Journal layouts, clear capacity warnings, Darkroom ownership, archive/delete distinctions, legible native controls, assistive interaction, release-notification opt-out.
 
@@ -568,8 +567,8 @@ Additional historical Cameras and digital-era experiences may be evaluated for v
 | Never allow early Development | Permit explicit early completion by wasting unused exposures/time after exact warning. |
 | Film must end with the trip | Personal Films can span events and be renamed. |
 | 1990s point-and-shoot option | Replaced by 1960s 6×6 Medium Format, inspired by the 500-series concept. |
-| Generic 35mm / overlapping instant choices | Consolidated to the four named Photo formats in section 6. |
-| Battery/wall-clock Movie budget | Fixed cartridge/tape-like duration; only saved recorded footage consumes it. |
+| Generic 35mm / overlapping instant choices | Consolidated to the three named Photo formats in section 6. |
+| Battery/wall-clock Movie budget | Fixed Camera-defined duration; only saved recorded footage consumes it. |
 | Give Camera by handing over phone | Join Film on each Participant's own iOS device. |
 | Closing Time | Manual irreversible Host closure; code expires on closure. |
 | Per-Participant Capture Allowance | Shared first-come Photo pool; one person may consume all. |
