@@ -201,7 +201,7 @@ Dependency: GRP, BIL, authoritative accounting. PRD FR-10.
 - [ ] POL-01 — Initialize exactly one full subscription-backed Host Load, without bonus free capacity.
 - [ ] POL-02 — Enforce one full selected-Camera load per subscribed Account per Group, including Host.
 - [ ] POL-03 — Enforce ten lifetime Photo loads independently from ten current members; never free consumed/contributed slots.
-- [ ] POL-04 — Offer explicit Add 27/48/12 Shared Exposures to eligible authenticated subscribers at joining or later while open.
+- [ ] POL-04 — Offer explicit Add 27/12 Shared Exposures to eligible authenticated subscribers at joining or later while open.
 - [ ] POL-05 — Confirm exact amount, shared use, irreversibility, no extra charge, and expiration at closure before contribution.
 - [ ] POL-06 — Never automatically add a load on joining, purchasing, or Guest claiming; declining preserves participation.
 - [ ] POL-07 — Add the entire load to a first-come pool with visible remaining count; no personal quotas/reserves.
