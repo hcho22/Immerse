@@ -37,7 +37,7 @@ Version 1.1 (September 30, 2026) scopes v1 to personal Photo and Movie Films onl
 
 The existing artifacts are two browser prototypes, not a native iOS app.
 One is the throwaway three-direction study; sign-in and Account flows, billing, camera capture, Movie playback, export, notifications, and cloud permissions in that study are simulations.
-The other is the v1 clickable prototype, whose iOS design the captain approved on 2026-09-30; it is kept outside this repository as a design reference only, simulates capture, Movie playback, StoreKit, the Keychain Trial record, Photos, and backup and restore, and is described in the [prototype notes](sources/PROTOTYPE-NOTES.md).
+The other is the v1 clickable prototype, whose iOS design the captain approved on 2026-09-30; it is kept outside this repository as a design reference only, simulates capture, Movie playback, StoreKit, the Keychain Trial record and Photos, shows the backup and restore disclosures without simulating a restore, and is described in the [prototype notes](sources/PROTOTYPE-NOTES.md).
 Production implementation tasks remain unchecked. No final pricing, delivery calendar, or final brand is approved by this package, and v1 needs no cloud provider.
 
 ## Updating the package

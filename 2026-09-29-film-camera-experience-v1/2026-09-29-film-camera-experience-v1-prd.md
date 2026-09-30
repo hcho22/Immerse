@@ -278,6 +278,9 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
   This journey does not add a third option.
 - What the first-run screens show, including any onboarding, is not specified by a requirement.
 - Whether the person can browse the Film Journal while a Film develops is open.
+- Whether Settings has a default for saving to Photos is open, given that FR-08 makes both saving choices per Film.
+- Whether Save Developed to Photos in step 12 covers the whole Film only or also a single photo is open.
+- Camera rendering and output specifications are open under DEC-04, and Darkroom control ranges and crop boundaries under DEC-11.
 
 #### Journey 2 - A Movie Film from recording to a developed Movie
 
@@ -301,6 +304,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 
 - When the app asks for camera and Photos permission is open, as in Journey 1.
 - When the originals choice appears relative to the reveal, and its wording, are open, as in Journey 1.
+- Whether the person can browse the Film Journal while a Film develops, and whether Settings has a default for saving to Photos, are open, as in Journey 1.
 - Early completion of an empty Film, and a Movie with no surviving clips after Discard, are open under DEC-09.
 - Whether a soundtrack can be reselected later is open under DEC-11.
 - Render quality, frame rates and export codecs are open under DEC-04.
@@ -341,11 +345,11 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 | --- | --- | --- |
 | 1 | The person restores their iOS device backup onto the new iPhone.<br>The app offers no sync or backup of its own. | Story 52; principle 8; FR-08 |
 | 2 | Their Films return with their sealed state and reversible edits.<br>Sealed Films stay sealed. | FR-08 acceptance; section 11 |
-| 3 | The new iPhone has its own Trial record, separate from the old one.<br>The old iPhone's Trial record does not come back through the restore. | FR-21 |
+| 3 | The new iPhone has its own unused Trial entitlement, and no Trial record until that entitlement is consumed.<br>The old iPhone's Trial record does not come back through the restore. | FR-21 |
 | 4 | A restored Trial Film with captures keeps capturing its remaining capacity.<br>A started Trial Film with no captures stays usable as a Trial Film.<br>Either coexists with the new iPhone's own entitlement without consuming or blocking it. | FR-21; DEC-16 |
 | 5 | A subscriber restores the purchase through StoreKit and the Apple ID, not through an app Account. | FR-20 |
 | 6 | The privacy copy and the Delete Film confirmation disclose that restoring an older backup can bring back discarded media or a deleted whole Film.<br>This is accepted, with no removal log. | FR-16; FR-18; DEC-17 |
-| 7 | Photos exports are separate.<br>They are not part of the restore and are not a Film. | FR-08 |
+| 7 | Photos exports are flattened results in the Photos library, not Films.<br>Whatever the Photos library brings back, it never brings back a Film or its edit history. | FR-08 |
 
 **Open in this journey.**
 
@@ -355,7 +359,7 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 
 #### Journey 5 - Several Films, an Instant pack, and tidying the Journal
 
-**Who:** a person who travels or shoots often (section 1.1), subscribed or using the Trial, with more than one Film open.
+**Who:** a subscriber who travels or shoots often (section 1.1), with more than one Film open.
 **Ends when:** the Journal shows what the person wants to keep, archived or deleted as they chose.
 
 | Step | What happens | Source |
@@ -1207,7 +1211,7 @@ It shows an iOS 26 style iPhone app in light and dark, with tap-through navigati
 It has no sign-in and no administrator mode, because v1 has neither.
 The Journeys in section 5.1 use its flow as a reference.
 Its review controls, placeholder prices and samples, illustrative framing values and storage figures, and its copy are not product content.
-It simulates capture, Movie playback, StoreKit, the Keychain Trial record, Photos, and backup and restore, and it validates none of them.
+It simulates capture, Movie playback, StoreKit, the Keychain Trial record and Photos, shows the backup and restore disclosures without simulating a restore, and validates none of them.
 Do not promote its code or its review controls into the product.
 
 **Questions the prototype raised that are still pending.**
