@@ -77,14 +77,14 @@ Source: PRD 12; pack section 4.
 | PRD module (section 12) | Component in the app | What it does | Milestone | Source |
 | --- | --- | --- | --- | --- |
 | Camera Catalog | Bundled Camera packages | Five immutable, versioned Camera packages and curated samples. A Film records the version it locked. | M1, M2 | FR-01; CAM-01 |
-| Film Lifecycle | FilmDomain | Setup, load, capacity, completion, state transitions. No UI and no I/O. | M1 | PRD 11; ARC-02 |
-| Capture Engine | Capture Engine (AVFoundation) | Durable saves (temp file, flush, rename, commit, then debit), interruptions, front and rear lenses. No microphone. | M1 | FR-04, FR-05; CAP-01; MOV-07 |
+| Film Lifecycle | FilmDomain | Setup, load, capacity, completion, state transitions. No UI and no I/O. | M1, M2 | PRD 11; ARC-02 |
+| Capture Engine | Capture Engine (AVFoundation) | Durable saves (temp file, flush, rename, commit, then debit), interruptions, front and rear lenses. No microphone. | M1, M2 | FR-04, FR-05; CAP-01; MOV-07 |
 | Development Engine | RenderCore | One-time stored treatment per capture, resumable jobs, Movie assembly, foreground execution. | M1, M2 | FR-06; DEV-06, DEV-07; MOV-03 |
 | Photo Darkroom | RenderCore | Reversible recipes, local masks, Reset. | M2 | FR-07; DRK-01 to DRK-06, DRK-08 |
-| Library and Local Store | Local store and Film Journal UI | SQLite (default D4) plus files, archive, Delete Film, no sealed thumbnails. | M1 | FR-02, FR-08; STO-01; ARC-03 |
-| Photos Export | Photos Export (PhotoKit, add-only) | Optional writes of developed media and originals, honest failure reporting. | M1 | FR-08; STO-04 to STO-06 |
+| Library and Local Store | Local store and Film Journal UI | SQLite (default D4) plus files, archive, Delete Film, no sealed thumbnails. | M1, M2 | FR-02, FR-08; STO-01; ARC-03 |
+| Photos Export | Photos Export (PhotoKit, add-only) | Optional writes of developed media and originals, honest failure reporting. | M1, M2 | FR-08; STO-04 to STO-06 |
 | Entitlements | Entitlements | StoreKit 2 purchase, restore and expiry; the Keychain Trial record with its first-save write rules. Trial start happens fully on the phone, with no connectivity and no StoreKit or Apple ID subscription-status check (DEC-15). | M2 | FR-20, FR-21; BIL-01 to BIL-03, BIL-05 to BIL-07; TRI-01 to TRI-04; DEC-15 |
-| Privacy Removal | Privacy Removal | Discard, Delete Film, retirement and rebuild of assembled Movies, source cleanup after verified masters. | M4 | FR-16, FR-18; PRV-01, PRV-05 to PRV-08, PRV-10; DEL-01 to DEL-04 |
+| Privacy Removal | Privacy Removal | Discard, Delete Film, retirement and rebuild of assembled Movies, source cleanup after verified masters. | M1 (source cleanup), M2 (Delete Film), M4 (Discard and Movie rebuild) | FR-08, FR-16, FR-18; DEV-10; STO-07, STO-08; PRV-01, PRV-05 to PRV-08, PRV-10; DEL-01 to DEL-04 |
 
 The Group modules (Group Coordinator, Release and Access, Notification Delivery) are deferred to v2 (PRD 8.8).
 
@@ -129,6 +129,7 @@ Discard removes one capture's media and keeps its numbered placeholder, and Dele
 | clip/{capture} (Movies) | At Development | When the clip is Discarded (its numbered placeholder stays), or when the Film is deleted | MOV-10; FR-16, FR-18; PRV-05 |
 | movie/{version} | At assembly | When a Discard retires it (it is rebuilt from surviving Developed Clips), or when the Film is deleted | FR-16, FR-18; PRV-07 |
 | Darkroom recipe rows | At the first edit | When the photo is Discarded or the Film is deleted; Reset returns the master | FR-07, FR-16, FR-18; DRK-06 |
+| Caches and derived renditions (excluded from the device backup, default D7) | When revealed media is displayed or processed; never for sealed captures | When the capture it derives from is Discarded, when the Movie version it derives from is retired, or when the Film is deleted | FR-16, FR-18; PRV-05; STO-11; UX-03 |
 | Photos library copy | On the user's export choice | Never by the app; it cannot be recalled | FR-08 |
 
 File paths use opaque ids, so a Film title never appears in a path or a log line (approved baseline, pack section 5).
