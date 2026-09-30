@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.3 · **Platform:** iOS 26, iPhone only\
+**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.4 · **Platform:** iOS 26, iPhone only\
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
@@ -556,3 +556,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
 | 2026-09-30 | Version 1.2: captain decisions recorded in the PRD's version 1.2 notes and FR-21. Account-only tasks moved to Deferred to v2 with IDs unchanged; earlier task wording is preserved in the tables above. Added DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15; DEC-15 to DEC-17 were decided the same day. |
 | 2026-09-30 | Version 1.3: the captain approved the v1 architecture pack, revision 3. Added the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) document and five early-check tasks, ARC-08 to ARC-12; no existing ID, status or decision changed. |
+| 2026-09-30 | Version 1.4: added the PRD's Users (1.1) and User journeys (5.1) sections and recorded the approved v1 clickable prototype in PRD section 18, as a design reference only with its questions pending. No task ID, task count, status or decision changed. |

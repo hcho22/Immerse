@@ -19,6 +19,10 @@
 > **Version 1.3 note (2026-09-30, PRD version 1.3).**
 > No domain rule or term changed.
 > The approved v1 architecture baseline maps these terms onto components and data model entities in [the architecture document](../2026-09-29-film-camera-experience-v1-architecture.md); it does not redefine them.
+>
+> **Version 1.4 note (2026-09-30, PRD version 1.4).**
+> No domain rule or term changed.
+> The PRD gained a Users section (1.1) and a User journeys section (5.1), both built from existing requirements, and records the approved v1 clickable prototype in section 18 as a design reference only.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 

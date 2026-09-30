@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 30, 2026 (version 1.3; versions 1.1 and 1.2 were the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.3\
+**Document date:** September 30, 2026 (version 1.4; versions 1.1 to 1.3 were the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.4\
 **Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)\
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
@@ -62,6 +62,19 @@ What it adds:
 What stays open: DEC-03 (the native stack is an M0 decision), DEC-02 (prices, held until before milestone 2 billing work), and every other DEC whose status was not changed in version 1.2.
 Group and Account material stays deferred to v2 in section 8 and section 8.13.
 
+**Version 1.4 users, journeys and prototype record (2026-09-30).**
+The captain asked for a Users section and a User journeys section, and for the PRD to be updated.
+Nothing in version 1.4 changes a requirement, an FR, DEC or section number, a task ID, or a decision recorded in earlier versions.
+What it adds:
+
+- Section 1.1, Users: who v1 is for, with a source for each group or need, and the gaps marked open.
+- Section 5.1, User journeys: five end-to-end journeys that string the existing requirements together, each step citing its FR or section.
+- Section 18: a record that the v1 clickable prototype was built and approved by the captain on 2026-09-30 as a design reference only, and the questions it raised that are still pending.
+
+The sections are numbered 1.1 and 5.1 so that no existing section reference moves.
+The journeys settle nothing that is still open.
+Where a journey reaches a pending question or an open DEC, it names that item as open.
+
 ## 1. Problem statement
 
 Most vintage camera apps emphasize interchangeable visual filters. They reproduce some appearance of old photographs but not the deliberate behavior, limits, anticipation, and shared memories of using an actual camera.
@@ -71,6 +84,41 @@ Users want a phone to feel like a disposable camera, an instant pack, a medium-f
 **Product positioning:** “Every camera you've ever loved, inside your phone.”
 
 **Primary promise:** Start a Film, choose a Camera, capture intentionally within its capacity, and develop memories according to that format's behavior.
+
+### 1.1 Users
+
+This section says who v1 is for.
+It uses only evidence already in this package: the problem statement and positioning above, the principles in section 2.1, the user stories in section 5, and the market research document kept at the repository root, "Nostalgic, Intentional Camera App - Market Research and Hipstamatic Comparison" (cited as "research" with its section number).
+The research's participant profile in its section 11 is a recruiting plan for a proposed study, not evidence of who uses the product.
+It adds no demographics, personas or numbers.
+The research is desk research with no interviews, so the audience below is a hypothesis to validate, not a measured market (research section 1, limitations; section 12, evidence still missing).
+
+**Who Immerse v1 is for.**
+People who want a phone camera to behave like a chosen, bounded camera instead of a filter over unlimited, instantly reviewable captures, and who want to keep the finished results in one private place.
+
+| User group | Who they are, as far as the sources say | What they need | Source |
+| --- | --- | --- | --- |
+| People drawn to intentional everyday capture | People attracted to shooting deliberately in ordinary life, who want to stop reviewing and tweaking while they shoot. | A Camera whose limits shape how they shoot, hidden captures, a brief Development ritual, and small finished records of their lives. | Section 1 (problem and primary promise); principles 1 to 5; stories 2, 4, 8, 9, 12, 18; research 7 (hypotheses 1, 5 and the outcome statement) and 11 (participants) |
+| People who record family and travel moments | People who photograph or film trips and family occasions. | To carry an unfinished Film across events, keep several unfinished Films, and resume the right Camera later. | Stories 6 and 7; FR-02 (Films span events); research 11 (participants) |
+| People who have used retro camera apps | People who already use nostalgic camera apps, which the research lists as substitutes. | Cameras that differ in behavior, not just in look, and a reason to choose Immerse over an app they own. | Section 1 (problem); principle 1; story 8; research 3, 4 and 11 (participants; "what they would lose by choosing an existing competitor") |
+| Photographers who want analog-style control | Users who want to adjust a developed photo in the manner of a darkroom. | Per-exposure analog-style adjustments that never change the Camera or reroll its treatment, and a Reset to the exact original. | Stories 20 and 21; FR-07 |
+| People who want short home movies | Users who want a short nostalgic Movie from a Super 8 or 16mm Camera. | Fixed-capacity recording where paused time is free, portrait or landscape clips, chronological cuts without editing, and silence or a built-in soundtrack. | Stories 13 to 17; FR-05; research 3 (customer job "Make nostalgic short Movies"); demand for this job is a hypothesis (research 7 and 12) |
+| People deciding whether to try or subscribe | New users, and non-subscribers with one Trial Film on their iPhone. | To browse Cameras first, try one complete Photo or Movie Film with no Account or sign-in, then decide on the subscription. | Stories 1, 43 and 44; FR-03; FR-20; FR-21; ADR 0012; willingness to pay is open (DEC-02; research 12) |
+| People whose subscription lapses | Former subscribers. | To finish, develop, view, edit and export existing Films without renewing. | Story 45; principle 7; FR-20; ADR 0006 |
+| People who replace or restore an iPhone | Users who move to a new or restored iPhone. | Their Films back from the iOS device backup, with honest disclosure of what a backup does and does not protect. | Stories 40 and 52; principle 8; FR-08; FR-21; acceptability of device-local loss risk is an open research question (research 12) |
+
+**Not v1 users.**
+Hosts, Participants and Guests of shared Films, and anyone who needs an Account, are not v1 users.
+Group and Account requirements are deferred to v2 (section 8).
+The research advises investigating Groups as a separate need, not attaching them to a personal first release by default (research 11, decision outcomes).
+
+**Open, not filled in.**
+
+- Who the best initial audience is and through which channel, which age, region, device-ownership or occupation segments matter, and how large the audience is: the sources do not establish these (research 12 and "Evidence still missing").
+- How often users would shoot outside holidays and events (research 12).
+- Whether users want the capture ritual or mainly the nostalgic appearance, and whether they accept the hidden-capture and fixed-capacity rules (research 11, questions worth answering).
+- Whether users prefer one Photo and Movie cycle to separate apps (research 11).
+- Willingness to pay, and the price: DEC-02. The learning plan in section 2.2 covers part of this through TestFlight testers and interviews.
 
 ## 2. Solution, principles, and intended outcomes
 
@@ -185,6 +233,147 @@ Story numbers are stable identifiers carried over from version 1.0, so gaps are 
 | 45 | As an expired subscriber, I want to finish and keep existing memories without renewing. |
 | 51 | As a user, I want the Film Journal library to show memories and progress without leaking sealed images. |
 | 52 | As a user who replaces or restores an iPhone, I want my Films to come back from the device backup. |
+
+### 5.1 User journeys
+
+These journeys string the requirements together end to end.
+They add no requirement.
+Each step cites the FR, section, story or task that already defines it, and where a rule is not defined it says so.
+The flow reference is the approved v1 clickable prototype (section 18), which is a design reference only.
+
+Some journeys reach a point that is still open.
+Those points are named here as open and are never settled by a journey.
+The pending prototype questions are listed in section 18.
+Wherever a step says "open", nothing in this PRD decides it, and any behavior the prototype shows there is not a decision.
+
+#### Journey 1 - First launch to a first developed and exported photo Film
+
+**Who:** a person deciding whether to try (section 1.1), using the iPhone's Trial on a 1990s Disposable, with no subscription.
+**Ends when:** the developed photos are saved to Photos and the Film is in the Film Journal.
+
+| Step | What happens | Source |
+| --- | --- | --- |
+| 1 | The person installs the app and opens it.<br>No Account or sign-in is asked for.<br>Home is the Film Library with Start a Film as the primary action. | FR-02; stories 2 and 44; principle 9 |
+| 2 | They browse Camera samples, capacity, controls, Reveal Rule and audio before committing.<br>Browsing consumes nothing and creates no Trial Film. | Story 1; FR-03; section 6.1 |
+| 3 | They choose the 1990s Disposable and confirm Load Film after seeing its 27-exposure capacity and its roll-level Reveal Rule.<br>The title is optional, with a suggested default.<br>The Camera cannot be swapped once loaded. | Stories 4 and 5; FR-02; FR-03; section 6.1 |
+| 4 | The Film starts as a Trial Film from this iPhone's entitlement.<br>Starting it needs no connectivity.<br>The entitlement is consumed only by the first successfully saved capture. | Story 43; FR-21; DEC-15 |
+| 5 | The person shoots exposures through a framing-only viewfinder, optionally with the front camera.<br>Each saved capture stays sealed with no thumbnail or review.<br>A failed save consumes no exposure and no Trial entitlement. | Stories 9 and 10; FR-04; FR-21 |
+| 6 | They leave the app and come back.<br>Saved captures remain and the Film is still unfinished. | Stories 6 and 7; FR-02; FR-04 |
+| 7 | At 27 exposures the roll is complete, and nothing is developed automatically.<br>Alternatively, they choose Rewind & Develop Early and confirm the exact number of exposures permanently wasted. | Story 12; FR-06; section 11 |
+| 8 | They choose to develop.<br>The original-export choice is presented at personal Development, and Immerse removes its private source photos only as FR-08 describes. | FR-08; FR-06 |
+| 9 | A brief Development ritual reveals the roll.<br>If the app is interrupted, Development resumes with the same result. | Stories 18 and 19; FR-06 |
+| 10 | The developed photos appear as a contact sheet in the Film Journal.<br>Nothing sealed leaks into thumbnails before this point. | Story 51; FR-02 |
+| 11 | Optionally, they open a photo in the Darkroom, adjust it, and Reset to Original. | Stories 20 and 21; FR-07 |
+| 12 | They choose Save Developed to Photos.<br>A denied permission or a failed write is not shown as success.<br>Saving developed output and saving originals are independent choices. | Story 40; FR-08 |
+| 13 | The app discloses that Films are protected only if the person has an iOS device backup, and that a Photos export is a flattened result, not a restorable Film. | Story 40; principle 8; FR-08 |
+
+**Open in this journey.**
+
+- When the app asks for camera permission (for example in onboarding or at Load Film) is open.
+  FR-03 only requires that Load Film cannot bypass permissions, and FR-04 and FR-08 do not say when the prompts appear.
+- When the app asks for Photos permission is open for the same reason.
+- The wording and timing of the originals choice in step 8 are open.
+  The choice is made before the person has seen the developed result, and the final wording is pending.
+  This journey does not add a third option.
+- What the first-run screens show, including any onboarding, is not specified by a requirement.
+- Whether the person can browse the Film Journal while a Film develops is open.
+
+#### Journey 2 - A Movie Film from recording to a developed Movie
+
+**Who:** a person who wants a short home movie (section 1.1), using a 1960s Super 8 or 16mm Camera, as a Trial Film or as a subscriber.
+**Ends when:** the developed Movie is viewable in the Film Journal and saved to Photos.
+
+| Step | What happens | Source |
+| --- | --- | --- |
+| 1 | They choose a Movie Camera and see its fixed capacity (200 or 165 seconds), its silent audio behavior and its Reveal Rule.<br>There is no capacity selector. | FR-03; section 6.2; story 16 |
+| 2 | At setup they choose the final Movie Orientation, and it is locked before the first recording.<br>They confirm Load Film. | FR-05; FR-03; story 15 |
+| 3 | They record clips in portrait or landscape.<br>Paused or idle time costs nothing.<br>Only successfully saved recording time consumes capacity.<br>No microphone permission is needed. | Stories 13 and 15; FR-05; section 6.2 |
+| 4 | A phone call or screen lock ends the active clip.<br>The footage saved so far is kept and stays sealed.<br>Recording never resumes automatically. | Story 17; FR-05 |
+| 5 | The Movie completes at full recorded duration, or through Stop & Develop Early after a confirmation that states the exact time permanently wasted. | FR-06 |
+| 6 | They choose to develop.<br>The original-export choice and Development follow FR-08 and FR-06, and interrupted Development resumes the same result. | FR-06; FR-08; stories 18 and 19 |
+| 7 | The Developed Movie plays as chronological cuts, with no editing timeline.<br>Clips of the opposite orientation are fitted with borders. | Story 14; FR-05 |
+| 8 | The Movie stays silent or takes one built-in instrumental soundtrack. | Story 16; FR-05 |
+| 9 | Optionally, they Discard a clip after reveal.<br>The Movie is reassembled from the surviving Developed Clips in order, with no treatment rerolled and any soundtrack and orientation kept. | FR-16 |
+| 10 | They save the full Developed Movie to Photos, subject to the same permission and failure rules as photos. | FR-08 |
+
+**Open in this journey.**
+
+- When the app asks for camera and Photos permission is open, as in Journey 1.
+- The originals-choice wording is open, as in Journey 1.
+- Early completion of an empty Film, and a Movie with no surviving clips after Discard, are open under DEC-09.
+- Whether a soundtrack can be reselected later is open under DEC-11.
+- Render quality, frame rates and export codecs are open under DEC-04.
+- The built-in soundtrack rights are open under DEC-05.
+
+#### Journey 3 - Trial to subscription, and a subscriber who lets it lapse
+
+**Who:** a person deciding whether to subscribe, who later stops paying (section 1.1).
+**Ends when:** the former subscriber finishes and keeps their existing Films.
+
+| Step | What happens | Source |
+| --- | --- | --- |
+| 1 | The person's first successfully saved capture (Journey 1) consumed this iPhone's Trial entitlement.<br>Their Trial Film remains theirs to finish, develop, view and export. | FR-21; story 43 |
+| 2 | They choose Start a Film again.<br>They can still browse every Camera, but a new personal Film needs a subscription. | FR-21; FR-20; FR-03; story 1 |
+| 3 | They buy the one monthly or yearly plan through StoreKit and their Apple ID, with no Account or sign-in.<br>The plan covers all five Cameras and unlimited new personal Films, with no per-Film charge. | FR-20; story 44 |
+| 4 | If they bought before on the same Apple ID, they restore the purchase through StoreKit, not through an app Account. | FR-20 |
+| 5 | As a subscriber, they start new Films of any Camera. | FR-20; section 6 |
+| 6 | Deleting Films or the app does not cancel the subscription.<br>They manage it through Apple. | FR-19 stub text; BIL-07 |
+| 7 | The subscription expires.<br>New personal Films are blocked. | FR-20 |
+| 8 | Existing personal Films remain capture-completable, developable, editable, viewable and exportable.<br>A partly shot roll can still be finished. | Story 45; principle 7; FR-20; ADR 0006 |
+
+**Variant - a Trial Film that captured nothing.**
+A Trial Film with zero saved captures can be deleted with no cancellation step, and the iPhone's entitlement stays available for a replacement (FR-18, FR-21).
+Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21).
+
+**Open in this journey.**
+
+- The price, offers, and refund and revocation handling are open under DEC-02, and billing work starts only after they are decided.
+- Whether a lapsed subscriber who never used the Trial still gets the Trial Film is open.
+  FR-21 says "non-subscriber" and does not say whether a person who once subscribed counts.
+
+#### Journey 4 - Restoring Films onto a replacement iPhone
+
+**Who:** a person who replaces or restores an iPhone (section 1.1), with Films from the old iPhone in an iOS device backup.
+**Ends when:** the Films are back and the person knows what did and did not come with them.
+
+| Step | What happens | Source |
+| --- | --- | --- |
+| 1 | The person restores their iOS device backup onto the new iPhone.<br>The app offers no sync or backup of its own. | Story 52; principle 8; FR-08 |
+| 2 | Their Films return with their sealed state and reversible edits.<br>Sealed Films stay sealed. | FR-08 acceptance; section 11 |
+| 3 | The new iPhone has its own Trial record, separate from the old one.<br>The old iPhone's Trial record does not come back through the restore. | FR-21 |
+| 4 | A restored Trial Film with captures keeps capturing its remaining capacity.<br>A started Trial Film with no captures stays usable as a Trial Film.<br>Either coexists with the new iPhone's own entitlement without consuming or blocking it. | FR-21; DEC-16 |
+| 5 | A subscriber restores the purchase through StoreKit and the Apple ID, not through an app Account. | FR-20 |
+| 6 | The privacy copy and the Delete Film confirmation disclose that restoring an older backup can bring back discarded media or a deleted whole Film.<br>This is accepted, with no removal log. | FR-16; FR-18; DEC-17 |
+| 7 | Photos exports are separate.<br>They are not part of the restore and are not a Film. | FR-08 |
+
+**Open in this journey.**
+
+- Whether the first launch after a restore shows onboarding is open.
+  The PRD does not say, and the restored iPhone has Films but no Trial record.
+- Backup size, and how large Films affect backup and restore, are measured by the early check in ARC-12 and are not settled here.
+
+#### Journey 5 - Several Films, an Instant pack, and tidying the Journal
+
+**Who:** a person who travels or shoots often (section 1.1), subscribed or using the Trial, with more than one Film open.
+**Ends when:** the Journal shows what the person wants to keep, archived or deleted as they chose.
+
+| Step | What happens | Source |
+| --- | --- | --- |
+| 1 | The person has several unfinished Films and resumes the Camera that suits the moment.<br>Opening or switching Films never reveals another unfinished Film. | Stories 6 and 7; FR-02 |
+| 2 | They load a 1970s Instant pack of 10 exposures.<br>Each exposure develops and reveals individually, including the final print of the pack. | Story 11; FR-06; section 6.1 |
+| 3 | They discard an Instant print after it is revealed.<br>The frame stays consumed. | FR-06; FR-16 |
+| 4 | The Journal shows unfinished, capacity-complete, developing and developed Films and progress without leaking sealed images. | Story 51; FR-02 |
+| 5 | They rename a Film after loading or Development.<br>A rename never changes the Camera, chronology, capacity or reveal. | FR-02; story 5 |
+| 6 | They Archive a Film to hide it only from their own main library, and can restore it from the archived list.<br>Archive deletes nothing and is never automatic. | Story 41; FR-02 |
+| 7 | They delete a whole Film after a clear warning and explicit confirmation, including a sealed Film, without previewing it.<br>The warning says that external exports remain, that used Trial eligibility is not restored, and that an older backup can bring the Film back. | Story 42; FR-18; DEC-17 |
+
+**Open in this journey.**
+
+- Whether an Instant pack can end early is open.
+  FR-06 names early actions for rolls and Movies only, while principle 4 says users may finish early.
+- The interaction for the originals choice on an Instant pack, and how it avoids exporting future sealed frames, is open under DEC-11.
+- How the Journal orders its sections, for example grouped by state or one chronological list, is open.
+  FR-02 names the states but no order.
 
 ## 6. Camera catalog and immutable packages
 
@@ -1002,10 +1191,46 @@ The ADR compilation preserves historical text unchanged. Where an ADR is narrowe
 
 ## 18. Current evidence and definition of done
 
-**Completed discovery:** detailed domain model, the decisions in the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md), throwaway three-direction browser prototype, selection of Film Journal, the browser interaction checks listed in the included prototype notes, and the approved [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) (a design, not an implementation).
+**Completed discovery:** detailed domain model, the decisions in the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md), throwaway three-direction browser prototype, selection of Film Journal, the browser interaction checks listed in the included prototype notes, and the approved [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) (a design, not an implementation), and the v1 clickable prototype described below (a design reference, not an implementation).
 
 **Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, real StoreKit subscriptions and the Keychain Trial record (including the iOS 26 device check), Photos export, production local deletion, device backup and restore behavior, and native release verification.
 
-The prototype simulates roles, network state, capacity, capture, Development, exports, and notifications, including Group flows that are deferred to v2. Its Movie playback is an illustrative sequence with accelerated timing—not recorded video. It has no persistent production storage, and its remote sample photos are not validated camera emulations. Do not promote its test controls, alternate-layout switcher, or state shortcuts into the product.
+The earlier three-direction study simulates roles, network state, capacity, capture, Development, exports, and notifications, including Group flows that are deferred to v2. Its Movie playback is an illustrative sequence with accelerated timing, not recorded video. It has no persistent production storage, and its remote sample photos are not validated camera emulations. Do not promote its test controls, alternate-layout switcher, or state shortcuts into the product.
+
+**V1 clickable prototype (version 1.4).**
+On 2026-09-30 a clickable browser prototype of the v1 product was built, and the captain approved its iOS design.
+It is a design reference only.
+It is not a requirement, not a decision and not evidence of native behavior.
+It shows an iOS 26 style iPhone app in light and dark, with tap-through navigation and these areas: onboarding, the Film Journal, choosing a Camera and previewing it, Load Film, capture, Movie recording, completion and early Development, Development, reveal, the Darkroom, Save to Photos, settings, and error and empty states.
+It has no sign-in and no administrator mode, because v1 has neither.
+The Journeys in section 5.1 use its flow as a reference.
+Its review controls, placeholder prices and samples, illustrative framing values and storage figures, and its copy are not product content.
+It simulates capture, Movie playback, StoreKit, the Keychain Trial record, Photos, and backup and restore, and it validates none of them.
+Do not promote its code or its review controls into the product.
+
+**Questions the prototype raised that are still pending.**
+The captain has not answered these.
+Nothing in this PRD decides them, and the prototype's recommendations are not decisions.
+Section 5.1 names each one where a journey reaches it.
+
+1. When the app asks for camera permission, for example in onboarding or at Load Film, and when it asks for Photos permission.
+   This PRD does not say when either prompt appears.
+2. Whether an Instant pack can end early.
+   FR-06 names early actions for rolls and Movies only, while principle 4 says users may finish early.
+3. The wording of the originals choice.
+   The choice is irreversible and is made before the person has seen the developed result, and FR-08 offers no option to keep originals in Immerse.
+4. Whether Settings has a default for saving to Photos, given that FR-08 makes both choices per Film.
+5. Whether Save to Photos covers a whole Film only or also a single photo.
+6. Whether the Film Journal groups Films by state or lists them chronologically.
+7. Whether a lapsed subscriber who never used the Trial still gets the Trial, because FR-21 says "non-subscriber".
+8. Whether the person can browse the Film Journal while a Film develops.
+9. DEC-09, empty-Film behavior, which must be answered before DEV-10.
+   The early Development action can be reached with zero captures.
+10. Whether the first launch after a backup restore shows onboarding, since the restored iPhone has Films but no Trial record.
+
+Gaps the prototype exposed in this PRD:
+FR-06 names the early actions but the state model separates Completion from explicit Development.
+For Instant, FR-08's originals choice at Development has no defined point (DEC-11).
+These are recorded as observations, not changed requirements.
 
 A feature is done only when its tracker task is implemented, its acceptance behavior passes in the relevant native/shared environment, its error/permission states are handled, and evidence is recorded. A browser demo or checked design decision alone does not satisfy production completion.

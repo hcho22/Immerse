@@ -1,12 +1,12 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 1.3 (updated September 30, 2026)\
+**Prepared:** September 29, 2026 · **Version:** 1.4 (updated September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 
 ## Start here
 
-1. Read the [detailed PRD](2026-09-29-film-camera-experience-v1-prd.md) for the product scope, Camera catalog, user stories, rules, acceptance criteria, state model, proposed engineering modules, and unresolved decisions. Group and Account requirements are preserved in its "Deferred to v2" section 8.
+1. Read the [detailed PRD](2026-09-29-film-camera-experience-v1-prd.md) for the product scope, users, user stories, user journeys, Camera catalog, rules, acceptance criteria, state model, proposed engineering modules, and unresolved decisions. Group and Account requirements are preserved in its "Deferred to v2" section 8.
 2. Use the [task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) to record implementation progress. Task IDs map to the PRD; completed discovery is separated from unfinished native work, and Group-only and Account-only tasks are listed under Deferred to v2.
 3. Read the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md) for all eleven original decisions, ADR 0012 (added in version 1.2) and reconciliation notes, including which ADRs now apply only to v2. Individual ADRs are also included in `adr/`.
 4. Read the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) for the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
@@ -15,6 +15,11 @@
 The filenames begin with `2026-09-29` so this package can be sorted and retained alongside later versions. The date is the compilation date; the original ADRs did not supply individual dates. Relative links work when this directory is kept together or extracted from the ZIP.
 
 ## Scope and implementation status
+
+Version 1.4 (September 30, 2026) adds a Users section (PRD 1.1) and a User journeys section (PRD 5.1), and records in PRD section 18 that the v1 clickable prototype was built and approved by the captain as a design reference only.
+The users are derived only from evidence already in the package and the market research, and the gaps are marked open.
+The five journeys cite existing requirements, and they name, but do not settle, the questions the prototype raised that are still pending.
+No requirement, FR, DEC or section number, task ID or recorded decision changed.
 
 Version 1.3 (September 30, 2026) records the captain's approval of the v1 architecture pack, revision 3, and adds the architecture baseline document and five early-check tasks (ARC-08 to ARC-12).
 No requirement, task ID or recorded decision changed.
@@ -43,8 +48,8 @@ The existing artifact is a throwaway browser prototype, not a native iOS app. Si
 
 ## Contents
 
-- Dated PRD (version 1.3).
-- Dated task tracker (version 1.3).
+- Dated PRD (version 1.4).
+- Dated task tracker (version 1.4).
 - Dated architecture baseline (version 1.0, added in version 1.3).
 - Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADR 0012.
 - Eleven original Markdown ADR files, unchanged, and ADR 0012 (added in version 1.2).
