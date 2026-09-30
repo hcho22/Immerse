@@ -80,6 +80,8 @@ The documented specification includes:
 
 These are proposed or documented requirements, not shipped capabilities. The existing browser prototype does not establish native capture quality, backend correctness, or commercial demand.
 
+**Update, September 30, 2026:** PRD version 1.1 defers all Group Films (Photo pools and Group Movies) to v2, so v1 is personal Photo and Movie Films only. The Group bullets above describe the version 1.0 baseline that this research evaluated. The research text below is otherwise unchanged.
+
 Reference: [September 29, 2026 PRD](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md).
 
 ## 3. Market structure: several overlapping jobs

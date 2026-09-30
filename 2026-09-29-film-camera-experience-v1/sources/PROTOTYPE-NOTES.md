@@ -1,5 +1,11 @@
 # Film UI study — throwaway prototype
 
+> **v1 scope note (2026-09-30, PRD version 1.1).**
+> By captain decision, v1 ships personal Photo and Movie Films only, and all Group functionality is deferred to v2.
+> This prototype still simulates Group flows (Join with a code, Guest participation, shared loads, closure, Host Private Review and Release, Private Prints on Group photos, Group notifications), and the notes below keep describing them because v2 needs them.
+> Read those Group flows as v2 design study, not v1 scope.
+> The personal Film flows, Camera samples, Darkroom on personal photos, Development, and the selected Film Journal direction describe v1.
+
 Question: which of three structurally different iPhone-style layouts makes loading, intentional capture, delayed reveal, and shared Host Release feel clearest?
 
 Run from the workspace with one command:
@@ -20,7 +26,7 @@ The project contained domain documentation but no source app, design system, the
 
 Start a personal Film, inspect Camera samples, choose a title, and explicitly Load Film. Shoot a frame, switch lenses between captures, or use the clearly separate review console to simulate consuming the remaining capacity. Roll captures stay sealed; early Development requires an unused-capacity warning. Instant prints develop individually. Movie time advances at 10× while recording and consumes no paused time. Movie playback is an illustrated sequence, not generated video or live audio.
 
-Join as Jamie with `CAMP27`, confirm the Camera and sharing rules, and capture account-free. Switch to Maya to opt into adding one full subscriber Camera load to the shared pool; joining or subscription alone never contributes it. Switch to You to close the Group Film, explicitly Develop it, privately review, and Release it. Switch back to Jamie to check that neither exhaustion, closure, nor Host Private Review reveals the Film. Released Group viewing is unavailable in simulated offline mode.
+(Group flow, deferred to v2.) Join as Jamie with `CAMP27`, confirm the Camera and sharing rules, and capture account-free. Switch to Maya to opt into adding one full subscriber Camera load to the shared pool; joining or subscription alone never contributes it. Switch to You to close the Group Film, explicitly Develop it, privately review, and Release it. Switch back to Jamie to check that neither exhaustion, closure, nor Host Private Review reveals the Film. Released Group viewing is unavailable in simulated offline mode.
 
 Interrupt Development and resume the same saved result. Open a revealed personal photo in the Darkroom, adjust print exposure, contrast, filtration, crop, and local Dodge/Burn, and reset to the developed master. Own Group photos offer Private Prints after Release; the shared original remains unchanged. Export and notifications are simulated and never save files, create push messages, or change a real Photos library.
 

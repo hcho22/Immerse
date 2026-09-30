@@ -1,23 +1,31 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 29, 2026 · **Filename date:** 2026-09-29 · **Version:** 1.0  
+**Document date:** September 30, 2026 (version 1.1; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.1\
 **Platform:** iOS · **Working product title:** Film Camera Experience (final brand not selected)  
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
-**Scope:** Personal Photo and Movie Films; shared Photo and Movie Group Films, as recorded in the current domain model.
+**Scope:** Personal Photo and Movie Films only. Shared Photo and Movie Group Films are deferred to v2; see section 8.
 
 ## Document guide and authority
 
 This PRD consolidates the recorded product interview, the current domain model, eleven decision records, and the selected prototype direction. It is not a claim that the product has been implemented or that every engineering choice is settled.
 
 - [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md): canonical implementation checkboxes, stable task IDs, dependencies, and verification work.
-- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text.
+- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text, including which ADRs now apply only to v2 Groups.
 - [Domain-model snapshot](sources/CONTEXT.md): detailed terminology and source requirements.
 - [Prototype notes](sources/PROTOTYPE-NOTES.md): what the browser study demonstrates and what it does not.
 
 Requirements below are recorded product decisions unless labeled **Proposed engineering approach** or **Open decision**. Task groups such as `CAM-*` refer to the accompanying tracker. Checkboxes there are the single source of implementation status; acceptance criteria here are not completion claims. The document date is the consolidation date, not a claim about the original date of each ADR.
 
-The source model is more detailed than the short ADRs. In particular, ADR 0001's original capacity-completion wording predates the later explicit early-Development exception. Apply the reconciled rules in this PRD; do not silently interpret that ADR as banning intentional waste. The recorded model also explicitly includes Movie Group Films, following an earlier photo-only Group proposal. Section 17 records these scope changes so earlier discussion is not mistaken for the final baseline.
+The source model is more detailed than the short ADRs. In particular, ADR 0001's original capacity-completion wording predates the later explicit early-Development exception. Apply the reconciled rules in this PRD; do not silently interpret that ADR as banning intentional waste. The recorded model also includes Movie Group Films, following an earlier photo-only Group proposal; as of version 1.1 all Group Films, Photo and Movie, are deferred to v2. Section 17 records these scope changes so earlier discussion is not mistaken for the final baseline.
+
+**Version 1.1 scope change (2026-09-30).**
+Captain decision: v1 ships personal Photo and Movie Films only, and all Group functionality moves to v2 to keep v1 simple.
+This answers two open architecture questions: Group Movies do not ship in v1, and Groups do not launch with the first public release.
+Every Group requirement from version 1.0 is kept, with its original FR ID and text, in section 8 (Deferred to v2).
+Group clauses that were mixed into otherwise personal requirements were removed from those requirements and are preserved verbatim in section 8.
+Every personal-Film rule is unchanged; only Group clauses were removed from mixed requirements.
+Task IDs are unchanged; Group-only tasks appear in the tracker's Deferred to v2 section.
 
 ## 1. Problem statement
 
@@ -36,17 +44,17 @@ Users want a phone to feel like a disposable camera, an instant pack, a medium-f
 1. **Camera authenticity wins.** Camera choice changes framing, controls, capacity, treatment, audio, and reveal behavior. Instant photography is intentionally an exception to roll-level delayed reveal.
 2. **A Film is bounded.** One immutable Camera package, one capacity model, and chronological captures. No mid-Film Camera or film-stock swaps.
 3. **Anticipation is part of the product.** No review of sealed captures, no live developed-filter preview, and no individual sealed-capture deletion.
-4. **Waste is authentic and irreversible.** Users may finish early after an exact-capacity warning; discarded frames and withdrawn clips do not refund capacity.
+4. **Waste is authentic and irreversible.** Users may finish early after an exact-capacity warning; discarded frames do not refund capacity.
 5. **Development happens once.** Interruptions resume the same result. Darkroom work never rerolls its underlying treatment.
-6. **Privacy is not dependent on a Host's availability.** Contributors can remove their own content without waiting for Release; chronology survives as metadata, not retained private content.
+6. **Deferred to v2 (Groups).** This principle is retained in section 8.12.
 7. **Existing memories are not subscription hostages.** Expiration prevents new entitlement use, not completion, viewing, editing, or exporting existing Films.
 8. **Personal v1 storage is local.** Saving a result to Photos is optional export, not app-managed backup or cross-device Film restoration.
 
 ### 2.2 Outcomes to evaluate
 
-Users should understand the selected Camera before loading, understand why captures are hidden, finish or deliberately end a Film, enjoy Development, and preserve a result. Group Participants should understand shared visibility and contribute without creating an account.
+Users should understand the selected Camera before loading, understand why captures are hidden, finish or deliberately end a Film, enjoy Development, and preserve a result.
 
-**Proposed measurement plan, not an approved analytics integration:** measure setup-to-first-save, first-save-to-Development, early-Development frequency, unfinished-Film resumption, Group join-to-capture, Release-to-view, successful export, and repeat Film creation. Track failures and privacy-boundary defects separately. Numeric targets, analytics vendor, consent, and telemetry retention remain open. Never collect sealed media to measure engagement.
+**Proposed measurement plan, not an approved analytics integration:** measure setup-to-first-save, first-save-to-Development, early-Development frequency, unfinished-Film resumption, successful export, and repeat Film creation. Track failures and privacy-boundary defects separately. Numeric targets, analytics vendor, consent, and telemetry retention remain open. Never collect sealed media to measure engagement.
 
 ## 3. V1 scope
 
@@ -55,15 +63,17 @@ Users should understand the selected Camera before loading, understand why captu
 | Capture | Native iOS, in-app new captures, rear and front lenses | Existing-media import; Android, web capture, App Clips |
 | Formats | Three analog Photo Cameras and two analog Movie Cameras | CCD digicams, MiniDV, Half Frame, VHS, Hi8 (including live-audio Movie capture with microphone permission), additional v2 formats |
 | Personal Films | Photo rolls, Instant packs, Movies; multiple unfinished Films | Personal cloud sync or app-managed cloud backup |
-| Group Films | Photo pools; serialized Movie recording; code/QR joining | Instant Groups; same-device Give Camera mode |
-| Editing | Reversible per-photo analog Darkroom; own Group Private Prints | Saturation slider, film replacement, AI retouching, Movie timeline editing |
+| Group Films | None. v1 is personal Films only. | All Group Films, Photo pools and Movie Groups with Recording Turns, including code/QR joining and Guest participants: deferred to v2 (section 8); Instant Groups; same-device Give Camera mode |
+| Editing | Reversible per-photo analog Darkroom | Saturation slider, film replacement, AI retouching, Movie timeline editing; Private Prints on Group Films (deferred to v2) |
 | Business model | One all-inclusive monthly/yearly subscription; one Photo OR Movie Trial Film | Per-Film fees, exposure wallet, tiers, recurring monthly exposure credits |
-| Sharing | Host Private Review then Release; optional Photos export | Automatic release, public feed, automatic export |
-| Management | Archive; personal whole-Film deletion; contribution withdrawal; identity deletion | Whole Group deletion, co-hosts, Host transfer, automatic takeover |
+| Sharing | Optional Photos export | Group sharing (Host Private Review then Release) is deferred to v2; automatic release, public feed, automatic export |
+| Management | Archive; personal whole-Film deletion; Account deletion | Contribution withdrawal, Leave Film, Participant removal and Guest identity deletion (deferred to v2); whole Group deletion, co-hosts, Host transfer, automatic takeover |
 
-“Personal-only” applies to Instant support and whole-Film deletion; “device-local” applies to personal Film storage. These do not remove the shared workflows explicitly documented in the current model.
+“Personal-only” applies to Instant support and whole-Film deletion; “device-local” applies to personal Film storage. In v1 every Film is personal; shared Group workflows are deferred to v2 (section 8).
 
 ## 4. Roles and vocabulary
+
+In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identity, Subscriber Load, Capacity Pause, Private Review / Release, Private Print) are deferred to v2 and preserved in section 8.1.
 
 | Term | Meaning |
 | --- | --- |
@@ -72,6 +82,189 @@ Users should understand the selected Camera before loading, understand why captu
 | Exposure / Recorded Clip | One photo / one uninterrupted recording. |
 | Developed master / Developed Clip | Preserved one-time developed result, distinct from its source capture and edited/exported copies. |
 | Personal owner | User controlling a device-local personal Film. Paid use can be account-free. |
+| Account | Apple- or Google-authenticated persistent identity for Trial eligibility. |
+| Discarded Frame | Numbered metadata-only chronology placeholder after permanent media removal. |
+
+### 4.1 Permission summary
+
+In v1 every Film is personal and device-local, so the permission summary has one role. The full multi-role summary, with the Host, Participant and former-contributor columns, is deferred to v2 and preserved in section 8.1.
+
+| Function | Personal owner |
+| --- | --- |
+| Choose and load Camera | Own Film |
+| Capture | Remaining personal capacity |
+| Edit developed photo | Own photos |
+| Remove a revealed capture | Discard own |
+| Delete whole Film | Personal only |
+
+## 5. User stories
+
+Story numbers are stable identifiers carried over from version 1.0, so gaps are intentional. Stories 3, 22-39, 46 and 50 are deferred to v2 with Groups and are preserved in section 8.2.
+
+| # | User story |
+| --- | --- |
+| 1 | As a new user, I want to browse Camera samples before signing in so I can understand the experience before committing. |
+| 2 | As a personal user, I want Start a Film to be the primary action so I begin with an intention, not an editor. |
+| 4 | As a user, I want loading to clearly explain capacity and reveal so the limitations are deliberate. |
+| 5 | As a personal owner, I want an optional custom title and a sensible default so naming never blocks a casual Film. |
+| 6 | As a traveler, I want to carry an unfinished Film into another event rather than reveal it prematurely. |
+| 7 | As a user, I want several unfinished Films so I can resume the appropriate Camera later. |
+| 8 | As a photographer, I want each Camera to feel behaviorally different rather than be a color preset. |
+| 9 | As a user, I want a framing-only viewfinder so I can compose without knowing the developed result. |
+| 10 | As a user, I want front-camera capture without changing my Film or bypassing its reveal rules. |
+| 11 | As an Instant user, I want each print to develop individually because that is the format's experience. |
+| 12 | As a roll user, I want to waste remaining exposures intentionally and develop early after understanding the cost. |
+| 13 | As a Movie user, I want paused time excluded so capacity reflects recorded footage. |
+| 14 | As a Movie user, I want chronological cuts rather than a project requiring editing. |
+| 15 | As a Movie user, I want portrait and landscape clips fitted without distorting them. |
+| 16 | As a silent-film user, I want silence or an appropriate built-in instrumental soundtrack. |
+| 17 | As a user, I want interrupted recording to preserve recoverable footage without automatically resuming. |
+| 18 | As a user, I want Development to be a brief ritual rather than a fake multi-hour wait. |
+| 19 | As a user, I want interrupted Development to resume without losing captures or changing their look. |
+| 20 | As a photographer, I want physical-darkroom-style adjustments per exposure without changing the Camera. |
+| 21 | As a photographer, I want Reset to recover the exact original developed result. |
+| 40 | As a personal user, I want optional Photos export and honest information about device-local loss. |
+| 41 | As a user, I want Archive to hide a Film only for me, without deleting it. |
+| 42 | As a personal owner, I want to delete a whole Film after a warning, including sealed Films without preview. |
+| 43 | As a trial user, I want one complete Photo OR Movie experience, not a partial sample of each. |
+| 44 | As a paid personal user, I want to use the app without creating a separate app Account. |
+| 45 | As an expired subscriber, I want to finish and keep existing memories without renewing. |
+| 47 | As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure. |
+| 48 | As a user, I want identity deletion to preserve eligible local personal Films without revealing them. |
+| 49 | As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion. |
+| 51 | As a user, I want the Film Journal library to show memories and progress without leaking sealed images. |
+
+## 6. Camera catalog and immutable packages
+
+**Requirements FR-01 · Tasks CAM-01–CAM-03, CAM-05–CAM-07, CAM-10–CAM-12**
+
+### 6.1 Photo Cameras
+
+| Camera | Capacity | Capture character | Reveal |
+| --- | --- | --- | --- |
+| 1990s Disposable | 27 exposures | Fixed focus, optional flash; disposable-film character | Roll-level Development |
+| 1970s Instant | 10 exposures | Individual instant-print experience | Each exposure develops individually |
+| 1960s 6×6 Medium Format | 12 exposures | Square framing, waist-level presentation, deliberate focus/exposure | Roll-level Development |
+
+The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas.
+
+### 6.2 Movie Cameras
+
+| Camera | Fixed capacity | Capture/developed character | Audio |
+| --- | --- | --- | --- |
+| 1960s Super 8 Home Movie | 3:20 / 200 seconds | Handheld cartridge character, pronounced grain/flicker | Silent; optional built-in soundtrack after Development |
+| 1960s 16mm Cinema | 2:45 / 165 seconds | Deliberate framing, finer grain, cinematic cadence | Silent; optional built-in soundtrack after Development |
+
+
+Both Movie Cameras support personal Films. Capacities are deliberately compressed for mobile completion; they are not claims about full historical film lengths. There is no capacity selector.
+
+**Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. No separate stock picker exists. All five Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
+
+## 7. Functional requirements — personal experience
+
+### FR-02 — Film Journal library, navigation, titles, and Archive
+
+**Tasks UX-01–UX-05, UX-07, UX-08** (UX-06 and UX-09 are deferred to v2)
+
+Home is the Film Library. Start a Film is primary. Use selected direction A: memory-first editorial cards for loaded Films and contact sheets for eligible developed photos. B — Camera Case and C — Roll Ledger are comparison alternatives, not production modes.
+
+Show unfinished, capacity-complete, developing, and developed states under their existing permissions. Maintain multiple unfinished personal Films. Opening or switching Films must not reveal another unfinished Film. Darkroom opens from an eligible developed photograph, never as a general-purpose home editor.
+
+Personal setup suggests a Camera-and-roll-number title, such as “Disposable — Roll #03”; keeping it or choosing a custom title is optional. Personal owners may rename their Films after loading and Development. Capture Date Range is derived from first and last capture, not a scheduled event period.
+
+Archive is an explicit, optional, reversible hide from that user's main library. Provide an archived list and restore action. It does not change reveal, release Trial eligibility, or restore deleted media. Never archive automatically.
+
+**Acceptance:** Library thumbnails, contact sheets, search/navigation surfaces, and archive entries cannot leak sealed or inaccessible content. A title change never changes Camera, chronology, capacity, or reveal.
+
+### FR-03 — Setup, Camera Preview, and Load Film
+
+**Tasks SET-01, SET-03–SET-06, SET-08** (SET-02 and SET-07 are deferred to v2)
+
+Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before sign-in or Trial Activation. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
+
+Browsing does not create a Trial Film, reserve or consume eligibility, or lock a Camera. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Load Film.
+
+**Acceptance:** Canceling preview/setup has no entitlement side effect. Loading is neither a capture nor Development, and cannot bypass permissions or entitlement checks.
+
+### FR-04 — Capture, viewfinder, and front camera
+
+**Tasks CAP-01–CAP-10**
+
+Every exposure and clip is newly captured in-app. No importing from Photos, Files, or another app. Viewfinders show Camera-authentic framing and cues: aspect ratio, focus behavior, exposure guidance, flash state, and appropriate overlays. They must not preview final grain, color variations, light leaks, scratches, or tape damage.
+
+Rear and front-camera capture are supported for personal Photos and Movies. The front viewfinder is mirrored; saved/developed output is unmirrored. Switch lenses only between exposures or clips, not during capture. Camera package, capacity, framing, treatment, and reveal remain unchanged.
+
+Only expose controls both authentic to the chosen Camera and genuinely supported by the active phone lens. Hide unsupported controls with a brief explanation; do not offer nonfunctional controls or fabricate unsupported flash/focus behavior.
+
+Personal capture works offline once entitled; a Trial requires prior online activation. Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
+
+**Acceptance:** No review/delete path for an individual sealed personal capture. No hidden-image thumbnails or automatic Photos writes. A lens change does not reset capacity. Failure before durable save must not consume an exposure or Trial entitlement.
+
+### FR-05 — Movie recording, orientation, and audio
+
+**Tasks MOV-01–MOV-07, MOV-09–MOV-11**
+
+Consume only successfully saved active recording time. Paused or idle time costs nothing. Clips remain chronological and every recording boundary becomes a cut in exactly one Developed Movie. There is no editable timeline, trimming, reordering, voice-over, or arbitrary music import.
+
+Allow portrait and landscape recording, including selfies. Lock each clip's orientation at recording start; change it only between clips. Choose final Movie Orientation at setup and lock it before the first recording. Fit opposite-orientation clips with borders—no crop or stretch. Preserve native proportions rotated for portrait: a 4:3 Camera uses 4:3 landscape or 3:4 portrait, not 9:16.
+
+Calls, screen lock, and leaving the app end the active clip. Save recoverable footage, debit only successfully saved duration, and keep it sealed. Never automatically resume; another clip requires an explicit recording action and available capacity.
+
+Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. No v1 Camera requires microphone permission or records audio. Additional sound-editing tools are out of scope.
+
+**Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, frame rates, resolutions, and audio channel guarantees are not yet specified.
+
+### FR-06 — Completion, early Development, Instant reveal, and recovery
+
+**Tasks DEV-01–DEV-08, DEV-10** (DEV-09 is deferred to v2)
+
+A personal Roll Film completes at full exposure capacity or through Rewind & Develop Early. A personal Movie completes at full recorded duration or through Stop & Develop Early. Early actions require explicit confirmation stating the exact remaining exposures or time permanently wasted. No refund, reopening, or temporary preview shortcut.
+
+The completed Film is eligible for explicit Development. A brief ritual reveals it without an artificial waiting period. Reaching capacity does not automatically develop. Instant Cameras instead develop and reveal each exposure individually, including the final print of the pack. Discarding a print still consumes its frame.
+
+Development assigns each capture a one-time Developed Treatment. Preserve the developed master and each Developed Clip. Interruptions—including app closure—resume the same Development, keep saved captures intact, and preserve already assigned treatment. Incomplete results stay hidden; previously revealed Instant prints stay revealed. Recovery must not restore removed media.
+
+**Acceptance:** Repeated retries do not reroll treatments. A warning of five unused exposures means exactly five are irrevocably wasted if confirmed. Completion and Development remain distinct. Behavior for a completely empty Film is an open decision, not permission to invent empty developed media.
+
+### FR-07 — Photo Darkroom
+
+**Tasks DRK-01–DRK-06, DRK-08** (DRK-07 is deferred to v2; Private Prints on Group Films are deferred to v2)
+
+Provide reversible adjustments per developed exposure, limited to analog printing/processing equivalents: print exposure, appropriate contrast/contrast grades, color filtration or balance for color work, crop, applicable chemical toning, and local Dodge/Burn. Controls must be appropriate to the medium; no universal modern saturation slider.
+
+Do not allow Camera/stock changes, treatment rerolls, digital-only object removal, AI content replacement, or similar manipulation. Preserve the exact original developed master and provide Reset to Original. Edits to one exposure never alter another.
+
+Movies have no Darkroom; permitted soundtrack and privacy-removal actions are separate.
+
+**Acceptance:** Reset reproduces the original developed result. No saturation control or Movie Darkroom entry exists. Exact control ranges and medium-specific applicability require render validation.
+
+### FR-08 — Personal local storage, Photos export, and source cleanup
+
+**Tasks STO-01–STO-10**
+
+Keep personal Film details, unfinished captures, developed masters, retained sources, and reversible edit data device-local. Account sign-in does not add cloud backup or cross-device sync. Explain the risk of losing device-local Films if the device cannot be recovered; do not promise app-managed backup. A Photos export preserves a flattened result, not a restorable Film or edit history.
+
+Unrevealed original captures stay in private app storage and are never written to Photos before reveal. Offer independent, optional Save Developed to Photos and Save Originals to Photos after eligible reveal. Developed exports include photos and full Developed Movies. No automatic export or local Film deletion follows export.
+
+Present the original-export choice at personal Development. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals will be irrecoverable. Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
+
+**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices.
+
+## 8. Deferred to v2 - shared Group Film requirements
+
+> **Deferred to v2. Nothing in this section is v1 scope, v1 acceptance, or an implementation commitment.**
+> Captain decision, 2026-09-30: v1 ships personal Photo and Movie Films only, and Groups for photos and video move to v2.
+> This section keeps every Group requirement from PRD version 1.0 with its original FR ID and wording, so v2 can adopt it without archaeology.
+> In the preserved text below, "v1" means the version 1.0 consolidated baseline that included Groups; read it as "the first Group release" (v2).
+> Related Group-only tasks are in the tracker's Deferred to v2 section under their unchanged IDs.
+> Like the list in section 16, this section is not implementation approval or a committed v2 roadmap.
+
+Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to FR-15; 8.4 FR-16 Group parts; 8.5 FR-17; 8.6 Group parts of FR-18 to FR-21; 8.7 state model; 8.8 engineering approach; 8.9 verification; 8.10 delivery milestones; 8.11 open decisions; 8.12 other Group clauses removed from v1 sections.
+
+### 8.1 Roles, vocabulary and permissions (from sections 4 and 4.1)
+
+| Term | Meaning |
+| --- | --- |
 | Host | Original subscribed, authenticated creator of a Group Film; fixed for its lifetime. |
 | Participant | A Group member, using an Account or secure device-bound Guest Identity. The Host also occupies one membership slot. |
 | Account | Apple- or Google-authenticated persistent identity for Trial eligibility, hosting, and subscriber contributions. |
@@ -80,9 +273,10 @@ Users should understand the selected Camera before loading, understand why captu
 | Capacity Pause | An open Group with no available capture capacity; not closed, developed, or released. |
 | Private Review / Release | Host-only developed review / explicit granting of developed-media visibility to current Participants. |
 | Private Print | A contributor's reversible edits to their own released Group photograph; never replaces the shared original. |
-| Discarded Frame | Numbered metadata-only chronology placeholder after permanent media removal. |
 
-### 4.1 Permission summary
+The Account row above is the version 1.0 wording; v1 keeps only its Trial eligibility meaning (section 4).
+
+#### Original permission summary (version 1.0)
 
 | Function | Personal owner | Group Host | Current Participant | Left or removed contributor |
 | --- | --- | --- | --- | --- |
@@ -101,179 +295,33 @@ Users should understand the selected Camera before loading, understand why captu
 
 Guest contribution ownership must remain enforceable without general album access. A subscriber badge does not grant Host powers. Revoked access is not restored by old notifications, caches, archive entries, or Account claiming.
 
-## 5. User stories
+### 8.2 User stories (original version 1.0 numbering)
 
-1. As a new user, I want to browse Camera samples before signing in so I can understand the experience before committing.
-2. As a personal user, I want Start a Film to be the primary action so I begin with an intention, not an editor.
-3. As a user, I want to choose Personal or Group before the Camera so only compatible options appear.
-4. As a user, I want loading to clearly explain capacity and reveal so the limitations are deliberate.
-5. As a personal owner, I want an optional custom title and a sensible default so naming never blocks a casual Film.
-6. As a traveler, I want to carry an unfinished Film into another event rather than reveal it prematurely.
-7. As a user, I want several unfinished Films so I can resume the appropriate Camera later.
-8. As a photographer, I want each Camera to feel behaviorally different rather than be a color preset.
-9. As a user, I want a framing-only viewfinder so I can compose without knowing the developed result.
-10. As a user, I want front-camera capture without changing my Film or bypassing its reveal rules.
-11. As an Instant user, I want each print to develop individually because that is the format's experience.
-12. As a roll user, I want to waste remaining exposures intentionally and develop early after understanding the cost.
-13. As a Movie user, I want paused time excluded so capacity reflects recorded footage.
-14. As a Movie user, I want chronological cuts rather than a project requiring editing.
-15. As a Movie user, I want portrait and landscape clips fitted without distorting them.
-16. As a silent-film user, I want silence or an appropriate built-in instrumental soundtrack.
-17. As a user, I want interrupted recording to preserve recoverable footage without automatically resuming.
-18. As a user, I want Development to be a brief ritual rather than a fake multi-hour wait.
-19. As a user, I want interrupted Development to resume without losing captures or changing their look.
-20. As a photographer, I want physical-darkroom-style adjustments per exposure without changing the Camera.
-21. As a photographer, I want Reset to recover the exact original developed result.
-22. As a Host, I want to name a shared Film for my event and lock one Camera for everyone.
-23. As a Participant, I want to join by code or QR on my own phone without an account.
-24. As a Participant, I want to understand sharing and Host review before confirming membership.
-25. As a Guest, I want to convert to an Account without losing ownership or adding exposures automatically.
-26. As a subscriber, I want to decide whether to contribute my one Camera load to the shared Photo pool.
-27. As a Participant, I want to use any available shared exposures without personal quotas.
-28. As a Group Movie Participant, I want to know who is recording and when I may take my turn.
-29. As a Host, I want to keep an event open manually or close it irreversibly with an unused-capacity warning.
-30. As a Host, I want Development to wait for eligible pending captures rather than silently losing them.
-31. As a Host, I want to privately review before releasing the Film.
-32. As a Host, I want to discard unsafe content without editing or reordering someone else's work.
-33. As a Participant, I want to report an inappropriate released capture to the Host.
-34. As a contributor, I want to withdraw my own revealed capture permanently for everyone.
-35. As a contributor, I want to remove all my unreleased work without waiting for the Host or previewing it.
-36. As a former Participant, I want my withdrawal rights to survive leaving or removal.
-37. As a Group photographer, I want a private edited print without changing the shared developed photograph.
-38. As a current member, I want to export released developed memories, including others' visible captures.
-39. As a contributor, I want an optional opportunity to save my own originals, with a clear deadline.
-40. As a personal user, I want optional Photos export and honest information about device-local loss.
-41. As a user, I want Archive to hide a Film only for me, without deleting it or leaving a Group.
-42. As a personal owner, I want to delete a whole Film after a warning, including sealed Films without preview.
-43. As a trial user, I want one complete Photo OR Movie experience, not a partial sample of each.
-44. As a paid personal user, I want to use the app without creating a separate app Account.
-45. As an expired subscriber, I want to finish and keep existing memories without renewing.
-46. As a user, I want identity deletion to remove my Group contributions without destroying other people's work.
-47. As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure.
-48. As a user, I want identity deletion to preserve eligible local personal Films without revealing them.
-49. As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion.
-50. As a Participant, I want only an optional text-only release alert—not capture reminders or photo notifications.
-51. As a user, I want the Film Journal library to show memories and progress without leaking sealed images.
+- **3.** As a user, I want to choose Personal or Group before the Camera so only compatible options appear.
+- **22.** As a Host, I want to name a shared Film for my event and lock one Camera for everyone.
+- **23.** As a Participant, I want to join by code or QR on my own phone without an account.
+- **24.** As a Participant, I want to understand sharing and Host review before confirming membership.
+- **25.** As a Guest, I want to convert to an Account without losing ownership or adding exposures automatically.
+- **26.** As a subscriber, I want to decide whether to contribute my one Camera load to the shared Photo pool.
+- **27.** As a Participant, I want to use any available shared exposures without personal quotas.
+- **28.** As a Group Movie Participant, I want to know who is recording and when I may take my turn.
+- **29.** As a Host, I want to keep an event open manually or close it irreversibly with an unused-capacity warning.
+- **30.** As a Host, I want Development to wait for eligible pending captures rather than silently losing them.
+- **31.** As a Host, I want to privately review before releasing the Film.
+- **32.** As a Host, I want to discard unsafe content without editing or reordering someone else's work.
+- **33.** As a Participant, I want to report an inappropriate released capture to the Host.
+- **34.** As a contributor, I want to withdraw my own revealed capture permanently for everyone.
+- **35.** As a contributor, I want to remove all my unreleased work without waiting for the Host or previewing it.
+- **36.** As a former Participant, I want my withdrawal rights to survive leaving or removal.
+- **37.** As a Group photographer, I want a private edited print without changing the shared developed photograph.
+- **38.** As a current member, I want to export released developed memories, including others' visible captures.
+- **39.** As a contributor, I want an optional opportunity to save my own originals, with a clear deadline.
+- **46.** As a user, I want identity deletion to remove my Group contributions without destroying other people's work.
+- **50.** As a Participant, I want only an optional text-only release alert—not capture reminders or photo notifications.
 
-## 6. Camera catalog and immutable packages
+### 8.3 Group functional requirements FR-09 to FR-15
 
-**Requirements FR-01 · Tasks CAM-01–CAM-03, CAM-05–CAM-07, CAM-10–CAM-12**
-
-### 6.1 Photo Cameras
-
-| Camera | Capacity | Capture character | Reveal | Group support |
-| --- | --- | --- | --- | --- |
-| 1990s Disposable | 27 exposures | Fixed focus, optional flash; disposable-film character | Roll-level Development | Yes |
-| 1970s Instant | 10 exposures | Individual instant-print experience | Each exposure develops individually | No |
-| 1960s 6×6 Medium Format | 12 exposures | Square framing, waist-level presentation, deliberate focus/exposure | Roll-level Development | Yes |
-
-The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas.
-
-### 6.2 Movie Cameras
-
-| Camera | Fixed capacity | Capture/developed character | Audio |
-| --- | --- | --- | --- |
-| 1960s Super 8 Home Movie | 3:20 / 200 seconds | Handheld cartridge character, pronounced grain/flicker | Silent; optional built-in soundtrack after Development |
-| 1960s 16mm Cinema | 2:45 / 165 seconds | Deliberate framing, finer grain, cinematic cadence | Silent; optional built-in soundtrack after Development |
-
-
-Both Movie Cameras support personal and Group Films in the recorded v1 model. Capacities are deliberately compressed for mobile completion; they are not claims about full historical film lengths. There is no capacity selector.
-
-**Acceptance:** Catalog entries have distinct framing, supported controls, capacity, audio, treatment, and Reveal Rules. Instant is unavailable in Group setup. No separate stock picker exists. All five Cameras are available to a Trial Film. Curated samples do not represent an authenticated simulation until actual render quality is validated. Exact render parameters and format-specific control ranges remain open.
-
-## 7. Functional requirements — personal experience
-
-### FR-02 — Film Journal library, navigation, titles, and Archive
-
-**Tasks UX-01–UX-09**
-
-Home is the Film Library. Start a Film is primary; Join Film is secondary. Use selected direction A: memory-first editorial cards for loaded Films and contact sheets for eligible developed photos. B — Camera Case and C — Roll Ledger are comparison alternatives, not production modes.
-
-Show unfinished, capacity-complete, developing, developed, and Group states under their existing permissions. Maintain multiple unfinished personal Films. Opening or switching Films must not reveal another unfinished Film. Darkroom opens from an eligible developed photograph, never as a general-purpose home editor.
-
-Personal setup suggests a Camera-and-roll-number title, such as “Disposable — Roll #03”; keeping it or choosing a custom title is optional. Group Hosts must supply a title before loading or sharing a code. Personal owners and Hosts may rename their Films after loading and Development. Capture Date Range is derived from first and last capture, not a scheduled event period.
-
-Archive is an explicit, optional, reversible hide from that user's main library. Provide an archived list and restore action. It does not leave a Group, free membership/load slots, change reveal, release Trial eligibility, stop export deadlines, or restore revoked/deleted media. Never archive automatically.
-
-**Acceptance:** Library thumbnails, contact sheets, search/navigation surfaces, and archive entries cannot leak sealed or inaccessible content. A title change never changes Camera, chronology, capacity, or reveal. An archived Group still requires current online access.
-
-### FR-03 — Setup, Camera Preview, and Load Film
-
-**Tasks SET-01–SET-08**
-
-Start a Film first chooses Personal or Group, defaulting to Personal. Then select a compatible Camera. Anyone may browse curated sample photos or a short sample movie before sign-in or Trial Activation. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
-
-Browsing does not create a Trial Film, reserve or consume eligibility, lock a Camera, or grant Group access. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. For Groups, it is the Host's Camera Lock—not a second step or a per-Participant action. Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Camera Lock.
-
-**Acceptance:** Canceling preview/setup has no entitlement side effect. Loading is neither a capture nor Development, and cannot bypass permissions or entitlement checks. Group codes are unavailable until setup and Camera Lock are complete.
-
-### FR-04 — Capture, viewfinder, and front camera
-
-**Tasks CAP-01–CAP-10**
-
-Every exposure and clip is newly captured in-app. No importing from Photos, Files, or another app. Viewfinders show Camera-authentic framing and cues: aspect ratio, focus behavior, exposure guidance, flash state, and appropriate overlays. They must not preview final grain, color variations, light leaks, scratches, or tape damage.
-
-Rear and front-camera capture are supported for personal and Group Photos and Movies. The front viewfinder is mirrored; saved/developed output is unmirrored. Switch lenses only between exposures or clips, not during capture. Camera package, capacity, framing, treatment, and reveal remain unchanged.
-
-Only expose controls both authentic to the chosen Camera and genuinely supported by the active phone lens. Hide unsupported controls with a brief explanation; do not offer nonfunctional controls or fabricate unsupported flash/focus behavior.
-
-Personal capture works offline once entitled; a Trial requires prior online activation. Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
-
-**Acceptance:** No review/delete path for an individual sealed personal capture. No hidden-image thumbnails or automatic Photos writes. A lens change does not reset capacity. Failure before durable save must not consume an exposure or Trial entitlement.
-
-### FR-05 — Movie recording, orientation, and audio
-
-**Tasks MOV-01–MOV-07, MOV-09–MOV-11**
-
-Consume only successfully saved active recording time. Paused or idle time costs nothing. Clips remain chronological and every recording boundary becomes a cut in exactly one Developed Movie. There is no editable timeline, trimming, reordering, voice-over, or arbitrary music import.
-
-Allow portrait and landscape recording, including selfies. Lock each clip's orientation at recording start; change it only between clips. Choose final Movie Orientation at setup and lock it before the first recording; for Groups, lock with the Camera. Fit opposite-orientation clips with borders—no crop or stretch. Preserve native proportions rotated for portrait: a 4:3 Camera uses 4:3 landscape or 3:4 portrait, not 9:16.
-
-Calls, screen lock, and leaving the app end the active clip. Save recoverable footage, debit only successfully saved duration, and keep it sealed. Never automatically resume; another clip requires an explicit recording action and available capacity/access.
-
-Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. No v1 Camera requires microphone permission or records audio. Additional sound-editing tools are out of scope.
-
-**Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, frame rates, resolutions, and audio channel guarantees are not yet specified.
-
-### FR-06 — Completion, early Development, Instant reveal, and recovery
-
-**Tasks DEV-01–DEV-10**
-
-A personal Roll Film completes at full exposure capacity or through Rewind & Develop Early. A personal Movie completes at full recorded duration or through Stop & Develop Early. Early actions require explicit confirmation stating the exact remaining exposures or time permanently wasted. No refund, reopening, or temporary preview shortcut.
-
-The completed Film is eligible for explicit Development. A brief ritual reveals it without an artificial waiting period. Reaching capacity does not automatically develop. Instant Cameras instead develop and reveal each exposure individually, including the final print of the pack. Discarding a print still consumes its frame.
-
-Development assigns each capture a one-time Developed Treatment. Preserve the developed master and each Developed Clip. Interruptions—including app closure—resume the same Development, keep saved captures intact, and preserve already assigned treatment. Incomplete results stay hidden; previously revealed Instant prints stay revealed. Recovery must not restore removed media. Group recovery is Host-only and ends in Private Review, never automatic Release.
-
-**Acceptance:** Repeated retries do not reroll treatments. A warning of five unused exposures means exactly five are irrevocably wasted if confirmed. Completion, Development, and Group Release remain distinct. Behavior for a completely empty Film is an open decision, not permission to invent empty developed media.
-
-### FR-07 — Photo Darkroom and Private Prints
-
-**Tasks DRK-01–DRK-08**
-
-Provide reversible adjustments per developed exposure, limited to analog printing/processing equivalents: print exposure, appropriate contrast/contrast grades, color filtration or balance for color work, crop, applicable chemical toning, and local Dodge/Burn. Controls must be appropriate to the medium; no universal modern saturation slider.
-
-Do not allow Camera/stock changes, treatment rerolls, digital-only object removal, AI content replacement, or similar manipulation. Preserve the exact original developed master and provide Reset to Original. Edits to one exposure never alter another.
-
-After Group Release, a current contributor may edit only their own Group photos into contributor-only Private Prints. The shared Film always shows the original developed result. The Host cannot edit others' photographs. Private Prints follow current online access and Discard/Withdraw rules; they may be exported when eligible. Movies have no Darkroom; permitted soundtrack and privacy-removal actions are separate.
-
-**Acceptance:** Reset reproduces the original developed result. Shared originals remain byte/content-equivalent despite private editing. No saturation control, Movie Darkroom entry, or edit action on another person's capture exists. Exact control ranges and medium-specific applicability require render validation.
-
-### FR-08 — Personal local storage, Photos export, and source cleanup
-
-**Tasks STO-01–STO-10**
-
-Keep personal Film details, unfinished captures, developed masters, retained sources, and reversible edit data device-local. Account sign-in does not add cloud backup or cross-device sync. Explain the risk of losing device-local Films if the device cannot be recovered; do not promise app-managed backup. A Photos export preserves a flattened result, not a restorable Film or edit history.
-
-Unrevealed original captures stay in private app storage and are never written to Photos before reveal. Offer independent, optional Save Developed to Photos and Save Originals to Photos after eligible reveal. Developed exports include photos, Private Prints, and full Developed Movies. No automatic export or local Film deletion follows export.
-
-Present the original-export choice at personal Development or Group Release. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals will be irrecoverable. Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
-
-**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices.
-
-## 8. Functional requirements — shared Films
-
-### FR-09 — Group creation, identity, joining, and limits
+#### FR-09 — Group creation, identity, joining, and limits
 
 **Tasks GRP-01–GRP-10; IDN-01–IDN-05**
 
@@ -289,7 +337,7 @@ Guest claiming is optional. Linking to an Account preserves capture ownership, m
 
 **Acceptance:** Merely opening a QR does not enroll. Unauthenticated Guests cannot access other Films or Host settings. Join checks enforce capacity, removal, closure, and identity-deletion state atomically enough to prevent an eleventh active member. Exact identity recovery and account-link conflict handling remain open.
 
-### FR-10 — Photo Group exposure pool and Add Shared Exposures
+#### FR-10 — Photo Group exposure pool and Add Shared Exposures
 
 **Tasks POL-01–POL-10**
 
@@ -303,7 +351,7 @@ Consumption, member departure/removal, or subscription expiration never frees a 
 
 **Acceptance:** Maximum lifetime capacities are 270 or 120 exposures respectively; a change in member count does not reset these limits. Concurrent Add actions from one Account cannot add two loads. Expired subscribers cannot add a new load, but existing loads remain usable.
 
-### FR-11 — Shared photo reservation and upload
+#### FR-11 — Shared photo reservation and upload
 
 **Tasks SYN-01–SYN-05**
 
@@ -311,7 +359,7 @@ Require connectivity to reserve a pooled exposure before capture. Two Participan
 
 **Acceptance:** Competing requests for the last exposure yield at most one authorized capture. Duplicate retries are idempotent. A network drop after local save preserves the sealed capture and its consumed status. Reservation reconciliation after an inaccessible device is an engineering decision to resolve, not an implicit timeout that can duplicate capacity.
 
-### FR-12 — Group Movie pool and Recording Turns
+#### FR-12 — Group Movie pool and Recording Turns
 
 **Tasks GMV-01–GMV-07**
 
@@ -321,7 +369,7 @@ Starting a turn requires connectivity and exclusive authorization against the re
 
 **Acceptance:** Concurrent turn acquisition never produces two active recorders. Offline completion cannot exceed authorized time. Paused time costs nothing. Subscriber load buttons never appear as a Movie time-expansion mechanism.
 
-### FR-13 — Manual closure and missing captures
+#### FR-13 — Manual closure and missing captures
 
 **Tasks CLS-01–CLS-07**
 
@@ -333,7 +381,7 @@ Development waits for eligible uploads and any active turn/duration confirmation
 
 **Acceptance:** Closure and capture race conditions preserve valid saved captures without granting new capture rights. A pending-upload Film cannot silently develop a partial result. Before 48 hours the override is unavailable. Closed Film never reopens.
 
-### FR-14 — Host Development, Private Review, Release, and soundtrack
+#### FR-14 — Host Development, Private Review, Release, and soundtrack
 
 **Tasks REL-01–REL-08**
 
@@ -345,7 +393,7 @@ Explicit Release exposes permitted media to current members. Viewing and exporti
 
 **Acceptance:** Group thumbnails, direct media requests, notification opens, and exports enforce the same boundaries. Private Review never acts as a Participant preview. Lost Host access grants nobody else Development or Release powers.
 
-### FR-15 — Group export, original-export deadline, and notifications
+#### FR-15 — Group export, original-export deadline, and notifications
 
 **Tasks EXP-01–EXP-08; NTF-01–NTF-04**
 
@@ -357,23 +405,30 @@ Optional Release Notifications occur only after Host Release and only for Partic
 
 **Acceptance:** A member cannot export another person's originals. A notification cannot preserve revoked access. Group source expiry does not delete the developed Film. Failed Photos writes must be reported honestly, including approaching original deletion deadlines.
 
-## 9. Functional requirements — privacy and lifecycle
+### 8.4 FR-16 Group parts: Withdraw, bulk withdrawal, reporting and Group removal rules
 
-### FR-16 — Discard, Withdraw, bulk withdrawal, and reporting
+**Tasks PRV-02–PRV-04, PRV-09, plus the Group clauses of PRV-05, PRV-06 and PRV-08**
 
-**Tasks PRV-01–PRV-10**
+Sentences removed from FR-16 for v1, verbatim.
+The v1 FR-16 keeps personal Discard and personal Movie reassembly.
 
-After reveal, personal owners may Discard captures; Group contributors may permanently Withdraw their own revealed captures. Host moderation may Discard unsafe Group captures during Private Review and after Release. Released Participants may Report Capture to the Host; reporting alone does not remove content.
+- Opening paragraph, Group sentences: Group contributors may permanently Withdraw their own revealed captures. Host moderation may Discard unsafe Group captures during Private Review and after Release. Released Participants may Report Capture to the Host; reporting alone does not remove content.
 
-Before Release, any contributor may Withdraw Unreleased Captures: permanently remove all their own already-saved contributions in that Group together, without preview, individual selection, or Host approval. This works while open, closed waiting for Development, or in Private Review. It is a privacy exception to sealed-capture deletion, not an early review tool.
+Second paragraph, entirely Group, verbatim:
 
-Removal destroys covered app-controlled source, developed content, associated Private Prints, and accessible cached versions; retains only numbered metadata placeholders; refunds no exposures, duration, loads, or load slots. Host cannot undo it and delayed uploads cannot restore it. Account or Guest deletion additionally removes identifying attribution.
+> Before Release, any contributor may Withdraw Unreleased Captures: permanently remove all their own already-saved contributions in that Group together, without preview, individual selection, or Host approval. This works while open, closed waiting for Development, or in Private Review. It is a privacy exception to sealed-capture deletion, not an early review tool.
 
-Movie removal deletes the selected clip's picture and audio, retained source, and Developed Clip. Reassemble surviving Developed Clips in original order without rerolling their treatments. Retire all app-controlled assembled versions containing removed content. Preserve orientation and any released soundtrack. External exports remain outside app control.
+- Removal paragraph, Group clauses: "associated Private Prints", "loads, or load slots", and the sentences "Host cannot undo it and delayed uploads cannot restore it. Account or Guest deletion additionally removes identifying attribution."
+- Movie paragraph, Group clause: the phrase "any released soundtrack" (v1 says "any selected soundtrack").
+- Acceptance, Group clause: "offline queued uploads".
 
-**Acceptance:** A removal acknowledgement cannot coexist with viewing/export of the removed app-controlled media. Test retries, offline queued uploads, stale movie versions, and cleanup failures. A privacy placeholder never contains a thumbnail or retained private content. Duration/refund behavior is unchanged by removal. Empty-Movie presentation after all clips are removed remains an open UX decision.
+Original removal paragraph, for reference:
 
-### FR-17 — Leave Film and permanent Participant removal
+> Removal destroys covered app-controlled source, developed content, associated Private Prints, and accessible cached versions; retains only numbered metadata placeholders; refunds no exposures, duration, loads, or load slots. Host cannot undo it and delayed uploads cannot restore it. Account or Guest deletion additionally removes identifying attribution.
+
+### 8.5 Leave Film and permanent Participant removal (FR-17)
+
+#### FR-17 — Leave Film and permanent Participant removal
 
 **Tasks MEM-01–MEM-06**
 
@@ -385,53 +440,206 @@ The system blocks known identities, not guaranteed physical people. A new unlink
 
 **Acceptance:** Leaving and removal have distinct rejoin behavior. Neither is whole-identity deletion. Archive neither frees membership nor relinquishes Host powers.
 
+### 8.6 Group parts of FR-18 to FR-21
+
+**FR-18 (Delete personal Film), removed Group clauses, verbatim:**
+
+> Whole-Group deletion is unavailable to everyone, including the Host.
+
+> **Acceptance (removed sentence):** A Group has no destructive whole-Film action disguised as Delete or Archive.
+
+**FR-19 (Delete Account), removed Group text, verbatim.**
+Tasks IDD-02–IDD-04 and IDD-06–IDD-09, plus the Group clauses of IDD-01 and IDD-05.
+Original first paragraph:
+
+> Delete Account applies to every Account holder and all their Group contributions across hosted/joined Films, including claimed Guest contributions and Films they left or were removed from. Delete Guest Identity supplies the equivalent account-free removal path. Remove identifying details/attribution and covered sources, developed results, Private Prints, and app-controlled copies without removing others' contributions or whole Groups.
+
+Original second paragraph (v1 keeps connectivity, Deletion Pending, and "sign-out or submission alone is not success", without covered contributions or a privacy block):
+
+> Submission requires connectivity. After acceptance, immediately block covered contributions from viewing/export while permanent cleanup proceeds. Mark Deletion Pending until deletion of the identity, identifying details, and covered contributions is confirmed. Sign-out or submission alone is not success. Failures and lost connectivity leave the privacy block and pending status intact.
+
+> Assembled Movies containing blocked clips are immediately unavailable until rebuilt from surviving unchanged Developed Clips. Pending identities cannot join, start new Group captures/turns, add shared exposures, or claim/link identities to evade cleanup. Others' activity is unaffected except when the deleting Account is the Host.
+
+> Host deletion immediately stops joins and captures in every hosted Group and invalidates codes. Remove only the Host's own contributions. Others' unreleased content stays sealed, including already developed Private Review content. No automatic Development, Release, or successor Host. Others retain withdrawal rights; already released Films retain access for otherwise authorized members. Permanent loss of Host login likewise has no takeover path, but is not itself an accepted deletion request.
+
+Acceptance, original text (v1 keeps the last two sentences):
+
+> Both claimed Guest content and old memberships are covered. Pending identities cannot escape through linking. Host deletion never reveals other contributors' sealed work. Personal preservation does not preserve the deleted identity. Trial anti-abuse retention after identity deletion and operational erasure timelines require explicit decisions before launch.
+
+**FR-20 (Subscription and expiration), removed Group clauses, verbatim:**
+
+- "unlimited new personal and Group Films, and one load per eligible Photo Group per subscribed Account" and "monthly reset of event capacity".
+- "Trial creation, Group hosting, and subscriber load contribution require an Apple/Google Account. Guest participation remains account-free."
+- "Expiration blocks new personal Films, new Groups, and new subscriber loads." and "Existing hosted Groups remain closable, developable, privately reviewable, and releasable. Contributed capacity stays. Access/privacy checks still apply; expiration does not override them."
+- Acceptance: "and Release an existing Group".
+- Task BIL-04 is deferred to v2.
+
+**FR-21 (One complete Trial Film), removed Group clauses, verbatim:**
+
+- "not a Group creation trial" and "Group joining/capture does not consume it."
+
+### 8.7 State model (from section 11)
+
+| Flow | Valid sequence | Important exception |
+| --- | --- | --- |
+| Group | Host setup/Load → Open ↔ Capacity Pause → Host Close → resolve uploads → Host Develop → Private Review → Host Release | Photo load may resume capacity; Movie subscribers add no time. |
+| Identity deletion | Online request → Accepted / immediate privacy block → Deletion Pending → confirmed permanent removal | Host acceptance stops hosted capture/joins; never reveals sealed media. |
+
+Original identity-deletion row, kept here for the Group case; v1 keeps the personal sequence in section 11.
+
+Invariants removed from the section 11 checklist, verbatim or in original form:
+
+- Group permissions are current, online, and ownership-aware; external exports cannot be revoked.
+- Ten active members and ten lifetime Photo loads are different counters.
+- Development does not imply Group Release.
+- Privacy removals win over delayed uploads (the delayed-upload clause of the privacy-removal invariant).
+- Capacity is never refunded for a withdrawn saved capture (the withdrawn clause of the capacity invariant).
+- Unrevealed content has no notification attachments (the notification clause of the reveal invariant).
+- Leave, removal, and withdrawal remain separate operations (from the operations-separation invariant).
+
+### 8.8 Engineering approach (from section 12)
+
+Modules removed for v1:
+
+| Proposed module | Responsibility and boundary | Key dependencies |
+| --- | --- | --- |
+| Group Coordinator | Codes/membership, pooled reservations, exclusive turns, close/upload reconciliation | Identity, persistent authoritative state |
+| Release and Access | Host-only development/review/release, online media permissions, reporting | Group, media, privacy |
+| Notification Delivery | Optional text-only Release events and permission-checked opens | Release state, current membership |
+
+Original rows of mixed modules, whose Group parts were removed for v1:
+
+| Proposed module | Responsibility and boundary | Key dependencies |
+| --- | --- | --- |
+| Photo Darkroom | Reversible medium-valid edit recipes, local masks, reset, Private Prints | Masters, current ownership/access |
+| Photos Export | Optional original/developed writes, errors, source cleanup eligibility | Permissions, verified master, access checks |
+| Identity and Entitlements | Apple/Google, Guests/claiming, purchases, expiry, Trial reservation | Auth/billing integration and backend |
+| Privacy Removal | Tombstones/access blocks, contribution deletion, movie-version retirement/reassembly | Identity, storage, development |
+
+Original data responsibilities and operation contract, for reference (v1 keeps only the personal and entitlement parts):
+
+#### 12.1 Proposed data responsibilities
+
+Model stable IDs for Film, immutable Camera definition/version, contributor identity/claim lineage, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, membership/removal history, contributed load history, reservation/turn state, upload inclusion/exclusion, Release timestamp, original-export deadline, Trial activation/consumption, and privacy deletion state.
+
+Keep contribution ownership distinct from present membership and authentication display names. Keep metadata-only chronology markers separate from assets so permanent media removal is possible. Store enough developed clip material to reassemble Movies without originals. Exact clock ordering across devices, conflict resolution, encryption/key custody, and deletion/backup behavior require architecture decisions.
+
+#### 12.2 Operation contract expectations
+
+Group join, exposure reservation, load contribution, turn acquisition, closure, Development start, Release, and privacy actions require authorization and repeat-safe results. Account/Guest deletion needs a durable accepted/pending/completed workflow. Local saves and entitlement consumption must be recoverable around app termination. Upload completion must check exclusion and withdrawal state before attaching media. Never trust UI hiding alone as an access boundary.
+
+Original opening sentence of section 12 (v1 says "enforce Account and entitlement authorization server-side"): "Use stable domain interfaces and enforce shared authorization server-side; browser-prototype role controls are not security mechanisms."
+
+### 8.9 Verification (from section 13)
+
+Deferred items keep their version 1.0 numbers (the v1 list in section 13 is renumbered). Item 4 is also partly kept in v1 as "Identity tests: deletion pending".
+
+2. Capacity/race tests: last Photo exposure contention, duplicate subscriber contribution, tenth member/load boundaries, exclusive Movie turns, close-versus-save races, retries after network loss.
+3. Reveal/security tests: Guests and Participants cannot access sealed/Private Review media through API, cache, thumbnail, exports, notifications, or role switching.
+4. Identity/ownership tests: Guest claim, removed-identity blocks, voluntary rejoin, former-member withdrawal, fixed Host, deletion pending and Host deletion.
+
+Group clauses removed from items kept in v1: in item 4, "Guest claim, removed-identity blocks, voluntary rejoin, former-member withdrawal, fixed Host, ... and Host deletion"; in item 5, "Private Print" cleanup and "no delayed-upload resurrection"; in item 8, "Darkroom ownership" and "release-notification opt-out"; in the release gate, "cloud coordination".
+
+### 8.10 Delivery milestones (from section 14)
+
+| Milestone | Deliverable | Tracker groups |
+| --- | --- | --- |
+| M3 — Shared photo experience | Accounts/Guests, Join consent/codes, shared loads/reservations, closure, Host review/Release, exports | IDN, GRP, POL, SYN, CLS, REL, EXP |
+| M4 — Shared Movies and lifecycle | Exclusive turns, pending-upload reconciliation, privacy-safe reassembly, all departure/deletion cases | GMV, MEM, PRV, IDD |
+
+Original milestone M5 tracker groups: NTF, QA; remaining DEC (v1 keeps QA and remaining DEC).
+Original privacy note: "Privacy and access design start in M0 and are prerequisites for shared slices; M4 is completion of their full lifecycle, not permission to defer security until after implementation."
+
+### 8.11 Open decisions (from section 15)
+
+| ID | Decision needed | Why it matters |
+| --- | --- | --- |
+| DEC-06 | Long-term Group retention, abandoned sealed Films, storage economics, erasure/backup timing | Manual indefinite openness is not a defined storage policy. |
+| DEC-08 | Lost Guest/device recovery, Account-link conflicts, subscriber-to-Account entitlement mapping | Device-bound participation and account-free paid use need explicit reconciliation. |
+| DEC-10 | Unresolved reservations/turn recovery, distributed chronology/clock ordering, upload exclusion treatment | Avoid capacity duplication, silent loss, or unauthorized reordering. |
+
+Group clauses removed from DEC rows kept in v1: DEC-03 "storage/.../push vendors", DEC-09 "closure", DEC-13 "Service-level reporting" and "Host moderation is defined".
+
+### 8.12 Other Group clauses removed from v1 sections
+
+| Where | Deferred text, verbatim |
+| --- | --- |
+| 2.1 principle 4 | "and withdrawn clips" |
+| 2.1 principle 6 | **Privacy is not dependent on a Host's availability.** Contributors can remove their own content without waiting for Release; chronology survives as metadata, not retained private content. |
+| 2.2 outcomes | Group Participants should understand shared visibility and contribute without creating an account. |
+| 2.2 measurement plan | "Group join-to-capture, Release-to-view" |
+| 3 scope table | Group Films: Included "Photo pools; serialized Movie recording; code/QR joining"; excluded "Instant Groups; same-device Give Camera mode". Editing: "own Group Private Prints". Sharing: "Host Private Review then Release". Management: "contribution withdrawal; identity deletion". |
+| 3 note | These do not remove the shared workflows explicitly documented in the current model. |
+| 6.1 catalog table | Column "Group support": 1990s Disposable Yes; 1970s Instant No; 1960s 6×6 Medium Format Yes. |
+| 6.2 Movie note and acceptance | "Both Movie Cameras support personal and Group Films in the recorded v1 model." "Instant is unavailable in Group setup." |
+| FR-02 | "Join Film is secondary." "Group states". "Group Hosts must supply a title before loading or sharing a code." "and Hosts may rename". Archive: "leave a Group, free membership/load slots", "stop export deadlines", "revoked". Acceptance: "An archived Group still requires current online access." Tasks UX-06, UX-09. |
+| FR-03 | "Start a Film first chooses Personal or Group, defaulting to Personal. Then select a compatible Camera." "or grant Group access". "For Groups, it is the Host's Camera Lock—not a second step or a per-Participant action." Acceptance: "Group codes are unavailable until setup and Camera Lock are complete." "Camera Lock" in "they are not frozen by Camera Lock" (v1 says "Load Film"). Tasks SET-02, SET-07. |
+| FR-04 | "and Group" in personal and Group Photos and Movies. |
+| FR-05 | "for Groups, lock with the Camera"; "/access" in "available capacity/access". |
+| FR-06 | "Group recovery is Host-only and ends in Private Review, never automatic Release." "and Group Release". Task DEV-09. |
+| FR-07 | After Group Release, a current contributor may edit only their own Group photos into contributor-only Private Prints. The shared Film always shows the original developed result. The Host cannot edit others' photographs. Private Prints follow current online access and Discard/Withdraw rules; they may be exported when eligible. Acceptance: "Shared originals remain byte/content-equivalent despite private editing." "or edit action on another person's capture". Task DRK-07. |
+| FR-08 | "or Group Release" in the original-export choice; "Private Prints," in developed exports. |
+| FR-18 to FR-21 | See 8.6. |
+| Section 17 (decision evolution) | Group rows are tagged [v2 Groups] in place. |
+| Section 18 (evidence) | "push delivery" in the not-completed list. |
+
+## 9. Functional requirements — privacy and lifecycle
+
+### FR-16 — Discard and personal Movie reassembly (Withdraw, bulk withdrawal, and reporting deferred to v2)
+
+**Tasks PRV-01, PRV-05–PRV-08, PRV-10** (PRV-02–PRV-04 and PRV-09 are deferred to v2)
+
+After reveal, personal owners may Discard captures.
+
+Removal destroys covered app-controlled source, developed content, and accessible cached versions; retains only numbered metadata placeholders; refunds no exposures or duration.
+
+Movie removal deletes the selected clip's picture and audio, retained source, and Developed Clip. Reassemble surviving Developed Clips in original order without rerolling their treatments. Retire all app-controlled assembled versions containing removed content. Preserve orientation and any selected soundtrack. External exports remain outside app control.
+
+**Acceptance:** A removal acknowledgement cannot coexist with viewing/export of the removed app-controlled media. Test retries, stale movie versions, and cleanup failures. A privacy placeholder never contains a thumbnail or retained private content. Duration/refund behavior is unchanged by removal. Empty-Movie presentation after all clips are removed remains an open UX decision.
+
 ### FR-18 — Delete personal Film
 
 **Tasks DEL-01–DEL-04**
 
 An owner may permanently delete an entire personal Photo or Movie Film, sealed or revealed, after a clear warning and explicit confirmation. Remove local Film details, retained sources, masters, Developed Clips, and reversible edits without developing or previewing sealed captures. Explain that used Trial eligibility is not restored and external exports remain.
 
-For an activated Trial with zero saved captures, first complete Cancel Unused Trial online on its original activating device. If cancellation is unconfirmed, keep the Film and request reconnection; do not delete it and assume eligibility has been released. Whole-Group deletion is unavailable to everyone, including the Host.
+For an activated Trial with zero saved captures, first complete Cancel Unused Trial online on its original activating device. If cancellation is unconfirmed, keep the Film and request reconnection; do not delete it and assume eligibility has been released.
 
-**Acceptance:** Personal deletion cannot trigger reveal or entitlement reset. A Group has no destructive whole-Film action disguised as Delete or Archive.
+**Acceptance:** Personal deletion cannot trigger reveal or entitlement reset.
 
-### FR-19 — Delete Account / Guest Identity and Deletion Pending
+### FR-19 — Delete Account and Deletion Pending (Guest Identity deletion and Group contribution cleanup deferred to v2)
 
-**Tasks IDD-01–IDD-12**
+**Tasks IDD-01, IDD-05, IDD-10–IDD-12** (IDD-02–IDD-04 and IDD-06–IDD-09 are deferred to v2)
 
-Delete Account applies to every Account holder and all their Group contributions across hosted/joined Films, including claimed Guest contributions and Films they left or were removed from. Delete Guest Identity supplies the equivalent account-free removal path. Remove identifying details/attribution and covered sources, developed results, Private Prints, and app-controlled copies without removing others' contributions or whole Groups.
+Delete Account applies to every Account holder and removes the Account's identifying details.
 
-Submission requires connectivity. After acceptance, immediately block covered contributions from viewing/export while permanent cleanup proceeds. Mark Deletion Pending until deletion of the identity, identifying details, and covered contributions is confirmed. Sign-out or submission alone is not success. Failures and lost connectivity leave the privacy block and pending status intact.
-
-Assembled Movies containing blocked clips are immediately unavailable until rebuilt from surviving unchanged Developed Clips. Pending identities cannot join, start new Group captures/turns, add shared exposures, or claim/link identities to evade cleanup. Others' activity is unaffected except when the deleting Account is the Host.
-
-Host deletion immediately stops joins and captures in every hosted Group and invalidates codes. Remove only the Host's own contributions. Others' unreleased content stays sealed, including already developed Private Review content. No automatic Development, Release, or successor Host. Others retain withdrawal rights; already released Films retain access for otherwise authorized members. Permanent loss of Host login likewise has no takeover path, but is not itself an accepted deletion request.
+Submission requires connectivity. Mark Deletion Pending until deletion of the identity and identifying details is confirmed. Sign-out or submission alone is not success. Failures and lost connectivity leave the pending status intact.
 
 Preserve account-independent paid personal Films on the device. A Trial Film with at least one successfully saved capture also survives Account deletion with its Account linkage removed and its original remaining capture/development rights intact. Do not reset its Camera, capacity, or reveal. An unused Trial Activation with zero saved captures is canceled during Account deletion and cannot remain an account-free capture entitlement. Deleting a preserved personal Film remains a separate action.
 
 For subscribers, warn that identity deletion does not cancel Apple subscription billing and offer Manage Subscription. Users may submit identity deletion immediately without opening that screen, canceling renewal first, or waiting for expiration. Do not confuse immediate submission with completed erasure.
 
-**Acceptance:** Both claimed Guest content and old memberships are covered. Pending identities cannot escape through linking. Host deletion never reveals other contributors' sealed work. Personal preservation does not preserve the deleted identity. Trial anti-abuse retention after identity deletion and operational erasure timelines require explicit decisions before launch.
+**Acceptance:** Personal preservation does not preserve the deleted identity. Trial anti-abuse retention after identity deletion and operational erasure timelines require explicit decisions before launch.
 
 ## 10. Functional requirements — entitlement and trial
 
 ### FR-20 — Subscription and expiration
 
-**Tasks BIL-01–BIL-07**
+**Tasks BIL-01–BIL-03, BIL-05–BIL-07** (BIL-04 is deferred to v2)
 
-Offer one all-inclusive monthly or yearly plan, all five Cameras, unlimited new personal and Group Films, and one load per eligible Photo Group per subscribed Account. No per-Film charge, feature tiers, exposure wallet, or monthly reset of event capacity. Exact prices and billing offers are not yet selected.
+Offer one all-inclusive monthly or yearly plan, all five Cameras, and unlimited new personal Films. No per-Film charge, feature tiers, exposure wallet, or monthly reset of capacity. Exact prices and billing offers are not yet selected.
 
-Paid personal purchase/capture/development/edit/export does not require a separate app Account. Trial creation, Group hosting, and subscriber load contribution require an Apple/Google Account. Guest participation remains account-free.
+Paid personal purchase/capture/development/edit/export does not require a separate app Account. Trial creation requires an Apple/Google Account.
 
-Expiration blocks new personal Films, new Groups, and new subscriber loads. Existing personal Films remain capture-completable, developable, editable, viewable, and exportable. Existing hosted Groups remain closable, developable, privately reviewable, and releasable. Contributed capacity stays. Access/privacy checks still apply; expiration does not override them.
+Expiration blocks new personal Films. Existing personal Films remain capture-completable, developable, editable, viewable, and exportable.
 
-**Acceptance:** An expired subscriber can finish a partly shot personal roll and Release an existing Group. Renewal is not an access fee for existing memories. Purchase restoration and entitlement/device reconciliation require a production design without imposing an app Account on paid personal use.
+**Acceptance:** An expired subscriber can finish a partly shot personal roll. Renewal is not an access fee for existing memories. Purchase restoration and entitlement/device reconciliation require a production design without imposing an app Account on paid personal use.
 
 ### FR-21 — One complete Trial Film
 
 **Tasks TRI-01–TRI-10**
 
-A non-subscriber with an Account receives exactly one full personal Film: Photo OR Movie, any v1 Camera. It is not one of each, not a Group creation trial, and not a recurring trial. Group joining/capture does not consume it.
+A non-subscriber with an Account receives exactly one full personal Film: Photo OR Movie, any v1 Camera. It is not one of each and not a recurring trial.
 
 Online Trial Activation reserves eligibility for exactly one Film on one original device, across devices/reinstalls. Browsing and activation do not consume it. The first successfully saved exposure or clip consumes eligibility; failure before save does not. After activation, capture may continue offline.
 
@@ -445,32 +653,33 @@ A used Trial remains used despite Discard, Film deletion, or abandonment. Its de
 
 ## 11. State model and invariant checks
 
-These are product states, not a final database schema. Capture, reveal, membership, upload, archive, entitlement, and deletion are separate dimensions; do not compress them into one boolean such as `completed`.
+These are product states, not a final database schema. Capture, reveal, archive, entitlement, and deletion are separate dimensions; do not compress them into one boolean such as `completed`.
 
 | Flow | Valid sequence | Important exception |
 | --- | --- | --- |
 | Personal roll | Preview → Load → Capture → Complete → explicit Development → Revealed | Early completion wastes remaining exposures after warning. |
 | Personal Movie | Preview/setup orientation → Load → Clips → Complete → Development → Developed Movie | Early completion wastes duration; paused time is free. |
 | Instant | Load pack → capture → individual print Development/reveal → next capture | Revealed prints coexist with unused pack capacity. |
-| Group | Host setup/Load → Open ↔ Capacity Pause → Host Close → resolve uploads → Host Develop → Private Review → Host Release | Photo load may resume capacity; Movie subscribers add no time. |
-| Identity deletion | Online request → Accepted / immediate privacy block → Deletion Pending → confirmed permanent removal | Host acceptance stops hosted capture/joins; never reveals sealed media. |
+| Identity deletion | Online request → Accepted → Deletion Pending → confirmed permanent removal | Preserved personal Films stay on the device; deletion never reveals sealed media. |
+
+Group flows and Group invariants are deferred to v2 (section 8.7).
 
 Invariant checklist for implementation:
 
 - Camera identity cannot change after loading; Movie presentation orientation is fixed before recording.
 - Captures cannot exceed authorized capacity; retries do not consume twice.
-- Completion does not imply Development; Development does not imply Group Release.
-- Unrevealed content has no thumbnails, direct-export path, notification attachments, or Camera Preview path.
-- Capacity is never refunded for a deliberately spent, discarded, withdrawn, or deleted saved capture.
-- Group permissions are current, online, and ownership-aware; external exports cannot be revoked.
-- Ten active members and ten lifetime Photo loads are different counters.
+- Completion does not imply Development.
+- Unrevealed content has no thumbnails, direct-export path, or Camera Preview path.
+- Capacity is never refunded for a deliberately spent, discarded, or deleted saved capture.
 - Treatment is assigned once, survives retries, and is unchanged by Movie reassembly.
-- Privacy removals win over delayed uploads, development retries, cached views, and old assembled versions.
-- Archive, leave, removal, withdrawal, whole-Film deletion, identity deletion, and subscription cancellation remain separate operations.
+- Privacy removals win over development retries, cached views, and old assembled versions.
+- Archive, whole-Film deletion, Account deletion, and subscription cancellation remain separate operations.
 
 ## 12. Proposed engineering approach — not finalized architecture
 
-No native codebase or production backend exists in the supplied workspace. The following decomposition organizes implementation, without selecting a cloud vendor, minimum iOS version, framework, schema, or deployment topology. Use stable domain interfaces and enforce shared authorization server-side; browser-prototype role controls are not security mechanisms.
+Group modules (Group Coordinator, Release and Access, Notification Delivery) and the Group data and operation rules are deferred to v2 (section 8.8).
+
+No native codebase or production backend exists in the supplied workspace. The following decomposition organizes implementation, without selecting a cloud vendor, minimum iOS version, framework, schema, or deployment topology. Use stable domain interfaces and enforce Account and entitlement authorization server-side; browser-prototype role controls are not security mechanisms.
 
 | Proposed module | Responsibility and boundary | Key dependencies |
 | --- | --- | --- |
@@ -478,41 +687,38 @@ No native codebase or production backend exists in the supplied workspace. The f
 | Film Lifecycle | Setup, load, capacity, chronology, completion, state transitions | Catalog, persistence, entitlements |
 | Capture Engine | Native lens capture, permissions, durable saves, interruptions, clip orientation | Lifecycle, hardware capabilities |
 | Development Engine | Persistent one-time treatment assignment, resumable jobs, masters/clips, chronological assembly | Capture storage, renderer, privacy state |
-| Photo Darkroom | Reversible medium-valid edit recipes, local masks, reset, Private Prints | Masters, current ownership/access |
+| Photo Darkroom | Reversible medium-valid edit recipes, local masks, reset | Masters |
 | Library and Local Store | Device-local personal data, safe media commits, archive/delete, Film Journal presentation | Lifecycle, media store |
-| Photos Export | Optional original/developed writes, errors, source cleanup eligibility | Permissions, verified master, access checks |
-| Identity and Entitlements | Apple/Google, Guests/claiming, purchases, expiry, Trial reservation | Auth/billing integration and backend |
-| Group Coordinator | Codes/membership, pooled reservations, exclusive turns, close/upload reconciliation | Identity, persistent authoritative state |
-| Release and Access | Host-only development/review/release, online media permissions, reporting | Group, media, privacy |
-| Privacy Removal | Tombstones/access blocks, contribution deletion, movie-version retirement/reassembly | Identity, storage, development |
-| Notification Delivery | Optional text-only Release events and permission-checked opens | Release state, current membership |
+| Photos Export | Optional original/developed writes, errors, source cleanup eligibility | Permissions, verified master |
+| Identity and Entitlements | Apple/Google, purchases, expiry, Trial reservation | Auth/billing integration and backend |
+| Privacy Removal | Tombstones, media deletion, movie-version retirement/reassembly | Storage, development |
 
 ### 12.1 Proposed data responsibilities
 
-Model stable IDs for Film, immutable Camera definition/version, contributor identity/claim lineage, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, membership/removal history, contributed load history, reservation/turn state, upload inclusion/exclusion, Release timestamp, original-export deadline, Trial activation/consumption, and privacy deletion state.
+Model stable IDs for Film, immutable Camera definition/version, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, Trial activation/consumption, and privacy deletion state.
 
-Keep contribution ownership distinct from present membership and authentication display names. Keep metadata-only chronology markers separate from assets so permanent media removal is possible. Store enough developed clip material to reassemble Movies without originals. Exact clock ordering across devices, conflict resolution, encryption/key custody, and deletion/backup behavior require architecture decisions.
+Keep metadata-only chronology markers separate from assets so permanent media removal is possible. Store enough developed clip material to reassemble Movies without originals. Exact encryption/key custody and deletion/backup behavior require architecture decisions.
 
 ### 12.2 Operation contract expectations
 
-Group join, exposure reservation, load contribution, turn acquisition, closure, Development start, Release, and privacy actions require authorization and repeat-safe results. Account/Guest deletion needs a durable accepted/pending/completed workflow. Local saves and entitlement consumption must be recoverable around app termination. Upload completion must check exclusion and withdrawal state before attaching media. Never trust UI hiding alone as an access boundary.
+Account deletion needs a durable accepted/pending/completed workflow. Local saves and entitlement consumption must be recoverable around app termination. Never trust UI hiding alone as an access boundary.
 
 ## 13. Verification and release acceptance
 
-**Tasks QA-01–QA-14; ARC-01–ARC-07**
+**Tasks QA-01–QA-04, QA-09–QA-14; ARC-01–ARC-03, ARC-05–ARC-07** (QA-05–QA-08 and ARC-04 are deferred to v2)
 
 Testing below is planned work, not completed production coverage. Assert observable behavior rather than private implementation details.
 
-1. Domain/state tests: every Camera, full/early completion, Instant exception, immutable treatment, title/archive independence, entitlement expiration.
-2. Capacity/race tests: last Photo exposure contention, duplicate subscriber contribution, tenth member/load boundaries, exclusive Movie turns, close-versus-save races, retries after network loss.
-3. Reveal/security tests: Guests and Participants cannot access sealed/Private Review media through API, cache, thumbnail, exports, notifications, or role switching.
-4. Identity/ownership tests: Guest claim, removed-identity blocks, voluntary rejoin, former-member withdrawal, fixed Host, deletion pending and Host deletion.
-5. Media/privacy tests: source/master/Private Print cleanup, stale Movie retirement, unchanged surviving Developed Clips, no delayed-upload resurrection, verified-master gates before source deletion.
-6. Native device tests: front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
-7. Entitlement tests: Account-free paid use, purchase restoration, expiry, cross-device Trial contention, offline first save, unused cancellation, deletion-preserved captured Trials.
-8. UX/accessibility tests: Film Journal layouts, clear capacity warnings, Darkroom ownership, archive/delete distinctions, legible native controls, assistive interaction, release-notification opt-out.
+Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, and Group identity/ownership tests) are deferred to v2 (section 8.9). The list below is renumbered.
 
-**Release gate:** Native capture, media treatment quality, permissions, cloud coordination, purchase/authentication, privacy removal, and export must be validated on the real app. The browser study is insufficient evidence for those gates. Performance/size limits, device support, and measurable reliability budgets remain open rather than invented numbers.
+1. Domain/state tests: every Camera, full/early completion, Instant exception, immutable treatment, title/archive independence, entitlement expiration.
+2. Identity tests: deletion pending after Account deletion.
+3. Media/privacy tests: source/master cleanup, stale Movie retirement, unchanged surviving Developed Clips, verified-master gates before source deletion.
+4. Native device tests: front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
+5. Entitlement tests: Account-free paid use, purchase restoration, expiry, cross-device Trial contention, offline first save, unused cancellation, deletion-preserved captured Trials.
+6. UX/accessibility tests: Film Journal layouts, clear capacity warnings, archive/delete distinctions, legible native controls, assistive interaction.
+
+**Release gate:** Native capture, media treatment quality, permissions, purchase/authentication, privacy removal, and export must be validated on the real app. The browser study is insufficient evidence for those gates. Performance/size limits, device support, and measurable reliability budgets remain open rather than invented numbers.
 
 ## 14. Implementation delivery sequence and tracking
 
@@ -523,42 +729,43 @@ This is a proposed dependency order within the agreed scope, not an automatic de
 | M0 — Resolve implementation prerequisites | Platform/backend decisions, data model, unresolved product edge cases, asset/licensing criteria | DEC, ARC |
 | M1 — Personal photo vertical slice | Film Journal → Camera sample → Load → real capture → durable sealed roll → Development → Photos export | UX, CAM, SET, CAP, DEV, STO |
 | M2 — Full personal experience | All photo formats, front lens, Darkroom, personal Movies/audio/orientation, delete/archive, billing and Trial | DRK, MOV, DEL, BIL, TRI |
-| M3 — Shared photo experience | Accounts/Guests, Join consent/codes, shared loads/reservations, closure, Host review/Release, exports | IDN, GRP, POL, SYN, CLS, REL, EXP |
-| M4 — Shared Movies and lifecycle | Exclusive turns, pending-upload reconciliation, privacy-safe reassembly, all departure/deletion cases | GMV, MEM, PRV, IDD |
-| M5 — Release readiness | All-camera/device acceptance, notifications, race/privacy testing, product-quality review | NTF, QA; remaining DEC |
+| M3 — Deferred to v2: shared photo experience | Accounts/Guests, Join consent/codes, shared loads/reservations, closure, Host review/Release, exports (see section 8.10) | Group-only tasks in the tracker's Deferred to v2 section |
+| M4 — Personal privacy and account lifecycle | Privacy-safe Movie reassembly after Discard, Account deletion with personal-Film preservation; the shared Movies and Group lifecycle parts are deferred to v2 (section 8.10) | PRV, IDD (v1 tasks only) |
+| M5 — Release readiness | All-camera/device acceptance, privacy testing, product-quality review | QA; remaining DEC |
 
-Privacy and access design start in M0 and are prerequisites for shared slices; M4 is completion of their full lifecycle, not permission to defer security until after implementation. Individual tracker items remain unchecked until implemented and verified. Completed discovery/prototype items are explicitly separated.
+Privacy and access design start in M0; M4 is completion of the personal privacy lifecycle, not permission to defer security until after implementation. The prerequisites for shared slices belong to v2 (section 8.10). Individual tracker items remain unchecked until implemented and verified. Completed discovery/prototype items are explicitly separated.
 
 ## 15. Open decisions and constraints
 
-These are unresolved choices, not newly approved features. Their tasks appear as `DEC-*` in the tracker.
+These are unresolved choices, not newly approved features. Their tasks appear as `DEC-*` in the tracker. DEC-06, DEC-08 and DEC-10 are deferred to v2 with Groups and preserved in section 8.11; their IDs are unchanged.
 
 | ID | Decision needed | Why it matters |
 | --- | --- | --- |
 | DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
 | DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling | One-plan structure is fixed; commercial and edge entitlement behavior are not. |
-| DEC-03 | Minimum iOS/device support, native stack, backend/storage/auth/push vendors | Required to turn proposed modules into deployable architecture. |
+| DEC-03 | Minimum iOS/device support, native stack, backend/auth vendors | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
-| DEC-06 | Long-term Group retention, abandoned sealed Films, storage economics, erasure/backup timing | Manual indefinite openness is not a defined storage policy. |
 | DEC-07 | Trial eligibility after Account deletion and any anti-abuse retention | Must reconcile deletion commitments without silently retaining identifying data. |
-| DEC-08 | Lost Guest/device recovery, Account-link conflicts, subscriber-to-Account entitlement mapping | Device-bound participation and account-free paid use need explicit reconciliation. |
-| DEC-09 | Empty-Film early completion/closure; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
-| DEC-10 | Unresolved reservations/turn recovery, distributed chronology/clock ordering, upload exclusion treatment | Avoid capacity duplication, silent loss, or unauthorized reordering. |
+| DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
 | DEC-11 | Darkroom ranges/crop boundaries, Instant source-choice presentation, personal soundtrack reselection rules | Medium constraints are agreed; exact interactions are not. |
 | DEC-12 | Storage-pressure handling, durability/performance budgets, accessibility/device acceptance matrix | Native media behavior is untested. |
-| DEC-13 | Service-level reporting/support escalation, privacy disclosures, launch/platform review | Host moderation is defined; wider operating procedures are not. |
+| DEC-13 | Support escalation, privacy disclosures, launch/platform review | Operating procedures for support and launch review are not defined. |
 | DEC-14 | Numeric success targets and any privacy-respecting analytics design | No telemetry vendor or collection policy has been chosen. |
 
 Do not resolve these by silently shipping assumptions that change the product's reveal, billing, privacy, or capacity promises. Implementation estimates and calendar release dates are not agreed.
 
 ## 16. Out of scope and possible later work
 
-V1 does not include digital nostalgia formats (CCD, MiniDV), additional Camera catalog entries, Instant Group Films, same-device Give Camera/phone lockdown, individual Group exposure quotas or private subscriber reserves, subscriber-added Movie duration, automatic Closing Time, automatic Group Development/Release, co-hosting/Host transfer, whole-Group deletion, a separate Event container, public social feeds, imported-media treatment, Movie editing, saturation/AI retouching, personal app cloud backup/sync, web/Android/App Clip capture, a monthly exposure wallet, or per-Film charges.
+V1 does not include Group Films of any kind. Deferred to v2 are Photo Group pools and Group Movies with Recording Turns, joining by code or QR, accountless Guest participants, the Host role, load contribution and Add Shared Exposures, shared reservation and upload, manual Group closure, Host Development, Private Review and Release, the Group export deadline and Group notifications, contribution withdrawal and bulk withdrawal and reporting, Leave Film and Participant removal, Guest identity deletion, and Private Prints on Group Films. Their requirements are preserved in section 8.
 
-Additional historical Cameras and digital-era experiences may be evaluated for v2 with their own authentic review rules. Listing these ideas is not implementation approval or a committed v2 roadmap.
+V1 also does not include digital nostalgia formats (CCD, MiniDV), additional Camera catalog entries, Instant Group Films, same-device Give Camera/phone lockdown, individual Group exposure quotas or private subscriber reserves, subscriber-added Movie duration, automatic Closing Time, automatic Group Development/Release, co-hosting/Host transfer, whole-Group deletion, a separate Event container, public social feeds, imported-media treatment, Movie editing, saturation/AI retouching, personal app cloud backup/sync, web/Android/App Clip capture, a monthly exposure wallet, or per-Film charges.
+
+Additional historical Cameras and digital-era experiences may be evaluated for v2 with their own authentic review rules. The retained Group requirements in section 8 are the starting point for that evaluation. Listing these ideas, and the deferred Group requirements, is not implementation approval or a committed v2 roadmap.
 
 ## 17. Decision evolution and superseded proposals
+
+Rows tagged [v2 Groups] record decisions made for the Group design, which version 1.1 defers to v2 (last row).
 
 | Earlier proposal or ambiguity | Current recorded decision |
 | --- | --- |
@@ -569,24 +776,25 @@ Additional historical Cameras and digital-era experiences may be evaluated for v
 | 1990s point-and-shoot option | Replaced by 1960s 6×6 Medium Format, inspired by the 500-series concept. |
 | Generic 35mm / overlapping instant choices | Consolidated to the three named Photo formats in section 6. |
 | Battery/wall-clock Movie budget | Fixed Camera-defined duration; only saved recorded footage consumes it. |
-| Give Camera by handing over phone | Join Film on each Participant's own iOS device. |
-| Closing Time | Manual irreversible Host closure; code expires on closure. |
-| Per-Participant Capture Allowance | Shared first-come Photo pool; one person may consume all. |
-| Keep subscriber exposures private or share | Explicit opt-in load contribution, entirely shared once added. |
-| Monthly exposure credits / Host reloads | One full load per subscribed Account per Group; new Group for further eligible capture. |
-| Free Host capacity plus subscription load | Host starts with exactly their one subscription-backed load. |
-| Automatic Add My Camera upon joining/upgrading | Optional Add Shared Exposures with exact amount and confirmation. |
-| 50-person Group | Ten active people total; separate ten-lifetime-load limit. |
-| Photo-only Groups in early discussion | Current domain model explicitly includes Movie Groups with one shared fixed duration and exclusive turns. |
-| Broad interpretation of “personal-only” | Personal-only Instant and whole-Film deletion; shared Photo/Movie workflows remain in current model. |
+| Give Camera by handing over phone | Join Film on each Participant's own iOS device. [v2 Groups] |
+| Closing Time | Manual irreversible Host closure; code expires on closure. [v2 Groups] |
+| Per-Participant Capture Allowance | Shared first-come Photo pool; one person may consume all. [v2 Groups] |
+| Keep subscriber exposures private or share | Explicit opt-in load contribution, entirely shared once added. [v2 Groups] |
+| Monthly exposure credits / Host reloads | One full load per subscribed Account per Group; new Group for further eligible capture. [v2 Groups] |
+| Free Host capacity plus subscription load | Host starts with exactly their one subscription-backed load. [v2 Groups] |
+| Automatic Add My Camera upon joining/upgrading | Optional Add Shared Exposures with exact amount and confirmation. [v2 Groups] |
+| 50-person Group | Ten active people total; separate ten-lifetime-load limit. [v2 Groups] |
+| Photo-only Groups in early discussion | Current domain model explicitly includes Movie Groups with one shared fixed duration and exclusive turns. [v2 Groups] |
+| Broad interpretation of “personal-only” | Personal-only Instant and whole-Film deletion; shared Photo/Movie workflows remain in current model. [v2 Groups] |
 | Free Photo and free Movie | Exactly one personal Trial: Photo OR Movie. |
-| Account required for all personal use | Account required for Trial/hosting/load contribution; paid personal use may be account-free. |
+| Account required for all personal use | Account required for Trial/hosting/load contribution; paid personal use may be account-free. [hosting and load contribution: v2 Groups] |
 | Save raw captures to native Photos before reveal | Keep sources private; optional export only after eligible reveal. |
-| Permanent source retention | Verified-master cleanup, optional original export; seven-day Group source window. |
+| Permanent source retention | Verified-master cleanup, optional original export; seven-day Group source window. [Group source window: v2 Groups] |
 | Saturation/basic modern editor | Analog-constrained per-photo Darkroom without saturation; reversible Dodge/Burn included. |
-| Delete entire Group / transfer abandoned Host | Neither exists in v1; contributors retain privacy exits. |
+| Delete entire Group / transfer abandoned Host | Neither exists in v1; contributors retain privacy exits. [v2 Groups] |
 | Automatically archive or export | Both are explicit optional actions. |
 | Three prototype directions | A — Film Journal selected; B and C are study alternatives only. |
+| Groups (Photo pools and Group Movies) in v1 scope | Captain decision, 2026-09-30 (PRD version 1.1): v1 ships personal Photo and Movie Films only, to keep v1 simple. All Group functionality, Photo Groups and Group Movies, is deferred to v2 and preserved in section 8. Group Movies do not ship in v1, and Groups do not launch with the first public release. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
@@ -594,8 +802,8 @@ The ADR compilation preserves historical text unchanged. Where an ADR is narrowe
 
 **Completed discovery:** detailed domain model, eleven ADRs, throwaway three-direction browser prototype, selection of Film Journal, and the browser interaction checks listed in the included prototype notes.
 
-**Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, secure backend authorization/concurrency, real authentication/subscriptions, Photos export, push delivery, production deletion infrastructure, and native release verification.
+**Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, secure backend authorization/concurrency, real authentication/subscriptions, Photos export, production deletion infrastructure, and native release verification.
 
-The prototype simulates roles, network state, capacity, capture, Development, exports, and notifications. Its Movie playback is an illustrative sequence with accelerated timing—not recorded video. It has no persistent production storage, and its remote sample photos are not validated camera emulations. Do not promote its test controls, alternate-layout switcher, or state shortcuts into the product.
+The prototype simulates roles, network state, capacity, capture, Development, exports, and notifications, including Group flows that are deferred to v2. Its Movie playback is an illustrative sequence with accelerated timing—not recorded video. It has no persistent production storage, and its remote sample photos are not validated camera emulations. Do not promote its test controls, alternate-layout switcher, or state shortcuts into the product.
 
 A feature is done only when its tracker task is implemented, its acceptance behavior passes in the relevant native/shared environment, its error/permission states are handled, and evidence is recorded. A browser demo or checked design decision alone does not satisfy production completion.
