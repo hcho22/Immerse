@@ -9,10 +9,10 @@
 >
 > **Version 1.2 scope note (2026-09-30, PRD version 1.2, ADR 0012).**
 > By captain decision, v1 is a personal, on-phone iOS 26 iPhone app.
-> The Trial is one Trial Film per iPhone, remembered on the phone in the Keychain, so v1 has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+> Each iPhone's device-bound Trial entitlement can start at most one Trial Film and is remembered on the phone in the Keychain; restored Trial Films retain their rights without consuming or blocking that entitlement. v1 therefore has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
 > The terms Account, Trial Film, Trial Activation and Cancel Unused Trial were rewritten below, and the Trial rules were rewritten for the per-iPhone Trial.
 > The Account-only rules (Delete Account, Deletion Pending, Account-scoped Trial eligibility and Trial preservation after Account deletion) moved, verbatim, to the "Deferred to v2 - Account rules" section after the Relationships list; read any remaining mention of Account, sign-in, Account deletion or Deletion Pending as v2 design.
-> Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore.
+> Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore; restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
 > v1 has no analytics SDK or service, and its price is decided before milestone 2 billing work.
 > The statements that assert overall v1 scope were corrected below; the Group-only rules were not rewritten.
 
@@ -197,7 +197,7 @@ The Apple subscription-management flow for changing or canceling the app's month
 _Avoid_: Delete Account, Delete Guest Identity, Delete Film
 
 **Trial Film**:
-The one free personal Film available per iPhone to a non-subscriber using either one Photo Camera or one Movie Camera, remembered on the phone in the Keychain.
+The personal Film started from an iPhone's one device-bound Trial entitlement by a non-subscriber using either one Photo Camera or one Movie Camera, remembered on the phone in the Keychain; a restored Trial Film retains separate Film-bound rights.
 _Avoid_: One free capture, per-Account trial, separate photo and movie trials, temporary developed media
 
 **Trial Activation**:
@@ -376,7 +376,7 @@ _Avoid_: Draft, incomplete album
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
-- Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore.
+- Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
 - The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; deleting a Trial Film with no successfully saved captures needs no cancellation step and does not consume Trial eligibility.
 - Delete Film permanently removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits without developing or revealing hidden captures.
 - The deletion warning explains the permanent loss, that a used **Trial Film** entitlement is not restored, and that copies already exported to Photos or elsewhere remain unaffected.
@@ -494,15 +494,15 @@ _Avoid_: Draft, incomplete album
 - An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
 - Personal Film use, including Subscription purchase, capture, Development, Darkroom work, export and the Trial Film, does not require an Account; v1 has no Account or sign-in.
 - Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
-- A non-subscriber may use exactly one **Trial Film** per iPhone, choosing either Photo or Movie; there is no Account or sign-in in v1.
-- The iPhone remembers its Trial in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore, so the Trial counts once per physical iPhone.
+- A non-subscriber may use each iPhone's own device-bound Trial entitlement to start at most one **Trial Film**, choosing either Photo or Movie; there is no Account or sign-in in v1.
+- The iPhone remembers its Trial entitlement in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore.
 - **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and it never needs connectivity (DEC-15).
 - After Trial Activation, Trial Film capture may continue without connectivity.
 - Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip (which writes the Keychain record), not during Camera browsing or empty Film setup.
 - Failed captures that do not save successfully do not consume Trial Film eligibility.
-- An iPhone has at most one Trial Film at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
+- The current iPhone's entitlement can have at most one Trial Film initiated from it at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
 - Someone with several iPhones gets several free Films; this costs only a possible sale, because Films never leave the phone.
-- After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film; the restored phone's own Trial record is separate (DEC-16).
+- After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film; either coexists with the restored phone's own entitlement without consuming or blocking it, and the phone's Trial record remains separate (DEC-16).
 - Restoring an older device backup can bring back media discarded after that backup; this is accepted and disclosed in the privacy copy, and the app keeps no removal log (DEC-17).
 - Abandoning, deleting, or Discarding a Trial Film after its first successfully saved capture never restores Trial Film eligibility.
 - Every v1 Camera is available for the Trial Film.

@@ -205,3 +205,7 @@ Restoring an older backup can bring back media discarded after it; that is accep
 Decided by the captain on 2026-09-30 (PRD version 1.2).
 
 ---
+
+### Reconciliation note for ADR 0012
+
+The ADR's "one free Trial Film per iPhone" means that each iPhone's own device-bound Trial entitlement can start at most one Trial Film. Under DEC-16, a Trial Film restored from another iPhone keeps its Film-bound capture rights and coexists with the destination iPhone's own entitlement without consuming or blocking it.
