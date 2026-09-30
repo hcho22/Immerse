@@ -266,7 +266,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 | 10 | The developed photos appear as a contact sheet in the Film Journal.<br>Nothing sealed leaks into thumbnails before this point. | Story 51; FR-02 |
 | 11 | Optionally, they open a photo in the Darkroom, adjust it, and Reset to Original. | Stories 20 and 21; FR-07 |
 | 12 | They choose Save Developed to Photos.<br>A denied permission or a failed write is not shown as success.<br>Saving developed output and saving originals are independent choices. | Story 40; FR-08 |
-| 13 | The app discloses that Films are protected only if the person has an iOS device backup, and that a Photos export is a flattened result, not a restorable Film. | Story 40; principle 8; FR-08 |
+| 13 | The app explains that Films are protected only if the person has an iOS device backup, and that a Photos export is a flattened result, not a restorable Film.<br>Where and when it explains this is open. | Story 40; principle 8; FR-08 |
 
 **Open in this journey.**
 
@@ -280,6 +280,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 - Whether the person can browse the Film Journal while a Film develops is open.
 - Whether Settings has a default for saving to Photos is open, given that FR-08 makes both saving choices per Film.
 - Whether Save Developed to Photos in step 12 covers the whole Film only or also a single photo is open.
+- Where and when the app gives the FR-08 backup and Photos-export explanation in step 13 is not specified by a requirement.
 - Camera rendering and output specifications are open under DEC-04, and Darkroom control ranges and crop boundaries under DEC-11.
 
 #### Journey 2 - A Movie Film from recording to a developed Movie
