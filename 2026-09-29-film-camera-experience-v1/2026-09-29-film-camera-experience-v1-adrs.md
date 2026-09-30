@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 1.1 (reconciliation notes updated September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 1.2 (reconciliation notes updated and ADR 0012 added September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
@@ -8,7 +8,9 @@
 
 The eleven original decision records below are reproduced verbatim inside their respective sections, including their original headings. No original creation dates were present; the collection date must not be read as their individual decision dates. Unchanged standalone copies are included in `adr/`.
 
-PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films.
+ADR 0012 was added in version 1.2 (2026-09-30), after the original eleven; it is a new record, dated by the captain decision it records, and appears under "Decision records added after the original eleven" at the end.
+
+PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
 The PRD supplies the later detailed rules and explicitly labels open engineering choices. The short ADRs do not independently specify all edge cases. Reconciliation notes here are collection commentary, not edits to the original records.
 
@@ -22,9 +24,10 @@ The PRD supplies the later detailed rules and explicitly labels open engineering
 - [ADR 0006 — Subscription expiration never locks existing Films](adr/0006-subscription-expiration-never-locks-existing-films.md) - applies partly to v1 (personal Films); Group hosting, Subscriber Load, Private Review and Release parts are v2
 - [ADR 0007 — Movie withdrawal rebuilds without repeating Development](adr/0007-movie-withdrawal-rebuilds-without-redevelopment.md) - Group withdrawal is v2; the rebuild-without-redevelopment principle applies partly to v1 personal Movie Discard
 - [ADR 0008 — Unreleased Group captures have a bulk privacy exit](adr/0008-unreleased-group-captures-have-a-bulk-privacy-exit.md) - v2 Groups only
-- [ADR 0009 — Whole-Film deletion is personal-only](adr/0009-whole-film-deletion-is-personal-only.md) - applies partly to v1 (personal Delete Film); the no-whole-Group-deletion part is v2
+- [ADR 0009 — Whole-Film deletion is personal-only](adr/0009-whole-film-deletion-is-personal-only.md) - applies partly to v1 (personal Delete Film, qualified by DEC-17's older-backup limitation); the no-whole-Group-deletion part is v2
 - [ADR 0010 — Group Film Host is fixed in v1](adr/0010-group-film-host-is-fixed-in-v1.md) - v2 Groups only (the title's "v1" is the version 1.0 baseline)
-- [ADR 0011 — Host Account deletion preserves shared privacy](adr/0011-host-account-deletion-preserves-shared-privacy.md) - v2 Groups only; the personal-Film preservation note applies to v1 Account deletion
+- [ADR 0011 — Host Account deletion preserves shared privacy](adr/0011-host-account-deletion-preserves-shared-privacy.md) - v2 only; v1 has no Account deletion
+- [ADR 0012 — V1 Trial is one Film per iPhone, held on the device, with no app Accounts](adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md) - applies to v1; added in version 1.2
 
 ## Reconciliation with later requirements
 
@@ -33,29 +36,35 @@ Captain decision: v1 ships personal Photo and Movie Films only, and all Group fu
 Every Group statement in the reconciliation notes below therefore describes the deferred v2 Group design, even where a note says "current v1 model".
 This collection commentary, not the original ADR text, is what was updated.
 
-| ADR | Applicability after PRD version 1.1 |
+**Version 1.2 status (2026-09-30).**
+Captain decision: the v1 Trial is one Film per iPhone held on the device, and v1 has no Accounts, sign-in, server or Account deletion flow (ADR 0012).
+Every statement below about Account deletion, Deletion Pending, Account-scoped Trial eligibility or a Trial server reservation therefore describes the deferred v2 design.
+Other version 1.2 decisions (iOS 26 iPhone only, iOS device backup with a device-bound Trial record, no analytics, price decided before M2 billing work) are recorded in the PRD.
+
+| ADR | Applicability after PRD version 1.2 |
 | --- | --- |
 | 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. |
 | 0002 | v2 Groups only. Join Film does not exist in v1. |
-| 0003 | v2 Groups only. v1 has no Host, Participant or Guest Identity; Accounts in v1 serve Trial eligibility. |
+| 0003 | v2 Groups only. v1 has no Host, Participant, Guest Identity or Account (ADR 0012). |
 | 0004 | v2 Groups only. |
 | 0005 | v2 Groups only. |
 | 0006 | Applies partly to v1: an expired subscription blocks new personal Films and never locks existing personal Films (capture completion, Development, Darkroom, export). The Group hosting, Subscriber Load, Private Review and Release parts are v2 only. |
 | 0007 | Group Withdraw is v2 only. The rule that each Developed Clip is preserved so a Movie can be rebuilt without repeating Development, retiring stale app-controlled versions, also applies in v1 to a personal Movie Discard. |
 | 0008 | v2 Groups only. |
-| 0009 | Applies partly to v1: Delete Film is personal and device-local, after a warning and confirmation. The statement that no Host or Participant may delete a Group Film is v2 only; v1 has no Group Films. |
+| 0009 | Applies partly to v1: Delete Film removes a personal Film from current app-controlled storage after a warning and confirmation. Under DEC-17, that warning discloses that restoring an iOS backup made before deletion can bring the Film back. The statement that no Host or Participant may delete a Group Film is v2 only; v1 has no Group Films. |
 | 0010 | v2 Groups only. |
-| 0011 | v2 Groups only for Host deletion behavior. The reconciliation note on personal-Film survival applies to v1 Account deletion. |
+| 0011 | v2 only. Host deletion behavior is Group design, and v1 has no Account deletion (ADR 0012), so the personal-Film survival note also applies only once Accounts return in v2. |
+| 0012 | Applies to v1. The Trial is one Film per iPhone held on the device, and v1 has no app Accounts, sign-in, server or Account deletion flow. It reverses the domain model's Account-scoped Trial; Accounts return in v2 with Groups. Added in version 1.2. |
 
-The per-ADR notes below are kept as originally written, updated only where they asserted v1 scope for Groups.
+The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
 - **0001:** Its original roll/Movie completion wording predates the accepted early-Development exception. The current rule permits intentional waste of remaining exposures/time after explicit warning. Instant remains per-exposure and personal-only. For v2 Groups, reveal additionally requires Host closure, Development, Private Review, and Release; exhausting the pool alone never reveals media.
 - **0002–0003 (v2 Groups only):** Code entry includes explicit Participant Join Confirmation, not individual Host approval or automatic enrollment. The installed iOS app is required. Ten active members includes the Host. Claiming a Guest preserves ownership and removal blocks.
 - **0004–0005 (v2 Groups only):** Photo Groups use at most ten lifetime loads independently of ten active members. Adding a load is optional, irreversible, all-shared, and Account-authenticated. Movie Groups were in the version 1.0 model and are now deferred to v2 with all Groups; they receive one fixed shared duration with exclusive Recording Turns and no subscriber-added time.
 - **0006 (v1 personal Films; Group parts v2):** Expiration preserves remaining capture and existing-Film workflows; it does not override ownership, online Group access, privacy removal, or reveal rules.
 - **0007–0008 (0007 partly v1 for personal Movie Discard; Group withdrawal and 0008 are v2):** Removal also covers app-controlled copies and stale assembled versions, prevents delayed-upload resurrection, and preserves capacity consumption. Group original sources have a seven-day post-Release export window; surviving Developed Clips are kept for reassembly without originals.
-- **0009 (partly v1):** Archive is a separate optional, reversible, per-user library operation. Deleting an activated unused Trial Film first requires confirmed original-device online cancellation. Used Trial eligibility is never refunded.
-- **0010–0011 (v2 Groups only, except personal-Film survival):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD.
+- **0009 (partly v1):** Archive is a separate optional, reversible, per-user library operation. Used Trial eligibility is never refunded. In version 1.1 deleting an activated unused Trial Film first required confirmed original-device online cancellation; in v1.2 an unused Trial Film is deleted without a cancellation step, because that rule belonged to the Account-scoped Trial (ADR 0012).
+- **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
 
@@ -168,3 +177,35 @@ Standalone source: [0011-host-account-deletion-preserves-shared-privacy.md](adr/
 Deleting a Host's Account disables new joins and captures in their Group Films and permanently removes their own contributions rather than deleting everyone else's media. Other contributors' unreleased media stays sealed with no automatic Development, Release, or replacement Host, trading future reveal for preservation of the original privacy boundary. Contributors retain withdrawal rights, and already released Films remain accessible under their existing access rules.
 
 ---
+
+## Decision records added after the original eleven
+
+### ADR 0012
+
+Standalone source: [0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md](adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md)
+
+# V1 Trial is one Film per iPhone, held on the device, with no app Accounts
+
+The v1 Trial is one free Trial Film per iPhone, remembered on the phone in the Keychain, which normally survives deleting and reinstalling the app.
+v1 therefore has no app Accounts, no sign-in, no server and no Account deletion flow.
+Capture, Development, Darkroom, storage and export happen on the phone, and the subscription is bought, checked and restored through StoreKit and the user's Apple ID.
+
+Moving Group Films to v2 left the Trial as the only use of an Account, because paid personal use already needed none.
+Keeping an Account, a server reservation and an Account deletion flow only to stop a second free Film would have made a personal, on-phone app depend on a service.
+The accepted cost is that someone with several iPhones gets several free Films, which costs only a possible sale because Films never leave the phone.
+The Trial record stays bound to the physical iPhone and does not come back through a device-backup restore, so the Trial counts once per physical iPhone.
+The Keychain behavior is to be confirmed on iOS 26 by an early device check before Trial work is built.
+
+This reverses the domain model's Account-scoped Trial: the Account term, Trial eligibility tied to an Account across devices and reinstalls, Trial Activation as an online server reservation, Cancel Unused Trial, and Delete Account with Deletion Pending no longer apply to v1.
+Accounts return in v2 when Groups need them, and the retired rules are preserved for v2 in the PRD (section 8.13) and the tracker's Deferred to v2 section.
+Starting the Trial never needs connectivity.
+After a backup is restored onto a new phone, a Trial Film with captures keeps capturing and a started Trial Film with no captures stays usable.
+Restoring an older backup can bring back media discarded after it; that is accepted and disclosed in the privacy copy, with no removal log.
+
+Decided by the captain on 2026-09-30 (PRD version 1.2).
+
+---
+
+### Reconciliation note for ADR 0012
+
+Interpret the ADR's "one free Trial Film per iPhone" through [PRD FR-21](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film), which defines first-save consumption, unused-Trial replacement and restored-Film coexistence under DEC-16.

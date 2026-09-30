@@ -5,6 +5,10 @@
 > This prototype still simulates Group flows (Join with a code, Guest participation, shared loads, closure, Host Private Review and Release, Private Prints on Group photos, Group notifications), and the notes below keep describing them because v2 needs them.
 > Read those Group flows as v2 design study, not v1 scope.
 > The personal Film flows, Camera samples, Darkroom on personal photos, Development, and the selected Film Journal direction describe v1.
+>
+> **Version 1.2 note (2026-09-30).**
+> v1 also has no Account, sign-in, server or analytics, and runs on iOS 26, iPhone only.
+> Any sign-in or Account behavior this prototype simulates is v2 design study; the v1 Trial is one Film per iPhone held in the Keychain (ADR 0012).
 
 Question: which of three structurally different iPhone-style layouts makes loading, intentional capture, delayed reveal, and shared Host Release feel clearest?
 
