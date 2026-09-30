@@ -931,7 +931,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 | --- | --- | --- |
 | DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
 | DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling. Timing (captain decision): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2 | One-plan structure is fixed; commercial and edge entitlement behavior are not. Nothing in M0 and M1 depends on the price. |
-| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists Swift 6, SwiftUI, GRDB and Xcode Cloud only as a default (D8), not a decision | Required to turn proposed modules into deployable architecture. |
+| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists Swift 6, SwiftUI, GRDB and Xcode Cloud only as defaults (D4 and D8), not a decision | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
 | DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
