@@ -157,7 +157,7 @@ The permanent removal of a revealed capture without restoring the Exposure or re
 _Avoid_: Undo capture, refund Exposure, rewind
 
 **Delete Film**:
-The irreversible removal of an entire device-local personal **Film**, its retained media, and its **Darkroom** edits rather than individual captures.
+The explicit removal of an entire device-local personal **Film**, its retained media, and its **Darkroom** edits from current app-controlled storage rather than individual captures; restoring an iOS backup made before the deletion can bring the Film back.
 _Avoid_: Discard, Withdraw, hide Film, reset trial
 
 **Archive Film**:
@@ -378,8 +378,8 @@ _Avoid_: Draft, incomplete album
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
 - Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
 - The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; deleting a Trial Film with no successfully saved captures needs no cancellation step and does not consume Trial eligibility.
-- Delete Film permanently removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits without developing or revealing hidden captures.
-- The deletion warning explains the permanent loss, that a used **Trial Film** entitlement is not restored, and that copies already exported to Photos or elsewhere remain unaffected.
+- Delete Film removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits from current app-controlled storage without developing or revealing hidden captures.
+- The deletion warning explains the loss from current app-controlled storage, that a used **Trial Film** entitlement is not restored, that copies already exported to Photos or elsewhere remain unaffected, and that restoring an iOS backup made before the deletion can bring the whole Film back (DEC-17).
 - V1 **Delete Film** is personal-only; neither the **Host** nor another **Participant** may delete an entire **Group Film** for everyone, while existing capture withdrawal and Host moderation rights remain unchanged.
 - V1 **Archive Film** is an explicit, optional action available for personal Films (Group Films: v2); it affects only the archiving user's main library list, not another person's library.
 - Archived Films remain reachable in that user's archived list and may be returned to the main list without restoring deleted or withdrawn media or previously revoked access.
@@ -503,7 +503,7 @@ _Avoid_: Draft, incomplete album
 - The current iPhone's entitlement can have at most one Trial Film initiated from it at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
 - Someone with several iPhones gets several free Films; this costs only a possible sale, because Films never leave the phone.
 - After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film; either coexists with the restored phone's own entitlement without consuming or blocking it, and the phone's Trial record remains separate (DEC-16).
-- Restoring an older device backup can bring back media discarded after that backup; this is accepted and disclosed in the privacy copy, and the app keeps no removal log (DEC-17).
+- Restoring an older device backup can bring back app data removed after that backup, including discarded media or a deleted whole Film; this is accepted and disclosed in the privacy copy and Delete Film warning, and the app keeps no removal log (DEC-17).
 - Abandoning, deleting, or Discarding a Trial Film after its first successfully saved capture never restores Trial Film eligibility.
 - Every v1 Camera is available for the Trial Film.
 - A developed Trial Film remains available permanently; starting another personal Film after Trial Film eligibility is consumed requires a Subscription.
@@ -770,7 +770,7 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Film type" was used for the underlying vintage treatment — resolved: **Camera** is the complete selectable package in v1, and there is no separate film-stock choice.
 - "Front camera" could be confused with a separately selected vintage **Camera** — resolved: **Selfie Capture** uses the phone's front lens within the same Film and Camera package; v1 is not rear-camera-only.
 - Movie "orientation" could mean an individual clip's capture orientation or the final movie's presentation — resolved: clips may mix portrait and landscape, while **Movie Orientation** fixes one presentation frame chosen at Film setup, with opposite-orientation clips fitted using borders.
-- Personal Film deletion could be confused with per-capture **Discard** — resolved: **Delete Film** removes the whole personal Film after a warning, including an unfinished Film without preview; Discard removes one revealed capture while retaining the Film's chronology.
+- Personal Film deletion could be confused with per-capture **Discard** — resolved: **Delete Film** removes the whole personal Film from current app-controlled storage after a warning, including an unfinished Film without preview; Discard removes one revealed capture while retaining the Film's chronology. Restoring an iOS backup made before either removal can bring the removed data back (DEC-17).
 - (Deferred to v2 with Accounts.) Deleting an identity could be mistaken for erasing every local personal Film — resolved: account-independent paid personal Films remain on the device after Account or Guest deletion, while their deletion remains a separate **Delete Film** action; this preservation rule does not retain the deleted identity or its Group contributions.
 - (Deferred to v2 with Accounts.) Identity deletion could be mistaken for Subscription cancellation — resolved: the deletion flow warns subscribed users about continuing Apple billing and offers **Manage Subscription**, but cancellation or Subscription expiry is never a prerequisite for submitting immediate identity deletion.
 - (Deferred to v2 with Accounts.) Account-bound Trial eligibility could be confused with permanent Account ownership of captured Trial media — resolved: a Trial Film with successfully saved captures survives Account deletion without its Account linkage and remains finishable under its original capacity and Reveal Rule.

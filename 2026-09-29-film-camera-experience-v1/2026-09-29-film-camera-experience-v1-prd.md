@@ -47,7 +47,7 @@ The Trial rules the per-iPhone design left unsettled were raised as DEC-15 to DE
 
 6. **DEC-15.** Starting the Trial never needs connectivity.
 7. **DEC-16.** After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film.
-8. **DEC-17.** Restoring an older backup can bring back media discarded after that backup. This is accepted and disclosed in the privacy copy, with no removal log.
+8. **DEC-17.** Restoring an older backup can bring back app data removed after that backup, including discarded media or a deleted whole Film. This is accepted and disclosed in the privacy copy, with no removal log.
 
 ## 1. Problem statement
 
@@ -292,7 +292,7 @@ Unrevealed original captures stay in private app storage and are never written t
 
 Present the original-export choice at personal Development. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals will be irrecoverable. Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
 
-**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup. The privacy copy says that restoring an older backup can bring back media discarded after it (DEC-17).
+**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup. The privacy copy says that restoring an older backup can bring back app data removed after it, including discarded media or a deleted whole Film (DEC-17).
 
 ## 8. Deferred to v2 - Group Film and Account requirements
 
@@ -744,12 +744,12 @@ Movie removal deletes the selected clip's picture and audio, retained source, an
 
 **Tasks DEL-01–DEL-04**
 
-An owner may permanently delete an entire personal Photo or Movie Film, sealed or revealed, after a clear warning and explicit confirmation. Remove local Film details, retained sources, masters, Developed Clips, and reversible edits without developing or previewing sealed captures. Explain that used Trial eligibility is not restored and external exports remain.
+An owner may delete an entire personal Photo or Movie Film, sealed or revealed, from current app-controlled storage after a clear warning and explicit confirmation. Remove local Film details, retained sources, masters, Developed Clips, and reversible edits without developing or previewing sealed captures. Explain that used Trial eligibility is not restored, external exports remain, and restoring an iOS backup made before the deletion can bring the whole Film back (DEC-17).
 
 Deleting a Trial Film with zero saved captures needs no cancellation step and changes nothing about Trial eligibility, because eligibility is consumed only by the first successfully saved capture (FR-21).
 Deleting a Trial Film that has captured never restores eligibility.
 
-**Acceptance:** Personal deletion cannot trigger reveal or entitlement reset.
+**Acceptance:** Personal deletion cannot trigger reveal or entitlement reset. The deleted Film is no longer viewable or exportable from current app-controlled storage, and the confirmation and privacy copy disclose both unaffected external exports and restoration from a pre-deletion iOS backup.
 
 ### FR-19 — Delete Account and Deletion Pending (deferred to v2)
 
@@ -808,7 +808,7 @@ These are product states, not a final database schema. Capture, reveal, archive,
 | Personal Movie | Preview/setup orientation → Load → Clips → Complete → Development → Developed Movie | Early completion wastes duration; paused time is free. |
 | Instant | Load pack → capture → individual print Development/reveal → next capture | Revealed prints coexist with unused pack capacity. |
 | Trial | Browse → Start Trial Film from this iPhone's entitlement → first saved capture consumes that entitlement and writes the Keychain record | Reinstalling keeps the record; a restore onto another iPhone does not restore it; restored Trial Films retain separate rights and coexist with the destination entitlement; deleting an unused Trial Film changes nothing. |
-| Device backup | Films in an iOS device backup → restore onto a replacement iPhone → Films return | The Trial record does not come back; a restore of an older backup can bring back media discarded after it, which is accepted and disclosed (DEC-17). |
+| Device backup | Films in an iOS device backup → restore onto a replacement iPhone → Films return | The Trial record does not come back; a restore of an older backup can bring back app data removed after it, including discarded media or a deleted whole Film, which is accepted and disclosed (DEC-17). |
 
 Group flows and Group invariants are deferred to v2 (section 8.7).
 
@@ -861,7 +861,7 @@ Testing below is planned work, not completed production coverage. Assert observa
 Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, and Group identity/ownership tests) are deferred to v2 (section 8.9). The list below is renumbered. Version 1.2 replaced item 2 (identity tests, deferred to v2) with backup and restore tests.
 
 1. Domain/state tests: every Camera, full/early completion, Instant exception, immutable treatment, title/archive independence, entitlement expiration.
-2. Backup and restore tests: Films and sealed captures restore from an iOS device backup and stay sealed; the Trial record does not come back onto a different iPhone; a restore of an older backup can bring back media discarded after it, and the privacy copy discloses that (DEC-17).
+2. Backup and restore tests: Films and sealed captures restore from an iOS device backup and stay sealed; the Trial record does not come back onto a different iPhone; a restore of an older backup can bring back discarded media and an entire Film deleted after that backup, and the privacy copy and Delete Film confirmation disclose both outcomes (DEC-17).
 3. Media/privacy tests: source/master cleanup, stale Movie retirement, unchanged surviving Developed Clips, verified-master gates before source deletion.
 4. Native device tests (iPhone, iOS 26): front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
 5. Entitlement tests: Account-free paid use, StoreKit purchase restoration, expiry, and the per-iPhone Trial: a first successfully saved capture consumes the device-bound entitlement even offline and across reinstall; deleting a zero-save Trial Film leaves that entitlement available; and a Trial Film restored onto a different iPhone keeps its capture rights without consuming or blocking the destination iPhone's entitlement.
@@ -902,7 +902,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 | DEC-14 | Numeric learning targets for the TestFlight and interview plan (section 2.2) | Analytics is settled for v1: none, so no vendor or collection policy is needed. Targets still need to be set. |
 | DEC-15 | **Decided 2026-09-30 (captain, option A):** Starting the Trial Film never needs connectivity; Trial start works fully on the phone. Option B, checking the Apple ID's subscription status through StoreKit before the first Trial start, was not chosen. | The old rule needed an online server reservation; with no server, this settles that Trial start has no connectivity requirement. |
 | DEC-16 | **Decided 2026-09-30 (captain, option A for both cases):** After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity because those rights belong to the Film, and a started Trial Film with no captures stays usable as a Trial Film. The restored Film coexists with the new phone's own entitlement without consuming or blocking it. Option B for each (view and develop only; treat as an ordinary empty Film) was not chosen. | The restored iPhone is a different physical iPhone with its own Trial record, so carried-over Trial Films needed an explicit rule. |
-| DEC-17 | **Decided 2026-09-30 (captain, option A):** Restoring an older backup can bring back media discarded after that backup. Accept it and disclose it in the privacy copy, like Photos exports, with no removal log. Option B, a removal log in storage that survives a restore, was not chosen. | FR-06 and FR-16 promise that recovery never restores removed media; device backup, allowed by captain decision, can contradict that for old backups, and the disclosure keeps the promise honest. |
+| DEC-17 | **Decided 2026-09-30 (captain, option A):** Restoring an older backup can bring back app data removed after that backup, including discarded media or a deleted whole Film. Accept it and disclose it in the privacy copy and Delete Film confirmation, like Photos exports, with no removal log. Option B, a removal log in storage that survives a restore, was not chosen. | FR-06, FR-16 and FR-18 remove app-controlled media; device backup, allowed by captain decision, can restore an older copy, and the disclosure keeps the promise honest. |
 
 Do not resolve these by silently shipping assumptions that change the product's reveal, billing, privacy, or capacity promises. Implementation estimates and calendar release dates are not agreed.
 
@@ -955,7 +955,7 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | Prices and offers to be set in the requirements (DEC-02) | Captain decision, 2026-09-30 (version 1.2): decide monthly and yearly prices and offers later, before billing work starts in milestone 2, after testing willingness to pay with TestFlight testers. Nothing in milestones 0 and 1 depends on the price. |
 | Whether starting the Trial Film needs connectivity (DEC-15) | Captain decision, 2026-09-30 (version 1.2, option A): starting the Trial never needs connectivity. |
 | What a restored iPhone does with Trial Films (DEC-16) | Captain decision, 2026-09-30 (version 1.2, option A for both cases): after a backup is restored onto a new phone, a Trial Film with captures keeps capturing, and a started Trial Film with no captures stays usable as a Trial Film; either coexists with the new phone's own Trial entitlement without consuming or blocking it. |
-| Privacy removals versus restoring an older device backup (DEC-17) | Captain decision, 2026-09-30 (version 1.2, option A): restoring an older backup can bring back media discarded after that backup; this is accepted and disclosed in the privacy copy, with no removal log. |
+| Privacy removals versus restoring an older device backup (DEC-17) | Captain decision, 2026-09-30 (version 1.2, option A): restoring an older backup can bring back app data removed after that backup, including discarded media or a deleted whole Film; this is accepted and disclosed in the privacy copy and Delete Film confirmation, with no removal log. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 

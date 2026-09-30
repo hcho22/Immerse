@@ -39,7 +39,7 @@ Dependency: resolve relevant choices before the affected implementation is accep
 - [ ] DEC-14 — Approve numeric learning targets for the TestFlight and interview plan (PRD section 2.2). Settled 2026-09-30: no analytics SDK or service in v1; no implicit media telemetry.
 - [x] DEC-15 — Decide whether starting the Trial Film needs connectivity. Decided 2026-09-30 (option A): it never needs connectivity. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
 - [x] DEC-16 — Decide what a restored iPhone does with an unused Trial Film and with a captured Trial Film. Decided 2026-09-30 (option A for both): a captured Trial Film keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable; either coexists with the destination iPhone's own entitlement without consuming or blocking it. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
-- [x] DEC-17 — Decide how privacy removals (Discard, Delete Film, Movie reassembly) interact with a restore from an older device backup. Decided 2026-09-30 (option A): accept that an older backup can bring back discarded media, disclose it in the privacy copy, and keep no removal log. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
+- [x] DEC-17 — Decide how privacy removals (Discard, Delete Film, Movie reassembly) interact with a restore from an older device backup. Decided 2026-09-30 (option A): accept that an older backup can bring back removed app data, including discarded media or a deleted whole Film, disclose it in the privacy copy and Delete Film confirmation, and keep no removal log. Status: done | Evidence: captain decision 2026-09-30; PRD section 15, FR-16 and FR-18 | Completed: 2026-09-30
 
 ## ARC — Foundation and architecture
 
@@ -185,8 +185,8 @@ Dependency: media deletion/reassembly architecture. PRD FR-16.
 
 Dependency: STO, TRI. PRD FR-18.
 
-- [ ] DEL-01 — Add explicit permanent-loss confirmation for personal Photo/Movie Delete Film, sealed or revealed.
-- [ ] DEL-02 — Remove personal Film details, all retained media, and edits without revealing sealed content or deleting external exports.
+- [ ] DEL-01 — Add explicit confirmation that personal Photo/Movie Delete Film, sealed or revealed, removes the Film from current app-controlled storage while a pre-deletion iOS backup can bring it back.
+- [ ] DEL-02 — Remove personal Film details, all retained media, and edits from current app-controlled storage without revealing sealed content; disclose that external exports remain and restoring an iOS backup made before deletion can bring the whole Film back (DEC-17).
 - [ ] DEL-03 — Delete an unused Trial Film (zero saved captures) directly, with no cancellation step and no change to Trial eligibility.
 - [ ] DEL-04 — Never restore used Trial eligibility.
 
@@ -230,7 +230,7 @@ Dependency: relevant implemented slices; test continuously rather than waiting u
 - [ ] QA-12 — Verify subscription expiration, account-free paid use, and both halves of the per-iPhone Trial invariant: this iPhone's device-bound entitlement cannot start another Trial Film after its first successfully saved capture, including after reinstall or an offline first save, while deleting a zero-save Trial Film leaves the entitlement available; a captured or empty Trial Film restored from another iPhone keeps its capture rights, coexists with this iPhone's own Trial Film, and neither consumes nor blocks this iPhone's entitlement.
 - [ ] QA-13 — Verify supported devices (iPhone, iOS 26), accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets.
 - [ ] QA-14 — Complete production asset/licensing, disclosures/support, platform review, unresolved-decision review, and evidence-backed release sign-off; do not use prototype checks as native completion evidence.
-- [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not, and verify the DEC-17 outcome: a restore of an older backup can bring back discarded media, and the privacy copy discloses it.
+- [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not; restoring an older backup can bring back both media discarded after that backup and an entire Film deleted after it; and the privacy copy and Delete Film confirmation disclose both DEC-17 outcomes.
 
 ## Deferred to v2 — Group and Account tasks
 
@@ -546,4 +546,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | --- | --- |
 | 2026-09-29 | Created local v1 baseline from the recorded discussion, domain model, ADRs, and selected Film Journal prototype. |
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
-| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (each iPhone's device-bound entitlement can start at most one Trial Film, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). The captain decided DEC-15 to DEC-17 the same day (Trial start needs no connectivity; restored Trial Films keep their rights and coexist without consuming or blocking the destination entitlement; older-backup restores may bring back discarded media, disclosed, no removal log). |
+| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (each iPhone's device-bound entitlement can start at most one Trial Film, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). The captain decided DEC-15 to DEC-17 the same day (Trial start needs no connectivity; restored Trial Films keep their rights and coexist without consuming or blocking the destination entitlement; older-backup restores may bring back discarded media or a deleted whole Film, disclosed, no removal log). |
