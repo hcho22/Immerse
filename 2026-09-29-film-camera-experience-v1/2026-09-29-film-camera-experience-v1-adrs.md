@@ -41,7 +41,7 @@ Captain decision: the v1 Trial is one Film per iPhone held on the device, and v1
 Every statement below about Account deletion, Deletion Pending, Account-scoped Trial eligibility or a Trial server reservation therefore describes the deferred v2 design.
 Other version 1.2 decisions (iOS 26 iPhone only, iOS device backup with a device-bound Trial record, no analytics, price decided before M2 billing work) are recorded in the PRD.
 
-| ADR | Applicability after PRD version 1.1 |
+| ADR | Applicability after PRD version 1.2 |
 | --- | --- |
 | 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. |
 | 0002 | v2 Groups only. Join Film does not exist in v1. |
@@ -56,7 +56,7 @@ Other version 1.2 decisions (iOS 26 iPhone only, iOS device backup with a device
 | 0011 | v2 only. Host deletion behavior is Group design, and v1 has no Account deletion (ADR 0012), so the personal-Film survival note also applies only once Accounts return in v2. |
 | 0012 | Applies to v1. The Trial is one Film per iPhone held on the device, and v1 has no app Accounts, sign-in, server or Account deletion flow. It reverses the domain model's Account-scoped Trial; Accounts return in v2 with Groups. Added in version 1.2. |
 
-The per-ADR notes below are kept as originally written, updated only where they asserted v1 scope for Groups.
+The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
 - **0001:** Its original roll/Movie completion wording predates the accepted early-Development exception. The current rule permits intentional waste of remaining exposures/time after explicit warning. Instant remains per-exposure and personal-only. For v2 Groups, reveal additionally requires Host closure, Development, Private Review, and Release; exhausting the pool alone never reveals media.
 - **0002–0003 (v2 Groups only):** Code entry includes explicit Participant Join Confirmation, not individual Host approval or automatic enrollment. The installed iOS app is required. Ten active members includes the Host. Claiming a Guest preserves ownership and removal blocks.
@@ -208,4 +208,4 @@ Decided by the captain on 2026-09-30 (PRD version 1.2).
 
 ### Reconciliation note for ADR 0012
 
-The ADR's "one free Trial Film per iPhone" means that each iPhone's own device-bound Trial entitlement can start at most one Trial Film. Under DEC-16, a Trial Film restored from another iPhone keeps its Film-bound capture rights and coexists with the destination iPhone's own entitlement without consuming or blocking it.
+Interpret the ADR's "one free Trial Film per iPhone" through [PRD FR-21](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film), which defines first-save consumption, unused-Trial replacement and restored-Film coexistence under DEC-16.

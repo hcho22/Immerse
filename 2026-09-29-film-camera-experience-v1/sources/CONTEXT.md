@@ -9,7 +9,7 @@
 >
 > **Version 1.2 scope note (2026-09-30, PRD version 1.2, ADR 0012).**
 > By captain decision, v1 is a personal, on-phone iOS 26 iPhone app.
-> Each iPhone's device-bound Trial entitlement can start at most one Trial Film and is remembered on the phone in the Keychain; restored Trial Films retain their rights without consuming or blocking that entitlement. v1 therefore has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+> The per-iPhone Trial follows [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film). v1 has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
 > The terms Account, Trial Film, Trial Activation and Cancel Unused Trial were rewritten below, and the Trial rules were rewritten for the per-iPhone Trial.
 > The Account-only rules (Delete Account, Deletion Pending, Account-scoped Trial eligibility and Trial preservation after Account deletion) moved, verbatim, to the "Deferred to v2 - Account rules" section after the Relationships list; read any remaining mention of Account, sign-in, Account deletion or Deletion Pending as v2 design.
 > Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore; restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
@@ -396,7 +396,7 @@ _Avoid_: Draft, incomplete album
 - **Save Originals to Photos** is optional and available after personal reveal or Group Film Release, subject to Photos permission.
 - The developed master and reversible Darkroom edit data are retained after source cleanup.
 - When original export is chosen, source copies are removed only after saving to Photos succeeds.
-- When original export is declined, source captures are permanently deleted after the developed master is verified as safely stored and the user receives notice that originals will not be recoverable.
+- When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-09-29-film-camera-experience-v1-prd.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-09-29-film-camera-experience-v1-prd.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
 - The original-export choice is presented at personal Development or Group Film Release.
 - For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
 - Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
@@ -494,14 +494,14 @@ _Avoid_: Draft, incomplete album
 - An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
 - Personal Film use, including Subscription purchase, capture, Development, Darkroom work, export and the Trial Film, does not require an Account; v1 has no Account or sign-in.
 - Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
-- A non-subscriber may use each iPhone's own device-bound Trial entitlement to start at most one **Trial Film**, choosing either Photo or Movie; there is no Account or sign-in in v1.
+- V1 Trial eligibility and unused-Film replacement are defined in [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film).
 - The iPhone remembers its Trial entitlement in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore.
 - **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and it never needs connectivity (DEC-15).
 - After Trial Activation, Trial Film capture may continue without connectivity.
-- Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip (which writes the Keychain record), not during Camera browsing or empty Film setup.
+- For device-bound consumption and Keychain-write rules, including the distinction from restored Film rights, see [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film).
 - Failed captures that do not save successfully do not consume Trial Film eligibility.
 - The current iPhone's entitlement can have at most one Trial Film initiated from it at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
-- Someone with several iPhones gets several free Films; this costs only a possible sale, because Films never leave the phone.
+- [ADR 0012](../adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md) records the accepted cost of granting an entitlement per physical iPhone.
 - After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film; either coexists with the restored phone's own entitlement without consuming or blocking it, and the phone's Trial record remains separate (DEC-16).
 - Restoring an older device backup can bring back app data removed after that backup, including discarded media or a deleted whole Film; this is accepted and disclosed in the privacy copy and Delete Film warning, and the app keeps no removal log (DEC-17).
 - Abandoning, deleting, or Discarding a Trial Film after its first successfully saved capture never restores Trial Film eligibility.
@@ -792,7 +792,7 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Export" could mean sharing the developed Group Film or saving original source captures — resolved: any Participant with access may export released developed media, but may save only their own originals.
 - Saving developed images to native Photos was a condition of keeping personal Films device-local — resolved: v1 offers Save Developed to Photos for revealed media, while personal Film state and reversible edit history remain device-local without app-managed cloud backup.
 - Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved (version 1.2): v1 has no sign-in or Account, and the Trial is one Film per iPhone remembered in the Keychain, so it needs no identity; the version 1.1 Account-scoped resolution is preserved in the deferred section above.
-- A per-iPhone Trial could be mistaken for a per-Account or cross-device Trial — resolved: it counts once per physical iPhone, so someone with several iPhones gets several free Films, which costs only a possible sale because Films never leave the phone.
+- A per-iPhone Trial could be mistaken for a per-Account or cross-device Trial — resolved: [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film) defines the entitlement and restored-Film rules; ADR 0012 records the rationale.
 - Device backup could be mistaken for app-managed sync or for restoring the Trial — resolved: Films are included in iOS device backups and return on a restored phone, the app offers no sync of its own, and the Trial record stays bound to the device and does not come back through a restore.
 - "Add My Camera" could imply selecting a different Camera or moving a personal Film — resolved: **Add Shared Exposures** is an optional, explicit contribution of one full Subscriber Load to the existing Group Exposure Pool, with the exact Exposure count shown in its button label.
 - The no-deletion-before-reveal rule could leave a Participant's content permanently dependent on an inactive Host — resolved: **Withdraw Unreleased Captures** allows bulk removal of that Participant's own saved contributions before Release without preview, selective deletion, capacity refund, or Host approval.

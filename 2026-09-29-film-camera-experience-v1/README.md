@@ -16,7 +16,7 @@ The filenames begin with `2026-09-29` so this package can be sorted and retained
 ## Scope and implementation status
 
 Version 1.2 (September 30, 2026) makes v1 a personal, on-phone iOS 26 iPhone app.
-By captain decision (ADR 0012), each iPhone's device-bound Trial entitlement can start at most one Trial Film and is remembered on the phone in the Keychain; restored Trial Films keep their rights without consuming or blocking that entitlement. v1 therefore has no server, Accounts, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+The [PRD's Trial rules](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film) define device-bound entitlement, unused-Trial replacement and restored-Trial rights (ADR 0012). v1 has no server, Accounts, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
 Films are included in iOS device backups while the app offers no sync of its own, and the Trial record stays bound to the device.
 v1 has no analytics SDK or service; learning comes from App Store Connect, Apple's crash and performance reports, TestFlight testers and interviews.
 Prices and offers are decided before billing work starts in milestone 2.

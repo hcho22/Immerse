@@ -160,7 +160,7 @@ Dependency: ARC-03, DEV, approved media specifications. PRD FR-08.
 - [ ] STO-05 — Offer optional Save Originals to Photos independently of developed export after eligible reveal.
 - [ ] STO-06 — Implement Photos permission denial/write failures and success reporting; no false export completion.
 - [ ] STO-07 — Remove chosen personal original sources only after successful Photos saving and verified master retention.
-- [ ] STO-08 — On declined original export, explain irrecoverability and delete sources only after verified master storage.
+- [ ] STO-08 — On declined original export, delete sources only after verified master storage and show the source-cleanup disclosure specified in PRD FR-08.
 - [ ] STO-09 — Retain developed masters/clip assets/reversible edits after source cleanup; preserve offline personal viewing.
 - [ ] STO-10 — Explain flattened exports are not restorable Films; never automatically delete/archive the Film after export.
 - [ ] STO-11 — Include Film data in iOS device backups (no backup exclusion on Films; keep derivable or temporary files out to limit size) so restoring a phone restores its Films, and keep the Trial record out of the restore.
@@ -210,9 +210,9 @@ Dependency: DEC-02 (resolved before billing work starts in M2), ARC-05. PRD FR-2
 
 Dependency: ARC-05, CAP durability; DEC-15 and DEC-16 (decided) for Trial start without connectivity and restored Trial Films. PRD FR-21. TRI-05 to TRI-08 and TRI-10 moved to Deferred to v2 in version 1.2.
 
-- [ ] TRI-01 — Let each iPhone's own device-bound Trial entitlement start at most one full personal Photo OR Movie Trial Film with any Camera, with no Account or sign-in.
+- [ ] TRI-01 — Implement the per-iPhone Photo OR Movie Trial entitlement under [PRD FR-21](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film), including its unused-Film replacement rule.
 - [ ] TRI-02 — Record the iPhone's Trial entitlement in the Keychain so it survives deleting and reinstalling the app, stays bound to this physical iPhone, and is not restored onto another iPhone; a Trial Film restored from a backup keeps its own capture rights and coexists without consuming or blocking this iPhone's entitlement (DEC-16).
-- [ ] TRI-03 — Consume eligibility at first successfully saved exposure/clip, never browsing, loading, activation, or failed unsaved capture.
+- [ ] TRI-03 — Apply FR-21's first-save consumption rules to this iPhone's device-bound entitlement, including the distinction from restored Film rights.
 - [ ] TRI-04 — Write the Trial record atomically around the first successful save so app termination cannot leave a free second Trial; capture and Trial start need no server or connectivity (DEC-15).
 - [ ] TRI-09 — Preserve developed Trial access and reject entitlement refunds after used-Film deletion/Discard/abandonment or app reinstall.
 - [ ] TRI-11 — Early device check on iOS 26 hardware: confirm the Keychain Trial record survives deleting and reinstalling the app and is absent after restoring a backup onto a different iPhone; note the effect of an OS update and of an erase; report the result before Trial work is built. If the record does not survive, raise a new decision instead of adding a server or Account.
@@ -546,4 +546,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | --- | --- |
 | 2026-09-29 | Created local v1 baseline from the recorded discussion, domain model, ADRs, and selected Film Journal prototype. |
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
-| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (each iPhone's device-bound entitlement can start at most one Trial Film, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). The captain decided DEC-15 to DEC-17 the same day (Trial start needs no connectivity; restored Trial Films keep their rights and coexist without consuming or blocking the destination entitlement; older-backup restores may bring back discarded media or a deleted whole Film, disclosed, no removal log). |
+| 2026-09-30 | Version 1.2: captain decisions recorded in the PRD's version 1.2 notes and FR-21. Account-only tasks moved to Deferred to v2 with IDs unchanged; earlier task wording is preserved in the tables above. Added DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15; DEC-15 to DEC-17 were decided the same day. |
