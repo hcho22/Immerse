@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 1.1 (updated September 30, 2026)  
+**Prepared:** September 29, 2026 · **Version:** 1.1 (updated September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 

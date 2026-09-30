@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 1.1 (reconciliation notes updated September 30, 2026)  
+**Collection date:** September 29, 2026 · **Version:** 1.1 (reconciliation notes updated September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
@@ -168,5 +168,3 @@ Standalone source: [0011-host-account-deletion-preserves-shared-privacy.md](adr/
 Deleting a Host's Account disables new joins and captures in their Group Films and permanently removes their own contributions rather than deleting everyone else's media. Other contributors' unreleased media stays sealed with no automatic Development, Release, or replacement Host, trading future reveal for preservation of the original privacy boundary. Contributors retain withdrawal rights, and already released Films remain accessible under their existing access rules.
 
 ---
-
-

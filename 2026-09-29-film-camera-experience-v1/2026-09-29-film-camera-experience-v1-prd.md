@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 30, 2026 (version 1.1; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.1  
+**Document date:** September 30, 2026 (version 1.1; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.1\
 **Platform:** iOS · **Working product title:** Film Camera Experience (final brand not selected)  
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  

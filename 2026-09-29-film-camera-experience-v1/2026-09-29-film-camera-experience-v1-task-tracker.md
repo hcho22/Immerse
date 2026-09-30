@@ -1,8 +1,8 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.1 · **Platform:** iOS  
+**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.1 · **Platform:** iOS\
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
-**Status:** Planning baseline. Native implementation tasks are not complete.  
+**Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only. All Group tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
 
 ## How to use this tracker
