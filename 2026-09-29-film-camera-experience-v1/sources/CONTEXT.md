@@ -1,5 +1,13 @@
 # Film Camera Experience
 
+> **v1 scope note (2026-09-30, PRD version 1.1).**
+> This snapshot is the domain model from the September 29 handoff.
+> By captain decision, v1 ships personal Photo and Movie Films only, and all Group functionality is deferred to v2.
+> The Group vocabulary and rules below are kept because v2 needs them; they are not v1 requirements.
+> Read every rule about Group Films, Hosts, Participants, Guest Identities, Join Codes and Join Film, Subscriber Loads, Group Exposure and Duration Pools, Recording Turns, Closure, Private Review, Release, Release Notifications, Withdraw, Leave Film, Remove Participant, Delete Guest Identity, and Private Prints on Group Films as v2 design, including where the text says "v1".
+> Personal Film rules, the Camera catalog, the Trial Film, personal subscription and expiration, and Account deletion for a Trial Account apply to v1 unchanged.
+> The statements that assert overall v1 scope were corrected below; the Group-only rules were not rewritten.
+
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
 ## Language
@@ -173,7 +181,7 @@ The irreversible removal of a persistent **Account**, its associated personal da
 _Avoid_: Sign out, cancel Subscription, Delete Film, Leave Film
 
 **Subscription**:
-The single all-inclusive v1 plan, billed monthly or yearly, that unlocks every Camera, unlimited personal and Group Film creation, and one Camera load contribution per Photo Group Film.
+The single all-inclusive v1 plan, billed monthly or yearly, that unlocks every Camera and unlimited personal Film creation; Group Film creation and one Camera load contribution per Photo Group Film are deferred to v2.
 _Avoid_: Exposure wallet, per-event purchase, feature tier, lifetime unlock
 
 **Manage Subscription**:
@@ -347,9 +355,9 @@ _Avoid_: Draft, incomplete album
 ## Relationships
 
 - The v1 home is the **Film Library**, showing the user's unfinished and developed Films, including intermediate capture and Development states under their existing access rules.
-- **Start a Film** is the home library's primary action, and **Join Film** is its secondary action.
-- Start a Film begins with a Personal or Group choice, with Personal selected by default; Camera selection follows that choice.
-- Group creation presents only Group-compatible Cameras; Instant Cameras are not offered as selectable Group options in v1.
+- **Start a Film** is the home library's primary action; **Join Film** as its secondary action is deferred to v2 with Groups.
+- In v1, Start a Film begins directly with Camera selection for a personal Film; the Personal or Group choice, with Personal selected by default, is deferred to v2.
+- Group creation (deferred to v2) presents only Group-compatible Cameras; Instant Cameras are not offered as selectable Group options.
 - **Camera Preview** is available to everyone browsing a new personal or Group Film, including prospective Trial users, before Account sign-in or Trial Activation.
 - Camera Preview uses curated sample photos or a short sample movie plus the Camera's capacity, controls, Reveal Rule, and audio behavior; it never applies the treatment to a live feed or displays a user's unrevealed captures.
 - Browsing Camera Previews does not create or activate a Trial Film, reserve or consume Trial eligibility, lock a Film's Camera, or grant Group capture access.
@@ -373,7 +381,7 @@ _Avoid_: Draft, incomplete album
 - Delete Film permanently removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits without developing or revealing hidden captures.
 - The deletion warning explains the permanent loss, that a used **Trial Film** entitlement is not restored, and that copies already exported to Photos or elsewhere remain unaffected.
 - V1 **Delete Film** is personal-only; neither the **Host** nor another **Participant** may delete an entire **Group Film** for everyone, while existing capture withdrawal and Host moderation rights remain unchanged.
-- V1 **Archive Film** is an explicit, optional action available for personal and Group Films; it affects only the archiving user's main library list, not another person's library.
+- V1 **Archive Film** is an explicit, optional action available for personal Films (Group Films: v2); it affects only the archiving user's main library list, not another person's library.
 - Archived Films remain reachable in that user's archived list and may be returned to the main list without restoring deleted or withdrawn media or previously revoked access.
 - Archive Film does not delete media, change a Film's reveal or Development state, end a Trial Activation, free Group membership or Camera load slots, change capture capacity, or relinquish the Host role.
 - Existing Group Film access checks, online viewing requirements, withdrawal rights, and original-export deadlines continue to apply to archived Films.
@@ -382,7 +390,7 @@ _Avoid_: Draft, incomplete album
 - Saving developed media to Photos preserves the selected visual or audiovisual result, not a restorable app Film or its reversible Darkroom edit history, and does not automatically remove the local Film.
 - Users are told that device-local Films may be lost without a recoverable device backup, and that saving developed media to Photos preserves exported results rather than the complete app Film.
 - Unrevealed original captures remain in private app storage and are never saved to Apple Photos before reveal.
-- V1 Films are capture-only: every Exposure and Recorded Clip must be newly captured inside the app using that Film's selected Camera, for both personal and Group Films.
+- V1 Films are capture-only: every Exposure and Recorded Clip must be newly captured inside the app using that Film's selected Camera, for personal Films (and Group Films in v2).
 - Existing photos or videos cannot be imported from Apple Photos, Files, or another app into a v1 Film or given a Film's Developed Treatment through an import flow.
 - Apple Photos integration saves revealed Developed Exports and optional original source captures; it does not import existing media into Films.
 - **Save Originals to Photos** is optional and available after personal reveal or Group Film Release, subject to Photos permission.
@@ -396,7 +404,7 @@ _Avoid_: Draft, incomplete album
 - Exported originals are independent copies outside the app's control; Discard and Withdraw cannot recall copies exported by others.
 
 - A **Film** uses exactly one **Camera**.
-- V1 supports rear-facing capture and **Selfie Capture** in both personal and Group Photo and Movie Films.
+- V1 supports rear-facing capture and **Selfie Capture** in personal Photo and Movie Films (and Group Photo and Movie Films in v2).
 - Choosing the phone's front or rear lens does not replace the selected **Camera**, undo **Camera Lock**, add capture capacity, or bypass **Development** or **Release**.
 - Front/rear switching is available only between **Exposures** or between **Recorded Clips**, never during capture or active recording.
 - **Selfie Capture** uses a mirrored live **Viewfinder** for framing, but its developed photos and movies are unmirrored.
@@ -413,7 +421,7 @@ _Avoid_: Draft, incomplete album
 - A personal owner or Group Host may change the Film Title after **Load Film**, including after Development; renaming never changes the selected Camera, capture capacity, chronology, or Reveal Rule.
 - A **Photo Film** has exactly one **Exposure Limit** and contains zero or more **Exposures**.
 - A **Movie Film** has exactly one **Duration Limit** and contains one or more recorded clips when complete.
-- V1 **Movie Films** support both portrait and landscape capture in personal and Group Films, including **Selfie Capture**; landscape capture is not mandatory.
+- V1 **Movie Films** support both portrait and landscape capture in personal Films (and Group Films in v2), including **Selfie Capture**; landscape capture is not mandatory.
 - A **Movie Film** may mix portrait and landscape **Recorded Clips**; users may change capture orientation between clips.
 - Each **Recorded Clip** keeps the capture orientation selected when recording begins until that recording stops.
 - Each **Movie Film** has one **Movie Orientation** chosen at setup by its personal owner or, for a Group Film, its **Host**.
@@ -502,7 +510,7 @@ _Avoid_: Draft, incomplete album
 - A Host must use an **Account** authenticated through Apple or Google.
 - A Host must have an active monthly or yearly **Subscription** to create a Group Film.
 - V1 offers one all-inclusive Subscription with no feature or Camera tiers.
-- An active Subscription permits unlimited personal and Group Film creation with no per-Film charge.
+- An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
 - Paid personal Film use, including Subscription purchase, capture, Development, Darkroom work, and export, does not require a separate app Account.
 - Apple or Google Account authentication is required before creating a Trial Film, hosting a Group Film, or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
 - A non-subscriber with an Account may use exactly one **Trial Film**, choosing either Photo or Movie.
@@ -635,7 +643,7 @@ _Avoid_: Draft, incomplete album
 - A **Developed Treatment** may include **Authentic Imperfections**, but random Development effects must not make an otherwise valid capture completely unusable.
 - Severe failures may result from authentic capture conditions such as darkness, motion, an obstructed lens, or incorrect manual exposure.
 - The **Darkroom** may adjust a Developed Treatment within analog constraints but cannot replace it.
-- V1 Darkroom adjustments apply only to Photo Films, including personal Exposures and eligible Group Film Private Prints; Movie Films have no Darkroom or post-Development Basic Edits.
+- V1 Darkroom adjustments apply only to Photo Films, including personal Exposures (and, in v2, eligible Group Film Private Prints); Movie Films have no Darkroom or post-Development Basic Edits.
 - A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Withdraw, Developed Export, and silent-format Soundtrack choice remain separate actions, not Movie Darkroom editing.
 - A developed **Exposure** may receive its own **Basic Edits** independently of every other Exposure in the Film.
 - After Group Film Release, the Host and Participants with current access may use the Darkroom only on Group Exposures they captured themselves.
