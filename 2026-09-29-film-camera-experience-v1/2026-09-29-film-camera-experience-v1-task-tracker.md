@@ -1,9 +1,9 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.1 · **Platform:** iOS\
+**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.2 · **Platform:** iOS 26, iPhone only\
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
-**Scope:** v1 is personal Photo and Movie Films only. All Group tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
+**Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
 
 ## How to use this tracker
 
@@ -11,7 +11,7 @@ This is the canonical checkbox list for the dated PRD. Every functional area has
 
 Suggested annotation: `Owner: … | Status: in progress / blocked / done | Evidence: … | Completed: YYYY-MM-DD`. State any unresolved prerequisite rather than checking a task off because a mockup demonstrates it. `DEC` items resolve open choices; `ARC` items design implementation; other groups implement or verify the recorded product behavior. All are needed for the corresponding scoped function unless the product owner explicitly revises scope.
 
-**Task counts (version 1.1).** The tracker still contains 227 items with unchanged IDs: five completed discovery/prototype items, 128 unchecked v1 tasks (implementation, decision, architecture, and verification), and 94 unchecked tasks deferred to v2 with Groups. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, it keeps its ID with the Group clause removed; the removed wording is preserved in the table at the end of the Deferred to v2 section.
+**Task counts (version 1.2).** The tracker contains 233 items: five completed discovery/prototype items, 120 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
 
 Each task inherits the acceptance criteria and privacy/reveal constraints of its referenced PRD section. For example, completing a Photos export task requires permission and failure behavior, not just a visible button. The final QA section supplies cross-feature verification, not a replacement for task-level checks.
 
@@ -28,25 +28,27 @@ Each task inherits the acceptance criteria and privacy/reveal constraints of its
 Dependency: resolve relevant choices before the affected implementation is accepted. See PRD section 15.
 
 - [ ] DEC-01 — Select final brand/product name and final user-facing terminology/copy.
-- [ ] DEC-02 — Set monthly/yearly pricing and specify purchase restoration, offers, refunds/revocations, and entitlement edge handling without changing existing-Film access promises.
-- [ ] DEC-03 — Choose minimum iOS/device support, native application stack, backend, and authentication providers.
+- [ ] DEC-02 — Set monthly/yearly pricing and specify purchase restoration, offers, refunds/revocations, and entitlement edge handling without changing existing-Film access promises. Timing (captain decision 2026-09-30): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2; nothing in M0-M1 depends on the price.
+- [ ] DEC-03 — Choose the native application stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 has no backend or authentication provider.
 - [ ] DEC-04 — Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls.
 - [ ] DEC-05 — Select and clear production sample media and export-licensed built-in instrumental soundtracks.
-- [ ] DEC-07 — Resolve Trial eligibility enforcement after Account deletion and any necessary retention with explicit privacy rules.
 - [ ] DEC-09 — Define empty-Film early Development and presentation when every Movie clip is removed.
 - [ ] DEC-11 — Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior.
 - [ ] DEC-12 — Define low-storage behavior, supported-device/accessibility matrix, media durability, and measurable performance/reliability budgets.
 - [ ] DEC-13 — Define support escalation, privacy disclosures, and platform/launch review requirements.
-- [ ] DEC-14 — Approve success metrics/targets and decide whether to add privacy-respecting analytics; no implicit media telemetry.
+- [ ] DEC-14 — Approve numeric learning targets for the TestFlight and interview plan (PRD section 2.2). Settled 2026-09-30: no analytics SDK or service in v1; no implicit media telemetry.
+- [ ] DEC-15 — Decide whether starting the Trial Film needs connectivity. needs-decision: options in PRD section 15.
+- [ ] DEC-16 — Decide what a restored iPhone does with an unused Trial Film and with a captured Trial Film, given the Trial record does not come back through a restore. needs-decision: options in PRD section 15.
+- [ ] DEC-17 — Decide how privacy removals (Discard, Delete Film, Movie reassembly) interact with a restore from an older device backup. needs-decision: options in PRD section 15.
 
 ## ARC — Foundation and architecture
 
 Dependency: relevant DEC items. PRD sections 11–13. Proposed engineering work, not a preselected vendor architecture.
 
-- [ ] ARC-01 — Establish native application build, local development setup, supported devices, and test environments.
+- [ ] ARC-01 — Establish native application build, local development setup, supported devices (iPhone, iOS 26), and test environments.
 - [ ] ARC-02 — Design separate Film, capture, reveal, entitlement, archive, and deletion state models with enforceable invariants.
-- [ ] ARC-03 — Design local media persistence, atomic save/recovery boundaries, Camera versioning, and developed-master integrity checks.
-- [ ] ARC-05 — Design identity, subscription validation, and Trial reservation/consumption.
+- [ ] ARC-03 — Design local media persistence, atomic save/recovery boundaries, device-backup contents, Camera versioning, and developed-master integrity checks.
+- [ ] ARC-05 — Design StoreKit subscription validation and the per-iPhone Trial record (Keychain), with Trial consumption recoverable around app termination.
 - [ ] ARC-06 — Design private source/master/clip storage, privacy tombstones, deletion jobs, and stale-version retirement.
 - [ ] ARC-07 — Document approved technical decisions and verification strategy without treating the disposable browser prototype as production architecture.
 
@@ -83,8 +85,8 @@ Retired v1 task IDs: CAM-04, CAM-08, and CAM-09. See the PRD's v1 scope and Came
 Dependency: UX, CAM, entitlement interfaces. PRD FR-03.
 
 - [ ] SET-01 — Start with Camera selection.
-- [ ] SET-03 — Permit curated Camera Preview before sign-in/activation with no live filter feed or user capture access.
-- [ ] SET-04 — Ensure browsing/canceling previews consumes/reserves no Trial and creates no active Film.
+- [ ] SET-03 — Permit curated Camera Preview before subscribing or starting the Trial with no live filter feed or user capture access.
+- [ ] SET-04 — Ensure browsing/canceling previews consumes no Trial and creates no active Film.
 - [ ] SET-05 — Add explicit Load Film confirmation showing Camera, capacity, and Reveal Rule.
 - [ ] SET-06 — Lock Camera package permanently at Load while preserving adjustable supported focus/flash/exposure controls.
 - [ ] SET-08 — Add Movie Orientation setup and lock at the agreed boundary.
@@ -100,7 +102,7 @@ Dependency: CAM, SET, ARC-03. PRD FR-04.
 - [ ] CAP-05 — Mirror front viewfinders but produce unmirrored saved/developed photo and movie results.
 - [ ] CAP-06 — Permit lens switching only between exposures/clips; block switches during capture/recording.
 - [ ] CAP-07 — Expose only Camera-authentic, hardware-supported controls and explain unavailable capabilities briefly.
-- [ ] CAP-08 — Support entitled personal offline capture; enforce prior online Trial Activation where applicable.
+- [ ] CAP-08 — Support entitled personal offline capture with no server dependency; connectivity at Trial start follows DEC-15.
 - [ ] CAP-09 — Handle camera permission, save failures, storage interruptions, and relaunch without false successful-save/capacity consumption.
 - [ ] CAP-10 — Keep saved sealed media private: no review, individual delete, thumbnails, or automatic Photos export before reveal.
 
@@ -152,7 +154,7 @@ Dependency: DEV, DEC-04/DEC-11. PRD FR-07.
 Dependency: ARC-03, DEV, approved media specifications. PRD FR-08.
 
 - [ ] STO-01 — Persist personal Film metadata, sources, masters, Developed Clips, and edits device-locally across relaunch.
-- [ ] STO-02 — Explain local-only storage/device-loss risk and that Account sign-in does not create Film backup/sync.
+- [ ] STO-02 — Explain that Films live on this iPhone and are included in iOS device backups, that the app has no sync or backup of its own, and that a lost phone without a device backup loses its Films.
 - [ ] STO-03 — Store unrevealed sources privately with no pre-reveal write to native Photos.
 - [ ] STO-04 — Offer optional Save Developed to Photos for eligible photographs and complete Movies.
 - [ ] STO-05 — Offer optional Save Originals to Photos independently of developed export after eligible reveal.
@@ -161,13 +163,12 @@ Dependency: ARC-03, DEV, approved media specifications. PRD FR-08.
 - [ ] STO-08 — On declined original export, explain irrecoverability and delete sources only after verified master storage.
 - [ ] STO-09 — Retain developed masters/clip assets/reversible edits after source cleanup; preserve offline personal viewing.
 - [ ] STO-10 — Explain flattened exports are not restorable Films; never automatically delete/archive the Film after export.
+- [ ] STO-11 — Include Film data in iOS device backups (no backup exclusion on Films; keep derivable or temporary files out to limit size) so restoring a phone restores its Films, and keep the Trial record out of the restore.
 
 ## IDN — Authentication
 
-Dependency: ARC-05. PRD FR-20/FR-21.
+No v1 tasks. v1 has no Account or sign-in, so IDN-01 and IDN-04 moved to Deferred to v2 in version 1.2.
 
-- [ ] IDN-01 — Integrate Apple and Google Account authentication for Trial.
-- [ ] IDN-04 — Enforce Account prerequisites only where required; preserve account-free paid personal use.
 
 ## PRV — Capture privacy and Discard
 
@@ -178,7 +179,7 @@ Dependency: media deletion/reassembly architecture. PRD FR-16.
 - [ ] PRV-06 — Enforce no refunds of exposures/time.
 - [ ] PRV-07 — Retire affected Movie versions and rebuild from unchanged surviving clips without repeating Development.
 - [ ] PRV-08 — Preserve surviving chronology, final orientation, and selected soundtrack through reassembly; handle all-clips-removed policy once decided.
-- [ ] PRV-10 — Explain permanent app removal and external-copy limitations; verify no stale viewing/export after accepted privacy action.
+- [ ] PRV-10 — Explain permanent app removal and the limits of external exports and device backups; verify no stale viewing/export after accepted privacy action (backup-restore handling per DEC-17).
 
 ## DEL — Whole personal Film deletion
 
@@ -186,44 +187,35 @@ Dependency: STO, TRI. PRD FR-18.
 
 - [ ] DEL-01 — Add explicit permanent-loss confirmation for personal Photo/Movie Delete Film, sealed or revealed.
 - [ ] DEL-02 — Remove personal Film details, all retained media, and edits without revealing sealed content or deleting external exports.
-- [ ] DEL-03 — For unused activated Trial Films, require confirmed original-device online cancellation before deleting; retain Film on uncertainty.
+- [ ] DEL-03 — Delete an unused Trial Film (zero saved captures) directly, with no cancellation step and no change to Trial eligibility.
 - [ ] DEL-04 — Never restore used Trial eligibility.
 
 ## IDD — Account deletion lifecycle
 
-Dependency: IDN, BIL, TRI; relevant DEC-07 decision. PRD FR-19.
+No v1 tasks. v1 has no Account, so there is no Account deletion; all IDD tasks moved to Deferred to v2 in version 1.2. PRD FR-19 is a v2 stub.
 
-- [ ] IDD-01 — Offer Delete Account with online submission and honest offline messaging.
-- [ ] IDD-05 — Keep Deletion Pending until permanent identity/data removal is confirmed; failures/sign-out are not completion.
-- [ ] IDD-10 — Preserve eligible paid personal Films and captured Trials locally without deleted identity linkage, capacity reset, or automatic reveal.
-- [ ] IDD-11 — Cancel zero-saved-capture Trial activation during Account deletion so it cannot persist as an account-free free-capture entitlement.
-- [ ] IDD-12 — Warn subscribed users of continuing Apple billing and offer Manage Subscription without making cancellation/expiry a deletion prerequisite.
 
 ## BIL — All-inclusive subscription
 
-Dependency: DEC-02, ARC-05. PRD FR-20.
+Dependency: DEC-02 (resolved before billing work starts in M2), ARC-05. PRD FR-20.
 
 - [ ] BIL-01 — Implement one all-inclusive monthly/yearly subscription using approved pricing and product configuration.
 - [ ] BIL-02 — Permit unlimited new entitled personal Films and all Cameras without per-Film charges or tiers.
-- [ ] BIL-03 — Support purchase and paid personal use without a separate app Account.
+- [ ] BIL-03 — Support purchase, restoration and all personal use through StoreKit and the Apple ID, with no app Account, sign-in or server.
 - [ ] BIL-05 — On expiry block only new Films, retaining existing capture/completion/edit/export rights.
-- [ ] BIL-06 — Implement purchase restoration, renewal, entitlement reconciliation, and approved refund/revocation behavior.
-- [ ] BIL-07 — Provide subscription-management entry and clear distinction between billing cancellation, identity deletion, and Film deletion.
+- [ ] BIL-06 — Implement StoreKit purchase restoration, renewal, entitlement checks, and approved refund/revocation behavior.
+- [ ] BIL-07 — Provide subscription-management entry and clear distinction between billing cancellation and Film deletion.
 
-## TRI — Account-scoped one-Film trial
+## TRI — Per-iPhone one-Film trial
 
-Dependency: IDN, ARC-05, CAP durability. PRD FR-21.
+Dependency: ARC-05, CAP durability; DEC-15 and DEC-16 for Trial start connectivity and restore behavior. PRD FR-21. TRI-05 to TRI-08 and TRI-10 moved to Deferred to v2 in version 1.2.
 
-- [ ] TRI-01 — Offer exactly one full personal Photo OR Movie Trial Film with any Camera after required Account sign-in.
-- [ ] TRI-02 — Reserve eligibility online for one Film on one original device across devices/reinstalls.
+- [ ] TRI-01 — Offer exactly one full personal Photo OR Movie Trial Film per iPhone with any Camera, with no Account or sign-in.
+- [ ] TRI-02 — Record the iPhone's Trial in the Keychain so it survives deleting and reinstalling the app, stays bound to this physical iPhone, and is not restored onto another iPhone.
 - [ ] TRI-03 — Consume eligibility at first successfully saved exposure/clip, never browsing, loading, activation, or failed unsaved capture.
-- [ ] TRI-04 — Support offline capture after activation and reconcile first-save consumption without permitting another Trial.
-- [ ] TRI-05 — Implement original-device online Cancel Unused Trial only before first successful save.
-- [ ] TRI-06 — Confirm old activation ends before releasing eligibility; reject capture from canceled activations and uncertain replacement trials.
-- [ ] TRI-07 — Keep unresolved activation reserved while Account exists, with no automatic expiry/lost-device replacement.
-- [ ] TRI-08 — Warn about original-device reservation and lack of automatic recovery before activation.
-- [ ] TRI-09 — Preserve developed Trial access and reject entitlement refunds after used-Film deletion/Discard/abandonment.
-- [ ] TRI-10 — Implement Account-deletion exceptions for captured versus unused Trials and the approved post-deletion eligibility policy.
+- [ ] TRI-04 — Write the Trial record atomically around the first successful save so app termination cannot leave a free second Trial; capture needs no server.
+- [ ] TRI-09 — Preserve developed Trial access and reject entitlement refunds after used-Film deletion/Discard/abandonment or app reinstall.
+- [ ] TRI-11 — Early device check on iOS 26 hardware: confirm the Keychain Trial record survives deleting and reinstalling the app and is absent after restoring a backup onto a different iPhone; note the effect of an OS update and of an erase; report the result before Trial work is built. If the record does not survive, raise a new decision instead of adding a server or Account.
 
 ## QA — Cross-feature acceptance and launch readiness
 
@@ -234,26 +226,28 @@ Dependency: relevant implemented slices; test continuously rather than waiting u
 - [ ] QA-03 — Verify deterministic Development restart across app termination and no treatment rerolls or media loss.
 - [ ] QA-04 — Verify every Darkroom control, per-exposure isolation, reset, and exclusion of prohibited editing.
 - [ ] QA-09 — Verify source deletion, failed Photos writes, verified-master gating, and unaffected external exports.
-- [ ] QA-10 — Verify Account deletion pending/completion.
 - [ ] QA-11 — Verify Movie stale-version retirement and unchanged surviving clip treatment/audio/order/orientation/soundtrack after removals.
-- [ ] QA-12 — Verify subscription expiration, account-free paid use, multi-device Trial contention, cancellation uncertainty, and preserved personal Films after Account deletion.
-- [ ] QA-13 — Verify supported devices, accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets.
+- [ ] QA-12 — Verify subscription expiration, account-free paid use, the per-iPhone Trial (one Film per iPhone, reinstall, no second Trial, offline first save, unused-Trial deletion), and Trial behavior after a restore onto a different iPhone.
+- [ ] QA-13 — Verify supported devices (iPhone, iOS 26), accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets.
 - [ ] QA-14 — Complete production asset/licensing, disclosures/support, platform review, unresolved-decision review, and evidence-backed release sign-off; do not use prototype checks as native completion evidence.
+- [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not, and verify the DEC-17 outcome for media removed after a backup was taken.
 
-## Deferred to v2 — Group tasks
+## Deferred to v2 — Group and Account tasks
 
 > **Deferred to v2. None of these tasks is part of v1.**
 > Captain decision, 2026-09-30: v1 ships personal Films only, and Groups for photos and video move to v2.
 > Task IDs, text, dependencies and PRD references are kept exactly as in version 1.0 so v2 can pick them up without archaeology.
-> References to PRD FR-09 to FR-15 and FR-17 now point to PRD section 8 (Deferred to v2); other Group parts are in PRD sections 8.4 to 8.12.
+> Version 1.2 (2026-09-30) also moved the Account-only tasks here, marked "moved in 1.2", with their version 1.1 text, because v1 has no Account, sign-in, server or Account deletion (captain decision, ADR 0012).
+> References to PRD FR-09 to FR-15 and FR-17 now point to PRD section 8 (Deferred to v2); other Group parts are in PRD sections 8.4 to 8.12, and the Account parts are in section 8.13.
 > "v1" in preserved task text means the version 1.0 baseline that included Groups; read it as the first Group release.
 > Like PRD section 16, this list is not implementation approval or a committed v2 roadmap.
 
-### DEC — Open decisions (Group-only tasks)
+### DEC — Open decisions (Group-only and Account-only tasks)
 
 Dependency: resolve relevant choices before the affected implementation is accepted. See PRD section 15.
 
 - [ ] DEC-06 — Decide long-term Group retention, abandoned sealed-Film policy, storage economics, and deletion/backup timing; do not invent automatic closing.
+- [ ] DEC-07 — Resolve Trial eligibility enforcement after Account deletion and any necessary retention with explicit privacy rules. *(Account-only; moved in 1.2)*
 - [ ] DEC-08 — Resolve lost Guest/device recovery, Account-link collisions, and account-free subscription-to-Account mapping for Group benefits.
 - [ ] DEC-10 — Define unresolved reservation/Recording Turn recovery, authoritative chronology across devices, and missing-capture exclusion accounting.
 
@@ -289,12 +283,14 @@ Dependency: DEV, DEC-04/DEC-11, Group authorization for Private Prints. PRD FR-0
 
 - [ ] DRK-07 — Allow post-Release contributor-only Private Prints, keeping shared originals unchanged and exports permission-checked.
 
-### IDN — Authentication and Guest ownership (Group-only tasks)
+### IDN — Authentication and Guest ownership (Group-only and Account-only tasks)
 
 Dependency: ARC-05, DEC-08. PRD FR-09/FR-20/FR-21.
 
+- [ ] IDN-01 — Integrate Apple and Google Account authentication for Trial. *(Account-only; moved in 1.2)*
 - [ ] IDN-02 — Create secure device-bound Guest Identity with display name and capture ownership without Account signup.
 - [ ] IDN-03 — Implement optional Claim Guest Identity preserving contributions, membership, load history, and removal blocks.
+- [ ] IDN-04 — Enforce Account prerequisites only where required; preserve account-free paid personal use. *(Account-only; moved in 1.2)*
 - [ ] IDN-05 — Provide ownership-specific privacy access after leaving/removal without reopening general album access.
 
 ### GRP — Group setup, codes, joining, and fixed Host
@@ -416,17 +412,22 @@ Dependency: GRP, IDN, PRV. PRD FR-17.
 - [ ] MEM-05 — Preserve removal blocks through code changes and Guest claiming; preserve former contributor's privacy rights.
 - [ ] MEM-06 — Communicate known-identity—not guaranteed person-level—blocking and distinguish leave/remove/archive/delete.
 
-### IDD — Account/Guest deletion lifecycle (Group-only tasks)
+### IDD — Account/Guest deletion lifecycle (Group-only and Account-only tasks)
 
 Dependency: IDN, PRV, BIL, TRI, ARC-06; relevant DEC-06/DEC-07 decisions. PRD FR-19.
 
+- [ ] IDD-01 — Offer Delete Account with online submission and honest offline messaging. *(Account-only; moved in 1.2)*
 - [ ] IDD-02 — Cover all own Group contributions, including claimed Guest captures, hosted/joined Films, and left/removed memberships.
 - [ ] IDD-03 — On acceptance, immediately block covered sources/results/Private Prints/cached copies from viewing/export.
 - [ ] IDD-04 — Block assembled Movies containing covered clips until privacy-safe reassembly; preserve other contributors' unchanged clips.
+- [ ] IDD-05 — Keep Deletion Pending until permanent identity/data removal is confirmed; failures/sign-out are not completion. *(Account-only; moved in 1.2)*
 - [ ] IDD-06 — Prohibit pending identities from joining, starting Group captures/turns, adding exposures, or claiming/linking to evade removal.
 - [ ] IDD-07 — On Host deletion acceptance, disable hosted joins/captures and codes without deleting others' media or assigning a successor.
 - [ ] IDD-08 — Keep others' unreleased media sealed, preserve their withdrawal rights, and retain authorized access to already released Films.
 - [ ] IDD-09 — Remove identifying attribution from chronology placeholders and prevent delayed jobs/uploads from restoring deleted content.
+- [ ] IDD-10 — Preserve eligible paid personal Films and captured Trials locally without deleted identity linkage, capacity reset, or automatic reveal. *(Account-only; moved in 1.2)*
+- [ ] IDD-11 — Cancel zero-saved-capture Trial activation during Account deletion so it cannot persist as an account-free free-capture entitlement. *(Account-only; moved in 1.2)*
+- [ ] IDD-12 — Warn subscribed users of continuing Apple billing and offer Manage Subscription without making cancellation/expiry a deletion prerequisite. *(Account-only; moved in 1.2)*
 
 ### BIL — All-inclusive subscription (Group-only tasks)
 
@@ -434,7 +435,17 @@ Dependency: DEC-02, ARC-05. PRD FR-20.
 
 - [ ] BIL-04 — Validate active subscription for new Group hosting and optional subscriber load contributions with required Account identity.
 
-### QA — Cross-feature acceptance and launch readiness (Group-only tasks)
+### TRI — Account-scoped one-Film trial (Account-only tasks)
+
+Dependency: IDN, ARC-05, CAP durability. PRD FR-21 (version 1.1 text in PRD section 8.13).
+
+- [ ] TRI-05 — Implement original-device online Cancel Unused Trial only before first successful save. *(Account-only; moved in 1.2)*
+- [ ] TRI-06 — Confirm old activation ends before releasing eligibility; reject capture from canceled activations and uncertain replacement trials. *(Account-only; moved in 1.2)*
+- [ ] TRI-07 — Keep unresolved activation reserved while Account exists, with no automatic expiry/lost-device replacement. *(Account-only; moved in 1.2)*
+- [ ] TRI-08 — Warn about original-device reservation and lack of automatic recovery before activation. *(Account-only; moved in 1.2)*
+- [ ] TRI-10 — Implement Account-deletion exceptions for captured versus unused Trials and the approved post-deletion eligibility policy. *(Account-only; moved in 1.2)*
+
+### QA — Cross-feature acceptance and launch readiness (Group-only and Account-only tasks)
 
 Dependency: relevant implemented slices; test continuously rather than waiting until the end. PRD section 13.
 
@@ -442,6 +453,7 @@ Dependency: relevant implemented slices; test continuously rather than waiting u
 - [ ] QA-06 — Verify exclusive Movie turns, paused time, offline authorized completion, interruption, close races, and delayed duration confirmation.
 - [ ] QA-07 — Verify closure/upload barriers, 48-hour explicit override, irreversible exclusion, and no automatic Development/Release.
 - [ ] QA-08 — Verify Host/Guest/current/former/removed/deleting identity permissions across API, cache, thumbnails, notifications, and exports.
+- [ ] QA-10 — Verify Account deletion pending/completion. *(Account-only; moved in 1.2)*
 
 ### Group clauses removed from v1 tasks
 
@@ -483,20 +495,50 @@ Each row shows the version 1.0 text of a task that keeps its ID in v1 with the G
 
 Group names and dependencies changed in v1: MOV was "Personal/shared Movie mechanics"; IDN was "Authentication and Guest ownership" with dependency "ARC-05, DEC-08" and "PRD FR-09/FR-20/FR-21"; PRV was "Capture privacy and moderation" with dependency "ownership/access design, media deletion/reassembly architecture"; IDD was "Account/Guest deletion lifecycle" with dependency "IDN, PRV, BIL, TRI, ARC-06; relevant DEC-06/DEC-07 decisions"; DRK dependency included "Group authorization for Private Prints".
 
+### Account, server and analytics clauses changed in v1 tasks (version 1.2)
+
+Each row shows the version 1.1 text of a task that keeps its ID in v1 with its text rewritten for the per-iPhone Trial, the on-phone scope, iOS 26 iPhone-only, device backup, no analytics, and deferred pricing. Restore the row text when the task is taken up for v2 Accounts.
+
+| Task | Version 1.1 text (verbatim) |
+| --- | --- |
+| DEC-02 | Set monthly/yearly pricing and specify purchase restoration, offers, refunds/revocations, and entitlement edge handling without changing existing-Film access promises. |
+| DEC-03 | Choose minimum iOS/device support, native application stack, backend, and authentication providers. |
+| DEC-14 | Approve success metrics/targets and decide whether to add privacy-respecting analytics; no implicit media telemetry. |
+| ARC-01 | Establish native application build, local development setup, supported devices, and test environments. |
+| ARC-03 | Design local media persistence, atomic save/recovery boundaries, Camera versioning, and developed-master integrity checks. |
+| ARC-05 | Design identity, subscription validation, and Trial reservation/consumption. |
+| SET-03 | Permit curated Camera Preview before sign-in/activation with no live filter feed or user capture access. |
+| SET-04 | Ensure browsing/canceling previews consumes/reserves no Trial and creates no active Film. |
+| CAP-08 | Support entitled personal offline capture; enforce prior online Trial Activation where applicable. |
+| STO-02 | Explain local-only storage/device-loss risk and that Account sign-in does not create Film backup/sync. |
+| PRV-10 | Explain permanent app removal and external-copy limitations; verify no stale viewing/export after accepted privacy action. |
+| DEL-03 | For unused activated Trial Films, require confirmed original-device online cancellation before deleting; retain Film on uncertainty. |
+| BIL-03 | Support purchase and paid personal use without a separate app Account. |
+| BIL-06 | Implement purchase restoration, renewal, entitlement reconciliation, and approved refund/revocation behavior. |
+| BIL-07 | Provide subscription-management entry and clear distinction between billing cancellation, identity deletion, and Film deletion. |
+| TRI-01 | Offer exactly one full personal Photo OR Movie Trial Film with any Camera after required Account sign-in. |
+| TRI-02 | Reserve eligibility online for one Film on one original device across devices/reinstalls. |
+| TRI-04 | Support offline capture after activation and reconcile first-save consumption without permitting another Trial. |
+| TRI-09 | Preserve developed Trial access and reject entitlement refunds after used-Film deletion/Discard/abandonment. |
+| QA-12 | Verify subscription expiration, account-free paid use, multi-device Trial contention, cancellation uncertainty, and preserved personal Films after Account deletion. |
+| QA-13 | Verify supported devices, accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets. |
+
+Group names and dependencies changed in v1.2: TRI was "Account-scoped one-Film trial" with dependency "IDN, ARC-05, CAP durability"; BIL had dependency "DEC-02, ARC-05"; IDN and IDD have no v1 tasks (IDN was "Authentication" with dependency "ARC-05", IDD was "Account deletion lifecycle" with dependency "IDN, BIL, TRI; relevant DEC-07 decision"). New IDs added in v1.2: DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15.
+
 ## Milestone tracking
 
 Milestones are dependency groupings, not additional task counts or committed launch dates.
 
 | Milestone | Main task groups | Exit evidence |
 | --- | --- | --- |
-| M0 — Prerequisites | DEC, ARC | Approved scope-sensitive choices and implementation architecture |
+| M0 — Prerequisites | DEC, ARC, TRI-11 | Approved scope-sensitive choices, implementation architecture, and the iOS 26 Keychain device check |
 | M1 — Personal photo slice | UX, CAM, SET, CAP, DEV, STO | Real capture through reveal/export, durable and private |
-| M2 — Complete personal experience | MOV, DRK, DEL, BIL, TRI | All personal formats and entitlement/lifecycle acceptance |
+| M2 — Complete personal experience | MOV, DRK, DEL, BIL, TRI | All personal formats and entitlement/lifecycle acceptance; price decided (DEC-02) before billing work starts |
 | M3 — Shared photos (deferred to v2) | Group-only tasks under Deferred to v2: IDN-02, IDN-03, IDN-05, GRP, POL, SYN, CLS, REL, EXP | Concurrent real devices; sealed capture through Host Release |
-| M4 — Personal privacy and account lifecycle | PRV, IDD (v1 tasks); GMV, MEM and the Group tasks of PRV and IDD are deferred to v2 | Tested personal Discard/Movie reassembly and Account deletion with personal-Film preservation |
-| M5 — Release readiness | QA, outstanding DEC (NTF deferred to v2) | Native, backend, billing, privacy, media-quality evidence |
+| M4 — Personal privacy lifecycle | PRV (v1 tasks); GMV, MEM, the Group tasks of PRV, and all IDD tasks are deferred to v2 | Tested personal Discard/Movie reassembly |
+| M5 — Release readiness | QA, outstanding DEC (NTF and the Group and Account QA tasks deferred to v2) | Native, billing, privacy, media-quality evidence |
 
-Privacy architecture is required before implementation, not deferred until M4; shared-slice prerequisites belong to v2. No checked discovery item means these milestones have passed.
+Privacy architecture is required before implementation, not deferred until M4; shared-slice prerequisites belong to v2, as do the Account-only tasks (IDN-01, IDN-04, IDD, TRI-05 to TRI-08, TRI-10, DEC-07, QA-10). No checked discovery item means these milestones have passed.
 
 ## Change log
 
@@ -504,3 +546,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | --- | --- |
 | 2026-09-29 | Created local v1 baseline from the recorded discussion, domain model, ADRs, and selected Film Journal prototype. |
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
+| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (one Trial Film per iPhone held in the Keychain, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). |

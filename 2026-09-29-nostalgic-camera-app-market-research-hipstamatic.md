@@ -80,7 +80,7 @@ The documented specification includes:
 
 These are proposed or documented requirements, not shipped capabilities. The existing browser prototype does not establish native capture quality, backend correctness, or commercial demand.
 
-**Update, September 30, 2026:** PRD version 1.1 defers all Group Films (Photo pools and Group Movies) to v2, so v1 is personal Photo and Movie Films only. The Group bullets above describe the version 1.0 baseline that this research evaluated. The research text below is otherwise unchanged.
+**Update, September 30, 2026:** PRD version 1.1 defers all Group Films (Photo pools and Group Movies) to v2, so v1 is personal Photo and Movie Films only. The Group bullets above describe the version 1.0 baseline that this research evaluated. PRD version 1.2 (2026-09-30) also makes v1 an on-phone iOS 26 iPhone app with no Accounts, server or analytics, and a per-iPhone Trial; the research's Account-required Trial bullet and its related interview question describe the version 1.0 baseline, not v1. The research text below is otherwise unchanged.
 
 Reference: [September 29, 2026 PRD](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md).
 

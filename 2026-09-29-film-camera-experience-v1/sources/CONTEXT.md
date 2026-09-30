@@ -5,7 +5,15 @@
 > By captain decision, v1 ships personal Photo and Movie Films only, and all Group functionality is deferred to v2.
 > The Group vocabulary and rules below are kept because v2 needs them; they are not v1 requirements.
 > Read every rule about Group Films, Hosts, Participants, Guest Identities, Join Codes and Join Film, Subscriber Loads, Group Exposure and Duration Pools, Recording Turns, Closure, Private Review, Release, Release Notifications, Withdraw, Leave Film, Remove Participant, Delete Guest Identity, and Private Prints on Group Films as v2 design, including where the text says "v1".
-> Personal Film rules, the Camera catalog, the Trial Film, personal subscription and expiration, and Account deletion for a Trial Account apply to v1 unchanged.
+> Personal Film rules, the Camera catalog, personal subscription and expiration apply to v1 unchanged.
+>
+> **Version 1.2 scope note (2026-09-30, PRD version 1.2, ADR 0012).**
+> By captain decision, v1 is a personal, on-phone iOS 26 iPhone app.
+> The Trial is one Trial Film per iPhone, remembered on the phone in the Keychain, so v1 has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+> The terms Account, Trial Film, Trial Activation and Cancel Unused Trial were rewritten below, and the Trial rules were rewritten for the per-iPhone Trial.
+> The Account-only rules (Delete Account, Deletion Pending, Account-scoped Trial eligibility and Trial preservation after Account deletion) moved, verbatim, to the "Deferred to v2 - Account rules" section after the Relationships list; read any remaining mention of Account, sign-in, Account deletion or Deletion Pending as v2 design.
+> Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore.
+> v1 has no analytics SDK or service, and its price is decided before milestone 2 billing work.
 > The statements that assert overall v1 scope were corrected below; the Group-only rules were not rewritten.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
@@ -49,7 +57,7 @@ Front-facing capture within a **Film** that retains its selected **Camera**, cap
 _Avoid_: Separate Selfie Camera, Camera replacement, live filter preview
 
 **Camera Preview**:
-Curated sample media demonstrating a Camera's expected framing, behavior, and Developed Treatment while browsing a new personal or Group Film before sign-in or activation.
+Curated sample media demonstrating a Camera's expected framing, behavior, and Developed Treatment while browsing a new personal or Group Film before subscribing or starting a Trial Film.
 _Avoid_: Live filter preview, unrevealed capture review, reroll, Trial capture
 
 **Camera Lock**:
@@ -173,11 +181,11 @@ The Participant display name stored in a Group Film capture's metadata and shown
 _Avoid_: Watermark, burned-in credit, anonymous capture
 
 **Account**:
-A persistent identity authenticated through Apple or Google that tracks Trial Film eligibility and enables Group Film hosting and persistent participation.
-_Avoid_: Guest identity, display name, role-specific account, device-based trial identity
+Deferred to v2. A persistent identity authenticated through Apple or Google that will enable Group Film hosting, subscriber load contribution and persistent participation; v1 has no Account or sign-in, and the v1 Trial does not use one.
+_Avoid_: Guest identity, display name, role-specific account, sign-in for the Trial
 
 **Delete Account**:
-The irreversible removal of a persistent **Account**, its associated personal data, and all its **Group Film** contributions, distinct from deleting an entire **Film**.
+Deferred to v2 with Accounts. The irreversible removal of a persistent **Account**, its associated personal data, and all its **Group Film** contributions, distinct from deleting an entire **Film**.
 _Avoid_: Sign out, cancel Subscription, Delete Film, Leave Film
 
 **Subscription**:
@@ -189,15 +197,15 @@ The Apple subscription-management flow for changing or canceling the app's month
 _Avoid_: Delete Account, Delete Guest Identity, Delete Film
 
 **Trial Film**:
-The one free personal Film available per Account to a non-subscriber using either one Photo Camera or one Movie Camera.
-_Avoid_: One free capture, per-device trial, separate photo and movie trials, temporary developed media
+The one free personal Film available per iPhone to a non-subscriber using either one Photo Camera or one Movie Camera, remembered on the phone in the Keychain.
+_Avoid_: One free capture, per-Account trial, separate photo and movie trials, temporary developed media
 
 **Trial Activation**:
-The online reservation of an Account's unused Trial Film eligibility for one Film on one device without consuming it before the first successfully saved capture.
-_Avoid_: Trial consumption, per-device free trial, continuous connectivity requirement
+The on-phone start of the iPhone's Trial Film, which involves no server and does not consume the Trial before the first successfully saved capture.
+_Avoid_: Trial consumption, server reservation, Account reservation
 
 **Cancel Unused Trial**:
-The connected action on the original activating device that ends a Trial Activation with no successfully saved captures and releases the Account's reserved trial eligibility.
+Deferred to v2. The connected action on the original activating device that ended a Trial Activation with no successfully saved captures and released the Account's reserved trial eligibility; v1 has no server reservation to release, so an unused Trial Film is simply deleted.
 _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 
 **Guest Identity**:
@@ -209,7 +217,7 @@ The irreversible removal of an account-free **Guest Identity**, its identifying 
 _Avoid_: Leave Film, sign out, Claim Guest Identity, Delete Film
 
 **Deletion Pending**:
-An accepted **Delete Account** or **Delete Guest Identity** request whose Group contributions are unavailable in-app while permanent identity and contribution removal remains unconfirmed.
+Deferred to v2 with Accounts. An accepted **Delete Account** or **Delete Guest Identity** request whose Group contributions are unavailable in-app while permanent identity and contribution removal remains unconfirmed.
 _Avoid_: Deletion complete, sign out, local-only identity removal
 
 **Claim Guest Identity**:
@@ -358,26 +366,18 @@ _Avoid_: Draft, incomplete album
 - **Start a Film** is the home library's primary action; **Join Film** as its secondary action is deferred to v2 with Groups.
 - In v1, Start a Film begins directly with Camera selection for a personal Film; the Personal or Group choice, with Personal selected by default, is deferred to v2.
 - Group creation (deferred to v2) presents only Group-compatible Cameras; Instant Cameras are not offered as selectable Group options.
-- **Camera Preview** is available to everyone browsing a new personal or Group Film, including prospective Trial users, before Account sign-in or Trial Activation.
+- **Camera Preview** is available to everyone browsing a new personal or Group Film, including prospective Trial users, before subscribing or starting a Trial Film.
 - Camera Preview uses curated sample photos or a short sample movie plus the Camera's capacity, controls, Reveal Rule, and audio behavior; it never applies the treatment to a live feed or displays a user's unrevealed captures.
-- Browsing Camera Previews does not create or activate a Trial Film, reserve or consume Trial eligibility, lock a Film's Camera, or grant Group capture access.
+- Browsing Camera Previews does not create or activate a Trial Film, consume Trial eligibility, lock a Film's Camera, or grant Group capture access.
 - Both personal and Group Film creation use an explicit **Load Film** confirmation showing the selected Camera, capture capacity, and Reveal Rule before capture becomes available.
 - Load Film irreversibly fixes the selected Camera package for the Film; it is not an Exposure, a recording, or Development and does not bypass existing Trial Activation, Subscription, permission, or Group capture-access requirements.
 - For a Group Film, the Host's Load Film confirmation performs the existing **Camera Lock**, rather than requiring a second locking step or a separate loading action from each Participant.
 - Locking the Camera package does not freeze supported Camera-authentic capture controls; focus, flash, and exposure remain adjustable where the selected Camera and active phone lens support them.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
-- Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no personal Film cloud backup or cross-device sync.
-- Signing into an Account does not add personal Film cloud backup or cross-device sync in v1.
-- Account-independent paid personal Films are preserved when the user performs **Delete Account** or **Delete Guest Identity**, including their local Film details, retained captures, developed masters, and reversible Darkroom edits.
-- A **Trial Film** with at least one successfully saved Exposure or Recorded Clip also survives **Delete Account** as a device-local personal Film, with its deleted Account linkage removed.
-- A preserved captured Trial Film may continue capturing within its remaining original capacity, complete Development, and retain its existing local media and reversible Darkroom edits without the deleted Account.
-- Preserving a captured Trial Film does not replace its Camera, reset its capacity, or bypass its existing Reveal Rule; Account deletion never automatically Develops or reveals its captures.
-- As part of **Delete Account**, a **Trial Activation** with zero successfully saved captures is canceled rather than preserved as an account-free capture entitlement; its empty Trial Film can no longer capture under that activation.
-- Canceling an unused Trial Activation during Account deletion does not erase a Trial Film that already contains successfully saved captures; that Film retains its existing local-preservation rules.
-- Identity deletion does not Develop or reveal those preserved personal Films, change their capacity or selected Camera, or remove copies already exported to Photos or elsewhere.
-- Removing a preserved personal Film, including a captured Trial Film, remains a separate **Delete Film** action with its existing warning and explicit confirmation; preservation of that Film does not preserve the deleted identity or its Group Film contributions.
-- The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; ending an activated unused Trial Film remains subject to the existing **Cancel Unused Trial** restrictions.
+- Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
+- Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore.
+- The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; deleting a Trial Film with no successfully saved captures needs no cancellation step and does not consume Trial eligibility.
 - Delete Film permanently removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits without developing or revealing hidden captures.
 - The deletion warning explains the permanent loss, that a used **Trial Film** entitlement is not restored, and that copies already exported to Photos or elsewhere remain unaffected.
 - V1 **Delete Film** is personal-only; neither the **Host** nor another **Participant** may delete an entire **Group Film** for everyone, while existing capture withdrawal and Host moderation rights remain unchanged.
@@ -469,25 +469,6 @@ _Avoid_: Draft, incomplete album
 - The guest's removed contributions leave numbered, metadata-only **Discarded Frame** placeholders without identifying attribution; sealed captures are never previewed or revealed by deletion.
 - Guest deletion follows existing privacy-removal rules: it restores no consumed Exposures or recording time, delayed uploads cannot restore deleted contributions, and affected Developed Movies are rebuilt from surviving unchanged Developed Clips without repeating Development.
 - Delete Guest Identity never automatically Develops or Releases a Film and cannot recall copies already exported outside the app.
-- **Delete Account** applies the same contribution-removal rule to every Account holder, whether they are a Host, another Participant, or have previously left or been removed from a Group Film.
-- Account deletion removes all that Account's Group Film contributions across hosted and joined Films, sealed or revealed, including contributions captured under any **Guest Identity** claimed by the Account.
-- It removes the Account's identifying details and **Contributor Attribution**, together with its app-controlled source media, developed results, and Private Prints; numbered metadata-only Discarded Frame placeholders contain no identifying attribution.
-- Account deletion follows existing privacy-removal rules: it offers no preview of sealed captures, restores no consumed capacity or contributed Camera load slot, prevents delayed uploads from restoring deleted contributions, and rebuilds affected Developed Movies from surviving unchanged Developed Clips without repeating Development.
-- Deleting a non-Host Account does not delete other contributors' media, close their Group Films, stop other Participants' capture, or automatically Develop or Release those Films; copies already exported outside the app cannot be recalled.
-- V1 **Delete Account** and **Delete Guest Identity** require connectivity to submit the deletion request; offline users must reconnect rather than treating local identity removal as completed deletion.
-- Before Account or Guest Identity deletion, subscribed users see a clear warning that identity deletion does not cancel their Apple Subscription and that billing continues unless the Subscription is canceled separately.
-- The deletion flow offers **Manage Subscription** so the user can manage or cancel renewal separately from deleting their identity.
-- Users may proceed with immediate identity-deletion submission without opening Manage Subscription, canceling first, or waiting for Subscription expiration; removal remains subject to the existing Deletion Pending and confirmation rules.
-- An accepted request is shown as **Deletion Pending** until removal of the requested identity, identifying details, and covered app-controlled Group contributions is confirmed complete.
-- As soon as an Account or Guest deletion request is accepted, every covered Group contribution becomes unavailable for in-app viewing and export while permanent removal continues, including retained originals, developed results, Private Prints, and cached app-controlled copies.
-- Any assembled **Developed Movie** version containing those contributions is immediately unavailable for in-app playback or export; existing privacy-removal rules allow a rebuilt version containing only surviving unchanged Developed Clips.
-- The immediate privacy block does not remove or alter another contributor's captures, reveal sealed media, or recall copies already exported outside the app.
-- Covered contributions remain unavailable throughout Deletion Pending, including interrupted or delayed cleanup; blocking access alone is not confirmation of permanent deletion.
-- While an Account or Guest Identity is in **Deletion Pending**, that identity cannot join a Group Film, begin a new Group Exposure or Recorded Clip, or use **Add Shared Exposures**.
-- **Claim Guest Identity** and other identity linking involving an identity in Deletion Pending are blocked, so pending deletion cannot be bypassed by moving its contributions to another identity.
-- These pending-deletion restrictions apply to the deleting identity and do not block other Participants' activity; the existing rule disabling joining and capture for a deleting Host's hosted Group Films remains a separate exception.
-- Deletion success is never reported merely because the request was submitted or the user was signed out; the covered contributions must no longer be available for in-app viewing or export, and their permanent removal must be confirmed.
-- A loss of connectivity or an unconfirmed removal does not become a successful deletion; the app continues to distinguish pending removal from confirmed completion.
 - A discarded Instant Exposure remains a used frame in its Instant Film pack.
 - Discard creates a **Discarded Frame** in the developed Film while permanently removing the underlying private media.
 - A **Group Film** is created with exactly one **Host** and zero or more other **Participants**; deletion of the Host's Account never assigns a successor.
@@ -511,23 +492,17 @@ _Avoid_: Draft, incomplete album
 - A Host must have an active monthly or yearly **Subscription** to create a Group Film.
 - V1 offers one all-inclusive Subscription with no feature or Camera tiers.
 - An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
-- Paid personal Film use, including Subscription purchase, capture, Development, Darkroom work, and export, does not require a separate app Account.
-- Apple or Google Account authentication is required before creating a Trial Film, hosting a Group Film, or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
-- A non-subscriber with an Account may use exactly one **Trial Film**, choosing either Photo or Movie.
-- Trial Film eligibility is tied to the Account across devices and app reinstalls, not separately granted per device; this entitlement does not provide cloud backup or recovery of device-local Trial Film media.
-- Starting a Trial Film requires connectivity for **Trial Activation**, which reserves the Account's trial for exactly one Film on exactly one device.
-- An Account cannot activate a second Trial Film on another device while its trial is reserved or consumed.
-- After Trial Activation, Trial Film capture may continue without connectivity; activation alone does not consume the entitlement.
-- Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip, not during Camera browsing or empty Film setup.
+- Personal Film use, including Subscription purchase, capture, Development, Darkroom work, export and the Trial Film, does not require an Account; v1 has no Account or sign-in.
+- Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
+- A non-subscriber may use exactly one **Trial Film** per iPhone, choosing either Photo or Movie; there is no Account or sign-in in v1.
+- The iPhone remembers its Trial in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore, so the Trial counts once per physical iPhone.
+- **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and whether it still needs connectivity is an open decision (DEC-15).
+- After Trial Activation, Trial Film capture may continue without connectivity.
+- Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip (which writes the Keychain record), not during Camera browsing or empty Film setup.
 - Failed captures that do not save successfully do not consume Trial Film eligibility.
-- Before its first successfully saved capture, a Trial Film may be ended through **Cancel Unused Trial** only on its original activating device while connected.
-- **Delete Film** for an activated Trial Film with no successfully saved captures first completes **Cancel Unused Trial** on the original device while connected, releasing the reserved trial eligibility before removing the local Film.
-- If cancellation cannot be confirmed, the unused Trial Film is not deleted; the user must reconnect and complete cancellation before deletion can proceed.
-- Cancel Unused Trial ends the original activation before releasing the Account's reservation; the canceled Film cannot capture without a new Trial Activation.
-- After Cancel Unused Trial, the Account may activate a new Trial Film; it never gains two simultaneous active trials.
-- While its Account exists, an unresolved Trial Activation remains reserved until its original device confirms a successfully saved capture or performs Cancel Unused Trial; v1 never expires or replaces that activation automatically, while explicit Account deletion cancels an unused activation.
-- If the original activating device becomes inaccessible, the Account cannot automatically obtain a replacement trial even when it is unknown whether an offline capture occurred.
-- Trial Activation includes a clear warning that the trial is reserved to the original device and cannot be automatically recovered or replaced if that device becomes inaccessible.
+- An iPhone has at most one Trial Film at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
+- Someone with several iPhones gets several free Films; this costs only a possible sale, because Films never leave the phone.
+- What a restored iPhone does with an unused or a captured Trial Film is an open decision (DEC-16).
 - Abandoning, deleting, or Discarding a Trial Film after its first successfully saved capture never restores Trial Film eligibility.
 - Every v1 Camera is available for the Trial Film.
 - A developed Trial Film remains available permanently; starting another personal Film after Trial Film eligibility is consumed requires a Subscription.
@@ -593,7 +568,7 @@ _Avoid_: Draft, incomplete album
 - After reservation, a captured Exposure is saved locally and can be uploaded through retries if connectivity is interrupted.
 - A reserved Exposure is consumed only when the capture is safely saved locally; a failure before successful local saving returns the reservation to the Group Exposure Pool.
 - A safely saved capture consumes its Exposure even when upload is delayed; upload retries do not consume additional Exposures.
-- Personal Films support capture without connectivity; a Trial Film requires online Trial Activation before its first capture.
+- Personal Films support capture without connectivity, including a Trial Film after it starts; whether starting the Trial Film needs connectivity is an open decision (DEC-15).
 - Revealed personal Films remain viewable without connectivity; offline access never bypasses their Camera's Reveal Rule.
 - An empty Group Exposure Pool places the Photo Group Film into **Capacity Pause** without closing it.
 - Adding a Subscriber Load during Capacity Pause resumes capture; otherwise the Host may close the Group Film.
@@ -661,6 +636,93 @@ _Avoid_: Draft, incomplete album
 - A user may keep multiple **Unfinished Films** and resume any of them later.
 - Starting or resuming another **Film** does not reveal the captures in an **Unfinished Film**.
 
+## Deferred to v2 - Account rules
+
+> **Deferred to v2 (version 1.2, 2026-09-30).**
+> By captain decision, v1 has no server, Account, sign-in or Account deletion flow, and the Trial is one Film per iPhone.
+> The rules below are the version 1.1 wording that applied to Accounts, kept verbatim because v2 needs them when Groups bring Accounts back.
+> They are not v1 requirements; where the text says "v1", read the first release that has Accounts.
+
+### Terms as in version 1.1
+
+**Account**:
+A persistent identity authenticated through Apple or Google that tracks Trial Film eligibility and enables Group Film hosting and persistent participation.
+_Avoid_: Guest identity, display name, role-specific account, device-based trial identity
+
+**Trial Film**:
+The one free personal Film available per Account to a non-subscriber using either one Photo Camera or one Movie Camera.
+_Avoid_: One free capture, per-device trial, separate photo and movie trials, temporary developed media
+
+**Trial Activation**:
+The online reservation of an Account's unused Trial Film eligibility for one Film on one device without consuming it before the first successfully saved capture.
+_Avoid_: Trial consumption, per-device free trial, continuous connectivity requirement
+
+**Cancel Unused Trial**:
+The connected action on the original activating device that ends a Trial Activation with no successfully saved captures and releases the Account's reserved trial eligibility.
+_Avoid_: Refund used trial, offline reset, replacement of lost captured media
+
+### Delete Account and Trial preservation rules as in version 1.1
+
+- Account-independent paid personal Films are preserved when the user performs **Delete Account** or **Delete Guest Identity**, including their local Film details, retained captures, developed masters, and reversible Darkroom edits.
+- A **Trial Film** with at least one successfully saved Exposure or Recorded Clip also survives **Delete Account** as a device-local personal Film, with its deleted Account linkage removed.
+- A preserved captured Trial Film may continue capturing within its remaining original capacity, complete Development, and retain its existing local media and reversible Darkroom edits without the deleted Account.
+- Preserving a captured Trial Film does not replace its Camera, reset its capacity, or bypass its existing Reveal Rule; Account deletion never automatically Develops or reveals its captures.
+- As part of **Delete Account**, a **Trial Activation** with zero successfully saved captures is canceled rather than preserved as an account-free capture entitlement; its empty Trial Film can no longer capture under that activation.
+- Canceling an unused Trial Activation during Account deletion does not erase a Trial Film that already contains successfully saved captures; that Film retains its existing local-preservation rules.
+- Identity deletion does not Develop or reveal those preserved personal Films, change their capacity or selected Camera, or remove copies already exported to Photos or elsewhere.
+- Removing a preserved personal Film, including a captured Trial Film, remains a separate **Delete Film** action with its existing warning and explicit confirmation; preservation of that Film does not preserve the deleted identity or its Group Film contributions.
+
+### Delete Account and Deletion Pending rules as in version 1.1
+
+- **Delete Account** applies the same contribution-removal rule to every Account holder, whether they are a Host, another Participant, or have previously left or been removed from a Group Film.
+- Account deletion removes all that Account's Group Film contributions across hosted and joined Films, sealed or revealed, including contributions captured under any **Guest Identity** claimed by the Account.
+- It removes the Account's identifying details and **Contributor Attribution**, together with its app-controlled source media, developed results, and Private Prints; numbered metadata-only Discarded Frame placeholders contain no identifying attribution.
+- Account deletion follows existing privacy-removal rules: it offers no preview of sealed captures, restores no consumed capacity or contributed Camera load slot, prevents delayed uploads from restoring deleted contributions, and rebuilds affected Developed Movies from surviving unchanged Developed Clips without repeating Development.
+- Deleting a non-Host Account does not delete other contributors' media, close their Group Films, stop other Participants' capture, or automatically Develop or Release those Films; copies already exported outside the app cannot be recalled.
+- V1 **Delete Account** and **Delete Guest Identity** require connectivity to submit the deletion request; offline users must reconnect rather than treating local identity removal as completed deletion.
+- Before Account or Guest Identity deletion, subscribed users see a clear warning that identity deletion does not cancel their Apple Subscription and that billing continues unless the Subscription is canceled separately.
+- The deletion flow offers **Manage Subscription** so the user can manage or cancel renewal separately from deleting their identity.
+- Users may proceed with immediate identity-deletion submission without opening Manage Subscription, canceling first, or waiting for Subscription expiration; removal remains subject to the existing Deletion Pending and confirmation rules.
+- An accepted request is shown as **Deletion Pending** until removal of the requested identity, identifying details, and covered app-controlled Group contributions is confirmed complete.
+- As soon as an Account or Guest deletion request is accepted, every covered Group contribution becomes unavailable for in-app viewing and export while permanent removal continues, including retained originals, developed results, Private Prints, and cached app-controlled copies.
+- Any assembled **Developed Movie** version containing those contributions is immediately unavailable for in-app playback or export; existing privacy-removal rules allow a rebuilt version containing only surviving unchanged Developed Clips.
+- The immediate privacy block does not remove or alter another contributor's captures, reveal sealed media, or recall copies already exported outside the app.
+- Covered contributions remain unavailable throughout Deletion Pending, including interrupted or delayed cleanup; blocking access alone is not confirmation of permanent deletion.
+- While an Account or Guest Identity is in **Deletion Pending**, that identity cannot join a Group Film, begin a new Group Exposure or Recorded Clip, or use **Add Shared Exposures**.
+- **Claim Guest Identity** and other identity linking involving an identity in Deletion Pending are blocked, so pending deletion cannot be bypassed by moving its contributions to another identity.
+- These pending-deletion restrictions apply to the deleting identity and do not block other Participants' activity; the existing rule disabling joining and capture for a deleting Host's hosted Group Films remains a separate exception.
+- Deletion success is never reported merely because the request was submitted or the user was signed out; the covered contributions must no longer be available for in-app viewing or export, and their permanent removal must be confirmed.
+- A loss of connectivity or an unconfirmed removal does not become a successful deletion; the app continues to distinguish pending removal from confirmed completion.
+
+### Account-scoped Trial rules as in version 1.1
+
+- A non-subscriber with an Account may use exactly one **Trial Film**, choosing either Photo or Movie.
+- Trial Film eligibility is tied to the Account across devices and app reinstalls, not separately granted per device; this entitlement does not provide cloud backup or recovery of device-local Trial Film media.
+- Starting a Trial Film requires connectivity for **Trial Activation**, which reserves the Account's trial for exactly one Film on exactly one device.
+- An Account cannot activate a second Trial Film on another device while its trial is reserved or consumed.
+- After Trial Activation, Trial Film capture may continue without connectivity; activation alone does not consume the entitlement.
+- Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip, not during Camera browsing or empty Film setup.
+- Failed captures that do not save successfully do not consume Trial Film eligibility.
+- Before its first successfully saved capture, a Trial Film may be ended through **Cancel Unused Trial** only on its original activating device while connected.
+- **Delete Film** for an activated Trial Film with no successfully saved captures first completes **Cancel Unused Trial** on the original device while connected, releasing the reserved trial eligibility before removing the local Film.
+- If cancellation cannot be confirmed, the unused Trial Film is not deleted; the user must reconnect and complete cancellation before deletion can proceed.
+- Cancel Unused Trial ends the original activation before releasing the Account's reservation; the canceled Film cannot capture without a new Trial Activation.
+- After Cancel Unused Trial, the Account may activate a new Trial Film; it never gains two simultaneous active trials.
+- While its Account exists, an unresolved Trial Activation remains reserved until its original device confirms a successfully saved capture or performs Cancel Unused Trial; v1 never expires or replaces that activation automatically, while explicit Account deletion cancels an unused activation.
+- If the original activating device becomes inaccessible, the Account cannot automatically obtain a replacement trial even when it is unknown whether an offline capture occurred.
+- Trial Activation includes a clear warning that the trial is reserved to the original device and cannot be automatically recovered or replaced if that device becomes inaccessible.
+
+### Other version 1.1 statements replaced in version 1.2
+
+- Signing into an Account does not add personal Film cloud backup or cross-device sync in v1.
+- The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; ending an activated unused Trial Film remains subject to the existing **Cancel Unused Trial** restrictions.
+- Paid personal Film use, including Subscription purchase, capture, Development, Darkroom work, and export, does not require a separate app Account.
+- Apple or Google Account authentication is required before creating a Trial Film, hosting a Group Film, or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
+- Personal Films support capture without connectivity; a Trial Film requires online Trial Activation before its first capture.
+
+- Camera Preview could be mistaken for a Host-only feature or a free captured-media trial — resolved: curated samples are available to anyone browsing a new Film before sign-in or activation, without a live filter preview, captured-media reveal, or Trial entitlement use.
+- Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved: Trial creation and activation require an Account and account-scoped eligibility, but a captured Trial Film may be preserved and finished locally after Account deletion; paid personal use may remain account-free, and Group Film guest entry is unchanged.
+
 ## V1 Camera catalog
 
 ### Photo Cameras
@@ -700,7 +762,7 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Your Film is ready" could be mistaken for a Development or capture-progress alert — resolved: the optional **Release Notification** follows Host Release only, with no shot-by-shot alerts or capture reminders and no change to viewing permissions.
 - A Release Notification could expose a capture outside the app's current-access checks — resolved: it contains only the Film title and readiness message, never photo or video previews, and opening it requires the existing current viewing-permission checks.
 - "Development happens once" could be mistaken for losing a Film when Development is interrupted — resolved: the same Development is resumable, saved captures remain intact, already-assigned treatments do not reroll, and unfinished results retain their existing reveal boundaries.
-- Camera Preview could be mistaken for a Host-only feature or a free captured-media trial — resolved: curated samples are available to anyone browsing a new Film before sign-in or activation, without a live filter preview, captured-media reveal, or Trial entitlement use.
+- Camera Preview could be mistaken for a Host-only feature or a free captured-media trial — resolved: curated samples are available to anyone browsing a new Film before subscribing or starting a Trial Film, without a live filter preview, captured-media reveal, or Trial entitlement use.
 - "Number of exposures/films" mixed the capacity of a photo film with the film itself — resolved: a photo **Film** has an **Exposure Limit**; a movie **Film** has a **Duration Limit**.
 - "Finish Film Early" was initially rejected as an early-preview loophole — revised for physical-camera authenticity: personal **Roll Films** may use **Rewind & Develop Early**, permanently wasting remaining Exposures after an explicit warning.
 - A **Film** was initially described as event-bounded — resolved: the roll capacity is the boundary; its **Film Title** is editable and it may span multiple events.
@@ -708,17 +770,17 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Front camera" could be confused with a separately selected vintage **Camera** — resolved: **Selfie Capture** uses the phone's front lens within the same Film and Camera package; v1 is not rear-camera-only.
 - Movie "orientation" could mean an individual clip's capture orientation or the final movie's presentation — resolved: clips may mix portrait and landscape, while **Movie Orientation** fixes one presentation frame chosen at Film setup, with opposite-orientation clips fitted using borders.
 - Personal Film deletion could be confused with per-capture **Discard** — resolved: **Delete Film** removes the whole personal Film after a warning, including an unfinished Film without preview; Discard removes one revealed capture while retaining the Film's chronology.
-- Deleting an identity could be mistaken for erasing every local personal Film — resolved: account-independent paid personal Films remain on the device after Account or Guest deletion, while their deletion remains a separate **Delete Film** action; this preservation rule does not retain the deleted identity or its Group contributions.
-- Identity deletion could be mistaken for Subscription cancellation — resolved: the deletion flow warns subscribed users about continuing Apple billing and offers **Manage Subscription**, but cancellation or Subscription expiry is never a prerequisite for submitting immediate identity deletion.
-- Account-bound Trial eligibility could be confused with permanent Account ownership of captured Trial media — resolved: a Trial Film with successfully saved captures survives Account deletion without its Account linkage and remains finishable under its original capacity and Reveal Rule.
-- Preserving captured Trial Films could be mistaken for preserving unused Trial eligibility after Account deletion — resolved: Account deletion cancels a Trial Activation with zero successfully saved captures, and the empty Film cannot continue capturing under that activation.
+- (Deferred to v2 with Accounts.) Deleting an identity could be mistaken for erasing every local personal Film — resolved: account-independent paid personal Films remain on the device after Account or Guest deletion, while their deletion remains a separate **Delete Film** action; this preservation rule does not retain the deleted identity or its Group contributions.
+- (Deferred to v2 with Accounts.) Identity deletion could be mistaken for Subscription cancellation — resolved: the deletion flow warns subscribed users about continuing Apple billing and offers **Manage Subscription**, but cancellation or Subscription expiry is never a prerequisite for submitting immediate identity deletion.
+- (Deferred to v2 with Accounts.) Account-bound Trial eligibility could be confused with permanent Account ownership of captured Trial media — resolved: a Trial Film with successfully saved captures survives Account deletion without its Account linkage and remains finishable under its original capacity and Reveal Rule.
+- (Deferred to v2 with Accounts.) Preserving captured Trial Films could be mistaken for preserving unused Trial eligibility after Account deletion — resolved: Account deletion cancels a Trial Activation with zero successfully saved captures, and the empty Film cannot continue capturing under that activation.
 - A Host-created Group Film could be mistaken for a personally owned Film that the Host may erase for everyone — resolved: v1 whole-Film deletion is personal-only; Group Film removal rights remain capture-level withdrawal and Host moderation.
 - Host Account deletion could be confused with deleting a whole Group Film or automatically revealing abandoned media — resolved: it disables new joins and captures, removes the Host's own contributions, leaves other unreleased media sealed, and preserves other contributors' withdrawal rights and existing released-Film access.
 - Hiding a Group Film could be confused with ending participation — resolved: **Archive Film** only changes a private library listing, while **Leave Film** ends a non-Host Participant's capture and general album access but retains contributions and withdrawal rights.
 - Guest departure could be confused with identity deletion — resolved: **Leave Film** preserves contributions, while **Delete Guest Identity** permanently removes the account-free identity, its identifying details, and all its Group Film contributions without affecting anyone else's captures.
 - Account deletion cleanup could be mistaken for a Host-only rule or exclude earlier Guest captures — resolved: **Delete Account** removes every Account holder's identifying details and Group Film contributions, including those inherited through **Claim Guest Identity**; only deletion of the Host's Account disables the whole Group Film's joining and capture.
-- Submitting an identity-deletion request could be mistaken for completed removal — resolved: account and Guest deletion require online submission and remain **Deletion Pending** until the requested removal is confirmed; local sign-out or an interrupted connection is not proof of deletion.
-- **Deletion Pending** could be mistaken for a grace period during which contributions remain visible — resolved: acceptance immediately blocks in-app viewing and export of the covered contributions, while confirmed permanent removal remains a separate completion condition.
+- (Deferred to v2 with Accounts.) Submitting an identity-deletion request could be mistaken for completed removal — resolved: account and Guest deletion require online submission and remain **Deletion Pending** until the requested removal is confirmed; local sign-out or an interrupted connection is not proof of deletion.
+- (Deferred to v2 with Accounts.) **Deletion Pending** could be mistaken for a grace period during which contributions remain visible — resolved: acceptance immediately blocks in-app viewing and export of the covered contributions, while confirmed permanent removal remains a separate completion condition.
 - A pending identity could otherwise create new contributions or change ownership during cleanup — resolved: it cannot join or capture in Group Films, add shared Exposures, or participate in identity claiming or linking until its deletion completes.
 - Voluntary departure and Host removal have different rejoining rights — resolved: **Leave Film** permits eligible rejoining while the Film is open, but **Remove Participant** permanently blocks that known identity from the same Film in v1, including after Guest Identity claiming.
 - A permanent removal block could be mistaken for a guaranteed ban on a physical person — resolved: v1 blocks known identities and retains account-free Guest entry despite the possibility of a new, unlinked identity on another device; leaked-code revocation limits entry through that code, not person-level identity evasion.
@@ -728,6 +790,8 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - CCD and MiniDV nostalgia conflicted with v1's delayed analog Development and Darkroom model — resolved: v1 is analog-only, and nostalgic digital formats are deferred.
 - "Export" could mean sharing the developed Group Film or saving original source captures — resolved: any Participant with access may export released developed media, but may save only their own originals.
 - Saving developed images to native Photos was a condition of keeping personal Films device-local — resolved: v1 offers Save Developed to Photos for revealed media, while personal Film state and reversible edit history remain device-local without app-managed cloud backup.
-- Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved: Trial creation and activation require an Account and account-scoped eligibility, but a captured Trial Film may be preserved and finished locally after Account deletion; paid personal use may remain account-free, and Group Film guest entry is unchanged.
+- Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved (version 1.2): v1 has no sign-in or Account, and the Trial is one Film per iPhone remembered in the Keychain, so it needs no identity; the version 1.1 Account-scoped resolution is preserved in the deferred section above.
+- A per-iPhone Trial could be mistaken for a per-Account or cross-device Trial — resolved: it counts once per physical iPhone, so someone with several iPhones gets several free Films, which costs only a possible sale because Films never leave the phone.
+- Device backup could be mistaken for app-managed sync or for restoring the Trial — resolved: Films are included in iOS device backups and return on a restored phone, the app offers no sync of its own, and the Trial record stays bound to the device and does not come back through a restore.
 - "Add My Camera" could imply selecting a different Camera or moving a personal Film — resolved: **Add Shared Exposures** is an optional, explicit contribution of one full Subscriber Load to the existing Group Exposure Pool, with the exact Exposure count shown in its button label.
 - The no-deletion-before-reveal rule could leave a Participant's content permanently dependent on an inactive Host — resolved: **Withdraw Unreleased Captures** allows bulk removal of that Participant's own saved contributions before Release without preview, selective deletion, capacity refund, or Host approval.

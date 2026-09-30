@@ -1,17 +1,17 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 30, 2026 (version 1.1; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.1\
-**Platform:** iOS · **Working product title:** Film Camera Experience (final brand not selected)  
+**Document date:** September 30, 2026 (version 1.2; version 1.1 was the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.2\
+**Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)  
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
-**Scope:** Personal Photo and Movie Films only. Shared Photo and Movie Group Films are deferred to v2; see section 8.
+**Scope:** Personal Photo and Movie Films only, as an on-phone app with no server, Accounts, sign-in or analytics. Shared Photo and Movie Group Films and everything that needs an Account are deferred to v2; see section 8.
 
 ## Document guide and authority
 
-This PRD consolidates the recorded product interview, the current domain model, eleven decision records, and the selected prototype direction. It is not a claim that the product has been implemented or that every engineering choice is settled.
+This PRD consolidates the recorded product interview, the current domain model, twelve decision records (the eleven originals and ADR 0012), and the selected prototype direction. It is not a claim that the product has been implemented or that every engineering choice is settled.
 
 - [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md): canonical implementation checkboxes, stable task IDs, dependencies, and verification work.
-- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text, including which ADRs now apply only to v2 Groups.
+- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text, including which ADRs now apply only to v2 Groups, plus ADR 0012 (added in version 1.2).
 - [Domain-model snapshot](sources/CONTEXT.md): detailed terminology and source requirements.
 - [Prototype notes](sources/PROTOTYPE-NOTES.md): what the browser study demonstrates and what it does not.
 
@@ -26,6 +26,22 @@ Every Group requirement from version 1.0 is kept, with its original FR ID and te
 Group clauses that were mixed into otherwise personal requirements were removed from those requirements and are preserved verbatim in section 8.
 Every personal-Film rule is unchanged; only Group clauses were removed from mixed requirements.
 Task IDs are unchanged; Group-only tasks appear in the tracker's Deferred to v2 section.
+
+**Version 1.2 decisions (2026-09-30).**
+Captain decisions, given one at a time while walking the open architecture calls:
+
+1. **Trial (ADR 0012).** One Trial Film per iPhone, remembered on the phone in the Keychain, which normally survives deleting and reinstalling the app; this is to be confirmed on iOS 26 by an early device check (TRI-11). v1 therefore has no server, no Account, no sign-in and no Account deletion flow. Someone with several iPhones gets several free Films; that costs only a possible sale because Films never leave the phone. Accounts return in v2 when Groups need them.
+2. **Devices.** iOS 26, iPhone only for v1.
+3. **Backup and sync.** Keep "no app-managed sync" and allow iOS device backup, so a lost or upgraded phone does not lose Films. Films are included in iOS device backups, so restoring a phone restores its Films. The per-iPhone Trial record stays bound to the device and does not come back through a restore, so the Trial counts once per physical iPhone.
+4. **Analytics.** None in v1: no analytics SDK or service. Learn from App Store Connect and Apple's crash and performance reports; the funnel outcomes in section 2.2 are learned from TestFlight testers and interviews.
+5. **Price.** Decide monthly and yearly prices and offers later, before billing work starts in milestone 2, after testing willingness to pay with TestFlight testers. Nothing in milestones 0 and 1 depends on the price.
+
+With these decisions v1 is a personal, on-phone app: capture, Development, Darkroom, storage and export happen on the phone, and the subscription is bought, checked and restored through StoreKit and the user's Apple ID.
+Account-only material (Account sign-in, the server reservation in Trial Activation, Cancel Unused Trial, FR-19 Account deletion with Deletion Pending, and their tasks) moved to section 8.13 beside the Group material, with its version 1.1 text preserved.
+FR-20 and FR-21 are rewritten for the per-iPhone Trial, and FR-19 is now a v2 stub.
+Every personal-Film rule is unchanged.
+Task IDs are unchanged; six IDs were added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15).
+The Trial rules the per-iPhone design leaves unsettled are recorded as open decisions DEC-15 to DEC-17 in section 15, with options and no chosen answer.
 
 ## 1. Problem statement
 
@@ -48,32 +64,51 @@ Users want a phone to feel like a disposable camera, an instant pack, a medium-f
 5. **Development happens once.** Interruptions resume the same result. Darkroom work never rerolls its underlying treatment.
 6. **Deferred to v2 (Groups).** This principle is retained in section 8.12.
 7. **Existing memories are not subscription hostages.** Expiration prevents new entitlement use, not completion, viewing, editing, or exporting existing Films.
-8. **Personal v1 storage is local.** Saving a result to Photos is optional export, not app-managed backup or cross-device Film restoration.
+8. **Personal v1 storage is on the phone.** Films are included in iOS device backups, so a restored or upgraded iPhone keeps them, but the app manages no sync or backup. Saving a result to Photos is optional export, not backup or Film restoration.
+9. **v1 runs entirely on the phone.** Capture, Development, Darkroom, storage and export happen on the iPhone. The subscription is bought, checked and restored through StoreKit and the user's Apple ID. There is no server, Account, sign-in or analytics.
 
 ### 2.2 Outcomes to evaluate
 
 Users should understand the selected Camera before loading, understand why captures are hidden, finish or deliberately end a Film, enjoy Development, and preserve a result.
 
-**Proposed measurement plan, not an approved analytics integration:** measure setup-to-first-save, first-save-to-Development, early-Development frequency, unfinished-Film resumption, successful export, and repeat Film creation. Track failures and privacy-boundary defects separately. Numeric targets, analytics vendor, consent, and telemetry retention remain open. Never collect sealed media to measure engagement.
+**Learning plan for v1 (no in-app analytics).**
+Captain decision, 2026-09-30: v1 has no analytics SDK or service.
+Learn from App Store Connect and from Apple's crash and performance reports.
+The funnel outcomes proposed for in-app measurement are learned in v1 from TestFlight testers and interviews instead of being measured in the app.
+
+| Outcome | How it is learned in v1 |
+| --- | --- |
+| Setup-to-first-save | Observed TestFlight sessions and a short tester questionnaire after the first Film |
+| First-save-to-Development | Tester interviews about when and why they developed, with observed sessions |
+| Early-Development frequency | Interviews and questionnaire: did testers waste exposures on purpose, and did the warning make sense |
+| Unfinished-Film resumption | Follow-up with testers after several days: which Films are still unfinished and why |
+| Successful export | Tester questionnaire and interviews; Apple's crash reports for export failures |
+| Repeat Film creation | Follow-up interviews; App Store Connect retention and subscription reports after release |
+| Willingness to pay | TestFlight testers, to inform DEC-02 before billing work starts in M2 |
+
+Track failures and privacy-boundary defects separately, through Apple's crash and performance reports and tester reports.
+Numeric targets remain open (DEC-14).
+Never collect sealed media, and add no telemetry of any kind without a new decision.
 
 ## 3. V1 scope
 
 | Area | Included in v1 | Excluded or deferred |
 | --- | --- | --- |
-| Capture | Native iOS, in-app new captures, rear and front lenses | Existing-media import; Android, web capture, App Clips |
+| Capture | Native iPhone app (iOS 26, iPhone only), in-app new captures, rear and front lenses | Existing-media import; iPad, Mac and other devices, iOS before 26, Android, web capture, App Clips |
 | Formats | Three analog Photo Cameras and two analog Movie Cameras | CCD digicams, MiniDV, Half Frame, VHS, Hi8 (including live-audio Movie capture with microphone permission), additional v2 formats |
-| Personal Films | Photo rolls, Instant packs, Movies; multiple unfinished Films | Personal cloud sync or app-managed cloud backup |
+| Personal Films | Photo rolls, Instant packs, Movies; multiple unfinished Films; Films on the phone, included in iOS device backups | App-managed sync or backup, including personal cloud sync |
 | Group Films | None. v1 is personal Films only. | All Group Films, Photo pools and Movie Groups with Recording Turns, including code/QR joining and Guest participants: deferred to v2 (section 8); Instant Groups; same-device Give Camera mode |
 | Editing | Reversible per-photo analog Darkroom | Saturation slider, film replacement, AI retouching, Movie timeline editing; Private Prints on Group Films (deferred to v2) |
-| Business model | One all-inclusive monthly/yearly subscription; one Photo OR Movie Trial Film | Per-Film fees, exposure wallet, tiers, recurring monthly exposure credits |
+| Business model | One all-inclusive monthly/yearly subscription bought, checked and restored through StoreKit; one Photo OR Movie Trial Film per iPhone | Per-Film fees, exposure wallet, tiers, recurring monthly exposure credits; prices and offers are decided before M2 billing work |
+| Accounts, server and analytics | None. v1 has no Account, sign-in, server or analytics; everything runs on the phone. | Accounts, sign-in, Account deletion and server-side Trial reservation (deferred to v2 with Groups, section 8.13); analytics SDK or service |
 | Sharing | Optional Photos export | Group sharing (Host Private Review then Release) is deferred to v2; automatic release, public feed, automatic export |
-| Management | Archive; personal whole-Film deletion; Account deletion | Contribution withdrawal, Leave Film, Participant removal and Guest identity deletion (deferred to v2); whole Group deletion, co-hosts, Host transfer, automatic takeover |
+| Management | Archive; personal whole-Film deletion | Account deletion (deferred to v2 with Accounts); contribution withdrawal, Leave Film, Participant removal and Guest identity deletion (deferred to v2); whole Group deletion, co-hosts, Host transfer, automatic takeover |
 
 “Personal-only” applies to Instant support and whole-Film deletion; “device-local” applies to personal Film storage. In v1 every Film is personal; shared Group workflows are deferred to v2 (section 8).
 
 ## 4. Roles and vocabulary
 
-In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identity, Subscriber Load, Capacity Pause, Private Review / Release, Private Print) are deferred to v2 and preserved in section 8.1.
+In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identity, Subscriber Load, Capacity Pause, Private Review / Release, Private Print) are deferred to v2 and preserved in section 8.1. The Account term is deferred too: v1 has no Account.
 
 | Term | Meaning |
 | --- | --- |
@@ -81,8 +116,8 @@ In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identit
 | Camera | The complete historical-format package: medium, framing, controls, capacity, treatment, and reveal. Not a filter. |
 | Exposure / Recorded Clip | One photo / one uninterrupted recording. |
 | Developed master / Developed Clip | Preserved one-time developed result, distinct from its source capture and edited/exported copies. |
-| Personal owner | User controlling a device-local personal Film. Paid use can be account-free. |
-| Account | Apple- or Google-authenticated persistent identity for Trial eligibility. |
+| Personal owner | User controlling a device-local personal Film. All v1 use is account-free. |
+| Trial Film | The one free personal Film available per iPhone to a non-subscriber (Photo OR Movie), remembered on the phone in the Keychain. There is no Account in v1. |
 | Discarded Frame | Numbered metadata-only chronology placeholder after permanent media removal. |
 
 ### 4.1 Permission summary
@@ -99,11 +134,11 @@ In v1 every Film is personal and device-local, so the permission summary has one
 
 ## 5. User stories
 
-Story numbers are stable identifiers carried over from version 1.0, so gaps are intentional. Stories 3, 22-39, 46 and 50 are deferred to v2 with Groups and are preserved in section 8.2.
+Story numbers are stable identifiers carried over from version 1.0, so gaps are intentional. Stories 3, 22-39, 46 and 50 are deferred to v2 with Groups, and stories 47-49 with Accounts; all are preserved in section 8.2. Story 52 was added in version 1.2.
 
 | # | User story |
 | --- | --- |
-| 1 | As a new user, I want to browse Camera samples before signing in so I can understand the experience before committing. |
+| 1 | As a new user, I want to browse Camera samples before subscribing or starting the Trial so I can understand the experience before committing. |
 | 2 | As a personal user, I want Start a Film to be the primary action so I begin with an intention, not an editor. |
 | 4 | As a user, I want loading to clearly explain capacity and reveal so the limitations are deliberate. |
 | 5 | As a personal owner, I want an optional custom title and a sensible default so naming never blocks a casual Film. |
@@ -123,16 +158,14 @@ Story numbers are stable identifiers carried over from version 1.0, so gaps are 
 | 19 | As a user, I want interrupted Development to resume without losing captures or changing their look. |
 | 20 | As a photographer, I want physical-darkroom-style adjustments per exposure without changing the Camera. |
 | 21 | As a photographer, I want Reset to recover the exact original developed result. |
-| 40 | As a personal user, I want optional Photos export and honest information about device-local loss. |
+| 40 | As a personal user, I want optional Photos export and honest information about what an iOS device backup does and does not protect. |
 | 41 | As a user, I want Archive to hide a Film only for me, without deleting it. |
 | 42 | As a personal owner, I want to delete a whole Film after a warning, including sealed Films without preview. |
 | 43 | As a trial user, I want one complete Photo OR Movie experience, not a partial sample of each. |
-| 44 | As a paid personal user, I want to use the app without creating a separate app Account. |
+| 44 | As a user, I want to use the whole app, including the Trial and a subscription, without creating an Account or signing in. |
 | 45 | As an expired subscriber, I want to finish and keep existing memories without renewing. |
-| 47 | As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure. |
-| 48 | As a user, I want identity deletion to preserve eligible local personal Films without revealing them. |
-| 49 | As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion. |
 | 51 | As a user, I want the Film Journal library to show memories and progress without leaking sealed images. |
+| 52 | As a user who replaces or restores an iPhone, I want my Films to come back from the device backup. |
 
 ## 6. Camera catalog and immutable packages
 
@@ -180,9 +213,9 @@ Archive is an explicit, optional, reversible hide from that user's main library.
 
 **Tasks SET-01, SET-03–SET-06, SET-08** (SET-02 and SET-07 are deferred to v2)
 
-Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before sign-in or Trial Activation. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
+Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before subscribing or starting the Trial. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
 
-Browsing does not create a Trial Film, reserve or consume eligibility, or lock a Camera. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Load Film.
+Browsing does not create a Trial Film, consume eligibility, or lock a Camera. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Load Film.
 
 **Acceptance:** Canceling preview/setup has no entitlement side effect. Loading is neither a capture nor Development, and cannot bypass permissions or entitlement checks.
 
@@ -196,7 +229,7 @@ Rear and front-camera capture are supported for personal Photos and Movies. The 
 
 Only expose controls both authentic to the chosen Camera and genuinely supported by the active phone lens. Hide unsupported controls with a brief explanation; do not offer nonfunctional controls or fabricate unsupported flash/focus behavior.
 
-Personal capture works offline once entitled; a Trial requires prior online activation. Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
+Personal capture works offline once entitled and needs no server. Whether starting the Trial Film itself needs connectivity is an open decision (DEC-15). Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
 
 **Acceptance:** No review/delete path for an individual sealed personal capture. No hidden-image thumbnails or automatic Photos writes. A lens change does not reset capacity. Failure before durable save must not consume an exposure or Trial entitlement.
 
@@ -242,15 +275,20 @@ Movies have no Darkroom; permitted soundtrack and privacy-removal actions are se
 
 **Tasks STO-01–STO-10**
 
-Keep personal Film details, unfinished captures, developed masters, retained sources, and reversible edit data device-local. Account sign-in does not add cloud backup or cross-device sync. Explain the risk of losing device-local Films if the device cannot be recovered; do not promise app-managed backup. A Photos export preserves a flattened result, not a restorable Film or edit history.
+Keep personal Film details, unfinished captures, developed masters, retained sources, and reversible edit data on the iPhone.
+The app provides no app-managed sync or backup and has no Account.
+Film data is included in iOS device backups, so restoring a backup onto a replacement or upgraded iPhone restores its Films.
+The per-iPhone Trial record is not part of that restore (FR-21).
+Explain that Films are protected only if the user has an iOS device backup and are lost with the phone otherwise; do not promise app-managed backup.
+A Photos export preserves a flattened result, not a restorable Film or edit history.
 
 Unrevealed original captures stay in private app storage and are never written to Photos before reveal. Offer independent, optional Save Developed to Photos and Save Originals to Photos after eligible reveal. Developed exports include photos and full Developed Movies. No automatic export or local Film deletion follows export.
 
 Present the original-export choice at personal Development. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals will be irrecoverable. Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
 
-**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices.
+**Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup.
 
-## 8. Deferred to v2 - shared Group Film requirements
+## 8. Deferred to v2 - Group Film and Account requirements
 
 > **Deferred to v2. Nothing in this section is v1 scope, v1 acceptance, or an implementation commitment.**
 > Captain decision, 2026-09-30: v1 ships personal Photo and Movie Films only, and Groups for photos and video move to v2.
@@ -258,8 +296,11 @@ Present the original-export choice at personal Development. If a personal user c
 > In the preserved text below, "v1" means the version 1.0 consolidated baseline that included Groups; read it as "the first Group release" (v2).
 > Related Group-only tasks are in the tracker's Deferred to v2 section under their unchanged IDs.
 > Like the list in section 16, this section is not implementation approval or a committed v2 roadmap.
+>
+> Version 1.2 (2026-09-30) also moves the Account-only material here (section 8.13), because v1 has no Account, sign-in, server or Account deletion (ADR 0012).
+> In the preserved text below, statements such as "v1 keeps ..." describe version 1.1; version 1.2 defers the remaining Account parts too.
 
-Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to FR-15; 8.4 FR-16 Group parts; 8.5 FR-17; 8.6 Group parts of FR-18 to FR-21; 8.7 state model; 8.8 engineering approach; 8.9 verification; 8.10 delivery milestones; 8.11 open decisions; 8.12 other Group clauses removed from v1 sections.
+Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to FR-15; 8.4 FR-16 Group parts; 8.5 FR-17; 8.6 Group parts of FR-18 to FR-21; 8.7 state model; 8.8 engineering approach; 8.9 verification; 8.10 delivery milestones; 8.11 open decisions; 8.12 other Group clauses removed from v1 sections; 8.13 Account-only material moved from v1 in version 1.2.
 
 ### 8.1 Roles, vocabulary and permissions (from sections 4 and 4.1)
 
@@ -274,7 +315,7 @@ Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to 
 | Private Review / Release | Host-only developed review / explicit granting of developed-media visibility to current Participants. |
 | Private Print | A contributor's reversible edits to their own released Group photograph; never replaces the shared original. |
 
-The Account row above is the version 1.0 wording; v1 keeps only its Trial eligibility meaning (section 4).
+The Account row above is the version 1.0 wording; version 1.1 kept only its Trial eligibility meaning, and version 1.2 removes the term from v1 altogether (section 4, section 8.13).
 
 #### Original permission summary (version 1.0)
 
@@ -317,6 +358,9 @@ Guest contribution ownership must remain enforceable without general album acces
 - **38.** As a current member, I want to export released developed memories, including others' visible captures.
 - **39.** As a contributor, I want an optional opportunity to save my own originals, with a clear deadline.
 - **46.** As a user, I want identity deletion to remove my Group contributions without destroying other people's work.
+- **47.** As a deleting user, I want clear pending and completed states rather than sign-out being misreported as erasure. *(moved from v1 in version 1.2, version 1.1 wording)*
+- **48.** As a user, I want identity deletion to preserve eligible local personal Films without revealing them. *(moved from v1 in version 1.2, version 1.1 wording)*
+- **49.** As a subscriber deleting my identity, I want a billing warning without being forced to cancel before requesting deletion. *(moved from v1 in version 1.2, version 1.1 wording)*
 - **50.** As a Participant, I want only an optional text-only release alert—not capture reminders or photo notifications.
 
 ### 8.3 Group functional requirements FR-09 to FR-15
@@ -532,7 +576,7 @@ Original opening sentence of section 12 (v1 says "enforce Account and entitlemen
 
 ### 8.9 Verification (from section 13)
 
-Deferred items keep their version 1.0 numbers (the v1 list in section 13 is renumbered). Item 4 is also partly kept in v1 as "Identity tests: deletion pending".
+Deferred items keep their version 1.0 numbers (the v1 list in section 13 is renumbered). Item 4 was also partly kept in version 1.1 as "Identity tests: deletion pending"; version 1.2 defers that remainder too (section 8.13) and replaces it in section 13 with backup and restore tests.
 
 2. Capacity/race tests: last Photo exposure contention, duplicate subscriber contribution, tenth member/load boundaries, exclusive Movie turns, close-versus-save races, retries after network loss.
 3. Reveal/security tests: Guests and Participants cannot access sealed/Private Review media through API, cache, thumbnail, exports, notifications, or role switching.
@@ -555,6 +599,7 @@ Original privacy note: "Privacy and access design start in M0 and are prerequisi
 | ID | Decision needed | Why it matters |
 | --- | --- | --- |
 | DEC-06 | Long-term Group retention, abandoned sealed Films, storage economics, erasure/backup timing | Manual indefinite openness is not a defined storage policy. |
+| DEC-07 | Trial eligibility after Account deletion and any anti-abuse retention | Must reconcile deletion commitments without silently retaining identifying data. *(Account-only; moved from v1 in version 1.2)* |
 | DEC-08 | Lost Guest/device recovery, Account-link conflicts, subscriber-to-Account entitlement mapping | Device-bound participation and account-free paid use need explicit reconciliation. |
 | DEC-10 | Unresolved reservations/turn recovery, distributed chronology/clock ordering, upload exclusion treatment | Avoid capacity duplication, silent loss, or unauthorized reordering. |
 
@@ -583,6 +628,97 @@ Group clauses removed from DEC rows kept in v1: DEC-03 "storage/.../push vendors
 | Section 17 (decision evolution) | Group rows are tagged [v2 Groups] in place. |
 | Section 18 (evidence) | "push delivery" in the not-completed list. |
 
+### 8.13 Account-only material moved from v1 (version 1.2)
+
+Captain decision, 2026-09-30 (ADR 0012): v1 has one Trial Film per iPhone held on the device, and no server, Account, sign-in or Account deletion flow.
+Accounts return in v2 when Groups need them (hosting, subscriber load contribution), so this material is kept for v2 and is not v1 scope.
+The text below is the version 1.1 wording of what version 1.2 removed or rewrote in v1 sections. Whole requirements are quoted verbatim; for table rows and single sentences the cells or sentences are listed as quoted text, or as label: text where a row is summarized.
+The Account-only tasks are in the tracker's Deferred to v2 section (IDN-01, IDN-04, IDD-01, IDD-05, IDD-10 to IDD-12, TRI-05 to TRI-08, TRI-10, DEC-07, QA-10), with the version 1.1 text of every rewritten v1 task preserved there.
+
+#### 8.13.1 FR-19 as in version 1.1
+
+> **FR-19 — Delete Account and Deletion Pending (Guest Identity deletion and Group contribution cleanup deferred to v2)**
+>
+> **Tasks IDD-01, IDD-05, IDD-10–IDD-12** (IDD-02–IDD-04 and IDD-06–IDD-09 are deferred to v2)
+>
+> Delete Account applies to every Account holder and removes the Account's identifying details.
+>
+> Submission requires connectivity. Mark Deletion Pending until deletion of the identity and identifying details is confirmed. Sign-out or submission alone is not success. Failures and lost connectivity leave the pending status intact.
+>
+> Preserve account-independent paid personal Films on the device. A Trial Film with at least one successfully saved capture also survives Account deletion with its Account linkage removed and its original remaining capture/development rights intact. Do not reset its Camera, capacity, or reveal. An unused Trial Activation with zero saved captures is canceled during Account deletion and cannot remain an account-free capture entitlement. Deleting a preserved personal Film remains a separate action.
+>
+> For subscribers, warn that identity deletion does not cancel Apple subscription billing and offer Manage Subscription. Users may submit identity deletion immediately without opening that screen, canceling renewal first, or waiting for expiration. Do not confuse immediate submission with completed erasure.
+>
+> **Acceptance:** Personal preservation does not preserve the deleted identity. Trial anti-abuse retention after identity deletion and operational erasure timelines require explicit decisions before launch.
+
+#### 8.13.2 FR-20 and FR-21 as in version 1.1
+
+> **FR-20 — Subscription and expiration**
+>
+> **Tasks BIL-01–BIL-03, BIL-05–BIL-07** (BIL-04 is deferred to v2)
+>
+> Offer one all-inclusive monthly or yearly plan, all five Cameras, and unlimited new personal Films. No per-Film charge, feature tiers, exposure wallet, or monthly reset of capacity. Exact prices and billing offers are not yet selected.
+>
+> Paid personal purchase/capture/development/edit/export does not require a separate app Account. Trial creation requires an Apple/Google Account.
+>
+> Expiration blocks new personal Films. Existing personal Films remain capture-completable, developable, editable, viewable, and exportable.
+>
+> **Acceptance:** An expired subscriber can finish a partly shot personal roll. Renewal is not an access fee for existing memories. Purchase restoration and entitlement/device reconciliation require a production design without imposing an app Account on paid personal use.
+>
+> **FR-21 — One complete Trial Film**
+>
+> **Tasks TRI-01–TRI-10**
+>
+> A non-subscriber with an Account receives exactly one full personal Film: Photo OR Movie, any v1 Camera. It is not one of each and not a recurring trial.
+>
+> Online Trial Activation reserves eligibility for exactly one Film on one original device, across devices/reinstalls. Browsing and activation do not consume it. The first successfully saved exposure or clip consumes eligibility; failure before save does not. After activation, capture may continue offline.
+>
+> Before any successful capture, Cancel Unused Trial is allowed only online on the original device. Confirm the old activation has ended before releasing its reservation or permitting a replacement. The canceled Film cannot capture under that activation. No two simultaneous active Trials.
+>
+> While the Account exists, unresolved activation never auto-expires or gets automatically replaced, including a lost device that may have captured offline. Warn about the original-device reservation before activation. Explicit Account deletion cancels an unused activation as specified in FR-19.
+>
+> A used Trial remains used despite Discard, Film deletion, or abandonment. Its developed result remains available; further new personal Films require subscription. Account deletion preserves an already captured Trial locally as specified above. No cloud recovery of its media is implied by account-scoped entitlement.
+>
+> **Acceptance:** Two devices cannot activate two free Films. Offline first save and later sync cannot reopen eligibility. Cancellation uncertainty never releases a second Trial. Do not silently invent an identity-retention mechanism to enforce trials after Account deletion; this is an open privacy/entitlement decision.
+
+#### 8.13.3 Other version 1.1 wording replaced in version 1.2
+
+Table cells are listed individually, and cells of one row are separated by a vertical bar.
+
+- **Section 2.1 principle 8 (version 1.1):** "**Personal v1 storage is local.** Saving a result to Photos is optional export, not app-managed backup or cross-device Film restoration."
+- **Section 2.2 measurement plan (version 1.1):** "**Proposed measurement plan, not an approved analytics integration:** measure setup-to-first-save, first-save-to-Development, early-Development frequency, unfinished-Film resumption, successful export, and repeat Film creation. Track failures and privacy-boundary defects separately. Numeric targets, analytics vendor, consent, and telemetry retention remain open. Never collect sealed media to measure engagement."
+- **Section 3, Capture row, included:** "Native iOS, in-app new captures, rear and front lenses"
+- **Section 3, Capture row, excluded:** "Existing-media import; Android, web capture, App Clips"
+- **Section 3, Personal Films row (included | excluded):** "Photo rolls, Instant packs, Movies; multiple unfinished Films | Personal cloud sync or app-managed cloud backup"
+- **Section 3, Business model row (included | excluded):** "One all-inclusive monthly/yearly subscription; one Photo OR Movie Trial Film | Per-Film fees, exposure wallet, tiers, recurring monthly exposure credits"
+- **Section 3, Management row:** "Included "Archive; personal whole-Film deletion; Account deletion"; excluded "Contribution withdrawal, Leave Film, Participant removal and Guest identity deletion (deferred to v2); whole Group deletion, co-hosts, Host transfer, automatic takeover""
+- **Section 4, Personal owner row:** "User controlling a device-local personal Film. Paid use can be account-free."
+- **Section 4, Account row:** "Account: Apple- or Google-authenticated persistent identity for Trial eligibility."
+- **Story 1 (version 1.1):** "As a new user, I want to browse Camera samples before signing in so I can understand the experience before committing."
+- **Story 40 (version 1.1):** "As a personal user, I want optional Photos export and honest information about device-local loss."
+- **Story 44 (version 1.1):** "As a paid personal user, I want to use the app without creating a separate app Account."
+- **FR-03 (version 1.1):** "Anyone may browse curated sample photos or a short sample movie before sign-in or Trial Activation."
+- **FR-03 (version 1.1):** "Browsing does not create a Trial Film, reserve or consume eligibility, or lock a Camera."
+- **FR-04 (version 1.1):** "Personal capture works offline once entitled; a Trial requires prior online activation."
+- **FR-08 first paragraph (version 1.1):** "Keep personal Film details, unfinished captures, developed masters, retained sources, and reversible edit data device-local. Account sign-in does not add cloud backup or cross-device sync. Explain the risk of losing device-local Films if the device cannot be recovered; do not promise app-managed backup. A Photos export preserves a flattened result, not a restorable Film or edit history."
+- **FR-18 Trial paragraph (version 1.1):** "For an activated Trial with zero saved captures, first complete Cancel Unused Trial online on its original activating device. If cancellation is unconfirmed, keep the Film and request reconnection; do not delete it and assume eligibility has been released."
+- **Section 11 state model, Identity deletion row (version 1.1):** "Identity deletion: Online request → Accepted → Deletion Pending → confirmed permanent removal; exception: Preserved personal Films stay on the device; deletion never reveals sealed media."
+- **Section 11 invariant checklist (version 1.1):** "Archive, whole-Film deletion, Account deletion, and subscription cancellation remain separate operations."
+- **Section 12 introduction (version 1.1):** "No native codebase or production backend exists in the supplied workspace. The following decomposition organizes implementation, without selecting a cloud vendor, minimum iOS version, framework, schema, or deployment topology. Use stable domain interfaces and enforce Account and entitlement authorization server-side; browser-prototype role controls are not security mechanisms."
+- **Section 12 module table, Identity and Entitlements row (version 1.1):** "Identity and Entitlements: Apple/Google, purchases, expiry, Trial reservation; key dependencies Auth/billing integration and backend."
+- **Section 12.1 (version 1.1):** "Trial activation/consumption"
+- **Section 12.1 closing sentence (version 1.1):** "Exact encryption/key custody and deletion/backup behavior require architecture decisions."
+- **Section 12.2 (version 1.1):** "Account deletion needs a durable accepted/pending/completed workflow. Local saves and entitlement consumption must be recoverable around app termination."
+- **Section 13 item 2 (version 1.1):** "Identity tests: deletion pending after Account deletion."
+- **Section 13 item 5 (version 1.1):** "Entitlement tests: Account-free paid use, purchase restoration, expiry, cross-device Trial contention, offline first save, unused cancellation, deletion-preserved captured Trials."
+- **Section 14, M0 row (version 1.1):** "M0 deliverable "Platform/backend decisions, data model, unresolved product edge cases, asset/licensing criteria"; tracker groups "DEC, ARC""
+- **Section 14, M4 row (version 1.1):** "M4 — Personal privacy and account lifecycle: Privacy-safe Movie reassembly after Discard, Account deletion with personal-Film preservation; the shared Movies and Group lifecycle parts are deferred to v2 (section 8.10); tracker groups PRV, IDD (v1 tasks only)"
+- **Section 15, DEC-02 row (version 1.1):** "Monthly/yearly prices, offers, restoration/refund/revocation handling | One-plan structure is fixed; commercial and edge entitlement behavior are not."
+- **Section 15, DEC-03 row (version 1.1):** "Minimum iOS/device support, native stack, backend/auth vendors"
+- **Section 15, DEC-14 row (version 1.1):** "Numeric success targets and any privacy-respecting analytics design | No telemetry vendor or collection policy has been chosen."
+- **Section 16 (version 1.1):** "personal app cloud backup/sync"
+- **Section 18 not-completed list (version 1.1):** "secure backend authorization/concurrency, real authentication/subscriptions, Photos export, production deletion infrastructure"
+
 ## 9. Functional requirements — privacy and lifecycle
 
 ### FR-16 — Discard and personal Movie reassembly (Withdraw, bulk withdrawal, and reporting deferred to v2)
@@ -592,6 +728,7 @@ Group clauses removed from DEC rows kept in v1: DEC-03 "storage/.../push vendors
 After reveal, personal owners may Discard captures.
 
 Removal destroys covered app-controlled source, developed content, and accessible cached versions; retains only numbered metadata placeholders; refunds no exposures or duration.
+Copies already in an iOS device backup, like external exports, are outside app control; how a later restore treats media removed after the backup was taken is an open decision (DEC-17).
 
 Movie removal deletes the selected clip's picture and audio, retained source, and Developed Clip. Reassemble surviving Developed Clips in original order without rerolling their treatments. Retire all app-controlled assembled versions containing removed content. Preserve orientation and any selected soundtrack. External exports remain outside app control.
 
@@ -603,23 +740,21 @@ Movie removal deletes the selected clip's picture and audio, retained source, an
 
 An owner may permanently delete an entire personal Photo or Movie Film, sealed or revealed, after a clear warning and explicit confirmation. Remove local Film details, retained sources, masters, Developed Clips, and reversible edits without developing or previewing sealed captures. Explain that used Trial eligibility is not restored and external exports remain.
 
-For an activated Trial with zero saved captures, first complete Cancel Unused Trial online on its original activating device. If cancellation is unconfirmed, keep the Film and request reconnection; do not delete it and assume eligibility has been released.
+Deleting a Trial Film with zero saved captures needs no cancellation step and changes nothing about Trial eligibility, because eligibility is consumed only by the first successfully saved capture (FR-21).
+Deleting a Trial Film that has captured never restores eligibility.
 
 **Acceptance:** Personal deletion cannot trigger reveal or entitlement reset.
 
-### FR-19 — Delete Account and Deletion Pending (Guest Identity deletion and Group contribution cleanup deferred to v2)
+### FR-19 — Delete Account and Deletion Pending (deferred to v2)
 
-**Tasks IDD-01, IDD-05, IDD-10–IDD-12** (IDD-02–IDD-04 and IDD-06–IDD-09 are deferred to v2)
+**Tasks:** none in v1. IDD-01 to IDD-12 are deferred to v2 (the tracker's Deferred to v2 section).
 
-Delete Account applies to every Account holder and removes the Account's identifying details.
-
-Submission requires connectivity. Mark Deletion Pending until deletion of the identity and identifying details is confirmed. Sign-out or submission alone is not success. Failures and lost connectivity leave the pending status intact.
-
-Preserve account-independent paid personal Films on the device. A Trial Film with at least one successfully saved capture also survives Account deletion with its Account linkage removed and its original remaining capture/development rights intact. Do not reset its Camera, capacity, or reveal. An unused Trial Activation with zero saved captures is canceled during Account deletion and cannot remain an account-free capture entitlement. Deleting a preserved personal Film remains a separate action.
-
-For subscribers, warn that identity deletion does not cancel Apple subscription billing and offer Manage Subscription. Users may submit identity deletion immediately without opening that screen, canceling renewal first, or waiting for expiration. Do not confuse immediate submission with completed erasure.
-
-**Acceptance:** Personal preservation does not preserve the deleted identity. Trial anti-abuse retention after identity deletion and operational erasure timelines require explicit decisions before launch.
+Deferred to v2 with Accounts.
+v1 has no Account, sign-in or server, so there is no Account to delete and no Deletion Pending state.
+Nothing in v1 holds an identity that FR-19 would erase; the per-iPhone Trial record (FR-21) is a device-local marker, not an identity.
+Films stay under the owner's control through FR-18 (Delete personal Film), and deleting a Film never reveals sealed captures.
+Subscription billing is managed through Apple (Manage Subscription, BIL-07); deleting Films or the app does not cancel it.
+The version 1.1 text of FR-19, including the Trial preservation rules, is preserved in section 8.13.
 
 ## 10. Functional requirements — entitlement and trial
 
@@ -627,29 +762,35 @@ For subscribers, warn that identity deletion does not cancel Apple subscription 
 
 **Tasks BIL-01–BIL-03, BIL-05–BIL-07** (BIL-04 is deferred to v2)
 
-Offer one all-inclusive monthly or yearly plan, all five Cameras, and unlimited new personal Films. No per-Film charge, feature tiers, exposure wallet, or monthly reset of capacity. Exact prices and billing offers are not yet selected.
+Offer one all-inclusive monthly or yearly plan, all five Cameras, and unlimited new personal Films. No per-Film charge, feature tiers, exposure wallet, or monthly reset of capacity.
+Exact prices and billing offers are not yet selected. They are decided before billing work starts in milestone 2, after testing willingness to pay with TestFlight testers (DEC-02). Nothing in milestones 0 and 1 depends on the price.
 
-Paid personal purchase/capture/development/edit/export does not require a separate app Account. Trial creation requires an Apple/Google Account.
+The subscription is bought, checked and restored through StoreKit and the user's Apple ID.
+v1 has no app Account, sign-in or server: purchase, capture, development, editing, export and the Trial all work without one.
 
 Expiration blocks new personal Films. Existing personal Films remain capture-completable, developable, editable, viewable, and exportable.
 
-**Acceptance:** An expired subscriber can finish a partly shot personal roll. Renewal is not an access fee for existing memories. Purchase restoration and entitlement/device reconciliation require a production design without imposing an app Account on paid personal use.
+**Acceptance:** An expired subscriber can finish a partly shot personal roll. Renewal is not an access fee for existing memories. Purchase restoration and entitlement checks go through StoreKit and the Apple ID, never an app Account; refund and revocation handling remain open under DEC-02.
 
 ### FR-21 — One complete Trial Film
 
-**Tasks TRI-01–TRI-10**
+**Tasks TRI-01–TRI-04, TRI-09, TRI-11** (TRI-05–TRI-08 and TRI-10 are deferred to v2)
 
-A non-subscriber with an Account receives exactly one full personal Film: Photo OR Movie, any v1 Camera. It is not one of each and not a recurring trial.
+A non-subscriber receives exactly one full personal Film per iPhone: Photo OR Movie, any v1 Camera. It is not one of each and not a recurring trial. There is no Account and no sign-in.
 
-Online Trial Activation reserves eligibility for exactly one Film on one original device, across devices/reinstalls. Browsing and activation do not consume it. The first successfully saved exposure or clip consumes eligibility; failure before save does not. After activation, capture may continue offline.
+The iPhone remembers its Trial in the Keychain, which normally survives deleting and reinstalling the app. This is to be confirmed on iOS 26 by an early device check (TRI-11).
+The record is bound to the physical device. It is not synced, and it does not come back through a device-backup restore, so the Trial counts once per physical iPhone.
 
-Before any successful capture, Cancel Unused Trial is allowed only online on the original device. Confirm the old activation has ended before releasing its reservation or permitting a replacement. The canceled Film cannot capture under that activation. No two simultaneous active Trials.
+Browsing does not consume it. Starting the Trial Film is Trial Activation: it happens on the phone and involves no server. Whether it still needs connectivity is an open decision (DEC-15).
+The first successfully saved exposure or clip consumes eligibility and writes the Keychain record; failure before save does not. Capture continues offline.
+An iPhone has at most one Trial Film at a time. A Trial Film with zero saved captures can be deleted without any cancellation step, and deleting it does not consume eligibility.
 
-While the Account exists, unresolved activation never auto-expires or gets automatically replaced, including a lost device that may have captured offline. Warn about the original-device reservation before activation. Explicit Account deletion cancels an unused activation as specified in FR-19.
+A used Trial remains used despite Discard, Film deletion, abandonment, or deleting and reinstalling the app. Its developed result remains available; further new personal Films require subscription.
+What a restored iPhone does with an unused or a captured Trial Film is an open decision (DEC-16).
 
-A used Trial remains used despite Discard, Film deletion, or abandonment. Its developed result remains available; further new personal Films require subscription. Account deletion preserves an already captured Trial locally as specified above. No cloud recovery of its media is implied by account-scoped entitlement.
+Accepted consequence: someone with several iPhones gets several free Films. This costs only a possible sale, because Films never leave the phone.
 
-**Acceptance:** Two devices cannot activate two free Films. Offline first save and later sync cannot reopen eligibility. Cancellation uncertainty never releases a second Trial. Do not silently invent an identity-retention mechanism to enforce trials after Account deletion; this is an open privacy/entitlement decision.
+**Acceptance:** Deleting and reinstalling the app does not reopen eligibility. A restore onto a different iPhone does not carry the Trial record. Offline first save cannot leave a free second Trial, even if the app is terminated around the save. Failure before save does not consume the Trial. No Account, sign-in or server is required. Do not substitute a server, Account or cross-device identifier for the Keychain record without a new decision.
 
 ## 11. State model and invariant checks
 
@@ -660,7 +801,8 @@ These are product states, not a final database schema. Capture, reveal, archive,
 | Personal roll | Preview → Load → Capture → Complete → explicit Development → Revealed | Early completion wastes remaining exposures after warning. |
 | Personal Movie | Preview/setup orientation → Load → Clips → Complete → Development → Developed Movie | Early completion wastes duration; paused time is free. |
 | Instant | Load pack → capture → individual print Development/reveal → next capture | Revealed prints coexist with unused pack capacity. |
-| Identity deletion | Online request → Accepted → Deletion Pending → confirmed permanent removal | Preserved personal Films stay on the device; deletion never reveals sealed media. |
+| Trial | Browse → Start Trial Film (on the phone) → first saved capture consumes the Trial and writes the Keychain record | Reinstalling keeps the record; a restore onto another iPhone does not; deleting an unused Trial Film changes nothing. |
+| Device backup | Films in an iOS device backup → restore onto a replacement iPhone → Films return | The Trial record does not come back; media removed after the backup was taken is open (DEC-17). |
 
 Group flows and Group invariants are deferred to v2 (section 8.7).
 
@@ -673,13 +815,14 @@ Invariant checklist for implementation:
 - Capacity is never refunded for a deliberately spent, discarded, or deleted saved capture.
 - Treatment is assigned once, survives retries, and is unchanged by Movie reassembly.
 - Privacy removals win over development retries, cached views, and old assembled versions.
-- Archive, whole-Film deletion, Account deletion, and subscription cancellation remain separate operations.
+- Archive, whole-Film deletion, and subscription cancellation remain separate operations.
+- Trial eligibility is consumed only by the first successfully saved capture and is never restored.
 
 ## 12. Proposed engineering approach — not finalized architecture
 
 Group modules (Group Coordinator, Release and Access, Notification Delivery) and the Group data and operation rules are deferred to v2 (section 8.8).
 
-No native codebase or production backend exists in the supplied workspace. The following decomposition organizes implementation, without selecting a cloud vendor, minimum iOS version, framework, schema, or deployment topology. Use stable domain interfaces and enforce Account and entitlement authorization server-side; browser-prototype role controls are not security mechanisms.
+No native codebase exists in the supplied workspace, and v1 needs no production backend. The following decomposition organizes implementation for an iOS 26, iPhone-only app, without selecting a framework or schema. Use stable domain interfaces, check entitlements on the device through StoreKit (there is no server), and do not treat browser-prototype role controls as security mechanisms.
 
 | Proposed module | Responsibility and boundary | Key dependencies |
 | --- | --- | --- |
@@ -690,35 +833,35 @@ No native codebase or production backend exists in the supplied workspace. The f
 | Photo Darkroom | Reversible medium-valid edit recipes, local masks, reset | Masters |
 | Library and Local Store | Device-local personal data, safe media commits, archive/delete, Film Journal presentation | Lifecycle, media store |
 | Photos Export | Optional original/developed writes, errors, source cleanup eligibility | Permissions, verified master |
-| Identity and Entitlements | Apple/Google, purchases, expiry, Trial reservation | Auth/billing integration and backend |
+| Entitlements | StoreKit purchases, restore and expiry; per-iPhone Trial record in the Keychain | StoreKit, Keychain, local persistence |
 | Privacy Removal | Tombstones, media deletion, movie-version retirement/reassembly | Storage, development |
 
 ### 12.1 Proposed data responsibilities
 
-Model stable IDs for Film, immutable Camera definition/version, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, Trial activation/consumption, and privacy deletion state.
+Model stable IDs for Film, immutable Camera definition/version, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, Trial start and consumption (recorded in the Keychain), and privacy deletion state.
 
-Keep metadata-only chronology markers separate from assets so permanent media removal is possible. Store enough developed clip material to reassemble Movies without originals. Exact encryption/key custody and deletion/backup behavior require architecture decisions.
+Keep metadata-only chronology markers separate from assets so permanent media removal is possible. Store enough developed clip material to reassemble Movies without originals. Exact encryption/key custody and the contents of the device backup require architecture decisions. Keep Film data in the device backup, and keep the Trial record this-device-only so it is not restored onto another iPhone.
 
 ### 12.2 Operation contract expectations
 
-Account deletion needs a durable accepted/pending/completed workflow. Local saves and entitlement consumption must be recoverable around app termination. Never trust UI hiding alone as an access boundary.
+Local saves and Trial consumption must be recoverable around app termination. Never trust UI hiding alone as an access boundary.
 
 ## 13. Verification and release acceptance
 
-**Tasks QA-01–QA-04, QA-09–QA-14; ARC-01–ARC-03, ARC-05–ARC-07** (QA-05–QA-08 and ARC-04 are deferred to v2)
+**Tasks QA-01–QA-04, QA-09, QA-11–QA-15; ARC-01–ARC-03, ARC-05–ARC-07** (QA-05–QA-08, QA-10 and ARC-04 are deferred to v2)
 
 Testing below is planned work, not completed production coverage. Assert observable behavior rather than private implementation details.
 
-Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, and Group identity/ownership tests) are deferred to v2 (section 8.9). The list below is renumbered.
+Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, and Group identity/ownership tests) are deferred to v2 (section 8.9). The list below is renumbered. Version 1.2 replaced item 2 (identity tests, deferred to v2) with backup and restore tests.
 
 1. Domain/state tests: every Camera, full/early completion, Instant exception, immutable treatment, title/archive independence, entitlement expiration.
-2. Identity tests: deletion pending after Account deletion.
+2. Backup and restore tests: Films and sealed captures restore from an iOS device backup and stay sealed; the Trial record does not come back onto a different iPhone; media removed after a backup was taken behaves as decided in DEC-17.
 3. Media/privacy tests: source/master cleanup, stale Movie retirement, unchanged surviving Developed Clips, verified-master gates before source deletion.
-4. Native device tests: front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
-5. Entitlement tests: Account-free paid use, purchase restoration, expiry, cross-device Trial contention, offline first save, unused cancellation, deletion-preserved captured Trials.
+4. Native device tests (iPhone, iOS 26): front/rear mirroring, authentic/hardware-supported controls, permission denial, interruption, limited storage, app relaunch, offline personal capture, no microphone permission prompt, playback/export fidelity.
+5. Entitlement tests: Account-free paid use, StoreKit purchase restoration, expiry, per-iPhone Trial (one Film per iPhone, reinstall, offline first save, unused-Trial deletion, restore onto a different iPhone).
 6. UX/accessibility tests: Film Journal layouts, clear capacity warnings, archive/delete distinctions, legible native controls, assistive interaction.
 
-**Release gate:** Native capture, media treatment quality, permissions, purchase/authentication, privacy removal, and export must be validated on the real app. The browser study is insufficient evidence for those gates. Performance/size limits, device support, and measurable reliability budgets remain open rather than invented numbers.
+**Release gate:** Native capture, media treatment quality, permissions, purchase, Trial, backup and restore, privacy removal, and export must be validated on the real app. The browser study is insufficient evidence for those gates. The supported iPhone models, performance/size limits, and measurable reliability budgets remain open rather than invented numbers; the platform is iOS 26, iPhone only.
 
 ## 14. Implementation delivery sequence and tracking
 
@@ -726,32 +869,34 @@ This is a proposed dependency order within the agreed scope, not an automatic de
 
 | Milestone | Deliverable | Tracker groups |
 | --- | --- | --- |
-| M0 — Resolve implementation prerequisites | Platform/backend decisions, data model, unresolved product edge cases, asset/licensing criteria | DEC, ARC |
+| M0 — Resolve implementation prerequisites | Native stack decision (platform settled: iOS 26, iPhone only, no backend), data model, unresolved product edge cases, asset/licensing criteria, early iOS 26 Keychain device check | DEC, ARC, TRI-11 |
 | M1 — Personal photo vertical slice | Film Journal → Camera sample → Load → real capture → durable sealed roll → Development → Photos export | UX, CAM, SET, CAP, DEV, STO |
-| M2 — Full personal experience | All photo formats, front lens, Darkroom, personal Movies/audio/orientation, delete/archive, billing and Trial | DRK, MOV, DEL, BIL, TRI |
+| M2 — Full personal experience | All photo formats, front lens, Darkroom, personal Movies/audio/orientation, delete/archive, billing and Trial (price decided before billing work starts) | DRK, MOV, DEL, BIL, TRI |
 | M3 — Deferred to v2: shared photo experience | Accounts/Guests, Join consent/codes, shared loads/reservations, closure, Host review/Release, exports (see section 8.10) | Group-only tasks in the tracker's Deferred to v2 section |
-| M4 — Personal privacy and account lifecycle | Privacy-safe Movie reassembly after Discard, Account deletion with personal-Film preservation; the shared Movies and Group lifecycle parts are deferred to v2 (section 8.10) | PRV, IDD (v1 tasks only) |
+| M4 — Personal privacy lifecycle | Privacy-safe Movie reassembly after Discard; the shared Movies and Group lifecycle parts are deferred to v2 (section 8.10), as is Account deletion (section 8.13) | PRV (v1 tasks only) |
 | M5 — Release readiness | All-camera/device acceptance, privacy testing, product-quality review | QA; remaining DEC |
 
 Privacy and access design start in M0; M4 is completion of the personal privacy lifecycle, not permission to defer security until after implementation. The prerequisites for shared slices belong to v2 (section 8.10). Individual tracker items remain unchecked until implemented and verified. Completed discovery/prototype items are explicitly separated.
 
 ## 15. Open decisions and constraints
 
-These are unresolved choices, not newly approved features. Their tasks appear as `DEC-*` in the tracker. DEC-06, DEC-08 and DEC-10 are deferred to v2 with Groups and preserved in section 8.11; their IDs are unchanged.
+These are unresolved choices, not newly approved features. Their tasks appear as `DEC-*` in the tracker. DEC-06, DEC-08 and DEC-10 are deferred to v2 with Groups, and DEC-07 with Accounts; all are preserved in section 8.11 and their IDs are unchanged. DEC-15 to DEC-17 were added in version 1.2.
 
 | ID | Decision needed | Why it matters |
 | --- | --- | --- |
 | DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
-| DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling | One-plan structure is fixed; commercial and edge entitlement behavior are not. |
-| DEC-03 | Minimum iOS/device support, native stack, backend/auth vendors | Required to turn proposed modules into deployable architecture. |
+| DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling. Timing (captain decision): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2 | One-plan structure is fixed; commercial and edge entitlement behavior are not. Nothing in M0 and M1 depends on the price. |
+| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
-| DEC-07 | Trial eligibility after Account deletion and any anti-abuse retention | Must reconcile deletion commitments without silently retaining identifying data. |
 | DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
 | DEC-11 | Darkroom ranges/crop boundaries, Instant source-choice presentation, personal soundtrack reselection rules | Medium constraints are agreed; exact interactions are not. |
 | DEC-12 | Storage-pressure handling, durability/performance budgets, accessibility/device acceptance matrix | Native media behavior is untested. |
 | DEC-13 | Support escalation, privacy disclosures, launch/platform review | Operating procedures for support and launch review are not defined. |
-| DEC-14 | Numeric success targets and any privacy-respecting analytics design | No telemetry vendor or collection policy has been chosen. |
+| DEC-14 | Numeric learning targets for the TestFlight and interview plan (section 2.2) | Analytics is settled for v1: none, so no vendor or collection policy is needed. Targets still need to be set. |
+| DEC-15 | **needs-decision:** Whether starting the Trial Film still needs connectivity. Option A: never, Trial start works fully on the phone. Option B: only to check the Apple ID's subscription status through StoreKit before the first Trial start, with capture offline afterward. | The old rule needed an online server reservation; with no server, neither answer is implied. |
+| DEC-16 | **needs-decision:** What a phone restored from a device backup does with Trial Films, given the Trial record does not come back through a restore. Captured Trial Film: Option A, it keeps its remaining capture rights because they belong to the Film; Option B, it stays viewable and developable but cannot capture more. Unused Trial Film (zero saved captures): Option A, it stays usable as that iPhone's Trial; Option B, it is treated as an ordinary empty Film and the iPhone offers its own Trial start. | The restored iPhone is a different physical iPhone with its own Trial, so the rule for carried-over Trial Films is not implied by the decisions. |
+| DEC-17 | **needs-decision:** How privacy removals interact with device backups. Discard, Delete Film and Movie reassembly remove media from the app, but a restore from an older backup brings it back. Option A: accept and disclose that backups, like Photos exports, are outside app control. Option B: also keep a removal log in storage that survives a restore (for example iCloud Keychain) and re-apply removals after a restore, which bends the no-sync stance. | FR-06 and FR-16 promise that recovery never restores removed media; device backup, allowed by captain decision, can contradict that. |
 
 Do not resolve these by silently shipping assumptions that change the product's reveal, billing, privacy, or capacity promises. Implementation estimates and calendar release dates are not agreed.
 
@@ -759,13 +904,15 @@ Do not resolve these by silently shipping assumptions that change the product's 
 
 V1 does not include Group Films of any kind. Deferred to v2 are Photo Group pools and Group Movies with Recording Turns, joining by code or QR, accountless Guest participants, the Host role, load contribution and Add Shared Exposures, shared reservation and upload, manual Group closure, Host Development, Private Review and Release, the Group export deadline and Group notifications, contribution withdrawal and bulk withdrawal and reporting, Leave Film and Participant removal, Guest identity deletion, and Private Prints on Group Films. Their requirements are preserved in section 8.
 
-V1 also does not include digital nostalgia formats (CCD, MiniDV), additional Camera catalog entries, Instant Group Films, same-device Give Camera/phone lockdown, individual Group exposure quotas or private subscriber reserves, subscriber-added Movie duration, automatic Closing Time, automatic Group Development/Release, co-hosting/Host transfer, whole-Group deletion, a separate Event container, public social feeds, imported-media treatment, Movie editing, saturation/AI retouching, personal app cloud backup/sync, web/Android/App Clip capture, a monthly exposure wallet, or per-Film charges.
+V1 also has no Accounts, sign-in, server or Account deletion; those are deferred to v2 with Groups and preserved in section 8.13.
+
+V1 also does not include digital nostalgia formats (CCD, MiniDV), additional Camera catalog entries, Instant Group Films, same-device Give Camera/phone lockdown, individual Group exposure quotas or private subscriber reserves, subscriber-added Movie duration, automatic Closing Time, automatic Group Development/Release, co-hosting/Host transfer, whole-Group deletion, a separate Event container, public social feeds, imported-media treatment, Movie editing, saturation/AI retouching, app-managed backup or sync (iOS device backup does include Films), an analytics SDK or service, iPad or Mac versions, iOS before 26, web/Android/App Clip capture, a monthly exposure wallet, or per-Film charges.
 
 Additional historical Cameras and digital-era experiences may be evaluated for v2 with their own authentic review rules. The retained Group requirements in section 8 are the starting point for that evaluation. Listing these ideas, and the deferred Group requirements, is not implementation approval or a committed v2 roadmap.
 
 ## 17. Decision evolution and superseded proposals
 
-Rows tagged [v2 Groups] record decisions made for the Group design, which version 1.1 defers to v2 (last row).
+Rows tagged [v2 Groups] record decisions made for the Group design, which version 1.1 defers to v2 (the row on Groups in v1 scope). The last five rows record the version 1.2 decisions.
 
 | Earlier proposal or ambiguity | Current recorded decision |
 | --- | --- |
@@ -786,8 +933,8 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | 50-person Group | Ten active people total; separate ten-lifetime-load limit. [v2 Groups] |
 | Photo-only Groups in early discussion | Current domain model explicitly includes Movie Groups with one shared fixed duration and exclusive turns. [v2 Groups] |
 | Broad interpretation of “personal-only” | Personal-only Instant and whole-Film deletion; shared Photo/Movie workflows remain in current model. [v2 Groups] |
-| Free Photo and free Movie | Exactly one personal Trial: Photo OR Movie. |
-| Account required for all personal use | Account required for Trial/hosting/load contribution; paid personal use may be account-free. [hosting and load contribution: v2 Groups] |
+| Free Photo and free Movie | Exactly one personal Trial: Photo OR Movie, per iPhone since version 1.2. |
+| Account required for all personal use | Version 1.1: Account required for Trial/hosting/load contribution; paid personal use may be account-free. Version 1.2: no Account in v1 at all; the Trial is per iPhone (see the rows below). [hosting and load contribution: v2 Groups] |
 | Save raw captures to native Photos before reveal | Keep sources private; optional export only after eligible reveal. |
 | Permanent source retention | Verified-master cleanup, optional original export; seven-day Group source window. [Group source window: v2 Groups] |
 | Saturation/basic modern editor | Analog-constrained per-photo Darkroom without saturation; reversible Dodge/Burn included. |
@@ -795,6 +942,11 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | Automatically archive or export | Both are explicit optional actions. |
 | Three prototype directions | A — Film Journal selected; B and C are study alternatives only. |
 | Groups (Photo pools and Group Movies) in v1 scope | Captain decision, 2026-09-30 (PRD version 1.1): v1 ships personal Photo and Movie Films only, to keep v1 simple. All Group functionality, Photo Groups and Group Movies, is deferred to v2 and preserved in section 8. Group Movies do not ship in v1, and Groups do not launch with the first public release. |
+| Trial tied to an Account across devices and reinstalls, with a server reservation and an Account deletion flow | Captain decision, 2026-09-30 (PRD version 1.2, ADR 0012): one Trial Film per iPhone, remembered on the phone in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check). v1 has no server, Accounts, sign-in or Account deletion flow, and Accounts return in v2 when Groups need them. Accepted consequence: someone with several iPhones gets several free Films, which costs only a possible sale because Films never leave the phone. |
+| Device support left open (DEC-03) | Captain decision, 2026-09-30 (version 1.2): iOS 26, iPhone only for v1. |
+| Personal Films device-local only, with backup undecided | Captain decision, 2026-09-30 (version 1.2): keep no app-managed sync and allow iOS device backup, so a lost or upgraded phone does not lose Films. Films are included in iOS device backups; the per-iPhone Trial record stays bound to the device and does not come back through a restore, so the Trial counts once per physical iPhone. |
+| Proposed in-app measurement plan (DEC-14) | Captain decision, 2026-09-30 (version 1.2): no analytics for v1. No analytics SDK or service; learn from App Store Connect, Apple's crash and performance reports, and TestFlight testers and interviews. |
+| Prices and offers to be set in the requirements (DEC-02) | Captain decision, 2026-09-30 (version 1.2): decide monthly and yearly prices and offers later, before billing work starts in milestone 2, after testing willingness to pay with TestFlight testers. Nothing in milestones 0 and 1 depends on the price. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
@@ -802,7 +954,7 @@ The ADR compilation preserves historical text unchanged. Where an ADR is narrowe
 
 **Completed discovery:** detailed domain model, eleven ADRs, throwaway three-direction browser prototype, selection of Film Journal, and the browser interaction checks listed in the included prototype notes.
 
-**Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, secure backend authorization/concurrency, real authentication/subscriptions, Photos export, production deletion infrastructure, and native release verification.
+**Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, real StoreKit subscriptions and the Keychain Trial record (including the iOS 26 device check), Photos export, production local deletion, device backup and restore behavior, and native release verification.
 
 The prototype simulates roles, network state, capacity, capture, Development, exports, and notifications, including Group flows that are deferred to v2. Its Movie playback is an illustrative sequence with accelerated timing—not recorded video. It has no persistent production storage, and its remote sample photos are not validated camera emulations. Do not promote its test controls, alternate-layout switcher, or state shortcuts into the product.
 
