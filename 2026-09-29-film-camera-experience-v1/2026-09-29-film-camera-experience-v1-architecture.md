@@ -45,6 +45,8 @@ Source: PRD 1.2 notes, sections 3 and 12; ADR 0012; FR-08; FR-20; pack section 1
    Deferred to v2: backend API and database, Accounts, Sign in with Apple, Account deletion, media bucket, render worker, push, join page.
 ```
 
+In the diagram, SQLite is default D4 and the device id is default D2 (section 7).
+
 ### 2.1 Trust boundaries
 
 | # | Boundary | Trusted | Not trusted | Enforced by | Source |
@@ -66,7 +68,8 @@ Source: PRD 1.2 notes, sections 3 and 12; ADR 0012; FR-08; FR-20; pack section 1
 ## 3. Components
 
 Every PRD v1 module lives in the app.
-The two shared Swift packages are FilmDomain (pure rules: state machines, capacity math, entitlement and Trial rules) and RenderCore (versioned treatments, Darkroom recipes, Movie assembly).
+The two shared packages are FilmDomain (pure rules: state machines, capacity math, entitlement and Trial rules) and RenderCore (versioned treatments, Darkroom recipes, Movie assembly).
+Building them as Swift packages follows default D8; the native stack (DEC-03) stays open.
 Source: PRD 12; pack section 4.
 
 ### 3.1 PRD modules to components
@@ -78,7 +81,7 @@ Source: PRD 12; pack section 4.
 | Capture Engine | Capture Engine (AVFoundation) | Durable saves (temp file, flush, rename, commit, then debit), interruptions, front and rear lenses. No microphone. | M1 | FR-04, FR-05; CAP-01; MOV-07 |
 | Development Engine | RenderCore | One-time stored treatment per capture, resumable jobs, Movie assembly, foreground execution. | M1, M2 | FR-06; DEV-06, DEV-07; MOV-03 |
 | Photo Darkroom | RenderCore | Reversible recipes, local masks, Reset. | M2 | FR-07; DRK-* |
-| Library and Local Store | Local store and Film Journal UI | SQLite plus files, archive, Delete Film, no sealed thumbnails. | M1 | FR-02, FR-08; STO-01; ARC-03 |
+| Library and Local Store | Local store and Film Journal UI | SQLite (default D4) plus files, archive, Delete Film, no sealed thumbnails. | M1 | FR-02, FR-08; STO-01; ARC-03 |
 | Photos Export | Photos Export (PhotoKit, add-only) | Optional writes of developed media and originals, honest failure reporting. | M1 | FR-08; STO-04 to STO-06 |
 | Entitlements | Entitlements | StoreKit 2 purchase, restore and expiry; the Keychain Trial record with its first-save write rules. | M2 | FR-20, FR-21; BIL-*; TRI-01 to TRI-04 |
 | Privacy Removal | Privacy Removal | Discard, Delete Film, retirement and rebuild of assembled Movies, source cleanup after verified masters. | M4 | FR-16, FR-18; PRV-*; DEL-* |
@@ -89,7 +92,7 @@ The Group modules (Group Coordinator, Release and Access, Notification Delivery)
 
 | Item | Use | Cost or note | Source |
 | --- | --- | --- | --- |
-| Apple Developer Program | Distribution, TestFlight, Xcode Cloud builds (25 compute hours a month included). | $99 a year | Pack sections 1 and 4 |
+| Apple Developer Program | Distribution, TestFlight, and Xcode Cloud builds under default D8 (25 compute hours a month included). | $99 a year | Pack sections 1 and 4 |
 | App Store and StoreKit 2 | Purchases, restore, Manage Subscription, verified on the phone. | Commission only | FR-20; BIL-01 to BIL-07 |
 | iOS device backup | Restores Films onto a replacement iPhone. Done by iOS, not by the app. | The user's iCloud or computer | FR-08; STO-11 |
 | App Store Connect, TestFlight, crash and performance reports | How Apple reports downloads, conversion, subscriptions and crashes. No SDK in the app. | Included | PRD 2.2; DEC-14 |
@@ -97,7 +100,7 @@ The Group modules (Group Coordinator, Release and Access, Notification Delivery)
 
 ## 4. On-device data model
 
-The database that matters is the phone's SQLite store, plus one Keychain record.
+The database that matters is the phone's SQLite store (default D4), plus one Keychain record.
 It holds the only copy of someone's memories and is also what the device backup restores.
 The table and column names are working names, not a final schema (PRD 11).
 Source: PRD 11, 12.1; FR-08; pack section 5.
@@ -106,14 +109,14 @@ Source: PRD 11, 12.1; FR-08; pack section 5.
 
 | Entity | Where | Holds | Ownership, privacy or retention rule | Source | Kind |
 | --- | --- | --- | --- | --- | --- |
-| film | SQLite | One row per personal Film. | Camera package immutable after Load Film. Capture, development, archive, entitlement and deletion are separate columns. Delete Film removes every row and file for the Film from current storage; an older backup can bring it back (DEC-17). | FR-03, FR-18; PRD 11 | Requirement-derived |
+| film | SQLite | One row per personal Film. | Camera package immutable after Load Film. Capture, development, archive, entitlement and deletion are separate states; archive flags live in this row (default D6). Delete Film removes every row and file for the Film from current storage; an older backup can bring it back (DEC-17). | FR-03, FR-18; PRD 11 | Requirement-derived rule, default mechanism |
 | film.trial_source, film.trial_origin_device | SQLite | Whether a Film came from this phone's Trial entitlement, and which phone started it. | A restored Trial Film keeps its own capture rights and never consumes or blocks this phone's entitlement. The mechanism that tells 'restored' from 'own' is default D2. | FR-21; DEC-16 | Requirement-derived rule, default mechanism |
-| capture | SQLite | Chronology marker per photo or clip. | Separate from files so Discard can remove media and keep a numbered placeholder. Capacity is never refunded. Failed unsaved captures consume nothing. Treatment assigned once (default D5). | FR-04, FR-06, FR-16; PRD 12.1; DEV-06 | Requirement-derived |
+| capture | SQLite | Chronology marker per photo or clip. | Separate from files so Discard can remove media and keep a numbered placeholder. Capacity is never refunded. Failed unsaved captures consume nothing. Treatment assigned once (default D5). | FR-04, FR-06, FR-16; PRD 12.1; DEV-06 | Requirement-derived rule, default mechanism |
 | media_asset | SQLite and files | Source, master and Developed Clip files. | No thumbnail for sealed captures. Sources deleted only after Photos save or a verified master. Masters and Developed Clips are kept until the photo or clip is Discarded or the Film is deleted. Discard removes the discarded capture's media and leaves its numbered placeholder. Delete Film removes everything for the Film. Included in the device backup. | FR-08, FR-16, FR-18; STO-03 to STO-09, STO-11; MOV-10; PRV-01, PRV-05 | Requirement-derived |
 | edit_recipe | SQLite | Darkroom edits per exposure. | Reversible, independent per exposure, no saturation control, Reset restores the master. | FR-07; DRK-01 to DRK-08 | Requirement-derived |
 | development_run | SQLite | Resumable Development progress. | Interruption resumes the same result. Incomplete results stay hidden. Recovery never restores removed media. | FR-06; DEV-07, DEV-08 | Requirement-derived |
 | movie_assembly | SQLite and files | Assembled Movie versions. | Retire every version containing a Discarded clip. Rebuild from surviving Developed Clips without re-Development. Keep orientation and selected soundtrack. | FR-16; PRV-07, PRV-08; ADR 0007 (personal Movie Discard) | Requirement-derived |
-| Keychain record | Keychain | A random device id and a Trial-consumed marker. | Written around the first saved capture (default D3, whose limit is recorded in section 8.1). Normally survives delete and reinstall, to be confirmed on iOS 26 (TRI-11). This-device-only (default D1): not restored onto another iPhone, not synced. | FR-21; TRI-02, TRI-04, TRI-11; ADR 0012 | Requirement-derived rule, default mechanism |
+| Keychain record | Keychain | A random device id (default D2) and a Trial-consumed marker. | Written around the first saved capture (default D3, whose limit is recorded in section 8.1). Normally survives delete and reinstall, to be confirmed on iOS 26 (TRI-11). This-device-only (default D1): not restored onto another iPhone, not synced. | FR-21; TRI-02, TRI-04, TRI-11; ADR 0012 | Requirement-derived rule, default mechanism |
 
 ### 4.2 File lifetimes
 
@@ -128,7 +131,7 @@ Discard removes one capture's media and keeps its numbered placeholder, and Dele
 | Darkroom recipe rows | At the first edit | When the photo is Discarded or the Film is deleted; Reset returns the master | FR-07, FR-16, FR-18; DRK-06 |
 | Photos library copy | On the user's export choice | Never by the app; it cannot be recalled | FR-08 |
 
-File paths use opaque ids, so a Film title never appears in a path or a log line (default, pack section 5).
+File paths use opaque ids, so a Film title never appears in a path or a log line (approved baseline, pack section 5).
 
 ### 4.3 Backup and restore behavior
 
@@ -147,11 +150,11 @@ Source: pack section 6.
 | Interface | Called by | Owns | Must never | Source |
 | --- | --- | --- | --- | --- |
 | StoreKit 2 | Entitlements, when a new Film starts and in Settings | Product configuration; purchase and restore; verified current entitlements; expiry check for new Films only; the Manage Subscription entry. Refund and revocation handling stays open under DEC-02. | Require an app Account or sign-in. Gate capture, Development, Darkroom or export on an existing Film. Accept an unverified transaction. Send purchase data to any Immerse service. | FR-20; BIL-01 to BIL-07; ADR 0006 (partly) |
-| Keychain Services | Entitlements, at Trial start, first save and launch | One Trial item and a random device id: accessible after first unlock, this-device-only, not synchronizable. Written around the first saved capture, with launch-time recovery while the app stays installed (default D3); the delete-and-reinstall window after termination is an open item (section 8.1). | Use iCloud Keychain sync. Store media, titles or identity. Be treated as a security boundary against a jailbroken phone. Be replaced by a server, Account or cross-device identifier without a new decision. | FR-21; TRI-02, TRI-04, TRI-11; ADR 0012 |
+| Keychain Services | Entitlements, at Trial start, first save and launch | One Trial item and a random device id (default D2): accessible after first unlock, this-device-only, not synchronizable (default D1). Written around the first saved capture, with launch-time recovery while the app stays installed (default D3); the delete-and-reinstall window after termination is an open item (section 8.1). | Use iCloud Keychain sync. Store media, titles or identity. Be treated as a security boundary against a jailbroken phone. Be replaced by a server, Account or cross-device identifier without a new decision. | FR-21; TRI-02, TRI-04, TRI-11; ADR 0012 |
 | Photos library (PhotoKit, add-only) | Photos Export, after reveal and only on the user's choice | Add-only authorization; writes of developed photos, full Developed Movies and, if chosen, originals; honest success and failure reporting. | Read or import from the library. Write anything before reveal. Write automatically. Report success when permission was denied or the write failed. Promise to recall an exported copy. | FR-08; STO-03 to STO-06; CAP-02 |
 | iOS device backup | iOS, configured by the app through file attributes | Film data in app storage is included; caches and temp files are excluded; the Trial item stays out of a restore to another phone; the privacy copy and Delete Film confirmation say what a backup can restore. | Build app-managed backup or cross-device sync. Exclude Film data. Promise protection without a backup. Keep a removal log that survives a restore. | FR-08; STO-02, STO-11; DEC-17 |
 | Camera and permissions (AVFoundation) | Capture Engine | Camera permission; rear and front lenses; interruption handling; a durable save before any capacity debit. | Request the microphone, location, contacts or tracking. Import existing media. | FR-04, FR-05; CAP-01, CAP-02; MOV-07 |
-| Metal and Core Image, foreground execution | RenderCore, on an explicit Develop tap | One-time treatment per capture with a stored seed; Darkroom recipes; Movie assembly; resume after interruption. | Assume GPU work can continue in the background. Re-roll a treatment. Change a Developed Clip when rebuilding a Movie. | FR-06, FR-07; DEV-06, DEV-07; MOV-03 |
+| Metal and Core Image, foreground execution | RenderCore, on an explicit Develop tap | One-time treatment per capture with a stored seed (default D5); Darkroom recipes; Movie assembly; resume after interruption. | Assume GPU work can continue in the background. Re-roll a treatment. Change a Developed Clip when rebuilding a Movie. | FR-06, FR-07; DEV-06, DEV-07; MOV-03 |
 | Apple's reports (App Store Connect, TestFlight, crash and performance) | Nobody in the app; Apple collects them | Downloads, conversion, subscriptions, opt-in retention and crashes; TestFlight testers and interviews for the PRD 2.2 funnel. | Add an analytics SDK or in-app telemetry. Send sealed media, titles or paths. | PRD 2.2; DEC-14; PRD 1.2 analytics decision |
 
 ## 6. Cost floor
@@ -232,7 +235,7 @@ Source: pack section 8.
 | 5 | RK-22 | Movie assembly, rebuild and export fidelity | Medium | Medium | Cuts, borders for opposite orientation, optional bundled soundtrack; HEVC, HDR and orientation on real hardware; a rebuild must not reroll any treatment. | Early check S11 plus golden tests; keep every Developed Clip as its own file (MOV-10). | M2 (early check), M4 (rebuild) | MOV-10, MOV-11; PRV-07; FR-16 |
 | 6 | RK-23 | Trial rules have tricky edges on the device | Medium | Medium | Atomic first-save consumption, zero-save deletion leaving the entitlement, restored Trial Films coexisting with the destination entitlement, telling 'restored' from 'own' without a server, and the termination-then-reinstall window at the first save (section 8.1). | Model-based tests of the Trial state machine, termination tests around the first save, and a two-iPhone test (early check S12), which also measures the open first-save window in section 8.1. | M2 | FR-21; TRI-01 to TRI-04; DEC-16; QA-12 |
 | 7 | RK-26 | An older backup can bring back discarded media or a deleted Film | Medium | Medium | Discard and Delete Film remove data from current storage only; copies in an earlier backup are outside app control. The captain accepted this with no removal log (DEC-17). | Say it plainly in the privacy copy and the Delete Film confirmation, test both outcomes (QA-15), and do not promise erasure from backups. | M4 (copy), M5 (QA-15) | DEC-17; FR-16, FR-18; PRV-10 |
-| 8 | RK-18 | The Trial can be repeated on another iPhone or after an erase | High | Low | Accepted in ADR 0012: it costs only a possible sale because Films never leave the phone. | Accept. Revisit only if it shows up as a revenue problem in App Store Connect. | Accepted by the captain | ADR 0012; FR-21 |
+| 8 | RK-18 | Someone with several iPhones gets a Trial on each | High | Low | Accepted in ADR 0012 and FR-21: the Trial counts once per physical iPhone, which costs only a possible sale because Films never leave the phone. The effect of an erase is not part of this acceptance and stays open under TRI-11 (RK-12, check S4). | Accept. Revisit only if it shows up as a revenue problem in App Store Connect. | Accepted by the captain | ADR 0012; FR-21 |
 | 9 | RK-12 | The Trial record may not survive a reinstall on iOS 26 | Low | Medium | An Apple developer-support engineer said Keychain items survive delete and reinstall, but the statement is from 2021 and iOS 26 is unchecked. There is no server fallback by decision. | Early check S4 before Trial work is built. If it fails, raise a new decision; do not add a server or Account (TRI-11). Also note the effect of an OS update and an erase. | M0 (TRI-11) | TRI-11; ADR 0012; FR-21 |
 | 10 | RK-24 | App Review basics are missed | Medium | Low | Guideline 3.1.2 subscription disclosures, the privacy label (likely 'data not collected', which is not confirmed), a support URL, a reviewer path to try the Trial. With no Accounts, in-app account deletion and Sign in with Apple requirements do not arise. | A launch checklist at QA-14 and DEC-13; decide the privacy answers with the final dependency list. | M5 | DEC-13; QA-14; pack section 8 |
 | 11 | RK-27 | No server means no remote control | Medium | Low | No kill switch, minimum-version check or remote configuration exist in v1; App Store review adds latency to fixes. | Test StoreKit and Trial paths thoroughly (QA-12), use phased release, and accept the limit. | M5 | pack section 8 (derivation) |

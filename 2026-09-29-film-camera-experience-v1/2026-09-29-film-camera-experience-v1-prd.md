@@ -874,8 +874,10 @@ Every line below restates the baseline and adds no requirement.
 - **System shape.** One iPhone app plus iOS services (Keychain, StoreKit 2, PhotoKit add-only, the backup agent) and three Apple services outside the phone (the App Store and Apple ID, iCloud or computer backup, App Store Connect with TestFlight and crash reports).
   No service is operated for Immerse, and the app makes no network call of its own (baseline 2).
 - **Modules.** All nine modules in the table above live in the app.
-  FilmDomain and RenderCore are the two shared Swift packages, and Entitlements is StoreKit 2 plus the Keychain Trial record (baseline 3).
-- **On-device data model.** Films, captures, files, edit recipes, Development runs and Movie assemblies are in SQLite and app storage, and the Trial record is one this-device-only Keychain item.
+  FilmDomain and RenderCore are the two shared packages, and Entitlements is StoreKit 2 plus the Keychain Trial record (baseline 3).
+  Building the shared packages in Swift is default D8, not a decision; DEC-03 stays open.
+- **On-device data model.** Films, captures, files, edit recipes, Development runs and Movie assemblies are in an on-device store and app storage, and the Trial record is one this-device-only Keychain item.
+  Using SQLite for that store is default D4, not a decision.
   The rules for each entity and for file lifetimes are in baseline 4.
 - **Apple interfaces.** The app's seven interfaces with iOS and Apple, with what each owns and must never do, are in baseline 5.
 - **Cost floor.** Apple's Developer Program at $99 a year is the only recurring cost in the baseline.
