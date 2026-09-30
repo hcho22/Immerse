@@ -127,7 +127,7 @@ Discard removes one capture's media and keeps its numbered placeholder, and Dele
 | source/{capture} | At the first save | After the master or Developed Clip is verified, and, when originals are exported, after a successful Photos export of them; also when the capture is Discarded or the Film is deleted | FR-08, FR-16, FR-18; DEV-10; STO-07, STO-08; PRV-05 |
 | master/{capture} | At Development | When the photo is Discarded (its numbered placeholder stays), or when the Film is deleted | FR-06, FR-08, FR-16, FR-18; STO-09; PRV-01, PRV-05 |
 | clip/{capture} (Movies) | At Development | When the clip is Discarded (its numbered placeholder stays), or when the Film is deleted | MOV-10; FR-16, FR-18; PRV-05 |
-| movie/{version} | At assembly | Retired and rebuilt after a Discard | PRV-07 |
+| movie/{version} | At assembly | When a Discard retires it (it is rebuilt from surviving Developed Clips), or when the Film is deleted | FR-16, FR-18; PRV-07 |
 | Darkroom recipe rows | At the first edit | When the photo is Discarded or the Film is deleted; Reset returns the master | FR-07, FR-16, FR-18; DRK-06 |
 | Photos library copy | On the user's export choice | Never by the app; it cannot be recalled | FR-08 |
 
