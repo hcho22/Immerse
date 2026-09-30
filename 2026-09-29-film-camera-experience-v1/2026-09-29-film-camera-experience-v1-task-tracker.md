@@ -11,7 +11,7 @@ This is the canonical checkbox list for the dated PRD. Every functional area has
 
 Suggested annotation: `Owner: … | Status: in progress / blocked / done | Evidence: … | Completed: YYYY-MM-DD`. State any unresolved prerequisite rather than checking a task off because a mockup demonstrates it. `DEC` items resolve open choices; `ARC` items design implementation; other groups implement or verify the recorded product behavior. All are needed for the corresponding scoped function unless the product owner explicitly revises scope.
 
-**Task counts (version 1.2).** The tracker contains 233 items: five completed discovery/prototype items, 120 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
+**Task counts (version 1.2).** The tracker contains 233 items: five completed discovery/prototype items, three DEC items decided on 2026-09-30 (DEC-15 to DEC-17, checked), 117 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
 
 Each task inherits the acceptance criteria and privacy/reveal constraints of its referenced PRD section. For example, completing a Photos export task requires permission and failure behavior, not just a visible button. The final QA section supplies cross-feature verification, not a replacement for task-level checks.
 
@@ -37,9 +37,9 @@ Dependency: resolve relevant choices before the affected implementation is accep
 - [ ] DEC-12 — Define low-storage behavior, supported-device/accessibility matrix, media durability, and measurable performance/reliability budgets.
 - [ ] DEC-13 — Define support escalation, privacy disclosures, and platform/launch review requirements.
 - [ ] DEC-14 — Approve numeric learning targets for the TestFlight and interview plan (PRD section 2.2). Settled 2026-09-30: no analytics SDK or service in v1; no implicit media telemetry.
-- [ ] DEC-15 — Decide whether starting the Trial Film needs connectivity. needs-decision: options in PRD section 15.
-- [ ] DEC-16 — Decide what a restored iPhone does with an unused Trial Film and with a captured Trial Film, given the Trial record does not come back through a restore. needs-decision: options in PRD section 15.
-- [ ] DEC-17 — Decide how privacy removals (Discard, Delete Film, Movie reassembly) interact with a restore from an older device backup. needs-decision: options in PRD section 15.
+- [x] DEC-15 — Decide whether starting the Trial Film needs connectivity. Decided 2026-09-30 (option A): it never needs connectivity. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
+- [x] DEC-16 — Decide what a restored iPhone does with an unused Trial Film and with a captured Trial Film. Decided 2026-09-30 (option A for both): a captured Trial Film keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
+- [x] DEC-17 — Decide how privacy removals (Discard, Delete Film, Movie reassembly) interact with a restore from an older device backup. Decided 2026-09-30 (option A): accept that an older backup can bring back discarded media, disclose it in the privacy copy, and keep no removal log. Status: done | Evidence: captain decision 2026-09-30; PRD section 15 and FR-21 | Completed: 2026-09-30
 
 ## ARC — Foundation and architecture
 
@@ -102,7 +102,7 @@ Dependency: CAM, SET, ARC-03. PRD FR-04.
 - [ ] CAP-05 — Mirror front viewfinders but produce unmirrored saved/developed photo and movie results.
 - [ ] CAP-06 — Permit lens switching only between exposures/clips; block switches during capture/recording.
 - [ ] CAP-07 — Expose only Camera-authentic, hardware-supported controls and explain unavailable capabilities briefly.
-- [ ] CAP-08 — Support entitled personal offline capture with no server dependency; connectivity at Trial start follows DEC-15.
+- [ ] CAP-08 — Support entitled personal offline capture with no server dependency; Trial start needs no connectivity (DEC-15).
 - [ ] CAP-09 — Handle camera permission, save failures, storage interruptions, and relaunch without false successful-save/capacity consumption.
 - [ ] CAP-10 — Keep saved sealed media private: no review, individual delete, thumbnails, or automatic Photos export before reveal.
 
@@ -179,7 +179,7 @@ Dependency: media deletion/reassembly architecture. PRD FR-16.
 - [ ] PRV-06 — Enforce no refunds of exposures/time.
 - [ ] PRV-07 — Retire affected Movie versions and rebuild from unchanged surviving clips without repeating Development.
 - [ ] PRV-08 — Preserve surviving chronology, final orientation, and selected soundtrack through reassembly; handle all-clips-removed policy once decided.
-- [ ] PRV-10 — Explain permanent app removal and the limits of external exports and device backups; verify no stale viewing/export after accepted privacy action (backup-restore handling per DEC-17).
+- [ ] PRV-10 — Explain permanent app removal and the limits of external exports and device backups; verify no stale viewing/export after accepted privacy action and disclose that restoring an older backup can bring back media discarded after it (DEC-17).
 
 ## DEL — Whole personal Film deletion
 
@@ -208,12 +208,12 @@ Dependency: DEC-02 (resolved before billing work starts in M2), ARC-05. PRD FR-2
 
 ## TRI — Per-iPhone one-Film trial
 
-Dependency: ARC-05, CAP durability; DEC-15 and DEC-16 for Trial start connectivity and restore behavior. PRD FR-21. TRI-05 to TRI-08 and TRI-10 moved to Deferred to v2 in version 1.2.
+Dependency: ARC-05, CAP durability; DEC-15 and DEC-16 (decided) for Trial start without connectivity and restored Trial Films. PRD FR-21. TRI-05 to TRI-08 and TRI-10 moved to Deferred to v2 in version 1.2.
 
 - [ ] TRI-01 — Offer exactly one full personal Photo OR Movie Trial Film per iPhone with any Camera, with no Account or sign-in.
-- [ ] TRI-02 — Record the iPhone's Trial in the Keychain so it survives deleting and reinstalling the app, stays bound to this physical iPhone, and is not restored onto another iPhone.
+- [ ] TRI-02 — Record the iPhone's Trial in the Keychain so it survives deleting and reinstalling the app, stays bound to this physical iPhone, and is not restored onto another iPhone; a Trial Film restored from a backup keeps its own capture rights (DEC-16).
 - [ ] TRI-03 — Consume eligibility at first successfully saved exposure/clip, never browsing, loading, activation, or failed unsaved capture.
-- [ ] TRI-04 — Write the Trial record atomically around the first successful save so app termination cannot leave a free second Trial; capture needs no server.
+- [ ] TRI-04 — Write the Trial record atomically around the first successful save so app termination cannot leave a free second Trial; capture and Trial start need no server or connectivity (DEC-15).
 - [ ] TRI-09 — Preserve developed Trial access and reject entitlement refunds after used-Film deletion/Discard/abandonment or app reinstall.
 - [ ] TRI-11 — Early device check on iOS 26 hardware: confirm the Keychain Trial record survives deleting and reinstalling the app and is absent after restoring a backup onto a different iPhone; note the effect of an OS update and of an erase; report the result before Trial work is built. If the record does not survive, raise a new decision instead of adding a server or Account.
 
@@ -227,10 +227,10 @@ Dependency: relevant implemented slices; test continuously rather than waiting u
 - [ ] QA-04 — Verify every Darkroom control, per-exposure isolation, reset, and exclusion of prohibited editing.
 - [ ] QA-09 — Verify source deletion, failed Photos writes, verified-master gating, and unaffected external exports.
 - [ ] QA-11 — Verify Movie stale-version retirement and unchanged surviving clip treatment/audio/order/orientation/soundtrack after removals.
-- [ ] QA-12 — Verify subscription expiration, account-free paid use, the per-iPhone Trial (one Film per iPhone, reinstall, no second Trial, offline first save, unused-Trial deletion), and Trial behavior after a restore onto a different iPhone.
+- [ ] QA-12 — Verify subscription expiration, account-free paid use, the per-iPhone Trial (one Film per iPhone, reinstall, no second Trial, offline first save, unused-Trial deletion), and Trial behavior after a restore onto a different iPhone (a captured Trial Film keeps capturing, a started empty Trial Film stays usable).
 - [ ] QA-13 — Verify supported devices (iPhone, iOS 26), accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets.
 - [ ] QA-14 — Complete production asset/licensing, disclosures/support, platform review, unresolved-decision review, and evidence-backed release sign-off; do not use prototype checks as native completion evidence.
-- [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not, and verify the DEC-17 outcome for media removed after a backup was taken.
+- [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not, and verify the DEC-17 outcome: a restore of an older backup can bring back discarded media, and the privacy copy discloses it.
 
 ## Deferred to v2 — Group and Account tasks
 
@@ -546,4 +546,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | --- | --- |
 | 2026-09-29 | Created local v1 baseline from the recorded discussion, domain model, ADRs, and selected Film Journal prototype. |
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
-| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (one Trial Film per iPhone held in the Keychain, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). |
+| 2026-09-30 | Version 1.2: captain decisions for an on-phone v1 (one Trial Film per iPhone held in the Keychain, no server, Accounts, sign-in or Account deletion; iOS 26 iPhone only; iOS device backup with a device-bound Trial record; no analytics; price decided before M2 billing work). 14 Account-only tasks moved to Deferred to v2 with IDs unchanged; 21 v1 tasks rewritten with their version 1.1 text preserved; six IDs added (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15). The captain decided DEC-15 to DEC-17 the same day (Trial start needs no connectivity; restored Trial Films keep their rights; older-backup restores may bring back discarded media, disclosed, no removal log). |

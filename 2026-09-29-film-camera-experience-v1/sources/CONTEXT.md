@@ -201,7 +201,7 @@ The one free personal Film available per iPhone to a non-subscriber using either
 _Avoid_: One free capture, per-Account trial, separate photo and movie trials, temporary developed media
 
 **Trial Activation**:
-The on-phone start of the iPhone's Trial Film, which involves no server and does not consume the Trial before the first successfully saved capture.
+The on-phone start of the iPhone's Trial Film, which involves no server, needs no connectivity, and does not consume the Trial before the first successfully saved capture.
 _Avoid_: Trial consumption, server reservation, Account reservation
 
 **Cancel Unused Trial**:
@@ -496,13 +496,14 @@ _Avoid_: Draft, incomplete album
 - Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
 - A non-subscriber may use exactly one **Trial Film** per iPhone, choosing either Photo or Movie; there is no Account or sign-in in v1.
 - The iPhone remembers its Trial in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore, so the Trial counts once per physical iPhone.
-- **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and whether it still needs connectivity is an open decision (DEC-15).
+- **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and it never needs connectivity (DEC-15).
 - After Trial Activation, Trial Film capture may continue without connectivity.
 - Trial Film eligibility is consumed at the first successfully saved Exposure or Recorded Clip (which writes the Keychain record), not during Camera browsing or empty Film setup.
 - Failed captures that do not save successfully do not consume Trial Film eligibility.
 - An iPhone has at most one Trial Film at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
 - Someone with several iPhones gets several free Films; this costs only a possible sale, because Films never leave the phone.
-- What a restored iPhone does with an unused or a captured Trial Film is an open decision (DEC-16).
+- After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film; the restored phone's own Trial record is separate (DEC-16).
+- Restoring an older device backup can bring back media discarded after that backup; this is accepted and disclosed in the privacy copy, and the app keeps no removal log (DEC-17).
 - Abandoning, deleting, or Discarding a Trial Film after its first successfully saved capture never restores Trial Film eligibility.
 - Every v1 Camera is available for the Trial Film.
 - A developed Trial Film remains available permanently; starting another personal Film after Trial Film eligibility is consumed requires a Subscription.
@@ -568,7 +569,7 @@ _Avoid_: Draft, incomplete album
 - After reservation, a captured Exposure is saved locally and can be uploaded through retries if connectivity is interrupted.
 - A reserved Exposure is consumed only when the capture is safely saved locally; a failure before successful local saving returns the reservation to the Group Exposure Pool.
 - A safely saved capture consumes its Exposure even when upload is delayed; upload retries do not consume additional Exposures.
-- Personal Films support capture without connectivity, including a Trial Film after it starts; whether starting the Trial Film needs connectivity is an open decision (DEC-15).
+- Personal Films support capture without connectivity, including a Trial Film and its start (DEC-15).
 - Revealed personal Films remain viewable without connectivity; offline access never bypasses their Camera's Reveal Rule.
 - An empty Group Exposure Pool places the Photo Group Film into **Capacity Pause** without closing it.
 - Adding a Subscriber Load during Capacity Pause resumes capture; otherwise the Host may close the Group Film.

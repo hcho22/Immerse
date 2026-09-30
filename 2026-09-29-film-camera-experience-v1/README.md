@@ -21,7 +21,7 @@ Films are included in iOS device backups while the app offers no sync of its own
 v1 has no analytics SDK or service; learning comes from App Store Connect, Apple's crash and performance reports, TestFlight testers and interviews.
 Prices and offers are decided before billing work starts in milestone 2.
 Account-only requirements are kept, labeled deferred to v2, in PRD section 8.13 and the tracker's Deferred to v2 section.
-The Trial rules that the per-iPhone design leaves unsettled are open decisions DEC-15 to DEC-17 in PRD section 15.
+The Trial rules the per-iPhone design left unsettled (DEC-15 to DEC-17) were answered by the captain the same day: starting the Trial never needs connectivity, restored Trial Films keep their capture rights, and restoring an older backup can bring back discarded media, which is disclosed.
 
 Version 1.1 (September 30, 2026) scopes v1 to personal Photo and Movie Films only. By captain decision, all Group functionality (Photo Group pools, Group Movies with Recording Turns, code/QR joining, Guest participants, the Host role, shared loads, Host Development with Private Review and Release, contribution withdrawal, Leave Film and Participant removal) is deferred to v2. Group Movies do not ship in v1, and Groups do not launch with the first public release. Every Group requirement is retained, labeled deferred to v2, in PRD section 8 and the tracker's Deferred to v2 section; that retention is not implementation approval or a committed v2 roadmap. Earlier proposals were revised during the discussion; see the PRD's decision-evolution table rather than treating every historical suggestion as simultaneously active.
 
@@ -45,6 +45,6 @@ The existing artifact is a throwaway browser prototype, not a native iOS app. Si
 - Source snapshots: CONTEXT.md and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 
-The tracker contains 233 items: five completed discovery/prototype items, 120 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six. The package contains 18 Markdown files, including all twelve standalone ADRs.
+The tracker contains 233 items: five completed discovery/prototype items, three decided DEC items, 117 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six. The package contains 18 Markdown files, including all twelve standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.
