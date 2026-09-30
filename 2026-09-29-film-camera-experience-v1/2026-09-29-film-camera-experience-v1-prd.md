@@ -883,7 +883,8 @@ Every line below restates the baseline and adds no requirement.
 - **Cost floor.** Apple's Developer Program at $99 a year is the only recurring cost in the baseline.
   Prices stay held under DEC-02 (baseline 6).
 - **Risks and early checks.** Twelve architecture risks are ranked, led by Development speed on the oldest supported iPhone and Films being protected only when the user has an iOS backup.
-  Six early checks settle them: ARC-08 to ARC-12 and TRI-11 (baseline 9).
+  Six early checks, ARC-08 to ARC-12 and TRI-11, settle seven of the twelve risks (baseline 9.1).
+  The remaining five are settled by design choices, acceptance, QA-14 or DEC-14 (baseline 9).
 - **Defaults.** The baseline lists eight engineering defaults, D1 to D8, including Swift 6 and SwiftUI.
   They are explicitly not decisions, and DEC-03 stays open (baseline 7).
 
@@ -931,7 +932,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 | --- | --- | --- |
 | DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
 | DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling. Timing (captain decision): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2 | One-plan structure is fixed; commercial and edge entitlement behavior are not. Nothing in M0 and M1 depends on the price. |
-| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists Swift 6, SwiftUI, GRDB and Xcode Cloud only as defaults (D4 and D8), not a decision | Required to turn proposed modules into deployable architecture. |
+| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists GRDB (D4) and Swift 6, SwiftUI and Xcode Cloud (D8) only as defaults D4 and D8, not a decision | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
 | DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
