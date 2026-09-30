@@ -1239,6 +1239,7 @@ Section 5.1 names each one where a journey reaches it.
 Gaps the prototype exposed in this PRD:
 FR-06 names the early actions but the state model separates Completion from explicit Development.
 For Instant, FR-08's originals choice at Development has no defined point (DEC-11).
+FR-21 allows at most one Trial Film from an iPhone's entitlement at a time, but the PRD does not describe what a non-subscriber sees when they start another Film while a Trial Film with zero captures exists.
 These are recorded as observations, not changed requirements.
 
 A feature is done only when its tracker task is implemented, its acceptance behavior passes in the relevant native/shared environment, its error/permission states are handled, and evidence is recorded. A browser demo or checked design decision alone does not satisfy production completion.
