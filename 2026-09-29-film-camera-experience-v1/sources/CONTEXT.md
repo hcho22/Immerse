@@ -15,6 +15,10 @@
 > Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore; restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
 > v1 has no analytics SDK or service, and its price is decided before milestone 2 billing work.
 > The statements that assert overall v1 scope were corrected below; the Group-only rules were not rewritten.
+>
+> **Version 1.3 note (2026-09-30, PRD version 1.3).**
+> No domain rule or term changed.
+> The approved v1 architecture baseline maps these terms onto components and data model entities in [the architecture document](../2026-09-29-film-camera-experience-v1-architecture.md); it does not redefine them.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 

@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 30, 2026 (version 1.2; version 1.1 was the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.2\
+**Document date:** September 30, 2026 (version 1.3; versions 1.1 and 1.2 were the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.3\
 **Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)\
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
@@ -12,6 +12,7 @@ This PRD consolidates the recorded product interview, the current domain model, 
 
 - [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md): canonical implementation checkboxes, stable task IDs, dependencies, and verification work.
 - [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text, including which ADRs now apply only to v2 Groups, plus ADR 0012 (added in version 1.2).
+- [Architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md): the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
 - [Domain-model snapshot](sources/CONTEXT.md): detailed terminology and source requirements.
 - [Prototype notes](sources/PROTOTYPE-NOTES.md): what the browser study demonstrates and what it does not.
 
@@ -48,6 +49,18 @@ The Trial rules the per-iPhone design left unsettled were raised as DEC-15 to DE
 6. **DEC-15.** Starting the Trial never needs connectivity.
 7. **DEC-16.** After a backup is restored onto a new phone, a Trial Film with captures keeps capturing its remaining capacity, and a started Trial Film with no captures stays usable as a Trial Film.
 8. **DEC-17.** Restoring an older backup can bring back app data removed after that backup, including discarded media or a deleted whole Film. This is accepted and disclosed in the privacy copy, with no removal log.
+
+**Version 1.3 architecture approval (2026-09-30).**
+The captain approved the v1 architecture pack, revision 3, as a whole, and asked for the PRD to be updated from it.
+Nothing in version 1.3 changes a requirement, an FR or section number, a task ID, or a decision recorded in versions 1.1 and 1.2.
+What it adds:
+
+- The [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) document, and section 12.3, which summarizes it at requirements level.
+- Five early-check tasks, ARC-08 to ARC-12, so the baseline's early checks have tracker tasks; the sixth early check is the existing TRI-11.
+- The baseline defaults D1 to D8, recorded as approved engineering defaults, explicitly not decisions.
+
+What stays open: DEC-03 (the native stack is an M0 decision), DEC-02 (prices, held until before milestone 2 billing work), and every other DEC whose status was not changed in version 1.2.
+Group and Account material stays deferred to v2 in section 8 and section 8.13.
 
 ## 1. Problem statement
 
@@ -852,11 +865,33 @@ Keep metadata-only chronology markers separate from assets so permanent media re
 
 Local saves and Trial consumption must be recoverable around app termination. Never trust UI hiding alone as an access boundary.
 
+### 12.3 Approved architecture baseline (version 1.3)
+
+The captain approved the v1 architecture pack, revision 3, on 2026-09-30.
+The detail is in the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md), and this section summarizes it at requirements level.
+Every line below restates the baseline and adds no requirement.
+
+- **System shape.** One iPhone app plus iOS services (Keychain, StoreKit 2, PhotoKit add-only, the backup agent) and three Apple services outside the phone (the App Store and Apple ID, iCloud or computer backup, App Store Connect with TestFlight and crash reports).
+  No service is operated for Immerse, and the app makes no network call of its own (baseline 2).
+- **Modules.** All nine modules in the table above live in the app.
+  FilmDomain and RenderCore are the two shared Swift packages, and Entitlements is StoreKit 2 plus the Keychain Trial record (baseline 3).
+- **On-device data model.** Films, captures, files, edit recipes, Development runs and Movie assemblies are in SQLite and app storage, and the Trial record is one this-device-only Keychain item.
+  The rules for each entity and for file lifetimes are in baseline 4.
+- **Apple interfaces.** The app's seven interfaces with iOS and Apple, with what each owns and must never do, are in baseline 5.
+- **Cost floor.** Apple's Developer Program at $99 a year is the only recurring cost in the baseline.
+  Prices stay held under DEC-02 (baseline 6).
+- **Risks and early checks.** Twelve architecture risks are ranked, led by Development speed on the oldest supported iPhone and Films being protected only when the user has an iOS backup.
+  Six early checks settle them: ARC-08 to ARC-12 and TRI-11 (baseline 9).
+- **Defaults.** The baseline lists eight engineering defaults, D1 to D8, including Swift 6 and SwiftUI.
+  They are explicitly not decisions, and DEC-03 stays open (baseline 7).
+
 ## 13. Verification and release acceptance
 
-**Tasks QA-01–QA-04, QA-09, QA-11–QA-15; ARC-01–ARC-03, ARC-05–ARC-07** (QA-05–QA-08, QA-10 and ARC-04 are deferred to v2)
+**Tasks QA-01–QA-04, QA-09, QA-11–QA-15; ARC-01–ARC-03, ARC-05–ARC-12** (QA-05–QA-08, QA-10 and ARC-04 are deferred to v2)
 
 Testing below is planned work, not completed production coverage. Assert observable behavior rather than private implementation details.
+
+The early checks from the architecture baseline (Development speed, the iOS 26 Keychain check, StoreKit offline and restore, Movie assembly and export, Trial edge cases, and the backup and restore drill) are tracker tasks ARC-08 to ARC-12 and TRI-11; they settle risks before the work that depends on them and do not replace the tests below.
 
 Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, and Group identity/ownership tests) are deferred to v2 (section 8.9). The list below is renumbered. Version 1.2 replaced item 2 (identity tests, deferred to v2) with backup and restore tests.
 
@@ -882,6 +917,8 @@ This is a proposed dependency order within the agreed scope, not an automatic de
 | M4 — Personal privacy lifecycle | Privacy-safe Movie reassembly after Discard; the shared Movies and Group lifecycle parts are deferred to v2 (section 8.10), as is Account deletion (section 8.13) | PRV (v1 tasks only) |
 | M5 — Release readiness | All-camera/device acceptance, privacy testing, product-quality review | QA; remaining DEC |
 
+The architecture baseline's early checks are scheduled as follows: the iOS 26 Keychain check (TRI-11) in M0; Development speed (ARC-08) in M1 for photos and M2 for Movies; StoreKit offline and restore (ARC-09), Movie assembly and export (ARC-10), Trial edge cases (ARC-11) and the backup and restore drill (ARC-12) in M2, with the drill repeated as QA-15 in M5.
+
 Privacy and access design start in M0; M4 is completion of the personal privacy lifecycle, not permission to defer security until after implementation. The prerequisites for shared slices belong to v2 (section 8.10). Individual tracker items remain unchecked until implemented and verified. Completed discovery/prototype items are explicitly separated.
 
 ## 15. Open decisions and constraints
@@ -892,7 +929,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 | --- | --- | --- |
 | DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
 | DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling. Timing (captain decision): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2 | One-plan structure is fixed; commercial and edge entitlement behavior are not. Nothing in M0 and M1 depends on the price. |
-| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors | Required to turn proposed modules into deployable architecture. |
+| DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists Swift 6, SwiftUI, GRDB and Xcode Cloud only as a default (D8), not a decision | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
 | DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
@@ -918,7 +955,7 @@ Additional historical Cameras and digital-era experiences may be evaluated for v
 
 ## 17. Decision evolution and superseded proposals
 
-Rows tagged [v2 Groups] record decisions made for the Group design, which version 1.1 defers to v2 (the row on Groups in v1 scope). The last eight rows record the version 1.2 decisions.
+Rows tagged [v2 Groups] record decisions made for the Group design, which version 1.1 defers to v2 (the row on Groups in v1 scope). The eight rows before the last record the version 1.2 decisions, and the last row records the version 1.3 architecture approval.
 
 | Earlier proposal or ambiguity | Current recorded decision |
 | --- | --- |
@@ -956,12 +993,13 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | Whether starting the Trial Film needs connectivity (DEC-15) | Captain decision, 2026-09-30 (version 1.2, option A): starting the Trial never needs connectivity. |
 | What a restored iPhone does with Trial Films (DEC-16) | Captain decision, 2026-09-30 (version 1.2, option A for both cases): after a backup is restored onto a new phone, a Trial Film with captures keeps capturing, and a started Trial Film with no captures stays usable as a Trial Film; either coexists with the new phone's own Trial entitlement without consuming or blocking it. |
 | Privacy removals versus restoring an older device backup (DEC-17) | Captain decision, 2026-09-30 (version 1.2, option A): restoring an older backup can bring back app data removed after that backup, including discarded media or a deleted whole Film; this is accepted and disclosed in the privacy copy and Delete Film confirmation, with no removal log. |
+| Architecture shape proposed but not approved (section 12) | Captain approval, 2026-09-30 (version 1.3): the v1 architecture pack, revision 3, was approved as a whole. The approved baseline is the [architecture document](2026-09-29-film-camera-experience-v1-architecture.md) and section 12.3. Its defaults D1 to D8 are baseline defaults, not decisions, and DEC-03 (native stack) and DEC-02 (price) stay open. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
 ## 18. Current evidence and definition of done
 
-**Completed discovery:** detailed domain model, the decisions in the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md), throwaway three-direction browser prototype, selection of Film Journal, and the browser interaction checks listed in the included prototype notes.
+**Completed discovery:** detailed domain model, the decisions in the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md), throwaway three-direction browser prototype, selection of Film Journal, the browser interaction checks listed in the included prototype notes, and the approved [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) (a design, not an implementation).
 
 **Not completed:** native iOS app, real Camera rendering/capture/audio, persistent production storage, real StoreKit subscriptions and the Keychain Trial record (including the iOS 26 device check), Photos export, production local deletion, device backup and restore behavior, and native release verification.
 

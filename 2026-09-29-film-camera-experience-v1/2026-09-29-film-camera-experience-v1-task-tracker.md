@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.2 · **Platform:** iOS 26, iPhone only\
+**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.3 · **Platform:** iOS 26, iPhone only\
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
@@ -11,7 +11,7 @@ This is the canonical checkbox list for the dated PRD. Every functional area has
 
 Suggested annotation: `Owner: … | Status: in progress / blocked / done | Evidence: … | Completed: YYYY-MM-DD`. State any unresolved prerequisite rather than checking a task off because a mockup demonstrates it. `DEC` items resolve open choices; `ARC` items design implementation; other groups implement or verify the recorded product behavior. All are needed for the corresponding scoped function unless the product owner explicitly revises scope.
 
-**Task counts (version 1.2).** The tracker contains 233 items: five completed discovery/prototype items, three DEC items decided on 2026-09-30 (DEC-15 to DEC-17, checked), 117 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
+**Task counts (version 1.3).** The tracker contains 238 items: five completed discovery/prototype items, three DEC items decided on 2026-09-30 (DEC-15 to DEC-17, checked), 122 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2, and version 1.3 added five early-check tasks (ARC-08 to ARC-12). Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
 
 Each task inherits the acceptance criteria and privacy/reveal constraints of its referenced PRD section. For example, completing a Photos export task requires permission and failure behavior, not just a visible button. The final QA section supplies cross-feature verification, not a replacement for task-level checks.
 
@@ -44,6 +44,7 @@ Dependency: resolve relevant choices before the affected implementation is accep
 ## ARC — Foundation and architecture
 
 Dependency: relevant DEC items. PRD sections 11–13. Proposed engineering work, not a preselected vendor architecture.
+ARC-08 to ARC-12 are the early checks from the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) (added in version 1.3); the sixth early check is TRI-11. They settle ranked risks before the work that depends on them and are scheduled in M1 and M2, not M0.
 
 - [ ] ARC-01 — Establish native application build, local development setup, supported devices (iPhone, iOS 26), and test environments.
 - [ ] ARC-02 — Design separate Film, capture, reveal, entitlement, archive, and deletion state models with enforceable invariants.
@@ -51,6 +52,11 @@ Dependency: relevant DEC items. PRD sections 11–13. Proposed engineering work,
 - [ ] ARC-05 — Design StoreKit subscription validation and the per-iPhone Trial record (Keychain), with Trial consumption recoverable around app termination.
 - [ ] ARC-06 — Design private source/master/clip storage, privacy tombstones, deletion jobs, and stale-version retirement.
 - [ ] ARC-07 — Document approved technical decisions and verification strategy without treating the disposable browser prototype as production architecture.
+- [ ] ARC-08 - Early check, M1 for photos and M2 for Movies: time personal Photo and Movie Development on an iPhone 11 running iOS 26, foreground only, including an interrupted and resumed run; report the result before the supported-device floor (DEC-12) is set. Source: architecture baseline 9.1, check S1.
+- [ ] ARC-09 - Early check, M2 before billing work: read StoreKit entitlements offline after one online sync, and restore a purchase with only an Apple ID; report the result before offline entitlement checks are relied on. Source: architecture baseline 9.1, check S8.
+- [ ] ARC-10 - Early check, M2: assemble, discard, rebuild and export a Movie on hardware (borders for opposite orientation, optional soundtrack, HEVC, HDR, orientation) and confirm a rebuilt Movie keeps every surviving Developed Clip unchanged. Source: architecture baseline 9.1, check S11.
+- [ ] ARC-11 - Early check, M2: exercise the Trial on the device by terminating the app around the first save, deleting a zero-save Trial Film, and restoring a Trial Film onto a second iPhone that has its own unused entitlement; report before Trial work is accepted. Source: architecture baseline 9.1, check S12.
+- [ ] ARC-12 - Early check, M2 and repeated as QA-15 in M5: back up a phone with large Films, restore onto a second iPhone, verify sealed and developed states, Darkroom edits and Movie assemblies, then restore an older backup and record what reappears and how large the backup is. Source: architecture baseline 9.1, check S13.
 
 ## UX — Film Journal library and organization
 
@@ -538,6 +544,8 @@ Milestones are dependency groupings, not additional task counts or committed lau
 | M4 — Personal privacy lifecycle | PRV (v1 tasks); GMV, MEM, the Group tasks of PRV, and all IDD tasks are deferred to v2 | Tested personal Discard/Movie reassembly |
 | M5 — Release readiness | QA, outstanding DEC (NTF and the Group and Account QA tasks deferred to v2) | Native, billing, privacy, media-quality evidence |
 
+The early checks ARC-08 to ARC-12 belong to the milestones named in their task text (M1 and M2, with the backup drill repeated in M5) even though their IDs are in the ARC group.
+
 Privacy architecture is required before implementation, not deferred until M4; shared-slice prerequisites belong to v2, as do the Account-only tasks (IDN-01, IDN-04, IDD, TRI-05 to TRI-08, TRI-10, DEC-07, QA-10). No checked discovery item means these milestones have passed.
 
 ## Change log
@@ -547,3 +555,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | 2026-09-29 | Created local v1 baseline from the recorded discussion, domain model, ADRs, and selected Film Journal prototype. |
 | 2026-09-30 | Version 1.1: captain decision to ship personal Films only. Group-only tasks (94) moved to the Deferred to v2 section with IDs unchanged; mixed tasks keep their IDs with Group clauses removed; no IDs added or removed. |
 | 2026-09-30 | Version 1.2: captain decisions recorded in the PRD's version 1.2 notes and FR-21. Account-only tasks moved to Deferred to v2 with IDs unchanged; earlier task wording is preserved in the tables above. Added DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15; DEC-15 to DEC-17 were decided the same day. |
+| 2026-09-30 | Version 1.3: the captain approved the v1 architecture pack, revision 3. Added the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) document and five early-check tasks, ARC-08 to ARC-12; no existing ID, status or decision changed. |
