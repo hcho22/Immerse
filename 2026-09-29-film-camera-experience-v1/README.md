@@ -12,12 +12,12 @@
 4. Read the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) for the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
 5. Consult the [domain-model snapshot](sources/CONTEXT.md) and [prototype notes](sources/PROTOTYPE-NOTES.md) for detailed provenance and limitations.
 
-The filenames begin with `2026-09-29` so this package can be sorted and retained alongside later versions. The date is the compilation date; the original ADRs did not supply individual dates. Relative links work when this directory is kept together or extracted from the ZIP.
+The filenames begin with `2026-09-29` so this package can be sorted and retained alongside later versions. The date is the compilation date; the original ADRs did not supply individual dates. Relative links work when this directory is kept together or extracted from the ZIP, except links to the market research document, which sits at the repository root outside this package.
 
 ## Scope and implementation status
 
-Version 1.4 (September 30, 2026) adds a Users section (PRD 1.1) and a User journeys section (PRD 5.1), and records in PRD section 18 that the v1 clickable prototype was built and approved by the captain as a design reference only.
-The users are derived only from evidence already in the package and the market research, and the gaps are marked open.
+Version 1.4 (September 30, 2026) adds a Users section (PRD 1.1) and a User journeys section (PRD 5.1), and records in PRD section 18 and the prototype notes that the v1 clickable prototype was built and approved by the captain as a design reference only.
+The users are derived from evidence already in the package and from the [market research document](../2026-09-29-nostalgic-camera-app-market-research-hipstamatic.md) kept at the repository root, outside this package and its ZIP, and the gaps are marked open.
 The five journeys cite existing requirements, and they name, but do not settle, the questions the prototype raised that are still pending.
 No requirement, FR, DEC or section number, task ID or recorded decision changed.
 
@@ -35,7 +35,10 @@ The Trial rules the per-iPhone design left unsettled (DEC-15 to DEC-17) were ans
 
 Version 1.1 (September 30, 2026) scopes v1 to personal Photo and Movie Films only. By captain decision, all Group functionality (Photo Group pools, Group Movies with Recording Turns, code/QR joining, Guest participants, the Host role, shared loads, Host Development with Private Review and Release, contribution withdrawal, Leave Film and Participant removal) is deferred to v2. Group Movies do not ship in v1, and Groups do not launch with the first public release. Every Group requirement is retained, labeled deferred to v2, in PRD section 8 and the tracker's Deferred to v2 section; that retention is not implementation approval or a committed v2 roadmap. Earlier proposals were revised during the discussion; see the PRD's decision-evolution table rather than treating every historical suggestion as simultaneously active.
 
-The existing artifact is a throwaway browser prototype, not a native iOS app. Sign-in and Account flows, billing, camera capture, Movie playback, export, notifications, and cloud permissions in that study are simulations. Production implementation tasks remain unchecked. No final pricing, delivery calendar, or final brand is approved by this package, and v1 needs no cloud provider.
+The existing artifacts are two browser prototypes, not a native iOS app.
+One is the throwaway three-direction study; sign-in and Account flows, billing, camera capture, Movie playback, export, notifications, and cloud permissions in that study are simulations.
+The other is the v1 clickable prototype, whose iOS design the captain approved on 2026-09-30; it is kept outside this repository as a design reference only, simulates capture, Movie playback, StoreKit, the Keychain Trial record, Photos, and backup and restore, and is described in the [prototype notes](sources/PROTOTYPE-NOTES.md).
+Production implementation tasks remain unchecked. No final pricing, delivery calendar, or final brand is approved by this package, and v1 needs no cloud provider.
 
 ## Updating the package
 

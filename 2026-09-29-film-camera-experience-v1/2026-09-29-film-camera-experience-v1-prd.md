@@ -14,7 +14,7 @@ This PRD consolidates the recorded product interview, the current domain model, 
 - [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): all eleven original decision records, preserved verbatim with reconciliation notes outside their text, including which ADRs now apply only to v2 Groups, plus ADR 0012 (added in version 1.2).
 - [Architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md): the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
 - [Domain-model snapshot](sources/CONTEXT.md): detailed terminology and source requirements.
-- [Prototype notes](sources/PROTOTYPE-NOTES.md): what the browser study demonstrates and what it does not.
+- [Prototype notes](sources/PROTOTYPE-NOTES.md): what the browser study demonstrates and what it does not, and a version 1.4 note on the v1 clickable prototype.
 
 Requirements below are recorded product decisions unless labeled **Proposed engineering approach** or **Open decision**. Task groups such as `CAM-*` refer to the accompanying tracker. Checkboxes there are the single source of implementation status; acceptance criteria here are not completion claims. The document date is the consolidation date, not a claim about the original date of each ADR.
 
@@ -69,7 +69,7 @@ What it adds:
 
 - Section 1.1, Users: who v1 is for, with a source for each group or need, and the gaps marked open.
 - Section 5.1, User journeys: five end-to-end journeys that string the existing requirements together, each step citing its FR or section.
-- Section 18: a record that the v1 clickable prototype was built and approved by the captain on 2026-09-30 as a design reference only, and the questions it raised that are still pending.
+- Section 18: a record that the v1 clickable prototype was built and approved by the captain on 2026-09-30 as a design reference only, and the questions it raised that are still pending, with a matching note in the [prototype notes](sources/PROTOTYPE-NOTES.md).
 
 The sections are numbered 1.1 and 5.1 so that no existing section reference moves.
 The journeys settle nothing that is still open.
@@ -88,7 +88,8 @@ Users want a phone to feel like a disposable camera, an instant pack, a medium-f
 ### 1.1 Users
 
 This section says who v1 is for.
-It uses only evidence already in this package: the problem statement and positioning above, the principles in section 2.1, the user stories in section 5, and the market research document kept at the repository root, "Nostalgic, Intentional Camera App - Market Research and Hipstamatic Comparison" (cited as "research" with its section number).
+It uses evidence already in this package: the problem statement and positioning above, the principles in section 2.1, and the user stories in section 5.
+It also draws on the market research document [Nostalgic, Intentional Camera App - Market Research and Hipstamatic Comparison](../2026-09-29-nostalgic-camera-app-market-research-hipstamatic.md), kept at the repository root, outside this package and its ZIP (cited as "research" with its section number).
 The research's participant profile in its section 11 is a recruiting plan for a proposed study, not evidence of who uses the product.
 It adds no demographics, personas or numbers.
 The research is desk research with no interviews, so the audience below is a hypothesis to validate, not a measured market (research section 1, limitations; section 12, evidence still missing).
@@ -239,7 +240,7 @@ Story numbers are stable identifiers carried over from version 1.0, so gaps are 
 These journeys string the requirements together end to end.
 They add no requirement.
 Each step cites the FR, section, story or task that already defines it, and where a rule is not defined it says so.
-The flow reference is the approved v1 clickable prototype (section 18), which is a design reference only.
+The flow reference is the approved v1 clickable prototype (section 18 and the [prototype notes](sources/PROTOTYPE-NOTES.md)), which is kept outside this repository and is a design reference only.
 
 Some journeys reach a point that is still open.
 Those points are named here as open and are never settled by a journey.
@@ -260,8 +261,8 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 | 5 | The person shoots exposures through a framing-only viewfinder, optionally with the front camera.<br>Each saved capture stays sealed with no thumbnail or review.<br>A failed save consumes no exposure and no Trial entitlement. | Stories 9 and 10; FR-04; FR-21 |
 | 6 | They leave the app and come back.<br>Saved captures remain and the Film is still unfinished. | Stories 6 and 7; FR-02; FR-04 |
 | 7 | At 27 exposures the roll is complete, and nothing is developed automatically.<br>Alternatively, they choose Rewind & Develop Early and confirm the exact number of exposures permanently wasted. | Story 12; FR-06; section 11 |
-| 8 | They choose to develop.<br>The original-export choice is presented at personal Development, and Immerse removes its private source photos only as FR-08 describes. | FR-08; FR-06 |
-| 9 | A brief Development ritual reveals the roll.<br>If the app is interrupted, Development resumes with the same result. | Stories 18 and 19; FR-06 |
+| 8 | They choose to develop. | FR-06 |
+| 9 | A brief Development ritual reveals the roll.<br>If the app is interrupted, Development resumes with the same result.<br>The original-export choice is presented at personal Development, and Save Originals to Photos is offered after eligible reveal.<br>When the choice appears relative to the reveal is open.<br>Immerse removes its private source photos only as FR-08 describes. | Stories 18 and 19; FR-06; FR-08 |
 | 10 | The developed photos appear as a contact sheet in the Film Journal.<br>Nothing sealed leaks into thumbnails before this point. | Story 51; FR-02 |
 | 11 | Optionally, they open a photo in the Darkroom, adjust it, and Reset to Original. | Stories 20 and 21; FR-07 |
 | 12 | They choose Save Developed to Photos.<br>A denied permission or a failed write is not shown as success.<br>Saving developed output and saving originals are independent choices. | Story 40; FR-08 |
@@ -272,8 +273,8 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 - When the app asks for camera permission (for example in onboarding or at Load Film) is open.
   FR-03 only requires that Load Film cannot bypass permissions, and FR-04 and FR-08 do not say when the prompts appear.
 - When the app asks for Photos permission is open for the same reason.
-- The wording and timing of the originals choice in step 8 are open.
-  The choice is made before the person has seen the developed result, and the final wording is pending.
+- When the originals choice in step 9 appears relative to the reveal, and its wording, are open.
+  FR-08 presents the choice at personal Development and offers Save Originals to Photos after eligible reveal, and settles nothing more.
   This journey does not add a third option.
 - What the first-run screens show, including any onboarding, is not specified by a requirement.
 - Whether the person can browse the Film Journal while a Film develops is open.
@@ -290,7 +291,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 | 3 | They record clips in portrait or landscape.<br>Paused or idle time costs nothing.<br>Only successfully saved recording time consumes capacity.<br>No microphone permission is needed. | Stories 13 and 15; FR-05; section 6.2 |
 | 4 | A phone call or screen lock ends the active clip.<br>The footage saved so far is kept and stays sealed.<br>Recording never resumes automatically. | Story 17; FR-05 |
 | 5 | The Movie completes at full recorded duration, or through Stop & Develop Early after a confirmation that states the exact time permanently wasted. | FR-06 |
-| 6 | They choose to develop.<br>The original-export choice and Development follow FR-08 and FR-06, and interrupted Development resumes the same result. | FR-06; FR-08; stories 18 and 19 |
+| 6 | They choose to develop.<br>Development follows FR-06 and the original-export choice follows FR-08, as in Journey 1, and interrupted Development resumes the same result. | FR-06; FR-08; stories 18 and 19 |
 | 7 | The Developed Movie plays as chronological cuts, with no editing timeline.<br>Clips of the opposite orientation are fitted with borders. | Story 14; FR-05 |
 | 8 | The Movie stays silent or takes one built-in instrumental soundtrack. | Story 16; FR-05 |
 | 9 | Optionally, they Discard a clip after reveal.<br>The Movie is reassembled from the surviving Developed Clips in order, with no treatment rerolled and any soundtrack and orientation kept. | FR-16 |
@@ -299,7 +300,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 **Open in this journey.**
 
 - When the app asks for camera and Photos permission is open, as in Journey 1.
-- The originals-choice wording is open, as in Journey 1.
+- When the originals choice appears relative to the reveal, and its wording, are open, as in Journey 1.
 - Early completion of an empty Film, and a Movie with no surviving clips after Discard, are open under DEC-09.
 - Whether a soundtrack can be reselected later is open under DEC-11.
 - Render quality, frame rates and export codecs are open under DEC-04.
@@ -1200,6 +1201,7 @@ The earlier three-direction study simulates roles, network state, capacity, capt
 **V1 clickable prototype (version 1.4).**
 On 2026-09-30 a clickable browser prototype of the v1 product was built, and the captain approved its iOS design.
 It is a design reference only.
+It is kept outside this repository, and the version 1.4 note in the [prototype notes](sources/PROTOTYPE-NOTES.md) records it.
 It is not a requirement, not a decision and not evidence of native behavior.
 It shows an iOS 26 style iPhone app in light and dark, with tap-through navigation and these areas: onboarding, the Film Journal, choosing a Camera and previewing it, Load Film, capture, Movie recording, completion and early Development, Development, reveal, the Darkroom, Save to Photos, settings, and error and empty states.
 It has no sign-in and no administrator mode, because v1 has neither.
@@ -1217,8 +1219,9 @@ Section 5.1 names each one where a journey reaches it.
    This PRD does not say when either prompt appears.
 2. Whether an Instant pack can end early.
    FR-06 names early actions for rolls and Movies only, while principle 4 says users may finish early.
-3. The wording of the originals choice.
-   The choice is irreversible and is made before the person has seen the developed result, and FR-08 offers no option to keep originals in Immerse.
+3. When the originals choice appears relative to the reveal, and its wording.
+   FR-08 presents the choice at personal Development and offers Save Originals to Photos after eligible reveal, and does not settle when the choice appears relative to the reveal.
+   The choice is irreversible, and FR-08 offers no option to keep originals in Immerse.
 4. Whether Settings has a default for saving to Photos, given that FR-08 makes both choices per Film.
 5. Whether Save to Photos covers a whole Film only or also a single photo.
 6. Whether the Film Journal groups Films by state or lists them chronologically.

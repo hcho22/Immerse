@@ -22,7 +22,7 @@
 >
 > **Version 1.4 note (2026-09-30, PRD version 1.4).**
 > No domain rule or term changed.
-> The PRD gained a Users section (1.1) and a User journeys section (5.1), both built from existing requirements, and records the approved v1 clickable prototype in section 18 as a design reference only.
+> The PRD gained a Users section (1.1), built from existing requirements and the market research kept outside this package, and a User journeys section (5.1), built from existing requirements, and records the approved v1 clickable prototype in section 18 as a design reference only.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
