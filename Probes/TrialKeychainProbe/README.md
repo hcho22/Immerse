@@ -34,13 +34,9 @@ Generic physical-iOS compile check without signing or installation:
 xcodebuild -project Probes/TrialKeychainProbe/TrialKeychainProbe.xcodeproj -scheme TrialKeychainProbe -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 ```
 
-Hardware execution requires a dedicated authorized iPhone running iOS 26 and a signing team selected by a human in Xcode.
-Do not change signing, Apple account settings, device trust, or personal-device contents without explicit authority.
-
-As of 2026-09-30, Firstmate recorded that only personal iPhones are available.
-Use `PERSONAL_DEVICE_TEST_PLAN.md` for the proposed personal-device path.
-That plan authorizes no install, signing, launch, deletion, restore, erase, OS update or settings change until the exact candidate, device and prerequisites are reviewable and the captain grants explicit scoped approval. Firstmate will relay any approved scope.
-Whole-phone backup restore, erase, OS update and signing/account changes remain outstanding tests that need separate approval.
+Hardware execution requires a specifically authorized iPhone running iOS 26 and approved signing scope.
+The captain approved the pinned probe-only single-phone procedure on 2026-10-01, including selecting the existing development team and probe-only delete/reinstall. See `PERSONAL_DEVICE_TEST_PLAN.md` for the exact candidate, device and allowed actions, and `../../Evidence/TrialKeychainProbe/2026-10-01-device-attempt.md` for observed results.
+The signed build passed; device execution awaits reconnection of the confirmed phone. Do not request the same approval again. Whole-phone backup restore, erase, OS update, settings or account changes and other devices remain outside this approval.
 
 ## Safe TRI-11 Procedure
 

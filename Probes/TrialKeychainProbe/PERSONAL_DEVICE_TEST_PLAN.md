@@ -1,8 +1,10 @@
 # Personal-Device Test Plan
 
 This plan records the currently available hardware path for `TRI-11`.
-Captain availability as of 2026-09-30: one personal iPhone target is available for review planning only.
-That availability is not authorization to delete, erase, restore, change signing, change Apple account settings, buy anything, install, launch, or alter real personal media.
+Captain approval relayed on 2026-10-01: "Confirm device and approve probe-only test".
+This confirms `HC_iPhone13`, the paired iPhone 13 Pro on iOS 26.6.2, and authorizes the exact probe-only sequence below using the existing development team. No duplicate approval is needed for these actions. Whole-phone restore/erase, Apple account or device settings changes, other apps, purchases, personal media and public exposure remain outside this approval.
+
+Current execution record: [2026-10-01 device attempt](../../Evidence/TrialKeychainProbe/2026-10-01-device-attempt.md). Signed build passed; the phone's CoreDevice tunnel was unavailable, so install/launch/marker/reinstall checks remain untested.
 
 ## Candidate Identity For Review
 
@@ -14,8 +16,8 @@ That availability is not authorization to delete, erase, restore, change signing
 - Xcode version recorded before review: `Xcode 26.5`, build `17F42`
 - Captain-reported target device: iPhone 13, iOS 26.6.2
 - Read-only Xcode discovery on 2026-09-30 local time: `HC_iPhone13`, available and paired, iPhone 13 Pro (`iPhone14,2`)
-- Device identity confirmation needed before future approval: the captain reported iPhone 13, while read-only Xcode discovery saw a paired iPhone 13 Pro label. Future device approval must name the exact intended device.
-- Signing team/profile: Apple development team is available, but selection or signing changes require explicit captain approval, not yet given; Firstmate will relay the approved scope.
+- Device identity: captain confirmed the paired iPhone 13 Pro as the intended target through the probe-only approval, resolving the earlier iPhone 13 label mismatch.
+- Signing team/profile: selection of the existing development team for this probe is approved. The signed build used a command-line team setting and existing provisioning, without account or portal changes.
 - Generic physical-iOS build command prepared for review:
 
 ```sh
@@ -37,13 +39,12 @@ xcodebuild -project Probes/TrialKeychainProbe/TrialKeychainProbe.xcodeproj -sche
 - The probe creates no user media, no Photos entries, no network traffic, no StoreKit purchase and no analytics.
 - Optional synthetic app/media tests must use freshly created synthetic captures only, never the captain's real personal media.
 
-## Prepared Probe Steps Awaiting Scoped Approval
+## Approved Probe Steps
 
-These proposed steps are limited to the probe app, but availability alone authorizes none of them.
-Do not install, sign, pair, trust, launch, delete, restore, erase or change settings on any personal iPhone until the candidate identity and prerequisites above are reviewed and the captain grants explicit scoped approval for the exact action and device. That approval has not been given; Firstmate will relay the approved scope.
+The captain approved these steps for this candidate and this phone. Preserve the exact source and signed artifact identity throughout. Stop the affected step and report through Firstmate if an additional device setting or human unlock is required; continue unaffected work.
 
-1. Human selects the approved Apple development team/profile for `com.immerse.TrialKeychainProbe` on the named target only.
-2. Build and install the probe on the approved iPhone 13/iOS 26.6.2 target.
+1. Select the existing approved Apple development team/profile for `com.immerse.TrialKeychainProbe` only. Local signed build passed; see the execution record for artifact hashes.
+2. Verify the approved iPhone 13 Pro/iOS 26.6.2 target is reachable, then install the signed probe. Reconnection is the current missing prerequisite.
 3. Launch the probe.
 4. Tap `Write fresh this-device-only marker`.
 5. Record the marker UUID, timestamp, device model, iOS version, bundle identifier, Keychain service, source revision and Xcode build.
@@ -52,8 +53,8 @@ Do not install, sign, pair, trust, launch, delete, restore, erase or change sett
 8. Tap `Mark consumed`.
 9. Force quit and relaunch the probe.
 10. Tap `Read marker`. Expected: same marker found with consumed state.
-11. If and only if explicitly approved by the captain for this personal phone, delete only the probe app.
-12. Reinstall the same bundle identifier from the same source revision.
+11. Delete only the probe app, as included in the captain's scoped approval. Do not tap `Delete probe marker`.
+12. Reinstall the exact same signed app and bundle identifier from the same source revision; compare artifact hashes before reinstall.
 13. Tap `Read marker`. Expected: same marker found with consumed state after delete/reinstall.
 
 ## Expected Evidence Packet
@@ -62,17 +63,17 @@ Do not install, sign, pair, trust, launch, delete, restore, erase or change sett
 - Built artifact path and bundle/build identity from the candidate identity section.
 - Screenshot or typed transcript of each probe screen after write, relaunch/read, consumed/read and approved reinstall/read.
 - Device model and iOS version from Settings, Finder, Xcode Devices or `xcrun devicectl`.
-- Device identity confirmation resolving the reported iPhone 13 versus read-only paired iPhone 13 Pro mismatch before any future device action.
+- Captain confirmation of the paired iPhone 13 Pro target, recorded above, and live device identity before installation.
 - Statement that no Photos entries, StoreKit purchase, network service, app media, real personal media, Account or analytics were touched.
 - If any step fails, stop and record the observed failure before changing the production Trial design.
 
 ## What This One Phone Can And Cannot Prove
 
-Can prove on the approved iPhone 13/iOS 26.6.2 target:
+Can prove on the approved iPhone 13 Pro/iOS 26.6.2 target:
 
 - A this-device-only, non-synchronizable Keychain marker can be written and read by the probe.
 - The marker survives app relaunch.
-- If explicitly approved by the captain, the marker survives deletion and reinstall of only the probe app with the same bundle identifier.
+- The marker survives the approved deletion and reinstall of only the probe app with the same bundle identifier.
 
 Cannot prove with this one phone:
 
@@ -82,14 +83,12 @@ Cannot prove with this one phone:
 - Native Movie capture/render/export fidelity on hardware (`ARC-10`).
 - OS update or erase behavior unless those destructive/device-changing actions are separately approved.
 
-## Steps Requiring Explicit Permission
+## Actions Outside This Approval
 
-These steps must not be performed merely because a personal iPhone exists.
-Each needs explicit captain approval, not yet given, for the named device; Firstmate will relay the approved scope. Destructive whole-phone steps need a suitable non-personal or approved resettable environment.
+These actions still need separate explicit captain approval through Firstmate. Destructive whole-phone steps need a suitable non-personal or approved resettable environment.
 
-- Build/install/launch on a personal iPhone: needed for the prepared probe path, but not authorized until the exact candidate, device and signing prerequisites are reviewed.
-- Delete/reinstall on a personal iPhone: required for `TRI-11`; touches only the probe app, but still needs permission because it deletes an installed app from a personal phone.
-- Change signing team, Apple account, provisioning, trust settings or device pairing: needs permission.
+- Install/launch/delete any app other than the approved probe, or run this procedure on another device.
+- Change Apple account, certificates, provisioning, trust settings or device pairing, or use a different signing team. Selecting the existing team for the approved probe is already permitted.
 - Back up iPhone A and restore onto iPhone B: outstanding for `ARC-11`, `ARC-12` and `QA-15`; destructive for the destination phone unless explicitly prepared.
 - Erase all content and settings: outstanding for Keychain erase behavior; destructive and not authorized for a personal phone by availability alone.
 - iOS update: needs permission because it changes a personal device.
