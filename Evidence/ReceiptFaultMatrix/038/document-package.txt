@@ -1,0 +1,30 @@
+Archive:  2026-09-29-film-camera-experience-v1-documents.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  09-30-2026 19:34   2026-09-29-film-camera-experience-v1/
+   135357  09-30-2026 17:40   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md
+        0  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/adr/
+      677  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0007-movie-withdrawal-rebuilds-without-redevelopment.md
+      638  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0003-host-accounts-and-accountless-participants.md
+      524  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0011-host-account-deletion-preserves-shared-privacy.md
+      406  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0006-subscription-expiration-never-locks-existing-films.md
+      496  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0009-whole-film-deletion-is-personal-only.md
+     1988  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md
+      352  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0002-join-film-replaces-device-handoff.md
+      418  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0001-camera-authenticity-over-universal-reveal.md
+      606  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0008-unreleased-group-captures-have-a-bulk-privacy-exit.md
+      475  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0010-group-film-host-is-fixed-in-v1.md
+      317  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0005-group-film-hosting-requires-subscription.md
+      776  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0004-photo-group-capacity-is-pooled-camera-loads.md
+    33898  09-30-2026 17:37   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md
+    54605  09-30-2026 17:40   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-task-tracker.md
+     9220  09-30-2026 19:35   2026-09-29-film-camera-experience-v1/README.md
+    10866  10-01-2026 08:34   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md
+        0  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/
+    88311  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/CONTEXT.md
+     6887  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/PROTOTYPE-NOTES.md
+    19109  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md
+    64457  10-01-2026 13:38   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md
+    33369  10-01-2026 13:38   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md
+---------                     -------
+   463752                     25 files

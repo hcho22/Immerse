@@ -19,6 +19,11 @@ deferred, and no source-bound native fix result exists. Priority 5 populated-vie
 coverage is independent and can proceed under instruction 036. Full-v1 and all
 original physical/product/accessibility gaps remain open.
 
+The subsequent nonshipping study `Evidence/ReceiptFaultMatrix/038/README.md`
+disproves the pre-write-marker hypothesis for pending/legacy backups and reports
+the read-trust versus restored-rights tradeoff. No marker, migration, shipping
+resolver change or new accepted guarantee follows; both regressions remain failed.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

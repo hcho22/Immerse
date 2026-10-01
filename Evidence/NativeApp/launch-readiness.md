@@ -14,6 +14,11 @@ rejected first-save recovery require different outcomes but expose identical
 persisted inputs. Existing-fields-only correction is insufficient. New protocol
 scope needs reconciliation; no production fix or hardware result is claimed.
 
+[038 study](../ReceiptFaultMatrix/038/README.md) disproves the proposed backed-up
+pre-write marker for pending/legacy restores. Its 22 logical rows include five
+unsatisfied outcomes and five equal-input pairs. Zero executable exit means a
+consistent counterexample, not acceptance. Read-contract scope remains unresolved.
+
 Draft sample and soundtrack review material is available at
 `../AssetReview/review.html`; provenance, decoded metadata, source hashes and
 limits are in `../AssetReview/README.md`. It is not production asset clearance.

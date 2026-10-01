@@ -17,6 +17,12 @@ the conflict criterion still fails. Existing receipt fields are insufficient for
 the required distinction, and a new persisted-provenance boundary is unresolved.
 No clause, original ADR, restored right or matching-readback promise is narrowed.
 
+The 038 nonshipping follow-up (`Evidence/ReceiptFaultMatrix/038/README.md`) also
+disproves the suggested pre-write marker for pending/legacy backups. It separates
+captain requirements from the engineering readback claim and presents the exact
+read-trust tradeoff. Its model assertions do not accept FR-04/21 or backup clauses;
+there is no new shipping field, migration, native execution or green regression.
+
 Evidence snapshot: source `7bfc78c`, branch `fm/immerse-v1-implementation`, observed 2026-10-01 UTC, macOS 26.6.2 (`25G83`), Swift 6.3.2, Xcode 26.5 (`17F42`). Package tests below ran on macOS. iOS builds were unsigned compile checks, not executed device tests. The approved Keychain candidate is separately pinned to `6e5c1742d344e0505b74176f60ac11c19a83e686`; its signed build passed but the confirmed iPhone was unreachable. No full FR has native acceptance yet.
 
 Historical snapshot rows below retain their original observations. Current

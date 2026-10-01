@@ -1,5 +1,13 @@
 # Trial Commit Protocol Study
 
+Current bounded restore study:
+`swift Probes/TrialCommitStudy/RestoreProvenanceStudy.swift` disproves the proposed
+backed-up pre-write provenance marker for pending/legacy backup histories. Its
+zero exit means counterexample assertions hold, not Trial acceptance.
+`Evidence/ReceiptFaultMatrix/038/README.md` separates the product promises from
+the engineering read/fault contract and records the required decision. It changes
+no shipping receipt, schema or resolver; the 036/037 regressions remain failed.
+
 `swift test --package-path Probes/TrialCommitStudy` runs **non-shipping**
 tests against actual FilmRepository SQLite and decoded native media. The original
 eleven isolated coordinator tests include 30 abrupt child-process exits, 30 save-prefix reopen histories,

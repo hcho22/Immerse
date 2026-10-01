@@ -32,6 +32,14 @@ suite. Production is unchanged; new persisted provenance needs a scoped decision
 before dependent implementation. No physical or hosted-native correction result
 is claimed. ARC-12/QA-15 restore requirements remain open alongside the IDs above.
 
+**038 nonshipping study:** `Evidence/ReceiptFaultMatrix/038/README.md` disproves
+the proposed pre-write provenance marker for pending/legacy backups. Five
+equal-input pairs and five unmet outcomes among 22 logical rows expose the
+read-trust contract boundary, not new native test results. Shipping state and
+both regressions are unchanged. A decision on authoritative reads versus
+arbitrary valid-but-false readbacks is required before dependent correction;
+no captain promise or failed gate is silently narrowed.
+
 Physical execution preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
 binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode
 steps, all personal FR acceptance/invariants, full receipt fault cases and exact
