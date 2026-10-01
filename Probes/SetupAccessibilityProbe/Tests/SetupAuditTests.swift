@@ -16,6 +16,39 @@ final class SetupAuditTests: XCTestCase {
 
     func testStackBoundedViewport() throws { try auditSetup(arguments: ["-stackContainer", "-boundedViewport"]) }
 
+    func testStackOuterPadding() throws { try auditSetup(arguments: ["-stackContainer", "-outerPadding"]) }
+
+    func testPaddedRowsRemainFullyReachable() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-stackContainer", "-outerPadding"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5))
+        let viewport = app.scrollViews.firstMatch
+        let rows = [
+            app.staticTexts["Capacity, 2:45 of film"], app.staticTexts["One silent Movie after Development"],
+            app.staticTexts["Deliberate framing, finer grain"], app.staticTexts["Silent capture"].firstMatch,
+            app.staticTexts["Movie Orientation"], app.buttons["Movie Orientation, Portrait"],
+            app.staticTexts["film-title-heading"], app.textFields["Film title"],
+            app.staticTexts["One Trial Film on this iPhone"],
+            app.staticTexts["The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading."],
+            app.buttons["Subscription"], app.buttons["load-film"]
+        ]
+        for (index, element) in rows.enumerated() {
+            for _ in 0..<12 where !viewport.frame.contains(element.frame) {
+                let moveUp = element.frame.maxY > viewport.frame.maxY
+                let start = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveUp ? 0.7 : 0.3))
+                let end = viewport.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: moveUp ? 0.4 : 0.6))
+                start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            }
+            XCTAssertTrue(element.exists && element.isHittable && viewport.frame.contains(element.frame),
+                          "Row \(index) must fit fully within the physical scroll viewport")
+            record("reachable-row-\(index)", detail: "viewport=\(viewport.frame) element=\(element.frame)")
+            retain(XCTAttachment(screenshot: app.screenshot()), name: "reachable-row-\(index)")
+        }
+    }
+
     func testForcedLargestSize() throws {
         try auditSetup(arguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
     }

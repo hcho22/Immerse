@@ -36,6 +36,12 @@ suppression and a GeometryReader viewport wrapper (0/2 and 0/1 tests). Timestamp
 geometry/video shows the audit size sweep moves the viewport before callbacks;
 the wrapper still underlaps navigation chrome. It does not establish a framework
 false positive. Actual-app default/largest light/dark gates remain failed or unproved.
+`accessibility-physical-frame-diagnosis.md` proves genuine frame separation in a
+padded minimal probe (all-category pass and twelve fully reachable rows), but its
+actual-app countercheck fails: light 0/2, dark 1/2. The attempted production patch
+is retained only as evidence, not an accepted correction. Capture instrumentation
+adds latency, and the probe's navigation/entitlement state differs from production.
+QA-13 remains failed; these results do not authorize a required-check exception.
 
 ## Required Native Manual Matrix
 

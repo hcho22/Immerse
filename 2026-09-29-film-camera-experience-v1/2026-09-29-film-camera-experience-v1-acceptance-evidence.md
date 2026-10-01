@@ -22,6 +22,11 @@ retains the failed edge-suppression/viewport counterfactuals, complete exported
 recordings and timestamped audit/geometry evidence. The observed callback viewport
 differs from the pre-audit viewport after the size sweep. This is not proof of a
 false positive or acceptance; production all-category accessibility remains open.
+The later `Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` establishes
+real frame separation and all-row reachability in a padded instrumented probe,
+but the corresponding actual-app attempt fails light 0/2 and dark 1/2. Its patch is
+retained as failed evidence only. Capture latency and production navigation/state
+differences remain unisolated; no QA-13 / H-UX acceptance or exception is implied.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 

@@ -1,0 +1,91 @@
+Attributes: Application, 0x10dc2a140, pid: 69612, label: 'Immerse'
+Element subtree:
+ →Application, 0x10dc2a140, pid: 69612, label: 'Immerse'
+    Window (Main), 0x10dc2a780, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10dc2ab40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10dc2ac60, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10dc2a8a0, {{-402.0, -874.0}, {1206.0, 2622.0}}
+          Other, 0x10dc2a9c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10dc2ad80, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10dc2aea0, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10dc2afc0, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal'
+                  Button, 0x10dc2b0e0, {{20.0, 66.0}, {37.3, 36.0}}, label: 'Settings'
+                  Button, 0x10dc2b200, {{344.7, 66.0}, {37.3, 36.0}}, label: 'Archive'
+                  StaticText, 0x10dc2b320, {{16.0, 116.0}, {335.0, 71.7}}, label: 'Film Journal'
+                Other, 0x10dc2b440, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10dc2b560, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10dc2b680, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10dc2b7a0, {{0.0, 0.0}, {402.0, 874.0}}
+                        ScrollView, 0x10dc2b8c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10dc2b9e0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10dc2bb00, {{0.0, 0.0}, {402.0, 170.8}}
+                            Other, 0x10dc2bc90, {{0.0, 733.2}, {402.0, 140.8}}
+                          Other, 0x10dc2bdb0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10dc2bed0, {{0.0, 189.0}, {402.0, 456.0}}
+                            Other, 0x10dc2bff0, {{33.7, 288.7}, {334.7, 261.0}}
+                              Image, 0x10dc2c110, {{133.3, 288.7}, {135.7, 105.3}}, identifier: 'camera', label: 'Camera'
+                              StaticText, 0x10dc2c230, {{33.7, 288.7}, {334.7, 261.0}}, label: 'Your Journal begins here'
+                          Other, 0x10dc2c350, {{369.0, 116.0}, {30.0, 672.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10dc2c470, {{396.0, 262.0}, {3.0, 523.0}}
+                          Other, 0x10dc2c590, {{369.0, 116.0}, {30.0, 672.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10dc2c6b0, {{396.0, 262.0}, {3.0, 523.0}}
+                Other, 0x10dc2c7d0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10dc2c8f0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x10dc2ca10, {{0.0, 788.0}, {402.0, 86.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10dc2cb30, {{177.0, 798.0}, {48.0, 48.0}}
+                        Other, 0x10dc2cc50, {{177.0, 798.0}, {48.0, 48.0}}
+                          Other, 0x10dc2cd70, {{177.0, 798.0}, {0.0, 0.0}}
+                            Other, 0x10dc2ce90, {{177.0, 798.0}, {48.0, 48.0}}
+                              Other, 0x10dc2cfb0, {{177.0, 798.0}, {48.0, 48.0}}
+                                Other, 0x10dc2d0d0, {{182.0, 803.0}, {38.0, 38.0}}
+                                  Other, 0x10dc2d1f0, {{182.0, 803.0}, {38.0, 38.0}}
+                                    Button, 0x10dc2d310, {{182.0, 803.0}, {38.0, 38.0}}, identifier: 'start-film', label: 'Start a Film'
+      Other, 0x10dc2d430, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10dc2d550, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x10dc2d670, {{0.0, 62.0}, {402.0, 812.0}}
+          Other, 0x10dc2d790, {{0.0, 62.0}, {402.0, 812.0}}
+            Other, 0x10dc2d8b0, {{0.0, 62.0}, {402.0, 812.0}}
+              Other, 0x10dc2d9d0, {{0.0, 62.0}, {402.0, 812.0}}
+                Other, 0x10dc2daf0, {{0.0, 62.0}, {402.0, 812.0}}
+                  Other, 0x10dc2dc10, {{0.0, 62.0}, {402.0, 812.0}}
+                    NavigationBar, 0x10dc2dd30, {{0.0, 78.0}, {402.0, 54.0}}, identifier: '16mm'
+                      Button, 0x10dc2de50, {{16.0, 78.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Choose a Camera'
+                      StaticText, 0x10dc2df70, {{16.0, 59.0}, {172.7, 71.7}}, label: '16mm'
+                    Other, 0x10dc2e090, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x10dc2e1b0, {{0.0, 62.0}, {402.0, 812.0}}
+                        Other, 0x10dc2e2d0, {{0.0, 62.0}, {402.0, 812.0}}
+                          Other, 0x10dc2e3f0, {{0.0, 62.0}, {402.0, 812.0}}
+                            ScrollView, 0x10dc2e510, {{0.0, 148.0}, {402.0, 676.0}}
+                              Other, 0x10dc2e630, {{0.0, -1236.7}, {402.0, 2089.3}}
+                                StaticText, 0x10dc2e750, {{32.0, -1221.7}, {338.0, 125.3}}, label: 'Capacity, 2:45 of film'
+                                StaticText, 0x10dc2e870, {{32.0, -1066.3}, {299.0, 187.3}}, label: 'One silent Movie after Development'
+                                StaticText, 0x10dc2e990, {{32.0, -849.0}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain'
+                                StaticText, 0x10dc2eab0, {{32.3, -631.7}, {335.7, 63.3}}, label: 'Silent capture'
+                                  Image, 0x10dc2ebd0, {{32.3, -610.3}, {19.3, 21.0}}, identifier: 'mic.slash', label: 'Microphone Off'
+                                  StaticText, 0x10dc2ecf0, {{60.0, -631.7}, {308.0, 63.3}}, label: 'Silent capture'
+                                StaticText, 0x10dc2ee10, {{32.0, -538.3}, {249.7, 125.3}}, label: 'Movie Orientation'
+                                Button, 0x10dc2ef30, {{32.0, -405.0}, {249.0, 77.3}}, label: 'Movie Orientation, Portrait'
+                                  StaticText, 0x10dc2f050, {{54.0, -398.0}, {163.0, 63.3}}, label: 'Portrait'
+                                StaticText, 0x10dc2f170, {{32.0, -262.7}, {199.7, 63.3}}, identifier: 'film-title-heading', label: 'Film title'
+                                TextField, 0x10dc2f290, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'film-title', label: 'Film title', value: 16mm - Roll #01
+                                  Other, 0x10dc2f3b0, {{32.0, -99.0}, {338.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                    Other, 0x10dc2f4d0, {{35.0, -72.0}, {332.0, 3.0}}
+                                StaticText, 0x10dc2f5f0, {{38.7, -1.0}, {329.3, 187.3}}, label: 'Trial status unavailable'
+                                StaticText, 0x10dc2f710, {{32.0, 216.3}, {338.0, 364.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'
+                                Button, 0x10dc2f830, {{32.0, 646.0}, {283.0, 63.3}}, label: 'Subscription'
+                                Button, 0x123f237a0, {{32.0, 774.3}, {338.0, 63.3}}, identifier: 'load-film', label: 'Load Film'
+                                  StaticText, 0x123f23ce0, {{32.0, 774.3}, {217.3, 63.3}}, label: 'Load Film'
+                                  Image, 0x10a827f30, {{299.7, 781.3}, {63.7, 49.7}}, identifier: 'camera', label: 'Camera'
+                              Other, 0x10a828050, {{369.0, 148.0}, {30.0, 664.0}}, label: 'Vertical scroll bar, 4 pages', value: 98%
+                                Other, 0x10a828170, {{396.0, 587.0}, {3.0, 213.0}}
+                              Other, 0x10a828290, {{369.0, 148.0}, {30.0, 664.0}}, label: 'Vertical scroll bar, 4 pages', value: 98%
+                                Other, 0x10a8283b0, {{396.0, 587.0}, {3.0, 213.0}}
+                    Other, 0x10a8284d0, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x10a8285f0, {{0.0, 62.0}, {402.0, 812.0}}
+Path to element:
+ →Application, 0x10dc2a140, pid: 69612, label: 'Immerse'
+Query chain:
+ →Find: Target Application 'com.immerse.FilmJournal'
+  Output: {
+    Application, 0x10aa29780, pid: 69612, label: 'Immerse'
+  }

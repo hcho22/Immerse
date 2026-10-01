@@ -1,0 +1,24 @@
+Failed to get matching snapshot: No matches found for Elements matching predicate '"Capacity" IN identifiers' from input {(
+    StaticText, label: 'Film Journal',
+    StaticText, label: '16mm',
+    StaticText, label: 'Film Journal',
+    StaticText, label: 'Capacity, 2:45 of film',
+    StaticText, label: 'One silent Movie after Development',
+    StaticText, label: 'Deliberate framing, finer grain',
+    StaticText, label: 'Silent capture',
+    StaticText, label: 'Movie Orientation',
+    StaticText, identifier: 'film-title-heading', label: 'Film title',
+    StaticText, label: 'One Trial Film on this iPhone',
+    StaticText, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.',
+    StaticText, label: 'Silent capture',
+    StaticText, label: 'Portrait',
+    StaticText, label: 'Load Film'
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Other from legacy attributes vs StaticText from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 48;
+    "XC_kAXXCAttributeElementBaseType" = UILabel;
+    "XC_kAXXCAttributeElementType" = UILabel;
+    "XC_kAXXCAttributeTraits" = 8590000128;
+}
+See test report attachments for more detail.

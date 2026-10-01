@@ -15,9 +15,15 @@ No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
 Current QA-13 accessibility diagnosis:
-`Evidence/NativeApp/accessibility-viewport-diagnosis.md` is the latest bounded
-follow-up: all-category largest-text control/suppression fail 0/2 and the independent
-viewport-wrapper condition fails 0/1. Complete exported video/activity and timed
+`Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` is the latest bounded
+follow-up: public native frames confirm outer-padding separation and its instrumented
+probe passes all-category audits plus twelve fully reachable rows. The actual-app
+attempt still fails light 0/2 and dark 1/2, and is retained only as an evidence patch.
+Synchronous screenshot timing and navigation/entitlement differences remain explicit
+limits; no production remedy, waiver or acceptance is claimed.
+`Evidence/NativeApp/accessibility-viewport-diagnosis.md` retains the earlier
+all-category largest-text control/suppression failures (0/2) and the independent
+viewport-wrapper failure (0/1). Complete exported video/activity and timed
 geometry establish a size-sweep/scroll-offset change before callbacks, not the
 analyzer's internal capture time. The wrapper did not isolate the physical viewport;
 suppression permits visible chrome overlap. No production fix or waiver is claimed.

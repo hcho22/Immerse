@@ -1,0 +1,68 @@
+Application, 0x10201f750, pid: 65433, label: 'SetupAccessibilityProbe' <App element pid: 65433>
+  Window (Main), 0x10200dbf0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4512095152.4>
+    Other, 0x10200c0e0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4504713440.5>
+      Other, 0x102011190, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4382029392.6>
+        Other, 0x102010910, {{-402.0, -874.0}, {1206.0, 2622.0}} <AX element pid: 65433, elementOrHash.elementID: 4506880800.31>
+        Other, 0x102014520, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4512085680.7>
+          Other, 0x102011520, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4506810544.8>
+            Other, 0x1020118a0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4506858960.9>
+              NavigationBar, 0x102011c40, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal' <AX element pid: 65433, elementOrHash.elementID: 4385166816.10>
+                StaticText, 0x102011fc0, {{16.0, 116.0}, {335.0, 71.7}}, label: 'Film Journal' <AX element pid: 65433, elementOrHash.elementID: 4387384352.13>
+              Other, 0x102012350, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4506851808.11>
+                Other, 0x1020126d0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4384128384.14>
+                  Other, 0x102012a50, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4387277776.16>
+                    Other, 0x102012dd0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4383446032.18>
+                      StaticText, 0x102013150, {{65.5, 456.8}, {271.0, 63.3}}, label: 'Film Journal' <AX element pid: 65433, elementOrHash.elementID: 4383494656.20>
+              Other, 0x1020134d0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4505755904.12>
+                Other, 0x102013860, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4505791712.15>
+                  Toolbar, 0x102013bf0, {{0.0, 788.0}, {402.0, 86.0}}, identifier: 'Toolbar', label: 'Toolbar' <AX element pid: 65433, elementOrHash.elementID: 4382046496.17>
+                    Other, 0x102013f90, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 65433, elementOrHash.elementID: 4382048912.19>
+                      Other, 0x102014ae0, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 65433, elementOrHash.elementID: 4382050816.21>
+                        Other, 0x102014e80, {{177.0, 798.0}, {0.0, 0.0}} <AX element pid: 65433, elementOrHash.elementID: 4382051232.22>
+                          Other, 0x102015200, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 65433, elementOrHash.elementID: 4382043808.23>
+                            Other, 0x102015570, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 65433, elementOrHash.elementID: 4382060784.24>
+                              Other, 0x1020158c0, {{182.0, 803.0}, {38.0, 38.0}} <AX element pid: 65433, elementOrHash.elementID: 4388331424.25>
+                                Other, 0x102015c30, {{182.0, 803.0}, {38.0, 38.0}} <AX element pid: 65433, elementOrHash.elementID: 4388329168.26>
+                                  Button, 0x102015f90, {{182.0, 803.0}, {38.0, 38.0}}, identifier: 'start-film', label: 'Start a Film' <AX element pid: 65433, elementOrHash.elementID: 4382037456.27>
+    Other, 0x1020162f0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 65433, elementOrHash.elementID: 4382136016.28>
+      Other, 0x102016680, {{-402.0, -874.0}, {1206.0, 2622.0}} <AX element pid: 65433, elementOrHash.elementID: 4506879024.29>
+      Other, 0x1020169e0, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4506885312.30>
+        Other, 0x102016d70, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4506888096.32>
+          Other, 0x1020170e0, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4506888816.33>
+            Other, 0x102017440, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4505752704.34>
+              Other, 0x1020177d0, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4506936256.35>
+                Other, 0x102008b70, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4386263632.36>
+                  NavigationBar, 0x102008470, {{0.0, 78.0}, {402.0, 127.0}}, identifier: '16mm' <AX element pid: 65433, elementOrHash.elementID: 4392516304.37>
+                    StaticText, 0x10200b4d0, {{16.0, 132.0}, {172.7, 71.7}}, label: '16mm' <AX element pid: 65433, elementOrHash.elementID: 4385181488.40>
+                  Other, 0x10200b160, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4386264112.38>
+                    Other, 0x1020097f0, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4391465072.41>
+                      Other, 0x10200bd10, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4393556640.43>
+                        Other, 0x10201a380, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4506978640.44>
+                          Other, 0x10200c9b0, {{0.0, 205.0}, {402.0, 635.0}} <AX element pid: 65433, elementOrHash.elementID: 4512220352.45>
+                          ScrollView, 0x10201ff00, {{0.0, 221.0}, {402.0, 603.0}} <AX element pid: 65433, elementOrHash.elementID: 4463215616.46>
+                            Other, 0x102020020, {{0.0, 221.0}, {402.0, 2090.0}} <AX element pid: 65433, elementOrHash.elementID: 4385244624.47>
+                              StaticText, 0x102020140, {{32.0, 236.0}, {338.0, 125.3}}, label: 'Capacity, 2:45 of film' <AX element pid: 65433, elementOrHash.elementID: 4506951200.49>
+                              StaticText, 0x102020260, {{32.0, 391.3}, {299.0, 187.3}}, label: 'One silent Movie after Development' <AX element pid: 65433, elementOrHash.elementID: 4506954480.50>
+                              StaticText, 0x102020380, {{32.0, 608.7}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain' <AX element pid: 65433, elementOrHash.elementID: 4506955152.51>
+                              StaticText, 0x1020204a0, {{32.3, 826.0}, {335.7, 63.3}}, label: 'Silent capture' <AX element pid: 65433, elementOrHash.elementID: 4506957824.52>
+                                Image, 0x1020205c0, {{32.3, 847.3}, {19.3, 21.0}}, identifier: 'mic.slash', label: 'Microphone Off' <AX element pid: 65433, elementOrHash.elementID: 4506955936.62>
+                                StaticText, 0x1020206e0, {{60.0, 826.0}, {308.0, 63.3}}, label: 'Silent capture' <AX element pid: 65433, elementOrHash.elementID: 4506957392.63>
+                              StaticText, 0x102020800, {{32.0, 919.3}, {249.7, 125.3}}, label: 'Movie Orientation' <AX element pid: 65433, elementOrHash.elementID: 4506958880.53>
+                              Button, 0x102020920, {{32.0, 1052.7}, {249.0, 77.3}}, label: 'Movie Orientation, Portrait' <AX element pid: 65433, elementOrHash.elementID: 4505874224.54>
+                                StaticText, 0x102020a40, {{54.0, 1059.7}, {163.0, 63.3}}, label: 'Portrait' <AX element pid: 65433, elementOrHash.elementID: 4505889600.64>
+                              StaticText, 0x102020b60, {{32.0, 1195.0}, {199.7, 63.3}}, identifier: 'film-title-heading', label: 'Film title' <AX element pid: 65433, elementOrHash.elementID: 4506964960.55>
+                              TextField, 0x102020c80, {{32.0, 1266.3}, {338.0, 126.0}}, label: 'Film title', value: 16mm - Roll #01 <AX element pid: 65433, elementOrHash.elementID: 4471602688.56>
+                                Other, 0x102020da0, {{32.0, 1359.3}, {338.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0% <AX element pid: 65433, elementOrHash.elementID: 4392525184.65>
+                                  Other, 0x102020ec0, {{35.0, 1386.3}, {332.0, 3.0}} <AX element pid: 65433, elementOrHash.elementID: 4392504976.70>
+                              StaticText, 0x102020fe0, {{38.7, 1457.3}, {326.7, 187.3}}, label: 'One Trial Film on this iPhone' <AX element pid: 65433, elementOrHash.elementID: 4506971280.57>
+                              StaticText, 0x102021100, {{32.0, 1674.7}, {338.0, 364.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.' <AX element pid: 65433, elementOrHash.elementID: 4506972384.58>
+                              Button, 0x102021220, {{32.0, 2104.3}, {283.0, 63.3}}, label: 'Subscription' <AX element pid: 65433, elementOrHash.elementID: 4506972816.59>
+                              Button, 0x102021340, {{32.0, 2232.7}, {338.0, 63.3}}, identifier: 'load-film', label: 'Load Film' <AX element pid: 65433, elementOrHash.elementID: 4506976480.60>
+                                StaticText, 0x102021460, {{32.0, 2232.7}, {217.3, 63.3}}, label: 'Load Film' <AX element pid: 65433, elementOrHash.elementID: 4506973920.66>
+                                Image, 0x102021580, {{299.7, 2239.7}, {63.7, 49.7}}, identifier: 'camera', label: 'Camera' <AX element pid: 65433, elementOrHash.elementID: 4506974352.67>
+                            Other, 0x1020216a0, {{369.0, 221.0}, {30.0, 591.0}}, label: 'Vertical scroll bar, 4 pages', value: 0% <AX element pid: 65433, elementOrHash.elementID: 4394661440.48>
+                              Other, 0x1020217c0, {{396.0, 814.0}, {3.0, 7.0}} <AX element pid: 65433, elementOrHash.elementID: 4394662416.61>
+                            Other, 0x1020218e0, {{369.0, 221.0}, {30.0, 591.0}}, label: 'Vertical scroll bar, 4 pages', value: 0% <AX element pid: 65433, elementOrHash.elementID: 4394661440.48>
+                              Other, 0x102021a00, {{396.0, 814.0}, {3.0, 7.0}} <AX element pid: 65433, elementOrHash.elementID: 4394662416.61>
+                  Other, 0x102021b20, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4386269120.39>
+                    Other, 0x102021c40, {{0.0, 62.0}, {402.0, 812.0}} <AX element pid: 65433, elementOrHash.elementID: 4386271408.42>

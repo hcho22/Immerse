@@ -58,3 +58,12 @@ are retained before issue queries because the audit's size sweep can move the
 viewport before the first callback. Never equate callback frames with an unobserved
 internal analyzer capture. Full exported recordings and complete activity are
 retained alongside timestamped geometry; no production correction is claimed.
+
+`Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` records the next
+independent outer-padding comparison. Public UIScrollView/UINavigationBar frames
+and adjusted insets distinguish physical viewport isolation from content margins.
+The instrumented padded probe passes, including a separate full-frame check for
+all twelve rows, but the attempted actual-app layout still fails required audits
+and is not retained. App-window captures add synchronous work during size changes;
+do not assume that this diagnostic instrumentation is timing-neutral. The report
+retains every failed control, source inventory, timestamp and exported attachment.

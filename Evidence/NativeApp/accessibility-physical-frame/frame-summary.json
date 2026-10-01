@@ -1,0 +1,2323 @@
+{
+  "minimumObservedGap": 12,
+  "maximumObservedGap": 16,
+  "scrollObservations": 502,
+  "frames": [
+    "[0,221,402,603]",
+    "[0,200,402,624]",
+    "[0,200.33333333333331,402,623.6666666666667]",
+    "[0,202,402,622]",
+    "[0,206,402,618]",
+    "[0,209.66666666666666,402,614.3333333333333]",
+    "[0,213.66666666666666,402,610.3333333333333]",
+    "[0,217.33333333333331,402,606.6666666666667]",
+    "[0,221,402,603.0000000000001]",
+    "[0,221,402,602.9999999999999]"
+  ],
+  "captures": [
+    {
+      "captureReturned": 1790873379.171801,
+      "captureStart": 1790873379.058325,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-1.png",
+      "time": 1790873379.357173,
+      "uptime": 1240755.420080086,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873379.172092,
+        "uptime": 1240755.23500172,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873378.850441,
+        "title": "16mm",
+        "uptime": 1240754.9133521512,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873379.437992,
+      "captureStart": 1790873379.35863,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-2.png",
+      "time": 1790873379.6082149,
+      "uptime": 1240755.671119122,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873379.172092,
+        "uptime": 1240755.23500172,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873378.850441,
+        "title": "16mm",
+        "uptime": 1240754.9133521512,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873379.814797,
+      "captureStart": 1790873379.706637,
+      "category": "UICTContentSizeCategoryM",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-3.png",
+      "time": 1790873379.9841151,
+      "uptime": 1240756.04701576,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          732.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873379.815086,
+        "uptime": 1240755.8779888651,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873378.850441,
+        "title": "16mm",
+        "uptime": 1240754.9133521512,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873380.180867,
+      "captureStart": 1790873380.078322,
+      "category": "UICTContentSizeCategoryL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-4.png",
+      "time": 1790873380.3625321,
+      "uptime": 1240756.425429217,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          739
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873380.181068,
+        "uptime": 1240756.2439667461,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873378.850441,
+        "title": "16mm",
+        "uptime": 1240754.9133521512,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873380.576857,
+      "captureStart": 1790873380.461905,
+      "category": "UICTContentSizeCategoryXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-5.png",
+      "time": 1790873380.73635,
+      "uptime": 1240756.7992430842,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          776.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873380.577155,
+        "uptime": 1240756.640050051,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873378.850441,
+        "title": "16mm",
+        "uptime": 1240754.9133521512,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873380.963431,
+      "captureStart": 1790873380.857123,
+      "category": "UICTContentSizeCategoryXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-6.png",
+      "time": 1790873381.133307,
+      "uptime": 1240757.196195397,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          623.6666666666666
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          805.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873380.83818,
+        "uptime": 1240756.9010717392,
+        "windowFrame": [
+          0,
+          200.33333333333331,
+          402,
+          623.6666666666667
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873380.7883549,
+        "title": "16mm",
+        "uptime": 1240756.851250211,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106.33333333333334
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873381.34297,
+      "captureStart": 1790873381.229706,
+      "category": "UICTContentSizeCategoryXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-7.png",
+      "time": 1790873381.526963,
+      "uptime": 1240757.589848276,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          622
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          865
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873381.213711,
+        "uptime": 1240757.2765980212,
+        "windowFrame": [
+          0,
+          202,
+          402,
+          622
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873381.175585,
+        "title": "16mm",
+        "uptime": 1240757.238472694,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          108
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873381.869855,
+      "captureStart": 1790873381.6819692,
+      "category": "UICTContentSizeCategoryAccessibilityL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-8.png",
+      "time": 1790873382.030137,
+      "uptime": 1240758.093016868,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          614.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1158
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873381.870058,
+        "uptime": 1240757.9329388172,
+        "windowFrame": [
+          0,
+          209.66666666666666,
+          402,
+          614.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873381.733469,
+        "title": "16mm",
+        "uptime": 1240757.796350927,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          115.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873382.258434,
+      "captureStart": 1790873382.1494899,
+      "category": "UICTContentSizeCategoryAccessibilityXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-9.png",
+      "time": 1790873382.436904,
+      "uptime": 1240758.499779524,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          610.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1389.6666666666665
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873382.258644,
+        "uptime": 1240758.321521617,
+        "windowFrame": [
+          0,
+          213.66666666666666,
+          402,
+          610.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873382.0815148,
+        "title": "16mm",
+        "uptime": 1240758.1443939891,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          119.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873382.513612,
+      "captureStart": 1790873382.438205,
+      "category": "UICTContentSizeCategoryAccessibilityXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-10.png",
+      "time": 1790873382.688153,
+      "uptime": 1240758.751024609,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          610.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1389.6666666666665
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873382.258644,
+        "uptime": 1240758.321521617,
+        "windowFrame": [
+          0,
+          213.66666666666666,
+          402,
+          610.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873382.0815148,
+        "title": "16mm",
+        "uptime": 1240758.1443939891,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          119.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873382.920281,
+      "captureStart": 1790873382.798411,
+      "category": "UICTContentSizeCategoryAccessibilityXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-11.png",
+      "time": 1790873383.0909429,
+      "uptime": 1240759.153810976,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          606.6666666666666
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1859.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873382.920486,
+        "uptime": 1240758.983356792,
+        "windowFrame": [
+          0,
+          217.33333333333331,
+          402,
+          606.6666666666667
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873382.736557,
+        "title": "16mm",
+        "uptime": 1240758.799428485,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          123.33333333333334
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873383.326472,
+      "captureStart": 1790873383.2329159,
+      "category": "UICTContentSizeCategoryAccessibilityXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-12.png",
+      "time": 1790873383.505434,
+      "uptime": 1240759.568297354,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          0,
+          402,
+          603
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          2089.333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873383.326793,
+        "uptime": 1240759.389659783,
+        "windowFrame": [
+          0,
+          221,
+          402,
+          603
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873383.138402,
+        "title": "16mm",
+        "uptime": 1240759.201270242,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          127
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873389.97036,
+      "captureStart": 1790873389.875404,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-13.png",
+      "time": 1790873390.151215,
+      "uptime": 1240766.2140085811,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873389.970562,
+        "uptime": 1240766.033358321,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873389.712131,
+        "title": "16mm",
+        "uptime": 1240765.7749287342,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873390.218676,
+      "captureStart": 1790873390.152127,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-14.png",
+      "time": 1790873390.395286,
+      "uptime": 1240766.458077321,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873389.970562,
+        "uptime": 1240766.033358321,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873389.712131,
+        "title": "16mm",
+        "uptime": 1240765.7749287342,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873390.6002069,
+      "captureStart": 1790873390.486773,
+      "category": "UICTContentSizeCategoryM",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-15.png",
+      "time": 1790873390.762162,
+      "uptime": 1240766.824951852,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          732.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873390.6004028,
+        "uptime": 1240766.663192312,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873389.712131,
+        "title": "16mm",
+        "uptime": 1240765.7749287342,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873390.965739,
+      "captureStart": 1790873390.8740458,
+      "category": "UICTContentSizeCategoryL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-16.png",
+      "time": 1790873391.136876,
+      "uptime": 1240767.199659579,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          739
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873390.965941,
+        "uptime": 1240767.028727035,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873389.712131,
+        "title": "16mm",
+        "uptime": 1240765.7749287342,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873391.333801,
+      "captureStart": 1790873391.223918,
+      "category": "UICTContentSizeCategoryXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-17.png",
+      "time": 1790873391.4828858,
+      "uptime": 1240767.5456668201,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          776.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873391.334091,
+        "uptime": 1240767.396874581,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873389.712131,
+        "title": "16mm",
+        "uptime": 1240765.7749287342,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873391.713821,
+      "captureStart": 1790873391.613375,
+      "category": "UICTContentSizeCategoryXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-18.png",
+      "time": 1790873391.9018521,
+      "uptime": 1240767.9646277751,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          623.6666666666666
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          805.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873391.597126,
+        "uptime": 1240767.659904202,
+        "windowFrame": [
+          0,
+          200.33333333333331,
+          402,
+          623.6666666666667
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873391.540728,
+        "title": "16mm",
+        "uptime": 1240767.603508711,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106.33333333333334
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873392.122639,
+      "captureStart": 1790873392.00707,
+      "category": "UICTContentSizeCategoryXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-19.png",
+      "time": 1790873392.306067,
+      "uptime": 1240768.3688381251,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          622
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          865
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873391.993887,
+        "uptime": 1240768.0566610121,
+        "windowFrame": [
+          0,
+          202,
+          402,
+          622
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873391.956121,
+        "title": "16mm",
+        "uptime": 1240768.018896074,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          108
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873392.665265,
+      "captureStart": 1790873392.5551782,
+      "category": "UICTContentSizeCategoryAccessibilityL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-20.png",
+      "time": 1790873392.856096,
+      "uptime": 1240768.918861336,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          614.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1158
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873392.665556,
+        "uptime": 1240768.728324339,
+        "windowFrame": [
+          0,
+          209.66666666666666,
+          402,
+          614.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873392.49494,
+        "title": "16mm",
+        "uptime": 1240768.557709986,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          115.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873392.9461641,
+      "captureStart": 1790873392.857168,
+      "category": "UICTContentSizeCategoryAccessibilityL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-21.png",
+      "time": 1790873393.1475449,
+      "uptime": 1240769.210307413,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          614.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1158
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873392.665556,
+        "uptime": 1240768.728324339,
+        "windowFrame": [
+          0,
+          209.66666666666666,
+          402,
+          614.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873392.49494,
+        "title": "16mm",
+        "uptime": 1240768.557709986,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          115.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873393.684396,
+      "captureStart": 1790873393.4634109,
+      "category": "UICTContentSizeCategoryAccessibilityXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-22.png",
+      "time": 1790873393.8751168,
+      "uptime": 1240769.9378727071,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          603
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          2089.333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873393.684658,
+        "uptime": 1240769.74741659,
+        "windowFrame": [
+          0,
+          221,
+          402,
+          603
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873393.520246,
+        "title": "16mm",
+        "uptime": 1240769.583003409,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          127
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873393.961987,
+      "captureStart": 1790873393.8770719,
+      "category": "UICTContentSizeCategoryAccessibilityXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-23.png",
+      "time": 1790873394.147097,
+      "uptime": 1240770.209849969,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          603
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          2089.333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873393.684658,
+        "uptime": 1240769.74741659,
+        "windowFrame": [
+          0,
+          221,
+          402,
+          603
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873393.520246,
+        "title": "16mm",
+        "uptime": 1240769.583003409,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          127
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873394.281887,
+      "captureStart": 1790873394.181442,
+      "category": "UICTContentSizeCategoryAccessibilityXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-24.png",
+      "time": 1790873394.457512,
+      "uptime": 1240770.520262167,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          603
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          2089.333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873393.684658,
+        "uptime": 1240769.74741659,
+        "windowFrame": [
+          0,
+          221,
+          402,
+          603
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873393.520246,
+        "title": "16mm",
+        "uptime": 1240769.583003409,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          127
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873405.166905,
+      "captureStart": 1790873405.0723271,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-25.png",
+      "time": 1790873405.3389158,
+      "uptime": 1240781.401551241,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873405.1670918,
+        "uptime": 1240781.2297297742,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873404.907216,
+        "title": "16mm",
+        "uptime": 1240780.96985441,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873405.4127688,
+      "captureStart": 1790873405.3404012,
+      "category": "UICTContentSizeCategoryS",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-26.png",
+      "time": 1790873405.586306,
+      "uptime": 1240781.648939914,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          729
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873405.1670918,
+        "uptime": 1240781.2297297742,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873404.907216,
+        "title": "16mm",
+        "uptime": 1240780.96985441,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873405.793367,
+      "captureStart": 1790873405.689522,
+      "category": "UICTContentSizeCategoryM",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-27.png",
+      "time": 1790873405.94772,
+      "uptime": 1240782.010349378,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          732.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873405.793651,
+        "uptime": 1240781.856282047,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873404.907216,
+        "title": "16mm",
+        "uptime": 1240780.96985441,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873406.1577601,
+      "captureStart": 1790873406.061075,
+      "category": "UICTContentSizeCategoryL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-28.png",
+      "time": 1790873406.322692,
+      "uptime": 1240782.3853173382,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          739
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873406.157954,
+        "uptime": 1240782.220580714,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873404.907216,
+        "title": "16mm",
+        "uptime": 1240780.96985441,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873406.543347,
+      "captureStart": 1790873406.440001,
+      "category": "UICTContentSizeCategoryXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-29.png",
+      "time": 1790873406.705967,
+      "uptime": 1240782.7685881471,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          624
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          776.6666666666666
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873406.543652,
+        "uptime": 1240782.606276134,
+        "windowFrame": [
+          0,
+          200,
+          402,
+          624
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873404.907216,
+        "title": "16mm",
+        "uptime": 1240780.96985441,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873406.9462562,
+      "captureStart": 1790873406.853024,
+      "category": "UICTContentSizeCategoryXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-30.png",
+      "time": 1790873407.111839,
+      "uptime": 1240783.17445637,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          623.6666666666666
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          805.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873406.82862,
+        "uptime": 1240782.891239512,
+        "windowFrame": [
+          0,
+          200.33333333333331,
+          402,
+          623.6666666666667
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873406.771219,
+        "title": "16mm",
+        "uptime": 1240782.8338392081,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          106.33333333333334
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873407.32445,
+      "captureStart": 1790873407.2171922,
+      "category": "UICTContentSizeCategoryXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-31.png",
+      "time": 1790873407.487637,
+      "uptime": 1240783.5502509312,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          622
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          865
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873407.20534,
+        "uptime": 1240783.267954969,
+        "windowFrame": [
+          0,
+          202,
+          402,
+          622
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873407.171276,
+        "title": "16mm",
+        "uptime": 1240783.233892335,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          108
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873407.725657,
+      "captureStart": 1790873407.627758,
+      "category": "UICTContentSizeCategoryAccessibilityM",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-32.png",
+      "time": 1790873407.89919,
+      "uptime": 1240783.961798958,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          618
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1057.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873407.614489,
+        "uptime": 1240783.6771002181,
+        "windowFrame": [
+          0,
+          206,
+          402,
+          618
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873407.57277,
+        "title": "16mm",
+        "uptime": 1240783.635380791,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          112
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873408.148333,
+      "captureStart": 1790873408.031682,
+      "category": "UICTContentSizeCategoryAccessibilityL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-33.png",
+      "time": 1790873408.307291,
+      "uptime": 1240784.36989582,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          614.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1158
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873408.148541,
+        "uptime": 1240784.2111478741,
+        "windowFrame": [
+          0,
+          209.66666666666666,
+          402,
+          614.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873407.971014,
+        "title": "16mm",
+        "uptime": 1240784.033622565,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          115.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873408.556318,
+      "captureStart": 1790873408.449771,
+      "category": "UICTContentSizeCategoryAccessibilityXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-34.png",
+      "time": 1790873408.737334,
+      "uptime": 1240784.7999339772,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          610.3333333333333
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1389.6666666666665
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873408.556508,
+        "uptime": 1240784.61911014,
+        "windowFrame": [
+          0,
+          213.66666666666666,
+          402,
+          610.3333333333333
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873408.381077,
+        "title": "16mm",
+        "uptime": 1240784.443680377,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          119.66666666666666
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873408.998393,
+      "captureStart": 1790873408.88114,
+      "category": "UICTContentSizeCategoryAccessibilityXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-35.png",
+      "time": 1790873409.171507,
+      "uptime": 1240785.234102294,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          606.6666666666666
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          1859.3333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873408.9986858,
+        "uptime": 1240785.0612845721,
+        "windowFrame": [
+          0,
+          217.33333333333331,
+          402,
+          606.6666666666667
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873408.80584,
+        "title": "16mm",
+        "uptime": 1240784.8684392371,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          123.33333333333334
+        ]
+      }
+    },
+    {
+      "captureReturned": 1790873409.487922,
+      "captureStart": 1790873409.377254,
+      "category": "UICTContentSizeCategoryAccessibilityXXXL",
+      "event": "size-screen",
+      "file": "498F3CBD-A8EE-4B13-AA02-405353ED5843/size-36.png",
+      "time": 1790873409.67451,
+      "uptime": 1240785.7371002021,
+      "lastScroll": {
+        "adjustedInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "bounds": [
+          0,
+          102,
+          402,
+          603
+        ],
+        "clipsToBounds": true,
+        "contentInset": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "contentSize": [
+          402,
+          2089.333333333333
+        ],
+        "event": "native-scroll",
+        "id": "ObjectIdentifier(0x0000000110081800)",
+        "safeArea": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "time": 1790873409.488213,
+        "uptime": 1240785.550806025,
+        "windowFrame": [
+          0,
+          221,
+          402,
+          603
+        ]
+      },
+      "lastNavigation": {
+        "event": "native-navigation",
+        "hidden": false,
+        "id": "ObjectIdentifier(0x0000000106232150)",
+        "time": 1790873409.249065,
+        "title": "16mm",
+        "uptime": 1240785.311659292,
+        "windowFrame": [
+          0,
+          78,
+          402,
+          127
+        ]
+      }
+    }
+  ]
+}

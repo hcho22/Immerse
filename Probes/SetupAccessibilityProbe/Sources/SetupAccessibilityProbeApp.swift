@@ -37,6 +37,8 @@ private struct ProbeSetup: View {
                     GeometryReader { viewport in
                         stackScroll.frame(width: viewport.size.width, height: viewport.size.height)
                     }
+                } else if ProcessInfo.processInfo.arguments.contains("-outerPadding") {
+                    stackScroll.padding(.vertical, 16)
                 } else {
                     stackScroll
                 }
@@ -57,6 +59,10 @@ private struct ProbeSetup: View {
                 "containerSize": [geometry.containerSize.width, geometry.containerSize.height],
                 "contentSize": [geometry.contentSize.width, geometry.contentSize.height]
             ])
+            ProbeLog.nativeViewports()
+        }
+        .onChange(of: size) { _, _ in
+            DispatchQueue.main.async { ProbeLog.captureWindow() }
         }
     }
 
@@ -204,8 +210,78 @@ private struct Metrics: ViewModifier {
     }
 }
 
+@MainActor
 private enum ProbeLog {
+    static weak var window: UIWindow?
+    private static var nativeGeometry: [ObjectIdentifier: [CGFloat]] = [:]
+    private static let captureRun = UUID().uuidString
+    private static var captureNumber = 0
+
     static func rect(_ value: CGRect) -> [CGFloat] { [value.minX, value.minY, value.width, value.height] }
+    static func insets(_ value: UIEdgeInsets) -> [CGFloat] { [value.top, value.left, value.bottom, value.right] }
+
+    static func nativeViewports() {
+        guard let window else { return }
+        func visit(_ view: UIView) {
+            if let scroll = view as? UIScrollView {
+                let frame = rect(scroll.convert(scroll.bounds, to: window))
+                let bounds = rect(scroll.bounds)
+                let adjusted = insets(scroll.adjustedContentInset)
+                let contentInset = insets(scroll.contentInset)
+                let contentSize = [scroll.contentSize.width, scroll.contentSize.height]
+                let geometry = frame + bounds + adjusted + contentInset + contentSize
+                let id = ObjectIdentifier(scroll)
+                if nativeGeometry[id] != geometry {
+                    nativeGeometry[id] = geometry
+                    record("native-scroll", ["id": String(describing: id), "windowFrame": frame,
+                                              "bounds": bounds, "adjustedInset": adjusted,
+                                              "contentInset": contentInset, "contentSize": contentSize,
+                                              "safeArea": insets(scroll.safeAreaInsets),
+                                              "clipsToBounds": scroll.clipsToBounds])
+                }
+            } else if let navigation = view as? UINavigationBar {
+                let frame = rect(navigation.convert(navigation.bounds, to: window))
+                let id = ObjectIdentifier(navigation)
+                if nativeGeometry[id] != frame {
+                    nativeGeometry[id] = frame
+                    record("native-navigation", ["id": String(describing: id), "windowFrame": frame,
+                                                  "title": navigation.topItem?.title ?? "",
+                                                  "hidden": navigation.isHidden])
+                }
+            }
+            view.subviews.forEach(visit)
+        }
+        visit(window)
+    }
+
+    static func captureWindow() {
+        guard let window, !window.bounds.isEmpty else { return }
+        captureNumber += 1
+        let start = Date().timeIntervalSince1970
+        let category = window.traitCollection.preferredContentSizeCategory.rawValue
+        let renderer = UIGraphicsImageRenderer(bounds: window.bounds)
+        var rendered = false
+        let image = renderer.image { _ in
+            rendered = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        let captured = Date().timeIntervalSince1970
+        nativeViewports()
+        do {
+            guard rendered, let png = image.pngData() else {
+                record("size-screen-failed", ["reason": "Window drawing did not complete"])
+                return
+            }
+            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                .appendingPathComponent("ViewportEvidence/\(captureRun)", isDirectory: true)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            let file = "size-\(captureNumber).png"
+            try png.write(to: folder.appendingPathComponent(file), options: .atomic)
+            record("size-screen", ["file": "\(captureRun)/\(file)", "captureStart": start,
+                                   "captureReturned": captured, "category": category])
+        } catch {
+            record("size-screen-failed", ["reason": String(describing: error)])
+        }
+    }
 
     static func record(_ event: String, _ values: [String: Any]) {
         var record = values
@@ -238,6 +314,8 @@ private final class WindowMetricsView: UIView {
 
     private func snapshot() {
         guard let window else { return }
+        ProbeLog.window = window
+        ProbeLog.nativeViewports()
         let frame = convert(bounds, to: window)
         let insets = [safeAreaInsets.top, safeAreaInsets.left, safeAreaInsets.bottom, safeAreaInsets.right]
         let geometry = ProbeLog.rect(frame) + insets + ProbeLog.rect(window.bounds)

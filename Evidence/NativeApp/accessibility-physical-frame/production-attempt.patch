@@ -1,0 +1,110 @@
+diff --git a/App/Immerse/Sources/CameraCatalogView.swift b/App/Immerse/Sources/CameraCatalogView.swift
+index e219264..9adf30d 100644
+--- a/App/Immerse/Sources/CameraCatalogView.swift
++++ b/App/Immerse/Sources/CameraCatalogView.swift
+@@ -49,29 +49,43 @@ private struct LoadFilmView: View {
+     @State private var samples = false
+
+     var body: some View {
+-        Form {
++        ScrollView {
++            VStack(alignment: .leading, spacing: 35) { setupSections }
++                .padding(.horizontal, 16)
++        }
++        // Outer padding separates the physical viewport from navigation chrome.
++        .padding(.vertical, 16)
++        .background(Color(uiColor: .systemGroupedBackground))
++        .navigationTitle(camera.shortName)
++        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
++        .task { if title.isEmpty { title = suggestedTitle } }
++        .interactiveDismissDisabled(loading)
++    }
++
++    private var setupSections: some View {
++        Group {
+             if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
+-                Section {
++                section { row {
+                     Button("Camera samples", systemImage: "photo.on.rectangle") { samples = true }
+-                }
++                } }
+             }
+-            Section {
+-                LabeledContent("Capacity", value: camera.capacityLabel)
+-                Text(camera.revealLabel)
+-                Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
++            section {
++                row { LabeledContent("Capacity", value: camera.capacityLabel) }
++                row { Text(camera.revealLabel) }
++                row { Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true) }
+                 if camera.medium == .movie {
+-                    HStack {
++                    row { HStack {
+                         Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
+                         Text("Silent capture").fixedSize(horizontal: false, vertical: true)
+-                    }.accessibilityElement(children: .combine)
+-                    VStack(alignment: .leading, spacing: 8) {
++                    }.accessibilityElement(children: .combine) }
++                    row { VStack(alignment: .leading, spacing: 8) {
+                         Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
+                         if dynamicTypeSize.isAccessibilitySize { orientationPicker.pickerStyle(.menu).labelsHidden() }
+                         else { orientationPicker.pickerStyle(.segmented).labelsHidden() }
+-                    }
++                    } }
+                 }
+             }
+-            Section {
++            section { row {
+                 VStack(alignment: .leading, spacing: 8) {
+                     Text("Film title").font(.headline).foregroundStyle(Color.primary)
+                         .fixedSize(horizontal: false, vertical: true)
+@@ -80,15 +94,17 @@ private struct LoadFilmView: View {
+                     TextField("Title", text: $title, axis: .vertical)
+                         .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
+                 }
++            } }
++            section {
++                row { Label(entitlementLabel, systemImage: "ticket") }
++                row {
++                    Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
++                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
++                }
+             }
+-            Section {
+-                Label(entitlementLabel, systemImage: "ticket")
+-                Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
+-                    .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+-            }
+-            Section { NavigationLink("Subscription") { SubscriptionView() } }
+-            if let error { Section { Text(error).foregroundStyle(.red) } }
+-            Section {
++            section { row { NavigationLink("Subscription") { SubscriptionView() } } }
++            if let error { section { row { Text(error).foregroundStyle(.red) } } }
++            section { row {
+                 Button {
+                     loading = true
+                     Task {
+@@ -111,12 +127,18 @@ private struct LoadFilmView: View {
+                 } label: {
+                     HStack { Text("Load Film"); Spacer(); if loading { ProgressView() } else { Image(systemName: "camera") } }
+                 }.disabled(loading).accessibilityIdentifier("load-film")
+-            }
++            } }
+         }
+-        .navigationTitle(camera.shortName)
+-        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
+-        .task { if title.isEmpty { title = suggestedTitle } }
+-        .interactiveDismissDisabled(loading)
++    }
++
++    private func section<Content: View>(@ViewBuilder content: () -> Content) -> some View {
++        VStack(alignment: .leading, spacing: 0, content: content)
++            .background(Color(uiColor: .secondarySystemGroupedBackground))
++    }
++
++    private func row<Content: View>(@ViewBuilder content: () -> Content) -> some View {
++        content().padding(.vertical, 15).padding(.horizontal, 16)
++            .frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
+     }
+
+     private var suggestedTitle: String {
