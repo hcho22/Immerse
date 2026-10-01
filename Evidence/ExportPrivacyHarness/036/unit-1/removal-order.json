@@ -1,0 +1,280 @@
+[
+  {
+    "id": "389EB27B-5B1E-4883-9EAF-66C9AB9EFBBC",
+    "camera": "cinema16mm",
+    "label": "movie-discard-beforeReply",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "export-returned"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "mediaNotRevealed"
+      }
+    ]
+  },
+  {
+    "id": "4AAB1131-8781-4D32-9A58-2659DA3A3B39",
+    "camera": "super8HomeMovie",
+    "label": "movie-discard-beforeReply",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "export-returned"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "mediaNotRevealed"
+      }
+    ]
+  },
+  {
+    "id": "54087A6C-0500-4497-BB2F-9EDCD45393A6",
+    "camera": "disposable1990s",
+    "label": "delete-beforeCopy-lateAck-true",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "CancellationError()"
+      },
+      {
+        "event": "export-error",
+        "error": "filmNotFound"
+      }
+    ]
+  },
+  {
+    "id": "5DE819C1-D7A5-460D-84FB-ACFF54439538",
+    "camera": "cinema16mm",
+    "label": "movie-discard-beforeCopy",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "export-error",
+        "error": "writeFailed(\"CancellationError()\")"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "mediaNotRevealed"
+      }
+    ]
+  },
+  {
+    "id": "64C0D1CE-4E88-4A6D-A0F7-5C274FCDFABD",
+    "camera": "disposable1990s",
+    "label": "delete-beforeReply-lateAck-true",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "CancellationError()"
+      },
+      {
+        "event": "export-error",
+        "error": "filmNotFound"
+      }
+    ]
+  },
+  {
+    "id": "BF70CF92-7DC1-4062-8E0B-A7A7D736020D",
+    "camera": "disposable1990s",
+    "label": "delete-beforeReply-lateAck-false",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeReply"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "writeFailed(\"CancellationError()\")"
+      },
+      {
+        "event": "export-error",
+        "error": "filmNotFound"
+      }
+    ]
+  },
+  {
+    "id": "C050BC17-F1A5-4DD3-A593-BDE3FA0A239C",
+    "camera": "disposable1990s",
+    "label": "delete-beforeCopy-lateAck-false",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "writeFailed(\"CancellationError()\")"
+      },
+      {
+        "event": "export-error",
+        "error": "filmNotFound"
+      }
+    ]
+  },
+  {
+    "id": "CEFCDD3D-599E-4DBD-9010-0E4D2FB0D198",
+    "camera": "super8HomeMovie",
+    "label": "movie-discard-beforeCopy",
+    "events": [
+      {
+        "event": "writer-paused",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "writer-task-cancelled",
+        "phase": "paused-beforeCopy"
+      },
+      {
+        "event": "writer-released"
+      },
+      {
+        "event": "export-error",
+        "error": "writeFailed(\"CancellationError()\")"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "removal-requested"
+      },
+      {
+        "event": "removal-returned"
+      },
+      {
+        "event": "export-error",
+        "error": "mediaNotRevealed"
+      }
+    ]
+  }
+]

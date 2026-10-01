@@ -1,0 +1,70 @@
+name: ExportPrivacyHarness
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 26.0
+packages:
+  FilmDomain:
+    path: ../../Packages/FilmDomain
+  FilmPersistence:
+    path: ../../Packages/FilmPersistence
+  FilmRuntime:
+    path: ../../Packages/FilmRuntime
+  RenderCore:
+    path: ../../Packages/RenderCore
+  NativeAdapters:
+    path: ../../Packages/NativeAdapters
+  RenderFixtures:
+    path: ../../Packages/RenderFixtures
+targets:
+  ExportPrivacyHarness:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+      - ../ReceiptScenarioHarness/Sources/ScenarioEvidence.swift
+    dependencies:
+      - package: FilmDomain
+      - package: FilmPersistence
+      - package: FilmRuntime
+      - package: RenderCore
+      - package: NativeAdapters
+      - package: RenderFixtures
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Export Scenarios"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: 1
+  ExportPrivacyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: ExportPrivacyHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.Tests
+        GENERATE_INFOPLIST_FILE: YES
+  ExportPrivacyUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: ExportPrivacyHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.UITests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  ExportPrivacyHarness:
+    build:
+      targets:
+        ExportPrivacyHarness: all
+        ExportPrivacyTests: [test]
+        ExportPrivacyUITests: [test]
+    test:
+      targets: [ExportPrivacyTests, ExportPrivacyUITests]
+      parallelizable: false

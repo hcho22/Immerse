@@ -1,0 +1,5 @@
+{
+  "acknowledgeAfterCancellation" : false,
+  "boundary" : "beforeCopy",
+  "reply" : "success"
+}

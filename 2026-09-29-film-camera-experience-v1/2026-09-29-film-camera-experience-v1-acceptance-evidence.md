@@ -26,6 +26,17 @@ The adjacent remaining-engineering inventory names unsupported phase/race/native
 coverage controls. All original accessibility failures and product/hardware gates
 stay open; no acceptance row or original ADR is replaced.
 
+Checkpoint 036 adds partial FR-08/16/18 and no-reroll/no-refund/privacy-invariant
+evidence through `Probes/ExportPrivacyHarness`, with execution details in
+`Evidence/ExportPrivacyHarness/036/README.md`. Production native media, repository
+and export/removal owners are real; permission, external writer receipts/errors
+and output directories are injected. Known acknowledged writes are skipped on
+retry; an unknown completed external copy may be duplicated by explicit retry,
+not erased or misreported as exactly-once. Sources survive failed/uncertain replies
+and unusable masters, while removed private Movies are retired/reassembled.
+No PhotoKit, physical recovery, soundtrack/player, original-audit or full-clause
+acceptance follows. Subsequent Development observers are not part of this checkpoint.
+
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
 Current physical-test preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)

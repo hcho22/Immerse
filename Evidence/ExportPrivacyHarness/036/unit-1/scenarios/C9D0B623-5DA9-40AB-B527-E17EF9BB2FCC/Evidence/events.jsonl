@@ -1,0 +1,17 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"disposable1990s","event":"session-open","label":"suspend-beforeReply","process":"38420","processSequence":"1","run":"C9D0B623-5DA9-40AB-B527-E17EF9BB2FCC","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:33:59Z"}
+{"developed":"true","event":"native-fixture-created","film":"864B3705-3EBA-421B-964C-2B0E8AEDF423","process":"38420","processSequence":"2","utc":"2026-10-01T19:33:59Z"}
+{"event":"inventory","file":"inventory-1F7D6EBB-0BA9-4963-AC77-5A4090B5ACBF.json","label":"prepared","process":"38420","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:33:59Z"}
+{"event":"inventory","file":"inventory-535CB77D-60B8-4D05-BEBB-BA605E8A746E.json","label":"before-suspend","process":"38420","processSequence":"4","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:33:59Z"}
+{"event":"export-requested","originals":"true","process":"38420","processSequence":"5","sequences":"[1]","utc":"2026-10-01T19:33:59Z"}
+{"event":"injected-authorization","level":"addOnly","process":"38420","processSequence":"6","status":"authorized","utc":"2026-10-01T19:33:59Z"}
+{"attempt":"1","event":"writer-entered","kind":"photo","nativePhotoKit":"false","process":"38420","processSequence":"7","utc":"2026-10-01T19:33:59Z","writer":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7"}
+{"decodedFrames":"1","event":"external-synthetic-copy-completed","file":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7-1.jpeg","process":"38420","processSequence":"8","recalledByPrivateRemoval":"false","sha256":"5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55","utc":"2026-10-01T19:33:59Z","writer":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7"}
+{"event":"writer-paused","phase":"paused-beforeReply","process":"38420","processSequence":"9","utc":"2026-10-01T19:33:59Z","writer":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7"}
+{"event":"suspend-requested","process":"38420","processSequence":"10","utc":"2026-10-01T19:33:59Z"}
+{"event":"writer-task-cancelled","phase":"paused-beforeReply","process":"38420","processSequence":"11","utc":"2026-10-01T19:33:59Z","writer":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7"}
+{"event":"inventory","file":"inventory-5315F059-D7C9-4FBA-96B2-9502FA557398.json","label":"cancelled-still-paused","process":"38420","processSequence":"12","summary":"films=1;sources=1;copies=1","utc":"2026-10-01T19:33:59Z"}
+{"event":"writer-released","process":"38420","processSequence":"13","utc":"2026-10-01T19:33:59Z","writer":"9F324B67-1B48-4EF0-9AB3-AEED85D195E7"}
+{"event":"suspend-returned","process":"38420","processSequence":"14","utc":"2026-10-01T19:33:59Z"}
+{"error":"writeFailed(\"CancellationError()\")","event":"export-error","process":"38420","processSequence":"15","utc":"2026-10-01T19:33:59Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"38420","processSequence":"16","utc":"2026-10-01T19:33:59Z"}
+{"event":"inventory","file":"inventory-E0A4AE0B-46B5-43EB-82EF-79A46CA4C1E1.json","label":"cancelled-reopened","process":"38420","processSequence":"17","summary":"films=1;sources=1;copies=1","utc":"2026-10-01T19:33:59Z"}

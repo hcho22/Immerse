@@ -1,0 +1,36 @@
+{
+  "movie" : {
+    "codecFourCC" : "avc1",
+    "durationSeconds" : 0.16833333333333333,
+    "encodedHeight" : 120,
+    "encodedWidth" : 160,
+    "nominalFrameRate" : 17.821783,
+    "orientation" : "landscape",
+    "preferredTransform" : {
+      "a" : 1,
+      "b" : 0,
+      "c" : 0,
+      "d" : 1,
+      "tx" : 0,
+      "ty" : 0
+    },
+    "relativePath" : "synthetic-developed-movie.mov"
+  },
+  "note" : "Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.",
+  "photo" : {
+    "hasAlpha" : false,
+    "pixelHeight" : 120,
+    "pixelWidth" : 160,
+    "relativePath" : "synthetic-developed-photo.jpg",
+    "uniformTypeIdentifier" : "public.jpeg"
+  },
+  "settings" : {
+    "movieDurationSeconds" : 0.16,
+    "movieFrameRate" : 18,
+    "movieHeight" : 120,
+    "movieOrientation" : "landscape",
+    "movieWidth" : 160,
+    "photoHeight" : 120,
+    "photoWidth" : 160
+  }
+}

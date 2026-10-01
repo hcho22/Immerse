@@ -96,6 +96,15 @@ before dependent edits. No production change, original-audit fix/waiver, physica
 acceptance or implementation-ready claim follows. This report is repository-owned
 no-mistakes handoff material, not a structured scenario import or a pipeline run.
 
+Instruction 036's first [export/privacy checkpoint](../ExportPrivacyHarness/036/README.md)
+adds source-bound native synthetic tests using existing public authorizer/writer
+interfaces. It exercises failed/unknown/cancelled replies, verified-master cleanup,
+acknowledgment-aware retries, paused export versus removal, stale private Movie
+retirement and process re-entry. Completed external synthetic copies remain;
+unknown replies do not establish exactly-once external writes. No PhotoKit or
+Security request, production change, physical acceptance, audit waiver or release.
+Exact Development observation and remaining fault/view coverage are subsequent work.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

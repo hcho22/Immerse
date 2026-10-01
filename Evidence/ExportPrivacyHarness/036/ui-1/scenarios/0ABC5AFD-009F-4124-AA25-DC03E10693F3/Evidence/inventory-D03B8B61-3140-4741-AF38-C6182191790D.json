@@ -1,0 +1,86 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "decodedFrames" : 1,
+      "expectedHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "kind" : "source",
+      "path" : "Media\/D18B64F7-3219-476C-982F-8869239407F8\/source-1.bin",
+      "sequence" : 1
+    },
+    {
+      "actualHash" : "875c19fa815dbb7e10675ce848c467f2eae70eaa824d6430d396f9d08f7701cf",
+      "decodedFrames" : 1,
+      "expectedHash" : "875c19fa815dbb7e10675ce848c467f2eae70eaa824d6430d396f9d08f7701cf",
+      "kind" : "master",
+      "path" : "Media\/D18B64F7-3219-476C-982F-8869239407F8\/master-1.bin",
+      "sequence" : 1
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 1190576488477798766,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "D18B64F7-3219-476C-982F-8869239407F8",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 10
+          }
+        },
+        "displayName" : "1970s Instant",
+        "id" : "instant1970s",
+        "medium" : "photo",
+        "revealRule" : "instantPerExposure",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "photo" : {
+
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "D18B64F7-3219-476C-982F-8869239407F8",
+      "isArchived" : false,
+      "loadedAt" : 812575984.4403,
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/D18B64F7-3219-476C-982F-8869239407F8\/master-1.bin" : "875c19fa815dbb7e10675ce848c467f2eae70eaa824d6430d396f9d08f7701cf",
+    "Media\/D18B64F7-3219-476C-982F-8869239407F8\/source-1.bin" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "30fa37ac17b987c608a1f7a279990d0d73abb5e4738706e6b97e24e49525bc7f",
+    "film-store.sqlite-wal" : "e0f9516e60827d8cbe47f7ff2c3fac93e98da21c1efd9afc081a7703f92b5fd9"
+  }
+}

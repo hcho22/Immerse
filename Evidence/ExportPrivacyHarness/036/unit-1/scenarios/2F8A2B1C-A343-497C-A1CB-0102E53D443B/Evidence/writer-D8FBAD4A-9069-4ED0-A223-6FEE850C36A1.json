@@ -1,0 +1,6 @@
+{
+  "acknowledgeAfterCancellation" : false,
+  "boundary" : "none",
+  "failAtAttempt" : 2,
+  "reply" : "success"
+}

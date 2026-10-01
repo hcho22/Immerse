@@ -34,6 +34,18 @@ FR-04/05/18/21; it does not accept physical scenarios or settle atomic durabilit
 `remaining-engineering.md` beside that report identifies concrete missing
 Development/export/privacy/native-coverage code and production boundary impacts.
 
+Export/privacy preparation checkpoint 036:
+`Probes/ExportPrivacyHarness/README.md` supplies executable native hosted and
+process-exit tests through existing public writer/authorizer protocols. Results
+and source/artifact binding are in `Evidence/ExportPrivacyHarness/036/README.md`.
+Real production rendering, storage and removal operate on synthetic media; all
+writer permissions, receipts and errors are explicitly injected, with completed
+external synthetic copies retained outside the private repository. This advances
+FR-08/16/18, STO-05...09, PRV-05...08, DEL-02, ARC-06 and QA-09/11 software evidence,
+not physical PhotoKit or full privacy acceptance. Production and original failed
+accessibility suites remain unchanged. Exact Development observers are authorized
+for a subsequent checkpoint, not delivered or validated by this first export target.
+
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
 unchanged original default/largest cases once in light and dark on `a79d481`:
@@ -309,7 +321,7 @@ Status words in this table are intentionally conservative:
 | ARC-02 | Settled domain subset. | `Packages/FilmDomain/Sources/FilmDomain`. | Partial: state dimensions and invariants behavior-tested by `swift test`. |
 | ARC-03 | Physical fault/recovery acceptance missing. | `FilmPersistence`, `FilmRuntime/TrialCoordinator`, `Probes/ReceiptScenarioHarness`. | Partial: production media journal/SQLite integration plus checkpoint 035 native-simulator synthetic phase/re-entry checks. Exact scenarios, source hashes and gaps in the 035 report; no hardware durability inference. |
 | ARC-05 | Physical testing deferred by captain; hardware gate still required. | `EntitlementCore/DeviceTrialStore`, `FilmRuntime/TrialCoordinator`, both Trial probes. | Partial: production single-item consumption/receipt/readback and legacy reconciliation; 035 full-receipt harness compiles for iOS. Native Security capability skips with actual -34018 unsigned; physical retention/restore and cross-store durability unproved. No reconnect request authorized. |
-| ARC-06 | Needs render/cache integration. | FilmDomain placeholders; FilmPersistence asset deletion and assembled Movie retirement. | Partial: placeholder/no-refund domain, source/master/clip deletion, surviving Developed Clip preservation and assembled Movie stale-version retirement are behavior-tested; native renderer caches unbuilt. |
+| ARC-06 | Native interruption/cleanup-failure and full viewer/cache acceptance missing. | `FilmRuntime/FilmProcessor`, `FilmPersistence`, `Probes/ExportPrivacyHarness`. | Partial 036 native-simulator tests hold real export jobs, observe cancellation, release removal, reject late exports, retire/reassemble private Movies and preserve retained clip/assignment/capacity. Completed external synthetic copies remain. Exact Development/capture/removal-crash boundaries still need coverage. |
 | ARC-07 | Needs ongoing documentation. | This evidence map. | Partial: records baseline/prototype boundaries and validation strategy. |
 | ARC-08 | Requires iPhone 11/iOS 26. | None. | Untested; no usable physical device available. |
 | ARC-09 | Requires StoreKit configuration and M2. | None. | Not started; StoreKit offline/restore evidence absent. |
@@ -378,17 +390,17 @@ Status words in this table are intentionally conservative:
 | STO-02 | DEC-13 copy and native UI. | Documentation only. | Not started in app. |
 | STO-03 | Needs native app sandbox integration. | FilmPersistence source files under app-private root. | Partial: synthetic sources stored privately in package root; no pre-reveal Photos path implemented. |
 | STO-04 | Needs PhotoKit. | NativeAdapters `PhotoKitAuthorizer` and `PhotoKitWriter`. | Prepared/partial: add-only adapter compiles; no actual Photos write. |
-| STO-05 | Needs PhotoKit/source storage. | NativeAdapters `PhotoExportCoordinator`. | Partial: explicit optional export coordinator exists; native UI/source-choice flow unbuilt. |
-| STO-06 | Needs PhotoKit failure tests. | NativeAdapters Photo export tests. | Partial: denial and write failure outcomes tested with fakes; actual PhotoKit failure modes untested. |
-| STO-07 | Needs decoded-master verification and PhotoKit original export branch. | FilmPersistence checksum-only cleanup; NativeAdapters export outcome. | Partial hash check only: usable master/clip decoding and a repository-enforced export receipt remain missing. Not accepted for production source removal. |
-| STO-08 | Needs decoded-master verification and disclosure UI. | FilmPersistence checksum-only cleanup. | Partial hash check only: malformed but hash-matching masters are not rejected. Declined-export decision/disclosure integration remains unbuilt. |
-| STO-09 | Needs native viewing. | FilmPersistence retains masters after source cleanup. | Partial: offline viewing UI unbuilt. |
+| STO-05 | Actual PhotoKit and UI acceptance missing. | `FilmExportWorker`, native app export flow, 036 probe. | Partial: developed export uses actual edited native print without choosing/removing originals; 036 preparation/recovery never auto-exports. No real Photos call in this probe. |
+| STO-06 | Actual permission/write-failure paths untested. | `PhotoExportCoordinator`, `FilmExportWorker`, 036 probe. | Partial: denied/restricted/undetermined, injected failed/unknown/missing/cancelled replies preserve originals and usable masters. Known acknowledged batch retries skip writes; unknown completed copy may be duplicated by explicit retry, retained and disclosed as an evidence limit. |
+| STO-07 | Hardware PhotoKit and physical durability missing. | `FilmExportWorker`, repository receipt/verified cleanup, 036 probe. | Partial: durable injected acknowledgment alone cannot clean a source with invalid or hash-mismatched master. Restoring the same synthetic master permits verified cleanup without another acknowledged write. Real Photos success/durability remains unaccepted. |
+| STO-08 | Disclosure/declined branch native acceptance remains open. | `FilmProcessor.cleanupSources`, repository decoded/hash evidence guard. | Partial native verification exists, superseding historical checksum-only state. 036 specifically exercises acknowledged-export cleanup and corrupt-master rejection, not final disclosure approval or every declined-export UI path. |
+| STO-09 | Full offline native viewing acceptance missing. | Native app viewers; `FilmProcessor`, repository, 036 probe. | Partial: actual masters/clips remain decodable and hash-identical after original cleanup/reopen; this is not a physical viewer/storage-loss acceptance run. |
 | STO-10 | Needs export UI copy. | None. | Not started. |
 | STO-11 | Needs real backup/restore. | FilmPersistence file attributes. | Partial: temp directory excluded from backup and media directory not excluded; hardware backup/restore unavailable. |
 | PRV-01 | Settled domain subset. | FilmDomain `discardRevealedCapture`. | Partial: placeholders and no refund tested. |
-| PRV-05 | Needs cache deletion integration. | FilmDomain discarded placeholder state; FilmPersistence asset deletion. | Partial: app-controlled source/master/clip files removed for Discard; caches unbuilt. |
+| PRV-05 | Full native player/cache/cleanup-failure coverage missing. | Repository removal and `FilmProcessor`, 036 probe. | Partial: source/clip/old assembly/Work retirement and late export rejection verified against actual synthetic private files. Retained external test copies are deliberately not claimed removed. |
 | PRV-06 | Settled domain subset. | FilmDomain consumed duration unchanged after Discard. | Partial tested. |
-| PRV-07 | Needs renderer/file reassembly. | FilmDomain playable sequence recompute; FilmPersistence removes discarded clip assets, verifies current playable clip plan and retires stale assembled Movies; RenderCore assembly plan uses surviving clips only; RenderFixtures synthetic AVFoundation file output. | Partial domain/storage/planning plus synthetic output fixture only; no actual reassembled production Movie export file. |
+| PRV-07 | Hardware fidelity/audio/player acceptance missing. | Production `FilmProcessor`/Movie renderer/repository, 036 probe. | Partial: Super 8/16mm paused export races retire the old private assembly; actual native reassembly matches surviving clip duration, unchanged clip hash/treatment assignments/orientation and spent capacity. External stale copies remain; soundtrack races and hardware viewing untested. |
 | PRV-08 | DEC-09 now decided. | FilmDomain all-clips-discarded state. | Partial: empty Movie has placeholders and no playback/export. |
 | PRV-10 | Needs copy/UI and storage verification. | Documentation only. | Not started in app. |
 | DEL-01 | Needs native UI/copy. | Documentation only. | Not started. |
@@ -411,8 +423,8 @@ Status words in this table are intentionally conservative:
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests; CapturePipeline no-debit failure tests. | Partial domain/pipeline only. |
 | QA-03 | Requires native job runner/app relaunch. | RenderCore resume test. | Partial: treatment assignments do not reroll across resumed DevelopmentRun. |
 | QA-04 | Requires Darkroom renderer/UI. | RenderCore reset test. | Partial: recipe Reset to Original is exact; pixel/UI behavior unbuilt. |
-| QA-09 | Requires Photos and full storage cleanup. | FilmPersistence source cleanup, Discard and Delete Film tests; NativeAdapters Photo export tests. | Partial: verified-master gating, unaffected surviving assets, Photos denial/write-failure outcomes tested with fakes; actual PhotoKit writes/export copies untested. |
-| QA-11 | Requires native Movie reassembly. | FilmDomain discard/all-clips tests; FilmPersistence stale assembled Movie retirement tests; RenderFixtures decoded synthetic `.mov` output. | Partial domain/storage/native-fixture only; no production Movie render/export. |
+| QA-09 | Requires actual PhotoKit/native failure/storage acceptance. | Production storage/export owner plus 036 probe. | Partial source-bound simulator scenarios now cover verified cleanup, acknowledgment retry, unknown/cancelled reply, removal races and re-entry. All permissions/writes here are injected, never real Photos or storage exhaustion. |
+| QA-11 | Requires hardware Movie/media/player coverage. | Production render/reassembly owner plus 036 probe. | Partial actual native synthetic Super 8/16mm reassembly/retirement and last-clip empty placeholders verified. Physical fidelity, actual Photos copies, licensed soundtrack and active-player acceptance remain missing. |
 | QA-12 | Requires StoreKit, Trial hardware, reinstall/restore. | `Packages/EntitlementCore`, probe prepared. | Partial policy only; not accepted without StoreKit, Keychain delete/reinstall and two-device restore evidence. |
 | QA-13 | Requires native device/accessibility/performance. | Capability discovery and recommendations doc. | Prepared recommendations only; device/accessibility/performance evidence unavailable. |
 | QA-14 | Requires launch readiness decisions/assets. | Evidence map and recommendations doc. | Partial evidence-handoff and recommended launch-readiness options only. |

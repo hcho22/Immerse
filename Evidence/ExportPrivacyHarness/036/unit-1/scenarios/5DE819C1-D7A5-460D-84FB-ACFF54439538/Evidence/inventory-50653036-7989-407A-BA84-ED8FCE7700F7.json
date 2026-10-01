@@ -1,0 +1,91 @@
+{
+  "assets" : [
+
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 4016074197680030681,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 16808063603115743166,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "A96C9E9B-C25A-4BA7-970E-7D4F269ACC57",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        },
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572802,
+          "sequenceNumber" : 2
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 164.66333333333333
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "A96C9E9B-C25A-4BA7-970E-7D4F269ACC57",
+      "isArchived" : false,
+      "loadedAt" : 812576019.303317,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "9e1f71cb269baa0afd9c196d00702ed7847af741cc3b530fb763db1140e32242",
+    "film-store.sqlite-wal" : "8dfd0c32170ec0f18080410f7b73ece4250f1165588f5610f878e5972ec3c97d"
+  }
+}
