@@ -85,6 +85,10 @@ files. It does not rerun native decoding or infer hardware behavior. The native
 test assertions performed decoding. Read `native-1/observations.json` for IDs and
 snapshots. Readable boot text normalizes terminal trailing whitespace; exact
 original bytes remain in `boot.log.raw.gz`.
+The initial staged whitespace check reported an extra blank line at EOF in both
+readable boot logs. Commit `c8096c0` was made before acting on that output; the
+follow-up normalizes only these terminal blank lines and regenerates the evidence
+inventory. Compressed raw transcripts and all native results remain unchanged.
 Xcode also reports runtime priority-inversion warnings (user-initiated waiting
 on Utility, and user-interactive waiting on Default) in five hosted methods,
 including the test snapshot decode site.
