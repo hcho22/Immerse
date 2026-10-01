@@ -5,6 +5,12 @@ Open `Immerse.xcodeproj` in Xcode 26.5. It is generated from `project.yml` with
 All production dependencies are local Swift packages. No browser prototype code,
 sample-library fixtures, review controls, imports or network backend are included.
 
+The [physical validation handoff](../../Evidence/NativeApp/manual-validation.md)
+pins the current candidate and provides future Xcode build/run steps for
+HC_iPhone13 (iPhone 13 Pro, iOS 26.6.2), scenario evidence requirements, the full
+receipt fault matrix and missing hardware/authority. Physical work is still
+deferred; the app is not ready for v1 sign-off.
+
 ## Build and Test
 
 From the repository root:
@@ -76,8 +82,9 @@ manual procedures live under `Evidence/` and the canonical requirement map.
 The app requests Camera at explicit Load Film/Open Camera and Photos add-only at
 explicit export. It never requests microphone, location or photo-library reading.
 PhotoKit exports cannot be recalled. Older iOS backups can restore removed media.
-Trial's cross-store first-save/uninstall conflict remains unresolved; see
-`Evidence/TrialKeychainProbe/2026-10-01-software-integration.md`.
+The historical SQL-before-Keychain Trial window has a software correction in the
+production receipt report above. Cross-store power-loss, device retention and
+two-phone restore remain unaccepted; a software correction is not hardware proof.
 
 For private synthetic populated UI testing, use the separate target and commands
 in `Probes/PopulatedJournalHarness/README.md`. It compiles the production views but

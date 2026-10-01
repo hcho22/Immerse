@@ -6,6 +6,13 @@ This confirms `HC_iPhone13`, the paired iPhone 13 Pro on iOS 26.6.2, and authori
 
 Current execution record: [2026-10-01 device attempt](../../Evidence/TrialKeychainProbe/2026-10-01-device-attempt.md). Signed build passed; the phone's CoreDevice tunnel was unavailable, so install/launch/marker/reinstall checks remain untested.
 
+Later captain instruction: **"implement prd first. i'll test is manually when v1 is ready"**.
+The approval and pinned sequence below remain intact, but physical execution and
+reconnection requests are deferred. This marker probe does not validate the new
+production receipt protocol. See the [full physical handoff](../../Evidence/NativeApp/manual-validation.md)
+for future app build steps, full-protocol cases and their separate authority and
+hardware requirements; v1 is not ready for manual sign-off.
+
 ## Candidate Identity For Review
 
 - Source branch: `fm/immerse-v1-implementation`

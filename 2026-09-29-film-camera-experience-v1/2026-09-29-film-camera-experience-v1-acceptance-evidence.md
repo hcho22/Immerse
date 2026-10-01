@@ -17,6 +17,13 @@ TRI-11 prohibition, not its eventual hardware acceptance requirement.
 
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
+Current physical-test preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
+maps all 72 clauses and nine invariants to concrete future native scenarios and
+evidence records, including the full receipt protocol rather than a marker-only
+probe. It pins `241dafd`, HC_iPhone13/iPhone 13 Pro/iOS 26.6.2, separate app/action
+authority and missing iPhone 11/two-phone coverage. All physical outcomes remain
+untested under the captain's exact manual-test deferral; preparation accepts none.
+
 Current QA-13 / H-UX addendum: `Evidence/NativeApp/accessibility-viewport-diagnosis.md`
 retains the failed edge-suppression/viewport counterfactuals, complete exported
 recordings and timestamped audit/geometry evidence. The observed callback viewport

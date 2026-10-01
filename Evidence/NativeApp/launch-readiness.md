@@ -6,6 +6,11 @@ limits are in `../AssetReview/README.md`. It is not production asset clearance.
 
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
+The [physical validation handoff](manual-validation.md) pins candidate `241dafd`,
+records the exact manual-test deferral and earlier probe-only authority, and gives
+future HC_iPhone13 Xcode steps, per-case outcomes/evidence fields, full receipt
+failpoints and iPhone 11/two-device prerequisites. All physical cases remain
+untested. It is preparation for eventual manual testing, not a request to start it.
 The candidate is the branch commit containing this file; exact execution outcomes
 are in `2026-10-01-native-candidate.md`, `2026-10-01-media-workflows.md` and the
 superseding `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md`.

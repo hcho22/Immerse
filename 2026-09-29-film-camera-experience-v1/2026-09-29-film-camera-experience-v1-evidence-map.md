@@ -14,6 +14,14 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Physical execution preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
+binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode
+steps, all personal FR acceptance/invariants, full receipt fault cases and exact
+evidence fields. It preserves the captain's manual-test deferral and earlier
+probe-only scope; iPhone 11, second-phone restore, native fault harness, asset,
+product and budget prerequisites remain unmet. No physical action or acceptance
+is implied, and current accessibility failures still block readiness.
+
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-observer-diagnosis.md` is the latest bounded
 follow-up: capture-enabled padded control passes but capture-disabled fails title
