@@ -29,6 +29,8 @@ No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keyc
 | NativeAdapters behavior tests | `swift test --package-path Packages/NativeAdapters` | Passed locally on Xcode 26.5 / Swift 6.3.2; 9 tests, 0 failures. | Tests synthetic adapters/fakes on macOS; no real camera, microphone, media quality, simulator Photos library or device Photos write occurred. |
 | CapturePipeline Swift package | `Packages/CapturePipeline` | Added capture-event-to-durable-save integration between `NativeAdapters` callbacks and `FilmPersistence`, including explicit failure/interruption outcomes and recovery-after-launch cleanup. | Uses synthetic files only; no real AVFoundation media operation, process-kill harness or device storage pressure was exercised. |
 | CapturePipeline behavior tests | `swift test --package-path Packages/CapturePipeline` | Passed locally on Xcode 26.5 / Swift 6.3.2; 5 tests, 0 failures. | Tests synthetic payloads on macOS; not hardware capture, real movie files, real app relaunch or iOS interruption recovery. |
+| EntitlementCore Swift package | `Packages/EntitlementCore` | Added pure policy rules for subscription expiry preserving existing Films, one current-device Trial in progress, first-save Trial consumption, zero-save Trial deletion/replacement, used-Trial non-refund and restored Trial coexistence. | Policy only: no StoreKit, no Keychain, no product IDs/prices and no production Trial write path. TRI-11, ARC-09, ARC-11 and DEC-02 remain open. |
+| EntitlementCore behavior tests | `swift test --package-path Packages/EntitlementCore` | Passed locally on Xcode 26.5 / Swift 6.3.2; 6 tests, 0 failures. | Tests settled entitlement policy in memory only; not StoreKit purchase/restore/expiry, Keychain persistence, delete/reinstall or backup/restore. |
 | NativeAdapters iOS compile probe generation | `xcodegen generate --spec Probes/NativeAdaptersCompileProbe/project.yml` | Succeeded; generated `NativeAdaptersCompileProbe.xcodeproj`. | Requires XcodeGen on the machine. |
 | NativeAdapters/CapturePipeline iOS simulator compile | `xcodebuild -project Probes/NativeAdaptersCompileProbe/NativeAdaptersCompileProbe.xcodeproj -scheme NativeAdaptersCompileProbe -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build` | Build succeeded against the iOS 26.5 simulator SDK with `NativeAdapters`, `CapturePipeline`, `FilmPersistence` and `FilmDomain` linked. | Compile-only; no simulator boot, camera session, microphone prompt, Photos write or device recovery was exercised. |
 | Open-decision recommendations | `2026-09-29-film-camera-experience-v1-open-decision-recommendations.md` | Added concrete recommendations for DEC-04, DEC-05, DEC-11, DEC-12, DEC-13 and DEC-14 with affected tracker IDs and current supporting evidence; DEC-04 units and DEC-12 budgets are explicitly provisional and measurable. | Recommendations are not approved decisions and do not close any DEC item. |
@@ -54,8 +56,8 @@ No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keyc
 | FR-16 Discard and Movie reassembly | FilmDomain supports Discard only after reveal, numbered placeholders, no capacity refund, stale Movie playback/export removal after all clips are discarded, and unchanged consumed duration. FilmPersistence removes app-controlled source/master/clip assets for a discarded capture, retires stale assembled Movie assets, preserves surviving Developed Clips and rejects empty Movie assembly. | Native renderer output, actual cache layers and hardware media tests remain unbuilt or untested. |
 | FR-18 Delete Film | FilmPersistence deletes sealed Film state and app-controlled assets without Development; DEC-09 and FR-18 empty-Film path are documented. | Native confirmation copy, Darkroom edit deletion integration and backup disclosure verification remain unbuilt. |
 | FR-19 Account deletion | Correctly not implemented for v1. | Deferred to v2; no v1 evidence needed beyond absence of Account flows in app once app exists. |
-| FR-20 Subscription | No StoreKit implementation yet. | DEC-02 price/refund/revocation handling is open; StoreKit products, restore, expiry and no-Account purchase evidence remain unbuilt. |
-| FR-21 Trial | Keychain probe prepared with this-device-only/non-sync marker and a concrete iPhone 13/iOS 26.6.2 review plan; generic physical-iOS build with signing disabled succeeded. | TRI-11 hardware proof is unavailable; production Trial state machine and first-save atomicity must not be accepted before TRI-11 and ARC-11. |
+| FR-20 Subscription | EntitlementCore tests verify an active subscription can start new Films and an expired subscription cannot start new subscription Films while existing subscription-origin Films remain finishable/exportable. | DEC-02 price/refund/revocation handling is open; StoreKit products, restore, real expiry and no-Account purchase evidence remain unbuilt. |
+| FR-21 Trial | Keychain probe prepared with this-device-only/non-sync marker and a concrete iPhone 13/iOS 26.6.2 review plan; generic physical-iOS build with signing disabled succeeded. EntitlementCore tests verify in-memory policy for first-save consumption, failed-save non-consumption, zero-save replacement, used-Trial non-refund and restored-Trial coexistence. | TRI-11 hardware proof is unavailable; production Trial state machine, Keychain write and first-save atomicity must not be accepted before TRI-11 and ARC-11. |
 
 ## Invariant Map
 
@@ -68,8 +70,8 @@ No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keyc
 | Capacity is never refunded for deliberately spent, discarded or deleted saved capture. | Tests verify Discard leaves consumed Movie seconds unchanged. | Photo discard/delete storage paths still need native tests. |
 | Treatment is assigned once, survives retries, and is unchanged by Movie reassembly. | RenderCore tests verify stable per-capture assignments across resume, a pinned SHA-256-derived seed and surviving Movie clip order without rerolling. | Actual rendered output and media file preservation still required. |
 | Privacy removals win over development retries, cached views, and old assembled versions. | Domain disables playback/export when all Movie clips are discarded. Persistence removes app-controlled source/master/clip files for Discard and retires assembled Movie assets before reassembly from surviving clips. | Actual native renderer caches and hardware media output still need verification. |
-| Archive, whole-Film deletion and subscription cancellation remain separate operations. | Domain archive flag is separate from title/capture/camera state. | Native Delete Film and StoreKit flows required. |
-| Trial eligibility is consumed only by first successfully saved capture and is never restored. | Keychain probe prepared; FilmDomain save/debit semantics support first-save modeling. | Production Trial must wait for TRI-11 hardware and ARC-11 termination/reinstall evidence. |
+| Archive, whole-Film deletion and subscription cancellation remain separate operations. | Domain archive flag is separate from title/capture/camera state. EntitlementCore keeps subscription expiry and Film deletion/refund behavior separate. | Native Delete Film UI and StoreKit management flows required. |
+| Trial eligibility is consumed only by first successfully saved capture and is never restored. | Keychain probe prepared; FilmDomain save/debit semantics support first-save modeling; EntitlementCore policy tests cover failed-save non-consumption, successful first-save consumption, zero-save deletion replacement and no refund after captured Trial deletion. | Production Trial must wait for TRI-11 hardware and ARC-11 termination/reinstall evidence. |
 
 ## Tracker ID Map
 
@@ -84,7 +86,7 @@ Status words in this table are intentionally conservative:
 | --- | --- | --- | --- |
 | DEC-01 | Open product decision. | None. | Not started; final brand/copy not selected. |
 | DEC-02 | Deferred until before M2 billing. | None. | Not started; prices/refund/revocation handling still open. |
-| DEC-03 | Native stack still open; Swift packages are baseline defaults only. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Packages/CapturePipeline`, `Packages/RenderFixtures`, `Probes/TrialKeychainProbe`. | Partial use of reversible Swift package default; does not close DEC-03. |
+| DEC-03 | Native stack still open; Swift packages are baseline defaults only. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Packages/CapturePipeline`, `Packages/RenderFixtures`, `Packages/EntitlementCore`, `Probes/TrialKeychainProbe`. | Partial use of reversible Swift package default; does not close DEC-03. |
 | DEC-04 | Open render/output decision. | Recommendations doc, `Packages/RenderFixtures`, `Evidence/RenderFixtures`. | Recommendation and native API fixture evidence prepared; Camera render specs remain unresolved until captain approval. |
 | DEC-05 | Open asset/licensing decision. | Recommendations doc. | Recommendation prepared; samples and soundtrack rights remain unresolved until captain approval. |
 | DEC-09 | Captain decision supplied 2026-09-30. | `Packages/FilmDomain/Sources/FilmDomain/Film.swift`. | Partial: tests verify empty early Development is blocked and all Movie clips discarded leaves placeholders with no playback/export. |
@@ -92,10 +94,10 @@ Status words in this table are intentionally conservative:
 | DEC-12 | Open product decision and hardware budgets. | Recommendations doc. | Recommendation prepared; low-storage/performance/accessibility matrix unresolved until captain approval and hardware evidence. |
 | DEC-13 | Open product/launch decision. | Recommendations doc. | Recommendation prepared; support/privacy/review requirements unresolved until captain approval. |
 | DEC-14 | Open numeric learning targets. | Recommendations doc. | Recommendation prepared; no analytics SDK remains preserved. |
-| ARC-01 | DEC-03 pending. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Packages/CapturePipeline`, `Packages/RenderFixtures`, `Probes/TrialKeychainProbe`. | Partial: Swift package tests and probe simulator builds pass; full native app setup absent. |
+| ARC-01 | DEC-03 pending. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Packages/CapturePipeline`, `Packages/RenderFixtures`, `Packages/EntitlementCore`, `Probes/TrialKeychainProbe`. | Partial: Swift package tests and probe simulator builds pass; full native app setup absent. |
 | ARC-02 | Settled domain subset. | `Packages/FilmDomain/Sources/FilmDomain`. | Partial: state dimensions and invariants behavior-tested by `swift test`. |
 | ARC-03 | Needs native app integration. | `Packages/FilmPersistence`, `Packages/CapturePipeline`. | Partial: durable temp/write/move, SQLite state commit, capture callback integration, recovery orphan cleanup, backup-exclusion distinction and checksum-verified master cleanup behavior-tested. |
-| ARC-05 | TRI-11 prerequisite. | `Probes/TrialKeychainProbe`. | Prepared: probe compiles for simulator and generic physical iOS, and a concrete iPhone 13/iOS 26.6.2 plan is ready for review; hardware Keychain evidence unavailable. |
+| ARC-05 | TRI-11 prerequisite. | `Probes/TrialKeychainProbe`, `Packages/EntitlementCore`. | Prepared/partial: probe compiles for simulator and generic physical iOS, pure policy is tested, and a concrete iPhone 13/iOS 26.6.2 plan is ready for review; hardware Keychain evidence and production atomic write unavailable. |
 | ARC-06 | Needs render/cache integration. | FilmDomain placeholders; FilmPersistence asset deletion and assembled Movie retirement. | Partial: placeholder/no-refund domain, source/master/clip deletion, surviving Developed Clip preservation and assembled Movie stale-version retirement are behavior-tested; native renderer caches unbuilt. |
 | ARC-07 | Needs ongoing documentation. | This evidence map. | Partial: records baseline/prototype boundaries and validation strategy. |
 | ARC-08 | Requires iPhone 11/iOS 26. | None. | Untested; no usable physical device available. |
@@ -183,16 +185,16 @@ Status words in this table are intentionally conservative:
 | DEL-03 | FR-21 and DEC-09 empty Film policy. | Documentation/domain policy only. | Not started in app. |
 | DEL-04 | Needs Trial production implementation. | None. | Not started. |
 | BIL-01 | DEC-02 and StoreKit. | None. | Not started. |
-| BIL-02 | StoreKit entitlement. | None. | Not started. |
+| BIL-02 | StoreKit entitlement. | `Packages/EntitlementCore`. | Partial policy: active subscription allows new Films and no per-Film charge tier is modeled; StoreKit validation unbuilt. |
 | BIL-03 | StoreKit / Apple ID. | None. | Not started. |
-| BIL-05 | StoreKit expiry and Film rights. | None. | Not started. |
+| BIL-05 | StoreKit expiry and Film rights. | `Packages/EntitlementCore`. | Partial policy: expired subscription blocks new subscription-origin Films but preserves existing Film continuation rights; real StoreKit expiry untested. |
 | BIL-06 | DEC-02 and StoreKit restore/refund/revocation. | None. | Not started. |
 | BIL-07 | StoreKit management UI. | None. | Not started. |
-| TRI-01 | TRI-11 first. | Probe only. | Prepared prerequisite; production Trial not started. |
+| TRI-01 | TRI-11 first. | `Packages/EntitlementCore`, probe only. | Partial policy for one current-device Trial and unused replacement; production Trial not started. |
 | TRI-02 | TRI-11 first. | Probe Keychain attributes. | Prepared only; hardware persistence/restore absent. |
-| TRI-03 | Needs Trial state machine. | FilmDomain saved-capture semantics. | Partial foundation only. |
+| TRI-03 | Needs Trial state machine. | FilmDomain saved-capture semantics; `Packages/EntitlementCore`. | Partial policy: failed save does not consume, first successful save consumes and restored Film rights are distinct; no Keychain persistence. |
 | TRI-04 | Needs atomic Keychain/filesystem proof. | Probe/procedure only. | Not accepted; first-save crash window open. |
-| TRI-09 | Needs Trial production implementation. | None. | Not started. |
+| TRI-09 | Needs Trial production implementation. | `Packages/EntitlementCore`. | Partial policy: captured Trial deletion does not refund eligibility and existing Trial Film continuation is preserved; no production storage/Keychain. |
 | TRI-11 | Hardware prerequisite. | `Probes/TrialKeychainProbe/README.md` and `Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md`. | Prepared procedure and generic physical-iOS compile; untested on hardware. One personal iPhone 13/iOS 26.6.2 target is reviewable for a probe-only sequence, but explicit captain approval is required and not yet given for install, signing, launch, delete/reinstall, restore, erase or settings changes. Two-phone restore remains missing, and device identity needs confirmation. |
 | QA-01 | Requires native real devices. | FilmDomain catalog tests. | Partial domain only; no real-device validation. |
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests; CapturePipeline no-debit failure tests. | Partial domain/pipeline only. |
@@ -200,7 +202,7 @@ Status words in this table are intentionally conservative:
 | QA-04 | Requires Darkroom renderer/UI. | RenderCore reset test. | Partial: recipe Reset to Original is exact; pixel/UI behavior unbuilt. |
 | QA-09 | Requires Photos and full storage cleanup. | FilmPersistence source cleanup, Discard and Delete Film tests; NativeAdapters Photo export tests. | Partial: verified-master gating, unaffected surviving assets, Photos denial/write-failure outcomes tested with fakes; actual PhotoKit writes/export copies untested. |
 | QA-11 | Requires native Movie reassembly. | FilmDomain discard/all-clips tests; FilmPersistence stale assembled Movie retirement tests; RenderFixtures decoded synthetic `.mov` output. | Partial domain/storage/native-fixture only; no production Movie render/export. |
-| QA-12 | Requires StoreKit, Trial hardware, reinstall/restore. | Probe prepared. | Not accepted; no hardware evidence. |
+| QA-12 | Requires StoreKit, Trial hardware, reinstall/restore. | `Packages/EntitlementCore`, probe prepared. | Partial policy only; not accepted without StoreKit, Keychain delete/reinstall and two-device restore evidence. |
 | QA-13 | Requires native device/accessibility/performance. | Capability discovery and recommendations doc. | Prepared recommendations only; device/accessibility/performance evidence unavailable. |
 | QA-14 | Requires launch readiness decisions/assets. | Evidence map and recommendations doc. | Partial evidence-handoff and recommended launch-readiness options only. |
 | QA-15 | Requires backup/restore on real iPhones. | None. | Untested; no authorized hardware restore. |
