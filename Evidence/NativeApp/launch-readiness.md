@@ -3,8 +3,9 @@
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
 The candidate is the branch commit containing this file; exact execution outcomes
-are in `2026-10-01-native-candidate.md`. Firstmate owns the no-mistakes pipeline
-handoff, reviews this evidence linkage, and must coordinate a separate retained
+are in `2026-10-01-native-candidate.md` and `2026-10-01-media-workflows.md`. The
+implementation worker owns the configured no-mistakes run; Firstmate supervises
+ask-user findings, reviews this evidence linkage, and must coordinate a separate retained
 ordinary release task before any future authorized exposure. Never merge here.
 
 ## Candidate Identity and Local Gates
@@ -17,8 +18,8 @@ the app README names separate optional navigation and StoreKit simulator gates.
 The `.storekit` fixture is test-target-only, with a strict product preflight and
 verified event barriers. No credentials or real purchases are required by CI.
 CI configuration is prepared; only an actual green run can establish that gate.
-The current checkpoint is blocked on the repeated scrolled-setup accessibility
-failure detailed in `accessibility-diagnosis.md`. Default audit success does not
+The current checkpoint retains the repeated scrolled-setup accessibility
+failure detailed in `accessibility-diagnosis.md`; unaffected software continues. Default audit success does not
 waive the fresh-build largest-type failure or the UIKitToolbar runtime warning.
 
 ## Required Native Manual Matrix
@@ -35,7 +36,7 @@ installation, signing, purchases, device deletion, backup restoration or erasure
 | STO / QA-09 | Independent developed/original exports; denied/restricted add-only permission, failed Photos write/retry; decode/hash masters before cleanup; inspect real Photos output; no sealed or automatic exports. | PhotoKit execution and actual device low-storage paths untested. |
 | MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Real native synthetic renders only; hardware fidelity/music acceptance absent. |
 | BIL / ARC-09 | Approved monthly/yearly products, cancellation/pending/renewal/expiry/restore; offline after one online sync; finish/develop/edit/export existing Films after expiry. | Local fixtures pass separately from any authorized StoreKit sandbox/device execution. Live setup and DEC-02 are absent. |
-| TRI / ARC-11 | Pinned Keychain procedure, offline activation/first save failure windows, zero-save delete/replacement, used delete/reinstall, two-device restored Trial coexistence. | Hardware untested; SQLite/filesystem/Keychain crash-then-uninstall invariant conflict remains open. |
+| TRI / ARC-11 | Pinned Keychain procedure, offline activation/first save failure windows, zero-save delete/replacement, used delete/reinstall, two-device restored Trial coexistence. | Hardware untested. Production D3 still has the confirmed software crash-then-uninstall violation. `../TrialKeychainProbe/2026-10-01-receipt-study.md` records eleven isolated fault-injected tests and 30 abrupt process exits; native adapter conditions and production integration remain, not a changed Trial policy. A marker-only probe cannot accept this protocol. |
 | ARC-08 / QA-13 | iPhone 11 iOS 26 capture-to-save and full-roll/Movie Development timings, interrupted resume, peak memory, thermal/storage-pressure behavior. | No measurements; DEC-12 budgets are proposals only. |
 | ARC-12 / QA-15 | Authorized two-device large-Film backup/restore, sealed/revealed state, edit recipes, Movie assets and independent Trial; older backup after deletion. Record backup size and reappearing objects. | No authorized restore performed. |
 

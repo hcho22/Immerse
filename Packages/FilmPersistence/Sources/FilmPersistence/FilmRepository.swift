@@ -1,5 +1,6 @@
 import FilmDomain
 import Foundation
+import MediaCatalog
 
 public enum SaveFailureInjection: Sendable {
     case beforeDurableMove
@@ -28,6 +29,9 @@ public enum PersistenceError: Error, Equatable {
     case notMovieFilm
     case movieNotDeveloped
     case movieNotPlayable
+    case soundtrackSelectionLocked
+    case soundtrackChanged
+    case soundtrackUnavailable
     case assembledMoviePlanMismatch(expected: [Int], actual: [Int])
     case missingDevelopedClip(Int)
     case clipChecksumMismatch(Int)
@@ -258,7 +262,8 @@ public final class FilmRepository {
         filmID: UUID,
         data: Data,
         clipSequenceNumbers: [Int],
-        verification: VerifiedMedia? = nil
+        verification: VerifiedMedia? = nil,
+        soundtrackRevision: UUID? = nil
     ) throws {
         try database.withTransaction {
             let film = try film(id: filmID)
@@ -269,8 +274,11 @@ public final class FilmRepository {
             guard clipSequenceNumbers == expected else {
                 throw PersistenceError.assembledMoviePlanMismatch(expected: expected, actual: clipSequenceNumbers)
             }
+            let audio = try movieAudioSelection(filmID: filmID)
+            guard audio?.revision == soundtrackRevision else { throw PersistenceError.soundtrackChanged }
             try verifyDevelopedClipsExist(filmID: filmID, sequenceNumbers: expected)
-            guard let verification, verification.kind == .movie, verification.sha256 == Checksum.sha256Hex(data) else {
+            guard let verification, verification.kind == .movie, verification.sha256 == Checksum.sha256Hex(data),
+                  verification.audioTrackCount == (audio?.asset == nil ? 0 : 1) else {
                 throw PersistenceError.invalidMedia
             }
             let destination = movieURL(filmID: filmID, clipSequenceNumbers: expected)
@@ -285,6 +293,66 @@ public final class FilmRepository {
                     sha256: Checksum.sha256Hex(data)
                 )
             )
+        }
+        try finishPendingDeletions(filmID: filmID)
+    }
+
+    public func movieAudioSelection(filmID: UUID) throws -> MovieAudioSelection? {
+        _ = try film(id: filmID)
+        guard let data = try database.value(filmID: filmID, key: "movie-audio") else { return nil }
+        return try decoder.decode(MovieAudioSelection.self, from: data)
+    }
+
+    public func retainedSoundtrack(filmID: UUID) throws -> StoredMediaAsset? {
+        guard let selected = try movieAudioSelection(filmID: filmID)?.asset else { return nil }
+        guard let audio = try mediaAsset(filmID: filmID, sequenceNumber: 0, kind: .soundtrack),
+              let license = try mediaAsset(filmID: filmID, sequenceNumber: 0, kind: .soundtrackLicense),
+              audio.record.sha256 == selected.sha256,
+              try Checksum.sha256Hex(contentsOf: audio.url) == selected.sha256,
+              try Checksum.sha256Hex(contentsOf: license.url) == selected.rights.licenseSHA256 else {
+            throw PersistenceError.soundtrackUnavailable
+        }
+        return audio
+    }
+
+    public func selectMovieSoundtrack(
+        filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?,
+        reselectionPolicy: SoundtrackReselectionPolicy
+    ) throws {
+        let data = try asset?.data()
+        try database.withTransaction {
+            let film = try film(id: filmID)
+            guard film.canPlaybackDevelopedMovie else { throw PersistenceError.movieNotPlayable }
+            let current = try movieAudioSelection(filmID: filmID)
+            if let current, current.asset == asset?.metadata { return }
+            guard current == nil || reselectionPolicy == .allowed else { throw PersistenceError.soundtrackSelectionLocked }
+            if let asset, let data {
+                guard asset.metadata.purpose == .instrumental, asset.metadata.kind == .audio,
+                      asset.metadata.cameraIDs.contains(film.camera.id), asset.metadata.rights.permitsMovieExport,
+                      let verification, verification.kind == .audio, verification.sha256 == Checksum.sha256Hex(data) else {
+                    throw PersistenceError.invalidMedia
+                }
+            } else if asset != nil || verification != nil { throw PersistenceError.invalidMedia }
+
+            let selection = MovieAudioSelection(revision: UUID(), asset: asset?.metadata)
+            for kind in [StoredAsset.Kind.soundtrack, .soundtrackLicense] {
+                if let old = try database.asset(filmID: filmID, sequenceNumber: 0, kind: kind) {
+                    try database.enqueueDeletion(filmID: filmID, relativePath: old.relativePath)
+                    try database.deleteAsset(filmID: filmID, sequenceNumber: 0, kind: kind)
+                }
+            }
+            if let asset, let data {
+                let directory = mediaRootURL.appendingPathComponent(filmID.uuidString)
+                for (kind, bytes) in [(StoredAsset.Kind.soundtrack, data), (.soundtrackLicense, asset.license)] {
+                    let suffix = kind == .soundtrack ? asset.url.pathExtension : "txt"
+                    let url = directory.appendingPathComponent("\(kind.rawValue)-\(selection.revision).\(suffix)")
+                    try durableWrite(bytes, to: url, failureInjection: nil)
+                    try database.upsertAsset(StoredAsset(filmID: filmID, sequenceNumber: 0, kind: kind,
+                        relativePath: relativePath(for: url), sha256: Checksum.sha256Hex(bytes)))
+                }
+            }
+            try database.setValue(filmID: filmID, key: "movie-audio", data: encoder.encode(selection))
+            try retireAssembledMovies(filmID: filmID)
         }
         try finishPendingDeletions(filmID: filmID)
     }
@@ -351,7 +419,7 @@ public final class FilmRepository {
         try database.withTransaction {
             let film = try film(id: filmID)
             guard let capture = film.captures.first(where: { $0.sequenceNumber == sequenceNumber }), !capture.isDiscarded,
-                  film.developmentState != .notStarted || film.camera.revealRule == .instantPerExposure else {
+                  film.canStartDevelopment || film.developmentState != .notStarted || film.camera.revealRule == .instantPerExposure else {
                 throw PersistenceError.mediaNotRevealed
             }
             let choice: OriginalDisposition = export ? .exportRequested : .declined

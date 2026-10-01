@@ -6,25 +6,48 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
     public var colorFiltration: ColorFiltration?
     public var crop: Crop?
     public var dodgeBurnMasks: [LocalMask]
+    public var chemicalToning: ChemicalToning?
 
     public init(
         printExposureStops: Double = 0,
         contrastGrade: Int? = nil,
         colorFiltration: ColorFiltration? = nil,
         crop: Crop? = nil,
-        dodgeBurnMasks: [LocalMask] = []
+        dodgeBurnMasks: [LocalMask] = [],
+        chemicalToning: ChemicalToning? = nil
     ) {
         self.printExposureStops = printExposureStops
         self.contrastGrade = contrastGrade
         self.colorFiltration = colorFiltration
         self.crop = crop
         self.dodgeBurnMasks = dodgeBurnMasks
+        self.chemicalToning = chemicalToning
     }
 
     public static let original = DarkroomRecipe()
 
     public mutating func resetToOriginal() {
         self = .original
+    }
+}
+
+public enum PhotoPrintProcess: String, Codable, Sendable {
+    case color
+    case silverGelatin
+
+    public var supportsChemicalToning: Bool { self == .silverGelatin }
+}
+
+public struct ChemicalToning: Codable, Equatable, Sendable {
+    public enum Chemistry: String, Codable, CaseIterable, Sendable {
+        case sepia, selenium
+    }
+    public var chemistry: Chemistry
+    public var amount: Double
+
+    public init(chemistry: Chemistry, amount: Double) {
+        self.chemistry = chemistry
+        self.amount = amount
     }
 }
 

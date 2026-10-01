@@ -48,6 +48,12 @@ extension Film {
     }
 
     var remainingLabel: String {
+        if case let .completedEarly(wasted) = completionState {
+            switch wasted {
+            case let .exposures(count): return "\(count) exposures wasted"
+            case let .seconds(count): return String(format: "%.3f seconds wasted", count)
+            }
+        }
         if let remainingExposures { return "\(remainingExposures) exposures left" }
         return String(format: "%.3f seconds left", remainingMovieSeconds ?? 0)
     }
@@ -58,9 +64,10 @@ extension Film {
     }
 
     var progress: Double {
+        if completionState != .open { return 1 }
         switch camera.capacity {
-        case let .exposures(total): Double(savedCaptureCount) / Double(total)
-        case let .seconds(total): consumedMovieSeconds / Double(total)
+        case let .exposures(total): return Double(savedCaptureCount) / Double(total)
+        case let .seconds(total): return consumedMovieSeconds / Double(total)
         }
     }
 }

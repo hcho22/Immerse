@@ -17,7 +17,7 @@ public enum NativeRenderError: Error, Equatable {
 public enum NativePhotoRenderer {
     public static let treatmentVersion = "film-look-1-provisional"
 
-    public static func develop(source: URL, camera: CameraPackage, seed: UInt64) throws -> Data {
+    public static func develop(source: URL, camera: CameraPackage, seed: UInt64, process: PhotoPrintProcess = .color) throws -> Data {
         guard camera.medium == .photo else { throw NativeRenderError.wrongMedium }
         guard var image = CIImage(contentsOf: source, options: [.applyOrientationProperty: true]),
               !image.extent.isEmpty else { throw NativeRenderError.unreadableSource }
@@ -34,12 +34,15 @@ public enum NativePhotoRenderer {
             image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
         }
         image = try FilmLook.apply(to: image, camera: camera.id, seed: seed)
+        if process == .silverGelatin {
+            image = image.applyingFilter("CIColorControls", parameters: [kCIInputSaturationKey: 0])
+        }
         return try jpeg(image)
     }
 
-    public static func print(master: Data, recipe: DarkroomRecipe, camera: CameraPackage) throws -> Data {
+    public static func print(master: Data, recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws -> Data {
         guard camera.medium == .photo else { throw NativeRenderError.wrongMedium }
-        try validate(recipe, camera: camera)
+        try validate(recipe, camera: camera, process: process)
         // Reset is byte-exact: never re-encode the original master.
         if recipe == .original { return master }
         guard var image = CIImage(data: master, options: [.applyOrientationProperty: true]) else {
@@ -73,6 +76,29 @@ public enum NativePhotoRenderer {
                 kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: combined
             ])
         }
+        if let toning = recipe.chemicalToning {
+            let toned: CIImage
+            switch toning.chemistry {
+            case .sepia:
+                toned = image.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: toning.amount])
+            case .selenium:
+                // Provisional shadow-biased selenium print response, not a stock certification.
+                let tinted = image.applyingFilter("CIColorMatrix", parameters: [
+                    "inputRVector": CIVector(x: 1.04, y: 0, z: 0, w: 0),
+                    "inputGVector": CIVector(x: 0, y: 0.94, z: 0, w: 0),
+                    "inputBVector": CIVector(x: 0, y: 0, z: 1.02, w: 0)
+                ])
+                let shadows = image.applyingFilter("CIColorInvert").applyingFilter("CIColorMatrix", parameters: [
+                    "inputRVector": CIVector(x: toning.amount, y: 0, z: 0, w: 0),
+                    "inputGVector": CIVector(x: 0, y: toning.amount, z: 0, w: 0),
+                    "inputBVector": CIVector(x: 0, y: 0, z: toning.amount, w: 0)
+                ])
+                toned = tinted.applyingFilter("CIBlendWithMask", parameters: [
+                    kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: shadows
+                ])
+            }
+            image = toned
+        }
         if let crop = recipe.crop {
             let size = image.extent.size
             image = normalize(image.cropped(to: CGRect(
@@ -83,11 +109,17 @@ public enum NativePhotoRenderer {
         return try jpeg(image)
     }
 
-    public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage) throws {
+    public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws {
         guard recipe.printExposureStops.isFinite, (-2...2).contains(recipe.printExposureStops),
               recipe.contrastGrade.map({ (0...5).contains($0) }) ?? true else { throw NativeRenderError.invalidRecipe }
         if let color = recipe.colorFiltration {
-            guard [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && (-30...30).contains($0) }) else {
+            guard process == .color,
+                  [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && (-30...30).contains($0) }) else {
+                throw NativeRenderError.invalidRecipe
+            }
+        }
+        if let toning = recipe.chemicalToning {
+            guard process.supportsChemicalToning, toning.amount.isFinite, (0...1).contains(toning.amount) else {
                 throw NativeRenderError.invalidRecipe
             }
         }

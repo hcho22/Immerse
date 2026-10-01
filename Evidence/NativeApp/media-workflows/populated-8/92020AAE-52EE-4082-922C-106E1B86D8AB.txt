@@ -1,0 +1,9 @@
+Failed to tap Button (First Match): No matches found for first query match sequence: `Descendants matching type Button` -> `Elements containing elements matching predicate 'label CONTAINS "Renamed synthetic Film"'`, given input App element pid: 78003
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs ProgressIndicator from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 35;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 8589935105;
+}
+See test report attachments for more detail.

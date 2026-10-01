@@ -6,6 +6,8 @@ public struct StoredAsset: Equatable, Sendable {
         case master
         case clip
         case movie
+        case soundtrack
+        case soundtrackLicense
     }
 
     public let filmID: UUID

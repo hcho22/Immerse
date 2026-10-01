@@ -73,7 +73,7 @@ struct PhotoView: View {
             .confirmationDialog("Discard photo \(sequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
                     model.perform { try await model.remove(filmID, sequence: sequence); dismiss() }
-                }
+                }.accessibilityIdentifier("confirm-discard-photo")
             } message: { Text(PrivacyCopy.discard) }
         }
     }
@@ -85,6 +85,7 @@ struct DarkroomView: View {
     let filmID: UUID
     let sequence: Int
     @State private var recipe = DarkroomRecipe.original
+    @State private var process = PhotoPrintProcess.color
     @State private var image: UIImage?
     @State private var tool = PrintTool.exposure
     @State private var brushKind = LocalMask.Kind.dodge
@@ -97,7 +98,7 @@ struct DarkroomView: View {
     @State private var error: String?
 
     enum PrintTool: String, CaseIterable, Identifiable {
-        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn"
+        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn", toning = "Chemical toning"
         var id: Self { self }
         var symbol: String {
             switch self {
@@ -106,6 +107,7 @@ struct DarkroomView: View {
             case .filtration: "camera.filters"
             case .crop: "crop"
             case .brush: "paintbrush.pointed"
+            case .toning: "drop"
             }
         }
     }
@@ -120,7 +122,9 @@ struct DarkroomView: View {
                             .accessibilityLabel("Photo \(sequence), print preview")
                     } else { ProgressView().frame(height: 240) }
                     HStack {
-                        ForEach(PrintTool.allCases) { choice in
+                        ForEach(PrintTool.allCases.filter { choice in
+                            choice != .toning || process.supportsChemicalToning
+                        }.filter { choice in choice != .filtration || process == .color }) { choice in
                             Button { tool = choice } label: {
                                 Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
                                     .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
@@ -151,7 +155,11 @@ struct DarkroomView: View {
                 }
             }
             .task {
-                do { recipe = try model.repository.darkroomRecipe(filmID: filmID, sequence: sequence); render() }
+                do {
+                    process = try model.repository.photoPrintProcess(filmID: filmID)
+                    recipe = try model.repository.darkroomRecipe(filmID: filmID, sequence: sequence)
+                    render()
+                }
                 catch { self.error = error.localizedDescription }
             }
             .onDisappear { renderTask?.cancel(); image = nil }
@@ -173,6 +181,20 @@ struct DarkroomView: View {
             filtrationSlider("Cyan", path: \.cyan)
             filtrationSlider("Magenta", path: \.magenta)
             filtrationSlider("Yellow", path: \.yellow)
+        case .toning:
+            Picker("Chemical toning", selection: Binding(get: { recipe.chemicalToning?.chemistry }, set: {
+                recipe.chemicalToning = $0.map { ChemicalToning(chemistry: $0, amount: 0.5) }; render()
+            })) {
+                Text("None").tag(Optional<ChemicalToning.Chemistry>.none)
+                ForEach(ChemicalToning.Chemistry.allCases, id: \.self) { chemistry in
+                    Text(chemistry.rawValue.capitalized).tag(Optional(chemistry))
+                }
+            }.pickerStyle(.menu)
+            if recipe.chemicalToning != nil {
+                Slider(value: Binding(get: { recipe.chemicalToning?.amount ?? 0 }, set: {
+                    recipe.chemicalToning?.amount = $0
+                }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
+            }
         case .crop:
             Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
                 recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()

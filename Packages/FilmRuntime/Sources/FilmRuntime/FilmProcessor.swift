@@ -3,6 +3,7 @@ import FilmPersistence
 import Foundation
 import RenderCore
 import NativeAdapters
+import MediaCatalog
 
 public actor FilmProcessor {
     private let root: URL
@@ -58,7 +59,8 @@ public actor FilmProcessor {
         let film = try repository.film(id: filmID)
         let master = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: .master)
         let selected = try recipe ?? repository.darkroomRecipe(filmID: filmID, sequence: sequence)
-        return try NativePhotoRenderer.print(master: Data(contentsOf: master.url), recipe: selected, camera: film.camera)
+        return try NativePhotoRenderer.print(master: Data(contentsOf: master.url), recipe: selected, camera: film.camera,
+            process: repository.photoPrintProcess(filmID: filmID))
     }
 
     public func saveRecipe(filmID: UUID, sequence: Int, recipe: DarkroomRecipe) throws -> Data {
@@ -69,6 +71,27 @@ public actor FilmProcessor {
 
     public func cleanupSources(filmID: UUID) async throws {
         try await DevelopmentWorker.cleanup(root: root, filmID: filmID)
+    }
+
+    public func selectSoundtrack(filmID: UUID, assetID: String?, catalog: BundleMediaCatalog) async throws {
+        guard !removing.contains(filmID), jobs[filmID] == nil else { throw PersistenceError.operationInProgress }
+        guard let policy = catalog.manifest.soundtrackReselection else { throw MediaCatalogError.invalidManifest }
+        let root = self.root
+        let job = Task.detached {
+            let asset = try assetID.map { try catalog.resolve(id: $0) }
+            let verification: VerifiedMedia?
+            if let asset { verification = try await VerifiedMedia.audio(at: asset.url) }
+            else { verification = nil }
+            try Task.checkCancellation()
+            let repository = try FilmRepository(rootURL: root)
+            try repository.selectMovieSoundtrack(filmID: filmID, asset: asset, verification: verification,
+                                                reselectionPolicy: policy)
+            try Task.checkCancellation()
+            try await DevelopmentWorker.run(root: root, filmID: filmID)
+        }
+        jobs[filmID] = job
+        defer { jobs[filmID] = nil }
+        try await job.value
     }
 
     public func export<Authorizer: PhotoLibraryAuthorizing, Writer: PhotoLibraryWriting>(
@@ -98,6 +121,7 @@ enum DevelopmentWorker {
         let run = try repository.beginDevelopment(filmID: filmID)
         guard run.treatmentVersion == NativePhotoRenderer.treatmentVersion else { throw PersistenceError.treatmentConflict }
         let film = try repository.film(id: filmID)
+        let audioSelection = try repository.movieAudioSelection(filmID: filmID)
         var work = root.appendingPathComponent("Work/\(filmID)/\(UUID())")
         try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
         var resources = URLResourceValues()
@@ -115,7 +139,8 @@ enum DevelopmentWorker {
                     throw PersistenceError.captureNotFound
                 }
                 if kind == .master {
-                    let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed)
+                    let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed,
+                        process: run.printProcess ?? .color)
                     try Task.checkCancellation()
                     try repository.writeDevelopedMaster(filmID: filmID, sequenceNumber: capture.sequenceNumber, data: data)
                 } else {
@@ -141,11 +166,14 @@ enum DevelopmentWorker {
         if film.camera.medium == .movie {
             guard !clips.isEmpty else { return }
             let output = work.appendingPathComponent("assembled.mov")
-            try await NativeMovieRenderer.assemble(clips: clips, destination: output)
-            let verification = try await VerifiedMedia.movie(at: output)
+            let soundtrack = try repository.retainedSoundtrack(filmID: filmID)
+            if let soundtrack { _ = try await VerifiedMedia.audio(at: soundtrack.url) }
+            try await NativeMovieRenderer.assemble(clips: clips, destination: output, soundtrack: soundtrack?.url)
+            let verification = try await VerifiedMedia.movie(at: output, allowsAudio: soundtrack != nil)
             try Task.checkCancellation()
             try repository.writeAssembledMovie(filmID: filmID, data: Data(contentsOf: output),
-                clipSequenceNumbers: film.captures.filter { !$0.isDiscarded }.map(\.sequenceNumber), verification: verification)
+                clipSequenceNumbers: film.captures.filter { !$0.isDiscarded }.map(\.sequenceNumber), verification: verification,
+                soundtrackRevision: audioSelection?.revision)
             evidence.append(verification)
         }
         if film.camera.revealRule != .instantPerExposure {
@@ -168,7 +196,7 @@ enum DevelopmentWorker {
             for (sequence, kind) in kinds {
                 let asset = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: kind)
                 if kind == .master { evidence.append(try VerifiedMedia.photo(at: asset.url)) }
-                else { evidence.append(try await VerifiedMedia.movie(at: asset.url)) }
+                else { evidence.append(try await VerifiedMedia.movie(at: asset.url, allowsAudio: kind == .movie)) }
             }
             try repository.cleanupSourceAfterVerifiedMaster(filmID: filmID, sequenceNumber: capture.sequenceNumber, verifiedMedia: evidence)
         }

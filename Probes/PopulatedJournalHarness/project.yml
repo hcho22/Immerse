@@ -1,0 +1,68 @@
+name: PopulatedJournalHarness
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 26.0
+packages:
+  FilmDomain:
+    path: ../../Packages/FilmDomain
+  FilmPersistence:
+    path: ../../Packages/FilmPersistence
+  FilmRuntime:
+    path: ../../Packages/FilmRuntime
+  RenderCore:
+    path: ../../Packages/RenderCore
+  RenderFixtures:
+    path: ../../Packages/RenderFixtures
+  NativeAdapters:
+    path: ../../Packages/NativeAdapters
+  EntitlementCore:
+    path: ../../Packages/EntitlementCore
+  MediaCatalog:
+    path: ../../Packages/MediaCatalog
+targets:
+  PopulatedJournalHarness:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+      - path: ../../App/Immerse/Sources
+        excludes: [ImmerseApp.swift]
+    dependencies:
+      - package: FilmDomain
+      - package: FilmPersistence
+      - package: FilmRuntime
+      - package: RenderCore
+      - package: RenderFixtures
+      - package: NativeAdapters
+      - package: EntitlementCore
+      - package: MediaCatalog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.PopulatedJournalHarness
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Private Workflow Harness"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: 1
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+  PopulatedJournalHarnessTests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: PopulatedJournalHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.PopulatedJournalHarness.Tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  PopulatedJournalHarness:
+    build:
+      targets:
+        PopulatedJournalHarness: all
+        PopulatedJournalHarnessTests: [test]
+    test:
+      targets: [PopulatedJournalHarnessTests]
+      parallelizable: false

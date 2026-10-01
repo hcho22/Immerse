@@ -35,6 +35,13 @@ evidence is in `Evidence/NativeApp/2026-10-01-native-candidate.md`.
 
 **Supporting evidence so far:** `CameraCatalog` marks Super 8 and 16mm as soundtrack-capable, and `NativeAdapters` keeps capture silent. No production asset rights evidence exists yet.
 
+Implementation preparation now exists in `Packages/MediaCatalog` and the native
+sample/soundtrack views. The production manifest remains empty, rejecting
+test-only clearance. Selected audio/license bytes are preserved with Film backups;
+native tests reassemble after the fixture bundle disappears. This supports the
+rights-ledger recommendation, not approval of any asset. See
+`Evidence/NativeApp/2026-10-01-media-workflows.md` (CAM-10, MOV-09/11, QA-14).
+
 ## DEC-11 - Darkroom Ranges, Instant Source Timing And Soundtrack Reselection
 
 **Recommendation:** keep v1 analog-only and bounded:
@@ -47,12 +54,20 @@ evidence is in `Evidence/NativeApp/2026-10-01-native-candidate.md`.
 | Crop | Per-photo only; preserve aspect for 6x6 unless a later decision explicitly allows free crop. |
 | Dodge/burn | Per-photo local masks with exposure delta `-1.0...+1.0` stops. |
 | Reset | Exact recipe reset to the developed original. |
+| Chemical toning | Sepia/selenium only for an explicitly approved silver-gelatin print process, never a universal color-photo filter. Review generated comparison prints and a provisional `0...1` amount before selecting any applicable Camera stock. |
 | Instant source export timing | Ask after each Instant reveal, because each print is individually revealed and there is no roll-level Development ceremony. |
 | Soundtrack reselection | Allow one selection before final Movie export; changing it later reassembles from existing Developed Clips without repeating Development. |
 
 **Affected tracker IDs:** DEC-11, DRK-01, DRK-02, DRK-03, DRK-04, DRK-05, DRK-06, DRK-08, DEV-05, STO-07, MOV-09, PRV-08, QA-04.
 
 **Supporting evidence so far:** `RenderCore` now renders actual native pixels, and the native app-model tests prove byte-exact Reset and independent photos. `App/Immerse/Sources/PhotoView.swift` exposes provisional controls and non-gesture local exposure points. These implementations do not approve the ranges, medium applicability, chemical toning, Instant presentation or soundtrack reselection. See `Evidence/NativeApp/2026-10-01-native-candidate.md` for candidate-bound execution.
+
+The media-workflow addendum adds decoded-pixel toning tests and a saved print
+process in the one-time Development run; old runs remain color. All current
+provisional Camera presets remain color, so toning is not exposed for them.
+The soundtrack catalog requires an explicit `initialChoiceOnly` or `allowed`
+policy before selection is exposed; nil stays unresolved. Native recovery tests
+exercise both possible policies without turning either into the captain's choice.
 
 ## DEC-12 - Storage, Device, Accessibility And Reliability Budgets
 

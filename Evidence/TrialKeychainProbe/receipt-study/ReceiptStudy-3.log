@@ -1,0 +1,45 @@
+Building for debugging...
+[0/5] Write sources
+[2/5] Write swift-version--58304C5D6DBC2206.txt
+[4/7] Compiling TrialReceiptStudy ReceiptCoordinator.swift
+[5/7] Emitting module TrialReceiptStudy
+[6/9] Compiling TrialReceiptStudyTests ReceiptStudyTests.swift
+[7/9] Emitting module TrialReceiptStudyTests
+[8/11] Compiling TrialReceiptStudyPackageTests runner.swift
+[9/11] Emitting module TrialReceiptStudyPackageTests
+[9/11] Write Objects.LinkFileList
+[10/11] Linking TrialReceiptStudyPackageTests
+Build complete! (12.92s)
+Test Suite 'All tests' started at 2026-10-01 06:43:48.250.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 06:43:48.252.
+Test Suite 'ReceiptStudyTests' started at 2026-10-01 06:43:48.252.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:153: error: -[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending] : failed: caught error: "invalidOperation"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' failed (1.311 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/MediaVerification.swift:33: error: -[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt] : failed: caught error: "Error Domain=AVFoundationErrorDomain Code=-11828 "Cannot Open" UserInfo={NSUnderlyingError=0x600002fa4d50 {Error Domain=NSOSStatusErrorDomain Code=-12847 "(null)"}, NSLocalizedFailureReason=This media format is not supported., AVErrorFailedDependenciesKey=(
+    "assetProperty_Tracks"
+), NSURL=file:///var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/TrialReceiptStudy-64D16A83-BD3A-4550-96F7-3663EC340050/Full-super8HomeMovie/Staging/B5B0CA75-9900-4CAE-A56F-586A5C8B3262/ReceiptStudy/252798D0-F82B-4C07-82B7-145B981DECF2.media, NSLocalizedDescription=Cannot Open}"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' failed (2.376 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/MediaVerification.swift:33: error: -[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible] : failed: caught error: "Error Domain=AVFoundationErrorDomain Code=-11828 "Cannot Open" UserInfo={NSUnderlyingError=0x600002f81080 {Error Domain=NSOSStatusErrorDomain Code=-12847 "(null)"}, NSLocalizedFailureReason=This media format is not supported., AVErrorFailedDependenciesKey=(
+    "assetProperty_Tracks"
+), NSURL=file:///var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/TrialReceiptStudy-C80BF7DA-F5F1-48B6-BAD5-F678E42E60B1/beforeReceipt/Staging/17909C8B-BA70-4C73-91DA-569ADFBA0F01/ReceiptStudy/F5D9E60B-D7E1-407D-8697-BEB5BB8FD8D1.media, NSLocalizedDescription=Cannot Open}"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' failed (0.386 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:153: error: -[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement] : failed: caught error: "invalidOperation"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' failed (0.285 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:153: error: -[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial] : failed: caught error: "invalidOperation"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' failed (0.301 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:153: error: -[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce] : failed: caught error: "invalidOperation"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' failed (0.225 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:153: error: -[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable] : failed: caught error: "invalidOperation"
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' failed (0.155 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testQueuedDeletionWaitsForReceiptOwnerAndRejectsStaleSave]' started.
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

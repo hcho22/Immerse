@@ -14,6 +14,54 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Current software execution (October 1, 2026, 06:18-06:47 PDT): 101 package tests
+and unsigned simulator/device app builds passed, followed by all six native local
+StoreKit/app-model scenarios on iOS 26.2. This includes two diagnostic Trial tests:
+one **confirms a required invariant violation**, not an acceptance pass. The exact
+source inventory, identified soundtrack fixtures, source-choice red/green regression,
+native result summaries and limits are in `Evidence/NativeApp/2026-10-01-media-workflows.md`.
+Rows explicitly described as historical below do not supersede these current reports.
+
+TRI-04 / ARC-11 / QA-12 current boundary:
+`Evidence/TrialKeychainProbe/2026-10-01-protocol-review.md` records the actual
+SQLite/capture-commit followed by lost-outbox counterexample, compares four native
+protocol orderings and retains 17 modeled prefixes. Prepared-media/Keychain receipt
+authority fixes the idealized local reinstall window but leaves a new-device
+backup distinction initially unproved. The focused follow-up in
+`Evidence/TrialKeychainProbe/2026-10-01-pending-replay-review.md` closes that
+particular modeled distinction with pending replay under restored rights: 35
+prefixes and four native file-copy photo/Movie cases preserve once-only capacity,
+chronology and destination entitlement. The authorized isolated implementation study
+is now in `Evidence/TrialKeychainProbe/2026-10-01-receipt-study.md`: eleven tests
+include 30 save-prefix histories, 60 restore copies and 30 abrupt child-process exits
+against actual SQLite/native media with injected receipt stores. Production D3 is
+unchanged. Native status/read mapping, complete app integration and all hardware
+gates remain; this is a software gap, not merely missing hardware. No first-save
+rule or privacy/storage exception is changed. Product judgment remains with its
+existing owner; independent implementation continues.
+
+Populated native workflows now pass 3/3 on iOS 26.5 after fixing Archive path mixing
+and stale Journal rows. The photo flow includes early Development, Darkroom/Reset,
+Discard, rename, Archive/restore/reopen and Delete Film. The other paths preserve
+Instant open-pack reveal and an empty Movie's numbered placeholders without export.
+The separate dark-mode all-category accessibility run still fails both tests
+(Dynamic Type and contrast); it is not waived by functional workflow success.
+
+Latest media/workflow addendum: `Evidence/NativeApp/2026-10-01-media-workflows.md`
+maps CAM-10, MOV-09/11, PRV-08, DRK and their FR clauses to the rights-verified
+bundle catalog, retained soundtrack/license/revision recovery, medium-gated chemical
+toning and separate populated native UI harness. Native decoded-media tests pass
+for soundtrack changes, stale Movie rejection, bundle-independent Discard and
+byte-exact toned-print Reset. No production asset is approved or bundled, no
+Camera stock is changed to black-and-white, and no test proves physical capture.
+The bounded minimal accessibility probe reproduces failures with both forced and
+system-selected largest text; unchanged picker style also fails. Host sleep accounts
+for substantial earlier elapsed-time gaps, not device performance. Evidence and
+exact commands are retained; no audit waiver or full-v1 acceptance follows.
+Firstmate authorized continuing unaffected software and worker-owned no-mistakes
+handoff with supervisor-owned ask-user findings. Historical rows below remain
+historical snapshots; use these addenda for current implementation status.
+
 Latest native app addendum: `Evidence/NativeApp/2026-10-01-native-candidate.md`
 maps the actual SwiftUI Journal, setup, capture, reveal, Darkroom, export, privacy,
 Settings and configurable StoreKit code to affected task IDs and FRs. It records
@@ -27,7 +75,7 @@ audits exposed real contrast/layout issues. Default setup now passes after bound
 diagnosis; expanded scrolled largest-type coverage still has navigation-edge
 contrast and Movie Orientation/Silent capture Dynamic Type failures, including a
 contradictory fresh-build result. Every finding is retained without exception. The current
-combined run passes 88 package tests plus both unsigned builds, and all six
+checkpoint combined run passed 88 package tests plus both unsigned builds, and all six
 StoreKit/app-model scenarios were repeated successfully. Later setup-only changes
 still need their affected UI/build checks. `Scripts/verify-requirement-map.sh`
 checks the 122 intake IDs, 72 clause records and nine invariants without treating

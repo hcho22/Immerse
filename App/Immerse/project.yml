@@ -18,6 +18,8 @@ packages:
     path: ../../Packages/NativeAdapters
   EntitlementCore:
     path: ../../Packages/EntitlementCore
+  MediaCatalog:
+    path: ../../Packages/MediaCatalog
 targets:
   Immerse:
     type: application
@@ -31,6 +33,7 @@ targets:
       - package: RenderCore
       - package: NativeAdapters
       - package: EntitlementCore
+      - package: MediaCatalog
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal

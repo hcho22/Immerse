@@ -3,6 +3,7 @@ import EntitlementCore
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
+import MediaCatalog
 import NativeAdapters
 import Observation
 import RenderCore
@@ -25,6 +26,8 @@ final class JournalModel {
     let trial: TrialCoordinator
     let capture = CaptureController()
     let billing = SubscriptionController()
+    let mediaCatalog: BundleMediaCatalog?
+    let catalogError: String?
     var films: [Film] = []
     var trialState: DeviceTrialState?
     var trialError: String?
@@ -34,6 +37,17 @@ final class JournalModel {
     var mediaRevision = UUID()
 
     init(root: URL) throws {
+        do {
+            guard let resources = Bundle.main.resourceURL,
+                  let manifest = Bundle.main.url(forResource: "MediaCatalog", withExtension: "json") else {
+                throw MediaCatalogError.invalidManifest
+            }
+            mediaCatalog = try BundleMediaCatalog(rootURL: resources, manifestData: Data(contentsOf: manifest))
+            catalogError = nil
+        } catch {
+            mediaCatalog = nil
+            catalogError = "Bundled media is unavailable: \(error.localizedDescription)"
+        }
         repository = try FilmRepository(rootURL: root)
         processor = try FilmProcessor(root: root)
         trial = try TrialCoordinator(root: root)
@@ -115,6 +129,16 @@ final class JournalModel {
         for sequence in sequences where try repository.originalDisposition(filmID: id, sequenceNumber: sequence) == nil {
             try repository.chooseOriginalExport(filmID: id, sequenceNumber: sequence, export: export)
         }
+    }
+
+    func selectSoundtrack(_ id: UUID, assetID: String?) async throws {
+        guard let mediaCatalog, !busyFilms.contains(id), !hiddenFilms.contains(id) else {
+            throw JournalError.operationInProgress
+        }
+        busyFilms.insert(id)
+        mediaRevision = UUID()
+        defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
+        try await processor.selectSoundtrack(filmID: id, assetID: assetID, catalog: mediaCatalog)
     }
 
     func remove(_ id: UUID, sequence: Int? = nil) async throws {

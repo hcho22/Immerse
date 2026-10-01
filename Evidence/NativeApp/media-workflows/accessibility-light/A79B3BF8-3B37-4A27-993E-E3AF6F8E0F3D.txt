@@ -1,0 +1,33 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x105c26b40, {{16.0, -76.0}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'
+Element subtree:
+ →StaticText, 0x105c26b40, {{16.0, -76.0}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'
+Path to element:
+ →Application, 0x105c1d410, pid: 61887, label: 'Immerse'
+  ↳Window (Main), 0x105c1e870, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x105c18ba0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x105c169a0, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x105c173e0, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x105c17080, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x105c16d00, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x105c15120, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x105c237c0, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x105c24200, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x105c24570, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x105c24900, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x105c24c80, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳CollectionView, 0x105c24ff0, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Cell, 0x105c256e0, {{16.0, -76.0}, {370.0, 217.3}}
+                ↳Other, 0x105c26110, {{16.0, -76.0}, {370.0, 217.3}}
+                 ↳Other, 0x105c26480, {{16.0, -76.0}, {370.0, 217.3}}
+                  ↳Other, 0x105c26800, {{16.0, -76.0}, {370.0, 217.3}}
+                   ↳StaticText, 0x105c26b40, {{16.0, -76.0}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'
+Query chain:
+ →Find: Target Application 'com.immerse.FilmJournal'
+  Output: {
+    Application, 0x115e32ad0, pid: 61887, label: 'Immerse'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 61887, elementOrHash.elementID: 4504387168.324
+    Output: {
+      StaticText, 0x1043652e0, {{16.0, -76.0}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'
+    }

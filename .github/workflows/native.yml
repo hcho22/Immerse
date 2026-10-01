@@ -17,6 +17,7 @@ jobs:
         run: |
           device=$(xcrun simctl create 'Immerse CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)
           echo "IMMERSE_SIMULATOR_UDID=$device" >> "$GITHUB_ENV"
+          echo "IMMERSE_WORKFLOW_SIMULATOR_UDID=$device" >> "$GITHUB_ENV"
           billing=$(xcrun simctl create 'Immerse Billing CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
           echo "IMMERSE_STOREKIT_SIMULATOR_UDID=$billing" >> "$GITHUB_ENV"
       - name: Package, app and local StoreKit tests

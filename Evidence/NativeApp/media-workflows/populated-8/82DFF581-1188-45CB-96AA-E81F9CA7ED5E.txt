@@ -1,0 +1,61 @@
+Attributes: Application, 0x10ff1f200, pid: 14767, label: 'Private Workflow Harness'
+Element subtree:
+ →Application, 0x10ff1f200, pid: 14767, label: 'Private Workflow Harness'
+    Window (Main), 0x10ff1f320, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10ff1f6e0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10ff1f800, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10ff1f440, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10ff1f560, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10ff1f920, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10ff1fa40, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Private synthetic Film'
+                  Button, 0x10ff1fb60, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Film Journal'
+                  StaticText, 0x10ff1fc80, {{115.3, 73.7}, {171.0, 20.7}}, label: 'Private synthetic Film'
+                  Button, 0x10ff1fda0, {{346.0, 66.0}, {36.0, 36.0}}, label: 'Film actions'
+                Other, 0x10ff1fec0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10ff1ffe0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10ff1c390, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10ff1c4b0, {{0.0, 0.0}, {402.0, 874.0}}
+                        ScrollView, 0x10ff1c5d0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10ff1c6f0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10ff1c810, {{0.0, 0.0}, {402.0, 170.8}}
+                          Other, 0x10ff1c930, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10ff1ca50, {{0.0, 116.0}, {402.0, 877.3}}
+                            StaticText, 0x10ff1d540, {{16.0, 132.0}, {206.7, 26.3}}, label: '1960s 16mm Cinema'
+                            StaticText, 0x10ff1d660, {{16.0, 168.3}, {84.7, 20.3}}, label: 'Developed'
+                            StaticText, 0x10ff1d780, {{16.0, 198.7}, {204.0, 18.0}}, label: '164.663 seconds wasted'
+                            ProgressIndicator, 0x10ff1d8a0, {{16.0, 226.7}, {370.0, 4.0}}, value: 100%
+                              ProgressIndicator, 0x10ff1d9c0, {{16.0, 216.7}, {370.0, 24.0}}, value: 100%
+                            StaticText, 0x10ff1dae0, {{16.0, 240.7}, {144.0, 14.3}}, label: 'Oct 1, 2026 - Oct 1, 2026'
+                            Button, 0x10ff1dc00, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                              Image, 0x10ff1dd20, {{18.0, 280.0}, {15.0, 19.3}}, identifier: 'square.and.arrow.down', label: 'Download'
+                              StaticText, 0x10ff1de40, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                            Button, 0x10ff1df60, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                              Image, 0x10ff1e080, {{16.7, 317.7}, {20.3, 20.0}}, identifier: 'photo.stack', label: 'photo.stack'
+                              StaticText, 0x10ff1e1a0, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                            Other, 0x10ff1e2c0, {{16.0, 362.7}, {370.0, 493.3}}
+                              Other, 0x10ff1e3e0, {{16.0, 362.7}, {370.0, 493.3}}
+                                Other, 0x10ff1e500, {{16.0, 362.7}, {370.0, 493.3}}
+                                  Other, 0x10ff1e620, {{16.0, 362.7}, {370.0, 493.3}}, label: 'Video'
+                                  Other, 0x10ff1e740, {{16.0, 362.7}, {370.0, 493.3}}
+                                Other, 0x10ff1e860, {{16.0, 362.7}, {370.0, 493.3}}
+                                  Other, 0x10ff1e980, {{16.0, 362.7}, {370.0, 493.3}}
+                                    Other, 0x10fc1a300, {{16.0, 362.7}, {370.0, 493.3}}
+                            StaticText, 0x10fc071c0, {{16.0, 888.2}, {21.3, 20.3}}, label: '01'
+                            StaticText, 0x10fc06870, {{47.3, 888.2}, {103.0, 20.3}}, label: '0.168 sec'
+                            Button, 0x10fc13930, {{367.0, 888.0}, {19.0, 20.7}}, identifier: 'discard-clip-1', label: 'Discard clip'
+                            StaticText, 0x10fc1ae30, {{16.0, 948.8}, {21.3, 20.3}}, label: '02'
+                            StaticText, 0x10fc1af50, {{47.3, 948.8}, {103.0, 20.3}}, label: '0.168 sec'
+                            Button, 0x10fc28010, {{367.0, 948.7}, {19.0, 20.7}}, identifier: 'discard-clip-2', label: 'Discard clip'
+                          Other, 0x10fc28130, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x10fc28250, {{396.0, 119.0}, {3.0, 592.0}}
+                          Other, 0x10fc28370, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x10fc28490, {{396.0, 119.0}, {3.0, 592.0}}
+                Other, 0x10fc29520, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10fc29640, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10ff1f200, pid: 14767, label: 'Private Workflow Harness'
+Query chain:
+ →Find: Target Application 'com.immerse.PopulatedJournalHarness'
+  Output: {
+    Application, 0x10d613ff0, pid: 14767, label: 'Private Workflow Harness'
+  }

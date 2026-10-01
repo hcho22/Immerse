@@ -1,0 +1,25 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmPersistenceTests SourceCleanupTests.swift
+[4/5] Emitting module FilmPersistenceTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmPersistencePackageTests
+Build complete! (3.75s)
+Test Suite 'Selected tests' started at 2026-10-01 06:17:07.911.
+Test Suite 'FilmPersistencePackageTests.xctest' started at 2026-10-01 06:17:07.926.
+Test Suite 'SourceCleanupTests' started at 2026-10-01 06:17:07.926.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/SQLiteDatabase.swift:48: error: -[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources] : failed: caught error: "mediaNotRevealed"
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' failed (1.977 seconds).
+Test Suite 'SourceCleanupTests' failed at 2026-10-01 06:17:09.904.
+	 Executed 1 test, with 1 failure (1 unexpected) in 1.977 (1.977) seconds
+Test Suite 'FilmPersistencePackageTests.xctest' failed at 2026-10-01 06:17:09.904.
+	 Executed 1 test, with 1 failure (1 unexpected) in 1.977 (1.978) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 06:17:09.904.
+	 Executed 1 test, with 1 failure (1 unexpected) in 1.977 (1.993) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

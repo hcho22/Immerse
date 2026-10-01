@@ -44,7 +44,7 @@ enum FilmExportWorker {
             let asset = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: kind)
             let verification: VerifiedMedia
             if film.camera.medium == .photo { verification = try VerifiedMedia.photo(at: asset.url) }
-            else { verification = try await VerifiedMedia.movie(at: asset.url) }
+            else { verification = try await VerifiedMedia.movie(at: asset.url, allowsAudio: !originals) }
             guard verification.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
             let extensionName: String
             if film.camera.medium == .movie { extensionName = "mov" }
@@ -58,14 +58,15 @@ enum FilmExportWorker {
             let file = work.appendingPathComponent("\(sequence).\(extensionName)")
             if !originals && film.camera.medium == .photo {
                 let recipe = try repository.darkroomRecipe(filmID: filmID, sequence: sequence)
-                let data = try NativePhotoRenderer.print(master: Data(contentsOf: asset.url), recipe: recipe, camera: film.camera)
+                let data = try NativePhotoRenderer.print(master: Data(contentsOf: asset.url), recipe: recipe, camera: film.camera,
+                    process: repository.photoPrintProcess(filmID: filmID))
                 try data.write(to: file, options: .atomic)
                 _ = try VerifiedMedia.photo(at: file)
             } else {
                 try FileManager.default.copyItem(at: asset.url, to: file)
                 let copied: VerifiedMedia
                 if film.camera.medium == .photo { copied = try VerifiedMedia.photo(at: file) }
-                else { copied = try await VerifiedMedia.movie(at: file) }
+                else { copied = try await VerifiedMedia.movie(at: file, allowsAudio: !originals) }
                 guard copied.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
             }
             if originals { try repository.chooseOriginalExport(filmID: filmID, sequenceNumber: sequence, export: true) }

@@ -22,13 +22,16 @@ public enum DevelopmentRunError: Error, Equatable, Sendable {
 public struct DevelopmentRun: Codable, Equatable, Sendable {
     public let filmID: UUID
     public let treatmentVersion: String
+    // Optional for decoding earlier runs, whose provisional treatment was color.
+    public let printProcess: PhotoPrintProcess?
     public private(set) var assignments: [Int: TreatmentAssignment]
     public private(set) var completedSequences: Set<Int>
     public private(set) var isComplete: Bool
 
-    public init(filmID: UUID) {
+    public init(filmID: UUID, printProcess: PhotoPrintProcess = .color) {
         self.filmID = filmID
         self.treatmentVersion = NativePhotoRenderer.treatmentVersion
+        self.printProcess = printProcess
         self.assignments = [:]
         self.completedSequences = []
         self.isComplete = false

@@ -15,6 +15,8 @@
 		4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD585D6F2151663DA3927D1E /* ImmerseApp.swift */; };
 		4F93FB2FC030AC783C0F3F8B /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 86BEEF17ACACB448446A4635 /* FilmPersistence */; };
 		50EC2E9F4FF8AB025A5B7FCC /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4F11F94E6BAC2977A36307 /* CaptureView.swift */; };
+		52F4C6288009DEE6C5290AC5 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F73957B082722839855E0 /* SoundtrackView.swift */; };
+		568526BB475E3526C02D4A4D /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */; };
 		5C8D41DBA54CB27A7630E775 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */; };
 		5EDC062601445A003E468074 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */; };
 		718C112B3F713C391C80BB45 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 23E745B0CA05FA19BE899251 /* EntitlementCore */; };
@@ -25,6 +27,7 @@
 		8CF96CE9CE3EF39590D32E48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5345D75982C156D9821482BB /* SettingsView.swift */; };
 		9269012BBD3C11F2ADE457CC /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = ECB5677E8658852E42741E9E /* FilmRuntime */; };
 		92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
+		9394253F3D5130352B73610C /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 15E6FEB6B2A025E914F0F602 /* MediaCatalog */; };
 		97EDC540558F6430442A6076 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = B003DCAC6B4E5C9D271D55C2 /* FilmDomain */; };
 		9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
 		A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 54847413BC0280518CA9021C /* NativeAdapters */; };
@@ -32,6 +35,7 @@
 		B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
 		BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 30073B98740522EE1997D947 /* LocalSubscriptions.storekit */; };
 		D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
+		E98D68BF2F172BDDC5E8D910 /* CameraSamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26AE1823FA15B59D835D16 /* CameraSamplesView.swift */; };
 		FC66DDA09C5D0ABEF86E8F0C /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,9 +57,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0AB3F25C02325EB748DF09A0 /* MediaCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MediaCatalog; path = ../../Packages/MediaCatalog; sourceTree = SOURCE_ROOT; };
 		17FC23B6591CF4D04A22FD93 /* Immerse.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Immerse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30073B98740522EE1997D947 /* LocalSubscriptions.storekit */ = {isa = PBXFileReference; path = LocalSubscriptions.storekit; sourceTree = "<group>"; };
 		3B89AA2B651AFE7F3D95FAF4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3D26AE1823FA15B59D835D16 /* CameraSamplesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSamplesView.swift; sourceTree = "<group>"; };
 		3D476A9C5406EC78CE4973A4 /* CaptureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
 		45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFlowTests.swift; sourceTree = "<group>"; };
 		46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalIntegrationTests.swift; sourceTree = "<group>"; };
@@ -72,8 +78,10 @@
 		99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailView.swift; sourceTree = "<group>"; };
 		B08B7044BE2F5A212F57FA06 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
+		B35F73957B082722839855E0 /* SoundtrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundtrackView.swift; sourceTree = "<group>"; };
 		CBEC1FD423337428B512E00A /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
 		CD585D6F2151663DA3927D1E /* ImmerseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmerseApp.swift; sourceTree = "<group>"; };
+		CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MediaCatalog.json; sourceTree = "<group>"; };
 		D2B43A4D3825AFE1F924B37B /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
 		DD83CB89DEA95F2368FD8F65 /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
@@ -102,6 +110,7 @@
 				447BA416FD2D827F9B770AF2 /* RenderCore in Frameworks */,
 				A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */,
 				02FD7E75DF77B0109CA571BB /* EntitlementCore in Frameworks */,
+				9394253F3D5130352B73610C /* MediaCatalog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +134,14 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
+		4300318AB82A27CF30D69EB0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		52A97AF3440799C4DCA5BE15 = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +160,7 @@
 				766A569971585250535D6ED0 /* FilmDomain */,
 				DD83CB89DEA95F2368FD8F65 /* FilmPersistence */,
 				D2B43A4D3825AFE1F924B37B /* FilmRuntime */,
+				0AB3F25C02325EB748DF09A0 /* MediaCatalog */,
 				9437363FB48E8E817EB59821 /* NativeAdapters */,
 				89ACDE1C9DC707276CC92690 /* RenderCore */,
 			);
@@ -154,6 +172,7 @@
 			children = (
 				6C7B00AA020EF955ACC8304F /* Assets.xcassets */,
 				6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */,
+				3D26AE1823FA15B59D835D16 /* CameraSamplesView.swift */,
 				3D476A9C5406EC78CE4973A4 /* CaptureController.swift */,
 				6C4F11F94E6BAC2977A36307 /* CaptureView.swift */,
 				9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */,
@@ -163,8 +182,10 @@
 				58B299AC9D190C1CBF43EE00 /* JournalView.swift */,
 				E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */,
 				5345D75982C156D9821482BB /* SettingsView.swift */,
+				B35F73957B082722839855E0 /* SoundtrackView.swift */,
 				CBEC1FD423337428B512E00A /* SubscriptionController.swift */,
 				F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */,
+				4300318AB82A27CF30D69EB0 /* Resources */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -252,6 +273,7 @@
 				B7AE777EF9385D731C173E89 /* RenderCore */,
 				54847413BC0280518CA9021C /* NativeAdapters */,
 				B549794A50EBE804BFE73FEC /* EntitlementCore */,
+				15E6FEB6B2A025E914F0F602 /* MediaCatalog */,
 			);
 			productName = Immerse;
 			productReference = 17FC23B6591CF4D04A22FD93 /* Immerse.app */;
@@ -285,6 +307,7 @@
 				C7154570A3BA2A18379D4C98 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */,
 				134BBA519155E5C866026FFE /* XCLocalSwiftPackageReference "../../Packages/FilmPersistence" */,
 				61088BD8BD6A34ED996B0B11 /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */,
+				A1F492C4540BE79567646EC3 /* XCLocalSwiftPackageReference "../../Packages/MediaCatalog" */,
 				06B1F3B23DBFA701CA5E2B2E /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */,
 				60D78D5E74DA657F686E9A7C /* XCLocalSwiftPackageReference "../../Packages/RenderCore" */,
 			);
@@ -315,6 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */,
+				568526BB475E3526C02D4A4D /* MediaCatalog.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */,
+				E98D68BF2F172BDDC5E8D910 /* CameraSamplesView.swift in Sources */,
 				9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */,
 				50EC2E9F4FF8AB025A5B7FCC /* CaptureView.swift in Sources */,
 				2E67A8B62F3CA31DDDB0D064 /* FilmDetailView.swift in Sources */,
@@ -352,6 +377,7 @@
 				794D2B906DD37A94A88B5E83 /* JournalView.swift in Sources */,
 				5C8D41DBA54CB27A7630E775 /* PhotoView.swift in Sources */,
 				8CF96CE9CE3EF39590D32E48 /* SettingsView.swift in Sources */,
+				52F4C6288009DEE6C5290AC5 /* SoundtrackView.swift in Sources */,
 				B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */,
 				5EDC062601445A003E468074 /* SubscriptionView.swift in Sources */,
 			);
@@ -670,6 +696,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Packages/FilmRuntime;
 		};
+		A1F492C4540BE79567646EC3 /* XCLocalSwiftPackageReference "../../Packages/MediaCatalog" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/MediaCatalog;
+		};
 		C7154570A3BA2A18379D4C98 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Packages/FilmDomain;
@@ -677,6 +707,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		15E6FEB6B2A025E914F0F602 /* MediaCatalog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MediaCatalog;
+		};
 		23E745B0CA05FA19BE899251 /* EntitlementCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EntitlementCore;

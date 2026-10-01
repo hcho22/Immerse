@@ -1,0 +1,55 @@
+Attributes: Application, 0x10d4159a0, pid: 78003, label: 'Private Workflow Harness'
+Element subtree:
+ →Application, 0x10d4159a0, pid: 78003, label: 'Private Workflow Harness'
+    Window (Main), 0x10d40f050, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10d417aa0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10d417bc0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10d418930, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10d417ce0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10d417800, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10d417920, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Private synthetic Film'
+                  Button, 0x10d4184b0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Film Journal'
+                  StaticText, 0x10d4185d0, {{115.3, 73.7}, {171.0, 20.7}}, label: 'Private synthetic Film'
+                  Button, 0x10d4186f0, {{346.0, 66.0}, {36.0, 36.0}}, label: 'Film actions'
+                Other, 0x10d418810, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10d418e90, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10d418fb0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10d4190d0, {{0.0, 0.0}, {402.0, 874.0}}
+                        ScrollView, 0x10d4191f0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10d419310, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10d419430, {{0.0, 0.0}, {402.0, 170.8}}
+                          Other, 0x10d419550, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10d419670, {{0.0, 116.0}, {402.0, 463.7}}
+                            StaticText, 0x10d419790, {{16.0, 132.0}, {172.7, 26.3}}, label: '1990s Disposable'
+                            StaticText, 0x10d4198b0, {{16.0, 168.3}, {84.7, 20.3}}, label: 'Developed'
+                            StaticText, 0x10d4199d0, {{16.0, 198.7}, {176.3, 18.0}}, label: '25 exposures wasted'
+                            ProgressIndicator, 0x10d419af0, {{16.0, 226.7}, {370.0, 4.0}}, value: 100%
+                              ProgressIndicator, 0x10d419c10, {{16.0, 216.7}, {370.0, 24.0}}, value: 100%
+                            StaticText, 0x10d419d30, {{16.0, 240.7}, {144.0, 14.3}}, label: 'Oct 1, 2026 - Oct 1, 2026'
+                            Button, 0x10d419e50, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                              Image, 0x10d419f70, {{18.0, 280.0}, {15.0, 19.3}}, identifier: 'square.and.arrow.down', label: 'Download'
+                              StaticText, 0x10d41a1a0, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                            Button, 0x10d41a2c0, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                              Image, 0x10d41a3e0, {{16.7, 317.7}, {20.3, 20.0}}, identifier: 'photo.stack', label: 'photo.stack'
+                              StaticText, 0x10d41a500, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                            Other, 0x10d41a620, {{16.0, 362.7}, {370.0, 200.3}}
+                              Button, 0x10d41a740, {{16.0, 362.7}, {180.0, 180.0}}, label: 'Open photo 1'
+                              StaticText, 0x10d41a860, {{16.0, 548.7}, {15.0, 14.3}}, label: '01'
+                              Button, 0x10d41a980, {{206.0, 362.7}, {180.0, 180.0}}, label: 'Open photo 2'
+                              StaticText, 0x10d41aaa0, {{206.0, 548.7}, {15.0, 14.3}}, label: '02'
+                          Other, 0x10d41abc0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10d41ace0, {{396.0, 404.7}, {3.0, 410.3}}
+                          Other, 0x10d41ae00, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10d41af20, {{396.0, 404.7}, {3.0, 410.3}}
+                Other, 0x10d41b040, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10d41b160, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10d41b280, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10d41b3a0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10d41b4c0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10d4159a0, pid: 78003, label: 'Private Workflow Harness'
+Query chain:
+ →Find: Target Application 'com.immerse.PopulatedJournalHarness'
+  Output: {
+    Application, 0x10ff14bf0, pid: 78003, label: 'Private Workflow Harness'
+  }

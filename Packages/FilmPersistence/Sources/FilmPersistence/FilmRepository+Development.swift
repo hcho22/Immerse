@@ -90,9 +90,15 @@ extension FilmRepository {
             let film = try film(id: filmID)
             guard film.camera.medium == .photo else { throw FilmDomainError.wrongCameraMedium }
             _ = try revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: .master)
-            try NativePhotoRenderer.validate(recipe, camera: film.camera)
+            try NativePhotoRenderer.validate(recipe, camera: film.camera, process: photoPrintProcess(filmID: filmID))
             try database.setValue(filmID: filmID, key: "recipe-\(sequence)", data: encoder.encode(recipe))
         }
+    }
+
+    public func photoPrintProcess(filmID: UUID) throws -> PhotoPrintProcess {
+        let film = try film(id: filmID)
+        guard film.camera.medium == .photo else { throw FilmDomainError.wrongCameraMedium }
+        return try developmentRun(filmID: filmID)?.printProcess ?? .color
     }
 
     private func verifyAsset(filmID: UUID, sequence: Int, kind: StoredAsset.Kind, evidence: [VerifiedMedia]) throws {

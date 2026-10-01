@@ -1,0 +1,308 @@
+{
+  "assumptions" : [
+    "Each modeled write is atomic and durable",
+    "Keychain survives reinstall perfectly",
+    "Uninstall removes app-controlled storage",
+    "A new-device restore omits source Keychain",
+    "Backup may observe any completed filesystem-write prefix; no cross-store backup barrier is assumed"
+  ],
+  "conclusion" : "Receipt authority fixes the modeled reinstall window, but not the demonstrated backup distinction. This is not a proof against all native protocols.",
+  "histories" : [
+    {
+      "actions" : [
+
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "current-file-first",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "current-file-first",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "current-file-first",
+      "verdict" : "counterexample_second_trial"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture",
+        "consumeKeychain"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "current-file-first",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "marker-first",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "consumeKeychain"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "marker-first",
+      "verdict" : "counterexample_failed_save_consumes_trial"
+    },
+    {
+      "actions" : [
+        "consumeKeychain",
+        "prepareRecoverableMedia"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "marker-first",
+      "verdict" : "counterexample_failed_save_consumes_trial"
+    },
+    {
+      "actions" : [
+        "consumeKeychain",
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "marker-first",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "pending-two-phase",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "reserveKeychain"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "pending",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "pending-two-phase",
+      "verdict" : "ambiguous_after_app_storage_loss"
+    },
+    {
+      "actions" : [
+        "reserveKeychain",
+        "prepareRecoverableMedia"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "pending",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "pending-two-phase",
+      "verdict" : "ambiguous_after_app_storage_loss"
+    },
+    {
+      "actions" : [
+        "reserveKeychain",
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "pending",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "pending-two-phase",
+      "verdict" : "ambiguous_after_app_storage_loss"
+    },
+    {
+      "actions" : [
+        "reserveKeychain",
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture",
+        "consumeKeychain"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "pending-two-phase",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "prepared-media-keychain-receipt",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "unused",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "prepared-media-keychain-receipt",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia",
+        "commitKeychainReceipt"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "prepared-media-keychain-receipt",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    },
+    {
+      "actions" : [
+        "prepareRecoverableMedia",
+        "commitKeychainReceipt",
+        "publishReceiptToBackup"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "consumed",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "prepared-media-keychain-receipt",
+      "verdict" : "satisfied_in_idealized_reinstall_model_only"
+    }
+  ],
+  "pendingPair" : [
+    {
+      "actions" : [
+        "reserveKeychain"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "pending",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : false,
+      "scheme" : "pending-two-phase",
+      "verdict" : "ambiguous_after_app_storage_loss"
+    },
+    {
+      "actions" : [
+        "reserveKeychain",
+        "prepareRecoverableMedia",
+        "commitSQLiteCapture"
+      ],
+      "reinstallObservation" : {
+        "backupReceipt" : false,
+        "keychain" : "pending",
+        "preparedMedia" : false,
+        "sqliteCapture" : false
+      },
+      "savedEver" : true,
+      "scheme" : "pending-two-phase",
+      "verdict" : "ambiguous_after_app_storage_loss"
+    }
+  ],
+  "purpose" : "Protocol disconfirmation only; no production or platform acceptance",
+  "receiptBackupObservation" : {
+    "backupReceipt" : false,
+    "keychain" : "unused",
+    "preparedMedia" : true,
+    "sqliteCapture" : false
+  },
+  "receiptBackupRequiredCaptureCounts" : [
+    0,
+    1
+  ]
+}

@@ -31,7 +31,10 @@ struct SettingsView: View {
                 Section("Subscription") {
                     NavigationLink("Subscription") { SubscriptionView() }
                 }
-                Section("About") { LabeledContent("Immerse", value: "1.0") }
+                Section("About") {
+                    LabeledContent("Immerse", value: "1.0")
+                    if let error = model.catalogError { Text(error).foregroundStyle(.red) }
+                }
             }
             .navigationTitle("Settings")
             .toolbar {

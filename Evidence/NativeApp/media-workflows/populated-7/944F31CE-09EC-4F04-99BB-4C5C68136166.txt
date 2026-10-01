@@ -1,0 +1,12 @@
+Failed to tap "Film actions" Button: No matches found for Elements matching predicate '"Film actions" IN identifiers' from input {(
+    Button, identifier: 'BackButton', label: 'Renamed synthetic Film',
+    Button, label: 'Disposable, Oct 1, Renamed synthetic Film, Developed photo 2, Film used, 25 exposures wasted', value: 100 percent
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs ProgressIndicator from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 35;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 8589935105;
+}
+See test report attachments for more detail.

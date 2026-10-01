@@ -46,9 +46,15 @@ private struct LoadFilmView: View {
     @State private var orientation = MovieOrientation.portrait
     @State private var loading = false
     @State private var error: String?
+    @State private var samples = false
 
     var body: some View {
         Form {
+            if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
+                Section {
+                    Button("Camera samples", systemImage: "photo.on.rectangle") { samples = true }
+                }
+            }
             Section {
                 LabeledContent("Capacity", value: camera.capacityLabel)
                 Text(camera.revealLabel)
@@ -108,6 +114,7 @@ private struct LoadFilmView: View {
             }
         }
         .navigationTitle(camera.shortName)
+        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
         .interactiveDismissDisabled(loading)
     }

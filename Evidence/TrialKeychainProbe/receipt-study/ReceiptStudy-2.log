@@ -1,0 +1,16 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[2/5] Write swift-version--58304C5D6DBC2206.txt
+[4/7] Compiling TrialReceiptStudy ReceiptCoordinator.swift
+[5/7] Emitting module TrialReceiptStudy
+[6/9] Emitting module TrialReceiptStudyTests
+[7/9] Compiling TrialReceiptStudyTests ReceiptStudyTests.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Tests/TrialReceiptStudyTests/ReceiptStudyTests.swift:195:81: error: cannot convert value of type 'CameraID' to expected argument type 'String'
+193 |         for camera in [CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
+194 |             guard case let .seconds(budget) = camera.capacity else { return XCTFail() }
+195 |             let fixture = try await fixtures(root.appendingPathComponent(camera.id), seconds: Double(budget))
+    |                                                                                 `- error: cannot convert value of type 'CameraID' to expected argument type 'String'
+196 |             let app = root.appendingPathComponent("Full-\(camera.id)")
+197 |             let store = ScriptedStore()
+error: fatalError

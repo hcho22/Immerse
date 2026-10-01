@@ -5,6 +5,25 @@ import RenderFixtures
 import XCTest
 
 final class SourceCleanupTests: XCTestCase {
+    func testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic")
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("sealed source".utf8))
+        XCTAssertThrowsError(try repository.chooseOriginalExport(filmID: film.id, sequenceNumber: 1, export: false))
+        try repository.completeEarly(filmID: film.id)
+        try repository.chooseOriginalExport(filmID: film.id, sequenceNumber: 1, export: false)
+
+        let reopened = try FilmRepository(rootURL: root)
+        XCTAssertEqual(try reopened.originalDisposition(filmID: film.id, sequenceNumber: 1), .declined)
+        XCTAssertEqual(try reopened.film(id: film.id).developmentState, .notStarted)
+        XCTAssertEqual(try reopened.film(id: film.id).captures.map(\.revealState), [.sealed])
+        XCTAssertThrowsError(try reopened.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertThrowsError(try reopened.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1))
+        XCTAssertTrue(try reopened.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+    }
+
     func testNondecodableMasterAndSealedOriginalCannotAuthorizeCleanupOrExport() throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

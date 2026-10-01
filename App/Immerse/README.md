@@ -56,8 +56,13 @@ SwiftUI, raw SQLite and local package boundaries are reversible baseline default
 not a newly approved DEC-03. Catalog sample rights, instrumental licenses, render
 quality/output specs, Darkroom ranges, Instant originals timing, soundtrack
 reselection, support/privacy URLs, budgets and launch approval remain open.
-Native UI currently has no curated sample media or licensed soundtrack selection.
-It does not display fixtures as real Camera samples. Remaining acceptance gaps and
+`Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
+samples and instrumentals. It is empty and its reselection policy is unresolved,
+so no synthetic sample or unlicensed music is exposed. See `Packages/MediaCatalog`
+and `Evidence/NativeApp/2026-10-01-media-workflows.md` for configuration, retained
+audio/license recovery and tests. Chemical toning is supported only for an explicitly
+saved silver-gelatin print process; all current provisional Camera presets remain
+color. No fixture is displayed as a real Camera sample. Remaining acceptance gaps and
 manual procedures live under `Evidence/` and the canonical requirement map.
 
 The app requests Camera at explicit Load Film/Open Camera and Photos add-only at
@@ -65,3 +70,10 @@ explicit export. It never requests microphone, location or photo-library reading
 PhotoKit exports cannot be recalled. Older iOS backups can restore removed media.
 Trial's cross-store first-save/uninstall conflict remains unresolved; see
 `Evidence/TrialKeychainProbe/2026-10-01-software-integration.md`.
+
+For private synthetic populated UI testing, use the separate target and commands
+in `Probes/PopulatedJournalHarness/README.md`. It compiles the production views but
+is not shipped, does not test capture/Trial, and adds no production fixture hook.
+Set `IMMERSE_WORKFLOW_SIMULATOR_UDID=<task-owned-uuid>` to include those tests in
+the validation script. CI prepares all three simulator test selections; no CI
+pass is claimed until the pipeline observes it.

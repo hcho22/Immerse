@@ -21,9 +21,13 @@ final class JournalIntegrationTests: XCTestCase {
         do { _ = try await model.processor.photo(filmID: film.id, sequence: 1); XCTFail("Sealed photo leaked") }
         catch { }
         _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: 2)
+        XCTAssertEqual(try model.repository.film(id: film.id).remainingLabel, "25 exposures wasted")
+        XCTAssertEqual(try model.repository.film(id: film.id).progress, 1)
+        try model.chooseOriginals(film.id, sequences: [1, 2], export: false)
+        XCTAssertThrowsError(try model.repository.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
         try await model.develop(film.id)
         XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.revealed, .revealed])
-        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertFalse(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
         let original = try await model.processor.photo(filmID: film.id, sequence: 1)
         let second = try await model.processor.photo(filmID: film.id, sequence: 2)
         XCTAssertNotNil(DisplayPhoto.image(original))
@@ -46,6 +50,8 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertNotEqual(model.mediaRevision, revision)
         XCTAssertEqual(model.film(film.id)?.discardedPlaceholderSequenceNumbers, [1])
         XCTAssertEqual(model.film(film.id)?.remainingExposures, 25)
+        XCTAssertEqual(model.film(film.id)?.remainingLabel, "25 exposures wasted")
+        XCTAssertEqual(model.film(film.id)?.progress, 1)
         XCTAssertNotEqual(model.film(film.id)?.completionState, .open)
         XCTAssertFalse(FileManager.default.fileExists(atPath: master.url.path))
         XCTAssertThrowsError(try model.repository.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .master))

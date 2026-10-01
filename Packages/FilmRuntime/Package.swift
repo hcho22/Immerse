@@ -8,10 +8,10 @@ let package = Package(
         .package(path: "../FilmDomain"), .package(path: "../FilmPersistence"),
         .package(path: "../RenderCore"), .package(path: "../NativeAdapters"),
         .package(path: "../EntitlementCore"), .package(path: "../CapturePipeline"),
-        .package(path: "../RenderFixtures")
+        .package(path: "../RenderFixtures"), .package(path: "../MediaCatalog")
     ],
     targets: [
-        .target(name: "FilmRuntime", dependencies: ["FilmDomain", "FilmPersistence", "RenderCore", "NativeAdapters", "EntitlementCore", "CapturePipeline"]),
-        .testTarget(name: "FilmRuntimeTests", dependencies: ["FilmRuntime", "RenderFixtures"])
+        .target(name: "FilmRuntime", dependencies: ["FilmDomain", "FilmPersistence", "RenderCore", "NativeAdapters", "EntitlementCore", "CapturePipeline", "MediaCatalog"]),
+        .testTarget(name: "FilmRuntimeTests", dependencies: ["FilmRuntime", "RenderFixtures", "MediaCatalog"])
     ], swiftLanguageModes: [.v6]
 )

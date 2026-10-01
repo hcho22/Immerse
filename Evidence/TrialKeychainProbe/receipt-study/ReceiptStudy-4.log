@@ -1,0 +1,79 @@
+Building for debugging...
+[0/4] Write sources
+[2/4] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Compiling TrialReceiptStudy ReceiptCoordinator.swift
+[5/6] Emitting module TrialReceiptStudy
+[6/8] Compiling TrialReceiptStudyTests ReceiptStudyTests.swift
+[7/8] Emitting module TrialReceiptStudyTests
+[7/9] Write Objects.LinkFileList
+[8/9] Linking TrialReceiptStudyPackageTests
+Build complete! (8.76s)
+Test Suite 'All tests' started at 2026-10-01 06:45:00.395.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 06:45:00.398.
+Test Suite 'ReceiptStudyTests' started at 2026-10-01 06:45:00.398.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' passed (0.812 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' passed (7.072 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' passed (0.471 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' passed (0.283 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' passed (8.916 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' passed (0.227 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' passed (0.281 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testQueuedDeletionWaitsForReceiptOwnerAndRejectsStaleSave]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testQueuedDeletionWaitsForReceiptOwnerAndRejectsStaleSave]' passed (0.243 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testStorageLossAtEachPrefixDoesNotGrantTrialAfterReceiptCommit]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testStorageLossAtEachPrefixDoesNotGrantTrialAfterReceiptCommit]' passed (0.520 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testUnknownOutcomeDeletionRetainsConsumptionAndOldBackupOnlyCanRestoreFilm]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testUnknownOutcomeDeletionRetainsConsumptionAndOldBackupOnlyCanRestoreFilm]' passed (0.399 seconds).
+Test Suite 'ReceiptStudyTests' passed at 2026-10-01 06:45:19.624.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 19.223 (19.226) seconds
+Test Suite 'TrialReceiptStudyPackageTests.xctest' passed at 2026-10-01 06:45:19.624.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 19.223 (19.226) seconds
+Test Suite 'All tests' passed at 2026-10-01 06:45:19.624.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 19.223 (19.229) seconds
+RECEIPT_PREFIX camera=disposable1990s point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=E664CE42-300E-446F-9144-E6737A0BEB5A hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=E1FA0FE2-A355-4F05-986B-972697F12CD1 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=E37E3C20-6783-4544-97A7-880D3451BB55 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=FB5E6822-2ED6-480E-B545-25071C6AE4E6 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=7FF477D1-5D76-4D59-B0BF-B37D2C8C478E hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=3AF7D34B-BA18-4284-B22A-FFB7B5F5424E hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=704729E5-DC57-4071-BBCE-06B875A37BFA hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=A2D13BE0-8652-4996-920B-7608025E6C45 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=11494F15-8A8F-41C4-BBE0-632FED843482 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=super8HomeMovie point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=9D10A6DB-3094-414D-80E9-F3CF535873E7 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=B47B9FCF-FAEC-4461-B4A2-974A393E5BBA hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=F81FE764-6201-42FA-875E-0F19317E714F hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=228538A2-899E-4CEC-A278-EE160BDC28FA hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=FE454B5E-8B9D-445F-9CD5-615F78529A40 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=9E94ADD5-DBA3-4DDB-B8F9-A73D7ED97F31 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=4B345F6E-A9BF-4C1F-AA7E-8FAA29C0FB4F hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=86683CEE-4E02-4C96-83F1-8C253C2235F1 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=super8HomeMovie point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=CB89FCA8-4F10-4414-8A47-17C4A81E3046 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=D628D594-77EA-49FE-B9C7-245D15F68148 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=0E2F3350-5236-4FC9-9551-CA7DFC9EADEF hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=C5D11680-3DD7-413D-A194-708CFD9698AA hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=A0FF7378-A9F7-43EF-96CF-0249F8A4B0F0 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=35289D33-22F1-45FF-A8E5-BD2C59B0F62C hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=FC6B2C76-ABCA-4E93-B75B-CC5B6CA486BA hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=59211823-E318-444C-96C1-CD85625D5340 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=9FB60AC0-B654-4A30-A49D-A4E3B4518AB6 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_PREFIX camera=cinema16mm point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=9D41AA85-C78C-445D-82D2-65C59FBFDDF8 hash=088f19684868f0a668a7c4da17e684a5b6438cd22883b30595a81cfaed363df6
+RECEIPT_STORAGE_LOSS point=preparedMetadata consumed=false
+RECEIPT_STORAGE_LOSS point=copiedMedia consumed=false
+RECEIPT_STORAGE_LOSS point=pendingManifest consumed=false
+RECEIPT_STORAGE_LOSS point=beforeReceipt consumed=false
+RECEIPT_STORAGE_LOSS point=afterReceipt consumed=true
+RECEIPT_STORAGE_LOSS point=beforeProjection consumed=true
+RECEIPT_STORAGE_LOSS point=afterProjection consumed=true
+RECEIPT_STORAGE_LOSS point=beforeCleanup consumed=true
+RECEIPT_STORAGE_LOSS point=afterCleanup consumed=true
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

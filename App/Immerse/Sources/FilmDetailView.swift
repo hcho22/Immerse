@@ -15,6 +15,7 @@ struct FilmDetailView: View {
     @State private var earlySnapshot: Film?
     @State private var developing = false
     @State private var originals = false
+    @State private var soundtrack = false
     @State private var selectedPhoto: CaptureRecord?
     @State private var discard: CaptureRecord?
 
@@ -39,6 +40,7 @@ struct FilmDetailView: View {
         .fullScreenCover(isPresented: $capturing) { CaptureView(filmID: filmID) }
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
+        .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
         .sheet(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
         .alert("Rename Film", isPresented: $renaming) {
             TextField("Film title", text: $title)
@@ -48,7 +50,7 @@ struct FilmDetailView: View {
         .confirmationDialog("Delete Film?", isPresented: $deleting, titleVisibility: .visible) {
             Button("Delete Film", role: .destructive) {
                 model.perform { try await model.remove(filmID); dismiss() }
-            }
+            }.accessibilityIdentifier("confirm-delete-film")
         } message: { Text(PrivacyCopy.deleteFilm) }
         .confirmationDialog("Complete Film early?", isPresented: $early, titleVisibility: .visible) {
             Button("Complete Film", role: .destructive) {
@@ -106,6 +108,11 @@ struct FilmDetailView: View {
                     Button("Originals", systemImage: "photo.stack") { originals = true }
                 }
             }
+            if film.canPlaybackDevelopedMovie, let catalog = model.mediaCatalog,
+               catalog.manifest.soundtrackReselection != nil,
+               !catalog.assets(for: film.camera.id, purpose: .instrumental).isEmpty {
+                Button("Soundtrack", systemImage: "music.note") { soundtrack = true }
+            }
         }
     }
 
@@ -139,6 +146,7 @@ struct FilmDetailView: View {
                     if capture.revealState == .revealed {
                         Button("Discard clip", systemImage: "trash", role: .destructive) { discard = capture }
                             .labelStyle(.iconOnly)
+                            .accessibilityIdentifier("discard-clip-\(capture.sequenceNumber)")
                     }
                 }.padding(.vertical, 8)
             }
@@ -212,6 +220,7 @@ struct OriginalChoiceView: View {
                             } catch { self.error = error.localizedDescription; model.report(error) }
                         }
                     }.disabled(working || (!undecided.isEmpty && choice == nil))
+                        .accessibilityIdentifier("confirm-original-choice")
                 }
                 if !startsDevelopment && awaitingExport {
                     Button("Save Originals to Photos", systemImage: "square.and.arrow.down") {
@@ -247,6 +256,7 @@ private struct DevelopedMovieView: View {
     var body: some View {
         Group {
             if model.hiddenFilms.contains(filmID) { Color.clear }
+            else if model.busyFilms.contains(filmID) { ProgressView("Preparing Movie") }
             else if let player { VideoPlayer(player: player).aspectRatio(model.film(filmID)?.movieOrientation == .portrait ? 0.75 : 4.0 / 3, contentMode: .fit) }
             else if let error {
                 VStack {
@@ -262,6 +272,7 @@ private struct DevelopedMovieView: View {
             } catch { self.error = "Movie is unavailable until reassembly finishes." }
         }
         .onChange(of: model.hiddenFilms.contains(filmID)) { _, hidden in if hidden { clear() } }
+        .onChange(of: model.busyFilms.contains(filmID)) { _, busy in if busy { clear() } }
         .onDisappear { clear() }
     }
     private func clear() { player?.pause(); player?.replaceCurrentItem(with: nil); player = nil }

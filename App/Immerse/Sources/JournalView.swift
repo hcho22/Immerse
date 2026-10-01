@@ -1,11 +1,16 @@
 import FilmDomain
 import SwiftUI
 
+private enum JournalRoute: Hashable {
+    case archive
+    case film(UUID)
+}
+
 struct JournalView: View {
     @Environment(JournalModel.self) private var model
     @State private var setup = false
     @State private var settings = false
-    @State private var path: [UUID] = []
+    @State private var path: [JournalRoute] = []
 
     var body: some View {
         @Bindable var model = model
@@ -17,7 +22,7 @@ struct JournalView: View {
                         Button("Settings", systemImage: "gearshape") { settings = true }
                     }
                     ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink { FilmList(archived: true).navigationTitle("Archive") } label: {
+                        NavigationLink(value: JournalRoute.archive) {
                             Label("Archive", systemImage: "archivebox")
                         }
                     }
@@ -27,10 +32,15 @@ struct JournalView: View {
                             .accessibilityIdentifier("start-film")
                     }
                 }
-                .navigationDestination(for: UUID.self) { FilmDetailView(filmID: $0) }
+                .navigationDestination(for: JournalRoute.self) { route in
+                    switch route {
+                    case .archive: FilmList(archived: true).navigationTitle("Archive")
+                    case .film(let id): FilmDetailView(filmID: id)
+                    }
+                }
         }
         .sheet(isPresented: $setup) {
-            CameraCatalogView { film in setup = false; path.append(film.id) }
+            CameraCatalogView { film in setup = false; path.append(.film(film.id)) }
         }
         .sheet(isPresented: $settings) { SettingsView() }
         .alert(item: $model.alert) { alert in
@@ -58,7 +68,7 @@ private struct FilmList: View {
                     if !matching.isEmpty {
                         Text(state).font(.headline).padding(.horizontal)
                         ForEach(matching) { film in
-                            NavigationLink(value: film.id) { JournalFilmRow(film: film) }
+                            NavigationLink(value: JournalRoute.film(film.id)) { JournalFilmRow(filmID: film.id) }
                                 .buttonStyle(.plain)
                         }
                     }
@@ -72,9 +82,13 @@ private struct FilmList: View {
 
 private struct JournalFilmRow: View {
     @Environment(JournalModel.self) private var model
-    let film: Film
+    let filmID: UUID
 
     var body: some View {
+        if let film = model.film(filmID) { row(film) }
+    }
+
+    private func row(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(.secondary)

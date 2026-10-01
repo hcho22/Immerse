@@ -1,0 +1,61 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Immerse · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1790862547.002,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790862407.289,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Dynamic Type font sizes are partially unsupported",
+      "targetName" : "ImmerseUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+      "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore",
+      "testName" : "testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()"
+    },
+    {
+      "failureText" : "Contrast failed",
+      "targetName" : "ImmerseUITests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()",
+      "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings",
+      "testName" : "testLargestDynamicTypeCatalogAndLandscapeSettings()"
+    }
+  ],
+  "title" : "Test - Immerse",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "3 runs of 1 test failed with Contrast failed"
+    }
+  ],
+  "totalTestCount" : 2
+}

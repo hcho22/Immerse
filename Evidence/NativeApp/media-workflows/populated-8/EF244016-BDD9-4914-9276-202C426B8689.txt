@@ -1,0 +1,50 @@
+Application, 0x10d618350, pid: 78003, label: 'Private Workflow Harness' <App element pid: 78003>
+  Window (Main), 0x10d618470, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4969230352.3>
+    Other, 0x10d617010, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4557163312.4>
+      Other, 0x10d617130, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4557164640.5>
+        Other, 0x10d616d70, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4571807872.6>
+          Other, 0x10d616e90, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4577124640.7>
+            Other, 0x10d6187e0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4546681104.8>
+              NavigationBar, 0x10d618900, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Film Journal' <AX element pid: 78003, elementOrHash.elementID: 4577088608.9>
+                Button, 0x10d618a20, {{20.0, 66.0}, {36.0, 36.0}}, label: 'Settings' <AX element pid: 78003, elementOrHash.elementID: 4574964256.12>
+                Button, 0x10d618b40, {{346.0, 66.0}, {36.0, 36.0}}, label: 'Archive' <AX element pid: 78003, elementOrHash.elementID: 4577344432.733>
+                StaticText, 0x10d6191c0, {{16.0, 119.7}, {192.7, 40.7}}, label: 'Film Journal' <AX element pid: 78003, elementOrHash.elementID: 4577229200.734>
+              Other, 0x10d6192e0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4546688080.10>
+                Other, 0x10d619400, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4545639344.15>
+                  Other, 0x10d619520, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4542513264.17>
+                    Other, 0x10d619640, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4579205456.736>
+                      ScrollView, 0x10d619760, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4974606848.21>
+                        Other, 0x10d619880, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4969257824.23>
+                          Other, 0x10d6199a0, {{0.0, 0.0}, {402.0, 170.8}} <AX element pid: 78003, elementOrHash.elementID: 4545726880.28>
+                          Other, 0x10d619ac0, {{0.0, 733.2}, {402.0, 140.8}} <AX element pid: 78003, elementOrHash.elementID: 4545740736.29>
+                        Other, 0x10d619be0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4969256896.24>
+                        Other, 0x10d619d00, {{0.0, 168.0}, {402.0, 215.0}} <AX element pid: 78003, elementOrHash.elementID: 4969255104.25>
+                          Other, 0x10d619e20, {{16.0, 184.0}, {370.0, 182.3}} <AX element pid: 78003, elementOrHash.elementID: 4557219728.30>
+                            StaticText, 0x10d619f40, {{16.0, 184.0}, {84.7, 20.3}}, label: 'Developed' <AX element pid: 78003, elementOrHash.elementID: 4579203568.741>
+                            Button, 0x10d61a060, {{16.0, 228.3}, {370.0, 138.0}}, label: 'Disposable, Oct 1, Private synthetic Film, Film used, 25 exposures left', value: 7 percent <AX element pid: 78003, elementOrHash.elementID: 4579203136.742>
+                              StaticText, 0x10d61a180, {{34.0, 246.3}, {74.3, 14.3}}, label: 'Disposable' <AX element pid: 78003, elementOrHash.elementID: 4579161904.743>
+                              StaticText, 0x10d61a2a0, {{338.3, 246.3}, {29.7, 14.3}}, label: 'Oct 1' <AX element pid: 78003, elementOrHash.elementID: 4579188688.744>
+                              StaticText, 0x10d61a3c0, {{34.0, 274.7}, {215.7, 26.3}}, label: 'Private synthetic Film' <AX element pid: 78003, elementOrHash.elementID: 4579195056.745>
+                              ProgressIndicator, 0x10d61a4e0, {{34.0, 315.0}, {334.0, 4.0}}, label: 'Film used', value: 7 percent <AX element pid: 78003, elementOrHash.elementID: 4579171104.746>
+                                ProgressIndicator, 0x10d61a600, {{34.0, 305.0}, {334.0, 24.0}}, value: 7% <AX element pid: 78003, elementOrHash.elementID: 4559279440.44>
+                              Image, 0x10d61a720, {{34.7, 333.7}, {14.3, 14.0}}, identifier: 'rectangle.stack', label: 'rectangle.stack' <AX element pid: 78003, elementOrHash.elementID: 4579222176.747>
+                              StaticText, 0x10d61a840, {{34.7, 333.1}, {121.3, 14.6}}, label: '25 exposures left' <AX element pid: 78003, elementOrHash.elementID: 4579222608.748>
+                              Image, 0x10d61a960, {{361.3, 335.7}, {6.0, 10.3}}, identifier: 'chevron.right', label: 'Forward' <AX element pid: 78003, elementOrHash.elementID: 4579198928.749>
+                        Other, 0x10d61aa80, {{369.0, 116.0}, {30.0, 672.0}}, label: 'Vertical scroll bar, 1 page', value: 0% <AX element pid: 78003, elementOrHash.elementID: 4576006752.26>
+                          Other, 0x10d61aba0, {{396.0, 524.0}, {3.0, 261.0}} <AX element pid: 78003, elementOrHash.elementID: 4576007728.31>
+                        Other, 0x10d61acc0, {{369.0, 116.0}, {30.0, 672.0}}, label: 'Vertical scroll bar, 1 page', value: 0% <AX element pid: 78003, elementOrHash.elementID: 4576006752.26>
+                          Other, 0x10d61ade0, {{396.0, 524.0}, {3.0, 261.0}} <AX element pid: 78003, elementOrHash.elementID: 4576007728.31>
+              Other, 0x10d61af00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4546695136.11>
+                Other, 0x10d61b020, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4546698864.16>
+                  Other, 0x10d61b140, {{0.0, 788.0}, {402.0, 86.0}} <AX element pid: 78003, elementOrHash.elementID: 4556280352.735>
+                    Other, 0x10d61b260, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 78003, elementOrHash.elementID: 4556204912.737>
+                      Other, 0x10d61b380, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 78003, elementOrHash.elementID: 4578164992.754>
+                        Other, 0x10d61b4a0, {{177.0, 798.0}, {0.0, 0.0}} <AX element pid: 78003, elementOrHash.elementID: 4578165408.755>
+                          Other, 0x10d61b5c0, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 78003, elementOrHash.elementID: 4578161200.756>
+                            Other, 0x10d61b6e0, {{177.0, 798.0}, {48.0, 48.0}} <AX element pid: 78003, elementOrHash.elementID: 4578172240.757>
+                              Other, 0x10d61b800, {{182.0, 803.0}, {38.0, 38.0}} <AX element pid: 78003, elementOrHash.elementID: 4546045440.751>
+                                Other, 0x10d61b920, {{182.0, 803.0}, {38.0, 38.0}} <AX element pid: 78003, elementOrHash.elementID: 4546043984.752>
+                                  Button, 0x10d61ba40, {{182.0, 803.0}, {38.0, 38.0}}, identifier: 'start-film', label: 'Start a Film' <AX element pid: 78003, elementOrHash.elementID: 4546004512.753>
+  Window, 0x10d61bb60, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4664504832.113>
+    Other, 0x10d61bc80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4559319296.116>
+      Other, 0x10d61bda0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 78003, elementOrHash.elementID: 4969311936.119>

@@ -1,0 +1,48 @@
+Building for debugging...
+[0/12] /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/.build/x86_64-apple-macosx/debug/TrialReceiptStudyPackageTests.derived/runner.swift
+[1/12] Write sources
+[9/12] Write swift-version--58304C5D6DBC2206.txt
+[11/19] Compiling FilmDomain FilmAccess.swift
+[12/19] Compiling FilmDomain CameraPackage.swift
+[13/19] Emitting module FilmDomain
+[14/19] Compiling FilmDomain Film.swift
+[15/27] Emitting module MediaCatalog
+[16/27] Compiling MediaCatalog BundleMediaCatalog.swift
+[17/27] Compiling RenderFixtures RenderFixtureModels.swift
+[18/27] Emitting module RenderFixtures
+[19/27] Compiling RenderFixtures RenderFixtureGenerator.swift
+[20/27] Compiling RenderCore NativePhotoRenderer.swift
+[21/27] Compiling RenderCore DevelopmentRun.swift
+[22/27] Compiling RenderCore MovieAssemblyPlan.swift
+[23/27] Compiling RenderCore DarkroomRecipe.swift
+[24/27] Emitting module RenderCore
+[25/27] Compiling RenderCore NativeMovieRenderer.swift
+[26/37] Compiling FilmPersistence SQLiteDatabase.swift
+[27/37] Compiling FilmPersistence StoredAsset.swift
+[28/37] Compiling FilmPersistence MediaVerification.swift
+[29/37] Compiling FilmPersistence MovieAudioSelection.swift
+[30/37] Compiling FilmPersistence FilmRepository+Development.swift
+[31/37] Compiling FilmPersistence FilmRepository+Entitlement.swift
+[32/37] Compiling FilmPersistence CaptureCommitReceipt.swift
+[33/37] Emitting module FilmPersistence
+[34/37] Compiling FilmPersistence FilmRepository.swift
+[35/37] Compiling FilmPersistence Checksum.swift
+[36/39] Emitting module TrialReceiptStudy
+[37/39] Compiling TrialReceiptStudy ReceiptCoordinator.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:158:53: error: operator can throw but expression is not marked with 'try'
+156 |             if operation.phase == .aborted {
+157 |                 try removeMedia(operation)
+158 |             } else if operation.phase == .preparing && !FileManager.default.fileExists(atPath: (try mediaURL(operation)).path) {
+    |                                                     |  `- note: call is to 'rethrows' function, but argument function can throw
+    |                                                     `- error: operator can throw but expression is not marked with 'try'
+159 |                 try await reject(operation)
+160 |             } else {
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/TrialCommitStudy/Sources/TrialReceiptStudy/ReceiptCoordinator.swift:211:15: error: cannot find 'Checksum' in scope
+209 |         try await boundary(.beforeProjection)
+210 |         let bytes = try Data(contentsOf: source)
+211 |         guard Checksum.sha256Hex(bytes) == operation.sha256 else { throw StudyError.invalidOperation }
+    |               `- error: cannot find 'Checksum' in scope
+212 |         switch operation.kind {
+213 |         case .photo:
+error: fatalError

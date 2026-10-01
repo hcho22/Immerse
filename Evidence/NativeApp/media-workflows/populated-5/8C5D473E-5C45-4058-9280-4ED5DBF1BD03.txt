@@ -1,0 +1,16 @@
+Failed to tap "confirm-discard-photo" Button: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x600002112f80>.
+Sparse tree of matches:
+→Application, pid: 49036, label: 'Private Workflow Harness'
+  ↳Window (Main)
+    ↳Other
+      ↳Popover
+        ↳Other
+          ↳Sheet, label: 'Discard photo 1?'
+            ↳Other
+              ↳Other
+                ↳Other
+                  ↳ScrollView
+                    ↳Other
+                      ↳Other
+                        ↳Button, identifier: 'confirm-discard-photo', label: 'Discard'
+                          ↳Button, identifier: 'confirm-discard-photo', label: 'Discard'

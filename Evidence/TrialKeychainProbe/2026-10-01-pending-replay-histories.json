@@ -1,0 +1,656 @@
+{
+  "correctedInference" : "Identical pending snapshots need not restore distinct counts immediately: both may complete the same verified pending operation later under restored Film rights.",
+  "privacyBoundary" : "Current deleted Film never replays; an older snapshot can restore it under DEC-17. No external historical removal log is added.",
+  "purpose" : "Pending-replay interpretation study, not native Trial acceptance",
+  "rejectedCaptureCounterexample" : "If rejection is only volatile and pending bytes remain, replay saves a definitively rejected capture. Persist an abort before reporting final rejection; cleanup must be resumable.",
+  "rows" : [
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptAcknowledged"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptAcknowledged",
+        "project"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "projected",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+          "first-operation"
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "acknowledged",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptAcknowledged",
+        "project",
+        "cleanup"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "projected",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+          "first-operation"
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownCommitted"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownCommitted",
+        "project"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "projected",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+          "first-operation"
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownCommitted",
+        "project",
+        "cleanup"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "projected",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+          "first-operation"
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-not-committed",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-not-committed",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-not-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "unknown-not-committed",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownNotCommitted"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "rejected-attempt-still-retryable",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "rejected-attempt-still-retryable",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "rejected-attempt-still-retryable",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "rejected-attempt-still-retryable",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptRejected"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptRejected"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptRejected",
+        "persistDefinitiveRejection"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "rejected",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "definitively-rejected",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptRejected",
+        "persistDefinitiveRejection",
+        "cleanup"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "rejected",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "uncommitted-Film-deleted",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "uncommitted-Film-deleted",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "uncommitted-Film-deleted",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "uncommitted-Film-deleted",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "deleteFilm"
+      ],
+      "restorableImage" : {
+        "filmExists" : false,
+        "phase" : "pending",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "committed-Film-deleted",
+      "prefix" : [
+
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "absent",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "committed-Film-deleted",
+      "prefix" : [
+        "beginPreparation"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "preparing",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "committed-Film-deleted",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : false
+    },
+    {
+      "captureCountAfterTwoReplays" : 1,
+      "destinationTrialConsumed" : false,
+      "history" : "committed-Film-deleted",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownCommitted"
+      ],
+      "restorableImage" : {
+        "filmExists" : true,
+        "phase" : "pending",
+        "preparedMedia" : true,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    },
+    {
+      "captureCountAfterTwoReplays" : 0,
+      "destinationTrialConsumed" : false,
+      "history" : "committed-Film-deleted",
+      "prefix" : [
+        "beginPreparation",
+        "finishVerifiedMedia",
+        "receiptUnknownCommitted",
+        "deleteFilm"
+      ],
+      "restorableImage" : {
+        "filmExists" : false,
+        "phase" : "pending",
+        "preparedMedia" : false,
+        "projectedCaptureIDs" : [
+
+        ]
+      },
+      "sourceReceiptCommitted" : true
+    }
+  ],
+  "unprovedConditions" : [
+    "Atomic durable receipt semantics and unknown OSStatus resolution",
+    "Prepared-media durability and integrity before receipt",
+    "Serialized first save, abort and privacy removal",
+    "Backup consistency and authoritative Film\/capture manifests",
+    "Native Movie budgets, fault timing and device performance",
+    "Real Keychain reinstall and same-device older-backup behavior"
+  ]
+}

@@ -1,7 +1,16 @@
 # Native Setup Accessibility Diagnosis
 
-Status: repeated scrolled-setup failure; escalated after the bounded counterfactuals
-below. Default setup passes, full accessibility acceptance does not. No audit
+Latest candidate: `media-workflows-source.sha256`, 06:37/06:49 PDT October 1.
+Actual app all-category audits in **dark and light both fail 0/2**: default
+Movie Orientation Dynamic Type and largest-type contrast. Results, pre-audit trees,
+issue nodes and screenshots are in `media-workflows/accessibility-dark` and
+`media-workflows/accessibility-light`; exact commands are in
+`2026-10-01-media-workflows.md`. The default pass described below is historical,
+not a current-candidate acceptance claim. No audit exception was introduced.
+
+Status: repeated scrolled-setup failure; Firstmate authorized a bounded minimal
+reproduction and continuing unaffected software (inbox 018). Default app setup
+passed once, full accessibility acceptance does not. No audit
 exception, element filter, font cap or QA-13 waiver is authorized.
 Source: `39894a5` plus the uncommitted native app candidate. Environment: Xcode
 26.5, iOS 26.5 (23F77), task-owned iPhone 17 Pro simulator
@@ -227,3 +236,53 @@ Unaffected software evidence: 88 package tests, unsigned builds, and all four
 StoreKit plus two native app-model integration scenarios passed. Source identity
 and remaining gates are in `2026-10-01-native-candidate.md`. This is not QA-13,
 full v1, CI or release acceptance.
+
+## Minimal Native Reproduction Follow-up
+
+Firstmate's October 1 instruction reopened one bounded diagnosis, not permission
+to waive QA-13. `Probes/SetupAccessibilityProbe` reproduces the app's sheet/Form,
+Movie Orientation, Silent capture, title and Load command with no product modules.
+Its Load action is a documented no-op solely for layout inspection. No production
+path uses the probe. Exact commands are in its README; simulator and Xcode match
+the environment above. Results are under `setup-probe/{default,forced-largest,
+system-largest}` with summary, node trees, screenshots and filtered app stdout.
+
+| Condition changed | Observed outcome |
+| --- | --- |
+| System `content_size large`, no launch override; `SetupProbe-Default-2.xcresult` | 0 passed / 1 failed; three audit reports of Dynamic Type unsupported on Movie Orientation. The prior app default pass does not generalize to this minimal hierarchy. |
+| Same light/default system setting, launch-forced accessibility XXXL; `SetupProbe-ForcedLargest.xcresult` | 0/1; title/command audits report contrast on the Camera description and Trial label crossing viewport edges. |
+| System `content_size accessibility-extra-extra-extra-large`, no launch arguments; `SetupProbe-SystemLargest.xcresult` | 0/1; scrolled description contrast remains. This disconfirms launch override as the necessary cause. |
+| Always-menu picker, system default, same labels; `SetupProbe-StablePicker.xcresult` | Zero executed tests despite exit 0, not a pass. Fresh build/result requested separately, outcome not inferred. |
+| Same always-menu condition, fresh `DerivedData/SetupAccessibilityProbe-StableFresh`; `SetupProbe-StablePicker-Fresh.xcresult` | 0/1, no skips. Dynamic Type still names Movie Orientation at `{32,408.8,134.7,20.3}`; contrast also reports at command audit. Stable picker identity is not a sufficient fix. Retained in `setup-probe/stable-picker/`. |
+
+`SETUP_PROBE` instrumentation reports actual SwiftUI category, UIKit preferred
+body size, label frame and scroll offset. During the default audit the orientation
+label changes from 114.3 x 17 at xSmall/14pt to 134.7 x 20.3 at large/17pt,
+175.7 x 27.7 at xxxLarge/23pt and 222.3 x 112.3 at accessibility4/47pt. Initial
+category callbacks can precede updated geometry; subsequent layout records show
+the size change. This disproves an absolute claim that the Text never scales,
+but does not prove a framework false positive. Audit-driven transitions and
+conditional picker subtree changes are distinct from the user's initial setting.
+
+Inspected system-largest title screenshot `01EF2199-0B25-49F3-8345-4AD9507358DA.png`:
+light appearance, large wrapped Movie Orientation, unclipped Silent capture and
+Film title; Camera-description text visibly blurs under the top navigation edge.
+Its issue node is `{16,-90,370,217.3}`. Forced-largest also reports a Trial row
+extending below the viewport. Overlay/scroll visibility is an observed masking
+condition; why the auditor sometimes reports sizing as well is still uncertain.
+No product style patch, font cap, audit category reduction or exception follows
+from these observations. Actual dark-mode/final candidate audits remain required.
+The bounded probe is concluded with uncertainty retained. Neither launch forcing
+nor conditional picker style alone explains both the earlier default app pass and
+fresh failures. Do not copy the probe's counterfactual picker mode into production
+as a proven remedy. The app's all-category audit remains an open required gate.
+
+### Separate Host Timing Evidence
+
+Read-only `pmset -g log` shows host sleep during the earlier 49-minute run:
+September 30 21:52:10 PDT maintenance sleep for 1804 seconds, 22:24:56 sleep for
+955 seconds, then 22:41:36 sleep for 986 seconds. These overlap the long snapshot
+gaps at 21:52 to 22:22/23 and finalization near 22:41. October 1 load averages were
+42.26/34.29/32.61 at read-only inspection. Sleep explains substantial wall-clock
+gaps; host contention may also affect runs, but neither proves a specific audit
+cause or iPhone performance. No power setting or shared daemon was changed.
