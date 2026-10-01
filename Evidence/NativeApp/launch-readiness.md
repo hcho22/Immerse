@@ -31,6 +31,11 @@ The controlled follow-up in `accessibility-container-diagnosis.md` reproduced
 the actual app's default failure and isolated a default-only stack success, but
 largest-text contrast survives the container and hard-edge counterfactuals.
 No production accessibility correction or green CI claim is established by it.
+`accessibility-viewport-diagnosis.md` subsequently rejects documented edge
+suppression and a GeometryReader viewport wrapper (0/2 and 0/1 tests). Timestamped
+geometry/video shows the audit size sweep moves the viewport before callbacks;
+the wrapper still underlaps navigation chrome. It does not establish a framework
+false positive. Actual-app default/largest light/dark gates remain failed or unproved.
 
 ## Required Native Manual Matrix
 

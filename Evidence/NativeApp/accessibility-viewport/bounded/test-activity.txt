@@ -1,0 +1,208 @@
+2026-10-01 09:37:23.656186-0700 SetupAccessibilityProbeTests-Runner[60098:142028719] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-01 09:37:25.709.
+Test Suite 'SetupAccessibilityProbeTests.xctest' started at 2026-10-01 09:37:25.710.
+Test Suite 'SetupAuditTests' started at 2026-10-01 09:37:25.711.
+Test Case '-[SetupAccessibilityProbeTests.SetupAuditTests testStackBoundedViewport]' started.
+    t =     0.00s Start Test at 2026-10-01 09:37:25.715
+    t =     0.11s Set Up
+AUDIT_PROBE time=1790872645.839421 uptime=1240021.91000926 event=launch -stackContainer -boundedViewport
+    t =     0.13s Added attachment named 'launch'
+    t =     0.13s Open com.immerse.SetupAccessibilityProbe
+    t =     0.13s     Launch com.immerse.SetupAccessibilityProbe
+    t =     1.53s         Setting up automation session
+    t =     3.42s         Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     5.46s Waiting 10.0s for "start-film" Button to exist
+    t =     6.52s     Checking `Expect predicate `existsNoRetry == 1` for object "start-film" Button`
+    t =     6.52s         Checking existence of `"start-film" Button`
+    t =     6.58s Tap "start-film" Button
+    t =     6.58s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     6.59s     Find the "start-film" Button
+    t =     6.63s     Check for interrupting elements affecting "start-film" Button
+    t =     6.67s     Synthesize event
+    t =     6.99s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     7.93s Waiting 5.0s for "16mm" NavigationBar to exist
+    t =     8.99s     Checking `Expect predicate `existsNoRetry == 1` for object "16mm" NavigationBar`
+    t =     8.99s         Checking existence of `"16mm" NavigationBar`
+AUDIT_PROBE time=1790872654.851639 uptime=1240030.922118907 event=top.before-snapshot
+    t =     9.14s Added attachment named 'top.before-snapshot'
+    t =     9.14s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =     9.61s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =     9.73s Added attachment named 'top-before-tree'
+    t =     9.73s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    10.04s Added attachment named 'top-before-screen'
+AUDIT_PROBE time=1790872655.753962 uptime=1240031.824432014 event=top.audit-call
+    t =    10.04s Added attachment named 'top.audit-call'
+AUDIT_PROBE time=1790872658.268667 uptime=1240034.3391114771 event=top.audit-returned
+    t =    12.56s Added attachment named 'top.audit-returned'
+    t =    12.56s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    13.01s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    13.13s Added attachment named 'top-after-tree'
+    t =    13.13s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    13.35s Added attachment named 'top-after-screen'
+    t =    13.35s Find the "film-title-heading" StaticText
+    t =    13.46s Swipe up Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    13.46s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    13.46s     Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    13.51s     Check for interrupting elements affecting "SetupAccessibilityProbe" Application
+    t =    13.58s     Synthesize event
+    t =    14.02s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    16.22s Find the "film-title-heading" StaticText
+    t =    16.36s Find the "film-title-heading" StaticText
+    t =    16.48s Find the "film-title-heading" StaticText
+    t =    16.60s Find the "film-title-heading" StaticText
+    t =    16.74s Find the "film-title-heading" StaticText
+    t =    16.86s Find the "film-title-heading" StaticText
+    t =    16.99s Find the "film-title-heading" StaticText
+    t =    17.11s Find the "film-title-heading" StaticText
+AUDIT_PROBE time=1790872662.973967 uptime=1240039.044361721 event=title.before-snapshot
+    t =    17.26s Added attachment named 'title.before-snapshot'
+    t =    17.26s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    17.82s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    17.97s Added attachment named 'title-before-tree'
+    t =    17.97s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    18.29s Added attachment named 'title-before-screen'
+AUDIT_PROBE time=1790872664.0079222 uptime=1240040.078305451 event=title.audit-call
+    t =    18.30s Added attachment named 'title.audit-call'
+AUDIT_PROBE time=1790872666.724061 uptime=1240042.7944161422 event=title.callback-1.enter auditType=1
+    t =    21.01s Added attachment named 'title.callback-1.enter'
+    t =    21.01s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    21.23s Added attachment named 'title.callback-1-before-query-screen'
+AUDIT_PROBE time=1790872666.946089 uptime=1240043.016442035 event=title.callback-1.screenshot-returned
+    t =    21.23s Added attachment named 'title.callback-1.screenshot-returned'
+    t =    21.24s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    21.68s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    21.80s Added attachment named 'title.callback-1-before-issue-query-tree'
+AUDIT_PROBE time=1790872667.516571 uptime=1240043.586916384 event=title.callback-1.tree-returned
+    t =    21.81s Added attachment named 'title.callback-1.tree-returned'
+    t =    21.82s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66)
+    t =    21.89s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    22.01s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66
+    t =    22.20s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    22.32s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66
+    t =    22.32s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    22.45s Added attachment named 'title-issue'
+AUDIT_PROBE time=1790872668.163752 uptime=1240044.234091768 event=title.callback-1.issue-query-returned
+    t =    22.45s Added attachment named 'title.callback-1.issue-query-returned'
+    t =    22.45s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    22.68s Added attachment named 'title.callback-1-after-query-screen'
+AUDIT_PROBE time=1790872668.3880792 uptime=1240044.4584163032 event=title.callback-1.exit
+    t =    22.68s Added attachment named 'title.callback-1.exit'
+    t =    22.68s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66)
+    t =    22.78s Checking existence of `"Silent capture" StaticText`
+    t =    22.84s Find the "Silent capture" StaticText
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift:48: error: -[SetupAccessibilityProbeTests.SetupAuditTests testStackBoundedViewport] : Contrast failed
+AUDIT_PROBE time=1790872668.647736 uptime=1240044.718070944 event=title.audit-returned
+    t =    22.94s Added attachment named 'title.audit-returned'
+    t =    22.94s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    23.40s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    23.56s Added attachment named 'title-after-tree'
+    t =    23.56s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    23.81s Added attachment named 'title-after-screen'
+    t =    23.81s Find the "load-film" Button
+    t =    23.93s Swipe up Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    23.93s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    23.94s     Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    24.00s     Check for interrupting elements affecting "SetupAccessibilityProbe" Application
+    t =    24.09s     Synthesize event
+    t =    24.52s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    26.64s Find the "load-film" Button
+    t =    26.78s Swipe up Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    26.78s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    26.79s     Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    26.85s     Check for interrupting elements affecting "SetupAccessibilityProbe" Application
+    t =    26.92s     Synthesize event
+    t =    27.36s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    27.84s Find the "load-film" Button
+    t =    27.98s Swipe up Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    27.98s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    27.99s     Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    28.06s     Check for interrupting elements affecting "SetupAccessibilityProbe" Application
+    t =    28.15s     Synthesize event
+    t =    28.60s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =    30.70s Find the "load-film" Button
+    t =    30.82s Find the "load-film" Button
+    t =    30.93s Find the "load-film" Button
+    t =    31.04s Find the "load-film" Button
+    t =    31.16s Find the "load-film" Button
+    t =    31.33s Find the "load-film" Button
+AUDIT_PROBE time=1790872677.154136 uptime=1240053.224418632 event=command.before-snapshot
+    t =    31.44s Added attachment named 'command.before-snapshot'
+    t =    31.44s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    31.89s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    32.01s Added attachment named 'command-before-tree'
+    t =    32.01s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    32.24s Added attachment named 'command-before-screen'
+AUDIT_PROBE time=1790872677.956211 uptime=1240054.02644907 event=command.audit-call
+    t =    32.24s Added attachment named 'command.audit-call'
+AUDIT_PROBE time=1790872680.821405 uptime=1240056.891612157 event=command.callback-1.enter auditType=1
+    t =    35.11s Added attachment named 'command.callback-1.enter'
+    t =    35.11s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    35.32s Added attachment named 'command.callback-1-before-query-screen'
+AUDIT_PROBE time=1790872681.0292602 uptime=1240057.099465277 event=command.callback-1.screenshot-returned
+    t =    35.32s Added attachment named 'command.callback-1.screenshot-returned'
+    t =    35.32s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    35.79s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    35.91s Added attachment named 'command.callback-1-before-issue-query-tree'
+AUDIT_PROBE time=1790872681.618846 uptime=1240057.6890450942 event=command.callback-1.tree-returned
+    t =    35.91s Added attachment named 'command.callback-1.tree-returned'
+    t =    35.91s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390412016.54)
+    t =    35.99s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    36.08s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390412016.54
+    t =    36.28s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    36.39s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390412016.54
+    t =    36.40s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    36.52s Added attachment named 'command-issue'
+AUDIT_PROBE time=1790872682.235588 uptime=1240058.30577976 event=command.callback-1.issue-query-returned
+    t =    36.52s Added attachment named 'command.callback-1.issue-query-returned'
+    t =    36.53s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    36.75s Added attachment named 'command.callback-1-after-query-screen'
+AUDIT_PROBE time=1790872682.4588342 uptime=1240058.529023447 event=command.callback-1.exit
+    t =    36.75s Added attachment named 'command.callback-1.exit'
+    t =    36.75s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390412016.54)
+    t =    36.81s Checking existence of `"Deliberate framing, finer grain" StaticText`
+    t =    36.88s Find the "Deliberate framing, finer grain" StaticText
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift:48: error: -[SetupAccessibilityProbeTests.SetupAuditTests testStackBoundedViewport] : Contrast failed
+AUDIT_PROBE time=1790872682.709992 uptime=1240058.7801787162 event=command.callback-2.enter auditType=1
+    t =    37.00s Added attachment named 'command.callback-2.enter'
+    t =    37.00s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    37.23s Added attachment named 'command.callback-2-before-query-screen'
+AUDIT_PROBE time=1790872682.9435148 uptime=1240059.013699912 event=command.callback-2.screenshot-returned
+    t =    37.23s Added attachment named 'command.callback-2.screenshot-returned'
+    t =    37.23s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    37.70s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    37.80s Added attachment named 'command.callback-2-before-issue-query-tree'
+AUDIT_PROBE time=1790872683.515862 uptime=1240059.586040593 event=command.callback-2.tree-returned
+    t =    37.80s Added attachment named 'command.callback-2.tree-returned'
+    t =    37.81s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66)
+    t =    37.88s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    38.00s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66
+    t =    38.21s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    38.30s Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66
+    t =    38.31s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    38.45s Added attachment named 'command-issue'
+AUDIT_PROBE time=1790872684.159595 uptime=1240060.2297673412 event=command.callback-2.issue-query-returned
+    t =    38.45s Added attachment named 'command.callback-2.issue-query-returned'
+    t =    38.45s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    38.67s Added attachment named 'command.callback-2-after-query-screen'
+AUDIT_PROBE time=1790872684.3858628 uptime=1240060.4560328692 event=command.callback-2.exit
+    t =    38.67s Added attachment named 'command.callback-2.exit'
+    t =    38.68s Find the Any (Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390414256.66)
+    t =    38.76s Checking existence of `"Silent capture" StaticText`
+    t =    38.81s Find the "Silent capture" StaticText
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift:48: error: -[SetupAccessibilityProbeTests.SetupAuditTests testStackBoundedViewport] : Contrast failed
+AUDIT_PROBE time=1790872684.647379 uptime=1240060.717547256 event=command.audit-returned
+    t =    38.94s Added attachment named 'command.audit-returned'
+    t =    38.94s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    39.38s Requesting snapshot of accessibility hierarchy for app with pid 61218
+    t =    39.50s Added attachment named 'command-after-tree'
+    t =    39.50s Find the Target Application 'com.immerse.SetupAccessibilityProbe'
+    t =    39.73s Added attachment named 'command-after-screen'
+    t =    39.75s Tear Down
+Test Case '-[SetupAccessibilityProbeTests.SetupAuditTests testStackBoundedViewport]' failed (40.065 seconds).
+Test Suite 'SetupAuditTests' failed at 2026-10-01 09:38:05.781.
+	 Executed 1 test, with 3 failures (0 unexpected) in 40.065 (40.070) seconds
+Test Suite 'SetupAccessibilityProbeTests.xctest' failed at 2026-10-01 09:38:05.781.
+	 Executed 1 test, with 3 failures (0 unexpected) in 40.065 (40.071) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 09:38:05.782.
+	 Executed 1 test, with 3 failures (0 unexpected) in 40.065 (40.073) seconds

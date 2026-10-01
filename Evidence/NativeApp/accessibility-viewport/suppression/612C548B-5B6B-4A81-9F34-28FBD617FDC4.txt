@@ -1,0 +1,1 @@
+AUDIT_PROBE time=1790872586.7004352 uptime=1239962.771626251 event=command.callback-1.screenshot-returned

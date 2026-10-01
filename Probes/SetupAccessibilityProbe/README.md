@@ -6,8 +6,9 @@ bypass or evidence of Camera capture. It uses no permissions, media or billing.
 Load Film deliberately does nothing; only its layout and accessibility are tested.
 
 All-category audits keep every finding. `SETUP_PROBE` app stdout records SwiftUI
-font category, UIKit preferred body size, label frames, appearance and scroll
-offsets. Before/after test attachments retain the actual tree and screen. UIKit
+font category, UIKit preferred body size, label frames and appearance.
+`SETUP_VIEWPORT` records scroll offsets/insets and root/window bounds with wall-clock
+and monotonic timestamps. Before/after test attachments retain the actual tree and screen. UIKit
 preferred body size is a diagnostic reference, not a claim about every rendered
 glyph's font. Font/audit transitions and navigation overlays are separate causes.
 
@@ -48,3 +49,12 @@ comparisons. Neither changes semantic fonts, required labels or audit categories
 When introducing a new test method, verify that it actually executes. A fresh
 derived-data root was necessary for this probe's newly selected method to run;
 matching built/installed binary hashes alone did not establish execution.
+
+`Evidence/NativeApp/accessibility-viewport-diagnosis.md` records the separate
+`testStackSuppressedEdges` and `testStackBoundedViewport` counterfactuals and their
+failures. Edge suppression is not the same as hard-edge styling; GeometryReader
+size equality did not establish a separate physical viewport. Callback screenshots
+are retained before issue queries because the audit's size sweep can move the
+viewport before the first callback. Never equate callback frames with an unobserved
+internal analyzer capture. Full exported recordings and complete activity are
+retained alongside timestamped geometry; no production correction is claimed.

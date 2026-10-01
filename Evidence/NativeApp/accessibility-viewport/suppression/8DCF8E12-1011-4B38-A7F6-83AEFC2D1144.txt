@@ -1,0 +1,1 @@
+AUDIT_PROBE time=1790872513.5524812 uptime=1239889.6244498992 event=launch -stackContainer

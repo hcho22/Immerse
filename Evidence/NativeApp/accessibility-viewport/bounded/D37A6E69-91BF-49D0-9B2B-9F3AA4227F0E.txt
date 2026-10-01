@@ -1,0 +1,1 @@
+AUDIT_PROBE time=1790872645.839421 uptime=1240021.91000926 event=launch -stackContainer -boundedViewport

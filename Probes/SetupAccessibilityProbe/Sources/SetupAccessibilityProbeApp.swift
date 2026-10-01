@@ -33,19 +33,38 @@ private struct ProbeSetup: View {
     var body: some View {
         Group {
             if stackContainer {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 35) { sections }
-                        .padding(.horizontal, 16)
-                }.background(Color(uiColor: .systemGroupedBackground))
+                if ProcessInfo.processInfo.arguments.contains("-boundedViewport") {
+                    GeometryReader { viewport in
+                        stackScroll.frame(width: viewport.size.width, height: viewport.size.height)
+                    }
+                } else {
+                    stackScroll
+                }
             } else {
                 originalForm
             }
         }
         .scrollEdgeEffectStyle(ProcessInfo.processInfo.arguments.contains("-hardEdge") ? .hard : nil, for: .all)
+        .scrollEdgeEffectHidden(ProcessInfo.processInfo.arguments.contains("-suppressEdges"))
         .navigationTitle("16mm")
-        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
-            print("SETUP_PROBE scrollOffset=\(offset)")
+        .background(WindowMetrics())
+        .onScrollGeometryChange(for: ScrollGeometry.self) { $0 } action: { _, geometry in
+            ProbeLog.record("scroll", [
+                "offset": [geometry.contentOffset.x, geometry.contentOffset.y],
+                "bounds": ProbeLog.rect(geometry.bounds), "visibleRect": ProbeLog.rect(geometry.visibleRect),
+                "insets": [geometry.contentInsets.top, geometry.contentInsets.leading,
+                           geometry.contentInsets.bottom, geometry.contentInsets.trailing],
+                "containerSize": [geometry.containerSize.width, geometry.containerSize.height],
+                "contentSize": [geometry.contentSize.width, geometry.contentSize.height]
+            ])
         }
+    }
+
+    private var stackScroll: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 35) { sections }
+                .padding(.horizontal, 16)
+        }.background(Color(uiColor: .systemGroupedBackground))
     }
 
     private var originalForm: some View {
@@ -77,7 +96,7 @@ private struct ProbeSetup: View {
                 }
             }
             Section {
-                Label("One Trial Film on this iPhone", systemImage: "ticket")
+                Label("One Trial Film on this iPhone", systemImage: "ticket").probe("trial-label")
                 Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
                     .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
             }
@@ -121,7 +140,7 @@ private struct ProbeSetup: View {
                 } }
             }
             section {
-                row { Label("One Trial Film on this iPhone", systemImage: "ticket") }
+                row { Label("One Trial Film on this iPhone", systemImage: "ticket").probe("trial-label") }
                 row {
                     Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
                         .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
@@ -177,10 +196,57 @@ private struct Metrics: ViewModifier {
             "appearance": String(describing: appearance),
             "preferredBodyPoints": UIFont.preferredFont(forTextStyle: .body).pointSize,
             "frame": [frame.minX, frame.minY, frame.width, frame.height],
-            "time": Date().timeIntervalSince1970
+            "time": Date().timeIntervalSince1970,
+            "uptime": ProcessInfo.processInfo.systemUptime
         ]
         if let data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]),
            let string = String(data: data, encoding: .utf8) { print("SETUP_PROBE \(string)") }
+    }
+}
+
+private enum ProbeLog {
+    static func rect(_ value: CGRect) -> [CGFloat] { [value.minX, value.minY, value.width, value.height] }
+
+    static func record(_ event: String, _ values: [String: Any]) {
+        var record = values
+        record["event"] = event
+        record["time"] = Date().timeIntervalSince1970
+        record["uptime"] = ProcessInfo.processInfo.systemUptime
+        if let data = try? JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]),
+           let string = String(data: data, encoding: .utf8) { print("SETUP_VIEWPORT \(string)") }
+    }
+}
+
+private struct WindowMetrics: UIViewRepresentable {
+    func makeUIView(context: Context) -> WindowMetricsView { WindowMetricsView() }
+    func updateUIView(_ uiView: WindowMetricsView, context: Context) {}
+}
+
+private final class WindowMetricsView: UIView {
+    private var lastGeometry: [CGFloat] = []
+
+    init() {
+        super.init(frame: .zero)
+        isUserInteractionEnabled = false
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) is not used by this probe") }
+
+    override func didMoveToWindow() { super.didMoveToWindow(); snapshot() }
+    override func safeAreaInsetsDidChange() { super.safeAreaInsetsDidChange(); snapshot() }
+    override func layoutSubviews() { super.layoutSubviews(); snapshot() }
+
+    private func snapshot() {
+        guard let window else { return }
+        let frame = convert(bounds, to: window)
+        let insets = [safeAreaInsets.top, safeAreaInsets.left, safeAreaInsets.bottom, safeAreaInsets.right]
+        let geometry = ProbeLog.rect(frame) + insets + ProbeLog.rect(window.bounds)
+        guard geometry != lastGeometry else { return }
+        lastGeometry = geometry
+        ProbeLog.record("window", ["rootFrame": ProbeLog.rect(frame), "rootSafeArea": insets,
+                                   "windowBounds": ProbeLog.rect(window.bounds),
+                                   "windowSafeArea": [window.safeAreaInsets.top, window.safeAreaInsets.left,
+                                                      window.safeAreaInsets.bottom, window.safeAreaInsets.right]])
     }
 }
 

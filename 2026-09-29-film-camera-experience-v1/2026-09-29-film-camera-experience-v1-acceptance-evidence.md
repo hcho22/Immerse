@@ -17,6 +17,12 @@ TRI-11 prohibition, not its eventual hardware acceptance requirement.
 
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
+Current QA-13 / H-UX addendum: `Evidence/NativeApp/accessibility-viewport-diagnosis.md`
+retains the failed edge-suppression/viewport counterfactuals, complete exported
+recordings and timestamped audit/geometry evidence. The observed callback viewport
+differs from the pre-audit viewport after the size sweep. This is not proof of a
+false positive or acceptance; production all-category accessibility remains open.
+
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 
 ## Evidence and Gate Key

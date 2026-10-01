@@ -12,6 +12,10 @@ final class SetupAuditTests: XCTestCase {
 
     func testStackContainerHardEdge() throws { try auditSetup(arguments: ["-stackContainer", "-hardEdge"]) }
 
+    func testStackSuppressedEdges() throws { try auditSetup(arguments: ["-stackContainer", "-suppressEdges"]) }
+
+    func testStackBoundedViewport() throws { try auditSetup(arguments: ["-stackContainer", "-boundedViewport"]) }
+
     func testForcedLargestSize() throws {
         try auditSetup(arguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
     }
@@ -19,6 +23,7 @@ final class SetupAuditTests: XCTestCase {
     private func auditSetup(arguments: [String]) throws {
         let app = XCUIApplication()
         app.launchArguments = arguments
+        record("launch", detail: arguments.joined(separator: " "))
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
@@ -35,14 +40,34 @@ final class SetupAuditTests: XCTestCase {
     }
 
     private func audit(_ app: XCUIApplication, name: String) throws {
+        record("\(name).before-snapshot")
         retain(XCTAttachment(string: app.debugDescription), name: "\(name)-before-tree")
         retain(XCTAttachment(screenshot: app.screenshot()), name: "\(name)-before-screen")
+        record("\(name).audit-call")
+        var callback = 0
         try app.performAccessibilityAudit { issue in
+            callback += 1
+            let event = "\(name).callback-\(callback)"
+            self.record("\(event).enter", detail: "auditType=\(issue.auditType.rawValue)")
+            self.retain(XCTAttachment(screenshot: app.screenshot()), name: "\(event)-before-query-screen")
+            self.record("\(event).screenshot-returned")
+            self.retain(XCTAttachment(string: app.debugDescription), name: "\(event)-before-issue-query-tree")
+            self.record("\(event).tree-returned")
             self.retain(XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied")"), name: "\(name)-issue")
+            self.record("\(event).issue-query-returned")
+            self.retain(XCTAttachment(screenshot: app.screenshot()), name: "\(event)-after-query-screen")
+            self.record("\(event).exit")
             return false
         }
+        record("\(name).audit-returned")
         retain(XCTAttachment(string: app.debugDescription), name: "\(name)-after-tree")
         retain(XCTAttachment(screenshot: app.screenshot()), name: "\(name)-after-screen")
+    }
+
+    private func record(_ event: String, detail: String = "") {
+        let value = "AUDIT_PROBE time=\(Date().timeIntervalSince1970) uptime=\(ProcessInfo.processInfo.systemUptime) event=\(event) \(detail)"
+        print(value)
+        retain(XCTAttachment(string: value), name: event)
     }
 
     private func retain(_ attachment: XCTAttachment, name: String) {
