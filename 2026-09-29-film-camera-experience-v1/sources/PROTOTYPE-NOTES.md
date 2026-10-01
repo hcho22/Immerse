@@ -9,6 +9,14 @@
 > **Version 1.2 note (2026-09-30).**
 > v1 also has no Account, sign-in, server or analytics, and runs on iOS 26, iPhone only.
 > Any sign-in or Account behavior this prototype simulates is v2 design study; the v1 Trial is one Film per iPhone held in the Keychain (ADR 0012).
+>
+> **Version 1.4 note (2026-09-30, PRD version 1.4): the v1 clickable prototype.**
+> A second, separate prototype now exists; everything else in this file describes the earlier three-direction study.
+> The v1 clickable prototype is a browser prototype of an iOS 26 style iPhone app in light and dark, with no sign-in or administrator mode.
+> It covers onboarding, the Film Journal, choosing and previewing a Camera, Load Film, capture, Movie recording, completion and early Development, Development, reveal, the Darkroom, Save to Photos, settings, and error and empty states.
+> The captain approved its iOS design on 2026-09-30.
+> It is kept outside this repository as a design reference only: it is not a requirement, a decision or evidence of native behavior, and its code and review controls must not be promoted into the product.
+> The questions it raised that are still pending are listed in [PRD section 18](../2026-09-29-film-camera-experience-v1-prd.md#18-current-evidence-and-definition-of-done).
 
 Question: which of three structurally different iPhone-style layouts makes loading, intentional capture, delayed reveal, and shared Host Release feel clearest?
 
