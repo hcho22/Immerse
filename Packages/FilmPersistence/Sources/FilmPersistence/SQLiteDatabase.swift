@@ -194,6 +194,33 @@ final class SQLiteDatabase {
         }
     }
 
+    func insertTrialConsumption(filmID: UUID, data: Data) throws {
+        try withStatement("INSERT OR IGNORE INTO trial_outbox (film_id, data) VALUES (?, ?);") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindBlob(data, to: statement, index: 2)
+            try stepDone(statement)
+        }
+    }
+
+    func pendingTrialData() throws -> [Data] {
+        try withStatement("SELECT data FROM trial_outbox;") { statement in
+            var values: [Data] = []
+            while true {
+                let status = sqlite3_step(statement)
+                if status == SQLITE_DONE { return values }
+                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                values.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
+            }
+        }
+    }
+
+    func finishTrialConsumption(filmID: UUID) throws {
+        try withStatement("DELETE FROM trial_outbox WHERE film_id = ?;") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try stepDone(statement)
+        }
+    }
+
     func setValue(filmID: UUID, key: String, data: Data) throws {
         try withStatement("""
             INSERT INTO film_values (film_id, key, data) VALUES (?, ?, ?)

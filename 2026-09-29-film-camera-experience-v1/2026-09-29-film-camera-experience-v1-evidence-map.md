@@ -14,6 +14,12 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Latest Trial addendum: `Evidence/TrialKeychainProbe/2026-10-01-software-integration.md`
+records native Keychain code, offline activation, capture-transaction outbox and
+reconciliation, four injected-store integration tests and both iOS compile gates.
+It supersedes the historical pure-policy-only implementation status below, but
+does not close hardware checks or the D3 first-save/uninstall atomicity conflict.
+
 Latest Development/render/export addendum: `Evidence/NativeRendering/2026-10-01-workflows.md`
 records real native pixel/Movie processing, persisted one-time assignments, verified
 reveal (including individually sealed-to-revealed Instant prints), exact byte Reset,

@@ -60,7 +60,8 @@ public final class FilmRepository {
         camera: CameraPackage,
         title: String,
         movieOrientation: MovieOrientation? = nil,
-        loadedAt: Date = Date()
+        loadedAt: Date = Date(),
+        access: FilmAccess = .subscription
     ) throws -> Film {
         let film = try Film(
             camera: camera,
@@ -68,7 +69,16 @@ public final class FilmRepository {
             loadedAt: loadedAt,
             movieOrientation: movieOrientation
         )
-        try save(film)
+        try database.withTransaction {
+            if case let .trial(device) = access {
+                guard try !allFilms().contains(where: { try filmAccess(filmID: $0.id) == access }),
+                      try !pendingTrialConsumptions().contains(where: { $0.originDevice == device }) else {
+                    throw PersistenceError.operationInProgress
+                }
+            }
+            try save(film)
+            try database.setValue(filmID: film.id, key: "access", data: encoder.encode(access))
+        }
         return film
     }
 
@@ -168,6 +178,10 @@ public final class FilmRepository {
             kind: capture.kind, sourceSHA256: Checksum.sha256Hex(data)
         )
         try database.insertReceipt(receipt, data: encoder.encode(receipt))
+        if capture.sequenceNumber == 1, case let .trial(device) = try filmAccess(filmID: filmID) {
+            let consumption = PendingTrialConsumption(filmID: filmID, originDevice: device, savedAt: capture.savedAt)
+            try database.insertTrialConsumption(filmID: filmID, data: encoder.encode(consumption))
+        }
     }
 
     private func validate(_ receipt: CaptureCommitReceipt, kind: CaptureKind, data: Data) throws {
@@ -653,6 +667,7 @@ public final class FilmRepository {
             );
             """
         )
+        try database.execute("CREATE TABLE IF NOT EXISTS trial_outbox (film_id TEXT PRIMARY KEY NOT NULL, data BLOB NOT NULL);")
     }
 
     private static func excludeFromBackup(_ url: URL) throws {
