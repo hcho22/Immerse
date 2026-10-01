@@ -263,7 +263,11 @@ private struct DevelopedMovieView: View {
         Group {
             if model.hiddenFilms.contains(filmID) { Color.clear }
             else if model.busyFilms.contains(filmID) { ProgressView("Preparing Movie") }
-            else if let player { VideoPlayer(player: player).aspectRatio(model.film(filmID)?.movieOrientation == .portrait ? 0.75 : 4.0 / 3, contentMode: .fit) }
+            else if let player {
+                VideoPlayer(player: player)
+                    .aspectRatio(model.film(filmID)?.movieOrientation == .portrait ? 0.75 : 4.0 / 3, contentMode: .fit)
+                    .accessibilityIdentifier("developed-movie-player")
+            }
             else if let error {
                 VStack {
                     Text(error)

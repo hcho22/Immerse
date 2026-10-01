@@ -10,9 +10,11 @@ Photos, Keychain, power-loss, backup/restore, accessibility or full-v1 acceptanc
 - `CapturedMediaFiles.pendingRecords()` now treats a removed staging directory as
   an already-empty pending set. This keeps privacy cleanup/recovery idempotent
   when another app-owned deletion path has already removed the staging directory.
-  A present but uninspectable staging path still throws through the ordinary
+  An existing non-directory staging path still throws through the ordinary
   filesystem enumeration contract and is not presented as successful empty
-  recovery.
+  recovery. This evidence does not establish the broader case where inspection
+  of a genuinely existing directory fails; keep that for the storage/permission
+  slice if a safe temporary-directory case is feasible.
 - `CapturedMediaFiles.removeCommittedFile(for:)` still rejects events outside the
   staging directory, but compares standardized parent paths instead of URL object
   equality. The previous URL equality check produced false `invalidMedia` cleanup
@@ -29,7 +31,7 @@ Photos, Keychain, power-loss, backup/restore, accessibility or full-v1 acceptanc
 | Cancel before recovery | Staged photo, staged metadata and malformed partial movie are removed without calling the committer; backend phase is interrupted. | `CaptureBackendRecoveryTests.testPrivacyCancelBeforeRecoveryDeletesStagedFilesWithoutCommit` |
 | Cancel during held recovery | A second recovery is rejected as `busy`; privacy cancellation does not return while the commit is held; after release the staged photo commits once, staged files are removed and retry recovery is empty. | `CaptureBackendRecoveryTests.testPrivacyCancelWaitsForInFlightRecoveryAndLeavesNoRetry` |
 | Missing staging directory | Package-level staging recovery/removal treats an absent staging directory as empty rather than throwing during privacy cleanup. | `CapturedMediaFileTests.testMissingStagingDirectoryBehavesAsAlreadyEmptyDuringPrivacyCleanup` |
-| Existing but uninspectable staging path | Replacing the staging directory with a regular file throws instead of returning an empty pending set. This is a representative synthetic inspection failure, not a physical permission/storage-pressure result. | `CapturedMediaFileTests.testExistingUninspectableStagingPathStillThrowsInsteadOfPretendingEmpty` |
+| Existing non-directory staging path | Replacing the staging directory with a regular file throws instead of returning an empty pending set after `fileExists` succeeds. This proves non-directory enumeration failure only, not a genuinely existing but uninspectable directory or a physical permission/storage-pressure result. | `CapturedMediaFileTests.testExistingUninspectableStagingPathStillThrowsInsteadOfPretendingEmpty` |
 | Outside committed-file cleanup | A `.photoSaved` event outside the staging directory is rejected as `invalidMedia`; the outside file bytes remain untouched. | `CapturedMediaFileTests.testCommittedCleanupRejectsOutsideStagingFilesAndLeavesThemUntouched` |
 
 ## Executed Gates

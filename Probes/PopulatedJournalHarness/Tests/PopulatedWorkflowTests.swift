@@ -75,22 +75,19 @@ final class PopulatedWorkflowTests: XCTestCase {
     }
 
     func testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom() throws {
-        let app = launch(arguments: ["--movie"])
+        let app = launch(arguments: ["--movie", "--hide-inspection-bar"])
         openFilm(app)
         XCTAssertTrue(app.buttons["Save Developed to Photos"].exists)
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "seconds wasted")).firstMatch.exists)
         XCTAssertFalse(app.buttons["Darkroom"].exists)
+        let player = app.descendants(matching: .any)["developed-movie-player"]
+        XCTAssertTrue(player.waitForExistence(timeout: 20))
         snapshot(app, "developed-Movie")
-        for sequence in 1...2 {
-            let discard = app.buttons["discard-clip-\(sequence)"]
-            for _ in 0..<6 where !discard.isHittable { app.swipeUp() }
-            XCTAssertTrue(discard.isHittable)
-            discard.tap()
-            app.buttons["Discard #\(sequence)"].tap()
-            let disappeared = NSPredicate(format: "exists == false")
-            expectation(for: disappeared, evaluatedWith: discard)
-            waitForExpectations(timeout: 40)
-        }
+        discardClip(1, app: app)
+        XCTAssertTrue(app.buttons["discard-clip-2"].waitForExistence(timeout: 40))
+        XCTAssertTrue(player.waitForExistence(timeout: 20))
+        discardClip(2, app: app)
+        XCTAssertFalse(player.waitForExistence(timeout: 3))
         XCTAssertFalse(app.buttons["Save Developed to Photos"].exists)
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "seconds wasted")).firstMatch.exists)
         XCTAssertEqual(app.staticTexts.matching(identifier: "Discarded").count, 2)
@@ -123,6 +120,19 @@ final class PopulatedWorkflowTests: XCTestCase {
     private func openFilm(_ app: XCUIApplication) {
         app.buttons.containing(NSPredicate(format: "label CONTAINS %@", "Private synthetic Film")).firstMatch.tap()
         XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 5))
+    }
+
+    private func discardClip(_ sequence: Int, app: XCUIApplication) {
+        let discard = app.buttons["discard-clip-\(sequence)"]
+        for _ in 0..<6 where !discard.isHittable { app.swipeUp() }
+        XCTAssertTrue(discard.isHittable)
+        discard.tap()
+        let confirm = app.buttons["Discard #\(sequence)"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        let disappeared = NSPredicate(format: "exists == false")
+        expectation(for: disappeared, evaluatedWith: discard)
+        waitForExpectations(timeout: 40)
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

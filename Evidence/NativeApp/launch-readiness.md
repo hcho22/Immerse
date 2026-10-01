@@ -163,6 +163,14 @@ capture-recovery integration test pass. This is partial CAP-09/PRV/ARC-03/06
 software evidence for synthetic staged media and an injected committer, not a real
 camera callback, storage-pressure, physical interruption or hardware acceptance.
 
+The Movie player/cache continuation is recorded in
+`Evidence/NativeApp/movie-player-cache-042.md`: the populated Journal harness now
+asserts initial Movie playback, surviving-clip playback after first discard and
+no playback/export after the final discard, while the runtime test proves stale
+assembled Movie retirement and reassembly from retained clips. This is bounded
+synthetic software evidence, not player-instance lifetime, hardware codec
+fidelity, PhotoKit/export race, background interruption or physical acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain
@@ -175,7 +183,7 @@ installation, signing, purchases, device deletion, backup restoration or erasure
 | DEV / QA-03 | Fill each exact capacity, prove no roll/Movie auto-reveal; confirm/cancel exact early waste; empty Delete Film; Instant final print; terminate and resume the same treatment/master. | App-model/native renderer tests are not device rituals or termination proof. |
 | DRK / QA-04,13 | Every applicable control, accessible point and gesture Dodge/Burn, exact Reset/export equality, independent photos, no Movie entry. Largest Dynamic Type, VoiceOver and Switch Control across populated screens. | Partial simulator audit only; medium applicability/ranges remain DEC-04/11. |
 | STO / QA-09 | Independent developed/original exports; denied/restricted add-only permission, failed Photos write/retry; decode/hash masters before cleanup; inspect real Photos output; no sealed or automatic exports. | PhotoKit execution and actual device low-storage paths untested. |
-| MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Real native synthetic renders only; hardware fidelity/music acceptance absent. |
+| MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Runtime stale-Movie retirement and populated final empty-Movie UI pass synthetically; hardware fidelity/music/export/playback-cache acceptance absent. |
 | BIL / ARC-09 | Approved monthly/yearly products, cancellation/pending/renewal/expiry/restore; offline after one online sync; finish/develop/edit/export existing Films after expiry. | Local fixtures pass separately from any authorized StoreKit sandbox/device execution. Live setup and DEC-02 are absent. |
 | TRI / ARC-11 | Pinned Keychain procedure, offline activation/first save failure windows, zero-save delete/replacement, used delete/reinstall, two-device restored Trial coexistence. | Hardware untested. `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md` records the production correction to historical D3, raw-status/read tests, native Journal integration and production-owner process exits. Complete pending media precedes one receipt/consumption item, then once-only projection. Injected survival and process-exit checks do not prove physical retention, power-loss ordering or restore. A marker-only probe cannot accept this protocol. |
 | ARC-08 / QA-13 | iPhone 11 iOS 26 capture-to-save and full-roll/Movie Development timings, interrupted resume, peak memory, thermal/storage-pressure behavior. | No measurements; DEC-12 budgets are proposals only. |
