@@ -17,6 +17,7 @@ final class SQLiteDatabase {
         if sqlite3_open_v2(url.path, &handle, flags, nil) != SQLITE_OK {
             throw SQLiteError.openFailed(lastMessage)
         }
+        sqlite3_busy_timeout(handle, 5_000)
         try execute("PRAGMA journal_mode = WAL;")
         try execute("PRAGMA foreign_keys = ON;")
     }
@@ -137,6 +138,37 @@ final class SQLiteDatabase {
     func deleteFilm(id: UUID) throws {
         try withStatement("DELETE FROM films WHERE id = ?;") { statement in
             try bindText(id.uuidString, to: statement, index: 1)
+            try stepDone(statement)
+        }
+    }
+
+    func enqueueDeletion(filmID: UUID, relativePath: String) throws {
+        try withStatement("INSERT OR IGNORE INTO pending_deletions (film_id, relative_path) VALUES (?, ?);") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindText(relativePath, to: statement, index: 2)
+            try stepDone(statement)
+        }
+    }
+
+    func pendingDeletionPaths(filmID: UUID? = nil) throws -> [String] {
+        let sql = filmID == nil
+            ? "SELECT relative_path FROM pending_deletions ORDER BY relative_path;"
+            : "SELECT relative_path FROM pending_deletions WHERE film_id = ? ORDER BY relative_path;"
+        return try withStatement(sql) { statement in
+            if let filmID { try bindText(filmID.uuidString, to: statement, index: 1) }
+            var paths: [String] = []
+            while true {
+                let status = sqlite3_step(statement)
+                if status == SQLITE_DONE { return paths }
+                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                paths.append(String(cString: sqlite3_column_text(statement, 0)))
+            }
+        }
+    }
+
+    func finishDeletion(relativePath: String) throws {
+        try withStatement("DELETE FROM pending_deletions WHERE relative_path = ?;") { statement in
+            try bindText(relativePath, to: statement, index: 1)
             try stepDone(statement)
         }
     }

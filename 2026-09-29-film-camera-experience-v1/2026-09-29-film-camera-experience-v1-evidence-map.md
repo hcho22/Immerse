@@ -14,7 +14,9 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
-The latest native capture slice is recorded in `Evidence/NativeCapture/2026-10-01-backend.md` (the commit containing that report). It also identifies unclosed safety gaps: capture receipts across process death, native staging privacy cleanup, decoded developed-master verification, and deletion tombstones/stale-writer suppression. Earlier package checks below do not prove those missing behaviors.
+The native capture slice is recorded in `Evidence/NativeCapture/2026-10-01-backend.md`. The subsequent repository privacy slice, including four new failure/concurrency scenarios and 14 passing persistence tests, is recorded in `Evidence/PrivacyRecovery/2026-10-01-repository.md`. Durable deletion jobs and stale-writer suppression now exist in the repository; native staging/cache/export integration, capture receipts across process death and decoded developed-master verification remain incomplete. Earlier package checks below do not prove those missing behaviors.
+
+The captain's later work order, "implement prd first. i'll test is manually when v1 is ready", supersedes the before-code hardware and foundation-only ordering restrictions. Implement the full reversible native app and Trial integration now; defer physical-phone operations and retain all required hardware checks as unaccepted. This does not approve unanswered product decisions. Historical gate records below retain their original outcomes, not a current instruction to reconnect a phone or wait before implementing software.
 
 ## Candidate Artifacts and Gates
 
