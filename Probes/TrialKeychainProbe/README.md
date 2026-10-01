@@ -32,8 +32,8 @@ Hardware execution requires a dedicated authorized iPhone running iOS 26 and a s
 Do not change signing, Apple account settings, device trust, or personal-device contents without explicit authority.
 
 As of 2026-09-30, Firstmate recorded that only personal iPhones are available.
-Use `PERSONAL_DEVICE_TEST_PLAN.md` for the restricted personal-device path.
-That plan allows only probe/synthetic data work unless Firstmate/captain grants exact device and action authority.
+Use `PERSONAL_DEVICE_TEST_PLAN.md` for the proposed personal-device path.
+That plan authorizes no install, signing, launch, deletion, restore, erase, OS update or settings change until the exact candidate, device and prerequisites are reviewable and Firstmate/captain grants scoped approval.
 Whole-phone backup restore, erase, OS update and signing/account changes remain outstanding tests that need separate approval.
 
 ## Safe TRI-11 Procedure

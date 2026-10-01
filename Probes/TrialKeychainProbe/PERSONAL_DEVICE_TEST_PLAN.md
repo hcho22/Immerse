@@ -4,16 +4,19 @@ This plan records the currently available hardware path for `TRI-11`.
 Captain availability as of 2026-09-30: only personal iPhones are available.
 That availability is not authorization to delete, erase, restore, change signing, change Apple account settings, buy anything, or alter real personal media.
 
-## Candidate to Record at Execution
+## Unfilled Execution Fields
 
-- Source branch: `fm/immerse-v1-implementation`
-- Source revision: fill with `git rev-parse HEAD` for the tested candidate
-- Probe bundle identifier: `com.immerse.trial-keychain-probe`
-- Probe scheme: `TrialKeychainProbe`
-- Build command: `xcodebuild -project Probes/TrialKeychainProbe/TrialKeychainProbe.xcodeproj -scheme TrialKeychainProbe -destination 'generic/platform=iOS' build`
-- Xcode version: fill with `xcodebuild -version`
-- Device model and iOS version: fill from Xcode Devices and Settings, Finder, or `xcrun devicectl list devices`
-- Signing team/profile: selected only by a human with authority
+These fields must be filled for an exact reviewable candidate before Firstmate/captain is asked to approve any device action.
+
+- Source branch: unfilled; expected `fm/immerse-v1-implementation`
+- Source revision: unfilled; fill with `git rev-parse HEAD` for the tested candidate
+- Probe bundle identifier: unfilled; expected `com.immerse.TrialKeychainProbe`
+- Probe Keychain service: unfilled; expected `com.immerse.trial-keychain-probe`
+- Probe scheme: unfilled; expected `TrialKeychainProbe`
+- Build command: unfilled; expected `xcodebuild -project Probes/TrialKeychainProbe/TrialKeychainProbe.xcodeproj -scheme TrialKeychainProbe -destination 'generic/platform=iOS' build`
+- Xcode version: unfilled; fill with `xcodebuild -version`
+- Device model and iOS version: unfilled; fill from Xcode Devices and Settings, Finder, or `xcrun devicectl list devices`
+- Signing team/profile: unfilled; selected only by a human with authority
 
 ## Data Touched
 
@@ -25,11 +28,12 @@ That availability is not authorization to delete, erase, restore, change signing
 - The probe creates no user media, no Photos entries, no network traffic, no StoreKit purchase and no analytics.
 - Optional synthetic app/media tests must use freshly created synthetic captures only, never the captain's real personal media.
 
-## Authorized Non-Destructive Probe Steps
+## Prepared Probe Steps Awaiting Scoped Approval
 
-These steps are limited to the probe app and require only the human-selected signing/install prerequisites above.
+These proposed steps are limited to the probe app, but availability alone authorizes none of them.
+Do not install, sign, pair, trust, launch, delete, restore, erase or change settings on any personal iPhone until the unfilled execution fields above are reviewable and Firstmate/captain grants scoped approval for the exact action and device.
 
-1. Build and install the probe on one personal iPhone running iOS 26.
+1. Build and install the probe on one named personal iPhone running iOS 26.
 2. Tap `Write fresh this-device-only marker`.
 3. Record the marker UUID, date, device model, iOS version and candidate revision.
 4. Force quit and relaunch the probe.
@@ -43,6 +47,7 @@ These steps are limited to the probe app and require only the human-selected sig
 These steps must not be performed merely because a personal iPhone exists.
 Each needs separate concrete authority from Firstmate/captain for the named device, and destructive whole-phone steps need a suitable non-personal or approved resettable environment.
 
+- Build/install/launch on a personal iPhone: needed for the prepared probe path, but not authorized until the exact candidate, device and signing prerequisites are reviewed.
 - Delete/reinstall on a personal iPhone: required for `TRI-11`; touches only the probe app, but still needs permission because it deletes an installed app from a personal phone.
 - Change signing team, Apple account, provisioning, trust settings or device pairing: needs permission.
 - Back up iPhone A and restore onto iPhone B: outstanding for `ARC-11`, `ARC-12` and `QA-15`; destructive for the destination phone unless explicitly prepared.

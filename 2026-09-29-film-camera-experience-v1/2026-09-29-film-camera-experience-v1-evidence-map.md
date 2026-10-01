@@ -10,7 +10,7 @@ It covers every unchecked v1 tracker ID present at intake, each personal FR acce
 
 No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
-No StoreKit, Photos, AVFoundation, backup or Keychain hardware behavior is accepted yet.
+No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
 ## Candidate Artifacts and Gates
 
@@ -22,11 +22,15 @@ No StoreKit, Photos, AVFoundation, backup or Keychain hardware behavior is accep
 | FilmPersistence behavior tests | `swift test --package-path Packages/FilmPersistence` | Passed locally on Xcode 26.5 / Swift 6.3.2; 8 tests, 0 failures. | Tests durable-save, relaunch-style reload, cleanup and whole-Film deletion contracts with synthetic data on macOS; not AVFoundation capture, PhotoKit, iOS backup or hardware. |
 | RenderCore Swift package | `Packages/RenderCore` | Added a pure Swift package for stable treatment assignment, resumable Development bookkeeping, Movie assembly plans and exact Darkroom reset. | It deliberately does not choose render specs, treatment algorithms, control ranges, codecs or soundtrack rights. |
 | RenderCore behavior tests | `swift test --package-path Packages/RenderCore` | Passed locally on Xcode 26.5 / Swift 6.3.2; 5 tests, 0 failures, including a pinned stable treatment seed value. | Tests planning/state contracts only, not actual pixels, video, audio or GPU performance. |
-| Trial Keychain probe source | `Probes/TrialKeychainProbe` | Added a small SwiftUI iOS probe that writes a this-device-only, non-synchronizable Keychain marker. `PERSONAL_DEVICE_TEST_PLAN.md` records the currently available personal-device-only path. | Probe is not production Trial code and does not satisfy TRI-11 until run on authorized iOS 26 hardware. Personal iPhone availability is not permission to delete, restore, erase, change signing/account settings or touch real personal media. |
+| NativeAdapters Swift package | `Packages/NativeAdapters` | Added AVFoundation and PhotoKit boundary adapters plus protocol-backed coordinators for capture permission timing, rear/front capability discovery, front viewfinder mirroring with unmirrored output, lens-switch gating, silent Movie plans, interruption/save events and add-only Photos export outcomes. | Uses approved reversible Swift package default only; does not settle DEC-03 final app stack or product flow timing. |
+| NativeAdapters behavior tests | `swift test --package-path Packages/NativeAdapters` | Passed locally on Xcode 26.5 / Swift 6.3.2; 9 tests, 0 failures. | Tests synthetic adapters/fakes on macOS; no real camera, microphone, media quality, simulator Photos library or device Photos write occurred. |
+| NativeAdapters iOS compile probe generation | `xcodegen generate --spec Probes/NativeAdaptersCompileProbe/project.yml` | Succeeded; generated `NativeAdaptersCompileProbe.xcodeproj`. | Requires XcodeGen on the machine. |
+| NativeAdapters iOS simulator compile | `xcodebuild -project Probes/NativeAdaptersCompileProbe/NativeAdaptersCompileProbe.xcodeproj -scheme NativeAdaptersCompileProbe -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build` | Build succeeded against the iOS 26.5 simulator SDK. | Compile-only; no simulator boot, camera session, microphone prompt or Photos write was exercised. |
+| Trial Keychain probe source | `Probes/TrialKeychainProbe` | Added a small SwiftUI iOS probe that writes a this-device-only, non-synchronizable Keychain marker. `PERSONAL_DEVICE_TEST_PLAN.md` records the proposed personal-device-only path and unfilled execution fields. | Probe is not production Trial code and does not satisfy TRI-11 until run on authorized iOS 26 hardware. Personal iPhone availability is not permission to install, sign, launch, delete, restore, erase, change settings or touch real personal media. |
 | Trial Keychain project generation | `xcodegen generate --spec Probes/TrialKeychainProbe/project.yml` | Succeeded; generated `TrialKeychainProbe.xcodeproj`. | Requires XcodeGen on the machine. |
 | Trial Keychain simulator compile | `xcodebuild -project Probes/TrialKeychainProbe/TrialKeychainProbe.xcodeproj -scheme TrialKeychainProbe -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build` | Build succeeded. | Compile-only. Simulator Keychain does not prove delete/reinstall, restore, OS update or erase behavior. |
-| Xcode capability discovery | `xcodebuild -version`, `xcodebuild -showsdks`, `xcrun simctl list runtimes`, `xcrun devicectl list devices` | Xcode 26.5, iOS 26.5 SDK, iOS 26.0 through 26.5 simulators available. Three physical devices were listed as unavailable. Firstmate later recorded that only personal iPhones are available. | No usable dedicated physical iPhone was available for TRI-11, ARC-08, ARC-10, ARC-11, ARC-12 or QA-15. Personal devices require explicit action authority and do not permit destructive restore/erase tests by default. |
-| Document package ZIP gate | `zip -r -X 2026-09-29-film-camera-experience-v1-documents.zip 2026-09-29-film-camera-experience-v1`, then `unzip -l`, then extracted content diff | Pending after document edits. | Required because this file lives under the packaged requirements directory. |
+| Xcode capability discovery | `xcodebuild -version`, `xcodebuild -showsdks`, `xcrun simctl list runtimes`, `xcrun devicectl list devices` | Xcode 26.5, iOS 26.5 SDK, iOS 26.0 through 26.5 simulators available. Three physical devices were listed as unavailable. Firstmate later recorded that only personal iPhones are available. | No usable dedicated physical iPhone was available for TRI-11, ARC-08, ARC-10, ARC-11, ARC-12 or QA-15. Personal devices require explicit action authority and do not permit install/signing, destructive restore/erase or settings changes by default. |
+| Document package ZIP gate | `zip -r -X 2026-09-29-film-camera-experience-v1-documents.zip 2026-09-29-film-camera-experience-v1`, then `unzip -l`, then extracted content diff | Passed locally; `unzip -l` listed 23 files and byte comparison reported `ZIP_COMPARE_OK`. | Required because this file lives under the packaged requirements directory. |
 
 ## FR Acceptance Map
 
@@ -35,11 +39,11 @@ No StoreKit, Photos, AVFoundation, backup or Keychain hardware behavior is accep
 | FR-01 Camera catalog | `CameraCatalog` models all five settled Camera packages with exact v1 capacities and Reveal Rules; tests verify IDs, capacities, reveal rules and soundtrack eligibility for Movie Cameras. | DEC-04 render specs, DEC-05 assets/soundtracks, native controls, samples and format-distinct treatment validation remain open. |
 | FR-02 Film Journal | FilmDomain separates title, archive, captures, completion and development; tests verify title/archive do not alter Camera, capacity or chronology. | Native Film Journal UI, sealed-safe thumbnails/contact sheets, archive list, restore, navigation and accessibility remain unbuilt. |
 | FR-03 Setup and Load Film | Film initializer fixes one Camera package and enforces Movie orientation only for Movie Cameras. | Native setup flow, Camera Preview, entitlement checks, permission timing and Load Film UI remain unbuilt; pending flow-bundle answers stay open. |
-| FR-04 Capture | Domain APIs debit only saved photos and reject sealed individual Discard. | AVFoundation capture, permission denial, front/rear mirroring, unsupported controls, durable file save and storage interruption recovery remain unbuilt and untested on hardware. |
-| FR-05 Movie mechanics | Domain APIs debit only saved active clip duration, preserve clip orientation values, prevent overrun, and keep Movie playback/export unavailable after all revealed clips are discarded. RenderCore plans reassembly from surviving clips in chronological order. | Native recording, interruption salvage, no microphone prompt, borders, playback/export fidelity and approved codecs remain unbuilt or hardware-untested. |
+| FR-04 Capture | Domain APIs debit only saved photos and reject sealed individual Discard. NativeAdapters tests cover configurable permission prompt timing, rear/front capability modeling, front viewfinder mirroring with unmirrored output, lens-switch gating during save/recording and save/interruption callback events. | Real AVFoundation capture, actual permission denial UI, unsupported hardware controls, durable captured-file save and storage interruption recovery remain untested on hardware. |
+| FR-05 Movie mechanics | Domain APIs debit only saved active clip duration, preserve clip orientation values, prevent overrun, and keep Movie playback/export unavailable after all revealed clips are discarded. NativeAdapters Movie plans are silent (`recordsAudio == false`) and use the locked Movie orientation; RenderCore plans reassembly from surviving clips in chronological order. | Native recording, interruption salvage from actual sessions, microphone prompt absence on device, borders, playback/export fidelity and approved codecs remain unbuilt or hardware-untested. |
 | FR-06 Completion and Development | Domain keeps completion and Development distinct, supports exact early waste for roll and Movie Films, reveals only after Development, reveals Instant prints individually, and blocks empty-Film early Development per DEC-09. RenderCore assigns stable treatment seeds, resumes progress without rerolling and rejects empty Films. | Actual renderer, source/master generation and native reveal ritual remain unbuilt; Instant early-end behavior remains open under DEC-11. |
 | FR-07 Darkroom | RenderCore models reversible analog-style recipe state and exact Reset to Original. Domain preserves developed master distinction indirectly by not mutating Camera or treatment through title/archive/discard rules. | DEC-11 ranges/crop/Instant source timing/soundtrack reselection; native photo editor, pixel exactness and no saturation/Movie Darkroom UI gates remain unbuilt. |
-| FR-08 Storage, Photos export and cleanup | FilmPersistence persists Film state to SQLite and private source/master files, excludes temp files from backup, leaves media included in backup, and deletes sources only after a checksum-verified master exists. | PhotoKit exports, add-only permission/write failures, original export choice UI and real iOS backup/restore evidence remain unbuilt or untested. |
+| FR-08 Storage, Photos export and cleanup | FilmPersistence persists Film state to SQLite and private source/master files, excludes temp files from backup, leaves media included in backup, and deletes sources only after a checksum-verified master exists. NativeAdapters tests cover add-only Photos permission deferral/denial, write-failure outcomes and success being only a prerequisite for later independently verified cleanup. | Actual PhotoKit writes, Photos permission sheets, original export choice UI and real iOS backup/restore evidence remain unbuilt or untested. |
 | FR-16 Discard and Movie reassembly | FilmDomain supports Discard only after reveal, numbered placeholders, no capacity refund, stale Movie playback/export removal after all clips are discarded, and unchanged consumed duration. FilmPersistence removes app-controlled source/master/clip assets for a discarded capture. | Cache retirement, assembled Movie version retirement and media reassembly output require native render work and hardware media tests. |
 | FR-18 Delete Film | FilmPersistence deletes sealed Film state and app-controlled assets without Development; DEC-09 and FR-18 empty-Film path are documented. | Native confirmation copy, Darkroom edit deletion integration and backup disclosure verification remain unbuilt. |
 | FR-19 Account deletion | Correctly not implemented for v1. | Deferred to v2; no v1 evidence needed beyond absence of Account flows in app once app exists. |
@@ -50,10 +54,10 @@ No StoreKit, Photos, AVFoundation, backup or Keychain hardware behavior is accep
 
 | Invariant | Current evidence | Remaining gap |
 | --- | --- | --- |
-| Camera identity cannot change after loading; Movie presentation orientation is fixed before recording. | Film stores immutable `CameraPackage`; Movie Films require `movieOrientation`; tests verify title/archive do not mutate Camera. | Native Load Film and recording UI still needed. |
+| Camera identity cannot change after loading; Movie presentation orientation is fixed before recording. | Film stores immutable `CameraPackage`; Movie Films require `movieOrientation`; tests verify title/archive do not mutate Camera. NativeAdapters Movie plan maps the locked Movie orientation to every clip. | Native Load Film and recording UI still needed. |
 | Captures cannot exceed authorized capacity; retries do not consume twice. | FilmDomain tests cover failed photo/movie saves and Movie overrun prevention. FilmPersistence tests cover failures before durable move and after durable move before debit, with no persisted debit and orphan cleanup. | Full iOS crash/process-kill recovery still needs native harness evidence. |
 | Completion does not imply Development. | Tests verify full roll completion leaves captures sealed until explicit Development finishes. | Native Development runner still needed. |
-| Unrevealed content has no thumbnails, direct-export path, or Camera Preview path. | Domain rejects individual Discard of sealed capture and keeps roll/movie captures sealed before Development. | UI, file/export access and cache gates still needed. |
+| Unrevealed content has no thumbnails, direct-export path, or Camera Preview path. | Domain rejects individual Discard of sealed capture and keeps roll/movie captures sealed before Development. NativeAdapters Photo export coordinator is explicit-call-only and has no automatic export path. | UI, file/export access and cache gates still needed. |
 | Capacity is never refunded for deliberately spent, discarded or deleted saved capture. | Tests verify Discard leaves consumed Movie seconds unchanged. | Photo discard/delete storage paths still need native tests. |
 | Treatment is assigned once, survives retries, and is unchanged by Movie reassembly. | RenderCore tests verify stable per-capture assignments across resume, a pinned SHA-256-derived seed and surviving Movie clip order without rerolling. | Actual rendered output and media file preservation still required. |
 | Privacy removals win over development retries, cached views, and old assembled versions. | Domain disables playback/export when all Movie clips are discarded. Persistence removes app-controlled source/master/clip files for Discard. | Cache and assembled Movie-version retirement jobs required. |
@@ -73,7 +77,7 @@ Status words in this table are intentionally conservative:
 | --- | --- | --- | --- |
 | DEC-01 | Open product decision. | None. | Not started; final brand/copy not selected. |
 | DEC-02 | Deferred until before M2 billing. | None. | Not started; prices/refund/revocation handling still open. |
-| DEC-03 | Native stack still open; Swift packages are baseline defaults only. | `Packages/FilmDomain`, `Probes/TrialKeychainProbe`. | Partial use of reversible Swift package default; does not close DEC-03. |
+| DEC-03 | Native stack still open; Swift packages are baseline defaults only. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Probes/TrialKeychainProbe`. | Partial use of reversible Swift package default; does not close DEC-03. |
 | DEC-04 | Open render/output decision. | None. | Not started; Camera render specs unresolved. |
 | DEC-05 | Open asset/licensing decision. | None. | Not started; samples and soundtrack rights unresolved. |
 | DEC-09 | Captain decision supplied 2026-09-30. | `Packages/FilmDomain/Sources/FilmDomain/Film.swift`. | Partial: tests verify empty early Development is blocked and all Movie clips discarded leaves placeholders with no playback/export. |
@@ -81,7 +85,7 @@ Status words in this table are intentionally conservative:
 | DEC-12 | Open product decision and hardware budgets. | None. | Not started; no low-storage/performance/accessibility matrix yet. |
 | DEC-13 | Open product/launch decision. | None. | Not started; support/privacy/review requirements unresolved. |
 | DEC-14 | Open numeric learning targets. | None. | Not started; no analytics SDK remains preserved. |
-| ARC-01 | DEC-03 pending. | `Packages/FilmDomain`, `Probes/TrialKeychainProbe`. | Partial: Swift package tests and probe simulator build pass; full native app setup absent. |
+| ARC-01 | DEC-03 pending. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Probes/TrialKeychainProbe`. | Partial: Swift package tests and probe simulator builds pass; full native app setup absent. |
 | ARC-02 | Settled domain subset. | `Packages/FilmDomain/Sources/FilmDomain`. | Partial: state dimensions and invariants behavior-tested by `swift test`. |
 | ARC-03 | Needs native app integration. | `Packages/FilmPersistence`. | Partial: durable temp/write/move, SQLite state commit, recovery orphan cleanup, backup-exclusion distinction and checksum-verified master cleanup behavior-tested. |
 | ARC-05 | TRI-11 prerequisite. | `Probes/TrialKeychainProbe`. | Prepared: probe compiles; hardware Keychain evidence unavailable. |
@@ -114,23 +118,23 @@ Status words in this table are intentionally conservative:
 | SET-05 | Needs native UI. | None. | Not started. |
 | SET-06 | Settled domain. | Film immutable `camera`. | Partial: Camera immutability tested. |
 | SET-08 | Needs native Movie setup. | Film initializer requires Movie orientation. | Partial domain only. |
-| CAP-01 | Needs AVFoundation and storage. | FilmDomain saved-photo debit. | Partial durable-debit contract only. |
+| CAP-01 | Needs AVFoundation and storage. | FilmDomain saved-photo debit; NativeAdapters save callback events. | Partial durable-debit and callback contract only; no real captured media. |
 | CAP-02 | Needs native import exclusions. | None. | Not started. |
-| CAP-03 | Needs native viewfinder. | None. | Not started. |
-| CAP-04 | Needs AVFoundation hardware. | None. | Not started. |
-| CAP-05 | Needs front camera hardware/output tests. | None. | Untested. |
-| CAP-06 | Needs native recording/capture UI. | None. | Not started. |
-| CAP-07 | Needs hardware capability matrix. | None. | Not started. |
+| CAP-03 | Needs native viewfinder. | NativeAdapters `CaptureSessionPlan`. | Partial: front viewfinder mirroring and unmirrored output plan tested; no rendered viewfinder. |
+| CAP-04 | Needs AVFoundation hardware. | NativeAdapters AVFoundation discoverer/authorizer. | Prepared/partial: compiled against iOS 26 simulator SDK; no hardware capture evidence. |
+| CAP-05 | Needs front camera hardware/output tests. | NativeAdapters `CaptureSessionPlan`. | Partial: front mirror/unmirrored-output contract tested with fakes; hardware output untested. |
+| CAP-06 | Needs native recording/capture UI. | NativeAdapters `CaptureEventEmitter`. | Partial: synthetic save/failure callbacks tested; native capture UI and actual save delegates unbuilt. |
+| CAP-07 | Needs hardware capability matrix. | NativeAdapters AVFoundation discoverer. | Prepared: adapter can report rear/front availability; no hardware matrix observed. |
 | CAP-08 | Needs entitlement and Trial implementation. | Probe only. | Prepared prerequisite; no production capture entitlement. |
-| CAP-09 | Needs storage failure/relaunch tests. | FilmDomain failed-save no debit. | Partial domain only. |
+| CAP-09 | Needs storage failure/relaunch tests. | FilmDomain failed-save no debit; FilmPersistence failure injection; NativeAdapters save-failure event. | Partial domain/storage/callbacks only; no native interruption/relaunch harness. |
 | CAP-10 | Needs UI/export/storage gates. | FilmDomain sealed state and sealed discard rejection. | Partial domain only. |
 | MOV-01 | Settled domain subset. | FilmDomain Movie debit. | Partial: saved duration debit tested. |
 | MOV-02 | Settled domain subset. | FilmDomain remaining seconds/overrun errors. | Partial: overrun prevention tested. |
 | MOV-03 | Needs renderer. | FilmDomain sequence numbers; RenderCore assembly plan. | Partial: chronological clip order tested, no media output. |
-| MOV-04 | Needs native recording. | FilmDomain `ClipOrientation`. | Partial data model only. |
-| MOV-05 | DEC-04/native renderer. | FilmDomain `MovieOrientation`. | Partial setup model only. |
-| MOV-06 | Needs interruption handling. | FilmDomain saved clip API. | Not started for native interruption. |
-| MOV-07 | Needs AVFoundation permission proof. | None. | Not started; no mic prompt hardware evidence. |
+| MOV-04 | Needs native recording. | FilmDomain `ClipOrientation`; NativeAdapters locked clip orientation plan. | Partial data/plan model only; no actual recording. |
+| MOV-05 | DEC-04/native renderer. | FilmDomain `MovieOrientation`; NativeAdapters `lockedMovieOrientation`. | Partial setup/adapter model only. |
+| MOV-06 | Needs interruption handling. | FilmDomain saved clip API; NativeAdapters interruption events. | Partial callback contract only; no actual AVFoundation interruption salvage. |
+| MOV-07 | Needs AVFoundation permission proof. | NativeAdapters silent Movie plan. | Partial: package plans no audio recording; no device proof that microphone is never requested. |
 | MOV-09 | DEC-05/DEC-11. | CameraCatalog soundtrack eligibility. | Partial capability flag only. |
 | MOV-10 | Needs native clip files. | FilmDomain clip records; FilmPersistence assets; RenderCore assembly plan. | Partial metadata/storage plan only. |
 | MOV-11 | DEC-04/native media tests. | None. | Not started. |
@@ -153,10 +157,10 @@ Status words in this table are intentionally conservative:
 | STO-01 | Needs native app integration. | `Packages/FilmPersistence`. | Partial: Film metadata and source/master assets reload from SQLite/files in a new repository instance in behavior tests. |
 | STO-02 | DEC-13 copy and native UI. | Documentation only. | Not started in app. |
 | STO-03 | Needs native app sandbox integration. | FilmPersistence source files under app-private root. | Partial: synthetic sources stored privately in package root; no pre-reveal Photos path implemented. |
-| STO-04 | Needs PhotoKit. | None. | Not started. |
-| STO-05 | Needs PhotoKit/source storage. | None. | Not started. |
-| STO-06 | Needs PhotoKit failure tests. | None. | Not started. |
-| STO-07 | Needs PhotoKit original export branch. | FilmPersistence verified master cleanup. | Partial: source cleanup waits for checksum-verified master; Photos save prerequisite unbuilt. |
+| STO-04 | Needs PhotoKit. | NativeAdapters `PhotoKitAuthorizer` and `PhotoKitWriter`. | Prepared/partial: add-only adapter compiles; no actual Photos write. |
+| STO-05 | Needs PhotoKit/source storage. | NativeAdapters `PhotoExportCoordinator`. | Partial: explicit optional export coordinator exists; native UI/source-choice flow unbuilt. |
+| STO-06 | Needs PhotoKit failure tests. | NativeAdapters Photo export tests. | Partial: denial and write failure outcomes tested with fakes; actual PhotoKit failure modes untested. |
+| STO-07 | Needs PhotoKit original export branch. | FilmPersistence verified master cleanup; NativeAdapters successful export outcome. | Partial: source cleanup waits for checksum-verified master and Photos success only permits later verification; original export UI and actual PhotoKit save unbuilt. |
 | STO-08 | Needs disclosure UI. | FilmPersistence verified master cleanup. | Partial: declined-export cleanup contract exists; user-facing disclosure unbuilt. |
 | STO-09 | Needs native viewing. | FilmPersistence retains masters after source cleanup. | Partial: offline viewing UI unbuilt. |
 | STO-10 | Needs export UI copy. | None. | Not started. |
@@ -182,12 +186,12 @@ Status words in this table are intentionally conservative:
 | TRI-03 | Needs Trial state machine. | FilmDomain saved-capture semantics. | Partial foundation only. |
 | TRI-04 | Needs atomic Keychain/filesystem proof. | Probe/procedure only. | Not accepted; first-save crash window open. |
 | TRI-09 | Needs Trial production implementation. | None. | Not started. |
-| TRI-11 | Hardware prerequisite. | `Probes/TrialKeychainProbe/README.md` and `Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md`. | Prepared procedure and compile; untested on hardware. Only personal iPhones are available, and no delete/reinstall, restore, erase or signing/account changes are authorized by availability alone. |
+| TRI-11 | Hardware prerequisite. | `Probes/TrialKeychainProbe/README.md` and `Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md`. | Prepared procedure and compile; untested on hardware. Only personal iPhones are available, and no install, signing, launch, delete/reinstall, restore, erase or settings changes are authorized by availability alone. |
 | QA-01 | Requires native real devices. | FilmDomain catalog tests. | Partial domain only; no real-device validation. |
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests. | Partial domain only. |
 | QA-03 | Requires native job runner/app relaunch. | RenderCore resume test. | Partial: treatment assignments do not reroll across resumed DevelopmentRun. |
 | QA-04 | Requires Darkroom renderer/UI. | RenderCore reset test. | Partial: recipe Reset to Original is exact; pixel/UI behavior unbuilt. |
-| QA-09 | Requires Photos and full storage cleanup. | FilmPersistence source cleanup, Discard and Delete Film tests. | Partial: verified-master gating and unaffected surviving assets tested; PhotoKit failures/export copies unbuilt. |
+| QA-09 | Requires Photos and full storage cleanup. | FilmPersistence source cleanup, Discard and Delete Film tests; NativeAdapters Photo export tests. | Partial: verified-master gating, unaffected surviving assets, Photos denial/write-failure outcomes tested with fakes; actual PhotoKit writes/export copies untested. |
 | QA-11 | Requires native Movie reassembly. | FilmDomain discard/all-clips tests. | Partial domain only. |
 | QA-12 | Requires StoreKit, Trial hardware, reinstall/restore. | Probe prepared. | Not accepted; no hardware evidence. |
 | QA-13 | Requires native device/accessibility/performance. | Capability discovery only. | Not started; devices unavailable. |
