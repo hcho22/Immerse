@@ -1,5 +1,13 @@
 # v1 Launch Readiness and Validation Handoff
 
+**New failed software criterion:**
+[Receipt recovery conflict](../ReceiptFaultMatrix/036/README.md) reproduces a
+mismatched first-save readback rejected initially but projected on still-
+mismatched re-entry through the consumed-marker fallback. The new test remains
+failed. Production correction must preserve older/foreign/legacy restored Film
+rights, not silently weaken them or relabel the failed check. This candidate is
+not ready for no-mistakes/CI or full-v1 acceptance.
+
 Draft sample and soundtrack review material is available at
 `../AssetReview/review.html`; provenance, decoded metadata, source hashes and
 limits are in `../AssetReview/README.md`. It is not production asset clearance.

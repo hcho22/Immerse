@@ -1,0 +1,54 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module FilmRuntimeTests
+[4/6] Compiling FilmRuntimeTests ReceiptFaultMatrixTests.swift
+[5/13] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[6/13] Compiling FilmRuntimeTests SoundtrackTests.swift
+[7/13] Compiling FilmRuntimeTests FilmProcessorTests.swift
+[8/13] Compiling FilmRuntimeTests FilmExportTests.swift
+[9/13] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[10/13] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+[11/13] Compiling FilmRuntimeTests CaptureRecoveryIntegrationTests.swift
+[11/13] Write Objects.LinkFileList
+[12/13] Linking FilmRuntimePackageTests
+Build complete! (4.41s)
+Test Suite 'Selected tests' started at 2026-10-01 13:13:22.216.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 13:13:22.218.
+Test Suite 'ReceiptFaultMatrixTests' started at 2026-10-01 13:13:22.218.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' passed (0.506 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift:91: error: -[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility] : XCTAssertEqual failed: ("4") is not equal to ("260")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift:91: error: -[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility] : XCTAssertEqual failed: ("4") is not equal to ("260")
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' failed (3.574 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' passed (0.360 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift:170: error: -[FilmRuntimeTests.ReceiptFaultMatrixTests testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery] : failed - Expected Keychain-boundary failure -25291, got success
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift:147: error: -[FilmRuntimeTests.ReceiptFaultMatrixTests testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery] : XCTAssertEqual failed: ("1") is not equal to ("0")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift:148: error: -[FilmRuntimeTests.ReceiptFaultMatrixTests testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery] : XCTAssertTrue failed
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery]' failed (0.119 seconds).
+Test Suite 'ReceiptFaultMatrixTests' failed at 2026-10-01 13:13:26.778.
+	 Executed 4 tests, with 5 failures (0 unexpected) in 4.559 (4.560) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' failed at 2026-10-01 13:13:26.778.
+	 Executed 4 tests, with 5 failures (0 unexpected) in 4.559 (4.560) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 13:13:26.778.
+	 Executed 4 tests, with 5 failures (0 unexpected) in 4.559 (4.562) seconds
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/9C00F0FD-874F-4E92-B80E-1F313AB8C454
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/687F1D4F-2811-425B-8F03-CD19BAB649A3
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/7EABBE43-0D7F-4076-90E0-8BA6CE1F74CC
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/9488C38F-FCAE-42D5-A471-C21C157A79E4
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/D22718B2-4F82-4B11-98CC-880A3290CE9A
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/998C4050-0448-40FD-ADFF-CC81EA15585F
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/FDA4C1CF-0C79-442F-8648-A9FE00A19572
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/7A363138-66F6-4837-8A08-CE938A5189A0
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/47114BE0-38AA-40AC-A347-29E6EEED50F7
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/F184B5DC-43DE-4FEF-9C41-07DC7F16ABB1
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/73A27CB2-85BC-47E6-8478-8140BB1BB3FF
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/52B08538-1102-41E2-AB26-57E4122B2EAF
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

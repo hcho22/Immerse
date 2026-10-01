@@ -2,6 +2,14 @@
 
 This companion expands the PRD's personal FR acceptance paragraphs and section 11 invariants into individually assessable records. It does not replace the [canonical tracker](2026-09-29-film-camera-experience-v1-task-tracker.md), modify original FR/section/ADR numbering, or add product decisions. The [requirement evidence map](2026-09-29-film-camera-experience-v1-evidence-map.md) covers every intake v1 tracker ID and implementation artifact. Group and Account acceptance in section 8 remains deferred.
 
+Current failed recovery addendum: `Evidence/ReceiptFaultMatrix/036/README.md`
+reproduces a still-mismatched valid receipt being projected on coordinator
+re-entry after initial first-save rejection. The matching-readback promise and
+restored-Film grant bypass need reconciliation before dependent production edits.
+FR-04 A06 / FR-21 first-save recovery are not accepted by earlier green tests.
+The new regression remains failed; three independent package methods passing
+does not turn that failure into a pass or a hardware result.
+
 Evidence snapshot: source `7bfc78c`, branch `fm/immerse-v1-implementation`, observed 2026-10-01 UTC, macOS 26.6.2 (`25G83`), Swift 6.3.2, Xcode 26.5 (`17F42`). Package tests below ran on macOS. iOS builds were unsigned compile checks, not executed device tests. The approved Keychain candidate is separately pinned to `6e5c1742d344e0505b74176f60ac11c19a83e686`; its signed build passed but the confirmed iPhone was unreachable. No full FR has native acceptance yet.
 
 Historical snapshot rows below retain their original observations. Current

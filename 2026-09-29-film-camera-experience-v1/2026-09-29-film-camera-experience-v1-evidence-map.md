@@ -14,6 +14,15 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+**New failed software criterion (036):**
+`Evidence/ReceiptFaultMatrix/036/README.md` records a valid mismatched first-save
+receipt rejected initially but projected by a new coordinator during still-
+mismatched recovery. The consumed-marker bypass intersects preserved restored-
+Film rights; no production change or weakened rule was made. The regression
+remains failed, not a passing native result. Three independent matrix methods
+pass after a fixture error-code correction, but do not close TRI-03/04/09,
+ARC-05/11, CAP-08, QA-12 or FR-04/21 recovery acceptance.
+
 Physical execution preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
 binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode
 steps, all personal FR acceptance/invariants, full receipt fault cases and exact
