@@ -4,6 +4,52 @@ import RenderFixtures
 import XCTest
 
 final class CapturedMediaFileTests: XCTestCase {
+    func testReopenedJournalRecoversPhotoAndMovieInCaptureOrderUntilAcknowledged() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root)
+        let staging = root.appendingPathComponent("staging")
+        let files = try CapturedMediaFiles(directory: staging)
+        let photoID = UUID(), movieID = UUID(), unusedID = UUID()
+        let date = Date(timeIntervalSince1970: 1_000)
+        try files.prepare(PendingCaptureRecord(id: photoID, mediaKind: .photo, createdAt: date))
+        let data = try Data(contentsOf: root.appendingPathComponent(manifest.photo.relativePath))
+        let photo = try files.savePhoto(data, id: photoID)
+        try files.prepare(PendingCaptureRecord(id: movieID, mediaKind: .movie, createdAt: date.addingTimeInterval(1),
+            orientation: .portrait, remainingSeconds: 10))
+        try FileManager.default.copyItem(at: root.appendingPathComponent(manifest.movie.relativePath), to: files.movieDestination(id: movieID))
+        try files.prepare(PendingCaptureRecord(id: unusedID, mediaKind: .photo, createdAt: date.addingTimeInterval(2)))
+        let reopened = try CapturedMediaFiles(directory: staging)
+        let recovered = try await reopened.recoveryEvents()
+        XCTAssertEqual(recovered.count, 2)
+        XCTAssertEqual(recovered.first, .photoSaved(photo))
+        if case let .movieClipSaved(_, seconds, orientation) = recovered.last {
+            XCTAssertEqual(seconds, manifest.movie.durationSeconds)
+            XCTAssertEqual(orientation, .portrait)
+        } else { XCTFail("Expected recovered Movie") }
+        XCTAssertEqual(try CapturedMediaFiles.metadata(for: photo)?.createdAt, date)
+        XCTAssertEqual(try reopened.pendingRecords().count, 2)
+        XCTAssertEqual(try Data(contentsOf: photo), data)
+        for event in recovered { try reopened.removeCommittedFile(for: event) }
+        XCTAssertTrue(try reopened.pendingRecords().isEmpty)
+        let retry = try await reopened.recoveryEvents()
+        XCTAssertTrue(retry.isEmpty)
+    }
+
+    func testInvalidPendingMovieIsRetainedAndBlocksSuccessfulRecovery() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let files = try CapturedMediaFiles(directory: root)
+        let id = UUID()
+        try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie, orientation: .landscape, remainingSeconds: 200))
+        let data = Data("unfinished movie".utf8)
+        try data.write(to: files.movieDestination(id: id))
+        do { _ = try await files.recoveryEvents(); XCTFail("Must not acknowledge undecodable media") }
+        catch { }
+        XCTAssertEqual(try files.pendingRecords().count, 1)
+        XCTAssertEqual(try Data(contentsOf: files.movieDestination(id: id)), data)
+    }
+
     func testRealPhotoBytesAreRetainedUnchangedUntilCommitCleanup() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -16,7 +62,7 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: saved), data)
         XCTAssertThrowsError(try files.savePhoto(data, id: id))
         XCTAssertEqual(try Data(contentsOf: saved), data)
-        XCTAssertEqual(try staging.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup, true)
+        XCTAssertEqual(try staging.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup, false)
         try files.removeCommittedFile(for: .photoSaved(saved))
         XCTAssertFalse(FileManager.default.fileExists(atPath: saved.path))
     }

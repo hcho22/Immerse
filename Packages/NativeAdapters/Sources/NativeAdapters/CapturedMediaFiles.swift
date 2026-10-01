@@ -11,7 +11,7 @@ public struct CapturedMediaFiles: Sendable {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         var url = directory
         var values = URLResourceValues()
-        values.isExcludedFromBackup = true
+        values.isExcludedFromBackup = false
         try url.setResourceValues(values)
     }
 
@@ -20,6 +20,17 @@ public struct CapturedMediaFiles: Sendable {
     }
 
     public func savePhoto(_ data: Data, id: UUID) throws -> URL {
+        try Self.validatePhoto(data)
+        if !FileManager.default.fileExists(atPath: recordURL(id).path) {
+            try prepare(PendingCaptureRecord(id: id, mediaKind: .photo))
+        }
+        let url = directory.appendingPathComponent("\(id.uuidString).photo")
+        try data.write(to: url, options: [.withoutOverwriting])
+        try synchronize(url)
+        return url
+    }
+
+    private static func validatePhoto(_ data: Data) throws {
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil),
               CGImageSourceGetStatus(imageSource) == .statusComplete,
               let image = CGImageSourceCreateImageAtIndex(imageSource, 0, [
@@ -27,10 +38,47 @@ public struct CapturedMediaFiles: Sendable {
               ] as CFDictionary), image.width > 0, image.height > 0 else {
             throw NativeCaptureError.invalidMedia
         }
-        let url = directory.appendingPathComponent("\(id.uuidString).photo")
-        try data.write(to: url, options: [.withoutOverwriting])
+    }
+
+    public func prepare(_ record: PendingCaptureRecord) throws {
+        let url = recordURL(record.id)
+        try JSONEncoder().encode(record).write(to: url, options: [.atomic])
         try synchronize(url)
-        return url
+    }
+
+    public func pendingRecords() throws -> [PendingCaptureRecord] {
+        try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            .filter { $0.pathExtension == "json" }
+            .map { try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: $0)) }
+            .sorted { $0.createdAt == $1.createdAt ? $0.id.uuidString < $1.id.uuidString : $0.createdAt < $1.createdAt }
+    }
+
+    public static func metadata(for mediaURL: URL) throws -> PendingCaptureRecord? {
+        let path = mediaURL.deletingPathExtension().appendingPathExtension("json")
+        guard FileManager.default.fileExists(atPath: path.path) else { return nil }
+        return try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: path))
+    }
+
+    public func recoveryEvents() async throws -> [CaptureSaveEvent] {
+        var result: [CaptureSaveEvent] = []
+        for record in try pendingRecords() {
+            let url = record.mediaKind == .movie ? movieDestination(id: record.id)
+                : directory.appendingPathComponent("\(record.id).photo")
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                try FileManager.default.removeItem(at: recordURL(record.id))
+                continue
+            }
+            if record.mediaKind == .photo {
+                try Self.validatePhoto(Data(contentsOf: url))
+                result.append(.photoSaved(url))
+            } else {
+                guard let orientation = record.orientation, let budget = record.remainingSeconds else {
+                    throw NativeCaptureError.invalidMedia
+                }
+                result.append(try await movieSavedEvent(id: record.id, orientation: orientation, remainingSeconds: budget))
+            }
+        }
+        return result
     }
 
     public func movieSavedEvent(
@@ -84,7 +132,18 @@ public struct CapturedMediaFiles: Sendable {
             throw NativeCaptureError.invalidMedia
         }
         if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
+        let metadata = url.deletingPathExtension().appendingPathExtension("json")
+        if FileManager.default.fileExists(atPath: metadata.path) { try FileManager.default.removeItem(at: metadata) }
     }
+
+    public func removeUncommitted(id: UUID) throws {
+        for suffix in ["photo", "mov", "json"] {
+            let url = directory.appendingPathComponent("\(id).\(suffix)")
+            if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
+        }
+    }
+
+    private func recordURL(_ id: UUID) -> URL { directory.appendingPathComponent("\(id).json") }
 
     private func synchronize(_ url: URL) throws {
         let file = try FileHandle(forWritingTo: url)

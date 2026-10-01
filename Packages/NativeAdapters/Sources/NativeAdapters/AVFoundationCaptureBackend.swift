@@ -73,6 +73,8 @@ public actor AVFoundationCaptureBackend {
     private var photoDelegate: PhotoSaveDelegate?
     private var movieDelegate: MovieSaveDelegate?
     private let notifications = CaptureNotifications()
+    private var privacyCancelled = false
+    private var isRecovering = false
     public private(set) var retainedCommittedFiles: [CaptureSaveEvent] = []
 
     public init(stagingDirectory: URL, committer: any CaptureSaveCommitting) throws {
@@ -86,6 +88,8 @@ public actor AVFoundationCaptureBackend {
     public func previewSource() -> CapturePreviewSource { CapturePreviewSource(session: session) }
 
     public func start(plan next: CaptureSessionPlan) throws {
+        guard !privacyCancelled, !isRecovering else { throw NativeCaptureError.notRunning }
+        guard try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
         guard AVCaptureDevice.authorizationStatus(for: .video) == .authorized else {
             throw NativeCaptureError.notRunning
         }
@@ -131,6 +135,7 @@ public actor AVFoundationCaptureBackend {
     public func capturePhoto(orientation: CaptureFrameOrientation, flash: Bool = false) throws {
         guard session.isRunning, let photoOutput else { throw NativeCaptureError.notRunning }
         try operations.requireIdle()
+        guard !isRecovering, try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
         try configureConnection(photoOutput.connection(with: .video), orientation: orientation)
         let settings = AVCapturePhotoSettings()
         if flash {
@@ -142,6 +147,8 @@ public actor AVFoundationCaptureBackend {
             settings.flashMode = .off
         }
         let id = try operations.begin(.photo)
+        do { try files.prepare(PendingCaptureRecord(id: id, mediaKind: .photo)) }
+        catch { operations.finish(id: id); throw error }
         let delegate = PhotoSaveDelegate { [weak self] data, failed in
             Task { await self?.photoFinished(id: id, data: data, failed: failed) }
         }
@@ -155,8 +162,13 @@ public actor AVFoundationCaptureBackend {
             throw NativeCaptureError.invalidDuration
         }
         try operations.requireIdle()
+        guard !isRecovering, try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
         try configureConnection(movieOutput.connection(with: .video), orientation: orientation)
         let id = try operations.begin(.movie)
+        do {
+            try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie,
+                orientation: orientation.clipOrientation, remainingSeconds: remainingSeconds))
+        } catch { operations.finish(id: id); throw error }
         movieOutput.maxRecordedDuration = CMTime(seconds: remainingSeconds, preferredTimescale: 60_000)
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
@@ -195,6 +207,34 @@ public actor AVFoundationCaptureBackend {
         catch { retainedCommittedFiles.append(event) }
         operations.finish(id: id)
         eventContinuation.yield(event)
+    }
+
+    public func recoverPendingCaptures() async throws {
+        guard !privacyCancelled, !isRecovering, operations.operationID == nil else { throw NativeCaptureError.busy }
+        isRecovering = true
+        defer { isRecovering = false }
+        for event in try await files.recoveryEvents() {
+            guard !privacyCancelled else { throw CancellationError() }
+            try await committer.commit(event)
+            try files.removeCommittedFile(for: event)
+            eventContinuation.yield(event)
+        }
+    }
+
+    public func cancelForPrivacy() async throws {
+        privacyCancelled = true
+        shutdown()
+        let deadline = ContinuousClock.now + .seconds(30)
+        while operations.operationID != nil || isRecovering {
+            if let id = operations.operationID, operations.pendingSave != nil, !operations.isCommitting {
+                try files.removeUncommitted(id: id)
+                operations.finish(id: id)
+            } else {
+                guard ContinuousClock.now < deadline else { throw NativeCaptureError.busy }
+                try await Task.sleep(for: .milliseconds(10))
+            }
+        }
+        for record in try files.pendingRecords() { try files.removeUncommitted(id: record.id) }
     }
 
     public func shutdown() {
@@ -263,6 +303,7 @@ public actor AVFoundationCaptureBackend {
     private func photoFinished(id: UUID, data: Data?, failed: Bool) async {
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         photoDelegate = nil
+        if privacyCancelled { operations.finish(id: id); return }
         guard !failed, let data else { failCapture(id: id); return }
         do {
             let url = try files.savePhoto(data, id: id)
@@ -276,6 +317,7 @@ public actor AVFoundationCaptureBackend {
     ) async {
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         movieDelegate = nil
+        if privacyCancelled { operations.finish(id: id); return }
         operations.stopRecording()
         // Interrupted recordings can carry an error with a successfully-finished file.
         // Even an unsuccessful callback may have salvageable footage: validate the actual file.

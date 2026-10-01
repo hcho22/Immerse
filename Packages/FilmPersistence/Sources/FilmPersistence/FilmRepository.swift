@@ -173,6 +173,8 @@ public final class FilmRepository {
     }
 
     private func saveReceipt(captureID: String, filmID: UUID, capture: CaptureRecord, data: Data) throws {
+        guard !captureID.isEmpty, ![".", ".."].contains(captureID),
+              URL(fileURLWithPath: captureID).lastPathComponent == captureID else { throw PersistenceError.invalidAssetPath }
         let receipt = CaptureCommitReceipt(
             captureID: captureID, filmID: filmID, sequenceNumber: capture.sequenceNumber,
             kind: capture.kind, sourceSHA256: Checksum.sha256Hex(data)
@@ -377,6 +379,11 @@ public final class FilmRepository {
         return StoredMediaAsset(record: asset, url: rootURL.appendingPathComponent(asset.relativePath))
     }
 
+    public func captureStagingDirectory(filmID: UUID) throws -> URL {
+        _ = try film(id: filmID)
+        return rootURL.appendingPathComponent("Staging/\(filmID)", isDirectory: true)
+    }
+
     public func revealedAsset(filmID: UUID, sequenceNumber: Int, kind: StoredAsset.Kind) throws -> StoredMediaAsset {
         let film = try film(id: filmID)
         if kind == .movie {
@@ -406,6 +413,14 @@ public final class FilmRepository {
             try save(film)
             try database.deleteValue(filmID: filmID, key: "recipe-\(sequenceNumber)")
             try database.deleteValue(filmID: filmID, key: "original-\(sequenceNumber)")
+            for data in try database.allReceiptData(filmID: filmID) {
+                let receipt = try decoder.decode(CaptureCommitReceipt.self, from: data)
+                guard receipt.sequenceNumber == sequenceNumber else { continue }
+                let path = "Staging/\(filmID)/\(receipt.captureID)"
+                try database.enqueueDeletion(filmID: filmID, relativePath: path)
+                let metadata = (path as NSString).deletingPathExtension + ".json"
+                try database.enqueueDeletion(filmID: filmID, relativePath: metadata)
+            }
             for kind in [StoredAsset.Kind.source, .master, .clip] {
                 if let asset = try database.asset(filmID: filmID, sequenceNumber: sequenceNumber, kind: kind) {
                     try database.enqueueDeletion(filmID: filmID, relativePath: asset.relativePath)
@@ -452,6 +467,7 @@ public final class FilmRepository {
                 try database.enqueueDeletion(filmID: filmID, relativePath: asset.relativePath)
             }
             try database.enqueueDeletion(filmID: filmID, relativePath: relativePath(for: filmDirectory))
+            try database.enqueueDeletion(filmID: filmID, relativePath: "Staging/\(filmID)")
             try database.deleteFilm(id: filmID)
         }
         try finishPendingDeletions(filmID: filmID)
@@ -549,8 +565,9 @@ public final class FilmRepository {
     private func finishPendingDeletions(filmID: UUID? = nil) throws {
         for path in try database.pendingDeletionPaths(filmID: filmID) {
             let url = rootURL.appendingPathComponent(path).standardizedFileURL
-            let root = mediaRootURL.resolvingSymlinksInPath().path + "/"
-            guard url.resolvingSymlinksInPath().path.hasPrefix(root) else {
+            let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging")]
+                .map { $0.resolvingSymlinksInPath().path + "/" }
+            guard roots.contains(where: { url.resolvingSymlinksInPath().path.hasPrefix($0) }) else {
                 throw PersistenceError.invalidAssetPath
             }
             if fileManager.fileExists(atPath: url.path) { try fileManager.removeItem(at: url) }

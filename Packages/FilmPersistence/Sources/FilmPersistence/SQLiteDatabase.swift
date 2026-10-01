@@ -118,6 +118,19 @@ final class SQLiteDatabase {
         }
     }
 
+    func allReceiptData(filmID: UUID) throws -> [Data] {
+        try withStatement("SELECT data FROM capture_receipts WHERE film_id = ?;") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            var result: [Data] = []
+            while true {
+                let status = sqlite3_step(statement)
+                if status == SQLITE_DONE { return result }
+                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                result.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
+            }
+        }
+    }
+
     func asset(filmID: UUID, sequenceNumber: Int, kind: StoredAsset.Kind) throws -> StoredAsset? {
         try withStatement(
             """

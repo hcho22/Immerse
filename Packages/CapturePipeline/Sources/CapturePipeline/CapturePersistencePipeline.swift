@@ -64,7 +64,8 @@ public struct CapturePersistencePipeline<Reader: CapturePayloadReading> {
         let payload = try read(url)
         do {
             let film = try repository.savePhotoCapture(
-                filmID: filmID, sourceData: payload, captureID: url.lastPathComponent
+                filmID: filmID, sourceData: payload, captureID: url.lastPathComponent,
+                savedAt: CapturedMediaFiles.metadata(for: url)?.createdAt ?? Date()
             )
             guard let receipt = try repository.captureReceipt(filmID: filmID, captureID: url.lastPathComponent) else {
                 throw CapturePipelineError.persistenceFailed("photo save returned no capture")
@@ -92,7 +93,8 @@ public struct CapturePersistencePipeline<Reader: CapturePayloadReading> {
                 sourceData: payload,
                 durationSeconds: durationSeconds,
                 orientation: orientation,
-                captureID: url.lastPathComponent
+                captureID: url.lastPathComponent,
+                savedAt: CapturedMediaFiles.metadata(for: url)?.createdAt ?? Date()
             )
             guard let receipt = try repository.captureReceipt(filmID: filmID, captureID: url.lastPathComponent) else {
                 throw CapturePipelineError.persistenceFailed("movie save returned no capture")

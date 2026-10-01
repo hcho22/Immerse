@@ -14,6 +14,14 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Latest capture recovery addendum: `Evidence/NativeCapture/2026-10-01-staging-recovery.md`
+records per-operation journals, preserved capture dates, decoder-gated relaunch
+replay through persistent receipts, staging privacy deletion and native cancellation
+boundaries. NativeAdapters 18, CapturePipeline 6 and FilmRuntime 11 tests pass;
+iOS simulator compile passes. Staging is included in Film backups; excluded
+temporary render work remains separate. Actual process termination and hardware
+callback cancellation remain untested, and the app UI still needs integration.
+
 Latest Trial addendum: `Evidence/TrialKeychainProbe/2026-10-01-software-integration.md`
 records native Keychain code, offline activation, capture-transaction outbox and
 reconciliation, four injected-store integration tests and both iOS compile gates.

@@ -11,6 +11,7 @@ public enum NativeCaptureError: Error, Equatable, Sendable {
     case unsupportedConnection
     case configurationFailed
     case noPendingSave
+    case pendingRecoveryRequired
 }
 
 public protocol CaptureSaveCommitting: Sendable {
