@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 1.4 (updated September 30, 2026)\
+**Prepared:** September 29, 2026 · **Version:** 1.5 (updated September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 
@@ -15,6 +15,10 @@
 The filenames begin with `2026-09-29` so this package can be sorted and retained alongside later versions. The date is the compilation date; the original ADRs did not supply individual dates. Relative links work when this directory is kept together or extracted from the ZIP, except links to the market research document, which sits at the repository root outside this package.
 
 ## Scope and implementation status
+
+Version 1.5 (September 30, 2026) records the captain's DEC-09 answer: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export.
+It also adds the repository-owned evidence map used by implementation and validation.
+No task ID changed.
 
 Version 1.4 (September 30, 2026) adds a Users section (PRD 1.1) and a User journeys section (PRD 5.1), and records in PRD section 18 and the prototype notes that the v1 clickable prototype was built and approved by the captain as a design reference only.
 The users are derived from evidence already in the package and from the [market research document](../2026-09-29-nostalgic-camera-app-market-research-hipstamatic.md) kept at the repository root, outside this package and its ZIP, and the gaps are marked open.
@@ -51,14 +55,15 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 
 ## Contents
 
-- Dated PRD (version 1.4).
-- Dated task tracker (version 1.4).
+- Dated PRD (version 1.5).
+- Dated task tracker (version 1.5).
 - Dated architecture baseline (version 1.0, added in version 1.3).
+- Dated implementation evidence map (added in version 1.5).
 - Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADR 0012.
 - Eleven original Markdown ADR files, unchanged, and ADR 0012 (added in version 1.2).
 - Source snapshots: CONTEXT.md and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 
-The tracker contains 238 items: five completed discovery/prototype items, three decided DEC items, 122 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 19 Markdown files, including all twelve standalone ADRs.
+The tracker contains 238 items: five completed discovery/prototype items, four decided DEC items, 121 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 20 Markdown files, including all twelve standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.
