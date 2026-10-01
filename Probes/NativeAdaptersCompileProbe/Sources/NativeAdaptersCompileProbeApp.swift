@@ -1,3 +1,4 @@
+import CapturePipeline
 import NativeAdapters
 import SwiftUI
 
@@ -14,10 +15,12 @@ struct NativeAdaptersCompileProbeApp: App {
             supportsLensSwitchDuringSession: true
         )
     )
+    private let recoveryOutcome = CapturePipelineOutcome.recovered
 
     var body: some Scene {
         WindowGroup {
             Text(plan.recordsAudio ? "Unexpected audio" : "Silent native adapters")
+                .accessibilityLabel(String(describing: recoveryOutcome))
         }
     }
 }

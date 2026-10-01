@@ -8,6 +8,8 @@ settings:
 packages:
   NativeAdapters:
     path: ../../Packages/NativeAdapters
+  CapturePipeline:
+    path: ../../Packages/CapturePipeline
 targets:
   NativeAdaptersCompileProbe:
     type: application
@@ -18,6 +20,8 @@ targets:
     dependencies:
       - package: NativeAdapters
         product: NativeAdapters
+      - package: CapturePipeline
+        product: CapturePipeline
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.NativeAdaptersCompileProbe

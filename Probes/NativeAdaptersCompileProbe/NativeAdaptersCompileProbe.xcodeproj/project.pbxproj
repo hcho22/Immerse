@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		64ADD168C7EE28796E2A66E7 /* CapturePipeline in Frameworks */ = {isa = PBXBuildFile; productRef = 5E904CBF87DC28A04E46FA0A /* CapturePipeline */; };
 		A5E1CC89C084601837A786CF /* NativeAdaptersCompileProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F6742E3A8FEBD436AB753D /* NativeAdaptersCompileProbeApp.swift */; };
 		D630C0E4CD882BE5FCC4C54D /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = C140131876B64188AF0ED0D1 /* NativeAdapters */; };
 /* End PBXBuildFile section */
@@ -15,6 +16,7 @@
 		03FF40B811B9D4862D6BBA1A /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
 		830049EBEA1C07EEFA933730 /* NativeAdaptersCompileProbe.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NativeAdaptersCompileProbe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F6742E3A8FEBD436AB753D /* NativeAdaptersCompileProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAdaptersCompileProbeApp.swift; sourceTree = "<group>"; };
+		A4FA321AAF314A4DC6FA226C /* CapturePipeline */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CapturePipeline; path = ../../Packages/CapturePipeline; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -23,6 +25,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D630C0E4CD882BE5FCC4C54D /* NativeAdapters in Frameworks */,
+				64ADD168C7EE28796E2A66E7 /* CapturePipeline in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +43,7 @@
 		A9FD7F496579B50CBEC67479 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
+				A4FA321AAF314A4DC6FA226C /* CapturePipeline */,
 				03FF40B811B9D4862D6BBA1A /* NativeAdapters */,
 			);
 			name = Packages;
@@ -79,6 +83,7 @@
 			name = NativeAdaptersCompileProbe;
 			packageProductDependencies = (
 				C140131876B64188AF0ED0D1 /* NativeAdapters */,
+				5E904CBF87DC28A04E46FA0A /* CapturePipeline */,
 			);
 			productName = NativeAdaptersCompileProbe;
 			productReference = 830049EBEA1C07EEFA933730 /* NativeAdaptersCompileProbe.app */;
@@ -105,6 +110,7 @@
 			mainGroup = B594CA6443C912B95E9C81D3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				5D55CA74824E3B6E78CD2E10 /* XCLocalSwiftPackageReference "../../Packages/CapturePipeline" */,
 				3A50539748294D48801DB893 /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -320,9 +326,17 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Packages/NativeAdapters;
 		};
+		5D55CA74824E3B6E78CD2E10 /* XCLocalSwiftPackageReference "../../Packages/CapturePipeline" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/CapturePipeline;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5E904CBF87DC28A04E46FA0A /* CapturePipeline */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CapturePipeline;
+		};
 		C140131876B64188AF0ED0D1 /* NativeAdapters */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NativeAdapters;

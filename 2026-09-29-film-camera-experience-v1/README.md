@@ -17,7 +17,7 @@ The filenames begin with `2026-09-29` so this package can be sorted and retained
 ## Scope and implementation status
 
 Version 1.5 (September 30, 2026) records the captain's DEC-09 answer: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export.
-It also adds the repository-owned evidence map used by implementation and validation.
+It also adds the repository-owned evidence map used by implementation and validation, plus an open-decision recommendations document for unresolved render, asset, Darkroom, budget, launch and learning choices.
 No task ID changed.
 
 Version 1.4 (September 30, 2026) adds a Users section (PRD 1.1) and a User journeys section (PRD 5.1), and records in PRD section 18 and the prototype notes that the v1 clickable prototype was built and approved by the captain as a design reference only.
@@ -59,11 +59,12 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 - Dated task tracker (version 1.5).
 - Dated architecture baseline (version 1.0, added in version 1.3).
 - Dated implementation evidence map (added in version 1.5).
+- Dated open-decision recommendations (added during implementation; not approved decisions).
 - Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADR 0012.
 - Eleven original Markdown ADR files, unchanged, and ADR 0012 (added in version 1.2).
 - Source snapshots: CONTEXT.md and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 
-The tracker contains 238 items: five completed discovery/prototype items, four decided DEC items, 121 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 20 Markdown files, including all twelve standalone ADRs.
+The tracker contains 238 items: five completed discovery/prototype items, four decided DEC items, 121 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 21 Markdown files, including all twelve standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.
