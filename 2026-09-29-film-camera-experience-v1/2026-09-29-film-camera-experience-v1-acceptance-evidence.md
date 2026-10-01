@@ -39,6 +39,11 @@ enabled-pass/disabled-fail window-capture comparison in the same padded probe.
 Twelve-row visibility and physical separation pass, but title/command contrast
 returns without the synchronous captures. Audit pose/load remain confounds; no
 production correction or later navigation/Trial comparison was made.
+The subsequent current-app paired traversal is retained at
+`Evidence/NativeApp/accessibility-traversal-diagnosis.md`: matched title frames
+and a Silent capture contrast finding, but incomplete traversal (A five inset
+assertion failures; B times out before rows). This does not accept QA-13/H-UX or
+establish a persistent visible defect/false positive. Original tests unchanged.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 

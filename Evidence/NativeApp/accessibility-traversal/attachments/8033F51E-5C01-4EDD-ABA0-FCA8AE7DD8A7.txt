@@ -1,0 +1,19 @@
+Failed to get matching snapshot: No matches found for Elements matching predicate '"film-title-heading" IN identifiers' from input {(
+    StaticText, label: 'Film Journal',
+    StaticText, label: '16mm',
+    StaticText, label: 'Your Journal begins here',
+    StaticText, label: 'Capacity',
+    StaticText, label: 'Capacity, 2:45 of film',
+    StaticText, label: 'One silent Movie after Development',
+    StaticText, label: 'Deliberate framing, finer grain',
+    StaticText, label: 'Silent capture',
+    StaticText, label: 'Silent capture'
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Other from legacy attributes vs StaticText from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 48;
+    "XC_kAXXCAttributeElementBaseType" = UILabel;
+    "XC_kAXXCAttributeElementType" = UILabel;
+    "XC_kAXXCAttributeTraits" = 8590000128;
+}
+See test report attachments for more detail.

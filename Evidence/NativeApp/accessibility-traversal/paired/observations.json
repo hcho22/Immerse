@@ -1,0 +1,414 @@
+{
+  "test": {
+    "result": "Failed",
+    "runs": "Test case with 1 run",
+    "seconds": 600,
+    "startUTC": "2026-10-01T17:39:48.557Z"
+  },
+  "rows": {
+    "A": 10,
+    "B": 0
+  },
+  "pose": {
+    "A": {
+      "field": [
+        32,
+        481.3333333333333,
+        338,
+        126.00000000000006
+      ],
+      "navigation": [
+        0,
+        78.00000000000001,
+        402,
+        53.999999999999986
+      ],
+      "orientation": [
+        32,
+        134.33333333333326,
+        249.66666666666663,
+        125.33333333333337
+      ],
+      "picker": [
+        32,
+        267.6666666666666,
+        217,
+        77.33333333333326
+      ],
+      "readingBounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "title": [
+        32,
+        410,
+        199.66666666666666,
+        63.333333333333314
+      ],
+      "trial": [
+        16,
+        657.3333333333334,
+        370,
+        155.33333333333326
+      ],
+      "viewport": [
+        0,
+        62,
+        402,
+        812.0000000000001
+      ],
+      "window": [
+        0,
+        0,
+        402,
+        874
+      ]
+    },
+    "B": {
+      "field": [
+        32,
+        481.3333333333333,
+        338,
+        126.00000000000006
+      ],
+      "navigation": [
+        0,
+        78,
+        402,
+        54
+      ],
+      "orientation": [
+        32,
+        134.33333333333326,
+        249.66666666666663,
+        125.33333333333337
+      ],
+      "picker": [
+        32,
+        267.6666666666666,
+        217,
+        77.33333333333326
+      ],
+      "readingBounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "title": [
+        32,
+        410,
+        199.66666666666666,
+        63.333333333333314
+      ],
+      "trial": [
+        16,
+        657.3333333333334,
+        370,
+        155.33333333333326
+      ],
+      "viewport": [
+        0,
+        62,
+        402,
+        812.0000000000001
+      ],
+      "window": [
+        0,
+        0,
+        402,
+        874
+      ]
+    },
+    "deltas": {
+      "field": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "navigation": [
+        0,
+        -1.4210854715202004e-14,
+        0,
+        1.4210854715202004e-14
+      ],
+      "orientation": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "picker": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "readingBounds": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "title": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "trial": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "viewport": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "window": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "events": [
+    {
+      "file": "7D850FC7-872C-434E-B7EA-4705513973BC.txt",
+      "event": "A-no-audit.launch",
+      "utc": "2026-10-01T17:39:55.098Z"
+    },
+    {
+      "file": "899A3CC9-B600-437C-BF8A-56E26B476431.txt",
+      "event": "A-no-audit-before.snapshot-start",
+      "utc": "2026-10-01T17:41:03.076Z"
+    },
+    {
+      "file": "091A7904-BE9E-4C2B-808C-C9DCA8FDE2C1.txt",
+      "event": "A-no-audit-before.snapshot-end",
+      "utc": "2026-10-01T17:41:04.771Z"
+    },
+    {
+      "file": "59C8FA33-DCB2-4E84-93BF-3D534EB61316.txt",
+      "event": "A-no-audit.invocation-start",
+      "utc": "2026-10-01T17:41:04.772Z"
+    },
+    {
+      "file": "870D506A-3BB6-4E8C-BF5B-87C7F0135B6A.txt",
+      "event": "A-no-audit.invocation-end",
+      "utc": "2026-10-01T17:41:04.774Z"
+    },
+    {
+      "file": "94F42549-46B6-4543-989B-D5B36BA2D84D.txt",
+      "event": "A-no-audit-after.snapshot-start",
+      "utc": "2026-10-01T17:41:08.021Z"
+    },
+    {
+      "file": "717DD10F-3C6B-4BEA-A612-E5DE14A2CC53.txt",
+      "event": "A-no-audit-after.snapshot-end",
+      "utc": "2026-10-01T17:41:09.655Z"
+    },
+    {
+      "file": "72482786-880A-430E-949D-528019CB43EE.txt",
+      "event": "A-no-audit.row.description",
+      "utc": "2026-10-01T17:42:10.110Z"
+    },
+    {
+      "file": "61121C2B-1ACF-412E-B87F-461FAC5E69A0.txt",
+      "event": "A-no-audit-row-description.snapshot-start",
+      "utc": "2026-10-01T17:42:13.228Z"
+    },
+    {
+      "file": "DF399BA3-6A6F-4521-825C-B7BA033C00CF.txt",
+      "event": "A-no-audit-row-description.snapshot-end",
+      "utc": "2026-10-01T17:42:14.644Z"
+    },
+    {
+      "file": "6987FE6D-0572-468A-B87D-56E7424FEF61.txt",
+      "event": "A-no-audit.row.silent",
+      "utc": "2026-10-01T17:42:36.302Z"
+    },
+    {
+      "file": "79EEC3A0-4354-4EB9-97FD-C80A7FF21F95.txt",
+      "event": "A-no-audit-row-silent.snapshot-start",
+      "utc": "2026-10-01T17:42:39.875Z"
+    },
+    {
+      "file": "BAC392B8-5C85-49BF-99CC-96AA8C68FB7C.txt",
+      "event": "A-no-audit-row-silent.snapshot-end",
+      "utc": "2026-10-01T17:42:41.317Z"
+    },
+    {
+      "file": "692C0553-A682-4F28-86C8-C55501A0B8C4.txt",
+      "event": "A-no-audit.row.orientation-heading",
+      "utc": "2026-10-01T17:42:56.306Z"
+    },
+    {
+      "file": "9A80FF0E-5EC6-4AB4-860A-2887BC3CFB42.txt",
+      "event": "A-no-audit-row-orientation-heading.snapshot-start",
+      "utc": "2026-10-01T17:42:59.765Z"
+    },
+    {
+      "file": "5B14C508-CEF5-4D16-BB49-F09B76795734.txt",
+      "event": "A-no-audit-row-orientation-heading.snapshot-end",
+      "utc": "2026-10-01T17:43:01.217Z"
+    },
+    {
+      "file": "17AF0F14-4DAD-4109-B70B-7EA599321465.txt",
+      "event": "A-no-audit.row.orientation-picker",
+      "utc": "2026-10-01T17:43:16.420Z"
+    },
+    {
+      "file": "F7AC1497-C16C-4304-ABFE-E32FA931CF08.txt",
+      "event": "A-no-audit-row-orientation-picker.snapshot-start",
+      "utc": "2026-10-01T17:43:19.541Z"
+    },
+    {
+      "file": "3F2349D0-1D7C-4E5A-9B2C-4D2C57FD6349.txt",
+      "event": "A-no-audit-row-orientation-picker.snapshot-end",
+      "utc": "2026-10-01T17:43:21.194Z"
+    },
+    {
+      "file": "10BBAC57-7178-4078-9455-79E899447F5C.txt",
+      "event": "A-no-audit.row.title-heading",
+      "utc": "2026-10-01T17:43:36.546Z"
+    },
+    {
+      "file": "C30E4413-EC0C-444E-885F-3E81D6135846.txt",
+      "event": "A-no-audit-row-title-heading.snapshot-start",
+      "utc": "2026-10-01T17:43:39.958Z"
+    },
+    {
+      "file": "44107D40-4D62-4CCC-A7CA-A3A988695F04.txt",
+      "event": "A-no-audit-row-title-heading.snapshot-end",
+      "utc": "2026-10-01T17:43:41.457Z"
+    },
+    {
+      "file": "D58C76BC-A00A-4277-8641-6D706583C2BA.txt",
+      "event": "A-no-audit.row.title-field",
+      "utc": "2026-10-01T17:45:11.592Z"
+    },
+    {
+      "file": "51183D9D-041F-4D1A-B45B-A52190A65544.txt",
+      "event": "A-no-audit-row-title-field.snapshot-start",
+      "utc": "2026-10-01T17:45:14.849Z"
+    },
+    {
+      "file": "2A8B888B-ECFC-4A76-BBD1-A3A9E9B976B3.txt",
+      "event": "A-no-audit-row-title-field.snapshot-end",
+      "utc": "2026-10-01T17:45:16.359Z"
+    },
+    {
+      "file": "BA0E0480-14A5-41D6-8044-760BE346A686.txt",
+      "event": "A-no-audit.row.trial",
+      "utc": "2026-10-01T17:45:34.345Z"
+    },
+    {
+      "file": "4B9CB4D2-4B53-49F9-8E6B-D25FDEE139BF.txt",
+      "event": "A-no-audit-row-trial.snapshot-start",
+      "utc": "2026-10-01T17:45:37.381Z"
+    },
+    {
+      "file": "9525647A-A2FA-4260-AE85-77EA06D36498.txt",
+      "event": "A-no-audit-row-trial.snapshot-end",
+      "utc": "2026-10-01T17:45:38.780Z"
+    },
+    {
+      "file": "05778F3F-B91B-4411-BE66-E6F650994F0B.txt",
+      "event": "A-no-audit.row.disclosure",
+      "utc": "2026-10-01T17:46:33.517Z"
+    },
+    {
+      "file": "3E2DFEBC-3F91-4A49-BC51-308754D186EC.txt",
+      "event": "A-no-audit-row-disclosure.snapshot-start",
+      "utc": "2026-10-01T17:46:36.083Z"
+    },
+    {
+      "file": "A5EAD2AD-65FA-4E5A-9A40-1A443C094F87.txt",
+      "event": "A-no-audit-row-disclosure.snapshot-end",
+      "utc": "2026-10-01T17:46:37.320Z"
+    },
+    {
+      "file": "2C9328BE-CEC9-443D-A202-697691D535D6.txt",
+      "event": "A-no-audit.row.subscription",
+      "utc": "2026-10-01T17:47:30.422Z"
+    },
+    {
+      "file": "B51F50C7-6A46-4D98-88F1-D7DC7D577994.txt",
+      "event": "A-no-audit-row-subscription.snapshot-start",
+      "utc": "2026-10-01T17:47:33.026Z"
+    },
+    {
+      "file": "ED590BF1-E973-4FFB-807B-330432014752.txt",
+      "event": "A-no-audit-row-subscription.snapshot-end",
+      "utc": "2026-10-01T17:47:34.311Z"
+    },
+    {
+      "file": "1E4FD183-C11B-4737-BFC0-E22548F20B68.txt",
+      "event": "A-no-audit.row.load",
+      "utc": "2026-10-01T17:48:25.873Z"
+    },
+    {
+      "file": "09800C30-1D24-4B2F-92F7-A259E71E8C1E.txt",
+      "event": "A-no-audit-row-load.snapshot-start",
+      "utc": "2026-10-01T17:48:27.891Z"
+    },
+    {
+      "file": "11B2E763-17AD-4276-B860-D0A799131476.txt",
+      "event": "A-no-audit-row-load.snapshot-end",
+      "utc": "2026-10-01T17:48:29.151Z"
+    },
+    {
+      "file": "2E681659-CF3D-491B-8B0F-7FCA5B2B0943.txt",
+      "event": "A-no-audit.complete",
+      "utc": "2026-10-01T17:48:29.152Z"
+    },
+    {
+      "file": "AAB6CB34-1BA3-45C8-8205-1FFF57A3D725.txt",
+      "event": "B-all-audit.launch",
+      "utc": "2026-10-01T17:48:34.032Z"
+    },
+    {
+      "file": "0328D1EC-274F-4CB8-A364-11CA5068CEBA.txt",
+      "event": "B-all-audit-before.snapshot-start",
+      "utc": "2026-10-01T17:49:31.550Z"
+    },
+    {
+      "file": "EB84F731-05C6-43B1-82BC-2798792545F3.txt",
+      "event": "B-all-audit-before.snapshot-end",
+      "utc": "2026-10-01T17:49:32.906Z"
+    },
+    {
+      "file": "15F66EED-4CD0-4293-B8E5-3030AC68BE37.txt",
+      "event": "B-all-audit.invocation-start",
+      "utc": "2026-10-01T17:49:32.908Z"
+    },
+    {
+      "file": "3D8904B5-C0A3-4E3C-90A1-C566A52E790D.txt",
+      "event": "B-all-audit.issue",
+      "utc": "2026-10-01T17:49:40.037Z"
+    },
+    {
+      "file": "D8947668-1F9D-4359-87DE-4936754D9B22.txt",
+      "event": "B-all-audit.invocation-end",
+      "utc": "2026-10-01T17:49:40.572Z"
+    },
+    {
+      "file": "B46365D2-ADAA-4AA5-BAFC-634C6365CBB7.txt",
+      "event": "B-all-audit-after.snapshot-start",
+      "utc": "2026-10-01T17:49:43.779Z"
+    },
+    {
+      "file": "E8A2477B-6F80-4090-94F7-0DEE049FD17E.txt",
+      "event": "B-all-audit-after.snapshot-end",
+      "utc": "2026-10-01T17:49:45.098Z"
+    }
+  ]
+}

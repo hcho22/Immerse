@@ -1,0 +1,181 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "duration" : "Ran for 10 minutes",
+  "durationInSeconds" : 600,
+  "hasMediaAttachments" : true,
+  "hasPerformanceMetrics" : false,
+  "startTime" : 1790876388.557,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+  "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+  "testName" : "testPairedSystemLargestTraversal()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Failed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "394528A4-658E-4728-A8BE-303E6DDFBA82",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+              "nodeType" : "Runtime Warning"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertTrue failed - A-no-audit description must be fully exposed, not merely hittable",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertTrue failed - A-no-audit title-field must be fully exposed, not merely hittable",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertTrue failed - A-no-audit disclosure must be fully exposed, not merely hittable",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertTrue failed - A-no-audit subscription must be fully exposed, not merely hittable",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertTrue failed - A-no-audit load must be fully exposed, not merely hittable",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "51865D45-D729-498F-99F8-9C9A70C12161",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "details" : "0~xlOJX6onmfIJc18F-kYlcVvvUageHh4eA1xUqAI-DAW_zhbGskInS7IlmUZaBWrTqdbdsMk4oZDHbXI_01dTYg==",
+                  "name" : "App Screenshot_0_C0B7E442-0EB1-4961-AF13-A3537AAC68A6.png",
+                  "nodeIdentifier" : "516E6036-87E5-4AF8-9215-5FA4D84B93BB",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "details" : "0~A0d8McImfGe5Ks2cdWqpOlESe-RIQXA8oiyCmjBWnyjRQDGbSvI7a-FpUX9TthrgJ19Q_IrtN8ud5NLz48Uu3w==",
+                  "name" : "Element Screenshot_1_D019A062-9D96-4FBA-94B7-BDC7E782C4B9.png",
+                  "nodeIdentifier" : "2E7D2F43-B43D-4863-A672-03A19086067C",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "name" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "Contrast failed",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "details" : "0~LzESeXqUnMSfibLeTZ3xCAVGEVER4phKeo9hfDACdXqZWi_hOTo9C8O00quZd4PcM4mL1w_Y2CFb7fudu4B2Mg==",
+                  "name" : "2026-10-01 174948 +0000-Spindump_0_0B4E014C-34EA-4A65-B51F-5C0CFD26422D.txt",
+                  "nodeIdentifier" : "BF39E090-DA3D-4A78-9D11-97F43B3B6F5E",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Test exceeded execution time allowance of 10 minutes",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            }
+          ],
+          "duration" : "10m",
+          "durationInSeconds" : 631.7130000591278,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Failed"
+        }
+      ],
+      "details" : "iOS Simulator 26.5",
+      "duration" : "10m",
+      "durationInSeconds" : 631.7130000591278,
+      "name" : "iPhone 17 Pro",
+      "nodeIdentifier" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "nodeType" : "Device",
+      "result" : "Failed"
+    }
+  ]
+}

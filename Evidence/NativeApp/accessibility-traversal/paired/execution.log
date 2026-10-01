@@ -1,0 +1,23 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Immerse-PairedTraversal-2.xcresult
+
+2026-10-01 10:39:48.927 xcodebuild[14965:145341936] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 10:39:48.927 xcodebuild[14965:145341936] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 10:48:30.163 xcodebuild[14965:145341936] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 10:48:30.163 xcodebuild[14965:145341936] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 10:51:11.271 xcodebuild[14965:145341936] [MT] IDETestOperationsObserverDebug: 689.204 elapsed -- Testing started completed.
+2026-10-01 10:51:11.271 xcodebuild[14965:145341936] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 10:51:11.271 xcodebuild[14965:145341936] [MT] IDETestOperationsObserverDebug: 689.204 sec, +689.204 sec -- end
+Failing tests:
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+	SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()
+
+** TEST FAILED **
+
+Testing started

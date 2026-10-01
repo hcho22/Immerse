@@ -53,6 +53,13 @@ contrast findings while all twelve rows remain reachable and the viewport stays
 separate. Navigation/Trial-label comparisons were not advanced. The instrumented
 green result cannot establish an uninstrumented remedy; audit pose/timing and
 shared-host load remain limitations. No new production change or acceptance.
+The subsequent [real-app traversal](accessibility-traversal-diagnosis.md) matches
+A/B settled title frames and reproduces Silent capture contrast in the first
+scrolled `.all` without earlier audits. A records ten rows but five inset checks
+fail; B times out before its row traversal at the effective 600-second bound.
+This is incomplete diagnostic evidence, not a startup failure, native correction
+or QA-13 pass. The original UI suite remains byte-identical; the additive test
+patch and every failure are retained outside normal CI sources.
 
 ## Required Native Manual Matrix
 

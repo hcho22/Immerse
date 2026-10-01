@@ -1,0 +1,53 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Immerse · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1790877071.286,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790876374.982,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose",
+      "targetName" : "ImmerseUITests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+      "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+      "testName" : "testPairedSystemLargestTraversal()"
+    }
+  ],
+  "title" : "Test - Immerse",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose"
+    }
+  ],
+  "totalTestCount" : 1
+}

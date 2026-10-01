@@ -1,0 +1,95 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "JournalFlowTests.swift:114: XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:159: XCTAssertTrue failed - A-no-audit description must be fully exposed, not merely hittable",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:159: XCTAssertTrue failed - A-no-audit title-field must be fully exposed, not merely hittable",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:159: XCTAssertTrue failed - A-no-audit disclosure must be fully exposed, not merely hittable",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:159: XCTAssertTrue failed - A-no-audit subscription must be fully exposed, not merely hittable",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:159: XCTAssertTrue failed - A-no-audit load must be fully exposed, not merely hittable",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:114: XCTAssertEqualWithAccuracy failed: (\"410.0\") is not equal to (\"400.0\") +/- (\"1.0\") - First scrolled title pose",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "JournalFlowTests.swift:124: Contrast failed",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "Test exceeded execution time allowance of 10 minutes",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "10m",
+                  "durationInSeconds" : 600,
+                  "name" : "testPairedSystemLargestTraversal()",
+                  "nodeIdentifier" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "SetupTraversalDiagnosisTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "ImmerseUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Immerse",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

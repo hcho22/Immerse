@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790876596.420459 uptime=1243972.3756033531 event=A-no-audit.row.orientation-picker readingBounds=(0.0, 156.0, 402.0, 668.0) element=(32.0, 613.0, 217.0, 77.33333333333337)

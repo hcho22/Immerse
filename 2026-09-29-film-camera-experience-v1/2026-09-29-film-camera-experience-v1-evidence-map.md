@@ -23,8 +23,13 @@ product and budget prerequisites remain unmet. No physical action or acceptance
 is implied, and current accessibility failures still block readiness.
 
 Current QA-13 accessibility diagnosis:
+`Evidence/NativeApp/accessibility-traversal-diagnosis.md` records the subsequent
+current-Form A/B attempt: matched title poses, first scrolled all-category contrast
+on Silent capture, A ten rows with five inset failures, B no completed rows before
+the effective 600-second timeout. The native case actually ran; comparison remains
+incomplete. No production change, altered original suite, waiver or acceptance.
 `Evidence/NativeApp/accessibility-observer-diagnosis.md` is the latest bounded
-follow-up: capture-enabled padded control passes but capture-disabled fails title
+probe follow-up: capture-enabled padded control passes but capture-disabled fails title
 and command contrast (same build, largest/light); twelve-row reachability passes.
 Physical separation survives both. Pre-audit offsets and shared-host load prevent
 claiming sole causality; no later navigation/Trial counterfactual or production

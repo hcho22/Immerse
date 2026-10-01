@@ -1,0 +1,78 @@
+Timestamp               Ty Process[PID:TID]
+2026-10-01 10:36:22.751 Df testmanagerd[81434:8a8b12f] [com.apple.dt.xctest:Default] Initiating session with identifier 9DB37A15-CB4E-4900-B55F-A7563CD25AB5 and IDE capabilities <XCTCapabilities: 0x103f04990>: {
+    "XCTIssue capability" = 1;
+    "daemon container sandbox extension" = 1;
+    "delayed attachment transfer" = 1;
+    "expected failure test capability" = 1;
+    "in-process test parallelization capability" = 1;
+    "request diagnostics for specific devices" = 1;
+    "runner plan" = 1;
+    "skipped suite capability" = 1;
+    "skipped test capability" = 1;
+    "test case run configurations" = 1;
+    "test iterations" = 2;
+    "test timeout capability" = 1;
+    traits = 1;
+    "ubiquitous test identifiers" = 1;
+    "unified issue recorded" = 1;
+}
+2026-10-01 10:36:22.754 Df testmanagerd[81434:8a8b236] [com.apple.dt.xctest:Default] Setting session <XCIDESession: 0x103d047d0> (socket 5) created Thursday, October 1, 2026 at 10:36:22 AM Pacific Daylight Time waiting to pair with test session 9DB37A15-CB4E-4900-B55F-A7563CD25AB5 for identifier 9DB37A15-CB4E-4900-B55F-A7563CD25AB5
+2026-10-01 10:36:38.829 Df testmanagerd[81434:8a8b237] [com.apple.dt.xctest:Default] Received new test session connection from process with PID 84814
+2026-10-01 10:36:39.369 Df testmanagerd[81434:8a8b237] [com.apple.dt.xctest:Default] DTXSocketTransport for socket 5 disconnected, owner is <XCIDESession: 0x103d047d0> (socket 5) created Thursday, October 1, 2026 at 10:36:22 AM Pacific Daylight Time waiting to pair with test session 9DB37A15-CB4E-4900-B55F-A7563CD25AB5
+2026-10-01 10:36:39.369 Df testmanagerd[81434:8a8ce36] [com.apple.dt.xctest:Default] Closing session <XCIDESession: 0x103d047d0> (socket 5) created Thursday, October 1, 2026 at 10:36:22 AM Pacific Daylight Time waiting to pair with test session 9DB37A15-CB4E-4900-B55F-A7563CD25AB5
+2026-10-01 10:36:39.370 Df testmanagerd[81434:8a8ce36] [com.apple.dt.xctest:Default] Tearing down <XCIDESession: 0x103d047d0> (socket 5) created Thursday, October 1, 2026 at 10:36:22 AM Pacific Daylight Time waiting to pair with test session 9DB37A15-CB4E-4900-B55F-A7563CD25AB5.
+2026-10-01 10:36:39.370 Df testmanagerd[81434:8a8ce36] [com.apple.dt.xctest:Default] Session summary: 1 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:37:16.061 Df testmanagerd[81434:8a8f5c0] [com.apple.dt.xctest:Default] Test process connection invalidated or interrupted, closing test session <XCTestSession: 0x10bc06c80> pid 84814.
+2026-10-01 10:37:16.086 Df testmanagerd[81434:8a8f5c0] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:38:17.791 Df testmanagerd[81434:8a93a8e] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, does not have control sessions
+2026-10-01 10:39:43.108 Df testmanagerd[81434:8a8b12f] [com.apple.dt.xctest:Default] Initiating session with identifier 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E and IDE capabilities <XCTCapabilities: 0x104616020>: {
+    "XCTIssue capability" = 1;
+    "daemon container sandbox extension" = 1;
+    "delayed attachment transfer" = 1;
+    "expected failure test capability" = 1;
+    "in-process test parallelization capability" = 1;
+    "request diagnostics for specific devices" = 1;
+    "runner plan" = 1;
+    "skipped suite capability" = 1;
+    "skipped test capability" = 1;
+    "test case run configurations" = 1;
+    "test iterations" = 2;
+    "test timeout capability" = 1;
+    traits = 1;
+    "ubiquitous test identifiers" = 1;
+    "unified issue recorded" = 1;
+}
+2026-10-01 10:39:43.112 Df testmanagerd[81434:8a9c097] [com.apple.dt.xctest:Default] Setting session <XCIDESession: 0x109508a10> (socket 6) created Thursday, October 1, 2026 at 10:39:42 AM Pacific Daylight Time waiting to pair with test session 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E for identifier 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E
+2026-10-01 10:39:45.570 Df testmanagerd[81434:8a9c097] [com.apple.dt.xctest:Default] Received new test session connection from process with PID 15018
+2026-10-01 10:39:45.575 Df testmanagerd[81434:8a9c096] [com.apple.dt.xctest:Default] DTXSocketTransport for socket 6 disconnected, owner is <XCIDESession: 0x109508a10> (socket 6) created Thursday, October 1, 2026 at 10:39:42 AM Pacific Daylight Time waiting to pair with test session 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E
+2026-10-01 10:39:45.575 Df testmanagerd[81434:8a9c1f1] [com.apple.dt.xctest:Default] Closing session <XCIDESession: 0x109508a10> (socket 6) created Thursday, October 1, 2026 at 10:39:42 AM Pacific Daylight Time waiting to pair with test session 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E
+2026-10-01 10:39:45.575 Df testmanagerd[81434:8a9c1f1] [com.apple.dt.xctest:Default] Tearing down <XCIDESession: 0x109508a10> (socket 6) created Thursday, October 1, 2026 at 10:39:42 AM Pacific Daylight Time waiting to pair with test session 359F3AFE-3DC3-4E4B-A1DA-C78EFD53252E.
+2026-10-01 10:39:45.575 Df testmanagerd[81434:8a9c1f1] [com.apple.dt.xctest:Default] Session summary: 1 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:50:20.299 Df testmanagerd[81434:8aacc57] [com.apple.dt.xctest:Default] Test process connection invalidated or interrupted, closing test session <XCTestSession: 0x109505240> pid 15018.
+2026-10-01 10:50:20.315 Df testmanagerd[81434:8aace09] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:50:21.790 Df testmanagerd[81434:8a8b12f] [com.apple.dt.xctest:Default] Initiating session with identifier F170B5ED-2803-496D-A4BC-536B2E0A003B and IDE capabilities <XCTCapabilities: 0x10bc696d0>: {
+    "XCTIssue capability" = 1;
+    "daemon container sandbox extension" = 1;
+    "delayed attachment transfer" = 1;
+    "expected failure test capability" = 1;
+    "in-process test parallelization capability" = 1;
+    "request diagnostics for specific devices" = 1;
+    "runner plan" = 1;
+    "skipped suite capability" = 1;
+    "skipped test capability" = 1;
+    "test case run configurations" = 1;
+    "test iterations" = 2;
+    "test timeout capability" = 1;
+    traits = 1;
+    "ubiquitous test identifiers" = 1;
+    "unified issue recorded" = 1;
+}
+2026-10-01 10:50:21.791 Df testmanagerd[81434:8aac152] [com.apple.dt.xctest:Default] Setting session <XCIDESession: 0x104706ae0> (socket 6) created Thursday, October 1, 2026 at 10:50:21 AM Pacific Daylight Time waiting to pair with test session F170B5ED-2803-496D-A4BC-536B2E0A003B for identifier F170B5ED-2803-496D-A4BC-536B2E0A003B
+2026-10-01 10:50:22.774 Df testmanagerd[81434:8aac152] [com.apple.dt.xctest:Default] Received new test session connection from process with PID 42875
+2026-10-01 10:50:22.780 Df testmanagerd[81434:8aace08] [com.apple.dt.xctest:Default] DTXSocketTransport for socket 6 disconnected, owner is <XCIDESession: 0x104706ae0> (socket 6) created Thursday, October 1, 2026 at 10:50:21 AM Pacific Daylight Time waiting to pair with test session F170B5ED-2803-496D-A4BC-536B2E0A003B
+2026-10-01 10:50:22.781 Df testmanagerd[81434:8aace09] [com.apple.dt.xctest:Default] Closing session <XCIDESession: 0x104706ae0> (socket 6) created Thursday, October 1, 2026 at 10:50:21 AM Pacific Daylight Time waiting to pair with test session F170B5ED-2803-496D-A4BC-536B2E0A003B
+2026-10-01 10:50:22.781 Df testmanagerd[81434:8aace09] [com.apple.dt.xctest:Default] Tearing down <XCIDESession: 0x104706ae0> (socket 6) created Thursday, October 1, 2026 at 10:50:21 AM Pacific Daylight Time waiting to pair with test session F170B5ED-2803-496D-A4BC-536B2E0A003B.
+2026-10-01 10:50:22.781 Df testmanagerd[81434:8aace09] [com.apple.dt.xctest:Default] Session summary: 1 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:50:24.552 Df testmanagerd[81434:8aace09] [com.apple.dt.xctest:Default] Test process connection invalidated or interrupted, closing test session <XCTestSession: 0x10450c8d0> pid 42875.
+2026-10-01 10:50:24.575 Df testmanagerd[81434:8aacc57] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, has control sessions
+2026-10-01 10:51:11.303 Df testmanagerd[81434:8ab0067] [com.apple.dt.xctest:Default] Session summary: 0 test sessions, 0 sessions with identifiers, 0 unidentified sessions, 0 remote automation sessions, does not have control sessions
