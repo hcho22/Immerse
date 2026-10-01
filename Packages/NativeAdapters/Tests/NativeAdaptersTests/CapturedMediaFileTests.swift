@@ -75,6 +75,43 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath: root.path).isEmpty)
     }
 
+    func testMissingStagingDirectoryBehavesAsAlreadyEmptyDuringPrivacyCleanup() async throws {
+        let root = makeRoot()
+        let files = try CapturedMediaFiles(directory: root)
+        try FileManager.default.removeItem(at: root)
+
+        XCTAssertTrue(try files.pendingRecords().isEmpty)
+        let recovery = try await files.recoveryEvents()
+        XCTAssertTrue(recovery.isEmpty)
+        try files.removeUncommitted(id: UUID())
+        try files.removeCommittedFile(for: .photoSaved(root.appendingPathComponent("missing.photo")))
+    }
+
+    func testExistingUninspectableStagingPathStillThrowsInsteadOfPretendingEmpty() throws {
+        let root = makeRoot()
+        let files = try CapturedMediaFiles(directory: root)
+        try FileManager.default.removeItem(at: root)
+        try Data("not a staging directory".utf8).write(to: root, options: .withoutOverwriting)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertThrowsError(try files.pendingRecords())
+    }
+
+    func testCommittedCleanupRejectsOutsideStagingFilesAndLeavesThemUntouched() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let staging = root.appendingPathComponent("staging")
+        let files = try CapturedMediaFiles(directory: staging)
+        let outside = root.appendingPathComponent("outside.photo")
+        let bytes = Data("outside synthetic file".utf8)
+        try bytes.write(to: outside)
+
+        XCTAssertThrowsError(try files.removeCommittedFile(for: .photoSaved(outside))) { error in
+            XCTAssertEqual(error as? NativeCaptureError, .invalidMedia)
+        }
+        XCTAssertEqual(try Data(contentsOf: outside), bytes)
+    }
+
     func testDecodedMoviePreservesFractionalDurationAndIndependentPortraitClip() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

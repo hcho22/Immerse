@@ -39,6 +39,15 @@ nonshipping targets. Initial isolation/fixture failures remain recorded. Ordinar
 process death now has bounded software evidence; unobserved power loss, physical
 interruptions, full-capacity performance and actual backup restoration do not.
 
+`Evidence/NativeApp/capture-backend-quiescence-040.md` now covers part of
+Priority 3's capture-backend boundary through public `AVFoundationCaptureBackend`
+methods in a nonshipping hosted iOS unit target. Cancel-before-recovery removes
+staged files without committing, concurrent recovery is rejected while a staged
+commit is held, cancel waits for the held recovery before acknowledging, and
+missing staging directories are treated as empty during cleanup. This remains
+synthetic staged-media evidence with an injected committer; it does not prove real
+camera callbacks, physical interruptions, storage pressure or hardware capture.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

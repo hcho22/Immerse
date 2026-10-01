@@ -17,6 +17,7 @@
 		3AB6AF815B4AAC24E15525EF /* DevelopmentProcessExitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */; };
 		402475D3F25EE25D8B2ABAFA /* ExportPrivacyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */; };
 		46D510C7340C2BF50F1FBFC3 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 129BE51D6B17A8F5A7C2708E /* NativeAdapters */; };
+		5DA211CBC931F6194F807C1A /* CaptureBackendRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B978CFF178542FC2845001 /* CaptureBackendRecoveryTests.swift */; };
 		5F8C2448E3B7277561D589C1 /* ControlledExportWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA5E3755544FE640A425D5D /* ControlledExportWriter.swift */; };
 		67DD287325296D39E6267971 /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 976C8B9C4E3B43002A66BE98 /* RenderFixtures */; };
 		7495873ABA8FEBF07D4BC6AE /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBADC727F2D38F87D4A8E6 /* FilmPersistence */; };
@@ -71,6 +72,7 @@
 		316A3D75AE6E145E01A07AB8 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
 		3536549B452938127BAA44C5 /* DevelopmentExitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentExitView.swift; sourceTree = "<group>"; };
 		5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyTests.swift; sourceTree = "<group>"; };
+		61B978CFF178542FC2845001 /* CaptureBackendRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureBackendRecoveryTests.swift; sourceTree = "<group>"; };
 		661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentProcessExitUITests.swift; sourceTree = "<group>"; };
 		6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ExportPrivacyHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +161,7 @@
 		7800585BFEE2CCCE7AE3F788 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				61B978CFF178542FC2845001 /* CaptureBackendRecoveryTests.swift */,
 				5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */,
 			);
 			path = Tests;
@@ -424,6 +427,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DA211CBC931F6194F807C1A /* CaptureBackendRecoveryTests.swift in Sources */,
 				402475D3F25EE25D8B2ABAFA /* ExportPrivacyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

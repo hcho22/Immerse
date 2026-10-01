@@ -154,6 +154,15 @@ backup/restore, full-capacity performance or final native-media fidelity accepta
 Initial compile/fixture failures are retained; FR-06/16 and DEV/PRV/ARC-06/QA-03/11
 remain partial. Exact commands and affected outcomes are in that source-bound report.
 
+The capture-backend quiescence continuation is recorded in
+`Evidence/NativeApp/capture-backend-quiescence-040.md`: `CapturedMediaFiles`
+cleanup now treats a removed staging directory as empty and uses standardized path
+comparison for same-directory committed-file cleanup. NativeAdapters package tests,
+a targeted hosted iOS `AVFoundationCaptureBackend` unit class and the runtime
+capture-recovery integration test pass. This is partial CAP-09/PRV/ARC-03/06
+software evidence for synthetic staged media and an injected committer, not a real
+camera callback, storage-pressure, physical interruption or hardware acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

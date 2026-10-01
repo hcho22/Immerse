@@ -47,10 +47,14 @@ public struct CapturedMediaFiles: Sendable {
     }
 
     public func pendingRecords() throws -> [PendingCaptureRecord] {
-        try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-            .filter { $0.pathExtension == "json" }
-            .map { try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: $0)) }
-            .sorted { $0.createdAt == $1.createdAt ? $0.id.uuidString < $1.id.uuidString : $0.createdAt < $1.createdAt }
+        guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
+        let urls = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        let records = try urls.filter { $0.pathExtension == "json" }.map { url in
+            try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: url))
+        }
+        return records.sorted {
+            $0.createdAt == $1.createdAt ? $0.id.uuidString < $1.id.uuidString : $0.createdAt < $1.createdAt
+        }
     }
 
     public static func metadata(for mediaURL: URL) throws -> PendingCaptureRecord? {
@@ -128,7 +132,7 @@ public struct CapturedMediaFiles: Sendable {
         case let .photoSaved(value), let .movieClipSaved(value, _, _): url = value
         default: return
         }
-        guard url.deletingLastPathComponent().standardizedFileURL == directory.standardizedFileURL else {
+        guard url.deletingLastPathComponent().standardizedFileURL.path == directory.standardizedFileURL.path else {
             throw NativeCaptureError.invalidMedia
         }
         if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
