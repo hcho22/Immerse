@@ -117,7 +117,7 @@ final class PrivacyRecoveryTests: XCTestCase {
             try repository.writeDevelopedClip(filmID: film.id, sequenceNumber: sequence, data: Data("clip-\(sequence)".utf8))
         }
         try repository.writeAssembledMovie(filmID: film.id, data: Data("old-movie".utf8), clipSequenceNumbers: [1, 2])
-        manager.failAtLastPathComponent = "movie-1-2.bin"
+        manager.failAtLastPathComponent = "movie-1-2.mov"
         XCTAssertThrowsError(try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 2))
         XCTAssertFalse(try repository.assembledMovieExists(filmID: film.id))
         XCTAssertEqual(try repository.film(id: film.id).playableMovieClipSequenceNumbers, [1])
@@ -131,8 +131,8 @@ final class PrivacyRecoveryTests: XCTestCase {
         repository = try FilmRepository(rootURL: root)
         try repository.recover()
         let directory = root.appendingPathComponent("Media/\(film.id.uuidString)")
-        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.appendingPathComponent("movie-1-2.bin").path))
-        XCTAssertEqual(try Data(contentsOf: directory.appendingPathComponent("clip-1.bin")), Data("clip-1".utf8))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.appendingPathComponent("movie-1-2.mov").path))
+        XCTAssertEqual(try Data(contentsOf: directory.appendingPathComponent("clip-1.mov")), Data("clip-1".utf8))
         try repository.writeAssembledMovie(filmID: film.id, data: Data("surviving-movie".utf8), clipSequenceNumbers: [1])
         XCTAssertTrue(try repository.assembledMovieExists(filmID: film.id))
         XCTAssertEqual(try repository.film(id: film.id).consumedMovieSeconds, 1)

@@ -20,6 +20,7 @@ final class SQLiteDatabase {
         sqlite3_busy_timeout(handle, 5_000)
         try execute("PRAGMA journal_mode = WAL;")
         try execute("PRAGMA foreign_keys = ON;")
+        try execute("PRAGMA synchronous = FULL;")
     }
 
     deinit {
@@ -97,6 +98,26 @@ final class SQLiteDatabase {
         }
     }
 
+    func insertReceipt(_ receipt: CaptureCommitReceipt, data: Data) throws {
+        try withStatement("INSERT INTO capture_receipts (film_id, capture_id, data) VALUES (?, ?, ?);") { statement in
+            try bindText(receipt.filmID.uuidString, to: statement, index: 1)
+            try bindText(receipt.captureID, to: statement, index: 2)
+            try bindBlob(data, to: statement, index: 3)
+            try stepDone(statement)
+        }
+    }
+
+    func receiptData(filmID: UUID, captureID: String) throws -> Data? {
+        try withStatement("SELECT data FROM capture_receipts WHERE film_id = ? AND capture_id = ?;") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindText(captureID, to: statement, index: 2)
+            let status = sqlite3_step(statement)
+            if status == SQLITE_DONE { return nil }
+            guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+            return Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0)))
+        }
+    }
+
     func asset(filmID: UUID, sequenceNumber: Int, kind: StoredAsset.Kind) throws -> StoredAsset? {
         try withStatement(
             """
@@ -138,6 +159,29 @@ final class SQLiteDatabase {
     func deleteFilm(id: UUID) throws {
         try withStatement("DELETE FROM films WHERE id = ?;") { statement in
             try bindText(id.uuidString, to: statement, index: 1)
+            try stepDone(statement)
+        }
+    }
+
+    func value(filmID: UUID, key: String) throws -> Data? {
+        try withStatement("SELECT data FROM film_values WHERE film_id = ? AND key = ?;") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindText(key, to: statement, index: 2)
+            let status = sqlite3_step(statement)
+            if status == SQLITE_DONE { return nil }
+            guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+            return Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0)))
+        }
+    }
+
+    func setValue(filmID: UUID, key: String, data: Data) throws {
+        try withStatement("""
+            INSERT INTO film_values (film_id, key, data) VALUES (?, ?, ?)
+            ON CONFLICT(film_id, key) DO UPDATE SET data = excluded.data;
+            """) { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindText(key, to: statement, index: 2)
+            try bindBlob(data, to: statement, index: 3)
             try stepDone(statement)
         }
     }

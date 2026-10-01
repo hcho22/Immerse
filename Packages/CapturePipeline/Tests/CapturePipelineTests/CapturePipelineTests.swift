@@ -24,6 +24,8 @@ final class CapturePipelineTests: XCTestCase {
         let event = CaptureSaveEvent.movieClipSaved(url: url, durationSeconds: 0.375, orientation: .portrait)
         try await receiver.commit(event)
         try await receiver.commit(event)
+        let reopened = try CapturePipelineReceiver(filmID: film.id, repositoryURL: harness.rootURL)
+        try await reopened.commit(event)
         let persisted = try harness.repository.film(id: film.id)
         XCTAssertEqual(persisted.savedCaptureCount, 1)
         XCTAssertEqual(persisted.consumedMovieSeconds, 0.375)

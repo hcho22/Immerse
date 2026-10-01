@@ -1,6 +1,7 @@
 import FilmDomain
 @testable import FilmPersistence
 import XCTest
+import RenderFixtures
 
 final class FilmPersistenceTests: XCTestCase {
     private var rootURL: URL!
@@ -100,12 +101,15 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
     }
 
-    func testSourceCleanupRequiresVerifiedMaster() throws {
+    func testSourceCleanupRequiresVerifiedMaster() async throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.disposable1990s,
             title: "Disposable - Roll #01"
         )
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source-1".utf8))
+        try repository.completeEarly(filmID: film.id)
+        try repository.startAndFinishDevelopment(filmID: film.id)
+        try repository.chooseOriginalExport(filmID: film.id, sequenceNumber: 1, export: false)
 
         XCTAssertThrowsError(
             try repository.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1)
@@ -114,12 +118,16 @@ final class FilmPersistenceTests: XCTestCase {
         }
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
 
+        let fixtures = rootURL.appendingPathComponent("Fixtures")
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures)
         try repository.writeDevelopedMaster(
             filmID: film.id,
             sequenceNumber: 1,
-            data: Data("master-1".utf8)
+            data: Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
         )
-        try repository.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1)
+        let master = try XCTUnwrap(repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .master))
+        let verified = try VerifiedMedia.photo(at: master.url)
+        try repository.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1, verifiedMedia: [verified])
 
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .master))

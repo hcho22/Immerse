@@ -63,12 +63,14 @@ public struct CapturePersistencePipeline<Reader: CapturePayloadReading> {
     private func persistPhoto(_ url: URL) throws -> CapturePipelineOutcome {
         let payload = try read(url)
         do {
-            let film = try repository.savePhotoCapture(filmID: filmID, sourceData: payload)
-            guard let capture = film.captures.last else {
+            let film = try repository.savePhotoCapture(
+                filmID: filmID, sourceData: payload, captureID: url.lastPathComponent
+            )
+            guard let receipt = try repository.captureReceipt(filmID: filmID, captureID: url.lastPathComponent) else {
                 throw CapturePipelineError.persistenceFailed("photo save returned no capture")
             }
             return .photoCommitted(
-                sequenceNumber: capture.sequenceNumber,
+                sequenceNumber: receipt.sequenceNumber,
                 remainingExposures: film.remainingExposures
             )
         } catch let error as CapturePipelineError {
@@ -89,13 +91,14 @@ public struct CapturePersistencePipeline<Reader: CapturePayloadReading> {
                 filmID: filmID,
                 sourceData: payload,
                 durationSeconds: durationSeconds,
-                orientation: orientation
+                orientation: orientation,
+                captureID: url.lastPathComponent
             )
-            guard let capture = film.captures.last else {
+            guard let receipt = try repository.captureReceipt(filmID: filmID, captureID: url.lastPathComponent) else {
                 throw CapturePipelineError.persistenceFailed("movie save returned no capture")
             }
             return .movieClipCommitted(
-                sequenceNumber: capture.sequenceNumber,
+                sequenceNumber: receipt.sequenceNumber,
                 remainingSeconds: film.remainingMovieSeconds
             )
         } catch let error as CapturePipelineError {

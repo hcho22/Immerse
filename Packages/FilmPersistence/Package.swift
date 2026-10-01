@@ -15,7 +15,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../FilmDomain")
+        .package(path: "../FilmDomain"),
+        .package(path: "../RenderFixtures")
     ],
     targets: [
         .target(
@@ -27,7 +28,7 @@ let package = Package(
         ),
         .testTarget(
             name: "FilmPersistenceTests",
-            dependencies: ["FilmPersistence"]
+            dependencies: ["FilmPersistence", "RenderFixtures"]
         )
     ],
     swiftLanguageModes: [.v6]
