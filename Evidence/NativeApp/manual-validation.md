@@ -71,7 +71,7 @@ Keep both records. No evidence of this document's preparation is a rerun.
 | Second physical iPhone | Required by TRI-11, ARC-11/S12, ARC-12/S13 and QA-15. | Dedicated authorized restore target and protected data; destination-unused and destination-consumed Trial histories. Simulator copies do not satisfy this. |
 | Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12 device/OS/accessibility matrix and budgets remain open. Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
 | Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. |
-| Controlled native failure tests | Production coordinator has `prepared`, `receiptResolved`, `projected` checkpoints; existing macOS study uses injected stores. | Device-capable isolated harness, native receipt readback and approved phase-control plan. The shipping UI exposes none. Natural force-quit is not exact failpoint evidence. No device fault harness is claimed delivered here. |
+| Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Shipping UI exposes no test switch. |
 
 ## Xcode Build and Run
 
@@ -228,9 +228,27 @@ D3 SQL-then-Keychain window; test both migration and the actual new boundaries.
 
 For every row, retain original capture ID/time, expected sequence, duration,
 camera/access/orientation, pending source hash/decode, receipt status and matching
-readback, SQL row/count and UI state. Exact native Keychain faults, readback
-instrumentation and power-loss durability still lack an executable device harness.
-The following are **UNTESTED**, not claimed automatically runnable via Xcode UI.
+readback, SQL row/count and UI state. The [isolated receipt harness](../../Probes/ReceiptScenarioHarness/README.md)
+provides synthetic phase/re-entry controls and underlying adapter/readback output.
+Its default backend is explicitly injected in tests; native Security is a separate
+opt-in, and was unavailable in the unsigned simulator. Exact physical Keychain
+faults and power-loss durability remain unproved. The following physical rows are
+**UNTESTED**, not claimed automatically runnable through the shipping Xcode UI.
+
+Simulator preparation commands (owned simulator only, unique unused output labels):
+
+```sh
+SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/ReceiptScenarioHarness/run-simulator.sh unit NEW-UNIT-LABEL
+SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/ReceiptScenarioHarness/run-simulator.sh ui NEW-UI-LABEL
+```
+
+Run sequentially and inspect actual test counts, not only exit status. The
+[checkpoint report](../ReceiptScenarioHarness/035/README.md) links retained runs;
+the harness README gives the unsigned build, opt-in Security check and exact
+manual controls. Reuse the **same scenario identity** after exit; never delete a
+marker or reset an existing scenario to manufacture eligibility. New initial
+histories are independently named synthetic cases, not production Trial resets.
+Additional device actions still require the authority table above.
 
 | Case | Boundary/actions | Expected result and decisive evidence |
 | --- | --- | --- |

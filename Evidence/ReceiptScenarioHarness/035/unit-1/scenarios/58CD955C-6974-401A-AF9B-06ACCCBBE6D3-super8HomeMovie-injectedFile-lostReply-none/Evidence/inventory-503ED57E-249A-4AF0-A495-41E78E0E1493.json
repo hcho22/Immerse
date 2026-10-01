@@ -1,0 +1,99 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "super8HomeMovie",
+    "fault" : "lostReply",
+    "pauseAt" : "none",
+    "runID" : "58CD955C-6974-401A-AF9B-06ACCCBBE6D3"
+  },
+  "decodedFrames" : 3,
+  "files" : {
+    "Media\/F26E94D4-649D-4CD6-856A-C123A266C645\/source-1.mov" : "f9484bc803730d49782e457c5bfe4c1f821d431a460e90582548cc475b28d37a",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "aca0e7668ce2368618c5368c50fa2abffc2a798ecc08fd4d858dfb7e875f7e0c",
+    "film-store.sqlite-wal" : "28c00191da21edfbe8d682a0e1b562e2cc3e7251812f4ef49a0407930fa8384d"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "sealed",
+          "savedAt" : 812562800,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "F26E94D4-649D-4CD6-856A-C123A266C645",
+      "isArchived" : false,
+      "loadedAt" : 812574308.045091,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "consumed",
+  "manifest" : {
+    "captureUUID" : "534C9098-F247-4317-A0B8-DB8ADE6B31FF",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "super8HomeMovie",
+      "fault" : "lostReply",
+      "pauseAt" : "none",
+      "runID" : "58CD955C-6974-401A-AF9B-06ACCCBBE6D3"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "F26E94D4-649D-4CD6-856A-C123A266C645",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "f9484bc803730d49782e457c5bfe4c1f821d431a460e90582548cc475b28d37a",
+    "sourcePath" : "Staging\/F26E94D4-649D-4CD6-856A-C123A266C645\/534C9098-F247-4317-A0B8-DB8ADE6B31FF.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : false,
+  "sourceMatches" : true,
+  "sqlReceipt" : {
+    "captureID" : "534C9098-F247-4317-A0B8-DB8ADE6B31FF.mov",
+    "filmID" : "F26E94D4-649D-4CD6-856A-C123A266C645",
+    "kind" : {
+      "movieClip" : {
+        "orientation" : "landscape",
+        "seconds" : 0.16833333333333333
+      }
+    },
+    "sequenceNumber" : 1,
+    "sourceSHA256" : "f9484bc803730d49782e457c5bfe4c1f821d431a460e90582548cc475b28d37a"
+  },
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "consumedAt" : 812562800,
+    "consumedCaptureID" : "534C9098-F247-4317-A0B8-DB8ADE6B31FF.mov",
+    "consumedFilmID" : "F26E94D4-649D-4CD6-856A-C123A266C645",
+    "deviceID" : "BC07C034-F548-4CAF-8D27-3C83E6F46DFC",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

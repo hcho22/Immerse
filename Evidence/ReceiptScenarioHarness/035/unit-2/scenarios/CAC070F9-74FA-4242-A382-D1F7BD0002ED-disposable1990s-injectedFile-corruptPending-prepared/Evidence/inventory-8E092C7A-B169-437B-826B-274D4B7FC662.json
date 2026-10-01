@@ -1,0 +1,73 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "corruptPending",
+    "pauseAt" : "prepared",
+    "runID" : "CAC070F9-74FA-4242-A382-D1F7BD0002ED"
+  },
+  "files" : {
+    "Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.json" : "e407a71fc0ec03c2622296a54f210440d45f83a80e81d522bc0800a3c126797b",
+    "Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/Commit\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo" : "63b2f396f7702af117babf2dc1c490dbdb11a71b88db29675b3e8cdfc8130f19",
+    "Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/Commit\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo.json" : "9d484e5d87547950e9a0778d9e538c7168ef241c7d0eb693d661750400a7aeaa",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "5bcf056e30ebfc3ff487501624c4a654600bfa53832fdc679d942f839250e37a",
+    "film-store.sqlite-wal" : "33987a8e21f9ab87e220b45ea5d168c5f999fc2fbf8bd0f5d846885f29ca2bed"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 27
+          }
+        },
+        "displayName" : "1990s Disposable",
+        "id" : "disposable1990s",
+        "medium" : "photo",
+        "revealRule" : "rollLevelDevelopment",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "06E06E4D-3CB0-4259-9705-EED2DC2829C5",
+      "isArchived" : false,
+      "loadedAt" : 812574306.586631,
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "unused",
+  "manifest" : {
+    "captureUUID" : "6E0ADB30-4F82-4936-A670-5C94C2A545CB",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "disposable1990s",
+      "fault" : "corruptPending",
+      "pauseAt" : "prepared",
+      "runID" : "CAC070F9-74FA-4242-A382-D1F7BD0002ED"
+    },
+    "filmID" : "06E06E4D-3CB0-4259-9705-EED2DC2829C5",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "sourcePath" : "Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "deviceID" : "1C8578F6-00FF-40C0-B93D-61E9665AE531",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

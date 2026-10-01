@@ -18,9 +18,21 @@ Physical execution preparation: [manual validation handoff](../Evidence/NativeAp
 binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode
 steps, all personal FR acceptance/invariants, full receipt fault cases and exact
 evidence fields. It preserves the captain's manual-test deferral and earlier
-probe-only scope; iPhone 11, second-phone restore, native fault harness, asset,
+probe-only scope; iPhone 11, second-phone restore, exact physical fault control, asset,
 product and budget prerequisites remain unmet. No physical action or acceptance
 is implied, and current accessibility failures still block readiness.
+
+Receipt preparation checkpoint 035:
+`Probes/ReceiptScenarioHarness/README.md` now owns executable unsigned build and
+isolated simulator commands for T02...T09. Its source-bound observed results are
+in `Evidence/ReceiptScenarioHarness/035/README.md`, including the actual native
+Security `-34018` capability skip (no native receipt created), injected-store
+recovery, media/SQL inventories and phase controls. Production source and the
+original failed accessibility matrix are unchanged. This adds bounded software
+evidence for TRI-01/03/04/09, ARC-03/05/11, CAP-08, DEL-04, QA-12 and
+FR-04/05/18/21; it does not accept physical scenarios or settle atomic durability.
+`remaining-engineering.md` beside that report identifies concrete missing
+Development/export/privacy/native-coverage code and production boundary impacts.
 
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
@@ -295,14 +307,14 @@ Status words in this table are intentionally conservative:
 | DEC-14 | Open numeric learning targets. | Recommendations doc. | Recommendation prepared; no analytics SDK remains preserved. |
 | ARC-01 | DEC-03 pending. | `Packages/FilmDomain`, `Packages/NativeAdapters`, `Packages/CapturePipeline`, `Packages/RenderFixtures`, `Packages/EntitlementCore`, `Probes/TrialKeychainProbe`. | Partial: Swift package tests and probe simulator builds pass; full native app setup absent. |
 | ARC-02 | Settled domain subset. | `Packages/FilmDomain/Sources/FilmDomain`. | Partial: state dimensions and invariants behavior-tested by `swift test`. |
-| ARC-03 | Needs native app integration. | `Packages/FilmPersistence`, `Packages/CapturePipeline`. | Partial: durable temp/write/move, SQLite state commit, capture callback integration, recovery orphan cleanup, backup-exclusion distinction and checksum-verified master cleanup behavior-tested. |
-| ARC-05 | TRI-11 prerequisite. | `Probes/TrialKeychainProbe`, `Packages/EntitlementCore`, `Evidence/TrialKeychainProbe`. | Prepared/partial: signed physical-iOS build and pure policy tests pass; the approved single-phone sequence awaits reconnection. Hardware Keychain evidence and production atomic write remain unavailable. |
+| ARC-03 | Physical fault/recovery acceptance missing. | `FilmPersistence`, `FilmRuntime/TrialCoordinator`, `Probes/ReceiptScenarioHarness`. | Partial: production media journal/SQLite integration plus checkpoint 035 native-simulator synthetic phase/re-entry checks. Exact scenarios, source hashes and gaps in the 035 report; no hardware durability inference. |
+| ARC-05 | Physical testing deferred by captain; hardware gate still required. | `EntitlementCore/DeviceTrialStore`, `FilmRuntime/TrialCoordinator`, both Trial probes. | Partial: production single-item consumption/receipt/readback and legacy reconciliation; 035 full-receipt harness compiles for iOS. Native Security capability skips with actual -34018 unsigned; physical retention/restore and cross-store durability unproved. No reconnect request authorized. |
 | ARC-06 | Needs render/cache integration. | FilmDomain placeholders; FilmPersistence asset deletion and assembled Movie retirement. | Partial: placeholder/no-refund domain, source/master/clip deletion, surviving Developed Clip preservation and assembled Movie stale-version retirement are behavior-tested; native renderer caches unbuilt. |
 | ARC-07 | Needs ongoing documentation. | This evidence map. | Partial: records baseline/prototype boundaries and validation strategy. |
 | ARC-08 | Requires iPhone 11/iOS 26. | None. | Untested; no usable physical device available. |
 | ARC-09 | Requires StoreKit configuration and M2. | None. | Not started; StoreKit offline/restore evidence absent. |
 | ARC-10 | Requires native Movie media on hardware. | FilmDomain Movie domain; `Packages/RenderFixtures`; `Evidence/RenderFixtures/synthetic-developed-movie.mov`. | Partial: decoded synthetic H.264 `.mov` fixture proves native API write/read metadata path; capture/render/export fidelity on iPhone hardware remains untested. |
-| ARC-11 | Requires Trial hardware tests. | Probe procedure. | Prepared only; no delete/reinstall/restore hardware evidence. |
+| ARC-11 | Requires Trial hardware tests. | Marker procedure; `Probes/ReceiptScenarioHarness`; manual T01...T12. | Partial software only, including 035 real media/SQLite with explicitly injected receipt errors/process exits. No delete/reinstall/restore, native receipt success or power-loss hardware evidence. |
 | ARC-12 | Requires two-device backup/restore. | None. | Untested; no authorized hardware restore performed. |
 | UX-01 | Needs native app UI and DEC-03. | None. | Not started. |
 | UX-02 | Needs native app UI. | None. | Not started. |
@@ -389,12 +401,12 @@ Status words in this table are intentionally conservative:
 | BIL-05 | StoreKit expiry and Film rights. | `Packages/EntitlementCore`. | Partial policy: expired subscription blocks new subscription-origin Films but preserves existing Film continuation rights; real StoreKit expiry untested. |
 | BIL-06 | DEC-02 and StoreKit restore/refund/revocation. | None. | Not started. |
 | BIL-07 | StoreKit management UI. | None. | Not started. |
-| TRI-01 | TRI-11 first. | `Packages/EntitlementCore`, probe only. | Partial policy for one current-device Trial and unused replacement; production Trial not started. |
+| TRI-01 | Hardware acceptance deferred, not waived. | `EntitlementCore`, `FilmRuntime/TrialCoordinator`, native app and receipt harness. | Partial production integration; 035 verifies no second load during unknown outcome or after consumed pending deletion. No physical per-iPhone Trial acceptance. |
 | TRI-02 | TRI-11 first. | Probe Keychain attributes. | Prepared only; hardware persistence/restore absent. |
-| TRI-03 | Needs Trial state machine. | FilmDomain saved-capture semantics; `Packages/EntitlementCore`. | Partial policy: failed save does not consume, first successful save consumes and restored Film rights are distinct; no Keychain persistence. |
-| TRI-04 | Needs atomic Keychain/filesystem proof. | Probe/procedure only. | Not accepted; first-save crash window open. |
-| TRI-09 | Needs Trial production implementation. | `Packages/EntitlementCore`. | Partial policy: captured Trial deletion does not refund eligibility and existing Trial Film continuation is preserved; no production storage/Keychain. |
-| TRI-11 | Hardware prerequisite. | `Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md`, `Evidence/TrialKeychainProbe/2026-10-01-device-attempt.md`. | Prepared procedure and signed physical-iOS build; untested on hardware. Captain confirmed and approved the iPhone 13 Pro/iOS 26.6.2 probe-only signing/install/launch/marker/relaunch/delete/reinstall sequence. Device currently unreachable; reconnect before resuming. Two-phone restore remains missing and outside this approval. |
+| TRI-03 | Native first-save/retention evidence missing. | `FilmRuntime/TrialCoordinator`, `EntitlementCore/DeviceTrialStore`, receipt harness. | Partial: invalid synthetic media never consumes/projects; full-receipt recovery preserves one capture/debit in 035. Native Security was unavailable, not replaced by a fake passing path. |
+| TRI-04 | Needs physical Keychain/filesystem durability evidence. | Production coordinator/journal; `Probes/ReceiptScenarioHarness`. | Partial injected-store failure/phase/re-entry checks in 035. No atomic transaction across stores or power-loss proof; exact unknown status, receipt and media state retained. |
+| TRI-09 | Native retention/delete/reinstall/restore evidence missing. | Production coordinator/repository/entitlement policy and receipt harness. | Partial: pending synthetic deletion/stale callback rejection retain consumption and do not recreate app media. Device retention/restored-Film coexistence remain unaccepted. |
+| TRI-11 | Physical prerequisite retained; implementation-first captain amendment defers execution. | Pinned marker plan; 035 full-receipt harness; manual T01...T12. | Prepared builds/procedures only. Earlier iPhone 13 Pro/iOS 26.6.2 probe-only authority does not extend to the new harness; do not request reconnection or execute phone operations. Two-phone restore and actual full-receipt hardware acceptance remain absent. |
 | QA-01 | Requires native real devices. | FilmDomain catalog tests. | Partial domain only; no real-device validation. |
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests; CapturePipeline no-debit failure tests. | Partial domain/pipeline only. |
 | QA-03 | Requires native job runner/app relaunch. | RenderCore resume test. | Partial: treatment assignments do not reroll across resumed DevelopmentRun. |

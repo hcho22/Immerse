@@ -1,0 +1,78 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "cinema16mm",
+    "fault" : "none",
+    "pauseAt" : "receiptResolved",
+    "runID" : "3EE22386-BB80-4733-A57C-0AE02CCAAF4B"
+  },
+  "files" : {
+    "Staging\/4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8\/AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.json" : "49276868d2213c2e139f3a4dfe95de2a33a7772513bcc8911bffd694a9fba054",
+    "Staging\/4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8\/AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.mov" : "74e59917cfe1a7ef1348f7c9af184ce58171c2725a3eafacfdc363b1d41c0ee6",
+    "Staging\/4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8\/Commit\/AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.mov" : "74e59917cfe1a7ef1348f7c9af184ce58171c2725a3eafacfdc363b1d41c0ee6",
+    "Staging\/4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8\/Commit\/AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.mov.json" : "871c567062b98651b1c0bcf4bbfa7e1d5779e28652aed91569580c4b759cb1cb",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "2da330b2a3c3e98f1931a1eeb852eb4e8f945328c1d57cceb25120c05fdbb3fc",
+    "film-store.sqlite-wal" : "d5a2dd5d203e3499834a86263b1b3166fbfa91b6c9386166bd764d6a4ab2eaee"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8",
+      "isArchived" : false,
+      "loadedAt" : 812575012.704116,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "consumed",
+  "manifest" : {
+    "captureUUID" : "AA2834AD-968C-4F58-8B60-FEB26ACEFDBC",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "cinema16mm",
+      "fault" : "none",
+      "pauseAt" : "receiptResolved",
+      "runID" : "3EE22386-BB80-4733-A57C-0AE02CCAAF4B"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "74e59917cfe1a7ef1348f7c9af184ce58171c2725a3eafacfdc363b1d41c0ee6",
+    "sourcePath" : "Staging\/4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8\/AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "consumedAt" : 812562800,
+    "consumedCaptureID" : "AA2834AD-968C-4F58-8B60-FEB26ACEFDBC.mov",
+    "consumedFilmID" : "4230A724-A41E-4D9E-8CC2-6DAD2ACE26B8",
+    "deviceID" : "3F0C5C2D-BA09-428B-877E-75894F324CD7",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

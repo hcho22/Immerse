@@ -1,0 +1,122 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.038s",
+                  "durationInSeconds" : 0.03783595561981201,
+                  "name" : "testAdapterRejectsForeignNamespaceWithoutNativeDispatch()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testAdapterRejectsForeignNamespaceWithoutNativeDispatch()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testAdapterRejectsForeignNamespaceWithoutNativeDispatch",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.55s",
+                  "durationInSeconds" : 0.5481740236282349,
+                  "name" : "testCorruptPreparedMediaFailsClosedAndRemainsForInspection()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testCorruptPreparedMediaFailsClosedAndRemainsForInspection()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testCorruptPreparedMediaFailsClosedAndRemainsForInspection",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.37s",
+                  "durationInSeconds" : 0.3749960660934448,
+                  "name" : "testDeleteUnknownPendingThenStaleCallbackCannotResurrect()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testDeleteUnknownPendingThenStaleCallbackCannotResurrect()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testDeleteUnknownPendingThenStaleCallbackCannotResurrect",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.17s",
+                  "durationInSeconds" : 0.1721479892730713,
+                  "name" : "testInvalidMediaDoesNotConsumeOrProject()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testInvalidMediaDoesNotConsumeOrProject()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testInvalidMediaDoesNotConsumeOrProject",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.53s",
+                  "durationInSeconds" : 0.5345859527587891,
+                  "name" : "testLegacyOutboxIncludingDeletedFilmNeverRefunds()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testLegacyOutboxIncludingDeletedFilmNeverRefunds()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testLegacyOutboxIncludingDeletedFilmNeverRefunds",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "ReceiptScenarioTests.swift:25: [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "2s",
+                  "durationInSeconds" : 2.2656450271606445,
+                  "name" : "testLostReplyMatchingReadbackAndUnknownReentry()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testLostReplyMatchingReadbackAndUnknownReentry()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testLostReplyMatchingReadbackAndUnknownReentry",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.48s",
+                  "durationInSeconds" : 0.48151588439941406,
+                  "name" : "testPausedDeleteRequestCompletesBeforeLateCallback()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testPausedDeleteRequestCompletesBeforeLateCallback()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testPausedDeleteRequestCompletesBeforeLateCallback",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "4s",
+                  "durationInSeconds" : 4.831464052200317,
+                  "name" : "testProjectionFailureReentryAcrossPhotoAndBothMoviePackages()",
+                  "nodeIdentifier" : "ReceiptScenarioTests/testProjectionFailureReentryAcrossPhotoAndBothMoviePackages()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests/testProjectionFailureReentryAcrossPhotoAndBothMoviePackages",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ReceiptScenarioTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests/ReceiptScenarioTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ReceiptScenarioTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ReceiptScenarioHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

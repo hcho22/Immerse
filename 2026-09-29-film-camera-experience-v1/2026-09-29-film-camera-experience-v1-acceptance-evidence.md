@@ -15,6 +15,17 @@ retention, two-device restore and power-loss behavior remain unaccepted. The
 captain's implementation-first instruction superseded the historical before-code
 TRI-11 prohibition, not its eventual hardware acceptance requirement.
 
+Checkpoint 035 adds a device-capable non-shipping receipt controller:
+`Probes/ReceiptScenarioHarness/README.md` supplies exact commands and
+`Evidence/ReceiptScenarioHarness/035/README.md` binds outcomes to source, artifact,
+runtime and separately named synthetic histories. This is additional partial
+evidence for FR-04/05/18/21 and capacity, privacy and Trial invariants, not closure
+of their physical clauses. Native Security returned -34018 and skipped; ordinary
+file receipt/process-exit results are not hardware retention or power-loss proof.
+The adjacent remaining-engineering inventory names unsupported phase/race/native
+coverage controls. All original accessibility failures and product/hardware gates
+stay open; no acceptance row or original ADR is replaced.
+
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
 Current physical-test preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)

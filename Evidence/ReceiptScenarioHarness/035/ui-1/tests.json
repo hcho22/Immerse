@@ -1,0 +1,83 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 39s",
+                  "durationInSeconds" : 99.14365100860596,
+                  "name" : "test16mmCheckpointProcessExits()",
+                  "nodeIdentifier" : "ReceiptProcessExitTests/test16mmCheckpointProcessExits()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests/ReceiptProcessExitTests/test16mmCheckpointProcessExits",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1m 37s",
+                  "durationInSeconds" : 97.28960907459259,
+                  "name" : "testPhotoCheckpointProcessExits()",
+                  "nodeIdentifier" : "ReceiptProcessExitTests/testPhotoCheckpointProcessExits()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests/ReceiptProcessExitTests/testPhotoCheckpointProcessExits",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 37s",
+                  "durationInSeconds" : 97.30873799324036,
+                  "name" : "testSuper8CheckpointProcessExits()",
+                  "nodeIdentifier" : "ReceiptProcessExitTests/testSuper8CheckpointProcessExits()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests/ReceiptProcessExitTests/testSuper8CheckpointProcessExits",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ReceiptProcessExitTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests/ReceiptProcessExitTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ReceiptScenarioUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ReceiptScenarioHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

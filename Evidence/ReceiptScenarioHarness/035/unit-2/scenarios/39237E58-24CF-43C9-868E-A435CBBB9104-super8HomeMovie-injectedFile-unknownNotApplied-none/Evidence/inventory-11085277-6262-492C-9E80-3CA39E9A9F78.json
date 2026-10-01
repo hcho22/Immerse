@@ -1,0 +1,75 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "super8HomeMovie",
+    "fault" : "unknownNotApplied",
+    "pauseAt" : "none",
+    "runID" : "39237E58-24CF-43C9-868E-A435CBBB9104"
+  },
+  "files" : {
+    "Staging\/4C051774-1D9C-441D-8DCF-17A931AFAE46\/Commit\/F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E.mov" : "f877de3942e00de4cf7200e1b831b5a4862a753e30024ece01a2e62bb6622de0",
+    "Staging\/4C051774-1D9C-441D-8DCF-17A931AFAE46\/Commit\/F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E.mov.json" : "302b0c24047c1772167ac0f4e842f440b02b964ce1d15f2efaf21126133660d5",
+    "Staging\/4C051774-1D9C-441D-8DCF-17A931AFAE46\/F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E.json" : "e4b0a9b586a748dd0926d8739f5939f19cf4985a2d4072924899f2844b997fb1",
+    "Staging\/4C051774-1D9C-441D-8DCF-17A931AFAE46\/F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E.mov" : "f877de3942e00de4cf7200e1b831b5a4862a753e30024ece01a2e62bb6622de0",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "1ea9604173d1879d4d735879124bbfdaf576c35bfc97df1aea88e57d57fab937",
+    "film-store.sqlite-wal" : "8d6109c9b3c703cacf85d336c08dd8f1b225f418604cd084e599183836eac660"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "4C051774-1D9C-441D-8DCF-17A931AFAE46",
+      "isArchived" : false,
+      "loadedAt" : 812575011.867683,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "TrialKeychainError(status: -25308)",
+  "manifest" : {
+    "captureUUID" : "F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "super8HomeMovie",
+      "fault" : "unknownNotApplied",
+      "pauseAt" : "none",
+      "runID" : "39237E58-24CF-43C9-868E-A435CBBB9104"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "4C051774-1D9C-441D-8DCF-17A931AFAE46",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "f877de3942e00de4cf7200e1b831b5a4862a753e30024ece01a2e62bb6622de0",
+    "sourcePath" : "Staging\/4C051774-1D9C-441D-8DCF-17A931AFAE46\/F7CCE3EE-E82E-44DE-AC41-4EDBBEE6C03E.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "deviceID" : "3F030A0D-4E22-4B48-A963-BE9C599AC699",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

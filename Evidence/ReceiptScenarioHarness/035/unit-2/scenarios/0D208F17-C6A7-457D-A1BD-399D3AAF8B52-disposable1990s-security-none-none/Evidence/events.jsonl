@@ -1,0 +1,4 @@
+{"account":"device-trial","backend":"security","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"none","namespace":"com.immerse.validation.receipt035.0D208F17-C6A7-457D-A1BD-399D3AAF8B52-disposable1990s-security-none-none","pauseAt":"none","process":"10582","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"0D208F17-C6A7-457D-A1BD-399D3AAF8B52-disposable1990s-security-none-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:08:34Z"}
+{"backend":"security","event":"adapter-read","process":"10582","processSequence":"2","sha256":"none","status":"-34018","utc":"2026-10-01T19:08:34Z"}
+{"backend":"security","event":"adapter-read","process":"10582","processSequence":"3","sha256":"none","status":"-34018","utc":"2026-10-01T19:08:34Z"}
+{"event":"native-capability-unavailable","process":"10582","processSequence":"4","status":"-34018","utc":"2026-10-01T19:08:34Z"}

@@ -1,0 +1,15 @@
+{
+  "captureUUID" : "7D9E1AD1-BFC6-475E-8EBF-20A87FC6FC26",
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "none",
+    "pauseAt" : "receiptResolved",
+    "runID" : "03777B2E-6076-4AA2-BFB3-855EC6044788"
+  },
+  "filmID" : "4A5BE196-7BDC-4399-81E3-DE264F8409DE",
+  "prepared" : true,
+  "savedAt" : 812562800,
+  "sourceHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+  "sourcePath" : "Staging\/4A5BE196-7BDC-4399-81E3-DE264F8409DE\/7D9E1AD1-BFC6-475E-8EBF-20A87FC6FC26.photo"
+}

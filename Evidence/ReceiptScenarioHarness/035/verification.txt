@@ -1,0 +1,49 @@
+Receipt checkpoint 035 verification, 2026-10-01 UTC
+Base: 63c21ce0590bb6aefe7a36f38fb0229c9e715813 plus committed harness source.
+
+Executed source/artifact checks:
+- SHA-256 comparison of current files against unit-2/source.sha256:
+  10 compiled Sources/Tests/Xcode-project files match.
+- Comparison against ui-1/source.sha256: 6 Sources/UITests files match.
+- Comparison against security-1/source.sha256: 6 Sources/native-test files match.
+- Current app root files match every entry of ui-1, security-1 and unit-2
+  app-files.sha256. Test binary inventory additionally retained at
+  simulator-artifact-final.sha256; physical compile at device-artifact.sha256.
+- shasum -a 256 -c source-final.sha256: 16 final probe files match.
+- git diff --exit-code 63c21ce -- App Packages .github plus original PRD,
+  tracker, adr directory and collected ADR document: exit 0, unchanged.
+
+Executed behavioral/evidence checks:
+- unit-1: 8/8 passed, 19 new injected-file histories.
+- security-1: 0 passed, 1 skipped; actual -34018, no native write or Film.
+- ui-1: 3/3 passed, 9 new histories and nine ordinary checkpoint process exits.
+- unit-2: 8/8 passed with exact production errors/statuses; 19 new histories.
+- node Probes/ReceiptScenarioHarness/inspect-evidence.mjs RUN MODE:
+  all four run directories pass count/history and applicable state/hash checks.
+  Native skipped result remains skipped, not accepted.
+- Six named before/after screenshots inspected: 16mm prepared, photo
+  receiptResolved, Super 8 projected. All 18 original screenshots retained.
+- sh -n Probes/ReceiptScenarioHarness/run-simulator.sh: exit 0.
+- node --check Probes/ReceiptScenarioHarness/inspect-evidence.mjs: exit 0.
+
+Document/package/source checks:
+- zip -r -X -q 2026-09-29-film-camera-experience-v1-documents.zip
+  2026-09-29-film-camera-experience-v1: exit 0.
+- sh Scripts/verify-document-package.sh: archive listing and content diff pass.
+- sh Scripts/verify-requirement-map.sh: 122 intake IDs, 72 unique personal
+  acceptance clauses, nine invariants. Coverage only; no accepted task change.
+- Project memory helper: AGENTS.md/CLAUDE.md convention unchanged.
+- git diff --cached --check: exit 0 after normalizing generated-log whitespace
+  with exact original compressed copies retained.
+- 23 local links in checkpoint/runbook/readiness reports resolve.
+
+Cleanup/limits:
+- Each script restored owned simulator's previous light/XXXL configuration
+  before shutdown. No post-shutdown UI-state readback or global preference edit.
+- device-after.json: owned AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 is Shutdown.
+- No active test/build sessions retained. All 48 synthetic histories retained
+  in latest snapshot; native capability produced no consumed Security item.
+- No personal phone/account/Photos/production-Keychain operation, signing
+  change, unrelated full suite, accessibility variant, no-mistakes run, PR,
+  CI acceptance or release action. Physical and original accessibility gates
+  remain unaccepted. This is the first harness checkpoint, not full v1 done.

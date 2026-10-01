@@ -1,0 +1,86 @@
+name: ReceiptScenarioHarness
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 26.0
+packages:
+  FilmDomain:
+    path: ../../Packages/FilmDomain
+  FilmPersistence:
+    path: ../../Packages/FilmPersistence
+  FilmRuntime:
+    path: ../../Packages/FilmRuntime
+  NativeAdapters:
+    path: ../../Packages/NativeAdapters
+  EntitlementCore:
+    path: ../../Packages/EntitlementCore
+  RenderFixtures:
+    path: ../../Packages/RenderFixtures
+targets:
+  ReceiptScenarioHarness:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    dependencies:
+      - package: FilmDomain
+      - package: FilmPersistence
+      - package: FilmRuntime
+      - package: NativeAdapters
+      - package: EntitlementCore
+      - package: RenderFixtures
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ReceiptScenarioHarness035
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Receipt Scenarios"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: 1
+  ReceiptScenarioTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: ReceiptScenarioHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ReceiptScenarioHarness035.Tests
+        GENERATE_INFOPLIST_FILE: YES
+  ReceiptScenarioUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: ReceiptScenarioHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ReceiptScenarioHarness035.UITests
+        GENERATE_INFOPLIST_FILE: YES
+  ReceiptNativeSecurityTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [NativeSecurityTests]
+    dependencies:
+      - target: ReceiptScenarioHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ReceiptScenarioHarness035.SecurityTests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  ReceiptScenarioHarness:
+    build:
+      targets:
+        ReceiptScenarioHarness: all
+        ReceiptScenarioTests: [test]
+        ReceiptScenarioUITests: [test]
+    test:
+      targets: [ReceiptScenarioTests, ReceiptScenarioUITests]
+      parallelizable: false
+  ReceiptNativeSecurity:
+    build:
+      targets:
+        ReceiptScenarioHarness: all
+        ReceiptNativeSecurityTests: [test]
+    test:
+      targets: [ReceiptNativeSecurityTests]
+      parallelizable: false

@@ -84,6 +84,18 @@ or production correction, exception or acceptance follows. The report also names
 remaining native fault-controller, race-instrumentation and coverage code work;
 hardware deferral does not waive those preparable deliverables.
 
+Instruction 035 delivers the first [receipt-harness checkpoint](../ReceiptScenarioHarness/035/README.md):
+an isolated iOS target using production receipt coordination, media journal and
+SQLite, explicit phase/re-entry controls and retained state/namespace inventories.
+Native Security capability skipped on actual -34018 in the unsigned simulator;
+the injected-store cases are labeled as such, never native Keychain acceptance.
+The [remaining engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md)
+names missing exact Development/FIFO boundaries, export/privacy race tests and
+broader native workflow coverage, with production interface impacts to review
+before dependent edits. No production change, original-audit fix/waiver, physical
+acceptance or implementation-ready claim follows. This report is repository-owned
+no-mistakes handoff material, not a structured scenario import or a pipeline run.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

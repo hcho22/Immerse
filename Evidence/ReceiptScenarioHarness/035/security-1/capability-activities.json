@@ -1,0 +1,25 @@
+{
+  "testIdentifier" : "ReceiptNativeSecurityTests/testExplicitNativeSecurityCapabilityAndReceipt()",
+  "testIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptNativeSecurityTests/ReceiptNativeSecurityTests/testExplicitNativeSecurityCapabilityAndReceipt",
+  "testName" : "testExplicitNativeSecurityCapabilityAndReceipt()",
+  "testRuns" : [
+    {
+      "activities" : [
+
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

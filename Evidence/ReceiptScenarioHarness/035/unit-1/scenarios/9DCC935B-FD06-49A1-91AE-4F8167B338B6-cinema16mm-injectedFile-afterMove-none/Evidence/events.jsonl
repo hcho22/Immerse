@@ -1,0 +1,29 @@
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"afterMove","namespace":"com.immerse.validation.receipt035.9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none","pauseAt":"none","process":"63694","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"2","sha256":"none","status":"-25300","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"3","sha256":"none","status":"-25300","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-add","process":"63694","processSequence":"4","sha256":"e9e4af80474771d0668f95e5828fec686817e5828d8496d0f45450c5c73a8020","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"5","sha256":"e9e4af80474771d0668f95e5828fec686817e5828d8496d0f45450c5c73a8020","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"6","sha256":"e9e4af80474771d0668f95e5828fec686817e5828d8496d0f45450c5c73a8020","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"captureID":"14BF0264-1B84-40B2-9D59-120884068C1C.mov","event":"prepared-input","filmID":"F48032AF-5C88-4223-8A23-487C7ACBD4A0","process":"63694","processSequence":"7","sha256":"15f9497070b2d213fd421c23d74942e27237151a5ae506571bd62c8ff6a3cb7a","utc":"2026-10-01T19:05:13Z"}
+{"event":"commit-requested","process":"63694","processSequence":"8","utc":"2026-10-01T19:05:13Z"}
+{"event":"production-checkpoint","phase":"prepared","process":"63694","processSequence":"9","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"10","sha256":"e9e4af80474771d0668f95e5828fec686817e5828d8496d0f45450c5c73a8020","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"11","sha256":"e9e4af80474771d0668f95e5828fec686817e5828d8496d0f45450c5c73a8020","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"actualStatus":"0","backend":"injectedFile","dispatched":"true","event":"adapter-update","process":"63694","processSequence":"12","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"13","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"event":"production-checkpoint","phase":"receiptResolved","process":"63694","processSequence":"14","utc":"2026-10-01T19:05:13Z"}
+{"error":"simulatedFailure(FilmPersistence.SaveFailureInjection.afterDurableMoveBeforeDebit)","event":"commit-error","process":"63694","processSequence":"15","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"16","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"17","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"event":"inventory","file":"inventory-57EE3B89-1383-41A0-9719-23B882736099.json","process":"63694","processSequence":"18","summary":"films=1;saved=0;pending=true;consumed=true;hash=none","utc":"2026-10-01T19:05:13Z"}
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"afterMove","namespace":"com.immerse.validation.receipt035.9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none","pauseAt":"none","process":"63694","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:05:13Z"}
+{"event":"recovery-started","process":"63694","processSequence":"2","projectionInjection":"disabled","receiptInjection":"preserved until explicit resolve","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"3","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"event":"recovery-returned","process":"63694","processSequence":"4","utc":"2026-10-01T19:05:13Z"}
+{"event":"recovery-started","process":"63694","processSequence":"5","projectionInjection":"disabled","receiptInjection":"preserved until explicit resolve","utc":"2026-10-01T19:05:13Z"}
+{"event":"recovery-returned","process":"63694","processSequence":"6","utc":"2026-10-01T19:05:13Z"}
+{"event":"commit-requested","process":"63694","processSequence":"7","utc":"2026-10-01T19:05:13Z"}
+{"event":"commit-returned","process":"63694","processSequence":"8","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"9","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"10","sha256":"dd14a1ee96d07d1d1d89ebf64da937aa638a8e5733ef5bdaca219553dc251728","status":"0","utc":"2026-10-01T19:05:13Z"}
+{"event":"inventory","file":"inventory-A9BD2DA4-F5B1-4D74-ACD5-30A848DC90A9.json","process":"63694","processSequence":"11","summary":"films=1;saved=1;pending=false;consumed=true;hash=true","utc":"2026-10-01T19:05:13Z"}

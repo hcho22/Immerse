@@ -1,0 +1,7 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Receipt035-unit-1.xcresult
+
+2026-10-01 12:05:52.845 xcodebuild[53407:148954415] [MT] IDETestOperationsObserverDebug: 63.604 elapsed -- Testing started completed.
+2026-10-01 12:05:52.845 xcodebuild[53407:148954415] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 12:05:52.845 xcodebuild[53407:148954415] [MT] IDETestOperationsObserverDebug: 63.604 sec, +63.604 sec -- end
+Testing started

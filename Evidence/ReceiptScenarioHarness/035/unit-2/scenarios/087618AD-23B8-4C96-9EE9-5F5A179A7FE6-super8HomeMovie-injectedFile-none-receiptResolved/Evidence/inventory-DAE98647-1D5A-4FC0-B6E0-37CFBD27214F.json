@@ -1,0 +1,73 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "super8HomeMovie",
+    "fault" : "none",
+    "pauseAt" : "receiptResolved",
+    "runID" : "087618AD-23B8-4C96-9EE9-5F5A179A7FE6"
+  },
+  "files" : {
+    "Staging\/4A274A05-B265-45E2-8582-86EAA1A108C7\/E691B2C6-C503-4136-A13C-A97D438AEC71.json" : "43b8f1099ea44d35b549f4921385ad9a77fb4ca23df8d4828f7da778ed1d979b",
+    "Staging\/4A274A05-B265-45E2-8582-86EAA1A108C7\/E691B2C6-C503-4136-A13C-A97D438AEC71.mov" : "1d3aa9904290da7e44a32024a9e309aa46bf641b71eeea94658f0ffc44786ce8",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "43fa77f62d021685cb52b2184b38f9aac42cee35071b86212b9882e07a5932fd",
+    "film-store.sqlite-wal" : "5a0a8491dec2bb11ab17a57669f94571f4965a6408fe54c6c38bf7d5e2f1a097"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "4A274A05-B265-45E2-8582-86EAA1A108C7",
+      "isArchived" : false,
+      "loadedAt" : 812574798.221243,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "unused",
+  "manifest" : {
+    "captureUUID" : "E691B2C6-C503-4136-A13C-A97D438AEC71",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "super8HomeMovie",
+      "fault" : "none",
+      "pauseAt" : "receiptResolved",
+      "runID" : "087618AD-23B8-4C96-9EE9-5F5A179A7FE6"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "4A274A05-B265-45E2-8582-86EAA1A108C7",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "1d3aa9904290da7e44a32024a9e309aa46bf641b71eeea94658f0ffc44786ce8",
+    "sourcePath" : "Staging\/4A274A05-B265-45E2-8582-86EAA1A108C7\/E691B2C6-C503-4136-A13C-A97D438AEC71.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "deviceID" : "36EBCD7D-757C-4520-91CB-49FF325155A8",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

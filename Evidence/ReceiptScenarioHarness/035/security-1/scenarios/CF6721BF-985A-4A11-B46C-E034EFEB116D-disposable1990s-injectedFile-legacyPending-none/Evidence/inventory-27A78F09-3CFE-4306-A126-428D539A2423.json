@@ -1,0 +1,94 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "legacyPending",
+    "pauseAt" : "none",
+    "runID" : "CF6721BF-985A-4A11-B46C-E034EFEB116D"
+  },
+  "decodedFrames" : 1,
+  "files" : {
+    "Media\/3B05E948-9439-4286-8AD5-3165EFD4DA0B\/source-1.bin" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "37044af6cd7c13752c9f333f4dd418d94b9d6cc769b9e1a33aa714f313131e80",
+    "film-store.sqlite-wal" : "0cfa6e1a9d232351c41a1a4c42cf78e49313b3c4b029695208bccf571c90d286"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 27
+          }
+        },
+        "displayName" : "1990s Disposable",
+        "id" : "disposable1990s",
+        "medium" : "photo",
+        "revealRule" : "rollLevelDevelopment",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "photo" : {
+
+            }
+          },
+          "revealState" : "sealed",
+          "savedAt" : 812562800,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "3B05E948-9439-4286-8AD5-3165EFD4DA0B",
+      "isArchived" : false,
+      "loadedAt" : 812574307.63513,
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "consumed",
+  "manifest" : {
+    "captureUUID" : "AE410B0F-3B6B-4787-BF73-282A426D0436",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "disposable1990s",
+      "fault" : "legacyPending",
+      "pauseAt" : "none",
+      "runID" : "CF6721BF-985A-4A11-B46C-E034EFEB116D"
+    },
+    "filmID" : "3B05E948-9439-4286-8AD5-3165EFD4DA0B",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "sourcePath" : "Staging\/3B05E948-9439-4286-8AD5-3165EFD4DA0B\/AE410B0F-3B6B-4787-BF73-282A426D0436.photo"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : false,
+  "sourceMatches" : true,
+  "sqlReceipt" : {
+    "captureID" : "AE410B0F-3B6B-4787-BF73-282A426D0436.photo",
+    "filmID" : "3B05E948-9439-4286-8AD5-3165EFD4DA0B",
+    "kind" : {
+      "photo" : {
+
+      }
+    },
+    "sequenceNumber" : 1,
+    "sourceSHA256" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "consumedAt" : 812562800,
+    "consumedFilmID" : "3B05E948-9439-4286-8AD5-3165EFD4DA0B",
+    "deviceID" : "4F1D84ED-A1AB-4D27-A778-233F3C374069",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}
