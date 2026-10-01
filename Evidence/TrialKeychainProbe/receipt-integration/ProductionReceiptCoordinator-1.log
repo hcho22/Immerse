@@ -1,0 +1,57 @@
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[3/6] Write swift-version--58304C5D6DBC2206.txt
+[5/8] Emitting module EntitlementCore
+[6/8] Compiling EntitlementCore DeviceTrialStore.swift
+[7/11] Compiling FilmRuntime CaptureCommitJournal.swift
+[8/11] Emitting module FilmRuntime
+[9/11] Compiling FilmRuntime TrialCoordinator.swift
+[10/17] Compiling FilmRuntimeTests FilmExportTests.swift
+[11/17] Compiling FilmRuntimeTests CaptureRecoveryIntegrationTests.swift
+[12/17] Compiling FilmRuntimeTests FilmProcessorTests.swift
+[13/17] Compiling FilmRuntimeTests SoundtrackTests.swift
+[14/17] Emitting module FilmRuntimeTests
+[15/17] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[15/17] Write Objects.LinkFileList
+[16/17] Linking FilmRuntimePackageTests
+Build complete! (6.54s)
+Test Suite 'Selected tests' started at 2026-10-01 07:02:30.490.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 07:02:30.493.
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 07:02:30.493.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/MediaVerification.swift:22: error: -[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume] : failed: caught error: "invalidMedia"
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' failed (0.990 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:130: error: -[FilmRuntimeTests.TrialIntegrationTests testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:131: error: -[FilmRuntimeTests.TrialIntegrationTests testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:132: error: -[FilmRuntimeTests.TrialIntegrationTests testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture] : XCTUnwrap failed: expected non-nil value of type "StoredMediaAsset"
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture]' failed (2.198 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' passed (0.014 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:194: error: -[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:195: error: -[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:199: error: -[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:203: error: -[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial] : XCTAssertTrue failed
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:205: error: -[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial] : failed - Used Trial cannot reset
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial]' failed (0.024 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/MediaVerification.swift:22: error: -[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement] : failed: caught error: "invalidMedia"
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' failed (0.042 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:31: error: -[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:32: error: -[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial] : XCTUnwrap failed: expected non-nil value of type "CaptureSaveEvent"
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' failed (0.340 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' passed (0.023 seconds).
+Test Suite 'TrialIntegrationTests' failed at 2026-10-01 07:02:34.125.
+	 Executed 7 tests, with 12 failures (2 unexpected) in 3.631 (3.633) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' failed at 2026-10-01 07:02:34.125.
+	 Executed 7 tests, with 12 failures (2 unexpected) in 3.631 (3.633) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 07:02:34.125.
+	 Executed 7 tests, with 12 failures (2 unexpected) in 3.631 (3.635) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

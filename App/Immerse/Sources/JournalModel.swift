@@ -35,8 +35,10 @@ final class JournalModel {
     var busyFilms: Set<UUID> = []
     var hiddenFilms: Set<UUID> = []
     var mediaRevision = UUID()
+    private(set) var pendingFilms: Set<UUID> = []
+    private(set) var initialRecoveryPending = true
 
-    init(root: URL) throws {
+    init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore()) throws {
         do {
             guard let resources = Bundle.main.resourceURL,
                   let manifest = Bundle.main.url(forResource: "MediaCatalog", withExtension: "json") else {
@@ -50,19 +52,47 @@ final class JournalModel {
         }
         repository = try FilmRepository(rootURL: root)
         processor = try FilmProcessor(root: root)
-        trial = try TrialCoordinator(root: root)
+        trial = try TrialCoordinator(root: root, store: trialStore)
         try repository.recover()
-        refresh()
+        reloadFilms()
     }
 
     func refresh() {
-        do { films = try repository.allFilms() }
-        catch { report(error) }
+        reloadFilms()
         Task {
             await billing.refresh()
             do { trialState = try await trial.state(); trialError = nil }
             catch { trialState = nil; trialError = error.localizedDescription }
+            reloadFilms()
         }
+    }
+
+    private func reloadFilms() {
+        do {
+            films = try repository.allFilms()
+            pendingFilms = Set(try films.filter { try repository.hasPendingCapture(filmID: $0.id) }.map(\.id))
+        } catch {
+            pendingFilms = Set(films.map(\.id))
+            report(error)
+        }
+    }
+
+    func hasPendingSave(_ id: UUID) -> Bool { initialRecoveryPending || pendingFilms.contains(id) }
+
+    func recoverAtLaunch() async {
+        guard initialRecoveryPending else { return }
+        do { try await trial.recoverSavedCaptures() }
+        catch { report(error) }
+        initialRecoveryPending = false
+        refresh()
+    }
+
+    func recoverCapture(_ id: UUID) async throws {
+        guard !busyFilms.contains(id), !hiddenFilms.contains(id) else { throw JournalError.operationInProgress }
+        busyFilms.insert(id)
+        defer { busyFilms.remove(id); refresh() }
+        try await capture.finishSaves(filmID: id)
+        try await trial.recoverSavedCaptures(filmID: id)
     }
 
     func film(_ id: UUID) -> Film? { films.first { $0.id == id } }
@@ -95,6 +125,7 @@ final class JournalModel {
     }
 
     func load(camera: CameraPackage, title: String, orientation: MovieOrientation) async throws -> Film {
+        guard !initialRecoveryPending else { throw JournalError.operationInProgress }
         // Permission is checked before any Film or Trial activation is written.
         let authorizer = AVFoundationCaptureAuthorizer()
         let allowed = authorizer.authorizationStatus() == .authorized
@@ -119,7 +150,7 @@ final class JournalModel {
     }
 
     func develop(_ id: UUID) async throws {
-        guard !busyFilms.contains(id), !hiddenFilms.contains(id) else { throw JournalError.operationInProgress }
+        guard !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { throw JournalError.operationInProgress }
         busyFilms.insert(id)
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
         try await processor.develop(filmID: id)
@@ -148,7 +179,7 @@ final class JournalModel {
         defer { refresh(); hiddenFilms.remove(id); mediaRevision = UUID() }
         try await capture.cancelForPrivacy(filmID: id)
         if let sequence { try await processor.discard(filmID: id, sequence: sequence) }
-        else { try await processor.deleteFilm(filmID: id) }
+        else { try await trial.deleteFilm(filmID: id, processor: processor) }
     }
 
     func export(_ id: UUID, originals: Bool) async throws {

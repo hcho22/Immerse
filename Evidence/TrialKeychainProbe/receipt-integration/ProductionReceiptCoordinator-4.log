@@ -1,0 +1,63 @@
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module FilmRuntimeTests
+[4/6] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (4.02s)
+Test Suite 'Selected tests' started at 2026-10-01 08:13:29.867.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 08:13:29.869.
+Test Suite 'ProductionTrialReceiptTests' started at 2026-10-01 08:13:29.869.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' passed (0.046 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' passed (1.407 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' passed (2.313 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' passed (0.303 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' passed (0.248 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' passed (0.230 seconds).
+Test Suite 'ProductionTrialReceiptTests' passed at 2026-10-01 08:13:34.418.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 4.547 (4.549) seconds
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 08:13:34.418.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' passed (0.442 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' passed (0.019 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' passed (0.330 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' passed (0.463 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' passed (0.356 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' passed (1.279 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' passed (0.044 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' passed (0.285 seconds).
+Test Suite 'TrialIntegrationTests' passed at 2026-10-01 08:13:37.638.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 3.219 (3.220) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 08:13:37.638.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 7.766 (7.770) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 08:13:37.638.
+	 Executed 14 tests, with 0 failures (0 unexpected) in 7.766 (7.772) seconds
+PRODUCTION_NATIVE_REPLY applied=false updates=2 count=1 pending=false
+PRODUCTION_NATIVE_REPLY applied=true updates=1 count=1 pending=false
+PRODUCTION_PROJECTION camera=disposable1990s fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

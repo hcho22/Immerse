@@ -54,6 +54,7 @@ final class CaptureController {
                     case .saveFailed:
                         recordingStarted = nil
                         message = "Capture could not finish saving. Retry before taking another capture."
+                        model.refresh()
                     case .interrupted:
                         recordingStarted = nil
                         message = "Camera paused. Saved captures are unchanged."
@@ -68,6 +69,7 @@ final class CaptureController {
             try await backend.retryPendingSave()
         }
         try await backend.recoverPendingCaptures()
+        try await model.trial.reconcile(filmID: film.id)
         model.refresh()
         guard model.film(film.id)?.completionState == .open else { return }
         let capabilities = AVFoundationCaptureDeviceDiscoverer().capabilities()

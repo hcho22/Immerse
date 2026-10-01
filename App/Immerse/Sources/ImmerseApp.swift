@@ -17,10 +17,10 @@ struct ImmerseApp: App {
                     } description: {
                         Text(failure)
                     } actions: {
-                        Button("Try Again", systemImage: "arrow.clockwise") { openJournal() }
+                        Button("Try Again", systemImage: "arrow.clockwise") { Task { await openJournal() } }
                     }
                 } else {
-                    ProgressView().task { openJournal() }
+                    ProgressView().task { await openJournal() }
                 }
             }
             .tint(.accentColor)
@@ -34,12 +34,14 @@ struct ImmerseApp: App {
         }
     }
 
-    private func openJournal() {
+    private func openJournal() async {
         do {
             let root = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                                    appropriateFor: nil, create: true)
                 .appendingPathComponent("FilmJournal", isDirectory: true)
-            model = try JournalModel(root: root)
+            let opened = try JournalModel(root: root)
+            await opened.recoverAtLaunch()
+            model = opened
             failure = nil
         } catch {
             failure = "Your Films have not been removed. Free space in iPhone Settings and try again. \(error.localizedDescription)"

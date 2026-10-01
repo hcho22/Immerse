@@ -30,6 +30,7 @@ struct JournalView: View {
                         Button("Start a Film", systemImage: "plus") { setup = true }
                             .buttonStyle(.borderedProminent)
                             .accessibilityIdentifier("start-film")
+                            .disabled(model.initialRecoveryPending)
                     }
                 }
                 .navigationDestination(for: JournalRoute.self) { route in
@@ -107,10 +108,14 @@ private struct JournalFilmRow: View {
                     }
                 }
             }
-            ProgressView(value: film.progress).tint(.secondary)
-                .accessibilityLabel("Film used").accessibilityValue("\(Int(film.progress * 100)) percent")
+            if model.hasPendingSave(film.id) { ProgressView().accessibilityLabel("Finishing save") }
+            else {
+                ProgressView(value: film.progress).tint(.secondary)
+                    .accessibilityLabel("Film used").accessibilityValue("\(Int(film.progress * 100)) percent")
+            }
             HStack {
-                Label(film.remainingLabel, systemImage: film.camera.medium == .photo ? "rectangle.stack" : "film")
+                Label(model.hasPendingSave(film.id) ? "Finishing save" : film.remainingLabel,
+                      systemImage: model.hasPendingSave(film.id) ? "clock" : film.camera.medium == .photo ? "rectangle.stack" : "film")
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
             }.font(.caption).foregroundStyle(.secondary)

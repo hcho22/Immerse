@@ -25,6 +25,7 @@ struct WorkflowHarnessApp: App {
             settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
             let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
             let model = try JournalModel(root: root)
+            await model.recoverAtLaunch()
             let movie = ProcessInfo.processInfo.arguments.contains("--movie")
             let instant = ProcessInfo.processInfo.arguments.contains("--instant")
             let camera = movie ? CameraCatalog.cinema16mm : (instant ? CameraCatalog.instant1970s : CameraCatalog.disposable1990s)

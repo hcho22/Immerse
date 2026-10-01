@@ -1,5 +1,10 @@
 # Configurable Media and Native Workflow Candidate
 
+Historical `d233bb7` checkpoint. Later Trial software and its distinct source
+inventory/results are in `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md`.
+The D3 software-gap descriptions below refer to this historical checkpoint;
+accessibility, production-rights and hardware gaps are not superseded by that work.
+
 This is an unaccepted continuation of `67bf395` on `fm/immerse-v1-implementation`,
 not completion of full v1. The commit containing this report identifies the source;
 execution below used that dirty candidate on Xcode 26.5/macOS 26.6.2. Production

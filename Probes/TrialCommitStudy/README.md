@@ -1,13 +1,20 @@
 # Trial Commit Protocol Study
 
-`swift test --package-path Probes/TrialCommitStudy` now runs a **non-shipping**
-receipt coordinator against actual FilmRepository SQLite and decoded native media.
-Eleven tests include 30 abrupt child-process exits, 30 save-prefix reopen histories,
+`swift test --package-path Probes/TrialCommitStudy` runs **non-shipping**
+tests against actual FilmRepository SQLite and decoded native media. The original
+eleven isolated coordinator tests include 30 abrupt child-process exits, 30 save-prefix reopen histories,
 60 destination restore copies, lost replies, projection failures, durable abort,
 queued privacy removal and both exact Movie capacities. The receipt stores are
 injected memory or ordinary test files, never system Keychain. See
 `Evidence/TrialKeychainProbe/2026-10-01-receipt-study.md` for the observed outcomes,
 old failures, remaining native conditions and production-integration boundary.
+
+The later `ProductionReceiptCrashWorker` calls the actual production coordinator,
+not the study's copy. It exits abruptly at three preparation/receipt/projection
+boundaries for each of three Cameras. `FileKeychainCalls` supplies ordinary-file
+receipt storage outside disposable app data, never real Security calls. Additional
+tests exercise raw status/read mapping and pending recovery. Current outcomes and
+commands are in `Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md`.
 
 Follow-up: `swift Probes/TrialCommitStudy/PendingReplay.swift` checks 35 prefixes
 with pending, unknown, rejected and deleted states. It corrects the first study's
@@ -33,13 +40,13 @@ For the actual current implementation, run:
 swift test --package-path Packages/FilmRuntime --filter TrialIntegrationTests
 ```
 
-`testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture` confirms the
-known violation using a decoded synthetic photo and real SQLite/media storage,
-with only the device store injected. It removes only its temporary test directory.
-This is neither an actual app uninstall nor a native Keychain persistence test.
-The paired precommit-failure test verifies that the same retained unused marker
-must, in that history, allow another Film. Existing tests cover installed recovery,
-zero-save deletion and destination entitlement independence.
+At historical `d233bb7`, `testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture`
+confirmed the D3 violation using a decoded photo and real SQLite/media storage.
+The failure-observation log and source identity remain retained. Current paired
+regressions instead assert no SQL commit before unresolved receipt and no eligibility
+reset after receipt commitment/app-storage loss. Native media, queued deletion,
+legacy migration and restored destination independence are covered separately.
+These tests remove only private temporary directories, not installed apps or phones.
 
 See `Evidence/TrialKeychainProbe/2026-10-01-protocol-review.md` for official API
 boundaries, alternatives, required disconfirming checks and the acceptance gap.

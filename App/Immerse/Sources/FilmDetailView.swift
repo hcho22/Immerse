@@ -55,7 +55,7 @@ struct FilmDetailView: View {
         .confirmationDialog("Complete Film early?", isPresented: $early, titleVisibility: .visible) {
             Button("Complete Film", role: .destructive) {
                 model.perform {
-                    try await model.capture.finishSaves(filmID: filmID)
+                    try await model.recoverCapture(filmID)
                     guard let snapshot = earlySnapshot else { throw PersistenceError.capacityChangedSinceConfirmation }
                     _ = try model.repository.completeEarly(filmID: filmID, confirmedCaptureCount: snapshot.savedCaptureCount)
                     developing = true
@@ -77,8 +77,10 @@ struct FilmDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(film.camera.displayName).font(.system(.title2, design: .serif))
             Text(film.journalState).font(.headline)
-            Text(film.remainingLabel).font(.subheadline.monospaced()).foregroundStyle(.secondary)
-            ProgressView(value: film.progress)
+            Text(model.hasPendingSave(filmID) ? "Finishing save" : film.remainingLabel)
+                .font(.subheadline.monospaced()).foregroundStyle(.secondary)
+            if model.hasPendingSave(filmID) { ProgressView().accessibilityLabel("Finishing save") }
+            else { ProgressView(value: film.progress) }
             if let range = film.captureDateRange {
                 Text("\(range.lowerBound.formatted(date: .abbreviated, time: .omitted)) - \(range.upperBound.formatted(date: .abbreviated, time: .omitted))")
                     .font(.caption).foregroundStyle(.secondary)
@@ -89,6 +91,10 @@ struct FilmDetailView: View {
     @ViewBuilder private func actions(_ film: Film) -> some View {
         if model.busyFilms.contains(filmID) {
             ProgressView("Processing Film").accessibilityIdentifier("processing-film")
+        } else if model.hasPendingSave(filmID) {
+            Button("Resume Save", systemImage: "arrow.clockwise") {
+                model.perform { try await model.recoverCapture(filmID) }
+            }.disabled(model.initialRecoveryPending)
         } else {
             if film.completionState == .open {
                 Button("Open Camera", systemImage: "camera") { capturing = true }.buttonStyle(.borderedProminent)
@@ -171,7 +177,7 @@ struct FilmDetailView: View {
             }
             if film.completionState == .open && film.camera.revealRule != .instantPerExposure {
                 Button(film.camera.medium == .photo ? "Rewind & Develop Early" : "Stop & Develop Early", systemImage: "backward.end") { earlySnapshot = film; early = true }
-                    .disabled(film.savedCaptureCount == 0 || model.busyFilms.contains(filmID))
+                    .disabled(film.savedCaptureCount == 0 || model.busyFilms.contains(filmID) || model.hasPendingSave(filmID))
             }
             Button("Delete Film", systemImage: "trash", role: .destructive) { deleting = true }
         } label: { Label("Film actions", systemImage: "ellipsis") }

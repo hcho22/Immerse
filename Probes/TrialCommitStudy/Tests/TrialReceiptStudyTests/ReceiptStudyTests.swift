@@ -2,6 +2,7 @@ import FilmDomain
 import FilmPersistence
 import Foundation
 import RenderFixtures
+import Security
 import Synchronization
 import XCTest
 @testable import TrialReceiptStudy
@@ -135,6 +136,39 @@ final class ReceiptStudyTests: XCTestCase {
             try await coordinator.save(input)
             try await coordinator.save(input)
             try await assertSaved(root: app, input: input, count: 1)
+            XCTAssertEqual(try store.read().receipt?.captureID, input.id)
+        }
+    }
+
+    func testNativeStatusAdapterKeepsUnknownCapturePendingAcrossActualSQLiteRecovery() async throws {
+        let root = temporaryRoot(); defer { try? FileManager.default.removeItem(at: root) }
+        let fixture = try await fixtures(root)
+        for applied in [false, true] {
+            let app = root.appendingPathComponent("NativeStatus-\(applied)")
+            let device = UUID()
+            let initial = NativeReceiptEnvelope(record: ReceiptRecord(deviceID: device, receipt: nil))
+            let calls = StatusCalls(bytes: try JSONEncoder().encode(initial))
+            let store = NativeReceiptStatusAdapter(calls: calls, expectedDeviceID: device)
+            let coordinator = try ReceiptCoordinator(root: app, store: store)
+            let film = try await coordinator.start(camera: CameraCatalog.super8HomeMovie)
+            let input = input(film: film, fixture: fixture)
+            calls.appliesUpdate = applied
+            calls.updateStatus = errSecNotAvailable
+            calls.readAfterUpdate = .init(status: errSecInteractionNotAllowed, data: nil)
+            do { try await coordinator.save(input); XCTFail("Unknown native reply must remain pending") }
+            catch ReceiptFailure.unknown { }
+            XCTAssertEqual(try FilmRepository(rootURL: app).film(id: film.id).savedCaptureCount, 0)
+            let reopened = try ReceiptCoordinator(root: app, store: store)
+            do { try await reopened.save(input); XCTFail("Read unavailable must block capture") }
+            catch ReceiptFailure.unavailable { }
+            do { _ = try await reopened.start(camera: CameraCatalog.instant1970s); XCTFail("Read unavailable must block Trial start") }
+            catch ReceiptFailure.unavailable { }
+            calls.overrideRead = nil; calls.readAfterUpdate = nil
+            calls.appliesUpdate = true; calls.updateStatus = errSecSuccess
+            try await reopened.reconcile()
+            try await reopened.save(input)
+            try await assertSaved(root: app, input: input, count: 1)
+            XCTAssertEqual(calls.updateCount, applied ? 1 : 2)
             XCTAssertEqual(try store.read().receipt?.captureID, input.id)
         }
     }

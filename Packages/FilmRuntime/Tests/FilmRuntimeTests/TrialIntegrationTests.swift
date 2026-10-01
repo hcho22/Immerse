@@ -85,22 +85,42 @@ final class TrialIntegrationTests: XCTestCase {
         return (film, date, manifest.movie.durationSeconds)
     }
 
-    // These are counterexamples, not acceptance passes. The device store survives
-    // perfectly; removing only our private app directory models loss of the outbox.
-    func testDocumentedUninstallGapReopensTrialAfterCommittedFirstCapture() async throws {
+    // The former D3 counterexample and its passing failure-observation log remain
+    // in the d233bb7 evidence checkpoint. These assertions exercise the correction.
+    func testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let store = MemoryDeviceStore()
-        let firstID = try await commitBeforeKeychainFailure(root: root, store: store)
+        let firstID = try await prepareBeforeKeychainFailure(root: root, store: store)
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
         try FileManager.default.removeItem(at: root)
         store.failConsumption = false
 
         let reinstalled = try TrialCoordinator(root: root, store: store)
         let observed = try await reinstalled.state()
-        XCTAssertEqual(observed, .unused, "Known TRI-04 violation: committed save must keep eligibility consumed")
-        let second = try await reinstalled.start(camera: CameraCatalog.disposable1990s, title: "Counterexample replacement")
+        XCTAssertEqual(observed, .unused, "No capture or receipt committed before storage loss")
+        let second = try await reinstalled.start(camera: CameraCatalog.disposable1990s, title: "Replacement")
         XCTAssertNotEqual(second.id, firstID)
+    }
+
+    func testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MemoryDeviceStore()
+        let source = try await photo(root)
+        let coordinator = try TrialCoordinator(root: root, store: store, projectionFailure: .afterDurableMoveBeforeDebit)
+        let film = try await coordinator.start(camera: CameraCatalog.disposable1990s, title: "Receipt committed")
+        let receiver = try await coordinator.receiver(filmID: film.id)
+        do { try await receiver.commit(.photoSaved(source)); XCTFail("Expected projection fault") }
+        catch { XCTAssertEqual(error as? PersistenceError, .simulatedFailure(.afterDurableMoveBeforeDebit)) }
+        let repository = try FilmRepository(rootURL: root)
+        XCTAssertEqual(try repository.film(id: film.id).savedCaptureCount, 0)
+        XCTAssertEqual(try XCTUnwrap(store.read()).consumedCaptureID, source.lastPathComponent)
+        try FileManager.default.removeItem(at: root)
+        let reinstalled = try TrialCoordinator(root: root, store: store)
+        guard case .consumed = try await reinstalled.state() else { return XCTFail("Receipt must survive app storage loss") }
+        do { _ = try await reinstalled.start(camera: CameraCatalog.instant1970s, title: "Cannot reset"); XCTFail("Second Trial") }
+        catch EntitlementDenial.currentDeviceTrialConsumed { }
     }
 
     func testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused() async throws {
@@ -115,22 +135,21 @@ final class TrialIntegrationTests: XCTestCase {
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
     }
 
-    private func commitBeforeKeychainFailure(root: URL, store: MemoryDeviceStore) async throws -> UUID {
-        let fixtures = root.appendingPathComponent("Fixtures")
-        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures)
-        let source = fixtures.appendingPathComponent("synthetic-developed-photo.jpg")
-        _ = try VerifiedMedia.photo(at: source)
+    private func prepareBeforeKeychainFailure(root: URL, store: MemoryDeviceStore) async throws -> UUID {
+        let source = try await photo(root)
         let coordinator = try TrialCoordinator(root: root, store: store)
-        let film = try await coordinator.start(camera: CameraCatalog.disposable1990s, title: "Counterexample first Film")
+        let film = try await coordinator.start(camera: CameraCatalog.disposable1990s, title: "Pending first Film")
         let receiver = try await coordinator.receiver(filmID: film.id)
         store.failConsumption = true
         do { try await receiver.commit(.photoSaved(source)); XCTFail("Expected injected Keychain failure") }
         catch { XCTAssertEqual((error as? CocoaError)?.code, .fileWriteNoPermission) }
         let reopened = try FilmRepository(rootURL: root)
-        XCTAssertEqual(try reopened.film(id: film.id).savedCaptureCount, 1)
-        XCTAssertEqual(try reopened.pendingTrialConsumptions().count, 1)
-        let retained = try XCTUnwrap(reopened.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
-        XCTAssertEqual(try VerifiedMedia.photo(at: retained.url).sha256, retained.record.sha256)
+        XCTAssertEqual(try reopened.film(id: film.id).savedCaptureCount, 0)
+        XCTAssertEqual(try reopened.film(id: film.id).remainingExposures, 27)
+        XCTAssertTrue(try reopened.pendingTrialConsumptions().isEmpty)
+        XCTAssertNil(try reopened.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
+        let pending = root.appendingPathComponent("Staging/\(film.id)/Commit/\(source.lastPathComponent)")
+        XCTAssertEqual(try VerifiedMedia.photo(at: pending).sha256, try VerifiedMedia.photo(at: source).sha256)
         return film.id
     }
 
@@ -159,8 +178,7 @@ final class TrialIntegrationTests: XCTestCase {
         try await coordinator.reconcile()
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
         XCTAssertTrue(try repository.pendingTrialConsumptions().isEmpty)
-        let source = root.appendingPathComponent("retry.photo")
-        try Data("native validated bytes".utf8).write(to: source)
+        let source = try await photo(root)
         let receiver = try await coordinator.receiver(filmID: film.id)
         store.failConsumption = true
         do { try await receiver.commit(.photoSaved(source)); XCTFail("Expected Keychain failure") }
@@ -175,7 +193,7 @@ final class TrialIntegrationTests: XCTestCase {
         XCTAssertTrue(try repository.pendingTrialConsumptions().isEmpty)
     }
 
-    func testFirstSaveOutboxSurvivesKeychainFailureAndFilmDeletionWithoutGrantingAnotherTrial() async throws {
+    func testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let store = MemoryDeviceStore()
@@ -184,23 +202,24 @@ final class TrialIntegrationTests: XCTestCase {
         let state = try await coordinator.state()
         XCTAssertEqual(state, .emptyFilmInProgress(filmID: film.id))
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
-        let source = root.appendingPathComponent("native-capture.photo")
-        try Data("already-native-validated".utf8).write(to: source)
-        let receiver = try await coordinator.receiver(filmID: film.id)
-        store.failConsumption = true
-        do { try await receiver.commit(.photoSaved(source)); XCTFail("Keychain failure must retain pending save acknowledgement") }
-        catch { }
+        let source = try await photo(root)
         let repository = try FilmRepository(rootURL: root)
+        // A D3 database committed before upgrade must not lose its obligation.
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data(contentsOf: source))
+        store.failConsumption = true
+        do { try await coordinator.reconcile(); XCTFail("Legacy outbox must remain on unresolved write") }
+        catch { }
         XCTAssertEqual(try repository.film(id: film.id).savedCaptureCount, 1)
         XCTAssertEqual(try repository.pendingTrialConsumptions().count, 1)
         do { _ = try await coordinator.start(camera: CameraCatalog.instant1970s, title: "No second Trial"); XCTFail("Must fail closed") }
         catch { }
-        try repository.deleteFilm(filmID: film.id)
+        try await coordinator.deleteFilm(filmID: film.id)
         XCTAssertEqual(try repository.pendingTrialConsumptions().count, 1)
         store.failConsumption = false
         let reopened = try TrialCoordinator(root: root, store: store)
         try await reopened.reconcile()
         XCTAssertTrue(try XCTUnwrap(store.read()).isConsumed)
+        XCTAssertNil(try XCTUnwrap(store.read()).consumedCaptureID, "Legacy consumption has no invented capture receipt")
         XCTAssertTrue(try repository.pendingTrialConsumptions().isEmpty)
         do { _ = try await reopened.start(camera: CameraCatalog.instant1970s, title: "Still consumed"); XCTFail("Used Trial cannot reset") }
         catch EntitlementDenial.currentDeviceTrialConsumed { }
@@ -216,7 +235,7 @@ final class TrialIntegrationTests: XCTestCase {
         try await receiver.commit(.saveFailed("no saved bytes"))
         let repository = try FilmRepository(rootURL: root)
         XCTAssertTrue(try repository.pendingTrialConsumptions().isEmpty)
-        try repository.deleteFilm(filmID: film.id)
+        try await coordinator.deleteFilm(filmID: film.id)
         let next = try await coordinator.start(camera: CameraCatalog.cinema16mm, title: "Replacement", orientation: .landscape)
         XCTAssertNotEqual(next.id, film.id)
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
@@ -227,29 +246,36 @@ final class TrialIntegrationTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let repository = try FilmRepository(rootURL: root)
         let captured = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Restored captured", access: .trial(originDevice: UUID()))
-        try repository.savePhotoCapture(filmID: captured.id, sourceData: Data("saved before restore".utf8))
+        let source = try await photo(root)
+        try repository.savePhotoCapture(filmID: captured.id, sourceData: Data(contentsOf: source))
         let empty = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Restored empty", access: .trial(originDevice: UUID()))
         let destination = MemoryDeviceStore()
         let coordinator = try TrialCoordinator(root: root, store: destination)
         let own = try await coordinator.start(camera: CameraCatalog.mediumFormat6x6, title: "Destination Trial")
         for film in [captured, empty] {
             let receiver = try await coordinator.receiver(filmID: film.id)
-            let source = root.appendingPathComponent("\(film.id).photo")
-            try Data("new native capture".utf8).write(to: source)
             try await receiver.commit(.photoSaved(source))
         }
         XCTAssertFalse(try XCTUnwrap(destination.read()).isConsumed)
         XCTAssertEqual(try repository.film(id: captured.id).savedCaptureCount, 2)
         XCTAssertEqual(try repository.film(id: empty.id).savedCaptureCount, 1)
-        let ownSource = root.appendingPathComponent("own.photo")
-        try Data("own native capture".utf8).write(to: ownSource)
         let ownReceiver = try await coordinator.receiver(filmID: own.id)
-        try await ownReceiver.commit(.photoSaved(ownSource))
+        try await ownReceiver.commit(.photoSaved(source))
         XCTAssertEqual(try destination.read()?.consumedFilmID, own.id)
     }
 
     private func makeRoot() -> URL {
         FileManager.default.temporaryDirectory.appendingPathComponent("TrialIntegrationTests-\(UUID())")
+    }
+
+    private func photo(_ root: URL) async throws -> URL {
+        let fixtures = root.appendingPathComponent("Fixtures")
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
+        let source = fixtures.appendingPathComponent("synthetic-developed-photo.jpg")
+        _ = try VerifiedMedia.photo(at: source)
+        return source
     }
 }
 
@@ -267,12 +293,13 @@ private final class MemoryDeviceStore: DeviceTrialStoring, Sendable {
             let record = DeviceTrialRecord(); state.record = record; return record
         }
     }
-    func consume(filmID: UUID, savedAt: Date) throws {
+    func consume(filmID: UUID, captureID: String? = nil, savedAt: Date) throws {
         try state.withLock { state in
             if state.fails { throw CocoaError(.fileWriteNoPermission) }
             let current = state.record ?? DeviceTrialRecord()
             if !current.isConsumed {
-                state.record = DeviceTrialRecord(deviceID: current.deviceID, consumedFilmID: filmID, consumedAt: savedAt)
+                state.record = DeviceTrialRecord(deviceID: current.deviceID, consumedFilmID: filmID,
+                    consumedAt: savedAt, consumedCaptureID: captureID)
             }
         }
     }

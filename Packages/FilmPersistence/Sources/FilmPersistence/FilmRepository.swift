@@ -456,6 +456,18 @@ public final class FilmRepository {
         return rootURL.appendingPathComponent("Staging/\(filmID)", isDirectory: true)
     }
 
+    /// A presentation guard, not a replacement for the runtime's serialized save
+    /// owner. Include malformed metadata so unavailable recovery stays visible.
+    public func hasPendingCapture(filmID: UUID) throws -> Bool {
+        let staging = try captureStagingDirectory(filmID: filmID)
+        for directory in [staging, staging.appendingPathComponent("Commit")] {
+            guard fileManager.fileExists(atPath: directory.path) else { continue }
+            if try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+                .contains(where: { $0.pathExtension == "json" }) { return true }
+        }
+        return false
+    }
+
     public func revealedAsset(filmID: UUID, sequenceNumber: Int, kind: StoredAsset.Kind) throws -> StoredMediaAsset {
         let film = try film(id: filmID)
         if kind == .movie {

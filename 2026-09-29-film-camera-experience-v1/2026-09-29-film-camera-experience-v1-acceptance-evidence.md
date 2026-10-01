@@ -4,6 +4,17 @@ This companion expands the PRD's personal FR acceptance paragraphs and section 1
 
 Evidence snapshot: source `7bfc78c`, branch `fm/immerse-v1-implementation`, observed 2026-10-01 UTC, macOS 26.6.2 (`25G83`), Swift 6.3.2, Xcode 26.5 (`17F42`). Package tests below ran on macOS. iOS builds were unsigned compile checks, not executed device tests. The approved Keychain candidate is separately pinned to `6e5c1742d344e0505b74176f60ac11c19a83e686`; its signed build passed but the confirmed iPhone was unreachable. No full FR has native acceptance yet.
 
+Historical snapshot rows below retain their original observations. Current
+software addenda are linked from the evidence map. In particular,
+`Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md` supersedes
+the D3 implementation-gap status for FR-04 A06 and FR-21 A01/A03/A05/A06/A07 and
+the Trial/capacity invariants: complete pending media, one receipt/readback,
+once-only projection, legacy migration, native app recovery and serialized deletion
+have software evidence. The original counterexample remains at `d233bb7`; device
+retention, two-device restore and power-loss behavior remain unaccepted. The
+captain's implementation-first instruction superseded the historical before-code
+TRI-11 prohibition, not its eventual hardware acceptance requirement.
+
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.

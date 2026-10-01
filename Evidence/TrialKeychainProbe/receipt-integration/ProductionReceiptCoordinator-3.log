@@ -1,0 +1,30 @@
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[3/6] Write swift-version--58304C5D6DBC2206.txt
+[5/8] Emitting module FilmPersistence
+[6/8] Compiling FilmPersistence FilmRepository.swift
+[7/10] Compiling FilmPersistence FilmRepository+Entitlement.swift
+[8/10] Compiling FilmPersistence FilmRepository+Development.swift
+[9/13] Compiling CapturePipeline CapturePersistencePipeline.swift
+[10/13] Compiling CapturePipeline CapturePipelineReceiver.swift
+[11/13] Emitting module CapturePipeline
+[12/17] Compiling FilmRuntime TrialCoordinator.swift
+[13/17] Compiling FilmRuntime FilmExportWorker.swift
+[14/17] Compiling FilmRuntime FilmProcessor.swift
+[15/17] Emitting module FilmRuntime
+[16/24] Compiling FilmRuntimeTests FilmExportTests.swift
+[17/24] Compiling FilmRuntimeTests SoundtrackTests.swift
+[18/24] Compiling FilmRuntimeTests FilmProcessorTests.swift
+[19/24] Compiling FilmRuntimeTests CaptureRecoveryIntegrationTests.swift
+[20/24] Emitting module FilmRuntimeTests
+[21/24] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[22/24] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift:49:38: error: 'async' call in an autoclosure that does not support concurrency
+ 47 |             XCTAssertFalse(calls.calledOnMainThread, "All Security-boundary calls in the production owner run off main")
+ 48 |             let source = try XCTUnwrap(repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
+ 49 |             XCTAssertEqual(try await VerifiedMedia.movie(at: source.url).sha256, source.record.sha256)
+    |                                      `- error: 'async' call in an autoclosure that does not support concurrency
+ 50 |             print("PRODUCTION_NATIVE_REPLY applied=\(applied) updates=\(calls.updates) count=1 pending=false")
+ 51 |         }
+error: fatalError

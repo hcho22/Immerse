@@ -14,7 +14,17 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
-Current software execution (October 1, 2026, 06:18-06:47 PDT): 101 package tests
+Current Trial software addendum:
+`Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md` binds
+TRI-01/03/04/09, ARC-03/05/11, CAP-08, DEL-04, UX-03, QA-12 and FR-04/05/08/18/21
+to production receipt/readback integration, complete pending media, serialized
+privacy deletion, legacy outbox migration and restored-Film rights. Focused gates
+pass 25 runtime tests, 12 entitlement tests, nine production-owner child-process
+exits and eight native Journal/local StoreKit scenarios. Its own source inventory
+and final combined gate are separate from the historical checkpoint below. No
+real Keychain mutation or phone action was performed; no hardware gate is accepted.
+
+Historical `d233bb7` execution (October 1, 2026, 06:18-06:47 PDT): 101 package tests
 and unsigned simulator/device app builds passed, followed by all six native local
 StoreKit/app-model scenarios on iOS 26.2. This includes two diagnostic Trial tests:
 one **confirms a required invariant violation**, not an acceptance pass. The exact
@@ -34,11 +44,14 @@ prefixes and four native file-copy photo/Movie cases preserve once-only capacity
 chronology and destination entitlement. The authorized isolated implementation study
 is now in `Evidence/TrialKeychainProbe/2026-10-01-receipt-study.md`: eleven tests
 include 30 save-prefix histories, 60 restore copies and 30 abrupt child-process exits
-against actual SQLite/native media with injected receipt stores. Production D3 is
-unchanged. Native status/read mapping, complete app integration and all hardware
-gates remain; this is a software gap, not merely missing hardware. No first-save
-rule or privacy/storage exception is changed. Product judgment remains with its
-existing owner; independent implementation continues.
+against actual SQLite/native media with injected receipt stores. The subsequent
+production report above corrects the D3 software ordering and maps native
+status/read outcomes conservatively: unknown is pending, never refundable. Native
+controller callbacks, launch, Trial start and whole-Film deletion share one owner.
+The D3 failure and original source identity remain historical evidence, not hidden
+as a hardware gap. Native retention, two-device restore, daemon interruption and
+power-loss boundaries remain unaccepted. No first-save rule or privacy/storage
+exception is changed; independent implementation continues.
 
 Populated native workflows now pass 3/3 on iOS 26.5 after fixing Archive path mixing
 and stale Journal rows. The photo flow includes early Development, Darkroom/Reset,

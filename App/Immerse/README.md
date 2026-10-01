@@ -50,6 +50,14 @@ and Settings reports the actual status. Do not add a simulator Trial bypass.
 Physical-phone installation, Keychain probing, delete/reinstall and restore are
 deferred to captain-directed manual testing; no device action is authorized here.
 
+`TrialCoordinator` is the single capture/recovery/Trial-start/whole-Film-deletion
+owner. Complete verified pending media precedes one Keychain receipt/readback and
+idempotent SQL projection. Launch recovery finishes before presenting capacity;
+unresolved saves remain visible as pending and can be retried or privately deleted.
+Never replay native staging during an active recording. See
+`Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md` for exact
+fault/native-app gates, historical D3 migration and still-unaccepted hardware limits.
+
 ## Provisional Choices and Limits
 
 SwiftUI, raw SQLite and local package boundaries are reversible baseline defaults,

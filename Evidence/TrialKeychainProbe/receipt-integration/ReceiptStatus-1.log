@@ -1,0 +1,54 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/10] Compiling TrialReceiptStudy NativeReceiptStatusAdapter.swift
+[5/10] Emitting module TrialReceiptStudy
+[6/15] Emitting module ReceiptCrashWorker
+[7/15] Compiling ReceiptCrashWorker main.swift
+[7/15] Write Objects.LinkFileList
+[8/15] Linking ReceiptCrashWorker
+[9/15] Applying ReceiptCrashWorker
+[11/15] Emitting module TrialReceiptStudyTests
+[12/15] Compiling TrialReceiptStudyTests NativeReceiptStatusTests.swift
+[13/15] Compiling TrialReceiptStudyTests ReceiptStudyTests.swift
+[13/15] Write Objects.LinkFileList
+[14/15] Linking TrialReceiptStudyPackageTests
+Build complete! (6.66s)
+Test Suite 'Selected tests' started at 2026-10-01 06:53:04.970.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 06:53:04.972.
+Test Suite 'NativeReceiptStatusTests' started at 2026-10-01 06:53:04.972.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testAnotherReceiptIsNeverOverwrittenOrAcceptedAsThisCapture]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testAnotherReceiptIsNeverOverwrittenOrAcceptedAsThisCapture]' passed (0.002 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testEveryUpdateStatusRequiresMatchingReadBeforeAcknowledgement]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testEveryUpdateStatusRequiresMatchingReadBeforeAcknowledgement]' passed (0.004 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testMissingProtectedMalformedLegacyOrForeignRecordNeverMeansUnused]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testMissingProtectedMalformedLegacyOrForeignRecordNeverMeansUnused]' passed (0.001 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testUnreadableReplyDoesNotLoseReceiptAndRetryDoesNotRewriteIt]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testUnreadableReplyDoesNotLoseReceiptAndRetryDoesNotRewriteIt]' passed (0.004 seconds).
+Test Suite 'NativeReceiptStatusTests' passed at 2026-10-01 06:53:04.985.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.012 (0.013) seconds
+Test Suite 'TrialReceiptStudyPackageTests.xctest' passed at 2026-10-01 06:53:04.985.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.012 (0.013) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 06:53:04.985.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.012 (0.015) seconds
+RECEIPT_STATUS status=0 applied=false resolvedByRead=true
+RECEIPT_STATUS status=0 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25291 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25291 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25308 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25308 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25293 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25293 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-50 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-50 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25300 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25300 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-108 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-108 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-26275 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-26275 applied=true resolvedByRead=true
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

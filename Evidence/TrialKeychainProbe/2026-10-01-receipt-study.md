@@ -1,5 +1,10 @@
 # Native File and SQLite Receipt Study
 
+Historical `d233bb7` study checkpoint. The later
+[production integration](2026-10-01-production-receipt-integration.md) supersedes
+the remaining-software status below, but not these observed results or hardware
+limitations. The original failing D3 history remains part of the evidence.
+
 **Not production integration or Trial acceptance.** The in-scope engineering
 study was authorized after the pending-replay follow-up; it changes no product
 rule. Production `FilmRuntime/TrialCoordinator` still uses D3 and its retained
