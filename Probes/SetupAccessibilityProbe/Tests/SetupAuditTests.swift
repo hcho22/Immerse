@@ -6,6 +6,12 @@ final class SetupAuditTests: XCTestCase {
 
     func testStablePickerStyle() throws { try auditSetup(arguments: ["-stableOrientationMenu"]) }
 
+    func testStackContainer() throws { try auditSetup(arguments: ["-stackContainer"]) }
+
+    func testHardEdge() throws { try auditSetup(arguments: ["-hardEdge"]) }
+
+    func testStackContainerHardEdge() throws { try auditSetup(arguments: ["-stackContainer", "-hardEdge"]) }
+
     func testForcedLargestSize() throws {
         try auditSetup(arguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
     }

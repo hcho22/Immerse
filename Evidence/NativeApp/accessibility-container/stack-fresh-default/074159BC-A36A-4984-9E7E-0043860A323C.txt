@@ -1,0 +1,33 @@
+XCUIAccessibilityAuditType(rawValue: 65536): User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x10e90dac0, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'
+Element subtree:
+ →StaticText, 0x10e90dac0, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'
+Path to element:
+ →Application, 0x10e815870, pid: 10860, label: 'SetupAccessibilityProbe'
+  ↳Window (Main), 0x10e816600, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x12650f0c0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x126516ab0, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x126516bd0, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x126512740, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x126512860, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x109c0ef80, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x109c12530, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x109c12890, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x109c129b0, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x109c12ad0, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x109c12bf0, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳CollectionView, 0x109c12d10, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Cell, 0x10e90d400, {{16.0, 393.7}, {370.0, 89.3}}
+                ↳Other, 0x10e90d760, {{16.0, 393.7}, {370.0, 89.3}}
+                 ↳Other, 0x10e90d880, {{16.0, 393.7}, {370.0, 89.3}}
+                  ↳Other, 0x10e90d9a0, {{16.0, 393.7}, {370.0, 89.3}}
+                   ↳StaticText, 0x10e90dac0, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x109e1d0c0, pid: 10860, label: 'SetupAccessibilityProbe'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 10860, elementOrHash.elementID: 4559583424.125
+    Output: {
+      StaticText, 0x109c24600, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'
+    }

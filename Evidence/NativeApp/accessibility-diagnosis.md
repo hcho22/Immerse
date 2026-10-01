@@ -1,5 +1,14 @@
 # Native Setup Accessibility Diagnosis
 
+Follow-up after the coordinated simulator quiet interval:
+`accessibility-container-diagnosis.md` retains unchanged probe/app repeats and
+matched-row container/hard-edge counterfactuals. Stack default passes while the
+same-build intact Form fails; both hard-edge largest-text conditions still fail
+contrast. The historical passing app screenshot lacked the later visible Movie
+Orientation heading. No production layout patch or audit waiver follows; QA-13
+remains failed. The report binds source variants, execution counts, issue nodes,
+font/frame/category timestamps, screenshots and the remaining causal boundary.
+
 Latest candidate: `media-workflows-source.sha256`, 06:37/06:49 PDT October 1.
 Actual app all-category audits in **dark and light both fail 0/2**: default
 Movie Orientation Dynamic Type and largest-type contrast. Results, pre-audit trees,

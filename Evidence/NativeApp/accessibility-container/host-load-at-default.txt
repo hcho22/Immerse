@@ -1,0 +1,14 @@
+ 9:07  up 28 days, 18:22, 3 users, load averages: 93.03 38.60 19.97
+  PID  %CPU     ELAPSED COMM
+44653 608.2       00:54 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/MediaAnalysis.framework/mediaanalysisd
+  236 110.7 28-18:19:41 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer
+39566  70.3       01:09 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/Applications/MobileCal.app/PlugIns/CalendarWidgetExtension.appex/CalendarWidgetExtension
+36056  65.1       01:22 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/CoreServices/SpringBoard.app/SpringBoard
+85965  51.7 01-12:38:45 /Applications/Zen.app/Contents/MacOS/plugin-container.app/Contents/MacOS/plugin-container
+36192  49.7       01:22 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/usr/libexec/diagnosticd
+28304  47.8       09:05 /Applications/Zen.app/Contents/MacOS/plugin-container.app/Contents/MacOS/plugin-container
+60440  44.2       00:08 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/Applications/MobileSafari.app/Extensions/SafariLinkExtension.appex/SafariLinkExtension
+64031  42.7 03-03:44:36 /Applications/iTerm.app/Contents/MacOS/iTerm2
+62974  38.4       00:01 /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/CoreServices/ShortcutsActions.app/Extensions/ShortcutsTopHitsExtension.appex/ShortcutsTopHitsExtension
+63140  38.1       00:00 (node)
+2026-10-01T16:07:57Z

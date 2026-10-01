@@ -14,6 +14,19 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Current QA-13 accessibility diagnosis:
+`Evidence/NativeApp/accessibility-container-diagnosis.md` records source-bound
+unchanged default/system-largest probe repeats, actual-app default failure and
+container/scroll-edge counterfactuals after the coordinated quiet interval.
+At default, the explicit stack passes all audits while the intact same-build Form
+fails Movie Orientation sizing. Both hard-edge largest-text conditions still fail
+contrast, with exact node/frame/category/timestamp and screenshot evidence retained.
+The old default app pass lacked the subsequently added visible orientation heading;
+it is not current same-label acceptance. No production patch, test exception,
+hardware acceptance or no-mistakes/CI result is claimed. The repeated contrast
+boundary remains open with Firstmate; all other software/asset evidence below is
+unchanged.
+
 Current asset-review preparation: `Evidence/AssetReview/README.md` and `review.html`
 cover DEC-04/05/11, CAM-10/12, MOV-03/05/09/10/11, DEV-04/06 and QA-03/11/14.
 Fourteen generated/derived native assets decode, with source/output hashes and

@@ -27,6 +27,10 @@ CI configuration is prepared; only an actual green run can establish that gate.
 The current checkpoint retains the repeated scrolled-setup accessibility
 failure detailed in `accessibility-diagnosis.md`; unaffected software continues. Default audit success does not
 waive the fresh-build largest-type failure or the UIKitToolbar runtime warning.
+The controlled follow-up in `accessibility-container-diagnosis.md` reproduced
+the actual app's default failure and isolated a default-only stack success, but
+largest-text contrast survives the container and hard-edge counterfactuals.
+No production accessibility correction or green CI claim is established by it.
 
 ## Required Native Manual Matrix
 

@@ -1,0 +1,33 @@
+XCUIAccessibilityAuditType(rawValue: 65536): User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x1143bcca0, {{16.0, 633.3}, {370.0, 52.0}}, label: 'One Trial Film on this iPhone'
+Element subtree:
+ →StaticText, 0x1143bcca0, {{16.0, 633.3}, {370.0, 52.0}}, label: 'One Trial Film on this iPhone'
+Path to element:
+ →Application, 0x1143b52c0, pid: 35864, label: 'SetupAccessibilityProbe'
+  ↳Window (Main), 0x1143b53e0, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x1143b7060, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x1143b72a0, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x1143b73c0, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x1143b74e0, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x1143b7600, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x1143b7720, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x1143b7840, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x1143b7ba0, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x1143b7cc0, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x1143b7de0, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x1143b7f00, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳CollectionView, 0x1143b8020, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Cell, 0x1143bc4c0, {{16.0, 633.3}, {370.0, 52.0}}
+                ↳Other, 0x1143bc820, {{16.0, 633.3}, {370.0, 52.0}}
+                 ↳Other, 0x1143bc940, {{16.0, 633.3}, {370.0, 52.0}}
+                  ↳Other, 0x1143bca60, {{16.0, 633.3}, {370.0, 52.0}}
+                   ↳StaticText, 0x1143bcca0, {{16.0, 633.3}, {370.0, 52.0}}, label: 'One Trial Film on this iPhone'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x11695b030, pid: 35864, label: 'SetupAccessibilityProbe'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 35864, elementOrHash.elementID: 4484908224.130
+    Output: {
+      StaticText, 0x116e6ede0, {{16.0, 633.3}, {370.0, 52.0}}, label: 'One Trial Film on this iPhone'
+    }

@@ -1,0 +1,131 @@
+diff --git a/Probes/SetupAccessibilityProbe/Sources/SetupAccessibilityProbeApp.swift b/Probes/SetupAccessibilityProbe/Sources/SetupAccessibilityProbeApp.swift
+index f95037f..6a06e76 100644
+--- a/Probes/SetupAccessibilityProbe/Sources/SetupAccessibilityProbeApp.swift
++++ b/Probes/SetupAccessibilityProbe/Sources/SetupAccessibilityProbeApp.swift
+@@ -28,50 +28,89 @@ private struct ProbeSetup: View {
+     @Environment(\.dynamicTypeSize) private var size
+     @State private var title = "16mm - Roll #01"
+     @State private var orientation = "Portrait"
++    private var stackContainer: Bool { ProcessInfo.processInfo.arguments.contains("-stackContainer") }
+ 
+     var body: some View {
+-        Form {
+-            Section {
+-                LabeledContent("Capacity", value: "2:45 of film")
+-                Text("One silent Movie after Development")
+-                Text("Deliberate framing, finer grain").foregroundStyle(.primary)
+-                    .fixedSize(horizontal: false, vertical: true).probe("camera-description")
+-                HStack {
++        Group {
++            if stackContainer {
++                ScrollView {
++                    VStack(alignment: .leading, spacing: 35) { sections }
++                        .padding(.horizontal, 16)
++                }.background(Color(uiColor: .systemGroupedBackground))
++            } else {
++                Form { sections }
++            }
++        }
++        .navigationTitle("16mm")
++        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
++            print("SETUP_PROBE scrollOffset=\(offset)")
++        }
++    }
++
++    private var sections: some View {
++        Group {
++            section {
++                row { LabeledContent("Capacity", value: "2:45 of film") }
++                row { Text("One silent Movie after Development") }
++                row {
++                    Text("Deliberate framing, finer grain").foregroundStyle(.primary)
++                        .fixedSize(horizontal: false, vertical: true).probe("camera-description")
++                }
++                row { HStack {
+                     Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
+                     Text("Silent capture").fixedSize(horizontal: false, vertical: true).probe("silent-capture")
+-                }.accessibilityElement(children: .combine)
+-                VStack(alignment: .leading, spacing: 8) {
++                }.accessibilityElement(children: .combine) }
++                row { VStack(alignment: .leading, spacing: 8) {
+                     Text("Movie Orientation").fixedSize(horizontal: false, vertical: true).probe("orientation-label")
+                     if size.isAccessibilitySize || ProcessInfo.processInfo.arguments.contains("-stableOrientationMenu") {
+                         orientationPicker.pickerStyle(.menu).labelsHidden()
+                     }
+                     else { orientationPicker.pickerStyle(.segmented).labelsHidden() }
+-                }
++                } }
+             }
+-            Section {
+-                VStack(alignment: .leading, spacing: 8) {
++            section {
++                row { VStack(alignment: .leading, spacing: 8) {
+                     Text("Film title").font(.headline).foregroundStyle(Color.primary)
+                         .fixedSize(horizontal: false, vertical: true)
+                         .accessibilityIdentifier("film-title-heading").accessibilityAddTraits(.isHeader)
+                         .probe("film-title")
+                     TextField("Title", text: $title, axis: .vertical).accessibilityLabel("Film title")
+-                }
++                } }
+             }
+-            Section {
+-                Label("One Trial Film on this iPhone", systemImage: "ticket")
+-                Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
+-                    .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
++            section {
++                row { Label("One Trial Film on this iPhone", systemImage: "ticket") }
++                row {
++                    Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
++                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
++                }
+             }
+-            Section { NavigationLink("Subscription") { Text("Subscription") } }
+-            Section {
+-                Button {} label: {
++            section { row { NavigationLink("Subscription") { Text("Subscription") } } }
++            section {
++                row { Button {} label: {
+                     HStack { Text("Load Film").probe("load-film"); Spacer(); Image(systemName: "camera") }
+-                }.accessibilityIdentifier("load-film")
++                }.accessibilityIdentifier("load-film") }
+             }
+         }
+-        .navigationTitle("16mm")
+-        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
+-            print("SETUP_PROBE scrollOffset=\(offset)")
++    }
++
++    @ViewBuilder
++    private func section<Content: View>(@ViewBuilder content: () -> Content) -> some View {
++        if stackContainer {
++            VStack(alignment: .leading, spacing: 0, content: content)
++                .background(Color(uiColor: .secondarySystemGroupedBackground))
++        } else {
++            Section(content: content)
++        }
++    }
++
++    @ViewBuilder
++    private func row<Content: View>(@ViewBuilder content: () -> Content) -> some View {
++        if stackContainer {
++            // Match the observed default Form insets/minimum; rows remain unbounded at larger sizes.
++            content().padding(.vertical, 15).padding(.horizontal, 16)
++                .frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
++        } else {
++            content()
+         }
+     }
+ 
+diff --git a/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift b/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift
+index 5fff26c..2e78b53 100644
+--- a/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift
++++ b/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift
+@@ -6,6 +6,8 @@ final class SetupAuditTests: XCTestCase {
+ 
+     func testStablePickerStyle() throws { try auditSetup(arguments: ["-stableOrientationMenu"]) }
+ 
++    func testStackContainer() throws { try auditSetup(arguments: ["-stackContainer"]) }
++
+     func testForcedLargestSize() throws {
+         try auditSetup(arguments: ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+     }

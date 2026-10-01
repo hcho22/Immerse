@@ -28,8 +28,27 @@ private struct ProbeSetup: View {
     @Environment(\.dynamicTypeSize) private var size
     @State private var title = "16mm - Roll #01"
     @State private var orientation = "Portrait"
+    private var stackContainer: Bool { ProcessInfo.processInfo.arguments.contains("-stackContainer") }
 
     var body: some View {
+        Group {
+            if stackContainer {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 35) { sections }
+                        .padding(.horizontal, 16)
+                }.background(Color(uiColor: .systemGroupedBackground))
+            } else {
+                originalForm
+            }
+        }
+        .scrollEdgeEffectStyle(ProcessInfo.processInfo.arguments.contains("-hardEdge") ? .hard : nil, for: .all)
+        .navigationTitle("16mm")
+        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
+            print("SETUP_PROBE scrollOffset=\(offset)")
+        }
+    }
+
+    private var originalForm: some View {
         Form {
             Section {
                 LabeledContent("Capacity", value: "2:45 of film")
@@ -69,10 +88,63 @@ private struct ProbeSetup: View {
                 }.accessibilityIdentifier("load-film")
             }
         }
-        .navigationTitle("16mm")
-        .onScrollGeometryChange(for: CGFloat.self) { $0.contentOffset.y } action: { _, offset in
-            print("SETUP_PROBE scrollOffset=\(offset)")
+    }
+
+    private var sections: some View {
+        Group {
+            section {
+                row { LabeledContent("Capacity", value: "2:45 of film") }
+                row { Text("One silent Movie after Development") }
+                row {
+                    Text("Deliberate framing, finer grain").foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true).probe("camera-description")
+                }
+                row { HStack {
+                    Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
+                    Text("Silent capture").fixedSize(horizontal: false, vertical: true).probe("silent-capture")
+                }.accessibilityElement(children: .combine) }
+                row { VStack(alignment: .leading, spacing: 8) {
+                    Text("Movie Orientation").fixedSize(horizontal: false, vertical: true).probe("orientation-label")
+                    if size.isAccessibilitySize || ProcessInfo.processInfo.arguments.contains("-stableOrientationMenu") {
+                        orientationPicker.pickerStyle(.menu).labelsHidden()
+                    }
+                    else { orientationPicker.pickerStyle(.segmented).labelsHidden() }
+                } }
+            }
+            section {
+                row { VStack(alignment: .leading, spacing: 8) {
+                    Text("Film title").font(.headline).foregroundStyle(Color.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("film-title-heading").accessibilityAddTraits(.isHeader)
+                        .probe("film-title")
+                    TextField("Title", text: $title, axis: .vertical).accessibilityLabel("Film title")
+                } }
+            }
+            section {
+                row { Label("One Trial Film on this iPhone", systemImage: "ticket") }
+                row {
+                    Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
+                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            section { row { NavigationLink("Subscription") { Text("Subscription") } } }
+            section {
+                row { Button {} label: {
+                    HStack { Text("Load Film").probe("load-film"); Spacer(); Image(systemName: "camera") }
+                }.accessibilityIdentifier("load-film") }
+            }
         }
+    }
+
+    private func section<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 0, content: content)
+            .background(Color(uiColor: .secondarySystemGroupedBackground))
+    }
+
+    private func row<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        // Match the observed default Form insets/minimum; rows remain unbounded at larger sizes.
+        content().padding(.vertical, 15).padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, minHeight: 52, alignment: .leading)
     }
 
     private var orientationPicker: some View {

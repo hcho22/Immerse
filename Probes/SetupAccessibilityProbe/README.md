@@ -33,3 +33,18 @@ size. The fresh-run result still fails; it is not a production fix. The first ru
 of that new test returned exit 0 with zero executed tests, so inspect xcresult
 counts rather than treating process success as behavioral evidence. Results and
 the concluded uncertainty are in `Evidence/NativeApp/accessibility-diagnosis.md`.
+
+The controlled follow-up is recorded separately in
+`Evidence/NativeApp/accessibility-container-diagnosis.md`. `testStackContainer`
+duplicates the unchanged Form's content in explicit ScrollView/VStack rows, with default Form
+insets/minimum row height calibrated from the retained baseline. Rows can grow
+without limit. It is a container counterfactual, not an approved production fix.
+Run `testSystemSelectedSize` in the same build as its Form control and repeat both
+at default/system-largest text. Preserve every audit finding and compare actual
+geometry; the two containers need not have identical accessibility hierarchies.
+`testHardEdge` changes only the scroll-edge style on the original Form;
+`testStackContainerHardEdge` combines it with the stack after their independent
+comparisons. Neither changes semantic fonts, required labels or audit categories.
+When introducing a new test method, verify that it actually executes. A fresh
+derived-data root was necessary for this probe's newly selected method to run;
+matching built/installed binary hashes alone did not establish execution.
