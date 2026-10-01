@@ -8,6 +8,8 @@
 This map is the repository-owned handoff for implementation evidence.
 It covers every unchecked v1 tracker ID present at intake, each personal FR acceptance area, the implementation artifacts added so far, exact commands, observed outcomes, and the gaps that still require decisions, native app work, Apple configuration or hardware.
 
+The [clause-level acceptance companion](2026-09-29-film-camera-experience-v1-acceptance-evidence.md) expands each personal FR acceptance paragraph and every section 11 invariant, binds the local checks to source `7bfc78c`, names the outstanding native/hardware gates, and records the precise first-save cross-store conflict without changing the Trial rule.
+
 No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
