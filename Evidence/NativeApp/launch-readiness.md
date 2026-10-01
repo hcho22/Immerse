@@ -73,6 +73,16 @@ y400 poses; B's unfiltered audit returns no findings. Only diagnostic loop exit
 timing changed. This establishes that bounded readability/reachability path, not
 the cause of prior failures or clearance of original sequential/assistive gates.
 Production/original suites remain unchanged; QA-13 and physical gates stay open.
+Instruction 034's [unchanged original matrix](accessibility-original-matrix-diagnosis.md)
+then executes all four default/largest light/dark cases once: four failures,
+seven findings, no skips/timeouts. Default names Movie Orientation sizing;
+largest names scrolled description/Silent capture contrast and elementless command
+contrast. All later navigation steps execute. Retained source, native videos,
+trees and timings distinguish the earlier passing pair's configuration/history
+and pose without establishing a user defect or analyzer cause. No original-test
+or production correction, exception or acceptance follows. The report also names
+remaining native fault-controller, race-instrumentation and coverage code work;
+hardware deferral does not waive those preparable deliverables.
 
 ## Required Native Manual Matrix
 

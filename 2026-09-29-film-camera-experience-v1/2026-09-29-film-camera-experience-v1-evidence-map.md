@@ -23,6 +23,14 @@ product and budget prerequisites remain unmet. No physical action or acceptance
 is implied, and current accessibility failures still block readiness.
 
 Current QA-13 accessibility diagnosis:
+`Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
+unchanged original default/largest cases once in light and dark on `a79d481`:
+four executed failures, seven findings, no skips/timeouts. Source-bound native
+videos/trees preserve all failures and completed downstream steps. Configuration,
+audit history and pose differ from the passing bounded pair; neither a user
+defect nor analyzer cause is isolated. No original-test/production correction or
+exception. Remaining native fault/race harness and coverage code work is named
+separately from deferred physical/product acceptance. QA-13 stays failed.
 `Evidence/NativeApp/accessibility-traversal-early-exit-diagnosis.md` records a
 completed bounded pair after correcting redundant diagnostic condition queries:
 both ten-row traversals pass, y400 poses match exactly, B unfiltered audit has

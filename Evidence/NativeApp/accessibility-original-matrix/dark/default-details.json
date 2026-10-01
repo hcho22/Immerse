@@ -1,0 +1,95 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "duration" : "Ran for 36 seconds",
+  "durationInSeconds" : 36.28980600833893,
+  "hasMediaAttachments" : true,
+  "hasPerformanceMetrics" : false,
+  "startTime" : 1790879960.153,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+  "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore",
+  "testName" : "testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Failed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "AA287C85-C9ED-4C7F-BD14-E968F4BE0DF8",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "details" : "0~1-S070T2QyxlPG8HCRbsK5Nz9Pbsc2w9xZ3He58J_uoBs6mYENlnZKxILLTs32t6zqActBQVIj19XnZkDtv9jQ==",
+                  "name" : "App Screenshot_0_4EB65B69-EF1E-499C-B0BD-A689C8F29F1F.png",
+                  "nodeIdentifier" : "AC9F4D28-BA0D-4F2A-BEF5-4A52EAE7FA9B",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "details" : "0~t01pxMqSDIupMjbyiI2zlAMSa5i2V9D75LjRdCa8fvCeMPCXb0LhcHtnAR0ylju42ZYwyjaPpZBwrW6QBsqmnQ==",
+                  "name" : "Element Screenshot_1_76EE7D3D-1936-4E91-95F1-3EEB3EE85D8E.png",
+                  "nodeIdentifier" : "6DD2DFCB-046E-4128-B69C-08A78DF4F1A5",
+                  "nodeType" : "Attachment"
+                },
+                {
+                  "name" : "JournalFlowTests.audit(_:name:)",
+                  "nodeType" : "Source Code Reference"
+                },
+                {
+                  "name" : "JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+                  "nodeType" : "Source Code Reference"
+                }
+              ],
+              "name" : "Dynamic Type font sizes are partially unsupported",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "4C2D4AA3-A94A-4EFC-A368-59896B1D8F6F",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+              "nodeType" : "Runtime Warning"
+            }
+          ],
+          "duration" : "36s",
+          "durationInSeconds" : 36.28980600833893,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Failed"
+        }
+      ],
+      "details" : "iOS Simulator 26.5",
+      "duration" : "36s",
+      "durationInSeconds" : 36.28980600833893,
+      "name" : "iPhone 17 Pro",
+      "nodeIdentifier" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "nodeType" : "Device",
+      "result" : "Failed"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Instruction 034 evidence-only handoff, observed 2026-10-01 UTC.
+Native source base: a79d48108e5e122eab9c577988433a91fac66a95.
+
+Native result: FAILED, not a verification pass.
+One matrix batch, two sequential appearance invocations. Each selects/executed
+two original cases once. Four failed cases, seven individual findings, no skips,
+expected failures, retries or timeouts. Each xcodebuild exit 65; batch exit 1.
+Full details, activities, nodes and recordings are retained. No extra native run.
+
+PASS sh -n Evidence/NativeApp/accessibility-original-matrix/run-once.sh
+PASS shasum -a 256 -c Evidence/NativeApp/accessibility-original-matrix/source.sha256
+PASS git diff --exit-code a79d481 -- App Packages Probes .github Scripts adr
+PASS summarize.mjs output comparison against observations.json
+PASS all manifest exports present: light 51, dark 55 attachments
+PASS owned simulator shutdown in devices-after.json
+PASS local Markdown link check: 9 references in diagnosis/launch-readiness
+PASS zip -r -X -q followed by sh Scripts/verify-document-package.sh:
+     unzip listing and extracted-tree content comparison
+PASS sh Scripts/verify-requirement-map.sh:
+     122 intake IDs, 72 personal acceptance clauses, 9 invariants (coverage only)
+
+Media: ffprobe reads four H.264/1206x2622 recordings. Full ffmpeg null-output
+decode exits 0 with repeated non-monotonic DTS muxer warnings; NOT a clean
+timestamp/fidelity result. Three derived contact sheets and native failure
+screens inspected. No claim of exact private analyzer capture timing.
+
+Scope: production and original UI tests unchanged; no blanket suite rerun,
+CI/no-mistakes acceptance, hardware/assistive acceptance or release. Hardware,
+rights/prices/quality/DEC-12 remain deferred/unaccepted. Native fault/race harness
+and coverage code work remains explicitly identified in the diagnosis report.

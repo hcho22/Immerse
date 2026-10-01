@@ -54,6 +54,13 @@ completes both ten-row arms with exactly matching settled y400 poses and zero
 B audit findings in 426.038 seconds. Diagnostic early exit changes query timing,
 not production. This bounded-path pass does not clear original sequential or
 assistive gates, explain historical audit failures, or accept QA-13/H-UX.
+`Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` then records one
+unchanged default/largest light/dark matrix on `a79d481`: four executed failures,
+seven findings, no skips/timeouts, all downstream navigation reached. Full native
+recordings and source-bound trees/issues establish different original invocation
+history/poses, not an analyzer cause or product correction. Remaining native
+fault/race harness code work is explicit. QA-13/H-UX remain failed/unaccepted;
+no original tests, production sources or required criteria were weakened.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 

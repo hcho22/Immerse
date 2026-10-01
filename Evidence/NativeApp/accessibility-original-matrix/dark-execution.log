@@ -1,0 +1,17 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Immerse-OriginalMatrix-Dark.xcresult
+
+2026-10-01 11:39:20.395 xcodebuild[94276:147197427] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 11:39:20.395 xcodebuild[94276:147197427] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 11:39:57.638 xcodebuild[94276:147197427] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 11:39:57.639 xcodebuild[94276:147197427] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 11:41:51.531 xcodebuild[94276:147197427] [MT] IDETestOperationsObserverDebug: 157.405 elapsed -- Testing started completed.
+2026-10-01 11:41:51.531 xcodebuild[94276:147197427] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 11:41:51.531 xcodebuild[94276:147197427] [MT] IDETestOperationsObserverDebug: 157.405 sec, +157.405 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
