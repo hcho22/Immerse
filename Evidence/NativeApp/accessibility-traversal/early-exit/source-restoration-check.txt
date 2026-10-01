@@ -1,0 +1,2 @@
+Reconstructed executed UI test SHA-256: bd7dafa6756e3b544dc597a0db1b274ddaf8dfe58078c9c632573e0815deea18
+Original suite restored byte-identically. Twenty unique contained rows and completed snapshots; both completion events; all matched-pose deltas zero; 27 drag records; no audit issue records.

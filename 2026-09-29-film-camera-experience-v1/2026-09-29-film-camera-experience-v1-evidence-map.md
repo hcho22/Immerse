@@ -23,6 +23,12 @@ product and budget prerequisites remain unmet. No physical action or acceptance
 is implied, and current accessibility failures still block readiness.
 
 Current QA-13 accessibility diagnosis:
+`Evidence/NativeApp/accessibility-traversal-early-exit-diagnosis.md` records a
+completed bounded pair after correcting redundant diagnostic condition queries:
+both ten-row traversals pass, y400 poses match exactly, B unfiltered audit has
+zero findings, 426.038 seconds. This is readability/reachability evidence for that
+path only, not production remediation or clearance of original matrix/assistive
+failures. QA-13 remains open; original suites and prior evidence are unchanged.
 `Evidence/NativeApp/accessibility-traversal-progress-diagnosis.md` records the
 mechanics-only continuation on base `1a69b3d`: matching settled y400 poses, all ten
 A rows passing, no-issue unfiltered B audit, seven B rows passing before the same

@@ -67,6 +67,12 @@ timeout. Its final three rows and completion record are absent. The pair remains
 incomplete; no original failed gate is cleared and no production edit follows.
 Repeated bounded condition queries remain in the diagnostic trace; additional
 variants stopped under instruction 032. Physical scenarios remain deferred.
+Instruction 033's [early-exit continuation](accessibility-traversal-early-exit-diagnosis.md)
+then completes in 426.038 seconds: both ten-row traversals pass at exactly matching
+y400 poses; B's unfiltered audit returns no findings. Only diagnostic loop exit
+timing changed. This establishes that bounded readability/reachability path, not
+the cause of prior failures or clearance of original sequential/assistive gates.
+Production/original suites remain unchanged; QA-13 and physical gates stay open.
 
 ## Required Native Manual Matrix
 

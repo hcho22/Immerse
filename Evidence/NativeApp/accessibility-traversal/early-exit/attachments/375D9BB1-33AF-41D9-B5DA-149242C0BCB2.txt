@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790879154.215092 uptime=1246530.066727364 event=scroll.progress requested=-9.000000000000114 gesture=-19.000000000000114 before=(16.0, -57.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -66.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development

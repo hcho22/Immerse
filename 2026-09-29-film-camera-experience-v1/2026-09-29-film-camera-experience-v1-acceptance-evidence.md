@@ -49,6 +49,11 @@ mechanics-only continuation: matching settled y400 poses, ten passing A rows,
 zero B audit issues and seven passing B rows. The unchanged 600-second limit
 prevents the last three B rows/completion. No paired conclusion, production
 correction or QA-13/H-UX acceptance; historical required failures remain failed.
+`Evidence/NativeApp/accessibility-traversal-early-exit-diagnosis.md` subsequently
+completes both ten-row arms with exactly matching settled y400 poses and zero
+B audit findings in 426.038 seconds. Diagnostic early exit changes query timing,
+not production. This bounded-path pass does not clear original sequential or
+assistive gates, explain historical audit failures, or accept QA-13/H-UX.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 

@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790878859.9552999 uptime=1246235.803357149 event=scroll.progress requested=-3.6666666666667425 gesture=-13.666666666666742 before=(16.0, 19.666666666666742, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture
