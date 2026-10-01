@@ -179,6 +179,15 @@ Instant reveal semantics and extra-capture rejection. This is synthetic
 repository/processor evidence, not hardware capture timing, iPhone 11
 performance, physical storage pressure or real-device full-capacity acceptance.
 
+The Darkroom/player observation continuation is recorded in
+`Evidence/NativeApp/darkroom-player-observation-044.md`: the populated harness
+now reaches Contrast, CMY, Crop and non-gesture Dodge/Burn controls in the actual
+Darkroom sheet, and a harness-only public UIKit/AVKit observer proves the initial
+Movie player/item path is released, detached or replaced before successor
+playback is accepted after Discard #1. This is simulator/synthetic software
+evidence, not VoiceOver/Switch Control, all-category audit, approved render-range,
+hardware playback-cache, PhotoKit, interruption or physical-device acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain
@@ -189,9 +198,9 @@ installation, signing, purchases, device deletion, backup restoration or erasure
 | --- | --- | --- |
 | CAP-01...10 / QA-01,02 | Each Camera rear/front; asymmetric target proves mirrored preview and unmirrored saved output; all supported controls; deny Camera; interrupt call/lock/background; retry low-space and process kill. Record source/media hashes, saved capacity and Trial state. | No physical capture run. |
 | DEV / QA-03 | Fill each exact capacity, prove no roll/Movie auto-reveal; confirm/cancel exact early waste; empty Delete Film; Instant final print; terminate and resume the same treatment/master. | Full-capacity repository/processor tests pass synthetically; app-model/native renderer tests are not device rituals, physical timing or termination proof. |
-| DRK / QA-04,13 | Every applicable control, accessible point and gesture Dodge/Burn, exact Reset/export equality, independent photos, no Movie entry. Largest Dynamic Type, VoiceOver and Switch Control across populated screens. | Partial simulator audit only; medium applicability/ranges remain DEC-04/11. |
+| DRK / QA-04,13 | Every applicable control, accessible point and gesture Dodge/Burn, exact Reset/export equality, independent photos, no Movie entry. Largest Dynamic Type, VoiceOver and Switch Control across populated screens. | Populated simulator now covers actual Darkroom controls and non-gesture Dodge/Burn; exact Reset/reopen was already bounded. Gesture drawing, assistive technologies, all-category audits, physical Dynamic Type and approved ranges remain open; medium applicability/ranges remain DEC-04/11. |
 | STO / QA-09 | Independent developed/original exports; denied/restricted add-only permission, failed Photos write/retry; decode/hash masters before cleanup; inspect real Photos output; no sealed or automatic exports. | PhotoKit execution and actual device low-storage paths untested. |
-| MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Runtime stale-Movie retirement and populated final empty-Movie UI pass synthetically; hardware fidelity/music/export/playback-cache acceptance absent. |
+| MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Runtime stale-Movie retirement, populated final empty-Movie UI and public AVKit player/item retirement after first Discard pass synthetically; hardware fidelity/music/export/background/cache-internals acceptance absent. |
 | BIL / ARC-09 | Approved monthly/yearly products, cancellation/pending/renewal/expiry/restore; offline after one online sync; finish/develop/edit/export existing Films after expiry. | Local fixtures pass separately from any authorized StoreKit sandbox/device execution. Live setup and DEC-02 are absent. |
 | TRI / ARC-11 | Pinned Keychain procedure, offline activation/first save failure windows, zero-save delete/replacement, used delete/reinstall, two-device restored Trial coexistence. | Hardware untested. `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md` records the production correction to historical D3, raw-status/read tests, native Journal integration and production-owner process exits. Complete pending media precedes one receipt/consumption item, then once-only projection. Injected survival and process-exit checks do not prove physical retention, power-loss ordering or restore. A marker-only probe cannot accept this protocol. |
 | ARC-08 / QA-13 | iPhone 11 iOS 26 capture-to-save and full-roll/Movie Development timings, interrupted resume, peak memory, thermal/storage-pressure behavior. | No measurements; DEC-12 budgets are proposals only. |

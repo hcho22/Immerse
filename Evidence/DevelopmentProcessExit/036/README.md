@@ -107,9 +107,14 @@ result was counted as a new execution or erased. That run also restored Shutdown
 Partial FR-06/16 and DEV-04/06/07/08, PRV-05/07, ARC-06, QA-03/11 evidence. Ordinary
 process exits are not power loss, physical interruptions, actual restore or an
 atomic filesystem guarantee. No physical ARC-08/10/11/12, TRI-11 or QA-15 acceptance.
-Capture-backend/controller quiescence, active Movie player/cache, full capacities,
-all Darkroom/assistive cases and real permission/storage failures remain separate
-preparable or hardware work. Original QA-13 failures and deferred product/asset/
+Later checkpoints cover bounded capture-backend quiescence
+(`../../NativeApp/capture-backend-quiescence-040.md`), active Movie/player state
+(`../../NativeApp/movie-player-cache-042.md`,
+`../../NativeApp/darkroom-player-observation-044.md`), full capacities
+(`../../NativeApp/full-capacity-runtime-043.md`) and additional Darkroom control
+reachability (`../../NativeApp/darkroom-player-observation-044.md`). Real
+permission/storage failures, assistive technologies and hardware paths remain
+separate preparable or hardware work. Original QA-13 failures and deferred product/asset/
 price/support/launch choices remain open. No no-mistakes run, CI-ready claim, PR,
 release/publication or merge.
 

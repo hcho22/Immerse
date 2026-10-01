@@ -114,6 +114,10 @@ Those remain in the manual and hardware matrices.
 
 ## Proposed Follow-Up
 
+Executed later in `darkroom-player-observation-044.md` using a harness-only
+public UIKit/AVKit observer. The limits below remain the controlling boundary for
+hardware playback-cache and codec fidelity.
+
 The old app-owned player lifetime is still a software-observable boundary, not
 automatically a hardware-only gap. Before adding production seams, use a
 nonshipping hosted view test against the actual Film detail view with synthetic

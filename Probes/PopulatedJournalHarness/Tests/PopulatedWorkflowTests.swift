@@ -96,6 +96,29 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "empty-Movie-placeholders")
     }
 
+    func testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback() throws {
+        let app = launch(arguments: ["--movie", "--hide-inspection-bar", "--movie-player-observer"])
+        openFilm(app)
+        let player = app.descendants(matching: .any)["developed-movie-player"]
+        XCTAssertTrue(player.waitForExistence(timeout: 20))
+
+        let oldState = app.staticTexts["movie-observer-old-state"]
+        let successorState = app.staticTexts["movie-observer-successor-state"]
+        let identity = app.staticTexts["movie-observer-identity"]
+        XCTAssertTrue(waitForAnyLabel(oldState, ["attached"], timeout: 20), identity.label)
+        XCTAssertTrue(waitForAnyLabel(successorState, ["initial-visible"], timeout: 20), identity.label)
+        let initialIdentity = identity.label
+        snapshot(app, "movie-player-observer-initial")
+
+        discardClip(1, app: app)
+        XCTAssertTrue(app.buttons["discard-clip-2"].waitForExistence(timeout: 40))
+        XCTAssertTrue(player.waitForExistence(timeout: 20))
+        XCTAssertTrue(waitForAnyLabel(oldState, ["released", "detached", "replaced"], timeout: 20), "before: \(initialIdentity) after: \(identity.label)")
+        XCTAssertTrue(waitForAnyLabel(successorState, ["successor-visible"], timeout: 20), "before: \(initialIdentity) after: \(identity.label)")
+        XCTAssertNotEqual(identity.label, initialIdentity)
+        snapshot(app, "movie-player-observer-after-discard")
+    }
+
     func testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment() throws {
         let app = launch(arguments: ["--instant"])
         openFilm(app)
@@ -133,6 +156,16 @@ final class PopulatedWorkflowTests: XCTestCase {
         let disappeared = NSPredicate(format: "exists == false")
         expectation(for: disappeared, evaluatedWith: discard)
         waitForExpectations(timeout: 40)
+    }
+
+    private func waitForAnyLabel(_ element: XCUIElement, _ labels: Set<String>, timeout: TimeInterval) -> Bool {
+        guard element.waitForExistence(timeout: timeout) else { return false }
+        let predicate = NSPredicate { object, _ in
+            guard let element = object as? XCUIElement else { return false }
+            return labels.contains(element.label)
+        }
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

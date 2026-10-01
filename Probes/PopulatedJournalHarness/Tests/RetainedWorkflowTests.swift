@@ -100,6 +100,50 @@ import XCTest
         app.buttons["Done"].tap()
     }
 
+    func testDarkroomAccessibleControlsReachNonGestureEditingPaths() throws {
+        let id = UUID()
+        let app = launch(["--developed-photo"], id: id)
+        openFilm(app)
+        openDarkroom(app)
+
+        app.buttons["Contrast"].tap()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Contrast grade")).firstMatch.waitForExistence(timeout: 5))
+
+        app.buttons["Filtration"].tap()
+        let cyan = app.sliders["Cyan"]
+        XCTAssertTrue(cyan.waitForExistence(timeout: 5))
+        cyan.adjust(toNormalizedSliderPosition: 0.65)
+        XCTAssertTrue(app.sliders["Magenta"].exists)
+        XCTAssertTrue(app.sliders["Yellow"].exists)
+
+        app.buttons["Crop"].tap()
+        let crop = app.switches["Crop"]
+        XCTAssertTrue(crop.waitForExistence(timeout: 5))
+        crop.tap()
+        let size = app.sliders["Crop size"]
+        XCTAssertTrue(size.waitForExistence(timeout: 5))
+        size.adjust(toNormalizedSliderPosition: 0.6)
+        XCTAssertTrue(app.sliders["Crop Horizontal"].exists)
+        XCTAssertTrue(app.sliders["Crop Vertical"].exists)
+        crop.tap()
+
+        app.buttons["Dodge / Burn"].tap()
+        let horizontal = app.sliders["Local exposure horizontal position"]
+        XCTAssertTrue(horizontal.waitForExistence(timeout: 5))
+        horizontal.adjust(toNormalizedSliderPosition: 0.7)
+        let vertical = app.sliders["Local exposure vertical position"]
+        XCTAssertTrue(vertical.waitForExistence(timeout: 5))
+        vertical.adjust(toNormalizedSliderPosition: 0.35)
+        XCTAssertTrue(app.buttons["Dodge point"].waitForExistence(timeout: 5))
+        app.buttons["Dodge point"].tap()
+        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
+        app.buttons["Undo last stroke"].tap()
+        XCTAssertFalse(app.buttons["Undo last stroke"].isEnabled)
+
+        saveDarkroom(app)
+        inspect(app, "darkroom-accessible-controls")
+    }
+
     private func launch(_ arguments: [String], id: UUID = UUID()) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = arguments + ["--workflow-run", id.uuidString]
@@ -144,7 +188,10 @@ import XCTest
     }
 
     private func openDarkroom(_ app: XCUIApplication) {
-        app.buttons["Open photo 1"].tap()
+        let photo = app.buttons["Open photo 1"]
+        for _ in 0..<6 where !photo.exists { app.swipeUp() }
+        XCTAssertTrue(photo.waitForExistence(timeout: 5))
+        photo.tap()
         app.buttons["Darkroom"].tap()
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
     }

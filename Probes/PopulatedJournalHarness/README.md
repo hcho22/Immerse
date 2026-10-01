@@ -68,3 +68,18 @@ The optional `legacy` selection reruns the three unchanged original functional
 tests against the new harness. Its initial snapshots alone do not establish the
 retained tests' before/after comparisons; do not use the four-history inspector
 on that three-scenario output.
+
+The optional `--movie-player-observer` argument installs a nonshipping, nearly
+invisible observer that traverses the harness app's public UIKit/AVKit hierarchy,
+records weak `AVPlayer`/`AVPlayerItem` identities for the actual developed Movie
+surface and exposes state labels for UI tests. Use it only for the bounded
+player-retirement check; it is not a production diagnostic, private API probe or
+hardware playback-cache test.
+
+```sh
+xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-darkroom-controls-044.xcresult -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testDarkroomAccessibleControlsReachNonGestureEditingPaths -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
+xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-movie-player-observer-044-2.xcresult -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
+```
+
+Read `Evidence/NativeApp/darkroom-player-observation-044.md` for the retained
+outcomes, failed setup assumptions, hashes and limits.

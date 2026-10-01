@@ -92,9 +92,14 @@ exact original output.
 The optional legacy runner selection was added after retained-2, before legacy-1;
 UI/scenario code stayed unchanged. Run sequentially on the owned simulator only.
 
-Partial FR-06/07/08/16/18 evidence. Full capacity/final Instant exposure, all
-Darkroom controls/assistive paths, actual capture/PhotoKit, active Movie player/
-cache, exact capture quiescence and Development process death remain separate work.
+Partial FR-06/07/08/16/18 evidence. Later checkpoints cover full capacity/final
+Instant exposure (`../NativeApp/full-capacity-runtime-043.md`), bounded active
+Movie/player state and public AVKit retirement
+(`../NativeApp/movie-player-cache-042.md`,
+`../NativeApp/darkroom-player-observation-044.md`), and additional Darkroom
+control reachability (`../NativeApp/darkroom-player-observation-044.md`).
+Actual capture/PhotoKit, exact capture quiescence, real assistive technologies
+and Development process death remain separate work.
 Physical ARC-08/10/11/12, TRI-11/QA-15, original accessibility failures, asset/render/
 price/support/launch decisions remain open. No product choice or original ADR changed.
 
