@@ -7,6 +7,111 @@ import RenderFixtures
 import XCTest
 
 final class FilmProcessorTests: XCTestCase {
+    func testFullPhotoRollCapacitiesStaySealedUntilExplicitDevelopment() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let fixture = root.appendingPathComponent("Fixtures")
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.photoWidth = 96; settings.photoHeight = 72
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixture, settings: settings)
+        let source = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-photo.jpg"))
+        let cases: [(CameraPackage, Int)] = [
+            (CameraCatalog.disposable1990s, 27),
+            (CameraCatalog.mediumFormat6x6, 12)
+        ]
+
+        for (camera, capacity) in cases {
+            let repository = try FilmRepository(rootURL: root.appendingPathComponent(camera.id.rawValue))
+            let film = try repository.createFilm(camera: camera, title: camera.displayName)
+            for expected in 1...capacity {
+                let saved = try repository.savePhotoCapture(filmID: film.id, sourceData: source)
+                XCTAssertEqual(saved.savedCaptureCount, expected)
+                XCTAssertEqual(saved.remainingExposures, capacity - expected)
+                XCTAssertEqual(saved.captures.map(\.revealState), Array(repeating: .sealed, count: expected))
+            }
+            let full = try repository.film(id: film.id)
+            XCTAssertEqual(full.completionState, .capacityFull)
+            XCTAssertTrue(full.canStartDevelopment)
+            XCTAssertThrowsError(try repository.savePhotoCapture(filmID: film.id, sourceData: source)) {
+                XCTAssertEqual($0 as? FilmDomainError, .captureAlreadyComplete)
+            }
+            let processor = try FilmProcessor(root: root.appendingPathComponent(camera.id.rawValue))
+            try await processor.develop(filmID: film.id)
+            let developed = try repository.film(id: film.id)
+            XCTAssertEqual(developed.developmentState, .developed)
+            XCTAssertEqual(developed.captures.map(\.revealState), Array(repeating: .revealed, count: capacity))
+            XCTAssertNotNil(try repository.mediaAsset(filmID: film.id, sequenceNumber: capacity, kind: .master))
+        }
+    }
+
+    func testFullInstantPackRevealsFinalPrintIndividuallyAndRejectsEleventhExposure() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let fixture = root.appendingPathComponent("Fixtures")
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.photoWidth = 96; settings.photoHeight = 72
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixture, settings: settings)
+        let source = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-photo.jpg"))
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Instant")
+        let processor = try FilmProcessor(root: root)
+        var firstPrint: Data?
+
+        for sequence in 1...10 {
+            try repository.savePhotoCapture(filmID: film.id, sourceData: source)
+            XCTAssertEqual(try repository.film(id: film.id).captures.filter { $0.revealState == .sealed }.map(\.sequenceNumber), [sequence])
+            try await processor.develop(filmID: film.id)
+            let current = try repository.film(id: film.id)
+            XCTAssertEqual(current.captures.filter { $0.revealState == .revealed }.map(\.sequenceNumber), Array(1...sequence))
+            XCTAssertFalse(current.canStartDevelopment)
+            let print = try await processor.photo(filmID: film.id, sequence: sequence)
+            XCTAssertFalse(print.isEmpty)
+            if sequence == 1 { firstPrint = print }
+            else {
+                let firstAgain = try await processor.photo(filmID: film.id, sequence: 1)
+                XCTAssertEqual(firstAgain, firstPrint)
+            }
+        }
+
+        let full = try repository.film(id: film.id)
+        XCTAssertEqual(full.completionState, .capacityFull)
+        XCTAssertEqual(full.remainingExposures, 0)
+        XCTAssertEqual(full.captures.map(\.revealState), Array(repeating: .revealed, count: 10))
+        XCTAssertThrowsError(try repository.savePhotoCapture(filmID: film.id, sourceData: source)) {
+            XCTAssertEqual($0 as? FilmDomainError, .captureAlreadyComplete)
+        }
+    }
+
+    func testFullMovieCapacitiesAreDurableAndRejectOverBudgetClips() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let fixture = root.appendingPathComponent("Fixtures")
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.movieWidth = 96; settings.movieHeight = 72; settings.movieDurationSeconds = 0.12
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixture, settings: settings)
+        let source = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-movie.mov"))
+        let cases: [(CameraPackage, TimeInterval)] = [
+            (CameraCatalog.super8HomeMovie, 200),
+            (CameraCatalog.cinema16mm, 165)
+        ]
+
+        for (camera, capacity) in cases {
+            let repository = try FilmRepository(rootURL: root.appendingPathComponent(camera.id.rawValue))
+            let film = try repository.createFilm(camera: camera, title: camera.displayName, movieOrientation: .landscape)
+            let first = try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: capacity - 0.25, orientation: .landscape)
+            XCTAssertEqual(try XCTUnwrap(first.remainingMovieSeconds), 0.25, accuracy: 0.0001)
+            XCTAssertEqual(first.completionState, .open)
+            let full = try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: 0.25, orientation: .portrait)
+            XCTAssertEqual(full.completionState, .capacityFull)
+            XCTAssertEqual(full.consumedMovieSeconds, capacity, accuracy: 0.0001)
+            XCTAssertEqual(try XCTUnwrap(full.remainingMovieSeconds), 0, accuracy: 0.0001)
+            XCTAssertEqual(full.captures.map(\.revealState), [.sealed, .sealed])
+            XCTAssertThrowsError(try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: 0.001, orientation: .landscape)) { error in
+                XCTAssertEqual(error as? FilmDomainError, .captureAlreadyComplete)
+            }
+        }
+    }
+
     func testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

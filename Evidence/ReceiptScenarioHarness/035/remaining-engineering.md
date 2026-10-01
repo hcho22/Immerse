@@ -28,9 +28,12 @@ physical/product/accessibility gaps remain open.
 Priority 5 has bounded current results in `Evidence/PopulatedJournal/037/README.md`:
 four retained-view cases with independent exact state/print comparisons, three
 unchanged legacy navigation cases and unsigned device compilation. No production
-source changes. Full-capacity/final Instant, every Darkroom/assistive path, active
-Movie playback/cache and exact capture quiescence remain preparable work. Initial
-selector/build failures and runtime warning remain visible.
+source changes. `Evidence/NativeApp/full-capacity-runtime-043.md` now covers
+full-capacity/final Instant behavior synthetically at FilmRuntime level, and
+`Evidence/NativeApp/movie-player-cache-042.md` covers bounded active Movie
+playback/cache states. Every Darkroom/assistive path and exact capture
+quiescence remain preparable work. Initial selector/build failures and runtime
+warning remain visible.
 
 `Evidence/DevelopmentProcessExit/036/README.md` now adds 33 exact-boundary macOS
 child exits and four representative iOS app exits with native state/hash comparisons

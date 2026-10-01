@@ -171,6 +171,14 @@ assembled Movie retirement and reassembly from retained clips. This is bounded
 synthetic software evidence, not player-instance lifetime, hardware codec
 fidelity, PhotoKit/export race, background interruption or physical acceptance.
 
+The full-capacity runtime continuation is recorded in
+`Evidence/NativeApp/full-capacity-runtime-043.md`: FilmRuntime package tests now
+cover full Disposable 27, 6x6 12, Instant 10 including the final print, Super 8
+200 seconds and 16mm 165 seconds with sealed-before-development or individual
+Instant reveal semantics and extra-capture rejection. This is synthetic
+repository/processor evidence, not hardware capture timing, iPhone 11
+performance, physical storage pressure or real-device full-capacity acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain
@@ -180,7 +188,7 @@ installation, signing, purchases, device deletion, backup restoration or erasure
 | Gate | Required scenario and retained evidence | Current gap |
 | --- | --- | --- |
 | CAP-01...10 / QA-01,02 | Each Camera rear/front; asymmetric target proves mirrored preview and unmirrored saved output; all supported controls; deny Camera; interrupt call/lock/background; retry low-space and process kill. Record source/media hashes, saved capacity and Trial state. | No physical capture run. |
-| DEV / QA-03 | Fill each exact capacity, prove no roll/Movie auto-reveal; confirm/cancel exact early waste; empty Delete Film; Instant final print; terminate and resume the same treatment/master. | App-model/native renderer tests are not device rituals or termination proof. |
+| DEV / QA-03 | Fill each exact capacity, prove no roll/Movie auto-reveal; confirm/cancel exact early waste; empty Delete Film; Instant final print; terminate and resume the same treatment/master. | Full-capacity repository/processor tests pass synthetically; app-model/native renderer tests are not device rituals, physical timing or termination proof. |
 | DRK / QA-04,13 | Every applicable control, accessible point and gesture Dodge/Burn, exact Reset/export equality, independent photos, no Movie entry. Largest Dynamic Type, VoiceOver and Switch Control across populated screens. | Partial simulator audit only; medium applicability/ranges remain DEC-04/11. |
 | STO / QA-09 | Independent developed/original exports; denied/restricted add-only permission, failed Photos write/retry; decode/hash masters before cleanup; inspect real Photos output; no sealed or automatic exports. | PhotoKit execution and actual device low-storage paths untested. |
 | MOV / PRV / QA-11 / ARC-10 | Both final orientations, opposite-orientation borders, chronological cuts, native cadence/color/HDR/codec fidelity, optional cleared music; Discard during playback/export and reopen; no stale asset or deleted clip returns. | Runtime stale-Movie retirement and populated final empty-Movie UI pass synthetically; hardware fidelity/music/export/playback-cache acceptance absent. |

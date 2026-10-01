@@ -111,3 +111,27 @@ identity or lifetime of a specific `AVPlayer` instance, a real device playback
 cache, hardware codec fidelity, PhotoKit export race behavior, background
 interruption, accessibility conformance, or any physical backup/restore result.
 Those remain in the manual and hardware matrices.
+
+## Proposed Follow-Up
+
+The old app-owned player lifetime is still a software-observable boundary, not
+automatically a hardware-only gap. Before adding production seams, use a
+nonshipping hosted view test against the actual Film detail view with synthetic
+Movie media:
+
+1. Host the real view/model in a probe target that can traverse the SwiftUI /
+   UIKit hierarchy after the developed Movie player appears.
+2. Locate the existing `AVPlayerViewController`/player surface through public
+   UIKit/AVKit relationships and retain a weak reference to the observed player
+   or current item. Do not use private API.
+3. Trigger Discard/Delete through the actual view action path and wait for the
+   production completion acknowledgement.
+4. Assert the observed old playback path cannot still present discarded content:
+   either the old player/item is released, or the retained player has no current
+   item / no readable discarded asset. Separately assert any successor Movie
+   contains only retained clips, as the current runtime test already does.
+
+If the public hierarchy cannot expose enough identity to distinguish old and
+successor players, record that exact infeasibility and propose the narrowest
+reviewable nonshipping seam. Do not add a shipping diagnostic flag, forced
+visible delay, broad observer framework or persistent protocol for this.
