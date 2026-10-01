@@ -1,28 +1,29 @@
 # Remaining Engineering After Receipt Checkpoint 035
 
-## Current Addendum (037)
+## Current Addendum (039)
 
 The historical inventory below is retained. Priority 1 now has source-bound
 native export/privacy evidence in `Evidence/ExportPrivacyHarness/036/README.md`;
-priority 2 has the approved optional observer and package/hosted scenarios in
+priority 2 has the optional observer and package/hosted scenarios in
 `Evidence/DevelopmentObserver/036/README.md`. Exact FIFO precedence within the
 production receipt owner is proved in `Evidence/ReceiptFIFO/036/README.md`, not
-capture-backend quiescence or physical interruptions. Those remaining boundaries
-are still open.
+capture-backend quiescence or physical interruptions. Those boundaries remain open.
 
-Priority 4 advanced through `Evidence/ReceiptFaultMatrix/036/README.md` and
-`037/README.md`. A failing mismatch recovery regression and a same-Film restore
-counterexample remain visible. Sixteen existing runtime and six adapter checks
-pass, but no production correction was made: a new persisted-provenance protocol
-boundary must be reconciled before dependent edits. Native Security remains
-deferred, and no source-bound native fix result exists. Priority 5 populated-view
-coverage is independent and can proceed under instruction 036. Full-v1 and all
-original physical/product/accessibility gaps remain open.
+Priority 4 now follows `Evidence/ReceiptFaultMatrix/039/README.md`. Instruction
+039 explicitly distinguishes exact direct-update acknowledgment from existing-
+grant recovery under authoritative same-item reads. Shipping behavior already
+matches that scope; no marker/schema/state change was made. Current tests cover
+direct identity/date mismatch rejection and repaired recovery, existing-grant
+permutations, pending backups, legacy/foreign rights, paid isolation and replay.
+23 runtime, six adapter, seven hosted-native and one nine-history process-exit
+method pass. These injected results do not establish native Security behavior.
 
-The subsequent nonshipping study `Evidence/ReceiptFaultMatrix/038/README.md`
-disproves the pre-write-marker hypothesis for pending/legacy backups and reports
-the read-trust versus restored-rights tradeoff. No marker, migration, shipping
-resolver change or new accepted guarantee follows; both regressions remain failed.
+036/037 retain their historical failed stronger assertions and 038 the disproved
+marker/arbitrary-false-read counterexamples. They are neither newly green nor
+waived captain requirements. Broader fabricated-read tolerance is unsupported,
+not a guarantee added by a test. Native Security remains deferred. Priority 5
+populated-view coverage is independent under instruction 036. Full-v1 and original
+physical/product/accessibility gaps remain open.
 
 ## Historical Inventory
 

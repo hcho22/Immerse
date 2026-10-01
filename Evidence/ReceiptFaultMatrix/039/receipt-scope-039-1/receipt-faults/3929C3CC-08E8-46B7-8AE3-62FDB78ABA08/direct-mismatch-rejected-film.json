@@ -1,0 +1,27 @@
+{
+  "camera" : {
+    "capacity" : {
+      "exposures" : {
+        "_0" : 27
+      }
+    },
+    "displayName" : "1990s Disposable",
+    "id" : "disposable1990s",
+    "medium" : "photo",
+    "revealRule" : "rollLevelDevelopment",
+    "supportsBuiltInSoundtrack" : false
+  },
+  "captures" : [
+
+  ],
+  "completionState" : {
+    "open" : {
+
+    }
+  },
+  "developmentState" : "notStarted",
+  "id" : "C862C341-6E73-4B63-ADB9-F7A8110B9A31",
+  "isArchived" : false,
+  "loadedAt" : 812580710.005556,
+  "title" : "Synthetic fault matrix"
+}

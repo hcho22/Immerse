@@ -1,0 +1,27 @@
+{
+  "camera" : {
+    "capacity" : {
+      "exposures" : {
+        "_0" : 27
+      }
+    },
+    "displayName" : "1990s Disposable",
+    "id" : "disposable1990s",
+    "medium" : "photo",
+    "revealRule" : "rollLevelDevelopment",
+    "supportsBuiltInSoundtrack" : false
+  },
+  "captures" : [
+
+  ],
+  "completionState" : {
+    "open" : {
+
+    }
+  },
+  "developmentState" : "notStarted",
+  "id" : "2D837EAE-819C-4677-9D6F-35C58738A4E0",
+  "isArchived" : false,
+  "loadedAt" : 812580707.891264,
+  "title" : "Synthetic existing grant"
+}

@@ -1,0 +1,112 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Compiling FilmRuntimeTests ReceiptFaultMatrixTests.swift
+[4/6] Compiling FilmRuntimeTests ReceiptCompatibilityTests.swift
+[5/6] Emitting module FilmRuntimeTests
+[5/7] Write Objects.LinkFileList
+[6/7] Linking FilmRuntimePackageTests
+Build complete! (4.37s)
+Test Suite 'Selected tests' started at 2026-10-01 13:50:28.831.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 13:50:28.832.
+Test Suite 'CaptureRecoveryIntegrationTests' started at 2026-10-01 13:50:28.832.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' started.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' passed (1.969 seconds).
+Test Suite 'CaptureRecoveryIntegrationTests' passed at 2026-10-01 13:50:30.802.
+	 Executed 1 test, with 0 failures (0 unexpected) in 1.969 (1.969) seconds
+Test Suite 'ProductionTrialReceiptTests' started at 2026-10-01 13:50:30.802.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' passed (0.021 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' passed (0.993 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' passed (2.171 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' passed (0.274 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' passed (0.149 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' passed (0.150 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' passed (0.159 seconds).
+Test Suite 'ProductionTrialReceiptTests' passed at 2026-10-01 13:50:34.720.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 3.916 (3.918) seconds
+Test Suite 'ReceiptCompatibilityTests' started at 2026-10-01 13:50:34.720.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation]' passed (0.564 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce]' passed (0.330 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce]' passed (0.191 seconds).
+Test Suite 'ReceiptCompatibilityTests' passed at 2026-10-01 13:50:35.805.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.085 (1.085) seconds
+Test Suite 'ReceiptFaultMatrixTests' started at 2026-10-01 13:50:35.805.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' passed (0.164 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce]' passed (0.582 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' passed (0.924 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' passed (0.402 seconds).
+Test Suite 'ReceiptFaultMatrixTests' passed at 2026-10-01 13:50:37.876.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 2.071 (2.071) seconds
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 13:50:37.877.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' passed (0.234 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' passed (0.018 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' passed (0.231 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' passed (0.254 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' passed (0.285 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' passed (1.053 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' passed (0.027 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' passed (0.243 seconds).
+Test Suite 'TrialIntegrationTests' passed at 2026-10-01 13:50:40.221.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 2.343 (2.345) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 13:50:40.221.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 11.384 (11.389) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 13:50:40.221.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 11.384 (11.391) seconds
+PRODUCTION_NATIVE_REPLY applied=false updates=2 count=1 pending=false
+PRODUCTION_NATIVE_REPLY applied=true updates=1 count=1 pending=false
+PRODUCTION_PROJECTION camera=disposable1990s fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+RECEIPT_FIFO injected-memory-only counts=0,1,2,0 stale=filmNotFound evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFIFO/EFB46ECA-D370-4F46-BFC3-06817A6E42BB
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/0C945E9E-361A-494A-8655-142CC1365C5F
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/16A11C57-7A18-46B5-908E-D22130D29830
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/4896D6F3-2F3C-4F7D-BADE-548EED9AABF1
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/06255213-86F0-44B1-A10E-D95682D7057D
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/B4C39347-1C33-45FB-B7B8-F7D926A5F425
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/1F7A1D2B-E9EA-418B-9034-076B64BE40B5
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/D74DDBC0-5839-4384-B313-A0C4148BF889
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/DA8321C0-32EA-4549-B9BE-9DC16D22036A
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/181BE5D1-2859-4C3F-B90C-FBEEF401304E
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/C98AAF03-6EF0-43C6-B9B4-96ECC9C0C750
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/CE51107B-46B3-4332-BAAA-FECA7832D411
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/776A2617-FAEF-47B6-AC80-20F8B56DA237
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/1F840490-6748-4982-96E2-6C7EC2C94706
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/93EC8E9E-53C6-45A5-A6CF-B10E13461A34
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/2EE1B5E3-7D60-4F51-A27F-F23C35DC5B13
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/32996CC4-253C-430E-A687-4ABF046E2B7E
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/C78A234E-0BD0-4E9F-A42E-65D1E4211F7F
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/C8832B86-D860-4434-98BA-AF3BEB462E5C
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/0CC4350A-A677-48A0-B776-C1D7DB9B722F
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

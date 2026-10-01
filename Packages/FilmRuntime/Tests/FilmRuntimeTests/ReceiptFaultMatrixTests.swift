@@ -10,7 +10,10 @@ import XCTest
 @testable import FilmRuntime
 
 private enum MatrixControl: Error { case preparedStop }
-private enum ReadbackFault: String, CaseIterable { case none, missingData, futureVersion, partialConsumption, mismatchedCapture }
+private enum ReadbackFault: String, CaseIterable {
+    case none, missingData, futureVersion, partialConsumption
+    case mismatchedCapture, mismatchedFilm, mismatchedDevice, mismatchedDate
+}
 
 private final class MatrixReceiptCalls: TrialKeychainCalling, Sendable {
     private struct State {
@@ -37,6 +40,9 @@ private final class MatrixReceiptCalls: TrialKeychainCalling, Sendable {
                 case .futureVersion: fields["schemaVersion"] = 999
                 case .partialConsumption: fields.removeValue(forKey: "consumedAt")
                 case .mismatchedCapture: fields["consumedCaptureID"] = "injected-different-capture"
+                case .mismatchedFilm: fields["consumedFilmID"] = "00000000-0000-0000-0000-000000000001"
+                case .mismatchedDevice: fields["deviceID"] = "00000000-0000-0000-0000-000000000002"
+                case .mismatchedDate: fields["consumedAt"] = (fields["consumedAt"] as! NSNumber).doubleValue + 1
                 case .none, .missingData: break
                 }
                 return .init(status: errSecSuccess, data: try JSONSerialization.data(withJSONObject: fields, options: .sortedKeys))
@@ -132,20 +138,30 @@ private final class MatrixReceiptCalls: TrialKeychainCalling, Sendable {
         }
     }
 
-    func testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery() async throws {
-        let fixture = try await Fixture(label: "mismatched-readback-recovery", fault: .mismatchedCapture)
-        let receiver = try await fixture.owner.receiver(filmID: fixture.film.id)
-        try await keychainFailure(errSecNotAvailable) { try await receiver.commit(.photoSaved(fixture.photo)) }
-        XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
-        try fixture.snapshot("first-mismatch-rejected")
-        let reopened = try TrialCoordinator(root: fixture.root, store: fixture.store)
-        // This probes the documented matching-readback-before-projection claim.
-        // Existing restored-Film rights remain unchanged; any conflict is evidence,
-        // not authority to tighten those rights or reset the receipt.
-        try await keychainFailure(errSecNotAvailable) { try await reopened.reconcile() }
-        try fixture.snapshot("still-mismatched-after-reconcile")
-        XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
-        XCTAssertTrue(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+    func testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce() async throws {
+        for fault in [ReadbackFault.mismatchedCapture, .mismatchedFilm, .mismatchedDevice, .mismatchedDate] {
+            let fixture = try await Fixture(label: "direct-\(fault.rawValue)", fault: fault)
+            let receiver = try await fixture.owner.receiver(filmID: fixture.film.id)
+            try await keychainFailure(errSecNotAvailable) { try await receiver.commit(.photoSaved(fixture.photo)) }
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
+            XCTAssertTrue(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+            try fixture.snapshot("direct-mismatch-rejected")
+            let actual = fixture.calls.actual
+            // Scope 039: recover only after this adapter again returns its actual
+            // item. Fabricated-read recovery remains historical unsupported evidence.
+            fixture.calls.resolveReadback()
+            XCTAssertEqual(fixture.calls.read(service: "injected-only").data, actual)
+            let reopened = try TrialCoordinator(root: fixture.root, store: fixture.store)
+            try await reopened.reconcile()
+            try await reopened.reconcile()
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 1)
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).captures.first?.revealState, .sealed)
+            XCTAssertFalse(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+            XCTAssertEqual(fixture.calls.actual, actual)
+            XCTAssertEqual(fixture.calls.updates, 1)
+            XCTAssertEqual(fixture.calls.adds, 0)
+            try fixture.snapshot("exact-item-recovered")
+        }
     }
 
     func testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit() async throws {

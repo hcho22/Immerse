@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/../.."
-mode=${1:?unit, ui, development or fifo}
+mode=${1:?unit, ui, development, fifo or receipt-scope}
 label=${2:?unique evidence label}
 SIM=${SIMULATOR_ID:?explicit authorized simulator UUID required}
 case "$label" in *[!a-zA-Z0-9_-]*|'') exit 64 ;; esac
@@ -10,11 +10,13 @@ case "$mode" in
   ui) selection=ExportPrivacyUITests ;;
   development) selection=DevelopmentObserverTests ;;
   fifo) selection=ReceiptFIFOTests/ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm ;;
+  receipt-scope) selection=ReceiptScopeTests ;;
   *) exit 64 ;;
 esac
 OUT="Evidence/ExportPrivacyHarness/036/$label"
 if [ "$mode" = development ]; then OUT="Evidence/DevelopmentObserver/036/$label"; fi
 if [ "$mode" = fifo ]; then OUT="Evidence/ReceiptFIFO/036/$label"; fi
+if [ "$mode" = receipt-scope ]; then OUT="Evidence/ReceiptFaultMatrix/039/$label"; fi
 RESULT="DerivedData/Export036-$label.xcresult"
 test ! -e "$OUT"
 test ! -e "$RESULT"
@@ -43,6 +45,7 @@ shasum -a 256 Probes/ReceiptScenarioHarness/Sources/ScenarioEvidence.swift >> "$
 find Packages/FilmRuntime/Sources -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 >> "$OUT/source.sha256"
 shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift >> "$OUT/source.sha256"
 shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift >> "$OUT/source.sha256"
+shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptCompatibilityTests.swift Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift Packages/EntitlementCore/Sources/EntitlementCore/DeviceTrialStore.swift >> "$OUT/source.sha256"
 git rev-parse HEAD > "$OUT/base-revision.txt"
 xcodebuild -version > "$OUT/xcode.txt"
 printf 'mode=%s\nselection=%s\nresult=%s\n' "$mode" "$selection" "$RESULT" > "$OUT/selection.txt"
@@ -59,14 +62,18 @@ if [ -d "$RESULT" ]; then
   xcrun xcresulttool get test-results tests --path "$RESULT" --format json > "$OUT/tests.json"
 fi
 container=$(xcrun simctl get_app_container "$SIM" com.immerse.validation.ExportPrivacyHarness036 data)
-if [ -d "$container/Documents/ExportScenarios" ]; then
+if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/ExportScenarios" ]; then
   cp -R "$container/Documents/ExportScenarios" "$OUT/scenarios"
 fi
-if [ -d "$container/Documents/DevelopmentScenarios" ]; then
+if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/DevelopmentScenarios" ]; then
   cp -R "$container/Documents/DevelopmentScenarios" "$OUT/development-scenarios"
 fi
-if [ -d "$container/Documents/ReceiptFIFO" ]; then
+if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/ReceiptFIFO" ]; then
   cp -R "$container/Documents/ReceiptFIFO" "$OUT/receipt-fifo"
+fi
+if [ "$mode" = receipt-scope ]; then
+  cp -R "$container/Documents/ReceiptCompatibility039" "$OUT/receipt-compatibility"
+  cp -R "$container/Documents/ReceiptFaultMatrix" "$OUT/receipt-faults"
 fi
 find DerivedData/ExportPrivacy036/Build/Products/Debug-iphonesimulator/ExportPrivacyHarness.app \
   -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/app-files.sha256"

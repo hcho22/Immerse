@@ -1,0 +1,220 @@
+import EntitlementCore
+import FilmDomain
+import FilmPersistence
+import Foundation
+import NativeAdapters
+import RenderFixtures
+import Security
+import Synchronization
+import XCTest
+@testable import FilmRuntime
+
+private enum MatrixControl: Error { case preparedStop }
+private enum ReadbackFault: String, CaseIterable { case none, missingData, futureVersion, partialConsumption, mismatchedCapture }
+
+private final class MatrixReceiptCalls: TrialKeychainCalling, Sendable {
+    private struct State {
+        var actual: Data
+        var fault: ReadbackFault
+        var updates = 0
+        var adds = 0
+    }
+    private let state: Mutex<State>
+    init(fault: ReadbackFault = .none) throws {
+        state = Mutex(State(actual: try JSONEncoder().encode(DeviceTrialRecord()), fault: fault))
+    }
+    var actual: Data { state.withLock { $0.actual } }
+    var updates: Int { state.withLock { $0.updates } }
+    var adds: Int { state.withLock { $0.adds } }
+    func resolveReadback() { state.withLock { $0.fault = .none } }
+    func read(service: String) -> TrialKeychainRead {
+        state.withLock { value in
+            guard value.updates > 0, value.fault != .none else { return .init(status: errSecSuccess, data: value.actual) }
+            if value.fault == .missingData { return .init(status: errSecSuccess, data: nil) }
+            do {
+                var fields = try JSONSerialization.jsonObject(with: value.actual) as! [String: Any]
+                switch value.fault {
+                case .futureVersion: fields["schemaVersion"] = 999
+                case .partialConsumption: fields.removeValue(forKey: "consumedAt")
+                case .mismatchedCapture: fields["consumedCaptureID"] = "injected-different-capture"
+                case .none, .missingData: break
+                }
+                return .init(status: errSecSuccess, data: try JSONSerialization.data(withJSONObject: fields, options: .sortedKeys))
+            } catch { fatalError("Cannot construct declared injected readback: \(error)") }
+        }
+    }
+    func add(service: String, data: Data) -> OSStatus { state.withLock { $0.adds += 1 }; return errSecDuplicateItem }
+    func update(service: String, data: Data) -> OSStatus {
+        state.withLock { $0.updates += 1; $0.actual = data }
+        return errSecSuccess
+    }
+}
+
+@MainActor final class ReceiptFaultMatrixTests: XCTestCase {
+    func testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility() async throws {
+        for fault in ["missingMedia", "foreignFilm", "foreignCapture", "sequence", "hash", "camera", "grant"] {
+            let fixture = try await Fixture(label: "pending-\(fault)")
+            let owner = try TrialCoordinator(root: fixture.root, store: fixture.store, checkpoint: {
+                if $0 == .prepared { throw MatrixControl.preparedStop }
+            })
+            let receiver = try await owner.receiver(filmID: fixture.film.id)
+            do { try await receiver.commit(.photoSaved(fixture.photo)); XCTFail("Expected prepared stop") }
+            catch MatrixControl.preparedStop { }
+            let directory = fixture.root.appendingPathComponent("Staging/\(fixture.film.id)/Commit")
+            let media = directory.appendingPathComponent(fixture.photo.lastPathComponent)
+            let manifest = media.appendingPathExtension("json")
+            let originalManifest = try Data(contentsOf: manifest)
+            try originalManifest.write(to: fixture.directory.appendingPathComponent("original-pending.json"), options: .withoutOverwriting)
+            if fault == "missingMedia" { try FileManager.default.removeItem(at: media) }
+            else {
+                var value = try JSONSerialization.jsonObject(with: originalManifest) as! [String: Any]
+                switch fault {
+                case "foreignFilm": value["filmID"] = UUID().uuidString
+                case "foreignCapture": value["captureID"] = "different.photo"
+                case "sequence": value["expectedSequence"] = 2
+                case "hash": value["sourceSHA256"] = String(repeating: "0", count: 64)
+                case "camera": value["camera"] = try JSONSerialization.jsonObject(with: JSONEncoder().encode(CameraCatalog.instant1970s))
+                case "grant": value["access"] = try JSONSerialization.jsonObject(with: JSONEncoder().encode(FilmAccess.subscription))
+                default: XCTFail("Undeclared pending mutation")
+                }
+                try JSONSerialization.data(withJSONObject: value, options: .sortedKeys).write(to: manifest, options: .atomic)
+            }
+            let reopened = try TrialCoordinator(root: fixture.root, store: fixture.store)
+            for action in 0...1 {
+                do {
+                    if action == 0 { try await reopened.reconcile() }
+                    else { _ = try await reopened.start(camera: CameraCatalog.instant1970s, title: "Forbidden reset") }
+                    XCTFail("Invalid pending input acknowledged")
+                } catch {
+                    if fault == "missingMedia" {
+                        XCTAssertEqual((error as NSError).domain, NSCocoaErrorDomain)
+                        XCTAssertEqual((error as NSError).code, NSFileNoSuchFileError)
+                    } else {
+                        let expected: PersistenceError = ["foreignFilm", "foreignCapture"].contains(fault) ? .invalidAssetPath
+                            : (fault == "hash" ? .mediaChangedDuringVerification : .conflictingCaptureReceipt)
+                        XCTAssertEqual(error as? PersistenceError, expected)
+                    }
+                }
+            }
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
+            XCTAssertEqual(try fixture.repository.allFilms().count, 1)
+            XCTAssertNil(try fixture.repository.captureReceipt(filmID: fixture.film.id, captureID: fixture.photo.lastPathComponent))
+            XCTAssertFalse(try XCTUnwrap(fixture.store.read()).isConsumed)
+            XCTAssertEqual(fixture.calls.updates, 0)
+            XCTAssertEqual(fixture.calls.adds, 0)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: manifest.path))
+            _ = try VerifiedMedia.photo(at: fixture.photo)
+            try fixture.snapshot("rejected-pending")
+        }
+    }
+
+    func testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite() async throws {
+        for fault in [ReadbackFault.missingData, .futureVersion, .partialConsumption] {
+            let fixture = try await Fixture(label: "readback-\(fault.rawValue)", fault: fault)
+            let receiver = try await fixture.owner.receiver(filmID: fixture.film.id)
+            try await keychainFailure(errSecDecode) { try await receiver.commit(.photoSaved(fixture.photo)) }
+            try fixture.snapshot("first-save-rejected")
+            let consumed = fixture.calls.actual
+            let reopened = try TrialCoordinator(root: fixture.root, store: fixture.store)
+            try await keychainFailure(errSecDecode) { try await reopened.reconcile() }
+            try await keychainFailure(errSecDecode) { _ = try await reopened.start(camera: CameraCatalog.instant1970s, title: "Forbidden reset") }
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
+            XCTAssertTrue(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+            fixture.calls.resolveReadback()
+            try await reopened.reconcile()
+            try await reopened.reconcile()
+            XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 1)
+            XCTAssertEqual(fixture.calls.actual, consumed)
+            XCTAssertEqual(fixture.calls.updates, 1)
+            XCTAssertEqual(fixture.calls.adds, 0)
+            XCTAssertFalse(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+            try fixture.snapshot("readable-recovered")
+        }
+    }
+
+    func testValidMismatchedReadbackRemainsUnacknowledgedDuringPendingRecovery() async throws {
+        let fixture = try await Fixture(label: "mismatched-readback-recovery", fault: .mismatchedCapture)
+        let receiver = try await fixture.owner.receiver(filmID: fixture.film.id)
+        try await keychainFailure(errSecNotAvailable) { try await receiver.commit(.photoSaved(fixture.photo)) }
+        XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
+        try fixture.snapshot("first-mismatch-rejected")
+        let reopened = try TrialCoordinator(root: fixture.root, store: fixture.store)
+        // This probes the documented matching-readback-before-projection claim.
+        // Existing restored-Film rights remain unchanged; any conflict is evidence,
+        // not authority to tighten those rights or reset the receipt.
+        try await keychainFailure(errSecNotAvailable) { try await reopened.reconcile() }
+        try fixture.snapshot("still-mismatched-after-reconcile")
+        XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 0)
+        XCTAssertTrue(try fixture.repository.hasPendingCapture(filmID: fixture.film.id))
+    }
+
+    func testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit() async throws {
+        let fixture = try await Fixture(label: "conflicting-callback")
+        let receiver = try await fixture.owner.receiver(filmID: fixture.film.id)
+        try await receiver.commit(.photoSaved(fixture.photo))
+        let source = try XCTUnwrap(fixture.repository.mediaAsset(filmID: fixture.film.id, sequenceNumber: 1, kind: .source)).url
+        let originalHash = try VerifiedMedia.photo(at: source).sha256
+        do { try await receiver.commit(.movieClipSaved(url: fixture.photo, durationSeconds: 0.16, orientation: .landscape)); XCTFail("Conflicting kind accepted") }
+        catch PersistenceError.conflictingCaptureReceipt { }
+        var changed = try Data(contentsOf: fixture.photo); changed.append(0)
+        try changed.write(to: fixture.photo, options: .atomic)
+        do { try await receiver.commit(.photoSaved(fixture.photo)); XCTFail("Conflicting bytes accepted") }
+        catch PersistenceError.conflictingCaptureReceipt { }
+        XCTAssertEqual(try fixture.repository.film(id: fixture.film.id).savedCaptureCount, 1)
+        XCTAssertEqual(try VerifiedMedia.photo(at: source).sha256, originalHash)
+        XCTAssertEqual(fixture.calls.updates, 1)
+        try fixture.snapshot("conflicting-callback-rejected")
+    }
+
+    private func keychainFailure(_ status: OSStatus, action: () async throws -> Void) async throws {
+        do { try await action(); XCTFail("Expected Keychain-boundary failure \(status), got success") }
+        catch { XCTAssertEqual((error as? TrialKeychainError)?.status, status, "Unexpected error \(error)") }
+    }
+
+    @MainActor private struct Fixture {
+        let directory: URL
+        let root: URL
+        let calls: MatrixReceiptCalls
+        let store: KeychainDeviceTrialStore
+        let owner: TrialCoordinator
+        let repository: FilmRepository
+        let film: Film
+        let photo: URL
+        init(label: String, fault: ReadbackFault = .none) async throws {
+            #if os(iOS)
+            let parent = URL.documentsDirectory
+            #else
+            let parent = FileManager.default.temporaryDirectory
+            #endif
+            directory = parent.appendingPathComponent("ReceiptFaultMatrix/\(UUID())")
+            root = directory.appendingPathComponent("App")
+            calls = try MatrixReceiptCalls(fault: fault)
+            store = KeychainDeviceTrialStore(service: "injected-only-receipt-matrix", calls: calls)
+            owner = try TrialCoordinator(root: root, store: store)
+            repository = try FilmRepository(rootURL: root)
+            film = try await owner.start(camera: CameraCatalog.disposable1990s, title: "Synthetic fault matrix")
+            var settings = RenderFixtureSettings.defaultExperimental
+            settings.photoWidth = 160; settings.photoHeight = 120
+            settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
+            let fixtures = directory.appendingPathComponent("Fixtures")
+            _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
+            photo = fixtures.appendingPathComponent("synthetic-developed-photo.jpg")
+            try JSONEncoder().encode(["label": label, "fault": fault.rawValue, "film": film.id.uuidString,
+                "backend": "injected-memory-readback", "utc": ISO8601DateFormatter().string(from: Date())])
+                .write(to: directory.appendingPathComponent("scenario.json"), options: .withoutOverwriting)
+            print("RECEIPT_MATRIX \(directory.path)")
+        }
+        func snapshot(_ name: String) throws {
+            let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            try encoder.encode(repository.film(id: film.id)).write(to: directory.appendingPathComponent("\(name)-film.json"), options: .withoutOverwriting)
+            try calls.actual.write(to: directory.appendingPathComponent("\(name)-actual-injected-receipt.json"), options: .withoutOverwriting)
+            let read = calls.read(service: "injected-only-receipt-matrix")
+            if let data = read.data { try data.write(to: directory.appendingPathComponent("\(name)-returned-readback.json"), options: .withoutOverwriting) }
+            try encoder.encode(["updates": calls.updates, "adds": calls.adds,
+                "pending": try repository.hasPendingCapture(filmID: film.id) ? 1 : 0,
+                "saved": try repository.film(id: film.id).savedCaptureCount,
+                "returnedStatus": Int(read.status)])
+                .write(to: directory.appendingPathComponent("\(name)-counts.json"), options: .withoutOverwriting)
+        }
+    }
+}

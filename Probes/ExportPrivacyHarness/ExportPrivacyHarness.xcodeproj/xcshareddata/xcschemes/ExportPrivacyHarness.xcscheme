@@ -77,6 +77,20 @@
                ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "81AC1C92D42F8AF0B68728C8"
+               BuildableName = "ReceiptScopeTests.xctest"
+               BlueprintName = "ReceiptScopeTests"
+               ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -136,6 +150,17 @@
                BlueprintIdentifier = "7C430F8CAE2F316F7D587B0A"
                BuildableName = "ReceiptFIFOTests.xctest"
                BlueprintName = "ReceiptFIFOTests"
+               ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "81AC1C92D42F8AF0B68728C8"
+               BuildableName = "ReceiptScopeTests.xctest"
+               BlueprintName = "ReceiptScopeTests"
                ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
             </BuildableReference>
          </TestableReference>

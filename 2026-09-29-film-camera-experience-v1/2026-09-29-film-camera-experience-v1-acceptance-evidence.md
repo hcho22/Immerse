@@ -2,26 +2,31 @@
 
 This companion expands the PRD's personal FR acceptance paragraphs and section 11 invariants into individually assessable records. It does not replace the [canonical tracker](2026-09-29-film-camera-experience-v1-task-tracker.md), modify original FR/section/ADR numbering, or add product decisions. The [requirement evidence map](2026-09-29-film-camera-experience-v1-evidence-map.md) covers every intake v1 tracker ID and implementation artifact. Group and Account acceptance in section 8 remains deferred.
 
-Current failed recovery addendum: `Evidence/ReceiptFaultMatrix/036/README.md`
-reproduces a still-mismatched valid receipt being projected on coordinator
-re-entry after initial first-save rejection. The matching-readback promise and
-restored-Film grant bypass need reconciliation before dependent production edits.
-FR-04 A06 / FR-21 first-save recovery are not accepted by earlier green tests.
-The new regression remains failed; three independent package methods passing
-does not turn that failure into a pass or a hardware result.
+**Current receipt/read scope (039):** Firstmate explicitly corrected its
+engineering assertion that every recovery must match the pending capture's
+receipt identity. Direct publication from unused eligibility still requires the
+exact post-write readback. Recovery may instead use a valid existing consumed
+record from an authoritative correctly scoped same-item read plus the persisted
+Film grant, without claiming acknowledgment of the pending write. Captain
+saved-only debit, no second new Trial Film/no refund, restored-Film rights and
+independent destination entitlement are unchanged. No marker/protocol/schema or
+shipping source change was necessary.
 
-Instruction 037's compatibility diagnosis (`Evidence/ReceiptFaultMatrix/037/README.md`)
-establishes identical recovery-visible inputs for legitimate same-Film empty-backup
-rights and an unresolved conflicting readback. The exact-readback control passes;
-the conflict criterion still fails. Existing receipt fields are insufficient for
-the required distinction, and a new persisted-provenance boundary is unresolved.
-No clause, original ADR, restored right or matching-readback promise is narrowed.
+`Evidence/ReceiptFaultMatrix/039/README.md` records the query/type/caller review,
+source-bound current tests, 23 runtime and six adapter passes, seven hosted iOS
+passes and one process-exit method covering nine histories. Receipts are injected;
+native media and persistence are real. The four direct identity/date mismatches
+reject, repaired exact data recovers once, and authoritative existing-grant
+permutations preserve restored rights without receipt mutation. These are partial
+TRI-03/04/09, ARC-03/05/11/12, CAP-08, QA-12/15 and FR-04/21 software evidence,
+not physical Keychain, backup or atomic durability acceptance.
 
-The 038 nonshipping follow-up (`Evidence/ReceiptFaultMatrix/038/README.md`) also
-disproves the suggested pre-write marker for pending/legacy backups. It separates
-captain requirements from the engineering readback claim and presents the exact
-read-trust tradeoff. Its model assertions do not accept FR-04/21 or backup clauses;
-there is no new shipping field, migration, native execution or green regression.
+Historical `036/README.md` and `037/README.md` remain factual failed tests of the
+stronger engineering assertion; their source and histories are retained, not
+retroactively green or waived captain criteria. `038/README.md` retains the
+disproved marker, five equal-input pairs and arbitrary fabricated-read
+counterexamples. That expanded trust/fault model is unsupported under instruction
+039, not a new passed guarantee. No captain requirement or original ADR changed.
 
 Evidence snapshot: source `7bfc78c`, branch `fm/immerse-v1-implementation`, observed 2026-10-01 UTC, macOS 26.6.2 (`25G83`), Swift 6.3.2, Xcode 26.5 (`17F42`). Package tests below ran on macOS. iOS builds were unsigned compile checks, not executed device tests. The approved Keychain candidate is separately pinned to `6e5c1742d344e0505b74176f60ac11c19a83e686`; its signed build passed but the confirmed iPhone was unreachable. No full FR has native acceptance yet.
 

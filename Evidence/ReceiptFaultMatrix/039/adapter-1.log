@@ -1,0 +1,29 @@
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.34s)
+Test Suite 'Selected tests' started at 2026-10-01 13:50:48.755.
+Test Suite 'EntitlementCorePackageTests.xctest' started at 2026-10-01 13:50:48.757.
+Test Suite 'DeviceTrialStoreTests' started at 2026-10-01 13:50:48.757.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testConsumptionAndReceiptRequireSameItemReadAcrossAllStatusOutcomes]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testConsumptionAndReceiptRequireSameItemReadAcrossAllStatusOutcomes]' passed (0.005 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testLegacyConsumedRecordIsNotUnusedOrOverwritten]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testLegacyConsumedRecordIsNotUnusedOrOverwritten]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMalformedFutureAndPartialRecordsFailClosedWithoutInitialization]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMalformedFutureAndPartialRecordsFailClosedWithoutInitialization]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMissingItemCannotBeCreatedByConsumptionAndLostAddReplyUsesReadback]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMissingItemCannotBeCreatedByConsumptionAndLostAddReplyUsesReadback]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testSuccessStatusWithMissingMalformedOrMismatchedReceiptIsNotAcknowledged]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testSuccessStatusWithMissingMalformedOrMismatchedReceiptIsNotAcknowledged]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testUnavailableReadAfterUpdateNeverResetsAndRetryDoesNotWriteAgain]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testUnavailableReadAfterUpdateNeverResetsAndRetryDoesNotWriteAgain]' passed (0.000 seconds).
+Test Suite 'DeviceTrialStoreTests' passed at 2026-10-01 13:50:48.767.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.008 (0.009) seconds
+Test Suite 'EntitlementCorePackageTests.xctest' passed at 2026-10-01 13:50:48.767.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.008 (0.010) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 13:50:48.767.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.008 (0.012) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

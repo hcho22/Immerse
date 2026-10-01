@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16ADA97A2F4EB19153314DA1 /* ReceiptFaultMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49A39460A843E77860767BF /* ReceiptFaultMatrixTests.swift */; };
+		1BF929F223471E355C4DCD64 /* ReceiptCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769A4F9188219CDD59589A96 /* ReceiptCompatibilityTests.swift */; };
 		2D2F1C9B743915C4522A81C0 /* DevelopmentObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */; };
 		31B2114577ACD6FE4D17C389 /* ExportScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8FA79544BAAEA8A3BF40E9 /* ExportScenario.swift */; };
 		36725F7871AC1968CEE520CF /* ExportProcessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */; };
@@ -24,6 +26,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		33EF9BA219081113F9B763B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2271B112ABB199472415545 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B297E76505E38CBC4E3D29BB;
+			remoteInfo = ExportPrivacyHarness;
+		};
 		477D390395B28B5A90641324 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2271B112ABB199472415545 /* Project object */;
@@ -60,13 +69,16 @@
 		5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyTests.swift; sourceTree = "<group>"; };
 		6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ExportPrivacyHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		769A4F9188219CDD59589A96 /* ReceiptCompatibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCompatibilityTests.swift; sourceTree = "<group>"; };
 		7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentObserverTests.swift; sourceTree = "<group>"; };
+		87DD0A0A3F5199C2FFFFFCBA /* ReceiptScopeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptScopeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyApp.swift; sourceTree = "<group>"; };
 		A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportProcessExitTests.swift; sourceTree = "<group>"; };
 		A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptFIFOTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioEvidence.swift; sourceTree = "<group>"; };
 		CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DevelopmentObserverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D35A271486D1EC5B7778147F /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		D49A39460A843E77860767BF /* ReceiptFaultMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFaultMatrixTests.swift; sourceTree = "<group>"; };
 		DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionTrialReceiptTests.swift; sourceTree = "<group>"; };
 		DD58A7C77B1C07CF6684EAAD /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +120,8 @@
 			children = (
 				7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */,
 				DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */,
+				769A4F9188219CDD59589A96 /* ReceiptCompatibilityTests.swift */,
+				D49A39460A843E77860767BF /* ReceiptFaultMatrixTests.swift */,
 			);
 			name = FilmRuntimeTests;
 			path = ../../Packages/FilmRuntime/Tests/FilmRuntimeTests;
@@ -121,6 +135,7 @@
 				DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */,
 				6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */,
 				A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */,
+				87DD0A0A3F5199C2FFFFFCBA /* ReceiptScopeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -233,6 +248,24 @@
 			productReference = A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		81AC1C92D42F8AF0B68728C8 /* ReceiptScopeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 17F495E41BE84B052DD785FA /* Build configuration list for PBXNativeTarget "ReceiptScopeTests" */;
+			buildPhases = (
+				60302BAFB6B2EAFA80A9B08B /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D7183309DEF4A388C65DBD98 /* PBXTargetDependency */,
+			);
+			name = ReceiptScopeTests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptScopeTests;
+			productReference = 87DD0A0A3F5199C2FFFFFCBA /* ReceiptScopeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12E38483E4E71AAC06FEB507 /* Build configuration list for PBXNativeTarget "ExportPrivacyHarness" */;
@@ -316,11 +349,21 @@
 				C4670707147C90AB50692A1A /* ExportPrivacyTests */,
 				2B789362606419B9ECC9030F /* ExportPrivacyUITests */,
 				7C430F8CAE2F316F7D587B0A /* ReceiptFIFOTests */,
+				81AC1C92D42F8AF0B68728C8 /* ReceiptScopeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		60302BAFB6B2EAFA80A9B08B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BF929F223471E355C4DCD64 /* ReceiptCompatibilityTests.swift in Sources */,
+				16ADA97A2F4EB19153314DA1 /* ReceiptFaultMatrixTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		71190B40879DC7F6E9A83371 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -386,6 +429,11 @@
 			isa = PBXTargetDependency;
 			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
 			targetProxy = 477D390395B28B5A90641324 /* PBXContainerItemProxy */;
+		};
+		D7183309DEF4A388C65DBD98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
+			targetProxy = 33EF9BA219081113F9B763B0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -528,6 +576,40 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		7CA6A60FD9B7852CED6FA4D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.ReceiptScopeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
+			};
+			name = Debug;
+		};
+		824FDA756FBCEDB1664205C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.ReceiptScopeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
 			};
 			name = Release;
 		};
@@ -709,6 +791,15 @@
 			buildConfigurations = (
 				CB8DF631F22B9E7E9406B705 /* Debug */,
 				92BF1FA02620389D00D5D84F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		17F495E41BE84B052DD785FA /* Build configuration list for PBXNativeTarget "ReceiptScopeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CA6A60FD9B7852CED6FA4D8 /* Debug */,
+				824FDA756FBCEDB1664205C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

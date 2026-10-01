@@ -1,23 +1,30 @@
 # v1 Launch Readiness and Validation Handoff
 
-**New failed software criterion:**
-[Receipt recovery conflict](../ReceiptFaultMatrix/036/README.md) reproduces a
-mismatched first-save readback rejected initially but projected on still-
-mismatched re-entry through the consumed-marker fallback. The new test remains
-failed. Production correction must preserve older/foreign/legacy restored Film
-rights, not silently weaken them or relabel the failed check. This candidate is
-not ready for no-mistakes/CI or full-v1 acceptance.
+**Current receipt/read scope (039):** Firstmate explicitly corrected its
+engineering assertion that every recovery must match the pending capture's
+receipt identity. Direct publication from unused eligibility still requires the
+exact post-write readback. Recovery may instead use a valid existing consumed
+record from an authoritative correctly scoped same-item read plus the persisted
+Film grant, without claiming acknowledgment of the pending write. Captain
+saved-only debit, no second new Trial Film/no refund, restored-Film rights and
+independent destination entitlement are unchanged. No marker/protocol/schema or
+shipping source change was necessary.
 
-[037 compatibility diagnosis](../ReceiptFaultMatrix/037/README.md) now retains
-an equal-input counterexample: legitimate same-Film empty-backup recovery and
-rejected first-save recovery require different outcomes but expose identical
-persisted inputs. Existing-fields-only correction is insufficient. New protocol
-scope needs reconciliation; no production fix or hardware result is claimed.
+`Evidence/ReceiptFaultMatrix/039/README.md` records the query/type/caller review,
+source-bound current tests, 23 runtime and six adapter passes, seven hosted iOS
+passes and one process-exit method covering nine histories. Receipts are injected;
+native media and persistence are real. The four direct identity/date mismatches
+reject, repaired exact data recovers once, and authoritative existing-grant
+permutations preserve restored rights without receipt mutation. These are partial
+TRI-03/04/09, ARC-03/05/11/12, CAP-08, QA-12/15 and FR-04/21 software evidence,
+not physical Keychain, backup or atomic durability acceptance.
 
-[038 study](../ReceiptFaultMatrix/038/README.md) disproves the proposed backed-up
-pre-write marker for pending/legacy restores. Its 22 logical rows include five
-unsatisfied outcomes and five equal-input pairs. Zero executable exit means a
-consistent counterexample, not acceptance. Read-contract scope remains unresolved.
+Historical `036/README.md` and `037/README.md` remain factual failed tests of the
+stronger engineering assertion; their source and histories are retained, not
+retroactively green or waived captain criteria. `038/README.md` retains the
+disproved marker, five equal-input pairs and arbitrary fabricated-read
+counterexamples. That expanded trust/fault model is unsupported under instruction
+039, not a new passed guarantee. No captain requirement or original ADR changed.
 
 Draft sample and soundtrack review material is available at
 `../AssetReview/review.html`; provenance, decoded metadata, source hashes and

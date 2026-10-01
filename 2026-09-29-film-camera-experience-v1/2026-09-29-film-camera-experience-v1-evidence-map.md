@@ -14,31 +14,31 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
-**New failed software criterion (036):**
-`Evidence/ReceiptFaultMatrix/036/README.md` records a valid mismatched first-save
-receipt rejected initially but projected by a new coordinator during still-
-mismatched recovery. The consumed-marker bypass intersects preserved restored-
-Film rights; no production change or weakened rule was made. The regression
-remains failed, not a passing native result. Three independent matrix methods
-pass after a fixture error-code correction, but do not close TRI-03/04/09,
-ARC-05/11, CAP-08, QA-12 or FR-04/21 recovery acceptance.
+**Current receipt/read scope (039):** Firstmate explicitly corrected its
+engineering assertion that every recovery must match the pending capture's
+receipt identity. Direct publication from unused eligibility still requires the
+exact post-write readback. Recovery may instead use a valid existing consumed
+record from an authoritative correctly scoped same-item read plus the persisted
+Film grant, without claiming acknowledgment of the pending write. Captain
+saved-only debit, no second new Trial Film/no refund, restored-Film rights and
+independent destination entitlement are unchanged. No marker/protocol/schema or
+shipping source change was necessary.
 
-**037 compatibility boundary:** `Evidence/ReceiptFaultMatrix/037/README.md`
-records an exact-readback control and legitimate same-Film empty-backup restore
-alongside rejected first-save recovery. The latter two expose identical persisted
-inputs but require different outcomes; the conflict regression remains failed.
-Sixteen affected runtime and six adapter preservation methods pass, not the full
-suite. Production is unchanged; new persisted provenance needs a scoped decision
-before dependent implementation. No physical or hosted-native correction result
-is claimed. ARC-12/QA-15 restore requirements remain open alongside the IDs above.
+`Evidence/ReceiptFaultMatrix/039/README.md` records the query/type/caller review,
+source-bound current tests, 23 runtime and six adapter passes, seven hosted iOS
+passes and one process-exit method covering nine histories. Receipts are injected;
+native media and persistence are real. The four direct identity/date mismatches
+reject, repaired exact data recovers once, and authoritative existing-grant
+permutations preserve restored rights without receipt mutation. These are partial
+TRI-03/04/09, ARC-03/05/11/12, CAP-08, QA-12/15 and FR-04/21 software evidence,
+not physical Keychain, backup or atomic durability acceptance.
 
-**038 nonshipping study:** `Evidence/ReceiptFaultMatrix/038/README.md` disproves
-the proposed pre-write provenance marker for pending/legacy backups. Five
-equal-input pairs and five unmet outcomes among 22 logical rows expose the
-read-trust contract boundary, not new native test results. Shipping state and
-both regressions are unchanged. A decision on authoritative reads versus
-arbitrary valid-but-false readbacks is required before dependent correction;
-no captain promise or failed gate is silently narrowed.
+Historical `036/README.md` and `037/README.md` remain factual failed tests of the
+stronger engineering assertion; their source and histories are retained, not
+retroactively green or waived captain criteria. `038/README.md` retains the
+disproved marker, five equal-input pairs and arbitrary fabricated-read
+counterexamples. That expanded trust/fault model is unsupported under instruction
+039, not a new passed guarantee. No captain requirement or original ADR changed.
 
 Physical execution preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
 binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode

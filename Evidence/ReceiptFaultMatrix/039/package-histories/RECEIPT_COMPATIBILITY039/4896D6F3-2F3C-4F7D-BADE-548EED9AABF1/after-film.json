@@ -1,0 +1,36 @@
+{
+  "camera" : {
+    "capacity" : {
+      "exposures" : {
+        "_0" : 27
+      }
+    },
+    "displayName" : "1990s Disposable",
+    "id" : "disposable1990s",
+    "medium" : "photo",
+    "revealRule" : "rollLevelDevelopment",
+    "supportsBuiltInSoundtrack" : false
+  },
+  "captures" : [
+    {
+      "kind" : {
+        "photo" : {
+
+        }
+      },
+      "revealState" : "sealed",
+      "savedAt" : 812580635.569606,
+      "sequenceNumber" : 1
+    }
+  ],
+  "completionState" : {
+    "open" : {
+
+    }
+  },
+  "developmentState" : "notStarted",
+  "id" : "B2909336-4CE4-4503-9679-22376E34CE15",
+  "isArchived" : false,
+  "loadedAt" : 812580635.44552,
+  "title" : "Synthetic existing grant"
+}

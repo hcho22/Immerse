@@ -114,3 +114,11 @@ calls and native synthetic media. It reads the existing internal count through
 See `Evidence/ReceiptFIFO/036/README.md`. Result labels must be unique across all
 modes, not just within an evidence subdirectory. Older copied histories remain
 retained evidence, not additional test executions.
+
+`run-simulator.sh receipt-scope UNIQUE-GLOBAL-LABEL` selects seven current package
+receipt tests in the additional hosted `ReceiptScopeTests` target. All receipt
+calls are explicit in-memory injection; no native Security capability retry.
+Histories, source hashes and outcomes are under `Evidence/ReceiptFaultMatrix/039/`.
+Read that report for the explicitly reconciled direct-write versus existing-grant
+recovery contract and retained historical failed assertions. The export-only
+inspector is not applicable to these receipt histories.

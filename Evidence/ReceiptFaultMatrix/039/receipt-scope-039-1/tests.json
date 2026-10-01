@@ -1,0 +1,115 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.2101420164108276,
+                  "name" : "testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation()",
+                  "nodeIdentifier" : "ReceiptCompatibilityTests/testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptCompatibilityTests/testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.51s",
+                  "durationInSeconds" : 0.5133819580078125,
+                  "name" : "testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce()",
+                  "nodeIdentifier" : "ReceiptCompatibilityTests/testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptCompatibilityTests/testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.19s",
+                  "durationInSeconds" : 0.1947859525680542,
+                  "name" : "testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce()",
+                  "nodeIdentifier" : "ReceiptCompatibilityTests/testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptCompatibilityTests/testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ReceiptCompatibilityTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptCompatibilityTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.2s",
+                  "durationInSeconds" : 0.20176804065704346,
+                  "name" : "testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit()",
+                  "nodeIdentifier" : "ReceiptFaultMatrixTests/testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptFaultMatrixTests/testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.75s",
+                  "durationInSeconds" : 0.7547650337219238,
+                  "name" : "testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce()",
+                  "nodeIdentifier" : "ReceiptFaultMatrixTests/testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptFaultMatrixTests/testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.33719003200531,
+                  "name" : "testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility()",
+                  "nodeIdentifier" : "ReceiptFaultMatrixTests/testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptFaultMatrixTests/testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.5s",
+                  "durationInSeconds" : 0.49612700939178467,
+                  "name" : "testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite()",
+                  "nodeIdentifier" : "ReceiptFaultMatrixTests/testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptFaultMatrixTests/testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ReceiptFaultMatrixTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests/ReceiptFaultMatrixTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ReceiptScopeTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptScopeTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}
