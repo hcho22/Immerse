@@ -16,12 +16,13 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../FilmDomain"),
+        .package(path: "../RenderCore"),
         .package(path: "../RenderFixtures")
     ],
     targets: [
         .target(
             name: "FilmPersistence",
-            dependencies: ["FilmDomain"],
+            dependencies: ["FilmDomain", "RenderCore"],
             linkerSettings: [
                 .linkedLibrary("sqlite3")
             ]

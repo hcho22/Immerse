@@ -174,6 +174,26 @@ final class SQLiteDatabase {
         }
     }
 
+    func deleteValue(filmID: UUID, key: String) throws {
+        try withStatement("DELETE FROM film_values WHERE film_id = ? AND key = ?;") { statement in
+            try bindText(filmID.uuidString, to: statement, index: 1)
+            try bindText(key, to: statement, index: 2)
+            try stepDone(statement)
+        }
+    }
+
+    func allFilmData() throws -> [Data] {
+        try withStatement("SELECT data FROM films ORDER BY updated_at DESC;") { statement in
+            var result: [Data] = []
+            while true {
+                let status = sqlite3_step(statement)
+                if status == SQLITE_DONE { return result }
+                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                result.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
+            }
+        }
+    }
+
     func setValue(filmID: UUID, key: String, data: Data) throws {
         try withStatement("""
             INSERT INTO film_values (film_id, key, data) VALUES (?, ?, ?)

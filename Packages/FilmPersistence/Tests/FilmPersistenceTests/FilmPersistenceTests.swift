@@ -108,13 +108,13 @@ final class FilmPersistenceTests: XCTestCase {
         )
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source-1".utf8))
         try repository.completeEarly(filmID: film.id)
-        try repository.startAndFinishDevelopment(filmID: film.id)
+        _ = try repository.beginDevelopment(filmID: film.id)
         try repository.chooseOriginalExport(filmID: film.id, sequenceNumber: 1, export: false)
 
         XCTAssertThrowsError(
             try repository.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1)
         ) { error in
-            XCTAssertEqual(error as? PersistenceError, .missingVerifiedMaster)
+            XCTAssertEqual(error as? PersistenceError, .mediaNotRevealed)
         }
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
 
@@ -127,13 +127,14 @@ final class FilmPersistenceTests: XCTestCase {
         )
         let master = try XCTUnwrap(repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .master))
         let verified = try VerifiedMedia.photo(at: master.url)
+        try repository.finishVerifiedDevelopment(filmID: film.id, verifiedMedia: [verified])
         try repository.cleanupSourceAfterVerifiedMaster(filmID: film.id, sequenceNumber: 1, verifiedMedia: [verified])
 
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .master))
     }
 
-    func testDiscardDeletesAppControlledMediaAndKeepsPlaceholder() throws {
+    func testDiscardDeletesAppControlledMediaAndKeepsPlaceholder() async throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.disposable1990s,
             title: "Disposable - Roll #01"
@@ -141,12 +142,7 @@ final class FilmPersistenceTests: XCTestCase {
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source-1".utf8))
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source-2".utf8))
         try repository.completeEarly(filmID: film.id)
-        try repository.startAndFinishDevelopment(filmID: film.id)
-        try repository.writeDevelopedMaster(
-            filmID: film.id,
-            sequenceNumber: 1,
-            data: Data("master-1".utf8)
-        )
+        try await developTestFilm(repository, filmID: film.id)
 
         let afterDiscard = try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 1)
 
@@ -156,7 +152,7 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .source))
     }
 
-    func testMovieDiscardRetiresStaleAssemblyAndPreservesSurvivingClips() throws {
+    func testMovieDiscardRetiresStaleAssemblyAndPreservesSurvivingClips() async throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.super8HomeMovie,
             title: "Super 8 - Reel #01",
@@ -175,22 +171,7 @@ final class FilmPersistenceTests: XCTestCase {
             orientation: .portrait
         )
         try repository.completeEarly(filmID: film.id)
-        try repository.startAndFinishDevelopment(filmID: film.id)
-        try repository.writeDevelopedClip(
-            filmID: film.id,
-            sequenceNumber: 1,
-            data: Data("clip-1-developed".utf8)
-        )
-        try repository.writeDevelopedClip(
-            filmID: film.id,
-            sequenceNumber: 2,
-            data: Data("clip-2-developed".utf8)
-        )
-        try repository.writeAssembledMovie(
-            filmID: film.id,
-            data: Data("movie-from-1-2".utf8),
-            clipSequenceNumbers: [1, 2]
-        )
+        try await developTestFilm(repository, filmID: film.id)
 
         XCTAssertTrue(try repository.assembledMovieExists(filmID: film.id))
 
@@ -204,10 +185,12 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .clip))
         XCTAssertFalse(try repository.assembledMovieExists(filmID: film.id))
 
+        let survivor = try repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .clip)!
+        let verified = try await VerifiedMedia.movie(at: survivor.url)
         try repository.writeAssembledMovie(
             filmID: film.id,
-            data: Data("movie-from-1".utf8),
-            clipSequenceNumbers: [1]
+            data: Data(contentsOf: survivor.url),
+            clipSequenceNumbers: [1], verification: verified
         )
         XCTAssertTrue(try repository.assembledMovieExists(filmID: film.id))
 
@@ -250,7 +233,7 @@ final class FilmPersistenceTests: XCTestCase {
             orientation: .landscape
         )
         try repository.completeEarly(filmID: film.id)
-        try repository.startAndFinishDevelopment(filmID: film.id)
+        _ = try repository.beginDevelopment(filmID: film.id)
         try repository.writeDevelopedClip(
             filmID: film.id,
             sequenceNumber: 1,

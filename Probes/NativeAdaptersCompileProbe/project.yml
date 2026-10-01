@@ -10,6 +10,10 @@ packages:
     path: ../../Packages/NativeAdapters
   CapturePipeline:
     path: ../../Packages/CapturePipeline
+  RenderCore:
+    path: ../../Packages/RenderCore
+  FilmRuntime:
+    path: ../../Packages/FilmRuntime
 targets:
   NativeAdaptersCompileProbe:
     type: application
@@ -22,6 +26,10 @@ targets:
         product: NativeAdapters
       - package: CapturePipeline
         product: CapturePipeline
+      - package: RenderCore
+        product: RenderCore
+      - package: FilmRuntime
+        product: FilmRuntime
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.NativeAdaptersCompileProbe

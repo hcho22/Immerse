@@ -202,12 +202,11 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
             throw FilmDomainError.noRemainingExposures
         }
 
-        let revealState: CaptureRevealState = camera.revealRule == .instantPerExposure ? .revealed : .sealed
         let capture = CaptureRecord(
             sequenceNumber: captures.count + 1,
             kind: .photo,
             savedAt: savedAt,
-            revealState: revealState
+            revealState: .sealed
         )
         captures.append(capture)
         completeIfCapacityReached()
@@ -295,6 +294,15 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
             captures[index].revealState = .revealed
         }
         developmentState = .developed
+    }
+
+    public mutating func revealInstantPrint(sequenceNumber: Int) throws {
+        guard camera.revealRule == .instantPerExposure else { throw FilmDomainError.wrongCameraMedium }
+        guard let index = captures.firstIndex(where: { $0.sequenceNumber == sequenceNumber }) else {
+            throw FilmDomainError.captureNotFound
+        }
+        guard !captures[index].isDiscarded else { throw FilmDomainError.captureAlreadyDiscarded }
+        captures[index].revealState = .revealed
     }
 
     public mutating func discardRevealedCapture(sequenceNumber: Int) throws {

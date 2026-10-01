@@ -53,6 +53,7 @@ final class CaptureReceiptTests: XCTestCase {
         let film = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic")
         let data = Data("native-photo".utf8)
         try repository.savePhotoCapture(filmID: film.id, sourceData: data, captureID: "one")
+        try revealTestInstant(repository, filmID: film.id)
         try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 1)
         repository = try FilmRepository(rootURL: root)
         let after = try repository.savePhotoCapture(filmID: film.id, sourceData: data, captureID: "one")

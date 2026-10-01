@@ -1,5 +1,6 @@
 import CapturePipeline
 import NativeAdapters
+import RenderCore
 import SwiftUI
 
 @main

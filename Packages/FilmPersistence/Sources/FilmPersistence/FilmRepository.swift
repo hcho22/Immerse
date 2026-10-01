@@ -19,6 +19,8 @@ public enum PersistenceError: Error, Equatable {
     case originalChoiceRequired
     case originalChoiceAlreadyMade
     case originalExportPending
+    case treatmentConflict
+    case operationInProgress
     case simulatedFailure(SaveFailureInjection)
     case missingVerifiedMaster
     case masterChecksumMismatch
@@ -34,9 +36,9 @@ public final class FilmRepository {
     private let rootURL: URL
     private let mediaRootURL: URL
     private let tempURL: URL
-    private let database: SQLiteDatabase
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
+    let database: SQLiteDatabase
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
     private let fileManager: FileManager
 
     public init(rootURL: URL, fileManager: FileManager = .default) throws {
@@ -174,32 +176,20 @@ public final class FilmRepository {
         }
     }
 
-    @discardableResult
-    public func startAndFinishDevelopment(filmID: UUID) throws -> Film {
-        try database.withTransaction {
-            var film = try film(id: filmID)
-            try film.startDevelopment()
-            try film.finishDevelopment()
-            try save(film)
-            return film
-        }
-    }
-
     public func writeDevelopedMaster(
         filmID: UUID,
         sequenceNumber: Int,
         data: Data
     ) throws {
         try database.withTransaction {
-            var film = try film(id: filmID)
+            let film = try film(id: filmID)
             guard let capture = film.captures.first(where: { $0.sequenceNumber == sequenceNumber }) else {
                 throw PersistenceError.captureNotFound
             }
             guard !capture.isDiscarded else { throw PersistenceError.captureRemoved }
-            if film.developmentState == .notStarted, film.canStartDevelopment {
-                try film.startDevelopment()
-                try film.finishDevelopment()
-                try save(film)
+            if let existing = try database.asset(filmID: filmID, sequenceNumber: sequenceNumber, kind: .master) {
+                guard existing.sha256 == Checksum.sha256Hex(data) else { throw PersistenceError.treatmentConflict }
+                return
             }
             let destination = masterURL(filmID: filmID, sequenceNumber: sequenceNumber)
             try durableWrite(data, to: destination, failureInjection: nil)
@@ -223,12 +213,16 @@ public final class FilmRepository {
         try database.withTransaction {
             let film = try film(id: filmID)
             guard film.camera.medium == .movie else { throw PersistenceError.notMovieFilm }
-            guard film.developmentState == .developed else { throw PersistenceError.movieNotDeveloped }
+            guard film.developmentState != .notStarted else { throw PersistenceError.movieNotDeveloped }
             guard let capture = film.captures.first(where: { $0.sequenceNumber == sequenceNumber }),
                   case .movieClip = capture.kind else {
                 throw PersistenceError.captureNotFound
             }
             guard !capture.isDiscarded else { throw PersistenceError.captureRemoved }
+            if let existing = try database.asset(filmID: filmID, sequenceNumber: sequenceNumber, kind: .clip) {
+                guard existing.sha256 == Checksum.sha256Hex(data) else { throw PersistenceError.treatmentConflict }
+                return
+            }
             let destination = clipURL(filmID: filmID, sequenceNumber: sequenceNumber)
             try durableWrite(data, to: destination, failureInjection: nil)
             try database.upsertAsset(
@@ -246,18 +240,22 @@ public final class FilmRepository {
     public func writeAssembledMovie(
         filmID: UUID,
         data: Data,
-        clipSequenceNumbers: [Int]
+        clipSequenceNumbers: [Int],
+        verification: VerifiedMedia? = nil
     ) throws {
         try database.withTransaction {
             let film = try film(id: filmID)
             guard film.camera.medium == .movie else { throw PersistenceError.notMovieFilm }
-            guard film.developmentState == .developed else { throw PersistenceError.movieNotDeveloped }
-            let expected = film.playableMovieClipSequenceNumbers
+            guard film.developmentState != .notStarted else { throw PersistenceError.movieNotDeveloped }
+            let expected = film.captures.filter { !$0.isDiscarded }.map(\.sequenceNumber)
             guard !expected.isEmpty else { throw PersistenceError.movieNotPlayable }
             guard clipSequenceNumbers == expected else {
                 throw PersistenceError.assembledMoviePlanMismatch(expected: expected, actual: clipSequenceNumbers)
             }
             try verifyDevelopedClipsExist(filmID: filmID, sequenceNumbers: expected)
+            guard let verification, verification.kind == .movie, verification.sha256 == Checksum.sha256Hex(data) else {
+                throw PersistenceError.invalidMedia
+            }
             let destination = movieURL(filmID: filmID, clipSequenceNumbers: expected)
             try retireAssembledMovies(filmID: filmID)
             try durableWrite(data, to: destination, failureInjection: nil)
@@ -271,6 +269,7 @@ public final class FilmRepository {
                 )
             )
         }
+        try finishPendingDeletions(filmID: filmID)
     }
 
     @discardableResult
@@ -391,6 +390,8 @@ public final class FilmRepository {
             }
             try film.discardRevealedCapture(sequenceNumber: sequenceNumber)
             try save(film)
+            try database.deleteValue(filmID: filmID, key: "recipe-\(sequenceNumber)")
+            try database.deleteValue(filmID: filmID, key: "original-\(sequenceNumber)")
             for kind in [StoredAsset.Kind.source, .master, .clip] {
                 if let asset = try database.asset(filmID: filmID, sequenceNumber: sequenceNumber, kind: kind) {
                     try database.enqueueDeletion(filmID: filmID, relativePath: asset.relativePath)
@@ -467,7 +468,7 @@ public final class FilmRepository {
         return values.isExcludedFromBackup == true
     }
 
-    private func save(_ film: Film) throws {
+    func save(_ film: Film) throws {
         try database.upsertFilm(id: film.id.uuidString, data: encoder.encode(film))
     }
 
@@ -522,7 +523,7 @@ public final class FilmRepository {
     private func retireAssembledMovies(filmID: UUID) throws {
         let assembledMovies = try database.assets(filmID: filmID).filter { $0.kind == .movie }
         for asset in assembledMovies {
-            try removeAssetFile(asset)
+            try database.enqueueDeletion(filmID: filmID, relativePath: asset.relativePath)
             try database.deleteAsset(
                 filmID: filmID,
                 sequenceNumber: asset.sequenceNumber,
@@ -587,7 +588,7 @@ public final class FilmRepository {
         let clipFingerprint = clipSequenceNumbers.map(String.init).joined(separator: "-")
         return mediaRootURL
             .appendingPathComponent(filmID.uuidString, isDirectory: true)
-            .appendingPathComponent("movie-\(clipFingerprint).mov")
+            .appendingPathComponent("movie-\(clipFingerprint)-\(UUID()).mov")
     }
 
     private func relativePath(for url: URL) -> String {

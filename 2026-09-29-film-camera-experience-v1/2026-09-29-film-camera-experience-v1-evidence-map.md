@@ -14,6 +14,14 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Latest Development/render/export addendum: `Evidence/NativeRendering/2026-10-01-workflows.md`
+records real native pixel/Movie processing, persisted one-time assignments, verified
+reveal (including individually sealed-to-revealed Instant prints), exact byte Reset,
+retained-clip Movie reassembly and explicit Photos export orchestration. It records
+69 passing tests across six affected packages and both signing-disabled iOS builds.
+Actual PhotoKit writes and required hardware/visual/rights acceptance are still absent.
+It supersedes earlier planning-only renderer and immediate-Instant-reveal descriptions.
+
 Latest storage addendum: `Evidence/PrivacyRecovery/2026-10-01-save-cleanup.md`
 records persistent native save receipts (including post-commit lost acknowledgement),
 decoder/hash/choice/export gates for source deletion, 21 passing persistence tests,

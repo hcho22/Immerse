@@ -21,12 +21,14 @@ public enum DevelopmentRunError: Error, Equatable, Sendable {
 
 public struct DevelopmentRun: Codable, Equatable, Sendable {
     public let filmID: UUID
+    public let treatmentVersion: String
     public private(set) var assignments: [Int: TreatmentAssignment]
     public private(set) var completedSequences: Set<Int>
     public private(set) var isComplete: Bool
 
     public init(filmID: UUID) {
         self.filmID = filmID
+        self.treatmentVersion = NativePhotoRenderer.treatmentVersion
         self.assignments = [:]
         self.completedSequences = []
         self.isComplete = false
@@ -36,9 +38,11 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
         guard !film.captures.isEmpty else {
             throw DevelopmentRunError.emptyFilm
         }
-        guard !isComplete else {
+        guard !isComplete || film.captures.contains(where: { assignments[$0.sequenceNumber] == nil }) else {
             throw DevelopmentRunError.developmentAlreadyComplete
         }
+
+        isComplete = false
 
         for capture in film.captures where assignments[capture.sequenceNumber] == nil {
             assignments[capture.sequenceNumber] = TreatmentAssignment(

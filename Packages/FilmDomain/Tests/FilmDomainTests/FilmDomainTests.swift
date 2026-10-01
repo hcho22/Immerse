@@ -85,7 +85,9 @@ final class FilmDomainTests: XCTestCase {
         for expectedSequence in 1...10 {
             let capture = try film.recordSavedPhoto()
             XCTAssertEqual(capture.sequenceNumber, expectedSequence)
-            XCTAssertEqual(capture.revealState, .revealed)
+            XCTAssertEqual(capture.revealState, .sealed)
+            XCTAssertEqual(film.captures.filter { $0.revealState == .revealed }.count, expectedSequence - 1)
+            try film.revealInstantPrint(sequenceNumber: expectedSequence)
         }
 
         XCTAssertEqual(film.completionState, .capacityFull)

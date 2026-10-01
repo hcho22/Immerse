@@ -58,12 +58,14 @@ public struct PhotoKitWriter: PhotoLibraryWriting {
                 }
             }
         }
-        return PhotoExportReceipt(localIdentifier: box.localIdentifier)
+        guard let identifier = box.localIdentifier, !identifier.isEmpty else { throw PhotoKitWriteError.missingIdentifier }
+        return PhotoExportReceipt(localIdentifier: identifier)
     }
 }
 
 public enum PhotoKitWriteError: Error, Equatable, Sendable {
     case changeRequestFailed
+    case missingIdentifier
 }
 
 private final class PhotoKitLocalIdentifierBox: @unchecked Sendable {
