@@ -6,21 +6,21 @@ These are recommendations, not approved decisions. They preserve all recorded de
 
 ## DEC-04 - Camera Render And Export Specs
 
-**Recommendation:** approve an inspectable v1 render matrix before renderer implementation:
+**Recommendation:** approve an inspectable v1 render matrix before renderer implementation. The numbers below are proposed output targets and validation units, not measured feasibility evidence and not approved production settings.
 
 | Camera | Capture source | Developed photo output | Movie output | Treatment target |
 | --- | --- | --- | --- | --- |
-| Disposable 27 | HEIC/JPEG still from native camera | 12 MP long-edge cap, display-P3 where available, JPEG export | Not applicable | Strong consumer-flash contrast, modest grain, date-free border option only if approved copy allows. |
-| Instant 10 | HEIC/JPEG still | 2048 px square-ish print master plus export JPEG | Not applicable | Softer contrast, instant-print frame, individually revealed. |
-| 6x6 12 | HEIC/JPEG still | 3072 px square master plus export JPEG | Not applicable | Square crop, smoother roll-film contrast, visible but restrained grain. |
-| Super 8 200s | Native video file, no microphone | Not applicable | 1080p H.264 `.mov`, 18 fps visual cadence, silent unless licensed built-in instrumental is selected | Home-movie color, gate weave/grain, chronological clip join. |
-| 16mm 165s | Native video file, no microphone | Not applicable | 1080p H.264 `.mov`, 24 fps visual cadence, silent unless licensed built-in instrumental is selected | Cleaner cinema grain, stable frame, chronological clip join. |
+| Disposable 27 | HEIC/JPEG still from native camera | Provisional cap: no more than 12,000,000 output pixels total, for example 4000 x 3000 for a 4:3 export; JPEG export; color space target still needs validation. | Not applicable | Strong consumer-flash contrast, modest grain, date-free border option only if approved copy allows. |
+| Instant 10 | HEIC/JPEG still | Provisional print master: exactly 2048 x 2048 pixels before any approved frame/border treatment; JPEG export. | Not applicable | Softer contrast, instant-print frame, individually revealed. |
+| 6x6 12 | HEIC/JPEG still | Provisional square master: exactly 3072 x 3072 pixels; JPEG export. | Not applicable | Square crop, smoother roll-film contrast, visible but restrained grain. |
+| Super 8 200s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1080 encoded landscape frame or 1080 x 1920 encoded portrait frame according to locked Movie orientation, 18 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Home-movie color, gate weave/grain, chronological clip join. |
+| 16mm 165s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1080 encoded landscape frame or 1080 x 1920 encoded portrait frame according to locked Movie orientation, 24 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Cleaner cinema grain, stable frame, chronological clip join. |
 
 **Why this recommendation:** it gives M1/M2 engineers fixed codec and size targets that are small enough for iPhone 11 testing while preserving the app's analog promise. It avoids raw/pro workflows and does not claim precise emulation before visual samples are approved.
 
 **Affected tracker IDs:** DEC-04, CAM-02, CAM-03, CAM-05, CAM-06, CAM-07, CAM-12, MOV-03, MOV-05, MOV-10, MOV-11, DEV-04, DEV-06, QA-01, QA-03, QA-11, ARC-08, ARC-10.
 
-**Supporting evidence so far:** `FilmDomain` fixes capacities/reveal rules; `RenderCore` fixes stable treatment assignment and Movie assembly order; `NativeAdaptersCompileProbe` now verifies the AVFoundation/PhotoKit/persistence package boundary compiles against the iOS 26 simulator SDK. No pixel/video/audio quality evidence exists yet.
+**Supporting evidence so far:** `FilmDomain` fixes capacities/reveal rules; `RenderCore` fixes stable treatment assignment and Movie assembly order; `NativeAdaptersCompileProbe` verifies the AVFoundation/PhotoKit/persistence package boundary compiles against the iOS 26 simulator SDK. `RenderFixtures` starts bounded native API discovery with synthetic still/video outputs and decoded metadata, but those fixtures are not production treatment quality and do not close DEC-04.
 
 ## DEC-05 - Production Assets And Licensed Instrumentals
 
@@ -51,7 +51,7 @@ These are recommendations, not approved decisions. They preserve all recorded de
 
 ## DEC-12 - Storage, Device, Accessibility And Reliability Budgets
 
-**Recommendation:** approve these M1/M2 acceptance budgets before hardware validation:
+**Recommendation:** approve provisional M1/M2 acceptance budgets before hardware validation. These are targets to measure, not claims that the current implementation or oldest supported hardware can meet them.
 
 | Budget | Recommended target |
 | --- | --- |
@@ -59,7 +59,7 @@ These are recommendations, not approved decisions. They preserve all recorded de
 | Photo capture save | Durable private save callback to debit in under 1.0 s p95 for stills on iPhone 11. |
 | Movie clip finalization | Debit only after playable source file exists; UI recovers from interruption without losing prior clips. |
 | Development | 27-photo Disposable roll develops in under 45 s on iPhone 11; progress resumes after relaunch. |
-| Movie assembly | 200 s Super 8 assembles/export-prepares in under 90 s on iPhone 11 with memory below jetsam risk. |
+| Movie assembly | 200 s Super 8 assembles/export-prepares in under 90 s on iPhone 11 with peak resident memory under an approved numeric ceiling, provisionally 700 MB until measured and revised. |
 | Low storage | Preflight warns below 2 GB free; saves fail honestly with no capacity debit when final private write cannot complete. |
 | Accessibility | Dynamic Type through accessibility sizes for non-viewfinder UI; VoiceOver labels for Camera, capacity, Development, export and destructive actions. |
 | Backup disclosure | On first export/delete/privacy action, disclose that iOS backups restore Films but older backups can bring back removed media. |

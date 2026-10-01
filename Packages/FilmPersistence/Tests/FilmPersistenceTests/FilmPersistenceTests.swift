@@ -148,6 +148,131 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .source))
     }
 
+    func testMovieDiscardRetiresStaleAssemblyAndPreservesSurvivingClips() throws {
+        let film = try repository.createFilm(
+            camera: CameraCatalog.super8HomeMovie,
+            title: "Super 8 - Reel #01",
+            movieOrientation: .landscape
+        )
+        try repository.saveMovieClip(
+            filmID: film.id,
+            sourceData: Data("source-1".utf8),
+            durationSeconds: 5,
+            orientation: .landscape
+        )
+        try repository.saveMovieClip(
+            filmID: film.id,
+            sourceData: Data("source-2".utf8),
+            durationSeconds: 7,
+            orientation: .portrait
+        )
+        try repository.completeEarly(filmID: film.id)
+        try repository.startAndFinishDevelopment(filmID: film.id)
+        try repository.writeDevelopedClip(
+            filmID: film.id,
+            sequenceNumber: 1,
+            data: Data("clip-1-developed".utf8)
+        )
+        try repository.writeDevelopedClip(
+            filmID: film.id,
+            sequenceNumber: 2,
+            data: Data("clip-2-developed".utf8)
+        )
+        try repository.writeAssembledMovie(
+            filmID: film.id,
+            data: Data("movie-from-1-2".utf8),
+            clipSequenceNumbers: [1, 2]
+        )
+
+        XCTAssertTrue(try repository.assembledMovieExists(filmID: film.id))
+
+        var afterDiscard = try repository.discardRevealedCapture(
+            filmID: film.id,
+            sequenceNumber: 2
+        )
+
+        XCTAssertEqual(afterDiscard.playableMovieClipSequenceNumbers, [1])
+        XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .clip))
+        XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .clip))
+        XCTAssertFalse(try repository.assembledMovieExists(filmID: film.id))
+
+        try repository.writeAssembledMovie(
+            filmID: film.id,
+            data: Data("movie-from-1".utf8),
+            clipSequenceNumbers: [1]
+        )
+        XCTAssertTrue(try repository.assembledMovieExists(filmID: film.id))
+
+        afterDiscard = try repository.discardRevealedCapture(
+            filmID: film.id,
+            sequenceNumber: 1
+        )
+
+        XCTAssertEqual(afterDiscard.discardedPlaceholderSequenceNumbers, [1, 2])
+        XCTAssertFalse(afterDiscard.canPlaybackDevelopedMovie)
+        XCTAssertFalse(afterDiscard.canExportDevelopedMovie)
+        XCTAssertFalse(try repository.assembledMovieExists(filmID: film.id))
+        XCTAssertThrowsError(
+            try repository.writeAssembledMovie(
+                filmID: film.id,
+                data: Data("empty-movie".utf8),
+                clipSequenceNumbers: []
+            )
+        ) { error in
+            XCTAssertEqual(error as? PersistenceError, .movieNotPlayable)
+        }
+    }
+
+    func testMovieAssemblyRequiresCurrentPlayableClipPlanAndVerifiedClips() throws {
+        let film = try repository.createFilm(
+            camera: CameraCatalog.cinema16mm,
+            title: "16mm - Reel #01",
+            movieOrientation: .portrait
+        )
+        try repository.saveMovieClip(
+            filmID: film.id,
+            sourceData: Data("source-1".utf8),
+            durationSeconds: 3,
+            orientation: .portrait
+        )
+        try repository.saveMovieClip(
+            filmID: film.id,
+            sourceData: Data("source-2".utf8),
+            durationSeconds: 4,
+            orientation: .landscape
+        )
+        try repository.completeEarly(filmID: film.id)
+        try repository.startAndFinishDevelopment(filmID: film.id)
+        try repository.writeDevelopedClip(
+            filmID: film.id,
+            sequenceNumber: 1,
+            data: Data("clip-1-developed".utf8)
+        )
+
+        XCTAssertThrowsError(
+            try repository.writeAssembledMovie(
+                filmID: film.id,
+                data: Data("wrong-plan".utf8),
+                clipSequenceNumbers: [1]
+            )
+        ) { error in
+            XCTAssertEqual(
+                error as? PersistenceError,
+                .assembledMoviePlanMismatch(expected: [1, 2], actual: [1])
+            )
+        }
+
+        XCTAssertThrowsError(
+            try repository.writeAssembledMovie(
+                filmID: film.id,
+                data: Data("missing-clip".utf8),
+                clipSequenceNumbers: [1, 2]
+            )
+        ) { error in
+            XCTAssertEqual(error as? PersistenceError, .missingDevelopedClip(2))
+        }
+    }
+
     func testDeleteFilmRemovesSealedFilmStateAndAssetsWithoutDevelopment() throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.disposable1990s,

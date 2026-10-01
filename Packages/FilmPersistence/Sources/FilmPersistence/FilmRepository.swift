@@ -12,6 +12,12 @@ public enum PersistenceError: Error, Equatable {
     case simulatedFailure(SaveFailureInjection)
     case missingVerifiedMaster
     case masterChecksumMismatch
+    case notMovieFilm
+    case movieNotDeveloped
+    case movieNotPlayable
+    case assembledMoviePlanMismatch(expected: [Int], actual: [Int])
+    case missingDevelopedClip(Int)
+    case clipChecksumMismatch(Int)
 }
 
 public final class FilmRepository {
@@ -167,6 +173,82 @@ public final class FilmRepository {
         )
     }
 
+    public func writeDevelopedClip(
+        filmID: UUID,
+        sequenceNumber: Int,
+        data: Data
+    ) throws {
+        let film = try film(id: filmID)
+        guard film.camera.medium == .movie else {
+            throw PersistenceError.notMovieFilm
+        }
+        guard film.developmentState == .developed else {
+            throw PersistenceError.movieNotDeveloped
+        }
+        guard film.captures.contains(where: { capture in
+            guard capture.sequenceNumber == sequenceNumber else {
+                return false
+            }
+            if case .movieClip = capture.kind {
+                return true
+            }
+            return false
+        }) else {
+            throw PersistenceError.captureNotFound
+        }
+
+        let destination = clipURL(filmID: filmID, sequenceNumber: sequenceNumber)
+        try durableWrite(data, to: destination, failureInjection: nil)
+        try database.upsertAsset(
+            StoredAsset(
+                filmID: filmID,
+                sequenceNumber: sequenceNumber,
+                kind: .clip,
+                relativePath: relativePath(for: destination),
+                sha256: Checksum.sha256Hex(data)
+            )
+        )
+    }
+
+    public func writeAssembledMovie(
+        filmID: UUID,
+        data: Data,
+        clipSequenceNumbers: [Int]
+    ) throws {
+        let film = try film(id: filmID)
+        guard film.camera.medium == .movie else {
+            throw PersistenceError.notMovieFilm
+        }
+        guard film.developmentState == .developed else {
+            throw PersistenceError.movieNotDeveloped
+        }
+
+        let expected = film.playableMovieClipSequenceNumbers
+        guard !expected.isEmpty else {
+            throw PersistenceError.movieNotPlayable
+        }
+        guard clipSequenceNumbers == expected else {
+            throw PersistenceError.assembledMoviePlanMismatch(
+                expected: expected,
+                actual: clipSequenceNumbers
+            )
+        }
+        try verifyDevelopedClipsExist(filmID: filmID, sequenceNumbers: expected)
+
+        let destination = movieURL(filmID: filmID, clipSequenceNumbers: expected)
+        try retireAssembledMovies(filmID: filmID)
+        try durableWrite(data, to: destination, failureInjection: nil)
+        try database.upsertAsset(
+            StoredAsset(
+                filmID: filmID,
+                sequenceNumber: 0,
+                kind: .movie,
+                relativePath: relativePath(for: destination),
+                sha256: Checksum.sha256Hex(data)
+            )
+        )
+    }
+
     @discardableResult
     public func completeEarly(filmID: UUID) throws -> Film {
         var film = try film(id: filmID)
@@ -209,6 +291,9 @@ public final class FilmRepository {
                     try removeAssetFile(asset)
                     try database.deleteAsset(filmID: filmID, sequenceNumber: sequenceNumber, kind: kind)
                 }
+            }
+            if film.camera.medium == .movie {
+                try retireAssembledMovies(filmID: filmID)
             }
         }
         return film
@@ -259,6 +344,10 @@ public final class FilmRepository {
             return false
         }
         return fileManager.fileExists(atPath: rootURL.appendingPathComponent(asset.relativePath).path)
+    }
+
+    public func assembledMovieExists(filmID: UUID) throws -> Bool {
+        try assetExists(filmID: filmID, sequenceNumber: 0, kind: .movie)
     }
 
     public func temporaryDirectoryIsExcludedFromBackup() throws -> Bool {
@@ -315,6 +404,40 @@ public final class FilmRepository {
         }
     }
 
+    private func retireAssembledMovies(filmID: UUID) throws {
+        let assembledMovies = try database.assets(filmID: filmID).filter { $0.kind == .movie }
+        for asset in assembledMovies {
+            try removeAssetFile(asset)
+            try database.deleteAsset(
+                filmID: filmID,
+                sequenceNumber: asset.sequenceNumber,
+                kind: asset.kind
+            )
+        }
+    }
+
+    private func verifyDevelopedClipsExist(
+        filmID: UUID,
+        sequenceNumbers: [Int]
+    ) throws {
+        for sequenceNumber in sequenceNumbers {
+            guard let clip = try database.asset(
+                filmID: filmID,
+                sequenceNumber: sequenceNumber,
+                kind: .clip
+            ) else {
+                throw PersistenceError.missingDevelopedClip(sequenceNumber)
+            }
+            let url = rootURL.appendingPathComponent(clip.relativePath)
+            guard fileManager.fileExists(atPath: url.path) else {
+                throw PersistenceError.missingDevelopedClip(sequenceNumber)
+            }
+            guard try Checksum.sha256Hex(contentsOf: url) == clip.sha256 else {
+                throw PersistenceError.clipChecksumMismatch(sequenceNumber)
+            }
+        }
+    }
+
     private func sourceURL(filmID: UUID, sequenceNumber: Int) -> URL {
         mediaRootURL
             .appendingPathComponent(filmID.uuidString, isDirectory: true)
@@ -325,6 +448,19 @@ public final class FilmRepository {
         mediaRootURL
             .appendingPathComponent(filmID.uuidString, isDirectory: true)
             .appendingPathComponent("master-\(sequenceNumber).bin")
+    }
+
+    private func clipURL(filmID: UUID, sequenceNumber: Int) -> URL {
+        mediaRootURL
+            .appendingPathComponent(filmID.uuidString, isDirectory: true)
+            .appendingPathComponent("clip-\(sequenceNumber).bin")
+    }
+
+    private func movieURL(filmID: UUID, clipSequenceNumbers: [Int]) -> URL {
+        let clipFingerprint = clipSequenceNumbers.map(String.init).joined(separator: "-")
+        return mediaRootURL
+            .appendingPathComponent(filmID.uuidString, isDirectory: true)
+            .appendingPathComponent("movie-\(clipFingerprint).bin")
     }
 
     private func relativePath(for url: URL) -> String {
