@@ -103,7 +103,7 @@ public final class FilmRepository {
     public func saveMovieClip(
         filmID: UUID,
         sourceData: Data,
-        durationSeconds: Int,
+        durationSeconds: TimeInterval,
         orientation: ClipOrientation,
         savedAt: Date = Date(),
         failureInjection: SaveFailureInjection? = nil

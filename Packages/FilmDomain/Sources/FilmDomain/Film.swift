@@ -12,7 +12,7 @@ public enum ClipOrientation: String, Codable, Equatable, Sendable {
 
 public enum CaptureKind: Codable, Equatable, Sendable {
     case photo
-    case movieClip(seconds: Int, orientation: ClipOrientation)
+    case movieClip(seconds: TimeInterval, orientation: ClipOrientation)
 }
 
 public enum CaptureRevealState: String, Codable, Equatable, Sendable {
@@ -42,7 +42,7 @@ public enum CompletionState: Codable, Equatable, Sendable {
 
 public enum WastedCapacity: Codable, Equatable, Sendable {
     case exposures(Int)
-    case seconds(Int)
+    case seconds(TimeInterval)
 }
 
 public enum DevelopmentState: String, Codable, Equatable, Sendable {
@@ -59,7 +59,7 @@ public enum FilmDomainError: Error, Equatable, Sendable {
     case noSavedCapturesForEarlyCompletion
     case earlyCompletionUnsupportedForInstant
     case invalidMovieDuration
-    case insufficientRemainingCapacity(remainingSeconds: Int)
+    case insufficientRemainingCapacity(remainingSeconds: TimeInterval)
     case noRemainingExposures
     case developmentNotEligible
     case developmentAlreadyStarted
@@ -124,7 +124,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         return max(0, limit - captures.count)
     }
 
-    public var consumedMovieSeconds: Int {
+    public var consumedMovieSeconds: TimeInterval {
         captures.reduce(0) { total, capture in
             guard case let .movieClip(seconds, _) = capture.kind else {
                 return total
@@ -133,11 +133,11 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         }
     }
 
-    public var remainingMovieSeconds: Int? {
+    public var remainingMovieSeconds: TimeInterval? {
         guard case let .seconds(limit) = camera.capacity else {
             return nil
         }
-        return max(0, limit - consumedMovieSeconds)
+        return max(0, Double(limit) - consumedMovieSeconds)
     }
 
     public var canStartDevelopment: Bool {
@@ -214,17 +214,17 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         return capture
     }
 
-    public mutating func recordFailedMovieClipSave(durationSeconds: Int) throws {
+    public mutating func recordFailedMovieClipSave(durationSeconds: TimeInterval) throws {
         guard camera.medium == .movie else {
             throw FilmDomainError.wrongCameraMedium
         }
-        guard durationSeconds > 0 else {
+        guard durationSeconds.isFinite, durationSeconds > 0 else {
             throw FilmDomainError.invalidMovieDuration
         }
     }
 
     public mutating func recordSavedMovieClip(
-        durationSeconds: Int,
+        durationSeconds: TimeInterval,
         orientation: ClipOrientation,
         at savedAt: Date = Date()
     ) throws -> CaptureRecord {
@@ -232,7 +232,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
             throw FilmDomainError.wrongCameraMedium
         }
         try ensureCaptureOpen()
-        guard durationSeconds > 0 else {
+        guard durationSeconds.isFinite, durationSeconds > 0 else {
             throw FilmDomainError.invalidMovieDuration
         }
         let remaining = remainingMovieSeconds ?? 0
@@ -321,7 +321,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         switch camera.capacity {
         case let .exposures(limit) where captures.count == limit:
             completionState = .capacityFull
-        case let .seconds(limit) where consumedMovieSeconds == limit:
+        case let .seconds(limit) where consumedMovieSeconds == Double(limit):
             completionState = .capacityFull
         default:
             break

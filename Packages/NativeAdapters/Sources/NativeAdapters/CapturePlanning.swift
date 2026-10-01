@@ -58,18 +58,6 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         false
     }
 
-    public func clipOrientation() -> ClipOrientation? {
-        guard mediaKind == .movie, let lockedMovieOrientation else {
-            return nil
-        }
-        switch lockedMovieOrientation {
-        case .portrait:
-            return .portrait
-        case .landscape:
-            return .landscape
-        }
-    }
-
     public func lensSwitchDecision(
         to target: CapturePosition,
         during phase: CapturePhase
@@ -93,12 +81,14 @@ public enum NativeCaptureInterruptionReason: Equatable, Sendable {
     case systemPressure
     case audioVideoInUseByAnotherClient
     case videoDeviceNotAvailable
+    case applicationInactive
+    case runtimeFailure
     case unknown
 }
 
 public enum CaptureSaveEvent: Equatable, Sendable {
     case photoSaved(URL)
-    case movieClipSaved(url: URL, durationSeconds: Int, orientation: ClipOrientation)
+    case movieClipSaved(url: URL, durationSeconds: TimeInterval, orientation: ClipOrientation)
     case saveFailed(String)
     case interrupted(NativeCaptureInterruptionReason)
     case interruptionEnded
@@ -119,7 +109,7 @@ public struct CaptureEventEmitter<Sink: CaptureEventSink>: Sendable {
         sink.receive(.photoSaved(url))
     }
 
-    public func movieClipSaved(at url: URL, durationSeconds: Int, orientation: ClipOrientation) {
+    public func movieClipSaved(at url: URL, durationSeconds: TimeInterval, orientation: ClipOrientation) {
         sink.receive(.movieClipSaved(url: url, durationSeconds: durationSeconds, orientation: orientation))
     }
 

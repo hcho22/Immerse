@@ -3,9 +3,9 @@ import FilmPersistence
 import Foundation
 import NativeAdapters
 
-public enum CapturePipelineOutcome: Equatable {
+public enum CapturePipelineOutcome: Equatable, Sendable {
     case photoCommitted(sequenceNumber: Int, remainingExposures: Int?)
-    case movieClipCommitted(sequenceNumber: Int, remainingSeconds: Int?)
+    case movieClipCommitted(sequenceNumber: Int, remainingSeconds: TimeInterval?)
     case captureFailed(String)
     case interrupted(NativeCaptureInterruptionReason)
     case interruptionEnded
@@ -80,7 +80,7 @@ public struct CapturePersistencePipeline<Reader: CapturePayloadReading> {
 
     private func persistMovieClip(
         url: URL,
-        durationSeconds: Int,
+        durationSeconds: TimeInterval,
         orientation: ClipOrientation
     ) throws -> CapturePipelineOutcome {
         let payload = try read(url)

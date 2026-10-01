@@ -6,6 +6,33 @@ import NativeAdapters
 import XCTest
 
 final class CapturePipelineTests: XCTestCase {
+    func testNativeReceiverAcknowledgesOnlyPersistedFilesAndDeduplicatesRepeatedDelivery() async throws {
+        let harness = try Harness()
+        defer { try? FileManager.default.removeItem(at: harness.rootURL) }
+        let film = try harness.repository.createFilm(
+            camera: CameraCatalog.super8HomeMovie, title: "Synthetic", movieOrientation: .landscape
+        )
+        let receiver = try CapturePipelineReceiver(filmID: film.id, repositoryURL: harness.rootURL)
+        let missingURL = harness.rootURL.appendingPathComponent("missing.mov")
+        do {
+            try await receiver.commit(.movieClipSaved(url: missingURL, durationSeconds: 0.375, orientation: .portrait))
+            XCTFail("Missing file must not be acknowledged")
+        } catch { }
+        XCTAssertEqual(try harness.repository.film(id: film.id).savedCaptureCount, 0)
+
+        let url = try harness.writeSyntheticPayload("already-native-validated-clip")
+        let event = CaptureSaveEvent.movieClipSaved(url: url, durationSeconds: 0.375, orientation: .portrait)
+        try await receiver.commit(event)
+        try await receiver.commit(event)
+        let persisted = try harness.repository.film(id: film.id)
+        XCTAssertEqual(persisted.savedCaptureCount, 1)
+        XCTAssertEqual(persisted.consumedMovieSeconds, 0.375)
+        XCTAssertEqual(persisted.movieOrientation, .landscape)
+        XCTAssertEqual(persisted.captures.first?.kind, .movieClip(seconds: 0.375, orientation: .portrait))
+        let outcome = await receiver.lastOutcome
+        XCTAssertEqual(outcome, .movieClipCommitted(sequenceNumber: 1, remainingSeconds: 199.625))
+    }
+
     func testPhotoSavedEventPersistsSourceAndDebitsOnlyAfterDurableSave() throws {
         let harness = try Harness()
         let film = try harness.repository.createFilm(

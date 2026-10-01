@@ -65,7 +65,7 @@ final class CaptureAdapterTests: XCTestCase {
         XCTAssertEqual(plan.lensSwitchDecision(to: .front, during: .idle), .unavailable(.front))
     }
 
-    func testMoviePlanIsSilentAndUsesLockedOrientationForEveryClip() async {
+    func testMoviePlanIsSilentAndRetainsFinalPresentationOrientation() async {
         let coordinator = CaptureStartupCoordinator(
             authorizer: FakeCaptureAuthorizer(status: .authorized),
             capabilities: CaptureCapabilities(
@@ -86,7 +86,7 @@ final class CaptureAdapterTests: XCTestCase {
             return XCTFail("Expected ready movie plan")
         }
         XCTAssertFalse(plan.recordsAudio)
-        XCTAssertEqual(plan.clipOrientation(), .landscape)
+        XCTAssertEqual(plan.lockedMovieOrientation, .landscape)
         XCTAssertEqual(plan.lensSwitchDecision(to: .rear, during: .idle), .disabledByConfiguration)
     }
 
