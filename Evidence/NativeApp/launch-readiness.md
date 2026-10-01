@@ -1,9 +1,15 @@
 # v1 Launch Readiness and Validation Handoff
 
+Draft sample and soundtrack review material is available at
+`../AssetReview/review.html`; provenance, decoded metadata, source hashes and
+limits are in `../AssetReview/README.md`. It is not production asset clearance.
+
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
 The candidate is the branch commit containing this file; exact execution outcomes
-are in `2026-10-01-native-candidate.md` and `2026-10-01-media-workflows.md`. The
+are in `2026-10-01-native-candidate.md`, `2026-10-01-media-workflows.md` and the
+superseding `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md`.
+Draft asset preparation is separately recorded above. The
 implementation worker owns the configured no-mistakes run; Firstmate supervises
 ask-user findings, reviews this evidence linkage, and must coordinate a separate retained
 ordinary release task before any future authorized exposure. Never merge here.

@@ -42,6 +42,13 @@ native tests reassemble after the fixture bundle disappears. This supports the
 rights-ledger recommendation, not approval of any asset. See
 `Evidence/NativeApp/2026-10-01-media-workflows.md` (CAM-10, MOV-09/11, QA-14).
 
+Draft review material is now inspectable at `Evidence/AssetReview/review.html`:
+one recorded generated source, all five actual provisional native Camera outputs,
+silent/instrumental Movies and a new coded instrumental. `Evidence/AssetReview/README.md`
+records source/license status, hashes, decoded metadata and browser checks. These
+are drafts for this existing review, not production-cleared sample media or a
+substitute for native capture/quality evidence. The shipping catalog stays empty.
+
 ## DEC-11 - Darkroom Ranges, Instant Source Timing And Soundtrack Reselection
 
 **Recommendation:** keep v1 analog-only and bounded:

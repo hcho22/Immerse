@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Film Journal | Draft Camera and Soundtrack Review</title>
+<style>
+  :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff; }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
+  header, main, footer { width: min(1180px, 100%); margin: auto; padding: 24px; }
+  header { border-bottom: 1px solid var(--line); }
+  .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
+  h1 { margin: 0; font: 36px/1.15 Georgia, serif; }
+  h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
+  h3 { font-size: 18px; margin: 0 0 8px; }
+  p { margin: 8px 0 14px; max-width: 84ch; }
+  .muted, small { color: var(--muted); }
+  .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 20px 0 0; color: #633b2b; }
+  .toolbar { display: flex; align-items: end; gap: 24px; flex-wrap: wrap; margin: 0 0 20px; }
+  label { display: block; font-size: 14px; font-weight: 600; }
+  select { display: block; margin-top: 6px; min-height: 44px; max-width: 100%; border: 1px solid #87958d; border-radius: 6px; background: white; color: var(--ink); font: inherit; padding: 8px 38px 8px 12px; }
+  input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--green); }
+  .check { display: flex; gap: 8px; align-items: center; min-height: 44px; }
+  .metadata { margin-left: auto; text-align: right; font-size: 14px; }
+  .compare { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 24px; }
+  figure { margin: 0; min-width: 0; }
+  figcaption { margin-top: 10px; font-size: 14px; }
+  .media { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #e4e9e5; }
+  [hidden] { display: none !important; }
+  a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  a:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid #a44429; outline-offset: 4px; }
+  .caption-title { font-weight: 650; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  section { padding: 32px 0; border-top: 1px solid var(--line); margin-top: 32px; }
+  .contact-sheet { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 22px; }
+  .contact-sheet img { width: 100%; aspect-ratio: 1; object-fit: contain; display: block; background: #e4e9e5; }
+  audio { width: min(560px, 100%); display: block; margin: 18px 0; }
+  .facts { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(0, 4fr); gap: 12px 24px; margin: 20px 0; }
+  dt { font-weight: 650; } dd { margin: 0; overflow-wrap: anywhere; }
+  code { font: 13px/1.5 ui-monospace, monospace; overflow-wrap: anywhere; }
+  footer { border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 700px) {
+    header, main, footer { padding: 20px 16px; }
+    h1 { font-size: 30px; }
+    .compare, .contact-sheet { grid-template-columns: minmax(0,1fr); gap: 24px; }
+    .toolbar { gap: 12px; }
+    .metadata { margin-left: 0; text-align: left; width: 100%; }
+    .facts { grid-template-columns: minmax(0,1fr); gap: 4px; }
+    dd { margin-bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <p class="eyebrow">Film Journal / Review Draft 01 / October 1, 2026</p>
+  <h1>Camera and Soundtrack Studies</h1>
+  <p class="muted">Actual provisional native-renderer output, from one inspectable generated source.</p>
+  <p class="notice">For the existing DEC-04/05/11 review. Not production-cleared media, an approved render specification, real camera footage or hardware acceptance. The shipping app bundles none of these drafts.</p>
+</header>
+<main>
+  <div class="toolbar">
+    <label>Camera
+      <select id="camera">
+        <option value="disposable1990s">1990s Disposable</option>
+        <option value="instant1970s">1970s Instant</option>
+        <option value="mediumFormat6x6">1960s 6x6 Medium Format</option>
+        <option value="super8HomeMovie">1960s Super 8 Home Movie</option>
+        <option value="cinema16mm">1960s 16mm Cinema</option>
+      </select>
+    </label>
+    <label id="audio-option" class="check" hidden><input type="checkbox" id="soundtrack">Draft instrumental</label>
+    <div class="metadata" aria-live="polite"><strong id="capacity">27 exposures</strong><br><span id="output">1448 x 1086 JPEG / roll Development</span></div>
+  </div>
+  <div class="compare">
+    <figure>
+      <img id="source-photo" class="media" src="sources/window-still-life-generated.png" alt="Generated untreated window still life with a glass, teal bowl, tomatoes and folded linen">
+      <video id="source-movie" class="media" controls playsinline preload="metadata" muted hidden src="draft-01/source-landscape.mov" poster="sources/window-still-life-generated.png"></video>
+      <figcaption>
+        <div class="caption-title"><span id="source-title">Generated source, untreated</span><a id="source-link" href="sources/window-still-life-generated.png">Open source</a></div>
+        <span id="source-note">Not a real iPhone capture. The full source stays visible for crop and tonal comparison.</span>
+        <label id="source-choice" hidden>Source clip
+          <select id="source-orientation"><option value="landscape">Landscape / first clip</option><option value="portrait">Portrait / second clip</option></select>
+        </label>
+      </figcaption>
+    </figure>
+    <figure>
+      <img id="result-photo" class="media" src="draft-01/disposable1990s.jpg" alt="Disposable draft developed with the native provisional renderer">
+      <video id="result-movie" class="media" controls playsinline preload="metadata" hidden src="draft-01/super8HomeMovie-silent.mov" poster="draft-01/super8HomeMovie-poster.jpg"></video>
+      <figcaption>
+        <div class="caption-title"><span id="result-title">Disposable / native developed draft</span><a id="result-link" href="draft-01/disposable1990s.jpg">Open result</a></div>
+        <span id="result-note">Fixed seed 2026100100. No manual grading or post-render changes.</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <section aria-labelledby="prints">
+    <h2 id="prints">Three Photo Cameras</h2>
+    <p class="muted">One source, fixed seeds, current native presets. Square outputs retain the renderer's center crop; no decorative frame was added for this review.</p>
+    <div class="contact-sheet">
+      <figure><a href="draft-01/disposable1990s.jpg"><img src="draft-01/disposable1990s.jpg" alt="Disposable native developed draft"></a><figcaption><strong>Disposable 27</strong><br>More contrast, visible grain. Roll-level reveal.</figcaption></figure>
+      <figure><a href="draft-01/instant1970s.jpg"><img src="draft-01/instant1970s.jpg" alt="Instant native developed square draft"></a><figcaption><strong>Instant 10</strong><br>Softer, square print. Individual reveal.</figcaption></figure>
+      <figure><a href="draft-01/mediumFormat6x6.jpg"><img src="draft-01/mediumFormat6x6.jpg" alt="6x6 native developed square draft"></a><figcaption><strong>6x6 12</strong><br>Square framing, restrained grain. Roll-level reveal.</figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="music">
+    <h2 id="music">Window Light</h2>
+    <p>An original draft instrumental: plucked melody, light arpeggios and soft bass. No sampled recording, microphone or voice. No named-artist reference.</p>
+    <audio controls preload="metadata" src="draft-01/window-light.wav"></audio>
+    <p class="muted">96 BPM / eight bars / 22 seconds / 48 kHz mono PCM. Movie examples use the opening eight seconds. Human listening and production-rights review are still outstanding.</p>
+    <p><a href="draft-01/window-light.wav">Open instrumental</a> &nbsp; <a href="sources/PROVENANCE.md">Source and rights record</a></p>
+  </section>
+
+  <section aria-labelledby="review">
+    <h2 id="review">Review Boundaries</h2>
+    <dl class="facts">
+      <dt>Render identity</dt><dd><code>film-look-1-provisional</code>. Existing application renderer, fixed review seeds. Photo dimensions and Movie cadence are proposals, not newly approved choices.</dd>
+      <dt>Movie comparison</dt><dd>Super 8: 200-second Film capacity, provisional 18 fps. 16mm: 165-second Film capacity, provisional 24 fps. Both previews are eight seconds, H.264 at 1920 x 1440, landscape locked. The portrait second clip receives side borders.</dd>
+      <dt>Source limitation</dt><dd>The moving source is a digitally animated pan of the generated still. It cannot validate real motion fidelity, camera mirroring, stabilization, low light, skin tones or hardware capture.</dd>
+      <dt>Rights status</dt><dd>Draft preparation only. DEC-05 must separately record applicable source terms, ownership, attribution, in-app bundling and user-Movie export rights. No invented production license or approval.</dd>
+      <dt>Next review</dt><dd>Assess distinctness and tonal response, then select representative real-phone scenes and approve final render/asset specifications. Soundtrack choice and reselection remain the existing product decision.</dd>
+    </dl>
+    <p><a href="draft-01/manifest.json">Decoded native metadata and hashes</a> &nbsp; <a href="SHA256SUMS">Source-to-output inventory</a></p>
+  </section>
+</main>
+<footer>Local review material only. No telemetry, uploads, remote assets, production settings or Trial activation. Design follows the native Film Journal's serif headings, system text, restrained green accent and unframed layout.</footer>
+<script>
+const variants = {
+  disposable1990s: { name: 'Disposable', capacity: '27 exposures', output: '1448 x 1086 JPEG / roll Development', seed: '2026100100' },
+  instant1970s: { name: 'Instant', capacity: '10 exposures', output: '2048 x 2048 JPEG / individual reveal', seed: '2026100101' },
+  mediumFormat6x6: { name: '6x6', capacity: '12 exposures', output: '3072 x 3072 JPEG / roll Development', seed: '2026100102' },
+  super8HomeMovie: { name: 'Super 8', capacity: '200-second Film', output: '1920 x 1440 H.264 / 18 fps proposal', movie: true },
+  cinema16mm: { name: '16mm', capacity: '165-second Film', output: '1920 x 1440 H.264 / 24 fps proposal', movie: true }
+};
+const el = id => document.getElementById(id);
+function update() {
+  const id = el('camera').value, choice = variants[id], movie = !!choice.movie;
+  el('source-movie').pause(); el('result-movie').pause();
+  for (const key of ['source-photo', 'result-photo']) el(key).hidden = movie;
+  for (const key of ['source-movie', 'result-movie', 'audio-option', 'source-choice']) el(key).hidden = !movie;
+  el('capacity').textContent = choice.capacity; el('output').textContent = choice.output;
+  el('source-title').textContent = movie ? 'Digital-pan source / silent' : 'Generated source, untreated';
+  el('source-note').textContent = movie ? 'Animated from the same generated still, not sensor footage. Source always silent.' : 'Not a real iPhone capture. The full source stays visible for crop and tonal comparison.';
+  const source = movie ? 'draft-01/source-' + el('source-orientation').value + '.mov' : 'sources/window-still-life-generated.png';
+  const result = 'draft-01/' + id + (movie ? (el('soundtrack').checked ? '-instrumental.mov' : '-silent.mov') : '.jpg');
+  el('source-link').href = source; el('result-link').href = result;
+  el('result-title').textContent = choice.name + ' / native developed draft';
+  el('result-note').textContent = movie ? 'Landscape clip then portrait clip. Same retained Developed Clips in the silent and instrumental versions.' : 'Fixed seed ' + choice.seed + '. No manual grading or post-render changes.';
+  if (movie) {
+    el('source-movie').src = source; el('result-movie').src = result;
+    el('result-movie').poster = 'draft-01/' + id + '-poster.jpg';
+  } else {
+    el('result-photo').src = result; el('result-photo').alt = choice.name + ' native provisional developed draft';
+  }
+}
+for (const id of ['camera', 'soundtrack', 'source-orientation']) el(id).addEventListener('change', update);
+</script>
+</body>
+</html>

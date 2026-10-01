@@ -1,0 +1,12 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/8] Compiling AssetReviewGenerator Music.swift
+[4/8] Emitting module AssetReviewGenerator
+[5/8] Compiling AssetReviewGenerator AssetReviewGenerator.swift
+[5/8] Write Objects.LinkFileList
+[6/8] Linking AssetReviewGenerator
+[7/8] Applying AssetReviewGenerator
+Build of product 'AssetReviewGenerator' complete! (3.18s)
+DRAFT_REVIEW verifiedAssets=14 treatment=film-look-1-provisional output=/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Evidence/AssetReview/draft-01

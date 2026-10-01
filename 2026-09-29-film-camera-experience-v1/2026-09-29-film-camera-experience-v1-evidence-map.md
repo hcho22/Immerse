@@ -14,6 +14,15 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Current asset-review preparation: `Evidence/AssetReview/README.md` and `review.html`
+cover DEC-04/05/11, CAM-10/12, MOV-03/05/09/10/11, DEV-04/06 and QA-03/11/14.
+Fourteen generated/derived native assets decode, with source/output hashes and
+provenance; browser photo/Movie/audio inspection passes at desktop and a measured
+390-pixel mobile viewport. These are actual provisional renderer outputs and a
+draft original instrumental, not cleared production media, camera footage or
+hardware proof. Source terms, final curation, quality and export rights remain
+with the existing asset review; no task acceptance or product decision is changed.
+
 Current Trial software addendum:
 `Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md` binds
 TRI-01/03/04/09, ARC-03/05/11, CAP-08, DEL-04, UX-03, QA-12 and FR-04/05/08/18/21
