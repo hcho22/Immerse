@@ -10,6 +10,13 @@ FR-04 A06 / FR-21 first-save recovery are not accepted by earlier green tests.
 The new regression remains failed; three independent package methods passing
 does not turn that failure into a pass or a hardware result.
 
+Instruction 037's compatibility diagnosis (`Evidence/ReceiptFaultMatrix/037/README.md`)
+establishes identical recovery-visible inputs for legitimate same-Film empty-backup
+rights and an unresolved conflicting readback. The exact-readback control passes;
+the conflict criterion still fails. Existing receipt fields are insufficient for
+the required distinction, and a new persisted-provenance boundary is unresolved.
+No clause, original ADR, restored right or matching-readback promise is narrowed.
+
 Evidence snapshot: source `7bfc78c`, branch `fm/immerse-v1-implementation`, observed 2026-10-01 UTC, macOS 26.6.2 (`25G83`), Swift 6.3.2, Xcode 26.5 (`17F42`). Package tests below ran on macOS. iOS builds were unsigned compile checks, not executed device tests. The approved Keychain candidate is separately pinned to `6e5c1742d344e0505b74176f60ac11c19a83e686`; its signed build passed but the confirmed iPhone was unreachable. No full FR has native acceptance yet.
 
 Historical snapshot rows below retain their original observations. Current

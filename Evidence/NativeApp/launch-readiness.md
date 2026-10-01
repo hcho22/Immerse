@@ -8,6 +8,12 @@ failed. Production correction must preserve older/foreign/legacy restored Film
 rights, not silently weaken them or relabel the failed check. This candidate is
 not ready for no-mistakes/CI or full-v1 acceptance.
 
+[037 compatibility diagnosis](../ReceiptFaultMatrix/037/README.md) now retains
+an equal-input counterexample: legitimate same-Film empty-backup recovery and
+rejected first-save recovery require different outcomes but expose identical
+persisted inputs. Existing-fields-only correction is insufficient. New protocol
+scope needs reconciliation; no production fix or hardware result is claimed.
+
 Draft sample and soundtrack review material is available at
 `../AssetReview/review.html`; provenance, decoded metadata, source hashes and
 limits are in `../AssetReview/README.md`. It is not production asset clearance.

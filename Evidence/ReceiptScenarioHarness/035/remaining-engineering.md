@@ -1,5 +1,26 @@
 # Remaining Engineering After Receipt Checkpoint 035
 
+## Current Addendum (037)
+
+The historical inventory below is retained. Priority 1 now has source-bound
+native export/privacy evidence in `Evidence/ExportPrivacyHarness/036/README.md`;
+priority 2 has the approved optional observer and package/hosted scenarios in
+`Evidence/DevelopmentObserver/036/README.md`. Exact FIFO precedence within the
+production receipt owner is proved in `Evidence/ReceiptFIFO/036/README.md`, not
+capture-backend quiescence or physical interruptions. Those remaining boundaries
+are still open.
+
+Priority 4 advanced through `Evidence/ReceiptFaultMatrix/036/README.md` and
+`037/README.md`. A failing mismatch recovery regression and a same-Film restore
+counterexample remain visible. Sixteen existing runtime and six adapter checks
+pass, but no production correction was made: a new persisted-provenance protocol
+boundary must be reconciled before dependent edits. Native Security remains
+deferred, and no source-bound native fix result exists. Priority 5 populated-view
+coverage is independent and can proceed under instruction 036. Full-v1 and all
+original physical/product/accessibility gaps remain open.
+
+## Historical Inventory
+
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.
 This inventory is preparation, not implementation or acceptance of the listed
 work. The receipt harness does not change any production boundary. Firstmate

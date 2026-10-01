@@ -23,6 +23,15 @@ remains failed, not a passing native result. Three independent matrix methods
 pass after a fixture error-code correction, but do not close TRI-03/04/09,
 ARC-05/11, CAP-08, QA-12 or FR-04/21 recovery acceptance.
 
+**037 compatibility boundary:** `Evidence/ReceiptFaultMatrix/037/README.md`
+records an exact-readback control and legitimate same-Film empty-backup restore
+alongside rejected first-save recovery. The latter two expose identical persisted
+inputs but require different outcomes; the conflict regression remains failed.
+Sixteen affected runtime and six adapter preservation methods pass, not the full
+suite. Production is unchanged; new persisted provenance needs a scoped decision
+before dependent implementation. No physical or hosted-native correction result
+is claimed. ARC-12/QA-15 restore requirements remain open alongside the IDs above.
+
 Physical execution preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)
 binds candidate `241dafd` to future HC_iPhone13 (iPhone 13 Pro/iOS 26.6.2) Xcode
 steps, all personal FR acceptance/invariants, full receipt fault cases and exact
