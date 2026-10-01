@@ -25,6 +25,12 @@ public actor FilmProcessor {
         try await job.value
     }
 
+    public func suspendProcessing() async {
+        let active = Array(jobs.values)
+        for task in active { task.cancel() }
+        for task in active { _ = await task.result }
+    }
+
     public func discard(filmID: UUID, sequence: Int) async throws {
         guard !removing.contains(filmID) else { throw PersistenceError.operationInProgress }
         removing.insert(filmID)

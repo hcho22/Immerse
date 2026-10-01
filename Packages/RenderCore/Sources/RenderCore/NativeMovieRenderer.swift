@@ -18,8 +18,8 @@ public enum NativeMovieRenderer {
         let transform = try await track.load(.preferredTransform)
         guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie }
         let fps = camera.id == .super8HomeMovie ? 18 : 24
-        let width = orientation == .landscape ? longEdge : longEdge * 9 / 16
-        let height = orientation == .landscape ? longEdge * 9 / 16 : longEdge
+        let width = orientation == .landscape ? longEdge : longEdge * 3 / 4
+        let height = orientation == .landscape ? longEdge * 3 / 4 : longEdge
         let bounds = CGRect(x: 0, y: 0, width: width, height: height)
         let reader = try AVAssetReader(asset: asset)
         let output = AVAssetReaderTrackOutput(track: track, outputSettings: [

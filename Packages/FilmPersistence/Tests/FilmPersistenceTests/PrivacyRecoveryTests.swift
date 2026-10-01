@@ -4,6 +4,26 @@ import Foundation
 import XCTest
 
 final class PrivacyRecoveryTests: XCTestCase {
+    func testRenderExportWorkIsRetiredWithDiscardAndInterruptedWorkClearsOnRecovery() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic work")
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source".utf8))
+        try revealTestInstant(repository, filmID: film.id)
+        let work = root.appendingPathComponent("Work/\(film.id)/Export-interrupted")
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        try Data("private exported pixels".utf8).write(to: work.appendingPathComponent("print.jpg"))
+        try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: work.path))
+        let orphanWork = root.appendingPathComponent("Work/\(UUID())/Render-interrupted")
+        try FileManager.default.createDirectory(at: orphanWork, withIntermediateDirectories: true)
+        try Data("orphan pixels".utf8).write(to: orphanWork.appendingPathComponent("clip.mov"))
+        try repository.recover()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: orphanWork.path))
+        XCTAssertEqual(try repository.film(id: film.id).discardedPlaceholderSequenceNumbers, [1])
+    }
+
     func testConcurrentCaptureAndRenderCannotOverwriteDiscardedStateAcrossConnections() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

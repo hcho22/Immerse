@@ -1,0 +1,34 @@
+XCUIAccessibilityAuditType(rawValue: 65536): User will not be able to change the font size of this SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x10a52c2e0, {{60.0, 136.0}, {308.0, 63.3}}, label: 'Silent capture'
+Element subtree:
+ →StaticText, 0x10a52c2e0, {{60.0, 136.0}, {308.0, 63.3}}, label: 'Silent capture'
+Path to element:
+ →Application, 0x10c907f40, pid: 61419, label: 'Immerse'
+  ↳Window (Main), 0x10c92f640, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x10a72ea50, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x10a72ef00, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x10a72f020, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x10a72f140, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x10a72f260, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x10a72f380, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x10a72f4a0, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x10a72f920, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x10a72fa40, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x10a72fb60, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x10a72fc80, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳CollectionView, 0x10a72fda0, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Cell, 0x10a52b9e0, {{16.0, 121.0}, {370.0, 93.3}}
+                ↳Other, 0x10a52bd40, {{16.0, 121.0}, {370.0, 93.3}}
+                 ↳Other, 0x10a52be60, {{16.0, 121.0}, {370.0, 93.3}}
+                  ↳Other, 0x10a52bf80, {{16.0, 121.0}, {370.0, 93.3}}
+                   ↳StaticText, 0x10a52c0a0, {{16.0, 121.0}, {370.0, 93.3}}, label: 'Silent capture'
+                    ↳StaticText, 0x10a52c2e0, {{60.0, 136.0}, {308.0, 63.3}}, label: 'Silent capture'
+Query chain:
+ →Find: Target Application 'com.immerse.FilmJournal'
+  Output: {
+    Application, 0x10a733c00, pid: 61419, label: 'Immerse'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 61419, elementOrHash.elementID: 4459855328.223
+    Output: {
+      StaticText, 0x10a328860, {{60.0, 136.0}, {308.0, 63.3}}, label: 'Silent capture'
+    }

@@ -1,0 +1,6 @@
+[DEBUG-expiry] three-seconds-later now=1790828268.927593
+fixture timeRate=0 grace=false
+fixture id=0 product=test.immerse.monthly purchased=2026-10-01 04:17:44 +0000 expires=Optional(2026-10-01 04:17:45 +0000) autoRenew=false cancelled=nil state=1
+latest verified id=0 product=test.immerse.monthly purchased=2026-10-01 04:17:44 +0000 expires=Optional(2026-10-01 04:17:45 +0000) revoked=nil upgraded=false environment=Environment(rawValue: "Xcode") status=RenewalState(rawValue: 2) verifiedRenewal autoRenew=false graceEnd=nil retry=false expiryReason=Optional(StoreKit.Product.SubscriptionInfo.RenewalInfo.ExpirationReason(rawValue: 1))
+adapter=expired controllerBeforeRefresh=expired
+controllerAfterRefresh=expired

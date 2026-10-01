@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "deviceName" : "Immerse StoreKit Validation 26.2",
+        "exportedFileName" : "4F762FFC-15DC-4B4E-A97F-104B58C6089F.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "three-seconds-later_0_C2FE9C37-B2EF-4365-A5D4-7D6AF9BA4069.txt",
+        "timestamp" : 1790828269.089
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "deviceName" : "Immerse StoreKit Validation 26.2",
+        "exportedFileName" : "5539917F-D5D0-4CD8-9D23-453A2877F338.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "one-second-later_0_852B298C-3E1A-45D5-A9A0-949C97208FC4.txt",
+        "timestamp" : 1790828266.926
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "deviceName" : "Immerse StoreKit Validation 26.2",
+        "exportedFileName" : "8DDD4C4D-B609-4CF2-A2D6-5084A5C38A8E.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "after-immediate-decision-active_0_A254243D-89FF-4607-888E-2A57915BF01D.txt",
+        "timestamp" : 1790828265.773
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "deviceName" : "Immerse StoreKit Validation 26.2",
+        "exportedFileName" : "BD20AC55-0DFF-4FB6-9C6D-C37F9A80D2C2.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "before-expiry_0_0349C22C-A3C7-4BED-86C1-CBEF1F9375AB.txt",
+        "timestamp" : 1790828265.554
+      }
+    ],
+    "testIdentifier" : "StoreKitSubscriptionTests/testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm()",
+    "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseTests/StoreKitSubscriptionTests/testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm"
+  }
+]

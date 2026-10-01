@@ -14,6 +14,33 @@ No simulator result below is treated as native hardware evidence.
 No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
+Latest native app addendum: `Evidence/NativeApp/2026-10-01-native-candidate.md`
+maps the actual SwiftUI Journal, setup, capture, reveal, Darkroom, export, privacy,
+Settings and configurable StoreKit code to affected task IDs and FRs. It records
+13 domain and 23 persistence passes, the initial native navigation execution,
+unsigned builds and retained failed StoreKit runs. The UI is now integrated,
+superseding historical "not started" UI entries below, but no such entry becomes
+accepted from compilation. Four local StoreKit scenarios and two app-model native
+integration tests subsequently passed on iOS 26.2 after proving asynchronous
+fixture delivery (diagnosis and unchanged assertions retained). Accessibility
+audits exposed real contrast/layout issues. Default setup now passes after bounded
+diagnosis; expanded scrolled largest-type coverage still has navigation-edge
+contrast and Movie Orientation/Silent capture Dynamic Type failures, including a
+contradictory fresh-build result. Every finding is retained without exception. The current
+combined run passes 88 package tests plus both unsigned builds, and all six
+StoreKit/app-model scenarios were repeated successfully. Later setup-only changes
+still need their affected UI/build checks. `Scripts/verify-requirement-map.sh`
+checks the 122 intake IDs, 72 clause records and nine invariants without treating
+coverage as acceptance. FR-05
+inspection also corrected a mistaken 16:9 renderer target to required 4:3/3:4.
+The candidate report records exact commands, earlier failures and current outcomes;
+`Evidence/NativeApp/launch-readiness.md` prepares QA-14 without release authority. Live prices,
+sample/music rights, remaining UI/accessibility work, all hardware gates and the
+Trial cross-store conflict remain open. `App/Immerse/README.md` and
+`Scripts/validate-local.sh` are the current build/test entry points. The captain's
+implementation-first amendment supersedes the old before-code TRI-11 order and
+the historical reconnect instruction below; do not perform physical-phone actions.
+
 Latest capture recovery addendum: `Evidence/NativeCapture/2026-10-01-staging-recovery.md`
 records per-operation journals, preserved capture dates, decoder-gated relaunch
 replay through persistent receipts, staging privacy deletion and native cancellation

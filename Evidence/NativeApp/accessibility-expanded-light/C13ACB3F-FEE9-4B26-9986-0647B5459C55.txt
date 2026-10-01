@@ -1,0 +1,34 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x108071d80, {{60.0, 126.3}, {308.0, 63.3}}, label: 'Silent capture'
+Element subtree:
+ →StaticText, 0x108071d80, {{60.0, 126.3}, {308.0, 63.3}}, label: 'Silent capture'
+Path to element:
+ →Application, 0x1080700f0, pid: 39420, label: 'Immerse'
+  ↳Window (Main), 0x1080536a0, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x1080562e0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x108056520, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x108056640, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x108056760, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x108056880, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x1080569a0, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x108056ac0, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x108056f40, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x108057060, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x108057180, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x1080572a0, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳CollectionView, 0x1080573c0, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Cell, 0x108058b60, {{16.0, 111.3}, {370.0, 93.3}}
+                ↳Other, 0x108058ec0, {{16.0, 111.3}, {370.0, 93.3}}
+                 ↳Other, 0x108071900, {{16.0, 111.3}, {370.0, 93.3}}
+                  ↳Other, 0x108071a20, {{16.0, 111.3}, {370.0, 93.3}}
+                   ↳StaticText, 0x108071b40, {{16.0, 111.3}, {370.0, 93.3}}, label: 'Silent capture'
+                    ↳StaticText, 0x108071d80, {{60.0, 126.3}, {308.0, 63.3}}, label: 'Silent capture'
+Query chain:
+ →Find: Target Application 'com.immerse.FilmJournal'
+  Output: {
+    Application, 0x105e5c860, pid: 39420, label: 'Immerse'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 39420, elementOrHash.elementID: 4525097024.223
+    Output: {
+      StaticText, 0x108464820, {{60.0, 126.3}, {308.0, 63.3}}, label: 'Silent capture'
+    }

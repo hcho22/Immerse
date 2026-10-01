@@ -13,8 +13,13 @@ These are recommendations, not approved decisions. They preserve all recorded de
 | Disposable 27 | HEIC/JPEG still from native camera | Provisional cap: no more than 12,000,000 output pixels total, for example 4000 x 3000 for a 4:3 export; JPEG export; color space target still needs validation. | Not applicable | Strong consumer-flash contrast, modest grain, date-free border option only if approved copy allows. |
 | Instant 10 | HEIC/JPEG still | Provisional print master: exactly 2048 x 2048 pixels before any approved frame/border treatment; JPEG export. | Not applicable | Softer contrast, instant-print frame, individually revealed. |
 | 6x6 12 | HEIC/JPEG still | Provisional square master: exactly 3072 x 3072 pixels; JPEG export. | Not applicable | Square crop, smoother roll-film contrast, visible but restrained grain. |
-| Super 8 200s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1080 encoded landscape frame or 1080 x 1920 encoded portrait frame according to locked Movie orientation, 18 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Home-movie color, gate weave/grain, chronological clip join. |
-| 16mm 165s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1080 encoded landscape frame or 1080 x 1920 encoded portrait frame according to locked Movie orientation, 24 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Cleaner cinema grain, stable frame, chronological clip join. |
+| Super 8 200s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1440 encoded landscape frame or 1440 x 1920 encoded portrait frame according to locked Movie orientation, 18 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Home-movie color, gate weave/grain, chronological clip join. |
+| 16mm 165s | Native video file, no microphone | Not applicable | Provisional export: H.264 `.mov`, 1920 x 1440 encoded landscape frame or 1440 x 1920 encoded portrait frame according to locked Movie orientation, 24 fps encoded cadence, silent unless licensed built-in instrumental is selected. | Cleaner cinema grain, stable frame, chronological clip join. |
+
+Correction 2026-10-01: the earlier proposed 16:9 dimensions contradicted FR-05.
+The 4:3/3:4 ratio is already required, not a new DEC choice. Absolute dimensions,
+codec, cadence and quality remain provisional. Native decoded-media regression
+evidence is in `Evidence/NativeApp/2026-10-01-native-candidate.md`.
 
 **Why this recommendation:** it gives M1/M2 engineers fixed codec and size targets that are small enough for iPhone 11 testing while preserving the app's analog promise. It avoids raw/pro workflows and does not claim precise emulation before visual samples are approved.
 
@@ -47,7 +52,7 @@ These are recommendations, not approved decisions. They preserve all recorded de
 
 **Affected tracker IDs:** DEC-11, DRK-01, DRK-02, DRK-03, DRK-04, DRK-05, DRK-06, DRK-08, DEV-05, STO-07, MOV-09, PRV-08, QA-04.
 
-**Supporting evidence so far:** `RenderCore` models exact Reset and per-photo recipes, and tests prove Reset returns to `.original`. It does not render pixels or enforce approved ranges yet.
+**Supporting evidence so far:** `RenderCore` now renders actual native pixels, and the native app-model tests prove byte-exact Reset and independent photos. `App/Immerse/Sources/PhotoView.swift` exposes provisional controls and non-gesture local exposure points. These implementations do not approve the ranges, medium applicability, chemical toning, Instant presentation or soundtrack reselection. See `Evidence/NativeApp/2026-10-01-native-candidate.md` for candidate-bound execution.
 
 ## DEC-12 - Storage, Device, Accessibility And Reliability Budgets
 
@@ -66,7 +71,7 @@ These are recommendations, not approved decisions. They preserve all recorded de
 
 **Affected tracker IDs:** DEC-12, ARC-08, ARC-10, ARC-12, CAP-07, CAP-09, DEV-07, STO-02, STO-11, QA-13, QA-15.
 
-**Supporting evidence so far:** `FilmPersistence` tests failure-before-debit and orphan recovery with synthetic data; `CapturePipeline` tests capture-event-to-durable-save behavior and recovery. No iPhone 11, storage pressure, accessibility audit or backup/restore evidence exists yet.
+**Supporting evidence so far:** `FilmPersistence` tests failure-before-debit and orphan recovery with synthetic data; `CapturePipeline` tests capture-event-to-durable-save behavior and recovery. Native simulator accessibility audits now exist, including retained failures and bounded corrections in `Evidence/NativeApp/accessibility-diagnosis.md`. They do not establish full QA-13 acceptance. No iPhone 11 timing, physical storage-pressure or backup/restore evidence exists yet.
 
 ## DEC-13 - Support, Privacy Disclosures And Launch Review
 
@@ -79,7 +84,7 @@ These are recommendations, not approved decisions. They preserve all recorded de
 
 **Affected tracker IDs:** DEC-13, STO-02, STO-10, PRV-10, DEL-01, BIL-07, QA-14, QA-15.
 
-**Supporting evidence so far:** PRD version 1.5 records DEC-09 and DEC-17 disclosures; the evidence map records hardware gaps. No launch copy or App Review packet is approved yet.
+**Supporting evidence so far:** PRD version 1.5 records DEC-09 and DEC-17 disclosures; the native app includes backup/privacy disclosures. `Evidence/NativeApp/launch-readiness.md` prepares the support, asset, manual-device and release-authority handoff. No launch copy or App Review packet is approved yet.
 
 ## DEC-14 - Learning Targets Without Analytics
 

@@ -25,6 +25,14 @@ public enum CaptureFrameOrientation: Sendable {
     }
 }
 
+public struct NativeCameraControls: Sendable {
+    public var flash = false
+    public var manualFocus = false
+    public var minimumExposureBias: Float?
+    public var maximumExposureBias: Float?
+    public init() {}
+}
+
 // The reference is shared only with AVCaptureVideoPreviewLayer on the main actor.
 // All session configuration and start/stop calls remain on the backend's serial executor.
 public final class CapturePreviewSource: @unchecked Sendable {
@@ -86,6 +94,46 @@ public actor AVFoundationCaptureBackend {
     public var phase: CapturePhase { operations.phase }
     public var activePosition: CapturePosition? { plan?.activePosition }
     public func previewSource() -> CapturePreviewSource { CapturePreviewSource(session: session) }
+
+    public func controls() -> NativeCameraControls {
+        var result = NativeCameraControls()
+        guard let device = input?.device else { return result }
+        result.flash = photoOutput?.supportedFlashModes.contains(.on) == true && device.hasFlash
+        result.manualFocus = device.isLockingFocusWithCustomLensPositionSupported
+        if device.isExposureModeSupported(.continuousAutoExposure) {
+            result.minimumExposureBias = device.minExposureTargetBias
+            result.maximumExposureBias = device.maxExposureTargetBias
+        }
+        return result
+    }
+
+    public func setManualFocus(_ position: Float) throws {
+        try operations.requireIdle()
+        guard let device = input?.device, device.isLockingFocusWithCustomLensPositionSupported,
+              position.isFinite, (0...1).contains(position) else { throw NativeCaptureError.configurationFailed }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        device.setFocusModeLocked(lensPosition: position)
+    }
+
+    public func lockDisposableFocus() throws {
+        guard let device = input?.device, device.isFocusModeSupported(.locked) else { return }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        device.focusMode = .locked
+    }
+
+    public func setExposureBias(_ bias: Float) throws {
+        try operations.requireIdle()
+        guard let device = input?.device, device.isExposureModeSupported(.continuousAutoExposure),
+              bias.isFinite, (device.minExposureTargetBias...device.maxExposureTargetBias).contains(bias) else {
+            throw NativeCaptureError.configurationFailed
+        }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        device.exposureMode = .continuousAutoExposure
+        device.setExposureTargetBias(bias)
+    }
 
     public func start(plan next: CaptureSessionPlan) throws {
         guard !privacyCancelled, !isRecovering else { throw NativeCaptureError.notRunning }
@@ -219,6 +267,20 @@ public actor AVFoundationCaptureBackend {
             try files.removeCommittedFile(for: event)
             eventContinuation.yield(event)
         }
+    }
+
+    public func finishPendingSaves() async throws {
+        suspend()
+        let deadline = ContinuousClock.now + .seconds(30)
+        while operations.operationID != nil {
+            if operations.pendingSave != nil, !operations.isCommitting {
+                try await retryPendingSave()
+            } else {
+                guard ContinuousClock.now < deadline else { throw NativeCaptureError.busy }
+                try await Task.sleep(for: .milliseconds(10))
+            }
+        }
+        try await recoverPendingCaptures()
     }
 
     public func cancelForPrivacy() async throws {

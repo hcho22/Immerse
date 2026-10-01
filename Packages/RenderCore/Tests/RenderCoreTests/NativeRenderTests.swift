@@ -68,7 +68,7 @@ final class NativeRenderTests: XCTestCase {
         }
         let clipMetadata = try await RenderFixtureGenerator.inspectMovie(at: first, relativePath: "first.mov", orientation: .landscape)
         XCTAssertEqual(clipMetadata.encodedWidth, 320)
-        XCTAssertEqual(clipMetadata.encodedHeight, 180)
+        XCTAssertEqual(clipMetadata.encodedHeight, 240)
         XCTAssertEqual(clipMetadata.preferredTransform, TransformMetadata(.identity))
         XCTAssertEqual(clipMetadata.durationSeconds, manifest.movie.durationSeconds, accuracy: 0.01)
         let movie = root.appendingPathComponent("movie.mov")
@@ -79,6 +79,10 @@ final class NativeRenderTests: XCTestCase {
         XCTAssertTrue(audio.isEmpty)
         XCTAssertEqual(total, manifest.movie.durationSeconds * 2, accuracy: 0.01)
         let firstFrames = try await decodedFrames(first)
+        let firstPixels = try XCTUnwrap(firstFrames.first)
+        // Portrait source fits the 4:3 output with side borders, not a crop/stretch.
+        XCTAssertLessThan(firstPixels[(120 * 320 + 8) * 4], 40)
+        XCTAssertGreaterThan(firstPixels[(120 * 320 + 160) * 4], 40)
         let secondFrames = try await decodedFrames(second)
         let assembledFrames = try await decodedFrames(movie)
         XCTAssertGreaterThan(firstFrames.count, 1)
@@ -87,6 +91,34 @@ final class NativeRenderTests: XCTestCase {
         try await NativeMovieRenderer.assemble(clips: [second], destination: surviving)
         let survivingFrames = try await decodedFrames(surviving)
         XCTAssertEqual(survivingFrames, secondFrames)
+    }
+
+    func testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.movieWidth = 160
+        settings.movieHeight = 120
+        settings.movieDurationSeconds = 0.2
+        settings.movieOrientation = .landscape
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root, settings: settings)
+        let source = root.appendingPathComponent("synthetic-developed-movie.mov")
+        for camera in [CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
+            let result = root.appendingPathComponent("\(camera.id.rawValue).mov")
+            try await NativeMovieRenderer.developClip(source: source, destination: result,
+                camera: camera, seed: 7, orientation: .portrait, longEdge: 160)
+            let metadata = try await RenderFixtureGenerator.inspectMovie(at: result,
+                relativePath: result.lastPathComponent, orientation: .portrait)
+            XCTAssertEqual(metadata.encodedWidth, 120)
+            XCTAssertEqual(metadata.encodedHeight, 160)
+            XCTAssertEqual(metadata.preferredTransform, TransformMetadata(.identity))
+            guard metadata.encodedWidth == 120, metadata.encodedHeight == 160 else { continue }
+            let frames = try await decodedFrames(result)
+            let pixels = try XCTUnwrap(frames.first)
+            XCTAssertLessThan(pixels[(8 * 120 + 60) * 4], 40)
+            XCTAssertLessThan(pixels[(151 * 120 + 60) * 4], 40)
+            XCTAssertGreaterThan(pixels[(80 * 120 + 60) * 4], 40)
+        }
     }
 
     private func image(_ data: Data) throws -> CGImage {

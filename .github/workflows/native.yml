@@ -1,0 +1,29 @@
+name: Native validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  local-native:
+    runs-on: macos-26
+    timeout-minutes: 40
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create isolated simulator
+        run: |
+          device=$(xcrun simctl create 'Immerse CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)
+          echo "IMMERSE_SIMULATOR_UDID=$device" >> "$GITHUB_ENV"
+          billing=$(xcrun simctl create 'Immerse Billing CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
+          echo "IMMERSE_STOREKIT_SIMULATOR_UDID=$billing" >> "$GITHUB_ENV"
+      - name: Package, app and local StoreKit tests
+        run: sh Scripts/validate-local.sh
+      - name: Retain native test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-test-results
+          path: DerivedData/*.xcresult

@@ -20,8 +20,11 @@ public protocol DeviceTrialStoring: Sendable {
     func consume(filmID: UUID, savedAt: Date) throws
 }
 
-public struct TrialKeychainError: Error, Equatable, Sendable {
+public struct TrialKeychainError: LocalizedError, Equatable, Sendable {
     public let status: OSStatus
+    public var errorDescription: String? {
+        "The iPhone's secure Trial record could not be read or updated (Keychain \(status)). Trial eligibility has not been reset."
+    }
 }
 
 /// Baseline D1/D2 only. The random identifier never leaves app storage/Keychain.

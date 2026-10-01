@@ -1,0 +1,34 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "1ED9A22C-897E-4120-BDE5-F9EAEB6D7FA3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Super8-load-default_0_204513DE-F7BF-4E48-A752-A2BD210AF569.png",
+        "timestamp" : 1790829780.1
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "80889E82-E792-491E-9605-05D851BCD0FF.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Super8-load-default-accessibility-tree_0_F71F7E76-23B5-4127-90FA-C3A56AE6AD78.txt",
+        "timestamp" : 1790829774.451
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "4BB76BDE-7481-4C30-AD10-E628F6707690.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      }
+    ],
+    "testIdentifier" : "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+    "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore"
+  }
+]

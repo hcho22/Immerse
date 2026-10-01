@@ -21,6 +21,7 @@ public enum PersistenceError: Error, Equatable {
     case originalExportPending
     case treatmentConflict
     case operationInProgress
+    case capacityChangedSinceConfirmation
     case simulatedFailure(SaveFailureInjection)
     case missingVerifiedMaster
     case masterChecksumMismatch
@@ -289,9 +290,12 @@ public final class FilmRepository {
     }
 
     @discardableResult
-    public func completeEarly(filmID: UUID) throws -> Film {
+    public func completeEarly(filmID: UUID, confirmedCaptureCount: Int? = nil) throws -> Film {
         try database.withTransaction {
             var film = try film(id: filmID)
+            if let confirmedCaptureCount, film.savedCaptureCount != confirmedCaptureCount {
+                throw PersistenceError.capacityChangedSinceConfirmation
+            }
             try film.completeEarly()
             try save(film)
             return film
@@ -413,6 +417,7 @@ public final class FilmRepository {
             try save(film)
             try database.deleteValue(filmID: filmID, key: "recipe-\(sequenceNumber)")
             try database.deleteValue(filmID: filmID, key: "original-\(sequenceNumber)")
+            try database.enqueueDeletion(filmID: filmID, relativePath: "Work/\(filmID)")
             for data in try database.allReceiptData(filmID: filmID) {
                 let receipt = try decoder.decode(CaptureCommitReceipt.self, from: data)
                 guard receipt.sequenceNumber == sequenceNumber else { continue }
@@ -444,6 +449,12 @@ public final class FilmRepository {
         try database.withTransaction {
             try finishPendingDeletions()
             try removeTemporaryFiles()
+            let work = rootURL.appendingPathComponent("Work", isDirectory: true)
+            if fileManager.fileExists(atPath: work.path) {
+                for child in try fileManager.contentsOfDirectory(at: work, includingPropertiesForKeys: nil) {
+                    try fileManager.removeItem(at: child)
+                }
+            }
             let referenced = Set(try database.assets().map(\.relativePath))
             guard fileManager.fileExists(atPath: mediaRootURL.path) else { return }
             let files = fileManager.enumerator(
@@ -468,6 +479,7 @@ public final class FilmRepository {
             }
             try database.enqueueDeletion(filmID: filmID, relativePath: relativePath(for: filmDirectory))
             try database.enqueueDeletion(filmID: filmID, relativePath: "Staging/\(filmID)")
+            try database.enqueueDeletion(filmID: filmID, relativePath: "Work/\(filmID)")
             try database.deleteFilm(id: filmID)
         }
         try finishPendingDeletions(filmID: filmID)
@@ -565,7 +577,7 @@ public final class FilmRepository {
     private func finishPendingDeletions(filmID: UUID? = nil) throws {
         for path in try database.pendingDeletionPaths(filmID: filmID) {
             let url = rootURL.appendingPathComponent(path).standardizedFileURL
-            let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging")]
+            let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging"), rootURL.appendingPathComponent("Work")]
                 .map { $0.resolvingSymlinksInPath().path + "/" }
             guard roots.contains(where: { url.resolvingSymlinksInPath().path.hasPrefix($0) }) else {
                 throw PersistenceError.invalidAssetPath

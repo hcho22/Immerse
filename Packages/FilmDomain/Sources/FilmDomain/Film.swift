@@ -114,7 +114,8 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         guard let first = captures.first?.savedAt, let last = captures.last?.savedAt else {
             return nil
         }
-        return first...last
+        // Wall-clock adjustments never change capture sequence or crash the Journal.
+        return min(first, last)...max(first, last)
     }
 
     public var remainingExposures: Int? {

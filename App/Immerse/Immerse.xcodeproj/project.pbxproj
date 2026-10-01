@@ -1,0 +1,715 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02FD7E75DF77B0109CA571BB /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = B549794A50EBE804BFE73FEC /* EntitlementCore */; };
+		042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */; };
+		1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */; };
+		2E67A8B62F3CA31DDDB0D064 /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */; };
+		447BA416FD2D827F9B770AF2 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = B7AE777EF9385D731C173E89 /* RenderCore */; };
+		4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD585D6F2151663DA3927D1E /* ImmerseApp.swift */; };
+		4F93FB2FC030AC783C0F3F8B /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 86BEEF17ACACB448446A4635 /* FilmPersistence */; };
+		50EC2E9F4FF8AB025A5B7FCC /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4F11F94E6BAC2977A36307 /* CaptureView.swift */; };
+		5C8D41DBA54CB27A7630E775 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */; };
+		5EDC062601445A003E468074 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */; };
+		718C112B3F713C391C80BB45 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 23E745B0CA05FA19BE899251 /* EntitlementCore */; };
+		794D2B906DD37A94A88B5E83 /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B299AC9D190C1CBF43EE00 /* JournalView.swift */; };
+		7A1F3ED8838FF78DCAB255B3 /* StoreKitSubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */; };
+		865894FD2C75EFF6AEED9DEC /* JournalFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */; };
+		8772F96028EB6799B35D32C6 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = F57CEE519E8D1B8CE63C90E5 /* FilmDomain */; };
+		8CF96CE9CE3EF39590D32E48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5345D75982C156D9821482BB /* SettingsView.swift */; };
+		9269012BBD3C11F2ADE457CC /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = ECB5677E8658852E42741E9E /* FilmRuntime */; };
+		92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
+		97EDC540558F6430442A6076 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = B003DCAC6B4E5C9D271D55C2 /* FilmDomain */; };
+		9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
+		A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 54847413BC0280518CA9021C /* NativeAdapters */; };
+		B18ADCB2236DD2A8140DB998 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3B89AA2B651AFE7F3D95FAF4 /* README.md */; };
+		B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
+		BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 30073B98740522EE1997D947 /* LocalSubscriptions.storekit */; };
+		D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
+		FC66DDA09C5D0ABEF86E8F0C /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		40B0246C39E07A11DBA08EEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF5E9BF9C46D2E3744A43B98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FF0469481DB495A7FC25D880;
+			remoteInfo = Immerse;
+		};
+		B9BD5F1F1182BACE61FBA081 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF5E9BF9C46D2E3744A43B98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FF0469481DB495A7FC25D880;
+			remoteInfo = Immerse;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		17FC23B6591CF4D04A22FD93 /* Immerse.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Immerse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30073B98740522EE1997D947 /* LocalSubscriptions.storekit */ = {isa = PBXFileReference; path = LocalSubscriptions.storekit; sourceTree = "<group>"; };
+		3B89AA2B651AFE7F3D95FAF4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3D476A9C5406EC78CE4973A4 /* CaptureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
+		45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFlowTests.swift; sourceTree = "<group>"; };
+		46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalIntegrationTests.swift; sourceTree = "<group>"; };
+		5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalModel.swift; sourceTree = "<group>"; };
+		5345D75982C156D9821482BB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		58B299AC9D190C1CBF43EE00 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
+		6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCatalogView.swift; sourceTree = "<group>"; };
+		6C4F11F94E6BAC2977A36307 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
+		6C7B00AA020EF955ACC8304F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		766A569971585250535D6ED0 /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		89ACDE1C9DC707276CC92690 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
+		8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitSubscriptionTests.swift; sourceTree = "<group>"; };
+		9437363FB48E8E817EB59821 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
+		99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailView.swift; sourceTree = "<group>"; };
+		B08B7044BE2F5A212F57FA06 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
+		CBEC1FD423337428B512E00A /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
+		CD585D6F2151663DA3927D1E /* ImmerseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmerseApp.swift; sourceTree = "<group>"; };
+		D2B43A4D3825AFE1F924B37B /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
+		DD83CB89DEA95F2368FD8F65 /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
+		E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
+		E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmPresentation.swift; sourceTree = "<group>"; };
+		F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B35AFF25AB9ED77BAD9FEAC2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				718C112B3F713C391C80BB45 /* EntitlementCore in Frameworks */,
+				97EDC540558F6430442A6076 /* FilmDomain in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C82074053CF45B64660E4B2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8772F96028EB6799B35D32C6 /* FilmDomain in Frameworks */,
+				4F93FB2FC030AC783C0F3F8B /* FilmPersistence in Frameworks */,
+				9269012BBD3C11F2ADE457CC /* FilmRuntime in Frameworks */,
+				447BA416FD2D827F9B770AF2 /* RenderCore in Frameworks */,
+				A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */,
+				02FD7E75DF77B0109CA571BB /* EntitlementCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		09867DCEC7620CD397443498 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		0AC13BF357CB3AF716BC273D /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				30073B98740522EE1997D947 /* LocalSubscriptions.storekit */,
+				3B89AA2B651AFE7F3D95FAF4 /* README.md */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		52A97AF3440799C4DCA5BE15 = {
+			isa = PBXGroup;
+			children = (
+				AA299EBD41AA8C0D112D9778 /* Packages */,
+				D203862C97AA7CC57CB735A6 /* Sources */,
+				DD1EAF1F13BA30FFB30F928C /* Tests */,
+				09867DCEC7620CD397443498 /* UITests */,
+				E023B5612DFB360D9B3337DB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA299EBD41AA8C0D112D9778 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				B08B7044BE2F5A212F57FA06 /* EntitlementCore */,
+				766A569971585250535D6ED0 /* FilmDomain */,
+				DD83CB89DEA95F2368FD8F65 /* FilmPersistence */,
+				D2B43A4D3825AFE1F924B37B /* FilmRuntime */,
+				9437363FB48E8E817EB59821 /* NativeAdapters */,
+				89ACDE1C9DC707276CC92690 /* RenderCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D203862C97AA7CC57CB735A6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6C7B00AA020EF955ACC8304F /* Assets.xcassets */,
+				6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */,
+				3D476A9C5406EC78CE4973A4 /* CaptureController.swift */,
+				6C4F11F94E6BAC2977A36307 /* CaptureView.swift */,
+				9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */,
+				F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */,
+				CD585D6F2151663DA3927D1E /* ImmerseApp.swift */,
+				5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */,
+				58B299AC9D190C1CBF43EE00 /* JournalView.swift */,
+				E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */,
+				5345D75982C156D9821482BB /* SettingsView.swift */,
+				CBEC1FD423337428B512E00A /* SubscriptionController.swift */,
+				F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		DD1EAF1F13BA30FFB30F928C /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */,
+				8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */,
+				0AC13BF357CB3AF716BC273D /* Fixtures */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		E023B5612DFB360D9B3337DB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				17FC23B6591CF4D04A22FD93 /* Immerse.app */,
+				99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */,
+				E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1069C31E8F44C6294DCA89D8 /* ImmerseUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4301959B59B88D4AE0CA86C1 /* Build configuration list for PBXNativeTarget "ImmerseUITests" */;
+			buildPhases = (
+				3FA5EC1312DEAB25FF051895 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2546331F534D50EBA05B3D6F /* PBXTargetDependency */,
+			);
+			name = ImmerseUITests;
+			packageProductDependencies = (
+			);
+			productName = ImmerseUITests;
+			productReference = E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		8B5F01732F84EBF27E1B53AD /* ImmerseTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B47B02C167490D81FECB0514 /* Build configuration list for PBXNativeTarget "ImmerseTests" */;
+			buildPhases = (
+				B6C7A8E85C1B8533EA03FEB9 /* Sources */,
+				034DE2E4202EE8F82B65AA1E /* Resources */,
+				B35AFF25AB9ED77BAD9FEAC2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				224E217B8BF4186AD537FCBE /* PBXTargetDependency */,
+			);
+			name = ImmerseTests;
+			packageProductDependencies = (
+				23E745B0CA05FA19BE899251 /* EntitlementCore */,
+				B003DCAC6B4E5C9D271D55C2 /* FilmDomain */,
+			);
+			productName = ImmerseTests;
+			productReference = 99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FF0469481DB495A7FC25D880 /* Immerse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 43F818793CA4E15B1D8AEC95 /* Build configuration list for PBXNativeTarget "Immerse" */;
+			buildPhases = (
+				F4CA8024D117F41184D4566E /* Sources */,
+				8D37D1E433FE98DF71D455FC /* Resources */,
+				C82074053CF45B64660E4B2C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Immerse;
+			packageProductDependencies = (
+				F57CEE519E8D1B8CE63C90E5 /* FilmDomain */,
+				86BEEF17ACACB448446A4635 /* FilmPersistence */,
+				ECB5677E8658852E42741E9E /* FilmRuntime */,
+				B7AE777EF9385D731C173E89 /* RenderCore */,
+				54847413BC0280518CA9021C /* NativeAdapters */,
+				B549794A50EBE804BFE73FEC /* EntitlementCore */,
+			);
+			productName = Immerse;
+			productReference = 17FC23B6591CF4D04A22FD93 /* Immerse.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BF5E9BF9C46D2E3744A43B98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1069C31E8F44C6294DCA89D8 = {
+						TestTargetID = FF0469481DB495A7FC25D880;
+					};
+				};
+			};
+			buildConfigurationList = 5D290F28DE0C2BD9E3A075A2 /* Build configuration list for PBXProject "Immerse" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 52A97AF3440799C4DCA5BE15;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				21535B1F79855A30A6F088EF /* XCLocalSwiftPackageReference "../../Packages/EntitlementCore" */,
+				C7154570A3BA2A18379D4C98 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */,
+				134BBA519155E5C866026FFE /* XCLocalSwiftPackageReference "../../Packages/FilmPersistence" */,
+				61088BD8BD6A34ED996B0B11 /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */,
+				06B1F3B23DBFA701CA5E2B2E /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */,
+				60D78D5E74DA657F686E9A7C /* XCLocalSwiftPackageReference "../../Packages/RenderCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E023B5612DFB360D9B3337DB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FF0469481DB495A7FC25D880 /* Immerse */,
+				8B5F01732F84EBF27E1B53AD /* ImmerseTests */,
+				1069C31E8F44C6294DCA89D8 /* ImmerseUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		034DE2E4202EE8F82B65AA1E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */,
+				B18ADCB2236DD2A8140DB998 /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D37D1E433FE98DF71D455FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3FA5EC1312DEAB25FF051895 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				865894FD2C75EFF6AEED9DEC /* JournalFlowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B6C7A8E85C1B8533EA03FEB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */,
+				7A1F3ED8838FF78DCAB255B3 /* StoreKitSubscriptionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4CA8024D117F41184D4566E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */,
+				9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */,
+				50EC2E9F4FF8AB025A5B7FCC /* CaptureView.swift in Sources */,
+				2E67A8B62F3CA31DDDB0D064 /* FilmDetailView.swift in Sources */,
+				FC66DDA09C5D0ABEF86E8F0C /* FilmPresentation.swift in Sources */,
+				4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */,
+				92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */,
+				794D2B906DD37A94A88B5E83 /* JournalView.swift in Sources */,
+				5C8D41DBA54CB27A7630E775 /* PhotoView.swift in Sources */,
+				8CF96CE9CE3EF39590D32E48 /* SettingsView.swift in Sources */,
+				B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */,
+				5EDC062601445A003E468074 /* SubscriptionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		224E217B8BF4186AD537FCBE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FF0469481DB495A7FC25D880 /* Immerse */;
+			targetProxy = 40B0246C39E07A11DBA08EEE /* PBXContainerItemProxy */;
+		};
+		2546331F534D50EBA05B3D6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FF0469481DB495A7FC25D880 /* Immerse */;
+			targetProxy = B9BD5F1F1182BACE61FBA081 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		05F6FDFEC132A411285633CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Immerse;
+			};
+			name = Release;
+		};
+		46CA5786EC9471A1EF030010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Immerse.app/Immerse";
+			};
+			name = Release;
+		};
+		7698014A1A69237F2A8853D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed photos or movies you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8767367C6A59F0D010BC153F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		8F92F3DB4B1041E5E76848B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		CC80630956864E3D78A0660D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed photos or movies you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CDE1DED979C0A4BC38D10939 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Immerse;
+			};
+			name = Debug;
+		};
+		F3183215F6C857E2B0D479BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Immerse.app/Immerse";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4301959B59B88D4AE0CA86C1 /* Build configuration list for PBXNativeTarget "ImmerseUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CDE1DED979C0A4BC38D10939 /* Debug */,
+				05F6FDFEC132A411285633CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		43F818793CA4E15B1D8AEC95 /* Build configuration list for PBXNativeTarget "Immerse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC80630956864E3D78A0660D /* Debug */,
+				7698014A1A69237F2A8853D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5D290F28DE0C2BD9E3A075A2 /* Build configuration list for PBXProject "Immerse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F92F3DB4B1041E5E76848B9 /* Debug */,
+				8767367C6A59F0D010BC153F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B47B02C167490D81FECB0514 /* Build configuration list for PBXNativeTarget "ImmerseTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3183215F6C857E2B0D479BA /* Debug */,
+				46CA5786EC9471A1EF030010 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		06B1F3B23DBFA701CA5E2B2E /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/NativeAdapters;
+		};
+		134BBA519155E5C866026FFE /* XCLocalSwiftPackageReference "../../Packages/FilmPersistence" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmPersistence;
+		};
+		21535B1F79855A30A6F088EF /* XCLocalSwiftPackageReference "../../Packages/EntitlementCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/EntitlementCore;
+		};
+		60D78D5E74DA657F686E9A7C /* XCLocalSwiftPackageReference "../../Packages/RenderCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/RenderCore;
+		};
+		61088BD8BD6A34ED996B0B11 /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmRuntime;
+		};
+		C7154570A3BA2A18379D4C98 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmDomain;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		23E745B0CA05FA19BE899251 /* EntitlementCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EntitlementCore;
+		};
+		54847413BC0280518CA9021C /* NativeAdapters */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeAdapters;
+		};
+		86BEEF17ACACB448446A4635 /* FilmPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmPersistence;
+		};
+		B003DCAC6B4E5C9D271D55C2 /* FilmDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmDomain;
+		};
+		B549794A50EBE804BFE73FEC /* EntitlementCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EntitlementCore;
+		};
+		B7AE777EF9385D731C173E89 /* RenderCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderCore;
+		};
+		ECB5677E8658852E42741E9E /* FilmRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmRuntime;
+		};
+		F57CEE519E8D1B8CE63C90E5 /* FilmDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmDomain;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = BF5E9BF9C46D2E3744A43B98 /* Project object */;
+}

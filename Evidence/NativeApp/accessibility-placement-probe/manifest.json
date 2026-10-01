@@ -1,0 +1,186 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "8862330E-8E21-4F22-ACA0-8272AD1A31D4",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-09-30 at 09.39.50 PM",
+        "timestamp" : 1790829590.975
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "92B84125-DD3B-430D-92BF-26A24979F009",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.51 PM",
+        "timestamp" : 1790829591.317
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "2C7B44B2-C7D2-43E4-8DD4-FD5B09DF395D",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-09-30 at 09.39.49 PM",
+        "timestamp" : 1790829589.61
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "9C21BFEC-B741-4920-AC66-C7E7748EB7F8",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.49 PM",
+        "timestamp" : 1790829589.948
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "56CFD72A-B471-4052-97BC-0BD4899FA104",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-09-30 at 09.39.47 PM",
+        "timestamp" : 1790829587.489
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "A27F5780-1DEF-4C0E-8970-8E753551E22E",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.47 PM",
+        "timestamp" : 1790829587.824
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "013A87E4-F9BE-4C65-AF42-5CA6EBD8F591",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-09-30 at 09.39.46 PM",
+        "timestamp" : 1790829586.051
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "1D52A119-B737-49C5-AE29-A52335A64773",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.46 PM",
+        "timestamp" : 1790829586.402
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "A93B5FD3-8B33-41D9-B4B6-DBC3BECC3A9B",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-09-30 at 09.39.43 PM",
+        "timestamp" : 1790829583.854
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "EC1A648B-7FC0-45CD-B3F2-7C74FB858DAB",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.44 PM",
+        "timestamp" : 1790829584.714
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "B474B14C-B129-41EE-9118-8DC43AB1E41A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Super8-load-default_0_31F7CF1B-BB36-4228-B801-932D890CAD35.png",
+        "timestamp" : 1790829583.407
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "D980B151-8D1F-43BC-AD3F-14395FAA097F.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Super8-load-default-audit-node_0_865B26E5-C249-4F69-8F83-71C3874D2E70.txt",
+        "timestamp" : 1790829582.001
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "4C941F2D-575A-4543-9F2A-CEC3823E9779.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Super8-load-default-accessibility-tree_0_B235BFA2-E084-4D6C-8D5C-DE84E8C44538.txt",
+        "timestamp" : 1790829574.179
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "00222232-6AA6-4815-B50C-10BCFB73DDEF",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.30 PM",
+        "timestamp" : 1790829570.751
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "CD166B5F-783E-4FB6-8B4F-4CF1D9BEDC31",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Synthesized Event 2026-09-30 at 09.39.26 PM",
+        "timestamp" : 1790829566.496
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "BA00E81E-9098-41CD-A9A6-A67D07F650DA.mp4",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Screen Recording 2026-09-30 at 09.39.15 PM.mp4",
+        "timestamp" : 1790829555.419
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "84399D47-2A9F-4666-9493-4E54BE11F689.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "79116681-0958-44D8-B528-6AF42D7CDFE0.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_12FF5F4E-2941-4270-B713-00C41F5A3A36.png",
+        "timestamp" : 1790829582.003
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "21B1F01B-1BAB-4DB9-AAD7-E14B3469B07D.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Element Screenshot_1_FA7D6322-6977-4664-B689-844FD8BF898E.png",
+        "timestamp" : 1790829582.003
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "A7C74F06-99BB-4DBF-8B1A-F690781F304A.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      }
+    ],
+    "testIdentifier" : "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+    "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore"
+  }
+]
