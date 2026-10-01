@@ -1,0 +1,42 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 4,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "ExportPrivacyHarness · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1790889009.632,
+  "passedTests" : 4,
+  "result" : "Passed",
+  "skippedTests" : 0,
+  "startTime" : 1790888700.632,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - ExportPrivacyHarness",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 4
+}

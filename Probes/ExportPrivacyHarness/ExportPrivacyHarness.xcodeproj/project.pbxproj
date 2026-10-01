@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		16ADA97A2F4EB19153314DA1 /* ReceiptFaultMatrixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49A39460A843E77860767BF /* ReceiptFaultMatrixTests.swift */; };
 		1BF929F223471E355C4DCD64 /* ReceiptCompatibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 769A4F9188219CDD59589A96 /* ReceiptCompatibilityTests.swift */; };
+		25093141AFDA1C7C05B971CF /* DevelopmentExitEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36B37B4C206626CE768E60D /* DevelopmentExitEvidence.swift */; };
 		2D2F1C9B743915C4522A81C0 /* DevelopmentObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */; };
 		31B2114577ACD6FE4D17C389 /* ExportScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8FA79544BAAEA8A3BF40E9 /* ExportScenario.swift */; };
 		36725F7871AC1968CEE520CF /* ExportProcessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */; };
 		394AEAD0D41282D278D514C9 /* ExportPrivacyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */; };
+		3AB6AF815B4AAC24E15525EF /* DevelopmentProcessExitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */; };
 		402475D3F25EE25D8B2ABAFA /* ExportPrivacyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */; };
 		46D510C7340C2BF50F1FBFC3 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 129BE51D6B17A8F5A7C2708E /* NativeAdapters */; };
 		5F8C2448E3B7277561D589C1 /* ControlledExportWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA5E3755544FE640A425D5D /* ControlledExportWriter.swift */; };
@@ -23,6 +25,7 @@
 		F29E0196C920F56242A458EF /* ProductionTrialReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */; };
 		F457F1E0820F1CB076BC2CED /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = CCD3E09E628C34510B450A7C /* FilmRuntime */; };
 		F55AC1E31051C49ADC22C305 /* ScenarioEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */; };
+		F88CE5086D724AFE1A6D0D6D /* DevelopmentExitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3536549B452938127BAA44C5 /* DevelopmentExitView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +69,9 @@
 /* Begin PBXFileReference section */
 		1B11427781665721AAD7D929 /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
 		316A3D75AE6E145E01A07AB8 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
+		3536549B452938127BAA44C5 /* DevelopmentExitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentExitView.swift; sourceTree = "<group>"; };
 		5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyTests.swift; sourceTree = "<group>"; };
+		661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentProcessExitUITests.swift; sourceTree = "<group>"; };
 		6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ExportPrivacyHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		769A4F9188219CDD59589A96 /* ReceiptCompatibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCompatibilityTests.swift; sourceTree = "<group>"; };
@@ -78,6 +83,7 @@
 		A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioEvidence.swift; sourceTree = "<group>"; };
 		CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DevelopmentObserverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D35A271486D1EC5B7778147F /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		D36B37B4C206626CE768E60D /* DevelopmentExitEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentExitEvidence.swift; sourceTree = "<group>"; };
 		D49A39460A843E77860767BF /* ReceiptFaultMatrixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFaultMatrixTests.swift; sourceTree = "<group>"; };
 		DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionTrialReceiptTests.swift; sourceTree = "<group>"; };
 		DD58A7C77B1C07CF6684EAAD /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
@@ -109,10 +115,20 @@
 			isa = PBXGroup;
 			children = (
 				FCA5E3755544FE640A425D5D /* ControlledExportWriter.swift */,
+				3536549B452938127BAA44C5 /* DevelopmentExitView.swift */,
 				894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */,
 				FF8FA79544BAAEA8A3BF40E9 /* ExportScenario.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		50A3A9BB9A56236F9735A2EB /* DevelopmentExitEvidence */ = {
+			isa = PBXGroup;
+			children = (
+				D36B37B4C206626CE768E60D /* DevelopmentExitEvidence.swift */,
+			);
+			name = DevelopmentExitEvidence;
+			path = ../DevelopmentProcessExit/Sources/DevelopmentExitEvidence;
 			sourceTree = "<group>";
 		};
 		5187AD2C2AC6569A768F60DF /* FilmRuntimeTests */ = {
@@ -151,6 +167,7 @@
 		78EE17769E4AB4C5D717578A = {
 			isa = PBXGroup;
 			children = (
+				50A3A9BB9A56236F9735A2EB /* DevelopmentExitEvidence */,
 				5187AD2C2AC6569A768F60DF /* FilmRuntimeTests */,
 				C11C51952DFBA61F79ED3037 /* Packages */,
 				00A6DFDF3F419B5F399A21DA /* Sources */,
@@ -177,6 +194,7 @@
 		DAF1722DDBDF23A7F8F9FAEE /* UITests */ = {
 			isa = PBXGroup;
 			children = (
+				661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */,
 				A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */,
 			);
 			path = UITests;
@@ -385,6 +403,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F8C2448E3B7277561D589C1 /* ControlledExportWriter.swift in Sources */,
+				25093141AFDA1C7C05B971CF /* DevelopmentExitEvidence.swift in Sources */,
+				F88CE5086D724AFE1A6D0D6D /* DevelopmentExitView.swift in Sources */,
 				394AEAD0D41282D278D514C9 /* ExportPrivacyApp.swift in Sources */,
 				31B2114577ACD6FE4D17C389 /* ExportScenario.swift in Sources */,
 				F55AC1E31051C49ADC22C305 /* ScenarioEvidence.swift in Sources */,
@@ -395,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB6AF815B4AAC24E15525EF /* DevelopmentProcessExitUITests.swift in Sources */,
 				36725F7871AC1968CEE520CF /* ExportProcessExitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

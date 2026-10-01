@@ -103,6 +103,18 @@ have bounded evidence. Initial compile/selector failures and UIKitToolbar warnin
 remain recorded. This is partial FR-06/07/08/16/18 evidence, not capture, Photos,
 Keychain, physical backup, final rendering or accessibility acceptance.
 
+The Development process-exit continuation is recorded in
+`Evidence/DevelopmentProcessExit/036/README.md`: 33 actual macOS child exits across
+all five Cameras and four representative iOS app exits, followed by explicit
+production recovery/resume and exact native state/media comparisons. Existing
+optional observers are used only in nonshipping targets; shipping code is unchanged.
+Fixed treatment/retained masters/clips, individual Instant reveal, abandoned Work
+cleanup and post-Discard Movie retirement/reassembly have bounded evidence. These
+are ordinary observed process exits, not power loss, physical interruption,
+backup/restore, full-capacity performance or final native-media fidelity acceptance.
+Initial compile/fixture failures are retained; FR-06/16 and DEV/PRV/ARC-06/QA-03/11
+remain partial. Exact commands and affected outcomes are in that source-bound report.
+
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
 unchanged original default/largest cases once in light and dark on `a79d481`:
@@ -378,7 +390,7 @@ Status words in this table are intentionally conservative:
 | ARC-02 | Settled domain subset. | `Packages/FilmDomain/Sources/FilmDomain`. | Partial: state dimensions and invariants behavior-tested by `swift test`. |
 | ARC-03 | Physical fault/recovery acceptance missing. | `FilmPersistence`, `FilmRuntime/TrialCoordinator`, `Probes/ReceiptScenarioHarness`. | Partial: production media journal/SQLite integration plus checkpoint 035 native-simulator synthetic phase/re-entry checks. Exact scenarios, source hashes and gaps in the 035 report; no hardware durability inference. |
 | ARC-05 | Physical testing deferred by captain; hardware gate still required. | `EntitlementCore/DeviceTrialStore`, `FilmRuntime/TrialCoordinator`, both Trial probes. | Partial: production single-item consumption/receipt/readback and legacy reconciliation; 035 full-receipt harness compiles for iOS. Native Security capability skips with actual -34018 unsigned; physical retention/restore and cross-store durability unproved. No reconnect request authorized. |
-| ARC-06 | Native interruption/cleanup-failure and full viewer/cache acceptance missing. | `FilmRuntime/FilmProcessor`, `FilmPersistence`, `Probes/ExportPrivacyHarness`. | Partial 036 native-simulator tests hold real export jobs, observe cancellation, release removal, reject late exports, retire/reassemble private Movies and preserve retained clip/assignment/capacity. Completed external synthetic copies remain. Exact Development/capture/removal-crash boundaries still need coverage. |
+| ARC-06 | Physical interruption, capture/removal-crash and full viewer/cache acceptance missing. | FilmProcessor/repository; ExportPrivacyHarness and DevelopmentProcessExit. | Partial: injected export/privacy races and exact observed Development exits recover retained native media and remove stale Movie assemblies without reroll/refund. External copies remain unrecalled; active camera/player and power-loss boundaries unproved. |
 | ARC-07 | Needs ongoing documentation. | This evidence map. | Partial: records baseline/prototype boundaries and validation strategy. |
 | ARC-08 | Requires iPhone 11/iOS 26. | None. | Untested; no usable physical device available. |
 | ARC-09 | Requires StoreKit configuration and M2. | None. | Not started; StoreKit offline/restore evidence absent. |
@@ -433,7 +445,7 @@ Status words in this table are intentionally conservative:
 | DEV-04 | Native reveal UI/physical acceptance remains open. | `FilmRuntime/FilmProcessor`, `DevelopmentStage`, 036 observer tests. | Partial: real native Development pauses/throws/cancels at approved existing phases; no reveal before verified persisted media. See source-bound DevelopmentObserver report. |
 | DEV-05 | Settled domain subset. | FilmDomain Instant reveal. | Partial: final print reveal tested. |
 | DEV-06 | Approved output/quality and physical evidence remain open. | Native renderer, repository and FilmProcessor; 036 DevelopmentObserver tests. | Partial: exact treatment assignments and native decoded/hash-verified persisted masters/clips survive thrown/cancelled observed boundaries, without rerendering retained captures. |
-| DEV-07 | Exact Development process-exit/hardware acceptance remains open. | FilmProcessor owned job/repository recovery; 036 DevelopmentObserver tests. | Partial: same-owner retry retires failed jobs; a new observer-absent owner resumes durable media/assignments. Repository re-entry is not process death or physical restore. |
+| DEV-07 | Full-capacity/physical interruption and restore acceptance remains open. | FilmProcessor/repository recovery; DevelopmentProcessExit probe. | Partial: 33 exact-boundary native macOS child exits and four representative iOS app exits recover fixed assignments/retained media through explicit new-owner resume; abandoned Work cleaned. Not power loss or hardware restore. |
 | DEV-08 | Physical storage/render interruption and full UI recovery missing. | FilmProcessor/FilmPersistence plus 036 boundary scenarios. | Partial: boundary throw/cancel preserves sources and durable state; verified cleanup follows explicit choice; removal cannot acknowledge while the tested Development job remains held. |
 | DEV-10 | DEC-09 supplied; physical/accessibility acceptance remains open. | FilmDetailView and production repository; PopulatedJournalHarness. | Partial 037 native UI: empty early disabled, Delete cancel/confirm; last Movie removal preserves numbered empty placeholders without export. |
 | DRK-01 | DEC-11/final-quality and full-control acceptance open. | DarkroomView, FilmProcessor, RenderCore and FilmPersistence. | Partial 037 UI/state comparison: saved exposure edit changes photo 1 print bytes, preserves photo 2 and treatment assignments, and survives relaunch. |
@@ -478,7 +490,7 @@ Status words in this table are intentionally conservative:
 | TRI-11 | Physical prerequisite retained; implementation-first captain amendment defers execution. | Pinned marker plan; 035 full-receipt harness; manual T01...T12. | Prepared builds/procedures only. Earlier iPhone 13 Pro/iOS 26.6.2 probe-only authority does not extend to the new harness; do not request reconnection or execute phone operations. Two-phone restore and actual full-receipt hardware acceptance remain absent. |
 | QA-01 | Requires native real devices. | FilmDomain catalog tests. | Partial domain only; no real-device validation. |
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests; CapturePipeline no-debit failure tests. | Partial domain/pipeline only. |
-| QA-03 | Native process-death/full-device cases still required. | FilmRuntime tests and `Evidence/DevelopmentObserver/036/README.md`. | Partial: native synthetic master/clip identities and treatment assignments persist through exact observed throw/cancel and default-absent-owner re-entry. Not hardware acceptance. |
+| QA-03 | Full-device/full-capacity and power-loss scenarios required. | FilmRuntime observer tests; DevelopmentProcessExit probe and iOS harness. | Partial: initial failures retained, then 33 ordinary child exits and four native-simulator app exits pass with exact treatment/master/clip/capacity/reveal checks. Physical acceptance remains open. |
 | QA-04 | All Darkroom controls, DEC-11 quality/ranges and hardware/accessibility acceptance open. | DarkroomView/FilmProcessor and retained-view inspector. | Partial 037 saved exposure edit and exact Reset/relaunch preserve original print bytes, other photo and treatments; remaining controls/gestures not accepted. |
 | QA-09 | Requires actual PhotoKit/native failure/storage acceptance. | Production storage/export owner plus 036 probe. | Partial source-bound simulator scenarios now cover verified cleanup, acknowledgment retry, unknown/cancelled reply, removal races and re-entry. All permissions/writes here are injected, never real Photos or storage exhaustion. |
 | QA-11 | Requires hardware Movie/media/player coverage. | Production render/reassembly owner plus 036 probe. | Partial actual native synthetic Super 8/16mm reassembly/retirement and last-clip empty placeholders verified. Physical fidelity, actual Photos copies, licensed soundtrack and active-player acceptance remain missing. |

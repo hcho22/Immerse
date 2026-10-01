@@ -1,0 +1,93 @@
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling DevelopmentProcessExitTests DevelopmentProcessExitTests.swift
+[4/5] Emitting module DevelopmentProcessExitTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking DevelopmentProcessExitPackageTests
+Build complete! (2.23s)
+Test Suite 'All tests' started at 2026-10-01 14:03:04.584.
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' started at 2026-10-01 14:03:04.586.
+Test Suite 'DevelopmentProcessExitTests' started at 2026-10-01 14:03:04.586.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' passed (38.825 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' passed (1.382 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' passed (7.997 seconds).
+Test Suite 'DevelopmentProcessExitTests' passed at 2026-10-01 14:03:52.791.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 48.204 (48.205) seconds
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' passed at 2026-10-01 14:03:52.791.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 48.204 (48.205) seconds
+Test Suite 'All tests' passed at 2026-10-01 14:03:52.791.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 48.204 (48.207) seconds
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeBegin-292E8110-70E6-4A1F-AB60-FA320D7B0B50
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeBegin-292E8110-70E6-4A1F-AB60-FA320D7B0B50
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterAssignments-659AD066-52DE-4A3A-A776-0647C07E3C22
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterAssignments-659AD066-52DE-4A3A-A776-0647C07E3C22
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterRendering-0B526883-40DD-4192-9C97-F2EB6DF41D7B
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterRendering-0B526883-40DD-4192-9C97-F2EB6DF41D7B
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterPersistence-5E0272D8-BCC4-4A0F-BFF1-D4BCC1D3ECA3
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterPersistence-5E0272D8-BCC4-4A0F-BFF1-D4BCC1D3ECA3
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeReveal-E1DF1E88-78E7-4259-BEA2-D6682012F828
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeReveal-E1DF1E88-78E7-4259-BEA2-D6682012F828
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeCleanup-023DD8FA-ED55-41B2-8101-15D5A3FB8A12
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeCleanup-023DD8FA-ED55-41B2-8101-15D5A3FB8A12
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeBegin-FD430DAD-1A29-4790-9905-C207619673EA
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeBegin-FD430DAD-1A29-4790-9905-C207619673EA
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterAssignments-2B27FC0E-1439-4D7A-8E91-B6AB4A8F35B0
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterAssignments-2B27FC0E-1439-4D7A-8E91-B6AB4A8F35B0
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterRendering-DF6940F9-ED49-4154-A133-093315F770C4
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterRendering-DF6940F9-ED49-4154-A133-093315F770C4
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterPersistence-E92F9C8F-7B60-4028-B4BA-41F8A931A186
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterPersistence-E92F9C8F-7B60-4028-B4BA-41F8A931A186
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeReveal-551635BB-5E03-4A7B-A068-DE69338DDD15
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeReveal-551635BB-5E03-4A7B-A068-DE69338DDD15
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeCleanup-208C60FB-A427-430C-87E0-2AA4B3D0590D
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeCleanup-208C60FB-A427-430C-87E0-2AA4B3D0590D
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeBegin-DB519AE6-2BDB-414A-8643-48ACEB0F582F
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeBegin-DB519AE6-2BDB-414A-8643-48ACEB0F582F
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterAssignments-0E71B3B1-7EE7-4B17-9947-09C3DA5624E1
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterAssignments-0E71B3B1-7EE7-4B17-9947-09C3DA5624E1
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterRendering-632794FA-9776-4C84-96CA-1B248C31CAB9
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterRendering-632794FA-9776-4C84-96CA-1B248C31CAB9
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterPersistence-6001D151-F2F7-4ADC-B21D-5A7BC95A63CD
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterPersistence-6001D151-F2F7-4ADC-B21D-5A7BC95A63CD
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeReveal-E175D9C5-6F28-4F95-BCFB-0294422FFDD3
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeReveal-E175D9C5-6F28-4F95-BCFB-0294422FFDD3
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeCleanup-544F41DB-EBF4-4F8B-B8FA-426E0D7B5996
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeCleanup-544F41DB-EBF4-4F8B-B8FA-426E0D7B5996
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeBegin-5136BC85-E333-4A5C-A8F0-4C1884612BE7
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeBegin-5136BC85-E333-4A5C-A8F0-4C1884612BE7
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterAssignments-6F2322EC-75AB-48BA-A404-7A763319A833
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterAssignments-6F2322EC-75AB-48BA-A404-7A763319A833
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterRendering-72FBF617-31A8-417B-8E75-27581597BBE5
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterRendering-72FBF617-31A8-417B-8E75-27581597BBE5
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterPersistence-69B155FA-ED6D-49A1-BE90-51706A18F3E7
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterPersistence-69B155FA-ED6D-49A1-BE90-51706A18F3E7
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeReveal-8CF269C7-FB20-4A76-B43A-FDE008B97597
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeReveal-8CF269C7-FB20-4A76-B43A-FDE008B97597
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeCleanup-3A3A29E3-398E-48A9-9DE5-5984A0909DE8
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeCleanup-3A3A29E3-398E-48A9-9DE5-5984A0909DE8
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeBegin-90D971DA-D832-4DB6-B66A-16489AF43B4E
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeBegin-90D971DA-D832-4DB6-B66A-16489AF43B4E
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterAssignments-02ED43DD-E729-45F7-8A6D-9C92CE21F68B
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterAssignments-02ED43DD-E729-45F7-8A6D-9C92CE21F68B
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterRendering-CBA09A38-E624-4FFA-8AEE-245C6F73411D
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterRendering-CBA09A38-E624-4FFA-8AEE-245C6F73411D
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterPersistence-47C5F1D3-DC06-4E5C-AD23-3127FD02DCAE
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterPersistence-47C5F1D3-DC06-4E5C-AD23-3127FD02DCAE
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeReveal-8415A92F-4029-457B-A993-62383F11BF42
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeReveal-8415A92F-4029-457B-A993-62383F11BF42
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeCleanup-8325A280-2AAE-424C-BE69-6A4B25D2512C
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeCleanup-8325A280-2AAE-424C-BE69-6A4B25D2512C
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-4FAD47C3-576C-4803-87F1-FEB408454652
+DEVELOPMENT_EXIT instant-second exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-4FAD47C3-576C-4803-87F1-FEB408454652
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-discard-reassembly-C6126AD8-B922-4327-887E-8E1C0F2B93A6
+DEVELOPMENT_EXIT discard camera=super8HomeMovie exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-discard-reassembly-C6126AD8-B922-4327-887E-8E1C0F2B93A6
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-discard-reassembly-62F6C5E4-0862-4DE1-BE2B-E35B42241E0A
+DEVELOPMENT_EXIT discard camera=cinema16mm exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-discard-reassembly-62F6C5E4-0862-4DE1-BE2B-E35B42241E0A
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

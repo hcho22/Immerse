@@ -1,0 +1,73 @@
+{
+  "assets" : {
+    "clip-1" : "939ab95735479ee66bbc4a8dee3e1ecdfe0dd43fad2dc58f7ade38dfdd686d52",
+    "movie-0" : "1a331a750cd8ed64d40b2416dfe20c126adb9065dcbbbf20c43109a49b7ddd17",
+    "source-1" : "83ac12630c643677310665cb4d2c2011e3705fd4c8e950689b9765523226deca"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developing",
+    "id" : "58848836-7AE7-4A24-A089-FBC9370F8200",
+    "isArchived" : false,
+    "loadedAt" : 812581406.680815,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "597\/App\/Media\/58848836-7AE7-4A24-A089-FBC9370F8200\/clip-1.mov",
+    "597\/App\/Media\/58848836-7AE7-4A24-A089-FBC9370F8200\/movie-1-9035936E-8AE0-4883-A9F2-DCBD26E34952.mov",
+    "597\/App\/Media\/58848836-7AE7-4A24-A089-FBC9370F8200\/source-1.mov",
+    "597\/App\/film-store.sqlite",
+    "597\/App\/film-store.sqlite-shm",
+    "597\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 2263181364802156734,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "58848836-7AE7-4A24-A089-FBC9370F8200",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

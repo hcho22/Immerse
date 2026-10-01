@@ -1,0 +1,97 @@
+{
+  "mode": "ui",
+  "result": "Passed",
+  "passed": 2,
+  "failed": 0,
+  "startUTC": "2026-10-01T21:11:06.315Z",
+  "finishUTC": "2026-10-01T21:14:52.556Z",
+  "runtime": [
+    {
+      "device": {
+        "architecture": "x86_64",
+        "deviceId": "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName": "Immerse v1 Validation",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 2,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "retainedHistories": 4,
+  "nativePhotoKitAcceptance": false,
+  "scenarios": [
+    {
+      "id": "6EB15996-8C7A-42EA-8988-072C39C40042",
+      "currentRun": true,
+      "label": "process-beforeCopy",
+      "camera": "cinema16mm",
+      "processes": [
+        "94607",
+        "1604"
+      ],
+      "inventories": 6,
+      "completedExternalCopies": 1,
+      "processExits": 1,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "774606C2-148C-4189-879F-8BC12A45C2C3",
+      "currentRun": true,
+      "label": "process-beforeReply",
+      "camera": "cinema16mm",
+      "processes": [
+        "5288",
+        "12039"
+      ],
+      "inventories": 6,
+      "completedExternalCopies": 2,
+      "processExits": 1,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=2"
+    },
+    {
+      "id": "7C05651B-76ED-45EE-9D82-AADC172569DD",
+      "currentRun": true,
+      "label": "process-beforeReply",
+      "camera": "disposable1990s",
+      "processes": [
+        "45954",
+        "58263"
+      ],
+      "inventories": 6,
+      "completedExternalCopies": 2,
+      "processExits": 1,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=0;copies=2"
+    },
+    {
+      "id": "F4D9DE0C-EEF6-4AF6-ACD6-CC85BA21C173",
+      "currentRun": true,
+      "label": "process-beforeCopy",
+      "camera": "disposable1990s",
+      "processes": [
+        "28029",
+        "38520"
+      ],
+      "inventories": 6,
+      "completedExternalCopies": 1,
+      "processExits": 1,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=0;copies=1"
+    }
+  ]
+}

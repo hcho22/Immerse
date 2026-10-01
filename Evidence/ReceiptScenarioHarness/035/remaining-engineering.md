@@ -29,8 +29,15 @@ Priority 5 has bounded current results in `Evidence/PopulatedJournal/037/README.
 four retained-view cases with independent exact state/print comparisons, three
 unchanged legacy navigation cases and unsigned device compilation. No production
 source changes. Full-capacity/final Instant, every Darkroom/assistive path, active
-Movie playback/cache, exact capture quiescence and Development process-death remain
-preparable work. Initial selector/build failures and runtime warning remain visible.
+Movie playback/cache and exact capture quiescence remain preparable work. Initial
+selector/build failures and runtime warning remain visible.
+
+`Evidence/DevelopmentProcessExit/036/README.md` now adds 33 exact-boundary macOS
+child exits and four representative iOS app exits with native state/hash comparisons
+after explicit recovery/resume. It uses only the existing optional observer in
+nonshipping targets. Initial isolation/fixture failures remain recorded. Ordinary
+process death now has bounded software evidence; unobserved power loss, physical
+interruptions, full-capacity performance and actual backup restoration do not.
 
 ## Historical Inventory
 

@@ -1,0 +1,3 @@
+mode=development-exit
+selection=ExportPrivacyUITests/DevelopmentProcessExitUITests
+result=DerivedData/Export036-development-exit-036-1.xcresult

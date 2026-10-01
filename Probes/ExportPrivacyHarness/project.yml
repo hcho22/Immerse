@@ -23,6 +23,7 @@ targets:
     sources:
       - Sources
       - ../ReceiptScenarioHarness/Sources/ScenarioEvidence.swift
+      - ../DevelopmentProcessExit/Sources/DevelopmentExitEvidence/DevelopmentExitEvidence.swift
     dependencies:
       - package: FilmDomain
       - package: FilmPersistence

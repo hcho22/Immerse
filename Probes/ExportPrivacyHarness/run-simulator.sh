@@ -1,22 +1,24 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/../.."
-mode=${1:?unit, ui, development, fifo or receipt-scope}
+mode=${1:?unit, ui, development, fifo, receipt-scope or development-exit}
 label=${2:?unique evidence label}
 SIM=${SIMULATOR_ID:?explicit authorized simulator UUID required}
 case "$label" in *[!a-zA-Z0-9_-]*|'') exit 64 ;; esac
 case "$mode" in
   unit) selection=ExportPrivacyTests ;;
-  ui) selection=ExportPrivacyUITests ;;
+  ui) selection=ExportPrivacyUITests/ExportProcessExitTests ;;
   development) selection=DevelopmentObserverTests ;;
   fifo) selection=ReceiptFIFOTests/ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm ;;
   receipt-scope) selection=ReceiptScopeTests ;;
+  development-exit) selection=ExportPrivacyUITests/DevelopmentProcessExitUITests ;;
   *) exit 64 ;;
 esac
 OUT="Evidence/ExportPrivacyHarness/036/$label"
 if [ "$mode" = development ]; then OUT="Evidence/DevelopmentObserver/036/$label"; fi
 if [ "$mode" = fifo ]; then OUT="Evidence/ReceiptFIFO/036/$label"; fi
 if [ "$mode" = receipt-scope ]; then OUT="Evidence/ReceiptFaultMatrix/039/$label"; fi
+if [ "$mode" = development-exit ]; then OUT="Evidence/DevelopmentProcessExit/036/$label"; fi
 RESULT="DerivedData/Export036-$label.xcresult"
 test ! -e "$OUT"
 test ! -e "$RESULT"
@@ -40,8 +42,13 @@ xcrun simctl ui "$SIM" appearance > "$OUT/appearance-before.txt"
 xcrun simctl ui "$SIM" content_size > "$OUT/category-before.txt"
 xcrun simctl ui "$SIM" appearance light
 xcrun simctl ui "$SIM" content_size large
+if [ "$mode" = development-exit ]; then
+  before=$(xcrun simctl get_app_container "$SIM" com.immerse.validation.ExportPrivacyHarness036 data 2> "$OUT/container-before-error.txt") || before=""
+  ruby -rjson -e 'puts JSON.generate(Dir.glob(File.join(ARGV[0],"Documents/ExportScenarios/*")).map{|p|File.basename(p)})' "$before" > "$OUT/histories-before.json"
+fi
 find Probes/ExportPrivacyHarness -type f ! -path '*/xcuserdata/*' -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/source.sha256"
 shasum -a 256 Probes/ReceiptScenarioHarness/Sources/ScenarioEvidence.swift >> "$OUT/source.sha256"
+shasum -a 256 Probes/DevelopmentProcessExit/Sources/DevelopmentExitEvidence/DevelopmentExitEvidence.swift >> "$OUT/source.sha256"
 find Packages/FilmRuntime/Sources -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 >> "$OUT/source.sha256"
 shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift >> "$OUT/source.sha256"
 shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift >> "$OUT/source.sha256"
@@ -60,20 +67,31 @@ printf '%s\n' "$status" > "$OUT/exit.txt"
 if [ -d "$RESULT" ]; then
   xcrun xcresulttool get test-results summary --path "$RESULT" --format json > "$OUT/summary.json"
   xcrun xcresulttool get test-results tests --path "$RESULT" --format json > "$OUT/tests.json"
+  if [ "$mode" = development-exit ]; then
+    xcrun xcresulttool export attachments --path "$RESULT" --output-path "$OUT/attachments" > "$OUT/attachments-export.log"
+  fi
 fi
 container=$(xcrun simctl get_app_container "$SIM" com.immerse.validation.ExportPrivacyHarness036 data)
-if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/ExportScenarios" ]; then
+if [ "$mode" != receipt-scope ] && [ "$mode" != development-exit ] && [ -d "$container/Documents/ExportScenarios" ]; then
   cp -R "$container/Documents/ExportScenarios" "$OUT/scenarios"
 fi
-if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/DevelopmentScenarios" ]; then
+if [ "$mode" != receipt-scope ] && [ "$mode" != development-exit ] && [ -d "$container/Documents/DevelopmentScenarios" ]; then
   cp -R "$container/Documents/DevelopmentScenarios" "$OUT/development-scenarios"
 fi
-if [ "$mode" != receipt-scope ] && [ -d "$container/Documents/ReceiptFIFO" ]; then
+if [ "$mode" != receipt-scope ] && [ "$mode" != development-exit ] && [ -d "$container/Documents/ReceiptFIFO" ]; then
   cp -R "$container/Documents/ReceiptFIFO" "$OUT/receipt-fifo"
 fi
 if [ "$mode" = receipt-scope ]; then
   cp -R "$container/Documents/ReceiptCompatibility039" "$OUT/receipt-compatibility"
   cp -R "$container/Documents/ReceiptFaultMatrix" "$OUT/receipt-faults"
+fi
+if [ "$mode" = development-exit ]; then
+  ruby -rjson -rfileutils -e '
+    before=JSON.parse(File.read(ARGV[1])); FileUtils.mkdir_p(ARGV[2])
+    paths=Dir.glob(File.join(ARGV[0],"Documents/ExportScenarios/*")).reject{|p|before.include?(File.basename(p))}
+    paths.each{|p|FileUtils.cp_r(p,ARGV[2])}
+    puts JSON.pretty_generate(paths.map{|p|File.basename(p)})
+  ' "$container" "$OUT/histories-before.json" "$OUT/histories" > "$OUT/histories-new.json"
 fi
 find DerivedData/ExportPrivacy036/Build/Products/Debug-iphonesimulator/ExportPrivacyHarness.app \
   -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/app-files.sha256"

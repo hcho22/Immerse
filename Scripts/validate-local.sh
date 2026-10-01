@@ -8,6 +8,7 @@ for package in FilmDomain MediaCatalog RenderFixtures RenderCore FilmPersistence
     swift test --package-path "Packages/$package"
 done
 swift test --package-path Probes/TrialCommitStudy
+swift test --package-path Probes/DevelopmentProcessExit
 swift build --package-path Probes/AssetReviewGenerator
 sh Scripts/verify-document-package.sh
 xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \

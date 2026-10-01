@@ -1,0 +1,63 @@
+{
+  "assets" : {
+    "master-1" : "cad3b9505cd162268eb538d2f37ba3875676c0272d6b26bb2331e89389527bad"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "5B6C5B9A-7CE6-4A96-BFC0-698E8AD9BFEC",
+    "isArchived" : false,
+    "loadedAt" : 812581386.921718,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "3EA\/App\/Media\/5B6C5B9A-7CE6-4A96-BFC0-698E8AD9BFEC\/master-1.bin",
+    "3EA\/App\/film-store.sqlite",
+    "3EA\/App\/film-store.sqlite-shm",
+    "3EA\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 10599343606013618463,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "5B6C5B9A-7CE6-4A96-BFC0-698E8AD9BFEC",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

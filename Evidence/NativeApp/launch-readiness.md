@@ -142,6 +142,18 @@ have bounded evidence. Initial compile/selector failures and UIKitToolbar warnin
 remain recorded. This is partial FR-06/07/08/16/18 evidence, not capture, Photos,
 Keychain, physical backup, final rendering or accessibility acceptance.
 
+The Development process-exit continuation is recorded in
+`Evidence/DevelopmentProcessExit/036/README.md`: 33 actual macOS child exits across
+all five Cameras and four representative iOS app exits, followed by explicit
+production recovery/resume and exact native state/media comparisons. Existing
+optional observers are used only in nonshipping targets; shipping code is unchanged.
+Fixed treatment/retained masters/clips, individual Instant reveal, abandoned Work
+cleanup and post-Discard Movie retirement/reassembly have bounded evidence. These
+are ordinary observed process exits, not power loss, physical interruption,
+backup/restore, full-capacity performance or final native-media fidelity acceptance.
+Initial compile/fixture failures are retained; FR-06/16 and DEV/PRV/ARC-06/QA-03/11
+remain partial. Exact commands and affected outcomes are in that source-bound report.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

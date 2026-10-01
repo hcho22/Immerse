@@ -53,6 +53,9 @@ import SwiftUI
     @State private var model = ExportHarnessModel()
     var body: some Scene {
         WindowGroup {
+            if ProcessInfo.processInfo.arguments.contains("--development-run") {
+                DevelopmentExitView()
+            } else {
             NavigationStack {
                 Form {
                     if model.scenario == nil {
@@ -99,6 +102,7 @@ import SwiftUI
                         try? await Task.sleep(for: .milliseconds(100))
                     }
                 }
+            }
             }
         }
     }

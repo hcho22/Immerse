@@ -1,0 +1,242 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "6E37A5DF-8950-4DDA-A23A-ABF219178352.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-instant1970s-beforeReveal_0_D99D7BC0-DDC7-4153-869D-F8511B0A73FB.txt",
+        "timestamp" : 1790888781.076
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "9D4ECDCF-157C-4B0A-AE93-FC5CE082A5B4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-instant1970s-beforeReveal_0_2454B833-AE4A-4941-B64A-DA860B1DEF43.png",
+        "timestamp" : 1790888781.074
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "8921A17A-9242-4CC4-9C93-E16F2A5BFD0D.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-instant1970s-beforeReveal_0_C041417C-F113-42A0-8552-2E5C67252006.txt",
+        "timestamp" : 1790888776.269
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "5DC1591A-251D-4DC5-9FD0-1288EF3B42F6.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-instant1970s-beforeReveal_0_448DC449-0F5F-41CB-8E32-1EA248225EB5.png",
+        "timestamp" : 1790888776.266
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "DA5ED04B-95FC-4ED2-B197-2A75CCD801D6.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-instant1970s-beforeReveal_0_692054CA-CDA3-41B8-8BF8-51C475F017E4.txt",
+        "timestamp" : 1790888762.221
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "7D44A183-862F-4FC7-B26B-99058B8D459E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-instant1970s-beforeReveal_0_ACDEDD32-D254-4CDF-8A84-FC8276058718.png",
+        "timestamp" : 1790888762.219
+      }
+    ],
+    "testIdentifier" : "DevelopmentProcessExitUITests/testInstantExitBeforeSecondReveal()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testInstantExitBeforeSecondReveal"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "65CB0ED5-1570-46E4-A9CB-512FC9379E68.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-super8HomeMovie-afterAssignments_0_95BED16E-DDE3-49ED-B2C7-61BA391A5D99.txt",
+        "timestamp" : 1790888846.909
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "48BE710F-912C-4A40-88FB-DA2E1923E77F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-super8HomeMovie-afterAssignments_0_9224F43A-1257-4F62-B59F-F77E5A2C7C14.png",
+        "timestamp" : 1790888846.907
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "BB77CA8B-5C40-4054-BD72-D1CB9AA8CF32.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-super8HomeMovie-afterAssignments_0_04330721-478B-42F4-937B-69447925F655.txt",
+        "timestamp" : 1790888842.023
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "2B9F8311-1011-4DFC-A0F2-A8A2174EE2DB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-super8HomeMovie-afterAssignments_0_60C6AE34-971C-4D4B-88E4-7C898F6DE803.png",
+        "timestamp" : 1790888842.021
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "F20020E7-3DC9-47C0-8777-A1217BE8D4C9.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-super8HomeMovie-afterAssignments_0_9AB3B570-C5A5-446D-86A4-435ABCCC93EE.txt",
+        "timestamp" : 1790888828.203
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "7BE465CA-C7F3-43FA-A25E-64AAEB0FF077.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-super8HomeMovie-afterAssignments_0_F2D012F2-1DF8-4F06-B030-06C56F291E9E.png",
+        "timestamp" : 1790888828.201
+      }
+    ],
+    "testIdentifier" : "DevelopmentProcessExitUITests/testMovieDiscardExitAfterAssignments()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testMovieDiscardExitAfterAssignments"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "37AB83D6-A4A0-43A4-8A38-5843E52AEDDD.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-cinema16mm-afterPersistence_0_D6F94B5E-6C38-4420-89C3-425B2B00F6D4.txt",
+        "timestamp" : 1790888900.224
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "9A74B78B-CC1B-4278-A42A-EF36FD6386F9.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-cinema16mm-afterPersistence_0_888E6032-8C2C-41FB-ABD8-C404F628861D.png",
+        "timestamp" : 1790888900.223
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "33468A6D-191B-435F-A965-D26583B75D6A.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-cinema16mm-afterPersistence_0_E2BB3241-A971-4071-849A-742AF8FDD6E6.txt",
+        "timestamp" : 1790888896.438
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "44EA4310-964E-4A80-A127-9CAD2B9C5395.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-cinema16mm-afterPersistence_0_2089BC35-EA24-4579-91A7-F73C763B46A5.png",
+        "timestamp" : 1790888896.436
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "68CD5C15-2A8E-46C4-B5FB-843F890B3CCF.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-cinema16mm-afterPersistence_0_8EA291F6-F93C-4706-9963-491C043A136C.txt",
+        "timestamp" : 1790888883.518
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "7AD524AD-D0A4-4D15-9A1D-EC45177D0391.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-cinema16mm-afterPersistence_0_04CBF8C7-B03B-4AFD-A9F3-48E636BAFAEB.png",
+        "timestamp" : 1790888883.516
+      }
+    ],
+    "testIdentifier" : "DevelopmentProcessExitUITests/testMovieExitAfterClipPersistence()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testMovieExitAfterClipPersistence"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "EC3D9A70-6D5A-4A29-BE06-3A63FF82FFAA.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-disposable1990s-afterRendering_0_424B15D5-8A4D-4D48-B087-36CFDFB103FA.txt",
+        "timestamp" : 1790888948.786
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "D002F815-A73E-403D-9A8A-ADD8D5F099BE.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "resumed-disposable1990s-afterRendering_0_5A08C60E-0C9E-4B75-8E0A-38F23D05EC59.png",
+        "timestamp" : 1790888948.785
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "74C4C53F-9BAC-4D2E-A792-35E83A9B5628.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-disposable1990s-afterRendering_0_69B7E00B-10AD-4DE3-A218-8E72742CF368.txt",
+        "timestamp" : 1790888945.048
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "0327903E-9BD0-4696-A0EF-9EEB4427D12F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "recovered-not-resumed-disposable1990s-afterRendering_0_6B93DFC1-89BC-4CD6-90D0-429350D84188.png",
+        "timestamp" : 1790888945.047
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "F3A55E3B-1C2F-41B1-8B4C-C74301D482DE.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-disposable1990s-afterRendering_0_86F694A8-DABE-40C8-A113-C47B01EEE8ED.txt",
+        "timestamp" : 1790888934.414
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "A03EB3C0-E4CA-462D-BC40-E275094A1C04.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "prepared-disposable1990s-afterRendering_0_2A6DAA99-BC94-48F4-AA15-C5B99875C729.png",
+        "timestamp" : 1790888934.413
+      }
+    ],
+    "testIdentifier" : "DevelopmentProcessExitUITests/testPhotoExitAfterRendering()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testPhotoExitAfterRendering"
+  }
+]

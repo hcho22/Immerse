@@ -1,0 +1,75 @@
+{
+  "assets" : {
+    "clip-1" : "3af7f57c2480c1259245ea00e43ea22230f2b949884ce98d79a9fca9ca863b9f",
+    "movie-0" : "c379ad88dccce70df807adf28c98d866d560e2da16a54347dda1c1c6b8fe2f1e",
+    "source-1" : "29227a441b5560fd1c3d1c6b5ce81f96af0e9146cd295ae5cbd4cd985acb9761"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "0537C717-FC55-46E6-ABEB-9B384AFDF1C1",
+    "isArchived" : false,
+    "loadedAt" : 812581408.958219,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "DE8\/App\/Media\/0537C717-FC55-46E6-ABEB-9B384AFDF1C1\/clip-1.mov",
+    "DE8\/App\/Media\/0537C717-FC55-46E6-ABEB-9B384AFDF1C1\/movie-1-F2B36186-9DB9-4BB3-AA2D-17E8A2663D94.mov",
+    "DE8\/App\/Media\/0537C717-FC55-46E6-ABEB-9B384AFDF1C1\/source-1.mov",
+    "DE8\/App\/Work\/0537C717-FC55-46E6-ABEB-9B384AFDF1C1\/1E279C3B-931F-4CCD-9977-75EBD10DF8EE\/1.mov",
+    "DE8\/App\/Work\/0537C717-FC55-46E6-ABEB-9B384AFDF1C1\/1E279C3B-931F-4CCD-9977-75EBD10DF8EE\/assembled.mov",
+    "DE8\/App\/film-store.sqlite",
+    "DE8\/App\/film-store.sqlite-shm",
+    "DE8\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 23949,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 15517526273740440930,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "0537C717-FC55-46E6-ABEB-9B384AFDF1C1",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

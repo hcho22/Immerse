@@ -1,0 +1,48 @@
+{
+  "assets" : {
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "5B6C5B9A-7CE6-4A96-BFC0-698E8AD9BFEC",
+    "isArchived" : false,
+    "loadedAt" : 812581386.921718,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "3EA\/App\/Media\/5B6C5B9A-7CE6-4A96-BFC0-698E8AD9BFEC\/source-1.bin",
+    "3EA\/App\/film-store.sqlite",
+    "3EA\/App\/film-store.sqlite-shm",
+    "3EA\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218
+}

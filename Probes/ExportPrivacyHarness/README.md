@@ -122,3 +122,12 @@ Histories, source hashes and outcomes are under `Evidence/ReceiptFaultMatrix/039
 Read that report for the explicitly reconciled direct-write versus existing-grant
 recovery contract and retained historical failed assertions. The export-only
 inspector is not applicable to these receipt histories.
+
+`run-simulator.sh development-exit UNIQUE-GLOBAL-LABEL` runs only the four new
+Development process-exit UI cases. It uses the existing optional observer and
+real production repository/renderer, synchronizes state at the selected boundary,
+then exits the app with status 81. Source and commands are documented in
+`Probes/DevelopmentProcessExit/README.md`; that probe's Ruby inspector, not the
+export-only inspector, compares its four retained histories. The ordinary `ui`
+selection remains the two original export process tests. No shipping hook,
+permission/receipt operation or hardware acceptance is added.

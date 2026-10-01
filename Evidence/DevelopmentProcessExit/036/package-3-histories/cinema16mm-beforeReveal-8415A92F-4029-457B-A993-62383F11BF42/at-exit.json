@@ -1,0 +1,75 @@
+{
+  "assets" : {
+    "clip-1" : "bcf25c8caf2c8d6386dc36023b4555d4f471bd7a9b647035504db90c688b5ffb",
+    "movie-0" : "8108287b3735ee7557c361b7f977f065ded2d34f9c00f9927dc84a09f97091bc",
+    "source-1" : "bc115bc854dbae3838769af8758aac631d7cadf48f3bfd8e005437d45b7cc4dd"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 165
+        }
+      },
+      "displayName" : "1960s 16mm Cinema",
+      "id" : "cinema16mm",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 164.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developing",
+    "id" : "1DA906F4-4E95-4DB6-923C-0A4C006562ED",
+    "isArchived" : false,
+    "loadedAt" : 812581418.896079,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "F42\/App\/Media\/1DA906F4-4E95-4DB6-923C-0A4C006562ED\/clip-1.mov",
+    "F42\/App\/Media\/1DA906F4-4E95-4DB6-923C-0A4C006562ED\/movie-1-E83C2027-BA50-4504-B795-81FBDCEF464E.mov",
+    "F42\/App\/Media\/1DA906F4-4E95-4DB6-923C-0A4C006562ED\/source-1.mov",
+    "F42\/App\/Work\/1DA906F4-4E95-4DB6-923C-0A4C006562ED\/0FECAB71-6005-4BF9-8CCE-265D34A2511B\/1.mov",
+    "F42\/App\/Work\/1DA906F4-4E95-4DB6-923C-0A4C006562ED\/0FECAB71-6005-4BF9-8CCE-265D34A2511B\/assembled.mov",
+    "F42\/App\/film-store.sqlite",
+    "F42\/App\/film-store.sqlite-shm",
+    "F42\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 26310,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 355583174445185080,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "1DA906F4-4E95-4DB6-923C-0A4C006562ED",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

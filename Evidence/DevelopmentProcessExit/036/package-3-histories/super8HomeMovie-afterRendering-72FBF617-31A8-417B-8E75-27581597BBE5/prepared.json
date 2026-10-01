@@ -1,0 +1,54 @@
+{
+  "assets" : {
+    "source-1" : "81ab3f254ae23a130291a5d5ef33f6f026bea8e84537de896990b7bb8a1dff1e"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "2C3A7CEA-923C-4B4B-B7DF-67C26A8543E8",
+    "isArchived" : false,
+    "loadedAt" : 812581402.591996,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "BE5\/App\/Media\/2C3A7CEA-923C-4B4B-B7DF-67C26A8543E8\/source-1.mov",
+    "BE5\/App\/film-store.sqlite",
+    "BE5\/App\/film-store.sqlite-shm",
+    "BE5\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218
+}

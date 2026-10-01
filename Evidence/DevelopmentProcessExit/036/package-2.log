@@ -1,0 +1,34 @@
+[0/1] Planning build
+Building for debugging...
+[0/6] Write sources
+[1/6] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module DevelopmentProcessExitTests
+[4/6] Compiling DevelopmentProcessExitTests DevelopmentProcessExitTests.swift
+[5/8] Compiling DevelopmentProcessExitPackageTests runner.swift
+[6/8] Emitting module DevelopmentProcessExitPackageTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking DevelopmentProcessExitPackageTests
+Build complete! (5.10s)
+Test Suite 'All tests' started at 2026-10-01 14:02:14.960.
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' started at 2026-10-01 14:02:14.961.
+Test Suite 'DevelopmentProcessExitTests' started at 2026-10-01 14:02:14.961.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/SQLiteDatabase.swift:48: error: -[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary] : failed: caught error: "mediaNotRevealed"
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' failed (0.924 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' passed (1.954 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/SQLiteDatabase.swift:48: error: -[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns] : failed: caught error: "mediaNotRevealed"
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' failed (0.110 seconds).
+Test Suite 'DevelopmentProcessExitTests' failed at 2026-10-01 14:02:17.950.
+	 Executed 3 tests, with 2 failures (2 unexpected) in 2.988 (2.989) seconds
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' failed at 2026-10-01 14:02:17.950.
+	 Executed 3 tests, with 2 failures (2 unexpected) in 2.988 (2.989) seconds
+Test Suite 'All tests' failed at 2026-10-01 14:02:17.950.
+	 Executed 3 tests, with 2 failures (2 unexpected) in 2.988 (2.991) seconds
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-2862B819-A626-4BC6-9F78-119AD10EBD5E
+DEVELOPMENT_EXIT instant-second exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-2862B819-A626-4BC6-9F78-119AD10EBD5E
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

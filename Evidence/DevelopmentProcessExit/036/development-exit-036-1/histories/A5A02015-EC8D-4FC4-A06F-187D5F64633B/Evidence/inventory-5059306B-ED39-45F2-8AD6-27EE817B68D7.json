@@ -1,0 +1,69 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "6a16140c17d39400a6e1c07c578a5f47b8933307757a1a5608e38275c80c13ec",
+      "decodedFrames" : 3,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "6a16140c17d39400a6e1c07c578a5f47b8933307757a1a5608e38275c80c13ec",
+      "kind" : "source",
+      "path" : "Media\/536EFF6D-43AD-43E6-B4AE-E3B02B4639A1\/source-1.mov",
+      "sequence" : 1
+    }
+  ],
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "sealed",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 164.83166666666668
+            }
+          }
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "536EFF6D-43AD-43E6-B4AE-E3B02B4639A1",
+      "isArchived" : false,
+      "loadedAt" : 812581680.318115,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/536EFF6D-43AD-43E6-B4AE-E3B02B4639A1\/source-1.mov" : "6a16140c17d39400a6e1c07c578a5f47b8933307757a1a5608e38275c80c13ec",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "00b3faa68f9995587e2a942ec64809fee680a96de0e3f713bf2d69bcffd57be5",
+    "film-store.sqlite-wal" : "2df3c5e1d987f19ca029d9bf8d7b2f357a5f1f838ff24812fd43680b8d55a365"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "assets" : {
+    "master-1" : "5e663720137a7998936be31256606bbc79a309043e400ce55167d837bb798f1d",
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 27
+        }
+      },
+      "displayName" : "1990s Disposable",
+      "id" : "disposable1990s",
+      "medium" : "photo",
+      "revealRule" : "rollLevelDevelopment",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "exposures" : {
+            "_0" : 26
+          }
+        }
+      }
+    },
+    "developmentState" : "developing",
+    "id" : "401CA135-1BE6-440B-ACA8-55964BAEC396",
+    "isArchived" : false,
+    "loadedAt" : 812581385.87518,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "CA3\/App\/Media\/401CA135-1BE6-440B-ACA8-55964BAEC396\/master-1.bin",
+    "CA3\/App\/Media\/401CA135-1BE6-440B-ACA8-55964BAEC396\/source-1.bin",
+    "CA3\/App\/film-store.sqlite",
+    "CA3\/App\/film-store.sqlite-shm",
+    "CA3\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13842,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 3743007687313207591,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "401CA135-1BE6-440B-ACA8-55964BAEC396",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

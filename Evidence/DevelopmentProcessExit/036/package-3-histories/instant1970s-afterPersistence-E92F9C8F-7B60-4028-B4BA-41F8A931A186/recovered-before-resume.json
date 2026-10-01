@@ -1,0 +1,65 @@
+{
+  "assets" : {
+    "master-1" : "0559de404f252d02257fe7a560ff3bc5e960d872f72a3839ca0a4c6d1ca4272e",
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "76FF322B-DDA8-460A-89DA-5CB39979C5C8",
+    "isArchived" : false,
+    "loadedAt" : 812581389.019475,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "186\/App\/Media\/76FF322B-DDA8-460A-89DA-5CB39979C5C8\/master-1.bin",
+    "186\/App\/Media\/76FF322B-DDA8-460A-89DA-5CB39979C5C8\/source-1.bin",
+    "186\/App\/film-store.sqlite",
+    "186\/App\/film-store.sqlite-shm",
+    "186\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 18276189104284153555,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "76FF322B-DDA8-460A-89DA-5CB39979C5C8",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}
