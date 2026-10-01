@@ -44,6 +44,11 @@ The subsequent current-app paired traversal is retained at
 and a Silent capture contrast finding, but incomplete traversal (A five inset
 assertion failures; B times out before rows). This does not accept QA-13/H-UX or
 establish a persistent visible defect/false positive. Original tests unchanged.
+`Evidence/NativeApp/accessibility-traversal-progress-diagnosis.md` adds the
+mechanics-only continuation: matching settled y400 poses, ten passing A rows,
+zero B audit issues and seven passing B rows. The unchanged 600-second limit
+prevents the last three B rows/completion. No paired conclusion, production
+correction or QA-13/H-UX acceptance; historical required failures remain failed.
 
 Local traceability audit on 2026-10-01: the tracker-to-map comparison found all 121 currently unchecked v1 IDs plus the intake's now-decided DEC-09 (122 intake records); this companion has 72 uniquely labeled personal FR acceptance records and nine invariant rows. This count checks traceability only, not correctness or native acceptance. The 108 deferred tasks remain excluded.
 

@@ -23,6 +23,12 @@ product and budget prerequisites remain unmet. No physical action or acceptance
 is implied, and current accessibility failures still block readiness.
 
 Current QA-13 accessibility diagnosis:
+`Evidence/NativeApp/accessibility-traversal-progress-diagnosis.md` records the
+mechanics-only continuation on base `1a69b3d`: matching settled y400 poses, all ten
+A rows passing, no-issue unfiltered B audit, seven B rows passing before the same
+600-second limit. Missing B disclosure/Subscription/Load and completion keep the
+pair incomplete. No production edit, required-check waiver or acceptance; further
+variants stopped. Original suites, historical failures and physical deferral remain.
 `Evidence/NativeApp/accessibility-traversal-diagnosis.md` records the subsequent
 current-Form A/B attempt: matched title poses, first scrolled all-category contrast
 on Silent capture, A ten rows with five inset failures, B no completed rows before

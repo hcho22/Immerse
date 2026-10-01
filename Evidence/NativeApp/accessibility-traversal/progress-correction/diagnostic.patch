@@ -1,0 +1,157 @@
+diff --git a/App/Immerse/UITests/JournalFlowTests.swift b/App/Immerse/UITests/JournalFlowTests.swift
+index fb53f3e..11863ce 100644
+--- a/App/Immerse/UITests/JournalFlowTests.swift
++++ b/App/Immerse/UITests/JournalFlowTests.swift
+@@ -85,3 +85,152 @@ final class JournalFlowTests: XCTestCase {
+         }
+     }
+ }
++
++@MainActor
++final class SetupTraversalDiagnosisTests: XCTestCase {
++    func testPairedSystemLargestTraversal() throws {
++        continueAfterFailure = true
++        XCUIDevice.shared.orientation = .portrait
++        var firstPose: [String: CGRect]?
++        for arm in ["A-no-audit", "B-all-audit"] {
++            let app = XCUIApplication()
++            app.launch()
++            defer { app.terminate() }
++            event("\(arm).launch", "arguments=\(app.launchArguments)")
++            XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 10))
++            app.buttons["start-film"].tap()
++            XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
++            let camera = app.buttons["camera-cinema16mm"]
++            for _ in 0..<8 where !camera.isHittable { app.swipeUp() }
++            XCTAssertTrue(camera.isHittable)
++            camera.tap()
++            XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5))
++            let title = app.staticTexts["film-title-heading"]
++            for _ in 0..<16 where !title.exists { try drag(app, points: -220) }
++            guard title.exists else { XCTFail("Title was not reached; pair is inconclusive"); return }
++            for _ in 0..<16 where abs(title.frame.minY - 400) > 1 {
++                try drag(app, points: 400 - title.frame.minY)
++            }
++            XCTAssertEqual(title.frame.minY, 400, accuracy: 1, "First scrolled title pose")
++            let pose = frames(app)
++            let settled = frames(app)
++            compare(pose, settled, context: "\(arm) settled")
++            if let firstPose { compare(firstPose, pose, context: "paired pre-invocation pose") }
++            else { firstPose = pose }
++            snapshot(app, name: "\(arm)-before")
++            event("\(arm).invocation-start")
++            if arm == "B-all-audit" {
++                do {
++                    try app.performAccessibilityAudit(for: .all) { issue in
++                        self.event("\(arm).issue", "type=\(issue.auditType.rawValue) \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element")")
++                        return false
++                    }
++                } catch {
++                    XCTFail("All-category audit threw: \(error)")
++                }
++            }
++            event("\(arm).invocation-end")
++            snapshot(app, name: "\(arm)-after")
++
++            let rows: [(String, XCUIElement)] = [
++                ("description", app.staticTexts["Deliberate framing, finer grain"]),
++                ("silent", app.staticTexts["Silent capture"].firstMatch),
++                ("orientation-heading", app.staticTexts["Movie Orientation"]),
++                ("orientation-picker", app.buttons["Movie Orientation, Portrait"]),
++                ("title-heading", title),
++                ("title-field", app.descendants(matching: .any).matching(identifier: "film-title").firstMatch),
++                ("trial", app.staticTexts["Trial status unavailable"]),
++                ("disclosure", app.staticTexts["The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading."]),
++                ("subscription", app.buttons["Subscription"]),
++                ("load", app.buttons["load-film"])
++            ]
++            for (name, row) in rows {
++                for _ in 0..<20 where !row.exists {
++                    try drag(app, points: name == "description" ? 220 : -220)
++                }
++                guard row.exists else { XCTFail("\(arm) \(name) absent; pair is inconclusive"); return }
++                for _ in 0..<20 where !readingBounds(app).contains(row.frame) {
++                    let bounds = readingBounds(app)
++                    let delta = row.frame.minY < bounds.minY
++                        ? bounds.minY + 8 - row.frame.minY
++                        : bounds.maxY - 8 - row.frame.maxY
++                    try drag(app, points: delta)
++                }
++                XCTAssertTrue(row.exists && row.isHittable && readingBounds(app).contains(row.frame),
++                              "\(arm) \(name) must be fully exposed, not merely hittable")
++                event("\(arm).row.\(name)", "readingBounds=\(readingBounds(app)) element=\(row.frame)")
++                snapshot(app, name: "\(arm)-row-\(name)")
++            }
++            event("\(arm).complete", "rows=\(rows.count)")
++        }
++    }
++
++    private enum ScrollFailure: Error { case noProgress }
++
++    private func drag(_ app: XCUIApplication, points: CGFloat) throws {
++        let cell = app.collectionViews.firstMatch.cells.firstMatch
++        let before = cell.frame
++        let beforeLabel = cell.staticTexts.firstMatch.label
++        // The retained trace loses ten points before content starts moving.
++        let delta = max(-220, min(220, points + (points < 0 ? -10 : 10)))
++        let start = app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: 200, dy: delta < 0 ? 690 : 350))
++        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: delta)),
++                    withVelocity: .slow, thenHoldForDuration: 0)
++        let after = cell.frame
++        let afterLabel = cell.staticTexts.firstMatch.label
++        event("scroll.progress", "requested=\(points) gesture=\(delta) before=\(before) label=\(beforeLabel) after=\(after) label=\(afterLabel)")
++        guard beforeLabel != afterLabel || abs(before.minY - after.minY) > 1 else {
++            snapshot(app, name: "scroll-no-progress")
++            throw ScrollFailure.noProgress
++        }
++    }
++
++    private func readingBounds(_ app: XCUIApplication) -> CGRect {
++        let viewport = app.collectionViews.firstMatch.frame.intersection(app.windows.firstMatch.frame)
++        let top = max(viewport.minY, app.navigationBars["16mm"].frame.maxY) + 24
++        return CGRect(x: viewport.minX, y: top, width: viewport.width, height: viewport.maxY - 50 - top)
++    }
++
++    private func frames(_ app: XCUIApplication) -> [String: CGRect] {
++        var result = ["window": app.windows.firstMatch.frame, "navigation": app.navigationBars["16mm"].frame,
++                      "viewport": app.collectionViews.firstMatch.frame, "readingBounds": readingBounds(app)]
++        let elements = ["description": app.staticTexts["Deliberate framing, finer grain"],
++                        "orientation": app.staticTexts["Movie Orientation"],
++                        "picker": app.buttons["Movie Orientation, Portrait"],
++                        "title": app.staticTexts["film-title-heading"],
++                        "field": app.descendants(matching: .any).matching(identifier: "film-title").firstMatch,
++                        "trial": app.staticTexts["Trial status unavailable"]]
++        for (name, element) in elements where element.exists { result[name] = element.frame }
++        return result
++    }
++
++    private func compare(_ expected: [String: CGRect], _ actual: [String: CGRect], context: String) {
++        XCTAssertEqual(Set(expected.keys), Set(actual.keys), "\(context): exposed elements")
++        for key in expected.keys.sorted() {
++            guard let lhs = expected[key], let rhs = actual[key] else { XCTFail("Missing pose \(key)"); continue }
++            for (a, b) in zip([lhs.minX, lhs.minY, lhs.width, lhs.height], [rhs.minX, rhs.minY, rhs.width, rhs.height]) {
++                XCTAssertEqual(a, b, accuracy: 1, "\(context): \(key)")
++            }
++        }
++    }
++
++    private func snapshot(_ app: XCUIApplication, name: String) {
++        let pose = frames(app)
++        event("\(name).snapshot-start", pose.keys.sorted().map { "\($0)=\(pose[$0]!)" }.joined(separator: " "))
++        retain(XCTAttachment(string: app.debugDescription), name: "\(name)-tree")
++        retain(XCTAttachment(screenshot: app.screenshot()), name: "\(name)-screen")
++        event("\(name).snapshot-end")
++    }
++
++    private func event(_ name: String, _ detail: String = "") {
++        let text = "SETUP_PAIR time=\(Date().timeIntervalSince1970) uptime=\(ProcessInfo.processInfo.systemUptime) event=\(name) \(detail)"
++        print(text)
++        retain(XCTAttachment(string: text), name: name)
++    }
++
++    private func retain(_ attachment: XCTAttachment, name: String) {
++        attachment.name = name
++        attachment.lifetime = .keepAlways
++        add(attachment)
++    }
++}

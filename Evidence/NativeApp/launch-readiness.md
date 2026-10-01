@@ -60,6 +60,13 @@ fail; B times out before its row traversal at the effective 600-second bound.
 This is incomplete diagnostic evidence, not a startup failure, native correction
 or QA-13 pass. The original UI suite remains byte-identical; the additive test
 patch and every failure are retained outside normal CI sources.
+The [mechanics-only continuation](accessibility-traversal-progress-diagnosis.md)
+reaches matching y400 poses and passes all ten A row checks. B's unfiltered audit
+returns without issues, then seven rows pass before the unchanged 600-second
+timeout. Its final three rows and completion record are absent. The pair remains
+incomplete; no original failed gate is cleared and no production edit follows.
+Repeated bounded condition queries remain in the diagnostic trace; additional
+variants stopped under instruction 032. Physical scenarios remain deferred.
 
 ## Required Native Manual Matrix
 

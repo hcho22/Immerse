@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790877707.6072512 uptime=1245083.5974766512 event=scroll.progress requested=-364.66666666666663 gesture=-220.0 before=(16.0, -54.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -46.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain

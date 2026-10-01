@@ -1,0 +1,2 @@
+Retained patch reconstructs executed UI test SHA-256: 1269c601f3d9a9f7b3085ee84b2fa56452d978311b9bbe32bd731b61981a9478
+Original sequential suite restored byte-identically; 24 completed drags, 17 contained rows, no B completion, no issue callback records.

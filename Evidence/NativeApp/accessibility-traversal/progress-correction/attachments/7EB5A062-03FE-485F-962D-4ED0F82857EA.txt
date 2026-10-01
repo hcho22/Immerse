@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790878157.847478 uptime=1245533.851917204 event=B-all-audit-row-orientation-picker.snapshot-end
