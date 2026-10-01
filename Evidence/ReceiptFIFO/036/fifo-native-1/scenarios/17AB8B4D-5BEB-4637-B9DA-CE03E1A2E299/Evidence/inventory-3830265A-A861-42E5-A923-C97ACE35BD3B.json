@@ -1,0 +1,91 @@
+{
+  "assets" : [
+
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 273886235143135267,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 2669853881088859322,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      1,
+      2
+    ],
+    "filmID" : "591CF7D1-928A-4752-AB9A-42989E185BC3",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+    "0E68A353-2686-4F66-8E4D-32E6D68790E8-1.mov" : "0181a9a338b5cda9fb4e105b8bac1168693b8167272534a11cdacec16dd7caa4"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        },
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572802,
+          "sequenceNumber" : 2
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 164.66333333333333
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "591CF7D1-928A-4752-AB9A-42989E185BC3",
+      "isArchived" : false,
+      "loadedAt" : 812577564.383304,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "86b0c101af78247183b25fb7ee3cb24841c01f5843b1953fc78a62c6bb4fdd08",
+    "film-store.sqlite-wal" : "300d2d5f75e4150ed8b75b4daafb2dfd69a486b83f0127ec1340ce8cb3123425"
+  }
+}

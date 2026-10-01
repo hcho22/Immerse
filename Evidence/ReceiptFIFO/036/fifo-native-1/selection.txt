@@ -1,0 +1,3 @@
+mode=fifo
+selection=ReceiptFIFOTests/ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm
+result=DerivedData/Export036-fifo-native-1.xcresult

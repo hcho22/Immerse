@@ -1,0 +1,19 @@
+{
+  "assets" : [
+
+  ],
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+
+  ],
+  "privateFiles" : {
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "8aa95f30b148bb29df5bde029ef5a6aabe188a6a9409d5503b222d1bbff1955f",
+    "film-store.sqlite-wal" : "431cd6ba8f84038d724593b6ed6c1bbad24869eb3776ca3c1ca2e850929435e8"
+  }
+}

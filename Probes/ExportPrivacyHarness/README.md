@@ -106,3 +106,11 @@ selection above. Its snapshots/native media are retained separately in
 `Evidence/DevelopmentObserver/036/`; read `Packages/FilmRuntime/README.md` for
 the precise five-phase observer contract. This mode is not accepted by the
 export-only offline inspector, whose nine/two test counts remain unchanged.
+
+`run-simulator.sh fifo UNIQUE-GLOBAL-LABEL` selects only the existing package's
+FIFO receipt/deletion method in `ReceiptFIFOTests`, using injected memory receipt
+calls and native synthetic media. It reads the existing internal count through
+`@testable import FilmRuntime`; no new public queue API or actual Security call.
+See `Evidence/ReceiptFIFO/036/README.md`. Result labels must be unique across all
+modes, not just within an evidence subdirectory. Older copied histories remain
+retained evidence, not additional test executions.

@@ -132,6 +132,11 @@ configuration installs it. The report binds actual tests/builds and initial
 fixture failures to source, and distinguishes recovery after joined cancellation
 from untested process death, restore and physical media fidelity. No acceptance
 checkbox, QA-13 exception or release authority follows from this preparation.
+The separate [receipt FIFO follow-up](../ReceiptFIFO/036/README.md) records one
+package and one hosted pass using the existing internal count, single possible
+new queue entrant at each step, real deletion and injected-memory receipts only.
+It leaves the original 035 request-before-release limitation and hardware gates
+intact; no new public queue-observation API or production source change.
 
 - DEC-01: final app name/copy, app icon, screenshots and metadata are not approved.
 - DEC-04/11: provisional render presets and controls require actual Camera-quality

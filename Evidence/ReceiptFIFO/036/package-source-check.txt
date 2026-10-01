@@ -1,0 +1,2 @@
+Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift: OK
+Packages/FilmRuntime/Sources/FilmRuntime/TrialCoordinator.swift: OK

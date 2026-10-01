@@ -1,0 +1,48 @@
+{
+  "assets" : {
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 27
+        }
+      },
+      "displayName" : "1990s Disposable",
+      "id" : "disposable1990s",
+      "medium" : "photo",
+      "revealRule" : "rollLevelDevelopment",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "exposures" : {
+            "_0" : 26
+          }
+        }
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "A0C898C1-82BD-45AE-BB4F-5048AAE60019",
+    "isArchived" : false,
+    "loadedAt" : 812577291.645634,
+    "title" : "Synthetic Development boundary"
+  },
+  "workFiles" : [
+
+  ]
+}

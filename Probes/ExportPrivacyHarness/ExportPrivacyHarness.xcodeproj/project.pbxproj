@@ -18,12 +18,20 @@
 		7495873ABA8FEBF07D4BC6AE /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 7DDBADC727F2D38F87D4A8E6 /* FilmPersistence */; };
 		80D34A831FAA4BA3FBA23960 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = C50F4643D66A3EF72D07D790 /* FilmDomain */; };
 		D3494B022FF07E15A212F64A /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = DED5C1219B0963D220AD9903 /* RenderCore */; };
+		F29E0196C920F56242A458EF /* ProductionTrialReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */; };
 		F457F1E0820F1CB076BC2CED /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = CCD3E09E628C34510B450A7C /* FilmRuntime */; };
 		F55AC1E31051C49ADC22C305 /* ScenarioEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		477D390395B28B5A90641324 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2271B112ABB199472415545 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B297E76505E38CBC4E3D29BB;
+			remoteInfo = ExportPrivacyHarness;
+		};
+		886529439A6416774B8E4043 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2271B112ABB199472415545 /* Project object */;
 			proxyType = 1;
@@ -55,9 +63,11 @@
 		7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentObserverTests.swift; sourceTree = "<group>"; };
 		894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyApp.swift; sourceTree = "<group>"; };
 		A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportProcessExitTests.swift; sourceTree = "<group>"; };
+		A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptFIFOTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioEvidence.swift; sourceTree = "<group>"; };
 		CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DevelopmentObserverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D35A271486D1EC5B7778147F /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductionTrialReceiptTests.swift; sourceTree = "<group>"; };
 		DD58A7C77B1C07CF6684EAAD /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDF41BC2F7A5DAE9B93BBD20 /* RenderFixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderFixtures; path = ../../Packages/RenderFixtures; sourceTree = SOURCE_ROOT; };
@@ -97,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */,
+				DCB1BA1CC51795599B460B33 /* ProductionTrialReceiptTests.swift */,
 			);
 			name = FilmRuntimeTests;
 			path = ../../Packages/FilmRuntime/Tests/FilmRuntimeTests;
@@ -109,6 +120,7 @@
 				6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */,
 				DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */,
 				6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */,
+				A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,6 +215,24 @@
 			productReference = 6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		7C430F8CAE2F316F7D587B0A /* ReceiptFIFOTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D1F5F688145B1D18461E8D4 /* Build configuration list for PBXNativeTarget "ReceiptFIFOTests" */;
+			buildPhases = (
+				71190B40879DC7F6E9A83371 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04572C34C734FD0AB4777FDB /* PBXTargetDependency */,
+			);
+			name = ReceiptFIFOTests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptFIFOTests;
+			productReference = A11789E90A30B29BD839AA7B /* ReceiptFIFOTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12E38483E4E71AAC06FEB507 /* Build configuration list for PBXNativeTarget "ExportPrivacyHarness" */;
@@ -285,11 +315,20 @@
 				B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */,
 				C4670707147C90AB50692A1A /* ExportPrivacyTests */,
 				2B789362606419B9ECC9030F /* ExportPrivacyUITests */,
+				7C430F8CAE2F316F7D587B0A /* ReceiptFIFOTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		71190B40879DC7F6E9A83371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F29E0196C920F56242A458EF /* ProductionTrialReceiptTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		72AF0DEEEFEE532C6D02D1A9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -328,6 +367,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		04572C34C734FD0AB4777FDB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
+			targetProxy = 886529439A6416774B8E4043 /* PBXContainerItemProxy */;
+		};
 		44B1B0F2C0D2BEF022A769B6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
@@ -346,6 +390,23 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1477F72E6DF3EB0D7638B58E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.ReceiptFIFOTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
+			};
+			name = Release;
+		};
 		253215D09E0EAB83A7231DD4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -374,6 +435,23 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.DevelopmentTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
+			};
+			name = Debug;
+		};
+		413E7B185A4E91AA3105E27F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.ReceiptFIFOTests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
@@ -631,6 +709,15 @@
 			buildConfigurations = (
 				CB8DF631F22B9E7E9406B705 /* Debug */,
 				92BF1FA02620389D00D5D84F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3D1F5F688145B1D18461E8D4 /* Build configuration list for PBXNativeTarget "ReceiptFIFOTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				413E7B185A4E91AA3105E27F /* Debug */,
+				1477F72E6DF3EB0D7638B58E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

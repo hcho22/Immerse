@@ -69,6 +69,17 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.DevelopmentTests
         GENERATE_INFOPLIST_FILE: YES
+  ReceiptFIFOTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ../../Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift
+    dependencies:
+      - target: ExportPrivacyHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.ReceiptFIFOTests
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   ExportPrivacyHarness:
     build:
@@ -77,6 +88,7 @@ schemes:
         ExportPrivacyTests: [test]
         ExportPrivacyUITests: [test]
         DevelopmentObserverTests: [test]
+        ReceiptFIFOTests: [test]
     test:
-      targets: [ExportPrivacyTests, ExportPrivacyUITests, DevelopmentObserverTests]
+      targets: [ExportPrivacyTests, ExportPrivacyUITests, DevelopmentObserverTests, ReceiptFIFOTests]
       parallelizable: false

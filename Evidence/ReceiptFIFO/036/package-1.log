@@ -1,0 +1,24 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module FilmRuntimeTests
+[4/5] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (3.40s)
+Test Suite 'Selected tests' started at 2026-10-01 13:02:42.352.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 13:02:42.353.
+Test Suite 'ProductionTrialReceiptTests' started at 2026-10-01 13:02:42.354.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' passed (0.794 seconds).
+Test Suite 'ProductionTrialReceiptTests' passed at 2026-10-01 13:02:43.148.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.794 (0.794) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 13:02:43.148.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.794 (0.794) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 13:02:43.148.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.794 (0.796) seconds
+RECEIPT_FIFO injected-memory-only counts=0,1,2,0 stale=filmNotFound evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFIFO/1B391735-25DA-44B4-B685-4B655F518B2F
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -58,6 +58,14 @@ process-exit, physical restore/power-loss, active player/cache and capture races
 remain distinct missing evidence. This adds partial FR-06/16/18, DEV-04/06/07/08,
 ARC-06 and QA-03/11 evidence, not acceptance or a change to the receipt protocol.
 
+Receipt FIFO follow-up 036 (`Evidence/ReceiptFIFO/036/README.md`) separately proves
+one controlled 16mm save/Delete/stale-callback order in package and iOS-hosted
+tests. The save owns its lease while counts 0/1/2 are observed, with only Delete
+and then only the stale callback newly launched. Final count 0, exact late error,
+private removal and unchanged injected consumption are recorded. No production
+queue API or native Security call was added. This does not retroactively prove
+the old 035 public-controller request timestamp or physical capture races.
+
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
 unchanged original default/largest cases once in light and dark on `a79d481`:

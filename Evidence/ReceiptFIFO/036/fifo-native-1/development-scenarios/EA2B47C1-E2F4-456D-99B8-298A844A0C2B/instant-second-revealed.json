@@ -1,0 +1,75 @@
+{
+  "assets" : {
+    "master-2" : "2d0f127b1c338bb59cd0b114faf6580fc0023b8099fd5f00457040498dd0db3d",
+    "source-2" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "discardedPlaceholder",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      },
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812577283.141097,
+        "sequenceNumber" : 2
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "402EEE5D-12F7-4379-BCE6-C60D63D315B4",
+    "isArchived" : false,
+    "loadedAt" : 812577282.924518,
+    "title" : "Synthetic Development boundary"
+  },
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 10118327729536771917,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 7108168903971646267,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "402EEE5D-12F7-4379-BCE6-C60D63D315B4",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "workFiles" : [
+
+  ]
+}

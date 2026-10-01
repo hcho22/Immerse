@@ -1,0 +1,59 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "ProductionTrialReceiptTests.swift:139: [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.2806529998779297,
+                  "name" : "testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm()",
+                  "nodeIdentifier" : "ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptFIFOTests/ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ProductionTrialReceiptTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptFIFOTests/ProductionTrialReceiptTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ReceiptFIFOTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ReceiptFIFOTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

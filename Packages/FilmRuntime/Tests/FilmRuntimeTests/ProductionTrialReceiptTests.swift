@@ -120,8 +120,14 @@ final class ProductionTrialReceiptTests: XCTestCase {
     }
 
     func testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm() async throws {
-        let root = temporaryRoot(); defer { try? FileManager.default.removeItem(at: root) }
-        let fixtures = try await fixtures(root)
+        #if os(iOS)
+        let parent = URL.documentsDirectory
+        #else
+        let parent = FileManager.default.temporaryDirectory
+        #endif
+        let directory = parent.appendingPathComponent("ReceiptFIFO/\(UUID())")
+        let root = directory.appendingPathComponent("App")
+        let fixtures = try await fixtures(directory)
         let calls = ReceiptCalls()
         let gate = CommitSuspension()
         let coordinator = try TrialCoordinator(root: root, store: KeychainDeviceTrialStore(calls: calls), checkpoint: {
@@ -132,20 +138,51 @@ final class ProductionTrialReceiptTests: XCTestCase {
         let event = event(CameraCatalog.cinema16mm, fixtures)
         let save = Task { try await receiver.commit(event) }
         try await gate.waitForEntry()
+        let initialCount = await coordinator.queuedOperationCount
+        XCTAssertEqual(initialCount, 0)
+        // The save owns the lease throughout these observations. Delete is the
+        // only newly launched operation until count 1 is actually observed.
         let delete = Task { try await coordinator.deleteFilm(filmID: film.id) }
         try await waitForQueue(1, coordinator)
+        let deleteCount = await coordinator.queuedOperationCount
+        XCTAssertEqual(deleteCount, 1)
         let stale = Task { try await receiver.commit(event) }
         try await waitForQueue(2, coordinator)
+        let callbackCount = await coordinator.queuedOperationCount
+        XCTAssertEqual(callbackCount, 2)
         let repository = try FilmRepository(rootURL: root)
         XCTAssertEqual(try repository.film(id: film.id).savedCaptureCount, 0)
+        let receiptBeforeRelease = try XCTUnwrap(KeychainDeviceTrialStore(calls: calls).read())
+        XCTAssertTrue(receiptBeforeRelease.isConsumed)
+        try persistFIFO(["initial": initialCount, "deleteQueued": deleteCount, "callbackQueued": callbackCount],
+                        name: "held-counts.json", in: directory)
+        try persistFIFO(try repository.film(id: film.id), name: "held-film.json", in: directory)
+        try persistFIFO(receiptBeforeRelease, name: "injected-receipt-before.json", in: directory)
         await gate.release()
         try await save.value
         try await delete.value
         do { try await stale.value; XCTFail("Deleted Film must not return") }
         catch PersistenceError.filmNotFound { }
-        XCTAssertThrowsError(try repository.film(id: film.id))
+        do { _ = try repository.film(id: film.id); XCTFail("Film still present") }
+        catch PersistenceError.filmNotFound { }
+        try repository.recover()
+        XCTAssertTrue(try repository.allFilms().isEmpty)
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Staging/\(film.id)").path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Media/\(film.id)").path))
         XCTAssertEqual(calls.updates, 1)
+        let finalCount = await coordinator.queuedOperationCount
+        XCTAssertEqual(finalCount, 0)
+        let finalReceipt = try XCTUnwrap(KeychainDeviceTrialStore(calls: calls).read())
+        XCTAssertEqual(finalReceipt, receiptBeforeRelease)
+        try persistFIFO(finalReceipt, name: "injected-receipt-after.json", in: directory)
+        try persistFIFO(["queued": finalCount, "privateFilms": try repository.allFilms().count,
+                         "injectedReceiptUpdates": calls.updates], name: "completed.json", in: directory)
+        print("RECEIPT_FIFO injected-memory-only counts=\(initialCount),\(deleteCount),\(callbackCount),\(finalCount) stale=filmNotFound evidence=\(directory.path)")
+    }
+
+    private func persistFIFO<T: Encodable>(_ value: T, name: String, in directory: URL) throws {
+        let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try encoder.encode(value).write(to: directory.appendingPathComponent(name), options: .withoutOverwriting)
     }
 
     func testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject() async throws {

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/../.."
-mode=${1:?unit, ui or development}
+mode=${1:?unit, ui, development or fifo}
 label=${2:?unique evidence label}
 SIM=${SIMULATOR_ID:?explicit authorized simulator UUID required}
 case "$label" in *[!a-zA-Z0-9_-]*|'') exit 64 ;; esac
@@ -9,10 +9,12 @@ case "$mode" in
   unit) selection=ExportPrivacyTests ;;
   ui) selection=ExportPrivacyUITests ;;
   development) selection=DevelopmentObserverTests ;;
+  fifo) selection=ReceiptFIFOTests/ProductionTrialReceiptTests/testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm ;;
   *) exit 64 ;;
 esac
 OUT="Evidence/ExportPrivacyHarness/036/$label"
 if [ "$mode" = development ]; then OUT="Evidence/DevelopmentObserver/036/$label"; fi
+if [ "$mode" = fifo ]; then OUT="Evidence/ReceiptFIFO/036/$label"; fi
 RESULT="DerivedData/Export036-$label.xcresult"
 test ! -e "$OUT"
 test ! -e "$RESULT"
@@ -40,6 +42,7 @@ find Probes/ExportPrivacyHarness -type f ! -path '*/xcuserdata/*' -print0 | LC_A
 shasum -a 256 Probes/ReceiptScenarioHarness/Sources/ScenarioEvidence.swift >> "$OUT/source.sha256"
 find Packages/FilmRuntime/Sources -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 >> "$OUT/source.sha256"
 shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift >> "$OUT/source.sha256"
+shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/ProductionTrialReceiptTests.swift >> "$OUT/source.sha256"
 git rev-parse HEAD > "$OUT/base-revision.txt"
 xcodebuild -version > "$OUT/xcode.txt"
 printf 'mode=%s\nselection=%s\nresult=%s\n' "$mode" "$selection" "$RESULT" > "$OUT/selection.txt"
@@ -61,6 +64,9 @@ if [ -d "$container/Documents/ExportScenarios" ]; then
 fi
 if [ -d "$container/Documents/DevelopmentScenarios" ]; then
   cp -R "$container/Documents/DevelopmentScenarios" "$OUT/development-scenarios"
+fi
+if [ -d "$container/Documents/ReceiptFIFO" ]; then
+  cp -R "$container/Documents/ReceiptFIFO" "$OUT/receipt-fifo"
 fi
 find DerivedData/ExportPrivacy036/Build/Products/Debug-iphonesimulator/ExportPrivacyHarness.app \
   -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/app-files.sha256"
