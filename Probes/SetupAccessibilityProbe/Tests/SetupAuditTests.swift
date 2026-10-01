@@ -18,9 +18,21 @@ final class SetupAuditTests: XCTestCase {
 
     func testStackOuterPadding() throws { try auditSetup(arguments: ["-stackContainer", "-outerPadding"]) }
 
+    func testStackOuterPaddingWithoutWindowCaptures() throws {
+        try auditSetup(arguments: ["-stackContainer", "-outerPadding", "-disableWindowCaptures"])
+    }
+
     func testPaddedRowsRemainFullyReachable() throws {
+        try checkPaddedRows(arguments: ["-stackContainer", "-outerPadding"])
+    }
+
+    func testPaddedRowsRemainFullyReachableWithoutWindowCaptures() throws {
+        try checkPaddedRows(arguments: ["-stackContainer", "-outerPadding", "-disableWindowCaptures"])
+    }
+
+    private func checkPaddedRows(arguments: [String]) throws {
         let app = XCUIApplication()
-        app.launchArguments = ["-stackContainer", "-outerPadding"]
+        app.launchArguments = arguments
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()

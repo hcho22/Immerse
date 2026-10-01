@@ -42,6 +42,12 @@ actual-app countercheck fails: light 0/2, dark 1/2. The attempted production pat
 is retained only as evidence, not an accepted correction. Capture instrumentation
 adds latency, and the probe's navigation/entitlement state differs from production.
 QA-13 remains failed; these results do not authorize a required-check exception.
+The next `accessibility-observer-diagnosis.md` comparison fails at its first
+prerequisite: capture-enabled padded probe passes, capture-disabled fails two
+contrast findings while all twelve rows remain reachable and the viewport stays
+separate. Navigation/Trial-label comparisons were not advanced. The instrumented
+green result cannot establish an uninstrumented remedy; audit pose/timing and
+shared-host load remain limitations. No new production change or acceptance.
 
 ## Required Native Manual Matrix
 

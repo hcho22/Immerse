@@ -67,3 +67,13 @@ all twelve rows, but the attempted actual-app layout still fails required audits
 and is not retained. App-window captures add synchronous work during size changes;
 do not assume that this diagnostic instrumentation is timing-neutral. The report
 retains every failed control, source inventory, timestamp and exported attachment.
+
+The capture-disabled countercheck is in
+`Evidence/NativeApp/accessibility-observer-diagnosis.md`. In one same-build pair,
+the padded capture-enabled probe passes and `testStackOuterPaddingWithoutWindowCaptures`
+fails title/command contrast, despite matching physical separation. Its separate
+full-row reachability test passes. `-disableWindowCaptures` omits only window draw,
+PNG encoding and writes; normal XCTest screenshots and read-only geometry remain.
+Navigation/Trial-state comparisons were not advanced past this failed prerequisite.
+Neither the green instrumented control nor this timing association is a production
+remedy, framework-false-positive finding or permission to weaken required audits.

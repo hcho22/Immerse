@@ -15,7 +15,13 @@ No browser prototype result is treated as production behavior.
 No StoreKit, actual Photos writes, AVFoundation hardware capture, backup or Keychain hardware behavior is accepted yet.
 
 Current QA-13 accessibility diagnosis:
-`Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` is the latest bounded
+`Evidence/NativeApp/accessibility-observer-diagnosis.md` is the latest bounded
+follow-up: capture-enabled padded control passes but capture-disabled fails title
+and command contrast (same build, largest/light); twelve-row reachability passes.
+Physical separation survives both. Pre-audit offsets and shared-host load prevent
+claiming sole causality; no later navigation/Trial counterfactual or production
+change is made. The instrumented pass is not an uninstrumented correction.
+`Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` retains the prior
 follow-up: public native frames confirm outer-padding separation and its instrumented
 probe passes all-category audits plus twelve fully reachable rows. The actual-app
 attempt still fails light 0/2 and dark 1/2, and is retained only as an evidence patch.

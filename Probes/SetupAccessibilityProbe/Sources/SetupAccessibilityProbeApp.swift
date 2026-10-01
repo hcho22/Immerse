@@ -256,6 +256,11 @@ private enum ProbeLog {
 
     static func captureWindow() {
         guard let window, !window.bounds.isEmpty else { return }
+        if ProcessInfo.processInfo.arguments.contains("-disableWindowCaptures") {
+            nativeViewports()
+            record("size-screen-disabled", ["category": window.traitCollection.preferredContentSizeCategory.rawValue])
+            return
+        }
         captureNumber += 1
         let start = Date().timeIntervalSince1970
         let category = window.traitCollection.preferredContentSizeCategory.rawValue

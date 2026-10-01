@@ -1,0 +1,1 @@
+AUDIT_PROBE time=1790875041.44374 uptime=1242417.464531648 event=command.audit-returned

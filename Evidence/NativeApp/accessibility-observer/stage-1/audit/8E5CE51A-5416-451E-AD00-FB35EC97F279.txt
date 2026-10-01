@@ -1,0 +1,1 @@
+AUDIT_PROBE time=1790874997.3633351 uptime=1242373.383165809 event=launch -stackContainer -outerPadding -disableWindowCaptures
