@@ -25,6 +25,13 @@ not a guarantee added by a test. Native Security remains deferred. Priority 5
 populated-view coverage is independent under instruction 036. Full-v1 and original
 physical/product/accessibility gaps remain open.
 
+Priority 5 has bounded current results in `Evidence/PopulatedJournal/037/README.md`:
+four retained-view cases with independent exact state/print comparisons, three
+unchanged legacy navigation cases and unsigned device compilation. No production
+source changes. Full-capacity/final Instant, every Darkroom/assistive path, active
+Movie playback/cache, exact capture quiescence and Development process-death remain
+preparable work. Initial selector/build failures and runtime warning remain visible.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

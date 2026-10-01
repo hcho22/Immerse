@@ -131,6 +131,17 @@ unknown replies do not establish exactly-once external writes. No PhotoKit or
 Security request, production change, physical acceptance, audit waiver or release.
 Exact Development observation and remaining fault/view coverage are subsequent work.
 
+The independent populated-view continuation is recorded in
+`Evidence/PopulatedJournal/037/README.md`: four retained UI scenarios and exact
+state/print comparisons pass, plus three unchanged legacy workflow tests and an
+unsigned device build. Actual views/renderer/repository use synthetic media,
+injected read-only Trial and absent billing configuration. Empty Delete and early
+cancel/separate Development, individual Instant reveal, original choice without
+export, saved Darkroom edit/exact Reset/reopen and legacy Archive/Movie placeholders
+have bounded evidence. Initial compile/selector failures and UIKitToolbar warnings
+remain recorded. This is partial FR-06/07/08/16/18 evidence, not capture, Photos,
+Keychain, physical backup, final rendering or accessibility acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

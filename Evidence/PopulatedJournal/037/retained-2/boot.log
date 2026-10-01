@@ -1,0 +1,42 @@
+Monitoring boot status for Immerse v1 Validation (AA6AD12A-9D0E-4948-ABD2-760AA97B6A60).
+[2026-10-01 20:45:07 +0000] Status=1, isTerminal=NO, Elapsed=00:01.
+	Waiting on BackBoard
+
+[2026-10-01 20:45:09 +0000] Status=4, isTerminal=NO, Elapsed=00:03.
+	Waiting on System App
+
+[2026-10-01 20:45:09 +0000] Status=4, isTerminal=NO, Elapsed=00:04.
+	Waiting on System App
+
+[2026-10-01 20:45:10 +0000] Status=4, isTerminal=NO, Elapsed=00:04.
+	Waiting on System App
+
+[2026-10-01 20:45:11 +0000] Status=4, isTerminal=NO, Elapsed=00:05.
+	Waiting on System App
+
+[2026-10-01 20:45:12 +0000] Status=4, isTerminal=NO, Elapsed=00:06.
+	Waiting on System App
+
+[2026-10-01 20:45:13 +0000] Status=4, isTerminal=NO, Elapsed=00:07.
+	Waiting on System App
+
+[2026-10-01 20:45:14 +0000] Status=4, isTerminal=NO, Elapsed=00:08.
+	Waiting on System App
+
+[2026-10-01 20:45:15 +0000] Status=4, isTerminal=NO, Elapsed=00:09.
+	Waiting on System App
+
+[2026-10-01 20:45:16 +0000] Status=4, isTerminal=NO, Elapsed=00:10.
+	Waiting on System App
+
+[2026-10-01 20:45:17 +0000] Status=4, isTerminal=NO, Elapsed=00:11.
+	Waiting on System App
+
+[2026-10-01 20:45:18 +0000] Status=4, isTerminal=NO, Elapsed=00:12.
+	Waiting on System App
+
+[2026-10-01 20:45:19 +0000] Status=4, isTerminal=NO, Elapsed=00:13.
+	Waiting on System App
+
+[2026-10-01 20:45:20 +0000] Status=4294967295, isTerminal=YES, Elapsed=00:14.
+	Finished

@@ -1,0 +1,168 @@
+import CryptoKit
+import EntitlementCore
+import FilmDomain
+import FilmPersistence
+import Foundation
+import Observation
+import RenderCore
+import RenderFixtures
+
+private enum WorkflowError: Error { case invalidArguments, cannotReseedHistory, missingHistory, unexpectedTrialWrite, configuredBilling }
+
+private struct FixtureTrialStore: DeviceTrialStoring {
+    let record = DeviceTrialRecord()
+    func read() throws -> DeviceTrialRecord? { record }
+    func ensureDeviceRecord() throws -> DeviceTrialRecord { throw WorkflowError.unexpectedTrialWrite }
+    func consume(filmID: UUID, captureID: String?, savedAt: Date) throws { throw WorkflowError.unexpectedTrialWrite }
+}
+
+@MainActor @Observable final class WorkflowScenario {
+    let model: JournalModel
+    let directory: URL
+    private(set) var inspectionCount: Int
+    private(set) var inspecting = false
+
+    private struct Seed: Codable { let mode: String; let filmID: UUID }
+    private struct Snapshot: Codable {
+        let reason: String
+        let utc: String
+        let process: Int32
+        let films: [FilmState]
+        let privateFiles: [String]
+    }
+    private struct FilmState: Codable {
+        let film: Film
+        let development: DevelopmentRun?
+        let captures: [CaptureState]
+        let movieSHA256: String?
+    }
+    private struct CaptureState: Codable {
+        let sequence: Int
+        let originalDisposition: OriginalDisposition?
+        let sourceSHA256: String?
+        let masterSHA256: String?
+        let clipSHA256: String?
+        let printSHA256: String?
+        let recipe: DarkroomRecipe?
+    }
+
+    private init(directory: URL) throws {
+        self.directory = directory
+        let evidence = directory.appendingPathComponent("Evidence")
+        try FileManager.default.createDirectory(at: evidence, withIntermediateDirectories: true)
+        inspectionCount = try FileManager.default.contentsOfDirectory(atPath: evidence.path).filter { $0.hasSuffix(".json") }.count
+        model = try JournalModel(root: directory.appendingPathComponent("App"), trialStore: FixtureTrialStore())
+        guard !model.billing.configured else { throw WorkflowError.configuredBilling }
+    }
+
+    static func prepare(arguments: [String]) async throws -> WorkflowScenario {
+        let run: UUID
+        if let index = arguments.firstIndex(of: "--workflow-run") {
+            guard arguments.indices.contains(index + 1), let id = UUID(uuidString: arguments[index + 1]) else {
+                throw WorkflowError.invalidArguments
+            }
+            run = id
+        } else { run = UUID() }
+        let directory = URL.documentsDirectory.appendingPathComponent("WorkflowHistories/\(run)")
+        let seedURL = directory.appendingPathComponent("seed.json")
+        let reopening = arguments.contains("--reopen")
+        guard FileManager.default.fileExists(atPath: seedURL.path) == reopening else {
+            throw reopening ? WorkflowError.missingHistory : WorkflowError.cannotReseedHistory
+        }
+        let scenario = try WorkflowScenario(directory: directory)
+        await scenario.model.recoverAtLaunch()
+        if reopening {
+            _ = try JSONDecoder().decode(Seed.self, from: Data(contentsOf: seedURL))
+        } else {
+            let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-mixed") ? "instant-mixed"
+                : arguments.contains("--instant") ? "instant" : arguments.contains("--empty") ? "empty"
+                : arguments.contains("--developed-photo") ? "developed-photo" : "early-photo"
+            let movie = mode == "movie", instant = mode.hasPrefix("instant")
+            let camera = movie ? CameraCatalog.cinema16mm : instant ? CameraCatalog.instant1970s : CameraCatalog.disposable1990s
+            let model = scenario.model
+            let film = try model.repository.createFilm(camera: camera, title: "Private synthetic Film",
+                movieOrientation: movie ? .portrait : nil, access: .subscription)
+            if mode != "empty" {
+                let fixtures = directory.appendingPathComponent("Fixtures")
+                var settings = RenderFixtureSettings.defaultExperimental
+                settings.photoWidth = 320; settings.photoHeight = 240
+                settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
+                let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
+                if movie {
+                    let data = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-movie.mov"))
+                    for _ in 0..<2 {
+                        try model.repository.saveMovieClip(filmID: film.id, sourceData: data,
+                            durationSeconds: manifest.movie.durationSeconds, orientation: .landscape)
+                    }
+                } else {
+                    let data = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
+                    for index in 1...2 {
+                        try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
+                        if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
+                    }
+                }
+                if movie || mode == "developed-photo" { try model.repository.completeEarly(filmID: film.id) }
+                if movie || mode == "developed-photo" || mode == "instant" {
+                    model.refresh(); try await model.develop(film.id)
+                }
+            }
+            try persist(Seed(mode: mode, filmID: film.id), to: seedURL)
+        }
+        scenario.model.refresh()
+        try await scenario.inspect(reason: reopening ? "reopen" : "seeded")
+        return scenario
+    }
+
+    func inspect(reason: String) async throws {
+        guard !inspecting else { return }
+        inspecting = true
+        defer { inspecting = false }
+        var films: [FilmState] = []
+        for film in try model.repository.allFilms() {
+            var captures: [CaptureState] = []
+            for capture in film.captures {
+                let sequence = capture.sequenceNumber
+                var printHash: String?, recipe: DarkroomRecipe?
+                if film.camera.medium == .photo, capture.revealState == .revealed {
+                    recipe = try model.repository.darkroomRecipe(filmID: film.id, sequence: sequence)
+                    printHash = Self.hash(try await model.processor.photo(filmID: film.id, sequence: sequence))
+                }
+                captures.append(CaptureState(sequence: sequence,
+                    originalDisposition: try model.repository.originalDisposition(filmID: film.id, sequenceNumber: sequence),
+                    sourceSHA256: try await assetHash(film: film, sequence: sequence, kind: .source),
+                    masterSHA256: try await assetHash(film: film, sequence: sequence, kind: .master),
+                    clipSHA256: try await assetHash(film: film, sequence: sequence, kind: .clip),
+                    printSHA256: printHash, recipe: recipe))
+            }
+            films.append(FilmState(film: film, development: try model.repository.developmentRun(filmID: film.id),
+                captures: captures, movieSHA256: try await assetHash(film: film, sequence: 0, kind: .movie)))
+        }
+        let root = directory.appendingPathComponent("App")
+        let entries = FileManager.default.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey])!
+        var paths: [String] = []
+        for case let url as URL in entries where try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {
+            paths.append(String(url.path.dropFirst(root.path.count + 1)))
+        }
+        let next = inspectionCount + 1
+        try Self.persist(Snapshot(reason: reason, utc: ISO8601DateFormatter().string(from: Date()),
+            process: ProcessInfo.processInfo.processIdentifier, films: films, privateFiles: paths.sorted()),
+            to: directory.appendingPathComponent(String(format: "Evidence/%03d.json", next)))
+        inspectionCount = next
+    }
+
+    private func assetHash(film: Film, sequence: Int, kind: StoredAsset.Kind) async throws -> String? {
+        guard let asset = try model.repository.mediaAsset(filmID: film.id, sequenceNumber: sequence, kind: kind) else { return nil }
+        let verified = film.camera.medium == .photo ? try VerifiedMedia.photo(at: asset.url) : try await VerifiedMedia.movie(at: asset.url)
+        guard verified.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
+        return verified.sha256
+    }
+
+    private static func hash(_ data: Data) -> String { SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined() }
+    private static func persist<T: Encodable>(_ value: T, to url: URL) throws {
+        let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try encoder.encode(value).write(to: url, options: .withoutOverwriting)
+        let handle = try FileHandle(forWritingTo: url)
+        defer { try? handle.close() }
+        try handle.synchronize()
+    }
+}

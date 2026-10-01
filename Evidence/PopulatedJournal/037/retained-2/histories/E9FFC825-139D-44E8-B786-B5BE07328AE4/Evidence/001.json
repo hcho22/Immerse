@@ -1,0 +1,44 @@
+{
+  "films" : [
+    {
+      "captures" : [
+
+      ],
+      "film" : {
+        "camera" : {
+          "capacity" : {
+            "exposures" : {
+              "_0" : 27
+            }
+          },
+          "displayName" : "1990s Disposable",
+          "id" : "disposable1990s",
+          "medium" : "photo",
+          "revealRule" : "rollLevelDevelopment",
+          "supportsBuiltInSoundtrack" : false
+        },
+        "captures" : [
+
+        ],
+        "completionState" : {
+          "open" : {
+
+          }
+        },
+        "developmentState" : "notStarted",
+        "id" : "5D35428C-4452-42E8-9723-108B50FD17F6",
+        "isArchived" : false,
+        "loadedAt" : 812580408.829346,
+        "title" : "Private synthetic Film"
+      }
+    }
+  ],
+  "privateFiles" : [
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 55722,
+  "reason" : "seeded",
+  "utc" : "2026-10-01T20:46:48Z"
+}

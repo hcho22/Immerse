@@ -71,6 +71,17 @@ release, re-entry and removal. Exact execution/source identities and limits are
 recorded there. This does not promote repository reopen to process-death or
 physical restoration evidence, and does not alter any clause or original failure.
 
+The independent populated-view continuation is recorded in
+`Evidence/PopulatedJournal/037/README.md`: four retained UI scenarios and exact
+state/print comparisons pass, plus three unchanged legacy workflow tests and an
+unsigned device build. Actual views/renderer/repository use synthetic media,
+injected read-only Trial and absent billing configuration. Empty Delete and early
+cancel/separate Development, individual Instant reveal, original choice without
+export, saved Darkroom edit/exact Reset/reopen and legacy Archive/Movie placeholders
+have bounded evidence. Initial compile/selector failures and UIKitToolbar warnings
+remain recorded. This is partial FR-06/07/08/16/18 evidence, not capture, Photos,
+Keychain, physical backup, final rendering or accessibility acceptance.
+
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
 Current physical-test preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)

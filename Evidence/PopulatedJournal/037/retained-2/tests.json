@@ -1,0 +1,104 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "57s",
+                  "durationInSeconds" : 57.983144998550415,
+                  "name" : "testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "31s",
+                  "durationInSeconds" : 31.449790000915527,
+                  "name" : "testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "27s",
+                  "durationInSeconds" : 27.198047995567322,
+                  "name" : "testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 12s",
+                  "durationInSeconds" : 72.15339195728302,
+                  "name" : "testSavedDarkroomEditAndExactResetPersistAcrossRelaunch()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "RetainedWorkflowTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "PopulatedJournalHarnessTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "PopulatedJournalHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

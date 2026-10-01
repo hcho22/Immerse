@@ -1,0 +1,134 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "B6EDB396-FAA6-44EE-96D5-ED08C8ACCA32.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "darkroom-reset_0_CD6821AD-EBE2-4042-9645-2941909731E5.txt",
+        "timestamp" : 1790888006.266
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "8B1BCCAC-B21B-4DC7-A369-06316FA85283.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "darkroom-reset_0_1BF1C2EC-0217-4313-9647-40EF8C55D639.png",
+        "timestamp" : 1790888006.26
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "1D9D945C-B5ED-4D35-A19F-9C280D1EC9CF.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "revealed-photo-Film_0_DB8E29AB-3307-43A2-B6E7-A6DAC3E03CB3.txt",
+        "timestamp" : 1790887993.939
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "C5A46EEE-E067-471B-A2B5-A7030D33C31C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "revealed-photo-Film_0_FE7A4112-231C-467B-9CE3-B9944259A048.png",
+        "timestamp" : 1790887993.929
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "8C44ACA7-F37C-4C06-B919-4D445423A32F.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      }
+    ],
+    "testIdentifier" : "PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval()",
+    "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "990BC9C8-AC59-4933-9B2C-F7B10397DD4F.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Instant-revealed-pack-open_0_236210DF-6B7A-4CB4-AB09-F1AC562285CA.txt",
+        "timestamp" : 1790888087.598
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "F8E4FA31-9244-4E84-8C8F-F103ABF0CD63.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Instant-revealed-pack-open_0_746E7A72-0803-4A2E-A9CB-8C297AD1E253.png",
+        "timestamp" : 1790888087.594
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "A35C3B90-8C21-4E9C-AC03-E7E542C63051.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      }
+    ],
+    "testIdentifier" : "PopulatedWorkflowTests/testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment()",
+    "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "2E18467F-29A4-4927-952A-7C4AB1EA40AE.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "empty-Movie-placeholders_0_3BF76A3F-07A0-403B-A32F-F01558FCB909.txt",
+        "timestamp" : 1790888123.437
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "93FC68CD-6747-411B-92BA-0A4D92FCE849.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "empty-Movie-placeholders_0_E09B6BCC-7C78-4A1D-AD3A-1B6828E491B2.png",
+        "timestamp" : 1790888123.436
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "42883CCD-44E9-468E-9A55-2A222CF4904A.txt",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "developed-Movie_0_6845F22C-0A9C-4A1B-8D12-0DCB07E4A98C.txt",
+        "timestamp" : 1790888108.415
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "1367CCDF-0443-4423-8B89-1C624505572E.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "developed-Movie_0_378876D9-36AA-495C-AF1B-0902C169F4AB.png",
+        "timestamp" : 1790888108.408
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "C3ADCAA5-0070-43C6-8D4A-7E3E54671C4C.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      }
+    ],
+    "testIdentifier" : "PopulatedWorkflowTests/testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom()",
+    "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom"
+  }
+]

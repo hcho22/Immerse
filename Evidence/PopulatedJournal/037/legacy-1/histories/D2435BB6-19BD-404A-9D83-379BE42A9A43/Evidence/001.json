@@ -1,0 +1,110 @@
+{
+  "films" : [
+    {
+      "captures" : [
+        {
+          "masterSHA256" : "2e98b0be265bd229c6369c0fa7f70311a3bfb41f609c4363c309e97e79e7cdd0",
+          "printSHA256" : "2e98b0be265bd229c6369c0fa7f70311a3bfb41f609c4363c309e97e79e7cdd0",
+          "recipe" : {
+            "dodgeBurnMasks" : [
+
+            ],
+            "printExposureStops" : 0
+          },
+          "sequence" : 1,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        },
+        {
+          "masterSHA256" : "a928e7e5326e247b78e2e6940c4ed38284117ee06108ec9916aacd6f08d61211",
+          "printSHA256" : "a928e7e5326e247b78e2e6940c4ed38284117ee06108ec9916aacd6f08d61211",
+          "recipe" : {
+            "dodgeBurnMasks" : [
+
+            ],
+            "printExposureStops" : 0
+          },
+          "sequence" : 2,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        }
+      ],
+      "development" : {
+        "assignments" : {
+          "1" : {
+            "seed" : 591313878224158469,
+            "sequenceNumber" : 1
+          },
+          "2" : {
+            "seed" : 906052950213391324,
+            "sequenceNumber" : 2
+          }
+        },
+        "completedSequences" : [
+          2,
+          1
+        ],
+        "filmID" : "C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D",
+        "isComplete" : true,
+        "printProcess" : "color",
+        "treatmentVersion" : "film-look-1-provisional"
+      },
+      "film" : {
+        "camera" : {
+          "capacity" : {
+            "exposures" : {
+              "_0" : 10
+            }
+          },
+          "displayName" : "1970s Instant",
+          "id" : "instant1970s",
+          "medium" : "photo",
+          "revealRule" : "instantPerExposure",
+          "supportsBuiltInSoundtrack" : false
+        },
+        "captures" : [
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812580874.933993,
+            "sequenceNumber" : 1
+          },
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812580874.969176,
+            "sequenceNumber" : 2
+          }
+        ],
+        "completionState" : {
+          "open" : {
+
+          }
+        },
+        "developmentState" : "notStarted",
+        "id" : "C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D",
+        "isArchived" : false,
+        "loadedAt" : 812580873.975697,
+        "title" : "Private synthetic Film"
+      }
+    }
+  ],
+  "privateFiles" : [
+    "Media\/C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D\/master-1.bin",
+    "Media\/C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D\/master-2.bin",
+    "Media\/C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D\/source-1.bin",
+    "Media\/C3CFC6C7-DD72-4960-A5C1-15DB5111BD4D\/source-2.bin",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 77225,
+  "reason" : "seeded",
+  "utc" : "2026-10-01T20:54:35Z"
+}

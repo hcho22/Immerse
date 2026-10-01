@@ -1,0 +1,37 @@
+Exported 9 attachments for: RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport():
+File: 72EB75A4-1016-4477-9C0F-452F5ECC9BCD.txt, suggested name: "reopened-original-export-still-pending_0_0518BCB9-D447-418D-9F18-AED6525A98DB.txt"
+File: DD933F92-D4D6-405D-926E-CE52591777BA.png, suggested name: "reopened-original-export-still-pending_0_05125058-B1FA-4E9D-836D-3031A149C9A7.png"
+File: 1CE49869-1E56-41A3-837E-237AF6B27116.txt, suggested name: "developed-export-requested-no-write_0_52550B53-872C-4CF6-8216-ED510FC0F473.txt"
+File: 37F12BBB-2CD6-428A-BEA2-D81D7B1F6F61.png, suggested name: "developed-export-requested-no-write_0_50E4AA06-8F46-42EA-801C-F5C45752141E.png"
+File: 4772A7AF-1CBB-4089-9BC7-12A10B0930D9.txt, suggested name: "completed-not-developed_0_F19A48ED-5D66-4AF6-9400-158867ADE219.txt"
+File: 1C632804-3417-45D0-8D09-024FB10B5F9C.png, suggested name: "completed-not-developed_0_76278291-BEB6-4007-A38B-DEE6A19D0438.png"
+File: 2660E597-1748-4546-81A4-3E436880EB7A.txt, suggested name: "early-cancelled_0_61788698-C0E0-4E9B-9F02-0D638A06838D.txt"
+File: 802CBC3D-B3F9-46FA-A897-CBAB7BA8774D.png, suggested name: "early-cancelled_0_8748CC69-EB73-4B11-B60A-5682F60DB732.png"
+File: 3AE1094E-CC38-4E18-8DC2-40B0906F4976.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 5 attachments for: RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation():
+File: B493DA65-DE7F-478B-B2AF-5997DF218259.txt, suggested name: "empty-deleted_0_3F8F9365-7966-4ACE-8C9A-771B23B23616.txt"
+File: A73732BD-E08C-4AD5-A347-E2409653DBD6.png, suggested name: "empty-deleted_0_D9D8F687-C774-4E5D-9F2C-7378D1B837BB.png"
+File: 0BC8BC67-8F5D-4E29-B761-4C6B3AC05267.txt, suggested name: "empty-delete-cancelled_0_5C024013-6D59-4C73-9A2A-4A3C98CA79B4.txt"
+File: 44A6C703-684A-47B3-B7E5-BA32B76C5CF0.png, suggested name: "empty-delete-cancelled_0_9F594EB2-50F7-4104-922A-A26042AC23F2.png"
+File: CE58AA70-5108-43B7-9F55-36A44EA55BC5.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 7 attachments for: RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume():
+File: 1FB83BB5-CE84-44C9-9BC2-CB9B92C99345.txt, suggested name: "Instant-reopened_0_E7AA303C-EEE8-49BE-9746-2ECEE1D18DFF.txt"
+File: FBC8D26A-5A55-4DC0-AD66-60D5D40C1355.png, suggested name: "Instant-reopened_0_4A6BAD4A-42C3-451C-9ED3-69E5C29C5653.png"
+File: 94C9D15E-D9FA-4B70-A42B-DF09A5BE524E.txt, suggested name: "Instant-both-revealed-still-open_0_4D6DAA97-D333-413E-83E5-F80F6B0922E4.txt"
+File: 7702DB6E-7FCA-47FD-A328-FEEAC5061213.png, suggested name: "Instant-both-revealed-still-open_0_C54A60A9-8CFE-49FB-9671-4E0F946B94E3.png"
+File: DBD2ACD8-7AA2-460E-89AC-B348DB52C6C8.txt, suggested name: "Instant-first-revealed-second-sealed_0_DE42B5E0-6A9F-4EAF-B0E4-F4918047ACF2.txt"
+File: 2F292DDC-A86A-4E0B-969B-D6570B14D8CB.png, suggested name: "Instant-first-revealed-second-sealed_0_2FCC47AD-FEBA-4DC2-8EC8-F4FBBBB22036.png"
+File: F9C91E8F-4625-4015-902D-93BF050FD4FC.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 7 attachments for: RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch():
+File: 076DA877-7FB6-4D41-ACE9-C7380631DBEF.txt, suggested name: "reset-reopened_0_EE8B916A-6B06-4B08-9E8C-C7F6561F506C.txt"
+File: 805BAF52-213D-4559-B34D-B6A583E25955.png, suggested name: "reset-reopened_0_FB379867-6D1F-42EF-B989-7AF76E0DD657.png"
+File: B3796DF8-D769-4EDD-AE70-AD64D7DA6B1D.txt, suggested name: "reset-first-photo_0_6134E5C9-C611-4F2E-9487-178A43B4CAC4.txt"
+File: 2BF8ECAA-05EA-4ACC-BA56-AAAE95DCBE01.png, suggested name: "reset-first-photo_0_5CF9D011-6C7C-4665-88D5-3122BD11E9AB.png"
+File: 78CC96D8-B1D3-4D97-AF22-BA748C988267.txt, suggested name: "edited-first-photo_0_7DF3A63D-B3D2-4866-A885-D04F32635846.txt"
+File: F8A0C617-C704-492C-8167-96D996F61ACA.png, suggested name: "edited-first-photo_0_F4C5AC5D-F17F-4789-B615-87B94ED4CD09.png"
+File: C15D1C70-D411-43E5-9ECF-42B69F6AEC8D.txt, suggested name: "Complete Issue Description.txt"
+
+Generated manifest file with attachment details: /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Evidence/PopulatedJournal/037/retained-2/attachments/manifest.json

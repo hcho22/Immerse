@@ -1,0 +1,2 @@
+mode=legacy
+selection=PopulatedJournalHarnessTests/PopulatedWorkflowTests

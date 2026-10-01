@@ -1,0 +1,9 @@
+Compile-only attempt, no simulator boot or test execution.
+Base: d5c1824 plus initial WorkflowScenario.swift retained as source-build-1.swift.txt.
+Command: xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData/PopulatedJournal037 CODE_SIGNING_ALLOWED=NO build-for-testing
+Exit: 65.
+Diagnostic excerpt from terminal output (not a full raw transcript):
+WorkflowScenario.swift:143:36: error: instance method 'makeIterator' is unavailable from asynchronous contexts
+        for case let url as URL in entries where try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {
+                                   ^
+Correction: move synchronous directory enumeration into privateFiles(); no production change.

@@ -92,6 +92,17 @@ private removal and unchanged injected consumption are recorded. No production
 queue API or native Security call was added. This does not retroactively prove
 the old 035 public-controller request timestamp or physical capture races.
 
+The independent populated-view continuation is recorded in
+`Evidence/PopulatedJournal/037/README.md`: four retained UI scenarios and exact
+state/print comparisons pass, plus three unchanged legacy workflow tests and an
+unsigned device build. Actual views/renderer/repository use synthetic media,
+injected read-only Trial and absent billing configuration. Empty Delete and early
+cancel/separate Development, individual Instant reveal, original choice without
+export, saved Darkroom edit/exact Reset/reopen and legacy Archive/Movie placeholders
+have bounded evidence. Initial compile/selector failures and UIKitToolbar warnings
+remain recorded. This is partial FR-06/07/08/16/18 evidence, not capture, Photos,
+Keychain, physical backup, final rendering or accessibility acceptance.
+
 Current QA-13 accessibility diagnosis:
 `Evidence/NativeApp/accessibility-original-matrix-diagnosis.md` rechecks the
 unchanged original default/largest cases once in light and dark on `a79d481`:
@@ -417,21 +428,21 @@ Status words in this table are intentionally conservative:
 | MOV-10 | Needs native clip files. | FilmDomain clip records; FilmPersistence assets; CapturePipeline synthetic clip save; RenderCore assembly plan; RenderFixtures sample media. | Partial metadata/storage plan plus decoded synthetic native media fixture; no captured clip files. |
 | MOV-11 | DEC-04/native media tests. | `Packages/RenderFixtures`, `Evidence/RenderFixtures`. | Prepared/partial: synthetic H.264 `.mov` fixture metadata recorded; approved codec/resolution/cadence and hardware export fidelity remain open. |
 | DEV-01 | Settled domain subset. | FilmDomain completion/development split. | Partial: capacity completion does not auto-develop. |
-| DEV-02 | Settled domain subset plus DEC-09. | FilmDomain `completeEarly`. | Partial: exact exposure waste tested. |
+| DEV-02 | Physical/full-capacity acceptance remains open. | FilmDomain completeEarly; FilmDetailView/DevelopmentView; PopulatedJournalHarness. | Partial: 037 UI/state checks verify cancel keeps open/sealed, confirmation spends exactly 25 remaining exposures and separate Development cancellation keeps completed/not developed. |
 | DEV-03 | Settled domain subset plus DEC-09. | FilmDomain `completeEarly`. | Partial: exact time waste tested. |
 | DEV-04 | Native reveal UI/physical acceptance remains open. | `FilmRuntime/FilmProcessor`, `DevelopmentStage`, 036 observer tests. | Partial: real native Development pauses/throws/cancels at approved existing phases; no reveal before verified persisted media. See source-bound DevelopmentObserver report. |
 | DEV-05 | Settled domain subset. | FilmDomain Instant reveal. | Partial: final print reveal tested. |
 | DEV-06 | Approved output/quality and physical evidence remain open. | Native renderer, repository and FilmProcessor; 036 DevelopmentObserver tests. | Partial: exact treatment assignments and native decoded/hash-verified persisted masters/clips survive thrown/cancelled observed boundaries, without rerendering retained captures. |
 | DEV-07 | Exact Development process-exit/hardware acceptance remains open. | FilmProcessor owned job/repository recovery; 036 DevelopmentObserver tests. | Partial: same-owner retry retires failed jobs; a new observer-absent owner resumes durable media/assignments. Repository re-entry is not process death or physical restore. |
 | DEV-08 | Physical storage/render interruption and full UI recovery missing. | FilmProcessor/FilmPersistence plus 036 boundary scenarios. | Partial: boundary throw/cancel preserves sources and durable state; verified cleanup follows explicit choice; removal cannot acknowledge while the tested Development job remains held. |
-| DEV-10 | DEC-09 now decided; needs storage/render verification. | FilmDomain DEC-09 domain behavior. | Partial: empty early disabled and empty Movie playback/export disabled. |
-| DRK-01 | DEC-11/renderer. | RenderCore `DarkroomRecipe`. | Partial recipe isolation model only. |
-| DRK-02 | DEC-11/renderer. | RenderCore `DarkroomRecipe.printExposureStops` and `contrastGrade`. | Partial fields only; ranges and pixels open. |
+| DEV-10 | DEC-09 supplied; physical/accessibility acceptance remains open. | FilmDetailView and production repository; PopulatedJournalHarness. | Partial 037 native UI: empty early disabled, Delete cancel/confirm; last Movie removal preserves numbered empty placeholders without export. |
+| DRK-01 | DEC-11/final-quality and full-control acceptance open. | DarkroomView, FilmProcessor, RenderCore and FilmPersistence. | Partial 037 UI/state comparison: saved exposure edit changes photo 1 print bytes, preserves photo 2 and treatment assignments, and survives relaunch. |
+| DRK-02 | DEC-11 final ranges and all-control acceptance open. | DarkroomView and native print renderer. | Partial: saved exposure UI/print change and reopen verified in 037; this checkpoint does not exercise contrast controls. |
 | DRK-03 | DEC-11/renderer. | RenderCore `ColorFiltration`. | Partial fields only; medium applicability open. |
 | DRK-04 | DEC-11/renderer. | RenderCore `Crop`. | Partial field only; crop boundaries open. |
 | DRK-05 | DEC-11/renderer. | RenderCore `LocalMask`. | Partial mask model only; native editing UI open. |
-| DRK-06 | DEC-11/renderer. | RenderCore reset test. | Partial: exact recipe reset tested; pixel reset requires renderer. |
-| DRK-08 | Native UI. | None. | Not started; no Movie Darkroom UI exists because no UI exists. |
+| DRK-06 | Full control/physical acceptance open. | DarkroomView, native print renderer and recipe persistence. | Partial 037: Reset/save/reopen restores original recipe and byte-identical print/source/master after saved exposure edit, without changing photo 2 or treatments. |
+| DRK-08 | Physical/full navigation acceptance open. | FilmDetailView/PhotoDetailView; PopulatedJournalHarness. | Partial 037 legacy UI regression: developed/empty Movie has no Darkroom; real photo path reaches it. |
 | STO-01 | Needs native app integration. | `Packages/FilmPersistence`. | Partial: Film metadata and source/master assets reload from SQLite/files in a new repository instance in behavior tests. |
 | STO-02 | DEC-13 copy and native UI. | Documentation only. | Not started in app. |
 | STO-03 | Needs native app sandbox integration. | FilmPersistence source files under app-private root. | Partial: synthetic sources stored privately in package root; no pre-reveal Photos path implemented. |
@@ -447,11 +458,11 @@ Status words in this table are intentionally conservative:
 | PRV-05 | Full native player/cache/cleanup-failure coverage missing. | Repository removal and `FilmProcessor`, 036 probe. | Partial: source/clip/old assembly/Work retirement and late export rejection verified against actual synthetic private files. Retained external test copies are deliberately not claimed removed. |
 | PRV-06 | Settled domain subset. | FilmDomain consumed duration unchanged after Discard. | Partial tested. |
 | PRV-07 | Hardware fidelity/audio/player acceptance missing. | Production `FilmProcessor`/Movie renderer/repository, 036 probe. | Partial: Super 8/16mm paused export races retire the old private assembly; actual native reassembly matches surviving clip duration, unchanged clip hash/treatment assignments/orientation and spent capacity. External stale copies remain; soundtrack races and hardware viewing untested. |
-| PRV-08 | DEC-09 now decided. | FilmDomain all-clips-discarded state. | Partial: empty Movie has placeholders and no playback/export. |
+| PRV-08 | DEC-09 supplied; physical player/export acceptance open. | FilmDetailView/Movie rendering; PopulatedJournalHarness. | Partial 037 legacy UI: last-clip discard retains 01/02 numbered discarded placeholders without developed export. See 036 for private retirement/hash assertions. |
 | PRV-10 | Needs copy/UI and storage verification. | Documentation only. | Not started in app. |
-| DEL-01 | Needs native UI/copy. | Documentation only. | Not started. |
+| DEL-01 | Final copy and full native/manual acceptance open. | FilmDetailView confirmation and Journal navigation. | Partial 037: empty Delete cancel preserves exact state; confirm removes Film/private files. Legacy rename/Archive/restore/Delete navigation passes. |
 | DEL-02 | Needs native confirmation/UI integration. | FilmPersistence `deleteFilm`. | Partial: sealed Film state and source assets are removed without Development in behavior tests. |
-| DEL-03 | FR-21 and DEC-09 empty Film policy. | Documentation/domain policy only. | Not started in app. |
+| DEL-03 | FR-21/DEC-09 device Trial behavior remains separately open. | Empty Film actions and repository. | Partial 037 UI/state: empty early disabled and Delete confirm removes synthetic subscription Film; not Trial replacement/hardware proof. |
 | DEL-04 | Needs Trial production implementation. | None. | Not started. |
 | BIL-01 | DEC-02 and StoreKit. | None. | Not started. |
 | BIL-02 | StoreKit entitlement. | `Packages/EntitlementCore`. | Partial policy: active subscription allows new Films and no per-Film charge tier is modeled; StoreKit validation unbuilt. |
@@ -468,7 +479,7 @@ Status words in this table are intentionally conservative:
 | QA-01 | Requires native real devices. | FilmDomain catalog tests. | Partial domain only; no real-device validation. |
 | QA-02 | Requires native app. | FilmDomain completion/Instant/sealed tests; CapturePipeline no-debit failure tests. | Partial domain/pipeline only. |
 | QA-03 | Native process-death/full-device cases still required. | FilmRuntime tests and `Evidence/DevelopmentObserver/036/README.md`. | Partial: native synthetic master/clip identities and treatment assignments persist through exact observed throw/cancel and default-absent-owner re-entry. Not hardware acceptance. |
-| QA-04 | Requires Darkroom renderer/UI. | RenderCore reset test. | Partial: recipe Reset to Original is exact; pixel/UI behavior unbuilt. |
+| QA-04 | All Darkroom controls, DEC-11 quality/ranges and hardware/accessibility acceptance open. | DarkroomView/FilmProcessor and retained-view inspector. | Partial 037 saved exposure edit and exact Reset/relaunch preserve original print bytes, other photo and treatments; remaining controls/gestures not accepted. |
 | QA-09 | Requires actual PhotoKit/native failure/storage acceptance. | Production storage/export owner plus 036 probe. | Partial source-bound simulator scenarios now cover verified cleanup, acknowledgment retry, unknown/cancelled reply, removal races and re-entry. All permissions/writes here are injected, never real Photos or storage exhaustion. |
 | QA-11 | Requires hardware Movie/media/player coverage. | Production render/reassembly owner plus 036 probe. | Partial actual native synthetic Super 8/16mm reassembly/retirement and last-clip empty placeholders verified. Physical fidelity, actual Photos copies, licensed soundtrack and active-player acceptance remain missing. |
 | QA-12 | Requires StoreKit, Trial hardware, reinstall/restore. | `Packages/EntitlementCore`, probe prepared. | Partial policy only; not accepted without StoreKit, Keychain delete/reinstall and two-device restore evidence. |

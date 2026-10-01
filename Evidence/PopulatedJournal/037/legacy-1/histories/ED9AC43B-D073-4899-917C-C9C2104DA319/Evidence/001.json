@@ -1,0 +1,105 @@
+{
+  "films" : [
+    {
+      "captures" : [
+        {
+          "clipSHA256" : "8296beac8f136e56a194e9c16328dec807de1f0bcc8ef69529a65ec3b0bab867",
+          "sequence" : 1,
+          "sourceSHA256" : "645fbbfedaa46f3fbb465dfd1fa16a7c5c93c322fa9e82b5931ffac4eb98584f"
+        },
+        {
+          "clipSHA256" : "35a06fdcffe8bd3ea12c8ec7735ade46a936a77888633312980328dfeefb85cc",
+          "sequence" : 2,
+          "sourceSHA256" : "645fbbfedaa46f3fbb465dfd1fa16a7c5c93c322fa9e82b5931ffac4eb98584f"
+        }
+      ],
+      "development" : {
+        "assignments" : {
+          "1" : {
+            "seed" : 5108031162757943962,
+            "sequenceNumber" : 1
+          },
+          "2" : {
+            "seed" : 807382915309216483,
+            "sequenceNumber" : 2
+          }
+        },
+        "completedSequences" : [
+          1,
+          2
+        ],
+        "filmID" : "35F4FFB7-8CE3-4137-B848-6040847DC47B",
+        "isComplete" : true,
+        "printProcess" : "color",
+        "treatmentVersion" : "film-look-1-provisional"
+      },
+      "film" : {
+        "camera" : {
+          "capacity" : {
+            "seconds" : {
+              "_0" : 165
+            }
+          },
+          "displayName" : "1960s 16mm Cinema",
+          "id" : "cinema16mm",
+          "medium" : "movie",
+          "revealRule" : "movieDevelopment",
+          "supportsBuiltInSoundtrack" : true
+        },
+        "captures" : [
+          {
+            "kind" : {
+              "movieClip" : {
+                "orientation" : "landscape",
+                "seconds" : 0.16833333333333333
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812580894.219282,
+            "sequenceNumber" : 1
+          },
+          {
+            "kind" : {
+              "movieClip" : {
+                "orientation" : "landscape",
+                "seconds" : 0.16833333333333333
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812580894.257332,
+            "sequenceNumber" : 2
+          }
+        ],
+        "completionState" : {
+          "completedEarly" : {
+            "wasted" : {
+              "seconds" : {
+                "_0" : 164.66333333333333
+              }
+            }
+          }
+        },
+        "developmentState" : "developed",
+        "id" : "35F4FFB7-8CE3-4137-B848-6040847DC47B",
+        "isArchived" : false,
+        "loadedAt" : 812580893.215697,
+        "movieOrientation" : "portrait",
+        "title" : "Private synthetic Film"
+      },
+      "movieSHA256" : "d195ac9adc572af16d1e9ad01604c9175137c685b13aa7d84cfb7a759618a53f"
+    }
+  ],
+  "privateFiles" : [
+    "Media\/35F4FFB7-8CE3-4137-B848-6040847DC47B\/clip-1.mov",
+    "Media\/35F4FFB7-8CE3-4137-B848-6040847DC47B\/clip-2.mov",
+    "Media\/35F4FFB7-8CE3-4137-B848-6040847DC47B\/movie-1-2-541E8AFE-36E2-4799-A63D-00F550753705.mov",
+    "Media\/35F4FFB7-8CE3-4137-B848-6040847DC47B\/source-1.mov",
+    "Media\/35F4FFB7-8CE3-4137-B848-6040847DC47B\/source-2.mov",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 78508,
+  "reason" : "seeded",
+  "utc" : "2026-10-01T20:55:01Z"
+}
