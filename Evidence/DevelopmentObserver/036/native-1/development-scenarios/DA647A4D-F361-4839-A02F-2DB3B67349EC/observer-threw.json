@@ -1,0 +1,59 @@
+{
+  "assets" : {
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "112F6C44-3313-4CB3-A84F-7FF80D1AE89D",
+    "isArchived" : false,
+    "loadedAt" : 812577294.752906,
+    "title" : "Synthetic Development boundary"
+  },
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 5594552393178649416,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "112F6C44-3313-4CB3-A84F-7FF80D1AE89D",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "workFiles" : [
+
+  ]
+}

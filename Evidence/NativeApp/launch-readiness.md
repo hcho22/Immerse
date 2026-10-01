@@ -125,6 +125,14 @@ installation, signing, purchases, device deletion, backup restoration or erasure
 
 ## Assets and Apple Configuration
 
+Subsequent 036 Development preparation is linked in
+[Development observer evidence](../DevelopmentObserver/036/README.md). The shared
+runtime gains a default-absent observer at five existing phases; no shipping
+configuration installs it. The report binds actual tests/builds and initial
+fixture failures to source, and distinguishes recovery after joined cancellation
+from untested process death, restore and physical media fidelity. No acceptance
+checkbox, QA-13 exception or release authority follows from this preparation.
+
 - DEC-01: final app name/copy, app icon, screenshots and metadata are not approved.
 - DEC-04/11: provisional render presets and controls require actual Camera-quality
   review. Do not label them authenticated simulations or silently approve ranges.

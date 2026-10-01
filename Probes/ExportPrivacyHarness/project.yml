@@ -58,6 +58,17 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.UITests
         GENERATE_INFOPLIST_FILE: YES
+  DevelopmentObserverTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - ../../Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift
+    dependencies:
+      - target: ExportPrivacyHarness
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.DevelopmentTests
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   ExportPrivacyHarness:
     build:
@@ -65,6 +76,7 @@ schemes:
         ExportPrivacyHarness: all
         ExportPrivacyTests: [test]
         ExportPrivacyUITests: [test]
+        DevelopmentObserverTests: [test]
     test:
-      targets: [ExportPrivacyTests, ExportPrivacyUITests]
+      targets: [ExportPrivacyTests, ExportPrivacyUITests, DevelopmentObserverTests]
       parallelizable: false

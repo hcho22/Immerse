@@ -1,16 +1,18 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/../.."
-mode=${1:?unit or ui}
+mode=${1:?unit, ui or development}
 label=${2:?unique evidence label}
 SIM=${SIMULATOR_ID:?explicit authorized simulator UUID required}
 case "$label" in *[!a-zA-Z0-9_-]*|'') exit 64 ;; esac
 case "$mode" in
   unit) selection=ExportPrivacyTests ;;
   ui) selection=ExportPrivacyUITests ;;
+  development) selection=DevelopmentObserverTests ;;
   *) exit 64 ;;
 esac
 OUT="Evidence/ExportPrivacyHarness/036/$label"
+if [ "$mode" = development ]; then OUT="Evidence/DevelopmentObserver/036/$label"; fi
 RESULT="DerivedData/Export036-$label.xcresult"
 test ! -e "$OUT"
 test ! -e "$RESULT"
@@ -36,6 +38,8 @@ xcrun simctl ui "$SIM" appearance light
 xcrun simctl ui "$SIM" content_size large
 find Probes/ExportPrivacyHarness -type f ! -path '*/xcuserdata/*' -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/source.sha256"
 shasum -a 256 Probes/ReceiptScenarioHarness/Sources/ScenarioEvidence.swift >> "$OUT/source.sha256"
+find Packages/FilmRuntime/Sources -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 >> "$OUT/source.sha256"
+shasum -a 256 Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift >> "$OUT/source.sha256"
 git rev-parse HEAD > "$OUT/base-revision.txt"
 xcodebuild -version > "$OUT/xcode.txt"
 printf 'mode=%s\nselection=%s\nresult=%s\n' "$mode" "$selection" "$RESULT" > "$OUT/selection.txt"
@@ -54,6 +58,9 @@ fi
 container=$(xcrun simctl get_app_container "$SIM" com.immerse.validation.ExportPrivacyHarness036 data)
 if [ -d "$container/Documents/ExportScenarios" ]; then
   cp -R "$container/Documents/ExportScenarios" "$OUT/scenarios"
+fi
+if [ -d "$container/Documents/DevelopmentScenarios" ]; then
+  cp -R "$container/Documents/DevelopmentScenarios" "$OUT/development-scenarios"
 fi
 find DerivedData/ExportPrivacy036/Build/Products/Debug-iphonesimulator/ExportPrivacyHarness.app \
   -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 > "$OUT/app-files.sha256"

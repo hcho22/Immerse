@@ -98,4 +98,11 @@ directory (or the full script path from repository root). It uses macOS's built-
 Ordinary process exit is not power loss, test writer errors are not PhotoKit daemon
 errors, and repository reopen is not backup/restore. Accessibility failures and
 physical/product gates remain open. Exact Development observer work is a subsequent
-checkpoint, not part of this target's first delivered boundary controls.
+checkpoint, not part of the first delivered export boundary controls at `a6000b3`.
+The added `DevelopmentObserverTests` hosted target reuses the production package's
+test source without adding a shipping fault setting or changing the export UI.
+Run `run-simulator.sh development UNIQUE-LABEL` with the explicit simulator
+selection above. Its snapshots/native media are retained separately in
+`Evidence/DevelopmentObserver/036/`; read `Packages/FilmRuntime/README.md` for
+the precise five-phase observer contract. This mode is not accepted by the
+export-only offline inspector, whose nine/two test counts remain unchanged.

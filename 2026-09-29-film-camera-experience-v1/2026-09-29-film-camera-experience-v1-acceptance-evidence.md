@@ -37,6 +37,14 @@ and unusable masters, while removed private Movies are retired/reassembled.
 No PhotoKit, physical recovery, soundtrack/player, original-audit or full-clause
 acceptance follows. Subsequent Development observers are not part of this checkpoint.
 
+The subsequent 036 observer candidate adds partial FR-06/16/18 and immutable
+treatment/privacy evidence in `Evidence/DevelopmentObserver/036/README.md`.
+Real production phases are exposed by an optional, default-absent callback only;
+native synthetic tests inspect durable state before/after throw, cancellation,
+release, re-entry and removal. Exact execution/source identities and limits are
+recorded there. This does not promote repository reopen to process-death or
+physical restoration evidence, and does not alter any clause or original failure.
+
 Row suffixes A01, A02, etc. are evidence labels, not new PRD or tracker IDs. A row marked partial identifies exactly what its test establishes; untested means the stated acceptance remains unproved. A dependency does not excuse a failed or untested gate.
 
 Current physical-test preparation: [manual validation handoff](../Evidence/NativeApp/manual-validation.md)

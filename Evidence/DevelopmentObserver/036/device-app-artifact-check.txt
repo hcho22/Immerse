@@ -1,0 +1,7 @@
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/Assets.car: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/Immerse: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/Immerse.debug.dylib: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/Info.plist: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/MediaCatalog.json: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/PkgInfo: OK
+DerivedData/ValidationDevice/Build/Products/Debug-iphoneos/Immerse.app/__preview.dylib: OK

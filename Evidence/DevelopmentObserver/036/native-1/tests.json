@@ -1,0 +1,137 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "14s",
+                  "durationInSeconds" : 14.387722969055176,
+                  "name" : "testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "11s",
+                  "durationInSeconds" : 11.894530057907104,
+                  "name" : "testDefaultAndEnabledCompletionAllCameras()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testDefaultAndEnabledCompletionAllCameras()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testDefaultAndEnabledCompletionAllCameras",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "4s",
+                  "durationInSeconds" : 4.275485038757324,
+                  "name" : "testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.6218940019607544,
+                  "name" : "testEnabledPauseReleaseCompletesWithoutExtraRendering()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testEnabledPauseReleaseCompletesWithoutExtraRendering()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testEnabledPauseReleaseCompletesWithoutExtraRendering",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.3610899448394775,
+                  "name" : "testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "7s",
+                  "durationInSeconds" : 7.358411073684692,
+                  "name" : "testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "DevelopmentObserverTests.swift:332: [Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "33s",
+                  "durationInSeconds" : 33.89942109584808,
+                  "name" : "testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob()",
+                  "nodeIdentifier" : "DevelopmentObserverTests/testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "DevelopmentObserverTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "DevelopmentObserverTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

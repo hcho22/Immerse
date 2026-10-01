@@ -8,19 +8,22 @@ import MediaCatalog
 public actor FilmProcessor {
     private let root: URL
     private let repository: FilmRepository
+    private let developmentObserver: DevelopmentObserver?
     private var jobs: [UUID: Task<Void, Error>] = [:]
     private var removing: Set<UUID> = []
 
-    public init(root: URL) throws {
+    public init(root: URL, developmentObserver: DevelopmentObserver? = nil) throws {
         self.root = root
         self.repository = try FilmRepository(rootURL: root)
+        self.developmentObserver = developmentObserver
     }
 
     public func develop(filmID: UUID) async throws {
         guard !removing.contains(filmID) else { throw PersistenceError.filmNotFound }
         if let job = jobs[filmID] { return try await job.value }
         let root = self.root
-        let job = Task.detached { try await DevelopmentWorker.run(root: root, filmID: filmID) }
+        let observer = developmentObserver
+        let job = Task.detached { try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer) }
         jobs[filmID] = job
         defer { jobs[filmID] = nil }
         try await job.value
@@ -41,7 +44,7 @@ public actor FilmProcessor {
         let film = try repository.discardRevealedCapture(filmID: filmID, sequenceNumber: sequence)
         try removeWork(filmID: filmID)
         if film.canPlaybackDevelopedMovie {
-            try await DevelopmentWorker.run(root: root, filmID: filmID)
+            try await DevelopmentWorker.run(root: root, filmID: filmID, observer: developmentObserver)
         }
     }
 
@@ -77,6 +80,7 @@ public actor FilmProcessor {
         guard !removing.contains(filmID), jobs[filmID] == nil else { throw PersistenceError.operationInProgress }
         guard let policy = catalog.manifest.soundtrackReselection else { throw MediaCatalogError.invalidManifest }
         let root = self.root
+        let observer = developmentObserver
         let job = Task.detached {
             let asset = try assetID.map { try catalog.resolve(id: $0) }
             let verification: VerifiedMedia?
@@ -87,7 +91,7 @@ public actor FilmProcessor {
             try repository.selectMovieSoundtrack(filmID: filmID, asset: asset, verification: verification,
                                                 reselectionPolicy: policy)
             try Task.checkCancellation()
-            try await DevelopmentWorker.run(root: root, filmID: filmID)
+            try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer)
         }
         jobs[filmID] = job
         defer { jobs[filmID] = nil }
@@ -116,9 +120,17 @@ public actor FilmProcessor {
 }
 
 enum DevelopmentWorker {
-    static func run(root: URL, filmID: UUID) async throws {
+    static func run(root: URL, filmID: UUID, observer: DevelopmentObserver? = nil) async throws {
         let repository = try FilmRepository(rootURL: root)
+        if let observer {
+            try await observer(filmID, .beforeBegin)
+            try Task.checkCancellation()
+        }
         let run = try repository.beginDevelopment(filmID: filmID)
+        if let observer {
+            try await observer(filmID, .afterAssignments)
+            try Task.checkCancellation()
+        }
         guard run.treatmentVersion == NativePhotoRenderer.treatmentVersion else { throw PersistenceError.treatmentConflict }
         let film = try repository.film(id: filmID)
         let audioSelection = try repository.movieAudioSelection(filmID: filmID)
@@ -141,15 +153,27 @@ enum DevelopmentWorker {
                 if kind == .master {
                     let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed,
                         process: run.printProcess ?? .color)
+                    if let observer {
+                        try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
+                        try Task.checkCancellation()
+                    }
                     try Task.checkCancellation()
                     try repository.writeDevelopedMaster(filmID: filmID, sequenceNumber: capture.sequenceNumber, data: data)
                 } else {
                     let output = work.appendingPathComponent("\(capture.sequenceNumber).mov")
                     try await NativeMovieRenderer.developClip(source: source.url, destination: output,
                         camera: film.camera, seed: treatment.seed, orientation: film.movieOrientation!)
+                    if let observer {
+                        try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
+                        try Task.checkCancellation()
+                    }
                     try Task.checkCancellation()
                     _ = try await VerifiedMedia.movie(at: output)
                     try repository.writeDevelopedClip(filmID: filmID, sequenceNumber: capture.sequenceNumber, data: Data(contentsOf: output))
+                }
+                if let observer {
+                    try await observer(filmID, .afterPersistence(sequence: capture.sequenceNumber))
+                    try Task.checkCancellation()
                 }
             }
             guard let asset = try repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: kind) else {
@@ -160,6 +184,10 @@ enum DevelopmentWorker {
             else { verification = try await VerifiedMedia.movie(at: asset.url); clips.append(asset.url) }
             evidence.append(verification)
             if film.camera.revealRule == .instantPerExposure {
+                if let observer {
+                    try await observer(filmID, .beforeRevealOrCleanup(.instantReveal(sequence: capture.sequenceNumber)))
+                    try Task.checkCancellation()
+                }
                 try repository.finishVerifiedDevelopment(filmID: filmID, verifiedMedia: [verification], instantSequence: capture.sequenceNumber)
             }
         }
@@ -177,7 +205,15 @@ enum DevelopmentWorker {
             evidence.append(verification)
         }
         if film.camera.revealRule != .instantPerExposure {
+            if let observer {
+                try await observer(filmID, .beforeRevealOrCleanup(.filmReveal))
+                try Task.checkCancellation()
+            }
             try repository.finishVerifiedDevelopment(filmID: filmID, verifiedMedia: evidence)
+        }
+        if let observer {
+            try await observer(filmID, .beforeRevealOrCleanup(.sourceCleanup))
+            try Task.checkCancellation()
         }
         try await cleanup(root: root, filmID: filmID)
     }

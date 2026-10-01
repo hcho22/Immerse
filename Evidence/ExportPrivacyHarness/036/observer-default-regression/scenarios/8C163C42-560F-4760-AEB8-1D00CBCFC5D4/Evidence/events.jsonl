@@ -1,0 +1,22 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"cinema16mm","event":"session-open","label":"movie-discard-beforeCopy","process":"10447","processSequence":"1","run":"8C163C42-560F-4760-AEB8-1D00CBCFC5D4","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:59:15Z"}
+{"developed":"true","event":"native-fixture-created","film":"003F8EFE-93E4-4E4A-AA02-249E5BB67627","process":"10447","processSequence":"2","utc":"2026-10-01T19:59:19Z"}
+{"event":"inventory","file":"inventory-9B5974FC-1BCA-4DC2-A2E9-8526BDC5E93D.json","label":"prepared","process":"10447","processSequence":"3","summary":"films=1;sources=2;copies=0","utc":"2026-10-01T19:59:20Z"}
+{"event":"inventory","file":"inventory-137B4505-42D4-43C1-B7B8-A34EF2F95E0B.json","label":"before-discard","process":"10447","processSequence":"4","summary":"films=1;sources=2;copies=0","utc":"2026-10-01T19:59:21Z"}
+{"event":"export-requested","originals":"false","process":"10447","processSequence":"5","sequences":"[1, 2]","utc":"2026-10-01T19:59:21Z"}
+{"event":"injected-authorization","level":"addOnly","process":"10447","processSequence":"6","status":"authorized","utc":"2026-10-01T19:59:22Z"}
+{"attempt":"1","event":"writer-entered","kind":"movie","nativePhotoKit":"false","process":"10447","processSequence":"7","utc":"2026-10-01T19:59:22Z","writer":"1317D59E-B218-462D-85A6-BDF6F000016A"}
+{"event":"writer-paused","phase":"paused-beforeCopy","process":"10447","processSequence":"8","utc":"2026-10-01T19:59:22Z","writer":"1317D59E-B218-462D-85A6-BDF6F000016A"}
+{"event":"removal-requested","operation":"discard-1","process":"10447","processSequence":"9","utc":"2026-10-01T19:59:22Z"}
+{"event":"writer-task-cancelled","phase":"paused-beforeCopy","process":"10447","processSequence":"10","utc":"2026-10-01T19:59:22Z","writer":"1317D59E-B218-462D-85A6-BDF6F000016A"}
+{"event":"inventory","file":"inventory-DA9375D7-BEEC-49A1-86F9-2FD20C9FB6BC.json","label":"discard-awaits-writer","process":"10447","processSequence":"11","summary":"films=1;sources=2;copies=0","utc":"2026-10-01T19:59:23Z"}
+{"event":"writer-released","process":"10447","processSequence":"12","utc":"2026-10-01T19:59:23Z","writer":"1317D59E-B218-462D-85A6-BDF6F000016A"}
+{"error":"writeFailed(\"CancellationError()\")","event":"export-error","process":"10447","processSequence":"13","utc":"2026-10-01T19:59:23Z"}
+{"event":"removal-returned","process":"10447","processSequence":"14","utc":"2026-10-01T19:59:23Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"10447","processSequence":"15","utc":"2026-10-01T19:59:23Z"}
+{"event":"inventory","file":"inventory-56C5E624-B95C-44F9-8AB1-82A3D7ACAC84.json","label":"discard-reassembled-reopened","process":"10447","processSequence":"16","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:59:24Z"}
+{"event":"removal-requested","operation":"discard-2","process":"10447","processSequence":"17","utc":"2026-10-01T19:59:24Z"}
+{"event":"removal-returned","process":"10447","processSequence":"18","utc":"2026-10-01T19:59:24Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"10447","processSequence":"19","utc":"2026-10-01T19:59:24Z"}
+{"event":"inventory","file":"inventory-0B268EEE-DDC7-45C4-997A-6F15248FBA48.json","label":"last-clip-empty-reopened","process":"10447","processSequence":"20","summary":"films=1;sources=0;copies=0","utc":"2026-10-01T19:59:24Z"}
+{"event":"export-requested","originals":"false","process":"10447","processSequence":"21","sequences":"[1, 2]","utc":"2026-10-01T19:59:24Z"}
+{"error":"mediaNotRevealed","event":"export-error","process":"10447","processSequence":"22","utc":"2026-10-01T19:59:24Z"}

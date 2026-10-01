@@ -1,0 +1,44 @@
+{
+  "testIdentifier" : "DevelopmentObserverTests/testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver()",
+  "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/DevelopmentObserverTests/DevelopmentObserverTests/testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver",
+  "testName" : "testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : "DevelopmentObserverTests.Fixture.snapshot(_:)"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : "DevelopmentObserverTests.testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver()"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790884451.74,
+          "title" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790884453.23,
+          "title" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions"
+        }
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

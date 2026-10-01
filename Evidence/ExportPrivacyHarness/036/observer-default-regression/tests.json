@@ -1,0 +1,143 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.6419739723205566,
+                  "name" : "testAcknowledgementCannotCleanWithoutDecodableHashMatchingMaster()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testAcknowledgementCannotCleanWithoutDecodableHashMatchingMaster()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testAcknowledgementCannotCleanWithoutDecodableHashMatchingMaster",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "11s",
+                  "durationInSeconds" : 11.630709052085876,
+                  "name" : "testDefaultPreparationAndRecoveryNeverExportAllCameras()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testDefaultPreparationAndRecoveryNeverExportAllCameras()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testDefaultPreparationAndRecoveryNeverExportAllCameras",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.5473639965057373,
+                  "name" : "testDeleteWaitsForPausedReplyAndCannotRecallCompletedCopy()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testDeleteWaitsForPausedReplyAndCannotRecallCompletedCopy()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testDeleteWaitsForPausedReplyAndCannotRecallCompletedCopy",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.45s",
+                  "durationInSeconds" : 0.4469560384750366,
+                  "name" : "testDevelopedExportKeepsOriginalChoiceIndependent()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testDevelopedExportKeepsOriginalChoiceIndependent()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testDevelopedExportKeepsOriginalChoiceIndependent",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1s",
+                  "durationInSeconds" : 1.38822603225708,
+                  "name" : "testFailedUnknownMissingAndCancelledRepliesPreserveMedia()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testFailedUnknownMissingAndCancelledRepliesPreserveMedia()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testFailedUnknownMissingAndCancelledRepliesPreserveMedia",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "38s",
+                  "durationInSeconds" : 38.64471101760864,
+                  "name" : "testMovieDiscardRetiresPrivateAssemblyButKeepsCompletedExternalCopy()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testMovieDiscardRetiresPrivateAssemblyButKeepsCompletedExternalCopy()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testMovieDiscardRetiresPrivateAssemblyButKeepsCompletedExternalCopy",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.46s",
+                  "durationInSeconds" : 0.46009302139282227,
+                  "name" : "testPartialAcknowledgementRetrySkipsRecordedWrite()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testPartialAcknowledgementRetrySkipsRecordedWrite()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testPartialAcknowledgementRetrySkipsRecordedWrite",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.85s",
+                  "durationInSeconds" : 0.8455640077590942,
+                  "name" : "testPermissionAndSealedSelectionNeverDispatchWriter()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testPermissionAndSealedSelectionNeverDispatchWriter()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testPermissionAndSealedSelectionNeverDispatchWriter",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.63s",
+                  "durationInSeconds" : 0.6285879611968994,
+                  "name" : "testSuspendWaitsForWriterCancellationAndPreservesOriginals()",
+                  "nodeIdentifier" : "ExportPrivacyTests/testSuspendWaitsForWriterCancellationAndPreservesOriginals()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests/testSuspendWaitsForWriterCancellationAndPreservesOriginals",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ExportPrivacyTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests/ExportPrivacyTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ExportPrivacyTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

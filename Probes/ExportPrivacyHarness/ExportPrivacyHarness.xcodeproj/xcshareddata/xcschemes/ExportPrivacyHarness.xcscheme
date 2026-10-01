@@ -9,6 +9,20 @@
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0193B4022E6942043A1E3821"
+               BuildableName = "DevelopmentObserverTests.xctest"
+               BlueprintName = "DevelopmentObserverTests"
+               ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
@@ -86,6 +100,17 @@
                BlueprintIdentifier = "2B789362606419B9ECC9030F"
                BuildableName = "ExportPrivacyUITests.xctest"
                BlueprintName = "ExportPrivacyUITests"
+               ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0193B4022E6942043A1E3821"
+               BuildableName = "DevelopmentObserverTests.xctest"
+               BlueprintName = "DevelopmentObserverTests"
                ReferencedContainer = "container:ExportPrivacyHarness.xcodeproj">
             </BuildableReference>
          </TestableReference>

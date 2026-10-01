@@ -1,0 +1,19 @@
+{
+  "assets" : [
+
+  ],
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+    "1D9AC161-AB9C-4D73-BD9A-5A7BC5DFB30E-1.jpeg" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "films" : [
+
+  ],
+  "privateFiles" : {
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "4f8a4e3db119db454a7158807c898a10efa89fa7d8c454c71b00ca08b39bfe07",
+    "film-store.sqlite-wal" : "a0c530ab71e4b4e1ffa0d8acf943917c083c3848941138841a4e00d5dd4d1dc7"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "lastBootedAt": "2026-10-01T19:35:00Z",
+  "dataPath": "/Users/hcho/Library/Developer/CoreSimulator/Devices/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60/data",
+  "dataPathSize": 3237421056,
+  "logPath": "/Users/hcho/Library/Logs/CoreSimulator/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+  "udid": "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+  "isAvailable": true,
+  "logPathSize": 540672,
+  "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+  "state": "Shutdown",
+  "name": "Immerse v1 Validation"
+}

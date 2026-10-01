@@ -1,0 +1,7 @@
+{
+  "backend" : "native-synthetic-no-external-services",
+  "camera" : "disposable1990s",
+  "createdUTC" : "2026-10-01T19:54:52Z",
+  "film" : "68554771-22E0-430E-A646-DF083A2CB997",
+  "label" : "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)"
+}

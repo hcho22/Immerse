@@ -1,0 +1,3 @@
+mode=unit
+selection=ExportPrivacyTests
+result=DerivedData/Export036-observer-default-regression.xcresult

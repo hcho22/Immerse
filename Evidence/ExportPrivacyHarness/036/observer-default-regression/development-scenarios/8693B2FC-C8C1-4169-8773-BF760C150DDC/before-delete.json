@@ -1,0 +1,66 @@
+{
+  "assets" : {
+    "clip-1" : "b1da2a0c67e5aa848e25a05d09f602ffee347668ff68bbe3dfecd18e1b487457",
+    "source-1" : "b08367fef68d1c976605a3cc94072030c592a89aa13ed921e95f6c010cf628a4"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 165
+        }
+      },
+      "displayName" : "1960s 16mm Cinema",
+      "id" : "cinema16mm",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 164.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developing",
+    "id" : "F8391467-FF02-47A9-97FA-39A8A146A45C",
+    "isArchived" : false,
+    "loadedAt" : 812577278.361564,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic Development boundary"
+  },
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 10955951731314776329,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "F8391467-FF02-47A9-97FA-39A8A146A45C",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "workFiles" : [
+    "Work\/F8391467-FF02-47A9-97FA-39A8A146A45C\/0A2CF3FD-8A37-4FE5-A9E8-5D2FD2473D5F\/1.mov"
+  ]
+}

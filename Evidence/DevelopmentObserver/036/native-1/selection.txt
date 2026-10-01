@@ -1,0 +1,3 @@
+mode=development
+selection=DevelopmentObserverTests
+result=DerivedData/Export036-native-1.xcresult

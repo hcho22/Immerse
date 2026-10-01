@@ -1,0 +1,7 @@
+{
+  "backend" : "native-synthetic-no-external-services",
+  "camera" : "cinema16mm",
+  "createdUTC" : "2026-10-01T19:54:58Z",
+  "film" : "9338FCDD-28C6-4625-BCAC-06B4DA6565AC",
+  "label" : "throw-beforeBegin"
+}

@@ -1,0 +1,21 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"disposable1990s","event":"session-open","label":"process-beforeCopy","process":"70332","processSequence":"1","run":"3E15E564-B8D8-4851-BFD0-DEDA337F4F0E","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:37:44Z"}
+{"developed":"true","event":"native-fixture-created","film":"374E019B-FA76-4DB5-9ECD-EF0F1B935CF9","process":"70332","processSequence":"2","utc":"2026-10-01T19:37:50Z"}
+{"event":"inventory","file":"inventory-36EEB5D2-01DE-4F08-A331-E937168F2945.json","label":"prepared","process":"70332","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:37:50Z"}
+{"event":"inventory","file":"inventory-440921A7-4458-4B28-8E57-7AAA35CEC55F.json","label":"prepare","process":"70332","processSequence":"4","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:37:50Z"}
+{"event":"export-requested","originals":"true","process":"70332","processSequence":"5","sequences":"[1]","utc":"2026-10-01T19:37:51Z"}
+{"event":"injected-authorization","level":"addOnly","process":"70332","processSequence":"6","status":"authorized","utc":"2026-10-01T19:37:51Z"}
+{"attempt":"1","event":"writer-entered","kind":"photo","nativePhotoKit":"false","process":"70332","processSequence":"7","utc":"2026-10-01T19:37:51Z","writer":"027B05E2-9D68-4E98-B498-62F892B4008A"}
+{"event":"writer-paused","phase":"paused-beforeCopy","process":"70332","processSequence":"8","utc":"2026-10-01T19:37:51Z","writer":"027B05E2-9D68-4E98-B498-62F892B4008A"}
+{"event":"inventory","file":"inventory-54519A43-90A0-4516-9103-A1B014FE32E8.json","label":"inspect-explicit","process":"70332","processSequence":"9","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:37:53Z"}
+{"event":"inventory","file":"inventory-97546420-6C69-41CE-873B-E72C728615C2.json","label":"inspect","process":"70332","processSequence":"10","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:37:53Z"}
+{"event":"ordinary-process-exit","powerLoss":"false","process":"70332","processSequence":"11","status":"79","utc":"2026-10-01T19:37:56Z"}
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"disposable1990s","event":"session-open","label":"process-beforeCopy","process":"71278","processSequence":"1","run":"3E15E564-B8D8-4851-BFD0-DEDA337F4F0E","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:37:58Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"71278","processSequence":"2","utc":"2026-10-01T19:38:03Z"}
+{"event":"inventory","file":"inventory-762483C0-FAC2-4526-ADCB-CAC835B3B8E8.json","label":"recover","process":"71278","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:38:04Z"}
+{"event":"export-requested","originals":"true","process":"71278","processSequence":"4","sequences":"[1]","utc":"2026-10-01T19:38:06Z"}
+{"event":"injected-authorization","level":"addOnly","process":"71278","processSequence":"5","status":"authorized","utc":"2026-10-01T19:38:06Z"}
+{"attempt":"1","event":"writer-entered","kind":"photo","nativePhotoKit":"false","process":"71278","processSequence":"6","utc":"2026-10-01T19:38:06Z","writer":"BF83201B-8DA1-46DC-971E-BBE378A1D1E3"}
+{"decodedFrames":"1","event":"external-synthetic-copy-completed","file":"BF83201B-8DA1-46DC-971E-BBE378A1D1E3-1.jpeg","process":"71278","processSequence":"7","recalledByPrivateRemoval":"false","sha256":"5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55","utc":"2026-10-01T19:38:06Z","writer":"BF83201B-8DA1-46DC-971E-BBE378A1D1E3"}
+{"event":"injected-export-reply","process":"71278","processSequence":"8","receipt":"injected-private-export036:BF83201B-8DA1-46DC-971E-BBE378A1D1E3:1","taskCancelled":"false","utc":"2026-10-01T19:38:06Z","writer":"BF83201B-8DA1-46DC-971E-BBE378A1D1E3"}
+{"event":"export-returned","process":"71278","processSequence":"9","utc":"2026-10-01T19:38:06Z"}
+{"event":"inventory","file":"inventory-3C51AD1F-A113-4749-9A52-17DC6C0182DF.json","label":"retry","process":"71278","processSequence":"10","summary":"films=1;sources=0;copies=1","utc":"2026-10-01T19:38:06Z"}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D2F1C9B743915C4522A81C0 /* DevelopmentObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */; };
 		31B2114577ACD6FE4D17C389 /* ExportScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8FA79544BAAEA8A3BF40E9 /* ExportScenario.swift */; };
 		36725F7871AC1968CEE520CF /* ExportProcessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */; };
 		394AEAD0D41282D278D514C9 /* ExportPrivacyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */; };
@@ -22,6 +23,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		477D390395B28B5A90641324 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2271B112ABB199472415545 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B297E76505E38CBC4E3D29BB;
+			remoteInfo = ExportPrivacyHarness;
+		};
 		93683143ECC6ADDB9EA01663 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2271B112ABB199472415545 /* Project object */;
@@ -44,9 +52,11 @@
 		5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyTests.swift; sourceTree = "<group>"; };
 		6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ExportPrivacyHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentObserverTests.swift; sourceTree = "<group>"; };
 		894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivacyApp.swift; sourceTree = "<group>"; };
 		A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportProcessExitTests.swift; sourceTree = "<group>"; };
 		A92FF5AD992A12F15AEA9E2D /* ScenarioEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioEvidence.swift; sourceTree = "<group>"; };
+		CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DevelopmentObserverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D35A271486D1EC5B7778147F /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
 		DD58A7C77B1C07CF6684EAAD /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ExportPrivacyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,9 +93,19 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		5187AD2C2AC6569A768F60DF /* FilmRuntimeTests */ = {
+			isa = PBXGroup;
+			children = (
+				7D392D674630BFAB9B81335C /* DevelopmentObserverTests.swift */,
+			);
+			name = FilmRuntimeTests;
+			path = ../../Packages/FilmRuntime/Tests/FilmRuntimeTests;
+			sourceTree = "<group>";
+		};
 		740214AEA76D8B64FA6B92A3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */,
 				6EB6290213E1FDC645CA9C52 /* ExportPrivacyHarness.app */,
 				DDA37E4B2A0C2BF263DAEC5A /* ExportPrivacyTests.xctest */,
 				6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */,
@@ -104,6 +124,7 @@
 		78EE17769E4AB4C5D717578A = {
 			isa = PBXGroup;
 			children = (
+				5187AD2C2AC6569A768F60DF /* FilmRuntimeTests */,
 				C11C51952DFBA61F79ED3037 /* Packages */,
 				00A6DFDF3F419B5F399A21DA /* Sources */,
 				F724F5CCFAD1521DFE08FD30 /* Sources */,
@@ -146,6 +167,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0193B4022E6942043A1E3821 /* DevelopmentObserverTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6F5260693E14612CC3D03C8B /* Build configuration list for PBXNativeTarget "DevelopmentObserverTests" */;
+			buildPhases = (
+				72AF0DEEEFEE532C6D02D1A9 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B8A893DDFFB14B9233D255DB /* PBXTargetDependency */,
+			);
+			name = DevelopmentObserverTests;
+			packageProductDependencies = (
+			);
+			productName = DevelopmentObserverTests;
+			productReference = CE9909CF49C8B7A7238CC598 /* DevelopmentObserverTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2B789362606419B9ECC9030F /* ExportPrivacyUITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A4FDC947BBB43F0C66D77F7 /* Build configuration list for PBXNativeTarget "ExportPrivacyUITests" */;
@@ -242,6 +281,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				0193B4022E6942043A1E3821 /* DevelopmentObserverTests */,
 				B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */,
 				C4670707147C90AB50692A1A /* ExportPrivacyTests */,
 				2B789362606419B9ECC9030F /* ExportPrivacyUITests */,
@@ -250,6 +290,14 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		72AF0DEEEFEE532C6D02D1A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D2F1C9B743915C4522A81C0 /* DevelopmentObserverTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ADF3BD69596E4A03329AEC78 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -290,6 +338,11 @@
 			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
 			targetProxy = 93683143ECC6ADDB9EA01663 /* PBXContainerItemProxy */;
 		};
+		B8A893DDFFB14B9233D255DB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B297E76505E38CBC4E3D29BB /* ExportPrivacyHarness */;
+			targetProxy = 477D390395B28B5A90641324 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -307,6 +360,23 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ExportPrivacyHarness;
+			};
+			name = Debug;
+		};
+		2A0BE37E2BA1B325F2897F55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.DevelopmentTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
 			};
 			name = Debug;
 		};
@@ -518,6 +588,23 @@
 			};
 			name = Debug;
 		};
+		E8DAB54BE8C164F3850E014C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ExportPrivacyHarness036.DevelopmentTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ExportPrivacyHarness.app/ExportPrivacyHarness";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -544,6 +631,15 @@
 			buildConfigurations = (
 				CB8DF631F22B9E7E9406B705 /* Debug */,
 				92BF1FA02620389D00D5D84F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6F5260693E14612CC3D03C8B /* Build configuration list for PBXNativeTarget "DevelopmentObserverTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A0BE37E2BA1B325F2897F55 /* Debug */,
+				E8DAB54BE8C164F3850E014C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

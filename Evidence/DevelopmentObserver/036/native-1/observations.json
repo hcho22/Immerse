@@ -1,0 +1,805 @@
+{
+  "result": "passed offline retained-state checks",
+  "histories": 49,
+  "groups": {
+    "throw": 18,
+    "default": 5,
+    "cancel": 10,
+    "delete": 8,
+    "release": 6,
+    "movie": 1,
+    "instant": 1
+  },
+  "integerParsing": "Ruby JSON exact integers",
+  "physicalAcceptance": false,
+  "observations": [
+    {
+      "id": "06447B15-D336-443B-B1AF-37AE96429190",
+      "label": "throw-afterAssignments",
+      "camera": "cinema16mm",
+      "film": "DB8480E3-7DE7-4F17-AA82-58F6581B9EBE",
+      "createdUTC": "2026-10-01T19:55:02Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "338601bdb8297f40eb5fd94239fd75b7346cc77b46d215acc611424a26f541d0",
+        "movie-0": "e92884bcd44021a6f360dd844af11c1dfc5c4f411421e03f53f38218fcff7f6f"
+      }
+    },
+    {
+      "id": "0692E4CF-6ACA-40E3-BC7A-A279BC6BEE06",
+      "label": "default-and-enabled",
+      "camera": "mediumFormat6x6",
+      "film": "7292B968-3808-47BD-B7F1-144A1C0C0C5D",
+      "createdUTC": "2026-10-01T19:54:26Z",
+      "snapshots": [
+        "default-completed",
+        "finished",
+        "observed-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "935d3f15bc0276412d87447db6d39499331f686085c7ab1abe7285e68a662acb",
+        "source-1": "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+      }
+    },
+    {
+      "id": "0940E7FA-4627-400A-AE25-1D4ED9CBA2B1",
+      "label": "cancel-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.filmReveal)",
+      "camera": "disposable1990s",
+      "film": "1A8C5228-7ECE-4DCB-B7F0-F9E913D9D706",
+      "createdUTC": "2026-10-01T19:54:12Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "5fc65fa4e6912b2f96d7687b4e2332b7223fd53c2e134bfe05816134d7a95158"
+      }
+    },
+    {
+      "id": "0C0FFEB1-1453-4A32-ACC9-AB3E7F8C87A2",
+      "label": "cancel-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.instantReveal(sequence: 1))",
+      "camera": "instant1970s",
+      "film": "1CB6FF08-8248-4B97-B471-EAB3E9CAB07F",
+      "createdUTC": "2026-10-01T19:54:22Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "a315a5e23faacf0bd637710f92eefb6a775312f66908017694f79b50c941e821"
+      }
+    },
+    {
+      "id": "189299D1-F57E-4DC3-B0CC-299DCDAA7D8A",
+      "label": "throw-afterPersistence(sequence: 1)",
+      "camera": "cinema16mm",
+      "film": "A0D4696E-D036-49BC-A936-F0D3283670A3",
+      "createdUTC": "2026-10-01T19:55:11Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "e5b632ae85e8f923a9e582f1123b10843ee1bd6e019fa7a6be639f0b49d2f736",
+        "movie-0": "cf6bc5c2726782918342cd0ce702ba7c9616d9e5848942f635edbce4e34bf12f"
+      }
+    },
+    {
+      "id": "29B273C8-932E-43ED-9B07-72A135FCF199",
+      "label": "delete-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.instantReveal(sequence: 1))",
+      "camera": "instant1970s",
+      "film": "39902EDE-220B-4D52-95C6-55E1A3D5FFDC",
+      "createdUTC": "2026-10-01T19:54:40Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "29B40D0E-761E-467A-BF11-DB9F8302241A",
+      "label": "throw-afterPersistence(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "4935D599-1C0E-44E5-9A3D-F4B0B480F398",
+      "createdUTC": "2026-10-01T19:54:52Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "f2782b0b186e4f654e46637bb6999f9749a67bf1fe5c63b36e0a65c87dab31b6"
+      }
+    },
+    {
+      "id": "39F4296A-BA90-4C78-940D-2E3E6E1FABB3",
+      "label": "cancel-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "disposable1990s",
+      "film": "4DCBC24D-7186-40D7-901D-932FCB8A4E5A",
+      "createdUTC": "2026-10-01T19:54:12Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "ed960e92d025b6a4d5c1098260b1f04772c885b893a38f460180b37169994f64"
+      }
+    },
+    {
+      "id": "3A07766C-69A3-414D-96A0-8B2B1666658C",
+      "label": "cancel-afterPersistence(sequence: 1)",
+      "camera": "cinema16mm",
+      "film": "5A0C2DF8-ECCB-4E6C-B156-28F2FCE5EB4B",
+      "createdUTC": "2026-10-01T19:54:18Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "8f9cc00f15af77cb9449fee72b9cde0d5c8fdff1bac3fef2b45a85eb58ef3ca1",
+        "movie-0": "74a4f8ea313cc53de57e19a0e3cc2b8c139616f808b6fc65e986985787f659af"
+      }
+    },
+    {
+      "id": "469AD618-6D41-47C6-B5D1-A50F3CBD6088",
+      "label": "throw-afterRendering(sequence: 1)",
+      "camera": "cinema16mm",
+      "film": "9F40356F-B10A-46A9-8A54-4DC024409576",
+      "createdUTC": "2026-10-01T19:55:06Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "ce22e9b774384cfdfd517efed3db16c7c0c884ad60c3fa3c6113ed53fae41e86",
+        "movie-0": "b759ea12af91574bb62db4ea7cfb1e8af1853f26166dabed6ac5f76b7a1e9eba"
+      }
+    },
+    {
+      "id": "4E60634C-1275-4AC8-923A-48812BE3A80B",
+      "label": "release-beforeBegin",
+      "camera": "disposable1990s",
+      "film": "CC270CFD-0E8A-4CB4-81D6-935044C49EBD",
+      "createdUTC": "2026-10-01T19:54:41Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "ed405ba35cd85f133658039456c6afe2b7b8e249176dd21f65057104f8d2779f"
+      }
+    },
+    {
+      "id": "508A858B-DB57-430E-84EB-AD38D70301EE",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.instantReveal(sequence: 1))",
+      "camera": "instant1970s",
+      "film": "DAD99984-E748-4C1B-A9F6-ABA1F4737EF4",
+      "createdUTC": "2026-10-01T19:54:56Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "ee6e566aaebc63c721ad3e678b31eda42cc6f69af8c8aacbf99a9204e125750a"
+      }
+    },
+    {
+      "id": "573D91A4-EA74-4CA1-A4E7-FB9357E5FE41",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.filmReveal)",
+      "camera": "disposable1990s",
+      "film": "16884B9A-E245-4ED4-8F8B-F2F7D5E45D1A",
+      "createdUTC": "2026-10-01T19:54:52Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "bf0daba99fe886efe1f461d9345de15e77fb1f5c3739dca4eddd4dc2bdc679c8"
+      }
+    },
+    {
+      "id": "578CCF2D-34B2-4056-B18D-048AB1C8C3C2",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "disposable1990s",
+      "film": "68554771-22E0-430E-A646-DF083A2CB997",
+      "createdUTC": "2026-10-01T19:54:52Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "093fa41d5444e5461a2b4241fa64eb81f8eda42c9d5d18522e1eae1259cd6811"
+      }
+    },
+    {
+      "id": "5F4FCE38-A221-42ED-A777-8147F3D9A5C4",
+      "label": "release-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.filmReveal)",
+      "camera": "disposable1990s",
+      "film": "F9AFC3C2-F5F8-4844-92C3-31D4E09FBFF3",
+      "createdUTC": "2026-10-01T19:54:42Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "bb9191bbd8fe19322c3e8557cd9f07dd9f95522a9490367a933c037633ae07f2"
+      }
+    },
+    {
+      "id": "5FC426B4-6847-46D5-8567-DDA101987688",
+      "label": "release-afterPersistence(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "3B22AC5A-05FB-41B5-B503-9824B2544D7F",
+      "createdUTC": "2026-10-01T19:54:42Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "7166f2ebb5317ad0e69742ed4b657f349c4116674fe8f0b5df9306b334f77f37"
+      }
+    },
+    {
+      "id": "6470E1EB-A99A-49B9-8295-75646ED4986A",
+      "label": "cancel-afterRendering(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "C0D960A8-6297-4EAA-975B-5C3FC4DEE129",
+      "createdUTC": "2026-10-01T19:54:11Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "cbfc689d4ffdeccc7b1dbbde1e18b7f630bfb0840118e920f216356b38d803ef"
+      }
+    },
+    {
+      "id": "65B4CB8D-D5A8-4EA2-A863-8D5E4FB49754",
+      "label": "release-afterAssignments",
+      "camera": "disposable1990s",
+      "film": "163E5293-C6CD-47DE-83A3-4A62FB0252C5",
+      "createdUTC": "2026-10-01T19:54:41Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "6887d2aa1c86790e6856a07b3cbf13bb9132dec75b17a64f9d837ac70a3568b5"
+      }
+    },
+    {
+      "id": "6C7106AB-090C-4AB0-967D-10AC087A32C0",
+      "label": "throw-beforeBegin",
+      "camera": "instant1970s",
+      "film": "85B1FAC3-F665-4D1F-AB99-F574ADC21ED4",
+      "createdUTC": "2026-10-01T19:54:53Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "76298756786c3505e3350b4e3047c787aa484c1299814db0532e2145edb3d909"
+      }
+    },
+    {
+      "id": "7074995C-0AA2-4AB9-8A6E-7E4C04CAD711",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.filmReveal)",
+      "camera": "cinema16mm",
+      "film": "567A7863-C8B7-4FF6-A408-56FEF721B960",
+      "createdUTC": "2026-10-01T19:55:15Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "0b46a30496a5e385fc082c81840051b84939675e03c837ba3579aaa8eedae2d4",
+        "movie-0": "c47e80e47fe618f5995a675862d795b295ccfb6368b12318ea3f49de840c9e6d"
+      }
+    },
+    {
+      "id": "735F2AB2-3600-4CE6-BA8B-519CEE3865B3",
+      "label": "throw-afterRendering(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "C70EA0D9-3DF6-4438-94DD-B5B8A6482757",
+      "createdUTC": "2026-10-01T19:54:52Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "9e593b668fb009e4ee9d9495fe551159676563f7d159154b2c1f22a3c1924f47"
+      }
+    },
+    {
+      "id": "75BF20BB-AF98-4EFA-A99F-B38E0CE40248",
+      "label": "throw-afterAssignments",
+      "camera": "disposable1990s",
+      "film": "429B28BF-A618-4B6C-8212-5E24C771309D",
+      "createdUTC": "2026-10-01T19:54:51Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "82ef5f6e53ae6d3536eb0a9956e26f173a0d0420b65acf409752be2b1785d698"
+      }
+    },
+    {
+      "id": "77EFC942-FEBD-4FC2-B65E-DEBECA14A3FD",
+      "label": "delete-beforeBegin",
+      "camera": "disposable1990s",
+      "film": "EF6B5251-87DA-49BF-8CBE-B33B7A2EBDA8",
+      "createdUTC": "2026-10-01T19:54:37Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "7FD44D51-32D8-41D6-A0E0-BB58500B75BF",
+      "label": "default-and-enabled",
+      "camera": "super8HomeMovie",
+      "film": "A55DE4FF-BE86-4A42-8A9C-AEF96977F84F",
+      "createdUTC": "2026-10-01T19:54:28Z",
+      "snapshots": [
+        "default-completed",
+        "finished",
+        "observed-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "3d9a69bf7bb27a11e2634ab82adf58b6296dcb68e28c41cb1eaf9a831f0eee54",
+        "movie-0": "bcbb93e0f7e9328f1c2bb53af94b20de0040cb927bb46877696b72db6d0ad097",
+        "source-1": "f7ccda80d4d8457a1f45eca382a21c0e6a989d6d0d3425eb2593f408565757a7"
+      }
+    },
+    {
+      "id": "80ABDF7B-E35B-4610-814E-DD329BAD529B",
+      "label": "delete-afterRendering(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "42099A88-8A76-4962-AD07-E8F80DA6992E",
+      "createdUTC": "2026-10-01T19:54:37Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "83A7A934-324B-45BE-9DB6-5E8214E0EAA1",
+      "label": "default-and-enabled",
+      "camera": "disposable1990s",
+      "film": "2CECCF30-1475-4B70-9341-3ED0D7D94706",
+      "createdUTC": "2026-10-01T19:54:25Z",
+      "snapshots": [
+        "default-completed",
+        "finished",
+        "observed-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "67749478436de8d20fcbfdb48ce86a20a4d0ca986fffaf8206767893b41ab937",
+        "source-1": "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+      }
+    },
+    {
+      "id": "8693B2FC-C8C1-4169-8773-BF760C150DDC",
+      "label": "delete-afterPersistence(sequence: 1)",
+      "camera": "cinema16mm",
+      "film": "F8391467-FF02-47A9-97FA-39A8A146A45C",
+      "createdUTC": "2026-10-01T19:54:38Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "A140F10F-5EF1-4B6C-B87F-6CC687CA147A",
+      "label": "throw-beforeBegin",
+      "camera": "disposable1990s",
+      "film": "A0C898C1-82BD-45AE-BB4F-5048AAE60019",
+      "createdUTC": "2026-10-01T19:54:51Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "2ed64cd960d4799cdbe62e61ce8ae657e42ba0efc0d8bcaed5b2ae99a5c4b720"
+      }
+    },
+    {
+      "id": "A705BFF3-0078-4E3A-B35D-845CC6ADF4A3",
+      "label": "cancel-beforeBegin",
+      "camera": "disposable1990s",
+      "film": "6D6ED845-1894-4DE5-A8CB-C3C8C0E8B25F",
+      "createdUTC": "2026-10-01T19:54:11Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "e478a1ede02938993f7bc277c5d7d3dd7133b84c751b94d47ce029c5eb214992"
+      }
+    },
+    {
+      "id": "A881E3FE-B8DC-4CE3-9D8C-70995DA3DE36",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "instant1970s",
+      "film": "FBB168F2-FFDB-4BE7-ABA7-542C81C78830",
+      "createdUTC": "2026-10-01T19:54:57Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "d13248c063615f500599067ab1ec9b749ba29a10db7022f617704da6c253dea5"
+      }
+    },
+    {
+      "id": "B088E7AF-E85C-4F10-9C79-E64A03B0BD3E",
+      "label": "delete-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "disposable1990s",
+      "film": "16EE5178-E321-4796-8D1C-F055C0B0A817",
+      "createdUTC": "2026-10-01T19:54:38Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "B8C729A2-259F-41B2-A5D1-3A14C07F77B6",
+      "label": "default-and-enabled",
+      "camera": "cinema16mm",
+      "film": "A33539F8-5F65-4891-85D3-A42707923009",
+      "createdUTC": "2026-10-01T19:54:32Z",
+      "snapshots": [
+        "default-completed",
+        "finished",
+        "observed-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "c699a58e406f9e0c68f2af9f8fa51ee678c3201b8e667438c3f41d7e759b02f7",
+        "movie-0": "0de4e1f1abbffb8ea78fa66812b190cf21736dabc1a9e89bfe90513d438f08b8",
+        "source-1": "a8b49e8058e9e09cea5d897339613248431eb672b3aa7aeac400ba15edae0cae"
+      }
+    },
+    {
+      "id": "BAF16076-0A1A-46D6-8DB8-739402BB4247",
+      "label": "cancel-afterAssignments",
+      "camera": "disposable1990s",
+      "film": "5F7A078D-41A4-43B9-8286-721317C824FA",
+      "createdUTC": "2026-10-01T19:54:11Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "2cf5a177d8902012fd41e23f92df4ef84ab70f420f30447db2f8da8a7378ce52"
+      }
+    },
+    {
+      "id": "C2C01F5D-0098-473B-831F-BE2579C81D10",
+      "label": "cancel-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "instant1970s",
+      "film": "4FD81905-6E91-4F33-AFB2-F42B8D2B32ED",
+      "createdUTC": "2026-10-01T19:54:24Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "baf89d8380c91045b7206815060c53618f259a9cb79a8e280a6f47121526de15"
+      }
+    },
+    {
+      "id": "CD4EC005-E390-4ABA-8166-67778DC13B41",
+      "label": "release-afterRendering(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "2F95AD2C-DF17-4686-825E-D78745642F56",
+      "createdUTC": "2026-10-01T19:54:41Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "7f645748e3f022291dcc74272390f5906cef9369c0d2a8a98f9e9219b377e84e"
+      }
+    },
+    {
+      "id": "D134A395-1DE0-4BA1-B29C-B1AF82E21504",
+      "label": "delete-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.filmReveal)",
+      "camera": "disposable1990s",
+      "film": "197596EA-0D1A-46F9-8EB0-C384A74CBDE2",
+      "createdUTC": "2026-10-01T19:54:37Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "D433F47D-62E6-46DC-96C2-B90B915D4A8F",
+      "label": "delete-afterAssignments",
+      "camera": "disposable1990s",
+      "film": "92E809E8-73EF-448A-AF0A-CFB79AEF08E6",
+      "createdUTC": "2026-10-01T19:54:37Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "D592E8EB-CE01-4924-A1FB-E7AE2C0F7DD5",
+      "label": "throw-afterPersistence(sequence: 1)",
+      "camera": "instant1970s",
+      "film": "24502436-25D5-485C-B907-5F03C6C3AD09",
+      "createdUTC": "2026-10-01T19:54:55Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "064df0704e05ea8d55ec702ba09b3a07fb57238310870379319d143031242df5"
+      }
+    },
+    {
+      "id": "DA647A4D-F361-4839-A02F-2DB3B67349EC",
+      "label": "throw-afterRendering(sequence: 1)",
+      "camera": "instant1970s",
+      "film": "112F6C44-3313-4CB3-A84F-7FF80D1AE89D",
+      "createdUTC": "2026-10-01T19:54:54Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "75856dd77de3f51e2332560c8cdc30c7ad97f1629cf49586c200bc8ed38abba2"
+      }
+    },
+    {
+      "id": "E1EC65CB-83E7-470A-94B6-38120DF4BA14",
+      "label": "cancel-afterRendering(sequence: 1)",
+      "camera": "cinema16mm",
+      "film": "6E3B16AC-D6AA-4941-876D-829841A703CA",
+      "createdUTC": "2026-10-01T19:54:13Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "5d02df52cb3e91e66a0f27a06b6c1e4abd7f6ec610585c2e4dec889cb958a7c6",
+        "movie-0": "86547b7c32da90eb80f7aa6f149f08df41b451993f2e416be9f662748ed763b9"
+      }
+    },
+    {
+      "id": "E471D1CF-8FA4-4609-A4A9-35119001490E",
+      "label": "throw-afterAssignments",
+      "camera": "instant1970s",
+      "film": "FBE9AF82-E18C-418A-88BE-DB31593EE6A7",
+      "createdUTC": "2026-10-01T19:54:53Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "9588cf1e6641a99b3fa1fb17b731d1f832db55138edcdc72837337b5cfb279d4"
+      }
+    },
+    {
+      "id": "E627EF7E-E999-4A85-9BE6-F5C085D58B45",
+      "label": "movie-reassembly",
+      "camera": "cinema16mm",
+      "film": "CEB7C0C9-D080-4298-89CA-19FFA94AF184",
+      "createdUTC": "2026-10-01T19:54:44Z",
+      "snapshots": [
+        "movie-before-discard",
+        "movie-reassembled",
+        "movie-reassembly-failed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-2": "39d7e54fa2a425433294716528c1eae38365d5e7590ec20593b800afe09b4643",
+        "movie-0": "a369e1d16eb288233fa7cfec4517baa19942a7fbcfd65082a4f766d8789d54f9",
+        "source-2": "c4ca91b1f3faf5ddf4e25f048e652d3c2b1b79a37d2c85fff477195b499a36f6"
+      }
+    },
+    {
+      "id": "E7E547AB-F7A4-4D5B-A8F7-D52843F6FD69",
+      "label": "cancel-afterPersistence(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "8ECAAB54-F5F7-4244-95FA-89F30290BA9B",
+      "createdUTC": "2026-10-01T19:54:12Z",
+      "snapshots": [
+        "cancelled",
+        "finished",
+        "held",
+        "observer-absent-reentry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "1acb316e85fecb4410f4fbd6be53efffca57aaf42a891679cf708217dd4190ee"
+      }
+    },
+    {
+      "id": "E92A9033-0522-4C8A-BEE8-ACE3896B91AE",
+      "label": "release-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "disposable1990s",
+      "film": "E02CF6BB-AEC3-48B4-B13E-25DC04BFF090",
+      "createdUTC": "2026-10-01T19:54:42Z",
+      "snapshots": [
+        "finished",
+        "held-for-release",
+        "released-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "8726c27d63fb9cb0d54dfa4ca63af183fb028d58e31ddea27cf75cf4407348e0"
+      }
+    },
+    {
+      "id": "EA0C06B4-A366-49F7-8C42-0D4F9C2F83E9",
+      "label": "delete-afterPersistence(sequence: 1)",
+      "camera": "disposable1990s",
+      "film": "CD3B4B84-0860-4C6B-A247-E80111A80516",
+      "createdUTC": "2026-10-01T19:54:37Z",
+      "snapshots": [
+        "before-delete",
+        "deleted",
+        "scenario"
+      ],
+      "finalHashes": null
+    },
+    {
+      "id": "EA2B47C1-E2F4-456D-99B8-298A844A0C2B",
+      "label": "instant-discard",
+      "camera": "instant1970s",
+      "film": "402EEE5D-12F7-4379-BCE6-C60D63D315B4",
+      "createdUTC": "2026-10-01T19:54:42Z",
+      "snapshots": [
+        "instant-discarded",
+        "instant-second-held",
+        "instant-second-revealed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-2": "2d0f127b1c338bb59cd0b114faf6580fc0023b8099fd5f00457040498dd0db3d",
+        "source-2": "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+      }
+    },
+    {
+      "id": "F0070A5C-25CB-457B-8677-3A8E4C481842",
+      "label": "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)",
+      "camera": "cinema16mm",
+      "film": "F58038D7-8DF9-4917-B4D5-B8B40D96457C",
+      "createdUTC": "2026-10-01T19:55:20Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "7c4f77043677a72acfedbf8a5cc7398de8aeb503db32267e5f3716c9f57a2bac",
+        "movie-0": "5f416bb309f2716edf658ee7fc5013238f22bc86abb2be393a95ae20d61bf345"
+      }
+    },
+    {
+      "id": "F67D407B-EF95-4E51-9787-F42233FC5025",
+      "label": "throw-beforeBegin",
+      "camera": "cinema16mm",
+      "film": "9338FCDD-28C6-4625-BCAC-06B4DA6565AC",
+      "createdUTC": "2026-10-01T19:54:58Z",
+      "snapshots": [
+        "finished",
+        "observer-threw",
+        "same-owner-retry",
+        "scenario"
+      ],
+      "finalHashes": {
+        "clip-1": "b0fcd344b236caa293fa2702f908db0b8921ad2d342bc47c571217862f8db0dd",
+        "movie-0": "42718e4f94f409a71fedceb45febc8ba2a3b06f833526207b5e464d4ac8ed157"
+      }
+    },
+    {
+      "id": "FBEC9906-59F9-413B-8F48-DC29E83F019C",
+      "label": "default-and-enabled",
+      "camera": "instant1970s",
+      "film": "8E9385D0-079B-4B70-A66A-D48351430CE2",
+      "createdUTC": "2026-10-01T19:54:25Z",
+      "snapshots": [
+        "default-completed",
+        "finished",
+        "observed-completed",
+        "scenario"
+      ],
+      "finalHashes": {
+        "master-1": "ca9035df54a306041689f5714d899038589cb2355f982a4e84b28cd0ca09e7ca",
+        "source-1": "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+      }
+    }
+  ]
+}

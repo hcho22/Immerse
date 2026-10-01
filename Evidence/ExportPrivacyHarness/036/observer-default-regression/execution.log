@@ -1,0 +1,7 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Export036-observer-default-regression.xcresult
+
+2026-10-01 13:00:09.832 xcodebuild[10268:150412192] [MT] IDETestOperationsObserverDebug: 104.706 elapsed -- Testing started completed.
+2026-10-01 13:00:09.832 xcodebuild[10268:150412192] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 13:00:09.832 xcodebuild[10268:150412192] [MT] IDETestOperationsObserverDebug: 104.706 sec, +104.706 sec -- end
+Testing started
