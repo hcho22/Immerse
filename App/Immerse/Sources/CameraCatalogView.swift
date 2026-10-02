@@ -81,11 +81,17 @@ private struct LoadFilmView: View {
                 }
             }
             Section {
-                Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
-                Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
-                                   subscriptionsAvailable: model.billing.configured))
-                    .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("load-note")
+                #if DEBUG
+                if model.testingUnlock.enabled {
+                    TestingUnlockNotice()
+                    Text(LoadCopy.fixed(medium: camera.medium))
+                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                } else {
+                    entitlement
+                }
+                #else
+                entitlement
+                #endif
             }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
@@ -124,6 +130,14 @@ private struct LoadFilmView: View {
         "\(camera.shortName) - Roll #\(String(format: "%02d", model.films.filter { $0.camera.id == camera.id }.count + 1))"
     }
 
+    @ViewBuilder private var entitlement: some View {
+        Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
+        Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
+                           subscriptionsAvailable: model.billing.configured))
+            .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("load-note")
+    }
+
     private var entitlementLabel: String {
         if model.billing.access == .active { return "Subscription active" }
         switch model.trialState {
@@ -154,9 +168,12 @@ enum LoadCopy {
             case nil: nil
             }
         }
-        let fixed = medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
+        return [entitlement, fixed(medium: medium)].compactMap { $0 }.joined(separator: " ")
+    }
+
+    static func fixed(medium: CameraMedium) -> String {
+        medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
             : "Your Camera cannot change after loading."
-        return [entitlement, fixed].compactMap { $0 }.joined(separator: " ")
     }
 }
 

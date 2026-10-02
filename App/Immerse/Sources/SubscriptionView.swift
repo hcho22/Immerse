@@ -6,6 +6,9 @@ struct SubscriptionView: View {
 
     var body: some View {
         Form {
+            #if DEBUG
+            if model.testingUnlock.enabled { Section { TestingUnlockNotice() } }
+            #endif
             Section {
                 Text("All Cameras").font(.system(.title2, design: .serif))
                 Text("Unlimited new personal Films. Monthly or yearly, one all-inclusive subscription.")

@@ -86,8 +86,8 @@ final class ContentSizeTests: XCTestCase {
 
     private func check(_ category: String) {
         var rows: [String] = []
-        let app = XCUIApplication()
-        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"]
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"]
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()

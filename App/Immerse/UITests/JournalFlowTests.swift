@@ -3,7 +3,7 @@ import XCTest
 @MainActor
 final class JournalFlowTests: XCTestCase {
     func testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore() throws {
-        let app = XCUIApplication()
+        let app = XCUIApplication.shippingGate()
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         try app.performAccessibilityAudit()
@@ -34,8 +34,8 @@ final class JournalFlowTests: XCTestCase {
     /// description's entry withheld, the audit fails on exactly that element. The held-drag pose puts it under the
     /// navigation bar in every run; if the auditor stops flagging it, re-examine that entry.
     func testAuditStillReportsContrastFindingsOutsideItsExceptions() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
@@ -56,8 +56,8 @@ final class JournalFlowTests: XCTestCase {
     }
 
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         defer { XCUIDevice.shared.orientation = .portrait }
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
@@ -95,7 +95,7 @@ final class JournalFlowTests: XCTestCase {
     }
 
     func testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings() throws {
-        let app = XCUIApplication()
+        let app = XCUIApplication.shippingGate()
         app.resetAuthorizationStatus(for: .camera)
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))

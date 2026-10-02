@@ -73,6 +73,10 @@ final class JournalLauncher {
         let root = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask,
                                                appropriateFor: nil, create: true)
             .appendingPathComponent("FilmJournal", isDirectory: true)
-        return try JournalModel(root: root)
+        let model = try JournalModel(root: root)
+        #if DEBUG
+        model.testingUnlock = TestingUnlock(defaults: .standard)
+        #endif
+        return model
     }
 }

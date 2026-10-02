@@ -38,6 +38,7 @@ xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
 xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
     -destination 'generic/platform=iOS' -derivedDataPath DerivedData/ValidationDevice \
     CODE_SIGNING_ALLOWED=NO build
+sh Scripts/verify-release-excludes-testing-unlock.sh
 if [ -n "${IMMERSE_WORKFLOW_SIMULATOR_UDID:-}" ]; then
     pin_simulator "$IMMERSE_WORKFLOW_SIMULATOR_UDID"
     # The Photos permission workflow needs a denied add-only status; the harness has no usage key to prompt.
