@@ -97,6 +97,36 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertThrowsError(try files.pendingRecords())
     }
 
+    func testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root)
+        let data = try Data(contentsOf: root.appendingPathComponent(manifest.photo.relativePath))
+        let parent = root.appendingPathComponent("Staging")
+        let files = try CapturedMediaFiles(directory: parent.appendingPathComponent("film"))
+        let id = UUID()
+        let photo = try files.savePhoto(data, id: id)
+        // The staging directory still exists; its parent denies search, so presence cannot be confirmed.
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: parent.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: parent.path) }
+
+        XCTAssertThrowsError(try files.pendingRecords()) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileReadNoPermission)
+        }
+        do { _ = try await files.recoveryEvents(); XCTFail("Uninspectable staging must not recover as empty") }
+        catch { XCTAssertEqual((error as? CocoaError)?.code, .fileReadNoPermission) }
+        XCTAssertThrowsError(try files.removeUncommitted(id: id)) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileWriteNoPermission)
+        }
+        XCTAssertThrowsError(try files.removeCommittedFile(for: .photoSaved(photo))) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileWriteNoPermission)
+        }
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: parent.path)
+        XCTAssertEqual(try files.pendingRecords().map(\.id), [id])
+        XCTAssertEqual(try Data(contentsOf: photo), data)
+    }
+
     func testCommittedCleanupRejectsOutsideStagingFilesAndLeavesThemUntouched() throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

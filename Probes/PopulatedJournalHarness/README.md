@@ -83,3 +83,17 @@ xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarnes
 
 Read `Evidence/NativeApp/darkroom-player-observation-044.md` for the retained
 outcomes, failed setup assumptions, hashes and limits.
+
+`PhotosPermissionWorkflowTests` needs a denied add-only Photos status set from the host before launch.
+The harness still has no usage keys.
+The test reads the status in the actual Settings view and stops before any export control unless it shows Off, so it never reaches a system prompt and never writes to Photos.
+`Scripts/validate-local.sh` applies the same revoke before the full harness suite.
+
+```sh
+xcrun simctl bootstatus "$SIM" -b
+xcrun simctl privacy "$SIM" revoke photos-add com.immerse.PopulatedJournalHarness
+xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-photos-denied.xcresult -only-testing:PopulatedJournalHarnessTests/PhotosPermissionWorkflowTests -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
+```
+
+Read `Evidence/NativeApp/permission-storage-failures-045.md` for the reproduced defects, outcomes and limits.
+A simulator privacy revoke is not a device PhotoKit write, restricted-status or prompt-timing result.

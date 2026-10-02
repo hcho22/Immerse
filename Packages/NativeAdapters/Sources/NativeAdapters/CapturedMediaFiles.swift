@@ -21,7 +21,7 @@ public struct CapturedMediaFiles: Sendable {
 
     public func savePhoto(_ data: Data, id: UUID) throws -> URL {
         try Self.validatePhoto(data)
-        if !FileManager.default.fileExists(atPath: recordURL(id).path) {
+        if try !FileManager.default.itemExists(at: recordURL(id)) {
             try prepare(PendingCaptureRecord(id: id, mediaKind: .photo))
         }
         let url = directory.appendingPathComponent("\(id.uuidString).photo")
@@ -47,8 +47,7 @@ public struct CapturedMediaFiles: Sendable {
     }
 
     public func pendingRecords() throws -> [PendingCaptureRecord] {
-        guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
-        let urls = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        let urls = try FileManager.default.contentsOfDirectoryIfPresent(at: directory)
         let records = try urls.filter { $0.pathExtension == "json" }.map { url in
             try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: url))
         }
@@ -59,7 +58,7 @@ public struct CapturedMediaFiles: Sendable {
 
     public static func metadata(for mediaURL: URL) throws -> PendingCaptureRecord? {
         let path = mediaURL.deletingPathExtension().appendingPathExtension("json")
-        guard FileManager.default.fileExists(atPath: path.path) else { return nil }
+        guard try FileManager.default.itemExists(at: path) else { return nil }
         return try JSONDecoder().decode(PendingCaptureRecord.self, from: Data(contentsOf: path))
     }
 
@@ -68,7 +67,7 @@ public struct CapturedMediaFiles: Sendable {
         for record in try pendingRecords() {
             let url = record.mediaKind == .movie ? movieDestination(id: record.id)
                 : directory.appendingPathComponent("\(record.id).photo")
-            guard FileManager.default.fileExists(atPath: url.path) else {
+            guard try FileManager.default.itemExists(at: url) else {
                 try FileManager.default.removeItem(at: recordURL(record.id))
                 continue
             }
@@ -135,15 +134,13 @@ public struct CapturedMediaFiles: Sendable {
         guard url.deletingLastPathComponent().standardizedFileURL.path == directory.standardizedFileURL.path else {
             throw NativeCaptureError.invalidMedia
         }
-        if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
-        let metadata = url.deletingPathExtension().appendingPathExtension("json")
-        if FileManager.default.fileExists(atPath: metadata.path) { try FileManager.default.removeItem(at: metadata) }
+        try FileManager.default.removeItemIfPresent(at: url)
+        try FileManager.default.removeItemIfPresent(at: url.deletingPathExtension().appendingPathExtension("json"))
     }
 
     public func removeUncommitted(id: UUID) throws {
         for suffix in ["photo", "mov", "json"] {
-            let url = directory.appendingPathComponent("\(id).\(suffix)")
-            if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
+            try FileManager.default.removeItemIfPresent(at: directory.appendingPathComponent("\(id).\(suffix)"))
         }
     }
 
@@ -153,5 +150,24 @@ public struct CapturedMediaFiles: Sendable {
         let file = try FileHandle(forWritingTo: url)
         defer { try? file.close() }
         try file.synchronize()
+    }
+}
+
+/// `fileExists(atPath:)` also returns false when an existing item cannot be inspected.
+/// Staging recovery and privacy cleanup treat only a confirmed-missing item as absent.
+private extension FileManager {
+    func itemExists(at url: URL) throws -> Bool {
+        do { return try url.checkResourceIsReachable() }
+        catch CocoaError.fileReadNoSuchFile { return false }
+    }
+
+    func contentsOfDirectoryIfPresent(at url: URL) throws -> [URL] {
+        do { return try contentsOfDirectory(at: url, includingPropertiesForKeys: nil) }
+        catch CocoaError.fileReadNoSuchFile { return [] }
+    }
+
+    func removeItemIfPresent(at url: URL) throws {
+        do { try removeItem(at: url) }
+        catch CocoaError.fileNoSuchFile {}
     }
 }

@@ -15,6 +15,8 @@ Photos, Keychain, power-loss, backup/restore, accessibility or full-v1 acceptanc
   recovery. This evidence does not establish the broader case where inspection
   of a genuinely existing directory fails; keep that for the storage/permission
   slice if a safe temporary-directory case is feasible.
+  Checkpoint 045 executed that case and found it read as empty; see
+  `permission-storage-failures-045.md` for the reproduction and fix.
 - `CapturedMediaFiles.removeCommittedFile(for:)` still rejects events outside the
   staging directory, but compares standardized parent paths instead of URL object
   equality. The previous URL equality check produced false `invalidMedia` cleanup

@@ -135,7 +135,7 @@ public actor TrialCoordinator {
         let film = try repository.film(id: filmID)
         if let existing = try repository.captureReceipt(filmID: filmID, captureID: source.lastPathComponent) {
             guard existing.kind == kind else { throw PersistenceError.conflictingCaptureReceipt }
-            if FileManager.default.fileExists(atPath: source.path) {
+            if try FileManager.default.itemExists(at: source) {
                 guard try CaptureCommitJournal.hash(Data(contentsOf: source)) == existing.sourceSHA256 else {
                     throw PersistenceError.conflictingCaptureReceipt
                 }

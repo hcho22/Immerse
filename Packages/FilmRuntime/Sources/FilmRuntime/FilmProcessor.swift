@@ -114,8 +114,7 @@ public actor FilmProcessor {
     }
 
     private func removeWork(filmID: UUID) throws {
-        let directory = root.appendingPathComponent("Work/\(filmID)")
-        if FileManager.default.fileExists(atPath: directory.path) { try FileManager.default.removeItem(at: directory) }
+        try FileManager.default.removeItemIfPresent(at: root.appendingPathComponent("Work/\(filmID)"))
     }
 }
 

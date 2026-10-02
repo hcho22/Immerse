@@ -48,7 +48,7 @@ final class JournalModel {
             catalogError = nil
         } catch {
             mediaCatalog = nil
-            catalogError = "Bundled media is unavailable: \(error.localizedDescription)"
+            catalogError = ["Bundled media is unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
         }
         repository = try FilmRepository(rootURL: root)
         processor = try FilmProcessor(root: root)
@@ -62,7 +62,7 @@ final class JournalModel {
         Task {
             await billing.refresh()
             do { trialState = try await trial.state(); trialError = nil }
-            catch { trialState = nil; trialError = error.localizedDescription }
+            catch { trialState = nil; trialError = FailureCopy.systemDetail(for: error) ?? "Reopen Immerse to check again." }
             reloadFilms()
         }
     }
@@ -98,22 +98,7 @@ final class JournalModel {
     func film(_ id: UUID) -> Film? { films.first { $0.id == id } }
 
     func report(_ error: Error) {
-        let message: String
-        switch error {
-        case JournalError.cameraDenied:
-            message = "Camera access is off. Allow Immerse in iPhone Settings. No new Film was loaded."
-        case JournalError.subscriptionUnavailable:
-            message = "Subscriptions are not available in this build. Your existing Films remain usable."
-        case JournalError.subscriptionRequired:
-            message = "This iPhone's Trial is used. An active subscription is required to load another Film. Your existing Films remain usable."
-        case JournalError.trialInProgress:
-            message = "This iPhone already has an unused Trial Film. Open it in your Journal, or delete that empty Film before loading another."
-        case PersistenceError.capacityChangedSinceConfirmation:
-            message = "A capture finished saving while confirmation was open. The Film is still open. Check the updated remaining capacity and confirm again."
-        case is CancellationError: return
-        default:
-            message = "The operation did not finish. Saved captures remain private; retry after checking available storage. \(error.localizedDescription)"
-        }
+        guard let message = FailureCopy.message(for: error) else { return }
         alert = JournalAlert(title: "Could not finish", message: message)
     }
 

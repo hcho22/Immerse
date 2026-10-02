@@ -46,7 +46,7 @@ final class SubscriptionController {
             case .pending: message = "Purchase pending approval. Existing Films remain usable."
             case .cancelled: message = "Purchase cancelled."
             }
-        } catch { message = "Purchase did not finish. \(error.localizedDescription)" }
+        } catch { message = ["Purchase did not finish.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
     }
 
     func restore() async {
@@ -56,7 +56,7 @@ final class SubscriptionController {
         do {
             access = try await store.restore()
             message = access == .active ? "Subscription restored" : "No active subscription was found for this Apple ID."
-        } catch { message = "Restore did not finish. Your Films are unchanged. \(error.localizedDescription)" }
+        } catch { message = ["Restore did not finish. Your Films are unchanged.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
     }
 
     static func bundleConfiguration() -> SubscriptionConfiguration? {

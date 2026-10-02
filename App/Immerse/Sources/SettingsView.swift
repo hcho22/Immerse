@@ -20,8 +20,8 @@ struct SettingsView: View {
                     Text("Exports are optional. Photos receives only the revealed media you choose. A developed export is a flattened result, not a restorable Film or edit history.")
                 }
                 Section("Privacy") {
-                    LabeledContent("Camera", value: String(describing: AVFoundationCaptureAuthorizer().authorizationStatus()).capitalized)
-                    LabeledContent("Photos (add only)", value: String(describing: PhotoKitAuthorizer().authorizationStatus(for: .addOnly)).capitalized)
+                    LabeledContent("Camera", value: PermissionCopy.label(AVFoundationCaptureAuthorizer().authorizationStatus()))
+                    LabeledContent("Photos (add only)", value: PermissionCopy.label(PhotoKitAuthorizer().authorizationStatus(for: .addOnly)))
                     LabeledContent("Microphone", value: "Not used")
                     Text("No Accounts, sign-in, analytics or Immerse server. Your Films stay under your control.")
                     Button("Open iPhone Settings", systemImage: "gearshape") {

@@ -44,7 +44,8 @@ struct ImmerseApp: App {
             model = opened
             failure = nil
         } catch {
-            failure = "Your Films have not been removed. Free space in iPhone Settings and try again. \(error.localizedDescription)"
+            failure = ["Your Films have not been removed. Free space in iPhone Settings and try again.",
+                       FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
         }
     }
 }

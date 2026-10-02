@@ -104,7 +104,7 @@ private struct LoadFilmView: View {
                             case JournalError.trialInProgress: self.error = "A Trial Film is already waiting in your Journal. Open it or delete that empty Film first."
                             case JournalError.subscriptionUnavailable: self.error = "This iPhone's Trial is used. Subscriptions are not available in this build. Existing Films remain usable."
                             case JournalError.subscriptionRequired: self.error = "This iPhone's Trial is used. Subscribe or restore a current subscription to load another Film. Existing Films remain usable."
-                            default: self.error = error.localizedDescription
+                            default: self.error = FailureCopy.message(for: error)
                             }
                         }
                     }

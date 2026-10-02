@@ -36,7 +36,7 @@ struct SoundtrackView: View {
                         Task {
                             defer { working = false }
                             do { try await model.selectSoundtrack(filmID, assetID: selected); dismiss() }
-                            catch { self.error = error.localizedDescription }
+                            catch { self.error = FailureCopy.message(for: error) }
                         }
                     }.disabled(!loaded || working || (current != nil && selected == current?.asset?.id))
                 }
@@ -54,7 +54,7 @@ struct SoundtrackView: View {
                     current = try model.repository.movieAudioSelection(filmID: filmID)
                     selected = current?.asset?.id
                     loaded = true
-                } catch { self.error = error.localizedDescription }
+                } catch { self.error = FailureCopy.message(for: error) }
             }
             .interactiveDismissDisabled(working)
         }

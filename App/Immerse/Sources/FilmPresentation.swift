@@ -1,4 +1,7 @@
 import FilmDomain
+import FilmPersistence
+import FilmRuntime
+import NativeAdapters
 import SwiftUI
 
 extension CameraPackage {
@@ -77,4 +80,64 @@ enum PrivacyCopy {
     static let discard = "Remove this capture and its app-controlled copies? No exposures or time are refunded. Photos exports remain, and an older iOS backup can bring discarded media back."
     static let sources = "This choice cannot be changed. Originals are removed from Immerse only after a usable developed result is verified, and, if selected, after saving to Photos succeeds. Older iOS backups can restore removed originals."
     static let backup = "Films, sealed captures and reversible edits are included in iOS device backups. Immerse provides no sync or app-managed backup. Without an iOS backup, losing this iPhone loses its Films. Restoring an older backup can bring back discarded media and deleted Films."
+}
+
+enum FailureCopy {
+    static let retry = "The operation did not finish. Saved captures remain private; retry after checking available storage."
+
+    /// User-facing text for a failed operation, or nil when the person cancelled it.
+    static func message(for error: Error) -> String? {
+        switch error {
+        case is CancellationError: return nil
+        case JournalError.cameraDenied:
+            return "Camera access is off. Allow Camera for Immerse in iPhone Settings. Saved captures are unchanged."
+        case JournalError.subscriptionUnavailable:
+            return "Subscriptions are not available in this build. Your existing Films remain usable."
+        case JournalError.subscriptionRequired:
+            return "This iPhone's Trial is used. An active subscription is required to load another Film. Your existing Films remain usable."
+        case JournalError.trialInProgress:
+            return "This iPhone already has an unused Trial Film. Open it in your Journal, or delete that empty Film before loading another."
+        case PersistenceError.capacityChangedSinceConfirmation:
+            return "A capture finished saving while confirmation was open. The Film is still open. Check the updated remaining capacity and confirm again."
+        case FilmExportError.permissionDenied:
+            return "Photos access is off, so nothing was saved and this Film is unchanged. Allow Immerse to add to Photos in iPhone Settings, then save again."
+        case FilmExportError.needsPermission:
+            return "Photos access was not granted, so nothing was saved and this Film is unchanged. Save again to answer the Photos request."
+        case FilmExportError.writeFailed:
+            return "Photos could not finish saving, so this Film is unchanged. Anything already saved stays in Photos. Check available storage, then save again."
+        case FilmExportError.missingReceipt:
+            return "Photos did not confirm the save, so this Film is unchanged. A copy may already be in Photos; check there before saving again."
+        default:
+            return [retry, systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
+        }
+    }
+
+    /// A system-provided description such as "there isn't enough space". Swift errors
+    /// without their own text bridge into a domain named after their type and would read
+    /// as "(Module.Type error N.)", so those add nothing.
+    static func systemDetail(for error: Error) -> String? {
+        guard error is LocalizedError || (error as NSError).domain != String(reflecting: type(of: error)) else { return nil }
+        return error.localizedDescription
+    }
+}
+
+enum PermissionCopy {
+    static func label(_ status: CaptureAuthorizationStatus) -> String {
+        switch status {
+        case .notDetermined: "Not asked yet"
+        case .authorized: "Allowed"
+        case .denied: "Off"
+        case .restricted: "Restricted"
+        }
+    }
+
+    static func label(_ status: PhotoLibraryAuthorizationStatus) -> String {
+        switch status {
+        case .notDetermined: "Not asked yet"
+        case .authorized: "Allowed"
+        case .limited: "Limited"
+        case .denied: "Off"
+        case .restricted: "Restricted"
+        }
+    }
 }

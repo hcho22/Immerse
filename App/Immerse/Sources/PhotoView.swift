@@ -160,7 +160,7 @@ struct DarkroomView: View {
                     recipe = try model.repository.darkroomRecipe(filmID: filmID, sequence: sequence)
                     render()
                 }
-                catch { self.error = error.localizedDescription }
+                catch { self.error = FailureCopy.message(for: error) }
             }
             .onDisappear { renderTask?.cancel(); image = nil }
         }
@@ -285,7 +285,7 @@ struct DarkroomView: View {
                 guard !Task.isCancelled, renderID == id, !model.hiddenFilms.contains(filmID) else { return }
                 image = DisplayPhoto.image(data)
                 error = nil
-            } catch { if !Task.isCancelled { self.error = error.localizedDescription } }
+            } catch { if !Task.isCancelled { self.error = FailureCopy.message(for: error) } }
             if renderID == id { rendering = false }
         }
     }

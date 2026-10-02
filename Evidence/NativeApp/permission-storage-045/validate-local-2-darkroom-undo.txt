@@ -1,0 +1,18 @@
+validate-local run 2 (both simulator gates pinned to light/large), exit 65.
+Result bundle: DerivedData/Populated-20261001T233019Z.xcresult; 9 passed, 1 failed.
+Failed RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths()
+  - RetainedWorkflowTests.swift:141: XCTAssertFalse failed (Undo last stroke still enabled after its tap)
+Retained harness snapshot 3457E405-F067-404C-AA61-AE1A43FF57BA/Evidence/002.json after Save: photo 1 recipe kept one dodge mask at (0.75, 0.30); photo 2 unchanged.
+
+Instrumented diagnosis at large text (DerivedData/Populated-darkroom-undo-diag-045.xcresult, not committed source):
+  undo frame=(125.0, 778.0, 152.3, 20.3) hittable=true count=1
+  Reset to Original (bottom bar) frame=(182.0, 803.0, 38.0, 38.0); window height 874
+  Before/after screenshots: Undo last stroke rests faded inside the bottom bar's scroll-edge band; the tap left it enabled.
+Scroll measurement (DerivedData/Populated-darkroom-scroll-diag-045.xcresult):
+  swipeUp on the 20 pt heading: no movement (heading y 515.5, undo y 778.0)
+  swipeUp on the Darkroom scroll view: content moved 26.3 pt (undo y 751.7), clear of the bar
+Conclusion: the content does scroll clear of the bar, as standard iOS 26 bottom-bar behavior; the
+test tapped the row at rest. The test now drags ~200 pt from the plain heading until the row clears
+the bar, then taps. It passed at large and at accessibility-extra-extra-extra-large
+(DerivedData/Populated-darkroom-undo-045-large.xcresult and -accessibility-extra-extra-extra-large.xcresult),
+with saved recipes holding no dodge mask and photo 2 unchanged.

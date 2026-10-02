@@ -223,7 +223,7 @@ struct OriginalChoiceView: View {
                                 if let choice { try model.chooseOriginals(filmID, sequences: undecided, export: choice) }
                                 if startsDevelopment { dismiss(); try await model.develop(filmID) }
                                 else { try await model.processor.cleanupSources(filmID: filmID); dismiss() }
-                            } catch { self.error = error.localizedDescription; model.report(error) }
+                            } catch { self.error = FailureCopy.message(for: error); model.report(error) }
                         }
                     }.disabled(working || (!undecided.isEmpty && choice == nil))
                         .accessibilityIdentifier("confirm-original-choice")
@@ -234,7 +234,7 @@ struct OriginalChoiceView: View {
                         Task {
                             defer { working = false }
                             do { try await model.export(filmID, originals: true); dismiss() }
-                            catch { self.error = error.localizedDescription }
+                            catch { self.error = FailureCopy.message(for: error) }
                         }
                     }.disabled(working)
                 }

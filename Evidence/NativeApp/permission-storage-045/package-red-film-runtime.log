@@ -1,0 +1,25 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[4/5] Emitting module FilmRuntimeTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (5.51s)
+Test Suite 'Selected tests' started at 2026-10-01 15:53:41.102.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 15:53:41.103.
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 15:53:41.103.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/TrialIntegrationTests.swift:138: error: -[FilmRuntimeTests.TrialIntegrationTests testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable] : failed - An uninspectable pending save is not an empty journal
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable]' failed (0.698 seconds).
+Test Suite 'TrialIntegrationTests' failed at 2026-10-01 15:53:41.801.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.698 (0.698) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' failed at 2026-10-01 15:53:41.801.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.698 (0.698) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 15:53:41.801.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.698 (0.700) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

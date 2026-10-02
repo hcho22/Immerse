@@ -136,8 +136,19 @@ import XCTest
         vertical.adjust(toNormalizedSliderPosition: 0.35)
         XCTAssertTrue(app.buttons["Dodge point"].waitForExistence(timeout: 5))
         app.buttons["Dodge point"].tap()
-        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
-        app.buttons["Undo last stroke"].tap()
+        let undo = app.buttons["Undo last stroke"]
+        XCTAssertTrue(undo.isEnabled)
+        // At the default text size the last row rests in the bottom bar's edge band, where a tap
+        // reaches the bar instead. Scroll it clear as a person would, starting on the plain heading
+        // so the drag cannot move a slider or paint on the print.
+        let bar = app.buttons["Reset to Original"]
+        let heading = app.staticTexts["Dodge / Burn"]
+        for _ in 0..<4 where undo.frame.maxY > bar.frame.minY - 12 {
+            heading.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                .press(forDuration: 0.1, thenDragTo: heading.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: -10)))
+        }
+        XCTAssertLessThan(undo.frame.maxY, bar.frame.minY - 12)
+        undo.tap()
         XCTAssertFalse(app.buttons["Undo last stroke"].isEnabled)
 
         saveDarkroom(app)

@@ -35,6 +35,47 @@ final class PhotoExportAdapterTests: XCTestCase {
         XCTAssertFalse(outcome.permitsSourceCleanupAfterIndependentVerification)
     }
 
+    func testCaptureStartPromptWritesOnlyAfterAddOnlyPermissionIsGranted() async {
+        let receipt = PhotoExportReceipt(localIdentifier: "asset-1")
+        let authorizer = FakePhotoAuthorizer(status: .notDetermined, requestedStatus: .authorized)
+        let writer = FakePhotoWriter(result: .success(receipt))
+        let coordinator = PhotoExportCoordinator(
+            authorizer: authorizer,
+            writer: writer,
+            promptPolicy: .requestAtCaptureStart
+        )
+
+        let outcome = await coordinator.export(
+            PhotoExportRequest(fileURL: URL(fileURLWithPath: "/tmp/photo.heic"), mediaKind: .photo)
+        )
+
+        XCTAssertEqual(outcome, .exported(receipt))
+        XCTAssertEqual(authorizer.requestCount, 1)
+        XCTAssertEqual(writer.writeCount, 1)
+        XCTAssertTrue(outcome.permitsSourceCleanupAfterIndependentVerification)
+    }
+
+    func testCaptureStartPromptDenialNeverDispatchesWriter() async {
+        for deniedStatus in [PhotoLibraryAuthorizationStatus.denied, .restricted] {
+            let authorizer = FakePhotoAuthorizer(status: .notDetermined, requestedStatus: deniedStatus)
+            let writer = FakePhotoWriter(result: .success(PhotoExportReceipt(localIdentifier: "asset-1")))
+            let coordinator = PhotoExportCoordinator(
+                authorizer: authorizer,
+                writer: writer,
+                promptPolicy: .requestAtCaptureStart
+            )
+
+            let outcome = await coordinator.export(
+                PhotoExportRequest(fileURL: URL(fileURLWithPath: "/tmp/photo.heic"), mediaKind: .photo)
+            )
+
+            XCTAssertEqual(outcome, .permissionDenied(deniedStatus))
+            XCTAssertEqual(authorizer.requestCount, 1)
+            XCTAssertEqual(writer.writeCount, 0)
+            XCTAssertFalse(outcome.permitsSourceCleanupAfterIndependentVerification)
+        }
+    }
+
     func testWriteFailureIsHonestAndDoesNotPermitSourceCleanup() async {
         let authorizer = FakePhotoAuthorizer(status: .authorized)
         let writer = FakePhotoWriter(result: .failure(FakePhotoWriteError.diskFull))
@@ -66,10 +107,12 @@ final class PhotoExportAdapterTests: XCTestCase {
 
 private final class FakePhotoAuthorizer: PhotoLibraryAuthorizing, @unchecked Sendable {
     private let status: PhotoLibraryAuthorizationStatus
+    private let requestedStatus: PhotoLibraryAuthorizationStatus
     private(set) var requestCount = 0
 
-    init(status: PhotoLibraryAuthorizationStatus) {
+    init(status: PhotoLibraryAuthorizationStatus, requestedStatus: PhotoLibraryAuthorizationStatus? = nil) {
         self.status = status
+        self.requestedStatus = requestedStatus ?? status
     }
 
     func authorizationStatus(for accessLevel: PhotoLibraryAccessLevel) -> PhotoLibraryAuthorizationStatus {
@@ -78,7 +121,7 @@ private final class FakePhotoAuthorizer: PhotoLibraryAuthorizing, @unchecked Sen
 
     func requestAuthorization(for accessLevel: PhotoLibraryAccessLevel) async -> PhotoLibraryAuthorizationStatus {
         requestCount += 1
-        return status
+        return requestedStatus
     }
 }
 

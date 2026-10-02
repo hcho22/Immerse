@@ -1,0 +1,77 @@
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+[2/6] Emitting module FilmPersistence
+[3/6] Compiling FilmPersistence FilmRepository.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:399:39: error: value of type 'FileManager' has no member 'itemExists'
+397 |                 }
+398 |                 let url = rootURL.appendingPathComponent(master.relativePath)
+399 |                 guard try fileManager.itemExists(at: url) else { throw PersistenceError.missingVerifiedMaster }
+    |                                       `- error: value of type 'FileManager' has no member 'itemExists'
+400 |                 guard try Checksum.sha256Hex(contentsOf: url) == master.sha256 else {
+401 |                     throw PersistenceError.masterChecksumMismatch
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:464:32: error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+462 |         let staging = try captureStagingDirectory(filmID: filmID)
+463 |         for directory in [staging, staging.appendingPathComponent("Commit")] {
+464 |             if try fileManager.contentsOfDirectoryIfPresent(at: directory)
+    |                                `- error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+465 |                 .contains(where: { $0.pathExtension == "json" }) { return true }
+466 |         }
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:532:42: error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+530 |             try removeTemporaryFiles()
+531 |             let work = rootURL.appendingPathComponent("Work", isDirectory: true)
+532 |             for child in try fileManager.contentsOfDirectoryIfPresent(at: work) {
+    |                                          `- error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+533 |                 try fileManager.removeItem(at: child)
+534 |             }
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:573:32: error: value of type 'FileManager' has no member 'itemExists'
+571 |             return false
+572 |         }
+573 |         return try fileManager.itemExists(at: rootURL.appendingPathComponent(asset.relativePath))
+    |                                `- error: value of type 'FileManager' has no member 'itemExists'
+574 |     }
+575 | 
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:617:25: error: value of type 'FileManager' has no member 'removeItemIfPresent'
+615 |             throw PersistenceError.simulatedFailure(.beforeDurableMove)
+616 |         }
+617 |         try fileManager.removeItemIfPresent(at: destination)
+    |                         `- error: value of type 'FileManager' has no member 'removeItemIfPresent'
+618 |         try fileManager.moveItem(at: temp, to: destination)
+619 |         if failureInjection == .afterDurableMoveBeforeDebit {
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:625:38: error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+623 | 
+624 |     private func removeTemporaryFiles() throws {
+625 |         for child in try fileManager.contentsOfDirectoryIfPresent(at: tempURL) {
+    |                                      `- error: value of type 'FileManager' has no member 'contentsOfDirectoryIfPresent'
+626 |             try fileManager.removeItem(at: child)
+627 |         }
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:631:25: error: value of type 'FileManager' has no member 'removeItemIfPresent'
+629 | 
+630 |     private func removeAssetFile(_ asset: StoredAsset) throws {
+631 |         try fileManager.removeItemIfPresent(at: rootURL.appendingPathComponent(asset.relativePath))
+    |                         `- error: value of type 'FileManager' has no member 'removeItemIfPresent'
+632 |     }
+633 | 
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:655:29: error: value of type 'FileManager' has no member 'removeItemIfPresent'
+653 |             }
+654 |             // An uninspectable path keeps its tombstone; only a confirmed absence finishes it.
+655 |             try fileManager.removeItemIfPresent(at: url)
+    |                             `- error: value of type 'FileManager' has no member 'removeItemIfPresent'
+656 |             try database.finishDeletion(relativePath: path)
+657 |         }
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/FilmRepository.swift:673:35: error: value of type 'FileManager' has no member 'itemExists'
+671 |             }
+672 |             let url = rootURL.appendingPathComponent(clip.relativePath)
+673 |             guard try fileManager.itemExists(at: url) else {
+    |                                   `- error: value of type 'FileManager' has no member 'itemExists'
+674 |                 throw PersistenceError.missingDevelopedClip(sequenceNumber)
+675 |             }
+[4/6] Emitting module NativeAdapters
+error: fatalError

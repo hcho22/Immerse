@@ -75,6 +75,36 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Media/\(film.id)").path))
     }
 
+    func testPermissionAndStorageFailuresGiveGuidanceWithoutPlaceholderErrorText() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("FailureCopy-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        model.report(FilmExportError.permissionDenied)
+        let alert = try XCTUnwrap(model.alert)
+        XCTAssertEqual(alert.title, "Could not finish")
+        XCTAssertTrue(alert.message.contains("Photos access is off"), alert.message)
+        XCTAssertFalse(alert.message.contains("storage"), alert.message)
+        model.alert = nil
+        model.report(CancellationError())
+        XCTAssertNil(model.alert)
+
+        // The simulator cannot stage a denied camera, so the reopen copy is checked here.
+        let camera = try XCTUnwrap(FailureCopy.message(for: JournalError.cameraDenied))
+        XCTAssertTrue(camera.contains("iPhone Settings"), camera)
+        XCTAssertFalse(camera.contains("No new Film"), "Reopening an existing Film's camera loads nothing")
+        let storage = try XCTUnwrap(FailureCopy.message(for: CocoaError(.fileWriteOutOfSpace)))
+        XCTAssertTrue(storage.hasPrefix(FailureCopy.retry), storage)
+        XCTAssertTrue(storage.contains("enough space"), storage)
+        let failures: [Error] = [JournalError.cameraDenied, FilmExportError.permissionDenied, FilmExportError.needsPermission,
+                                 FilmExportError.writeFailed("synthetic"), FilmExportError.missingReceipt,
+                                 PersistenceError.invalidMedia, NativeCaptureError.invalidMedia, CocoaError(.fileReadNoPermission)]
+        for failure in failures {
+            let message = try XCTUnwrap(FailureCopy.message(for: failure))
+            XCTAssertFalse(message.contains("couldn’t be completed"), message)
+            XCTAssertFalse(message.contains("error"), message)
+        }
+    }
+
     func testEmptyFilmCannotDevelopAndCanBeDeleted() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("EmptyJournalIntegration-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }

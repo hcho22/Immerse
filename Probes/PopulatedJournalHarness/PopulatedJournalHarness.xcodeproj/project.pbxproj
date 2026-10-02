@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02A7AEC38F9BBF16A99705DC /* PhotosPermissionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */; };
 		09188DCB5E84DD0A608208F3 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7F78B2C999303933D5777637 /* RenderCore */; };
 		09D38255E770B7DA3A752A08 /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E8ACB31376AA5F1A9E08D2 /* FilmDetailView.swift */; };
 		0CE35ED846B9F215A059FD8C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */; };
@@ -60,6 +61,7 @@
 		3000C80787BFE05052237403 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
 		3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopulatedWorkflowTests.swift; sourceTree = "<group>"; };
 		40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundtrackView.swift; sourceTree = "<group>"; };
+		5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		7400BB1444CBFD7AF92EA764 /* RenderFixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderFixtures; path = ../../Packages/RenderFixtures; sourceTree = SOURCE_ROOT; };
 		786A297DE02FD3E071CC282A /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
 		7A0B1A1A7D76AF576541CD9B /* MediaCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MediaCatalog; path = ../../Packages/MediaCatalog; sourceTree = SOURCE_ROOT; };
@@ -124,6 +126,7 @@
 		83860CC0C3AB665D118A157C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */,
 				3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */,
 				94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */,
 			);
@@ -312,6 +315,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A7AEC38F9BBF16A99705DC /* PhotosPermissionWorkflowTests.swift in Sources */,
 				659C053BB2A6A00BE88D24C5 /* PopulatedWorkflowTests.swift in Sources */,
 				1008D5C0A3495A394D5B701B /* RetainedWorkflowTests.swift in Sources */,
 			);

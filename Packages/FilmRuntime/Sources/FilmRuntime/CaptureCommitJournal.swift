@@ -18,9 +18,7 @@ struct CaptureCommitJournal {
     let root: URL
 
     func pending(filmID: UUID) throws -> [PendingCaptureCommit] {
-        let directory = directory(filmID)
-        guard FileManager.default.fileExists(atPath: directory.path) else { return [] }
-        return try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+        try FileManager.default.contentsOfDirectoryIfPresent(at: directory(filmID))
             .filter { $0.pathExtension == "json" }
             .map { url in
                 let operation = try JSONDecoder().decode(PendingCaptureCommit.self, from: Data(contentsOf: url))
@@ -69,8 +67,7 @@ struct CaptureCommitJournal {
     }
 
     func finish(_ operation: PendingCaptureCommit) throws {
-        let url = media(operation)
-        if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
+        try FileManager.default.removeItemIfPresent(at: media(operation))
         try FileManager.default.removeItem(at: manifest(operation))
     }
 

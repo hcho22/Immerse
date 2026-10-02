@@ -93,6 +93,40 @@ final class PrivacyRecoveryTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: directory.appendingPathComponent("source-2.bin")), Data("surviving-source".utf8))
     }
 
+    func testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic")
+        let captureID = "\(UUID().uuidString).photo"
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("first-source".utf8), captureID: captureID)
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("surviving-source".utf8))
+        try revealTestInstant(repository, filmID: film.id)
+        // A staged copy left by an interrupted backend cleanup; launch recovery never sweeps Staging.
+        let staging = try repository.captureStagingDirectory(filmID: film.id)
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: true)
+        let residual = staging.appendingPathComponent(captureID)
+        try Data("private staged pixels".utf8).write(to: residual)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: staging.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: staging.path) }
+
+        XCTAssertThrowsError(try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 1)) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileWriteNoPermission)
+        }
+        XCTAssertEqual(try repository.film(id: film.id).discardedPlaceholderSequenceNumbers, [1])
+        XCTAssertThrowsError(try repository.hasPendingCapture(filmID: film.id)) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileReadNoPermission)
+        }
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: staging.path)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: residual.path))
+        try FilmRepository(rootURL: root).recover()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: residual.path))
+        XCTAssertFalse(try repository.hasPendingCapture(filmID: film.id))
+        XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("Media/\(film.id.uuidString)/source-2.bin")),
+                       Data("surviving-source".utf8))
+    }
+
     func testFailedWholeFilmCleanupRemainsDeletedAndRetryFinishesWithoutTouchingAnotherFilm() throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

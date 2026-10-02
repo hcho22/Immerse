@@ -50,7 +50,7 @@ struct CaptureView: View {
                                 Button {
                                     Task {
                                         do { try await capture.shutter(film: film) }
-                                        catch { self.error = error.localizedDescription }
+                                        catch { self.error = FailureCopy.message(for: error) }
                                     }
                                 } label: {
                                     ZStack {
@@ -114,7 +114,8 @@ struct CaptureView: View {
     private func open(_ film: Film) {
         Task {
             do { try await model.capture.open(film: film, model: model); error = nil }
-            catch { self.error = "Camera unavailable. \(error.localizedDescription)" }
+            catch JournalError.cameraDenied { self.error = FailureCopy.message(for: JournalError.cameraDenied) }
+            catch { self.error = ["Camera unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
         }
     }
 }

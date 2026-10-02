@@ -54,6 +54,11 @@ missing staging directories are treated as empty during cleanup. This remains
 synthetic staged-media evidence with an injected committer; it does not prove real
 camera callbacks, physical interruptions, storage pressure or hardware capture.
 
+`Evidence/NativeApp/permission-storage-failures-045.md` covers representative permission and storage failures with synthetic inputs.
+It reproduced and fixed existing-but-uninspectable staging, tombstone and pending-save paths that read as absent, including a Discard that left private staged bytes behind after launch recovery.
+It also reproduced the Photos denial alert that gave storage advice with raw error text, and replaced that text across the app's failure surfaces.
+Physical storage pressure, PhotoKit writes, restricted/limited Photos states, a denied Camera on the simulator and prompt timing remain open.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

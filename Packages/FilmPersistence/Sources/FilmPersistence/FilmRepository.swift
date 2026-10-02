@@ -396,7 +396,7 @@ public final class FilmRepository {
                     throw PersistenceError.missingVerifiedMaster
                 }
                 let url = rootURL.appendingPathComponent(master.relativePath)
-                guard fileManager.fileExists(atPath: url.path) else { throw PersistenceError.missingVerifiedMaster }
+                guard try fileManager.itemExists(at: url) else { throw PersistenceError.missingVerifiedMaster }
                 guard try Checksum.sha256Hex(contentsOf: url) == master.sha256 else {
                     throw PersistenceError.masterChecksumMismatch
                 }
@@ -461,8 +461,7 @@ public final class FilmRepository {
     public func hasPendingCapture(filmID: UUID) throws -> Bool {
         let staging = try captureStagingDirectory(filmID: filmID)
         for directory in [staging, staging.appendingPathComponent("Commit")] {
-            guard fileManager.fileExists(atPath: directory.path) else { continue }
-            if try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            if try fileManager.contentsOfDirectoryIfPresent(at: directory)
                 .contains(where: { $0.pathExtension == "json" }) { return true }
         }
         return false
@@ -530,13 +529,11 @@ public final class FilmRepository {
             try finishPendingDeletions()
             try removeTemporaryFiles()
             let work = rootURL.appendingPathComponent("Work", isDirectory: true)
-            if fileManager.fileExists(atPath: work.path) {
-                for child in try fileManager.contentsOfDirectory(at: work, includingPropertiesForKeys: nil) {
-                    try fileManager.removeItem(at: child)
-                }
+            for child in try fileManager.contentsOfDirectoryIfPresent(at: work) {
+                try fileManager.removeItem(at: child)
             }
             let referenced = Set(try database.assets().map(\.relativePath))
-            guard fileManager.fileExists(atPath: mediaRootURL.path) else { return }
+            guard try fileManager.itemExists(at: mediaRootURL) else { return }
             let files = fileManager.enumerator(
                 at: mediaRootURL,
                 includingPropertiesForKeys: [.isRegularFileKey]
@@ -573,7 +570,7 @@ public final class FilmRepository {
         guard let asset = try database.asset(filmID: filmID, sequenceNumber: sequenceNumber, kind: kind) else {
             return false
         }
-        return fileManager.fileExists(atPath: rootURL.appendingPathComponent(asset.relativePath).path)
+        return try fileManager.itemExists(at: rootURL.appendingPathComponent(asset.relativePath))
     }
 
     public func assembledMovieExists(filmID: UUID) throws -> Bool {
@@ -617,9 +614,7 @@ public final class FilmRepository {
             try? fileManager.removeItem(at: temp)
             throw PersistenceError.simulatedFailure(.beforeDurableMove)
         }
-        if fileManager.fileExists(atPath: destination.path) {
-            try fileManager.removeItem(at: destination)
-        }
+        try fileManager.removeItemIfPresent(at: destination)
         try fileManager.moveItem(at: temp, to: destination)
         if failureInjection == .afterDurableMoveBeforeDebit {
             throw PersistenceError.simulatedFailure(.afterDurableMoveBeforeDebit)
@@ -627,19 +622,13 @@ public final class FilmRepository {
     }
 
     private func removeTemporaryFiles() throws {
-        guard fileManager.fileExists(atPath: tempURL.path) else {
-            return
-        }
-        for child in try fileManager.contentsOfDirectory(at: tempURL, includingPropertiesForKeys: nil) {
+        for child in try fileManager.contentsOfDirectoryIfPresent(at: tempURL) {
             try fileManager.removeItem(at: child)
         }
     }
 
     private func removeAssetFile(_ asset: StoredAsset) throws {
-        let url = rootURL.appendingPathComponent(asset.relativePath)
-        if fileManager.fileExists(atPath: url.path) {
-            try fileManager.removeItem(at: url)
-        }
+        try fileManager.removeItemIfPresent(at: rootURL.appendingPathComponent(asset.relativePath))
     }
 
     private func retireAssembledMovies(filmID: UUID) throws {
@@ -662,7 +651,8 @@ public final class FilmRepository {
             guard roots.contains(where: { url.resolvingSymlinksInPath().path.hasPrefix($0) }) else {
                 throw PersistenceError.invalidAssetPath
             }
-            if fileManager.fileExists(atPath: url.path) { try fileManager.removeItem(at: url) }
+            // An uninspectable path keeps its tombstone; only a confirmed absence finishes it.
+            try fileManager.removeItemIfPresent(at: url)
             try database.finishDeletion(relativePath: path)
         }
     }
@@ -680,7 +670,7 @@ public final class FilmRepository {
                 throw PersistenceError.missingDevelopedClip(sequenceNumber)
             }
             let url = rootURL.appendingPathComponent(clip.relativePath)
-            guard fileManager.fileExists(atPath: url.path) else {
+            guard try fileManager.itemExists(at: url) else {
                 throw PersistenceError.missingDevelopedClip(sequenceNumber)
             }
             guard try Checksum.sha256Hex(contentsOf: url) == clip.sha256 else {

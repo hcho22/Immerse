@@ -123,6 +123,30 @@ final class TrialIntegrationTests: XCTestCase {
         catch EntitlementDenial.currentDeviceTrialConsumed { }
     }
 
+    func testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MemoryDeviceStore()
+        let filmID = try await prepareBeforeKeychainFailure(root: root, store: store)
+        store.failConsumption = false
+        // The verified pending save still exists; its Film staging directory denies search.
+        let staging = root.appendingPathComponent("Staging/\(filmID)")
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: staging.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: staging.path) }
+
+        let relaunched = try TrialCoordinator(root: root, store: store)
+        do { try await relaunched.reconcile(filmID: filmID); XCTFail("An uninspectable pending save is not an empty journal") }
+        catch { XCTAssertEqual((error as? CocoaError)?.code, .fileReadNoPermission) }
+        let repository = try FilmRepository(rootURL: root)
+        XCTAssertEqual(try repository.film(id: filmID).savedCaptureCount, 0)
+        XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: staging.path)
+        try await relaunched.reconcile(filmID: filmID)
+        XCTAssertEqual(try repository.film(id: filmID).savedCaptureCount, 1)
+        XCTAssertEqual(try store.read()?.consumedFilmID, filmID)
+    }
+
     func testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
