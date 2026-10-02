@@ -65,6 +65,48 @@ final class FilmExportTests: XCTestCase {
         XCTAssertEqual(try repository.film(id: film.id).savedCaptureCount, 1)
     }
 
+    func testSuspendingProcessingNeverCancelsAnExportWhosePhotosWriteIsInFlight() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let (_, film, processor, _) = try await setup(root: root, count: 3)
+        let writer = HeldWriter()
+        let coordinator = PhotoExportCoordinator(authorizer: Authorization(status: .authorized), writer: writer)
+        let export = Task { try await processor.export(filmID: film.id, sequences: [1, 2, 3], originals: false, coordinator: coordinator) }
+        try await waitUntil { await writer.attempts == 1 }
+        let suspension = Task { await processor.suspendProcessing() }
+        try await Task.sleep(for: .milliseconds(100))
+        await writer.release()
+        await suspension.value
+        try await export.value
+        let attempts = await writer.attempts
+        XCTAssertEqual(attempts, 3)
+    }
+
+    func testExportCancelledAfterAPhotosWriteReportsWhatWasAlreadySaved() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let (repository, film, processor, _) = try await setup(root: root, count: 3)
+        let writer = HeldWriter()
+        let coordinator = PhotoExportCoordinator(authorizer: Authorization(status: .authorized), writer: writer)
+        let export = Task { try await processor.export(filmID: film.id, sequences: [1, 2, 3], originals: false, coordinator: coordinator) }
+        try await waitUntil { await writer.attempts == 1 }
+        let discard = Task { try await processor.discard(filmID: film.id, sequence: 3) }
+        try await Task.sleep(for: .milliseconds(100))
+        await writer.release()
+        do { try await export.value; XCTFail("A cancelled export cannot report full success") }
+        catch FilmExportError.interrupted(saved: 1, total: 3) { }
+        try await discard.value
+        XCTAssertEqual(try repository.film(id: film.id).discardedPlaceholderSequenceNumbers, [3])
+    }
+
+    private func waitUntil(_ condition: () async -> Bool) async throws {
+        let deadline = ContinuousClock.now + .seconds(30)
+        while !(await condition()) {
+            guard ContinuousClock.now < deadline else { throw CancellationError() }
+            try await Task.sleep(for: .milliseconds(10))
+        }
+    }
+
     private func setup(root: URL, count: Int) async throws -> (FilmRepository, Film, FilmProcessor, Data) {
         let fixtures = root.appendingPathComponent("Fixtures")
         _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures)
@@ -86,6 +128,23 @@ private struct Authorization: PhotoLibraryAuthorizing {
     let status: PhotoLibraryAuthorizationStatus
     func authorizationStatus(for accessLevel: PhotoLibraryAccessLevel) -> PhotoLibraryAuthorizationStatus { status }
     func requestAuthorization(for accessLevel: PhotoLibraryAccessLevel) async -> PhotoLibraryAuthorizationStatus { status }
+}
+
+/// Holds the first Photos write until the test releases it.
+private actor HeldWriter: PhotoLibraryWriting {
+    private(set) var attempts = 0
+    private var held: CheckedContinuation<Void, Never>?
+    private var released = false
+    func write(_ request: PhotoExportRequest) async throws -> PhotoExportReceipt {
+        attempts += 1
+        if attempts == 1, !released { await withCheckedContinuation { held = $0 } }
+        return PhotoExportReceipt(localIdentifier: "synthetic-held-\(attempts)")
+    }
+    func release() {
+        released = true
+        held?.resume()
+        held = nil
+    }
 }
 
 private actor RecordingWriter: PhotoLibraryWriting {

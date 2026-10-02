@@ -524,28 +524,23 @@ public final class FilmRepository {
         return film
     }
 
+    /// Every cleanup step runs even when an earlier one fails, so one uninspectable
+    /// path never leaves another Film's private files behind; the first failure is rethrown.
     public func recover() throws {
+        var failure: Error?
         try database.withTransaction {
-            try finishPendingDeletions()
-            try removeTemporaryFiles()
             let work = rootURL.appendingPathComponent("Work", isDirectory: true)
-            for child in try fileManager.contentsOfDirectoryIfPresent(at: work) {
-                try fileManager.removeItem(at: child)
-            }
-            let referenced = Set(try database.assets().map(\.relativePath))
-            guard try fileManager.itemExists(at: mediaRootURL) else { return }
-            let files = fileManager.enumerator(
-                at: mediaRootURL,
-                includingPropertiesForKeys: [.isRegularFileKey]
-            )
-            while let fileURL = files?.nextObject() as? URL {
-                let values = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
-                guard values.isRegularFile == true else { continue }
-                if !referenced.contains(relativePath(for: fileURL)) {
-                    try fileManager.removeItem(at: fileURL)
-                }
+            let steps: [() throws -> Void] = [
+                { try self.finishPendingDeletions() },
+                { try self.removeChildren(of: self.tempURL) },
+                { try self.removeChildren(of: work) },
+                { try self.removeUnreferencedMedia(in: self.mediaRootURL, referenced: Set(try self.database.assets().map(\.relativePath))) }
+            ]
+            for step in steps {
+                do { try step() } catch { failure = failure ?? error }
             }
         }
+        if let failure { throw failure }
     }
 
     public func deleteFilm(filmID: UUID) throws {
@@ -601,30 +596,53 @@ public final class FilmRepository {
             withIntermediateDirectories: true
         )
         let temp = tempURL.appendingPathComponent(UUID().uuidString)
-        try data.write(to: temp, options: [.atomic])
-        let handle = try FileHandle(forWritingTo: temp)
         do {
-            try handle.synchronize()
-            try handle.close()
+            try data.write(to: temp, options: [.atomic])
+            let handle = try FileHandle(forWritingTo: temp)
+            do {
+                try handle.synchronize()
+                try handle.close()
+            } catch {
+                try? handle.close()
+                throw error
+            }
+            if failureInjection == .beforeDurableMove {
+                throw PersistenceError.simulatedFailure(.beforeDurableMove)
+            }
+            try fileManager.removeItemIfPresent(at: destination)
+            try fileManager.moveItem(at: temp, to: destination)
         } catch {
-            try? handle.close()
+            try? fileManager.removeItemIfPresent(at: temp)
             throw error
         }
-        if failureInjection == .beforeDurableMove {
-            try? fileManager.removeItem(at: temp)
-            throw PersistenceError.simulatedFailure(.beforeDurableMove)
-        }
-        try fileManager.removeItemIfPresent(at: destination)
-        try fileManager.moveItem(at: temp, to: destination)
         if failureInjection == .afterDurableMoveBeforeDebit {
             throw PersistenceError.simulatedFailure(.afterDurableMoveBeforeDebit)
         }
     }
 
-    private func removeTemporaryFiles() throws {
-        for child in try fileManager.contentsOfDirectoryIfPresent(at: tempURL) {
-            try fileManager.removeItem(at: child)
+    private func removeChildren(of directory: URL) throws {
+        try attemptEach(fileManager.contentsOfDirectoryIfPresent(at: directory)) { try fileManager.removeItem(at: $0) }
+    }
+
+    /// Walks every Media folder; an unreadable folder throws instead of reading as empty.
+    private func removeUnreferencedMedia(in directory: URL, referenced: Set<String>) throws {
+        try attemptEach(fileManager.contentsOfDirectoryIfPresent(at: directory)) { url in
+            let values = try url.resourceValues(forKeys: [.isDirectoryKey, .isRegularFileKey])
+            if values.isDirectory == true {
+                try removeUnreferencedMedia(in: url, referenced: referenced)
+            } else if values.isRegularFile == true, !referenced.contains(relativePath(for: url)) {
+                try fileManager.removeItem(at: url)
+            }
         }
+    }
+
+    /// Attempts every item, then rethrows the first failure.
+    private func attemptEach<Item>(_ items: [Item], _ body: (Item) throws -> Void) throws {
+        var failure: Error?
+        for item in items {
+            do { try body(item) } catch { failure = failure ?? error }
+        }
+        if let failure { throw failure }
     }
 
     private func removeAssetFile(_ asset: StoredAsset) throws {
@@ -644,10 +662,10 @@ public final class FilmRepository {
     }
 
     private func finishPendingDeletions(filmID: UUID? = nil) throws {
-        for path in try database.pendingDeletionPaths(filmID: filmID) {
+        let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging"), rootURL.appendingPathComponent("Work")]
+            .map { $0.resolvingSymlinksInPath().path + "/" }
+        try attemptEach(database.pendingDeletionPaths(filmID: filmID)) { path in
             let url = rootURL.appendingPathComponent(path).standardizedFileURL
-            let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging"), rootURL.appendingPathComponent("Work")]
-                .map { $0.resolvingSymlinksInPath().path + "/" }
             guard roots.contains(where: { url.resolvingSymlinksInPath().path.hasPrefix($0) }) else {
                 throw PersistenceError.invalidAssetPath
             }

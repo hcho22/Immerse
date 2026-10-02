@@ -139,6 +139,34 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: unfinished.path))
     }
 
+    func testFailedSwitchToAnotherFilmKeepsTheAttachedFilmListening() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let attached = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                       title: "Synthetic attached roll", access: .subscription)
+        let removed = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6,
+                                                      title: "Synthetic removed roll", access: .subscription)
+        try await openWithoutSimulatorCamera(attached, model)
+        try model.repository.deleteFilm(filmID: removed.id)
+        do { try await model.capture.open(film: removed, model: model); XCTFail("A deleted Film cannot attach") }
+        catch PersistenceError.filmNotFound { }
+        XCTAssertEqual(model.capture.filmID, attached.id)
+
+        _ = try stageUnfinishedSave(attached, model)
+        try await openWithoutSimulatorCamera(attached, model)
+        try await waitUntil { model.capture.message == "Saved" }
+        XCTAssertEqual(model.film(attached.id)?.savedCaptureCount, 1)
+    }
+
+    func testViewfinderFollowsTheInterfaceWhoseLandscapeNamesAreSwapped() {
+        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeRight)?.rotationAngle, 0, "Home side right")
+        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeLeft)?.rotationAngle, 180)
+        XCTAssertEqual(CaptureFrameOrientation(interface: .portrait)?.rotationAngle, 90)
+        XCTAssertEqual(CaptureFrameOrientation(device: .landscapeLeft)?.rotationAngle, 0, "Home side right")
+        XCTAssertEqual(CaptureFrameOrientation(device: .landscapeRight)?.rotationAngle, 180)
+        XCTAssertNil(CaptureFrameOrientation(device: .faceUp))
+    }
+
     func testDeniedCameraOnReopenAttachesNothingAndLoadsNoFilm() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureDenied-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }

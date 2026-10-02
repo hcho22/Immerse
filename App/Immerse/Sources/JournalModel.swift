@@ -108,10 +108,17 @@ final class JournalModel {
         alert = JournalAlert(title: "Could not finish", message: message)
     }
 
-    func perform(_ operation: @escaping @MainActor () async throws -> Void) {
+    /// Runs an operation and reports its failure in the Journal alert. Inside a sheet or a
+    /// full-screen cover, where that alert cannot appear, pass `failure` to show it there instead.
+    func perform(_ operation: @escaping @MainActor () async throws -> Void,
+                 failure: (@MainActor (String) -> Void)? = nil) {
         Task {
             do { try await operation(); refresh() }
-            catch { refresh(); report(error) }
+            catch {
+                refresh()
+                guard let failure else { return report(error) }
+                if let message = FailureCopy.message(for: error) { failure(message) }
+            }
         }
     }
 
@@ -144,11 +151,11 @@ final class JournalModel {
 
     /// Instant prints develop as each save lands. A print saved while another operation owns
     /// or is removing the Film stays sealed and is offered through Resume Development.
-    func developSavedPrint(_ id: UUID) {
-        perform { [self] in
+    func developSavedPrint(_ id: UUID, failure: @escaping @MainActor (String) -> Void) {
+        perform({ [self] in
             guard film(id) != nil, !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { return }
             try await develop(id)
-        }
+        }, failure: failure)
     }
 
     func chooseOriginals(_ id: UUID, sequences: [Int], export: Bool) throws {
@@ -168,6 +175,7 @@ final class JournalModel {
     }
 
     func remove(_ id: UUID, sequence: Int? = nil) async throws {
+        guard !hiddenFilms.contains(id) else { throw JournalError.operationInProgress }
         hiddenFilms.insert(id)
         mediaRevision = UUID()
         // Clear every app-owned visible image/player before acknowledging removal.

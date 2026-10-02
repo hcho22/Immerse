@@ -5,26 +5,6 @@ import FilmDomain
 import Foundation
 import UIKit
 
-public enum CaptureFrameOrientation: Sendable {
-    case portrait, portraitUpsideDown, landscapeLeft, landscapeRight
-
-    var rotationAngle: CGFloat {
-        switch self {
-        case .portrait: 90
-        case .portraitUpsideDown: 270
-        case .landscapeLeft: 180
-        case .landscapeRight: 0
-        }
-    }
-
-    public var clipOrientation: ClipOrientation {
-        switch self {
-        case .portrait, .portraitUpsideDown: .portrait
-        case .landscapeLeft, .landscapeRight: .landscape
-        }
-    }
-}
-
 public struct NativeCameraControls: Sendable {
     public var flash = false
     public var manualFocus = false
@@ -246,6 +226,11 @@ public actor AVFoundationCaptureBackend {
 
     public func retryPendingSave() async throws {
         let (id, event) = try operations.beginCommit()
+        guard !privacyCancelled else {
+            defer { operations.finish(id: id) }
+            try files.removeUncommitted(id: id)
+            return
+        }
         do {
             try await committer.commit(event)
         } catch {
@@ -407,6 +392,7 @@ public actor AVFoundationCaptureBackend {
             let event = try await files.movieSavedEvent(
                 id: id, orientation: orientation, remainingFrames: remainingFrames
             )
+            if privacyCancelled { operations.finish(id: id); return }
             guard operations.stage(event, id: id) else { return }
         } catch { failCapture(id: id); return }
         try? await retryPendingSave()

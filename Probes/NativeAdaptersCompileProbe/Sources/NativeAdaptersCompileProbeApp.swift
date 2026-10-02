@@ -20,7 +20,7 @@ struct NativeAdaptersCompileProbeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Text(plan.recordsAudio ? "Unexpected audio" : "Silent native adapters")
+            Text(plan.mediaKind == .movie ? "Silent native adapters" : "Unexpected media")
                 .accessibilityLabel(committer)
         }
     }

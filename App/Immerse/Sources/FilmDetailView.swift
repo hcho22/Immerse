@@ -46,6 +46,7 @@ struct FilmDetailView: View {
             TextField("Film title", text: $title)
             Button("Cancel", role: .cancel) {}
             Button("Save") { model.perform { try model.repository.rename(filmID: filmID, title: title) } }
+                .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .confirmationDialog("Delete Film?", isPresented: $deleting, titleVisibility: .visible) {
             Button("Delete Film", role: .destructive) {
@@ -180,6 +181,7 @@ struct FilmDetailView: View {
                     .disabled(film.savedCaptureCount == 0 || model.busyFilms.contains(filmID) || model.hasPendingSave(filmID))
             }
             Button("Delete Film", systemImage: "trash", role: .destructive) { deleting = true }
+                .disabled(model.hiddenFilms.contains(filmID))
         } label: { Label("Film actions", systemImage: "ellipsis") }
     }
 }
@@ -223,7 +225,7 @@ struct OriginalChoiceView: View {
                                 if let choice { try model.chooseOriginals(filmID, sequences: undecided, export: choice) }
                                 if startsDevelopment { dismiss(); try await model.develop(filmID) }
                                 else { try await model.processor.cleanupSources(filmID: filmID); dismiss() }
-                            } catch { self.error = FailureCopy.message(for: error); model.report(error) }
+                            } catch { self.error = FailureCopy.message(for: error) }
                         }
                     }.disabled(working || (!undecided.isEmpty && choice == nil))
                         .accessibilityIdentifier("confirm-original-choice")

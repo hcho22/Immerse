@@ -16,11 +16,25 @@ final class FilmDomainTests: XCTestCase {
         XCTAssertTrue(CameraCatalog.cinema16mm.supportsBuiltInSoundtrack)
     }
 
+    func testTitlesAreTrimmedAndABlankTitleIsRejectedWithoutRenaming() throws {
+        var film = try Film(camera: CameraCatalog.disposable1990s, title: "  Disposable - Roll #01\n")
+        XCTAssertEqual(film.title, "Disposable - Roll #01")
+        for blank in ["", "   ", "\n\t "] {
+            XCTAssertThrowsError(try film.rename(to: blank)) { XCTAssertEqual($0 as? FilmDomainError, .emptyTitle) }
+            XCTAssertThrowsError(try Film(camera: CameraCatalog.instant1970s, title: blank)) {
+                XCTAssertEqual($0 as? FilmDomainError, .emptyTitle)
+            }
+        }
+        XCTAssertEqual(film.title, "Disposable - Roll #01")
+        try film.rename(to: " Kyoto alleys ")
+        XCTAssertEqual(film.title, "Kyoto alleys")
+    }
+
     func testLoadedCameraDoesNotChangeWhenTitleOrArchiveChanges() throws {
         var film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "6x6 - Roll #01")
         _ = try film.recordSavedPhoto()
 
-        film.rename(to: "Kyoto alleys")
+        try film.rename(to: "Kyoto alleys")
         film.setArchived(true)
 
         XCTAssertEqual(film.camera, CameraCatalog.mediumFormat6x6)

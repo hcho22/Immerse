@@ -5,10 +5,13 @@ import Foundation
 public struct TreatmentAssignment: Codable, Equatable, Sendable {
     public let sequenceNumber: Int
     public let seed: UInt64
+    // Optional for decoding earlier runs, whose captures used the run's version.
+    public let treatmentVersion: String?
 
-    public init(sequenceNumber: Int, seed: UInt64) {
+    public init(sequenceNumber: Int, seed: UInt64, treatmentVersion: String? = NativePhotoRenderer.treatmentVersion) {
         self.sequenceNumber = sequenceNumber
         self.seed = seed
+        self.treatmentVersion = treatmentVersion
     }
 }
 
@@ -35,6 +38,12 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
         self.assignments = [:]
         self.completedSequences = []
         self.isComplete = false
+    }
+
+    /// Whether the current renderer can render this capture's assigned treatment. Only a
+    /// new render depends on it; masters and clips already rendered stay usable.
+    public func rendersWithCurrentTreatment(_ assignment: TreatmentAssignment) -> Bool {
+        (assignment.treatmentVersion ?? treatmentVersion) == NativePhotoRenderer.treatmentVersion
     }
 
     public mutating func assignMissingTreatments(for film: Film) throws {

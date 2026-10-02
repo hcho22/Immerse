@@ -68,6 +68,26 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: saved.path))
     }
 
+    func testPhotoInterruptedMidWriteNeverBlocksRecoveryOrBecomesASavedCapture() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root)
+        let data = try Data(contentsOf: root.appendingPathComponent(manifest.photo.relativePath))
+        let files = try CapturedMediaFiles(directory: root.appendingPathComponent("staging"))
+        let interrupted = UUID(), saved = UUID()
+        try files.prepare(PendingCaptureRecord(id: interrupted, mediaKind: .photo))
+        // What a process killed during the write leaves behind: a truncated partial file.
+        let partial = root.appendingPathComponent("staging/\(interrupted.uuidString).photo.partial")
+        try data.prefix(data.count / 2).write(to: partial)
+        let photo = try files.savePhoto(data, id: saved)
+        XCTAssertEqual(try Data(contentsOf: photo), data)
+
+        let recovered = try await files.recoveryEvents()
+        XCTAssertEqual(recovered, [.photoSaved(photo)])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: partial.path))
+        XCTAssertEqual(try files.pendingRecords().map(\.id), [saved])
+    }
+
     func testMalformedPhotoCannotBecomeASavedCapture() throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }

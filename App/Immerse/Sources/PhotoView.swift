@@ -53,26 +53,34 @@ struct PhotoView: View {
     let sequence: Int
     @State private var editing = false
     @State private var discarding = false
+    @State private var error: String?
 
     var body: some View {
         NavigationStack {
-            Group {
+            VStack {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
                 else { RevealedPhoto(filmID: filmID, sequence: sequence) }
+                if let error { Text(error).foregroundStyle(.red).padding() }
             }
             .navigationTitle("Photo \(sequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
                 ToolbarItemGroup(placement: .bottomBar) {
                     Button("Darkroom", systemImage: "slider.horizontal.3") { editing = true }
+                        .disabled(model.hiddenFilms.contains(filmID))
                     Spacer()
                     Button("Discard", systemImage: "trash", role: .destructive) { discarding = true }
+                        .disabled(model.hiddenFilms.contains(filmID))
                 }
             }
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: sequence) }
             .confirmationDialog("Discard photo \(sequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
-                    model.perform { try await model.remove(filmID, sequence: sequence); dismiss() }
+                    error = nil
+                    model.perform {
+                        try await model.remove(filmID, sequence: sequence)
+                        dismiss()
+                    } failure: { error = $0 }
                 }.accessibilityIdentifier("confirm-discard-photo")
             } message: { Text(PrivacyCopy.discard) }
         }
@@ -143,11 +151,12 @@ struct DarkroomView: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { renderTask?.cancel(); dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        error = nil
                         model.perform {
                             _ = try await model.processor.saveRecipe(filmID: filmID, sequence: sequence, recipe: recipe)
                             model.mediaRevision = UUID()
                             dismiss()
-                        }
+                        } failure: { error = $0 }
                     }.disabled(rendering || model.hiddenFilms.contains(filmID))
                 }
                 ToolbarItem(placement: .bottomBar) {

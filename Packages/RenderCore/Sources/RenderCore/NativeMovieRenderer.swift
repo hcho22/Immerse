@@ -85,7 +85,8 @@ public enum NativeMovieRenderer {
             let time = CMSampleBufferGetPresentationTimeStamp(sample)
             if firstTime == nil { firstTime = time }
             let elapsed = (time - firstTime!).seconds
-            let image = NativePhotoRenderer.normalize(CIImage(cvPixelBuffer: buffer).transformed(by: transform))
+            let decoded = CIImage(cvPixelBuffer: buffer)
+            let image = NativePhotoRenderer.normalize(decoded.transformed(by: coreImage(transform, extent: decoded.extent)))
             let scale = min(bounds.width / image.extent.width, bounds.height / image.extent.height)
             let scaled = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
             let fitted = scaled.transformed(by: CGAffineTransform(
@@ -103,6 +104,15 @@ public enum NativeMovieRenderer {
         input.markAsFinished()
         await writer.finishWriting()
         guard writer.status == .completed else { throw NativeRenderError.writerFailed }
+    }
+
+    /// `preferredTransform` uses a top-left origin and Core Image a bottom-left one, so the
+    /// transform is conjugated with a vertical flip of the source and of the rotated frame.
+    static func coreImage(_ transform: CGAffineTransform, extent: CGRect) -> CGAffineTransform {
+        let flipSource = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: extent.height)
+        let flipFrame = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0,
+                                          ty: CGRect(origin: .zero, size: extent.size).applying(transform).height)
+        return flipSource.concatenating(transform).concatenating(flipFrame)
     }
 
     public static func assemble(clips: [URL], destination: URL, soundtrack: URL? = nil) async throws {

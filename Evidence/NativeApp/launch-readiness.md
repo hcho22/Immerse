@@ -49,7 +49,8 @@ ordinary release task before any future authorized exposure. Never merge here.
 Movie capacity is now accounted in whole 30 fps frames: clips whose frames total the reel complete the Film, and the final clip is capped at exactly the remaining frames instead of being rejected and blocking the Film.
 Movie capture now uses the largest native 4:3 format no larger than the earlier 1920x1080 `.high` preset (1440x1080 where offered), with a 3:4 portrait or 4:3 landscape viewfinder; the size is provisional pending DEC-04 and the format is a manual device check (M19).
 `TrialCoordinator.load` is now the single new-Film entitlement decision that production executes; the unused `EntitlementPolicy` rules and the unlinked `CapturePipeline` committer were removed, and the local StoreKit tests drive `JournalModel.load` and the production capture commit.
-These are software changes with package and hosted tests, not device evidence.
+A second review round corrected the landscape capture angles (home side right is 0 degrees) and portrait clip rotation in Development, made the viewfinder follow the interface orientation, stopped transient inactive phases from cancelling Development or Photos exports, reported partly saved exports, and hardened recovery, staging and removal re-entry.
+These are software changes with package and hosted tests, not device evidence; M04, M07 and M15 to M17 in the [physical handoff](manual-validation.md) must confirm them on a device.
 
 ## Candidate Identity and Local Gates
 

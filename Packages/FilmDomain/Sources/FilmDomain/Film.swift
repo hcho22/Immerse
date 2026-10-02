@@ -86,6 +86,7 @@ public enum FilmDomainError: Error, Equatable, Sendable {
     case captureNotFound
     case captureNotRevealed
     case captureAlreadyDiscarded
+    case emptyTitle
 }
 
 public struct Film: Codable, Equatable, Identifiable, Sendable {
@@ -115,7 +116,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
 
         self.id = id
         self.camera = camera
-        self.title = title
+        self.title = try Self.validTitle(title)
         self.isArchived = false
         self.loadedAt = loadedAt
         self.movieOrientation = movieOrientation
@@ -206,8 +207,15 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         }
     }
 
-    public mutating func rename(to newTitle: String) {
-        title = newTitle
+    public mutating func rename(to newTitle: String) throws {
+        title = try Self.validTitle(newTitle)
+    }
+
+    /// A title is trimmed and never blank, so every Journal row and heading has a name.
+    private static func validTitle(_ title: String) throws -> String {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { throw FilmDomainError.emptyTitle }
+        return trimmed
     }
 
     public mutating func setArchived(_ archived: Bool) {

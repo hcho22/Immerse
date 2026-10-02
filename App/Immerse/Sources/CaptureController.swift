@@ -31,31 +31,34 @@ final class CaptureController {
         busy = true
         defer { busy = false }
         let request = sessionRequest
+        updateOrientation()
         let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
         guard allowed else {
             throw JournalError.cameraDenied
         }
         if filmID != film.id {
+            let receiver = try await model.trial.receiver(filmID: film.id)
+            let next = try AVFoundationCaptureBackend(stagingDirectory: model.repository.captureStagingDirectory(filmID: film.id), committer: receiver)
             if let backend {
                 try await backend.finishPendingSaves()
                 await backend.shutdown()
             }
             eventsTask?.cancel()
-            let receiver = try await model.trial.receiver(filmID: film.id)
-            let backend = try AVFoundationCaptureBackend(stagingDirectory: model.repository.captureStagingDirectory(filmID: film.id), committer: receiver)
-            self.backend = backend
+            backend = next
             filmID = film.id
             eventsTask = Task { [weak self, weak model] in
-                for await event in backend.events {
+                for await event in next.events {
                     guard !Task.isCancelled, let self, let model else { return }
-                    phase = await backend.phase
+                    await updatePhase(next)
                     guard !Task.isCancelled else { return }
                     switch event {
                     case .photoSaved, .movieClipSaved:
                         recordingStarted = nil
                         message = "Saved"
                         model.refresh()
-                        if film.camera.revealRule == .instantPerExposure { model.developSavedPrint(film.id) }
+                        if film.camera.revealRule == .instantPerExposure {
+                            model.developSavedPrint(film.id) { [weak self] in self?.message = $0 }
+                        }
                     case .saveFailed:
                         recordingStarted = nil
                         message = "Capture could not finish saving. Retry before taking another capture."
@@ -87,7 +90,7 @@ final class CaptureController {
         controls = await backend.controls()
         if film.camera.id == .disposable1990s { try await backend.lockDisposableFocus() }
         preview = await backend.previewSource()
-        phase = await backend.phase
+        await updatePhase(backend)
         message = nil
     }
 
@@ -103,7 +106,7 @@ final class CaptureController {
             try await backend.startMovie(orientation: orientation, remainingFrames: film.remainingMovieFrames ?? 0)
             recordingStarted = Date()
         }
-        phase = await backend.phase
+        await updatePhase(backend)
     }
 
     func switchLens(camera: CameraPackage) async throws {
@@ -122,7 +125,7 @@ final class CaptureController {
     func suspend() {
         sessionRequest += 1
         preview = nil
-        Task { await backend?.suspend(); phase = await backend?.phase ?? .interrupted }
+        Task { await backend?.suspend(); await updatePhase(backend) }
     }
 
     func finishSaves(filmID: UUID) async throws {
@@ -130,7 +133,7 @@ final class CaptureController {
         sessionRequest += 1
         preview = nil
         try await backend?.finishPendingSaves()
-        phase = await backend?.phase ?? .interrupted
+        await updatePhase(backend)
     }
 
     func cancelForPrivacy(filmID: UUID) async throws {
@@ -147,14 +150,38 @@ final class CaptureController {
         recordingStarted = nil
     }
 
+    /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now.
     func updateOrientation() {
-        guard phase != .recordingMovie else { return }
-        switch UIDevice.current.orientation {
-        case .portrait: orientation = .portrait
-        case .portraitUpsideDown: orientation = .portraitUpsideDown
-        case .landscapeLeft: orientation = .landscapeLeft
-        case .landscapeRight: orientation = .landscapeRight
-        default: break
+        guard phase != .recordingMovie, let held = CaptureFrameOrientation(device: UIDevice.current.orientation) else { return }
+        orientation = held
+    }
+
+    private func updatePhase(_ backend: AVFoundationCaptureBackend?) async {
+        phase = await backend?.phase ?? .interrupted
+        updateOrientation()
+    }
+}
+
+extension CaptureFrameOrientation {
+    /// Face-up, face-down and unknown keep the last held orientation.
+    init?(device: UIDeviceOrientation) {
+        switch device {
+        case .portrait: self = .portrait
+        case .portraitUpsideDown: self = .portraitUpsideDown
+        case .landscapeLeft: self = .landscapeLeft
+        case .landscapeRight: self = .landscapeRight
+        default: return nil
+        }
+    }
+
+    /// The held orientation an interface orientation shows; their landscape names are swapped.
+    init?(interface: UIInterfaceOrientation) {
+        switch interface {
+        case .portrait: self = .portrait
+        case .portraitUpsideDown: self = .portraitUpsideDown
+        case .landscapeLeft: self = .landscapeRight
+        case .landscapeRight: self = .landscapeLeft
+        default: return nil
         }
     }
 }

@@ -67,6 +67,6 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 - Source snapshots: CONTEXT.md and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 
-The tracker contains 238 items: five completed discovery/prototype items, four decided DEC items, 121 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 21 Markdown files, including all twelve standalone ADRs.
+The tracker contains 238 items: five completed discovery/prototype items, four decided DEC items, 121 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six and version 1.3 added five. The package contains 22 Markdown files, including all twelve standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.

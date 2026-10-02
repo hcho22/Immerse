@@ -1,5 +1,5 @@
 import FilmDomain
-import FilmPersistence
+@testable import FilmPersistence
 import FilmRuntime
 import Foundation
 import RenderCore
@@ -181,6 +181,49 @@ final class FilmProcessorTests: XCTestCase {
         try await relaunched.develop(filmID: film.id)
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .master))
         XCTAssertEqual(try repository.film(id: film.id).remainingExposures, 8)
+    }
+
+    func testRendererUpdateKeepsDevelopedMediaUsableAndRendersOnlyNewCaptures() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.movieWidth = 160; settings.movieHeight = 96; settings.movieDurationSeconds = 0.16
+        let fixture = root.appendingPathComponent("Fixtures")
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixture, settings: settings)
+        let clip = fixture.appendingPathComponent("synthetic-developed-movie.mov")
+        let photo = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-photo.jpg"))
+        let repository = try FilmRepository(rootURL: root)
+        let processor = try FilmProcessor(root: root)
+
+        let movie = try repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "Synthetic", movieOrientation: .landscape)
+        let seconds = try await VerifiedMedia.movie(at: clip).durationSeconds ?? 0
+        for _ in 0..<2 {
+            try repository.saveMovieClip(filmID: movie.id, sourceData: Data(contentsOf: clip), durationSeconds: seconds, orientation: .landscape)
+        }
+        try repository.completeEarly(filmID: movie.id)
+        try await processor.develop(filmID: movie.id)
+        try storeAsEarlierRenderer(repository, filmID: movie.id)
+        try await processor.discard(filmID: movie.id, sequence: 1)
+        XCTAssertTrue(try repository.film(id: movie.id).canPlaybackDevelopedMovie)
+        XCTAssertTrue(try repository.assembledMovieExists(filmID: movie.id))
+
+        let pack = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic pack")
+        try repository.savePhotoCapture(filmID: pack.id, sourceData: photo)
+        try await processor.develop(filmID: pack.id)
+        try storeAsEarlierRenderer(repository, filmID: pack.id)
+        try repository.savePhotoCapture(filmID: pack.id, sourceData: photo)
+        try await processor.develop(filmID: pack.id)
+        XCTAssertEqual(try repository.film(id: pack.id).captures.map(\.revealState), [.revealed, .revealed])
+    }
+
+    /// Stores the Development run as if an earlier renderer had assigned every treatment.
+    private func storeAsEarlierRenderer(_ repository: FilmRepository, filmID: UUID) throws {
+        let stored = try XCTUnwrap(repository.database.value(filmID: filmID, key: "development"))
+        let current = "\"treatmentVersion\":\"\(NativePhotoRenderer.treatmentVersion)\""
+        let json = try XCTUnwrap(String(data: stored, encoding: .utf8))
+        XCTAssertTrue(json.contains(current))
+        let earlier = json.replacingOccurrences(of: current, with: "\"treatmentVersion\":\"film-look-0-earlier\"")
+        try repository.database.setValue(filmID: filmID, key: "development", data: Data(earlier.utf8))
     }
 
     func testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders() async throws {

@@ -25,7 +25,7 @@ final class CaptureAdapterTests: XCTestCase {
         XCTAssertEqual(authorizer.requestCount, 0)
     }
 
-    func testAuthorizedFrontCaptureMirrorsOnlyViewfinderAndNeverOutput() async {
+    func testAuthorizedFrontRequestStartsOnTheFrontLensWithoutPrompting() async {
         let coordinator = CaptureStartupCoordinator(
             authorizer: FakeCaptureAuthorizer(status: .authorized),
             capabilities: CaptureCapabilities(
@@ -41,8 +41,8 @@ final class CaptureAdapterTests: XCTestCase {
         guard case let .ready(plan) = outcome else {
             return XCTFail("Expected ready capture plan")
         }
-        XCTAssertTrue(plan.viewfinderMirrored)
-        XCTAssertFalse(plan.outputMirrored)
+        XCTAssertEqual(plan.activePosition, .front)
+        XCTAssertEqual(plan.mediaKind, .photo)
     }
 
     func testLensSwitchIsBlockedWhileSavingOrRecordingAndUnavailablePositionsAreReported() async {
@@ -65,7 +65,7 @@ final class CaptureAdapterTests: XCTestCase {
         XCTAssertEqual(plan.lensSwitchDecision(to: .front, during: .idle), .unavailable(.front))
     }
 
-    func testMoviePlanIsSilentAndRetainsFinalPresentationOrientation() async {
+    func testMoviePlanRetainsFinalPresentationOrientation() async {
         let coordinator = CaptureStartupCoordinator(
             authorizer: FakeCaptureAuthorizer(status: .authorized),
             capabilities: CaptureCapabilities(
@@ -85,9 +85,17 @@ final class CaptureAdapterTests: XCTestCase {
         guard case let .ready(plan) = outcome else {
             return XCTFail("Expected ready movie plan")
         }
-        XCTAssertFalse(plan.recordsAudio)
         XCTAssertEqual(plan.lockedMovieOrientation, .landscape)
         XCTAssertEqual(plan.lensSwitchDecision(to: .rear, during: .idle), .disabledByConfiguration)
+    }
+
+    func testHeldOrientationRotatesFromTheSensorsHomeRightLandscapeFrame() {
+        XCTAssertEqual(CaptureFrameOrientation.landscapeLeft.rotationAngle, 0, "Home side right is the sensor's native frame")
+        XCTAssertEqual(CaptureFrameOrientation.landscapeRight.rotationAngle, 180)
+        XCTAssertEqual(CaptureFrameOrientation.portrait.rotationAngle, 90)
+        XCTAssertEqual(CaptureFrameOrientation.portraitUpsideDown.rotationAngle, 270)
+        XCTAssertEqual(CaptureFrameOrientation.landscapeRight.clipOrientation, .landscape)
+        XCTAssertEqual(CaptureFrameOrientation.portraitUpsideDown.clipOrientation, .portrait)
     }
 
     func testMoviesRecordTheLargestNative4x3FormatWithinTheEarlierPresetAtMovieFrameRate() {

@@ -30,7 +30,7 @@ final class SubscriptionController {
     func refresh() async { access = await store.access() }
 
     func loadProducts() async {
-        guard configured else { return }
+        guard configured, !busy else { return }
         busy = true
         defer { busy = false }
         do { products = try await store.products(); message = nil }

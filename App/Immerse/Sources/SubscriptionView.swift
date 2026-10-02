@@ -30,6 +30,7 @@ struct SubscriptionView: View {
                     }
                     if model.billing.products.isEmpty {
                         Button("Reload Plans", systemImage: "arrow.clockwise") { Task { await model.billing.loadProducts() } }
+                            .disabled(model.billing.busy)
                     }
                 }
                 Section {

@@ -11,7 +11,7 @@ extension FilmRepository {
     public func rename(filmID: UUID, title: String) throws {
         try database.withTransaction {
             var film = try film(id: filmID)
-            film.rename(to: title)
+            try film.rename(to: title)
             try save(film)
         }
     }

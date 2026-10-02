@@ -1,3 +1,4 @@
+import EntitlementCore
 import FilmDomain
 import SwiftUI
 
@@ -81,7 +82,7 @@ private struct LoadFilmView: View {
             }
             Section {
                 Label(entitlementLabel, systemImage: "ticket")
-                Text("The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.")
+                Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium))
                     .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
             }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
@@ -129,6 +130,25 @@ private struct LoadFilmView: View {
         case .consumed: return "This iPhone's Trial is used"
         case nil: return model.trialError == nil ? "Checking Trial status" : "Trial status unavailable"
         }
+    }
+}
+
+/// What loading this Film uses and what stays fixed, matching `TrialCoordinator.load`.
+enum LoadCopy {
+    static func note(access: SubscriptionAccess, trial: DeviceTrialState?, medium: CameraMedium) -> String {
+        let entitlement: String? = if access == .active {
+            "This Film is included in your subscription."
+        } else {
+            switch trial {
+            case .unused: "The first saved capture uses this iPhone's Trial."
+            case .emptyFilmInProgress: "This iPhone's Trial Film is already loaded. Open or delete it first, or subscribe."
+            case .consumed: "This iPhone's Trial is used. A subscription is required to load another Film."
+            case nil: nil
+            }
+        }
+        let fixed = medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
+            : "Your Camera cannot change after loading."
+        return [entitlement, fixed].compactMap { $0 }.joined(separator: " ")
     }
 }
 

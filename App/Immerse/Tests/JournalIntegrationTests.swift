@@ -117,6 +117,58 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertThrowsError(try JournalModel(root: blocker.appendingPathComponent("FilmJournal")))
     }
 
+    func testTryAgainWhileTheJournalIsOpeningOpensOnlyOneJournal() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalLauncher-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        var opened = 0
+        let launcher = JournalLauncher {
+            opened += 1
+            return try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                    cameraAuthorizer: SyntheticCamera(granted: true))
+        }
+        async let first: Void = launcher.open()
+        async let second: Void = launcher.open()
+        _ = await (first, second)
+        XCTAssertEqual(opened, 1, "A second open would add a second Trial owner for the same storage")
+        XCTAssertNotNil(launcher.model)
+        XCTAssertFalse(launcher.opening)
+    }
+
+    func testRemovalWhileTheFilmIsAlreadyBeingRemovedIsRefusedAndKeepsItHidden() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalRemoval-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        model.refresh()
+        // A Discard or Delete Film for this Film is still in flight.
+        model.hiddenFilms.insert(film.id)
+        do { try await model.remove(film.id); XCTFail("A second removal must wait for the first") }
+        catch JournalError.operationInProgress { }
+        XCTAssertTrue(model.hiddenFilms.contains(film.id))
+        XCTAssertNotNil(model.film(film.id))
+        XCTAssertEqual(FailureCopy.message(for: JournalError.operationInProgress),
+                       "Another change to this Film is still finishing. Try again when it completes.")
+    }
+
+    func testEarlyCompletionWarningShowsUnusedSecondsLikeTheOtherMovieLabels() throws {
+        var film = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
+        _ = try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(104), orientation: .landscape)
+        XCTAssertEqual(film.exactWasteLabel, "196.533 unused seconds")
+        XCTAssertEqual(film.remainingLabel, "196.533 seconds left")
+    }
+
+    func testLoadSheetDescribesTheEntitlementThatLoadingWillUse() {
+        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, medium: .photo),
+                       "This Film is included in your subscription. Your Camera cannot change after loading.")
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, medium: .movie),
+                       "The first saved capture uses this iPhone's Trial. Your Camera and Movie Orientation cannot change after loading.")
+        let consumed = DeviceTrialState.consumed(record: DeviceTrialConsumptionRecord(filmID: UUID(), consumedAt: Date()))
+        XCTAssertEqual(LoadCopy.note(access: .expired, trial: consumed, medium: .photo),
+                       "This iPhone's Trial is used. A subscription is required to load another Film. Your Camera cannot change after loading.")
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: nil, medium: .photo), "Your Camera cannot change after loading.")
+    }
+
     func testEmptyFilmCannotDevelopAndCanBeDeleted() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("EmptyJournalIntegration-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }

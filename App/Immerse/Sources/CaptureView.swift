@@ -6,6 +6,7 @@ import SwiftUI
 struct CaptureView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     let filmID: UUID
     @State private var error: String?
     @State private var cameraDenied = false
@@ -45,12 +46,11 @@ struct CaptureView: View {
                         ZStack {
                             Color.black
                             if let preview = capture.preview {
-                                CameraPreview(source: preview, position: capture.position, orientation: capture.orientation,
-                                              square: square)
+                                CameraPreview(source: preview, position: capture.position, square: square)
                             } else { Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white) }
                         }
-                        // The 4:3 capture fills a 3:4 viewfinder in portrait and a 4:3 one in landscape.
-                        .aspectRatio(square ? 1 : capture.orientation.clipOrientation == .portrait ? 3.0 / 4 : 4.0 / 3, contentMode: .fit)
+                        // The 4:3 capture fills a 3:4 viewfinder in a portrait interface and a 4:3 one in landscape.
+                        .aspectRatio(square ? 1 : verticalSizeClass == .compact ? 4.0 / 3 : 3.0 / 4, contentMode: .fit)
                         .clipped()
                         .accessibilityLabel(capture.position == .front ? "Mirrored front viewfinder" : "Rear viewfinder")
                         if film.completionState == .open {
@@ -59,7 +59,7 @@ struct CaptureView: View {
                                     VStack(alignment: .leading) {
                                         Text("Focus").font(.caption)
                                         Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
-                                            if !editing { model.perform { try await capture.setFocus() } }
+                                            if !editing { model.perform { try await capture.setFocus() } failure: { error = $0 } }
                                         }).accessibilityLabel("Focus")
                                     }
                                 } else { Text("Manual focus unavailable on this lens").font(.caption).foregroundStyle(.secondary) }
@@ -67,7 +67,7 @@ struct CaptureView: View {
                                     VStack(alignment: .leading) {
                                         Text("Exposure \(capture.exposure, specifier: "%.1f") EV").font(.caption.monospaced())
                                         Slider(value: $capture.exposure, in: Double(minimum)...Double(maximum), onEditingChanged: { editing in
-                                            if !editing { model.perform { try await capture.setExposure() } }
+                                            if !editing { model.perform { try await capture.setExposure() } failure: { error = $0 } }
                                         }).accessibilityLabel("Exposure")
                                     }
                                 }
@@ -84,7 +84,7 @@ struct CaptureView: View {
                 if let film = model.film(filmID), film.completionState == .open {
                     HStack(spacing: 32) {
                         Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
-                            model.perform { try await capture.switchLens(camera: film.camera) }
+                            model.perform { try await capture.switchLens(camera: film.camera) } failure: { error = $0 }
                         }.labelStyle(.iconOnly).font(.title2)
                             .disabled(capture.phase != .idle || capture.busy)
                         Button {
@@ -114,6 +114,7 @@ struct CaptureView: View {
             .task { if let film = model.film(filmID) { open(film) } }
             .onAppear {
                 UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+                capture.updateOrientation()
                 lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
             }
             .onDisappear { UIDevice.current.endGeneratingDeviceOrientationNotifications(); capture.suspend() }
@@ -145,24 +146,33 @@ struct CaptureView: View {
 private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
     let position: CapturePosition
-    let orientation: CaptureFrameOrientation
     let square: Bool
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
+        surface.source = source
         surface.preview = source.makeLayer()
         return surface
     }
     func updateUIView(_ uiView: PreviewSurface, context: Context) {
-        if let layer = uiView.preview {
-            layer.videoGravity = square ? .resizeAspectFill : .resizeAspect
-            try? source.update(layer, position: position, orientation: orientation)
-        }
+        uiView.preview?.videoGravity = square ? .resizeAspectFill : .resizeAspect
+        uiView.position = position
+        uiView.setNeedsLayout()
     }
 }
 
+/// The viewfinder turns with the interface, which stays upright when the iPhone is upside down
+/// and keeps turning while a clip records in the orientation it started in.
 private final class PreviewSurface: UIView {
+    var source: CapturePreviewSource?
+    var position = CapturePosition.rear
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
     }
-    override func layoutSubviews() { super.layoutSubviews(); preview?.frame = bounds }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        preview?.frame = bounds
+        guard let preview, let source, let interface = window?.windowScene?.effectiveGeometry.interfaceOrientation,
+              let orientation = CaptureFrameOrientation(interface: interface) else { return }
+        try? source.update(preview, position: position, orientation: orientation)
+    }
 }

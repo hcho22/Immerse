@@ -9,7 +9,12 @@ public actor FilmProcessor {
     private let root: URL
     private let repository: FilmRepository
     private let developmentObserver: DevelopmentObserver?
-    private var jobs: [UUID: Task<Void, Error>] = [:]
+    /// Exports are not suspendable: a write may already be in Photos and cannot be recalled.
+    private struct Job {
+        let task: Task<Void, Error>
+        let suspendable: Bool
+    }
+    private var jobs: [UUID: Job] = [:]
     private var removing: Set<UUID> = []
 
     public init(root: URL, developmentObserver: DevelopmentObserver? = nil) throws {
@@ -20,17 +25,18 @@ public actor FilmProcessor {
 
     public func develop(filmID: UUID) async throws {
         guard !removing.contains(filmID) else { throw PersistenceError.filmNotFound }
-        if let job = jobs[filmID] { return try await job.value }
+        if let job = jobs[filmID] { return try await job.task.value }
         let root = self.root
         let observer = developmentObserver
         let job = Task.detached { try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer) }
-        jobs[filmID] = job
+        jobs[filmID] = Job(task: job, suspendable: true)
         defer { jobs[filmID] = nil }
         try await job.value
     }
 
+    /// Stops Development and Movie work before the app is suspended. Exports keep running.
     public func suspendProcessing() async {
-        let active = Array(jobs.values)
+        let active = jobs.values.filter(\.suspendable).map(\.task)
         for task in active { task.cancel() }
         for task in active { _ = await task.result }
     }
@@ -39,7 +45,7 @@ public actor FilmProcessor {
         guard !removing.contains(filmID) else { throw PersistenceError.operationInProgress }
         removing.insert(filmID)
         defer { removing.remove(filmID) }
-        if let job = jobs[filmID] { job.cancel(); _ = await job.result }
+        if let job = jobs[filmID] { job.task.cancel(); _ = await job.task.result }
         jobs[filmID] = nil
         let film = try repository.discardRevealedCapture(filmID: filmID, sequenceNumber: sequence)
         try removeWork(filmID: filmID)
@@ -52,7 +58,7 @@ public actor FilmProcessor {
         guard !removing.contains(filmID) else { throw PersistenceError.operationInProgress }
         removing.insert(filmID)
         defer { removing.remove(filmID) }
-        if let job = jobs[filmID] { job.cancel(); _ = await job.result }
+        if let job = jobs[filmID] { job.task.cancel(); _ = await job.task.result }
         jobs[filmID] = nil
         try repository.deleteFilm(filmID: filmID)
         try removeWork(filmID: filmID)
@@ -93,22 +99,28 @@ public actor FilmProcessor {
             try Task.checkCancellation()
             try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer)
         }
-        jobs[filmID] = job
+        jobs[filmID] = Job(task: job, suspendable: true)
         defer { jobs[filmID] = nil }
         try await job.value
     }
 
+    /// Photos permission is settled before the export starts, so its prompt never interrupts a write.
     public func export<Authorizer: PhotoLibraryAuthorizing, Writer: PhotoLibraryWriting>(
         filmID: UUID, sequences: [Int], originals: Bool,
         coordinator: PhotoExportCoordinator<Authorizer, Writer>
     ) async throws {
+        switch await coordinator.resolveAccess() {
+        case .authorized, .limited: break
+        case .notDetermined: throw FilmExportError.needsPermission
+        case .denied, .restricted: throw FilmExportError.permissionDenied
+        }
         guard !removing.contains(filmID), jobs[filmID] == nil else { throw PersistenceError.operationInProgress }
         let root = self.root
         let job = Task.detached {
             try await FilmExportWorker.export(root: root, filmID: filmID, sequences: sequences,
                 originals: originals, coordinator: coordinator)
         }
-        jobs[filmID] = job
+        jobs[filmID] = Job(task: job, suspendable: false)
         defer { jobs[filmID] = nil }
         try await job.value
     }
@@ -130,7 +142,6 @@ enum DevelopmentWorker {
             try await observer(filmID, .afterAssignments)
             try Task.checkCancellation()
         }
-        guard run.treatmentVersion == NativePhotoRenderer.treatmentVersion else { throw PersistenceError.treatmentConflict }
         let film = try repository.film(id: filmID)
         let audioSelection = try repository.movieAudioSelection(filmID: filmID)
         var work = root.appendingPathComponent("Work/\(filmID)/\(UUID())")
@@ -146,6 +157,7 @@ enum DevelopmentWorker {
             guard let treatment = run.assignments[capture.sequenceNumber] else { throw PersistenceError.treatmentConflict }
             let kind: StoredAsset.Kind = film.camera.medium == .photo ? .master : .clip
             if try repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: kind) == nil {
+                guard run.rendersWithCurrentTreatment(treatment) else { throw PersistenceError.treatmentConflict }
                 guard let source = try repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: .source) else {
                     throw PersistenceError.captureNotFound
                 }

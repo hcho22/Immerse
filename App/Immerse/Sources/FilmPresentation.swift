@@ -64,7 +64,7 @@ extension Film {
 
     var exactWasteLabel: String {
         if let remainingExposures { return "\(remainingExposures) unused exposures" }
-        return "\(String(remainingMovieSeconds ?? 0)) unused seconds"
+        return String(format: "%.3f unused seconds", remainingMovieSeconds ?? 0)
     }
 
     var progress: Double {
@@ -108,6 +108,12 @@ enum FailureCopy {
             return "This iPhone's Trial is used. An active subscription is required to load another Film. Your existing Films remain usable."
         case JournalError.trialInProgress:
             return "This iPhone already has an unused Trial Film. Open it in your Journal, or delete that empty Film before loading another."
+        case JournalError.operationInProgress, PersistenceError.operationInProgress:
+            return "Another change to this Film is still finishing. Try again when it completes."
+        case FilmDomainError.emptyTitle:
+            return "A Film needs a title, so the current title is kept."
+        case let FilmExportError.interrupted(saved, total):
+            return "Saving to Photos stopped after \(saved) of \(total). Those copies stay in Photos; check Photos before saving again."
         case PersistenceError.capacityChangedSinceConfirmation:
             return "A capture finished saving while confirmation was open. The Film is still open. Check the updated remaining capacity and confirm again."
         case FilmExportError.permissionDenied:

@@ -141,7 +141,7 @@ import XCTest
         XCTAssertTrue(result.dispositions.isEmpty)
     }
 
-    func testSuspendWaitsForWriterCancellationAndPreservesOriginals() async throws {
+    func testSuspendLeavesAnInFlightExportToFinishAndRecordItsCopy() async throws {
         for boundary in [ExportBoundary.beforeCopy, .beforeReply] {
             let scenario = try ExportScenario(label: "suspend-\(boundary.rawValue)")
             try await scenario.prepare()
@@ -149,21 +149,18 @@ import XCTest
             let writer = try await scenario.makeWriter(.init(boundary: boundary))
             let export = Task { try await scenario.export(writer: writer) }
             try await paused(writer)
-            let suspension = Task { await scenario.suspend() }
-            try await cancelled(writer)
-            let held = try await scenario.inventory("cancelled-still-paused")
-            assertUsable(held, sources: 1)
-            XCTAssertFalse(try events(scenario).contains("suspend-returned"))
+            await scenario.suspend()
+            XCTAssertTrue(try events(scenario).contains("suspend-returned"))
+            let cancellations = await writer.cancellations
+            XCTAssertEqual(cancellations, 0, "A Photos write already under way cannot be recalled, so suspension leaves it running")
             try await writer.release()
-            do { try await export.value; XCTFail("Cancelled writer reported success") }
-            catch FilmExportError.writeFailed("CancellationError()") { }
-            await suspension.value
+            try await export.value
             try await scenario.recover()
-            let result = try await scenario.inventory("cancelled-reopened")
-            assertUsable(result, sources: 1)
-            XCTAssertEqual(assetHashes(result), assetHashes(before))
-            XCTAssertEqual(result.dispositions[1], .exportRequested)
-            XCTAssertEqual(result.externalFiles.count, boundary == .beforeCopy ? 0 : 1)
+            let result = try await scenario.inventory("suspended-export-completed")
+            assertUsable(result, sources: 0)
+            XCTAssertEqual(assetHashes(result, kind: "master"), assetHashes(before, kind: "master"))
+            assertReceipt(result, sequence: 1)
+            XCTAssertEqual(result.externalFiles.count, 1)
             assertNoWork(result)
         }
     }

@@ -77,25 +77,21 @@ public struct PhotoExportCoordinator<Authorizer: PhotoLibraryAuthorizing, Writer
     }
 
     public func export(_ request: PhotoExportRequest) async -> PhotoExportOutcome {
-        switch authorizer.authorizationStatus(for: accessLevel) {
+        switch await resolveAccess() {
         case .authorized, .limited:
             return await write(request)
         case .notDetermined:
-            guard promptPolicy == .requestAtCaptureStart else {
-                return .needsPermission(accessLevel)
-            }
-            let requestedStatus = await authorizer.requestAuthorization(for: accessLevel)
-            switch requestedStatus {
-            case .authorized, .limited:
-                return await write(request)
-            case .notDetermined:
-                return .needsPermission(accessLevel)
-            case .denied, .restricted:
-                return .permissionDenied(requestedStatus)
-            }
-        case .denied, .restricted:
-            return .permissionDenied(authorizer.authorizationStatus(for: accessLevel))
+            return .needsPermission(accessLevel)
+        case let status:
+            return .permissionDenied(status)
         }
+    }
+
+    /// The current access, after the system prompt when the policy allows asking.
+    public func resolveAccess() async -> PhotoLibraryAuthorizationStatus {
+        let status = authorizer.authorizationStatus(for: accessLevel)
+        guard status == .notDetermined, promptPolicy == .requestAtCaptureStart else { return status }
+        return await authorizer.requestAuthorization(for: accessLevel)
     }
 
     private func write(_ request: PhotoExportRequest) async -> PhotoExportOutcome {

@@ -83,6 +83,10 @@ final class NativeRenderTests: XCTestCase {
         // Portrait source fits the 4:3 output with side borders, not a crop/stretch.
         XCTAssertLessThan(firstPixels[(120 * 320 + 8) * 4], 40)
         XCTAssertGreaterThan(firstPixels[(120 * 320 + 160) * 4], 40)
+        // Upright, the source's dark top-left corner sits at the top right and its bright
+        // bottom-right corner at the bottom left, as a player shows the portrait clip.
+        func brightness(x: Int, y: Int) -> Int { (0..<3).reduce(0) { $0 + Int(firstPixels[(y * 320 + x) * 4 + $1]) } }
+        XCTAssertLessThan(brightness(x: 210, y: 30) + 150, brightness(x: 110, y: 210))
         let secondFrames = try await decodedFrames(second)
         let assembledFrames = try await decodedFrames(movie)
         XCTAssertGreaterThan(firstFrames.count, 1)

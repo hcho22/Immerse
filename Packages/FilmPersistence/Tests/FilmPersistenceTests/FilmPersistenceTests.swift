@@ -36,6 +36,20 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
     }
 
+    func testBlankTitlesAreRejectedWhenLoadingOrRenaming() throws {
+        XCTAssertThrowsError(try repository.createFilm(camera: CameraCatalog.instant1970s, title: " \n")) {
+            XCTAssertEqual($0 as? FilmDomainError, .emptyTitle)
+        }
+        let film = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Instant - Pack #01")
+        XCTAssertThrowsError(try repository.rename(filmID: film.id, title: "   ")) {
+            XCTAssertEqual($0 as? FilmDomainError, .emptyTitle)
+        }
+        XCTAssertEqual(try repository.film(id: film.id).title, "Instant - Pack #01")
+        try repository.rename(filmID: film.id, title: "  Coast  ")
+        XCTAssertEqual(try repository.film(id: film.id).title, "Coast")
+        XCTAssertEqual(try repository.allFilms().count, 1)
+    }
+
     func testFilmStateAndAssetsReloadFromDiskInNewRepositoryInstance() throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.mediumFormat6x6,

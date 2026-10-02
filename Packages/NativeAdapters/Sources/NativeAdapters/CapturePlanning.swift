@@ -1,6 +1,29 @@
 import FilmDomain
 import Foundation
 
+/// How the iPhone is held, named like `UIDeviceOrientation`. In `landscapeLeft` the home
+/// side is on the right, which is the camera sensors' native frame and needs no rotation.
+public enum CaptureFrameOrientation: Equatable, Sendable {
+    case portrait, portraitUpsideDown, landscapeLeft, landscapeRight
+
+    /// The `AVCaptureConnection.videoRotationAngle` that shows this orientation upright.
+    public var rotationAngle: CGFloat {
+        switch self {
+        case .portrait: 90
+        case .portraitUpsideDown: 270
+        case .landscapeLeft: 0
+        case .landscapeRight: 180
+        }
+    }
+
+    public var clipOrientation: ClipOrientation {
+        switch self {
+        case .portrait, .portraitUpsideDown: .portrait
+        case .landscapeLeft, .landscapeRight: .landscape
+        }
+    }
+}
+
 public enum CapturePhase: Equatable, Sendable {
     case idle
     case savingPhoto
@@ -38,24 +61,14 @@ public struct CaptureSessionRequest: Equatable, Sendable {
 public struct CaptureSessionPlan: Equatable, Sendable {
     public let activePosition: CapturePosition
     public let mediaKind: CaptureMediaKind
-    public let recordsAudio: Bool
     public let lockedMovieOrientation: MovieOrientation?
     private let capabilities: CaptureCapabilities
 
     public init(request: CaptureSessionRequest, capabilities: CaptureCapabilities) {
         self.activePosition = request.preferredPosition
         self.mediaKind = request.mediaKind
-        self.recordsAudio = false
         self.lockedMovieOrientation = request.lockedMovieOrientation
         self.capabilities = capabilities
-    }
-
-    public var viewfinderMirrored: Bool {
-        activePosition == .front
-    }
-
-    public var outputMirrored: Bool {
-        false
     }
 
     public func lensSwitchDecision(

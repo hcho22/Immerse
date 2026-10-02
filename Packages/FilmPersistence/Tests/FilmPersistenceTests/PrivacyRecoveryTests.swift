@@ -71,7 +71,7 @@ final class PrivacyRecoveryTests: XCTestCase {
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("first-source".utf8))
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("surviving-source".utf8))
         try revealTestInstant(repository, filmID: film.id)
-        manager.failAtLastPathComponent = "source-1.bin"
+        manager.failAtLastPathComponents = ["source-1.bin"]
 
         XCTAssertThrowsError(try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 1))
         XCTAssertEqual(try repository.film(id: film.id).discardedPlaceholderSequenceNumbers, [1])
@@ -136,7 +136,7 @@ final class PrivacyRecoveryTests: XCTestCase {
         let survivor = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic survivor")
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("private-source".utf8))
         try repository.savePhotoCapture(filmID: survivor.id, sourceData: Data("survivor".utf8))
-        manager.failAtLastPathComponent = film.id.uuidString
+        manager.failAtLastPathComponents = [film.id.uuidString]
 
         XCTAssertThrowsError(try repository.deleteFilm(filmID: film.id))
         XCTAssertThrowsError(try repository.film(id: film.id)) {
@@ -151,6 +151,86 @@ final class PrivacyRecoveryTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Media/\(film.id.uuidString)").path))
         XCTAssertEqual(try repository.film(id: survivor.id).savedCaptureCount, 1)
         XCTAssertTrue(try repository.assetExists(filmID: survivor.id, sequenceNumber: 1, kind: .source))
+    }
+
+    func testRecoveryCleansEveryOtherFilmAndSweepWhenOneTombstoneCannotBeRemoved() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let failing = FailingRemovalFileManager()
+        let repository = try FilmRepository(rootURL: root, fileManager: failing)
+        let discarded = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic discarded")
+        try repository.savePhotoCapture(filmID: discarded.id, sourceData: Data("first".utf8), captureID: "stuck.photo")
+        try revealTestInstant(repository, filmID: discarded.id)
+        let staging = try repository.captureStagingDirectory(filmID: discarded.id)
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: true)
+        let stuck = staging.appendingPathComponent("stuck.photo")
+        try Data("private staged pixels".utf8).write(to: stuck)
+        failing.failAtLastPathComponents = ["stuck.photo"]
+        XCTAssertThrowsError(try repository.discardRevealedCapture(filmID: discarded.id, sequenceNumber: 1))
+
+        let deleted = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic deleted")
+        try repository.savePhotoCapture(filmID: deleted.id, sourceData: Data("private".utf8))
+        let deletedStaging = try repository.captureStagingDirectory(filmID: deleted.id)
+        let deletedWork = root.appendingPathComponent("Work/\(deleted.id)/Render-interrupted")
+        for directory in [deletedStaging, deletedWork] {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try Data("private".utf8).write(to: directory.appendingPathComponent("leftover"))
+        }
+        failing.failAtLastPathComponents = ["stuck.photo", deleted.id.uuidString]
+        // The process exits before deleting the Film's files; its tombstones remain.
+        XCTAssertThrowsError(try repository.deleteFilm(filmID: deleted.id))
+        let temporary = root.appendingPathComponent("Temporary/interrupted-copy")
+        try Data("private".utf8).write(to: temporary)
+
+        failing.failAtLastPathComponents = ["stuck.photo"]
+        XCTAssertThrowsError(try FilmRepository(rootURL: root, fileManager: failing).recover()) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileWriteNoPermission)
+        }
+        for removed in [root.appendingPathComponent("Media/\(deleted.id)"), deletedStaging,
+                        root.appendingPathComponent("Work/\(deleted.id)"), temporary] {
+            XCTAssertFalse(FileManager.default.fileExists(atPath: removed.path), removed.lastPathComponent)
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: stuck.path), "The failed tombstone stays for the next retry")
+
+        try FilmRepository(rootURL: root).recover()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: stuck.path))
+    }
+
+    func testOrphanSweepThatCannotReadAFilmFolderFailsInsteadOfReportingSuccess() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic")
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("kept".utf8))
+        let folder = root.appendingPathComponent("Media/\(film.id.uuidString)")
+        let orphan = folder.appendingPathComponent("source-2.bin")
+        try Data("moved before its debit committed".utf8).write(to: orphan)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: folder.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path) }
+
+        XCTAssertThrowsError(try repository.recover()) {
+            XCTAssertEqual(($0 as? CocoaError)?.code, .fileReadNoPermission)
+        }
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path)
+        try repository.recover()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: orphan.path))
+        XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+    }
+
+    func testFailedDurableMoveLeavesNoPrivateTemporaryCopy() throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let repository = try FilmRepository(rootURL: root)
+        let film = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic")
+        try repository.savePhotoCapture(filmID: film.id, sourceData: Data("first".utf8))
+        let folder = root.appendingPathComponent("Media/\(film.id.uuidString)")
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: folder.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path) }
+
+        XCTAssertThrowsError(try repository.savePhotoCapture(filmID: film.id, sourceData: Data("second".utf8)))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: root.appendingPathComponent("Temporary").path), [])
+        XCTAssertEqual(try repository.film(id: film.id).savedCaptureCount, 1)
     }
 
     func testMovieRemovalRetiresAssemblyBeforeFailedCleanupAndRejectsLateClipOrOldPlan() async throws {
@@ -172,7 +252,7 @@ final class PrivacyRecoveryTests: XCTestCase {
         let surviving = try Data(contentsOf: repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .clip)!.url)
         let retiredURL = try repository.mediaAsset(filmID: film.id, sequenceNumber: 0, kind: .movie)!.url
         let verifiedSurvivor = try await VerifiedMedia.movie(at: repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .clip)!.url)
-        manager.failAtLastPathComponent = retiredURL.lastPathComponent
+        manager.failAtLastPathComponents = [retiredURL.lastPathComponent]
         XCTAssertThrowsError(try repository.discardRevealedCapture(filmID: film.id, sequenceNumber: 2))
         XCTAssertFalse(try repository.assembledMovieExists(filmID: film.id))
         XCTAssertEqual(try repository.film(id: film.id).playableMovieClipSequenceNumbers, [1])
@@ -199,10 +279,10 @@ final class PrivacyRecoveryTests: XCTestCase {
 }
 
 private final class FailingRemovalFileManager: FileManager, @unchecked Sendable {
-    var failAtLastPathComponent: String?
+    var failAtLastPathComponents: Set<String> = []
 
     override func removeItem(at url: URL) throws {
-        if url.lastPathComponent == failAtLastPathComponent {
+        if failAtLastPathComponents.contains(url.lastPathComponent) {
             throw CocoaError(.fileWriteNoPermission)
         }
         try super.removeItem(at: url)

@@ -81,8 +81,10 @@ Prepare cannot overwrite a retained history. No marker or Film reset is exposed.
   corrupted master prevents cleanup even after an acknowledged external copy.
 - Developed-photo export uses the actual Darkroom print without changing original
   disposition or deleting its source. Preparation/recovery never writes externally.
-- Suspend/Delete/Discard wait for the held production job. Late callbacks cannot
+- Delete/Discard wait for the held production job. Late callbacks cannot
   recreate removed private media. Completed external copies remain outside removal.
+  Suspend leaves an export running, since a Photos write already under way cannot
+  be recalled; it stops only Development and Movie work.
 - Movie Discard retires the old private assembly, preserves the retained clip and
   treatment assignments, reassembles only that clip and does not refund duration.
   Last-clip Discard retains numbered placeholders with no playback/export.

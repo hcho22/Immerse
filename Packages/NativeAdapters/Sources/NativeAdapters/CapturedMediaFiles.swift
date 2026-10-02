@@ -25,8 +25,15 @@ public struct CapturedMediaFiles: Sendable {
             try prepare(PendingCaptureRecord(id: id, mediaKind: .photo))
         }
         let url = directory.appendingPathComponent("\(id.uuidString).photo")
-        try data.write(to: url, options: [.withoutOverwriting])
-        try synchronize(url)
+        let partial = partialURL(url)
+        do {
+            try data.write(to: partial)
+            try synchronize(partial)
+            try FileManager.default.moveItem(at: partial, to: url)
+        } catch {
+            try? FileManager.default.removeItemIfPresent(at: partial)
+            throw error
+        }
         return url
     }
 
@@ -63,6 +70,10 @@ public struct CapturedMediaFiles: Sendable {
     }
 
     public func recoveryEvents() async throws -> [CaptureSaveEvent] {
+        for leftover in try FileManager.default.contentsOfDirectoryIfPresent(at: directory)
+            where leftover.pathExtension == "partial" {
+            try FileManager.default.removeItemIfPresent(at: leftover)
+        }
         var result: [CaptureSaveEvent] = []
         for record in try pendingRecords() {
             let url = record.mediaKind == .movie ? movieDestination(id: record.id)
@@ -139,12 +150,13 @@ public struct CapturedMediaFiles: Sendable {
     }
 
     public func removeUncommitted(id: UUID) throws {
-        for suffix in ["photo", "mov", "json"] {
+        for suffix in ["photo", "photo.partial", "mov", "json"] {
             try FileManager.default.removeItemIfPresent(at: directory.appendingPathComponent("\(id).\(suffix)"))
         }
     }
 
     private func recordURL(_ id: UUID) -> URL { directory.appendingPathComponent("\(id).json") }
+    private func partialURL(_ url: URL) -> URL { url.appendingPathExtension("partial") }
 
     private func synchronize(_ url: URL) throws {
         let file = try FileHandle(forWritingTo: url)
