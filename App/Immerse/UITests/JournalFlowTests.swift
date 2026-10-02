@@ -13,7 +13,9 @@ final class JournalFlowTests: XCTestCase {
             XCTAssertTrue(app.buttons["camera-\(id)"].exists)
         }
         app.buttons["camera-super8HomeMovie"].tap()
-        XCTAssertTrue(app.staticTexts["3:20 of film"].exists)
+        // Assert the load screen's own capacity element; a bare "3:20 of film" query also matched the
+        // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
+        XCTAssertTrue(app.staticTexts["Capacity, 3:20 of film"].exists)
         XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default")
