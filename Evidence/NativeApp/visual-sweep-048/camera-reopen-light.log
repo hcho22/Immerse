@@ -1,0 +1,9 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/CameraReopen-048-light.xcresult
+
+2026-10-01 19:11:46.157 xcodebuild[50732:160524637] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 19:11:46.157 xcodebuild[50732:160524637] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 19:12:19.068 xcodebuild[50732:160524637] [MT] IDETestOperationsObserverDebug: 36.030 elapsed -- Testing started completed.
+2026-10-01 19:12:19.068 xcodebuild[50732:160524637] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 19:12:19.068 xcodebuild[50732:160524637] [MT] IDETestOperationsObserverDebug: 36.030 sec, +36.030 sec -- end
+Testing started

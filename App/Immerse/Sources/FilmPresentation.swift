@@ -76,10 +76,14 @@ extension Film {
     }
 }
 
-extension View {
-    /// A filled primary action. The dark-mode accent is too light under a white label, so filled
+extension Color {
+    /// Fill for filled actions. The dark-mode accent is too light under a white label, so filled
     /// actions use a deeper green that keeps both the label and the fill's edge readable.
-    func primaryAction() -> some View { buttonStyle(.borderedProminent).tint(Color("PrimaryAction")) }
+    static let primaryAction = Color("PrimaryAction")
+}
+
+extension View {
+    func primaryAction() -> some View { buttonStyle(.borderedProminent).tint(.primaryAction) }
 }
 
 enum PrivacyCopy {

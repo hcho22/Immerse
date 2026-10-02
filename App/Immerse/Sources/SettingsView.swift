@@ -39,7 +39,8 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done", systemImage: "checkmark") { dismiss() }.labelStyle(.iconOnly)
+                    // iOS 26 fills an icon-only confirmation with the tint.
+                    Button("Done", systemImage: "checkmark") { dismiss() }.labelStyle(.iconOnly).tint(.primaryAction)
                 }
             }
         }

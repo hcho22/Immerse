@@ -8,6 +8,7 @@ struct CaptureView: View {
     @Environment(\.dismiss) private var dismiss
     let filmID: UUID
     @State private var error: String?
+    @State private var cameraDenied = false
     @State private var instantPrint: CaptureRecord?
     @State private var lastRevealedSequence: Int?
 
@@ -24,6 +25,22 @@ struct CaptureView: View {
                                     .font(.body.monospaced()).foregroundStyle(.red)
                             } else { Text(model.hasPendingSave(filmID) ? "Finishing save" : film.remainingLabel).font(.body.monospaced()) }
                         }
+                        // Status sits above the viewfinder so guidance is visible without scrolling.
+                        if film.completionState != .open {
+                            Text(film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete").font(.headline)
+                        }
+                        if let error { Text(error).foregroundStyle(.red).font(.callout).multilineTextAlignment(.center) }
+                        if let message = capture.message {
+                            Text(message).font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        }
+                        if cameraDenied {
+                            Button("Open iPhone Settings", systemImage: "gearshape") {
+                                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                            }
+                        }
+                        if capture.phase == .interrupted || error != nil || capture.message?.contains("Retry") == true {
+                            Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
+                        }
                         ZStack {
                             Color.black
                             if let preview = capture.preview {
@@ -34,39 +51,7 @@ struct CaptureView: View {
                         .aspectRatio(film.camera.id == .mediumFormat6x6 || film.camera.id == .instant1970s ? 1 : 0.75, contentMode: .fit)
                         .clipped()
                         .accessibilityLabel(capture.position == .front ? "Mirrored front viewfinder" : "Rear viewfinder")
-                        if let error { Text(error).foregroundStyle(.red).font(.callout) }
-                        if let message = capture.message { Text(message).font(.callout).foregroundStyle(.secondary) }
-                        if capture.phase == .interrupted || error != nil || capture.message?.contains("Retry") == true {
-                            Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
-                        }
-                        if film.completionState != .open {
-                            Text(film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete").font(.headline)
-                        } else {
-                            HStack(spacing: 32) {
-                                Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
-                                    model.perform { try await capture.switchLens(camera: film.camera) }
-                                }.labelStyle(.iconOnly).font(.title2)
-                                    .disabled(capture.phase != .idle || capture.busy)
-                                Button {
-                                    Task {
-                                        do { try await capture.shutter(film: film) }
-                                        catch { self.error = FailureCopy.message(for: error) }
-                                    }
-                                } label: {
-                                    ZStack {
-                                        Circle().stroke(.primary, lineWidth: 3).frame(width: 74, height: 74)
-                                        if capture.phase == .recordingMovie { RoundedRectangle(cornerRadius: 4).fill(.red).frame(width: 32, height: 32) }
-                                        else { Circle().fill(film.camera.medium == .movie ? Color.red : Color.primary).frame(width: 62, height: 62) }
-                                    }.frame(width: 88, height: 88)
-                                }
-                                .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
-                                .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
-                                .accessibilityIdentifier("capture-shutter")
-                                if film.camera.id == .disposable1990s && capture.controls.flash {
-                                    Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
-                                        .toggleStyle(.button).labelStyle(.iconOnly).disabled(capture.phase != .idle)
-                                } else { Image(systemName: film.camera.medium == .movie ? "mic.slash" : "bolt.slash").foregroundStyle(.secondary).frame(width: 44) }
-                            }
+                        if film.completionState == .open {
                             if film.camera.id == .mediumFormat6x6 {
                                 if capture.controls.manualFocus {
                                     VStack(alignment: .leading) {
@@ -92,6 +77,37 @@ struct CaptureView: View {
                     }
                 }.padding()
             }
+            // The shutter stays on screen on small iPhones, at large text sizes and below messages.
+            .safeAreaInset(edge: .bottom) {
+                if let film = model.film(filmID), film.completionState == .open {
+                    HStack(spacing: 32) {
+                        Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
+                            model.perform { try await capture.switchLens(camera: film.camera) }
+                        }.labelStyle(.iconOnly).font(.title2)
+                            .disabled(capture.phase != .idle || capture.busy)
+                        Button {
+                            Task {
+                                do { try await capture.shutter(film: film) }
+                                catch { self.error = FailureCopy.message(for: error) }
+                            }
+                        } label: {
+                            ZStack {
+                                Circle().stroke(.primary, lineWidth: 3).frame(width: 74, height: 74)
+                                if capture.phase == .recordingMovie { RoundedRectangle(cornerRadius: 4).fill(.red).frame(width: 32, height: 32) }
+                                else { Circle().fill(film.camera.medium == .movie ? Color.red : Color.primary).frame(width: 62, height: 62) }
+                            }.frame(width: 88, height: 88)
+                        }
+                        .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
+                        .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
+                        .accessibilityIdentifier("capture-shutter")
+                        if film.camera.id == .disposable1990s && capture.controls.flash {
+                            Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
+                                .toggleStyle(.button).labelStyle(.iconOnly).disabled(capture.phase != .idle)
+                        } else { Image(systemName: film.camera.medium == .movie ? "mic.slash" : "bolt.slash").foregroundStyle(.secondary).frame(width: 44) }
+                    }
+                        .padding(.vertical, 8).frame(maxWidth: .infinity).background(.bar)
+                }
+            }
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Done") { capture.suspend(); dismiss() } } }
             .task { if let film = model.film(filmID) { open(film) } }
             .onAppear {
@@ -113,8 +129,12 @@ struct CaptureView: View {
     }
     private func open(_ film: Film) {
         Task {
+            cameraDenied = false
             do { try await model.capture.open(film: film, model: model); error = nil }
-            catch JournalError.cameraDenied { self.error = FailureCopy.message(for: JournalError.cameraDenied) }
+            catch JournalError.cameraDenied {
+                self.error = FailureCopy.message(for: JournalError.cameraDenied)
+                cameraDenied = true
+            }
             catch { self.error = ["Camera unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
         }
     }

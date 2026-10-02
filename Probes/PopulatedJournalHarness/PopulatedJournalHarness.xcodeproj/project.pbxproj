@@ -24,6 +24,7 @@
 		6CD8EC42521CB218F1B49E00 /* WorkflowHarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A988703796E8A16B38EA1BF /* WorkflowHarnessApp.swift */; };
 		7E10CBB3EF15C17916C9FCA3 /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FFCE9E01DB928F875296A0E /* MediaCatalog.json */; };
 		8132825A6E8823A102FF1D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00B81FCC70A05084325DA5A1 /* Assets.xcassets */; };
+		8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */; };
 		9B2DB15E2A9CA3A3CA0B0B85 /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 6CDA3AAB98F34F05A92E201E /* FilmPersistence */; };
 		A8745D718F6267AE8FF68268 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 12F2D9D75387D3F28C80CD90 /* MediaCatalog */; };
 		C8033A34AC916AF7899B0A98 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7174548584A2CC7E0017F828 /* EntitlementCore */; };
@@ -77,6 +78,7 @@
 		D8A4DBEB964964D36603BE05 /* PopulatedJournalHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PopulatedJournalHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAB2B694752974D58F54C7B /* FilmPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmPresentation.swift; sourceTree = "<group>"; };
 		E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		E41D46942323019637CC91E2 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,6 +128,7 @@
 		83860CC0C3AB665D118A157C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */,
 				5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */,
 				3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */,
 				94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */,
@@ -315,6 +318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */,
 				02A7AEC38F9BBF16A99705DC /* PhotosPermissionWorkflowTests.swift in Sources */,
 				659C053BB2A6A00BE88D24C5 /* PopulatedWorkflowTests.swift in Sources */,
 				1008D5C0A3495A394D5B701B /* RetainedWorkflowTests.swift in Sources */,
@@ -340,6 +344,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Private Workflow Harness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -513,6 +518,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Private Workflow Harness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

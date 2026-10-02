@@ -4,7 +4,7 @@ This separate, non-shipping target compiles the actual app views/model/modules
 and seeds only its own temporary sandbox with generated native media. It does not
 add fixture loading, Trial bypasses or imported media to the production app. It
 does not prove native capture, entitlement, Photos writes or real-device behavior.
-There are no Camera/Photos usage keys: tests must not invoke those permissions.
+There is no Photos usage key; a Camera usage key exists only for the declined-request test below.
 
 The initial Film uses synthetic preexisting subscription rights so edit/removal
 workflows can run without configuring purchases. Tests exercise the real native
@@ -88,7 +88,7 @@ Read `Evidence/NativeApp/darkroom-player-observation-044.md` for the retained
 outcomes, failed setup assumptions, hashes and limits.
 
 `PhotosPermissionWorkflowTests` needs a denied add-only Photos status set from the host before launch.
-The harness still has no usage keys.
+The harness has no Photos usage key.
 The test reads the status in the actual Settings view and stops before any export control unless it shows Off, so it never reaches a system prompt and never writes to Photos.
 `Scripts/validate-local.sh` applies the same revoke before the full harness suite.
 
@@ -100,3 +100,8 @@ xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarnes
 
 Read `Evidence/NativeApp/permission-storage-failures-045.md` for the reproduced defects, outcomes and limits.
 A simulator privacy revoke is not a device PhotoKit write, restricted-status or prompt-timing result.
+
+`CameraPermissionWorkflowTests` resets the harness's Camera authorization, opens an existing Film's camera and declines the actual system request through an interruption monitor; without the monitor XCTest allows it.
+The harness declares a Camera usage key only for this test; other tests never open the camera, and the simulator has no camera to capture with.
+The test also checks that the guidance and the shutter are on screen without scrolling; run it on small screens such as an iPhone SE (3rd generation) as well.
+Read `Evidence/NativeApp/visual-sweep-048.md` for the outcomes and limits.

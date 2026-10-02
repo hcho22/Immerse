@@ -67,6 +67,9 @@ Actual AVFoundation callbacks, a running session, reopening an existing Film wit
 `Evidence/NativeApp/darkroom-gesture-tint-047.md` closes the populated-view Dodge/Burn gesture gap with a drawn stroke that renders and persists, and fixes bottom-bar accent and dark-mode filled-action contrast defects found in its screenshots.
 Device touch, assistive technologies and a full dark-mode screen review remain open.
 
+`Evidence/NativeApp/visual-sweep-048.md` reviews the reachable screens in dark and light, fixes small-screen capture layout and dark-mode Done buttons, and covers reopening a Film's camera with the actual request declined in the actual views.
+A live preview, recording, focus/exposure controls and accessibility text-size sweeps of the capture screen remain open on the camera-less simulator.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

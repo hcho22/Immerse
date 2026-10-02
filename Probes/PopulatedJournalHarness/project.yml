@@ -42,6 +42,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.PopulatedJournalHarness
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "Private Workflow Harness"
+        # Only so a test can decline the actual Camera request; the simulator has no camera to capture with.
+        INFOPLIST_KEY_NSCameraUsageDescription: "Capture new photos and silent movie clips for your Films."
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         TARGETED_DEVICE_FAMILY: 1

@@ -202,6 +202,10 @@ The iOS 26.2 hosted stage, which CI runs, exposed an abort in `SubscriptionContr
 `Evidence/NativeApp/darkroom-gesture-tint-047.md` adds a drawn dodge stroke in the actual Darkroom that paints without scrolling, renders and persists across relaunch.
 It also fixes bottom-bar actions that ignored the green accent and showed system blue, and filled actions that were unreadable in dark mode (white on mint, 1.69:1, now 5.4:1).
 These are simulator screenshots and synthetic touches, not device, assistive-technology or QA-13 acceptance; colors remain DEC-01 review defaults.
+
+`Evidence/NativeApp/visual-sweep-048.md` reviews the actual screens in dark and light and the capture screen on iPhone SE, 13 Pro and 17 Pro simulators.
+The shutter was below the fold on the smaller screens and declined-Camera guidance was a dead end; the shutter row is now pinned, status sits above the viewfinder with Open iPhone Settings, and filled Done buttons are readable in dark mode.
+Reopening an existing Film's camera with the actual request declined is now covered in the actual views.
 This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a running camera, AVFoundation callback, physical interruption or device acceptance.
 
 ## Required Native Manual Matrix

@@ -87,9 +87,13 @@ final class JournalFlowTests: XCTestCase {
         }
         defer { removeUIInterruptionMonitor(monitor) }
         load.tap()
-        app.navigationBars.firstMatch.tap()
         let denied = app.staticTexts["Camera access is off. No Film was loaded. Allow Camera in iPhone Settings."]
-        XCTAssertTrue(denied.waitForExistence(timeout: 10))
+        // The monitor runs only on an interaction made while the request is showing, which can appear late.
+        for _ in 0..<20 where !denied.exists {
+            app.navigationBars.firstMatch.tap()
+            _ = denied.waitForExistence(timeout: 0.5)
+        }
+        XCTAssertTrue(denied.exists)
         XCTAssertTrue(declined, "Load Film must ask for Camera access")
         retainScreenshot(app, name: "Load-camera-denied")
         XCTAssertFalse(app.alerts.firstMatch.exists)
