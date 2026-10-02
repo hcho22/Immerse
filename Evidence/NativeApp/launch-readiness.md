@@ -50,7 +50,8 @@ Movie capacity is now accounted in whole 30 fps frames: clips whose frames total
 Movie capture now uses the largest native 4:3 format no larger than the earlier 1920x1080 `.high` preset (1440x1080 where offered), with a 3:4 portrait or 4:3 landscape viewfinder; the size is provisional pending DEC-04 and the format is a manual device check (M19).
 `TrialCoordinator.load` is now the single new-Film entitlement decision that production executes; the unused `EntitlementPolicy` rules and the unlinked `CapturePipeline` committer were removed, and the local StoreKit tests drive `JournalModel.load` and the production capture commit.
 A second review round corrected the landscape capture angles (home side right is 0 degrees) and portrait clip rotation in Development, made the viewfinder follow the interface orientation, stopped transient inactive phases from cancelling Development or Photos exports, reported partly saved exports, and hardened recovery, staging and removal re-entry.
-These are software changes with package and hosted tests, not device evidence; M04, M07 and M15 to M17 in the [physical handoff](manual-validation.md) must confirm them on a device.
+A third review round re-applies the viewfinder rotation when the iPhone turns straight from one landscape side to the other, shows each failure from a sheet or the camera screen exactly once (including a failed Instant print after the camera closes and Development started from the originals choice), and keeps the load screen from suggesting a subscription in builds without subscription products.
+These are software changes with package and hosted tests, not device evidence; M02, M04, M07, M09, M15 to M19 and M27 in the [physical handoff](manual-validation.md) must confirm them on a device.
 
 ## Candidate Identity and Local Gates
 

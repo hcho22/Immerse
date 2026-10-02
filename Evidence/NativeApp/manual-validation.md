@@ -6,8 +6,8 @@ The software candidate is `71391e483a80f3df38d995f5320c8a77c17cef61` on
 `fm/immerse-v1-implementation`; app sources last changed at `bd9594a`, tests at this commit, and the earlier pin was `241dafd`.
 Later document-only commits do not change the software. Record the exact eventual tested revision and configuration;
 reassess affected scenarios after any production, asset, signing or OS change.
-The no-mistakes review then changed app and package sources (whole-frame Movie capacity, 4:3 Movie capture, the single new-Film entitlement path in `TrialCoordinator.load` and removal of the unlinked `CapturePipeline` committer); see the [QA-14 handoff](launch-readiness.md).
-Re-pin the candidate to the commit containing those fixes before any manual run; M18, M19 and M27 below are directly affected.
+The no-mistakes review then changed app and package sources; the [QA-14 handoff](launch-readiness.md) lists the fixes and the scenarios they affect.
+Re-pin the candidate to the commit containing those fixes before any manual run.
 
 This is the execution companion to the [122-task evidence map](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md),
 [72 acceptance clauses and nine invariants](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md),
