@@ -223,8 +223,10 @@ struct OriginalChoiceView: View {
                             defer { working = false }
                             do {
                                 if let choice { try model.chooseOriginals(filmID, sequences: undecided, export: choice) }
-                                if startsDevelopment { dismiss(); try await model.develop(filmID) }
-                                else { try await model.processor.cleanupSources(filmID: filmID); dismiss() }
+                                if startsDevelopment {
+                                    dismiss()
+                                    model.perform { try await model.develop(filmID) }
+                                } else { try await model.processor.cleanupSources(filmID: filmID); dismiss() }
                             } catch { self.error = FailureCopy.message(for: error) }
                         }
                     }.disabled(working || (!undecided.isEmpty && choice == nil))

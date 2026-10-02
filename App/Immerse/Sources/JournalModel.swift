@@ -13,6 +13,8 @@ struct JournalAlert: Identifiable {
     let id = UUID()
     let title: String
     let message: String
+
+    static func failure(_ message: String) -> JournalAlert { JournalAlert(title: "Could not finish", message: message) }
 }
 
 enum JournalError: Error {
@@ -105,7 +107,7 @@ final class JournalModel {
 
     func report(_ error: Error) {
         guard let message = FailureCopy.message(for: error) else { return }
-        alert = JournalAlert(title: "Could not finish", message: message)
+        alert = .failure(message)
     }
 
     /// Runs an operation and reports its failure in the Journal alert. Inside a sheet or a

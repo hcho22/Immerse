@@ -115,9 +115,10 @@ struct CaptureView: View {
             .onAppear {
                 UIDevice.current.beginGeneratingDeviceOrientationNotifications()
                 capture.updateOrientation()
+                capture.presented = true
                 lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
             }
-            .onDisappear { UIDevice.current.endGeneratingDeviceOrientationNotifications(); capture.suspend() }
+            .onDisappear { UIDevice.current.endGeneratingDeviceOrientationNotifications(); capture.presented = false; capture.suspend() }
             .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in capture.updateOrientation() }
             .onChange(of: model.film(filmID)?.captures) { _, captures in
                 guard model.film(filmID)?.camera.revealRule == .instantPerExposure,
@@ -161,16 +162,29 @@ private struct CameraPreview: UIViewRepresentable {
 }
 
 /// The viewfinder turns with the interface, which stays upright when the iPhone is upside down
-/// and keeps turning while a clip records in the orientation it started in.
+/// and keeps turning while a clip records in the orientation it started in. A turn from one
+/// landscape side to the other keeps the same size, so the scene's geometry is observed too.
 private final class PreviewSurface: UIView {
     var source: CapturePreviewSource?
     var position = CapturePosition.rear
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
     }
+    private var geometry: NSKeyValueObservation?
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        geometry = window?.windowScene?.observe(\.effectiveGeometry) { [weak self] _, _ in
+            Task { @MainActor in self?.rotatePreview() }
+        }
+        rotatePreview()
+    }
     override func layoutSubviews() {
         super.layoutSubviews()
         preview?.frame = bounds
+        rotatePreview()
+    }
+    private func rotatePreview() {
         guard let preview, let source, let interface = window?.windowScene?.effectiveGeometry.interfaceOrientation,
               let orientation = CaptureFrameOrientation(interface: interface) else { return }
         try? source.update(preview, position: position, orientation: orientation)

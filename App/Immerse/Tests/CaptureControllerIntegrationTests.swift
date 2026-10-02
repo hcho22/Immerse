@@ -158,6 +158,28 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertEqual(model.film(attached.id)?.savedCaptureCount, 1)
     }
 
+    func testFailedInstantPrintDevelopmentShowsOnTheCameraWhenOpenAndInTheJournalOtherwise() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s,
+                                                   title: "Synthetic Instant pack", access: .subscription)
+        try await openWithoutSimulatorCamera(film, model)
+        // Development cannot create its private work folder, so each print's Development fails.
+        try Data("not a folder".utf8).write(to: root.appendingPathComponent("Work"))
+
+        _ = try stageUnfinishedSave(film, model)
+        try await openWithoutSimulatorCamera(film, model)
+        try await waitUntil { model.alert != nil }
+        XCTAssertEqual(model.capture.message, "Saved", "With the camera closed, the Journal alert reports the failure")
+
+        model.alert = nil
+        model.capture.presented = true
+        _ = try stageUnfinishedSave(film, model)
+        try await openWithoutSimulatorCamera(film, model)
+        try await waitUntil { model.capture.message?.hasPrefix(FailureCopy.retry) == true }
+        XCTAssertNil(model.alert, "Over the camera the failure shows once, on the camera")
+    }
+
     func testViewfinderFollowsTheInterfaceWhoseLandscapeNamesAreSwapped() {
         XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeRight)?.rotationAngle, 0, "Home side right")
         XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeLeft)?.rotationAngle, 180)

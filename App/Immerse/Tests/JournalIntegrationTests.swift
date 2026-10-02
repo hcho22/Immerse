@@ -159,14 +159,29 @@ final class JournalIntegrationTests: XCTestCase {
     }
 
     func testLoadSheetDescribesTheEntitlementThatLoadingWillUse() {
-        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, medium: .photo),
+        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, medium: .photo, subscriptionsAvailable: true),
                        "This Film is included in your subscription. Your Camera cannot change after loading.")
-        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, medium: .movie),
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, medium: .movie, subscriptionsAvailable: true),
                        "The first saved capture uses this iPhone's Trial. Your Camera and Movie Orientation cannot change after loading.")
         let consumed = DeviceTrialState.consumed(record: DeviceTrialConsumptionRecord(filmID: UUID(), consumedAt: Date()))
-        XCTAssertEqual(LoadCopy.note(access: .expired, trial: consumed, medium: .photo),
+        XCTAssertEqual(LoadCopy.note(access: .expired, trial: consumed, medium: .photo, subscriptionsAvailable: true),
                        "This iPhone's Trial is used. A subscription is required to load another Film. Your Camera cannot change after loading.")
-        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: nil, medium: .photo), "Your Camera cannot change after loading.")
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: nil, medium: .photo, subscriptionsAvailable: true),
+                       "Your Camera cannot change after loading.")
+    }
+
+    func testLoadSheetNeverSuggestsSubscribingInABuildWithoutSubscriptions() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("LoadCopyUnconfigured-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        XCTAssertFalse(model.billing.configured)
+        let consumed = DeviceTrialState.consumed(record: DeviceTrialConsumptionRecord(filmID: UUID(), consumedAt: Date()))
+        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: consumed, medium: .photo,
+                                     subscriptionsAvailable: model.billing.configured),
+                       "This iPhone's Trial is used. Subscriptions are not available in this build. Your Camera cannot change after loading.")
+        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: .emptyFilmInProgress(filmID: UUID()), medium: .movie,
+                                     subscriptionsAvailable: model.billing.configured),
+                       "This iPhone's Trial Film is already loaded. Open or delete it first. Your Camera and Movie Orientation cannot change after loading.")
     }
 
     func testEmptyFilmCannotDevelopAndCanBeDeleted() async throws {

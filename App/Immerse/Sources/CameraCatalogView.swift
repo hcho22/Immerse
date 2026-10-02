@@ -82,7 +82,8 @@ private struct LoadFilmView: View {
             }
             Section {
                 Label(entitlementLabel, systemImage: "ticket")
-                Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium))
+                Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
+                                   subscriptionsAvailable: model.billing.configured))
                     .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
             }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
@@ -133,16 +134,22 @@ private struct LoadFilmView: View {
     }
 }
 
-/// What loading this Film uses and what stays fixed, matching `TrialCoordinator.load`.
+/// What loading this Film uses and what stays fixed, matching `TrialCoordinator.load` and the
+/// Load Film errors. Builds without subscription products never suggest subscribing.
 enum LoadCopy {
-    static func note(access: SubscriptionAccess, trial: DeviceTrialState?, medium: CameraMedium) -> String {
+    static func note(access: SubscriptionAccess, trial: DeviceTrialState?, medium: CameraMedium,
+                     subscriptionsAvailable: Bool) -> String {
         let entitlement: String? = if access == .active {
             "This Film is included in your subscription."
         } else {
             switch trial {
             case .unused: "The first saved capture uses this iPhone's Trial."
-            case .emptyFilmInProgress: "This iPhone's Trial Film is already loaded. Open or delete it first, or subscribe."
-            case .consumed: "This iPhone's Trial is used. A subscription is required to load another Film."
+            case .emptyFilmInProgress: subscriptionsAvailable
+                ? "This iPhone's Trial Film is already loaded. Open or delete it first, or subscribe."
+                : "This iPhone's Trial Film is already loaded. Open or delete it first."
+            case .consumed: subscriptionsAvailable
+                ? "This iPhone's Trial is used. A subscription is required to load another Film."
+                : "This iPhone's Trial is used. Subscriptions are not available in this build."
             case nil: nil
             }
         }

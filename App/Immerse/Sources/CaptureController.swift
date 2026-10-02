@@ -23,6 +23,8 @@ final class CaptureController {
     var exposure: Double = 0
     var orientation = CaptureFrameOrientation.portrait
     var recordingStarted: Date?
+    /// Whether the capture screen is on screen; the Journal alert cannot appear over it.
+    var presented = false
 
     init(authorizer: any CapturePermissionAuthorizing) { self.authorizer = authorizer }
 
@@ -57,7 +59,9 @@ final class CaptureController {
                         message = "Saved"
                         model.refresh()
                         if film.camera.revealRule == .instantPerExposure {
-                            model.developSavedPrint(film.id) { [weak self] in self?.message = $0 }
+                            model.developSavedPrint(film.id) { [weak self, weak model] text in
+                                if self?.presented == true { self?.message = text } else { model?.alert = .failure(text) }
+                            }
                         }
                     case .saveFailed:
                         recordingStarted = nil
