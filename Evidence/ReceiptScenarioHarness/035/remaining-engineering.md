@@ -64,6 +64,9 @@ It reproduced and fixed Discard deleting another capture's unfinished save, `ope
 The actual app now declines the real simulator Camera request at Load Film; 045's statement that a denied Camera cannot be staged on the simulator is corrected there.
 Actual AVFoundation callbacks, a running session, reopening an existing Film with Camera denied in the actual views, restricted Camera and prompt timing remain open.
 
+`Evidence/NativeApp/darkroom-gesture-tint-047.md` closes the populated-view Dodge/Burn gesture gap with a drawn stroke that renders and persists, and fixes bottom-bar accent and dark-mode filled-action contrast defects found in its screenshots.
+Device touch, assistive technologies and a full dark-mode screen review remain open.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

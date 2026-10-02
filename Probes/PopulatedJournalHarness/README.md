@@ -51,10 +51,13 @@ SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/PopulatedJournalHarn
 The runner requires the explicitly selected owned simulator to be Shutdown,
 preserves appearance/content size, records source/artifact/runtime and xcresult
 attachments, copies only newly created histories and shuts down after execution.
-The four retained tests cover empty-Film Delete confirmation, early cancellation
+The six retained tests cover empty-Film Delete confirmation, early cancellation
 and separate Development/original choice, one Instant revealed while the next is
-sealed, and saved per-photo edit/exact Reset across relaunch. They never tap Open
-Camera, execute Photos export or purchase. The offline Ruby inspector compares
+sealed, saved per-photo edit/exact Reset across relaunch, Darkroom control
+reachability (044) and a drawn dodge stroke saved across relaunch (047). They never
+tap Open Camera, execute Photos export or purchase. Runs before 044 produced four
+histories; the inspector now requires all six and tells the three developed-photo
+histories apart by their inspection reasons. The offline Ruby inspector compares
 UInt64 seeds exactly and normalizes only the order of Swift's completed-sequence
 Set. It is an additional required check, not inferred from a screenshot/test exit.
 
@@ -64,10 +67,10 @@ accessibility audits or the hardware/manual matrix in
 their separate injected writer harness. Read `Evidence/PopulatedJournal/037/`
 for actual outcomes; prepared commands alone are not acceptance.
 
-The optional `legacy` selection reruns the three unchanged original functional
-tests against the new harness. Its initial snapshots alone do not establish the
-retained tests' before/after comparisons; do not use the four-history inspector
-on that three-scenario output.
+The optional `legacy` selection reruns the three original functional tests and
+the 044 player-observation test against the new harness. Its initial snapshots alone do not establish the
+retained tests' before/after comparisons; do not use the six-history inspector
+on that legacy output.
 
 The optional `--movie-player-observer` argument installs a nonshipping, nearly
 invisible observer that traverses the harness app's public UIKit/AVKit hierarchy,

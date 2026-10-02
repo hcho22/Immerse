@@ -23,7 +23,8 @@ struct ImmerseApp: App {
                     ProgressView().task { await openJournal() }
                 }
             }
-            .tint(.accentColor)
+            // A concrete color: inside iOS 26 bottom toolbars `Color.accentColor` resolves to system blue.
+            .tint(Color("AccentColor"))
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active {
                     model?.capture.suspend()

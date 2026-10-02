@@ -1,0 +1,239 @@
+{
+  "films" : [
+    {
+      "captures" : [
+        {
+          "masterSHA256" : "6ead0c5931e70dc74cdda8a45c16e67a496a7e7709fedb1e47c65f2ce1107535",
+          "printSHA256" : "e6e89d8c372c26078d2bb2201b70a0e8cd997f438d267ad219a3844180006e93",
+          "recipe" : {
+            "dodgeBurnMasks" : [
+              {
+                "exposureStops" : 0.4,
+                "kind" : "dodge",
+                "points" : [
+                  {
+                    "x" : 0.2,
+                    "y" : 0.30030030030030025
+                  },
+                  {
+                    "x" : 0.21531531531531528,
+                    "y" : 0.30750750750750744
+                  },
+                  {
+                    "x" : 0.2333333333333333,
+                    "y" : 0.3171171171171171
+                  },
+                  {
+                    "x" : 0.25225225225225223,
+                    "y" : 0.3267267267267267
+                  },
+                  {
+                    "x" : 0.27297297297297296,
+                    "y" : 0.33633633633633625
+                  },
+                  {
+                    "x" : 0.2936936936936937,
+                    "y" : 0.34714714714714706
+                  },
+                  {
+                    "x" : 0.3162162162162162,
+                    "y" : 0.3579579579579579
+                  },
+                  {
+                    "x" : 0.33873873873873867,
+                    "y" : 0.36996996996996984
+                  },
+                  {
+                    "x" : 0.36126126126126124,
+                    "y" : 0.38078078078078065
+                  },
+                  {
+                    "x" : 0.38468468468468464,
+                    "y" : 0.3927927927927928
+                  },
+                  {
+                    "x" : 0.40900900900900894,
+                    "y" : 0.40480480480480474
+                  },
+                  {
+                    "x" : 0.43243243243243246,
+                    "y" : 0.4168168168168167
+                  },
+                  {
+                    "x" : 0.45675675675675675,
+                    "y" : 0.42882882882882883
+                  },
+                  {
+                    "x" : 0.4810810810810811,
+                    "y" : 0.4408408408408408
+                  },
+                  {
+                    "x" : 0.5054054054054054,
+                    "y" : 0.4528528528528527
+                  },
+                  {
+                    "x" : 0.5288288288288288,
+                    "y" : 0.4648648648648649
+                  },
+                  {
+                    "x" : 0.5531531531531532,
+                    "y" : 0.4768768768768768
+                  },
+                  {
+                    "x" : 0.5765765765765766,
+                    "y" : 0.48888888888888876
+                  },
+                  {
+                    "x" : 0.6,
+                    "y" : 0.5009009009009009
+                  },
+                  {
+                    "x" : 0.6234234234234234,
+                    "y" : 0.5117117117117117
+                  },
+                  {
+                    "x" : 0.6468468468468468,
+                    "y" : 0.5237237237237237
+                  },
+                  {
+                    "x" : 0.6684684684684684,
+                    "y" : 0.5345345345345345
+                  },
+                  {
+                    "x" : 0.69009009009009,
+                    "y" : 0.5453453453453453
+                  },
+                  {
+                    "x" : 0.7108108108108108,
+                    "y" : 0.5561561561561561
+                  },
+                  {
+                    "x" : 0.7315315315315314,
+                    "y" : 0.5657657657657658
+                  },
+                  {
+                    "x" : 0.7495495495495494,
+                    "y" : 0.5753753753753752
+                  },
+                  {
+                    "x" : 0.7666666666666666,
+                    "y" : 0.5837837837837838
+                  },
+                  {
+                    "x" : 0.7819819819819819,
+                    "y" : 0.590990990990991
+                  },
+                  {
+                    "x" : 0.7954954954954955,
+                    "y" : 0.5981981981981982
+                  },
+                  {
+                    "x" : 0.8,
+                    "y" : 0.6006006006006005
+                  }
+                ]
+              }
+            ],
+            "printExposureStops" : 0
+          },
+          "sequence" : 1,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        },
+        {
+          "masterSHA256" : "d0f36133eac8b4a735a53c4a23fc1e95a418de9eb8491ca29c40a17c520e98e7",
+          "printSHA256" : "d0f36133eac8b4a735a53c4a23fc1e95a418de9eb8491ca29c40a17c520e98e7",
+          "recipe" : {
+            "dodgeBurnMasks" : [
+
+            ],
+            "printExposureStops" : 0
+          },
+          "sequence" : 2,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        }
+      ],
+      "development" : {
+        "assignments" : {
+          "1" : {
+            "seed" : 15750194706894365698,
+            "sequenceNumber" : 1
+          },
+          "2" : {
+            "seed" : 16419960166356018093,
+            "sequenceNumber" : 2
+          }
+        },
+        "completedSequences" : [
+          1,
+          2
+        ],
+        "filmID" : "8B53CF2B-577A-4869-802F-F30F118BDDD6",
+        "isComplete" : true,
+        "printProcess" : "color",
+        "treatmentVersion" : "film-look-1-provisional"
+      },
+      "film" : {
+        "camera" : {
+          "capacity" : {
+            "exposures" : {
+              "_0" : 27
+            }
+          },
+          "displayName" : "1990s Disposable",
+          "id" : "disposable1990s",
+          "medium" : "photo",
+          "revealRule" : "rollLevelDevelopment",
+          "supportsBuiltInSoundtrack" : false
+        },
+        "captures" : [
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812598735.948054,
+            "sequenceNumber" : 1
+          },
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "revealed",
+            "savedAt" : 812598735.964035,
+            "sequenceNumber" : 2
+          }
+        ],
+        "completionState" : {
+          "completedEarly" : {
+            "wasted" : {
+              "exposures" : {
+                "_0" : 25
+              }
+            }
+          }
+        },
+        "developmentState" : "developed",
+        "id" : "8B53CF2B-577A-4869-802F-F30F118BDDD6",
+        "isArchived" : false,
+        "loadedAt" : 812598735.741868,
+        "title" : "Private synthetic Film"
+      }
+    }
+  ],
+  "privateFiles" : [
+    "Media\/8B53CF2B-577A-4869-802F-F30F118BDDD6\/master-1.bin",
+    "Media\/8B53CF2B-577A-4869-802F-F30F118BDDD6\/master-2.bin",
+    "Media\/8B53CF2B-577A-4869-802F-F30F118BDDD6\/source-1.bin",
+    "Media\/8B53CF2B-577A-4869-802F-F30F118BDDD6\/source-2.bin",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 55700,
+  "reason" : "explicit",
+  "utc" : "2026-10-02T01:52:39Z"
+}

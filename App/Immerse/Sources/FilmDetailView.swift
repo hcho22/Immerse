@@ -97,10 +97,10 @@ struct FilmDetailView: View {
             }.disabled(model.initialRecoveryPending)
         } else {
             if film.completionState == .open {
-                Button("Open Camera", systemImage: "camera") { capturing = true }.buttonStyle(.borderedProminent)
+                Button("Open Camera", systemImage: "camera") { capturing = true }.primaryAction()
             }
             if film.canStartDevelopment {
-                Button("Develop Film", systemImage: "sparkles") { developing = true }.buttonStyle(.borderedProminent)
+                Button("Develop Film", systemImage: "sparkles") { developing = true }.primaryAction()
             }
             if film.developmentState == .developing ||
                 (film.camera.revealRule == .instantPerExposure && film.captures.contains { $0.revealState == .sealed }) {

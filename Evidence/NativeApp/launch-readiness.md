@@ -198,6 +198,10 @@ Hosted tests drive the actual controller, backend, Trial owner and repository on
 Four reproduced defects are fixed: Discard deleted another capture's unfinished save, an `open` still finishing a save started the session after Done, and late save events showed storage failure alerts during Delete Film and Resume Save.
 The actual app now declines the real simulator Camera request at Load Film, loads nothing and shows Camera Off in Settings; a Keychain Trial failure no longer gives storage advice.
 The iOS 26.2 hosted stage, which CI runs, exposed an abort in `SubscriptionController`'s `isolated deinit`; a plain deinit replaces it and all 16 hosted tests pass on 26.2.
+
+`Evidence/NativeApp/darkroom-gesture-tint-047.md` adds a drawn dodge stroke in the actual Darkroom that paints without scrolling, renders and persists across relaunch.
+It also fixes bottom-bar actions that ignored the green accent and showed system blue, and filled actions that were unreadable in dark mode (white on mint, 1.69:1, now 5.4:1).
+These are simulator screenshots and synthetic touches, not device, assistive-technology or QA-13 acceptance; colors remain DEC-01 review defaults.
 This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a running camera, AVFoundation callback, physical interruption or device acceptance.
 
 ## Required Native Manual Matrix

@@ -155,6 +155,46 @@ import XCTest
         inspect(app, "darkroom-accessible-controls")
     }
 
+    func testDrawnDodgeStrokeChangesPrintAndPersistsAcrossRelaunch() throws {
+        let id = UUID()
+        let app = launch(["--developed-photo"], id: id)
+        openFilm(app)
+        openDarkroom(app)
+        app.buttons["Dodge / Burn"].tap()
+        let undo = app.buttons["Undo last stroke"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 5))
+        XCTAssertFalse(undo.isEnabled)
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 10))
+        let frame = print.frame
+        let before = print.screenshot().pngRepresentation
+
+        // Draw across the print with a finger, as a person paints a dodge.
+        print.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.3))
+            .press(forDuration: 0.1, thenDragTo: print.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.6)))
+        XCTAssertEqual(print.frame, frame, "Drawing on the print must not scroll the Darkroom")
+        XCTAssertTrue(undo.isEnabled, "The drawn stroke is recorded")
+        var changed = false
+        for _ in 0..<40 where !changed {
+            changed = print.screenshot().pngRepresentation != before
+            if !changed { Thread.sleep(forTimeInterval: 0.25) }
+        }
+        XCTAssertTrue(changed, "The drawn dodge renders into the print preview")
+        snapshot(app, "drawn-dodge-stroke")
+        saveDarkroom(app)
+        inspect(app, "drawn-dodge-saved")
+
+        reopen(app, id: id)
+        openFilm(app)
+        openDarkroom(app)
+        app.buttons["Dodge / Burn"].tap()
+        XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled, "The saved stroke returns after relaunch")
+        snapshot(app, "drawn-dodge-reopened")
+        app.buttons["Cancel"].tap()
+        app.buttons["Done"].tap()
+    }
+
     private func launch(_ arguments: [String], id: UUID = UUID()) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = arguments + ["--workflow-run", id.uuidString]

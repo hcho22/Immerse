@@ -76,6 +76,12 @@ extension Film {
     }
 }
 
+extension View {
+    /// A filled primary action. The dark-mode accent is too light under a white label, so filled
+    /// actions use a deeper green that keeps both the label and the fill's edge readable.
+    func primaryAction() -> some View { buttonStyle(.borderedProminent).tint(Color("PrimaryAction")) }
+}
+
 enum PrivacyCopy {
     static let deleteFilm = "Remove this Film and its captures from Immerse? Photos exports remain. Used Trial eligibility is not restored. Restoring an older iOS backup can bring the whole Film back."
     static let discard = "Remove this capture and its app-controlled copies? No exposures or time are refunded. Photos exports remain, and an older iOS backup can bring discarded media back."

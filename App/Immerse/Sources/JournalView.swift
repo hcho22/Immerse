@@ -28,7 +28,7 @@ struct JournalView: View {
                     }
                     ToolbarItem(placement: .bottomBar) {
                         Button("Start a Film", systemImage: "plus") { setup = true }
-                            .buttonStyle(.borderedProminent)
+                            .primaryAction()
                             .accessibilityIdentifier("start-film")
                             .disabled(model.initialRecoveryPending)
                     }

@@ -16,7 +16,7 @@ struct WorkflowHarnessApp: App {
                 }
                 else if let failure { Text(failure).accessibilityIdentifier("fixture-failed") }
                 else { ProgressView("Preparing private fixtures").task { await prepare() } }
-            }.tint(.accentColor)
+            }.tint(Color("AccentColor")) // Matches ImmerseApp's root tint.
         }
     }
 
