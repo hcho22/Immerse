@@ -40,8 +40,18 @@ The script then stopped at the app UI stage with exit 65.
 
 Because the script stops at the UI stage, the hosted and StoreKit stage was run separately with the script's command: 27 of 28 passed, including all four `TestingUnlockTests` and the four StoreKit tests.
 `CaptureControllerIntegrationTests.testDeletingFilmWhileItsSaveIsHeldIgnoresTheLateSaveEvent` failed once with the generic "The operation did not finish" alert. It constructs its Journal directly, so the unlock is off, and it calls `trial.start` rather than `load`.
-Repeated runs: this branch 14 of 15 and then 40 of 40, unmodified `14328bf` 15 of 15. The failure is intermittent and load-dependent and was not reproduced on demand.
-Unconfirmed hypothesis for follow-up: `JournalModel.reloadFilms` lists Films and then reads each staging directory, so a Film deleted concurrently by the Trial owner between those reads throws `PersistenceError.filmNotFound` into the Journal alert.
+Repeated runs: this branch 14 of 15 and then 40 of 40, unmodified `14328bf` 15 of 15. The failure was intermittent and load-dependent, and the race behind it predates this change.
+
+### Intermittent Delete Failure: Cause Found and Fixed
+
+`JournalModel.reloadFilms` listed Films and then checked each Film's staging directory through `FilmRepository.hasPendingCapture`, which throws `PersistenceError.filmNotFound` once the Film's row is gone.
+While `JournalModel.remove` awaits the Trial owner's deletion off the main actor, `CaptureController` refreshes the Journal.
+A Film deleted between the listing and its check therefore reached the Journal alert as "Could not finish", and every Film was marked as having a pending save until the next refresh.
+`reloadFilms` now drops a listed Film that is no longer found, and it still reports every other failure.
+`JournalIntegrationTests.testFilmDeletedBetweenListingAndPendingSaveCheckLeavesTheJournalWithoutAnAlert` deletes a Film right after the Journal lists it and before the pending-save check, through a second repository, as the Trial owner does.
+That makes the race deterministic; the test asserts no alert, the surviving Film's pending save still detected, and the deleted Film dropped.
+On `Immerse Unlock Billing 26.2`, before the fix, it failed with the same "The operation did not finish" alert, kept the deleted Film listed and marked both Films pending.
+With the fix, `JournalIntegrationTests`, `CaptureControllerIntegrationTests` and `TestingUnlockTests` passed 25 of 25. Then 30 repetitions each of the new test and `testDeletingFilmWhileItsSaveIsHeldIgnoresTheLateSaveEvent` passed 60 of 60, at a host load average of about 110.
 
 ## Limits
 

@@ -82,7 +82,12 @@ final class JournalModel {
     private func reloadFilms() {
         do {
             films = try repository.allFilms()
-            pendingFilms = Set(try films.filter { try repository.hasPendingCapture(filmID: $0.id) }.map(\.id))
+            var pending: Set<UUID> = []
+            for film in films {
+                do { if try repository.hasPendingCapture(filmID: film.id) { pending.insert(film.id) } }
+                catch PersistenceError.filmNotFound { films.removeAll { $0.id == film.id } }
+            }
+            pendingFilms = pending
         } catch {
             pendingFilms = Set(films.map(\.id))
             report(error)
