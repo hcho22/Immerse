@@ -83,6 +83,7 @@ final class JournalModel {
         do {
             films = try repository.allFilms()
             var pending: Set<UUID> = []
+            // The Trial owner deletes Films off the main actor, so a listed Film can be gone by its check.
             for film in films {
                 do { if try repository.hasPendingCapture(filmID: film.id) { pending.insert(film.id) } }
                 catch PersistenceError.filmNotFound { films.removeAll { $0.id == film.id } }
