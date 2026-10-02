@@ -39,7 +39,6 @@ struct CameraCatalogView: View {
 
 private struct LoadFilmView: View {
     @Environment(JournalModel.self) private var model
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let camera: CameraPackage
     var loaded: (Film) -> Void
     @State private var title = ""
@@ -66,8 +65,7 @@ private struct LoadFilmView: View {
                     }.accessibilityElement(children: .combine)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
-                        if dynamicTypeSize.isAccessibilitySize { orientationPicker.pickerStyle(.menu).labelsHidden() }
-                        else { orientationPicker.pickerStyle(.segmented).labelsHidden() }
+                        OrientationChoice(selection: $orientation)
                     }
                 }
             }
@@ -123,13 +121,6 @@ private struct LoadFilmView: View {
         "\(camera.shortName) - Roll #\(String(format: "%02d", model.films.filter { $0.camera.id == camera.id }.count + 1))"
     }
 
-    private var orientationPicker: some View {
-        Picker("Movie Orientation", selection: $orientation) {
-            Text("Portrait").tag(MovieOrientation.portrait)
-            Text("Landscape").tag(MovieOrientation.landscape)
-        }
-    }
-
     private var entitlementLabel: String {
         if model.billing.access == .active { return "Subscription active" }
         switch model.trialState {
@@ -139,4 +130,39 @@ private struct LoadFilmView: View {
         case nil: return model.trialError == nil ? "Checking Trial status" : "Trial status unavailable"
         }
     }
+}
+
+/// Segmented-style choice whose text follows Dynamic Type; `UISegmentedControl` titles stay at one size.
+/// Its height follows the text, matching the native control's 32 points at the default size.
+private struct OrientationChoice: View {
+    @Binding var selection: MovieOrientation
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 2) { options }
+            VStack(spacing: 2) { options }
+        }
+        .padding(2)
+        .background(Color(uiColor: .tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Movie Orientation")
+    }
+
+    @ViewBuilder private var options: some View {
+        option(.portrait, "Portrait")
+        option(.landscape, "Landscape")
+    }
+
+    private func option(_ value: MovieOrientation, _ title: String) -> some View {
+        Button { selection = value } label: {
+            Text(title).fixedSize(horizontal: false, vertical: true)
+                .padding(.vertical, 4).frame(maxWidth: .infinity).padding(.horizontal, 8)
+                .background(selection == value ? Self.selectedFill : .clear, in: RoundedRectangle(cornerRadius: 8))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selection == value ? .isSelected : [])
+    }
+
+    private static let selectedFill = Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? .systemGray3 : .systemBackground })
 }

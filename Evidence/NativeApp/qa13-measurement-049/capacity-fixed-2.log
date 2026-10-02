@@ -1,0 +1,14 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Capacity-049-fixed-2.xcresult
+
+2026-10-01 21:10:24.756 xcodebuild[2716:169318820] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:10:24.756 xcodebuild[2716:169318820] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:11:32.771 xcodebuild[2716:169318820] [MT] IDETestOperationsObserverDebug: 73.267 elapsed -- Testing started completed.
+2026-10-01 21:11:32.771 xcodebuild[2716:169318820] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 21:11:32.771 xcodebuild[2716:169318820] [MT] IDETestOperationsObserverDebug: 73.267 sec, +73.267 sec -- end
+Failing tests:
+	CapacityQueryDiagnostic.testCapacityElementsRightAfterOpeningSixteenMillimeter()
+
+** TEST FAILED **
+
+Testing started

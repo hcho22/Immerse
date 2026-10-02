@@ -206,6 +206,10 @@ These are simulator screenshots and synthetic touches, not device, assistive-tec
 `Evidence/NativeApp/visual-sweep-048.md` reviews the actual screens in dark and light and the capture screen on iPhone SE, 13 Pro and 17 Pro simulators.
 The shutter was below the fold on the smaller screens and declined-Camera guidance was a dead end; the shutter row is now pinned, status sits above the viewfinder with Open iPhone Settings, and filled Done buttons are readable in dark mode.
 Reopening an existing Film's camera with the actual request declined is now covered in the actual views.
+
+`Evidence/NativeApp/qa13-measurement-049.md` measures the original QA-13 findings as a person sees them.
+The Super 8 segmented Movie Orientation titles did not follow Dynamic Type; a scalable choice replaces them and a new UI test asserts the growth.
+Every other named element measures above WCAG when fully visible, the 16mm description falls below only under the iOS 26 scroll-edge band, and several auditor findings do not match the measured rendering. QA-13 stays failed pending Firstmate's decision.
 This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a running camera, AVFoundation callback, physical interruption or device acceptance.
 
 ## Required Native Manual Matrix

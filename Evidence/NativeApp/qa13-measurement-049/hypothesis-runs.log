@@ -1,0 +1,32 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Hypothesis-049-nofixedsize.xcresult
+
+2026-10-01 21:28:48.996 xcodebuild[16686:171281174] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:28:48.996 xcodebuild[16686:171281174] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:29:45.975 xcodebuild[16686:171281174] [MT] IDETestOperationsObserverDebug: 61.589 elapsed -- Testing started completed.
+2026-10-01 21:29:45.976 xcodebuild[16686:171281174] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 21:29:45.976 xcodebuild[16686:171281174] [MT] IDETestOperationsObserverDebug: 61.589 sec, +61.589 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+
+** TEST FAILED **
+
+Testing started
+nofixedsize exit 65
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Hypothesis-049-menu.xcresult
+
+2026-10-01 21:30:00.911 xcodebuild[86415:171401961] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:30:00.911 xcodebuild[86415:171401961] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:30:49.267 xcodebuild[86415:171401961] [MT] IDETestOperationsObserverDebug: 51.899 elapsed -- Testing started completed.
+2026-10-01 21:30:49.268 xcodebuild[86415:171401961] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 21:30:49.268 xcodebuild[86415:171401961] [MT] IDETestOperationsObserverDebug: 51.899 sec, +51.899 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+
+** TEST FAILED **
+
+Testing started
+menu exit 65

@@ -1,0 +1,32 @@
+import CoreGraphics
+import ImageIO
+import Foundation
+// usage: contrast image.png x y w h   (points; the image is at 3x)
+// Background is the most common luminance bin in the element; text is the pixel at the 98th percentile of
+// luminance distance from that background (robust to antialiasing). Reports WCAG contrast of the two.
+let a = CommandLine.arguments
+let img = CGImageSourceCreateImageAtIndex(CGImageSourceCreateWithURL(URL(fileURLWithPath: a[1]) as CFURL, nil)!, 0, nil)!
+let w = img.width, h = img.height, s = 3.0
+var data = [UInt8](repeating: 0, count: w*h*4)
+let ctx = CGContext(data: &data, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w*4, space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+ctx.draw(img, in: CGRect(x: 0, y: 0, width: w, height: h))
+func lin(_ c: Double) -> Double { c <= 0.04045 ? c/12.92 : pow((c+0.055)/1.055, 2.4) }
+let x0 = max(0, Int(Double(a[2])! * s)), y0 = max(0, Int(Double(a[3])! * s))
+let x1 = min(w, Int((Double(a[2])! + Double(a[4])!) * s)), y1 = min(h, Int((Double(a[3])! + Double(a[5])!) * s))
+guard x1 > x0, y1 > y0 else { print("offscreen"); exit(0) }
+var lums: [(Double, String)] = []
+for y in y0..<y1 { for x in x0..<x1 {
+    let i = (y*w+x)*4
+    let l = 0.2126*lin(Double(data[i])/255) + 0.7152*lin(Double(data[i+1])/255) + 0.0722*lin(Double(data[i+2])/255)
+    lums.append((l, String(format: "#%02X%02X%02X", data[i], data[i+1], data[i+2])))
+} }
+var bins = [Int](repeating: 0, count: 200)
+for (l, _) in lums { bins[min(199, Int(l*200))] += 1 }
+let mode = bins.firstIndex(of: bins.max()!)!
+let bgPixels = lums.filter { min(199, Int($0.0*200)) == mode }
+let bg = bgPixels.map(\.0).reduce(0, +) / Double(bgPixels.count)
+let sorted = lums.sorted { abs($0.0 - bg) < abs($1.0 - bg) }
+let text = sorted[Int(Double(sorted.count - 1) * 0.98)]
+func cr(_ p: Double, _ q: Double) -> Double { (max(p, q) + 0.05) / (min(p, q) + 0.05) }
+let visible = Double((x1-x0)*(y1-y0)) / (Double(a[4])! * Double(a[5])! * s * s)
+print(String(format: "bg %@ text %@ contrast %.2f:1 visible %.0f%%", bgPixels.first!.1, text.1, cr(bg, text.0), visible*100))

@@ -1,0 +1,42 @@
+
+/// Diagnostic only: the host changes the simulator's text size while this test waits.
+@MainActor
+final class LiveContentSizeDiagnostic: XCTestCase {
+    func testMovieSetupUpdatesWhenTextSizeChangesWhileOpen() throws {
+        let marker = URL(fileURLWithPath: "/tmp/claude-501/-Users-hcho--treehouse-Immerse-3833fe-1-Immerse/cfe1e158-dab8-44ca-b9c3-c872753fde5a/scratchpad/live")
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        app.buttons["camera-super8HomeMovie"].tap()
+        let label = app.staticTexts["Movie Orientation"], control = app.buttons["Portrait"], capacity = app.staticTexts["Capacity"]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        func frames() -> String { "label=\(label.frame) portrait=\(control.exists ? "\(control.frame)" : "-") capacity=\(capacity.exists ? "\(capacity.frame)" : "-") movieInk=\(control.exists ? "\(ink(control.screenshot()))" : "-") labelInk=\(ink(label.screenshot()))" }
+        var lines = ["before " + frames()]
+        let before = app.screenshot()
+        try Data().write(to: marker.appendingPathComponent("ready"))
+        for _ in 0..<120 where !FileManager.default.fileExists(atPath: marker.appendingPathComponent("changed").path) { Thread.sleep(forTimeInterval: 0.5) }
+        Thread.sleep(forTimeInterval: 3)
+        lines.append("after " + frames())
+        let after = app.screenshot()
+        for (shot, name) in [(before, "before"), (after, "after")] {
+            let a = XCTAttachment(screenshot: shot); a.name = name; a.lifetime = .keepAlways; add(a)
+        }
+        let a = XCTAttachment(string: lines.joined(separator: "\n")); a.name = "live"; a.lifetime = .keepAlways; add(a)
+    }
+
+    private func ink(_ screenshot: XCUIScreenshot) -> Int {
+        guard let image = screenshot.image.cgImage else { return 0 }
+        let width = image.width, height = image.height
+        var data = [UInt8](repeating: 0, count: width * height * 4)
+        let context = CGContext(data: &data, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        var top = height, bottom = -1
+        for y in 0..<height { for x in 0..<width {
+            let i = (y * width + x) * 4
+            if Int(data[i]) + Int(data[i + 1]) + Int(data[i + 2]) < 200 { top = min(top, y); bottom = max(bottom, y); break }
+        } }
+        return bottom >= top ? bottom - top + 1 : 0
+    }
+}

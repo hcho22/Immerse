@@ -1,0 +1,60 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/QA13Original-049-after-light.xcresult
+
+2026-10-01 20:40:33.024 xcodebuild[85789:166082634] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:40:33.024 xcodebuild[85789:166082634] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:41:04.881 xcodebuild[85789:166082634] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:41:04.881 xcodebuild[85789:166082634] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:42:21.553 xcodebuild[85789:166082634] [MT] IDETestOperationsObserverDebug: 112.100 elapsed -- Testing started completed.
+2026-10-01 20:42:21.553 xcodebuild[85789:166082634] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 20:42:21.553 xcodebuild[85789:166082634] [MT] IDETestOperationsObserverDebug: 112.100 sec, +112.100 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
+original light exit 65
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/QA13Pose-049-after-light.xcresult
+
+2026-10-01 20:42:32.832 xcodebuild[14608:166291158] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:42:32.832 xcodebuild[14608:166291158] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:43:45.589 xcodebuild[14608:166291158] [MT] IDETestOperationsObserverDebug: 78.477 elapsed -- Testing started completed.
+2026-10-01 20:43:45.589 xcodebuild[14608:166291158] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 20:43:45.590 xcodebuild[14608:166291158] [MT] IDETestOperationsObserverDebug: 78.478 sec, +78.477 sec -- end
+Testing started
+pose light exit 0
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/QA13Original-049-after-dark.xcresult
+
+2026-10-01 20:43:56.630 xcodebuild[5773:166441465] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:43:56.630 xcodebuild[5773:166441465] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:44:26.297 xcodebuild[5773:166441465] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:44:26.297 xcodebuild[5773:166441465] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:45:42.196 xcodebuild[5773:166441465] [MT] IDETestOperationsObserverDebug: 109.686 elapsed -- Testing started completed.
+2026-10-01 20:45:42.196 xcodebuild[5773:166441465] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 20:45:42.197 xcodebuild[5773:166441465] [MT] IDETestOperationsObserverDebug: 109.686 sec, +109.686 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
+original dark exit 65
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/QA13Pose-049-after-dark.xcresult
+
+2026-10-01 20:45:51.411 xcodebuild[35590:166652157] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 20:45:51.411 xcodebuild[35590:166652157] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 20:47:09.204 xcodebuild[35590:166652157] [MT] IDETestOperationsObserverDebug: 81.387 elapsed -- Testing started completed.
+2026-10-01 20:47:09.205 xcodebuild[35590:166652157] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 20:47:09.205 xcodebuild[35590:166652157] [MT] IDETestOperationsObserverDebug: 81.387 sec, +81.387 sec -- end
+Testing started
+pose dark exit 0

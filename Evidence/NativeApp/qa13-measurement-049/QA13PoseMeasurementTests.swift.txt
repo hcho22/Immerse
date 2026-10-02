@@ -1,0 +1,71 @@
+import XCTest
+
+/// Diagnostic only, kept outside the test suite. Copied into App/Immerse/UITests for a run and removed again.
+/// Replays testLargestDynamicTypeCatalogAndLandscapeSettings up to each of its three 16mm audit points without
+/// auditing, records the named elements' frames and a screenshot, then shows each element fully at rest.
+@MainActor
+final class QA13PoseMeasurementTests: XCTestCase {
+    func testMeasureSixteenMillimeterAuditPoses() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(app.staticTexts["2:45 of film"].exists)
+        record(app, "pose-16mm-load")
+        let title = app.staticTexts["film-title-heading"]
+        for _ in 0..<8 where !title.isHittable { app.swipeUp() }
+        record(app, "pose-16mm-title")
+        let load = app.buttons["load-film"]
+        for _ in 0..<8 where !load.isHittable { app.swipeUp() }
+        record(app, "pose-16mm-command")
+        for (name, element) in elements(app) { rest(app, element, name) }
+    }
+
+    private func elements(_ app: XCUIApplication) -> [(String, XCUIElement)] {
+        // Dark mode exposes "Silent capture" as two nested text elements, so every query takes the first match.
+        [("description", app.staticTexts["Deliberate framing, finer grain"].firstMatch),
+         ("silent-capture", app.staticTexts["Silent capture"].firstMatch),
+         ("trial-status", app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Trial status")).firstMatch)]
+    }
+
+    private func record(_ app: XCUIApplication, _ name: String) {
+        var lines = ["window \(app.windows.firstMatch.frame)", "navigation \(app.navigationBars.firstMatch.frame)"]
+        for (element, query) in elements(app) {
+            lines.append("\(element) exists=\(query.exists) frame=\(query.exists ? "\(query.frame)" : "-")")
+        }
+        let text = XCTAttachment(string: lines.joined(separator: "\n"))
+        text.name = "\(name)-frames"
+        text.lifetime = .keepAlways
+        add(text)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = name
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
+    /// Scrolls with short drags until the element is fully between the navigation bar and the bottom edge band.
+    private func rest(_ app: XCUIApplication, _ element: XCUIElement, _ name: String) {
+        let window = app.windows.firstMatch.frame
+        for _ in 0..<30 {
+            let top = app.navigationBars.firstMatch.frame.maxY + 16
+            let bottom = window.maxY - 80
+            // Rows below the current position are created lazily, so look for Trial status further down.
+            guard element.exists else { if name == "trial-status" { app.swipeUp() } else { app.swipeDown() }; continue }
+            let frame = element.frame
+            if frame.minY < top {
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.45))
+                    .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.55)))
+            } else if frame.maxY > bottom {
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.55))
+                    .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.45)))
+            } else { break }
+        }
+        Thread.sleep(forTimeInterval: 1)
+        record(app, "rest-\(name)")
+    }
+}
