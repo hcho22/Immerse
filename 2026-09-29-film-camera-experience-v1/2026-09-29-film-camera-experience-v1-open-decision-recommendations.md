@@ -93,7 +93,7 @@ exercise both possible policies without turning either into the captain's choice
 
 **Affected tracker IDs:** DEC-12, ARC-08, ARC-10, ARC-12, CAP-07, CAP-09, DEV-07, STO-02, STO-11, QA-13, QA-15.
 
-**Supporting evidence so far:** `FilmPersistence` tests failure-before-debit and orphan recovery with synthetic data; `CapturePipeline` tests capture-event-to-durable-save behavior and recovery. Native simulator accessibility audits now exist, including retained failures and bounded corrections in `Evidence/NativeApp/accessibility-diagnosis.md`. They do not establish full QA-13 acceptance. No iPhone 11 timing, physical storage-pressure or backup/restore evidence exists yet.
+**Supporting evidence so far:** `FilmPersistence` tests failure-before-debit and orphan recovery with synthetic data; `FilmRuntime` tests capture-event-to-durable-save behavior and recovery through the production `TrialCoordinator` committer. Native simulator accessibility audits now exist, including retained failures and bounded corrections in `Evidence/NativeApp/accessibility-diagnosis.md`. They do not establish full QA-13 acceptance. No iPhone 11 timing, physical storage-pressure or backup/restore evidence exists yet.
 
 ## DEC-13 - Support, Privacy Disclosures And Launch Review
 

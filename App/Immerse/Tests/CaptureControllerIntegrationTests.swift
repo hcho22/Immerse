@@ -212,7 +212,7 @@ extension XCTestCase {
     }
 }
 
-private struct SyntheticCamera: CapturePermissionAuthorizing {
+struct SyntheticCamera: CapturePermissionAuthorizing {
     let granted: Bool
     func authorizationStatus() -> CaptureAuthorizationStatus { granted ? .authorized : .denied }
     func requestAccess() async -> Bool { granted }
@@ -220,7 +220,7 @@ private struct SyntheticCamera: CapturePermissionAuthorizing {
 
 /// In-memory receipt calls. A held update blocks its caller, which is always the Trial owner
 /// off the main actor, until the test releases it.
-private final class HeldReceiptCalls: TrialKeychainCalling, Sendable {
+final class HeldReceiptCalls: TrialKeychainCalling, Sendable {
     private struct State {
         var data: Data?
         var holdNext = false

@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2E0BEADF4AA29CBA4BEEAFED /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = E426B161B9CDB36E082BA2E7 /* FilmRuntime */; };
-		64ADD168C7EE28796E2A66E7 /* CapturePipeline in Frameworks */ = {isa = PBXBuildFile; productRef = 5E904CBF87DC28A04E46FA0A /* CapturePipeline */; };
+		64ADD168C7EE28796E2A66E7 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1F5D3B1DA1F627D59C3D8B34 /* RenderCore */; };
 		A5E1CC89C084601837A786CF /* NativeAdaptersCompileProbeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F6742E3A8FEBD436AB753D /* NativeAdaptersCompileProbeApp.swift */; };
 		D630C0E4CD882BE5FCC4C54D /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = C140131876B64188AF0ED0D1 /* NativeAdapters */; };
-		F4B1C266B441D5E02CE221DA /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1F5D3B1DA1F627D59C3D8B34 /* RenderCore */; };
+		F4B1C266B441D5E02CE221DA /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = E426B161B9CDB36E082BA2E7 /* FilmRuntime */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,7 +19,6 @@
 		830049EBEA1C07EEFA933730 /* NativeAdaptersCompileProbe.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NativeAdaptersCompileProbe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F6742E3A8FEBD436AB753D /* NativeAdaptersCompileProbeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAdaptersCompileProbeApp.swift; sourceTree = "<group>"; };
 		9D5442E5B09E7343EB1E3560 /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
-		A4FA321AAF314A4DC6FA226C /* CapturePipeline */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CapturePipeline; path = ../../Packages/CapturePipeline; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,9 +27,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D630C0E4CD882BE5FCC4C54D /* NativeAdapters in Frameworks */,
-				64ADD168C7EE28796E2A66E7 /* CapturePipeline in Frameworks */,
-				F4B1C266B441D5E02CE221DA /* RenderCore in Frameworks */,
-				2E0BEADF4AA29CBA4BEEAFED /* FilmRuntime in Frameworks */,
+				64ADD168C7EE28796E2A66E7 /* RenderCore in Frameworks */,
+				F4B1C266B441D5E02CE221DA /* FilmRuntime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,7 +46,6 @@
 		A9FD7F496579B50CBEC67479 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				A4FA321AAF314A4DC6FA226C /* CapturePipeline */,
 				9D5442E5B09E7343EB1E3560 /* FilmRuntime */,
 				03FF40B811B9D4862D6BBA1A /* NativeAdapters */,
 				7D875A2BC64C626D0507DD14 /* RenderCore */,
@@ -91,7 +87,6 @@
 			name = NativeAdaptersCompileProbe;
 			packageProductDependencies = (
 				C140131876B64188AF0ED0D1 /* NativeAdapters */,
-				5E904CBF87DC28A04E46FA0A /* CapturePipeline */,
 				1F5D3B1DA1F627D59C3D8B34 /* RenderCore */,
 				E426B161B9CDB36E082BA2E7 /* FilmRuntime */,
 			);
@@ -120,7 +115,6 @@
 			mainGroup = B594CA6443C912B95E9C81D3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5D55CA74824E3B6E78CD2E10 /* XCLocalSwiftPackageReference "../../Packages/CapturePipeline" */,
 				93EAC2E8743DD02A32A3826B /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */,
 				3A50539748294D48801DB893 /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */,
 				E2618D39B377E52DE43DF19B /* XCLocalSwiftPackageReference "../../Packages/RenderCore" */,
@@ -338,10 +332,6 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Packages/NativeAdapters;
 		};
-		5D55CA74824E3B6E78CD2E10 /* XCLocalSwiftPackageReference "../../Packages/CapturePipeline" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../Packages/CapturePipeline;
-		};
 		93EAC2E8743DD02A32A3826B /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../Packages/FilmRuntime;
@@ -356,10 +346,6 @@
 		1F5D3B1DA1F627D59C3D8B34 /* RenderCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RenderCore;
-		};
-		5E904CBF87DC28A04E46FA0A /* CapturePipeline */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CapturePipeline;
 		};
 		C140131876B64188AF0ED0D1 /* NativeAdapters */ = {
 			isa = XCSwiftPackageProductDependency;

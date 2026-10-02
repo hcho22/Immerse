@@ -15,6 +15,24 @@ public enum CaptureKind: Codable, Equatable, Sendable {
     case movieClip(seconds: TimeInterval, orientation: ClipOrientation)
 }
 
+/// Movie capacity is accounted in whole frames, never in summed seconds, so clips that
+/// together record a Camera's full duration always complete its Film exactly.
+public enum MovieFrames {
+    public static let perSecond = 30
+
+    /// The whole frames a saved clip of this decoded duration consumes. A clip always
+    /// consumes at least one frame; a non-finite or non-positive duration has none.
+    public static func count(seconds: TimeInterval) -> Int? {
+        guard seconds.isFinite, seconds > 0,
+              let frames = Int(exactly: (seconds * Double(perSecond)).rounded()) else { return nil }
+        return max(1, frames)
+    }
+
+    public static func seconds(_ frames: Int) -> TimeInterval {
+        Double(frames) / Double(perSecond)
+    }
+}
+
 public enum CaptureRevealState: String, Codable, Equatable, Sendable {
     case sealed
     case revealed
@@ -125,20 +143,28 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         return max(0, limit - captures.count)
     }
 
-    public var consumedMovieSeconds: TimeInterval {
+    public var consumedMovieFrames: Int {
         captures.reduce(0) { total, capture in
             guard case let .movieClip(seconds, _) = capture.kind else {
                 return total
             }
-            return total + seconds
+            return total + (MovieFrames.count(seconds: seconds) ?? 0)
         }
     }
 
-    public var remainingMovieSeconds: TimeInterval? {
+    public var remainingMovieFrames: Int? {
         guard case let .seconds(limit) = camera.capacity else {
             return nil
         }
-        return max(0, Double(limit) - consumedMovieSeconds)
+        return max(0, limit * MovieFrames.perSecond - consumedMovieFrames)
+    }
+
+    public var consumedMovieSeconds: TimeInterval {
+        MovieFrames.seconds(consumedMovieFrames)
+    }
+
+    public var remainingMovieSeconds: TimeInterval? {
+        remainingMovieFrames.map(MovieFrames.seconds)
     }
 
     public var canStartDevelopment: Bool {
@@ -218,7 +244,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         guard camera.medium == .movie else {
             throw FilmDomainError.wrongCameraMedium
         }
-        guard durationSeconds.isFinite, durationSeconds > 0 else {
+        guard MovieFrames.count(seconds: durationSeconds) != nil else {
             throw FilmDomainError.invalidMovieDuration
         }
     }
@@ -232,12 +258,12 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
             throw FilmDomainError.wrongCameraMedium
         }
         try ensureCaptureOpen()
-        guard durationSeconds.isFinite, durationSeconds > 0 else {
+        guard let frames = MovieFrames.count(seconds: durationSeconds) else {
             throw FilmDomainError.invalidMovieDuration
         }
-        let remaining = remainingMovieSeconds ?? 0
-        guard durationSeconds <= remaining else {
-            throw FilmDomainError.insufficientRemainingCapacity(remainingSeconds: remaining)
+        let remaining = remainingMovieFrames ?? 0
+        guard frames <= remaining else {
+            throw FilmDomainError.insufficientRemainingCapacity(remainingSeconds: MovieFrames.seconds(remaining))
         }
 
         let capture = CaptureRecord(
@@ -330,7 +356,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         switch camera.capacity {
         case let .exposures(limit) where captures.count == limit:
             completionState = .capacityFull
-        case let .seconds(limit) where consumedMovieSeconds == Double(limit):
+        case .seconds where remainingMovieFrames == 0:
             completionState = .capacityFull
         default:
             break

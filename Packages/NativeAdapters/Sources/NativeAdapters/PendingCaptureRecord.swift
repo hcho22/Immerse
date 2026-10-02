@@ -6,11 +6,11 @@ public struct PendingCaptureRecord: Codable, Equatable, Sendable {
     public let mediaKind: CaptureMediaKind
     public let createdAt: Date
     public let orientation: ClipOrientation?
-    public let remainingSeconds: TimeInterval?
+    public let remainingFrames: Int?
 
     public init(id: UUID, mediaKind: CaptureMediaKind, createdAt: Date = Date(),
-                orientation: ClipOrientation? = nil, remainingSeconds: TimeInterval? = nil) {
+                orientation: ClipOrientation? = nil, remainingFrames: Int? = nil) {
         self.id = id; self.mediaKind = mediaKind; self.createdAt = createdAt
-        self.orientation = orientation; self.remainingSeconds = remainingSeconds
+        self.orientation = orientation; self.remainingFrames = remainingFrames
     }
 }

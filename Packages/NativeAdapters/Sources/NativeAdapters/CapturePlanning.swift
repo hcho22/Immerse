@@ -77,6 +77,28 @@ public struct CaptureSessionPlan: Equatable, Sendable {
     }
 }
 
+/// Movies record a native 4:3 format, 3:4 once rotated for portrait, so clips in a Film's
+/// locked orientation fill its 4:3 or 3:4 Movie frame and only opposite clips get borders.
+public enum MovieCaptureFormat {
+    /// Provisional pending DEC-04: no larger than the 1920x1080 `.high` preset Movies used before.
+    public static let maximumWidth = 1920
+    public static let maximumHeight = 1080
+
+    /// The largest 4:3 format within the maximum size that records `MovieFrames.perSecond`.
+    /// Dimensions are the sensor's landscape width and height.
+    public static func preferred<Format>(
+        among formats: [Format],
+        dimensions: (Format) -> (width: Int, height: Int),
+        recordsMovieFrameRate: (Format) -> Bool
+    ) -> Format? {
+        formats.filter { format in
+            let size = dimensions(format)
+            return size.width * 3 == size.height * 4 && size.width <= maximumWidth
+                && size.height <= maximumHeight && recordsMovieFrameRate(format)
+        }.max { dimensions($0).width < dimensions($1).width }
+    }
+}
+
 public enum NativeCaptureInterruptionReason: Equatable, Sendable {
     case systemPressure
     case audioVideoInUseByAnotherClient

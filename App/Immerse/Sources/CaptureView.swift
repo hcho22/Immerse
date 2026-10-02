@@ -41,14 +41,16 @@ struct CaptureView: View {
                         if capture.phase == .interrupted || error != nil || capture.message?.contains("Retry") == true {
                             Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
                         }
+                        let square = film.camera.id == .mediumFormat6x6 || film.camera.id == .instant1970s
                         ZStack {
                             Color.black
                             if let preview = capture.preview {
                                 CameraPreview(source: preview, position: capture.position, orientation: capture.orientation,
-                                              square: film.camera.id == .mediumFormat6x6 || film.camera.id == .instant1970s)
+                                              square: square)
                             } else { Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white) }
                         }
-                        .aspectRatio(film.camera.id == .mediumFormat6x6 || film.camera.id == .instant1970s ? 1 : 0.75, contentMode: .fit)
+                        // The 4:3 capture fills a 3:4 viewfinder in portrait and a 4:3 one in landscape.
+                        .aspectRatio(square ? 1 : capture.orientation.clipOrientation == .portrait ? 3.0 / 4 : 4.0 / 3, contentMode: .fit)
                         .clipped()
                         .accessibilityLabel(capture.position == .front ? "Mirrored front viewfinder" : "Rear viewfinder")
                         if film.completionState == .open {

@@ -1,3 +1,4 @@
+import FilmDomain
 import Foundation
 import NativeAdapters
 import RenderFixtures
@@ -16,7 +17,7 @@ final class CapturedMediaFileTests: XCTestCase {
         let data = try Data(contentsOf: root.appendingPathComponent(manifest.photo.relativePath))
         let photo = try files.savePhoto(data, id: photoID)
         try files.prepare(PendingCaptureRecord(id: movieID, mediaKind: .movie, createdAt: date.addingTimeInterval(1),
-            orientation: .portrait, remainingSeconds: 10))
+            orientation: .portrait, remainingFrames: 300))
         try FileManager.default.copyItem(at: root.appendingPathComponent(manifest.movie.relativePath), to: files.movieDestination(id: movieID))
         try files.prepare(PendingCaptureRecord(id: unusedID, mediaKind: .photo, createdAt: date.addingTimeInterval(2)))
         let reopened = try CapturedMediaFiles(directory: staging)
@@ -41,7 +42,7 @@ final class CapturedMediaFileTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let files = try CapturedMediaFiles(directory: root)
         let id = UUID()
-        try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie, orientation: .landscape, remainingSeconds: 200))
+        try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie, orientation: .landscape, remainingFrames: 6_000))
         let data = Data("unfinished movie".utf8)
         try data.write(to: files.movieDestination(id: id))
         do { _ = try await files.recoveryEvents(); XCTFail("Must not acknowledge undecodable media") }
@@ -150,7 +151,7 @@ final class CapturedMediaFileTests: XCTestCase {
         let id = UUID()
         let destination = files.movieDestination(id: id)
         try FileManager.default.copyItem(at: root.appendingPathComponent(manifest.movie.relativePath), to: destination)
-        let event = try await files.movieSavedEvent(id: id, orientation: .portrait, remainingSeconds: 10)
+        let event = try await files.movieSavedEvent(id: id, orientation: .portrait, remainingFrames: 300)
         guard case let .movieClipSaved(url, seconds, orientation) = event else {
             return XCTFail("Expected validated Movie file")
         }
@@ -161,10 +162,27 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertEqual(orientation, .portrait)
         XCTAssertTrue(FileManager.default.fileExists(atPath: destination.path))
         do {
-            _ = try await files.movieSavedEvent(id: id, orientation: .portrait, remainingSeconds: 0.1)
+            _ = try await files.movieSavedEvent(id: id, orientation: .portrait, remainingFrames: 3)
             XCTFail("Over-budget footage must never be committed")
         } catch { XCTAssertEqual(error as? NativeCaptureError, .invalidMedia) }
         XCTAssertTrue(FileManager.default.fileExists(atPath: destination.path))
+    }
+
+    func testClipThatRecordsExactlyTheRemainingFramesIsSavedAndOneMoreFrameIsNot() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root, frameRate: MovieFrames.perSecond, seconds: MovieFrames.seconds(17))
+        let files = try CapturedMediaFiles(directory: root.appendingPathComponent("staging"))
+        let id = UUID()
+        try FileManager.default.copyItem(at: root.appendingPathComponent(manifest.movie.relativePath),
+                                         to: files.movieDestination(id: id))
+        do {
+            _ = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingFrames: 16)
+            XCTFail("A clip one frame over the remaining budget must not be committed")
+        } catch { XCTAssertEqual(error as? NativeCaptureError, .invalidMedia) }
+        let event = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingFrames: 17)
+        guard case let .movieClipSaved(_, seconds, _) = event else { return XCTFail("Expected validated Movie file") }
+        XCTAssertEqual(MovieFrames.count(seconds: seconds), 17)
     }
 
     func testUnfinishedMovieIsRetainedWithoutReportingSaveSuccess() async throws {
@@ -176,7 +194,7 @@ final class CapturedMediaFileTests: XCTestCase {
         let partial = Data("unfinished-movie".utf8)
         try partial.write(to: url)
         do {
-            _ = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingSeconds: 200)
+            _ = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingFrames: 6_000)
             XCTFail("Incomplete file must not become a save event")
         } catch { }
         XCTAssertEqual(try Data(contentsOf: url), partial)
@@ -186,12 +204,12 @@ final class CapturedMediaFileTests: XCTestCase {
         FileManager.default.temporaryDirectory.appendingPathComponent("NativeCaptureFiles-\(UUID())")
     }
 
-    private func fixtures(at root: URL) async throws -> RenderFixtureManifest {
+    private func fixtures(at root: URL, frameRate: Int = 24, seconds: Double = 0.5) async throws -> RenderFixtureManifest {
         try await RenderFixtureGenerator.writeFixtures(
             outputDirectory: root,
             settings: RenderFixtureSettings(
                 photoWidth: 64, photoHeight: 64, movieWidth: 64, movieHeight: 64,
-                movieFrameRate: 24, movieDurationSeconds: 0.5, movieOrientation: .landscape
+                movieFrameRate: frameRate, movieDurationSeconds: seconds, movieOrientation: .landscape
             )
         )
     }

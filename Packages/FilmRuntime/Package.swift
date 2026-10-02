@@ -7,11 +7,11 @@ let package = Package(
     dependencies: [
         .package(path: "../FilmDomain"), .package(path: "../FilmPersistence"),
         .package(path: "../RenderCore"), .package(path: "../NativeAdapters"),
-        .package(path: "../EntitlementCore"), .package(path: "../CapturePipeline"),
-        .package(path: "../RenderFixtures"), .package(path: "../MediaCatalog")
+        .package(path: "../EntitlementCore"), .package(path: "../RenderFixtures"),
+        .package(path: "../MediaCatalog")
     ],
     targets: [
-        .target(name: "FilmRuntime", dependencies: ["FilmDomain", "FilmPersistence", "RenderCore", "NativeAdapters", "EntitlementCore", "CapturePipeline", "MediaCatalog"]),
+        .target(name: "FilmRuntime", dependencies: ["FilmDomain", "FilmPersistence", "RenderCore", "NativeAdapters", "EntitlementCore", "MediaCatalog"]),
         .testTarget(name: "FilmRuntimeTests", dependencies: ["FilmRuntime", "RenderFixtures", "MediaCatalog"])
     ], swiftLanguageModes: [.v6]
 )

@@ -192,7 +192,7 @@ final class ReceiptScenarioTests: XCTestCase {
         XCTAssertEqual(inventory.underlyingRecord?.isConsumed, true, file: file, line: line)
         if inventory.configuration.camera.medium == .movie {
             XCTAssertEqual(inventory.films.first?.movieOrientation, .portrait, file: file, line: line)
-            XCTAssertEqual(inventory.films.first?.consumedMovieSeconds, inventory.manifest.duration, file: file, line: line)
+            XCTAssertEqual(inventory.films.first?.consumedMovieFrames, inventory.manifest.duration.flatMap(MovieFrames.count(seconds:)), file: file, line: line)
             if let duration = inventory.manifest.duration {
                 XCTAssertEqual(inventory.films.first?.captures.first?.kind, .movieClip(seconds: duration, orientation: .landscape), file: file, line: line)
             }

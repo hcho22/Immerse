@@ -90,6 +90,30 @@ final class CaptureAdapterTests: XCTestCase {
         XCTAssertEqual(plan.lensSwitchDecision(to: .rear, during: .idle), .disabledByConfiguration)
     }
 
+    func testMoviesRecordTheLargestNative4x3FormatWithinTheEarlierPresetAtMovieFrameRate() {
+        struct Format: Equatable { let width: Int, height: Int, recordsMovieFrames: Bool }
+        func preferred(_ formats: [Format]) -> Format? {
+            MovieCaptureFormat.preferred(among: formats, dimensions: { ($0.width, $0.height) },
+                                         recordsMovieFrameRate: \.recordsMovieFrames)
+        }
+        let offered = [
+            Format(width: 640, height: 480, recordsMovieFrames: true),
+            Format(width: 1280, height: 720, recordsMovieFrames: true),
+            Format(width: 1280, height: 960, recordsMovieFrames: true),
+            Format(width: 1920, height: 1080, recordsMovieFrames: true),
+            Format(width: 1440, height: 1080, recordsMovieFrames: true),
+            Format(width: 1920, height: 1440, recordsMovieFrames: true),
+            Format(width: 3840, height: 2160, recordsMovieFrames: true),
+            Format(width: 4032, height: 3024, recordsMovieFrames: true)
+        ]
+        XCTAssertEqual(preferred(offered), Format(width: 1440, height: 1080, recordsMovieFrames: true))
+        let highSpeedOnly = offered.map {
+            $0.width == 1440 ? Format(width: 1440, height: 1080, recordsMovieFrames: false) : $0
+        }
+        XCTAssertEqual(preferred(highSpeedOnly), Format(width: 1280, height: 960, recordsMovieFrames: true))
+        XCTAssertNil(preferred(offered.filter { $0.width * 3 != $0.height * 4 }), "A 16:9 format never records a Movie")
+    }
+
     func testCaptureEventEmitterReportsSaveAndInterruptionCallbacksInOrder() {
         let sink = RecordingCaptureSink()
         let emitter = CaptureEventEmitter(sink: sink)

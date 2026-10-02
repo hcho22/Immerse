@@ -98,10 +98,15 @@ final class FilmProcessorTests: XCTestCase {
         for (camera, capacity) in cases {
             let repository = try FilmRepository(rootURL: root.appendingPathComponent(camera.id.rawValue))
             let film = try repository.createFilm(camera: camera, title: camera.displayName, movieOrientation: .landscape)
-            let first = try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: capacity - 0.25, orientation: .landscape)
-            XCTAssertEqual(try XCTUnwrap(first.remainingMovieSeconds), 0.25, accuracy: 0.0001)
+            let first = try repository.saveMovieClip(filmID: film.id, sourceData: source,
+                durationSeconds: capacity - MovieFrames.seconds(8), orientation: .landscape)
+            XCTAssertEqual(first.remainingMovieFrames, 8)
             XCTAssertEqual(first.completionState, .open)
-            let full = try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: 0.25, orientation: .portrait)
+            XCTAssertThrowsError(try repository.saveMovieClip(filmID: film.id, sourceData: source,
+                durationSeconds: MovieFrames.seconds(9), orientation: .portrait)) { error in
+                XCTAssertEqual(error as? FilmDomainError, .insufficientRemainingCapacity(remainingSeconds: MovieFrames.seconds(8)))
+            }
+            let full = try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: MovieFrames.seconds(8), orientation: .portrait)
             XCTAssertEqual(full.completionState, .capacityFull)
             XCTAssertEqual(full.consumedMovieSeconds, capacity, accuracy: 0.0001)
             XCTAssertEqual(try XCTUnwrap(full.remainingMovieSeconds), 0, accuracy: 0.0001)
@@ -209,7 +214,7 @@ final class FilmProcessorTests: XCTestCase {
         let empty = try repository.film(id: film.id)
         XCTAssertEqual(empty.discardedPlaceholderSequenceNumbers, [1, 2])
         XCTAssertFalse(empty.canPlaybackDevelopedMovie)
-        XCTAssertEqual(empty.consumedMovieSeconds, manifest.movie.durationSeconds * 2)
+        XCTAssertEqual(empty.consumedMovieFrames, try XCTUnwrap(MovieFrames.count(seconds: manifest.movie.durationSeconds)) * 2)
         XCTAssertThrowsError(try repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
         try await processor.deleteFilm(filmID: film.id)
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Work/\(film.id)").path))

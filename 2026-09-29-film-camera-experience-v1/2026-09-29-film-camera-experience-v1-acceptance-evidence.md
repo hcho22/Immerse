@@ -191,6 +191,13 @@ The current-status columns below use these keys, reconciled at `4687295` (`Evide
 | T | Trial receipt study and harnesses | `swift test --package-path Probes/TrialCommitStudy` (17 tests), `Evidence/ReceiptScenarioHarness/035/`, `Evidence/ReceiptFaultMatrix/039/` and `Evidence/TrialKeychainProbe/2026-10-01-production-receipt-integration.md`. Injected receipt stores only. |
 
 Numbered checkpoints such as 043 or 045 refer to the matching report under `Evidence/NativeApp/`.
+
+Review reconciliation after checkpoint 050: production never executed `Packages/CapturePipeline` (key C) or the pure `EntitlementPolicy` rules in key E, so both were removed.
+Key C's capture-commit evidence now comes from the production `TrialCoordinator` committer in F (`CaptureRecoveryIntegrationTests`, `TrialIntegrationTests`), and E keeps only the Keychain receipt adapter tests.
+`TrialCoordinator.load` is the single new-Film entitlement decision (F); S now drives `JournalModel.load` and the production capture commit, so rows citing E's policy for existing-Film rights rest on F and S.
+Under the provisional default for PRD open question 7, pending the captain, an expired subscriber who never used the Trial gets the Trial Film.
+Movie capacity is now whole 30 fps frames (D, N, F), and Movie capture uses a native 4:3 format whose size is provisional pending DEC-04.
+The next gate run records the resulting test counts; this note does not.
 H gates keep their meaning above; all remain untested on hardware, with steps in `Evidence/NativeApp/manual-validation.md`.
 
 ## FR Acceptance Clauses

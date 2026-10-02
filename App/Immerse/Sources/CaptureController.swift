@@ -100,7 +100,7 @@ final class CaptureController {
         } else if film.camera.medium == .photo {
             try await backend.capturePhoto(orientation: orientation, flash: flash && controls.flash)
         } else {
-            try await backend.startMovie(orientation: orientation, remainingSeconds: film.remainingMovieSeconds ?? 0)
+            try await backend.startMovie(orientation: orientation, remainingFrames: film.remainingMovieFrames ?? 0)
             recordingStarted = Date()
         }
         phase = await backend.phase

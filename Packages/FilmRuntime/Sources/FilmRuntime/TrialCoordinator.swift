@@ -44,6 +44,25 @@ public actor TrialCoordinator {
         return .unused
     }
 
+    /// The single new-Film entitlement decision production executes. An active subscription
+    /// loads a subscription Film and leaves this iPhone's Trial untouched; otherwise the Film
+    /// uses the Trial through `start`, which refuses a Trial in progress or already consumed.
+    public func load(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil,
+                     subscription: SubscriptionAccess) async throws -> Film {
+        switch subscription {
+        case .active:
+            return try repository.createFilm(camera: camera, title: title, movieOrientation: orientation,
+                access: .subscription)
+        case .notPurchased:
+            return try await start(camera: camera, title: title, orientation: orientation)
+        case .expired:
+            // PRD section 18 open question 7: whether a lapsed subscriber who never used the
+            // Trial still gets it is undecided. Provisional default pending the captain: yes.
+            return try await start(camera: camera, title: title, orientation: orientation)
+        }
+    }
+
+    /// Loads a Film on this iPhone's Trial. Production reaches it only through `load`.
     public func start(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil) async throws -> Film {
         await enter(); defer { leave() }
         try await reconcileLocked()

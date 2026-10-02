@@ -124,7 +124,7 @@ actor ReceiptScenario {
         let files = try CapturedMediaFiles(directory: repository.captureStagingDirectory(filmID: film.id))
         try files.prepare(PendingCaptureRecord(id: manifest.captureUUID, mediaKind: camera.medium == .photo ? .photo : .movie,
             createdAt: manifest.savedAt, orientation: camera.medium == .movie ? .landscape : nil,
-            remainingSeconds: film.remainingMovieSeconds))
+            remainingFrames: film.remainingMovieFrames))
         var settings = RenderFixtureSettings.defaultExperimental
         settings.photoWidth = 160; settings.photoHeight = 120
         settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
@@ -139,7 +139,7 @@ actor ReceiptScenario {
         } else {
             source = files.movieDestination(id: manifest.captureUUID)
             try FileManager.default.copyItem(at: fixtures.appendingPathComponent("synthetic-developed-movie.mov"), to: source)
-            let nativeEvent = try await files.movieSavedEvent(id: manifest.captureUUID, orientation: .landscape, remainingSeconds: film.remainingMovieSeconds!)
+            let nativeEvent = try await files.movieSavedEvent(id: manifest.captureUUID, orientation: .landscape, remainingFrames: film.remainingMovieFrames!)
             guard case let .movieClipSaved(_, duration, _) = nativeEvent else { throw HarnessError.evidenceMismatch }
             manifest.duration = duration
         }

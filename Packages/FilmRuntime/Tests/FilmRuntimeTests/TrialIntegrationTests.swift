@@ -41,7 +41,7 @@ final class TrialIntegrationTests: XCTestCase {
                 XCTAssertEqual(restored.captures.first?.revealState, .sealed)
                 if camera.medium == .photo { XCTAssertEqual(restored.remainingExposures, 26) }
                 else {
-                    XCTAssertEqual(restored.consumedMovieSeconds, prepared.duration, accuracy: 0.000001)
+                    XCTAssertEqual(restored.consumedMovieFrames, MovieFrames.count(seconds: prepared.duration))
                     XCTAssertEqual(restored.movieOrientation, .portrait)
                     XCTAssertEqual(restored.captures.first?.kind, .movieClip(seconds: prepared.duration, orientation: .landscape))
                 }
@@ -74,7 +74,7 @@ final class TrialIntegrationTests: XCTestCase {
         let files = try CapturedMediaFiles(directory: repository.captureStagingDirectory(filmID: film.id))
         try files.prepare(PendingCaptureRecord(id: id, mediaKind: camera.medium == .photo ? .photo : .movie,
             createdAt: date, orientation: camera.medium == .movie ? .landscape : nil,
-            remainingSeconds: camera.medium == .movie ? film.remainingMovieSeconds : nil))
+            remainingFrames: camera.medium == .movie ? film.remainingMovieFrames : nil))
         if camera.medium == .photo {
             _ = try files.savePhoto(Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-photo.jpg")), id: id)
         } else {
@@ -249,6 +249,38 @@ final class TrialIntegrationTests: XCTestCase {
         catch EntitlementDenial.currentDeviceTrialConsumed { }
     }
 
+    func testLoadIsTheNewFilmEntitlementDecisionAndGivesLapsedSubscribersTheUnusedTrial() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let store = MemoryDeviceStore()
+        let coordinator = try TrialCoordinator(root: root, store: store)
+        let repository = try FilmRepository(rootURL: root)
+        let paid = try await coordinator.load(camera: CameraCatalog.super8HomeMovie, title: "Paid",
+                                              orientation: .landscape, subscription: .active)
+        XCTAssertEqual(try repository.filmAccess(filmID: paid.id), .subscription)
+        XCTAssertEqual(paid.movieOrientation, .landscape)
+        XCTAssertNil(try store.read(), "A subscriber's new Film never activates this iPhone's Trial")
+
+        // PRD open question 7 is pending the captain; this asserts the provisional default only.
+        let lapsed = try await coordinator.load(camera: CameraCatalog.disposable1990s, title: "Lapsed",
+                                                subscription: .expired)
+        let device = try XCTUnwrap(store.read())
+        XCTAssertEqual(try repository.filmAccess(filmID: lapsed.id), .trial(originDevice: device.deviceID))
+        for subscription in [SubscriptionAccess.expired, .notPurchased] {
+            do { _ = try await coordinator.load(camera: CameraCatalog.instant1970s, title: "Second", subscription: subscription); XCTFail() }
+            catch let EntitlementDenial.currentDeviceTrialAlreadyInProgress(id) { XCTAssertEqual(id, lapsed.id) }
+        }
+
+        try store.consume(filmID: lapsed.id, savedAt: Date(timeIntervalSince1970: 7))
+        for subscription in [SubscriptionAccess.expired, .notPurchased] {
+            do { _ = try await coordinator.load(camera: CameraCatalog.instant1970s, title: "Second", subscription: subscription); XCTFail() }
+            catch EntitlementDenial.currentDeviceTrialConsumed { }
+        }
+        let renewed = try await coordinator.load(camera: CameraCatalog.instant1970s, title: "Renewed", subscription: .active)
+        XCTAssertEqual(try repository.filmAccess(filmID: renewed.id), .subscription)
+        XCTAssertEqual(try repository.allFilms().count, 3)
+    }
+
     func testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -303,7 +335,7 @@ final class TrialIntegrationTests: XCTestCase {
     }
 }
 
-private final class MemoryDeviceStore: DeviceTrialStoring, Sendable {
+final class MemoryDeviceStore: DeviceTrialStoring, Sendable {
     private struct State { var record: DeviceTrialRecord?; var fails = false }
     private let state = Mutex(State())
     var failConsumption: Bool {

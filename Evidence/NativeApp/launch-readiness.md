@@ -45,6 +45,12 @@ implementation worker owns the configured no-mistakes run; Firstmate supervises
 ask-user findings, reviews this evidence linkage, and must coordinate a separate retained
 ordinary release task before any future authorized exposure. Never merge here.
 
+**Review fixes after candidate `71391e4`:** the no-mistakes review changed app and package sources, so the manual candidate must be re-pinned to the commit that contains them.
+Movie capacity is now accounted in whole 30 fps frames: clips whose frames total the reel complete the Film, and the final clip is capped at exactly the remaining frames instead of being rejected and blocking the Film.
+Movie capture now uses the largest native 4:3 format no larger than the earlier 1920x1080 `.high` preset (1440x1080 where offered), with a 3:4 portrait or 4:3 landscape viewfinder; the size is provisional pending DEC-04 and the format is a manual device check (M19).
+`TrialCoordinator.load` is now the single new-Film entitlement decision that production executes; the unused `EntitlementPolicy` rules and the unlinked `CapturePipeline` committer were removed, and the local StoreKit tests drive `JournalModel.load` and the production capture commit.
+These are software changes with package and hosted tests, not device evidence.
+
 ## Candidate Identity and Local Gates
 
 Record `git rev-parse HEAD`, `git status --short`, `xcodebuild -version`, simulator
@@ -257,6 +263,9 @@ intact; no new public queue-observation API or production source change.
 - DEC-02: production product IDs, prices, offers and refund/revocation product
   policy remain absent. Test fixture prices are not recommendations. No Apple
   account, App Store Connect or billing configuration change is authorized.
+- PRD open question 7 (section 18; Journey 3): whether a lapsed subscriber who never used the Trial still gets the Trial Film is open, pending the captain.
+  `TrialCoordinator.load` owns the decision and keeps the existing behavior as a provisional default: an expired subscription with an unused Trial loads the Trial Film.
+  The FilmRuntime and local StoreKit tests assert that default only; they do not settle the question.
 - DEC-13: support/privacy URLs, approved policy copy, App Review contact/material,
   privacy declarations, age rating and signing/provisioning need their real owners.
   App requests only Camera and Photos add-only. Audit the final binary and Apple

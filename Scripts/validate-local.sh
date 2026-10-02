@@ -24,7 +24,7 @@ trap restore_simulators EXIT
 xcodebuild -version
 swift --version
 sh Scripts/verify-requirement-map.sh
-for package in FilmDomain MediaCatalog RenderFixtures RenderCore FilmPersistence NativeAdapters CapturePipeline EntitlementCore FilmRuntime; do
+for package in FilmDomain MediaCatalog RenderFixtures RenderCore FilmPersistence NativeAdapters EntitlementCore FilmRuntime; do
     swift test --package-path "Packages/$package"
 done
 swift test --package-path Probes/TrialCommitStudy

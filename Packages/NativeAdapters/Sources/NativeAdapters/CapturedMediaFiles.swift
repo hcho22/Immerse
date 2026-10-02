@@ -75,10 +75,10 @@ public struct CapturedMediaFiles: Sendable {
                 try Self.validatePhoto(Data(contentsOf: url))
                 result.append(.photoSaved(url))
             } else {
-                guard let orientation = record.orientation, let budget = record.remainingSeconds else {
+                guard let orientation = record.orientation, let budget = record.remainingFrames else {
                     throw NativeCaptureError.invalidMedia
                 }
-                result.append(try await movieSavedEvent(id: record.id, orientation: orientation, remainingSeconds: budget))
+                result.append(try await movieSavedEvent(id: record.id, orientation: orientation, remainingFrames: budget))
             }
         }
         return result
@@ -87,9 +87,9 @@ public struct CapturedMediaFiles: Sendable {
     public func movieSavedEvent(
         id: UUID,
         orientation: ClipOrientation,
-        remainingSeconds: TimeInterval
+        remainingFrames: Int
     ) async throws -> CaptureSaveEvent {
-        guard remainingSeconds.isFinite, remainingSeconds > 0 else {
+        guard remainingFrames > 0 else {
             throw NativeCaptureError.invalidDuration
         }
         let url = movieDestination(id: id)
@@ -98,7 +98,7 @@ public struct CapturedMediaFiles: Sendable {
         let audio = try await asset.loadTracks(withMediaType: .audio)
         let duration = try await asset.load(.duration).seconds
         guard let track = tracks.first, tracks.count == 1, audio.isEmpty,
-              duration.isFinite, duration > 0, duration <= remainingSeconds else {
+              let clipFrames = MovieFrames.count(seconds: duration), clipFrames <= remainingFrames else {
             throw NativeCaptureError.invalidMedia
         }
 

@@ -13,7 +13,7 @@ final class CaptureBackendRecoveryTests: XCTestCase {
         let photoID = UUID()
         let movieID = UUID()
         let savedPhoto = try files.savePhoto(Data(contentsOf: photo), id: photoID)
-        try files.prepare(PendingCaptureRecord(id: movieID, mediaKind: .movie, orientation: .landscape, remainingSeconds: 200))
+        try files.prepare(PendingCaptureRecord(id: movieID, mediaKind: .movie, orientation: .landscape, remainingFrames: 6_000))
         let partialMovie = files.movieDestination(id: movieID)
         try Data("partial synthetic movie".utf8).write(to: partialMovie)
         let committer = RecordingCaptureCommitter()

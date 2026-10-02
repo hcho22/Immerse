@@ -23,12 +23,12 @@ import ProductionReceiptHarness
         let id = UUID(uuidString: "00000000-0000-0000-0000-000000000789")!
         try files.prepare(PendingCaptureRecord(id: id, mediaKind: camera.medium == .photo ? .photo : .movie,
             createdAt: Date(timeIntervalSince1970: 1_790_870_000),
-            orientation: camera.medium == .movie ? .landscape : nil, remainingSeconds: film.remainingMovieSeconds))
+            orientation: camera.medium == .movie ? .landscape : nil, remainingFrames: film.remainingMovieFrames))
         let event: CaptureSaveEvent
         if camera.medium == .photo { event = .photoSaved(try files.savePhoto(Data(contentsOf: source), id: id)) }
         else {
             try FileManager.default.copyItem(at: source, to: files.movieDestination(id: id))
-            event = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingSeconds: film.remainingMovieSeconds!)
+            event = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingFrames: film.remainingMovieFrames!)
         }
         let receiver = try await owner.receiver(filmID: film.id)
         try await receiver.commit(event)

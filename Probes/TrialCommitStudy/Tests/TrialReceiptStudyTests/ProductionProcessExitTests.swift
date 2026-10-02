@@ -45,7 +45,7 @@ final class ProductionProcessExitTests: XCTestCase {
                 XCTAssertEqual(saved.captures.first?.savedAt, Date(timeIntervalSince1970: 1_790_870_000))
                 XCTAssertEqual(saved.captures.first?.revealState, .sealed)
                 if camera.medium == .movie {
-                    XCTAssertEqual(saved.consumedMovieSeconds, manifest.movie.durationSeconds)
+                    XCTAssertEqual(saved.consumedMovieFrames, MovieFrames.count(seconds: manifest.movie.durationSeconds))
                     XCTAssertEqual(saved.movieOrientation, .portrait)
                 } else { XCTAssertEqual(saved.remainingExposures, 26) }
                 let asset = try XCTUnwrap(repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source))

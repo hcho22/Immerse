@@ -26,7 +26,7 @@ final class JournalModel {
     let trial: TrialCoordinator
     let capture: CaptureController
     private let cameraAuthorizer: any CapturePermissionAuthorizing
-    let billing = SubscriptionController()
+    let billing: SubscriptionController
     let mediaCatalog: BundleMediaCatalog?
     let catalogError: String?
     var films: [Film] = []
@@ -40,8 +40,10 @@ final class JournalModel {
     private(set) var initialRecoveryPending = true
 
     init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
-         cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer()) throws {
+         cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer(),
+         subscriptions: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration()) throws {
         self.cameraAuthorizer = cameraAuthorizer
+        billing = SubscriptionController(configuration: subscriptions)
         capture = CaptureController(authorizer: cameraAuthorizer)
         do {
             guard let resources = Bundle.main.resourceURL,
@@ -120,19 +122,15 @@ final class JournalModel {
             ? true : await cameraAuthorizer.requestAccess()
         guard allowed else { throw JournalError.cameraDenied }
         await billing.refresh()
-        if billing.access == .active {
-            let film = try repository.createFilm(camera: camera, title: title,
-                movieOrientation: camera.medium == .movie ? orientation : nil, access: .subscription)
-            refresh()
-            return film
+        let film: Film
+        do {
+            film = try await trial.load(camera: camera, title: title,
+                orientation: camera.medium == .movie ? orientation : nil, subscription: billing.access)
+        } catch let EntitlementDenial.currentDeviceTrialAlreadyInProgress(id) {
+            throw JournalError.trialInProgress(id)
+        } catch EntitlementDenial.currentDeviceTrialConsumed {
+            throw billing.configured ? JournalError.subscriptionRequired : JournalError.subscriptionUnavailable
         }
-        switch try await trial.state() {
-        case .unused: break
-        case let .emptyFilmInProgress(id): throw JournalError.trialInProgress(id)
-        case .consumed: throw billing.configured ? JournalError.subscriptionRequired : JournalError.subscriptionUnavailable
-        }
-        let film = try await trial.start(camera: camera, title: title,
-                                        orientation: camera.medium == .movie ? orientation : nil)
         refresh()
         return film
     }

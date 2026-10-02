@@ -8,8 +8,6 @@ settings:
 packages:
   NativeAdapters:
     path: ../../Packages/NativeAdapters
-  CapturePipeline:
-    path: ../../Packages/CapturePipeline
   RenderCore:
     path: ../../Packages/RenderCore
   FilmRuntime:
@@ -24,8 +22,6 @@ targets:
     dependencies:
       - package: NativeAdapters
         product: NativeAdapters
-      - package: CapturePipeline
-        product: CapturePipeline
       - package: RenderCore
         product: RenderCore
       - package: FilmRuntime

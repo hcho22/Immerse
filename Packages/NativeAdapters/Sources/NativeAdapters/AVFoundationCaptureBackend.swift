@@ -17,7 +17,7 @@ public enum CaptureFrameOrientation: Sendable {
         }
     }
 
-    var clipOrientation: ClipOrientation {
+    public var clipOrientation: ClipOrientation {
         switch self {
         case .portrait, .portraitUpsideDown: .portrait
         case .landscapeLeft, .landscapeRight: .landscape
@@ -160,6 +160,8 @@ public actor AVFoundationCaptureBackend {
             throw NativeCaptureError.configurationFailed
         }
         let device = try camera(at: position)
+        // The movie session runs at `.inputPriority`, so the added lens keeps the format chosen here.
+        if plan.mediaKind == .movie { try selectMovieFormat(device) }
         let replacement = try AVCaptureDeviceInput(device: device)
         session.beginConfiguration()
         defer { session.commitConfiguration() }
@@ -204,9 +206,9 @@ public actor AVFoundationCaptureBackend {
         photoOutput.capturePhoto(with: settings, delegate: delegate)
     }
 
-    public func startMovie(orientation: CaptureFrameOrientation, remainingSeconds: TimeInterval) throws {
+    public func startMovie(orientation: CaptureFrameOrientation, remainingFrames: Int) throws {
         guard session.isRunning, let movieOutput else { throw NativeCaptureError.notRunning }
-        guard remainingSeconds.isFinite, remainingSeconds > 0 else {
+        guard remainingFrames > 0 else {
             throw NativeCaptureError.invalidDuration
         }
         try operations.requireIdle()
@@ -215,14 +217,14 @@ public actor AVFoundationCaptureBackend {
         let id = try operations.begin(.movie)
         do {
             try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie,
-                orientation: orientation.clipOrientation, remainingSeconds: remainingSeconds))
+                orientation: orientation.clipOrientation, remainingFrames: remainingFrames))
         } catch { operations.finish(id: id); throw error }
-        movieOutput.maxRecordedDuration = CMTime(seconds: remainingSeconds, preferredTimescale: 60_000)
+        movieOutput.maxRecordedDuration = CMTime(value: CMTimeValue(remainingFrames), timescale: CMTimeScale(MovieFrames.perSecond))
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
                 await self?.movieFinished(
                     id: id, orientation: orientation.clipOrientation,
-                    remainingSeconds: remainingSeconds, successfullyFinished: successfullyFinished
+                    remainingFrames: remainingFrames, successfullyFinished: successfullyFinished
                 )
             }
         }
@@ -329,12 +331,30 @@ public actor AVFoundationCaptureBackend {
         } else {
             let output = AVCaptureMovieFileOutput()
             guard session.canAddOutput(output) else { throw NativeCaptureError.configurationFailed }
-            if session.canSetSessionPreset(.high) { session.sessionPreset = .high }
+            // Choosing the input's format switches the session to its `.inputPriority` preset.
+            try selectMovieFormat(newInput.device)
             session.addOutput(output)
             movieOutput = output
         }
         plan = next
         ensureUnmirroredOutput()
+    }
+
+    private func selectMovieFormat(_ device: AVCaptureDevice) throws {
+        let rate = Float64(MovieFrames.perSecond)
+        let formats = device.formats.filter {
+            CMFormatDescriptionGetMediaSubType($0.formatDescription) == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+        }
+        guard let format = MovieCaptureFormat.preferred(among: formats, dimensions: {
+            let size = CMVideoFormatDescriptionGetDimensions($0.formatDescription)
+            return (Int(size.width), Int(size.height))
+        }, recordsMovieFrameRate: {
+            $0.videoSupportedFrameRateRanges.contains { $0.minFrameRate <= rate && rate <= $0.maxFrameRate }
+        }) else { throw NativeCaptureError.configurationFailed }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        device.activeFormat = format
+        device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(MovieFrames.perSecond))
     }
 
     private func camera(at position: CapturePosition) throws -> AVCaptureDevice {
@@ -375,7 +395,7 @@ public actor AVFoundationCaptureBackend {
     }
 
     private func movieFinished(
-        id: UUID, orientation: ClipOrientation, remainingSeconds: TimeInterval, successfullyFinished: Bool
+        id: UUID, orientation: ClipOrientation, remainingFrames: Int, successfullyFinished: Bool
     ) async {
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         movieDelegate = nil
@@ -385,7 +405,7 @@ public actor AVFoundationCaptureBackend {
         // Even an unsuccessful callback may have salvageable footage: validate the actual file.
         do {
             let event = try await files.movieSavedEvent(
-                id: id, orientation: orientation, remainingSeconds: remainingSeconds
+                id: id, orientation: orientation, remainingFrames: remainingFrames
             )
             guard operations.stage(event, id: id) else { return }
         } catch { failCapture(id: id); return }
