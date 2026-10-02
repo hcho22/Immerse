@@ -1,0 +1,54 @@
+{
+  "assets" : {
+    "source-1" : "af30ee29bda05f5afdecabc768b3a6b141bd9af1d4f857affcac652f2d15be6c"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 165
+        }
+      },
+      "displayName" : "1960s 16mm Cinema",
+      "id" : "cinema16mm",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 164.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "CEBE0D37-6161-4E0C-A18F-07E04B383642",
+    "isArchived" : false,
+    "loadedAt" : 812581414.551242,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "11D\/App\/Media\/CEBE0D37-6161-4E0C-A18F-07E04B383642\/source-1.mov",
+    "11D\/App\/film-store.sqlite",
+    "11D\/App\/film-store.sqlite-shm",
+    "11D\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218
+}

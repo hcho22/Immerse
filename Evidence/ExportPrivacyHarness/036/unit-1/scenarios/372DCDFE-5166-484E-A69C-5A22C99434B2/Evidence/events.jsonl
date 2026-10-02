@@ -1,0 +1,12 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"disposable1990s","event":"session-open","label":"reply-missingReceipt","process":"38420","processSequence":"1","run":"372DCDFE-5166-484E-A69C-5A22C99434B2","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:33:18Z"}
+{"developed":"true","event":"native-fixture-created","film":"BD4839E4-D832-4C05-97C7-1ACBE7BF052A","process":"38420","processSequence":"2","utc":"2026-10-01T19:33:18Z"}
+{"event":"inventory","file":"inventory-10730FC2-3127-4FED-B1FA-653C7DDE87A0.json","label":"prepared","process":"38420","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:33:18Z"}
+{"event":"inventory","file":"inventory-36AB1D5A-BA5B-4427-8D84-7551868D52FE.json","label":"before-export","process":"38420","processSequence":"4","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:33:18Z"}
+{"event":"export-requested","originals":"true","process":"38420","processSequence":"5","sequences":"[1]","utc":"2026-10-01T19:33:18Z"}
+{"event":"injected-authorization","level":"addOnly","process":"38420","processSequence":"6","status":"authorized","utc":"2026-10-01T19:33:18Z"}
+{"attempt":"1","event":"writer-entered","kind":"photo","nativePhotoKit":"false","process":"38420","processSequence":"7","utc":"2026-10-01T19:33:18Z","writer":"1D67D9FB-7157-4E0E-B847-A556FCA5263B"}
+{"decodedFrames":"1","event":"external-synthetic-copy-completed","file":"1D67D9FB-7157-4E0E-B847-A556FCA5263B-1.jpeg","process":"38420","processSequence":"8","recalledByPrivateRemoval":"false","sha256":"5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55","utc":"2026-10-01T19:33:18Z","writer":"1D67D9FB-7157-4E0E-B847-A556FCA5263B"}
+{"event":"injected-export-reply","process":"38420","processSequence":"9","receipt":"missing","taskCancelled":"false","utc":"2026-10-01T19:33:18Z","writer":"1D67D9FB-7157-4E0E-B847-A556FCA5263B"}
+{"error":"missingReceipt","event":"export-error","process":"38420","processSequence":"10","utc":"2026-10-01T19:33:18Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"38420","processSequence":"11","utc":"2026-10-01T19:33:18Z"}
+{"event":"inventory","file":"inventory-1F1139EA-983E-43AF-A0F8-2EE4CA4DF8FB.json","label":"failed-reply-reopened","process":"38420","processSequence":"12","summary":"films=1;sources=1;copies=1","utc":"2026-10-01T19:33:18Z"}

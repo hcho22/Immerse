@@ -1,0 +1,73 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "cinema16mm",
+    "fault" : "none",
+    "pauseAt" : "prepared",
+    "runID" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0"
+  },
+  "files" : {
+    "Staging\/06561761-99B8-4B1D-90B2-C11A030BEAE5\/F051E844-88D0-4F85-ACB8-42AB1C6BF429.json" : "a7975ccf56b1863cf992dbdaf99b5360f587e1342306f656eebef8b7cef95acc",
+    "Staging\/06561761-99B8-4B1D-90B2-C11A030BEAE5\/F051E844-88D0-4F85-ACB8-42AB1C6BF429.mov" : "843053308f5e8867ef22113f39b2ef7bcc92b0b8e40da00b16d3e61e007e497a",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "7854e1ab2a0539b4bb1ec4c9da4da3ae3b4b27f10c30b9e58d67d938ee81892a",
+    "film-store.sqlite-wal" : "a8c2d3d98fc5f4399f391155efc37f9c1beee8cd72c4074da04597851fdf99b5"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "06561761-99B8-4B1D-90B2-C11A030BEAE5",
+      "isArchived" : false,
+      "loadedAt" : 812574577.96093,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "unused",
+  "manifest" : {
+    "captureUUID" : "F051E844-88D0-4F85-ACB8-42AB1C6BF429",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "cinema16mm",
+      "fault" : "none",
+      "pauseAt" : "prepared",
+      "runID" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "06561761-99B8-4B1D-90B2-C11A030BEAE5",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "843053308f5e8867ef22113f39b2ef7bcc92b0b8e40da00b16d3e61e007e497a",
+    "sourcePath" : "Staging\/06561761-99B8-4B1D-90B2-C11A030BEAE5\/F051E844-88D0-4F85-ACB8-42AB1C6BF429.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "deviceID" : "225390C7-7528-4DD8-9B6E-C5EBAD22E90B",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

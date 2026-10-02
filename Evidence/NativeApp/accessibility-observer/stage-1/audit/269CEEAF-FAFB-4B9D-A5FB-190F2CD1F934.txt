@@ -1,0 +1,30 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x114431f80, {{38.7, 1354.7}, {326.7, 187.3}}, label: 'One Trial Film on this iPhone'
+Element subtree:
+ →StaticText, 0x114431f80, {{38.7, 1354.7}, {326.7, 187.3}}, label: 'One Trial Film on this iPhone'
+Path to element:
+ →Application, 0x119a2caa0, pid: 51610, label: 'SetupAccessibilityProbe'
+  ↳Window (Main), 0x119a2c680, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x11093bfb0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x11093c1f0, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x11093c310, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x11093c430, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x11093c550, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x11093c670, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x11442aee0, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x114430900, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x114430a20, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x114430b40, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x114430c60, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳ScrollView, 0x114430ea0, {{0.0, 221.0}, {402.0, 603.0}}
+               ↳Other, 0x114430fc0, {{0.0, 119.0}, {402.0, 2089.3}}
+                ↳StaticText, 0x114431f80, {{38.7, 1354.7}, {326.7, 187.3}}, label: 'One Trial Film on this iPhone'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x1109201e0, pid: 51610, label: 'SetupAccessibilityProbe'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 51610, elementOrHash.elementID: 4523796688.57
+    Output: {
+      StaticText, 0x11421df90, {{38.7, 1354.7}, {326.7, 187.3}}, label: 'One Trial Film on this iPhone'
+    }

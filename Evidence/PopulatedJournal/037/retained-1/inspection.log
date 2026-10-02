@@ -1,0 +1,6 @@
+Probes/PopulatedJournalHarness/inspect-retained.rb:4:in `check': Early/originals scenario inspections incomplete (RuntimeError)
+	from Probes/PopulatedJournalHarness/inspect-retained.rb:30:in `block in <main>'
+	from Probes/PopulatedJournalHarness/inspect-retained.rb:10:in `each'
+	from Probes/PopulatedJournalHarness/inspect-retained.rb:10:in `<main>'
+PASS developed-photo: 5 native inspections, 178C0823-0F86-4DE5-8457-4DDDA0761743
+PASS instant-mixed: 3 native inspections, E7B7ADCE-80A6-44F6-A361-5711605AD859

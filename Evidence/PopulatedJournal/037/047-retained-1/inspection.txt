@@ -1,0 +1,7 @@
+PASS early-photo: 5 native inspections, 6166CFAD-3F61-4D22-95C3-6491F05A1A68
+PASS developed-photo-controls: 2 native inspections, 1CB65569-523A-435E-947C-CBB8D4D5D714
+PASS empty: 3 native inspections, D4F21874-53D1-4AE3-868F-0BC5B3029DEA
+PASS instant-mixed: 3 native inspections, 8B33E74E-D698-4A72-AC73-D425F6DE6275
+PASS developed-photo-stroke: 3 native inspections, B7416772-14A3-4041-B5A4-E3EA8C6D9D9B
+PASS developed-photo-reset: 5 native inspections, F6326E3E-24FF-4045-9E65-5399E3A8B15D
+Bounded UI/state evidence only; no Camera, Photos, Security, StoreKit or hardware acceptance.

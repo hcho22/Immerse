@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** September 30, 2026 (version 1.4; versions 1.1 to 1.3 were the same day; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.4\
+**Document date:** September 30, 2026 (version 1.5; versions 1.1 to 1.4 were also September 30, 2026; original consolidation September 29, 2026) · **Filename date:** 2026-09-29 · **Version:** 1.5\
 **Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)\
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
@@ -74,6 +74,12 @@ What it adds:
 The sections are numbered 1.1 and 5.1 so that no existing section reference moves.
 The journeys settle nothing that is still open.
 Where a journey reaches a pending question or an open DEC, it names that item as open.
+
+**Version 1.5 DEC-09 and evidence map (2026-09-30).**
+The captain answered DEC-09: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded, retain an empty Film with numbered discarded placeholders and no playback or export.
+This resolves only DEC-09.
+All other open DEC items stay open.
+Version 1.5 also adds the evidence map for implementation traceability; it is not a completion claim.
 
 ## 1. Problem statement
 
@@ -306,7 +312,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 - When the app asks for camera and Photos permission is open, as in Journey 1.
 - When the originals choice appears relative to the reveal, and its wording, are open, as in Journey 1.
 - Whether the person can browse the Film Journal while a Film develops, and whether Settings has a default for saving to Photos, are open, as in Journey 1.
-- Early completion of an empty Film, and a Movie with no surviving clips after Discard, are open under DEC-09.
+- Empty-Film behavior follows DEC-09: early Development is disabled until a Film has a saved capture, empty Films use Delete Film, and a Movie with no surviving clips keeps numbered discarded placeholders with no playback or export.
 - Whether a soundtrack can be reselected later is open under DEC-11.
 - Render quality, frame rates and export codecs are open under DEC-04.
 - The built-in soundtrack rights are open under DEC-05.
@@ -471,7 +477,7 @@ The completed Film is eligible for explicit Development. A brief ritual reveals 
 
 Development assigns each capture a one-time Developed Treatment. Preserve the developed master and each Developed Clip. Interruptions—including app closure—resume the same Development, keep saved captures intact, and preserve already assigned treatment. Incomplete results stay hidden; previously revealed Instant prints stay revealed. Recovery must not restore removed media.
 
-**Acceptance:** Repeated retries do not reroll treatments. A warning of five unused exposures means exactly five are irrevocably wasted if confirmed. Completion and Development remain distinct. Behavior for a completely empty Film is an open decision, not permission to invent empty developed media.
+**Acceptance:** Repeated retries do not reroll treatments. A warning of five unused exposures means exactly five are irrevocably wasted if confirmed. Completion and Development remain distinct. Under DEC-09, early Development is disabled until a Film has a saved capture, and an empty Film uses Delete Film rather than an invented empty developed result.
 
 ### FR-07 — Photo Darkroom
 
@@ -946,7 +952,7 @@ Copies already in an iOS device backup, like external exports, are outside app c
 
 Movie removal deletes the selected clip's picture and audio, retained source, and Developed Clip. Reassemble surviving Developed Clips in original order without rerolling their treatments. Retire all app-controlled assembled versions containing removed content. Preserve orientation and any selected soundtrack. External exports remain outside app control.
 
-**Acceptance:** A removal acknowledgement cannot coexist with viewing/export of the removed app-controlled media. Test retries, stale movie versions, and cleanup failures. A privacy placeholder never contains a thumbnail or retained private content. Duration/refund behavior is unchanged by removal. Empty-Movie presentation after all clips are removed remains an open UX decision.
+**Acceptance:** A removal acknowledgement cannot coexist with viewing/export of the removed app-controlled media. Test retries, stale movie versions, and cleanup failures. A privacy placeholder never contains a thumbnail or retained private content. Duration/refund behavior is unchanged by removal. Under DEC-09, after every Movie clip is Discarded the Film remains as numbered discarded placeholders with no playback or export.
 
 ### FR-18 — Delete personal Film
 
@@ -1130,7 +1136,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 | DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists GRDB (D4) and Swift 6, SwiftUI and Xcode Cloud (D8) only as defaults D4 and D8, not a decision | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs: each Camera's frame rates, color/tone, grain, crop/toning controls, export codecs/resolution/audio guarantees | Prototype samples are illustrative, not validated emulation. |
 | DEC-05 | Curated sample rights and built-in soundtrack export licensing | Final production assets and usage rights are not selected. |
-| DEC-09 | Empty-Film early completion; Movie with no surviving clips | Current rules do not specify a meaningful empty developed result. |
+| DEC-09 | **Decided 2026-09-30 (captain):** Disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export. | Avoids inventing meaningless empty developed media while preserving chronology and the no-refund privacy rule. |
 | DEC-11 | Darkroom ranges/crop boundaries, Instant source-choice presentation, personal soundtrack reselection rules | Medium constraints are agreed; exact interactions are not. |
 | DEC-12 | Storage-pressure handling, durability/performance budgets, accessibility/device acceptance matrix | Native media behavior is untested. |
 | DEC-13 | Support escalation, privacy disclosures, launch/platform review | Operating procedures for support and launch review are not defined. |
@@ -1216,7 +1222,7 @@ It simulates capture, Movie playback, StoreKit, the Keychain Trial record and Ph
 Do not promote its code or its review controls into the product.
 
 **Questions the prototype raised that are still pending.**
-The captain has not answered these.
+Except for DEC-09, which was answered in version 1.5, the captain has not answered these.
 Nothing in this PRD decides them, and the prototype's recommendations are not decisions.
 Section 5.1 names each one where a journey reaches it.
 
@@ -1232,9 +1238,11 @@ Section 5.1 names each one where a journey reaches it.
 6. Whether the Film Journal groups Films by state or lists them chronologically.
 7. Whether a lapsed subscriber who never used the Trial still gets the Trial, because FR-21 says "non-subscriber".
 8. Whether the person can browse the Film Journal while a Film develops.
-9. DEC-09, empty-Film behavior, which must be answered before DEV-10.
-   The early Development action can be reached with zero captures.
-10. Whether the first launch after a backup restore shows onboarding, since the restored iPhone has Films but no Trial record.
+9. Whether the first launch after a backup restore shows onboarding, since the restored iPhone has Films but no Trial record.
+
+**Prototype question answered after version 1.4.**
+
+- DEC-09, empty-Film behavior, was answered on 2026-09-30: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export.
 
 Gaps the prototype exposed in this PRD:
 FR-06 names the early actions but the state model separates Completion from explicit Development.

@@ -1,0 +1,76 @@
+[0/1] Planning build
+Building for debugging...
+[0/10] Write ProductionReceiptCrashWorker-entitlement.plist
+[1/16] Write sources
+[9/17] Write swift-version--58304C5D6DBC2206.txt
+[11/34] Compiling NativeAdapters PendingCaptureRecord.swift
+[12/34] Compiling NativeAdapters CaptureCapabilities.swift
+[13/34] Compiling NativeAdapters PhotoExport.swift
+[14/34] Compiling NativeAdapters CapturedMediaFiles.swift
+[15/34] Compiling NativeAdapters CaptureAuthorization.swift
+[16/34] Compiling NativeAdapters CaptureOperationCoordinator.swift
+[17/34] Compiling NativeAdapters AVFoundationCaptureBackend.swift
+[18/34] Compiling NativeAdapters CapturePlanning.swift
+[19/34] Emitting module NativeAdapters
+[20/34] Compiling NativeAdapters PhotoKitAdapters.swift
+[21/34] Compiling NativeAdapters AVFoundationAdapters.swift
+[22/34] Compiling FilmPersistence FilmRepository.swift
+[23/34] Emitting module FilmPersistence
+[24/36] Compiling FilmPersistence FilmRepository+Development.swift
+[25/36] Compiling FilmPersistence FilmRepository+Entitlement.swift
+[26/43] Emitting module EntitlementCore
+[27/43] Compiling EntitlementCore DeviceTrialStore.swift
+[28/43] Compiling EntitlementCore StoreKitSubscriptions.swift
+[29/43] Compiling EntitlementCore EntitlementPolicy.swift
+[30/43] Compiling CapturePipeline CapturePipelineReceiver.swift
+[31/43] Compiling CapturePipeline CapturePayloadReader.swift
+[32/43] Compiling CapturePipeline CapturePersistencePipeline.swift
+[33/43] Emitting module CapturePipeline
+[34/48] Compiling TrialReceiptStudy CrashWorker.swift
+[35/48] Emitting module TrialReceiptStudy
+[36/48] Compiling TrialReceiptStudy ReceiptCoordinator.swift
+[36/49] Write Objects.LinkFileList
+[38/49] Compiling FilmRuntime CaptureCommitJournal.swift
+[39/49] Compiling FilmRuntime FilmExportWorker.swift
+[40/49] Emitting module FilmRuntime
+[41/49] Compiling FilmRuntime FilmProcessor.swift
+[42/49] Compiling FilmRuntime TrialCoordinator.swift
+[42/51] Linking ReceiptCrashWorker
+[43/51] Applying ReceiptCrashWorker
+[45/51] Compiling ProductionReceiptHarness FileKeychainCalls.swift
+[46/51] Emitting module ProductionReceiptHarness
+[47/56] Emitting module ProductionReceiptCrashWorker
+[48/56] Compiling ProductionReceiptCrashWorker main.swift
+[48/56] Write Objects.LinkFileList
+[49/56] Linking ProductionReceiptCrashWorker
+[50/56] Applying ProductionReceiptCrashWorker
+[52/56] Compiling TrialReceiptStudyTests ProductionProcessExitTests.swift
+[53/56] Compiling TrialReceiptStudyTests ReceiptStudyTests.swift
+[54/56] Emitting module TrialReceiptStudyTests
+[54/56] Write Objects.LinkFileList
+[55/56] Linking TrialReceiptStudyPackageTests
+Build complete! (25.07s)
+Test Suite 'Selected tests' started at 2026-10-01 08:15:45.072.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 08:15:45.075.
+Test Suite 'ProductionProcessExitTests' started at 2026-10-01 08:15:45.075.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' started.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' passed (7.358 seconds).
+Test Suite 'ProductionProcessExitTests' passed at 2026-10-01 08:15:52.434.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.358 (7.359) seconds
+Test Suite 'TrialReceiptStudyPackageTests.xctest' passed at 2026-10-01 08:15:52.434.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.358 (7.359) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 08:15:52.434.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.358 (7.362) seconds
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=prepared status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=receiptResolved status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=projected status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=prepared status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=receiptResolved status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=projected status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=prepared status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=receiptResolved status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=projected status=77 recovered=1 sealed=true hash=e8576f892a08e6ce54cfc87f5c080e7e91e30b8e8e294ec7be99d8812a34ba42 storageLoss=consumed
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

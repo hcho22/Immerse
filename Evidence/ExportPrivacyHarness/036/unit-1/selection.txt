@@ -1,0 +1,3 @@
+mode=unit
+selection=ExportPrivacyTests
+result=DerivedData/Export036-unit-1.xcresult

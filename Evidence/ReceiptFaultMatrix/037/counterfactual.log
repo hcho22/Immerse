@@ -1,0 +1,28 @@
+[0/1] Planning build
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module FilmRuntimeTests
+[4/6] Compiling FilmRuntimeTests ReceiptCompatibilityTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (15.00s)
+Test Suite 'Selected tests' started at 2026-10-01 13:24:03.233.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 13:24:03.235.
+Test Suite 'ReceiptCompatibilityTests' started at 2026-10-01 13:24:03.235.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSamePendingOperationCounterfactualAndSameFilmRestoreCompatibility]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptCompatibilityTests.swift:140: error: -[FilmRuntimeTests.ReceiptCompatibilityTests testSamePendingOperationCounterfactualAndSameFilmRestoreCompatibility] : failed - Still-conflicting readback must remain unresolved
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptCompatibilityTests.swift:145: error: -[FilmRuntimeTests.ReceiptCompatibilityTests testSamePendingOperationCounterfactualAndSameFilmRestoreCompatibility] : XCTAssertEqual failed: ("1") is not equal to ("0")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptCompatibilityTests.swift:146: error: -[FilmRuntimeTests.ReceiptCompatibilityTests testSamePendingOperationCounterfactualAndSameFilmRestoreCompatibility] : XCTAssertTrue failed
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSamePendingOperationCounterfactualAndSameFilmRestoreCompatibility]' failed (1.514 seconds).
+Test Suite 'ReceiptCompatibilityTests' failed at 2026-10-01 13:24:04.749.
+	 Executed 1 test, with 3 failures (0 unexpected) in 1.514 (1.514) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' failed at 2026-10-01 13:24:04.749.
+	 Executed 1 test, with 3 failures (0 unexpected) in 1.514 (1.514) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 13:24:04.749.
+	 Executed 1 test, with 3 failures (0 unexpected) in 1.514 (1.516) seconds
+RECEIPT_COMPATIBILITY /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility/2DEC9B40-A416-4B9B-88F7-3FFA3348055D
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -1,0 +1,142 @@
+Attributes: Application, 0x10e42a890, pid: 44843, label: 'Private Workflow Harness'
+Element subtree:
+ →Application, 0x10e42a890, pid: 44843, label: 'Private Workflow Harness'
+    Window (Main), 0x10e42ce50, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10e430800, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10e430920, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10e4306b0, {{-402.0, -874.0}, {1206.0, 2622.0}}
+          Other, 0x10e42f190, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10e430a40, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10e430b60, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10e430c80, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Private synthetic Film'
+                  Button, 0x10e430da0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Film Journal'
+                  StaticText, 0x10e430ec0, {{115.3, 73.7}, {171.0, 20.7}}, label: 'Private synthetic Film'
+                  Button, 0x10e430fe0, {{346.0, 66.0}, {36.0, 36.0}}, label: 'Film actions'
+                Other, 0x10e431100, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10e431220, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10e431340, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10e431460, {{0.0, 0.0}, {402.0, 874.0}}
+                        ScrollView, 0x10e431580, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10e4316a0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10e4317c0, {{0.0, 0.0}, {402.0, 170.8}}
+                          Other, 0x10e4318e0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10e431a00, {{0.0, 116.0}, {402.0, 463.7}}
+                            StaticText, 0x10e431b20, {{16.0, 132.0}, {172.7, 26.3}}, label: '1990s Disposable'
+                            StaticText, 0x10e431c40, {{16.0, 168.3}, {84.7, 20.3}}, label: 'Developed'
+                            StaticText, 0x10e431d60, {{16.0, 198.7}, {176.3, 18.0}}, label: '25 exposures wasted'
+                            ProgressIndicator, 0x10e431e80, {{16.0, 226.7}, {370.0, 4.0}}, value: 100%
+                              ProgressIndicator, 0x10e431fa0, {{16.0, 216.7}, {370.0, 24.0}}, value: 100%
+                            StaticText, 0x10e4320c0, {{16.0, 240.7}, {144.0, 14.3}}, label: 'Oct 1, 2026 - Oct 1, 2026'
+                            Button, 0x10e4321e0, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                              Image, 0x10e432300, {{18.0, 280.0}, {15.0, 19.3}}, identifier: 'square.and.arrow.down', label: 'Download'
+                              StaticText, 0x10e432420, {{16.0, 279.0}, {227.0, 21.7}}, label: 'Save Developed to Photos'
+                            Button, 0x10e432540, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                              Image, 0x10e432660, {{16.7, 317.7}, {20.3, 20.0}}, identifier: 'photo.stack', label: 'photo.stack'
+                              StaticText, 0x10e432780, {{16.0, 316.7}, {96.7, 22.0}}, label: 'Originals'
+                            Other, 0x10e4328a0, {{16.0, 362.7}, {370.0, 200.3}}
+                              Button, 0x10e4329c0, {{16.0, 362.7}, {180.0, 180.0}}, label: 'Open photo 1'
+                              StaticText, 0x10e432ae0, {{16.0, 548.7}, {15.0, 14.3}}, label: '01'
+                              Button, 0x10e432c00, {{206.0, 362.7}, {180.0, 180.0}}, label: 'Open photo 2'
+                              StaticText, 0x10e432d20, {{206.0, 548.7}, {15.0, 14.3}}, label: '02'
+                          Other, 0x10e432e40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x112318c60, {{396.0, 379.3}, {3.0, 429.7}}
+                          Other, 0x112318220, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x11231a420, {{396.0, 379.3}, {3.0, 429.7}}
+                Other, 0x1123129a0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1123188e0, {{0.0, 0.0}, {402.0, 874.0}}
+              Button, 0x112319d60, {{118.3, 816.3}, {149.7, 15.7}}, identifier: 'inspect-state', label: 'Inspect synthetic state'
+                Image, 0x11231ae60, {{119.7, 817.0}, {11.7, 14.3}}, identifier: 'doc.text.magnifyingglass', label: 'Search Document'
+                StaticText, 0x11231b1d0, {{118.3, 816.3}, {149.7, 15.7}}, label: 'Inspect synthetic state'
+              StaticText, 0x112319680, {{276.0, 817.0}, {7.7, 14.3}}, identifier: 'inspection-count', label: '5'
+      Other, 0x11231bf50, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11231b520, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x112319330, {{16.0, 62.0}, {370.0, 747.4}}
+          Other, 0x11231c2a0, {{16.0, 62.0}, {370.0, 747.4}}
+            Other, 0x11231bbf0, {{16.0, 62.0}, {370.0, 747.4}}
+              Other, 0x11231c980, {{-354.0, -685.4}, {1110.0, 2242.1}}
+              Other, 0x11231b8a0, {{16.0, 62.0}, {370.0, 747.4}}
+                Other, 0x1156220c0, {{16.0, 62.0}, {370.0, 747.4}}
+                  Other, 0x10e432f60, {{16.0, 62.0}, {370.0, 747.4}}
+                    NavigationBar, 0x10e625810, {{16.0, 76.7}, {370.0, 49.7}}, identifier: 'Photo 1'
+                      Other, 0x10e627450, {{34.4, 80.4}, {59.2, 33.1}}, label: 'Done'
+                        Other, 0x10e627570, {{34.4, 80.4}, {59.2, 33.1}}
+                          Button, 0x10e627690, {{34.4, 80.4}, {59.2, 33.1}}, label: 'Done'
+                      StaticText, 0x10e6277b0, {{173.7, 87.5}, {54.3, 19.0}}, label: 'Photo 1'
+                    Other, 0x10e6278d0, {{16.0, 62.0}, {370.0, 747.4}}
+                      Other, 0x10e6279f0, {{16.0, 62.0}, {370.0, 747.4}}
+                        Other, 0x10e627b10, {{16.0, 62.0}, {370.0, 747.4}}
+                          Other, 0x10e627c30, {{16.0, 62.0}, {370.0, 747.4}}
+                            Image, 0x10e627d50, {{16.0, 126.4}, {370.0, 603.8}}, label: 'Developed photo 1'
+                    Other, 0x10e627e70, {{16.0, 62.0}, {370.0, 747.4}}
+                      Other, 0x10e627f90, {{16.0, 62.0}, {370.0, 747.4}}
+                        Other, 0x10e6280b0, {{16.0, 730.2}, {370.0, 79.2}}
+                          Other, 0x10e6281d0, {{41.8, 739.4}, {318.5, 44.2}}
+                            Other, 0x10e6282f0, {{41.8, 739.4}, {318.5, 44.2}}
+                              Other, 0x10e628410, {{41.8, 739.4}, {0.0, 0.0}}
+                                Other, 0x10e628530, {{41.8, 739.4}, {44.2, 44.2}}
+                                  Other, 0x10e628650, {{41.8, 739.4}, {44.2, 44.2}}
+                                    Other, 0x10e628770, {{46.4, 744.0}, {35.0, 35.0}}
+                                      Other, 0x10e628890, {{46.4, 744.0}, {35.0, 35.0}}
+                                        Button, 0x10e6289b0, {{46.4, 744.0}, {35.0, 35.0}}, label: 'Darkroom'
+                                Other, 0x10e628ad0, {{316.0, 739.4}, {44.2, 44.2}}
+                                  Other, 0x10e628bf0, {{316.0, 739.4}, {44.2, 44.2}}
+                                    Other, 0x10e628d10, {{320.7, 744.0}, {35.0, 35.0}}
+                                      Other, 0x112115020, {{320.7, 744.0}, {35.0, 35.0}}
+                                        Button, 0x11211cd80, {{320.7, 744.0}, {35.0, 35.0}}, label: 'Discard'
+      Other, 0x11211c110, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11211d120, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x11211d240, {{0.0, 72.0}, {402.0, 802.0}}
+          Other, 0x11211d360, {{0.0, 72.0}, {402.0, 802.0}}
+            Other, 0x11211d480, {{0.0, 72.0}, {402.0, 802.0}}
+              Other, 0x11211d5a0, {{0.0, 72.0}, {402.0, 802.0}}
+                Other, 0x11211d6c0, {{0.0, 72.0}, {402.0, 802.0}}
+                  Other, 0x11211d7e0, {{0.0, 72.0}, {402.0, 802.0}}
+                    NavigationBar, 0x11211d900, {{0.0, 88.0}, {402.0, 54.0}}, identifier: 'Darkroom'
+                      Other, 0x11211da20, {{20.0, 92.0}, {76.7, 36.0}}, label: 'Cancel'
+                        Other, 0x11211db40, {{20.0, 92.0}, {76.7, 36.0}}
+                          Button, 0x11211dc60, {{20.0, 92.0}, {76.7, 36.0}}, label: 'Cancel'
+                      StaticText, 0x11211dd80, {{161.3, 99.7}, {79.0, 20.7}}, label: 'Darkroom'
+                      Other, 0x11211dea0, {{319.7, 92.0}, {62.3, 36.0}}, label: 'Save'
+                        Other, 0x11211dfc0, {{319.7, 92.0}, {62.3, 36.0}}
+                          Button, 0x11211e0e0, {{319.7, 92.0}, {62.3, 36.0}}, label: 'Save'
+                    Other, 0x11211e200, {{0.0, 72.0}, {402.0, 802.0}}
+                      Other, 0x11211e320, {{0.0, 72.0}, {402.0, 802.0}}
+                        Other, 0x11211e440, {{0.0, 72.0}, {402.0, 802.0}}
+                          Other, 0x11211e560, {{0.0, 72.0}, {402.0, 802.0}}
+                            ScrollView, 0x116d04280, {{0.0, 72.0}, {402.0, 802.0}}
+                              Other, 0x10e3198b0, {{0.0, 72.0}, {402.0, 802.0}}
+                                Other, 0x10e31a4a0, {{0.0, 72.0}, {402.0, 124.8}}
+                                Other, 0x10e31a5c0, {{0.0, 733.2}, {402.0, 140.8}}
+                              Other, 0x10e31a6e0, {{0.0, 72.0}, {402.0, 802.0}}
+                              Other, 0x10e31a800, {{0.0, 142.0}, {402.0, 497.3}}
+                                Image, 0x10e31a920, {{16.0, 158.0}, {370.0, 277.7}}, label: 'Photo 1, print preview'
+                                Button, 0x10e31aab0, {{16.0, 453.7}, {67.7, 44.0}}, identifier: 'sun.max', label: 'Exposure', Selected
+                                Button, 0x10e31abd0, {{91.7, 453.7}, {67.7, 44.0}}, identifier: 'circle.lefthalf.filled', label: 'Contrast'
+                                Button, 0x10e31acf0, {{167.3, 453.7}, {67.3, 44.0}}, identifier: 'camera.filters', label: 'Filtration'
+                                Button, 0x10e31ae10, {{242.7, 453.7}, {67.7, 44.0}}, identifier: 'crop', label: 'Crop'
+                                Button, 0x10e31af30, {{318.3, 453.7}, {67.7, 44.0}}, identifier: 'paintbrush.pointed', label: 'Dodge / Burn'
+                                StaticText, 0x10e31b050, {{163.8, 515.5}, {74.3, 20.3}}, label: 'Exposure'
+                                StaticText, 0x10e31b170, {{165.2, 553.8}, {71.7, 20.3}}, label: '0.0 stops'
+                                Slider, 0x10e31b290, {{16.0, 592.3}, {370.0, 31.0}}, label: 'Print exposure', value: 0
+                              Other, 0x10e31b3b0, {{369.0, 142.0}, {30.0, 646.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                Other, 0x10e31b4d0, {{396.0, 266.7}, {3.0, 518.3}}
+                              Other, 0x10e31b5f0, {{369.0, 142.0}, {30.0, 646.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                Other, 0x10e31b710, {{396.0, 266.7}, {3.0, 518.3}}
+                    Other, 0x10e31b830, {{0.0, 72.0}, {402.0, 802.0}}
+                      Other, 0x10e31b950, {{0.0, 72.0}, {402.0, 802.0}}
+                        Other, 0x10e31ba70, {{0.0, 788.0}, {402.0, 86.0}}
+                          Other, 0x10e31bb90, {{177.0, 798.0}, {48.0, 48.0}}
+                            Other, 0x10e31bcb0, {{177.0, 798.0}, {48.0, 48.0}}
+                              Other, 0x10e31bdd0, {{177.0, 798.0}, {0.0, 0.0}}
+                                Other, 0x10e31bef0, {{177.0, 798.0}, {48.0, 48.0}}
+                                  Other, 0x10e31c010, {{177.0, 798.0}, {48.0, 48.0}}
+                                    Other, 0x10e31c130, {{182.0, 803.0}, {38.0, 38.0}}
+                                      Other, 0x10e31c250, {{182.0, 803.0}, {38.0, 38.0}}
+                                        Button, 0x10e31c370, {{182.0, 803.0}, {38.0, 38.0}}, label: 'Reset to Original'
+Path to element:
+ →Application, 0x10e42a890, pid: 44843, label: 'Private Workflow Harness'
+Query chain:
+ →Find: Target Application 'com.immerse.PopulatedJournalHarness'
+  Output: {
+    Application, 0x10e713430, pid: 44843, label: 'Private Workflow Harness'
+  }

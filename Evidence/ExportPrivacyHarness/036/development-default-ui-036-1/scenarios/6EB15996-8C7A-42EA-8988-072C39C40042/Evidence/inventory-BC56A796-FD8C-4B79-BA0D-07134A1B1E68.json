@@ -1,0 +1,144 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "d995ff049aba443aa6c7a1dd935d3d1baedf6d00f126e5c89b2eaeb921aa8f5c",
+      "decodedFrames" : 10,
+      "duration" : 0.33666666666666667,
+      "expectedHash" : "d995ff049aba443aa6c7a1dd935d3d1baedf6d00f126e5c89b2eaeb921aa8f5c",
+      "kind" : "movie",
+      "path" : "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/movie-1-2-4CC8607F-D7B8-4FF7-BB76-2532588BE146.mov",
+      "sequence" : 0
+    },
+    {
+      "actualHash" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+      "decodedFrames" : 3,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+      "kind" : "source",
+      "path" : "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/source-1.mov",
+      "sequence" : 1
+    },
+    {
+      "actualHash" : "990fb2c4cf72b287f7d6b84d27aa92688762497f91d7ffe1330a01e05ff81062",
+      "decodedFrames" : 5,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "990fb2c4cf72b287f7d6b84d27aa92688762497f91d7ffe1330a01e05ff81062",
+      "kind" : "clip",
+      "path" : "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/clip-1.mov",
+      "sequence" : 1
+    },
+    {
+      "actualHash" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+      "decodedFrames" : 3,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+      "kind" : "source",
+      "path" : "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/source-2.mov",
+      "sequence" : 2
+    },
+    {
+      "actualHash" : "3935a2b0c31a10908790dba353fb8237d3d8cb49c0c0385502e36f02f7e7c347",
+      "decodedFrames" : 5,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "3935a2b0c31a10908790dba353fb8237d3d8cb49c0c0385502e36f02f7e7c347",
+      "kind" : "clip",
+      "path" : "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/clip-2.mov",
+      "sequence" : 2
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 11004085912639887713,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 8542092055540346753,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "116FD6C4-496F-4781-84B1-361CD6C59B9B",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+    "1" : {
+      "exportRequested" : {
+
+      }
+    }
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 165
+          }
+        },
+        "displayName" : "1960s 16mm Cinema",
+        "id" : "cinema16mm",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        },
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572802,
+          "sequenceNumber" : 2
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 164.66333333333333
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "116FD6C4-496F-4781-84B1-361CD6C59B9B",
+      "isArchived" : false,
+      "loadedAt" : 812581903.738279,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/clip-1.mov" : "990fb2c4cf72b287f7d6b84d27aa92688762497f91d7ffe1330a01e05ff81062",
+    "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/clip-2.mov" : "3935a2b0c31a10908790dba353fb8237d3d8cb49c0c0385502e36f02f7e7c347",
+    "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/movie-1-2-4CC8607F-D7B8-4FF7-BB76-2532588BE146.mov" : "d995ff049aba443aa6c7a1dd935d3d1baedf6d00f126e5c89b2eaeb921aa8f5c",
+    "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/source-1.mov" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+    "Media\/116FD6C4-496F-4781-84B1-361CD6C59B9B\/source-2.mov" : "c9b45dc1808578a6efab18390739b377d1e3b36e5208b1e147c20971873f7050",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "80eee92d2b856d7512d198d2f3b9f59c90d95a61a87b16ed8e26eb36c66ac22c",
+    "film-store.sqlite-wal" : "9a350f2d40811d3e43172d3003221d498aae66db658388338e434047505939e1"
+  }
+}

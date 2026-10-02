@@ -1,0 +1,25 @@
+2026-09-30 21:01:12.897227-0700 Immerse[25090:134806028] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-09-30 21:01:13.346298-0700 Immerse[25090:134805299] [SwiftUI] Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.
+Test Suite 'All tests' started at 2026-09-30 21:01:14.135.
+Test Suite 'ImmerseTests.xctest' started at 2026-09-30 21:01:14.137.
+Test Suite 'StoreKitSubscriptionTests' started at 2026-09-30 21:01:14.138.
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testPendingApprovalAndTransactionUpdate]' started.
+2026-09-30 21:01:15.067327-0700 Immerse[25090:134805299] [SKTestSession] Error saving configuration file: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:15.068294-0700 Immerse[25090:134805299] [SKTestSession] Error clearing overrides: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:15.069175-0700 Immerse[25090:134805299] [SKTestSession] Error setting value to 1 for identifier 2 for com.immerse.FilmJournal: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:15.069971-0700 Immerse[25090:134805299] [SKTestSession] Error deleting all transactions: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:15.070606-0700 Immerse[25090:134805299] [SKTestSession] Error setting value to 1 for identifier 0 for com.immerse.FilmJournal: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:15.110444-0700 Immerse[25090:134806028] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-09-30 21:01:16.278053-0700 Immerse[25090:134805299] [SKTestSession] Error deleting all transactions: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/StoreKitSubscriptionTests.swift:62: error: -[ImmerseTests.StoreKitSubscriptionTests testPendingApprovalAndTransactionUpdate] : failed: caught error: "unexpectedProduct"
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/StoreKitSubscriptionTests.swift:57: error: -[ImmerseTests.StoreKitSubscriptionTests testPendingApprovalAndTransactionUpdate] : Failed due to unwaited expectation 'verified entitlement update'.
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testPendingApprovalAndTransactionUpdate]' failed (2.767 seconds).
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testProductFailureRestoreFailureAndUnconfiguredDoNotGrantAccess]' started.
+2026-09-30 21:01:16.917016-0700 Immerse[25090:134805299] [SKTestSession] Error saving configuration file: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:16.917799-0700 Immerse[25090:134805299] [SKTestSession] Error clearing overrides: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:16.918500-0700 Immerse[25090:134805299] [SKTestSession] Error setting value to 1 for identifier 2 for com.immerse.FilmJournal: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+2026-09-30 21:01:16.919118-0700 Immerse[25090:134805299] [SKTestSession] Error deleting all transactions: Error Domain=SKInternalErrorDomain Code=3 "(null)"
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testProductFailureRestoreFailureAndUnconfiguredDoNotGrantAccess]' exceeded execution time allowance of 2 minutes. The test may have hung; check Xcode's test report for additional diagnostics. If the test requires additional time, use -[XCTestCase executionTimeAllowance] or one of xcodebuild's command-line overrides.
+
+
+*** If you believe this error represents a bug, please attach the result bundle at /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Immerse-Native-Tests-2.xcresult

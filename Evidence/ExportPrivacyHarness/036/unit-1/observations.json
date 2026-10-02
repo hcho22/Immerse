@@ -1,0 +1,486 @@
+{
+  "mode": "unit",
+  "result": "Passed",
+  "passed": 9,
+  "failed": 0,
+  "startUTC": "2026-10-01T19:32:33.530Z",
+  "finishUTC": "2026-10-01T19:34:36.779Z",
+  "runtime": [
+    {
+      "device": {
+        "architecture": "x86_64",
+        "deviceId": "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName": "Immerse v1 Validation",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 9,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "retainedHistories": 27,
+  "nativePhotoKitAcceptance": false,
+  "scenarios": [
+    {
+      "id": "0ABC5AFD-009F-4124-AA25-DC03E10693F3",
+      "currentRun": true,
+      "label": "default-no-export",
+      "camera": "instant1970s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "0BDA9076-D5D2-4AC6-9635-F1EE3DEDF178",
+      "currentRun": true,
+      "label": "permission-notDetermined",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 2,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "needsPermission"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "2F8A2B1C-A343-497C-A1CB-0102E53D443B",
+      "currentRun": true,
+      "label": "partial-ack",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 2,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "writeFailed(\"beforeCopy\")"
+      ],
+      "lastSummary": "films=1;sources=0;copies=2"
+    },
+    {
+      "id": "372DCDFE-5166-484E-A69C-5A22C99434B2",
+      "currentRun": true,
+      "label": "reply-missingReceipt",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "missingReceipt"
+      ],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "389EB27B-5B1E-4883-9EAF-66C9AB9EFBBC",
+      "currentRun": true,
+      "label": "movie-discard-beforeReply",
+      "camera": "cinema16mm",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "mediaNotRevealed"
+      ],
+      "lastSummary": "films=1;sources=0;copies=1"
+    },
+    {
+      "id": "449C1163-B6D0-46F5-86E7-0A3684BB306D",
+      "currentRun": true,
+      "label": "reply-failBeforeCopy",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "writeFailed(\"beforeCopy\")"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "4AAB1131-8781-4D32-9A58-2659DA3A3B39",
+      "currentRun": true,
+      "label": "movie-discard-beforeReply",
+      "camera": "super8HomeMovie",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "mediaNotRevealed"
+      ],
+      "lastSummary": "films=1;sources=0;copies=1"
+    },
+    {
+      "id": "4D7FE4E9-81BB-4D01-BFFF-E86F503E85EA",
+      "currentRun": true,
+      "label": "default-no-export",
+      "camera": "cinema16mm",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "54087A6C-0500-4497-BB2F-9EDCD45393A6",
+      "currentRun": true,
+      "label": "delete-beforeCopy-lateAck-true",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "CancellationError()",
+        "filmNotFound"
+      ],
+      "lastSummary": "films=0;sources=0;copies=1"
+    },
+    {
+      "id": "55C7EEEB-D9B4-4292-8AC9-6B15CA0273D3",
+      "currentRun": true,
+      "label": "corrupt-master-true",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "masterChecksumMismatch"
+      ],
+      "lastSummary": "films=1;sources=0;copies=1"
+    },
+    {
+      "id": "5DE819C1-D7A5-460D-84FB-ACFF54439538",
+      "currentRun": true,
+      "label": "movie-discard-beforeCopy",
+      "camera": "cinema16mm",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")",
+        "mediaNotRevealed"
+      ],
+      "lastSummary": "films=1;sources=0;copies=0"
+    },
+    {
+      "id": "64C0D1CE-4E88-4A6D-A0F7-5C274FCDFABD",
+      "currentRun": true,
+      "label": "delete-beforeReply-lateAck-true",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "CancellationError()",
+        "filmNotFound"
+      ],
+      "lastSummary": "films=0;sources=0;copies=1"
+    },
+    {
+      "id": "72840078-0198-43CC-BD4B-E5D8469A8369",
+      "currentRun": true,
+      "label": "suspend-beforeCopy",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "801088B0-0EF5-48F9-9079-C5EB9D7A426D",
+      "currentRun": true,
+      "label": "default-no-export",
+      "camera": "super8HomeMovie",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "97D78095-76E8-4A20-9393-96C9724D376D",
+      "currentRun": true,
+      "label": "permission-denied",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 2,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "permissionDenied"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "9A51B8A7-CDC7-4F87-A76D-9D4822590B4D",
+      "currentRun": true,
+      "label": "reply-failAfterCopy",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "writeFailed(\"unknownAfterCopy\")"
+      ],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "9DF7658F-DD99-4FE8-B74E-98DD3926510B",
+      "currentRun": true,
+      "label": "reply-cancelled",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")"
+      ],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "B653A5E1-3DC1-425E-B676-2734BB0ADCC2",
+      "currentRun": true,
+      "label": "corrupt-master-false",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "invalidMedia"
+      ],
+      "lastSummary": "films=1;sources=0;copies=1"
+    },
+    {
+      "id": "BB58AA8A-3C00-49B4-BF79-1C5C63E230DE",
+      "currentRun": true,
+      "label": "default-no-export",
+      "camera": "mediumFormat6x6",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "BF70CF92-7DC1-4062-8E0B-A7A7D736020D",
+      "currentRun": true,
+      "label": "delete-beforeReply-lateAck-false",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")",
+        "filmNotFound"
+      ],
+      "lastSummary": "films=0;sources=0;copies=1"
+    },
+    {
+      "id": "C050BC17-F1A5-4DD3-A593-BDE3FA0A239C",
+      "currentRun": true,
+      "label": "delete-beforeCopy-lateAck-false",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")",
+        "filmNotFound"
+      ],
+      "lastSummary": "films=0;sources=0;copies=0"
+    },
+    {
+      "id": "C5C8E0E7-BD63-4240-B34D-4D3CDCDDD3B3",
+      "currentRun": true,
+      "label": "developed-independent",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 2,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "C9D0B623-5DA9-40AB-B527-E17EF9BB2FCC",
+      "currentRun": true,
+      "label": "suspend-beforeReply",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 4,
+      "completedExternalCopies": 1,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")"
+      ],
+      "lastSummary": "films=1;sources=1;copies=1"
+    },
+    {
+      "id": "CEFCDD3D-599E-4DBD-9010-0E4D2FB0D198",
+      "currentRun": true,
+      "label": "movie-discard-beforeCopy",
+      "camera": "super8HomeMovie",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 5,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 1,
+      "exportErrors": [
+        "writeFailed(\"CancellationError()\")",
+        "mediaNotRevealed"
+      ],
+      "lastSummary": "films=1;sources=0;copies=0"
+    },
+    {
+      "id": "F7A0213C-88E8-48FF-A341-B9C7A8CF4556",
+      "currentRun": true,
+      "label": "permission-restricted",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 2,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "permissionDenied"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "F9AB92DE-ABE3-4043-8ADA-EF5B3DCD429B",
+      "currentRun": true,
+      "label": "default-no-export",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 3,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [],
+      "lastSummary": "films=1;sources=1;copies=0"
+    },
+    {
+      "id": "FE744862-4363-41EC-B6A3-8A5D59B2ACA8",
+      "currentRun": true,
+      "label": "sealed-reject",
+      "camera": "disposable1990s",
+      "processes": [
+        "38420"
+      ],
+      "inventories": 2,
+      "completedExternalCopies": 0,
+      "processExits": 0,
+      "writerCancellations": 0,
+      "exportErrors": [
+        "mediaNotRevealed"
+      ],
+      "lastSummary": "films=1;sources=1;copies=0"
+    }
+  ]
+}

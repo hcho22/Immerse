@@ -1,0 +1,571 @@
+{
+  "mode": "unit",
+  "result": "Passed",
+  "passed": 8,
+  "skipped": 0,
+  "startUTC": "2026-10-01T19:04:31.454Z",
+  "finishUTC": "2026-10-01T19:05:52.853Z",
+  "runtime": [
+    {
+      "device": {
+        "architecture": "x86_64",
+        "deviceId": "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName": "Immerse v1 Validation",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 8,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "newHistories": 19,
+  "retainedHistories": 19,
+  "nativeAcceptance": false,
+  "scenarios": [
+    {
+      "name": "1DE76351-021F-41F0-B917-132DF1A12A99-super8HomeMovie-injectedFile-unknownApplied-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "unknownApplied",
+        "pauseAt": "none",
+        "runID": "1DE76351-021F-41F0-B917-132DF1A12A99"
+      },
+      "namespace": "com.immerse.validation.receipt035.1DE76351-021F-41F0-B917-132DF1A12A99-super8HomeMovie-injectedFile-unknownApplied-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "TrialKeychainError(status: -25308)"
+        },
+        {
+          "event": "recovery-error",
+          "error": "TrialKeychainError(status: -25308)"
+        },
+        {
+          "event": "second-load-error",
+          "error": "TrialKeychainError(status: -25308)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 3,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "38F14643-CD52-4E56-8975-243EDC9958DF-disposable1990s-injectedFile-invalidMedia-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "invalidMedia",
+        "pauseAt": "none",
+        "runID": "38F14643-CD52-4E56-8975-243EDC9958DF"
+      },
+      "namespace": "com.immerse.validation.receipt035.38F14643-CD52-4E56-8975-243EDC9958DF-disposable1990s-injectedFile-invalidMedia-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "invalidMedia"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 1,
+      "lastSummary": "films=1;saved=0;pending=true;consumed=false;hash=none"
+    },
+    {
+      "name": "42C7C2F7-1D20-4B0D-AB00-B9026AC870B8-disposable1990s-injectedFile-none-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "none",
+        "pauseAt": "none",
+        "runID": "42C7C2F7-1D20-4B0D-AB00-B9026AC870B8"
+      },
+      "namespace": "com.immerse.validation.receipt035.42C7C2F7-1D20-4B0D-AB00-B9026AC870B8-disposable1990s-injectedFile-none-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [],
+      "observedErrors": [],
+      "processExits": 0,
+      "inventories": 0
+    },
+    {
+      "name": "58CD955C-6974-401A-AF9B-06ACCCBBE6D3-super8HomeMovie-injectedFile-lostReply-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "lostReply",
+        "pauseAt": "none",
+        "runID": "58CD955C-6974-401A-AF9B-06ACCCBBE6D3"
+      },
+      "namespace": "com.immerse.validation.receipt035.58CD955C-6974-401A-AF9B-06ACCCBBE6D3-super8HomeMovie-injectedFile-lostReply-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [],
+      "processExits": 0,
+      "inventories": 1,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "6E1F8083-AABF-4FCB-B41D-AFA981C6F490-super8HomeMovie-injectedFile-afterMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "afterMove",
+        "pauseAt": "none",
+        "runID": "6E1F8083-AABF-4FCB-B41D-AFA981C6F490"
+      },
+      "namespace": "com.immerse.validation.receipt035.6E1F8083-AABF-4FCB-B41D-AFA981C6F490-super8HomeMovie-injectedFile-afterMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDurableMoveBeforeDebit)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "703A37E6-2B1F-45ED-A39A-8ED419E1FDC1-cinema16mm-injectedFile-beforeMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "cinema16mm",
+        "fault": "beforeMove",
+        "pauseAt": "none",
+        "runID": "703A37E6-2B1F-45ED-A39A-8ED419E1FDC1"
+      },
+      "namespace": "com.immerse.validation.receipt035.703A37E6-2B1F-45ED-A39A-8ED419E1FDC1-cinema16mm-injectedFile-beforeMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.beforeDurableMove)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "722EA817-5C8E-474D-A1EC-AF8F778FBDC1-disposable1990s-injectedFile-afterCommit-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "afterCommit",
+        "pauseAt": "none",
+        "runID": "722EA817-5C8E-474D-A1EC-AF8F778FBDC1"
+      },
+      "namespace": "com.immerse.validation.receipt035.722EA817-5C8E-474D-A1EC-AF8F778FBDC1-disposable1990s-injectedFile-afterCommit-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDatabaseCommitBeforeAcknowledgement)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "96843D68-B1CC-4EAB-9363-D2B1F992215B-disposable1990s-injectedFile-legacyDeleted-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "legacyDeleted",
+        "pauseAt": "none",
+        "runID": "96843D68-B1CC-4EAB-9363-D2B1F992215B"
+      },
+      "namespace": "com.immerse.validation.receipt035.96843D68-B1CC-4EAB-9363-D2B1F992215B-disposable1990s-injectedFile-legacyDeleted-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=0;saved=0;pending=false;consumed=true;hash=none"
+    },
+    {
+      "name": "9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "cinema16mm",
+        "fault": "afterMove",
+        "pauseAt": "none",
+        "runID": "9DCC935B-FD06-49A1-91AE-4F8167B338B6"
+      },
+      "namespace": "com.immerse.validation.receipt035.9DCC935B-FD06-49A1-91AE-4F8167B338B6-cinema16mm-injectedFile-afterMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDurableMoveBeforeDebit)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "A5ABB23A-1AE3-4A63-B438-5EF38C4E232C-disposable1990s-injectedFile-unknownApplied-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "unknownApplied",
+        "pauseAt": "none",
+        "runID": "A5ABB23A-1AE3-4A63-B438-5EF38C4E232C"
+      },
+      "namespace": "com.immerse.validation.receipt035.A5ABB23A-1AE3-4A63-B438-5EF38C4E232C-disposable1990s-injectedFile-unknownApplied-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "TrialKeychainError(status: -25308)"
+        },
+        {
+          "event": "callback-error",
+          "error": "filmNotFound"
+        },
+        {
+          "event": "second-load-error",
+          "error": "currentDeviceTrialConsumed"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 3,
+      "lastSummary": "films=0;saved=0;pending=false;consumed=true;hash=none"
+    },
+    {
+      "name": "BAF75BDE-3C38-4C1B-8CA9-E262C3609101-disposable1990s-injectedFile-afterMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "afterMove",
+        "pauseAt": "none",
+        "runID": "BAF75BDE-3C38-4C1B-8CA9-E262C3609101"
+      },
+      "namespace": "com.immerse.validation.receipt035.BAF75BDE-3C38-4C1B-8CA9-E262C3609101-disposable1990s-injectedFile-afterMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDurableMoveBeforeDebit)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "BFDF3491-5C77-45CE-A0A7-4B129682395F-cinema16mm-injectedFile-none-receiptResolved",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "cinema16mm",
+        "fault": "none",
+        "pauseAt": "receiptResolved",
+        "runID": "BFDF3491-5C77-45CE-A0A7-4B129682395F"
+      },
+      "namespace": "com.immerse.validation.receipt035.BFDF3491-5C77-45CE-A0A7-4B129682395F-cinema16mm-injectedFile-none-receiptResolved",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "callback-error",
+          "error": "filmNotFound"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=0;saved=0;pending=false;consumed=true;hash=none"
+    },
+    {
+      "name": "CAC070F9-74FA-4242-A382-D1F7BD0002ED-disposable1990s-injectedFile-corruptPending-prepared",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "corruptPending",
+        "pauseAt": "prepared",
+        "runID": "CAC070F9-74FA-4242-A382-D1F7BD0002ED"
+      },
+      "namespace": "com.immerse.validation.receipt035.CAC070F9-74FA-4242-A382-D1F7BD0002ED-disposable1990s-injectedFile-corruptPending-prepared",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "invalidMedia"
+        },
+        {
+          "event": "recovery-error",
+          "error": "invalidMedia"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=0;pending=true;consumed=false;hash=none"
+    },
+    {
+      "name": "CBECD371-F5D6-472B-A892-BC2FDC65C7B9-disposable1990s-injectedFile-beforeMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "beforeMove",
+        "pauseAt": "none",
+        "runID": "CBECD371-F5D6-472B-A892-BC2FDC65C7B9"
+      },
+      "namespace": "com.immerse.validation.receipt035.CBECD371-F5D6-472B-A892-BC2FDC65C7B9-disposable1990s-injectedFile-beforeMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.beforeDurableMove)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "CF209490-526E-4FFD-A6D0-581D2CC4EE4B-cinema16mm-injectedFile-afterCommit-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "cinema16mm",
+        "fault": "afterCommit",
+        "pauseAt": "none",
+        "runID": "CF209490-526E-4FFD-A6D0-581D2CC4EE4B"
+      },
+      "namespace": "com.immerse.validation.receipt035.CF209490-526E-4FFD-A6D0-581D2CC4EE4B-cinema16mm-injectedFile-afterCommit-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDatabaseCommitBeforeAcknowledgement)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "CF6721BF-985A-4A11-B46C-E034EFEB116D-disposable1990s-injectedFile-legacyPending-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "disposable1990s",
+        "fault": "legacyPending",
+        "pauseAt": "none",
+        "runID": "CF6721BF-985A-4A11-B46C-E034EFEB116D"
+      },
+      "namespace": "com.immerse.validation.receipt035.CF6721BF-985A-4A11-B46C-E034EFEB116D-disposable1990s-injectedFile-legacyPending-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "D4CEC870-7A3E-4FE1-82EB-B648DA64B2DB-super8HomeMovie-injectedFile-unknownNotApplied-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "unknownNotApplied",
+        "pauseAt": "none",
+        "runID": "D4CEC870-7A3E-4FE1-82EB-B648DA64B2DB"
+      },
+      "namespace": "com.immerse.validation.receipt035.D4CEC870-7A3E-4FE1-82EB-B648DA64B2DB-super8HomeMovie-injectedFile-unknownNotApplied-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0",
+        "-25291"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "TrialKeychainError(status: -25308)"
+        },
+        {
+          "event": "recovery-error",
+          "error": "TrialKeychainError(status: -25308)"
+        },
+        {
+          "event": "second-load-error",
+          "error": "TrialKeychainError(status: -25308)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 3,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "DD92B1A3-6620-41E5-8F6A-A0BC02D37D31-super8HomeMovie-injectedFile-afterCommit-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "afterCommit",
+        "pauseAt": "none",
+        "runID": "DD92B1A3-6620-41E5-8F6A-A0BC02D37D31"
+      },
+      "namespace": "com.immerse.validation.receipt035.DD92B1A3-6620-41E5-8F6A-A0BC02D37D31-super8HomeMovie-injectedFile-afterCommit-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.afterDatabaseCommitBeforeAcknowledgement)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    },
+    {
+      "name": "ECF4AF94-127A-49D9-8E5E-F25D583B12BB-super8HomeMovie-injectedFile-beforeMove-none",
+      "currentRun": true,
+      "configuration": {
+        "backend": "injectedFile",
+        "cameraID": "super8HomeMovie",
+        "fault": "beforeMove",
+        "pauseAt": "none",
+        "runID": "ECF4AF94-127A-49D9-8E5E-F25D583B12BB"
+      },
+      "namespace": "com.immerse.validation.receipt035.ECF4AF94-127A-49D9-8E5E-F25D583B12BB-super8HomeMovie-injectedFile-beforeMove-none",
+      "processes": [
+        "63694"
+      ],
+      "adapterStatuses": [
+        "-25300",
+        "0"
+      ],
+      "observedErrors": [
+        {
+          "event": "commit-error",
+          "error": "simulatedFailure(FilmPersistence.SaveFailureInjection.beforeDurableMove)"
+        }
+      ],
+      "processExits": 0,
+      "inventories": 2,
+      "lastSummary": "films=1;saved=1;pending=false;consumed=true;hash=true"
+    }
+  ]
+}

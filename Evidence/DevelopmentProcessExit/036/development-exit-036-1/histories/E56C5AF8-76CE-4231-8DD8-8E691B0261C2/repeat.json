@@ -1,0 +1,80 @@
+{
+  "assets" : {
+    "master-1" : "b837ac587bee94cdb6171be6d8f08135045556e2891de2110173a3400e40f2d4",
+    "master-2" : "96cc84ce3c8839c97f1668f8a21b3e8f672f395a4f06929557d6cdf339c74d3b"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 10
+        }
+      },
+      "displayName" : "1970s Instant",
+      "id" : "instant1970s",
+      "medium" : "photo",
+      "revealRule" : "instantPerExposure",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      },
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812581559.235484,
+        "sequenceNumber" : 2
+      }
+    ],
+    "completionState" : {
+      "open" : {
+
+      }
+    },
+    "developmentState" : "notStarted",
+    "id" : "78DB51A0-A080-4626-997E-98B949C97E2A",
+    "isArchived" : false,
+    "loadedAt" : 812581558.698547,
+    "title" : "Private synthetic export"
+  },
+  "privateFiles" : [
+    "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/master-1.bin",
+    "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/master-2.bin",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 62387,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 2647725311528710555,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 15443372322735808321,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "78DB51A0-A080-4626-997E-98B949C97E2A",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

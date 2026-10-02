@@ -1,0 +1,1512 @@
+[
+  {
+    "launch": {
+      "time": 1790874935.2822719,
+      "event": "launch",
+      "detail": "-stackContainer -outerPadding"
+    },
+    "mainScrollObservations": 499,
+    "adjustedInsets": [
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "sequentialNavigationGapRange": [
+      12.0,
+      16
+    ],
+    "windowCaptures": 36,
+    "captureSeconds": {
+      "min": 0.36283087730407715,
+      "median": 0.44622087478637695,
+      "max": 0.7569060325622559
+    },
+    "disabledCaptureCallbacks": 0,
+    "auditObservations": [
+      {
+        "time": 1790874948.099031,
+        "event": "top.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            0,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874944.976717,
+          "uptime": 1242320.9954053191,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874944.9533901,
+          "title": "16mm",
+          "uptime": 1242320.972077105,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              608.6666666666666,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874944.926095,
+            "uptime": 1242320.944779962
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1195,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874944.925778,
+            "uptime": 1242320.94446226
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1457.3333333333333,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874945.018095,
+            "uptime": 1242321.036780945
+          }
+        ]
+      },
+      {
+        "time": 1790874957.994234,
+        "event": "top.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            0,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874955.653955,
+          "uptime": 1242331.672876008,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874955.3422709,
+          "title": "16mm",
+          "uptime": 1242331.3611849512,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              608.6666666666666,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874955.3652148,
+            "uptime": 1242331.3841285931
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1195,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874955.441718,
+            "uptime": 1242331.4606314711
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1456.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874955.441554,
+            "uptime": 1242331.460468597
+          }
+        ]
+      },
+      {
+        "time": 1790874965.238585,
+        "event": "title.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            671.3333333333334,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874962.408595,
+          "uptime": 1242338.427662542,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603.0000000000001
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874955.3422709,
+          "title": "16mm",
+          "uptime": 1242331.3611849512,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -62.66666666666674,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874962.409731,
+            "uptime": 1242338.428796451
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              523.6666666666666,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874962.409501,
+            "uptime": 1242338.428566602
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              785.3333333333334,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874962.409378,
+            "uptime": 1242338.428443589
+          }
+        ]
+      },
+      {
+        "time": 1790874974.867239,
+        "event": "title.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874968.067069,
+          "uptime": 1242344.086260246,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874967.751262,
+          "title": "16mm",
+          "uptime": 1242343.770444574,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874967.766813,
+            "uptime": 1242343.7859955442
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874967.836887,
+            "uptime": 1242343.856071606
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874967.836752,
+            "uptime": 1242343.855936516
+          }
+        ]
+      },
+      {
+        "time": 1790874985.667616,
+        "event": "command.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            1449,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874983.407964,
+          "uptime": 1242359.427489055,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874967.751262,
+          "title": "16mm",
+          "uptime": 1242343.770444574,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -840.3333333333335,
+              302.66666666666663,
+              187.33333333333348
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874983.408992,
+            "uptime": 1242359.4285155341
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -254,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874983.4087849,
+            "uptime": 1242359.4283084092
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              7.6666666666667425,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874983.408673,
+            "uptime": 1242359.428196446
+          }
+        ]
+      },
+      {
+        "time": 1790874995.315881,
+        "event": "command.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x0000000118858a00)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790874993.696937,
+          "uptime": 1242369.716687672,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x000000010fd73100)",
+          "time": 1790874993.33814,
+          "title": "16mm",
+          "uptime": 1242369.3578809302,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790874993.356357,
+            "uptime": 1242369.376097783
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790874993.424403,
+            "uptime": 1242369.444144461
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790874993.424295,
+            "uptime": 1242369.444036548
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "launch": {
+      "time": 1790874997.3633351,
+      "event": "launch",
+      "detail": "-stackContainer -outerPadding -disableWindowCaptures"
+    },
+    "mainScrollObservations": 502,
+    "adjustedInsets": [
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "sequentialNavigationGapRange": [
+      12.0,
+      16
+    ],
+    "windowCaptures": 0,
+    "captureSeconds": null,
+    "disabledCaptureCallbacks": 36,
+    "auditObservations": [
+      {
+        "time": 1790875009.276249,
+        "event": "top.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            0,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875006.2691169,
+          "uptime": 1242382.2891414012,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875006.24492,
+          "title": "16mm",
+          "uptime": 1242382.2649428751,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              608.6666666666666,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875006.2201362,
+            "uptime": 1242382.240156806
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1195,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875006.219939,
+            "uptime": 1242382.2399594202
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1457.3333333333333,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875006.306592,
+            "uptime": 1242382.326615214
+          }
+        ]
+      },
+      {
+        "time": 1790875012.401593,
+        "event": "top.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            0,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875011.896634,
+          "uptime": 1242387.916780671,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875011.779721,
+          "title": "16mm",
+          "uptime": 1242387.799863474,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              608.6666666666666,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875011.792595,
+            "uptime": 1242387.81273702
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1195,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875011.8502789,
+            "uptime": 1242387.870422969
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1456.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875011.850169,
+            "uptime": 1242387.870312141
+          }
+        ]
+      },
+      {
+        "time": 1790875019.2628999,
+        "event": "title.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            681,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875016.49024,
+          "uptime": 1242392.51048641,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875011.779721,
+          "title": "16mm",
+          "uptime": 1242387.799863474,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -72.33333333333337,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875016.491356,
+            "uptime": 1242392.5116010131
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              514,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875016.491118,
+            "uptime": 1242392.511362218
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              775.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875016.490991,
+            "uptime": 1242392.5112356232
+          }
+        ]
+      },
+      {
+        "time": 1790875022.452441,
+        "event": "title.callback-1.enter",
+        "detail": "auditType=1",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875021.983553,
+          "uptime": 1242398.003919444,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875021.892463,
+          "title": "16mm",
+          "uptime": 1242397.9128268522,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.904804,
+            "uptime": 1242397.925166299
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.926671,
+            "uptime": 1242397.947034338
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.9264889,
+            "uptime": 1242397.9468520072
+          }
+        ]
+      },
+      {
+        "time": 1790875025.54251,
+        "event": "title.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875021.983553,
+          "uptime": 1242398.003919444,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875021.892463,
+          "title": "16mm",
+          "uptime": 1242397.9128268522,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.904804,
+            "uptime": 1242397.925166299
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.926671,
+            "uptime": 1242397.947034338
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875021.9264889,
+            "uptime": 1242397.9468520072
+          }
+        ]
+      },
+      {
+        "time": 1790875035.521123,
+        "event": "command.audit-call",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            1452,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875033.538919,
+          "uptime": 1242409.559536061,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875021.892463,
+          "title": "16mm",
+          "uptime": 1242397.9128268522,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -843.3333333333335,
+              302.66666666666663,
+              187.33333333333348
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875033.539647,
+            "uptime": 1242409.5602628111
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              -257,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875033.539497,
+            "uptime": 1242409.560113413
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              4.6666666666667425,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875033.539418,
+            "uptime": 1242409.560034363
+          }
+        ]
+      },
+      {
+        "time": 1790875039.114706,
+        "event": "command.callback-1.enter",
+        "detail": "auditType=1",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875038.627094,
+          "uptime": 1242414.647822286,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875038.461256,
+          "title": "16mm",
+          "uptime": 1242414.481979859,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.4755878,
+            "uptime": 1242414.496311872
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.5370321,
+            "uptime": 1242414.5577573
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.536931,
+            "uptime": 1242414.5576561661
+          }
+        ]
+      },
+      {
+        "time": 1790875041.44374,
+        "event": "command.audit-returned",
+        "detail": "",
+        "lastScroll": {
+          "adjustedInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "bounds": [
+            0,
+            102,
+            402,
+            603
+          ],
+          "clipsToBounds": true,
+          "contentInset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "contentSize": [
+            402,
+            2089.333333333333
+          ],
+          "event": "native-scroll",
+          "id": "ObjectIdentifier(0x000000010d04b600)",
+          "safeArea": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "time": 1790875038.627094,
+          "uptime": 1242414.647822286,
+          "windowFrame": [
+            0,
+            221,
+            402,
+            603
+          ]
+        },
+        "lastNavigation": {
+          "event": "native-navigation",
+          "hidden": false,
+          "id": "ObjectIdentifier(0x0000000108f15580)",
+          "time": 1790875038.461256,
+          "title": "16mm",
+          "uptime": 1242414.481979859,
+          "windowFrame": [
+            0,
+            78,
+            402,
+            127
+          ]
+        },
+        "lastLabels": [
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              506.66666666666663,
+              302.66666666666663,
+              187.33333333333337
+            ],
+            "id": "camera-description",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.4755878,
+            "uptime": 1242414.496311872
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1093,
+              199.66666666666666,
+              63.33333333333326
+            ],
+            "id": "film-title",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.5370321,
+            "uptime": 1242414.5577573
+          },
+          {
+            "appearance": "light",
+            "dynamicTypeSize": "accessibility5",
+            "frame": [
+              32,
+              1354.6666666666667,
+              333.33333333333337,
+              187.33333333333326
+            ],
+            "id": "trial-label",
+            "preferredBodyPoints": 53,
+            "time": 1790875038.536931,
+            "uptime": 1242414.5576561661
+          }
+        ]
+      }
+    ]
+  }
+]

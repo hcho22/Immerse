@@ -1,0 +1,97 @@
+Attributes: Application, 0x10d916c20, pid: 62387, label: 'Export Scenarios'
+Element subtree:
+ →Application, 0x10d916c20, pid: 62387, label: 'Export Scenarios'
+    Window (Main), 0x10d919d50, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10d91ad70, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10d91ae90, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10d91aad0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10d91abf0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10d91afb0, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10d91b0d0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Development Exit'
+                  StaticText, 0x10d91b1f0, {{16.0, 119.7}, {276.7, 40.7}}, label: 'Development Exit'
+                Other, 0x10d91b310, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10d91b430, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10d91b550, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10d91b670, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x10d91b790, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10d91b8b0, {{-16.0, -1580.0}, {434.0, 3880.0}}
+                          Other, 0x10d91b9d0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x111407810, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x111506280, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x10dc09500, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x10dc09840, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x10dc07ec0, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x111005050, {{16.0, 168.0}, {370.0, 52.0}}
+                                Other, 0x11100d8f0, {{16.0, 168.0}, {370.0, 52.0}}
+                                  StaticText, 0x111010fd0, {{16.0, 168.0}, {370.0, 52.0}}, identifier: 'development-status', label: 'recover-ok'
+                          Cell, 0x1110110f0, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x111011210, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x111011330, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x111011450, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x111011570, {{16.0, 220.0}, {370.0, 52.0}}
+                                Other, 0x111011690, {{16.0, 220.0}, {370.0, 52.0}}
+                                  StaticText, 0x1110117b0, {{16.0, 220.0}, {370.0, 52.0}}, identifier: 'development-summary', label: 'saved=2;revealed=1;sources=2'
+                          Other, 0x1110118d0, {{32.0, 219.0}, {338.0, 1.0}}
+                          Cell, 0x1110119f0, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x111011b10, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x111011c30, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x111011d50, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x111011e70, {{16.0, 272.0}, {370.0, 52.0}}
+                                Other, 0x111011f90, {{16.0, 272.0}, {370.0, 52.0}}
+                                  Button, 0x1110120b0, {{16.0, 272.0}, {370.0, 52.0}}, identifier: 'development-prepare', label: 'Prepare'
+                                    Image, 0x1110121d0, {{29.0, 285.0}, {24.0, 26.3}}, identifier: 'doc.badge.plus', label: 'doc.badge.plus'
+                                    StaticText, 0x1110122f0, {{29.0, 285.0}, {102.7, 26.3}}, label: 'Prepare'
+                          Other, 0x111012410, {{32.0, 271.0}, {338.0, 1.0}}
+                          Cell, 0x11130a260, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x111309c00, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x11130a670, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x11130c9f0, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x11130cb10, {{16.0, 324.0}, {370.0, 52.0}}
+                                Other, 0x11130cc30, {{16.0, 324.0}, {370.0, 52.0}}
+                                  Button, 0x11130cd50, {{16.0, 324.0}, {370.0, 52.0}}, identifier: 'development-start', label: 'Develop to exit'
+                                    Image, 0x11130ce70, {{33.3, 339.3}, {21.7, 21.7}}, identifier: 'stop.circle', label: 'stop.circle'
+                                    StaticText, 0x11130cf90, {{33.3, 339.3}, {152.0, 21.7}}, label: 'Develop to exit'
+                          Other, 0x11130d0b0, {{72.0, 323.0}, {298.0, 1.0}}
+                          Cell, 0x11130d1d0, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x11130d2f0, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x11130d410, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x11130d530, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x11130d650, {{16.0, 376.0}, {370.0, 52.0}}
+                                Other, 0x11130d770, {{16.0, 376.0}, {370.0, 52.0}}
+                                  Button, 0x11130d890, {{16.0, 376.0}, {370.0, 52.0}}, identifier: 'development-recover', label: 'Recover'
+                                    Image, 0x11130d9b0, {{34.7, 390.7}, {19.0, 23.0}}, identifier: 'arrow.clockwise', label: 'Refresh'
+                                    StaticText, 0x11130dad0, {{34.7, 390.7}, {99.3, 23.0}}, label: 'Recover'
+                          Other, 0x11130dbf0, {{72.0, 375.0}, {298.0, 1.0}}
+                          Cell, 0x11130dd10, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x11130de30, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x11130df50, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x11130e070, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x11130e190, {{16.0, 428.0}, {370.0, 52.0}}
+                                Other, 0x11130e2b0, {{16.0, 428.0}, {370.0, 52.0}}
+                                  Button, 0x11130e3d0, {{16.0, 428.0}, {370.0, 52.0}}, identifier: 'development-resume', label: 'Resume'
+                                    Image, 0x11130e4f0, {{37.0, 445.0}, {16.0, 18.0}}, identifier: 'play', label: 'Play'
+                                    StaticText, 0x11130e610, {{37.0, 443.8}, {96.3, 20.3}}, label: 'Resume'
+                          Other, 0x11130e730, {{72.0, 427.0}, {298.0, 1.0}}
+                          Cell, 0x11130e850, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x11130e970, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x11130ea90, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x11130ebb0, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x11130ecd0, {{16.0, 480.0}, {370.0, 52.0}}
+                                Other, 0x11130edf0, {{16.0, 480.0}, {370.0, 52.0}}
+                                  Button, 0x11130ef10, {{16.0, 480.0}, {370.0, 52.0}}, identifier: 'development-repeat', label: 'Repeat'
+                                    Image, 0x11130f030, {{33.0, 496.7}, {22.3, 19.0}}, identifier: 'repeat', label: 'Repeat 1'
+                                    StaticText, 0x11130f150, {{33.0, 495.8}, {92.7, 20.3}}, label: 'Repeat'
+                          Other, 0x11130f270, {{72.0, 479.0}, {298.0, 1.0}}
+                          Other, 0x11130f390, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x11130f4b0, {{396.0, 407.0}, {3.0, 402.0}}
+                          Other, 0x11130f5d0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x11130f6f0, {{396.0, 407.0}, {3.0, 402.0}}
+                Other, 0x11130f810, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x11130f930, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10d916c20, pid: 62387, label: 'Export Scenarios'
+Query chain:
+ →Find: Target Application 'com.immerse.validation.ExportPrivacyHarness036'
+  Output: {
+    Application, 0x114211f00, pid: 62387, label: 'Export Scenarios'
+  }

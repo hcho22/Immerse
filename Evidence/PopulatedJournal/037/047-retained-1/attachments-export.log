@@ -1,0 +1,51 @@
+Exported 3 attachments for: RetainedWorkflowTests/testDarkroomAccessibleControlsReachNonGestureEditingPaths():
+File: 77B8C1BF-6108-448C-8B0E-A6F25CBEF544.txt, suggested name: "darkroom-accessible-controls_0_4A1D0FC4-6A54-4BFF-8DFB-A236FD4C1298.txt"
+File: 8DDAAD96-2C44-4BE9-BE6D-BFB685CD570E.png, suggested name: "darkroom-accessible-controls_0_5FCF9A1F-8DA6-46AB-9382-BDB3DD7A27C9.png"
+File: 7C93BD6B-301B-4247-B834-B7B036D03CE8.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 7 attachments for: RetainedWorkflowTests/testDrawnDodgeStrokeChangesPrintAndPersistsAcrossRelaunch():
+File: 1234DC21-5A32-4636-B98B-D1F87287FF5C.txt, suggested name: "drawn-dodge-reopened_0_4CEB1DA9-D9CC-48B4-883B-E95A107CEE1B.txt"
+File: C0D17666-8213-47A4-8178-FC52BC4D15F4.png, suggested name: "drawn-dodge-reopened_0_F830D0CA-C487-4E91-836A-0C47BB9B0ECD.png"
+File: DFA28B60-F103-4CCC-B162-0B069B60F776.txt, suggested name: "drawn-dodge-saved_0_B54984A7-D5DF-4EF6-BA9A-B6F0F6260EA8.txt"
+File: A7E1CD2B-5512-4F6D-BE07-DBDF46223C77.png, suggested name: "drawn-dodge-saved_0_7324BD88-CD15-4145-9145-60D7091AC857.png"
+File: F2ACA6AB-CB39-43D2-9521-FDA7039D0D2D.txt, suggested name: "drawn-dodge-stroke_0_0BF61106-6729-41D9-9A43-8188CAEBA153.txt"
+File: C721E9AA-C019-4E9C-B980-BEE5993ACDEA.png, suggested name: "drawn-dodge-stroke_0_C9172379-9E3A-43DF-BA49-EA75D342F81B.png"
+File: 64619B44-A6DD-4EB3-8B3C-0C1B472BB970.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 9 attachments for: RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport():
+File: 3DCD9084-9C73-4844-9F25-76236CE0996D.txt, suggested name: "reopened-original-export-still-pending_0_B37DE4D9-0889-4CFE-B7B3-09A4B379853C.txt"
+File: 699568F6-81FD-4DE0-B546-265E19B219E2.png, suggested name: "reopened-original-export-still-pending_0_8AC34E19-0F63-4966-BBDE-653070429E5A.png"
+File: 9FEEAD2C-7BC8-4130-A222-2D50E8F0D5E0.txt, suggested name: "developed-export-requested-no-write_0_FF7F10A8-795A-4CCA-AE3F-BA667F482F36.txt"
+File: DAFEBBA2-D644-439B-9CB6-790B82DE7BAF.png, suggested name: "developed-export-requested-no-write_0_B6F640F1-8A67-414B-8835-1E72C502A48C.png"
+File: E58542C0-BD44-463A-984F-D151605C4C01.txt, suggested name: "completed-not-developed_0_2630343A-E8E9-4334-B100-A3F222E4A91B.txt"
+File: E2885242-0F85-4F0E-A91C-543503405542.png, suggested name: "completed-not-developed_0_D75D92BA-6D11-4C4F-A0DD-D371CB8E6C4E.png"
+File: 61CDFF27-CDCF-4B3E-8DF4-480A150B3052.txt, suggested name: "early-cancelled_0_6CC09FF4-5A7B-4E8E-9D74-B43F8B6EFBA5.txt"
+File: C9F133F8-9770-4503-902B-73AB6FEDCA4B.png, suggested name: "early-cancelled_0_7937D2DD-60A2-4785-B9C4-5FB3E8EA5879.png"
+File: 62E47FCA-F3DB-44AF-B6EB-E9211355063A.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 5 attachments for: RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation():
+File: FF5EA171-0365-4A7C-AB8A-20081EA6726B.txt, suggested name: "empty-deleted_0_5D386122-97E7-464F-9FCC-B5C94A7332B6.txt"
+File: 2DE67B88-6BC8-4C5D-BFA0-98B605E05DAA.png, suggested name: "empty-deleted_0_10786C9F-00C9-49CD-977F-37ABCF2141E1.png"
+File: E587C8F2-8D91-444B-8928-C1C1CF521026.txt, suggested name: "empty-delete-cancelled_0_170C55EE-A01C-46AA-9FBF-3D84CC67549C.txt"
+File: ACF5775E-8AEA-4F20-9266-4969B651F75A.png, suggested name: "empty-delete-cancelled_0_3461BA88-66BF-4AD3-B621-A7B89F68294B.png"
+File: 993811C9-245A-4684-919E-5FC579A4E065.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 7 attachments for: RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume():
+File: 681CE8AA-006F-41E8-88A0-77FA4246FA5E.txt, suggested name: "Instant-reopened_0_75AAAEA9-96BB-4250-808B-06763D9D5084.txt"
+File: 3B9AE353-F6D6-429E-A17B-4FF24544635E.png, suggested name: "Instant-reopened_0_7230F712-0013-45F0-85CF-94FD15C8FD7B.png"
+File: 79FBBB50-6559-4271-86C7-78DCA5DA21CC.txt, suggested name: "Instant-both-revealed-still-open_0_F4DB27A0-A547-4A89-A052-D142A23A4D36.txt"
+File: 44BEE165-3D24-4D0B-B47B-49AE2B4DFF90.png, suggested name: "Instant-both-revealed-still-open_0_C4301EB8-B264-42DA-8F42-BB2B8537C81C.png"
+File: 6FC54D3E-8845-43A6-86C0-9C2D0F8EFF62.txt, suggested name: "Instant-first-revealed-second-sealed_0_4A29FE05-0EFC-4AD6-842B-F5FFA0470F1C.txt"
+File: 3E869F4F-297B-42C8-9AB2-B7B3D7DD89DA.png, suggested name: "Instant-first-revealed-second-sealed_0_8E7DAFEE-FF19-4B0C-A3C8-D9D7EB7BBAC4.png"
+File: DFFF5F14-6000-4A10-8DBE-BBAD160C6913.txt, suggested name: "Complete Issue Description.txt"
+
+Exported 7 attachments for: RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch():
+File: D15FE0A3-7B39-4DAF-BFF1-C27877BE2B5F.txt, suggested name: "reset-reopened_0_B4398294-788C-444C-AC37-EA1BAA04F290.txt"
+File: AE21A89A-4A13-4753-A89F-ED973696C16B.png, suggested name: "reset-reopened_0_B16CCA94-3972-4E4F-80CB-B4BA60CD8AF6.png"
+File: 7247DB08-FDBB-4F53-BD9E-050962E4CC22.txt, suggested name: "reset-first-photo_0_9478E463-C549-4370-8A7D-24B106686A16.txt"
+File: A15F1B50-F74E-468E-95C8-4271B4458056.png, suggested name: "reset-first-photo_0_4D6AD9DE-D1AE-400F-BDC3-D912C56AD86D.png"
+File: 4F83C334-CB8E-4701-8717-E341DF6EBBEA.txt, suggested name: "edited-first-photo_0_3FB07157-FEB1-496A-874C-9693023B71FF.txt"
+File: 059507A2-E7C3-4159-A87C-BB90A91E3FEF.png, suggested name: "edited-first-photo_0_FA4615BA-371A-48C1-8400-9D9CA44B60AC.png"
+File: 7A022E71-6196-4CD3-82D4-6C797B145B18.txt, suggested name: "Complete Issue Description.txt"
+
+Generated manifest file with attachment details: /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Evidence/PopulatedJournal/037/047-retained-1/attachments/manifest.json

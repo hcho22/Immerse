@@ -1,0 +1,11 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/DarkProminent-047-1.xcresult
+
+2026-10-01 18:27:31.383 xcodebuild[16895:159156105] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:27:31.383 xcodebuild[16895:159156105] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:28:06.795 xcodebuild[16895:159156105] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:28:06.795 xcodebuild[16895:159156105] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:28:47.219 xcodebuild[16895:159156105] [MT] IDETestOperationsObserverDebug: 79.422 elapsed -- Testing started completed.
+2026-10-01 18:28:47.219 xcodebuild[16895:159156105] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:28:47.219 xcodebuild[16895:159156105] [MT] IDETestOperationsObserverDebug: 79.422 sec, +79.422 sec -- end
+Testing started

@@ -1,0 +1,11 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/DarkroomGesture-047-2.xcresult
+
+2026-10-01 18:24:17.052 xcodebuild[57153:159050212] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:24:17.053 xcodebuild[57153:159050212] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:24:46.144 xcodebuild[57153:159050212] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:24:46.144 xcodebuild[57153:159050212] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:25:39.365 xcodebuild[57153:159050212] [MT] IDETestOperationsObserverDebug: 86.808 elapsed -- Testing started completed.
+2026-10-01 18:25:39.365 xcodebuild[57153:159050212] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:25:39.366 xcodebuild[57153:159050212] [MT] IDETestOperationsObserverDebug: 86.808 sec, +86.808 sec -- end
+Testing started

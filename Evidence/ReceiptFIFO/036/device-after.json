@@ -1,0 +1,2691 @@
+{
+  "devices" : {
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-5" : [
+      {
+        "lastBootedAt" : "2026-10-01T20:03:09Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60\/data",
+        "dataPathSize" : 3348127744,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "udid" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "isAvailable" : true,
+        "logPathSize" : 548864,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "Immerse v1 Validation"
+      },
+      {
+        "lastBootedAt" : "2026-09-21T23:36:15Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/795ACE5E-6864-453C-A914-D824B388DD39\/data",
+        "dataPathSize" : 2508738560,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/795ACE5E-6864-453C-A914-D824B388DD39",
+        "udid" : "795ACE5E-6864-453C-A914-D824B388DD39",
+        "isAvailable" : true,
+        "logPathSize" : 471040,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/113A82F7-39BA-429A-9236-8EAC52E604FD\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/113A82F7-39BA-429A-9236-8EAC52E604FD",
+        "udid" : "113A82F7-39BA-429A-9236-8EAC52E604FD",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BE29BE69-2365-430C-ADBF-6B247355316F\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BE29BE69-2365-430C-ADBF-6B247355316F",
+        "udid" : "BE29BE69-2365-430C-ADBF-6B247355316F",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17e",
+        "state" : "Shutdown",
+        "name" : "iPhone 17e"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D433C1C9-518A-489D-A275-95E705DC0595\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D433C1C9-518A-489D-A275-95E705DC0595",
+        "udid" : "D433C1C9-518A-489D-A275-95E705DC0595",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+        "state" : "Shutdown",
+        "name" : "iPhone Air"
+      },
+      {
+        "lastBootedAt" : "2026-08-15T05:01:48Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4F8E431A-4A08-44F4-BA69-BE996256A674\/data",
+        "dataPathSize" : 2667900928,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4F8E431A-4A08-44F4-BA69-BE996256A674",
+        "udid" : "4F8E431A-4A08-44F4-BA69-BE996256A674",
+        "isAvailable" : true,
+        "logPathSize" : 262144,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+        "state" : "Shutdown",
+        "name" : "iPhone 17"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D5D8F2E2-8BAA-4E4B-8268-1567CDC1E9BD\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D5D8F2E2-8BAA-4E4B-8268-1567CDC1E9BD",
+        "udid" : "D5D8F2E2-8BAA-4E4B-8268-1567CDC1E9BD",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F34855B1-0417-4846-9978-45CCBC8280EE\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F34855B1-0417-4846-9978-45CCBC8280EE",
+        "udid" : "F34855B1-0417-4846-9978-45CCBC8280EE",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E76FB2D8-3E71-460C-97AF-146D81B24435\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E76FB2D8-3E71-460C-97AF-146D81B24435",
+        "udid" : "E76FB2D8-3E71-460C-97AF-146D81B24435",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7681C214-5268-4960-B751-8E0FE253881B\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7681C214-5268-4960-B751-8E0FE253881B",
+        "udid" : "7681C214-5268-4960-B751-8E0FE253881B",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M4",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6A14A4F6-E5F0-4934-859C-D5F01B664445\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6A14A4F6-E5F0-4934-859C-D5F01B664445",
+        "udid" : "6A14A4F6-E5F0-4934-859C-D5F01B664445",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M4",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/03A5D228-356E-420D-8CB2-DBC3466DF8DF\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/03A5D228-356E-420D-8CB2-DBC3466DF8DF",
+        "udid" : "03A5D228-356E-420D-8CB2-DBC3466DF8DF",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-4" : [
+      {
+        "lastBootedAt" : "2026-09-01T18:39:14Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7AFC591B-46C6-4C9F-A1B8-ED71D54ED379\/data",
+        "dataPathSize" : 3385311232,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7AFC591B-46C6-4C9F-A1B8-ED71D54ED379",
+        "udid" : "7AFC591B-46C6-4C9F-A1B8-ED71D54ED379",
+        "isAvailable" : true,
+        "logPathSize" : 696320,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CD777120-9500-4969-900F-560E0C5B947A\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CD777120-9500-4969-900F-560E0C5B947A",
+        "udid" : "CD777120-9500-4969-900F-560E0C5B947A",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BB083A9D-8977-4341-861B-30FD7996EBCC\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BB083A9D-8977-4341-861B-30FD7996EBCC",
+        "udid" : "BB083A9D-8977-4341-861B-30FD7996EBCC",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17e",
+        "state" : "Shutdown",
+        "name" : "iPhone 17e"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/542B4180-D361-4E30-953C-8900A00286FD\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/542B4180-D361-4E30-953C-8900A00286FD",
+        "udid" : "542B4180-D361-4E30-953C-8900A00286FD",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+        "state" : "Shutdown",
+        "name" : "iPhone Air"
+      },
+      {
+        "lastBootedAt" : "2026-07-11T13:39:47Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6F5B8783-1BC7-48E4-AFDD-FD28E307FD10\/data",
+        "dataPathSize" : 3303407616,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6F5B8783-1BC7-48E4-AFDD-FD28E307FD10",
+        "udid" : "6F5B8783-1BC7-48E4-AFDD-FD28E307FD10",
+        "isAvailable" : true,
+        "logPathSize" : 376832,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+        "state" : "Shutdown",
+        "name" : "iPhone 17"
+      },
+      {
+        "lastBootedAt" : "2026-04-26T23:39:41Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5F792AA4-7AE3-4C16-8F56-45D29261ECBA\/data",
+        "dataPathSize" : 2892775424,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5F792AA4-7AE3-4C16-8F56-45D29261ECBA",
+        "udid" : "5F792AA4-7AE3-4C16-8F56-45D29261ECBA",
+        "isAvailable" : true,
+        "logPathSize" : 184320,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/00FB662E-E78D-4B1B-A19D-8C4DDE696213\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/00FB662E-E78D-4B1B-A19D-8C4DDE696213",
+        "udid" : "00FB662E-E78D-4B1B-A19D-8C4DDE696213",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FFD10CEB-CCFE-4C2E-A654-DB62FCEC3187\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FFD10CEB-CCFE-4C2E-A654-DB62FCEC3187",
+        "udid" : "FFD10CEB-CCFE-4C2E-A654-DB62FCEC3187",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BB3CE3F2-78CB-4AC4-BA49-783ACA4D8F59\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BB3CE3F2-78CB-4AC4-BA49-783ACA4D8F59",
+        "udid" : "BB3CE3F2-78CB-4AC4-BA49-783ACA4D8F59",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M4",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/55554614-8CBD-4174-8A87-67F0EE93BC81\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/55554614-8CBD-4174-8A87-67F0EE93BC81",
+        "udid" : "55554614-8CBD-4174-8A87-67F0EE93BC81",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M4",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/644DBD5C-A638-4407-AF4F-F7D7D3F11D6D\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/644DBD5C-A638-4407-AF4F-F7D7D3F11D6D",
+        "udid" : "644DBD5C-A638-4407-AF4F-F7D7D3F11D6D",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.tvOS-14-3" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FCA2E5EB-DA29-42CA-8164-EAE554228F52\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FCA2E5EB-DA29-42CA-8164-EAE554228F52",
+        "udid" : "FCA2E5EB-DA29-42CA-8164-EAE554228F52",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-4K",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FDC7CCAE-7600-41AF-BCDF-80323F21F846\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FDC7CCAE-7600-41AF-BCDF-80323F21F846",
+        "udid" : "FDC7CCAE-7600-41AF-BCDF-80323F21F846",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (at 1080p)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/624EF807-AACF-4673-8550-18EE05139362\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/624EF807-AACF-4673-8550-18EE05139362",
+        "udid" : "624EF807-AACF-4673-8550-18EE05139362",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-2" : [
+      {
+        "lastBootedAt" : "2026-10-01T15:15:06Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A5825795-2E74-49C8-BC64-A5CDCB27AF8B\/data",
+        "dataPathSize" : 1575161856,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "udid" : "A5825795-2E74-49C8-BC64-A5CDCB27AF8B",
+        "isAvailable" : true,
+        "logPathSize" : 339968,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "Immerse StoreKit Validation 26.2"
+      },
+      {
+        "lastBootedAt" : "2026-04-10T17:52:38Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CE628011-B7E4-4BD6-8C12-8D99ECCE8D6D\/data",
+        "dataPathSize" : 3211583488,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CE628011-B7E4-4BD6-8C12-8D99ECCE8D6D",
+        "udid" : "CE628011-B7E4-4BD6-8C12-8D99ECCE8D6D",
+        "isAvailable" : true,
+        "logPathSize" : 978944,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro"
+      },
+      {
+        "lastBootedAt" : "2026-04-28T17:10:50Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/93930C66-68F0-46B1-9B96-B77F46E413FD\/data",
+        "dataPathSize" : 2311737344,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/93930C66-68F0-46B1-9B96-B77F46E413FD",
+        "udid" : "93930C66-68F0-46B1-9B96-B77F46E413FD",
+        "isAvailable" : true,
+        "logPathSize" : 372736,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0BDA711F-3DA8-43C5-B1CC-D6C42ECD1DA5\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0BDA711F-3DA8-43C5-B1CC-D6C42ECD1DA5",
+        "udid" : "0BDA711F-3DA8-43C5-B1CC-D6C42ECD1DA5",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+        "state" : "Shutdown",
+        "name" : "iPhone Air"
+      },
+      {
+        "lastBootedAt" : "2026-01-22T20:58:33Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/56AC221F-452F-4378-AE4C-FB25440F4464\/data",
+        "dataPathSize" : 1660571648,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/56AC221F-452F-4378-AE4C-FB25440F4464",
+        "udid" : "56AC221F-452F-4378-AE4C-FB25440F4464",
+        "isAvailable" : true,
+        "logPathSize" : 81920,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+        "state" : "Shutdown",
+        "name" : "iPhone 17"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/80B6EE96-12F3-465A-9D24-476B1060EFCC\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/80B6EE96-12F3-465A-9D24-476B1060EFCC",
+        "udid" : "80B6EE96-12F3-465A-9D24-476B1060EFCC",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+        "state" : "Shutdown",
+        "name" : "iPhone 16e"
+      },
+      {
+        "lastBootedAt" : "2026-09-14T21:54:49Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1E9DC8D9-342A-4E68-956A-CD323BD3800E\/data",
+        "dataPathSize" : 3950374912,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1E9DC8D9-342A-4E68-956A-CD323BD3800E",
+        "udid" : "1E9DC8D9-342A-4E68-956A-CD323BD3800E",
+        "isAvailable" : true,
+        "logPathSize" : 1798144,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M5)"
+      },
+      {
+        "lastBootedAt" : "2026-03-09T16:17:22Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E88BFEEF-FA20-4EFC-AFFF-618915BB94EE\/data",
+        "dataPathSize" : 2073837568,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E88BFEEF-FA20-4EFC-AFFF-618915BB94EE",
+        "udid" : "E88BFEEF-FA20-4EFC-AFFF-618915BB94EE",
+        "isAvailable" : true,
+        "logPathSize" : 176128,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/59B00CF0-2E02-4EB6-89DD-BC0E446F8F35\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/59B00CF0-2E02-4EB6-89DD-BC0E446F8F35",
+        "udid" : "59B00CF0-2E02-4EB6-89DD-BC0E446F8F35",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AE272D73-1E55-434C-9B4B-17CC1187A323\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AE272D73-1E55-434C-9B4B-17CC1187A323",
+        "udid" : "AE272D73-1E55-434C-9B4B-17CC1187A323",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/2EE74661-0725-4744-8073-E229FA897429\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/2EE74661-0725-4744-8073-E229FA897429",
+        "udid" : "2EE74661-0725-4744-8073-E229FA897429",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C55A9F44-6F4C-4E1C-B97A-6BBEB8695407\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C55A9F44-6F4C-4E1C-B97A-6BBEB8695407",
+        "udid" : "C55A9F44-6F4C-4E1C-B97A-6BBEB8695407",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M3)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-1" : [
+      {
+        "lastBootedAt" : "2026-01-30T18:20:39Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/107DD14E-E0C8-49C2-892B-AE409BC56C75\/data",
+        "dataPathSize" : 1670115328,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/107DD14E-E0C8-49C2-892B-AE409BC56C75",
+        "udid" : "107DD14E-E0C8-49C2-892B-AE409BC56C75",
+        "isAvailable" : true,
+        "logPathSize" : 167936,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro"
+      },
+      {
+        "lastBootedAt" : "2026-04-28T20:36:38Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AD0B0CF7-5DD8-4FA4-B71D-A0F9E532C229\/data",
+        "dataPathSize" : 2402537472,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AD0B0CF7-5DD8-4FA4-B71D-A0F9E532C229",
+        "udid" : "AD0B0CF7-5DD8-4FA4-B71D-A0F9E532C229",
+        "isAvailable" : true,
+        "logPathSize" : 421888,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B59B70B9-62E0-475C-95C5-9FF0652EC0BE\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B59B70B9-62E0-475C-95C5-9FF0652EC0BE",
+        "udid" : "B59B70B9-62E0-475C-95C5-9FF0652EC0BE",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+        "state" : "Shutdown",
+        "name" : "iPhone Air"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7318F1CC-E1E8-458E-A321-F91D37CF6AB0\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7318F1CC-E1E8-458E-A321-F91D37CF6AB0",
+        "udid" : "7318F1CC-E1E8-458E-A321-F91D37CF6AB0",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+        "state" : "Shutdown",
+        "name" : "iPhone 17"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/DCD8E3EF-AE3F-429E-8EFF-6B9C39CF8E7D\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/DCD8E3EF-AE3F-429E-8EFF-6B9C39CF8E7D",
+        "udid" : "DCD8E3EF-AE3F-429E-8EFF-6B9C39CF8E7D",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+        "state" : "Shutdown",
+        "name" : "iPhone 16e"
+      },
+      {
+        "lastBootedAt" : "2026-04-08T23:40:28Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/17793334-C476-4FF2-B55B-6F8EE76BBADB\/data",
+        "dataPathSize" : 1927417856,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/17793334-C476-4FF2-B55B-6F8EE76BBADB",
+        "udid" : "17793334-C476-4FF2-B55B-6F8EE76BBADB",
+        "isAvailable" : true,
+        "logPathSize" : 372736,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/05B719B2-A5F9-4FC1-9728-D06C3A584F5E\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/05B719B2-A5F9-4FC1-9728-D06C3A584F5E",
+        "udid" : "05B719B2-A5F9-4FC1-9728-D06C3A584F5E",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M5)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D3198435-10F6-48EF-81F5-22AB2B0D665C\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D3198435-10F6-48EF-81F5-22AB2B0D665C",
+        "udid" : "D3198435-10F6-48EF-81F5-22AB2B0D665C",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D5DBB7C1-2067-484C-88F7-FA8792E77B60\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D5DBB7C1-2067-484C-88F7-FA8792E77B60",
+        "udid" : "D5DBB7C1-2067-484C-88F7-FA8792E77B60",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0131518C-32C7-47AD-A7F2-E041C433660F\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0131518C-32C7-47AD-A7F2-E041C433660F",
+        "udid" : "0131518C-32C7-47AD-A7F2-E041C433660F",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/81DD2150-D145-4CA1-9491-686B01E49EDF\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/81DD2150-D145-4CA1-9491-686B01E49EDF",
+        "udid" : "81DD2150-D145-4CA1-9491-686B01E49EDF",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M3)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-26-0" : [
+      {
+        "lastBootedAt" : "2026-09-21T22:13:28Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CD48F119-CE5E-4519-B969-651727D1B81E\/data",
+        "dataPathSize" : 2944065536,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CD48F119-CE5E-4519-B969-651727D1B81E",
+        "udid" : "CD48F119-CE5E-4519-B969-651727D1B81E",
+        "isAvailable" : true,
+        "logPathSize" : 405504,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro"
+      },
+      {
+        "lastBootedAt" : "2026-04-06T16:09:08Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/DD1BF7EE-20AA-47A4-8B13-1D610CE07229\/data",
+        "dataPathSize" : 2700210176,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/DD1BF7EE-20AA-47A4-8B13-1D610CE07229",
+        "udid" : "DD1BF7EE-20AA-47A4-8B13-1D610CE07229",
+        "isAvailable" : true,
+        "logPathSize" : 581632,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 17 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5834DA7C-27F0-4573-B2EE-8FD9F052B933\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5834DA7C-27F0-4573-B2EE-8FD9F052B933",
+        "udid" : "5834DA7C-27F0-4573-B2EE-8FD9F052B933",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+        "state" : "Shutdown",
+        "name" : "iPhone Air"
+      },
+      {
+        "lastBootedAt" : "2026-08-16T13:35:44Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5A17B7DD-5127-407B-A66C-1BF3AF52A3C2\/data",
+        "dataPathSize" : 2577260544,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5A17B7DD-5127-407B-A66C-1BF3AF52A3C2",
+        "udid" : "5A17B7DD-5127-407B-A66C-1BF3AF52A3C2",
+        "isAvailable" : true,
+        "logPathSize" : 454656,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-17",
+        "state" : "Shutdown",
+        "name" : "iPhone 17"
+      },
+      {
+        "lastBootedAt" : "2026-04-10T17:45:44Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/76F858D0-5D9E-45F6-9FBE-524C064FA9C9\/data",
+        "dataPathSize" : 2039664640,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/76F858D0-5D9E-45F6-9FBE-524C064FA9C9",
+        "udid" : "76F858D0-5D9E-45F6-9FBE-524C064FA9C9",
+        "isAvailable" : true,
+        "logPathSize" : 454656,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+        "state" : "Shutdown",
+        "name" : "iPhone 16e"
+      },
+      {
+        "lastBootedAt" : "2026-04-02T19:20:56Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9882E6CA-2447-4D64-983E-0CE086E36D42\/data",
+        "dataPathSize" : 2671390720,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9882E6CA-2447-4D64-983E-0CE086E36D42",
+        "udid" : "9882E6CA-2447-4D64-983E-0CE086E36D42",
+        "isAvailable" : true,
+        "logPathSize" : 266240,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M5)"
+      },
+      {
+        "lastBootedAt" : "2026-01-22T13:54:00Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/56C1248C-9620-42CF-AE12-052459758F8B\/data",
+        "dataPathSize" : 4450160640,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/56C1248C-9620-42CF-AE12-052459758F8B",
+        "udid" : "56C1248C-9620-42CF-AE12-052459758F8B",
+        "isAvailable" : true,
+        "logPathSize" : 1970176,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M5-12GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M5)"
+      },
+      {
+        "lastBootedAt" : "2025-11-11T13:21:41Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F0570F43-8915-46C1-A65D-130FA9103B26\/data",
+        "dataPathSize" : 2324979712,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F0570F43-8915-46C1-A65D-130FA9103B26",
+        "udid" : "F0570F43-8915-46C1-A65D-130FA9103B26",
+        "isAvailable" : true,
+        "logPathSize" : 151552,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M4)"
+      },
+      {
+        "lastBootedAt" : "2026-04-22T19:58:05Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/55602DCF-DAE9-49D9-AB30-7534C072EF6A\/data",
+        "dataPathSize" : 2591223808,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/55602DCF-DAE9-49D9-AB30-7534C072EF6A",
+        "udid" : "55602DCF-DAE9-49D9-AB30-7534C072EF6A",
+        "isAvailable" : true,
+        "logPathSize" : 262144,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/DDFE6DA0-A374-4BF5-9621-24646204D11B\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/DDFE6DA0-A374-4BF5-9621-24646204D11B",
+        "udid" : "DDFE6DA0-A374-4BF5-9621-24646204D11B",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F08A219E-C379-4B67-835C-3A2214BF117A\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F08A219E-C379-4B67-835C-3A2214BF117A",
+        "udid" : "F08A219E-C379-4B67-835C-3A2214BF117A",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1C39B72D-2523-4578-9B2B-A411D2FA3CAF\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1C39B72D-2523-4578-9B2B-A411D2FA3CAF",
+        "udid" : "1C39B72D-2523-4578-9B2B-A411D2FA3CAF",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8B49F7B2-597E-4CFA-AFB9-7C3BFECE8772\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8B49F7B2-597E-4CFA-AFB9-7C3BFECE8772",
+        "udid" : "8B49F7B2-597E-4CFA-AFB9-7C3BFECE8772",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M3)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.tvOS-15-4" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/381505D6-8B3A-4133-9E14-E7F90172EE66\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/381505D6-8B3A-4133-9E14-E7F90172EE66",
+        "udid" : "381505D6-8B3A-4133-9E14-E7F90172EE66",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-2nd-generation-4K",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F3B2919A-867C-4AA3-B529-467A0AB17282\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F3B2919A-867C-4AA3-B529-467A0AB17282",
+        "udid" : "F3B2919A-867C-4AA3-B529-467A0AB17282",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-2nd-generation-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (at 1080p) (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7C5E2627-B69B-4E60-89B2-95253A2A5C46\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7C5E2627-B69B-4E60-89B2-95253A2A5C46",
+        "udid" : "7C5E2627-B69B-4E60-89B2-95253A2A5C46",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-8-3" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B8674A45-C849-4C5C-B4A8-7679829C3140\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B8674A45-C849-4C5C-B4A8-7679829C3140",
+        "udid" : "B8674A45-C849-4C5C-B4A8-7679829C3140",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-7-45mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 7 - 45mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0823CD94-A797-403B-B4DA-8E20F7214771\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0823CD94-A797-403B-B4DA-8E20F7214771",
+        "udid" : "0823CD94-A797-403B-B4DA-8E20F7214771",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-7-41mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 7 - 41mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/98A66895-6751-44C2-AE2F-E578AEA5DF18\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/98A66895-6751-44C2-AE2F-E578AEA5DF18",
+        "udid" : "98A66895-6751-44C2-AE2F-E578AEA5DF18",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AED72DE0-8EB5-4E9E-81B5-1B0FE506C9AC\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AED72DE0-8EB5-4E9E-81B5-1B0FE506C9AC",
+        "udid" : "AED72DE0-8EB5-4E9E-81B5-1B0FE506C9AC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3661799B-1399-4443-9CAF-9D2A006CD8B4\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3661799B-1399-4443-9CAF-9D2A006CD8B4",
+        "udid" : "3661799B-1399-4443-9CAF-9D2A006CD8B4",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9F70C963-B351-4C3D-AC3C-C9FF961F15E0\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9F70C963-B351-4C3D-AC3C-C9FF961F15E0",
+        "udid" : "9F70C963-B351-4C3D-AC3C-C9FF961F15E0",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 40mm"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-13-7" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/64B7F2DF-B8B4-4531-B260-9C99796F4DC5\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/64B7F2DF-B8B4-4531-B260-9C99796F4DC5",
+        "udid" : "64B7F2DF-B8B4-4531-B260-9C99796F4DC5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE--2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7D980C7F-FFF4-4D95-8064-118036C135E0\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7D980C7F-FFF4-4D95-8064-118036C135E0",
+        "udid" : "7D980C7F-FFF4-4D95-8064-118036C135E0",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/28C11BA0-2AF9-4DBB-B534-542BFEE31115\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/28C11BA0-2AF9-4DBB-B534-542BFEE31115",
+        "udid" : "28C11BA0-2AF9-4DBB-B534-542BFEE31115",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/75CA20A2-B016-4930-ABBE-C1A9F3B23E90\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/75CA20A2-B016-4930-ABBE-C1A9F3B23E90",
+        "udid" : "75CA20A2-B016-4930-ABBE-C1A9F3B23E90",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11",
+        "state" : "Shutdown",
+        "name" : "iPhone 11"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1B8AAB3E-736A-40B7-A7A9-892A4A2E2AA5\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1B8AAB3E-736A-40B7-A7A9-892A4A2E2AA5",
+        "udid" : "1B8AAB3E-736A-40B7-A7A9-892A4A2E2AA5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-X",
+        "state" : "Shutdown",
+        "name" : "iPhone X"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/93CA8057-C1B9-445E-8557-4835B20662D7\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/93CA8057-C1B9-445E-8557-4835B20662D7",
+        "udid" : "93CA8057-C1B9-445E-8557-4835B20662D7",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8",
+        "state" : "Shutdown",
+        "name" : "iPhone 8"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C721A1BC-B714-49A9-A3CD-4A7E55CC7E94\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C721A1BC-B714-49A9-A3CD-4A7E55CC7E94",
+        "udid" : "C721A1BC-B714-49A9-A3CD-4A7E55CC7E94",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 8 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/83BBF359-EB93-4916-A1BA-93781E9F6CAD\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/83BBF359-EB93-4916-A1BA-93781E9F6CAD",
+        "udid" : "83BBF359-EB93-4916-A1BA-93781E9F6CAD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air--3rd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Air (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/713DA07F-40E3-4166-9DED-7E8835034715\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/713DA07F-40E3-4166-9DED-7E8835034715",
+        "udid" : "713DA07F-40E3-4166-9DED-7E8835034715",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--11-inch---2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F6B0FF45-9252-4DEA-8D18-E09B01BCC934\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F6B0FF45-9252-4DEA-8D18-E09B01BCC934",
+        "udid" : "F6B0FF45-9252-4DEA-8D18-E09B01BCC934",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--12-9-inch---4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6B64DA92-0D56-4B0E-BB34-457C082E01EA\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6B64DA92-0D56-4B0E-BB34-457C082E01EA",
+        "udid" : "6B64DA92-0D56-4B0E-BB34-457C082E01EA",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad (7th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/27E77D4F-0C4F-45C8-9671-E1BEBDDD3601\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/27E77D4F-0C4F-45C8-9671-E1BEBDDD3601",
+        "udid" : "27E77D4F-0C4F-45C8-9671-E1BEBDDD3601",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (9.7-inch)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.tvOS-15-2" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AA563569-464A-4E52-9E93-E5388D3A9B68\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AA563569-464A-4E52-9E93-E5388D3A9B68",
+        "udid" : "AA563569-464A-4E52-9E93-E5388D3A9B68",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-2nd-generation-4K",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1A31232D-5596-48AB-A061-8472683FD1EC\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1A31232D-5596-48AB-A061-8472683FD1EC",
+        "udid" : "1A31232D-5596-48AB-A061-8472683FD1EC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-2nd-generation-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (at 1080p) (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AF91D0DE-90BD-42A2-8618-A5C46A0D6268\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AF91D0DE-90BD-42A2-8618-A5C46A0D6268",
+        "udid" : "AF91D0DE-90BD-42A2-8618-A5C46A0D6268",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.tvOS-14-0" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1CEEBC35-E3FA-4258-8BD9-2F7BE2A57810\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1CEEBC35-E3FA-4258-8BD9-2F7BE2A57810",
+        "udid" : "1CEEBC35-E3FA-4258-8BD9-2F7BE2A57810",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-4K",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/598DD1CE-8CA6-4ED7-883C-2118E53CA125\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/598DD1CE-8CA6-4ED7-883C-2118E53CA125",
+        "udid" : "598DD1CE-8CA6-4ED7-883C-2118E53CA125",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (at 1080p)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E1E0151A-69D7-4526-B92C-D175552D7104\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E1E0151A-69D7-4526-B92C-D175552D7104",
+        "udid" : "E1E0151A-69D7-4526-B92C-D175552D7104",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-8-5" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/82A61E5F-529A-4E57-A6E4-635F91B2C2DC\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/82A61E5F-529A-4E57-A6E4-635F91B2C2DC",
+        "udid" : "82A61E5F-529A-4E57-A6E4-635F91B2C2DC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-7-45mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 7 - 45mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/77187E4E-088E-4CCF-B1A1-8A3C8B855795\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/77187E4E-088E-4CCF-B1A1-8A3C8B855795",
+        "udid" : "77187E4E-088E-4CCF-B1A1-8A3C8B855795",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-7-41mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 7 - 41mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D0DBE61B-02B0-4BBD-8BDB-39D07A39D231\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D0DBE61B-02B0-4BBD-8BDB-39D07A39D231",
+        "udid" : "D0DBE61B-02B0-4BBD-8BDB-39D07A39D231",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CA4C9B91-9150-481D-A8D1-EE2B2255B70C\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CA4C9B91-9150-481D-A8D1-EE2B2255B70C",
+        "udid" : "CA4C9B91-9150-481D-A8D1-EE2B2255B70C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CDD804D5-511C-4BC0-A1E9-138CEB609D4F\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CDD804D5-511C-4BC0-A1E9-138CEB609D4F",
+        "udid" : "CDD804D5-511C-4BC0-A1E9-138CEB609D4F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/874AE740-2319-4372-9598-AE09918C743F\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/874AE740-2319-4372-9598-AE09918C743F",
+        "udid" : "874AE740-2319-4372-9598-AE09918C743F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 40mm"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-7-0" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/03FEFA59-04FC-46B0-97F3-140B86BB0270\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/03FEFA59-04FC-46B0-97F3-140B86BB0270",
+        "udid" : "03FEFA59-04FC-46B0-97F3-140B86BB0270",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5EE29A78-72C4-4CAF-A4D2-DA58E65449E7\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5EE29A78-72C4-4CAF-A4D2-DA58E65449E7",
+        "udid" : "5EE29A78-72C4-4CAF-A4D2-DA58E65449E7",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B4698FB3-0F76-4BB1-BA7C-8C0E2BD5CD5E\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B4698FB3-0F76-4BB1-BA7C-8C0E2BD5CD5E",
+        "udid" : "B4698FB3-0F76-4BB1-BA7C-8C0E2BD5CD5E",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/2DFECD0C-7F43-42EF-890F-5DF70A136A63\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/2DFECD0C-7F43-42EF-890F-5DF70A136A63",
+        "udid" : "2DFECD0C-7F43-42EF-890F-5DF70A136A63",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/82845CB8-3FF8-4D02-B92C-85EE800E54FA\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/82845CB8-3FF8-4D02-B92C-85EE800E54FA",
+        "udid" : "82845CB8-3FF8-4D02-B92C-85EE800E54FA",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 4 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/89EA5EB0-E132-4DC4-96F6-0F95B419C797\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/89EA5EB0-E132-4DC4-96F6-0F95B419C797",
+        "udid" : "89EA5EB0-E132-4DC4-96F6-0F95B419C797",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 4 - 40mm"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-15-5" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/52062D3E-8741-4D1C-907E-A3131EA3255B\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/52062D3E-8741-4D1C-907E-A3131EA3255B",
+        "udid" : "52062D3E-8741-4D1C-907E-A3131EA3255B",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/48F7646F-CC36-4F32-81F0-7A2BA2A48287\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/48F7646F-CC36-4F32-81F0-7A2BA2A48287",
+        "udid" : "48F7646F-CC36-4F32-81F0-7A2BA2A48287",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/02DEA46B-0D3D-4112-94C4-3B2F74E3CFEB\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/02DEA46B-0D3D-4112-94C4-3B2F74E3CFEB",
+        "udid" : "02DEA46B-0D3D-4112-94C4-3B2F74E3CFEB",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CC87CCC7-CCED-43B0-9063-B224D34EA361\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CC87CCC7-CCED-43B0-9063-B224D34EA361",
+        "udid" : "CC87CCC7-CCED-43B0-9063-B224D34EA361",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13",
+        "state" : "Shutdown",
+        "name" : "iPhone 13"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7D7677E2-3550-4F86-889E-66F6F35B8D14\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7D7677E2-3550-4F86-889E-66F6F35B8D14",
+        "udid" : "7D7677E2-3550-4F86-889E-66F6F35B8D14",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-mini",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 mini"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B25FDCE7-41A8-4A72-BB51-30ED662FAF79\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B25FDCE7-41A8-4A72-BB51-30ED662FAF79",
+        "udid" : "B25FDCE7-41A8-4A72-BB51-30ED662FAF79",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4D01ADDC-DE1A-4F6C-974C-6A7F61802653\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4D01ADDC-DE1A-4F6C-974C-6A7F61802653",
+        "udid" : "4D01ADDC-DE1A-4F6C-974C-6A7F61802653",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5C5E5EC3-FC73-4E83-90D7-06711B1ED78F\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5C5E5EC3-FC73-4E83-90D7-06711B1ED78F",
+        "udid" : "5C5E5EC3-FC73-4E83-90D7-06711B1ED78F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12",
+        "state" : "Shutdown",
+        "name" : "iPhone 12"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BDCA3222-96FA-4AAE-8F8E-CD6A9B6C8044\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BDCA3222-96FA-4AAE-8F8E-CD6A9B6C8044",
+        "udid" : "BDCA3222-96FA-4AAE-8F8E-CD6A9B6C8044",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 mini"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C72ABF77-0BEF-4D64-A8DD-02B5935B8898\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C72ABF77-0BEF-4D64-A8DD-02B5935B8898",
+        "udid" : "C72ABF77-0BEF-4D64-A8DD-02B5935B8898",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/34508BA1-B164-4753-BE6A-41A1B4150C21\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/34508BA1-B164-4753-BE6A-41A1B4150C21",
+        "udid" : "34508BA1-B164-4753-BE6A-41A1B4150C21",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3C20BC9A-AD23-4E79-A9D2-8E64FF7A9FD5\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3C20BC9A-AD23-4E79-A9D2-8E64FF7A9FD5",
+        "udid" : "3C20BC9A-AD23-4E79-A9D2-8E64FF7A9FD5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11",
+        "state" : "Shutdown",
+        "name" : "iPhone 11"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E17A00A7-7AC1-44DE-B6BE-9BB191F991F3\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E17A00A7-7AC1-44DE-B6BE-9BB191F991F3",
+        "udid" : "E17A00A7-7AC1-44DE-B6BE-9BB191F991F3",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8",
+        "state" : "Shutdown",
+        "name" : "iPhone 8"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4C4FBD98-7EDE-45A8-A3D0-AF2058CCAABF\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4C4FBD98-7EDE-45A8-A3D0-AF2058CCAABF",
+        "udid" : "4C4FBD98-7EDE-45A8-A3D0-AF2058CCAABF",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 8 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/712B390F-04A8-4B25-958F-81F25B2B96FE\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/712B390F-04A8-4B25-958F-81F25B2B96FE",
+        "udid" : "712B390F-04A8-4B25-958F-81F25B2B96FE",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Air (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/ED43E630-9C2B-4952-B4E5-CBD391A3026B\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/ED43E630-9C2B-4952-B4E5-CBD391A3026B",
+        "udid" : "ED43E630-9C2B-4952-B4E5-CBD391A3026B",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-6th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad mini (6th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0B0CC88D-5C54-42FB-B29F-453ACCC143F3\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0B0CC88D-5C54-42FB-B29F-453ACCC143F3",
+        "udid" : "0B0CC88D-5C54-42FB-B29F-453ACCC143F3",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A1AB2C09-E714-4C1F-B9AF-6AA620526F6A\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A1AB2C09-E714-4C1F-B9AF-6AA620526F6A",
+        "udid" : "A1AB2C09-E714-4C1F-B9AF-6AA620526F6A",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-12-9-inch-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4EDB29C1-321C-4785-90CF-2BCFAF920ADD\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4EDB29C1-321C-4785-90CF-2BCFAF920ADD",
+        "udid" : "4EDB29C1-321C-4785-90CF-2BCFAF920ADD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-9th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (9th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/73099C40-DB0B-42A4-BF7B-0650950C1C74\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/73099C40-DB0B-42A4-BF7B-0650950C1C74",
+        "udid" : "73099C40-DB0B-42A4-BF7B-0650950C1C74",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (9.7-inch)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/067F8F03-6E55-4DF0-A380-ED31BB57CB6F\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/067F8F03-6E55-4DF0-A380-ED31BB57CB6F",
+        "udid" : "067F8F03-6E55-4DF0-A380-ED31BB57CB6F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPod-touch--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPod touch (7th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-14-3" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/220733B6-34D6-47A0-8F70-2A894AA4421D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/220733B6-34D6-47A0-8F70-2A894AA4421D",
+        "udid" : "220733B6-34D6-47A0-8F70-2A894AA4421D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/63526C81-13DB-4707-9C32-D14F9A52AA55\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/63526C81-13DB-4707-9C32-D14F9A52AA55",
+        "udid" : "63526C81-13DB-4707-9C32-D14F9A52AA55",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7EDBCB0C-1527-4404-B281-7C2D53780ABD\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7EDBCB0C-1527-4404-B281-7C2D53780ABD",
+        "udid" : "7EDBCB0C-1527-4404-B281-7C2D53780ABD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12",
+        "state" : "Shutdown",
+        "name" : "iPhone 12"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A556F2D3-837B-41C7-8E80-6DE38160A29B\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A556F2D3-837B-41C7-8E80-6DE38160A29B",
+        "udid" : "A556F2D3-837B-41C7-8E80-6DE38160A29B",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 mini"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3FBE7687-C923-4260-87FC-59FA58606B82\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3FBE7687-C923-4260-87FC-59FA58606B82",
+        "udid" : "3FBE7687-C923-4260-87FC-59FA58606B82",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE--2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/21025E7F-F93F-4F0F-884A-03A3475D6929\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/21025E7F-F93F-4F0F-884A-03A3475D6929",
+        "udid" : "21025E7F-F93F-4F0F-884A-03A3475D6929",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AD987523-2FB0-4CFF-A4F3-397CA031C262\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AD987523-2FB0-4CFF-A4F3-397CA031C262",
+        "udid" : "AD987523-2FB0-4CFF-A4F3-397CA031C262",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/52DAACD9-EE84-409D-8E53-B5A615FA4E5B\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/52DAACD9-EE84-409D-8E53-B5A615FA4E5B",
+        "udid" : "52DAACD9-EE84-409D-8E53-B5A615FA4E5B",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11",
+        "state" : "Shutdown",
+        "name" : "iPhone 11"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5820CD69-86F1-4F1D-A723-5C1F316CB3B1\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5820CD69-86F1-4F1D-A723-5C1F316CB3B1",
+        "udid" : "5820CD69-86F1-4F1D-A723-5C1F316CB3B1",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8",
+        "state" : "Shutdown",
+        "name" : "iPhone 8"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F044DF3F-9948-40B9-9FFA-777BB425A9A0\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F044DF3F-9948-40B9-9FFA-777BB425A9A0",
+        "udid" : "F044DF3F-9948-40B9-9FFA-777BB425A9A0",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 8 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8700F09C-F0A6-4A10-8B3C-CC2EF00A26C1\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8700F09C-F0A6-4A10-8B3C-CC2EF00A26C1",
+        "udid" : "8700F09C-F0A6-4A10-8B3C-CC2EF00A26C1",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air--4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Air (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E983F034-5226-499B-98BF-A9C1166FAC2D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E983F034-5226-499B-98BF-A9C1166FAC2D",
+        "udid" : "E983F034-5226-499B-98BF-A9C1166FAC2D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad--8th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad (8th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7996E20E-8128-4A09-B100-042B8CB508E6\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7996E20E-8128-4A09-B100-042B8CB508E6",
+        "udid" : "7996E20E-8128-4A09-B100-042B8CB508E6",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--11-inch---2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FC255B26-8E33-4A02-A233-CBB4F120D47C\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FC255B26-8E33-4A02-A233-CBB4F120D47C",
+        "udid" : "FC255B26-8E33-4A02-A233-CBB4F120D47C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--12-9-inch---4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/63EFBD0A-DF0F-4886-BBE7-9B6C51B0B75D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/63EFBD0A-DF0F-4886-BBE7-9B6C51B0B75D",
+        "udid" : "63EFBD0A-DF0F-4886-BBE7-9B6C51B0B75D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (9.7-inch)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D3B8F1E9-07D7-457E-B7B3-CAC0001D9938\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D3B8F1E9-07D7-457E-B7B3-CAC0001D9938",
+        "udid" : "D3B8F1E9-07D7-457E-B7B3-CAC0001D9938",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPod-touch--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPod touch (7th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-14-0" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4394F006-A524-4E36-AAF2-D5792FA5F953\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4394F006-A524-4E36-AAF2-D5792FA5F953",
+        "udid" : "4394F006-A524-4E36-AAF2-D5792FA5F953",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE--2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7102CC89-5639-40CC-B707-3186877B5F46\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7102CC89-5639-40CC-B707-3186877B5F46",
+        "udid" : "7102CC89-5639-40CC-B707-3186877B5F46",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/EF80D856-173E-497E-945D-6D7E7F8E547A\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/EF80D856-173E-497E-945D-6D7E7F8E547A",
+        "udid" : "EF80D856-173E-497E-945D-6D7E7F8E547A",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/73919FB3-8E21-47AD-938F-0D76ED893F2A\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/73919FB3-8E21-47AD-938F-0D76ED893F2A",
+        "udid" : "73919FB3-8E21-47AD-938F-0D76ED893F2A",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11",
+        "state" : "Shutdown",
+        "name" : "iPhone 11"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E67F3694-1B1E-4C53-B178-53C917AE806D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E67F3694-1B1E-4C53-B178-53C917AE806D",
+        "udid" : "E67F3694-1B1E-4C53-B178-53C917AE806D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8",
+        "state" : "Shutdown",
+        "name" : "iPhone 8"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A191A189-5C37-40D7-9B69-65C32B17F9F2\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A191A189-5C37-40D7-9B69-65C32B17F9F2",
+        "udid" : "A191A189-5C37-40D7-9B69-65C32B17F9F2",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 8 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8B926A6D-88F6-4FD2-8AE3-3E29FA91BD84\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8B926A6D-88F6-4FD2-8AE3-3E29FA91BD84",
+        "udid" : "8B926A6D-88F6-4FD2-8AE3-3E29FA91BD84",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air--4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Air (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3906287D-512D-41D5-AE73-C95A0BC3BC38\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3906287D-512D-41D5-AE73-C95A0BC3BC38",
+        "udid" : "3906287D-512D-41D5-AE73-C95A0BC3BC38",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad--8th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad (8th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F9125A6D-982C-4ACF-8536-37A4A31CFBFD\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F9125A6D-982C-4ACF-8536-37A4A31CFBFD",
+        "udid" : "F9125A6D-982C-4ACF-8536-37A4A31CFBFD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air--3rd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Air (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4BA48FF2-0198-4E49-B427-BC7A398BA5D6\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4BA48FF2-0198-4E49-B427-BC7A398BA5D6",
+        "udid" : "4BA48FF2-0198-4E49-B427-BC7A398BA5D6",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--11-inch---2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B19760CE-A1FC-469B-90D9-614CF6E247B3\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B19760CE-A1FC-469B-90D9-614CF6E247B3",
+        "udid" : "B19760CE-A1FC-469B-90D9-614CF6E247B3",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--12-9-inch---4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F8B69F72-26BB-4160-A662-1F1FD9E96AA8\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F8B69F72-26BB-4160-A662-1F1FD9E96AA8",
+        "udid" : "F8B69F72-26BB-4160-A662-1F1FD9E96AA8",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad (7th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D71BE7B9-71A2-458A-B408-D1D330ECCA4C\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D71BE7B9-71A2-458A-B408-D1D330ECCA4C",
+        "udid" : "D71BE7B9-71A2-458A-B408-D1D330ECCA4C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (9.7-inch)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6BE8BFC7-F3C6-4EC9-B181-540A68777C2F\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6BE8BFC7-F3C6-4EC9-B181-540A68777C2F",
+        "udid" : "6BE8BFC7-F3C6-4EC9-B181-540A68777C2F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPod-touch--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPod touch (7th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-16-4" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E30643D7-4614-48BA-85DD-DB2DDD79BBDC\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E30643D7-4614-48BA-85DD-DB2DDD79BBDC",
+        "udid" : "E30643D7-4614-48BA-85DD-DB2DDD79BBDC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F18CC435-96C7-4A47-B364-FF9E3231C2FB\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F18CC435-96C7-4A47-B364-FF9E3231C2FB",
+        "udid" : "F18CC435-96C7-4A47-B364-FF9E3231C2FB",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/01281A1B-31A4-4321-8B34-3F2498ACB0D8\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/01281A1B-31A4-4321-8B34-3F2498ACB0D8",
+        "udid" : "01281A1B-31A4-4321-8B34-3F2498ACB0D8",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14",
+        "state" : "Shutdown",
+        "name" : "iPhone 14"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8B4216A9-2ABD-4374-90C9-41E2A072D662\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8B4216A9-2ABD-4374-90C9-41E2A072D662",
+        "udid" : "8B4216A9-2ABD-4374-90C9-41E2A072D662",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4F8E576E-40BA-4C53-98CB-ABED20273AB2\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4F8E576E-40BA-4C53-98CB-ABED20273AB2",
+        "udid" : "4F8E576E-40BA-4C53-98CB-ABED20273AB2",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/17A3BED5-3637-4F91-BEF5-1CADDEA0E5F4\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/17A3BED5-3637-4F91-BEF5-1CADDEA0E5F4",
+        "udid" : "17A3BED5-3637-4F91-BEF5-1CADDEA0E5F4",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-4th-generation-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F84BC7AB-F59D-4D55-A71A-25243AD5B1B7\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F84BC7AB-F59D-4D55-A71A-25243AD5B1B7",
+        "udid" : "F84BC7AB-F59D-4D55-A71A-25243AD5B1B7",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-12-9-inch-6th-generation-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (6th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/D6CD4C2A-FB97-4A67-A4DA-DA8AF331423F\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/D6CD4C2A-FB97-4A67-A4DA-DA8AF331423F",
+        "udid" : "D6CD4C2A-FB97-4A67-A4DA-DA8AF331423F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-10th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (10th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/50683230-43DD-49C4-BAEE-0722A0BB3C3D\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/50683230-43DD-49C4-BAEE-0722A0BB3C3D",
+        "udid" : "50683230-43DD-49C4-BAEE-0722A0BB3C3D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Air (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0F88A33F-E39C-410D-BDC1-4441DDCF3CC5\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0F88A33F-E39C-410D-BDC1-4441DDCF3CC5",
+        "udid" : "0F88A33F-E39C-410D-BDC1-4441DDCF3CC5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-6th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad mini (6th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-16-2" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/2DDB94EE-FDD8-4284-B39F-50EA841D6673\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/2DDB94EE-FDD8-4284-B39F-50EA841D6673",
+        "udid" : "2DDB94EE-FDD8-4284-B39F-50EA841D6673",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1B180A89-3CEE-4212-A05A-B5AE4564B320\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1B180A89-3CEE-4212-A05A-B5AE4564B320",
+        "udid" : "1B180A89-3CEE-4212-A05A-B5AE4564B320",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/CA3C0D79-1CC6-4E6C-8F67-7E1B48BBE2D9\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/CA3C0D79-1CC6-4E6C-8F67-7E1B48BBE2D9",
+        "udid" : "CA3C0D79-1CC6-4E6C-8F67-7E1B48BBE2D9",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14",
+        "state" : "Shutdown",
+        "name" : "iPhone 14"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9F836382-97D6-48BB-9DA7-FD35DF571911\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9F836382-97D6-48BB-9DA7-FD35DF571911",
+        "udid" : "9F836382-97D6-48BB-9DA7-FD35DF571911",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/44E2AF60-F883-4E23-A8C9-B51A0FDEDE76\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/44E2AF60-F883-4E23-A8C9-B51A0FDEDE76",
+        "udid" : "44E2AF60-F883-4E23-A8C9-B51A0FDEDE76",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/51B71291-6113-4EA8-86C4-5115C67361DD\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/51B71291-6113-4EA8-86C4-5115C67361DD",
+        "udid" : "51B71291-6113-4EA8-86C4-5115C67361DD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-4th-generation-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7C8B1ACA-A2F8-4FED-91FF-6C372262A397\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7C8B1ACA-A2F8-4FED-91FF-6C372262A397",
+        "udid" : "7C8B1ACA-A2F8-4FED-91FF-6C372262A397",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-12-9-inch-6th-generation-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (6th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/86ECDE5D-4A04-4BB1-82AC-15C2245296E6\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/86ECDE5D-4A04-4BB1-82AC-15C2245296E6",
+        "udid" : "86ECDE5D-4A04-4BB1-82AC-15C2245296E6",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-10th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (10th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0BE95AD9-B878-414B-8819-02788EFE9EF1\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0BE95AD9-B878-414B-8819-02788EFE9EF1",
+        "udid" : "0BE95AD9-B878-414B-8819-02788EFE9EF1",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Air (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/EDF97EDB-36F9-41E0-88DD-D259696C11ED\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/EDF97EDB-36F9-41E0-88DD-D259696C11ED",
+        "udid" : "EDF97EDB-36F9-41E0-88DD-D259696C11ED",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-6th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad mini (6th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-18-6" : [
+      {
+        "lastBootedAt" : "2026-09-22T13:39:25Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/EFFC0185-7429-4490-ADA8-9F85AFAE0D72\/data",
+        "dataPathSize" : 3370528768,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/EFFC0185-7429-4490-ADA8-9F85AFAE0D72",
+        "udid" : "EFFC0185-7429-4490-ADA8-9F85AFAE0D72",
+        "isAvailable" : true,
+        "logPathSize" : 770048,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Pro"
+      },
+      {
+        "lastBootedAt" : "2026-08-27T19:16:07Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/48442B9E-0D75-426A-8362-F85722E91CE8\/data",
+        "dataPathSize" : 3426123776,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/48442B9E-0D75-426A-8362-F85722E91CE8",
+        "udid" : "48442B9E-0D75-426A-8362-F85722E91CE8",
+        "isAvailable" : true,
+        "logPathSize" : 450560,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Pro Max"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5529785C-F24E-4DE5-AD2A-5800FFC6DF98\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5529785C-F24E-4DE5-AD2A-5800FFC6DF98",
+        "udid" : "5529785C-F24E-4DE5-AD2A-5800FFC6DF98",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+        "state" : "Shutdown",
+        "name" : "iPhone 16e"
+      },
+      {
+        "lastBootedAt" : "2026-09-23T00:05:14Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/32039CCE-BE1D-4233-A4D4-19CA9428DBF3\/data",
+        "dataPathSize" : 5710188544,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/32039CCE-BE1D-4233-A4D4-19CA9428DBF3",
+        "udid" : "32039CCE-BE1D-4233-A4D4-19CA9428DBF3",
+        "isAvailable" : true,
+        "logPathSize" : 860160,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16",
+        "state" : "Shutdown",
+        "name" : "iPhone 16"
+      },
+      {
+        "lastBootedAt" : "2026-09-23T21:04:13Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A0E82D97-5DAA-454A-855E-D4CCCDA5EBE7\/data",
+        "dataPathSize" : 852901888,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A0E82D97-5DAA-454A-855E-D4CCCDA5EBE7",
+        "udid" : "A0E82D97-5DAA-454A-855E-D4CCCDA5EBE7",
+        "isAvailable" : true,
+        "logPathSize" : 225280,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16",
+        "state" : "Shutdown",
+        "name" : "RepToday StoreKit Diagnostics Offline"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/94422395-9A86-46EE-8253-56F63EF60A79\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/94422395-9A86-46EE-8253-56F63EF60A79",
+        "udid" : "94422395-9A86-46EE-8253-56F63EF60A79",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Plus"
+      },
+      {
+        "lastBootedAt" : "2025-11-11T02:25:48Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/EDAD313E-AE6C-4E04-A7D8-905C959F2F8B\/data",
+        "dataPathSize" : 1058033664,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/EDAD313E-AE6C-4E04-A7D8-905C959F2F8B",
+        "udid" : "EDAD313E-AE6C-4E04-A7D8-905C959F2F8B",
+        "isAvailable" : true,
+        "logPathSize" : 90112,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M4)"
+      },
+      {
+        "lastBootedAt" : "2025-11-18T19:03:47Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6C6F5C95-FC76-4945-B9B0-1FE26EC154FF\/data",
+        "dataPathSize" : 2195283968,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6C6F5C95-FC76-4945-B9B0-1FE26EC154FF",
+        "udid" : "6C6F5C95-FC76-4945-B9B0-1FE26EC154FF",
+        "isAvailable" : true,
+        "logPathSize" : 90112,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8661B749-6F96-4803-BD8D-FCFD9231AF2C\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8661B749-6F96-4803-BD8D-FCFD9231AF2C",
+        "udid" : "8661B749-6F96-4803-BD8D-FCFD9231AF2C",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8D3B9A98-C30B-450D-A874-FC5401A7C832\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8D3B9A98-C30B-450D-A874-FC5401A7C832",
+        "udid" : "8D3B9A98-C30B-450D-A874-FC5401A7C832",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/89A4639C-2A47-44D5-8B16-459D79230609\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/89A4639C-2A47-44D5-8B16-459D79230609",
+        "udid" : "89A4639C-2A47-44D5-8B16-459D79230609",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BED34F71-021C-412B-8EAC-7EDB8DA140AF\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BED34F71-021C-412B-8EAC-7EDB8DA140AF",
+        "udid" : "BED34F71-021C-412B-8EAC-7EDB8DA140AF",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M3)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-16-0" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/822A3F09-5E69-475B-90F0-3808D208A96D\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/822A3F09-5E69-475B-90F0-3808D208A96D",
+        "udid" : "822A3F09-5E69-475B-90F0-3808D208A96D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FB5C485D-3218-490A-82BC-39603C1486A8\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FB5C485D-3218-490A-82BC-39603C1486A8",
+        "udid" : "FB5C485D-3218-490A-82BC-39603C1486A8",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/F5E17AFF-F9CF-4FBA-A098-FD70C94D66C5\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/F5E17AFF-F9CF-4FBA-A098-FD70C94D66C5",
+        "udid" : "F5E17AFF-F9CF-4FBA-A098-FD70C94D66C5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14",
+        "state" : "Shutdown",
+        "name" : "iPhone 14"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/77AB6B53-788E-449D-803C-759710B68BCB\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/77AB6B53-788E-449D-803C-759710B68BCB",
+        "udid" : "77AB6B53-788E-449D-803C-759710B68BCB",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-14-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 14 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/68F09A79-6C5C-4276-BB49-512DF0A414C1\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/68F09A79-6C5C-4276-BB49-512DF0A414C1",
+        "udid" : "68F09A79-6C5C-4276-BB49-512DF0A414C1",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/842A6438-AF02-4EEF-8788-760CD86D6972\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/842A6438-AF02-4EEF-8788-760CD86D6972",
+        "udid" : "842A6438-AF02-4EEF-8788-760CD86D6972",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Air (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/7E755248-1466-4FC3-9628-039F8E8706D2\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/7E755248-1466-4FC3-9628-039F8E8706D2",
+        "udid" : "7E755248-1466-4FC3-9628-039F8E8706D2",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-6th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad mini (6th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9D48C038-D10A-48F7-9ED6-EFD050F9BD00\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9D48C038-D10A-48F7-9ED6-EFD050F9BD00",
+        "udid" : "9D48C038-D10A-48F7-9ED6-EFD050F9BD00",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/572BB460-1F80-4B65-8B10-68DAEF016241\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/572BB460-1F80-4B65-8B10-68DAEF016241",
+        "udid" : "572BB460-1F80-4B65-8B10-68DAEF016241",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-12-9-inch-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/ED2EBEF9-7BF6-4E7E-A14D-EF4A15503619\/data",
+        "dataPathSize" : 13316096,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/ED2EBEF9-7BF6-4E7E-A14D-EF4A15503619",
+        "udid" : "ED2EBEF9-7BF6-4E7E-A14D-EF4A15503619",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-9th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (9th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-18-3" : [
+      {
+        "lastBootedAt" : "2026-09-18T19:12:04Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E37C5BE1-87D4-4EEF-BC0A-CBACCA22F5EF\/data",
+        "dataPathSize" : 3117412352,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E37C5BE1-87D4-4EEF-BC0A-CBACCA22F5EF",
+        "udid" : "E37C5BE1-87D4-4EEF-BC0A-CBACCA22F5EF",
+        "isAvailable" : true,
+        "logPathSize" : 536576,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Pro"
+      },
+      {
+        "lastBootedAt" : "2026-04-14T20:14:43Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3087B09F-68B7-4571-A8DA-070293CE0E18\/data",
+        "dataPathSize" : 1274900480,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3087B09F-68B7-4571-A8DA-070293CE0E18",
+        "udid" : "3087B09F-68B7-4571-A8DA-070293CE0E18",
+        "isAvailable" : true,
+        "logPathSize" : 102400,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Pro Max"
+      },
+      {
+        "lastBootedAt" : "2026-07-14T22:20:31Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/50B3ACA9-2B37-41D0-8169-20687D61DDDB\/data",
+        "dataPathSize" : 798175232,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/50B3ACA9-2B37-41D0-8169-20687D61DDDB",
+        "udid" : "50B3ACA9-2B37-41D0-8169-20687D61DDDB",
+        "isAvailable" : true,
+        "logPathSize" : 344064,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16e",
+        "state" : "Shutdown",
+        "name" : "iPhone 16e"
+      },
+      {
+        "lastBootedAt" : "2026-09-22T01:25:55Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/27C7F91C-0186-4F8A-9F8E-DE9F0A69FFAA\/data",
+        "dataPathSize" : 3371356160,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/27C7F91C-0186-4F8A-9F8E-DE9F0A69FFAA",
+        "udid" : "27C7F91C-0186-4F8A-9F8E-DE9F0A69FFAA",
+        "isAvailable" : true,
+        "logPathSize" : 929792,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16",
+        "state" : "Shutdown",
+        "name" : "iPhone 16"
+      },
+      {
+        "lastBootedAt" : "2026-04-15T13:04:48Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3DC95FBC-BF95-43B5-AB37-F4AE5D0646C3\/data",
+        "dataPathSize" : 1147883520,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3DC95FBC-BF95-43B5-AB37-F4AE5D0646C3",
+        "udid" : "3DC95FBC-BF95-43B5-AB37-F4AE5D0646C3",
+        "isAvailable" : true,
+        "logPathSize" : 94208,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 16 Plus"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C2FB25C3-CE5C-4958-8CE8-58CD876E9F20\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C2FB25C3-CE5C-4958-8CE8-58CD876E9F20",
+        "udid" : "C2FB25C3-CE5C-4958-8CE8-58CD876E9F20",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (3rd generation)"
+      },
+      {
+        "lastBootedAt" : "2025-11-11T13:18:12Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6F3F46FC-223B-4141-B230-828D4F581FC5\/data",
+        "dataPathSize" : 1156337664,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6F3F46FC-223B-4141-B230-828D4F581FC5",
+        "udid" : "6F3F46FC-223B-4141-B230-828D4F581FC5",
+        "isAvailable" : true,
+        "logPathSize" : 90112,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 11-inch (M4)"
+      },
+      {
+        "lastBootedAt" : "2026-01-06T19:05:39Z",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/3F339DD4-2AFA-4B5D-9EA5-3E66258CE3ED\/data",
+        "dataPathSize" : 2470473728,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/3F339DD4-2AFA-4B5D-9EA5-3E66258CE3ED",
+        "udid" : "3F339DD4-2AFA-4B5D-9EA5-3E66258CE3ED",
+        "isAvailable" : true,
+        "logPathSize" : 602112,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-13-inch-M4-8GB",
+        "state" : "Shutdown",
+        "name" : "iPad Pro 13-inch (M4)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/35AE6266-22CD-4053-807E-DC0556FB4590\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/35AE6266-22CD-4053-807E-DC0556FB4590",
+        "udid" : "35AE6266-22CD-4053-807E-DC0556FB4590",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-A16",
+        "state" : "Shutdown",
+        "name" : "iPad (A16)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/873C621D-902F-4330-AD30-41DA322AB267\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/873C621D-902F-4330-AD30-41DA322AB267",
+        "udid" : "873C621D-902F-4330-AD30-41DA322AB267",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4640BF49-B285-463F-98B6-A9DA1E93BB7B\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4640BF49-B285-463F-98B6-A9DA1E93BB7B",
+        "udid" : "4640BF49-B285-463F-98B6-A9DA1E93BB7B",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M3",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M3)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/322652FC-4391-4E9B-8A0E-383D4E8C7C65\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/322652FC-4391-4E9B-8A0E-383D4E8C7C65",
+        "udid" : "322652FC-4391-4E9B-8A0E-383D4E8C7C65",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-11-inch-M2",
+        "state" : "Shutdown",
+        "name" : "iPad Air 11-inch (M2)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9EA52DC5-ED7F-462F-AD1D-4D206864DB9A\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9EA52DC5-ED7F-462F-AD1D-4D206864DB9A",
+        "udid" : "9EA52DC5-ED7F-462F-AD1D-4D206864DB9A",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air-13-inch-M2",
+        "state" : "Shutdown",
+        "name" : "iPad Air 13-inch (M2)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C2E46B33-AB53-472E-BC0F-5F52A329CFE1\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C2E46B33-AB53-472E-BC0F-5F52A329CFE1",
+        "udid" : "C2E46B33-AB53-472E-BC0F-5F52A329CFE1",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-A17-Pro",
+        "state" : "Shutdown",
+        "name" : "iPad mini (A17 Pro)"
+      },
+      {
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9AE55542-4A75-49AF-9E3C-793133305F25\/data",
+        "dataPathSize" : 18337792,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9AE55542-4A75-49AF-9E3C-793133305F25",
+        "udid" : "9AE55542-4A75-49AF-9E3C-793133305F25",
+        "isAvailable" : true,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-10th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (10th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.iOS-15-2" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/81814F81-49C7-41A7-87F6-FE0B9ABE8CB9\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/81814F81-49C7-41A7-87F6-FE0B9ABE8CB9",
+        "udid" : "81814F81-49C7-41A7-87F6-FE0B9ABE8CB9",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/1BAFB5E5-FBF8-4E3B-892A-5A61805CE08C\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/1BAFB5E5-FBF8-4E3B-892A-5A61805CE08C",
+        "udid" : "1BAFB5E5-FBF8-4E3B-892A-5A61805CE08C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/0B7EDE8D-3253-4813-A31D-C4377686B70F\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/0B7EDE8D-3253-4813-A31D-C4377686B70F",
+        "udid" : "0B7EDE8D-3253-4813-A31D-C4377686B70F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13",
+        "state" : "Shutdown",
+        "name" : "iPhone 13"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/DCE6B56F-0F4F-4448-B5FA-197C7DF03192\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/DCE6B56F-0F4F-4448-B5FA-197C7DF03192",
+        "udid" : "DCE6B56F-0F4F-4448-B5FA-197C7DF03192",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-13-mini",
+        "state" : "Shutdown",
+        "name" : "iPhone 13 mini"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/84D81166-A5C5-486D-946D-C936CE325F97\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/84D81166-A5C5-486D-946D-C936CE325F97",
+        "udid" : "84D81166-A5C5-486D-946D-C936CE325F97",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/AF31E072-4AD9-4B19-8745-3F681D750C59\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/AF31E072-4AD9-4B19-8745-3F681D750C59",
+        "udid" : "AF31E072-4AD9-4B19-8745-3F681D750C59",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/B522AF75-8626-49F6-9BDA-8AA3A8FCB383\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/B522AF75-8626-49F6-9BDA-8AA3A8FCB383",
+        "udid" : "B522AF75-8626-49F6-9BDA-8AA3A8FCB383",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12",
+        "state" : "Shutdown",
+        "name" : "iPhone 12"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E397CFE8-0E2F-401F-B7C4-E4815894A249\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E397CFE8-0E2F-401F-B7C4-E4815894A249",
+        "udid" : "E397CFE8-0E2F-401F-B7C4-E4815894A249",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini",
+        "state" : "Shutdown",
+        "name" : "iPhone 12 mini"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/2F3C51BD-FD8D-48D3-89DA-E29AD5EFC85D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/2F3C51BD-FD8D-48D3-89DA-E29AD5EFC85D",
+        "udid" : "2F3C51BD-FD8D-48D3-89DA-E29AD5EFC85D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-SE--2nd-generation-",
+        "state" : "Shutdown",
+        "name" : "iPhone SE (2nd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4BB6D9AE-DE66-47F8-99BE-A89637C43833\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4BB6D9AE-DE66-47F8-99BE-A89637C43833",
+        "udid" : "4BB6D9AE-DE66-47F8-99BE-A89637C43833",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/661B0E09-A148-4685-B539-6FBB23A72071\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/661B0E09-A148-4685-B539-6FBB23A72071",
+        "udid" : "661B0E09-A148-4685-B539-6FBB23A72071",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11-Pro-Max",
+        "state" : "Shutdown",
+        "name" : "iPhone 11 Pro Max"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/26FCB315-E508-48B2-909B-81100A900605\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/26FCB315-E508-48B2-909B-81100A900605",
+        "udid" : "26FCB315-E508-48B2-909B-81100A900605",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-11",
+        "state" : "Shutdown",
+        "name" : "iPhone 11"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/BA49A593-1F73-488D-9F51-5756E8F6A98C\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/BA49A593-1F73-488D-9F51-5756E8F6A98C",
+        "udid" : "BA49A593-1F73-488D-9F51-5756E8F6A98C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8",
+        "state" : "Shutdown",
+        "name" : "iPhone 8"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/FD356CAA-076B-4676-B6F2-D7C6A3F0F21D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/FD356CAA-076B-4676-B6F2-D7C6A3F0F21D",
+        "udid" : "FD356CAA-076B-4676-B6F2-D7C6A3F0F21D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus",
+        "state" : "Shutdown",
+        "name" : "iPhone 8 Plus"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/64B08299-1F31-4B8E-A9C1-506284197DE3\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/64B08299-1F31-4B8E-A9C1-506284197DE3",
+        "udid" : "64B08299-1F31-4B8E-A9C1-506284197DE3",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-mini-6th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad mini (6th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/755B3F8F-2288-4B04-8B2F-697BE368DD2D\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/755B3F8F-2288-4B04-8B2F-697BE368DD2D",
+        "udid" : "755B3F8F-2288-4B04-8B2F-697BE368DD2D",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-3rd-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (11-inch) (3rd generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/709E82DD-8ACD-49C6-A5A5-28AB8BA968DA\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/709E82DD-8ACD-49C6-A5A5-28AB8BA968DA",
+        "udid" : "709E82DD-8ACD-49C6-A5A5-28AB8BA968DA",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-12-9-inch-5th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (12.9-inch) (5th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/65F18F7B-E246-49AC-A89F-2F3C386521C4\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/65F18F7B-E246-49AC-A89F-2F3C386521C4",
+        "udid" : "65F18F7B-E246-49AC-A89F-2F3C386521C4",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-9th-generation",
+        "state" : "Shutdown",
+        "name" : "iPad (9th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C58DE7E9-59BA-46AE-A13C-66B690E5111F\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C58DE7E9-59BA-46AE-A13C-66B690E5111F",
+        "udid" : "C58DE7E9-59BA-46AE-A13C-66B690E5111F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Air--4th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPad Air (4th generation)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/8989D38C-1195-4824-BB6F-C1B341A845E3\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/8989D38C-1195-4824-BB6F-C1B341A845E3",
+        "udid" : "8989D38C-1195-4824-BB6F-C1B341A845E3",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-",
+        "state" : "Shutdown",
+        "name" : "iPad Pro (9.7-inch)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/4ADE2A1A-4B60-44E4-88DA-103FE0E2B4C1\/data",
+        "dataPathSize" : 13312000,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/4ADE2A1A-4B60-44E4-88DA-103FE0E2B4C1",
+        "udid" : "4ADE2A1A-4B60-44E4-88DA-103FE0E2B4C1",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.iPod-touch--7th-generation-",
+        "state" : "Shutdown",
+        "name" : "iPod touch (7th generation)"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-7-2" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6C1BB68D-030D-4465-8DB6-9D8216EB6EA6\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6C1BB68D-030D-4465-8DB6-9D8216EB6EA6",
+        "udid" : "6C1BB68D-030D-4465-8DB6-9D8216EB6EA6",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/C94458D2-929C-4276-8AA7-F6CB73D8E9FD\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/C94458D2-929C-4276-8AA7-F6CB73D8E9FD",
+        "udid" : "C94458D2-929C-4276-8AA7-F6CB73D8E9FD",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-6-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 6 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/174FC996-C201-4C58-B8E0-286705923D8F\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/174FC996-C201-4C58-B8E0-286705923D8F",
+        "udid" : "174FC996-C201-4C58-B8E0-286705923D8F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/6E2BD8F0-8593-4924-A153-63EE4D951E5F\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/6E2BD8F0-8593-4924-A153-63EE4D951E5F",
+        "udid" : "6E2BD8F0-8593-4924-A153-63EE4D951E5F",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 40mm"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.tvOS-13-4" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/74B47267-7AF9-4975-8F8A-5AE93301DEEE\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/74B47267-7AF9-4975-8F8A-5AE93301DEEE",
+        "udid" : "74B47267-7AF9-4975-8F8A-5AE93301DEEE",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-4K",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/9CB6FAEA-3AC2-485C-B1B2-B65E542F98EC\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/9CB6FAEA-3AC2-485C-B1B2-B65E542F98EC",
+        "udid" : "9CB6FAEA-3AC2-485C-B1B2-B65E542F98EC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV 4K (at 1080p)"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/843B3428-34AD-40A4-9B93-D3466A5ED513\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/843B3428-34AD-40A4-9B93-D3466A5ED513",
+        "udid" : "843B3428-34AD-40A4-9B93-D3466A5ED513",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
+        "state" : "Shutdown",
+        "name" : "Apple TV"
+      }
+    ],
+    "com.apple.CoreSimulator.SimRuntime.watchOS-6-2" : [
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/5D354EF1-E2DA-4BCC-8A5A-D3BE73FFBAFC\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/5D354EF1-E2DA-4BCC-8A5A-D3BE73FFBAFC",
+        "udid" : "5D354EF1-E2DA-4BCC-8A5A-D3BE73FFBAFC",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/36E7FCF1-354A-48AD-8EEC-DEFAF27E9D6C\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/36E7FCF1-354A-48AD-8EEC-DEFAF27E9D6C",
+        "udid" : "36E7FCF1-354A-48AD-8EEC-DEFAF27E9D6C",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-5-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 5 - 40mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/E9A3B7B6-678D-4F93-A03A-CF80979B3F16\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/E9A3B7B6-678D-4F93-A03A-CF80979B3F16",
+        "udid" : "E9A3B7B6-678D-4F93-A03A-CF80979B3F16",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-44mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 4 - 44mm"
+      },
+      {
+        "availabilityError" : "runtime profile not found using \"System\" match policy",
+        "dataPath" : "\/Users\/hcho\/Library\/Developer\/CoreSimulator\/Devices\/A61593BB-8534-45CE-B029-562811C0B5A5\/data",
+        "dataPathSize" : 0,
+        "logPath" : "\/Users\/hcho\/Library\/Logs\/CoreSimulator\/A61593BB-8534-45CE-B029-562811C0B5A5",
+        "udid" : "A61593BB-8534-45CE-B029-562811C0B5A5",
+        "isAvailable" : false,
+        "deviceTypeIdentifier" : "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-40mm",
+        "state" : "Shutdown",
+        "name" : "Apple Watch Series 4 - 40mm"
+      }
+    ]
+  }
+}

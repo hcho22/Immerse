@@ -1,0 +1,50 @@
+Building for debugging...
+[0/4] Write sources
+[1/4] Write swift-version--58304C5D6DBC2206.txt
+[3/6] Emitting module FilmRuntimeTests
+[4/6] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (3.18s)
+Test Suite 'Selected tests' started at 2026-10-01 12:51:01.053.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 12:51:01.055.
+Test Suite 'DevelopmentObserverTests' started at 2026-10-01 12:51:01.055.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/SQLiteDatabase.swift:48: error: -[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver] : failed: caught error: "mediaNotRevealed"
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' failed (0.755 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' passed (4.356 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' passed (1.856 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' passed (0.800 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' passed (1.677 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Sources/FilmPersistence/SQLiteDatabase.swift:48: error: -[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob] : failed: caught error: "mediaNotRevealed"
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' failed (0.115 seconds).
+Test Suite 'DevelopmentObserverTests' failed at 2026-10-01 12:51:10.615.
+	 Executed 6 tests, with 2 failures (2 unexpected) in 9.559 (9.560) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' failed at 2026-10-01 12:51:10.615.
+	 Executed 6 tests, with 2 failures (2 unexpected) in 9.559 (9.560) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 12:51:10.615.
+	 Executed 6 tests, with 2 failures (2 unexpected) in 9.559 (9.562) seconds
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7B569546-2E7C-48D3-B395-099D7B2935A4
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/351FAC99-9C70-4490-92C2-195D84435CC9
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/00CD3D3F-0D5A-4448-A574-F77071F60389
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E2988A98-0927-4425-9309-8F2DC24793D0
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/40572E88-F654-42A6-A0CF-12C4808F0421
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/312945DC-EAA4-48D9-ACA1-31C4151D219D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/13F36029-4579-4A57-8734-DEDD789F0938
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B84DAD9A-2A82-41BA-9574-48CB51C69B46
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/ABCEEB7A-033D-406C-8C04-254D1F6C99DC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7FDBF0BD-E2C5-4449-A6B2-1B898136B022
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7813BFF2-AA1B-44F6-9628-37EAC8497928
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B5913F30-3219-4A6C-AF98-66FF51924846
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1407A28B-24D3-4E36-A4E7-159C3B8463EC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/A0325503-4BD5-4F25-A06E-26B2F484ADB3
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/C04F5E48-0D47-47B6-8807-0816DDCF8B6B
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -1,0 +1,57 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 2,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "PopulatedJournalHarness · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1790887444.484,
+  "passedTests" : 2,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790887217.778,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to tap \"Cancel\" Button: No matches found for Elements matching predicate '\"Cancel\" IN identifiers' from input {(\n    Button, identifier: 'inspect-state', label: 'Inspect synthetic state',\n    Button, identifier: 'BackButton', label: 'Film Journal',\n    Button, label: 'Film actions',\n    Button, label: 'Complete Film',\n    Button, label: 'Open Camera'\n)}",
+      "targetName" : "PopulatedJournalHarnessTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()",
+      "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport",
+      "testName" : "testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()"
+    },
+    {
+      "failureText" : "Failed to tap \"Cancel\" Button: No matches found for Elements matching predicate '\"Cancel\" IN identifiers' from input {(\n    Button, identifier: 'inspect-state', label: 'Inspect synthetic state',\n    Button, identifier: 'BackButton', label: 'Film Journal',\n    Button, label: 'Film actions',\n    Button, identifier: 'confirm-delete-film', label: 'Delete Film',\n    Button, label: 'Open Camera',\n    Button, identifier: 'confirm-delete-film', label: 'Delete Film'\n)}",
+      "targetName" : "PopulatedJournalHarnessTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()",
+      "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation",
+      "testName" : "testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()"
+    }
+  ],
+  "title" : "Test - PopulatedJournalHarness",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 4
+}

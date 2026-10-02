@@ -1,0 +1,27 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling NativeAdaptersTests CapturedMediaFileTests.swift
+[4/5] Emitting module NativeAdaptersTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking NativeAdaptersPackageTests
+Build complete! (2.00s)
+Test Suite 'Selected tests' started at 2026-10-01 15:53:36.119.
+Test Suite 'NativeAdaptersPackageTests.xctest' started at 2026-10-01 15:53:36.121.
+Test Suite 'CapturedMediaFileTests' started at 2026-10-01 15:53:36.121.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/NativeAdapters/Tests/NativeAdaptersTests/CapturedMediaFileTests.swift:113: error: -[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved] : XCTAssertThrowsError failed: did not throw an error
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/NativeAdapters/Tests/NativeAdaptersTests/CapturedMediaFileTests.swift:116: error: -[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved] : failed - Uninspectable staging must not recover as empty
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/NativeAdapters/Tests/NativeAdaptersTests/CapturedMediaFileTests.swift:118: error: -[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved] : XCTAssertThrowsError failed: did not throw an error
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/NativeAdapters/Tests/NativeAdaptersTests/CapturedMediaFileTests.swift:121: error: -[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved] : XCTAssertThrowsError failed: did not throw an error
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved]' failed (0.824 seconds).
+Test Suite 'CapturedMediaFileTests' failed at 2026-10-01 15:53:36.945.
+	 Executed 1 test, with 4 failures (0 unexpected) in 0.824 (0.824) seconds
+Test Suite 'NativeAdaptersPackageTests.xctest' failed at 2026-10-01 15:53:36.945.
+	 Executed 1 test, with 4 failures (0 unexpected) in 0.824 (0.824) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 15:53:36.945.
+	 Executed 1 test, with 4 failures (0 unexpected) in 0.824 (0.826) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -1,0 +1,15 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/CameraDenied-046-1.xcresult
+
+2026-10-01 17:38:09.395 xcodebuild[83779:157889152] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:38:09.395 xcodebuild[83779:157889152] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:38:49.560 xcodebuild[83779:157889152] [MT] IDETestOperationsObserverDebug: 43.246 elapsed -- Testing started completed.
+2026-10-01 17:38:49.560 xcodebuild[83779:157889152] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 17:38:49.561 xcodebuild[83779:157889152] [MT] IDETestOperationsObserverDebug: 43.246 sec, +43.246 sec -- end
+Failing tests:
+	JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings()
+	JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings()
+
+** TEST FAILED **
+
+Testing started

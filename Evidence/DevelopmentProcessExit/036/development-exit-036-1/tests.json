@@ -1,0 +1,92 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "58s",
+                  "durationInSeconds" : 58.46352696418762,
+                  "name" : "testInstantExitBeforeSecondReveal()",
+                  "nodeIdentifier" : "DevelopmentProcessExitUITests/testInstantExitBeforeSecondReveal()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testInstantExitBeforeSecondReveal",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 5s",
+                  "durationInSeconds" : 65.73462295532227,
+                  "name" : "testMovieDiscardExitAfterAssignments()",
+                  "nodeIdentifier" : "DevelopmentProcessExitUITests/testMovieDiscardExitAfterAssignments()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testMovieDiscardExitAfterAssignments",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "53s",
+                  "durationInSeconds" : 53.04403901100159,
+                  "name" : "testMovieExitAfterClipPersistence()",
+                  "nodeIdentifier" : "DevelopmentProcessExitUITests/testMovieExitAfterClipPersistence()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testMovieExitAfterClipPersistence",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "48s",
+                  "durationInSeconds" : 48.49640703201294,
+                  "name" : "testPhotoExitAfterRendering()",
+                  "nodeIdentifier" : "DevelopmentProcessExitUITests/testPhotoExitAfterRendering()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests/testPhotoExitAfterRendering",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "DevelopmentProcessExitUITests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/DevelopmentProcessExitUITests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ExportPrivacyUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

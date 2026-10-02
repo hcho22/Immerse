@@ -1,0 +1,46 @@
+simulator build exit 0
+device build exit 0
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Populated-046-final.xcresult
+
+2026-10-01 18:04:28.828 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:04:28.828 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:05:44.280 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:05:44.281 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:07:08.649 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:07:08.650 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:07:21.665 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:07:21.665 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:07:50.082 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:07:50.082 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:08:18.046 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:08:18.046 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:09:07.532 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:09:07.532 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:09:40.979 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:09:40.979 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:09:52.580 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:09:52.580 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:10:17.678 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:10:17.678 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:10:29.682 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:10:29.682 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:10:37.772 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:10:37.772 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:11:00.390 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:11:00.390 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:11:23.593 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:11:23.594 xcodebuild[17953:158280771] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:12:09.791 xcodebuild[17953:158280771] [MT] IDETestOperationsObserverDebug: 465.359 elapsed -- Testing started completed.
+2026-10-01 18:12:09.792 xcodebuild[17953:158280771] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:12:09.792 xcodebuild[17953:158280771] [MT] IDETestOperationsObserverDebug: 465.359 sec, +465.359 sec -- end
+Testing started
+harness exit 0
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/CaptureController-046-final.xcresult
+
+2026-10-01 18:12:55.078 xcodebuild[65401:158404319] [MT] IDETestOperationsObserverDebug: 24.705 elapsed -- Testing started completed.
+2026-10-01 18:12:55.079 xcodebuild[65401:158404319] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:12:55.079 xcodebuild[65401:158404319] [MT] IDETestOperationsObserverDebug: 24.705 sec, +24.705 sec -- end
+Testing started
+hosted 26.5 exit 0

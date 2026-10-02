@@ -1,0 +1,3081 @@
+[
+  {
+    "time": 1790872645.839421,
+    "uptime": 1240021.91000926,
+    "event": "launch",
+    "detail": "-stackContainer -boundedViewport",
+    "labels": []
+  },
+  {
+    "time": 1790872654.851639,
+    "uptime": 1240030.922118907,
+    "event": "top.before-snapshot",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -143,
+        402,
+        635
+      ],
+      "containerSize": [
+        402,
+        635
+      ],
+      "contentSize": [
+        402,
+        2090
+      ],
+      "event": "scroll",
+      "insets": [
+        143,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -143
+      ],
+      "time": 1790872653.061006,
+      "uptime": 1240029.1315030681,
+      "visibleRect": [
+        0,
+        -143,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        205,
+        402,
+        635
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872653.00505,
+      "uptime": 1240029.0755482551,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          592.6666666666666,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.98978,
+        "uptime": 1240029.060275939
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          810,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.989691,
+        "uptime": 1240029.060187587
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          903.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.989869,
+        "uptime": 1240029.0603647882
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1441.3333333333333,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872653.061287,
+        "uptime": 1240029.131782734
+      }
+    ]
+  },
+  {
+    "time": 1790872655.753962,
+    "uptime": 1240031.824432014,
+    "event": "top.audit-call",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -143,
+        402,
+        635
+      ],
+      "containerSize": [
+        402,
+        635
+      ],
+      "contentSize": [
+        402,
+        2090
+      ],
+      "event": "scroll",
+      "insets": [
+        143,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -143
+      ],
+      "time": 1790872653.061006,
+      "uptime": 1240029.1315030681,
+      "visibleRect": [
+        0,
+        -143,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        205,
+        402,
+        635
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872653.00505,
+      "uptime": 1240029.0755482551,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          592.6666666666666,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.98978,
+        "uptime": 1240029.060275939
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          810,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.989691,
+        "uptime": 1240029.060187587
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          903.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872652.989869,
+        "uptime": 1240029.0603647882
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1441.3333333333333,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872653.061287,
+        "uptime": 1240029.131782734
+      }
+    ]
+  },
+  {
+    "time": 1790872658.268667,
+    "uptime": 1240034.3391114771,
+    "event": "top.audit-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -143,
+        402,
+        635
+      ],
+      "containerSize": [
+        402,
+        635
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        143,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -143
+      ],
+      "time": 1790872657.8348908,
+      "uptime": 1240033.905336417,
+      "visibleRect": [
+        0,
+        -143,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        205,
+        402,
+        635
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872657.826433,
+      "uptime": 1240033.896879738,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          592.6666666666666,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872657.791045,
+        "uptime": 1240033.861490959
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          810,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872657.790972,
+        "uptime": 1240033.861418415
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          903.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872657.791978,
+        "uptime": 1240033.862424723
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1440.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872657.8350759,
+        "uptime": 1240033.905521228
+      }
+    ]
+  },
+  {
+    "time": 1790872662.973967,
+    "uptime": 1240039.044361721,
+    "event": "title.before-snapshot",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        538,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        538
+      ],
+      "time": 1790872661.905673,
+      "uptime": 1240037.976077829,
+      "visibleRect": [
+        0,
+        538,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -88.33333333333337,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.906077,
+        "uptime": 1240037.976480229
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          129,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.906022,
+        "uptime": 1240037.9764249981
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          222.33333333333337,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.9061341,
+        "uptime": 1240037.9765366032
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          759.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.905904,
+        "uptime": 1240037.976306565
+      }
+    ]
+  },
+  {
+    "time": 1790872664.0079222,
+    "uptime": 1240040.078305451,
+    "event": "title.audit-call",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        538,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        538
+      ],
+      "time": 1790872661.905673,
+      "uptime": 1240037.976077829,
+      "visibleRect": [
+        0,
+        538,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -88.33333333333337,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.906077,
+        "uptime": 1240037.976480229
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          129,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.906022,
+        "uptime": 1240037.9764249981
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          222.33333333333337,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.9061341,
+        "uptime": 1240037.9765366032
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          759.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872661.905904,
+        "uptime": 1240037.976306565
+      }
+    ]
+  },
+  {
+    "time": 1790872666.724061,
+    "uptime": 1240042.7944161422,
+    "event": "title.callback-1.enter",
+    "detail": "auditType=1",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872666.946089,
+    "uptime": 1240043.016442035,
+    "event": "title.callback-1.screenshot-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872667.516571,
+    "uptime": 1240043.586916384,
+    "event": "title.callback-1.tree-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872668.163752,
+    "uptime": 1240044.234091768,
+    "event": "title.callback-1.issue-query-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872668.3880792,
+    "uptime": 1240044.4584163032,
+    "event": "title.callback-1.exit",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872668.647736,
+    "uptime": 1240044.718070944,
+    "event": "title.audit-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872665.879813,
+      "uptime": 1240041.950176462,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844118,
+        "uptime": 1240041.9144797442
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844009,
+        "uptime": 1240041.914371009
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.844174,
+        "uptime": 1240041.914535646
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872665.880029,
+        "uptime": 1240041.9503901221
+      }
+    ]
+  },
+  {
+    "time": 1790872677.154136,
+    "uptime": 1240053.224418632,
+    "event": "command.before-snapshot",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        1294,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        1294
+      ],
+      "time": 1790872676.389118,
+      "uptime": 1240052.459371495,
+      "visibleRect": [
+        0,
+        1294,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -844.3333333333334,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.389504,
+        "uptime": 1240052.459755507
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          -627,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.38945,
+        "uptime": 1240052.459701675
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -533.6666666666666,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.3895578,
+        "uptime": 1240052.4598093391
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          3.6666666666667425,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.389336,
+        "uptime": 1240052.459587173
+      }
+    ]
+  },
+  {
+    "time": 1790872677.956211,
+    "uptime": 1240054.02644907,
+    "event": "command.audit-call",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        1294,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        1294
+      ],
+      "time": 1790872676.389118,
+      "uptime": 1240052.459371495,
+      "visibleRect": [
+        0,
+        1294,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -844.3333333333334,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.389504,
+        "uptime": 1240052.459755507
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          -627,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.38945,
+        "uptime": 1240052.459701675
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          -533.6666666666666,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.3895578,
+        "uptime": 1240052.4598093391
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          3.6666666666667425,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872676.389336,
+        "uptime": 1240052.459587173
+      }
+    ]
+  },
+  {
+    "time": 1790872680.821405,
+    "uptime": 1240056.891612157,
+    "event": "command.callback-1.enter",
+    "detail": "auditType=1",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872681.0292602,
+    "uptime": 1240057.099465277,
+    "event": "command.callback-1.screenshot-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872681.618846,
+    "uptime": 1240057.6890450942,
+    "event": "command.callback-1.tree-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872682.235588,
+    "uptime": 1240058.30577976,
+    "event": "command.callback-1.issue-query-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872682.4588342,
+    "uptime": 1240058.529023447,
+    "event": "command.callback-1.exit",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872682.709992,
+    "uptime": 1240058.7801787162,
+    "event": "command.callback-2.enter",
+    "detail": "auditType=1",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872682.9435148,
+    "uptime": 1240059.013699912,
+    "event": "command.callback-2.screenshot-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872683.515862,
+    "uptime": 1240059.586040593,
+    "event": "command.callback-2.tree-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872684.159595,
+    "uptime": 1240060.2297673412,
+    "event": "command.callback-2.issue-query-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872684.3858628,
+    "uptime": 1240060.4560328692,
+    "event": "command.callback-2.exit",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  },
+  {
+    "time": 1790872684.647379,
+    "uptime": 1240060.717547256,
+    "event": "command.audit-returned",
+    "detail": "",
+    "lastScroll": {
+      "bounds": [
+        0,
+        -52,
+        402,
+        708
+      ],
+      "containerSize": [
+        402,
+        708
+      ],
+      "contentSize": [
+        402,
+        2089.333333333333
+      ],
+      "event": "scroll",
+      "insets": [
+        70,
+        0,
+        34,
+        0
+      ],
+      "offset": [
+        0,
+        -52
+      ],
+      "time": 1790872679.9486098,
+      "uptime": 1240056.018825571,
+      "visibleRect": [
+        0,
+        -52,
+        402,
+        812
+      ]
+    },
+    "lastWindow": {
+      "event": "window",
+      "rootFrame": [
+        0,
+        132,
+        402,
+        708
+      ],
+      "rootSafeArea": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "time": 1790872659.4522,
+      "uptime": 1240035.522630972,
+      "windowBounds": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "windowSafeArea": [
+        62,
+        0,
+        34,
+        0
+      ]
+    },
+    "labels": [
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          501.66666666666663,
+          302.66666666666663,
+          187.33333333333337
+        ],
+        "id": "camera-description",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.908355,
+        "uptime": 1240055.978569735
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          60,
+          719,
+          308,
+          63.33333333333337
+        ],
+        "id": "silent-capture",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.9082499,
+        "uptime": 1240055.978464316
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          812.3333333333334,
+          249.66666666666663,
+          125.33333333333337
+        ],
+        "id": "orientation-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.90841,
+        "uptime": 1240055.9786245672
+      },
+      {
+        "appearance": "light",
+        "dynamicTypeSize": "accessibility5",
+        "frame": [
+          32,
+          1349.6666666666667,
+          333.33333333333337,
+          187.33333333333326
+        ],
+        "id": "trial-label",
+        "preferredBodyPoints": 53,
+        "time": 1790872679.948821,
+        "uptime": 1240056.019035578
+      }
+    ]
+  }
+]

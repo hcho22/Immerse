@@ -1,0 +1,120 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "c835f33c26e6b6f35c744125c5d93846eabeb4c1251a018e5c278735dda53c25",
+      "decodedFrames" : 4,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "c835f33c26e6b6f35c744125c5d93846eabeb4c1251a018e5c278735dda53c25",
+      "kind" : "movie",
+      "path" : "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/movie-2-A1091BCE-28B0-4A5E-BC56-7A162FFC26DE.mov",
+      "sequence" : 0
+    },
+    {
+      "actualHash" : "8aab9b67b4486d61355f8a2ed6ecb296b6861107a77535db02a6e48336a4095d",
+      "decodedFrames" : 3,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "8aab9b67b4486d61355f8a2ed6ecb296b6861107a77535db02a6e48336a4095d",
+      "kind" : "source",
+      "path" : "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/source-2.mov",
+      "sequence" : 2
+    },
+    {
+      "actualHash" : "ced8d4e6fa1c24f8d8b90dc09160b55137f800b9dcec47e940ef239477792b04",
+      "decodedFrames" : 4,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "ced8d4e6fa1c24f8d8b90dc09160b55137f800b9dcec47e940ef239477792b04",
+      "kind" : "clip",
+      "path" : "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/clip-2.mov",
+      "sequence" : 2
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 14915568002848803481,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 10430561826334805417,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      1,
+      2
+    ],
+    "filmID" : "8693CE02-EDBA-4572-81FA-A6482DEDDE6C",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        },
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572802,
+          "sequenceNumber" : 2
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 199.66333333333333
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "8693CE02-EDBA-4572-81FA-A6482DEDDE6C",
+      "isArchived" : false,
+      "loadedAt" : 812575998.961732,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/clip-2.mov" : "ced8d4e6fa1c24f8d8b90dc09160b55137f800b9dcec47e940ef239477792b04",
+    "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/movie-2-A1091BCE-28B0-4A5E-BC56-7A162FFC26DE.mov" : "c835f33c26e6b6f35c744125c5d93846eabeb4c1251a018e5c278735dda53c25",
+    "Media\/8693CE02-EDBA-4572-81FA-A6482DEDDE6C\/source-2.mov" : "8aab9b67b4486d61355f8a2ed6ecb296b6861107a77535db02a6e48336a4095d",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "655650870ce904f475d40b2267e09a5e904132507b620b141ab9dc649b97b38c",
+    "film-store.sqlite-wal" : "18a523dfc9fa1ed3bcbedc411e8ab7343891f4b8b679bd99ddfdf3c1740267b5"
+  }
+}

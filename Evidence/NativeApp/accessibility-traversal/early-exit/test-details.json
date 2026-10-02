@@ -1,0 +1,63 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "duration" : "Ran for 7 minutes, 6 seconds",
+  "durationInSeconds" : 426.03837990760803,
+  "hasMediaAttachments" : true,
+  "hasPerformanceMetrics" : false,
+  "startTime" : 1790878813.959,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+  "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+  "testName" : "testPairedSystemLargestTraversal()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Passed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "95084708-412C-4E06-94DB-3E1AF5C18989",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+              "nodeType" : "Runtime Warning"
+            }
+          ],
+          "duration" : "7m 6s",
+          "durationInSeconds" : 426.03837990760803,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Passed"
+        }
+      ],
+      "details" : "iOS Simulator 26.5",
+      "duration" : "7m 6s",
+      "durationInSeconds" : 426.03837990760803,
+      "name" : "iPhone 17 Pro",
+      "nodeIdentifier" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "nodeType" : "Device",
+      "result" : "Passed"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+import CoreGraphics
+import ImageIO
+import Foundation
+// Prints the pixel height and width of the darkest-ink box: rows/columns containing pixels darker than the threshold.
+for path in CommandLine.arguments.dropFirst() {
+    let img = CGImageSourceCreateImageAtIndex(CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, nil)!, 0, nil)!
+    let w = img.width, h = img.height
+    var data = [UInt8](repeating: 0, count: w*h*4)
+    let ctx = CGContext(data: &data, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w*4, space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+    ctx.draw(img, in: CGRect(x: 0, y: 0, width: w, height: h))
+    var minY = h, maxY = -1, minX = w, maxX = -1
+    for y in 0..<h { for x in 0..<w {
+        let i = (y*w+x)*4
+        let l = 0.2126*Double(data[i]) + 0.7152*Double(data[i+1]) + 0.0722*Double(data[i+2])
+        if l < 90 { minY = min(minY, y); maxY = max(maxY, y); minX = min(minX, x); maxX = max(maxX, x) }
+    } }
+    print(URL(fileURLWithPath: path).lastPathComponent, "image \(w)x\(h)", "ink height \(maxY-minY+1) width \(maxX-minX+1)")
+}

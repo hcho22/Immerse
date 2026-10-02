@@ -1,0 +1,1147 @@
+{
+  "testIdentifier" : "ReceiptProcessExitTests/test16mmCheckpointProcessExits()",
+  "testIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptScenarioUITests/ReceiptProcessExitTests/test16mmCheckpointProcessExits",
+  "testName" : "test16mmCheckpointProcessExits()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881768.251,
+          "title" : "Start Test at 2026-10-01 12:09:28.251"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881768.858,
+          "title" : "Set Up"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881771.054,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881773.74,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881768.87,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881768.869,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881777.144,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881777.143,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881776.118,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881777.408,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881777.415,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881777.556,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881777.69,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881778.121,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881777.407,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881778.665,
+          "title" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881779.453,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881779.452,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881779.602,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881779.615,
+              "title" : "Find the \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881779.749,
+              "title" : "Check for interrupting elements affecting \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881779.878,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881780.205,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881779.601,
+          "title" : "Tap \"commit\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881781.474,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881781.473,
+          "title" : "Checking `Expect predicate `label == \"paused-prepared\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881781.595,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881781.603,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881781.736,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881781.858,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881782.183,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881781.595,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881783.467,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881783.466,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881783.609,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881783.738,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-before-exit_0_E65819C9-0F5C-465A-A935-20F87FA88EB4.png",
+              "payloadId" : "0~o_Pu8TA_ymfhY6h7i4nRjCL2Pt_-nosv9dMYk_UYEAVSgnY9RfezYm3t6c0IalmJ54RQoOUzShg4J1Zv509RdA==",
+              "timestamp" : 1790881784.098,
+              "uuid" : "3CFF16C9-3306-4EF8-8609-C970AF9E7F5B"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.098,
+              "title" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881784.098,
+          "title" : "Added attachment named '6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.101,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.109,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.243,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.398,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.778,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881784.1,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881784.784,
+          "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881785.618,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881788.334,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881784.789,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881784.787,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881791.779,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881791.778,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881790.745,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881792.034,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881792.043,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881792.183,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881792.312,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881792.668,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881792.033,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881793.957,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881793.956,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881794.103,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881794.244,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-recovered_0_04236538-3BDB-4A13-ACBE-4A8F9A693921.png",
+              "payloadId" : "0~8m-ONAwc3dPQOEQ2tfkpCoHIyWs9gjmUrYqELaMCxvhEJRQhPEe2jg7wXKUTJh5LR-ICvaqEvNcr-SrKdPPZpQ==",
+              "timestamp" : 1790881794.604,
+              "uuid" : "6C6F64F9-A29E-4A37-962F-FE18E2A35492"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881794.604,
+              "title" : "6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-recovered"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881794.604,
+          "title" : "Added attachment named '6F4D0C14-51CC-477E-9B3E-0B58C2DAB6E0-cinema16mm-prepared-recovered'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881794.606,
+          "title" : "Terminate com.immerse.validation.ReceiptScenarioHarness035:21762"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881796.145,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881799.452,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881795.713,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881795.711,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881802.769,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881802.768,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881801.734,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881803.013,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881803.022,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881803.187,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881803.319,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881803.65,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881803.012,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881804.956,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881804.955,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881805.106,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881805.115,
+              "title" : "Find the \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881805.254,
+              "title" : "Check for interrupting elements affecting \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881805.404,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881805.73,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881805.105,
+          "title" : "Tap \"commit\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.03,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881807.029,
+          "title" : "Checking `Expect predicate `label == \"paused-receiptResolved\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.166,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.175,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.329,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.456,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881807.777,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881807.166,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881809.075,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881809.074,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881809.223,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881809.366,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-before-exit_0_00ACD256-633D-4C5B-BF88-CEDC38A83EF1.png",
+              "payloadId" : "0~GmejJkBjogIu-OAgUHNuaZqj_h55ZHrDN0lC_IOOb8WPL8j3CwKJis-C_iqSbg_onT2oOC0bIJujdSJJLOvvWA==",
+              "timestamp" : 1790881809.697,
+              "uuid" : "17EA8A37-4E1A-4982-9DF6-E592643C0AE5"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881809.697,
+              "title" : "4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881809.697,
+          "title" : "Added attachment named '4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881809.7,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881809.708,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881809.879,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881810.031,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881810.358,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881809.699,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881810.362,
+          "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881811.201,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881813.925,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881810.365,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881810.363,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881817.499,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881817.498,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881816.492,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881817.744,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881817.756,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881817.915,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881818.036,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881818.393,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881817.744,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881819.689,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881819.688,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881819.843,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881819.98,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-recovered_0_FB111ADA-581E-417D-AAD7-1D22AF1935B4.png",
+              "payloadId" : "0~YZBQkQZfJcl2D1DgWKFw-tRwoSuT-wlXbME0ZcPNaTQTN1fojOefXKsdBIvUyqrt0uatvJy1dqDaCPIkb9CkCA==",
+              "timestamp" : 1790881820.335,
+              "uuid" : "7D398602-5D8A-4F37-B11E-A0FC27F56A82"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881820.335,
+              "title" : "4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-recovered"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881820.335,
+          "title" : "Added attachment named '4E093C36-C2F8-4CC3-9B5C-129D016C3FD8-cinema16mm-receiptResolved-recovered'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881820.338,
+          "title" : "Terminate com.immerse.validation.ReceiptScenarioHarness035:32331"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881821.841,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881824.843,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881821.419,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881821.417,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881828.059,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.059,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881827.023,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.289,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.297,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.429,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.559,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881828.903,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881828.289,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.184,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881830.183,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.347,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.358,
+              "title" : "Find the \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.51,
+              "title" : "Check for interrupting elements affecting \"commit\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.636,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881830.971,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881830.347,
+          "title" : "Tap \"commit\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881832.256,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881832.255,
+          "title" : "Checking `Expect predicate `label == \"paused-projected\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881832.405,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881832.413,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881832.581,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881832.733,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881833.064,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881832.404,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881834.344,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881834.343,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881834.503,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881834.653,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-before-exit_0_9502D0DF-EEDC-435E-AC90-EF5EDE0A7A5D.png",
+              "payloadId" : "0~WeYP_sFGBH9NEOmQaK4bG1BeoikQ2jSPVYBI4gsDmwxADBIif0GSglkZDm_XSPjq71B9hs9jBdX8jGwnpbQo4Q==",
+              "timestamp" : 1790881834.995,
+              "uuid" : "8BE0FCA6-E117-45FE-AE67-9CD9BAC45332"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881834.995,
+              "title" : "7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881834.995,
+          "title" : "Added attachment named '7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881834.998,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881835.011,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881835.151,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881835.294,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881835.624,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881834.997,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881835.627,
+          "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881836.517,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881839.651,
+                  "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881835.631,
+              "title" : "Launch com.immerse.validation.ReceiptScenarioHarness035"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881835.629,
+          "title" : "Open com.immerse.validation.ReceiptScenarioHarness035"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790881843.248,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881843.247,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881842.229,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881843.514,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881843.523,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881843.681,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881843.887,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881844.224,
+              "title" : "Wait for com.immerse.validation.ReceiptScenarioHarness035 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881843.514,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881845.516,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881845.515,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881845.712,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881845.861,
+          "title" : "Find the Target Application 'com.immerse.validation.ReceiptScenarioHarness035'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-recovered_0_C985A0B8-650D-4E63-893B-D1CB8D0E61A0.png",
+              "payloadId" : "0~YZBQkQZfJcl2D1DgWKFw-tRwoSuT-wlXbME0ZcPNaTQTN1fojOefXKsdBIvUyqrt0uatvJy1dqDaCPIkb9CkCA==",
+              "timestamp" : 1790881846.217,
+              "uuid" : "A9E61360-E016-4F61-B6A6-DD85A51A949B"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790881846.217,
+              "title" : "7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-recovered"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881846.217,
+          "title" : "Added attachment named '7332C46B-3F30-4230-B35D-D7362388E9DC-cinema16mm-projected-recovered'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881846.219,
+          "title" : "Terminate com.immerse.validation.ReceiptScenarioHarness035:43631"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881847.25,
+          "title" : "Tear Down"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790881847.38,
+          "title" : "Checking for crash reports corresponding to unexpected termination of com.immerse.validation.ReceiptScenarioHarness035"
+        }
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

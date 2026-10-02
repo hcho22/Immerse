@@ -1,0 +1,67 @@
+{
+  "assets" : {
+    "master-1" : "d3958be858f39137d378b95cea0cd0f5acb7f4285e2ae8e57bb1375a9f163c7a"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 27
+        }
+      },
+      "displayName" : "1990s Disposable",
+      "id" : "disposable1990s",
+      "medium" : "photo",
+      "revealRule" : "rollLevelDevelopment",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "exposures" : {
+            "_0" : 26
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "C4DB1FD8-4012-4265-A268-DB80395BA215",
+    "isArchived" : false,
+    "loadedAt" : 812581384.999985,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "B50\/App\/Media\/C4DB1FD8-4012-4265-A268-DB80395BA215\/master-1.bin",
+    "B50\/App\/film-store.sqlite",
+    "B50\/App\/film-store.sqlite-shm",
+    "B50\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 15010016157589525407,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "C4DB1FD8-4012-4265-A268-DB80395BA215",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

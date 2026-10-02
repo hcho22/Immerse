@@ -1,0 +1,16 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/SetupProbe-PhysicalFrame-Largest.xcresult
+
+2026-10-01 09:48:37.271 xcodebuild[20272:142774728] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 09:48:37.271 xcodebuild[20272:142774728] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 09:49:29.492 xcodebuild[20272:142774728] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 09:49:29.492 xcodebuild[20272:142774728] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 09:50:55.127 xcodebuild[20272:142774728] [MT] IDETestOperationsObserverDebug: 156.500 elapsed -- Testing started completed.
+2026-10-01 09:50:55.127 xcodebuild[20272:142774728] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 09:50:55.127 xcodebuild[20272:142774728] [MT] IDETestOperationsObserverDebug: 156.500 sec, +156.500 sec -- end
+Failing tests:
+	SetupAuditTests.testStackContainer()
+
+** TEST FAILED **
+
+Testing started

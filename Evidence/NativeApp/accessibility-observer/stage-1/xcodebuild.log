@@ -1,0 +1,18 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/SetupProbe-Observer-Largest-Light.xcresult
+
+2026-10-01 10:13:51.722 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 10:13:51.723 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 10:15:36.354 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 10:15:36.355 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 10:16:38.392 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 10:16:38.392 xcodebuild[45953:144367014] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 10:18:21.524 xcodebuild[45953:144367014] [MT] IDETestOperationsObserverDebug: 301.940 elapsed -- Testing started completed.
+2026-10-01 10:18:21.524 xcodebuild[45953:144367014] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 10:18:21.524 xcodebuild[45953:144367014] [MT] IDETestOperationsObserverDebug: 301.940 sec, +301.940 sec -- end
+Failing tests:
+	SetupAuditTests.testStackOuterPaddingWithoutWindowCaptures()
+
+** TEST FAILED **
+
+Testing started

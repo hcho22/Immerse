@@ -1,0 +1,79 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "super8HomeMovie",
+    "fault" : "afterMove",
+    "pauseAt" : "none",
+    "runID" : "F042E669-8AF3-4054-AA7D-C32E8D9F9A58"
+  },
+  "files" : {
+    "Media\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/source-1.mov" : "9c8a12ee848d00ac2a0ca509151bca0b8de71cb4fd507a75e0e775cd691cf29c",
+    "Staging\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.json" : "2ced9e9c09f56b25606948b4c52d9d41abc8b50b86cad5d7fea0c8cdc5f96059",
+    "Staging\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.mov" : "9c8a12ee848d00ac2a0ca509151bca0b8de71cb4fd507a75e0e775cd691cf29c",
+    "Staging\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/Commit\/09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.mov" : "9c8a12ee848d00ac2a0ca509151bca0b8de71cb4fd507a75e0e775cd691cf29c",
+    "Staging\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/Commit\/09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.mov.json" : "39da36623abb42afaa3eecb73797dc7df047473984d07bba1cc0965e7388c071",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "119daedfbbc0982d9665bdcdc35d53212de30cf288c830eb22a2e881323958a7",
+    "film-store.sqlite-wal" : "a05a25d51376c8d908a122f098941d1ea9187b780a68acd4d39cdbada9e938d1"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "AC8B851D-6412-4E44-BDF3-D895F9ABFD8D",
+      "isArchived" : false,
+      "loadedAt" : 812575014.895568,
+      "movieOrientation" : "portrait",
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "consumed",
+  "manifest" : {
+    "captureUUID" : "09B4DEA0-AACE-4A1C-93EC-19124CA05FB5",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "super8HomeMovie",
+      "fault" : "afterMove",
+      "pauseAt" : "none",
+      "runID" : "F042E669-8AF3-4054-AA7D-C32E8D9F9A58"
+    },
+    "duration" : 0.16833333333333333,
+    "filmID" : "AC8B851D-6412-4E44-BDF3-D895F9ABFD8D",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "9c8a12ee848d00ac2a0ca509151bca0b8de71cb4fd507a75e0e775cd691cf29c",
+    "sourcePath" : "Staging\/AC8B851D-6412-4E44-BDF3-D895F9ABFD8D\/09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.mov"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "consumedAt" : 812562800,
+    "consumedCaptureID" : "09B4DEA0-AACE-4A1C-93EC-19124CA05FB5.mov",
+    "consumedFilmID" : "AC8B851D-6412-4E44-BDF3-D895F9ABFD8D",
+    "deviceID" : "2F4A4D62-237F-499D-B22C-C9E923BF9B37",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

@@ -1,0 +1,707 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0F41C008AD0E367D278FF49C /* ReceiptScenarioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 419ED9B59B9060352617EB63 /* ReceiptScenarioApp.swift */; };
+		21880CA0F5FC958319087972 /* ReceiptScenarioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72E7D76B5E49BEF6155B816 /* ReceiptScenarioTests.swift */; };
+		250E65D9707D45436E62E0DD /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = ED6C4DDF3992F1320AEEE983 /* EntitlementCore */; };
+		26EAC1D3C7F4BF0F4EA548E9 /* ReceiptScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB5EBD5F1BDA1565C00411F /* ReceiptScenario.swift */; };
+		2A792F105BB57E503A5CEEF3 /* ScenarioEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F215A2BDEFC912FD0D846C9 /* ScenarioEvidence.swift */; };
+		56ABF17E5E1114BA2DA6388D /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 4AA352F25A437C8515A54446 /* RenderFixtures */; };
+		5D5439CBBA760DBFE96DAFF8 /* ReceiptNativeSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D216B726E5E8E71F2436E028 /* ReceiptNativeSecurityTests.swift */; };
+		92A49C9DB5DE9F6FBFF4878A /* RecordedReceiptCalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B6464939B8C1A29666F54F /* RecordedReceiptCalls.swift */; };
+		9D09A4EBA4E605211AC5E8FF /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = B83864C4DE86BBA7881C201E /* FilmPersistence */; };
+		B2AC8C34486FCC4E7ED77D71 /* ReceiptProcessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB6E6A42731A915D9D0CFBA /* ReceiptProcessExitTests.swift */; };
+		C4A0AADCC687D1163574A7A9 /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 119F29216E25E88967C9787D /* FilmRuntime */; };
+		CD50B5D0BE5DFA0B57DEAC4A /* ScenarioConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AC196604E152C0EBEC1978 /* ScenarioConfiguration.swift */; };
+		D0FA4C7A085C212F57CDBE81 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 62C28FF465A36389B713F9F0 /* FilmDomain */; };
+		EEAF568FA6A3515F746B6F90 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 834C96EE5C52F9F5E70BA230 /* NativeAdapters */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		30B2FFF550859F910336515D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86808C653BCC436BAF6970BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E926FBB4DD19157D412BD19;
+			remoteInfo = ReceiptScenarioHarness;
+		};
+		9313E57F1FACE27C2BA6E836 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86808C653BCC436BAF6970BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E926FBB4DD19157D412BD19;
+			remoteInfo = ReceiptScenarioHarness;
+		};
+		B0A7DCB71F727BA84B58CA81 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 86808C653BCC436BAF6970BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E926FBB4DD19157D412BD19;
+			remoteInfo = ReceiptScenarioHarness;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2BB6E6A42731A915D9D0CFBA /* ReceiptProcessExitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptProcessExitTests.swift; sourceTree = "<group>"; };
+		308F3C9F62603161EC64F118 /* ReceiptScenarioHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ReceiptScenarioHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33BB6A3656E27DAF23B965E0 /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
+		3C6645A3301DB93FB31EBD2E /* ReceiptNativeSecurityTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptNativeSecurityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4008BFADEE0B39E72D91E1F3 /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		419ED9B59B9060352617EB63 /* ReceiptScenarioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScenarioApp.swift; sourceTree = "<group>"; };
+		481D7A767C83696D51C2AFC3 /* ReceiptScenarioUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptScenarioUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5603D119A6D8A410ECCE465A /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
+		68AC196604E152C0EBEC1978 /* ScenarioConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioConfiguration.swift; sourceTree = "<group>"; };
+		877CC81BD5EBAF511E664BE0 /* RenderFixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderFixtures; path = ../../Packages/RenderFixtures; sourceTree = SOURCE_ROOT; };
+		8F215A2BDEFC912FD0D846C9 /* ScenarioEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioEvidence.swift; sourceTree = "<group>"; };
+		AAB5EBD5F1BDA1565C00411F /* ReceiptScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScenario.swift; sourceTree = "<group>"; };
+		CF61B9D15EEA455FBE16969F /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
+		D216B726E5E8E71F2436E028 /* ReceiptNativeSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptNativeSecurityTests.swift; sourceTree = "<group>"; };
+		D5B6464939B8C1A29666F54F /* RecordedReceiptCalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordedReceiptCalls.swift; sourceTree = "<group>"; };
+		DC06D87E883583EFC50AA086 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
+		DCA2B83838C2E953223FC899 /* ReceiptScenarioTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReceiptScenarioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E72E7D76B5E49BEF6155B816 /* ReceiptScenarioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScenarioTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		94323E0594135339FFEFD255 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0FA4C7A085C212F57CDBE81 /* FilmDomain in Frameworks */,
+				9D09A4EBA4E605211AC5E8FF /* FilmPersistence in Frameworks */,
+				C4A0AADCC687D1163574A7A9 /* FilmRuntime in Frameworks */,
+				EEAF568FA6A3515F746B6F90 /* NativeAdapters in Frameworks */,
+				250E65D9707D45436E62E0DD /* EntitlementCore in Frameworks */,
+				56ABF17E5E1114BA2DA6388D /* RenderFixtures in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1358D60EB48C3E1E7EDFC61E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E72E7D76B5E49BEF6155B816 /* ReceiptScenarioTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		53839D824A7639CA17F1548B /* NativeSecurityTests */ = {
+			isa = PBXGroup;
+			children = (
+				D216B726E5E8E71F2436E028 /* ReceiptNativeSecurityTests.swift */,
+			);
+			path = NativeSecurityTests;
+			sourceTree = "<group>";
+		};
+		A62B8C44DCAAE175470A5E60 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AAB5EBD5F1BDA1565C00411F /* ReceiptScenario.swift */,
+				419ED9B59B9060352617EB63 /* ReceiptScenarioApp.swift */,
+				D5B6464939B8C1A29666F54F /* RecordedReceiptCalls.swift */,
+				68AC196604E152C0EBEC1978 /* ScenarioConfiguration.swift */,
+				8F215A2BDEFC912FD0D846C9 /* ScenarioEvidence.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		B7FE2B829D42757E83FEDCDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3C6645A3301DB93FB31EBD2E /* ReceiptNativeSecurityTests.xctest */,
+				308F3C9F62603161EC64F118 /* ReceiptScenarioHarness.app */,
+				DCA2B83838C2E953223FC899 /* ReceiptScenarioTests.xctest */,
+				481D7A767C83696D51C2AFC3 /* ReceiptScenarioUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C0FEEE291AD56E7FC58FCC3A = {
+			isa = PBXGroup;
+			children = (
+				53839D824A7639CA17F1548B /* NativeSecurityTests */,
+				F1388CA9DB80B6342E997244 /* Packages */,
+				A62B8C44DCAAE175470A5E60 /* Sources */,
+				1358D60EB48C3E1E7EDFC61E /* Tests */,
+				DA49F330886D443CF1A55FAC /* UITests */,
+				B7FE2B829D42757E83FEDCDB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA49F330886D443CF1A55FAC /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				2BB6E6A42731A915D9D0CFBA /* ReceiptProcessExitTests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		F1388CA9DB80B6342E997244 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				5603D119A6D8A410ECCE465A /* EntitlementCore */,
+				4008BFADEE0B39E72D91E1F3 /* FilmDomain */,
+				CF61B9D15EEA455FBE16969F /* FilmPersistence */,
+				33BB6A3656E27DAF23B965E0 /* FilmRuntime */,
+				DC06D87E883583EFC50AA086 /* NativeAdapters */,
+				877CC81BD5EBAF511E664BE0 /* RenderFixtures */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0546E2606D42370A2F276213 /* ReceiptScenarioTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6844F2C8AE7C52CDC6E8C086 /* Build configuration list for PBXNativeTarget "ReceiptScenarioTests" */;
+			buildPhases = (
+				D841B2194F835BDE004772B0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8F7520B78AF4AD4BC7724335 /* PBXTargetDependency */,
+			);
+			name = ReceiptScenarioTests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptScenarioTests;
+			productReference = DCA2B83838C2E953223FC899 /* ReceiptScenarioTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		34DAF07D7B8FAA8EE2B9BB97 /* ReceiptScenarioUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D24BE290C1B2017963FA0ECC /* Build configuration list for PBXNativeTarget "ReceiptScenarioUITests" */;
+			buildPhases = (
+				7BFD2BF4F1D289FCD0335AB1 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				17A83E94F58CD924A337303B /* PBXTargetDependency */,
+			);
+			name = ReceiptScenarioUITests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptScenarioUITests;
+			productReference = 481D7A767C83696D51C2AFC3 /* ReceiptScenarioUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		3E926FBB4DD19157D412BD19 /* ReceiptScenarioHarness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BFDD3B1C1B21787D6A8FBC70 /* Build configuration list for PBXNativeTarget "ReceiptScenarioHarness" */;
+			buildPhases = (
+				3A2F10C4976F06E751D64034 /* Sources */,
+				94323E0594135339FFEFD255 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReceiptScenarioHarness;
+			packageProductDependencies = (
+				62C28FF465A36389B713F9F0 /* FilmDomain */,
+				B83864C4DE86BBA7881C201E /* FilmPersistence */,
+				119F29216E25E88967C9787D /* FilmRuntime */,
+				834C96EE5C52F9F5E70BA230 /* NativeAdapters */,
+				ED6C4DDF3992F1320AEEE983 /* EntitlementCore */,
+				4AA352F25A437C8515A54446 /* RenderFixtures */,
+			);
+			productName = ReceiptScenarioHarness;
+			productReference = 308F3C9F62603161EC64F118 /* ReceiptScenarioHarness.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A4885FD3F432347958E74C28 /* ReceiptNativeSecurityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BD31FC137F2D1F3E2F2B536 /* Build configuration list for PBXNativeTarget "ReceiptNativeSecurityTests" */;
+			buildPhases = (
+				60C8E990FFD963430C60222F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1939C263D0E17CEDB5F36811 /* PBXTargetDependency */,
+			);
+			name = ReceiptNativeSecurityTests;
+			packageProductDependencies = (
+			);
+			productName = ReceiptNativeSecurityTests;
+			productReference = 3C6645A3301DB93FB31EBD2E /* ReceiptNativeSecurityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		86808C653BCC436BAF6970BA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					34DAF07D7B8FAA8EE2B9BB97 = {
+						TestTargetID = 3E926FBB4DD19157D412BD19;
+					};
+				};
+			};
+			buildConfigurationList = 22CDD700C5D171A274596AB0 /* Build configuration list for PBXProject "ReceiptScenarioHarness" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C0FEEE291AD56E7FC58FCC3A;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				40B96E133E221FCF32B61470 /* XCLocalSwiftPackageReference "../../Packages/EntitlementCore" */,
+				AD826ED67490DBDDFC39EBF4 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */,
+				A9128487C1EAEDAAF7CE918D /* XCLocalSwiftPackageReference "../../Packages/FilmPersistence" */,
+				448598EC15BE7F884EB92EB1 /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */,
+				5D2730F4EBE1021A921D96F4 /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */,
+				7561865BA8C5DF8A4FD2EFF4 /* XCLocalSwiftPackageReference "../../Packages/RenderFixtures" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B7FE2B829D42757E83FEDCDB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4885FD3F432347958E74C28 /* ReceiptNativeSecurityTests */,
+				3E926FBB4DD19157D412BD19 /* ReceiptScenarioHarness */,
+				0546E2606D42370A2F276213 /* ReceiptScenarioTests */,
+				34DAF07D7B8FAA8EE2B9BB97 /* ReceiptScenarioUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A2F10C4976F06E751D64034 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26EAC1D3C7F4BF0F4EA548E9 /* ReceiptScenario.swift in Sources */,
+				0F41C008AD0E367D278FF49C /* ReceiptScenarioApp.swift in Sources */,
+				92A49C9DB5DE9F6FBFF4878A /* RecordedReceiptCalls.swift in Sources */,
+				CD50B5D0BE5DFA0B57DEAC4A /* ScenarioConfiguration.swift in Sources */,
+				2A792F105BB57E503A5CEEF3 /* ScenarioEvidence.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		60C8E990FFD963430C60222F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D5439CBBA760DBFE96DAFF8 /* ReceiptNativeSecurityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7BFD2BF4F1D289FCD0335AB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2AC8C34486FCC4E7ED77D71 /* ReceiptProcessExitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D841B2194F835BDE004772B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21880CA0F5FC958319087972 /* ReceiptScenarioTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		17A83E94F58CD924A337303B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E926FBB4DD19157D412BD19 /* ReceiptScenarioHarness */;
+			targetProxy = B0A7DCB71F727BA84B58CA81 /* PBXContainerItemProxy */;
+		};
+		1939C263D0E17CEDB5F36811 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E926FBB4DD19157D412BD19 /* ReceiptScenarioHarness */;
+			targetProxy = 30B2FFF550859F910336515D /* PBXContainerItemProxy */;
+		};
+		8F7520B78AF4AD4BC7724335 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E926FBB4DD19157D412BD19 /* ReceiptScenarioHarness */;
+			targetProxy = 9313E57F1FACE27C2BA6E836 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		082FC4F0340F9003704AC79E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ReceiptScenarioHarness;
+			};
+			name = Release;
+		};
+		20F3DCC5F90D57CB1F9B86C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Receipt Scenarios";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		42B2442ECEC1731B1C0CD91B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.SecurityTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptScenarioHarness.app/ReceiptScenarioHarness";
+			};
+			name = Release;
+		};
+		5D47FC5CC166CEB562B7D86D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.SecurityTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptScenarioHarness.app/ReceiptScenarioHarness";
+			};
+			name = Debug;
+		};
+		C9891932CA97C1C8E00545BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptScenarioHarness.app/ReceiptScenarioHarness";
+			};
+			name = Debug;
+		};
+		C9B41D9B592933D138784A65 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		D1446BD1D3895E22FBDAA52D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ReceiptScenarioHarness;
+			};
+			name = Debug;
+		};
+		D1CE8769F6D5F342A59B2F5F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		E78A3BA784070C7560847F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReceiptScenarioHarness.app/ReceiptScenarioHarness";
+			};
+			name = Release;
+		};
+		F1A76B5C1AEC04F25BE865E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Receipt Scenarios";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.validation.ReceiptScenarioHarness035;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22CDD700C5D171A274596AB0 /* Build configuration list for PBXProject "ReceiptScenarioHarness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1CE8769F6D5F342A59B2F5F /* Debug */,
+				C9B41D9B592933D138784A65 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6844F2C8AE7C52CDC6E8C086 /* Build configuration list for PBXNativeTarget "ReceiptScenarioTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9891932CA97C1C8E00545BE /* Debug */,
+				E78A3BA784070C7560847F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8BD31FC137F2D1F3E2F2B536 /* Build configuration list for PBXNativeTarget "ReceiptNativeSecurityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D47FC5CC166CEB562B7D86D /* Debug */,
+				42B2442ECEC1731B1C0CD91B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BFDD3B1C1B21787D6A8FBC70 /* Build configuration list for PBXNativeTarget "ReceiptScenarioHarness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1A76B5C1AEC04F25BE865E8 /* Debug */,
+				20F3DCC5F90D57CB1F9B86C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D24BE290C1B2017963FA0ECC /* Build configuration list for PBXNativeTarget "ReceiptScenarioUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1446BD1D3895E22FBDAA52D /* Debug */,
+				082FC4F0340F9003704AC79E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		40B96E133E221FCF32B61470 /* XCLocalSwiftPackageReference "../../Packages/EntitlementCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/EntitlementCore;
+		};
+		448598EC15BE7F884EB92EB1 /* XCLocalSwiftPackageReference "../../Packages/FilmRuntime" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmRuntime;
+		};
+		5D2730F4EBE1021A921D96F4 /* XCLocalSwiftPackageReference "../../Packages/NativeAdapters" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/NativeAdapters;
+		};
+		7561865BA8C5DF8A4FD2EFF4 /* XCLocalSwiftPackageReference "../../Packages/RenderFixtures" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/RenderFixtures;
+		};
+		A9128487C1EAEDAAF7CE918D /* XCLocalSwiftPackageReference "../../Packages/FilmPersistence" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmPersistence;
+		};
+		AD826ED67490DBDDFC39EBF4 /* XCLocalSwiftPackageReference "../../Packages/FilmDomain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/FilmDomain;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		119F29216E25E88967C9787D /* FilmRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmRuntime;
+		};
+		4AA352F25A437C8515A54446 /* RenderFixtures */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderFixtures;
+		};
+		62C28FF465A36389B713F9F0 /* FilmDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmDomain;
+		};
+		834C96EE5C52F9F5E70BA230 /* NativeAdapters */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeAdapters;
+		};
+		B83864C4DE86BBA7881C201E /* FilmPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmPersistence;
+		};
+		ED6C4DDF3992F1320AEEE983 /* EntitlementCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EntitlementCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 86808C653BCC436BAF6970BA /* Project object */;
+}

@@ -1,0 +1,72 @@
+{
+  "assets" : {
+    "clip-1" : "30bbe8b21cac6b502f56b6824882cbdb54476e2fe54987c0dcd4d345bd66a26d",
+    "source-1" : "52c4f4f2ee7457dfe10fa457fa42df00c06beefa7b6121d300345bbbd7ccea07"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "sealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developing",
+    "id" : "969EA04C-CA02-4CB3-86F7-571C3611106E",
+    "isArchived" : false,
+    "loadedAt" : 812581404.741819,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "3E7\/App\/Media\/969EA04C-CA02-4CB3-86F7-571C3611106E\/clip-1.mov",
+    "3E7\/App\/Media\/969EA04C-CA02-4CB3-86F7-571C3611106E\/source-1.mov",
+    "3E7\/App\/Work\/969EA04C-CA02-4CB3-86F7-571C3611106E\/39074ED2-D019-4A8A-B601-841C5E011A4C\/1.mov",
+    "3E7\/App\/film-store.sqlite",
+    "3E7\/App\/film-store.sqlite-shm",
+    "3E7\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 22500,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 2726610352947666966,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+
+    ],
+    "filmID" : "969EA04C-CA02-4CB3-86F7-571C3611106E",
+    "isComplete" : false,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

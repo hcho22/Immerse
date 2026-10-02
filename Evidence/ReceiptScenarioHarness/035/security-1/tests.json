@@ -1,0 +1,59 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "Test skipped - Actual Security unavailable: -34018. No injected fallback or native receipt pass.",
+                      "nodeType" : "Failure Message"
+                    }
+                  ],
+                  "duration" : "0.061s",
+                  "durationInSeconds" : 0.06093800067901611,
+                  "name" : "testExplicitNativeSecurityCapabilityAndReceipt()",
+                  "nodeIdentifier" : "ReceiptNativeSecurityTests/testExplicitNativeSecurityCapabilityAndReceipt()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptNativeSecurityTests/ReceiptNativeSecurityTests/testExplicitNativeSecurityCapabilityAndReceipt",
+                  "nodeType" : "Test Case",
+                  "result" : "Skipped"
+                }
+              ],
+              "name" : "ReceiptNativeSecurityTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptNativeSecurityTests/ReceiptNativeSecurityTests",
+              "nodeType" : "Test Suite",
+              "result" : "Skipped"
+            }
+          ],
+          "name" : "ReceiptNativeSecurityTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ReceiptScenarioHarness/ReceiptNativeSecurityTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Skipped"
+        }
+      ],
+      "name" : "ReceiptNativeSecurity",
+      "nodeType" : "Test Plan",
+      "result" : "Skipped"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

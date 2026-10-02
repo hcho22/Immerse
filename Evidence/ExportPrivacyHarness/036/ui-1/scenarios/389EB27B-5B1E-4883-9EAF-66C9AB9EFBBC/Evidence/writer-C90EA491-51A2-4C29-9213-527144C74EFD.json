@@ -1,0 +1,5 @@
+{
+  "acknowledgeAfterCancellation" : true,
+  "boundary" : "beforeReply",
+  "reply" : "success"
+}

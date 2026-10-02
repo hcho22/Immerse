@@ -1,0 +1,4 @@
+Packages/FilmRuntime/Tests/FilmRuntimeTests/ReceiptFaultMatrixTests.swift: OK
+Packages/FilmRuntime/Sources/FilmRuntime/TrialCoordinator.swift: OK
+Packages/FilmRuntime/Sources/FilmRuntime/CaptureCommitJournal.swift: OK
+Packages/EntitlementCore/Sources/EntitlementCore/DeviceTrialStore.swift: OK

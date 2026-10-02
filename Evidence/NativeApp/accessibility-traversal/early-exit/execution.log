@@ -1,0 +1,11 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Immerse-PairedTraversal-EarlyExit.xcresult
+
+2026-10-01 11:20:15.036 xcodebuild[59647:146273052] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 11:20:15.037 xcodebuild[59647:146273052] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 11:23:52.797 xcodebuild[59647:146273052] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 11:23:52.798 xcodebuild[59647:146273052] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 11:28:19.052 xcodebuild[59647:146273052] [MT] IDETestOperationsObserverDebug: 516.980 elapsed -- Testing started completed.
+2026-10-01 11:28:19.053 xcodebuild[59647:146273052] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 11:28:19.053 xcodebuild[59647:146273052] [MT] IDETestOperationsObserverDebug: 516.980 sec, +516.980 sec -- end
+Testing started

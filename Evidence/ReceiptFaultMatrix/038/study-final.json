@@ -1,0 +1,884 @@
+{
+  "assumptionsAndLimits" : [
+    "Logical model with atomic complete snapshots and verified source hash assumed; 037 retains actual native\/SQLite witnesses",
+    "No trusted restore detector, monotonic clock, external historical ledger, native Security, accounts or server",
+    "Actual receipt, applied\/unapplied history and required outcome are oracles, not production recovery inputs",
+    "Foreign device identity is modeled as already readable; actual migration and same-device Keychain retention remain untested",
+    "No filesystem, Keychain, migration, privacy or power-loss guarantee follows from a zero exit",
+    "Original 036\/037 production regressions remain failed; no resolver is changed by this executable"
+  ],
+  "candidateSatisfiesBothContracts" : false,
+  "equalInputPairs" : [
+    [
+      "pending-backup-R2",
+      "fresh-mismatch-M"
+    ],
+    [
+      "unresolved-unapplied-backup-R3",
+      "fresh-mismatch-M"
+    ],
+    [
+      "pending-backup-different-film-R4",
+      "fresh-different-film-mismatch-M4"
+    ],
+    [
+      "legacy-restored-pending",
+      "legacy-conflicted-pending"
+    ],
+    [
+      "pending-backup-R2",
+      "unapplied-fabricated-consumed-M5"
+    ]
+  ],
+  "proposedPersistentState" : "Optional per-pending pre-write provenance: requiresMatchingReceipt or existingFilmGrant; not implemented in shipping code",
+  "purpose" : "Counterexample consistency, not production or native acceptance",
+  "rows" : [
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-A",
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot E0-empty",
+        "Prepare Capture-A with requiresMatchingReceipt",
+        "Write Capture-A: applies=true, matchingReadback=true",
+        "Restore E0-empty; device receipt unchanged",
+        "Prepare Capture-B with existingFilmGrant"
+      ],
+      "name" : "empty-backup-R",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "existingFilmGrant",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Prepare Capture-B with requiresMatchingReceipt",
+        "Write Capture-B: applies=true, matchingReadback=false"
+      ],
+      "name" : "fresh-mismatch-M",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Same pending B and actual B as M",
+        "Read exact B"
+      ],
+      "name" : "exact-control-E",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-A",
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot E0-empty",
+        "Prepare Capture-B with requiresMatchingReceipt",
+        "Snapshot P0-pending-before-write",
+        "Restore E0-empty; device receipt unchanged",
+        "Prepare Capture-A with requiresMatchingReceipt",
+        "Write Capture-A: applies=true, matchingReadback=true",
+        "Restore P0-pending-before-write; device receipt unchanged"
+      ],
+      "name" : "pending-backup-R2",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : false,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-A",
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot E0-empty",
+        "Prepare Capture-B with requiresMatchingReceipt",
+        "Write Capture-B: applies=false, matchingReadback=false",
+        "Snapshot P0-unresolved-unapplied",
+        "Restore E0-empty; device receipt unchanged",
+        "Prepare Capture-A with requiresMatchingReceipt",
+        "Write Capture-A: applies=true, matchingReadback=true",
+        "Restore P0-unresolved-unapplied; device receipt unchanged"
+      ],
+      "name" : "unresolved-unapplied-backup-R3",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : false,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-C",
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-G"
+      },
+      "history" : [
+        "Prepare Capture-B with requiresMatchingReceipt",
+        "Snapshot P0-pending-before-write",
+        "Delete zero-save current Film without consuming or refunding",
+        "Start Film-G using still-unused eligibility",
+        "Prepare Capture-C with requiresMatchingReceipt",
+        "Write Capture-C: applies=true, matchingReadback=true",
+        "Restore P0-pending-before-write; device receipt unchanged"
+      ],
+      "name" : "pending-backup-different-film-R4",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : false,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-C",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-G"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Prepare B; update actual B but return conflicting C for G",
+        "Initial rejection then reopen"
+      ],
+      "name" : "fresh-different-film-mismatch-M4",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-C",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-G"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "device" : "synthetic-source-device"
+      },
+      "history" : [
+        "Prepare Capture-B with requiresMatchingReceipt",
+        "Write Capture-B: applies=false, matchingReadback=false"
+      ],
+      "name" : "unapplied-fabricated-consumed-M5",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot pending B with requiresMatchingReceipt",
+        "Actual receipt eventually B",
+        "Reopen with exact B"
+      ],
+      "name" : "after-prepare-before-write",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot pending B with requiresMatchingReceipt",
+        "Actual receipt eventually B",
+        "Reopen with exact B"
+      ],
+      "name" : "unresolved-applied",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Snapshot pending B with requiresMatchingReceipt",
+        "Actual receipt eventually B",
+        "Reopen with exact B"
+      ],
+      "name" : "readable-receipt-before-SQL",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "device" : "synthetic-source-device"
+      },
+      "history" : [
+        "Snapshot prepared B before write",
+        "Reopen with unused source receipt"
+      ],
+      "name" : "pending-same-device-unused",
+      "proposedOutcome" : "publishThenRead",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "publishThenRead",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "device" : "synthetic-source-device"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "device" : "synthetic-foreign-device"
+      },
+      "history" : [
+        "Restore pending B onto foreign device",
+        "Do not consume destination entitlement"
+      ],
+      "name" : "foreign-destination-unused",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "device" : "synthetic-foreign-device"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Destination-Capture",
+        "date" : 30,
+        "device" : "synthetic-foreign-device",
+        "film" : "Destination-Film"
+      },
+      "history" : [
+        "Restore pending B onto foreign device",
+        "Do not consume destination entitlement"
+      ],
+      "name" : "foreign-destination-used",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Destination-Capture",
+          "date" : 30,
+          "device" : "synthetic-foreign-device",
+          "film" : "Destination-Film"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-A",
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Same R2 history but old journal has no provenance field"
+      ],
+      "name" : "legacy-restored-pending",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : false,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Same M history but old journal has no provenance field"
+      ],
+      "name" : "legacy-conflicted-pending",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-A",
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "date" : 20,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Legacy pending restored Film",
+        "Versionless consumed record contains no opaque capture receipt"
+      ],
+      "name" : "historical-consumed-no-capture-receipt",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : false,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "date" : 20,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "No authoritative usable receipt record"
+      ],
+      "name" : "blocked-unavailable",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "unavailable",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "No authoritative usable receipt record"
+      ],
+      "name" : "blocked-future",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "future",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "No authoritative usable receipt record"
+      ],
+      "name" : "blocked-malformed",
+      "proposedOutcome" : "wait",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "wait",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : true,
+          "origin" : "synthetic-source-device",
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "malformed",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Quiescent deletion removes current Film and pending",
+        "Stale callback cannot recreate it"
+      ],
+      "name" : "deleted-current-stale-callback",
+      "proposedOutcome" : "ignoreDeleted",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "ignoreDeleted",
+      "visible" : {
+        "image" : {
+          "film" : "Film-F",
+          "filmExists" : false,
+          "origin" : "synthetic-source-device",
+          "projected" : [
+
+          ]
+        },
+        "readability" : "valid",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    },
+    {
+      "actualReceipt" : {
+        "capture" : "Capture-B",
+        "date" : 10,
+        "device" : "synthetic-source-device",
+        "film" : "Film-F"
+      },
+      "history" : [
+        "Existing paid Film is independent of unreadable Trial"
+      ],
+      "name" : "paid-isolation",
+      "proposedOutcome" : "project",
+      "proposedOutcomeMeetsRequirement" : true,
+      "requiredByCombinedContracts" : "project",
+      "visible" : {
+        "image" : {
+          "film" : "Paid-Film",
+          "filmExists" : true,
+          "pending" : {
+            "capture" : "Capture-B",
+            "date" : 10,
+            "provenance" : "requiresMatchingReceipt",
+            "verifiedMediaHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+          },
+          "projected" : [
+
+          ]
+        },
+        "readability" : "unavailable",
+        "returned" : {
+          "capture" : "Capture-B",
+          "date" : 10,
+          "device" : "synthetic-source-device",
+          "film" : "Film-F"
+        }
+      }
+    }
+  ]
+}

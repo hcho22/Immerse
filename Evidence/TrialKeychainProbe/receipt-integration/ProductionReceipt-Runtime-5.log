@@ -1,0 +1,103 @@
+Building for debugging...
+[0/4] Write sources
+[2/4] Write swift-version--58304C5D6DBC2206.txt
+[4/6] Emitting module FilmRuntime
+[5/6] Compiling FilmRuntime TrialCoordinator.swift
+[6/9] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[7/9] Emitting module FilmRuntimeTests
+[8/9] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[8/10] Write Objects.LinkFileList
+[9/10] Linking FilmRuntimePackageTests
+Build complete! (8.80s)
+Test Suite 'All tests' started at 2026-10-01 08:16:42.352.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 08:16:42.354.
+Test Suite 'CaptureRecoveryIntegrationTests' started at 2026-10-01 08:16:42.354.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' started.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' passed (2.424 seconds).
+Test Suite 'CaptureRecoveryIntegrationTests' passed at 2026-10-01 08:16:44.778.
+	 Executed 1 test, with 0 failures (0 unexpected) in 2.424 (2.424) seconds
+Test Suite 'FilmExportTests' started at 2026-10-01 08:16:44.778.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' passed (1.887 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' passed (2.089 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' passed (2.314 seconds).
+Test Suite 'FilmExportTests' passed at 2026-10-01 08:16:51.068.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 6.289 (6.290) seconds
+Test Suite 'FilmProcessorTests' started at 2026-10-01 08:16:51.068.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' passed (2.125 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' passed (1.870 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' passed (1.840 seconds).
+Test Suite 'FilmProcessorTests' passed at 2026-10-01 08:16:56.904.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 5.835 (5.836) seconds
+Test Suite 'ProductionTrialReceiptTests' started at 2026-10-01 08:16:56.904.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' passed (0.017 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' passed (0.830 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' passed (2.417 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' passed (0.336 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' passed (0.195 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' passed (0.199 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' passed (0.143 seconds).
+Test Suite 'ProductionTrialReceiptTests' passed at 2026-10-01 08:17:01.043.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 4.137 (4.139) seconds
+Test Suite 'SoundtrackTests' started at 2026-10-01 08:17:01.043.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' passed (2.426 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' passed (2.332 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' passed (2.221 seconds).
+Test Suite 'SoundtrackTests' passed at 2026-10-01 08:17:08.023.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 6.979 (6.980) seconds
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 08:17:08.023.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' passed (0.301 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' passed (0.022 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' passed (0.306 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' passed (0.329 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' passed (0.413 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' passed (1.396 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' passed (0.045 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' passed (0.351 seconds).
+Test Suite 'TrialIntegrationTests' passed at 2026-10-01 08:17:11.188.
+	 Executed 8 tests, with 0 failures (0 unexpected) in 3.163 (3.165) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 08:17:11.188.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 28.827 (28.834) seconds
+Test Suite 'All tests' passed at 2026-10-01 08:17:11.188.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 28.827 (28.836) seconds
+PRODUCTION_NATIVE_REPLY applied=false updates=2 count=1 pending=false
+PRODUCTION_NATIVE_REPLY applied=true updates=1 count=1 pending=false
+PRODUCTION_PROJECTION camera=disposable1990s fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":12960525024822215343,\"sequenceNumber\":1},\"2\":{\"seed\":3185973105173961337,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"20317579-2492-4187-9828-932B34D9EF7E\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"20317579-2492-4187-9828-932B34D9EF7E","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"6f0332900d0c8381ee5f9f7de18ce68aa8dc00a93f4dcbf4b5c782afc2e800e9"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":1325810703986576291,\"sequenceNumber\":1},\"2\":{\"seed\":3783240305190701736,\"sequenceNumber\":2}},\"completedSequences\":[2,1],\"filmID\":\"17286B18-D35D-40C6-8B77-8870A6651DE8\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"17286B18-D35D-40C6-8B77-8870A6651DE8","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"f2d1ca29ea08ff6e39b889b40b238f363fc3cfbf8b1f1ad7b94443e6a16db991"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":7861660013705953969,\"sequenceNumber\":1},\"2\":{\"seed\":8992666022819858562,\"sequenceNumber\":2}},\"completedSequences\":[2,1],\"filmID\":\"794684BD-A7AC-44BE-A281-9E555C9E283E\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"794684BD-A7AC-44BE-A281-9E555C9E283E","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"80f5ecd8b9b9ec1bd77e910e6a190f013f7323a62de76fa4e005d2007c9bb635"}
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

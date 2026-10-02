@@ -1,0 +1,14 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Immerse-Accessibility-Controlled-Default.xcresult
+
+2026-10-01 09:13:02.930 xcodebuild[66575:140956465] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 09:13:02.930 xcodebuild[66575:140956465] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 09:14:49.622 xcodebuild[66575:140956465] [MT] IDETestOperationsObserverDebug: 114.134 elapsed -- Testing started completed.
+2026-10-01 09:14:49.623 xcodebuild[66575:140956465] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 09:14:49.623 xcodebuild[66575:140956465] [MT] IDETestOperationsObserverDebug: 114.134 sec, +114.134 sec -- end
+Failing tests:
+	JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()
+
+** TEST FAILED **
+
+Testing started

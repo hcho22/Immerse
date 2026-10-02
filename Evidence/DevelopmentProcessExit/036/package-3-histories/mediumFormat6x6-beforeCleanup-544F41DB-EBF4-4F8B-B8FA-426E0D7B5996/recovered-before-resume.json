@@ -1,0 +1,69 @@
+{
+  "assets" : {
+    "master-1" : "2043c9f1cbc8e67360950d8d92bb6b9f6ef05c2b3cce21ce9fcb020333ddd3c7",
+    "source-1" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "exposures" : {
+          "_0" : 12
+        }
+      },
+      "displayName" : "1960s 6x6 Medium Format",
+      "id" : "mediumFormat6x6",
+      "medium" : "photo",
+      "revealRule" : "rollLevelDevelopment",
+      "supportsBuiltInSoundtrack" : false
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "photo" : {
+
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "exposures" : {
+            "_0" : 11
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "D3848303-9E11-42A5-99B6-90A03F024EE2",
+    "isArchived" : false,
+    "loadedAt" : 812581397.528148,
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "996\/App\/Media\/D3848303-9E11-42A5-99B6-90A03F024EE2\/master-1.bin",
+    "996\/App\/Media\/D3848303-9E11-42A5-99B6-90A03F024EE2\/source-1.bin",
+    "996\/App\/film-store.sqlite",
+    "996\/App\/film-store.sqlite-shm",
+    "996\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 8441377242074711123,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "D3848303-9E11-42A5-99B6-90A03F024EE2",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

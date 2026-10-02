@@ -1,0 +1,15 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/SetupProbe-Container-Default.xcresult
+
+2026-10-01 09:15:27.236 xcodebuild[29248:141067531] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 09:15:27.236 xcodebuild[29248:141067531] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 09:17:41.414 xcodebuild[29248:141067531] [MT] IDETestOperationsObserverDebug: 141.466 elapsed -- Testing started completed.
+2026-10-01 09:17:41.414 xcodebuild[29248:141067531] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 09:17:41.414 xcodebuild[29248:141067531] [MT] IDETestOperationsObserverDebug: 141.466 sec, +141.466 sec -- end
+Failing tests:
+	SetupAuditTests.testSystemSelectedSize()
+	SetupAuditTests.testSystemSelectedSize()
+
+** TEST FAILED **
+
+Testing started

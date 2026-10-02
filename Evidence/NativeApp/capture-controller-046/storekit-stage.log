@@ -1,0 +1,13 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/StoreKit-20261002T005851Z.xcresult
+
+2026-10-01 17:59:58.862 xcodebuild[90837:158195150] [MT] IDETestOperationsObserverDebug: 56.663 elapsed -- Testing started completed.
+2026-10-01 17:59:58.863 xcodebuild[90837:158195150] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 17:59:58.863 xcodebuild[90837:158195150] [MT] IDETestOperationsObserverDebug: 56.663 sec, +56.663 sec -- end
+Failing tests:
+	JournalIntegrationTests.testPermissionAndStorageFailuresGiveGuidanceWithoutPlaceholderErrorText()
+
+** TEST FAILED **
+
+Testing started
+storekit exit 65 StoreKit-20261002T005851Z

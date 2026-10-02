@@ -1,0 +1,16 @@
+{
+  "captureUUID" : "22A8C0E8-6113-4205-BDBC-12415B773CD9",
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "cinema16mm",
+    "fault" : "beforeMove",
+    "pauseAt" : "none",
+    "runID" : "703A37E6-2B1F-45ED-A39A-8ED419E1FDC1"
+  },
+  "duration" : 0.16833333333333333,
+  "filmID" : "A3108A6C-6997-406A-94ED-7EC587A7048A",
+  "prepared" : true,
+  "savedAt" : 812562800,
+  "sourceHash" : "567a14751016799f16aa473a5209e1680e05b9940df62d5302ce68905c166d3e",
+  "sourcePath" : "Staging\/A3108A6C-6997-406A-94ED-7EC587A7048A\/22A8C0E8-6113-4205-BDBC-12415B773CD9.mov"
+}

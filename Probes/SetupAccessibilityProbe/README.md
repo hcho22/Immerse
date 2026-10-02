@@ -1,0 +1,79 @@
+# Setup Accessibility Probe
+
+Bounded native reproduction of the `67bf395` Film setup labels, Form, sheet,
+navigation edge and Load Film command. This is not a production app, a Trial
+bypass or evidence of Camera capture. It uses no permissions, media or billing.
+Load Film deliberately does nothing; only its layout and accessibility are tested.
+
+All-category audits keep every finding. `SETUP_PROBE` app stdout records SwiftUI
+font category, UIKit preferred body size, label frames and appearance.
+`SETUP_VIEWPORT` records scroll offsets/insets and root/window bounds with wall-clock
+and monotonic timestamps. Before/after test attachments retain the actual tree and screen. UIKit
+preferred body size is a diagnostic reference, not a claim about every rendered
+glyph's font. Font/audit transitions and navigation overlays are separate causes.
+
+Use only a task-owned simulator; no physical-device operation is authorized:
+
+```sh
+xcodegen generate --spec Probes/SetupAccessibilityProbe/project.yml
+xcrun simctl ui "$SIM" appearance light
+xcrun simctl ui "$SIM" content_size large
+xcodebuild -quiet -project Probes/SetupAccessibilityProbe/SetupAccessibilityProbe.xcodeproj -scheme SetupAccessibilityProbe -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/SetupAccessibilityProbe -resultBundlePath DerivedData/SetupProbe-Default.xcresult -only-testing:SetupAccessibilityProbeTests/SetupAuditTests/testSystemSelectedSize -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
+```
+
+Then change only test selection to `testForcedLargestSize` and result path to
+`SetupProbe-ForcedLargest.xcresult`. Finally set `content_size
+accessibility-extra-extra-extra-large`, run `testSystemSelectedSize` with result
+`SetupProbe-SystemLargest.xcresult`. Record actual appearance/category before each
+run. Restore the simulator settings afterward. No finding is a framework false
+positive merely because this probe also fails. Long wall-clock gaps are separate
+environment evidence, not iPhone performance measurements.
+
+`testStablePickerStyle` changes only the orientation control to a menu at every
+size. The fresh-run result still fails; it is not a production fix. The first run
+of that new test returned exit 0 with zero executed tests, so inspect xcresult
+counts rather than treating process success as behavioral evidence. Results and
+the concluded uncertainty are in `Evidence/NativeApp/accessibility-diagnosis.md`.
+
+The controlled follow-up is recorded separately in
+`Evidence/NativeApp/accessibility-container-diagnosis.md`. `testStackContainer`
+duplicates the unchanged Form's content in explicit ScrollView/VStack rows, with default Form
+insets/minimum row height calibrated from the retained baseline. Rows can grow
+without limit. It is a container counterfactual, not an approved production fix.
+Run `testSystemSelectedSize` in the same build as its Form control and repeat both
+at default/system-largest text. Preserve every audit finding and compare actual
+geometry; the two containers need not have identical accessibility hierarchies.
+`testHardEdge` changes only the scroll-edge style on the original Form;
+`testStackContainerHardEdge` combines it with the stack after their independent
+comparisons. Neither changes semantic fonts, required labels or audit categories.
+When introducing a new test method, verify that it actually executes. A fresh
+derived-data root was necessary for this probe's newly selected method to run;
+matching built/installed binary hashes alone did not establish execution.
+
+`Evidence/NativeApp/accessibility-viewport-diagnosis.md` records the separate
+`testStackSuppressedEdges` and `testStackBoundedViewport` counterfactuals and their
+failures. Edge suppression is not the same as hard-edge styling; GeometryReader
+size equality did not establish a separate physical viewport. Callback screenshots
+are retained before issue queries because the audit's size sweep can move the
+viewport before the first callback. Never equate callback frames with an unobserved
+internal analyzer capture. Full exported recordings and complete activity are
+retained alongside timestamped geometry; no production correction is claimed.
+
+`Evidence/NativeApp/accessibility-physical-frame-diagnosis.md` records the next
+independent outer-padding comparison. Public UIScrollView/UINavigationBar frames
+and adjusted insets distinguish physical viewport isolation from content margins.
+The instrumented padded probe passes, including a separate full-frame check for
+all twelve rows, but the attempted actual-app layout still fails required audits
+and is not retained. App-window captures add synchronous work during size changes;
+do not assume that this diagnostic instrumentation is timing-neutral. The report
+retains every failed control, source inventory, timestamp and exported attachment.
+
+The capture-disabled countercheck is in
+`Evidence/NativeApp/accessibility-observer-diagnosis.md`. In one same-build pair,
+the padded capture-enabled probe passes and `testStackOuterPaddingWithoutWindowCaptures`
+fails title/command contrast, despite matching physical separation. Its separate
+full-row reachability test passes. `-disableWindowCaptures` omits only window draw,
+PNG encoding and writes; normal XCTest screenshots and read-only geometry remain.
+Navigation/Trial-state comparisons were not advanced past this failed prerequisite.
+Neither the green instrumented control nor this timing association is a production
+remedy, framework-false-positive finding or permission to weaken required audits.

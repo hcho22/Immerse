@@ -1,0 +1,6 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"instant1970s","event":"session-open","label":"default-no-export","process":"10447","processSequence":"1","run":"75607141-4AE3-48EF-9CFF-5F90EA098DC0","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:58:40Z"}
+{"developed":"true","event":"native-fixture-created","film":"75B5DF0E-C5FD-43E4-B4BF-2F7FD8A55983","process":"10447","processSequence":"2","utc":"2026-10-01T19:58:40Z"}
+{"event":"inventory","file":"inventory-AC68BF76-3CED-494E-964E-E6210C7285E4.json","label":"prepared","process":"10447","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:58:40Z"}
+{"event":"inventory","file":"inventory-93A01F0C-7A4E-4FCC-8DDA-658324FBC650.json","label":"before-recovery","process":"10447","processSequence":"4","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:58:40Z"}
+{"automaticallyExported":"false","event":"recovery-returned","process":"10447","processSequence":"5","utc":"2026-10-01T19:58:40Z"}
+{"event":"inventory","file":"inventory-5367072F-61EE-4B12-9C7A-AE663EF19BFF.json","label":"after-recovery","process":"10447","processSequence":"6","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:58:41Z"}

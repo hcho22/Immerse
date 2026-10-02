@@ -1,0 +1,16 @@
+{
+  "captureUUID" : "534C9098-F247-4317-A0B8-DB8ADE6B31FF",
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "super8HomeMovie",
+    "fault" : "lostReply",
+    "pauseAt" : "none",
+    "runID" : "58CD955C-6974-401A-AF9B-06ACCCBBE6D3"
+  },
+  "duration" : 0.16833333333333333,
+  "filmID" : "F26E94D4-649D-4CD6-856A-C123A266C645",
+  "prepared" : true,
+  "savedAt" : 812562800,
+  "sourceHash" : "f9484bc803730d49782e457c5bfe4c1f821d431a460e90582548cc475b28d37a",
+  "sourcePath" : "Staging\/F26E94D4-649D-4CD6-856A-C123A266C645\/534C9098-F247-4317-A0B8-DB8ADE6B31FF.mov"
+}

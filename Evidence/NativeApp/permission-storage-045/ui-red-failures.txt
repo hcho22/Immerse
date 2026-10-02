@@ -1,0 +1,20 @@
+== DerivedData/Populated-photos-denied-045-red.xcresult
+- PhotosPermissionWorkflowTests.swift:54: failed - Revoke photos-add for com.immerse.PopulatedJournalHarness before launch; never prompt without a usage key
+- Test skipped - Photos add-only access is not denied
+== DerivedData/Populated-photos-denied-045-red-2.xcresult
+- PhotosPermissionWorkflowTests.swift:21: Failed to tap "Save Originals to Photos after reveal" Button: No matches found for Elements matching predicate '"Save Originals to Photos after reveal" IN identifiers' from input {(
+    Button, identifier: 'BackButton', label: 'Film Journal',
+    Button, label: 'Film actions',
+    Button, label: 'Cancel',
+    Button, label: 'Develop Film'
+)}
+== DerivedData/Populated-photos-denied-045-red-3.xcresult
+- PhotosPermissionWorkflowTests.swift:23: XCTAssertTrue failed
+- PhotosPermissionWorkflowTests.swift:30: XCTAssertTrue failed - Could not finish The operation did not finish. Saved captures remain private; retry after checking available storage. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:30: XCTAssertTrue failed - Could not finish The operation did not finish. Saved captures remain private; retry after checking available storage. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:30: XCTAssertFalse failed - Could not finish The operation did not finish. Saved captures remain private; retry after checking available storage. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:30: XCTAssertFalse failed - Could not finish The operation did not finish. Saved captures remain private; retry after checking available storage. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:42: XCTAssertTrue failed - Denied export must leave the original export pending
+- PhotosPermissionWorkflowTests.swift:43: XCTAssertTrue failed - Private synthetic Film Originals 1990s Disposable Developed 25 exposures wasted Oct 1, 2026 - Oct 1, 2026 Save Developed to Photos Originals This choice cannot be changed. Originals are removed from Immerse only after a usable developed result is verified, and, if selected, after saving to Photos succeeds. Older iOS backups can restore removed originals. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:43: XCTAssertTrue failed - Private synthetic Film Originals 1990s Disposable Developed 25 exposures wasted Oct 1, 2026 - Oct 1, 2026 Save Developed to Photos Originals This choice cannot be changed. Originals are removed from Immerse only after a usable developed result is verified, and, if selected, after saving to Photos succeeds. Older iOS backups can restore removed originals. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)
+- PhotosPermissionWorkflowTests.swift:43: XCTAssertFalse failed - Private synthetic Film Originals 1990s Disposable Developed 25 exposures wasted Oct 1, 2026 - Oct 1, 2026 Save Developed to Photos Originals This choice cannot be changed. Originals are removed from Immerse only after a usable developed result is verified, and, if selected, after saving to Photos succeeds. Older iOS backups can restore removed originals. The operation couldn’t be completed. (FilmRuntime.FilmExportError error 3.)

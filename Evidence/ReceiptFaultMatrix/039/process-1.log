@@ -1,0 +1,38 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[3/10] Compiling FilmRuntime DevelopmentStage.swift
+[4/10] Emitting module FilmRuntime
+[5/10] Compiling FilmRuntime FilmProcessor.swift
+[6/12] Compiling FilmRuntime FilmExportWorker.swift
+[7/12] Compiling FilmRuntime TrialCoordinator.swift
+[7/12] Write Objects.LinkFileList
+[9/12] Linking ProductionReceiptCrashWorker
+[10/12] Linking TrialReceiptStudyPackageTests
+[11/12] Applying ProductionReceiptCrashWorker
+Build complete! (11.96s)
+Test Suite 'Selected tests' started at 2026-10-01 13:51:01.914.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 13:51:01.917.
+Test Suite 'ProductionProcessExitTests' started at 2026-10-01 13:51:01.917.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' started.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' passed (11.392 seconds).
+Test Suite 'ProductionProcessExitTests' passed at 2026-10-01 13:51:13.310.
+	 Executed 1 test, with 0 failures (0 unexpected) in 11.392 (11.393) seconds
+Test Suite 'TrialReceiptStudyPackageTests.xctest' passed at 2026-10-01 13:51:13.310.
+	 Executed 1 test, with 0 failures (0 unexpected) in 11.392 (11.393) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 13:51:13.311.
+	 Executed 1 test, with 0 failures (0 unexpected) in 11.392 (11.397) seconds
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=prepared status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=receiptResolved status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=projected status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=prepared status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=receiptResolved status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=projected status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=prepared status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=receiptResolved status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=projected status=77 recovered=1 sealed=true hash=1fff4bd36f4e28217c118bf07a29afc6393478ecd10a384e13ca106c8864e098 storageLoss=consumed
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

@@ -1,0 +1,711 @@
+[
+  {
+    "mode": "light",
+    "name": "default",
+    "testIdentifier": "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+    "result": "Failed",
+    "startUTC": "2026-10-01T18:36:36.226Z",
+    "durationSeconds": 39.17016100883484,
+    "timeline": [
+      {
+        "utc": "2026-10-01T18:36:36.226Z",
+        "failure": false,
+        "title": "Start Test at 2026-10-01 11:36:36.225"
+      },
+      {
+        "utc": "2026-10-01T18:36:36.727Z",
+        "failure": false,
+        "title": "Open com.immerse.FilmJournal"
+      },
+      {
+        "utc": "2026-10-01T18:36:47.865Z",
+        "failure": false,
+        "title": "Tap \"start-film\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:36:52.196Z",
+        "failure": false,
+        "title": "Tap \"camera-super8HomeMovie\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:36:56.331Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:37:04.715Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:37:04.716Z",
+        "failure": true,
+        "title": "Dynamic Type font sizes are partially unsupported"
+      },
+      {
+        "utc": "2026-10-01T18:37:06.153Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default'"
+      },
+      {
+        "utc": "2026-10-01T18:37:06.156Z",
+        "failure": false,
+        "title": "Tap Button (Element at index 0)"
+      },
+      {
+        "utc": "2026-10-01T18:37:08.428Z",
+        "failure": false,
+        "title": "Tap \"Cancel\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:10.186Z",
+        "failure": false,
+        "title": "Tap \"Settings\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:12.101Z",
+        "failure": false,
+        "title": "Tap \"Done\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:13.610Z",
+        "failure": false,
+        "title": "Tap \"Archive\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:15.059Z",
+        "failure": false,
+        "title": "Tear Down"
+      }
+    ],
+    "failureCount": 1,
+    "auditNodes": [
+      {
+        "file": "light/attachments/B2A0F659-C889-47AB-A49C-42A858059D46.txt",
+        "name": "Super8-load-default-audit-node_0_298A5FDD-6D38-4DAB-9FF5-F2A0001553AF.txt",
+        "utc": "2026-10-01T18:37:04.715Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 65536): User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+          "Attributes: StaticText, 0x105816550, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'"
+        ]
+      }
+    ],
+    "preAuditTrees": [
+      {
+        "file": "light/attachments/AE6278E6-7B20-47DD-A367-BD575F9FA51A.txt",
+        "name": "Super8-load-default-accessibility-tree_0_B9248278-0947-41E8-9D4E-091751462C5C.txt",
+        "utc": "2026-10-01T18:36:56.331Z",
+        "relevantLines": [
+          "NavigationBar, 0x101d0d7d0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x101d165a0, {{0.0, 78.0}, {402.0, 106.0}}, identifier: 'Super 8'",
+          "StaticText, 0x101c19790, {{16.0, 340.0}, {370.0, 53.7}}, label: 'Silent capture'",
+          "StaticText, 0x1085073a0, {{60.0, 356.7}, {105.3, 20.3}}, label: 'Silent capture'",
+          "StaticText, 0x105f32b30, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'",
+          "StaticText, 0x101c1a900, {{32.0, 533.0}, {68.0, 20.3}}, identifier: 'film-title-heading', label: 'Film title'",
+          "TextField, 0x101c1ac90, {{32.0, 561.3}, {338.0, 22.0}}, identifier: 'film-title', label: 'Film title', value: Super 8 - Roll #01",
+          "StaticText, 0x101c1db40, {{16.0, 633.3}, {370.0, 52.0}}, label: 'Trial status unavailable'",
+          "StaticText, 0x101c0e800, {{16.0, 685.3}, {370.0, 63.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'",
+          "Button, 0x101c0e480, {{16.0, 784.0}, {370.0, 52.0}}, label: 'Subscription'",
+          "StaticText, 0x101c0eee0, {{32.0, 799.8}, {96.0, 20.3}}, label: 'Subscription'",
+          "Button, 0x101c2be30, {{16.0, 871.0}, {370.0, 52.0}}, identifier: 'load-film', label: 'Load Film'",
+          "StaticText, 0x101c2bf50, {{32.0, 886.8}, {73.3, 20.3}}, label: 'Load Film'"
+        ]
+      }
+    ],
+    "recordings": [
+      {
+        "file": "light/attachments/1B5DC9B2-A68C-4F40-A34C-D5261C544467.mp4",
+        "startUTC": "2026-10-01T18:36:36.711Z",
+        "bytes": 19095386,
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1206,
+              "height": 2622,
+              "nb_frames": "934"
+            }
+          ],
+          "format": {
+            "duration": "38.378333",
+            "size": "19095386"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "mode": "light",
+    "name": "largest",
+    "testIdentifier": "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()",
+    "result": "Failed",
+    "startUTC": "2026-10-01T18:37:15.396Z",
+    "durationSeconds": 70.11185395717621,
+    "timeline": [
+      {
+        "utc": "2026-10-01T18:37:15.396Z",
+        "failure": false,
+        "title": "Start Test at 2026-10-01 11:37:15.396"
+      },
+      {
+        "utc": "2026-10-01T18:37:15.518Z",
+        "failure": false,
+        "title": "Open com.immerse.FilmJournal"
+      },
+      {
+        "utc": "2026-10-01T18:37:21.706Z",
+        "failure": false,
+        "title": "Tap \"start-film\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:29.144Z",
+        "failure": false,
+        "title": "Added attachment named 'Catalog-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:37:31.598Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:37:35.018Z",
+        "failure": false,
+        "title": "Tap \"camera-cinema16mm\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:37:41.950Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-load-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:37:44.390Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:37:50.242Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:37:56.482Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:37:56.483Z",
+        "failure": true,
+        "title": "Contrast failed"
+      },
+      {
+        "utc": "2026-10-01T18:37:57.343Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:37:59.824Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:38:05.585Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:38:10.832Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:38:10.834Z",
+        "failure": true,
+        "title": "Contrast failed"
+      },
+      {
+        "utc": "2026-10-01T18:38:11.266Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:38:11.268Z",
+        "failure": false,
+        "title": "Tap Button (Element at index 0)"
+      },
+      {
+        "utc": "2026-10-01T18:38:13.578Z",
+        "failure": false,
+        "title": "Tap \"Cancel\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:38:15.292Z",
+        "failure": false,
+        "title": "Tap \"Settings\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:38:16.744Z",
+        "failure": false,
+        "title": "Setting device orientation to Landscape Left"
+      },
+      {
+        "utc": "2026-10-01T18:38:23.375Z",
+        "failure": false,
+        "title": "Added attachment named 'Settings-landscape-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:38:23.377Z",
+        "failure": false,
+        "title": "Setting device orientation to Portrait"
+      },
+      {
+        "utc": "2026-10-01T18:38:25.109Z",
+        "failure": false,
+        "title": "Tear Down"
+      }
+    ],
+    "failureCount": 2,
+    "auditNodes": [
+      {
+        "file": "light/attachments/E3E71D0D-D6C0-487C-A4DD-B2E5FED46102.txt",
+        "name": "16mm-command-accessibility-largest-audit-node_0_2BADB5CF-2148-4020-917F-E8150EA43B11.txt",
+        "utc": "2026-10-01T18:38:10.832Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode",
+          "No element supplied by auditor"
+        ]
+      },
+      {
+        "file": "light/attachments/A7FE98C0-E7A3-4576-8645-D4AC8ED25B69.txt",
+        "name": "16mm-title-accessibility-largest-audit-node_0_5C7BB806-6C71-4DCA-8EA4-A035BE7E936D.txt",
+        "utc": "2026-10-01T18:37:56.482Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode",
+          "Attributes: StaticText, 0x105e40340, {{16.0, -86.3}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'"
+        ]
+      }
+    ],
+    "preAuditTrees": [
+      {
+        "file": "light/attachments/B31A8E68-BF01-4D17-A472-FC9BA79D692C.txt",
+        "name": "16mm-command-accessibility-largest-accessibility-tree_0_D2D13C25-23ED-412F-9A0C-8C74A5A48242.txt",
+        "utc": "2026-10-01T18:38:05.585Z",
+        "relevantLines": [
+          "NavigationBar, 0x101e6b550, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x101f2c740, {{0.0, 78.0}, {402.0, 54.0}}, identifier: '16mm'",
+          "StaticText, 0x101e6cbd0, {{16.0, 79.7}, {370.0, 155.3}}, label: 'Trial status unavailable'",
+          "StaticText, 0x101911ee0, {{16.0, 235.0}, {370.0, 394.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'",
+          "Button, 0x101914190, {{16.0, 664.7}, {370.0, 93.3}}, label: 'Subscription'",
+          "StaticText, 0x1019142b0, {{32.0, 679.7}, {283.0, 63.3}}, label: 'Subscription'",
+          "Button, 0x105f59f50, {{16.0, 793.0}, {370.0, 93.3}}, identifier: 'load-film', label: 'Load Film'",
+          "StaticText, 0x105f5a070, {{32.0, 808.0}, {217.3, 63.3}}, label: 'Load Film'"
+        ]
+      },
+      {
+        "file": "light/attachments/6DA88B7E-B87F-4210-9C23-C98E4810423A.txt",
+        "name": "16mm-title-accessibility-largest-accessibility-tree_0_B0229A41-7ABF-4A3E-BF82-8FA89F34C489.txt",
+        "utc": "2026-10-01T18:37:50.242Z",
+        "relevantLines": [
+          "NavigationBar, 0x105904080, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x10590e1b0, {{0.0, 78.0}, {402.0, 54.0}}, identifier: '16mm'",
+          "StaticText, 0x10590f290, {{16.0, -86.3}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'",
+          "StaticText, 0x10190d730, {{16.0, 131.0}, {370.0, 93.3}}, label: 'Silent capture'",
+          "StaticText, 0x10190d970, {{60.0, 146.0}, {308.0, 63.3}}, label: 'Silent capture'",
+          "StaticText, 0x10590fef0, {{32.0, 239.3}, {249.7, 125.3}}, label: 'Movie Orientation'",
+          "Button, 0x105910010, {{32.0, 372.7}, {217.0, 77.3}}, label: 'Movie Orientation, Portrait'",
+          "StaticText, 0x101e4d0a0, {{32.0, 515.0}, {199.7, 63.3}}, identifier: 'film-title-heading', label: 'Film title'",
+          "TextField, 0x101d19d60, {{32.0, 586.3}, {338.0, 126.0}}, identifier: 'film-title', label: 'Film title', value: 16mm - Roll #01",
+          "StaticText, 0x105e38360, {{16.0, 762.3}, {370.0, 155.3}}, label: 'Trial status unavailable'"
+        ]
+      }
+    ],
+    "recordings": [
+      {
+        "file": "light/attachments/C108EC47-B426-4F7B-938D-89CF4282B5BB.mp4",
+        "startUTC": "2026-10-01T18:37:15.512Z",
+        "bytes": 38329603,
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1206,
+              "height": 2622,
+              "nb_frames": "1873"
+            }
+          ],
+          "format": {
+            "duration": "69.603333",
+            "size": "38329603"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "mode": "dark",
+    "name": "default",
+    "testIdentifier": "JournalFlowTests/testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore()",
+    "result": "Failed",
+    "startUTC": "2026-10-01T18:39:20.153Z",
+    "durationSeconds": 36.28980600833893,
+    "timeline": [
+      {
+        "utc": "2026-10-01T18:39:20.153Z",
+        "failure": false,
+        "title": "Start Test at 2026-10-01 11:39:20.153"
+      },
+      {
+        "utc": "2026-10-01T18:39:20.298Z",
+        "failure": false,
+        "title": "Open com.immerse.FilmJournal"
+      },
+      {
+        "utc": "2026-10-01T18:39:30.220Z",
+        "failure": false,
+        "title": "Tap \"start-film\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:34.353Z",
+        "failure": false,
+        "title": "Tap \"camera-super8HomeMovie\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:38.374Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:39:45.999Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:39:46.001Z",
+        "failure": true,
+        "title": "Dynamic Type font sizes are partially unsupported"
+      },
+      {
+        "utc": "2026-10-01T18:39:47.004Z",
+        "failure": false,
+        "title": "Added attachment named 'Super8-load-default'"
+      },
+      {
+        "utc": "2026-10-01T18:39:47.006Z",
+        "failure": false,
+        "title": "Tap Button (Element at index 0)"
+      },
+      {
+        "utc": "2026-10-01T18:39:49.160Z",
+        "failure": false,
+        "title": "Tap \"Cancel\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:50.922Z",
+        "failure": false,
+        "title": "Tap \"Settings\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:52.930Z",
+        "failure": false,
+        "title": "Tap \"Done\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:54.542Z",
+        "failure": false,
+        "title": "Tap \"Archive\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:39:56.127Z",
+        "failure": false,
+        "title": "Tear Down"
+      }
+    ],
+    "failureCount": 1,
+    "auditNodes": [
+      {
+        "file": "dark/attachments/6EC63778-1B9C-4155-8EDE-7E6BABC022EB.txt",
+        "name": "Super8-load-default-audit-node_0_E4065AB0-502A-43B9-9E15-FFA0938F9410.txt",
+        "utc": "2026-10-01T18:39:45.999Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 65536): User will not be able to change the font size of this SwiftUI.AccessibilityNode",
+          "Attributes: StaticText, 0x10c014d90, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'"
+        ]
+      }
+    ],
+    "preAuditTrees": [
+      {
+        "file": "dark/attachments/656F4A5A-3EF6-4CBC-A8AF-EBD77D0FE063.txt",
+        "name": "Super8-load-default-accessibility-tree_0_5DDE1BA1-3D8A-4CA2-A650-CF5BC94C635D.txt",
+        "utc": "2026-10-01T18:39:38.374Z",
+        "relevantLines": [
+          "NavigationBar, 0x111306dd0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x11130ada0, {{0.0, 78.0}, {402.0, 106.0}}, identifier: 'Super 8'",
+          "StaticText, 0x1111059d0, {{16.0, 340.0}, {370.0, 53.7}}, label: 'Silent capture'",
+          "StaticText, 0x111107b90, {{60.0, 356.7}, {105.3, 20.3}}, label: 'Silent capture'",
+          "StaticText, 0x10c219c00, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'",
+          "StaticText, 0x10c31f140, {{32.0, 533.0}, {68.0, 20.3}}, identifier: 'film-title-heading', label: 'Film title'",
+          "TextField, 0x10c31f260, {{32.0, 561.3}, {338.0, 22.0}}, identifier: 'film-title', label: 'Film title', value: Super 8 - Roll #01",
+          "StaticText, 0x11160f7f0, {{16.0, 633.3}, {370.0, 52.0}}, label: 'Trial status unavailable'",
+          "StaticText, 0x1116109b0, {{16.0, 685.3}, {370.0, 63.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'",
+          "Button, 0x11160e2f0, {{16.0, 784.0}, {370.0, 52.0}}, label: 'Subscription'",
+          "StaticText, 0x11160e410, {{32.0, 799.8}, {96.0, 20.3}}, label: 'Subscription'",
+          "Button, 0x111611780, {{16.0, 871.0}, {370.0, 52.0}}, identifier: 'load-film', label: 'Load Film'",
+          "StaticText, 0x1116118a0, {{32.0, 886.8}, {73.3, 20.3}}, label: 'Load Film'"
+        ]
+      }
+    ],
+    "recordings": [
+      {
+        "file": "dark/attachments/5857137C-97D7-4A57-9011-18B6F5F4A4BE.mp4",
+        "startUTC": "2026-10-01T18:39:20.275Z",
+        "bytes": 16672122,
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1206,
+              "height": 2622,
+              "nb_frames": "1003"
+            }
+          ],
+          "format": {
+            "duration": "35.856667",
+            "size": "16672122"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "mode": "dark",
+    "name": "largest",
+    "testIdentifier": "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()",
+    "result": "Failed",
+    "startUTC": "2026-10-01T18:39:56.445Z",
+    "durationSeconds": 79.50178802013397,
+    "timeline": [
+      {
+        "utc": "2026-10-01T18:39:56.445Z",
+        "failure": false,
+        "title": "Start Test at 2026-10-01 11:39:56.445"
+      },
+      {
+        "utc": "2026-10-01T18:39:56.572Z",
+        "failure": false,
+        "title": "Open com.immerse.FilmJournal"
+      },
+      {
+        "utc": "2026-10-01T18:40:03.093Z",
+        "failure": false,
+        "title": "Tap \"start-film\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:40:12.262Z",
+        "failure": false,
+        "title": "Added attachment named 'Catalog-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:40:14.765Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:40:18.406Z",
+        "failure": false,
+        "title": "Tap \"camera-cinema16mm\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:40:26.248Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-load-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:40:28.700Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:40:35.075Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:40:42.100Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:40:42.102Z",
+        "failure": true,
+        "title": "Contrast failed"
+      },
+      {
+        "utc": "2026-10-01T18:40:43.999Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:40:44.000Z",
+        "failure": true,
+        "title": "Contrast failed"
+      },
+      {
+        "utc": "2026-10-01T18:40:44.954Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-title-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:40:47.506Z",
+        "failure": false,
+        "title": "Swipe up Target Application 'com.immerse.FilmJournal'"
+      },
+      {
+        "utc": "2026-10-01T18:40:54.221Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest-accessibility-tree'"
+      },
+      {
+        "utc": "2026-10-01T18:41:00.068Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest-audit-node'"
+      },
+      {
+        "utc": "2026-10-01T18:41:00.070Z",
+        "failure": true,
+        "title": "Contrast failed"
+      },
+      {
+        "utc": "2026-10-01T18:41:00.512Z",
+        "failure": false,
+        "title": "Added attachment named '16mm-command-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:41:00.514Z",
+        "failure": false,
+        "title": "Tap Button (Element at index 0)"
+      },
+      {
+        "utc": "2026-10-01T18:41:02.959Z",
+        "failure": false,
+        "title": "Tap \"Cancel\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:41:04.692Z",
+        "failure": false,
+        "title": "Tap \"Settings\" Button"
+      },
+      {
+        "utc": "2026-10-01T18:41:06.309Z",
+        "failure": false,
+        "title": "Setting device orientation to Landscape Left"
+      },
+      {
+        "utc": "2026-10-01T18:41:13.774Z",
+        "failure": false,
+        "title": "Added attachment named 'Settings-landscape-accessibility-largest'"
+      },
+      {
+        "utc": "2026-10-01T18:41:13.775Z",
+        "failure": false,
+        "title": "Setting device orientation to Portrait"
+      },
+      {
+        "utc": "2026-10-01T18:41:15.541Z",
+        "failure": false,
+        "title": "Tear Down"
+      }
+    ],
+    "failureCount": 3,
+    "auditNodes": [
+      {
+        "file": "dark/attachments/F006C75F-0131-4695-880D-71B35A2F6C87.txt",
+        "name": "16mm-command-accessibility-largest-audit-node_0_1DFBDF43-0B71-49CC-B6FA-4F6766DF3C0F.txt",
+        "utc": "2026-10-01T18:41:00.068Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode",
+          "No element supplied by auditor"
+        ]
+      },
+      {
+        "file": "dark/attachments/1276C429-0408-45E3-9D4D-260025291CC9.txt",
+        "name": "16mm-title-accessibility-largest-audit-node_0_4E2F11CC-0FC4-4DB5-92ED-45FAC3FD825E.txt",
+        "utc": "2026-10-01T18:40:43.999Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode",
+          "Attributes: StaticText, 0x10c33e560, {{60.0, 118.0}, {308.0, 63.3}}, label: 'Silent capture'"
+        ]
+      },
+      {
+        "file": "dark/attachments/338543C2-291F-4E59-A5CA-2BE5228C64FD.txt",
+        "name": "16mm-title-accessibility-largest-audit-node_0_B90D9B6A-5C08-47B3-ACF4-F5624FC6C83A.txt",
+        "utc": "2026-10-01T18:40:42.100Z",
+        "detail": [
+          "XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode",
+          "Attributes: StaticText, 0x10c01d0f0, {{16.0, -114.3}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'"
+        ]
+      }
+    ],
+    "preAuditTrees": [
+      {
+        "file": "dark/attachments/B58872DA-6652-4F4C-B20A-9B1E813C6C5B.txt",
+        "name": "16mm-command-accessibility-largest-accessibility-tree_0_70CE9368-83D8-4FDA-BFEA-509264FBC772.txt",
+        "utc": "2026-10-01T18:40:54.221Z",
+        "relevantLines": [
+          "NavigationBar, 0x10c336440, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x10c038400, {{0.0, 78.0}, {402.0, 54.0}}, identifier: '16mm'",
+          "StaticText, 0x10c039600, {{16.0, 53.3}, {370.0, 155.3}}, label: 'Trial status unavailable'",
+          "StaticText, 0x10c03ab60, {{16.0, 208.7}, {370.0, 394.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'",
+          "Button, 0x10c355d10, {{16.0, 638.3}, {370.0, 93.3}}, label: 'Subscription'",
+          "StaticText, 0x10c355e30, {{32.0, 653.3}, {283.0, 63.3}}, label: 'Subscription'",
+          "Button, 0x10c356850, {{16.0, 766.7}, {370.0, 93.3}}, identifier: 'load-film', label: 'Load Film'",
+          "StaticText, 0x10c356970, {{32.0, 781.7}, {217.3, 63.3}}, label: 'Load Film'"
+        ]
+      },
+      {
+        "file": "dark/attachments/C129385E-DD03-48A2-96A0-2FB8C6580CE8.txt",
+        "name": "16mm-title-accessibility-largest-accessibility-tree_0_A46CDB22-FB5B-4325-9E8D-568CFEA2DF79.txt",
+        "utc": "2026-10-01T18:40:35.075Z",
+        "relevantLines": [
+          "NavigationBar, 0x10c123a30, {{0.0, 62.0}, {402.0, 127.0}}, identifier: 'Film Journal'",
+          "NavigationBar, 0x10c126730, {{0.0, 78.0}, {402.0, 54.0}}, identifier: '16mm'",
+          "StaticText, 0x10c127810, {{16.0, -114.3}, {370.0, 217.3}}, label: 'Deliberate framing, finer grain'",
+          "StaticText, 0x11142dc30, {{16.0, 103.0}, {370.0, 93.3}}, label: 'Silent capture'",
+          "StaticText, 0x11142de70, {{60.0, 118.0}, {308.0, 63.3}}, label: 'Silent capture'",
+          "StaticText, 0x11142e770, {{32.0, 211.3}, {249.7, 125.3}}, label: 'Movie Orientation'",
+          "Button, 0x11142e890, {{32.0, 344.7}, {217.0, 77.3}}, label: 'Movie Orientation, Portrait'",
+          "StaticText, 0x11142f3d0, {{32.0, 487.0}, {199.7, 63.3}}, identifier: 'film-title-heading', label: 'Film title'",
+          "TextField, 0x11142f4f0, {{32.0, 558.3}, {338.0, 126.0}}, identifier: 'film-title', label: 'Film title', value: 16mm - Roll #01",
+          "StaticText, 0x111430150, {{16.0, 734.3}, {370.0, 155.3}}, label: 'Trial status unavailable'"
+        ]
+      }
+    ],
+    "recordings": [
+      {
+        "file": "dark/attachments/F046A7FC-CB38-4AEE-9550-E1EF02B089CB.mp4",
+        "startUTC": "2026-10-01T18:39:56.566Z",
+        "bytes": 37770555,
+        "probe": {
+          "programs": [],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "width": 1206,
+              "height": 2622,
+              "nb_frames": "2173"
+            }
+          ],
+          "format": {
+            "duration": "78.980000",
+            "size": "37770555"
+          }
+        }
+      }
+    ]
+  }
+]

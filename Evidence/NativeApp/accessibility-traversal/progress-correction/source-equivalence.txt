@@ -1,0 +1,1 @@
+All assertions, ten rows, arms, snapshot/query helpers and audit handler unchanged; only drag mechanics/error propagation differ.

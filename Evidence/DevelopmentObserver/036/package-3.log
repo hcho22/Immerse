@@ -1,0 +1,76 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+[4/5] Emitting module FilmRuntimeTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (2.99s)
+Test Suite 'Selected tests' started at 2026-10-01 12:51:25.033.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 12:51:25.034.
+Test Suite 'DevelopmentObserverTests' started at 2026-10-01 12:51:25.034.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' passed (5.159 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' passed (3.845 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' passed (1.704 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' passed (0.765 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' passed (1.665 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' passed (10.252 seconds).
+Test Suite 'DevelopmentObserverTests' passed at 2026-10-01 12:51:48.427.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 23.391 (23.392) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 12:51:48.427.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 23.391 (23.392) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 12:51:48.427.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 23.391 (23.394) seconds
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9C2AB5E8-63A0-4009-8501-D4AD0132AE6D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F5F0B5CA-BFE3-48A5-9EE4-DFCC9A684142
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/88F0EC26-1D0A-4802-ADE1-63343108985E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/83AF0F60-9556-4FCA-A3A7-6BA79CACD4C0
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/5A838127-8828-40EF-8C51-5274E312C01B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/2DCB2BFB-86FD-4762-B5A8-AD54AD281D02
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/ACCD7C37-046C-4B5A-808D-6DC3AD681FB4
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/5AE75198-2DE3-468A-AABF-078D50E464E6
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/AA5813D6-D0AB-4EA5-BB82-AEDA68998ED6
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F1B3EAD2-4961-456B-AAAE-5B6BFDF894F3
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/03788973-561F-4EB5-9849-60EA9C02CB66
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/471E0289-B70A-4886-A094-A6796B5F10E2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D88B16CC-2679-4B61-AC61-3F22308D67EE
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/21762268-793C-4A0C-A8DF-E32F48D6A753
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1F2A66FE-D5A4-402C-BC90-66A9E9840F49
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/499276B5-E4B5-451E-A71B-EE4DB60FC706
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/550C968F-7D5B-41C4-86DA-915EDF5970DF
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/685578E3-06B7-4043-98BA-38D965E10D66
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/8209F6B5-419B-4A1F-BA48-487B883F12BF
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/39B2BE72-776F-4D5A-95DD-8A701968A2FB
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/2A2AD119-8852-4659-A7EC-AB704B6FC132
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7034B4E2-A4E8-4234-87BE-964E24173C2F
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/702A4855-4536-4688-9C05-ED6E1687F913
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/0BA6DB86-F212-48E2-9ADB-B7B31B1DE3A3
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/A0D7CDC1-D170-4DEF-A938-8848C0492959
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9D5F5883-AED6-4EAC-B630-2EB33441B6E6
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/3F067B4D-3E40-43CA-9638-62B3E506A968
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4EC843AB-C25B-416B-9E7F-8DFF45F5570C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B98953CB-4ECC-49D5-9FE0-525B17A61100
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/AF216539-6064-4844-8C00-D13A3CA37258
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/C81AA77D-140B-4F33-A8A4-D332B66C9E9B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/6402E678-F689-4F50-9336-4844C90048E5
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/C8E79D85-E44C-4BE3-A284-293ADC281521
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7445DCF3-7CE8-4079-AFFF-19F63546428D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/22286508-8ABF-410C-B917-68BFC50D4BF2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/BBBB27B4-C7C7-4542-8201-C3778BD45317
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/738039D6-B954-4C3F-ACDB-AEA2576D0558
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9CBC925D-AA17-4316-967E-C0566E314A10
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/FB912CE4-9F33-40EF-8E72-496C55DFC8EC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/08264DAC-FFC4-4A44-9031-8E4249AAE831
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/8D6912CB-82F5-437D-9EB4-7094268C7CA2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/67E24672-A57F-451B-AD7F-74F009071106
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E40D95FB-1891-4D34-8A4D-77E11AB21AB1
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

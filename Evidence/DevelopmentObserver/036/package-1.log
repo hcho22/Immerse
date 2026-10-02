@@ -1,0 +1,33 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[2/5] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling FilmRuntime DevelopmentStage.swift
+[5/8] Emitting module FilmRuntime
+[6/8] Compiling FilmRuntime FilmProcessor.swift
+[7/10] Compiling FilmRuntime FilmExportWorker.swift
+[8/10] Compiling FilmRuntime TrialCoordinator.swift
+[9/18] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[10/18] Emitting module FilmRuntimeTests
+[11/18] Compiling FilmRuntimeTests SoundtrackTests.swift
+[12/18] Compiling FilmRuntimeTests CaptureRecoveryIntegrationTests.swift
+[13/18] Compiling FilmRuntimeTests FilmExportTests.swift
+[14/18] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[15/18] Compiling FilmRuntimeTests FilmProcessorTests.swift
+[16/18] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift:241:39: error: value of type 'DevelopmentRun' has no member 'id'
+239 |     private func assertPreserved(_ earlier: State, _ later: State, file: StaticString = #filePath, line: UInt = #line) {
+240 |         if let run = earlier.run {
+241 |             XCTAssertEqual(later.run?.id, run.id, file: file, line: line)
+    |                                       `- error: value of type 'DevelopmentRun' has no member 'id'
+242 |             XCTAssertEqual(later.run?.assignments, run.assignments, file: file, line: line)
+243 |         }
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmRuntime/Tests/FilmRuntimeTests/DevelopmentObserverTests.swift:241:47: error: value of type 'DevelopmentRun' has no member 'id'
+239 |     private func assertPreserved(_ earlier: State, _ later: State, file: StaticString = #filePath, line: UInt = #line) {
+240 |         if let run = earlier.run {
+241 |             XCTAssertEqual(later.run?.id, run.id, file: file, line: line)
+    |                                               `- error: value of type 'DevelopmentRun' has no member 'id'
+242 |             XCTAssertEqual(later.run?.assignments, run.assignments, file: file, line: line)
+243 |         }
+error: fatalError

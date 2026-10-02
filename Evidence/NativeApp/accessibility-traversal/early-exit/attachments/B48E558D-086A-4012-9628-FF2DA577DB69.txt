@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790878918.578834 uptime=1246294.4276038911 event=A-no-audit.row.orientation-heading readingBounds=(0.0, 156.0, 402.0, 668.0) element=(32.0, 485.99999999999994, 249.66666666666663, 125.33333333333331)

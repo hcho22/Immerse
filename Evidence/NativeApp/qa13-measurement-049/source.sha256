@@ -1,0 +1,5 @@
+# Base 35a6ae3; SHA-256 of changed sources for checkpoint 049 and its follow-up
+851d9bc6fe4a68c6a4755f9a96ee18e503245e1c5377146851880a918116b2a7  App/Immerse/Sources/CameraCatalogView.swift
+cd50bdbc6c342d2b3d1a9d1fa292f0a9bfa458cab6c57cab18532ddbc57fcdb7  App/Immerse/UITests/ContentSizeTests.swift
+1a089de435e2eb27ada719a163c7c9d84f8eeb58d9c73c969eaca66cceb16a02  App/Immerse/UITests/JournalFlowTests.swift
+2b09556e254dc0a61aa29ec3c2601d48b4edfbe19d066e3c14958929f673d68d  App/Immerse/Immerse.xcodeproj/project.pbxproj

@@ -1,0 +1,61 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "SetupAccessibilityProbe · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1790871965.892,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790871806.76,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Contrast failed",
+      "targetName" : "SetupAccessibilityProbeTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "SetupAuditTests/testHardEdge()",
+      "testIdentifierURL" : "test://com.apple.xcode/SetupAccessibilityProbe/SetupAccessibilityProbeTests/SetupAuditTests/testHardEdge",
+      "testName" : "testHardEdge()"
+    },
+    {
+      "failureText" : "Contrast failed",
+      "targetName" : "SetupAccessibilityProbeTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "SetupAuditTests/testStackContainerHardEdge()",
+      "testIdentifierURL" : "test://com.apple.xcode/SetupAccessibilityProbe/SetupAccessibilityProbeTests/SetupAuditTests/testStackContainerHardEdge",
+      "testName" : "testStackContainerHardEdge()"
+    }
+  ],
+  "title" : "Test - SetupAccessibilityProbe",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "3 runs of 2 tests failed with Contrast failed"
+    }
+  ],
+  "totalTestCount" : 2
+}

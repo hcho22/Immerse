@@ -1,0 +1,30 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x101936350, {{32.0, 501.7}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain'
+Element subtree:
+ →StaticText, 0x101936350, {{32.0, 501.7}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain'
+Path to element:
+ →Application, 0x101930f30, pid: 61218, label: 'SetupAccessibilityProbe'
+  ↳Window (Main), 0x101931050, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x101932cd0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x101932f10, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x101933030, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x1019344f0, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x101934610, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x101934730, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x101934850, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x101934bb0, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x101934cd0, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x101934df0, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x101934f10, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳ScrollView, 0x101935150, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Other, 0x101935ff0, {{0.0, 114.0}, {402.0, 2089.3}}
+                ↳StaticText, 0x101936350, {{32.0, 501.7}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x10494bdb0, pid: 61218, label: 'SetupAccessibilityProbe'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 61218, elementOrHash.elementID: 4390412016.54
+    Output: {
+      StaticText, 0x101e4cc70, {{32.0, 501.7}, {302.7, 187.3}}, label: 'Deliberate framing, finer grain'
+    }

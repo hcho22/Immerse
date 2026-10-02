@@ -1,0 +1,8 @@
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+Xcode 26.5
+Build version 17F42
+Apple Swift version 6.3.2 (swiftlang-6.3.2.1.108 clang-2100.1.1.101)
+Target: x86_64-apple-macosx26.0
+Thu Oct  1 20:25:32 UTC 2026

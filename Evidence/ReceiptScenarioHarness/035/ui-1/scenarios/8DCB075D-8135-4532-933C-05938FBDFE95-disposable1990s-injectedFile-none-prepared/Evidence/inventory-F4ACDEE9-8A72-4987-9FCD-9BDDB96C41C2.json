@@ -1,0 +1,71 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "none",
+    "pauseAt" : "prepared",
+    "runID" : "8DCB075D-8135-4532-933C-05938FBDFE95"
+  },
+  "files" : {
+    "Staging\/A6848F63-209A-4C94-AF40-753DFEC2C75D\/D9581034-14D5-4317-83EF-5E7BE7741751.json" : "32bbb38e7bbc13dd25f7872354a7d54ee7512bdc89f70eeecdf2c93dd53142a1",
+    "Staging\/A6848F63-209A-4C94-AF40-753DFEC2C75D\/D9581034-14D5-4317-83EF-5E7BE7741751.photo" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "ea2fc16ecad967f175df1dea341696ea621dbc4f665b29ba3b2394905549e95d",
+    "film-store.sqlite-wal" : "d0a78b6e3bb8711b6b78ee065abfdf430265e566bd02e2571edf285ad2dc4c73"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 27
+          }
+        },
+        "displayName" : "1990s Disposable",
+        "id" : "disposable1990s",
+        "medium" : "photo",
+        "revealRule" : "rollLevelDevelopment",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "A6848F63-209A-4C94-AF40-753DFEC2C75D",
+      "isArchived" : false,
+      "loadedAt" : 812574675.199516,
+      "title" : "Synthetic receipt scenario"
+    }
+  ],
+  "logicalRead" : "unused",
+  "manifest" : {
+    "captureUUID" : "D9581034-14D5-4317-83EF-5E7BE7741751",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "disposable1990s",
+      "fault" : "none",
+      "pauseAt" : "prepared",
+      "runID" : "8DCB075D-8135-4532-933C-05938FBDFE95"
+    },
+    "filmID" : "A6848F63-209A-4C94-AF40-753DFEC2C75D",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "sourcePath" : "Staging\/A6848F63-209A-4C94-AF40-753DFEC2C75D\/D9581034-14D5-4317-83EF-5E7BE7741751.photo"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : true,
+  "stagingExists" : true,
+  "underlyingRecord" : {
+    "deviceID" : "3191CC3F-C64C-4CE4-B650-2B1DACC686A6",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

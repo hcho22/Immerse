@@ -1,0 +1,66 @@
+2026-10-01 09:53:16.745795-0700 SetupAccessibilityProbeTests-Runner[63175:143029900] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-10-01 09:53:18.551.
+Test Suite 'SetupAccessibilityProbeTests.xctest' started at 2026-10-01 09:53:18.554.
+Test Suite 'SetupAuditTests' started at 2026-10-01 09:53:18.555.
+Test Case '-[SetupAccessibilityProbeTests.SetupAuditTests testPaddedRowsRemainFullyReachable]' started.
+    t =     0.00s Start Test at 2026-10-01 09:53:18.559
+    t =     0.11s Set Up
+    t =     0.12s Open com.immerse.SetupAccessibilityProbe
+    t =     0.12s     Launch com.immerse.SetupAccessibilityProbe
+    t =     1.46s         Setting up automation session
+    t =     3.65s         Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     5.87s Waiting 10.0s for "start-film" Button to exist
+    t =     6.93s     Checking `Expect predicate `existsNoRetry == 1` for object "start-film" Button`
+    t =     6.93s         Checking existence of `"start-film" Button`
+    t =     7.00s Tap "start-film" Button
+    t =     7.00s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     7.01s     Find the "start-film" Button
+    t =     7.04s     Check for interrupting elements affecting "start-film" Button
+    t =     7.08s     Synthesize event
+    t =     7.42s     Wait for com.immerse.SetupAccessibilityProbe to idle
+    t =     8.41s Waiting 5.0s for "16mm" NavigationBar to exist
+    t =     9.42s     Checking `Expect predicate `existsNoRetry == 1` for object "16mm" NavigationBar`
+    t =     9.42s         Checking existence of `"16mm" NavigationBar`
+    t =     9.55s Find the ScrollView (First Match)
+    t =     9.64s Find the "Capacity" StaticText
+    t =    10.73s     Find the "Capacity" StaticText (retry 1)
+    t =    11.79s     Find the "Capacity" StaticText (retry 2)
+    t =    11.88s     Collecting debug information to assist test failure triage
+    t =    11.88s         Requesting snapshot of accessibility hierarchy for app with pid 65433
+    t =    12.03s     Requesting snapshot of accessibility hierarchy for app with pid 65433
+    t =    12.15s     Find: Descendants matching type StaticText
+    t =    12.15s     Find: Elements matching predicate '"Capacity" IN identifiers'
+    t =    12.16s     Requesting snapshot of accessibility hierarchy for app with pid 65433
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/SetupAccessibilityProbe/Tests/SetupAuditTests.swift:38: error: -[SetupAccessibilityProbeTests.SetupAuditTests testPaddedRowsRemainFullyReachable] : Failed to get matching snapshot: No matches found for Elements matching predicate '"Capacity" IN identifiers' from input {(
+    StaticText, label: 'Film Journal',
+    StaticText, label: '16mm',
+    StaticText, label: 'Film Journal',
+    StaticText, label: 'Capacity, 2:45 of film',
+    StaticText, label: 'One silent Movie after Development',
+    StaticText, label: 'Deliberate framing, finer grain',
+    StaticText, label: 'Silent capture',
+    StaticText, label: 'Movie Orientation',
+    StaticText, identifier: 'film-title-heading', label: 'Film title',
+    StaticText, label: 'One Trial Film on this iPhone',
+    StaticText, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.',
+    StaticText, label: 'Silent capture',
+    StaticText, label: 'Portrait',
+    StaticText, label: 'Load Film'
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Other from legacy attributes vs StaticText from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 48;
+    "XC_kAXXCAttributeElementBaseType" = UILabel;
+    "XC_kAXXCAttributeElementType" = UILabel;
+    "XC_kAXXCAttributeTraits" = 8590000128;
+}
+See test report attachments for more detail.
+    t =    12.31s Tear Down
+Test Case '-[SetupAccessibilityProbeTests.SetupAuditTests testPaddedRowsRemainFullyReachable]' failed (15.792 seconds).
+Test Suite 'SetupAuditTests' failed at 2026-10-01 09:53:34.351.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.792 (15.796) seconds
+Test Suite 'SetupAccessibilityProbeTests.xctest' failed at 2026-10-01 09:53:34.352.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.792 (15.798) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 09:53:34.353.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.792 (15.802) seconds

@@ -1,0 +1,119 @@
+Building for debugging...
+[0/11] Write AssetReviewGenerator-entitlement.plist
+[0/11] Write sources
+[7/11] Write swift-version--58304C5D6DBC2206.txt
+[9/18] Compiling FilmDomain FilmAccess.swift
+[10/18] Compiling FilmDomain Film.swift
+[11/18] Emitting module FilmDomain
+[12/18] Compiling FilmDomain CameraPackage.swift
+[13/26] Emitting module MediaCatalog
+[14/26] Compiling MediaCatalog BundleMediaCatalog.swift
+[15/26] Compiling RenderFixtures RenderFixtureGenerator.swift
+[16/26] Compiling RenderFixtures RenderFixtureModels.swift
+[17/26] Emitting module RenderFixtures
+[18/26] Emitting module RenderCore
+[19/26] Compiling RenderCore DevelopmentRun.swift
+[20/26] Compiling RenderCore NativeMovieRenderer.swift
+[21/26] Compiling RenderCore NativePhotoRenderer.swift
+[22/26] Compiling RenderCore DarkroomRecipe.swift
+[23/26] Compiling RenderCore MovieAssemblyPlan.swift
+[24/36] Compiling FilmPersistence FilmRepository+Entitlement.swift
+[25/36] Compiling FilmPersistence MovieAudioSelection.swift
+[26/36] Compiling FilmPersistence SQLiteDatabase.swift
+[27/36] Compiling FilmPersistence MediaVerification.swift
+[28/36] Compiling FilmPersistence StoredAsset.swift
+[29/36] Compiling FilmPersistence CaptureCommitReceipt.swift
+[30/36] Compiling FilmPersistence FilmRepository+Development.swift
+[31/36] Emitting module FilmPersistence
+[32/36] Compiling FilmPersistence Checksum.swift
+[33/36] Compiling FilmPersistence FilmRepository.swift
+error: emit-module command failed with exit code 1 (use -v to see invocation)
+[34/39] Emitting module AssetReviewGenerator
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:33:1: error: 'main' attribute cannot be used in a module that contains top-level code
+  1 | @preconcurrency import AVFoundation
+    | |- note: top-level code defined in this source file
+    | `- note: pass '-parse-as-library' to compiler invocation if this is intentional
+  2 | import CoreImage
+  3 | import CryptoKit
+    :
+ 31 | }
+ 32 | 
+ 33 | @main struct AssetReviewGenerator {
+    | `- error: 'main' attribute cannot be used in a module that contains top-level code
+ 34 |     static func main() async throws {
+ 35 |         let args = CommandLine.arguments
+[35/39] Compiling AssetReviewGenerator Music.swift
+[36/39] Compiling AssetReviewGenerator main.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:33:1: error: 'main' attribute cannot be used in a module that contains top-level code
+  1 | @preconcurrency import AVFoundation
+    | |- note: top-level code defined in this source file
+    | `- note: pass '-parse-as-library' to compiler invocation if this is intentional
+  2 | import CoreImage
+  3 | import CryptoKit
+    :
+ 31 | }
+ 32 | 
+ 33 | @main struct AssetReviewGenerator {
+    | `- error: 'main' attribute cannot be used in a module that contains top-level code
+ 34 |     static func main() async throws {
+ 35 |         let args = CommandLine.arguments
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:24:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 22 | 
+ 23 | struct ReviewManifest: Codable {
+ 24 |     let schemaVersion = 1
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'schemaVersion' case to silence this warning
+    |         `- note: make the property mutable instead
+ 25 |     let status = "Draft review only; not production cleared, hardware evidence or approved DEC-04/05/11."
+ 26 |     let source = "Built-in image generation, 2026-10-01. See ../sources/PROVENANCE.md."
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:25:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 23 | struct ReviewManifest: Codable {
+ 24 |     let schemaVersion = 1
+ 25 |     let status = "Draft review only; not production cleared, hardware evidence or approved DEC-04/05/11."
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'status' case to silence this warning
+    |         `- note: make the property mutable instead
+ 26 |     let source = "Built-in image generation, 2026-10-01. See ../sources/PROVENANCE.md."
+ 27 |     let treatmentVersion = NativePhotoRenderer.treatmentVersion
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:26:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 24 |     let schemaVersion = 1
+ 25 |     let status = "Draft review only; not production cleared, hardware evidence or approved DEC-04/05/11."
+ 26 |     let source = "Built-in image generation, 2026-10-01. See ../sources/PROVENANCE.md."
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'source' case to silence this warning
+    |         `- note: make the property mutable instead
+ 27 |     let treatmentVersion = NativePhotoRenderer.treatmentVersion
+ 28 |     let movieSource = "Generated digital pan of the still, not captured motion. Two four-second silent clips: landscape then portrait."
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:27:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 25 |     let status = "Draft review only; not production cleared, hardware evidence or approved DEC-04/05/11."
+ 26 |     let source = "Built-in image generation, 2026-10-01. See ../sources/PROVENANCE.md."
+ 27 |     let treatmentVersion = NativePhotoRenderer.treatmentVersion
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'treatmentVersion' case to silence this warning
+    |         `- note: make the property mutable instead
+ 28 |     let movieSource = "Generated digital pan of the still, not captured motion. Two four-second silent clips: landscape then portrait."
+ 29 |     let musicSource = "Original deterministic score and synthesis in AssetReviewGenerator/Music.swift; no sampled recording."
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:28:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 26 |     let source = "Built-in image generation, 2026-10-01. See ../sources/PROVENANCE.md."
+ 27 |     let treatmentVersion = NativePhotoRenderer.treatmentVersion
+ 28 |     let movieSource = "Generated digital pan of the still, not captured motion. Two four-second silent clips: landscape then portrait."
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'movieSource' case to silence this warning
+    |         `- note: make the property mutable instead
+ 29 |     let musicSource = "Original deterministic score and synthesis in AssetReviewGenerator/Music.swift; no sampled recording."
+ 30 |     let assets: [ReviewAsset]
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/AssetReviewGenerator/Sources/AssetReviewGenerator/main.swift:29:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+ 27 |     let treatmentVersion = NativePhotoRenderer.treatmentVersion
+ 28 |     let movieSource = "Generated digital pan of the still, not captured motion. Two four-second silent clips: landscape then portrait."
+ 29 |     let musicSource = "Original deterministic score and synthesis in AssetReviewGenerator/Music.swift; no sampled recording."
+    |         |- warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+    |         |- note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'musicSource' case to silence this warning
+    |         `- note: make the property mutable instead
+ 30 |     let assets: [ReviewAsset]
+ 31 | }

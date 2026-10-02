@@ -1,0 +1,45 @@
+{
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "legacyDeleted",
+    "pauseAt" : "none",
+    "runID" : "96843D68-B1CC-4EAB-9363-D2B1F992215B"
+  },
+  "files" : {
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "60cea9d862014fe33f7778e6fce149f9f3d5b9c81b68a2adcc5af83efdbb00d6",
+    "film-store.sqlite-wal" : "58ebc6ce40c839c66e4af7473eea814895deb703a1bbbd19a6beef8392c9bbcb"
+  },
+  "films" : [
+
+  ],
+  "logicalRead" : "consumed",
+  "manifest" : {
+    "captureUUID" : "635547D6-DFF2-4B25-8E41-A173D570007E",
+    "configuration" : {
+      "backend" : "injectedFile",
+      "cameraID" : "disposable1990s",
+      "fault" : "legacyDeleted",
+      "pauseAt" : "none",
+      "runID" : "96843D68-B1CC-4EAB-9363-D2B1F992215B"
+    },
+    "filmID" : "9D80BE70-3F20-484D-8E90-BBB56E7CFF87",
+    "prepared" : true,
+    "savedAt" : 812562800,
+    "sourceHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "sourcePath" : "Staging\/9D80BE70-3F20-484D-8E90-BBB56E7CFF87\/635547D6-DFF2-4B25-8E41-A173D570007E.photo"
+  },
+  "outboxFilmIDs" : [
+
+  ],
+  "pending" : false,
+  "stagingExists" : false,
+  "underlyingRecord" : {
+    "consumedAt" : 812562800,
+    "consumedFilmID" : "9D80BE70-3F20-484D-8E90-BBB56E7CFF87",
+    "deviceID" : "A88B45FD-B482-43E8-974C-ABABFEA10341",
+    "schemaVersion" : 2
+  },
+  "underlyingStatus" : 0
+}

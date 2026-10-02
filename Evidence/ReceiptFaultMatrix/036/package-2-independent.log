@@ -1,0 +1,45 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmRuntimeTests ReceiptFaultMatrixTests.swift
+[4/5] Emitting module FilmRuntimeTests
+[5/12] Compiling FilmRuntimeTests ProductionTrialReceiptTests.swift
+[6/12] Compiling FilmRuntimeTests SoundtrackTests.swift
+[7/12] Compiling FilmRuntimeTests TrialIntegrationTests.swift
+[8/12] Compiling FilmRuntimeTests CaptureRecoveryIntegrationTests.swift
+[9/12] Compiling FilmRuntimeTests FilmProcessorTests.swift
+[10/12] Compiling FilmRuntimeTests FilmExportTests.swift
+[11/12] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+[11/13] Write Objects.LinkFileList
+[12/13] Linking FilmRuntimePackageTests
+Build complete! (3.75s)
+Test Suite 'Selected tests' started at 2026-10-01 13:14:19.059.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 13:14:19.060.
+Test Suite 'ReceiptFaultMatrixTests' started at 2026-10-01 13:14:19.060.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' passed (0.434 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' passed (0.906 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' passed (0.393 seconds).
+Test Suite 'ReceiptFaultMatrixTests' passed at 2026-10-01 13:14:20.794.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.733 (1.734) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 13:14:20.794.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.733 (1.734) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 13:14:20.795.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 1.733 (1.736) seconds
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/5D9E5EF6-C934-47F4-B074-C8E179701004
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/BDFB8803-3C09-4A50-AFDC-6AF446801F67
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/9B010DA2-9994-43B1-A566-AD6EDE1337C8
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/E5B1C675-C6A6-47FB-8440-D708F21E7F6D
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/0E6D3760-389D-4AEF-A7FE-090829D1A95E
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/2B85C2B7-6751-439F-8975-E779D3A7495E
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/264D9017-68D8-43EB-A61E-46D9D0F956E0
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/19CE7495-48D3-49C7-B114-D2879654568E
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/8758A50B-B1CA-4F0B-8A51-5DB77D1C0268
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/0EE83539-8CAE-4055-AB4A-F9BB4112AFAD
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/DBE63B63-3870-4121-99C2-71425A3D6683
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

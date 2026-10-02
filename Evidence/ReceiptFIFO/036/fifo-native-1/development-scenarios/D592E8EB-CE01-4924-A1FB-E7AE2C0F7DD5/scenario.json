@@ -1,0 +1,7 @@
+{
+  "backend" : "native-synthetic-no-external-services",
+  "camera" : "instant1970s",
+  "createdUTC" : "2026-10-01T19:54:55Z",
+  "film" : "24502436-25D5-485C-B907-5F03C6C3AD09",
+  "label" : "throw-afterPersistence(sequence: 1)"
+}

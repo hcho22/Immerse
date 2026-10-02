@@ -1,0 +1,90 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "decodedFrames" : 1,
+      "expectedHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "kind" : "source",
+      "path" : "Media\/E6782C0C-2CE8-4EE1-8AE4-B411D5F72793\/source-1.bin",
+      "sequence" : 1
+    },
+    {
+      "actualHash" : "46ee496c70409477ade891cc5e02ff6e1e85a76686e3a52a5a3effeea593c1e3",
+      "decodedFrames" : 1,
+      "expectedHash" : "46ee496c70409477ade891cc5e02ff6e1e85a76686e3a52a5a3effeea593c1e3",
+      "kind" : "master",
+      "path" : "Media\/E6782C0C-2CE8-4EE1-8AE4-B411D5F72793\/master-1.bin",
+      "sequence" : 1
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 16876616633151003180,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "E6782C0C-2CE8-4EE1-8AE4-B411D5F72793",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 27
+          }
+        },
+        "displayName" : "1990s Disposable",
+        "id" : "disposable1990s",
+        "medium" : "photo",
+        "revealRule" : "rollLevelDevelopment",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "photo" : {
+
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "exposures" : {
+              "_0" : 26
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "E6782C0C-2CE8-4EE1-8AE4-B411D5F72793",
+      "isArchived" : false,
+      "loadedAt" : 812576038.662879,
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/E6782C0C-2CE8-4EE1-8AE4-B411D5F72793\/master-1.bin" : "46ee496c70409477ade891cc5e02ff6e1e85a76686e3a52a5a3effeea593c1e3",
+    "Media\/E6782C0C-2CE8-4EE1-8AE4-B411D5F72793\/source-1.bin" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "d2109a190be7ff599a08ea3a072aece63380e940c58f1f53377ba1ba56466716",
+    "film-store.sqlite-wal" : "c3c5be1d559e738d3245bffeaaeb54e7e9a33c4df62efe61f5ada06b7ae6218e"
+  }
+}

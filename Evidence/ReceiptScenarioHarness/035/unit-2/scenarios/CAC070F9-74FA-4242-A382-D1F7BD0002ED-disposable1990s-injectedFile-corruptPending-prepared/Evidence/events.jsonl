@@ -1,0 +1,21 @@
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"corruptPending","namespace":"com.immerse.validation.receipt035.CAC070F9-74FA-4242-A382-D1F7BD0002ED-disposable1990s-injectedFile-corruptPending-prepared","pauseAt":"prepared","process":"63694","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"CAC070F9-74FA-4242-A382-D1F7BD0002ED-disposable1990s-injectedFile-corruptPending-prepared","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:05:06Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"2","sha256":"none","status":"-25300","utc":"2026-10-01T19:05:06Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"3","sha256":"none","status":"-25300","utc":"2026-10-01T19:05:06Z"}
+{"backend":"injectedFile","event":"adapter-add","process":"63694","processSequence":"4","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:06Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"5","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:06Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"6","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:06Z"}
+{"captureID":"6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo","event":"prepared-input","filmID":"06E06E4D-3CB0-4259-9705-EED2DC2829C5","process":"63694","processSequence":"7","sha256":"5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55","utc":"2026-10-01T19:05:07Z"}
+{"event":"commit-requested","process":"63694","processSequence":"8","utc":"2026-10-01T19:05:07Z"}
+{"event":"production-checkpoint","phase":"prepared","process":"63694","processSequence":"9","utc":"2026-10-01T19:05:07Z"}
+{"event":"paused","phase":"prepared","process":"63694","processSequence":"10","utc":"2026-10-01T19:05:07Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"11","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:07Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"12","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:07Z"}
+{"event":"inventory","file":"inventory-5F06A26B-4273-4037-BE15-DAF863664B49.json","process":"63694","processSequence":"13","summary":"films=1;saved=0;pending=true;consumed=false;hash=none","utc":"2026-10-01T19:05:07Z"}
+{"event":"injected-pending-corruption","process":"63694","processSequence":"14","relativePath":"Staging\/06E06E4D-3CB0-4259-9705-EED2DC2829C5\/Commit\/6E0ADB30-4F82-4936-A670-5C94C2A545CB.photo","utc":"2026-10-01T19:05:07Z"}
+{"event":"boundary-released","process":"63694","processSequence":"15","utc":"2026-10-01T19:05:07Z"}
+{"error":"invalidMedia","event":"commit-error","process":"63694","processSequence":"16","utc":"2026-10-01T19:05:07Z"}
+{"event":"recovery-started","process":"63694","processSequence":"17","projectionInjection":"disabled","receiptInjection":"preserved until explicit resolve","utc":"2026-10-01T19:05:07Z"}
+{"error":"invalidMedia","event":"recovery-error","process":"63694","processSequence":"18","utc":"2026-10-01T19:05:07Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"19","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:07Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"63694","processSequence":"20","sha256":"e266e2b199c185785e681cff2cf75f983e7845b2d6f5d4916211e5f6d6c9e98c","status":"0","utc":"2026-10-01T19:05:07Z"}
+{"event":"inventory","file":"inventory-8E092C7A-B169-437B-826B-274D4B7FC662.json","process":"63694","processSequence":"21","summary":"films=1;saved=0;pending=true;consumed=false;hash=none","utc":"2026-10-01T19:05:07Z"}

@@ -1,0 +1,37 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Shutter-048-green-AA6AD12A-9D0E-4948-ABD2-760AA97B6A60.xcresult
+
+2026-10-01 19:23:41.037 xcodebuild[71800:161392316] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 19:23:41.037 xcodebuild[71800:161392316] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 19:24:23.764 xcodebuild[71800:161392316] [MT] IDETestOperationsObserverDebug: 46.033 elapsed -- Testing started completed.
+2026-10-01 19:24:23.764 xcodebuild[71800:161392316] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 19:24:23.764 xcodebuild[71800:161392316] [MT] IDETestOperationsObserverDebug: 46.033 sec, +46.033 sec -- end
+Testing started
+AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 exit 0
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Shutter-048-green-48739B52-A691-4863-8245-C313996DE53B.xcresult
+
+2026-10-01 19:25:07.170 xcodebuild[31460:161493590] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 19:25:07.170 xcodebuild[31460:161493590] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 19:25:53.393 xcodebuild[31460:161493590] [MT] IDETestOperationsObserverDebug: 62.277 elapsed -- Testing started completed.
+2026-10-01 19:25:53.393 xcodebuild[31460:161493590] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 19:25:53.393 xcodebuild[31460:161493590] [MT] IDETestOperationsObserverDebug: 62.277 sec, +62.277 sec -- end
+Testing started
+48739B52-A691-4863-8245-C313996DE53B exit 0
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Shutter-048-green-3F8CF83E-0A5D-4F42-BC9A-05D622D7A87E.xcresult
+
+2026-10-01 19:26:53.233 xcodebuild[82488:161587128] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 19:26:53.233 xcodebuild[82488:161587128] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 19:28:05.176 xcodebuild[82488:161587128] [MT] IDETestOperationsObserverDebug: 96.915 elapsed -- Testing started completed.
+2026-10-01 19:28:05.177 xcodebuild[82488:161587128] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 19:28:05.177 xcodebuild[82488:161587128] [MT] IDETestOperationsObserverDebug: 96.915 sec, +96.915 sec -- end
+Failing tests:
+	CameraPermissionWorkflowTests.testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged()
+	CameraPermissionWorkflowTests.testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged()
+	CameraPermissionWorkflowTests.testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged()
+
+** TEST FAILED **
+
+Testing started
+3F8CF83E-0A5D-4F42-BC9A-05D622D7A87E exit 65

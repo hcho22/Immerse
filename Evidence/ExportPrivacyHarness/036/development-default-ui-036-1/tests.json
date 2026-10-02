@@ -1,0 +1,68 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 45s",
+                  "durationInSeconds" : 105.95040905475616,
+                  "name" : "testMovieUnknownReplyReentry()",
+                  "nodeIdentifier" : "ExportProcessExitTests/testMovieUnknownReplyReentry()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testMovieUnknownReplyReentry",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1m 8s",
+                  "durationInSeconds" : 68.90313398838043,
+                  "name" : "testPhotoUnknownReplyReentry()",
+                  "nodeIdentifier" : "ExportProcessExitTests/testPhotoUnknownReplyReentry()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testPhotoUnknownReplyReentry",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ExportProcessExitTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ExportPrivacyUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ExportPrivacyHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

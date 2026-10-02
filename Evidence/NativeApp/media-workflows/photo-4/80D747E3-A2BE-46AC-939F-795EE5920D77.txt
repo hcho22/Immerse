@@ -1,0 +1,11 @@
+Failed to tap "Rename" Button: No matches found for Elements matching predicate '"Rename" IN identifiers' from input {(
+    Button, identifier: 'BackButton', label: 'Film Journal',
+    Button, label: 'Film actions',
+    Button, label: 'Done',
+    Button, label: 'Save Developed to Photos',
+    Button, label: 'Originals',
+    Button, label: 'Open photo 1',
+    Button, label: 'Open photo 2',
+    Button, label: 'Darkroom',
+    Button, label: 'Discard'
+)}

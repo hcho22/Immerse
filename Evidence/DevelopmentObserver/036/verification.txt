@@ -1,0 +1,29 @@
+Development observer checkpoint; base a6000b3ef48bc37bf3d03fa5ef2d5efe4b769084 plus source inventories.
+No full-v1 acceptance. Initial failures retained in package-1.log and package-2.log.
+
+PASS package-3: 6 boundary methods, 43 histories, source bound by package-3-source.sha256.
+PASS package-4 affected: 16 methods (7 observer/3 processor/3 export/3 soundtrack), 49 observer histories.
+PASS native-1: 7 hosted iOS tests, 49 native synthetic histories, no failures/skips.
+PASS native default-absent export/privacy regression: 9 tests, 27 new histories, no failures/skips.
+PASS node Probes/ExportPrivacyHarness/inspect-evidence.mjs Evidence/ExportPrivacyHarness/036/observer-default-regression unit
+PASS shipping app generic iOS Simulator unsigned build.
+PASS shipping app generic physical iOS unsigned build; compilation only.
+PASS ruby Probes/ExportPrivacyHarness/inspect-development-evidence.rb Evidence/DevelopmentObserver/036/native-1
+PASS ruby -c Probes/ExportPrivacyHarness/inspect-development-evidence.rb
+PASS sh -n Probes/ExportPrivacyHarness/run-simulator.sh
+PASS package-4-source.sha256 and native-1/source.sha256 match current files.
+PASS native-1/app-files.sha256 matches current hosted artifact.
+PASS shipping simulator/device app inventories match current built artifacts.
+PASS sh Scripts/verify-document-package.sh (listing plus extracted content comparison).
+PASS sh Scripts/verify-requirement-map.sh (122 IDs, 72 clauses, 9 invariants; coverage only).
+PASS project memory helper; self-governance retained.
+PASS original app source, TrialCoordinator, receipt 035 probe/evidence, PRD/tracker/ADRs unchanged.
+OBSERVED no Development observer reference/installation in App/Immerse/Sources.
+OBSERVED owned simulator Shutdown after native-1; prior appearance/category restored.
+OBSERVED owned simulator Shutdown after final default-path regression; device-final.json retained.
+
+Runtime QoS warnings remain in native result tree/activities, not suppressed.
+Ordinary process death at Development boundaries, physical retention/restore,
+native Camera/Photos/Security, licensed quality and original accessibility gates
+remain unaccepted. Only synthetic test resources were used. No public exposure,
+signing/account mutation, no-mistakes run, push, PR or merge.

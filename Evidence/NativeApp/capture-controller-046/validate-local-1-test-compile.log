@@ -1,0 +1,916 @@
+Xcode 26.5
+Build version 17F42
+swift-driver version: 1.148.6 Apple Swift version 6.3.2 (swiftlang-6.3.2.1.108 clang-2100.1.1.101)
+Target: x86_64-apple-macosx26.0
+Traceability: 122 intake IDs, 72 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.26s)
+Test Suite 'All tests' started at 2026-10-01 17:44:14.753.
+Test Suite 'FilmDomainPackageTests.xctest' started at 2026-10-01 17:44:14.754.
+Test Suite 'CaptureDateRangeTests' started at 2026-10-01 17:44:14.754.
+Test Case '-[FilmDomainTests.CaptureDateRangeTests testClockMovingBackwardsDoesNotChangeCaptureSequenceOrCrashDateRange]' started.
+Test Case '-[FilmDomainTests.CaptureDateRangeTests testClockMovingBackwardsDoesNotChangeCaptureSequenceOrCrashDateRange]' passed (0.002 seconds).
+Test Suite 'CaptureDateRangeTests' passed at 2026-10-01 17:44:14.757.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'FilmDomainTests' started at 2026-10-01 17:44:14.757.
+Test Case '-[FilmDomainTests.FilmDomainTests testCameraCatalogDefinesSettledCapacitiesAndRevealRules]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testCameraCatalogDefinesSettledCapacitiesAndRevealRules]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testDiscardingAllMovieClipsKeepsPlaceholdersAndDisablesPlaybackAndExport]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testDiscardingAllMovieClipsKeepsPlaceholdersAndDisablesPlaybackAndExport]' passed (0.001 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testDurablePhotoDebitHappensOnlyForSavedCaptures]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testDurablePhotoDebitHappensOnlyForSavedCaptures]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testEarlyCompletionRequiresSavedCaptureAndReportsExactWaste]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testEarlyCompletionRequiresSavedCaptureAndReportsExactWaste]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testInstantPrintsRevealIndividuallyIncludingFinalFrame]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testInstantPrintsRevealIndividuallyIncludingFinalFrame]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testLoadedCameraDoesNotChangeWhenTitleOrArchiveChanges]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testLoadedCameraDoesNotChangeWhenTitleOrArchiveChanges]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testMovieDebitHappensOnlyForSavedDurationAndPreventsOverrun]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testMovieDebitHappensOnlyForSavedDurationAndPreventsOverrun]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testMovieEarlyCompletionReportsExactRemainingTime]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testMovieEarlyCompletionReportsExactRemainingTime]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testRollCompletionAndDevelopmentAreDistinct]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testRollCompletionAndDevelopmentAreDistinct]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.FilmDomainTests testSealedCapturesCannotBeDiscardedIndividually]' started.
+Test Case '-[FilmDomainTests.FilmDomainTests testSealedCapturesCannotBeDiscardedIndividually]' passed (0.000 seconds).
+Test Suite 'FilmDomainTests' passed at 2026-10-01 17:44:14.762.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'MovieDurationTests' started at 2026-10-01 17:44:14.762.
+Test Case '-[FilmDomainTests.MovieDurationTests testFinalFractionCompletesBudgetAndNonfiniteDurationsNeverDebit]' started.
+Test Case '-[FilmDomainTests.MovieDurationTests testFinalFractionCompletesBudgetAndNonfiniteDurationsNeverDebit]' passed (0.000 seconds).
+Test Case '-[FilmDomainTests.MovieDurationTests testSubsecondClipsConsumeOnlyTheirSavedDurationAcrossPersistenceAndEarlyCompletion]' started.
+Test Case '-[FilmDomainTests.MovieDurationTests testSubsecondClipsConsumeOnlyTheirSavedDurationAcrossPersistenceAndEarlyCompletion]' passed (0.001 seconds).
+Test Suite 'MovieDurationTests' passed at 2026-10-01 17:44:14.764.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'FilmDomainPackageTests.xctest' passed at 2026-10-01 17:44:14.764.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.008 (0.010) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:14.764.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.008 (0.011) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.24s)
+Test Suite 'All tests' started at 2026-10-01 17:44:16.812.
+Test Suite 'MediaCatalogPackageTests.xctest' started at 2026-10-01 17:44:16.813.
+Test Suite 'BundleMediaCatalogTests' started at 2026-10-01 17:44:16.813.
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testInstrumentalNeedsMovieCameraAndExportRights]' started.
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testInstrumentalNeedsMovieCameraAndExportRights]' passed (0.007 seconds).
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testPathsDuplicateIDsAndWrongMediaAreRejected]' started.
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testPathsDuplicateIDsAndWrongMediaAreRejected]' passed (0.005 seconds).
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testProductionRejectsSyntheticClearanceAndEmptyCatalogLoadsWithoutEffects]' started.
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testProductionRejectsSyntheticClearanceAndEmptyCatalogLoadsWithoutEffects]' passed (0.002 seconds).
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testVerifiedResourceAndLicenseCannotSilentlyChange]' started.
+Test Case '-[MediaCatalogTests.BundleMediaCatalogTests testVerifiedResourceAndLicenseCannotSilentlyChange]' passed (0.005 seconds).
+Test Suite 'BundleMediaCatalogTests' passed at 2026-10-01 17:44:16.833.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.019 (0.020) seconds
+Test Suite 'MediaCatalogPackageTests.xctest' passed at 2026-10-01 17:44:16.833.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.019 (0.020) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:16.833.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.019 (0.022) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/4] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.24s)
+Test Suite 'All tests' started at 2026-10-01 17:44:18.904.
+Test Suite 'RenderFixturesPackageTests.xctest' started at 2026-10-01 17:44:18.906.
+Test Suite 'RenderFixturesTests' started at 2026-10-01 17:44:18.906.
+Test Case '-[RenderFixturesTests.RenderFixturesTests testPortraitFixtureRecordsOrientationTransformSeparatelyFromEncodedRaster]' started.
+Test Case '-[RenderFixturesTests.RenderFixturesTests testPortraitFixtureRecordsOrientationTransformSeparatelyFromEncodedRaster]' passed (0.409 seconds).
+Test Case '-[RenderFixturesTests.RenderFixturesTests testWritesAndDecodesSyntheticPhotoAndMovieMetadata]' started.
+Test Case '-[RenderFixturesTests.RenderFixturesTests testWritesAndDecodesSyntheticPhotoAndMovieMetadata]' passed (0.145 seconds).
+Test Suite 'RenderFixturesTests' passed at 2026-10-01 17:44:19.461.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.555 (0.555) seconds
+Test Suite 'RenderFixturesPackageTests.xctest' passed at 2026-10-01 17:44:19.461.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.555 (0.555) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:19.461.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.555 (0.557) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.27s)
+Test Suite 'All tests' started at 2026-10-01 17:44:21.596.
+Test Suite 'RenderCorePackageTests.xctest' started at 2026-10-01 17:44:21.597.
+Test Suite 'ChemicalToningTests' started at 2026-10-01 17:44:21.597.
+Test Case '-[RenderCoreTests.ChemicalToningTests testApplicableToningChangesDecodedPrintButResetKeepsExactSilverMaster]' started.
+Test Case '-[RenderCoreTests.ChemicalToningTests testApplicableToningChangesDecodedPrintButResetKeepsExactSilverMaster]' passed (1.447 seconds).
+Test Case '-[RenderCoreTests.ChemicalToningTests testOlderRecipeAndRunDecodeWithoutChangingOriginalOrAssigningAToner]' started.
+Test Case '-[RenderCoreTests.ChemicalToningTests testOlderRecipeAndRunDecodeWithoutChangingOriginalOrAssigningAToner]' passed (0.001 seconds).
+Test Suite 'ChemicalToningTests' passed at 2026-10-01 17:44:23.046.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 1.448 (1.449) seconds
+Test Suite 'NativeRenderTests' started at 2026-10-01 17:44:23.046.
+Test Case '-[RenderCoreTests.NativeRenderTests testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape]' started.
+Test Case '-[RenderCoreTests.NativeRenderTests testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape]' passed (0.637 seconds).
+Test Case '-[RenderCoreTests.NativeRenderTests testNativeMoviesKeepLockedPresentationDurationAndSilentChronologicalAssembly]' started.
+Test Case '-[RenderCoreTests.NativeRenderTests testNativeMoviesKeepLockedPresentationDurationAndSilentChronologicalAssembly]' passed (0.570 seconds).
+Test Case '-[RenderCoreTests.NativeRenderTests testRealPhotoTreatmentRepeatsAndResetReturnsExactMasterBytes]' started.
+Test Case '-[RenderCoreTests.NativeRenderTests testRealPhotoTreatmentRepeatsAndResetReturnsExactMasterBytes]' passed (1.089 seconds).
+Test Case '-[RenderCoreTests.NativeRenderTests testSquareCameraOutputsAndBoundedDifferentTreatments]' started.
+Test Case '-[RenderCoreTests.NativeRenderTests testSquareCameraOutputsAndBoundedDifferentTreatments]' passed (1.372 seconds).
+Test Suite 'NativeRenderTests' passed at 2026-10-01 17:44:26.714.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 3.667 (3.668) seconds
+Test Suite 'RenderCoreTests' started at 2026-10-01 17:44:26.714.
+Test Case '-[RenderCoreTests.RenderCoreTests testDarkroomResetReturnsExactOriginalRecipe]' started.
+Test Case '-[RenderCoreTests.RenderCoreTests testDarkroomResetReturnsExactOriginalRecipe]' passed (0.000 seconds).
+Test Case '-[RenderCoreTests.RenderCoreTests testDevelopmentRunRejectsEmptyFilm]' started.
+Test Case '-[RenderCoreTests.RenderCoreTests testDevelopmentRunRejectsEmptyFilm]' passed (0.001 seconds).
+Test Case '-[RenderCoreTests.RenderCoreTests testMovieAssemblyUsesSurvivingDevelopedClipOrderAndDetectsEmptyMovie]' started.
+Test Case '-[RenderCoreTests.RenderCoreTests testMovieAssemblyUsesSurvivingDevelopedClipOrderAndDetectsEmptyMovie]' passed (0.000 seconds).
+Test Case '-[RenderCoreTests.RenderCoreTests testTreatmentAssignmentIsStableAcrossResumeAndNeverRerollsCompletedWork]' started.
+Test Case '-[RenderCoreTests.RenderCoreTests testTreatmentAssignmentIsStableAcrossResumeAndNeverRerollsCompletedWork]' passed (0.000 seconds).
+Test Case '-[RenderCoreTests.RenderCoreTests testTreatmentAssignmentUsesPinnedStableSeed]' started.
+Test Case '-[RenderCoreTests.RenderCoreTests testTreatmentAssignmentUsesPinnedStableSeed]' passed (0.000 seconds).
+Test Suite 'RenderCoreTests' passed at 2026-10-01 17:44:26.718.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+Test Suite 'RenderCorePackageTests.xctest' passed at 2026-10-01 17:44:26.718.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 5.118 (5.121) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:26.718.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 5.118 (5.122) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.28s)
+Test Suite 'All tests' started at 2026-10-01 17:44:28.796.
+Test Suite 'FilmPersistencePackageTests.xctest' started at 2026-10-01 17:44:28.797.
+Test Suite 'CaptureReceiptTests' started at 2026-10-01 17:44:28.797.
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testLostAcknowledgementCanRetryAfterReopenWithoutAnotherDebit]' started.
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testLostAcknowledgementCanRetryAfterReopenWithoutAnotherDebit]' passed (0.021 seconds).
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testMovieRetryChecksDurationAndOrientationEvenAtFullCapacity]' started.
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testMovieRetryChecksDurationAndOrientationEvenAtFullCapacity]' passed (0.013 seconds).
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testRetryAfterDiscardNeverRecreatesMediaAndDeletionRejectsIt]' started.
+Test Case '-[FilmPersistenceTests.CaptureReceiptTests testRetryAfterDiscardNeverRecreatesMediaAndDeletionRejectsIt]' passed (0.026 seconds).
+Test Suite 'CaptureReceiptTests' passed at 2026-10-01 17:44:28.858.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.060 (0.061) seconds
+Test Suite 'EarlyCompletionRaceTests' started at 2026-10-01 17:44:28.858.
+Test Case '-[FilmPersistenceTests.EarlyCompletionRaceTests testLateSavedCaptureRequiresNewWasteConfirmation]' started.
+Test Case '-[FilmPersistenceTests.EarlyCompletionRaceTests testLateSavedCaptureRequiresNewWasteConfirmation]' passed (0.014 seconds).
+Test Suite 'EarlyCompletionRaceTests' passed at 2026-10-01 17:44:28.872.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.014 (0.014) seconds
+Test Suite 'FilmPersistenceTests' started at 2026-10-01 17:44:28.872.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testDeleteFilmRemovesSealedFilmStateAndAssetsWithoutDevelopment]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testDeleteFilmRemovesSealedFilmStateAndAssetsWithoutDevelopment]' passed (0.013 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testDiscardDeletesAppControlledMediaAndKeepsPlaceholder]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testDiscardDeletesAppControlledMediaAndKeepsPlaceholder]' passed (0.024 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFailureAfterDurableMoveBeforeDebitLeavesNoDebitAndRecoveryRemovesOrphan]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFailureAfterDurableMoveBeforeDebitLeavesNoDebitAndRecoveryRemovesOrphan]' passed (0.012 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFailureBeforeDurableMoveDoesNotDebitOrLeaveSource]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFailureBeforeDurableMoveDoesNotDebitOrLeaveSource]' passed (0.011 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFilmStateAndAssetsReloadFromDiskInNewRepositoryInstance]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testFilmStateAndAssetsReloadFromDiskInNewRepositoryInstance]' passed (0.012 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testMovieAssemblyRequiresCurrentPlayableClipPlanAndVerifiedClips]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testMovieAssemblyRequiresCurrentPlayableClipPlanAndVerifiedClips]' passed (0.015 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testMovieDiscardRetiresStaleAssemblyAndPreservesSurvivingClips]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testMovieDiscardRetiresStaleAssemblyAndPreservesSurvivingClips]' passed (1.005 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testSourceCleanupRequiresVerifiedMaster]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testSourceCleanupRequiresVerifiedMaster]' passed (0.995 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testSuccessfulPhotoSavePersistsStateAndPrivateSource]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testSuccessfulPhotoSavePersistsStateAndPrivateSource]' passed (0.011 seconds).
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testTemporaryFilesAreExcludedFromBackupButFilmMediaIsNot]' started.
+Test Case '-[FilmPersistenceTests.FilmPersistenceTests testTemporaryFilesAreExcludedFromBackupButFilmMediaIsNot]' passed (0.011 seconds).
+Test Suite 'FilmPersistenceTests' passed at 2026-10-01 17:44:30.982.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 2.108 (2.110) seconds
+Test Suite 'PrivacyRecoveryTests' started at 2026-10-01 17:44:30.982.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testConcurrentCaptureAndRenderCannotOverwriteDiscardedStateAcrossConnections]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testConcurrentCaptureAndRenderCannotOverwriteDiscardedStateAcrossConnections]' passed (0.095 seconds).
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected]' passed (0.020 seconds).
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testFailedWholeFilmCleanupRemainsDeletedAndRetryFinishesWithoutTouchingAnotherFilm]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testFailedWholeFilmCleanupRemainsDeletedAndRetryFinishesWithoutTouchingAnotherFilm]' passed (0.016 seconds).
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testMovieRemovalRetiresAssemblyBeforeFailedCleanupAndRejectsLateClipOrOldPlan]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testMovieRemovalRetiresAssemblyBeforeFailedCleanupAndRejectsLateClipOrOldPlan]' passed (0.282 seconds).
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testPartialDiscardFailureKeepsTombstoneRejectsLateMasterAndResumesAfterReopen]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testPartialDiscardFailureKeepsTombstoneRejectsLateMasterAndResumesAfterReopen]' passed (0.020 seconds).
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testRenderExportWorkIsRetiredWithDiscardAndInterruptedWorkClearsOnRecovery]' started.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testRenderExportWorkIsRetiredWithDiscardAndInterruptedWorkClearsOnRecovery]' passed (0.018 seconds).
+Test Suite 'PrivacyRecoveryTests' passed at 2026-10-01 17:44:31.435.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.451 (0.452) seconds
+Test Suite 'SourceCleanupTests' started at 2026-10-01 17:44:31.435.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testChangedMasterAfterDecodeKeepsSource]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testChangedMasterAfterDecodeKeepsSource]' passed (0.964 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' passed (0.012 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testExportRequestedCannotDeleteSourceUntilMatchingSuccessfulReceiptAndDecode]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testExportRequestedCannotDeleteSourceUntilMatchingSuccessfulReceiptAndDecode]' passed (0.968 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testMovieCleanupRequiresDecodableClipAndFullMovieWhileRetainingBoth]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testMovieCleanupRequiresDecodableClipAndFullMovieWhileRetainingBoth]' passed (1.005 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testNondecodableMasterAndSealedOriginalCannotAuthorizeCleanupOrExport]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testNondecodableMasterAndSealedOriginalCannotAuthorizeCleanupOrExport]' passed (0.018 seconds).
+Test Suite 'SourceCleanupTests' passed at 2026-10-01 17:44:34.403.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 2.968 (2.969) seconds
+Test Suite 'FilmPersistencePackageTests.xctest' passed at 2026-10-01 17:44:34.403.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 5.601 (5.606) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:34.403.
+	 Executed 25 tests, with 0 failures (0 unexpected) in 5.601 (5.608) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.25s)
+Test Suite 'All tests' started at 2026-10-01 17:44:36.361.
+Test Suite 'NativeAdaptersPackageTests.xctest' started at 2026-10-01 17:44:36.362.
+Test Suite 'CaptureAdapterTests' started at 2026-10-01 17:44:36.362.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testAuthorizedFrontCaptureMirrorsOnlyViewfinderAndNeverOutput]' started.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testAuthorizedFrontCaptureMirrorsOnlyViewfinderAndNeverOutput]' passed (0.001 seconds).
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testCaptureEventEmitterReportsSaveAndInterruptionCallbacksInOrder]' started.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testCaptureEventEmitterReportsSaveAndInterruptionCallbacksInOrder]' passed (0.001 seconds).
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testLensSwitchIsBlockedWhileSavingOrRecordingAndUnavailablePositionsAreReported]' started.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testLensSwitchIsBlockedWhileSavingOrRecordingAndUnavailablePositionsAreReported]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testMoviePlanIsSilentAndRetainsFinalPresentationOrientation]' started.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testMoviePlanIsSilentAndRetainsFinalPresentationOrientation]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testStartupDefersCameraPromptWhenPolicySaysCoordinatorOwnsTiming]' started.
+Test Case '-[NativeAdaptersTests.CaptureAdapterTests testStartupDefersCameraPromptWhenPolicySaysCoordinatorOwnsTiming]' passed (0.000 seconds).
+Test Suite 'CaptureAdapterTests' passed at 2026-10-01 17:44:36.366.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'CaptureOperationTests' started at 2026-10-01 17:44:36.366.
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testFailedPersistenceRetainsCaptureAndPreventsRecaptureOrLensSwitchUntilRetryCommits]' started.
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testFailedPersistenceRetainsCaptureAndPreventsRecaptureOrLensSwitchUntilRetryCommits]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testInterruptionDuringRecordingSalvagesPendingSaveButNeverRestartsRecording]' started.
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testInterruptionDuringRecordingSalvagesPendingSaveButNeverRestartsRecording]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testLateAndDuplicateCallbacksCannotReplaceAnotherCaptureOrCommitTwice]' started.
+Test Case '-[NativeAdaptersTests.CaptureOperationTests testLateAndDuplicateCallbacksCannotReplaceAnotherCaptureOrCommitTwice]' passed (0.000 seconds).
+Test Suite 'CaptureOperationTests' passed at 2026-10-01 17:44:36.367.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'CapturedMediaFileTests' started at 2026-10-01 17:44:36.367.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testCommittedCleanupRejectsOutsideStagingFilesAndLeavesThemUntouched]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testCommittedCleanupRejectsOutsideStagingFilesAndLeavesThemUntouched]' passed (0.003 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testDecodedMoviePreservesFractionalDurationAndIndependentPortraitClip]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testDecodedMoviePreservesFractionalDurationAndIndependentPortraitClip]' passed (0.447 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingStagingDirectoryThatCannotBeInspectedIsNeitherEmptyNorRemoved]' passed (0.124 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingUninspectableStagingPathStillThrowsInsteadOfPretendingEmpty]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testExistingUninspectableStagingPathStillThrowsInsteadOfPretendingEmpty]' passed (0.001 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testInvalidPendingMovieIsRetainedAndBlocksSuccessfulRecovery]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testInvalidPendingMovieIsRetainedAndBlocksSuccessfulRecovery]' passed (0.005 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testMalformedPhotoCannotBecomeASavedCapture]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testMalformedPhotoCannotBecomeASavedCapture]' passed (0.002 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testMissingStagingDirectoryBehavesAsAlreadyEmptyDuringPrivacyCleanup]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testMissingStagingDirectoryBehavesAsAlreadyEmptyDuringPrivacyCleanup]' passed (0.002 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testRealPhotoBytesAreRetainedUnchangedUntilCommitCleanup]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testRealPhotoBytesAreRetainedUnchangedUntilCommitCleanup]' passed (0.082 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testReopenedJournalRecoversPhotoAndMovieInCaptureOrderUntilAcknowledged]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testReopenedJournalRecoversPhotoAndMovieInCaptureOrderUntilAcknowledged]' passed (0.117 seconds).
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testUnfinishedMovieIsRetainedWithoutReportingSaveSuccess]' started.
+Test Case '-[NativeAdaptersTests.CapturedMediaFileTests testUnfinishedMovieIsRetainedWithoutReportingSaveSuccess]' passed (0.003 seconds).
+Test Suite 'CapturedMediaFileTests' passed at 2026-10-01 17:44:37.156.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.787 (0.789) seconds
+Test Suite 'PhotoExportAdapterTests' started at 2026-10-01 17:44:37.156.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testCaptureStartPromptDenialNeverDispatchesWriter]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testCaptureStartPromptDenialNeverDispatchesWriter]' passed (0.001 seconds).
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testCaptureStartPromptWritesOnlyAfterAddOnlyPermissionIsGranted]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testCaptureStartPromptWritesOnlyAfterAddOnlyPermissionIsGranted]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testDeniedPhotosPermissionIsReportedWithoutAttemptingAWrite]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testDeniedPhotosPermissionIsReportedWithoutAttemptingAWrite]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testExportDefersAddOnlyPhotosPromptWhenFlowCoordinatorOwnsTiming]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testExportDefersAddOnlyPhotosPromptWhenFlowCoordinatorOwnsTiming]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testSuccessfulAddOnlyExportPermitsOnlyLaterVerifiedCleanup]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testSuccessfulAddOnlyExportPermitsOnlyLaterVerifiedCleanup]' passed (0.000 seconds).
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testWriteFailureIsHonestAndDoesNotPermitSourceCleanup]' started.
+Test Case '-[NativeAdaptersTests.PhotoExportAdapterTests testWriteFailureIsHonestAndDoesNotPermitSourceCleanup]' passed (0.001 seconds).
+Test Suite 'PhotoExportAdapterTests' passed at 2026-10-01 17:44:37.160.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.003 (0.004) seconds
+Test Suite 'NativeAdaptersPackageTests.xctest' passed at 2026-10-01 17:44:37.160.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.794 (0.798) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:37.160.
+	 Executed 24 tests, with 0 failures (0 unexpected) in 0.794 (0.799) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.28s)
+Test Suite 'All tests' started at 2026-10-01 17:44:39.129.
+Test Suite 'CapturePipelinePackageTests.xctest' started at 2026-10-01 17:44:39.131.
+Test Suite 'CapturePipelineTests' started at 2026-10-01 17:44:39.131.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testFailureAndInterruptionEventsDoNotChangeFilmState]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testFailureAndInterruptionEventsDoNotChangeFilmState]' passed (0.019 seconds).
+Test Case '-[CapturePipelineTests.CapturePipelineTests testMovieClipSavedEventPersistsDurationAndLockedOrientation]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testMovieClipSavedEventPersistsDurationAndLockedOrientation]' passed (0.013 seconds).
+Test Case '-[CapturePipelineTests.CapturePipelineTests testNativeReceiverAcknowledgesOnlyPersistedFilesAndDeduplicatesRepeatedDelivery]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testNativeReceiverAcknowledgesOnlyPersistedFilesAndDeduplicatesRepeatedDelivery]' passed (0.015 seconds).
+Test Case '-[CapturePipelineTests.CapturePipelineTests testPhotoSavedEventPersistsSourceAndDebitsOnlyAfterDurableSave]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testPhotoSavedEventPersistsSourceAndDebitsOnlyAfterDurableSave]' passed (0.013 seconds).
+Test Case '-[CapturePipelineTests.CapturePipelineTests testRecoveryRemovesDurableOrphanLeftBeforeDebit]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testRecoveryRemovesDurableOrphanLeftBeforeDebit]' passed (0.011 seconds).
+Test Case '-[CapturePipelineTests.CapturePipelineTests testUnreadablePhotoPayloadDoesNotDebitCapacity]' started.
+Test Case '-[CapturePipelineTests.CapturePipelineTests testUnreadablePhotoPayloadDoesNotDebitCapacity]' passed (0.009 seconds).
+Test Suite 'CapturePipelineTests' passed at 2026-10-01 17:44:39.211.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.079 (0.080) seconds
+Test Suite 'CapturePipelinePackageTests.xctest' passed at 2026-10-01 17:44:39.211.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.079 (0.080) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:39.211.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.079 (0.082) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.23s)
+Test Suite 'All tests' started at 2026-10-01 17:44:41.146.
+Test Suite 'EntitlementCorePackageTests.xctest' started at 2026-10-01 17:44:41.148.
+Test Suite 'DeviceTrialStoreTests' started at 2026-10-01 17:44:41.148.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testConsumptionAndReceiptRequireSameItemReadAcrossAllStatusOutcomes]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testConsumptionAndReceiptRequireSameItemReadAcrossAllStatusOutcomes]' passed (0.003 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testLegacyConsumedRecordIsNotUnusedOrOverwritten]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testLegacyConsumedRecordIsNotUnusedOrOverwritten]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMalformedFutureAndPartialRecordsFailClosedWithoutInitialization]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMalformedFutureAndPartialRecordsFailClosedWithoutInitialization]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMissingItemCannotBeCreatedByConsumptionAndLostAddReplyUsesReadback]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testMissingItemCannotBeCreatedByConsumptionAndLostAddReplyUsesReadback]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testSuccessStatusWithMissingMalformedOrMismatchedReceiptIsNotAcknowledged]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testSuccessStatusWithMissingMalformedOrMismatchedReceiptIsNotAcknowledged]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testUnavailableReadAfterUpdateNeverResetsAndRetryDoesNotWriteAgain]' started.
+Test Case '-[EntitlementCoreTests.DeviceTrialStoreTests testUnavailableReadAfterUpdateNeverResetsAndRetryDoesNotWriteAgain]' passed (0.000 seconds).
+Test Suite 'DeviceTrialStoreTests' passed at 2026-10-01 17:44:41.155.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.006 (0.007) seconds
+Test Suite 'EntitlementPolicyTests' started at 2026-10-01 17:44:41.155.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testActiveSubscriptionAllowsNewFilmsAndExpiredSubscriptionStillAllowsExistingFilms]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testActiveSubscriptionAllowsNewFilmsAndExpiredSubscriptionStillAllowsExistingFilms]' passed (0.001 seconds).
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testDeletingCapturedTrialFilmDoesNotRefundEligibility]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testDeletingCapturedTrialFilmDoesNotRefundEligibility]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testDeletingZeroSaveCurrentDeviceTrialFilmLeavesEligibilityAvailable]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testDeletingZeroSaveCurrentDeviceTrialFilmLeavesEligibilityAvailable]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testFailedFirstSaveDoesNotConsumeTrialAndSuccessfulFirstSaveDoes]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testFailedFirstSaveDoesNotConsumeTrialAndSuccessfulFirstSaveDoes]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testNonSubscriberCanStartExactlyOneCurrentDeviceTrialFilmAtATime]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testNonSubscriberCanStartExactlyOneCurrentDeviceTrialFilmAtATime]' passed (0.000 seconds).
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testRestoredTrialFilmsKeepCaptureRightsAndDoNotConsumeDestinationTrial]' started.
+Test Case '-[EntitlementCoreTests.EntitlementPolicyTests testRestoredTrialFilmsKeepCaptureRightsAndDoNotConsumeDestinationTrial]' passed (0.000 seconds).
+Test Suite 'EntitlementPolicyTests' passed at 2026-10-01 17:44:41.157.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'EntitlementCorePackageTests.xctest' passed at 2026-10-01 17:44:41.157.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.008 (0.010) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:44:41.157.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.008 (0.011) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.32s)
+Test Suite 'All tests' started at 2026-10-01 17:44:43.225.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 17:44:43.226.
+Test Suite 'CaptureRecoveryIntegrationTests' started at 2026-10-01 17:44:43.226.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' started.
+Test Case '-[FilmRuntimeTests.CaptureRecoveryIntegrationTests testNativeJournalReopenPreservesDateAndLostAcknowledgementDoesNotDebitTwice]' passed (1.288 seconds).
+Test Suite 'CaptureRecoveryIntegrationTests' passed at 2026-10-01 17:44:44.514.
+	 Executed 1 test, with 0 failures (0 unexpected) in 1.288 (1.288) seconds
+Test Suite 'DevelopmentObserverTests' started at 2026-10-01 17:44:44.514.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' passed (3.523 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' passed (2.582 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' passed (1.254 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testEnabledPauseReleaseCompletesWithoutExtraRendering]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testEnabledPauseReleaseCompletesWithoutExtraRendering]' passed (0.658 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' passed (0.562 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' passed (1.052 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' passed (6.980 seconds).
+Test Suite 'DevelopmentObserverTests' passed at 2026-10-01 17:45:01.127.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 16.611 (16.612) seconds
+Test Suite 'FilmExportTests' started at 2026-10-01 17:45:01.127.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' passed (1.080 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' passed (1.245 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' passed (1.264 seconds).
+Test Suite 'FilmExportTests' passed at 2026-10-01 17:45:04.716.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3.589 (3.589) seconds
+Test Suite 'FilmProcessorTests' started at 2026-10-01 17:45:04.716.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullInstantPackRevealsFinalPrintIndividuallyAndRejectsEleventhExposure]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullInstantPackRevealsFinalPrintIndividuallyAndRejectsEleventhExposure]' passed (4.184 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullMovieCapacitiesAreDurableAndRejectOverBudgetClips]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullMovieCapacitiesAreDurableAndRejectOverBudgetClips]' passed (0.155 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullPhotoRollCapacitiesStaySealedUntilExplicitDevelopment]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testFullPhotoRollCapacitiesStaySealedUntilExplicitDevelopment]' passed (3.405 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' passed (1.264 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' passed (1.048 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' passed (0.871 seconds).
+Test Suite 'FilmProcessorTests' passed at 2026-10-01 17:45:15.645.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 10.928 (10.929) seconds
+Test Suite 'ProductionTrialReceiptTests' started at 2026-10-01 17:45:15.645.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testEligibilityRefreshNeverRecoversAnActiveNativeWriter]' passed (0.018 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testNativeLostRepliesKeepPendingMediaUntilReadbackThenProjectExactlyOnce]' passed (0.371 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testProjectionFaultsReopenAndDestinationCopiesKeepIndependentEntitlement]' passed (1.147 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testQueuedDeletionQuiescesReceiptProjectionAndStaleCallbacksCannotRecreateFilm]' passed (0.138 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testSameDeviceOlderEmptyFilmCanContinueWithoutReplacingConsumption]' passed (0.097 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnknownReceiptDeletionDoesNotRefundAndCorruptMediaCannotProject]' passed (0.107 seconds).
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' started.
+Test Case '-[FilmRuntimeTests.ProductionTrialReceiptTests testUnresolvedLegacyTrialDoesNotLockIndependentExistingSubscriptionFilm]' passed (0.085 seconds).
+Test Suite 'ProductionTrialReceiptTests' passed at 2026-10-01 17:45:17.609.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1.963 (1.964) seconds
+Test Suite 'ReceiptCompatibilityTests' started at 2026-10-01 17:45:17.609.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testAuthoritativeExistingGrantPermutationsRecoverPendingBackupWithoutReceiptMutation]' passed (0.358 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testPendingBackupsBeforeAndAfterReceiptResolutionProjectOnce]' passed (0.215 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptCompatibilityTests testSameFilmEmptyBackupKeepsEarlierConsumptionAndSavesNewCaptureOnce]' passed (0.110 seconds).
+Test Suite 'ReceiptCompatibilityTests' passed at 2026-10-01 17:45:18.292.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.682 (0.683) seconds
+Test Suite 'ReceiptFaultMatrixTests' started at 2026-10-01 17:45:18.292.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testCommittedCaptureIdentityRejectsConflictingCallbackWithoutAnotherDebit]' passed (0.084 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testDirectMismatchedReadbackRejectsThenRepairedExactItemRecoversOnce]' passed (0.368 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingAndConflictingPendingInputsNeverProjectOrResetEligibility]' passed (0.600 seconds).
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' started.
+Test Case '-[FilmRuntimeTests.ReceiptFaultMatrixTests testMissingFutureAndPartialReadbacksBlockRecoveryUntilReadableWithoutRewrite]' passed (0.291 seconds).
+Test Suite 'ReceiptFaultMatrixTests' passed at 2026-10-01 17:45:19.636.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 1.344 (1.344) seconds
+Test Suite 'SoundtrackTests' started at 2026-10-01 17:45:19.636.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' passed (1.349 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' passed (1.158 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' passed (1.235 seconds).
+Test Suite 'SoundtrackTests' passed at 2026-10-01 17:45:23.378.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 3.742 (3.742) seconds
+Test Suite 'TrialIntegrationTests' started at 2026-10-01 17:45:23.379.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testCrashWindowRetryConsumesOnlyOnceAndPrecommitFailureDoesNotConsume]' passed (0.169 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testFailedUnsavedCaptureAndZeroSaveDeletionAllowReplacement]' passed (0.015 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testLegacyCommittedOutboxSurvivesKeychainFailureAndDeletionWithoutRefund]' passed (0.155 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testPendingSaveThatCannotBeInspectedBlocksReconcileUntilReadable]' passed (0.175 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testReceiptBeforeProjectionSurvivesAppStorageLossWithoutReopeningTrial]' passed (0.180 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredEmptyAndCapturedTrialFilmsCoexistWithDestinationEntitlement]' passed (0.182 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testRestoredPendingPhotoAndMovieReplayOnceWithoutConsumingDestinationTrial]' passed (0.583 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUninstallAfterPrecommitFailureCorrectlyKeepsTrialUnused]' passed (0.018 seconds).
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' started.
+Test Case '-[FilmRuntimeTests.TrialIntegrationTests testUnresolvedReceiptDoesNotCommitCapacityBeforeAppStorageLoss]' passed (0.170 seconds).
+Test Suite 'TrialIntegrationTests' passed at 2026-10-01 17:45:25.026.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 1.646 (1.648) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 17:45:25.026.
+	 Executed 43 tests, with 0 failures (0 unexpected) in 41.792 (41.800) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:45:25.026.
+	 Executed 43 tests, with 0 failures (0 unexpected) in 41.792 (41.802) seconds
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/885AA1A9-4B05-4830-95D7-3424D37A247C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/6A8AF5EF-C8A7-4E16-B443-9D0F3F13A449
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/34853A9E-62B9-42B0-BCCF-3B70C9C47A66
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/659C9D48-2532-4A01-8013-3809294B7C7D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/928A0333-CE0F-413F-9073-CF259F5B4244
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/84567264-0AF4-4948-8962-F79BF4A0F497
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9595D3B4-C3B2-420A-9396-27227071AF6F
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/71EA0BF4-CDA5-434A-BAB1-90FF01332BBB
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4FE1EBB2-2E25-4B79-9353-9EF7CFD039A6
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1DA5486C-43E0-407E-879F-F0D73134D803
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E18E4105-D662-442B-9B97-A836FDB27CB9
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/50E1ECC7-6799-42C6-8CED-D846E735CA3B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F3070D4B-8F73-4E6F-871D-26B4B6EE8256
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/806A9A82-C3D0-40A2-9285-0297FC34FB90
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/71E465AE-F7E6-46A6-BBC4-8A590C0A611C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7C6C649A-7445-4F26-8F9D-2AD9FE67EDE7
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/EC94FF87-42E9-4DE1-AE17-C0712BD813FC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/23F288C5-5F34-4CF5-9B28-BF9325AF5BED
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F51561DE-0D0C-47AF-AB12-CA049644F290
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F6E3CEA1-43B4-49F8-B09F-40F4627CC44C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B75D5420-51A9-4D4F-9639-511A8BCD92E6
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/ECE2DC8E-B26A-4CF2-80CE-BF718BBD6FF2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/0966AB45-A753-4FD5-A3E0-3F379C05B477
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/0CB4AB41-2A91-4E3F-B427-F401C3198743
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/43B480E9-5767-4F30-8B7A-4D15F1A527C7
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D7984BF7-93F8-428D-9915-F9F01C59DE7E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/319D9B47-C6EC-4772-9C20-04AE3B0A73DC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/BDEE4453-09DE-42DD-8ADB-54F7FEF7BCAF
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1ADA3CA0-63F8-46FF-8938-D873C7B10CAC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/44207F93-5451-4520-8BDC-50D9F12F5BD8
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/AFB2B6C7-9739-42FF-860D-E2F70D9EE960
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4EC3D881-A828-4B57-9D9A-E979C8E89875
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/BE929C86-E9E0-4A73-8A68-662C9CD79A16
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/BE3B7DBD-1B6B-433D-B833-96ED6AF4D4CE
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9C82B0C1-F295-4D23-9E7C-18F1CAE7EF02
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/6AFE7019-1E7F-4441-A587-3CA3456A71AC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/FAE0040F-0F61-42EE-A6D5-9F8D7505DCE9
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E1CC371F-F60E-46E5-A1D0-265C32C23D49
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/2CF7AF5B-1C11-440D-A416-5A8C6CCDF204
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E67962AE-B26A-481B-A233-EB118683462C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/990529CF-C460-40FC-BD7A-B98A794FAA40
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E4E8F922-C1B4-4CB8-AEE2-AB2CF36CF7D2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1B9E0D64-4B93-4189-83F9-68B144FB24F8
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/A06CD9E9-24DE-4A48-B897-A796DA4B82E8
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/CB8104A6-783A-4364-9462-609E52A9E6A8
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9B1C85CF-B041-469D-AAF8-A130106E2F9C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E91ED9FD-F310-497D-A4B8-D66D4602B00A
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/6996C36C-9F2B-4DDC-BD32-201916BD665E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/BB392855-E305-4725-9E50-2ACDC861D9DB
+PRODUCTION_NATIVE_REPLY applied=false updates=2 count=1 pending=false
+PRODUCTION_NATIVE_REPLY applied=true updates=1 count=1 pending=false
+PRODUCTION_PROJECTION camera=disposable1990s fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=disposable1990s fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=super8HomeMovie fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=beforeDurableMove reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDurableMoveBeforeDebit reopened=1 destinations=unused,used destinationWrites=0
+PRODUCTION_PROJECTION camera=cinema16mm fault=afterDatabaseCommitBeforeAcknowledgement reopened=1 destinations=unused,used destinationWrites=0
+RECEIPT_FIFO injected-memory-only counts=0,1,2,0 stale=filmNotFound evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFIFO/D7159CE9-70A5-4B47-A26E-6F41AE7165C4
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/40A2B016-133C-429C-A890-16BCB0635708
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/EF510D58-D574-449D-8CCF-D4CD69662C84
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/92862E27-4EB2-4013-B3B8-5FF71C2E1376
+RECEIPT_COMPATIBILITY039 /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptCompatibility039/DB9F50CB-9020-4086-B11A-4DC5D9261D9A
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/D9419245-0CF1-4954-8A88-14C83FAF7F6F
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/975DE76C-052F-4B78-9E91-541EF45A1785
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/894614FC-8597-4BDF-B28E-78A4BC7E0B38
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/96C4146F-A423-4AB9-A7E5-9F38E2E64376
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/B515DE54-B1D4-4E52-A589-1900235E04B7
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/9CD37A36-7982-4BF0-BC4A-EB61BD4E5175
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/68B51D74-5D17-494B-A616-1463F7A644CB
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/36ED19FE-6096-44D5-99DE-10EBC3ABEF13
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/CF0B9FE3-20E5-4FBB-AD64-F67D8976B2CA
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/4619AB7A-6AB3-452D-88CC-E169420E5F17
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/5550C038-3531-423D-85A5-BA2B32DD2D0A
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/AD72B5C3-6DE6-4573-949C-FA7FC0F47B34
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/C53E7DA1-8E55-4E30-B85C-B3AFAC3F132F
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/48CC18C4-C67A-41F8-9AEA-2ABAF11ED747
+RECEIPT_MATRIX /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/ReceiptFaultMatrix/ADC27575-2AAA-4C5B-B65B-421D90C8E967
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":4002362348371805986,\"sequenceNumber\":1},\"2\":{\"seed\":1248491370649246008,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"E59CD7BD-6606-496D-B82C-5CE676753A83\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"E59CD7BD-6606-496D-B82C-5CE676753A83","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"eb31db41873ef2b44c05c64d10bec1cd0d569615ff8a7ff4a65e57b225a64759"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":8333038931464898734,\"sequenceNumber\":1},\"2\":{\"seed\":13581273392968018602,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"3D9B9036-2F4B-4628-BC2A-40736E490872\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"3D9B9036-2F4B-4628-BC2A-40736E490872","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"9b929112e2388aa08dc2433ad490eb8213bee245a54ccb630266ff2bb38b3562"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":6465724830569055100,\"sequenceNumber\":1},\"2\":{\"seed\":7096548635312284343,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"92BCC184-7D0D-4142-A9F8-B5D46570E04E\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"92BCC184-7D0D-4142-A9F8-B5D46570E04E","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"ab74d17aca6caad67299b92ef6ba1f90787328766656e9fd306cde3f12e8a758"}
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/6] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.34s)
+Test Suite 'All tests' started at 2026-10-01 17:45:27.914.
+Test Suite 'TrialReceiptStudyPackageTests.xctest' started at 2026-10-01 17:45:27.916.
+Test Suite 'NativeReceiptStatusTests' started at 2026-10-01 17:45:27.916.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testAnotherReceiptIsNeverOverwrittenOrAcceptedAsThisCapture]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testAnotherReceiptIsNeverOverwrittenOrAcceptedAsThisCapture]' passed (0.002 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testEveryUpdateStatusRequiresMatchingReadBeforeAcknowledgement]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testEveryUpdateStatusRequiresMatchingReadBeforeAcknowledgement]' passed (0.002 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testMissingProtectedMalformedLegacyOrForeignRecordNeverMeansUnused]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testMissingProtectedMalformedLegacyOrForeignRecordNeverMeansUnused]' passed (0.001 seconds).
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testUnreadableReplyDoesNotLoseReceiptAndRetryDoesNotRewriteIt]' started.
+Test Case '-[TrialReceiptStudyTests.NativeReceiptStatusTests testUnreadableReplyDoesNotLoseReceiptAndRetryDoesNotRewriteIt]' passed (0.000 seconds).
+Test Suite 'NativeReceiptStatusTests' passed at 2026-10-01 17:45:27.922.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'ProductionProcessExitTests' started at 2026-10-01 17:45:27.922.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' started.
+Test Case '-[TrialReceiptStudyTests.ProductionProcessExitTests testProductionOwnerRecoversActualProcessExitBeforeAndAfterReceiptAndProjection]' passed (2.682 seconds).
+Test Suite 'ProductionProcessExitTests' passed at 2026-10-01 17:45:30.604.
+	 Executed 1 test, with 0 failures (0 unexpected) in 2.682 (2.683) seconds
+Test Suite 'ReceiptStudyTests' started at 2026-10-01 17:45:30.604.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbortAfterReceiptCannotRefundAndFailedAbortWriteStaysPending]' passed (0.177 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbruptProcessExitsRecoverWithoutLanguageCleanup]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testAbruptProcessExitsRecoverWithoutLanguageCleanup]' passed (6.419 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCapacityFullAndDurationMismatchNeverPublishAnExtraReceipt]' passed (2.164 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testCorruptPreparedMediaCannotProjectOrConsumeAndDeletionRemainsPossible]' passed (0.178 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testDurableAbortPreventsReplayAndKeepsZeroSaveReplacement]' passed (0.147 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testEverySavePrefixReopensAndRestoresWithoutUsingDestinationTrial]' passed (4.779 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testLostRepliesRemainPendingUntilAuthoritativeReadThenDebitOnce]' passed (0.122 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testNativeStatusAdapterKeepsUnknownCapturePendingAcrossActualSQLiteRecovery]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testNativeStatusAdapterKeepsUnknownCapturePendingAcrossActualSQLiteRecovery]' passed (0.281 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testProjectionFailureKeepsReceiptAndNativeMediaRecoverable]' passed (0.137 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testQueuedDeletionWaitsForReceiptOwnerAndRejectsStaleSave]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testQueuedDeletionWaitsForReceiptOwnerAndRejectsStaleSave]' passed (0.115 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testStorageLossAtEachPrefixDoesNotGrantTrialAfterReceiptCommit]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testStorageLossAtEachPrefixDoesNotGrantTrialAfterReceiptCommit]' passed (0.270 seconds).
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testUnknownOutcomeDeletionRetainsConsumptionAndOldBackupOnlyCanRestoreFilm]' started.
+Test Case '-[TrialReceiptStudyTests.ReceiptStudyTests testUnknownOutcomeDeletionRetainsConsumptionAndOldBackupOnlyCanRestoreFilm]' passed (0.158 seconds).
+Test Suite 'ReceiptStudyTests' passed at 2026-10-01 17:45:45.553.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 14.946 (14.949) seconds
+Test Suite 'TrialReceiptStudyPackageTests.xctest' passed at 2026-10-01 17:45:45.553.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 17.634 (17.637) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:45:45.553.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 17.634 (17.639) seconds
+RECEIPT_STATUS status=0 applied=false resolvedByRead=true
+RECEIPT_STATUS status=0 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25291 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25291 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25308 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25308 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25293 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25293 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-50 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-50 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-25300 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-25300 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-108 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-108 applied=true resolvedByRead=true
+RECEIPT_STATUS status=-26275 applied=false resolvedByRead=true
+RECEIPT_STATUS status=-26275 applied=true resolvedByRead=true
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=prepared status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=receiptResolved status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=disposable1990s point=projected status=77 recovered=1 sealed=true hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=prepared status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=receiptResolved status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=super8HomeMovie point=projected status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=prepared status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=receiptResolved status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+PRODUCTION_PROCESS_EXIT camera=cinema16mm point=projected status=77 recovered=1 sealed=true hash=e62db3cf912cafd32b5b886851bb93ebb5a016bd0b27ad6d6833c53b54307988 storageLoss=consumed
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=preparedMetadata status=77 receiptBefore=false savedAfter=0
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=copiedMedia status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=pendingManifest status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=beforeReceipt status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=afterReceipt status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=beforeProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=afterProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=beforeCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=afterSourceCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=disposable1990s point=afterCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=preparedMetadata status=77 receiptBefore=false savedAfter=0
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=copiedMedia status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=pendingManifest status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=beforeReceipt status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=afterReceipt status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=beforeProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=afterProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=beforeCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=afterSourceCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=super8HomeMovie point=afterCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=preparedMetadata status=77 receiptBefore=false savedAfter=0
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=copiedMedia status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=pendingManifest status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=beforeReceipt status=77 receiptBefore=false savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=afterReceipt status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=beforeProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=afterProjection status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=beforeCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=afterSourceCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PROCESS_EXIT camera=cinema16mm point=afterCleanup status=77 receiptBefore=true savedAfter=1
+RECEIPT_PREFIX camera=disposable1990s point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=1D59E462-8A2E-47D0-9C71-4C15EBC0E364 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=79043A2B-6E00-409C-85CC-F31F496FE0E6 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=28E90365-0727-4FFD-970E-96538CC715CE hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=0E2DA53A-E4DA-486D-93C0-49FA89EE7709 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=00919EAD-FE6B-4AB0-B447-113369728D77 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=74A2D964-4F04-4E08-90C8-C88919E6C234 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=E782E0FF-346E-41C2-AB71-7A7BC950C917 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=77DBBB3F-60FB-4695-8377-5DB7CCB0053E hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterSourceCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=F433518D-39AE-4635-A61E-15187CA3D88A hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=disposable1990s point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=D0D01F49-A9C9-4565-A09D-96B0DE50F477 hash=5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55
+RECEIPT_PREFIX camera=super8HomeMovie point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=958B18D6-1935-4999-9DBE-92ABC26EE557 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=9791DB2A-624B-4D0B-9CA0-47CFE6DEA7B8 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=BF737DA3-E6B1-48A5-9A5B-65A921B849F9 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=0CD489C5-C580-469C-8C4F-6897ECCBB3D5 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=8DE1B85F-FCB0-4CBF-A288-44B395C8788D hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=BDE23D71-C127-4C72-9B0F-D135960CB846 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=85756159-4B8D-4275-9C62-0EC5B9394760 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=25BF14CE-9368-4CD2-A2E0-86DF887B51B7 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=afterSourceCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=982998EA-D6D9-4BD4-8F5F-1FAF3E43A4D4 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=super8HomeMovie point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=1C682E80-3BE1-4263-9E8D-DF6DB9D7FDE3 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=preparedMetadata initialSQL=0 reopened=0 destinations=unused,consumed destinationWrites=0 capture=59BCDF74-4DA3-4157-87F5-D20E8B4CBF01 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=copiedMedia initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=BDABCBA4-29CF-4251-BB7F-CA5C64CBEAA1 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=pendingManifest initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=0951084C-54A3-4706-B279-0D9F7E40B834 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=beforeReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=4DC23933-6773-4E7F-A7B2-B2AF88C075F7 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=afterReceipt initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=FAA58544-AEBD-467B-964F-38F583F44A03 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=beforeProjection initialSQL=0 reopened=1 destinations=unused,consumed destinationWrites=0 capture=3F65284C-0CFB-4B39-B617-66FB6653D45A hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=afterProjection initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=7F10EEB3-5152-4099-9583-520CD638CAA2 hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=beforeCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=707B9A3A-DF5C-4B17-B959-1F569CCDF01D hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=afterSourceCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=B83722F3-E8FE-4271-A934-3B5E54854B7E hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_PREFIX camera=cinema16mm point=afterCleanup initialSQL=1 reopened=1 destinations=unused,consumed destinationWrites=0 capture=A9B9C3C1-716E-45FE-AD6B-9DF09D87194B hash=2cf7527de59d302ea3fc141995f2ce3976b3c7c96755945da4379b1118e5045e
+RECEIPT_STORAGE_LOSS point=preparedMetadata consumed=false
+RECEIPT_STORAGE_LOSS point=copiedMedia consumed=false
+RECEIPT_STORAGE_LOSS point=pendingManifest consumed=false
+RECEIPT_STORAGE_LOSS point=beforeReceipt consumed=false
+RECEIPT_STORAGE_LOSS point=afterReceipt consumed=true
+RECEIPT_STORAGE_LOSS point=beforeProjection consumed=true
+RECEIPT_STORAGE_LOSS point=afterProjection consumed=true
+RECEIPT_STORAGE_LOSS point=beforeCleanup consumed=true
+RECEIPT_STORAGE_LOSS point=afterSourceCleanup consumed=true
+RECEIPT_STORAGE_LOSS point=afterCleanup consumed=true
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/4] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.33s)
+Test Suite 'All tests' started at 2026-10-01 17:45:47.600.
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' started at 2026-10-01 17:45:47.602.
+Test Suite 'DevelopmentProcessExitTests' started at 2026-10-01 17:45:47.602.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testEveryCameraAtEveryExistingDevelopmentBoundary]' passed (26.253 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testInstantSecondPrintExitPreservesFirstPrintAndOpenCapacity]' passed (0.913 seconds).
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' started.
+Test Case '-[DevelopmentProcessExitTests.DevelopmentProcessExitTests testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns]' passed (2.724 seconds).
+Test Suite 'DevelopmentProcessExitTests' passed at 2026-10-01 17:46:17.492.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 29.890 (29.890) seconds
+Test Suite 'DevelopmentProcessExitPackageTests.xctest' passed at 2026-10-01 17:46:17.492.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 29.890 (29.890) seconds
+Test Suite 'All tests' passed at 2026-10-01 17:46:17.492.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 29.890 (29.892) seconds
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeBegin-8C952F00-0CCC-412E-BFBC-6061B9711B00
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeBegin-8C952F00-0CCC-412E-BFBC-6061B9711B00
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterAssignments-07992AD8-B11F-470D-A03E-18CE0D2FC8B5
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterAssignments-07992AD8-B11F-470D-A03E-18CE0D2FC8B5
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterRendering-FFC7D4BC-3546-4D86-B880-7B64AF072A93
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterRendering-FFC7D4BC-3546-4D86-B880-7B64AF072A93
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterPersistence-8E2CB6DA-3671-4DAC-8F0C-48930D3DCF0E
+DEVELOPMENT_EXIT camera=disposable1990s boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-afterPersistence-8E2CB6DA-3671-4DAC-8F0C-48930D3DCF0E
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeReveal-767FCCED-4D39-4F80-9316-7F47ECDDAB6B
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeReveal-767FCCED-4D39-4F80-9316-7F47ECDDAB6B
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeCleanup-A5A261DC-4E8F-42B9-A2BF-CA0BAC02F101
+DEVELOPMENT_EXIT camera=disposable1990s boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/disposable1990s-beforeCleanup-A5A261DC-4E8F-42B9-A2BF-CA0BAC02F101
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeBegin-38295823-F8D9-4732-8289-3C3769A905A7
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeBegin-38295823-F8D9-4732-8289-3C3769A905A7
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterAssignments-FBAF4519-88B9-4643-8B96-2B3CC4E197FF
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterAssignments-FBAF4519-88B9-4643-8B96-2B3CC4E197FF
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterRendering-9C5F703B-F062-4223-A68F-A9174C49298E
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterRendering-9C5F703B-F062-4223-A68F-A9174C49298E
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterPersistence-0B5CCD71-5946-4867-AB5A-49DBEB707A2D
+DEVELOPMENT_EXIT camera=instant1970s boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-afterPersistence-0B5CCD71-5946-4867-AB5A-49DBEB707A2D
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeReveal-9B0037E3-961F-46D8-896F-69D9B0F99F93
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeReveal-9B0037E3-961F-46D8-896F-69D9B0F99F93
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeCleanup-7FA66584-97E0-463E-B53D-B3DE76D49F57
+DEVELOPMENT_EXIT camera=instant1970s boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-beforeCleanup-7FA66584-97E0-463E-B53D-B3DE76D49F57
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeBegin-11987703-978C-4B67-8B90-F24E7AFDBA0B
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeBegin-11987703-978C-4B67-8B90-F24E7AFDBA0B
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterAssignments-863F79D6-6520-4610-885C-F26791BEEA48
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterAssignments-863F79D6-6520-4610-885C-F26791BEEA48
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterRendering-16D3796C-BA9D-4283-98A4-11DEDBDE4EC3
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterRendering-16D3796C-BA9D-4283-98A4-11DEDBDE4EC3
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterPersistence-19D7C15B-EDAF-4F05-8BB2-E3EBCA9DC66C
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-afterPersistence-19D7C15B-EDAF-4F05-8BB2-E3EBCA9DC66C
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeReveal-4BFA6C1A-3B76-4B8D-8AC3-FE46486E739E
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeReveal-4BFA6C1A-3B76-4B8D-8AC3-FE46486E739E
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeCleanup-9B32E917-B5A7-4C7D-8956-771E95EE3B83
+DEVELOPMENT_EXIT camera=mediumFormat6x6 boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/mediumFormat6x6-beforeCleanup-9B32E917-B5A7-4C7D-8956-771E95EE3B83
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeBegin-F651FAFB-C50C-4474-9926-AF5E4812261F
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeBegin-F651FAFB-C50C-4474-9926-AF5E4812261F
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterAssignments-9D334789-5861-4C52-9DE8-E821435DB198
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterAssignments-9D334789-5861-4C52-9DE8-E821435DB198
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterRendering-BE5D943C-4BEB-44FD-8D20-29951AD0CF2B
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterRendering-BE5D943C-4BEB-44FD-8D20-29951AD0CF2B
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterPersistence-1A23FFB5-0072-4493-9DCF-E6D8CCB22E86
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-afterPersistence-1A23FFB5-0072-4493-9DCF-E6D8CCB22E86
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeReveal-A92D0F93-E9A8-4B73-BD41-4C78ADA4F178
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeReveal-A92D0F93-E9A8-4B73-BD41-4C78ADA4F178
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeCleanup-806AB664-EF0C-4DD6-B196-ED75CBFCDF5E
+DEVELOPMENT_EXIT camera=super8HomeMovie boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-beforeCleanup-806AB664-EF0C-4DD6-B196-ED75CBFCDF5E
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeBegin-2FEAC0A2-FDFD-47C9-AF24-0F524E2F3945
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeBegin exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeBegin-2FEAC0A2-FDFD-47C9-AF24-0F524E2F3945
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterAssignments-044C5D10-D379-4CC7-BF32-A745F06028B7
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterAssignments exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterAssignments-044C5D10-D379-4CC7-BF32-A745F06028B7
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterRendering-16735488-E53B-473B-9F91-CA203D82BD54
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterRendering exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterRendering-16735488-E53B-473B-9F91-CA203D82BD54
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterPersistence-336F7C5D-9A04-4667-B530-4025921A8A96
+DEVELOPMENT_EXIT camera=cinema16mm boundary=afterPersistence exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-afterPersistence-336F7C5D-9A04-4667-B530-4025921A8A96
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeReveal-AAAF5F14-4E60-4145-8304-6C26B4EE27EE
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeReveal exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeReveal-AAAF5F14-4E60-4145-8304-6C26B4EE27EE
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeCleanup-EED4A057-9F98-4FA2-BAD9-EA9C42463D60
+DEVELOPMENT_EXIT camera=cinema16mm boundary=beforeCleanup exit=81 recovered=1 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-beforeCleanup-EED4A057-9F98-4FA2-BAD9-EA9C42463D60
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-AD4DEFEC-CE60-438F-A75D-8596F6FF0BD9
+DEVELOPMENT_EXIT instant-second exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/instant1970s-second-print-AD4DEFEC-CE60-438F-A75D-8596F6FF0BD9
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-discard-reassembly-A0B6CBE2-1261-489C-ABA0-3408111F1924
+DEVELOPMENT_EXIT discard camera=super8HomeMovie exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/super8HomeMovie-discard-reassembly-A0B6CBE2-1261-489C-ABA0-3408111F1924
+DEVELOPMENT_EXIT_PREPARED /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-discard-reassembly-9F0E8064-756B-45BD-BF04-66E2E911BBEA
+DEVELOPMENT_EXIT discard camera=cinema16mm exit=81 evidence=/var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentProcessExit/cinema16mm-discard-reassembly-9F0E8064-756B-45BD-BF04-66E2E911BBEA
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+[0/1] Planning build
+Building for debugging...
+[0/3] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.24s)
+Archive:  2026-09-29-film-camera-experience-v1-documents.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  09-30-2026 19:34   2026-09-29-film-camera-experience-v1/
+   135357  09-30-2026 17:40   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md
+        0  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/adr/
+      677  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0007-movie-withdrawal-rebuilds-without-redevelopment.md
+      638  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0003-host-accounts-and-accountless-participants.md
+      524  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0011-host-account-deletion-preserves-shared-privacy.md
+      406  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0006-subscription-expiration-never-locks-existing-films.md
+      496  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0009-whole-film-deletion-is-personal-only.md
+     1988  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md
+      352  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0002-join-film-replaces-device-handoff.md
+      418  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0001-camera-authenticity-over-universal-reveal.md
+      606  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0008-unreleased-group-captures-have-a-bulk-privacy-exit.md
+      475  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0010-group-film-host-is-fixed-in-v1.md
+      317  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0005-group-film-hosting-requires-subscription.md
+      776  09-29-2026 13:44   2026-09-29-film-camera-experience-v1/adr/0004-photo-group-capacity-is-pooled-camera-loads.md
+    33898  09-30-2026 17:37   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md
+    54605  09-30-2026 17:40   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-task-tracker.md
+     9220  09-30-2026 19:35   2026-09-29-film-camera-experience-v1/README.md
+    10866  10-01-2026 08:34   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md
+        0  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/
+    88311  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/CONTEXT.md
+     6887  09-30-2026 17:25   2026-09-29-film-camera-experience-v1/sources/PROTOTYPE-NOTES.md
+    19109  09-30-2026 12:28   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md
+    67707  10-01-2026 14:14   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md
+    35342  10-01-2026 14:13   2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md
+---------                     -------
+   468975                     25 files
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Populated-20261002T004700Z.xcresult
+
+2026-10-01 17:47:14.377 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:47:14.377 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:48:12.701 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:48:12.701 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:49:26.521 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:49:26.521 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:49:38.939 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:49:38.939 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:50:06.738 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:50:06.738 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:50:34.815 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:50:34.815 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:51:23.952 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:51:23.952 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:51:57.166 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:51:57.166 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:52:08.205 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:52:08.205 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:52:32.717 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:52:32.717 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:52:44.323 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:52:44.323 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:52:52.834 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:52:52.834 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:53:14.517 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:53:14.517 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:53:37.099 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 17:53:37.099 xcodebuild[33026:158036445] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 17:54:18.863 xcodebuild[33026:158036445] [MT] IDETestOperationsObserverDebug: 427.730 elapsed -- Testing started completed.
+2026-10-01 17:54:18.863 xcodebuild[33026:158036445] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 17:54:18.863 xcodebuild[33026:158036445] [MT] IDETestOperationsObserverDebug: 427.730 sec, +427.730 sec -- end
+Testing started
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Validation-20261002T005421Z.xcresult
+
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/CaptureControllerIntegrationTests.swift -primary-file /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/JournalIntegrationTests.swift /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/StoreKitSubscriptionTests.swift -emit-dependencies-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.d -emit-const-values-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.swiftconstvalues -emit-reference-dependencies-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.swiftdeps -serialize-diagnostics-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.dia -target x86_64-apple-ios26.0-simulator -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libTipKitMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#TipKitMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/ImmerseTests-dependencies-1.json -debug-module-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/ImmerseTests.swiftmodule -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -I /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/Developer/Library/Frameworks -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -swift-version 6 -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/ImmerseTests_const_extract_protocols.json -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse -enable-anonymous-context-mangled-names -file-compilation-dir /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/SDKStatCaches.noindex/iphonesimulator26.5-23F73-6cfe768891a92b912361537c460fe42b.sdkstatcache -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/ImmerseTests-generated-files.hmap -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/ImmerseTests-own-target-headers.hmap -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/ImmerseTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/Immerse-04e31b4db0839d8c5ce4e67aa79fb778-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/ImmerseTests-project-headers.hmap -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/DerivedSources-normal/x86_64 -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/DerivedSources/x86_64 -Xcc -I/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name ImmerseTests -frontend-parseable-output -disable-clang-spi -clang-target x86_64-apple-ios26.5-simulator -target-sdk-version 26.5 -target-sdk-name iphonesimulator26.5 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Build/Intermediates.noindex/Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.o -index-unit-output-path /Immerse.build/Debug-iphonesimulator/ImmerseTests.build/Objects-normal/x86_64/JournalIntegrationTests.o -index-store-path /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/ValidationSimulator/Index.noindex/DataStore -index-system-modules
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/JournalIntegrationTests.swift:95:63: error: 'TrialKeychainError' initializer is inaccessible due to 'internal' protection level
+        let keychain = try XCTUnwrap(FailureCopy.message(for: TrialKeychainError(status: errSecInteractionNotAllowed)))
+                                                              ^
+EntitlementCore.TrialKeychainError.init:2:10: note: 'init(status:)' declared here
+internal init(status: OSStatus)}
+         ^
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/JournalIntegrationTests.swift:104:34: error: 'TrialKeychainError' initializer is inaccessible due to 'internal' protection level
+                                 TrialKeychainError(status: errSecNotAvailable)]
+                                 ^
+EntitlementCore.TrialKeychainError.init:2:10: note: 'init(status:)' declared here
+internal init(status: OSStatus)}
+         ^
+Testing failed:
+	'TrialKeychainError' initializer is inaccessible due to 'internal' protection level
+	'TrialKeychainError' initializer is inaccessible due to 'internal' protection level
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+
+exit 65

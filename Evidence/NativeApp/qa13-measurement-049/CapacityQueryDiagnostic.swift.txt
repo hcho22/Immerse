@@ -1,0 +1,27 @@
+
+/// Diagnostic only: the accessibility tree at the original test's "2:45 of film" check.
+@MainActor
+final class CapacityQueryDiagnostic: XCTestCase {
+    func testCapacityElementsRightAfterOpeningSixteenMillimeter() throws {
+        var lines: [String] = []
+        for attempt in 0..<3 {
+            let app = XCUIApplication()
+            app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+            app.buttons["start-film"].tap()
+            XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+            try app.performAccessibilityAudit { _ in true }
+            let camera = app.buttons["camera-cinema16mm"]
+            for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+            camera.tap()
+            let found = app.staticTexts["2:45 of film"].exists
+            let snapshot = app.debugDescription
+            let matches = snapshot.split(separator: "\n").filter { $0.contains("2:45") }.map { $0.trimmingCharacters(in: .whitespaces) }
+            lines.append("attempt \(attempt) exists=\(found) matches=" + matches.joined(separator: " ; "))
+            let tree = XCTAttachment(string: snapshot); tree.name = "tree-\(attempt)"; tree.lifetime = .keepAlways; add(tree)
+            app.terminate()
+        }
+        let a = XCTAttachment(string: lines.joined(separator: "\n")); a.name = "capacity"; a.lifetime = .keepAlways; add(a)
+    }
+}

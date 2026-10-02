@@ -1,0 +1,13 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Capacity-049-fixed.xcresult
+
+2026-10-01 21:03:56.481 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:03:56.481 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:04:17.350 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:04:17.351 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:04:37.806 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 21:04:37.806 xcodebuild[92948:168791657] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 21:05:25.122 xcodebuild[92948:168791657] [MT] IDETestOperationsObserverDebug: 93.345 elapsed -- Testing started completed.
+2026-10-01 21:05:25.122 xcodebuild[92948:168791657] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 21:05:25.122 xcodebuild[92948:168791657] [MT] IDETestOperationsObserverDebug: 93.345 sec, +93.345 sec -- end
+Testing started

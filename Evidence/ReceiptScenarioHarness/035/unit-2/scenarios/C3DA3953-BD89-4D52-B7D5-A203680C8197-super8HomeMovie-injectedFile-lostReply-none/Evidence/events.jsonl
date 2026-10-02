@@ -1,0 +1,20 @@
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"lostReply","namespace":"com.immerse.validation.receipt035.C3DA3953-BD89-4D52-B7D5-A203680C8197-super8HomeMovie-injectedFile-lostReply-none","pauseAt":"none","process":"39098","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"C3DA3953-BD89-4D52-B7D5-A203680C8197-super8HomeMovie-injectedFile-lostReply-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"2","sha256":"none","status":"-25300","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"3","sha256":"none","status":"-25300","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-add","process":"39098","processSequence":"4","sha256":"ddf77a01d6d34da893785595c191422f79cb727f4e382f5e27421cfe14972e23","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"5","sha256":"ddf77a01d6d34da893785595c191422f79cb727f4e382f5e27421cfe14972e23","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"6","sha256":"ddf77a01d6d34da893785595c191422f79cb727f4e382f5e27421cfe14972e23","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"captureID":"67B83728-CA02-4CD9-AD0F-60BCE1A03028.mov","event":"prepared-input","filmID":"E0D409A7-64F9-4E25-9BF0-2C5DFB55EABD","process":"39098","processSequence":"7","sha256":"e358fd60e3143ba2930d7b155a86523d0bf1602c60adbd0e8c94c8d0cb56671b","utc":"2026-10-01T19:16:50Z"}
+{"event":"commit-requested","process":"39098","processSequence":"8","utc":"2026-10-01T19:16:50Z"}
+{"event":"production-checkpoint","phase":"prepared","process":"39098","processSequence":"9","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"10","sha256":"ddf77a01d6d34da893785595c191422f79cb727f4e382f5e27421cfe14972e23","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"11","sha256":"ddf77a01d6d34da893785595c191422f79cb727f4e382f5e27421cfe14972e23","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"actualStatus":"0","backend":"injectedFile","dispatched":"true","event":"adapter-update","process":"39098","processSequence":"12","sha256":"5ea55be8181bb1de0b91e5e5ff2b7eecca62c3904a53816bf587e8fc9640c032","utc":"2026-10-01T19:16:50Z"}
+{"actual":"0","event":"injected-update-reply","process":"39098","processSequence":"13","returned":"-25291","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"14","sha256":"5ea55be8181bb1de0b91e5e5ff2b7eecca62c3904a53816bf587e8fc9640c032","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"event":"production-checkpoint","phase":"receiptResolved","process":"39098","processSequence":"15","utc":"2026-10-01T19:16:50Z"}
+{"event":"production-checkpoint","phase":"projected","process":"39098","processSequence":"16","utc":"2026-10-01T19:16:50Z"}
+{"event":"commit-returned","process":"39098","processSequence":"17","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"18","sha256":"5ea55be8181bb1de0b91e5e5ff2b7eecca62c3904a53816bf587e8fc9640c032","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"19","sha256":"5ea55be8181bb1de0b91e5e5ff2b7eecca62c3904a53816bf587e8fc9640c032","status":"0","utc":"2026-10-01T19:16:50Z"}
+{"event":"inventory","file":"inventory-A731D710-6956-4D0E-BB79-053BC613A4E8.json","process":"39098","processSequence":"20","summary":"films=1;saved=1;pending=false;consumed=true;hash=true","utc":"2026-10-01T19:16:50Z"}

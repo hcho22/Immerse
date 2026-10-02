@@ -1,0 +1,31 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+Attributes: StaticText, 0x11895cfc0, {{60.0, 719.0}, {308.0, 63.3}}, label: 'Silent capture'
+Element subtree:
+ →StaticText, 0x11895cfc0, {{60.0, 719.0}, {308.0, 63.3}}, label: 'Silent capture'
+Path to element:
+ →Application, 0x118954260, pid: 75351, label: 'SetupAccessibilityProbe'
+  ↳Window (Main), 0x118957050, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x11895aaa0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x11895ace0, {{0.0, 62.0}, {402.0, 812.0}}
+     ↳Other, 0x11895ae00, {{0.0, 62.0}, {402.0, 812.0}}
+      ↳Other, 0x11895af20, {{0.0, 62.0}, {402.0, 812.0}}
+       ↳Other, 0x11895b040, {{0.0, 62.0}, {402.0, 812.0}}
+        ↳Other, 0x11895b160, {{0.0, 62.0}, {402.0, 812.0}}
+         ↳Other, 0x11895b280, {{0.0, 62.0}, {402.0, 812.0}}
+          ↳Other, 0x11895b5e0, {{0.0, 62.0}, {402.0, 812.0}}
+           ↳Other, 0x11895b700, {{0.0, 62.0}, {402.0, 812.0}}
+            ↳Other, 0x11895b820, {{0.0, 62.0}, {402.0, 812.0}}
+             ↳Other, 0x11895b940, {{0.0, 62.0}, {402.0, 812.0}}
+              ↳ScrollView, 0x11895ba60, {{0.0, 62.0}, {402.0, 812.0}}
+               ↳Other, 0x11895c900, {{0.0, 114.0}, {402.0, 2089.3}}
+                ↳StaticText, 0x11895cd80, {{32.3, 719.0}, {335.7, 63.3}}, label: 'Silent capture'
+                 ↳StaticText, 0x11895cfc0, {{60.0, 719.0}, {308.0, 63.3}}, label: 'Silent capture'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x10dc203c0, pid: 75351, label: 'SetupAccessibilityProbe'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 75351, elementOrHash.elementID: 4592859712.65
+    Output: {
+      StaticText, 0x11884aa10, {{60.0, 719.0}, {308.0, 63.3}}, label: 'Silent capture'
+    }

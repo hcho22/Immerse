@@ -1,0 +1,10 @@
+Building for debugging...
+[0/7] Write RenderFixtureTool-entitlement.plist
+[1/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/8] Compiling RenderFixtureTool main.swift
+[5/8] Emitting module RenderFixtureTool
+[5/8] Write Objects.LinkFileList
+[6/8] Linking RenderFixtureTool
+[7/8] Applying RenderFixtureTool
+Build complete! (1.26s)

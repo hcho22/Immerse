@@ -1,0 +1,48 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/HitArea-047-current-1.xcresult
+
+2026-10-01 18:44:12.357 xcodebuild[12199:159393073] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:44:12.357 xcodebuild[12199:159393073] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:45:20.253 xcodebuild[12199:159393073] [MT] IDETestOperationsObserverDebug: 70.866 elapsed -- Testing started completed.
+2026-10-01 18:45:20.253 xcodebuild[12199:159393073] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:45:20.253 xcodebuild[12199:159393073] [MT] IDETestOperationsObserverDebug: 70.866 sec, +70.866 sec -- end
+Failing tests:
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
+HitArea-047-current-1 exit 65
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/HitArea-047-current-2.xcresult
+
+2026-10-01 18:45:27.540 xcodebuild[19234:159416719] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:45:27.540 xcodebuild[19234:159416719] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:46:35.010 xcodebuild[19234:159416719] [MT] IDETestOperationsObserverDebug: 70.432 elapsed -- Testing started completed.
+2026-10-01 18:46:35.010 xcodebuild[19234:159416719] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:46:35.010 xcodebuild[19234:159416719] [MT] IDETestOperationsObserverDebug: 70.432 sec, +70.432 sec -- end
+Failing tests:
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
+HitArea-047-current-2 exit 65
+27:            .tint(.accentColor)
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/HitArea-047-oldtint-1.xcresult
+
+2026-10-01 18:46:45.147 xcodebuild[25369:159438201] [MT] IDELaunchParametersSnapshot: The operation couldn’t be completed. (DebuggerLLDB.DebuggerVersionStore.StoreError error 0.)
+2026-10-01 18:46:45.147 xcodebuild[25369:159438201] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-01 18:48:01.381 xcodebuild[25369:159438201] [MT] IDETestOperationsObserverDebug: 79.265 elapsed -- Testing started completed.
+2026-10-01 18:48:01.381 xcodebuild[25369:159438201] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:48:01.382 xcodebuild[25369:159438201] [MT] IDETestOperationsObserverDebug: 79.265 sec, +79.265 sec -- end
+Failing tests:
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+	JournalFlowTests.testLargestDynamicTypeCatalogAndLandscapeSettings()
+
+** TEST FAILED **
+
+Testing started
+HitArea-047-oldtint-1 exit 65
+27:            .tint(Color("AccentColor"))

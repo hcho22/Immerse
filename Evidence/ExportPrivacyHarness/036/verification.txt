@@ -1,0 +1,28 @@
+Checkpoint 036: source-bound synthetic export/privacy evidence, not v1 acceptance.
+Base: 0cd6344e0c1b73e0d9116810722c6c9e44fc055e plus source-final.sha256.
+Environment and exact native commands: README.md and Probes/ExportPrivacyHarness/README.md.
+
+PASS generic iOS Simulator build-for-testing (build-1.log, quiet success).
+PASS hosted unit-1: 9 passed, 0 failed/skipped; 27 new histories.
+PASS UI ui-1: 2 passed, 0 failed/skipped; 4 ordinary exits/re-entries.
+PASS generic unsigned physical-iOS build (device-build.log); compilation only.
+PASS node Probes/ExportPrivacyHarness/inspect-evidence.mjs Evidence/ExportPrivacyHarness/036/unit-1 unit
+PASS node Probes/ExportPrivacyHarness/inspect-evidence.mjs Evidence/ExportPrivacyHarness/036/ui-1 ui
+PASS node --check Probes/ExportPrivacyHarness/inspect-evidence.mjs
+PASS sh -n Probes/ExportPrivacyHarness/run-simulator.sh
+PASS shasum -a 256 -c Evidence/ExportPrivacyHarness/036/source-final.sha256
+PASS compiled unit/UI source inventories: 8 relevant files each match current source.
+PASS unit/UI app artifact inventories: 37 files each match current simulator artifact.
+PASS 26 local links in report/runbook/readiness resolve.
+PASS sh Scripts/verify-document-package.sh (ZIP listing and extracted content diff).
+PASS sh Scripts/verify-requirement-map.sh (122 intake IDs, 72 clauses, 9 invariants; coverage only).
+PASS project memory helper: existing Maintaining this file section retained.
+PASS production App/Packages/.github, receipt 035 probe/evidence, PRD/tracker/original ADRs unchanged.
+OBSERVED owned simulator Shutdown after run (device-after.json).
+OBSERVED 6 representative native screenshots inspected; 12 original attachments retained.
+
+No actual PhotoKit, Camera, StoreKit, Security, phone, backup/restore, signing,
+account, release or no-mistakes execution. Original accessibility failures remain
+failed; native Security -34018 remains skipped. Unknown completed external copies
+can duplicate on explicit retry; known acknowledged retries skip writer calls.
+Preparation warnings and offline comparison fixes remain recorded separately.

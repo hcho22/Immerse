@@ -1,0 +1,80 @@
+Attributes: Application, 0x10e9178a0, pid: 94624, label: 'SetupAccessibilityProbe'
+Element subtree:
+ →Application, 0x10e9178a0, pid: 94624, label: 'SetupAccessibilityProbe'
+    Window (Main), 0x10e90b9e0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10e90ad40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10e90bd60, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10e907a70, {{-402.0, -874.0}, {1206.0, 2622.0}}
+          Other, 0x10e906120, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10e91afa0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10e91b0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10e91b1e0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Film Journal'
+                  StaticText, 0x10e91b300, {{16.0, 119.7}, {192.7, 40.7}}, label: 'Film Journal'
+                Other, 0x10e91b420, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10e91b540, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10e91b660, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10e91b780, {{0.0, 0.0}, {402.0, 874.0}}
+                        StaticText, 0x10e91b8a0, {{155.0, 467.8}, {92.0, 20.3}}, label: 'Film Journal'
+                Other, 0x10e91b9c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10e91bae0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x10e91bc00, {{0.0, 788.0}, {402.0, 86.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10e91bd20, {{177.0, 798.0}, {48.0, 48.0}}
+                        Other, 0x10e91be40, {{177.0, 798.0}, {48.0, 48.0}}
+                          Other, 0x10e91bf60, {{177.0, 798.0}, {0.0, 0.0}}
+                            Other, 0x10e91c080, {{177.0, 798.0}, {48.0, 48.0}}
+                              Other, 0x10e91c1a0, {{177.0, 798.0}, {48.0, 48.0}}
+                                Other, 0x10e91c2c0, {{182.0, 803.0}, {38.0, 38.0}}
+                                  Other, 0x10e91c3e0, {{182.0, 803.0}, {38.0, 38.0}}
+                                    Button, 0x10e91c500, {{182.0, 803.0}, {38.0, 38.0}}, identifier: 'start-film', label: 'Start a Film'
+      Other, 0x10e91c620, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10e91c740, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x10e91c860, {{0.0, 62.0}, {402.0, 812.0}}
+          Other, 0x10e91c980, {{0.0, 62.0}, {402.0, 812.0}}
+            Other, 0x10e91caa0, {{0.0, 62.0}, {402.0, 812.0}}
+              Other, 0x10e91cbc0, {{0.0, 62.0}, {402.0, 812.0}}
+                Other, 0x10e91cce0, {{0.0, 62.0}, {402.0, 812.0}}
+                  Other, 0x10e91ce00, {{0.0, 62.0}, {402.0, 812.0}}
+                    NavigationBar, 0x10e91cf20, {{0.0, 78.0}, {402.0, 106.0}}, identifier: '16mm'
+                      StaticText, 0x10e91d040, {{16.0, 135.7}, {99.0, 40.7}}, label: '16mm'
+                    Other, 0x10e91d160, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x10e91d280, {{0.0, 62.0}, {402.0, 812.0}}
+                        Other, 0x10e91d3a0, {{0.0, 62.0}, {402.0, 812.0}}
+                          Other, 0x10e91d4c0, {{0.0, 62.0}, {402.0, 812.0}}
+                            ScrollView, 0x10e91d5e0, {{0.0, 62.0}, {402.0, 812.0}}
+                              Other, 0x10e91d700, {{0.0, 62.0}, {402.0, 812.0}}
+                                Other, 0x10e91d820, {{0.0, 62.0}, {402.0, 124.8}}
+                              Other, 0x10e91d940, {{0.0, 62.0}, {402.0, 812.0}}
+                              Other, 0x10e91da60, {{0.0, 184.0}, {402.0, 739.0}}
+                                StaticText, 0x10e91db80, {{32.0, 199.8}, {338.0, 20.3}}, label: 'Capacity, 2:45 of film'
+                                StaticText, 0x10e91dca0, {{32.0, 251.8}, {272.0, 20.3}}, label: 'One silent Movie after Development'
+                                StaticText, 0x10e91ddc0, {{32.0, 303.8}, {226.7, 20.3}}, label: 'Deliberate framing, finer grain'
+                                StaticText, 0x10e91dee0, {{32.3, 356.3}, {133.0, 21.0}}, label: 'Silent capture'
+                                  Image, 0x10e91e000, {{32.3, 356.3}, {19.3, 21.0}}, identifier: 'mic.slash', label: 'Microphone Off'
+                                  StaticText, 0x10e91e120, {{60.0, 356.7}, {105.3, 20.3}}, label: 'Silent capture'
+                                StaticText, 0x10e91e240, {{32.0, 408.7}, {134.7, 20.3}}, label: 'Movie Orientation'
+                                SegmentedControl, 0x10e91e360, {{32.0, 437.0}, {338.0, 31.0}}
+                                  Button, 0x10e91e480, {{32.0, 437.0}, {169.0, 32.0}}, label: 'Portrait', Selected
+                                  Button, 0x10e91e5a0, {{201.0, 437.0}, {169.0, 32.0}}, label: 'Landscape'
+                                StaticText, 0x10e91e6c0, {{32.0, 533.0}, {68.0, 20.3}}, identifier: 'film-title-heading', label: 'Film title'
+                                TextField, 0x109f16820, {{32.0, 561.3}, {338.0, 22.0}}, label: 'Film title', value: 16mm - Roll #01
+                                  Other, 0x109f17c10, {{32.0, 569.3}, {338.0, 11.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                    Other, 0x109f177f0, {{35.0, 577.3}, {332.0, 3.0}}
+                                StaticText, 0x109f173d0, {{34.0, 649.2}, {245.7, 20.3}}, label: 'One Trial Film on this iPhone'
+                                StaticText, 0x109f16400, {{32.0, 700.3}, {338.0, 33.7}}, label: 'The first saved capture uses the Trial. Your Camera and Movie Orientation cannot change after loading.'
+                                Button, 0x109f15980, {{32.0, 800.0}, {96.0, 20.3}}, label: 'Subscription'
+                                Button, 0x109f1c210, {{32.0, 887.0}, {338.0, 20.3}}, identifier: 'load-film', label: 'Load Film'
+                                  StaticText, 0x109f1c330, {{32.0, 886.8}, {73.3, 20.3}}, label: 'Load Film'
+                                  Image, 0x109f1c450, {{347.3, 889.0}, {20.7, 16.0}}, identifier: 'camera', label: 'Camera'
+                              Other, 0x109f1c570, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                Other, 0x109f1c690, {{396.0, 119.0}, {3.0, 561.0}}
+                              Other, 0x109f1c7b0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                Other, 0x109f1c8d0, {{396.0, 119.0}, {3.0, 561.0}}
+                    Other, 0x109f1c9f0, {{0.0, 62.0}, {402.0, 812.0}}
+                      Other, 0x109f1cb10, {{0.0, 62.0}, {402.0, 812.0}}
+Path to element:
+ →Application, 0x10e9178a0, pid: 94624, label: 'SetupAccessibilityProbe'
+Query chain:
+ →Find: Target Application 'com.immerse.SetupAccessibilityProbe'
+  Output: {
+    Application, 0x10e91e7e0, pid: 94624, label: 'SetupAccessibilityProbe'
+  }

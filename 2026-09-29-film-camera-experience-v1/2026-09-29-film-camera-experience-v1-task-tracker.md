@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.4 · **Platform:** iOS 26, iPhone only\
+**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.5 · **Platform:** iOS 26, iPhone only\
 **Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
@@ -11,7 +11,7 @@ This is the canonical checkbox list for the dated PRD. Every functional area has
 
 Suggested annotation: `Owner: … | Status: in progress / blocked / done | Evidence: … | Completed: YYYY-MM-DD`. State any unresolved prerequisite rather than checking a task off because a mockup demonstrates it. `DEC` items resolve open choices; `ARC` items design implementation; other groups implement or verify the recorded product behavior. All are needed for the corresponding scoped function unless the product owner explicitly revises scope.
 
-**Task counts (version 1.4).** The tracker contains 238 items: five completed discovery/prototype items, three DEC items decided on 2026-09-30 (DEC-15 to DEC-17, checked), 122 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2, version 1.3 added five early-check tasks (ARC-08 to ARC-12), and version 1.4 added none. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
+**Task counts (version 1.5).** The tracker contains 238 items: five completed discovery/prototype items, four DEC items decided (DEC-09 and DEC-15 to DEC-17 on 2026-09-30, checked), 121 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2, version 1.3 added five early-check tasks (ARC-08 to ARC-12), version 1.4 added none, and version 1.5 changed no IDs. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
 
 Each task inherits the acceptance criteria and privacy/reveal constraints of its referenced PRD section. For example, completing a Photos export task requires permission and failure behavior, not just a visible button. The final QA section supplies cross-feature verification, not a replacement for task-level checks.
 
@@ -32,7 +32,7 @@ Dependency: resolve relevant choices before the affected implementation is accep
 - [ ] DEC-03 — Choose the native application stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 has no backend or authentication provider.
 - [ ] DEC-04 — Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls.
 - [ ] DEC-05 — Select and clear production sample media and export-licensed built-in instrumental soundtracks.
-- [ ] DEC-09 — Define empty-Film early Development and presentation when every Movie clip is removed.
+- [x] DEC-09 — Define empty-Film early Development and presentation when every Movie clip is removed. Decided 2026-09-30: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export. Status: done | Evidence: captain decision relayed in Firstmate v1 implementation brief; PRD section 15 | Completed: 2026-09-30
 - [ ] DEC-11 — Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior.
 - [ ] DEC-12 — Define low-storage behavior, supported-device/accessibility matrix, media durability, and measurable performance/reliability budgets.
 - [ ] DEC-13 — Define support escalation, privacy disclosures, and platform/launch review requirements.
@@ -141,7 +141,7 @@ Dependency: CAP, MOV where relevant, durable storage. PRD FR-06.
 - [ ] DEV-06 — Assign and persist a one-time treatment per capture with no reroll/redevelopment action.
 - [ ] DEV-07 — Resume interrupted Development after relaunch with saved captures and assigned treatment intact.
 - [ ] DEV-08 — Hide unfinished results and prevent recovery from restoring discarded/deleted content.
-- [ ] DEV-10 — Verify developed masters/clips before allowing source cleanup; implement agreed empty-Film policy only after DEC-09.
+- [ ] DEV-10 — Verify developed masters/clips before allowing source cleanup; implement the DEC-09 empty-Film policy.
 
 ## DRK — Analog photo Darkroom
 
@@ -184,7 +184,7 @@ Dependency: media deletion/reassembly architecture. PRD FR-16.
 - [ ] PRV-05 — Remove source/master/Developed Clip/app-controlled cache content and retain metadata-only chronology.
 - [ ] PRV-06 — Enforce no refunds of exposures/time.
 - [ ] PRV-07 — Retire affected Movie versions and rebuild from unchanged surviving clips without repeating Development.
-- [ ] PRV-08 — Preserve surviving chronology, final orientation, and selected soundtrack through reassembly; handle all-clips-removed policy once decided.
+- [ ] PRV-08 — Preserve surviving chronology, final orientation, and selected soundtrack through reassembly; after all clips are removed, apply DEC-09 by retaining numbered discarded placeholders with no playback or export.
 - [ ] PRV-10 — Explain permanent app removal and the limits of external exports and device backups; verify no stale viewing/export after accepted privacy action and disclose that restoring an older backup can bring back media discarded after it (DEC-17).
 
 ## DEL — Whole personal Film deletion
@@ -557,3 +557,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | 2026-09-30 | Version 1.2: captain decisions recorded in the PRD's version 1.2 notes and FR-21. Account-only tasks moved to Deferred to v2 with IDs unchanged; earlier task wording is preserved in the tables above. Added DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15; DEC-15 to DEC-17 were decided the same day. |
 | 2026-09-30 | Version 1.3: the captain approved the v1 architecture pack, revision 3. Added the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) document and five early-check tasks, ARC-08 to ARC-12; no existing ID, status or decision changed. |
 | 2026-09-30 | Version 1.4: added the PRD's Users (1.1) and User journeys (5.1) sections and recorded the approved v1 clickable prototype in PRD section 18, as a design reference only with its questions pending. No task ID, task count, status or decision changed. |
+| 2026-09-30 | Version 1.5: recorded the captain's DEC-09 empty-Film decision and added the evidence map. No task ID changed. |

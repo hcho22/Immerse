@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790879114.9186969 uptime=1246490.7698546401 event=B-all-audit.row.description readingBounds=(0.0, 156.0, 402.0, 668.0) element=(16.0, 160.33333333333331, 370.0, 217.33333333333337)

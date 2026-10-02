@@ -1,0 +1,113 @@
+Building for debugging...
+[0/21] Write sources
+[7/21] Write DevelopmentExitWorker-entitlement.plist
+[8/21] Write sources
+[13/21] /Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/.build/x86_64-apple-macosx/debug/DevelopmentProcessExitPackageTests.derived/runner.swift
+[14/21] Write sources
+[15/21] Write swift-version--58304C5D6DBC2206.txt
+[17/32] Emitting module FilmDomain
+[18/32] Compiling FilmDomain Film.swift
+[19/32] Compiling FilmDomain CameraPackage.swift
+[20/32] Compiling FilmDomain FilmAccess.swift
+[21/51] Emitting module NativeAdapters
+[22/51] Compiling NativeAdapters CapturePlanning.swift
+[23/51] Compiling NativeAdapters PhotoExport.swift
+[24/51] Compiling NativeAdapters CaptureOperationCoordinator.swift
+[25/51] Compiling NativeAdapters PendingCaptureRecord.swift
+[26/51] Emitting module MediaCatalog
+[27/51] Compiling MediaCatalog BundleMediaCatalog.swift
+[28/51] Compiling NativeAdapters CaptureCapabilities.swift
+[29/51] Compiling NativeAdapters AVFoundationCaptureBackend.swift
+[30/51] Compiling NativeAdapters CaptureAuthorization.swift
+[31/51] Compiling NativeAdapters PhotoKitAdapters.swift
+[32/51] Compiling NativeAdapters AVFoundationAdapters.swift
+[33/51] Compiling NativeAdapters CapturedMediaFiles.swift
+[34/51] Compiling RenderFixtures RenderFixtureGenerator.swift
+[35/51] Emitting module RenderFixtures
+[36/51] Compiling RenderFixtures RenderFixtureModels.swift
+[37/51] Compiling EntitlementCore DeviceTrialStore.swift
+[38/51] Compiling EntitlementCore EntitlementPolicy.swift
+[39/51] Emitting module EntitlementCore
+[40/51] Compiling EntitlementCore StoreKitSubscriptions.swift
+[41/51] Compiling RenderCore DevelopmentRun.swift
+[42/51] Compiling RenderCore NativeMovieRenderer.swift
+[43/51] Compiling RenderCore DarkroomRecipe.swift
+[44/51] Emitting module RenderCore
+[45/51] Compiling RenderCore NativePhotoRenderer.swift
+[46/51] Compiling RenderCore MovieAssemblyPlan.swift
+[47/61] Compiling FilmPersistence SQLiteDatabase.swift
+[48/61] Compiling FilmPersistence StoredAsset.swift
+[49/61] Compiling FilmPersistence MovieAudioSelection.swift
+[50/61] Compiling FilmPersistence MediaVerification.swift
+[51/61] Compiling FilmPersistence Checksum.swift
+[52/61] Compiling FilmPersistence FilmRepository.swift
+[53/61] Compiling FilmPersistence FilmRepository+Development.swift
+[54/61] Compiling FilmPersistence CaptureCommitReceipt.swift
+[55/61] Compiling FilmPersistence FilmRepository+Entitlement.swift
+[56/61] Emitting module FilmPersistence
+[57/65] Compiling CapturePipeline CapturePersistencePipeline.swift
+[58/65] Compiling CapturePipeline CapturePipelineReceiver.swift
+[59/65] Emitting module CapturePipeline
+[60/65] Compiling CapturePipeline CapturePayloadReader.swift
+[61/71] Compiling FilmRuntime CaptureCommitJournal.swift
+[62/71] Compiling FilmRuntime FilmProcessor.swift
+[63/71] Emitting module FilmRuntime
+[64/71] Compiling FilmRuntime TrialCoordinator.swift
+[65/71] Compiling FilmRuntime FilmExportWorker.swift
+[66/71] Compiling FilmRuntime DevelopmentStage.swift
+[67/73] Compiling DevelopmentExitEvidence DevelopmentExitEvidence.swift
+[68/73] Emitting module DevelopmentExitEvidence
+[69/77] Compiling DevelopmentExitWorker main.swift
+[70/77] Emitting module DevelopmentExitWorker
+[70/77] Write Objects.LinkFileList
+[71/77] Linking DevelopmentExitWorker
+[72/77] Applying DevelopmentExitWorker
+[74/77] Emitting module DevelopmentProcessExitTests
+[75/77] Compiling DevelopmentProcessExitTests DevelopmentProcessExitTests.swift
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/Tests/DevelopmentProcessExitTests/DevelopmentProcessExitTests.swift:25:51: error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+ 23 |                 XCTAssertEqual(stopped.film.captures.first?.revealState, boundary == .beforeCleanup ? .revealed : .sealed)
+ 24 |                 try fixture.repository.recover()
+ 25 |                 let recovered = try await fixture.snapshot("recovered-before-resume")
+    |                                                   |- error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+    |                                                   `- note: sending main actor-isolated 'fixture' to nonisolated instance method 'snapshot' risks causing data races between nonisolated and main actor-isolated uses
+ 26 |                 XCTAssertFalse(recovered.privateFiles.contains { $0.hasPrefix("Work/") })
+ 27 |                 XCTAssertEqual(recovered.film, stopped.film)
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/Tests/DevelopmentProcessExitTests/DevelopmentProcessExitTests.swift:30:49: error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+ 28 |                 XCTAssertEqual(recovered.assets, stopped.assets)
+ 29 |                 try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
+ 30 |                 let resumed = try await fixture.snapshot("resumed")
+    |                                                 |- error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+    |                                                 `- note: sending main actor-isolated 'fixture' to nonisolated instance method 'snapshot' risks causing data races between nonisolated and main actor-isolated uses
+ 31 |                 assertPreserved(stopped, resumed)
+ 32 |                 XCTAssertEqual(resumed.film.captures.map(\.id), original.film.captures.map(\.id))
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/Tests/DevelopmentProcessExitTests/DevelopmentProcessExitTests.swift:42:50: error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+ 40 |                 XCTAssertFalse(resumed.privateFiles.contains { $0.hasPrefix("Work/") })
+ 41 |                 try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
+ 42 |                 let repeated = try await fixture.snapshot("repeated")
+    |                                                  |- error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+    |                                                  `- note: sending main actor-isolated 'fixture' to nonisolated instance method 'snapshot' risks causing data races between nonisolated and main actor-isolated uses
+ 43 |                 XCTAssertEqual(repeated.film, resumed.film)
+ 44 |                 XCTAssertEqual(repeated.run, resumed.run)
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/Tests/DevelopmentProcessExitTests/DevelopmentProcessExitTests.swift:63:41: error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+ 61 |         try fixture.repository.recover()
+ 62 |         try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
+ 63 |         let resumed = try await fixture.snapshot("resumed")
+    |                                         |- error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+    |                                         `- note: sending main actor-isolated 'fixture' to nonisolated instance method 'snapshot' risks causing data races between nonisolated and main actor-isolated uses
+ 64 |         assertPreserved(stopped, resumed)
+ 65 |         XCTAssertEqual(resumed.film.captures.map(\.revealState), [.revealed, .revealed])
+
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Probes/DevelopmentProcessExit/Tests/DevelopmentProcessExitTests/DevelopmentProcessExitTests.swift:87:45: error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+ 85 |             try fixture.repository.recover()
+ 86 |             try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
+ 87 |             let resumed = try await fixture.snapshot("resumed")
+    |                                             |- error: sending 'fixture' risks causing data races [#SendingRisksDataRace]
+    |                                             `- note: sending main actor-isolated 'fixture' to nonisolated instance method 'snapshot' risks causing data races between nonisolated and main actor-isolated uses
+ 88 |             assertPreserved(stopped, resumed)
+ 89 |             XCTAssertEqual(resumed.film.discardedPlaceholderSequenceNumbers, [1])
+
+[#SendingRisksDataRace]: <https://docs.swift.org/compiler/documentation/diagnostics/sending-risks-data-race>
+error: fatalError

@@ -1,0 +1,86 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "decodedFrames" : 1,
+      "expectedHash" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+      "kind" : "source",
+      "path" : "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/source-1.bin",
+      "sequence" : 1
+    },
+    {
+      "actualHash" : "b837ac587bee94cdb6171be6d8f08135045556e2891de2110173a3400e40f2d4",
+      "decodedFrames" : 1,
+      "expectedHash" : "b837ac587bee94cdb6171be6d8f08135045556e2891de2110173a3400e40f2d4",
+      "kind" : "master",
+      "path" : "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/master-1.bin",
+      "sequence" : 1
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 2647725311528710555,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "78DB51A0-A080-4626-997E-98B949C97E2A",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "exposures" : {
+            "_0" : 10
+          }
+        },
+        "displayName" : "1970s Instant",
+        "id" : "instant1970s",
+        "medium" : "photo",
+        "revealRule" : "instantPerExposure",
+        "supportsBuiltInSoundtrack" : false
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "photo" : {
+
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        }
+      ],
+      "completionState" : {
+        "open" : {
+
+        }
+      },
+      "developmentState" : "notStarted",
+      "id" : "78DB51A0-A080-4626-997E-98B949C97E2A",
+      "isArchived" : false,
+      "loadedAt" : 812581558.698547,
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/master-1.bin" : "b837ac587bee94cdb6171be6d8f08135045556e2891de2110173a3400e40f2d4",
+    "Media\/78DB51A0-A080-4626-997E-98B949C97E2A\/source-1.bin" : "5048c474cddba881a0416ce92cc4fe8757bcbbeba57eb69401a3d0950aef9a55",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "2461a77b8ea6349b4393a919b9ac4e1388821fa847d080560efbff2706064bf0",
+    "film-store.sqlite-wal" : "2223b7fde5b3eb46e17adf232b4dc1e03a927eadf6d8de39e85e5af165caf946"
+  }
+}

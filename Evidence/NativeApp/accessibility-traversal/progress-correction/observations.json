@@ -1,0 +1,1030 @@
+{
+  "test": {
+    "result": "Failed",
+    "runs": "Test case with 1 run",
+    "seconds": 600,
+    "startUTC": "2026-10-01T18:01:10.888Z"
+  },
+  "completion": {
+    "A-no-audit": {
+      "rows": 10,
+      "completeEvent": "SETUP_PAIR time=1790877980.624277 uptime=1245356.623120961 event=A-no-audit.complete rows=10"
+    },
+    "B-all-audit": {
+      "rows": 7,
+      "completeEvent": null
+    }
+  },
+  "poses": {
+    "A-no-audit": {
+      "field": [
+        32,
+        471.3333333333333,
+        338,
+        126.00000000000006
+      ],
+      "navigation": [
+        0,
+        78,
+        402,
+        54
+      ],
+      "orientation": [
+        32,
+        124.33333333333327,
+        249.66666666666663,
+        125.33333333333333
+      ],
+      "picker": [
+        32,
+        257.6666666666666,
+        217,
+        77.33333333333331
+      ],
+      "readingBounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "title": [
+        32,
+        400,
+        199.66666666666666,
+        63.333333333333314
+      ],
+      "trial": [
+        16,
+        647.3333333333334,
+        370,
+        155.33333333333326
+      ],
+      "viewport": [
+        0,
+        62,
+        402,
+        812.0000000000001
+      ],
+      "window": [
+        0,
+        0,
+        402,
+        874
+      ]
+    },
+    "B-all-audit": {
+      "field": [
+        32,
+        471.3333333333333,
+        338,
+        126.00000000000006
+      ],
+      "navigation": [
+        0,
+        78.00000000000001,
+        402,
+        53.999999999999986
+      ],
+      "orientation": [
+        32,
+        124.33333333333327,
+        249.66666666666663,
+        125.33333333333333
+      ],
+      "picker": [
+        32,
+        257.6666666666666,
+        217,
+        77.33333333333331
+      ],
+      "readingBounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "title": [
+        32,
+        400,
+        199.66666666666666,
+        63.333333333333314
+      ],
+      "trial": [
+        16,
+        647.3333333333334,
+        370,
+        155.33333333333326
+      ],
+      "viewport": [
+        0,
+        62,
+        402,
+        812.0000000000001
+      ],
+      "window": [
+        0,
+        0,
+        402,
+        874
+      ]
+    }
+  },
+  "deltas": {
+    "field": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "navigation": [
+      0,
+      1.4210854715202004e-14,
+      0,
+      -1.4210854715202004e-14
+    ],
+    "orientation": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "picker": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "readingBounds": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "title": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "trial": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "viewport": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "window": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "rows": [
+    {
+      "file": "B0EC09E7-0D5B-46E1-A6F2-792916776E98.txt",
+      "event": "A-no-audit.row.description",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        160.33333333333331,
+        370,
+        217.33333333333337
+      ],
+      "contained": true
+    },
+    {
+      "file": "8323A6D3-8370-4EA1-A59D-DA2B57F68C28.txt",
+      "event": "A-no-audit.row.silent",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        377.6666666666667,
+        370,
+        93.33333333333331
+      ],
+      "contained": true
+    },
+    {
+      "file": "676D099A-4FDA-4232-A655-47A488C87308.txt",
+      "event": "A-no-audit.row.orientation-heading",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        485.99999999999994,
+        249.66666666666663,
+        125.33333333333331
+      ],
+      "contained": true
+    },
+    {
+      "file": "9D1CFF56-D2DC-489E-9716-2AC6B64520D3.txt",
+      "event": "A-no-audit.row.orientation-picker",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        619.3333333333333,
+        217,
+        77.33333333333326
+      ],
+      "contained": true
+    },
+    {
+      "file": "E3013D9D-C1F9-4980-88A1-C85A1A96CFFB.txt",
+      "event": "A-no-audit.row.title-heading",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        752.6666666666666,
+        199.66666666666666,
+        63.333333333333485
+      ],
+      "contained": true
+    },
+    {
+      "file": "1A09BEC9-3DC9-4F00-AB69-FC0EC064AB36.txt",
+      "event": "A-no-audit.row.title-field",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        694,
+        338,
+        126
+      ],
+      "contained": true
+    },
+    {
+      "file": "B68CDECB-110C-4EBA-96B1-F664075D1C75.txt",
+      "event": "A-no-audit.row.trial",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        660.6666666666667,
+        370,
+        155.33333333333337
+      ],
+      "contained": true
+    },
+    {
+      "file": "C164B18F-ADF1-4F71-B57C-22297D345D35.txt",
+      "event": "A-no-audit.row.disclosure",
+      "bounds": [
+        0,
+        156,
+        402,
+        667.9999999999999
+      ],
+      "element": [
+        16,
+        421.3333333333333,
+        370,
+        394.6666666666667
+      ],
+      "contained": true
+    },
+    {
+      "file": "69AB5779-662D-4F45-888E-FAB3BAC50F8C.txt",
+      "event": "A-no-audit.row.subscription",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        726.6666666666666,
+        370,
+        93.33333333333348
+      ],
+      "contained": true
+    },
+    {
+      "file": "DB060E18-6A3D-41BC-B0F0-986A845EEA65.txt",
+      "event": "A-no-audit.row.load",
+      "bounds": [
+        0,
+        156,
+        402,
+        667.9999999999997
+      ],
+      "element": [
+        16,
+        726.6666666666666,
+        370,
+        93.33333333333348
+      ],
+      "contained": true
+    },
+    {
+      "file": "08657D31-196D-436D-963D-D0DE537D4EC8.txt",
+      "event": "B-all-audit.row.description",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        160.33333333333331,
+        370,
+        217.33333333333337
+      ],
+      "contained": true
+    },
+    {
+      "file": "41F30F08-030C-453C-8566-7A69BB83C06A.txt",
+      "event": "B-all-audit.row.silent",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        377.6666666666667,
+        370,
+        93.33333333333331
+      ],
+      "contained": true
+    },
+    {
+      "file": "83704CD8-A5E0-4EFC-848F-93E5AEB03218.txt",
+      "event": "B-all-audit.row.orientation-heading",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        485.99999999999994,
+        249.66666666666663,
+        125.33333333333331
+      ],
+      "contained": true
+    },
+    {
+      "file": "7AA8546C-4495-4BFA-A2D0-C0801CDB2606.txt",
+      "event": "B-all-audit.row.orientation-picker",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        619.3333333333333,
+        217,
+        77.33333333333326
+      ],
+      "contained": true
+    },
+    {
+      "file": "F37E28A9-53E9-4FE1-89F5-DD5E6A763668.txt",
+      "event": "B-all-audit.row.title-heading",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        752.6666666666666,
+        199.66666666666666,
+        63.333333333333485
+      ],
+      "contained": true
+    },
+    {
+      "file": "5D7C5C54-A858-441E-8194-F89A00F293D9.txt",
+      "event": "B-all-audit.row.title-field",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        32,
+        694,
+        338,
+        126
+      ],
+      "contained": true
+    },
+    {
+      "file": "2F5EBE08-D982-4413-B96C-FC0B656EB687.txt",
+      "event": "B-all-audit.row.trial",
+      "bounds": [
+        0,
+        156,
+        402,
+        668
+      ],
+      "element": [
+        16,
+        660.6666666666667,
+        370,
+        155.33333333333337
+      ],
+      "contained": true
+    }
+  ],
+  "scrolls": [
+    {
+      "file": "AEB9A890-8DE3-4DC4-BE96-112366CF9D72.txt",
+      "text": "SETUP_PAIR time=1790877696.605082 uptime=1245072.594961706 event=scroll.progress requested=-220.0 gesture=-220.0 before=(16.0, 205.0, 370.0, 160.66666666666669) label=Capacity after=(16.0, -4.666666666666671, 370.0, 160.66666666666669) label=Capacity"
+    },
+    {
+      "file": "B44E70BC-5609-4678-9A20-D0A58EDF2E38.txt",
+      "text": "SETUP_PAIR time=1790877700.571928 uptime=1245076.5619311992 event=scroll.progress requested=-220.0 gesture=-220.0 before=(16.0, -4.666666666666671, 370.0, 160.66666666666669) label=Capacity after=(16.0, -54.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "5ECDFD24-2CD3-4C73-BEB9-8C5BCD26BF7F.txt",
+      "text": "SETUP_PAIR time=1790877707.6072512 uptime=1245083.5974766512 event=scroll.progress requested=-364.66666666666663 gesture=-220.0 before=(16.0, -54.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -46.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "95AA483B-4388-45E2-813F-E161BFBC1192.txt",
+      "text": "SETUP_PAIR time=1790877711.587205 uptime=1245087.5775563212 event=scroll.progress requested=-154.66666666666674 gesture=-164.66666666666674 before=(16.0, -46.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, 19.666666666666742, 370.0, 93.33333333333333) label=Silent capture"
+    },
+    {
+      "file": "673E6D7D-C0CA-46AA-9062-E02FB72B0DFC.txt",
+      "text": "SETUP_PAIR time=1790877714.3380451 uptime=1245090.3284814912 event=scroll.progress requested=-3.6666666666667425 gesture=-13.666666666666742 before=(16.0, 19.666666666666742, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture"
+    },
+    {
+      "file": "3E164DDF-C05B-4692-B2B4-E9EDF12D17EF.txt",
+      "text": "SETUP_PAIR time=1790877737.542522 uptime=1245113.533691755 event=scroll.progress requested=220.0 gesture=220.0 before=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 8.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "C9CC23F4-DCAC-409E-8BB8-849A058A805B.txt",
+      "text": "SETUP_PAIR time=1790877745.128547 uptime=1245121.119956504 event=scroll.progress requested=155.33333333333331 gesture=165.33333333333331 before=(16.0, 8.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, -57.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "9B7DB9FE-47CF-47F7-AF72-3CC9B97FE75F.txt",
+      "text": "SETUP_PAIR time=1790877832.26223 uptime=1245208.2563907611 event=scroll.progress requested=-9.000000000000114 gesture=-19.000000000000114 before=(16.0, -57.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -66.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "5FFFDE6C-5D76-4C4A-95DB-C43671A3CBCA.txt",
+      "text": "SETUP_PAIR time=1790877862.556724 uptime=1245238.55184056 event=scroll.progress requested=-134.0 gesture=-144.0 before=(16.0, -66.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, 21.333333333333314, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "8A62198C-B762-423D-BAC1-D88F8CA8555F.txt",
+      "text": "SETUP_PAIR time=1790877893.561654 uptime=1245269.5577497191 event=scroll.progress requested=-209.33333333333326 gesture=-219.33333333333326 before=(16.0, 21.333333333333314, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, 29.33333333333337, 370.0, 93.33333333333333) label=Silent capture"
+    },
+    {
+      "file": "A6AF5FF1-F664-4635-80A9-856953DD672F.txt",
+      "text": "SETUP_PAIR time=1790877915.619765 uptime=1245291.616556649 event=scroll.progress requested=-394.66666666666674 gesture=-220.0 before=(16.0, 29.33333333333337, 370.0, 93.33333333333333) label=Silent capture after=(16.0, -87.33333333333337, 370.0, 240.66666666666666) label=Movie Orientation"
+    },
+    {
+      "file": "DD73E27E-7BA9-45B2-820F-CDB12A424941.txt",
+      "text": "SETUP_PAIR time=1790877920.1039329 uptime=1245296.1008656002 event=scroll.progress requested=-184.66666666666663 gesture=-194.66666666666663 before=(16.0, -87.33333333333337, 370.0, 240.66666666666666) label=Movie Orientation after=(16.0, 3.6666666666667425, 370.0, 227.33333333333334) label=Film title"
+    },
+    {
+      "file": "54313F8D-8483-4EF5-9D2E-F88666E654DB.txt",
+      "text": "SETUP_PAIR time=1790877939.924983 uptime=1245315.9225419122 event=scroll.progress requested=-128.3333333333336 gesture=-138.3333333333336 before=(16.0, 3.6666666666667425, 370.0, 227.33333333333334) label=Film title after=(16.0, -120.66666666666663, 370.0, 227.33333333333334) label=Film title"
+    },
+    {
+      "file": "05CF3065-8BE3-469F-9D75-11FAD842A9DA.txt",
+      "text": "SETUP_PAIR time=1790877963.576693 uptime=1245339.575001003 event=scroll.progress requested=-132.33333333333337 gesture=-142.33333333333337 before=(16.0, -120.66666666666663, 370.0, 227.33333333333334) label=Film title after=(16.0, 13.333333333333485, 370.0, 155.33333333333334) label=Trial status unavailable"
+    },
+    {
+      "file": "16D4D420-3A54-4BAC-B0F4-0DF8014230AB.txt",
+      "text": "SETUP_PAIR time=1790878004.300579 uptime=1245380.300174091 event=scroll.progress requested=-220.0 gesture=-220.0 before=(16.0, 205.0, 370.0, 160.66666666666669) label=Capacity after=(16.0, -4.666666666666671, 370.0, 160.66666666666669) label=Capacity"
+    },
+    {
+      "file": "E335FD8A-71E2-4BDB-B612-6E5566FF76EB.txt",
+      "text": "SETUP_PAIR time=1790878008.0823421 uptime=1245384.0820527382 event=scroll.progress requested=-220.0 gesture=-220.0 before=(16.0, -4.666666666666671, 370.0, 160.66666666666669) label=Capacity after=(16.0, -54.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "2993BC83-5CAD-4477-93A3-E124A3FA4D54.txt",
+      "text": "SETUP_PAIR time=1790878015.423936 uptime=1245391.423878923 event=scroll.progress requested=-364.66666666666663 gesture=-220.0 before=(16.0, -54.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -46.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "065DEABE-1426-4B1E-9F50-DCD0A4CB174E.txt",
+      "text": "SETUP_PAIR time=1790878020.346252 uptime=1245396.34635104 event=scroll.progress requested=-154.66666666666674 gesture=-164.66666666666674 before=(16.0, -46.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, 19.666666666666742, 370.0, 93.33333333333333) label=Silent capture"
+    },
+    {
+      "file": "70D48647-3A85-44C6-A886-3B0BFB520FF0.txt",
+      "text": "SETUP_PAIR time=1790878022.920216 uptime=1245398.920395479 event=scroll.progress requested=-3.6666666666667425 gesture=-13.666666666666742 before=(16.0, 19.666666666666742, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture"
+    },
+    {
+      "file": "9F12C20C-271B-410A-B79A-98E48E6DAE0E.txt",
+      "text": "SETUP_PAIR time=1790878052.425758 uptime=1245428.4268695521 event=scroll.progress requested=220.0 gesture=220.0 before=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 8.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "D76B5163-5447-4C72-A2D4-AB12613B9B02.txt",
+      "text": "SETUP_PAIR time=1790878061.143105 uptime=1245437.1444906841 event=scroll.progress requested=155.33333333333331 gesture=165.33333333333331 before=(16.0, 8.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, -57.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "2E7B0A72-6484-4F89-A4C5-1934AD65FAF3.txt",
+      "text": "SETUP_PAIR time=1790878166.45331 uptime=1245542.458021394 event=scroll.progress requested=-9.000000000000114 gesture=-19.000000000000114 before=(16.0, -57.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, -66.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development"
+    },
+    {
+      "file": "576B722C-3045-4AB3-B195-1FF1D5489945.txt",
+      "text": "SETUP_PAIR time=1790878207.043981 uptime=1245583.049973272 event=scroll.progress requested=-134.0 gesture=-144.0 before=(16.0, -66.00000000000006, 370.0, 217.33333333333334) label=One silent Movie after Development after=(16.0, 21.333333333333314, 370.0, 217.33333333333334) label=Deliberate framing, finer grain"
+    },
+    {
+      "file": "2A4515DD-651E-49C7-B7D2-9CF00A933CF9.txt",
+      "text": "SETUP_PAIR time=1790878246.926118 uptime=1245622.9333699301 event=scroll.progress requested=-209.33333333333326 gesture=-219.33333333333326 before=(16.0, 21.333333333333314, 370.0, 217.33333333333334) label=Deliberate framing, finer grain after=(16.0, 29.33333333333337, 370.0, 93.33333333333333) label=Silent capture"
+    }
+  ],
+  "issues": [],
+  "events": [
+    {
+      "file": "673D2901-64FE-4DB9-9EBE-860C045CDC5D.txt",
+      "event": "A-no-audit.launch",
+      "utc": "2026-10-01T18:01:19.022Z"
+    },
+    {
+      "file": "AEB9A890-8DE3-4DC4-BE96-112366CF9D72.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:01:36.605Z"
+    },
+    {
+      "file": "B44E70BC-5609-4678-9A20-D0A58EDF2E38.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:01:40.571Z"
+    },
+    {
+      "file": "5ECDFD24-2CD3-4C73-BEB9-8C5BCD26BF7F.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:01:47.607Z"
+    },
+    {
+      "file": "95AA483B-4388-45E2-813F-E161BFBC1192.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:01:51.587Z"
+    },
+    {
+      "file": "673E6D7D-C0CA-46AA-9062-E02FB72B0DFC.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:01:54.338Z"
+    },
+    {
+      "file": "D80FF558-99AC-4D66-82D3-2726947A7242.txt",
+      "event": "A-no-audit-before.snapshot-start",
+      "utc": "2026-10-01T18:02:07.023Z"
+    },
+    {
+      "file": "A9D61236-2AD5-4FB9-A8EB-3BDEA698DB9E.txt",
+      "event": "A-no-audit-before.snapshot-end",
+      "utc": "2026-10-01T18:02:08.596Z"
+    },
+    {
+      "file": "085FD18E-7DDF-4E96-B98C-BF9AE18AF1F6.txt",
+      "event": "A-no-audit.invocation-start",
+      "utc": "2026-10-01T18:02:08.598Z"
+    },
+    {
+      "file": "929FD58D-1685-44A4-A8A3-8B118CB869F0.txt",
+      "event": "A-no-audit.invocation-end",
+      "utc": "2026-10-01T18:02:08.600Z"
+    },
+    {
+      "file": "ED034732-6304-4258-9B93-60F916B8120D.txt",
+      "event": "A-no-audit-after.snapshot-start",
+      "utc": "2026-10-01T18:02:12.318Z"
+    },
+    {
+      "file": "B94A8423-442C-462B-8DC7-A88AE1BC39D2.txt",
+      "event": "A-no-audit-after.snapshot-end",
+      "utc": "2026-10-01T18:02:13.901Z"
+    },
+    {
+      "file": "3E164DDF-C05B-4692-B2B4-E9EDF12D17EF.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:02:17.542Z"
+    },
+    {
+      "file": "C9CC23F4-DCAC-409E-8BB8-849A058A805B.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:02:25.128Z"
+    },
+    {
+      "file": "B0EC09E7-0D5B-46E1-A6F2-792916776E98.txt",
+      "event": "A-no-audit.row.description",
+      "utc": "2026-10-01T18:02:37.767Z"
+    },
+    {
+      "file": "D14149FA-E458-4FF2-ABB4-87890E7A61EF.txt",
+      "event": "A-no-audit-row-description.snapshot-start",
+      "utc": "2026-10-01T18:02:41.238Z"
+    },
+    {
+      "file": "63F246B7-5DC1-4704-B699-35E020652ED7.txt",
+      "event": "A-no-audit-row-description.snapshot-end",
+      "utc": "2026-10-01T18:02:42.757Z"
+    },
+    {
+      "file": "8323A6D3-8370-4EA1-A59D-DA2B57F68C28.txt",
+      "event": "A-no-audit.row.silent",
+      "utc": "2026-10-01T18:03:04.486Z"
+    },
+    {
+      "file": "3EE5BC02-8E66-4219-AA67-2B432B70BEED.txt",
+      "event": "A-no-audit-row-silent.snapshot-start",
+      "utc": "2026-10-01T18:03:07.433Z"
+    },
+    {
+      "file": "AB7E9488-F513-49FA-8456-B07835EEA7F1.txt",
+      "event": "A-no-audit-row-silent.snapshot-end",
+      "utc": "2026-10-01T18:03:08.854Z"
+    },
+    {
+      "file": "676D099A-4FDA-4232-A655-47A488C87308.txt",
+      "event": "A-no-audit.row.orientation-heading",
+      "utc": "2026-10-01T18:03:23.235Z"
+    },
+    {
+      "file": "8C8603D0-D675-4C8B-983A-E90AF6231DCA.txt",
+      "event": "A-no-audit-row-orientation-heading.snapshot-start",
+      "utc": "2026-10-01T18:03:26.186Z"
+    },
+    {
+      "file": "D617FA6B-A1FB-476A-BDA7-EDFF9876C141.txt",
+      "event": "A-no-audit-row-orientation-heading.snapshot-end",
+      "utc": "2026-10-01T18:03:27.438Z"
+    },
+    {
+      "file": "9D1CFF56-D2DC-489E-9716-2AC6B64520D3.txt",
+      "event": "A-no-audit.row.orientation-picker",
+      "utc": "2026-10-01T18:03:41.425Z"
+    },
+    {
+      "file": "997ED678-AD31-4FD2-AA25-7F9D3366BB26.txt",
+      "event": "A-no-audit-row-orientation-picker.snapshot-start",
+      "utc": "2026-10-01T18:03:44.415Z"
+    },
+    {
+      "file": "FD20BDF7-8163-4044-8786-384E9D9A7854.txt",
+      "event": "A-no-audit-row-orientation-picker.snapshot-end",
+      "utc": "2026-10-01T18:03:45.656Z"
+    },
+    {
+      "file": "9B7DB9FE-47CF-47F7-AF72-3CC9B97FE75F.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:03:52.262Z"
+    },
+    {
+      "file": "E3013D9D-C1F9-4980-88A1-C85A1A96CFFB.txt",
+      "event": "A-no-audit.row.title-heading",
+      "utc": "2026-10-01T18:04:02.824Z"
+    },
+    {
+      "file": "F189254A-F682-430A-9D02-74135FB0B1A5.txt",
+      "event": "A-no-audit-row-title-heading.snapshot-start",
+      "utc": "2026-10-01T18:04:05.772Z"
+    },
+    {
+      "file": "563AD030-9ABB-48E6-966F-8F479C727C1A.txt",
+      "event": "A-no-audit-row-title-heading.snapshot-end",
+      "utc": "2026-10-01T18:04:06.971Z"
+    },
+    {
+      "file": "5FFFDE6C-5D76-4C4A-95DB-C43671A3CBCA.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:04:22.556Z"
+    },
+    {
+      "file": "1A09BEC9-3DC9-4F00-AB69-FC0EC064AB36.txt",
+      "event": "A-no-audit.row.title-field",
+      "utc": "2026-10-01T18:04:41.725Z"
+    },
+    {
+      "file": "6EF76B97-5693-4239-88F4-5C02799EF590.txt",
+      "event": "A-no-audit-row-title-field.snapshot-start",
+      "utc": "2026-10-01T18:04:44.886Z"
+    },
+    {
+      "file": "5A769748-33F9-43AD-B386-5C13B6CB5405.txt",
+      "event": "A-no-audit-row-title-field.snapshot-end",
+      "utc": "2026-10-01T18:04:46.160Z"
+    },
+    {
+      "file": "8A62198C-B762-423D-BAC1-D88F8CA8555F.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:04:53.561Z"
+    },
+    {
+      "file": "B68CDECB-110C-4EBA-96B1-F664075D1C75.txt",
+      "event": "A-no-audit.row.trial",
+      "utc": "2026-10-01T18:05:03.980Z"
+    },
+    {
+      "file": "0FA463AA-C6D9-4F16-931F-A27D5D3A2DC4.txt",
+      "event": "A-no-audit-row-trial.snapshot-start",
+      "utc": "2026-10-01T18:05:07.001Z"
+    },
+    {
+      "file": "46C3F17D-A71B-457A-9829-E93B8260F282.txt",
+      "event": "A-no-audit-row-trial.snapshot-end",
+      "utc": "2026-10-01T18:05:08.362Z"
+    },
+    {
+      "file": "A6AF5FF1-F664-4635-80A9-856953DD672F.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:05:15.619Z"
+    },
+    {
+      "file": "DD73E27E-7BA9-45B2-820F-CDB12A424941.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:05:20.103Z"
+    },
+    {
+      "file": "C164B18F-ADF1-4F71-B57C-22297D345D35.txt",
+      "event": "A-no-audit.row.disclosure",
+      "utc": "2026-10-01T18:05:29.647Z"
+    },
+    {
+      "file": "41144122-3C7B-4B4A-824D-7ABA7430AD10.txt",
+      "event": "A-no-audit-row-disclosure.snapshot-start",
+      "utc": "2026-10-01T18:05:31.992Z"
+    },
+    {
+      "file": "F83913D5-722A-42A4-8BB4-36BC51005380.txt",
+      "event": "A-no-audit-row-disclosure.snapshot-end",
+      "utc": "2026-10-01T18:05:33.223Z"
+    },
+    {
+      "file": "54313F8D-8483-4EF5-9D2E-F88666E654DB.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:05:39.924Z"
+    },
+    {
+      "file": "69AB5779-662D-4F45-888E-FAB3BAC50F8C.txt",
+      "event": "A-no-audit.row.subscription",
+      "utc": "2026-10-01T18:05:51.169Z"
+    },
+    {
+      "file": "F82694CE-B2D1-4F34-A291-E9EF60C1A2B3.txt",
+      "event": "A-no-audit-row-subscription.snapshot-start",
+      "utc": "2026-10-01T18:05:53.921Z"
+    },
+    {
+      "file": "2530B968-ABB3-4177-9F3C-09AA3AB9D6C3.txt",
+      "event": "A-no-audit-row-subscription.snapshot-end",
+      "utc": "2026-10-01T18:05:55.304Z"
+    },
+    {
+      "file": "05CF3065-8BE3-469F-9D75-11FAD842A9DA.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:06:03.576Z"
+    },
+    {
+      "file": "DB060E18-6A3D-41BC-B0F0-986A845EEA65.txt",
+      "event": "A-no-audit.row.load",
+      "utc": "2026-10-01T18:06:16.281Z"
+    },
+    {
+      "file": "3CD62C07-77C5-4D1F-80F2-C8937BED42E2.txt",
+      "event": "A-no-audit-row-load.snapshot-start",
+      "utc": "2026-10-01T18:06:19.029Z"
+    },
+    {
+      "file": "744EB95E-C894-4159-8890-2E399FF51E83.txt",
+      "event": "A-no-audit-row-load.snapshot-end",
+      "utc": "2026-10-01T18:06:20.622Z"
+    },
+    {
+      "file": "A104F0F1-6AFD-400E-BE16-7EC23DCEADC8.txt",
+      "event": "A-no-audit.complete",
+      "utc": "2026-10-01T18:06:20.624Z"
+    },
+    {
+      "file": "B79ABAA9-2F79-4CA1-81F2-411C9B6BB63A.txt",
+      "event": "B-all-audit.launch",
+      "utc": "2026-10-01T18:06:26.675Z"
+    },
+    {
+      "file": "16D4D420-3A54-4BAC-B0F4-0DF8014230AB.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:06:44.300Z"
+    },
+    {
+      "file": "E335FD8A-71E2-4BDB-B612-6E5566FF76EB.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:06:48.082Z"
+    },
+    {
+      "file": "2993BC83-5CAD-4477-93A3-E124A3FA4D54.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:06:55.423Z"
+    },
+    {
+      "file": "065DEABE-1426-4B1E-9F50-DCD0A4CB174E.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:07:00.346Z"
+    },
+    {
+      "file": "70D48647-3A85-44C6-A886-3B0BFB520FF0.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:07:02.920Z"
+    },
+    {
+      "file": "5C3C9510-33C8-44F7-88F3-21FC18ECCB05.txt",
+      "event": "B-all-audit-before.snapshot-start",
+      "utc": "2026-10-01T18:07:15.865Z"
+    },
+    {
+      "file": "580D1A64-E40D-4966-BC02-3B2D7AA7D4F5.txt",
+      "event": "B-all-audit-before.snapshot-end",
+      "utc": "2026-10-01T18:07:17.441Z"
+    },
+    {
+      "file": "BFC85458-DF1C-478A-8DC5-4AEF7163A07B.txt",
+      "event": "B-all-audit.invocation-start",
+      "utc": "2026-10-01T18:07:17.443Z"
+    },
+    {
+      "file": "40561CA0-C164-48BA-A886-B6823F573B4F.txt",
+      "event": "B-all-audit.invocation-end",
+      "utc": "2026-10-01T18:07:23.406Z"
+    },
+    {
+      "file": "9AD2D2D8-AB9D-4D08-BB62-D9B195F246CC.txt",
+      "event": "B-all-audit-after.snapshot-start",
+      "utc": "2026-10-01T18:07:26.829Z"
+    },
+    {
+      "file": "69135252-E20F-4B05-AD76-A4B5A5B7C0B9.txt",
+      "event": "B-all-audit-after.snapshot-end",
+      "utc": "2026-10-01T18:07:28.305Z"
+    },
+    {
+      "file": "9F12C20C-271B-410A-B79A-98E48E6DAE0E.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:07:32.425Z"
+    },
+    {
+      "file": "D76B5163-5447-4C72-A2D4-AB12613B9B02.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:07:41.143Z"
+    },
+    {
+      "file": "08657D31-196D-436D-963D-D0DE537D4EC8.txt",
+      "event": "B-all-audit.row.description",
+      "utc": "2026-10-01T18:07:54.721Z"
+    },
+    {
+      "file": "B68FDFF5-8636-4C84-BFB1-38E5C9BE054E.txt",
+      "event": "B-all-audit-row-description.snapshot-start",
+      "utc": "2026-10-01T18:07:58.748Z"
+    },
+    {
+      "file": "39CCEDE1-4F00-40DC-A18B-AF3C42A09447.txt",
+      "event": "B-all-audit-row-description.snapshot-end",
+      "utc": "2026-10-01T18:08:00.363Z"
+    },
+    {
+      "file": "41F30F08-030C-453C-8566-7A69BB83C06A.txt",
+      "event": "B-all-audit.row.silent",
+      "utc": "2026-10-01T18:08:24.785Z"
+    },
+    {
+      "file": "4500E3D9-55C2-49CA-A5DA-F9D2459CEF77.txt",
+      "event": "B-all-audit-row-silent.snapshot-start",
+      "utc": "2026-10-01T18:08:28.522Z"
+    },
+    {
+      "file": "BAF1BE13-8919-45BF-9C48-3231A80A7FEF.txt",
+      "event": "B-all-audit-row-silent.snapshot-end",
+      "utc": "2026-10-01T18:08:30.308Z"
+    },
+    {
+      "file": "83704CD8-A5E0-4EFC-848F-93E5AEB03218.txt",
+      "event": "B-all-audit.row.orientation-heading",
+      "utc": "2026-10-01T18:08:48.139Z"
+    },
+    {
+      "file": "AAFAF814-96B3-4AE5-AC5A-1BE490501C51.txt",
+      "event": "B-all-audit-row-orientation-heading.snapshot-start",
+      "utc": "2026-10-01T18:08:51.805Z"
+    },
+    {
+      "file": "F48650AF-6934-4463-B6EC-12FDFC0BC22B.txt",
+      "event": "B-all-audit-row-orientation-heading.snapshot-end",
+      "utc": "2026-10-01T18:08:53.508Z"
+    },
+    {
+      "file": "7AA8546C-4495-4BFA-A2D0-C0801CDB2606.txt",
+      "event": "B-all-audit.row.orientation-picker",
+      "utc": "2026-10-01T18:09:11.802Z"
+    },
+    {
+      "file": "BED1E180-0DD9-4C7B-849A-277C7DCB4BDD.txt",
+      "event": "B-all-audit-row-orientation-picker.snapshot-start",
+      "utc": "2026-10-01T18:09:16.184Z"
+    },
+    {
+      "file": "7EB5A062-03FE-485F-962D-4ED0F82857EA.txt",
+      "event": "B-all-audit-row-orientation-picker.snapshot-end",
+      "utc": "2026-10-01T18:09:17.847Z"
+    },
+    {
+      "file": "2E7B0A72-6484-4F89-A4C5-1934AD65FAF3.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:09:26.453Z"
+    },
+    {
+      "file": "F37E28A9-53E9-4FE1-89F5-DD5E6A763668.txt",
+      "event": "B-all-audit.row.title-heading",
+      "utc": "2026-10-01T18:09:41.418Z"
+    },
+    {
+      "file": "56472827-CAF5-4FB3-8B5F-7D48E1D98EBB.txt",
+      "event": "B-all-audit-row-title-heading.snapshot-start",
+      "utc": "2026-10-01T18:09:45.130Z"
+    },
+    {
+      "file": "734CA84C-76AD-4402-B98A-2B32ABD9B7BD.txt",
+      "event": "B-all-audit-row-title-heading.snapshot-end",
+      "utc": "2026-10-01T18:09:46.910Z"
+    },
+    {
+      "file": "576B722C-3045-4AB3-B195-1FF1D5489945.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:10:07.043Z"
+    },
+    {
+      "file": "5D7C5C54-A858-441E-8194-F89A00F293D9.txt",
+      "event": "B-all-audit.row.title-field",
+      "utc": "2026-10-01T18:10:31.733Z"
+    },
+    {
+      "file": "DBBDC04B-FFD8-4559-81F6-D66727446E9F.txt",
+      "event": "B-all-audit-row-title-field.snapshot-start",
+      "utc": "2026-10-01T18:10:35.797Z"
+    },
+    {
+      "file": "FAF56EC3-EE71-4B7B-BBC6-04CF259A4674.txt",
+      "event": "B-all-audit-row-title-field.snapshot-end",
+      "utc": "2026-10-01T18:10:37.578Z"
+    },
+    {
+      "file": "2A4515DD-651E-49C7-B7D2-9CF00A933CF9.txt",
+      "event": "scroll.progress",
+      "utc": "2026-10-01T18:10:46.926Z"
+    },
+    {
+      "file": "2F5EBE08-D982-4413-B96C-FC0B656EB687.txt",
+      "event": "B-all-audit.row.trial",
+      "utc": "2026-10-01T18:11:01.741Z"
+    },
+    {
+      "file": "19BB3881-C84A-45D0-BFC0-980C4D7A0D11.txt",
+      "event": "B-all-audit-row-trial.snapshot-start",
+      "utc": "2026-10-01T18:11:05.866Z"
+    },
+    {
+      "file": "39C8C7F9-0919-436C-8855-8D566B299EF0.txt",
+      "event": "B-all-audit-row-trial.snapshot-end",
+      "utc": "2026-10-01T18:11:08.013Z"
+    }
+  ]
+}

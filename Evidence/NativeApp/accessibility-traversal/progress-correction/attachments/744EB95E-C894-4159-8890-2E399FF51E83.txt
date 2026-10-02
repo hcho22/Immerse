@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790877980.6229138 uptime=1245356.621759458 event=A-no-audit-row-load.snapshot-end

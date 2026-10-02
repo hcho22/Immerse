@@ -1,0 +1,67 @@
+{
+  "assets" : {
+    "clip-1" : "3d9a69bf7bb27a11e2634ab82adf58b6296dcb68e28c41cb1eaf9a831f0eee54",
+    "movie-0" : "bcbb93e0f7e9328f1c2bb53af94b20de0040cb927bb46877696b72db6d0ad097",
+    "source-1" : "f7ccda80d4d8457a1f45eca382a21c0e6a989d6d0d3425eb2593f408565757a7"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "A55DE4FF-BE86-4A42-8A9C-AEF96977F84F",
+    "isArchived" : false,
+    "loadedAt" : 812577268.000325,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic Development boundary"
+  },
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 18323820141744756216,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "A55DE4FF-BE86-4A42-8A9C-AEF96977F84F",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "workFiles" : [
+
+  ]
+}

@@ -1,0 +1,20 @@
+import json, os, re, subprocess, sys
+S = '/tmp/claude-501/-Users-hcho--treehouse-Immerse-3833fe-1-Immerse/cfe1e158-dab8-44ca-b9c3-c872753fde5a/scratchpad'
+out = sys.argv[1]
+d = json.load(open(os.path.join(out, 'manifest.json')))
+for t in d:
+    atts = t.get('attachments', [])
+    shots = [a for a in atts if a['suggestedHumanReadableName'].startswith('App Screenshot')]
+    for a in atts:
+        n = a['suggestedHumanReadableName']
+        if 'audit-node' not in n: continue
+        txt = open(os.path.join(out, a['exportedFileName'])).read().split('\n')
+        kind = txt[0].split(': ', 1)[1].split(' for')[0][:34]
+        el = txt[1] if len(txt) > 1 else ''
+        lab = re.search(r"label: '([^']*)'", el)
+        m = re.search(r"\{\{([-\d.]+), ([-\d.]+)\}, \{([-\d.]+), ([-\d.]+)\}\}", el)
+        shot = min(shots, key=lambda s: abs(s['timestamp'] - a['timestamp'])) if shots else None
+        result = '-'
+        if m and shot and abs(shot['timestamp'] - a['timestamp']) < 0.05 and 'Contrast' in kind:
+            result = subprocess.run([f'{S}/contrast', os.path.join(out, shot['exportedFileName']), *m.groups()], capture_output=True, text=True).stdout.strip()
+        print(f"{n.split('-audit-node')[0]} | {kind} | {(lab.group(1)[:40] if lab else 'no element')} | {m.group(0) if m else ''} | {result}")

@@ -1,0 +1,122 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "8474ADE5-415B-4A9C-AD0F-2E8D3708F748.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-explicit-retry_0_E7C712B3-7704-4E97-A02A-65D729409A5D.png",
+        "timestamp" : 1790883441.549
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "0AFAC2A7-45CD-476C-B3CC-2CDB07328E77.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-recovered-no-auto-export_0_ABAA6549-7625-4E48-B26A-EBB85DB3E56F.png",
+        "timestamp" : 1790883436.986
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "0E808CBF-DDC7-4EE7-8EC1-BB714AC3919B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-before-exit_0_B5965801-B538-43B2-A1F6-84E7CA6A1992.png",
+        "timestamp" : 1790883424.256
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "F616BD24-E506-49E4-A0B4-92DD93B5F4B8.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-explicit-retry_0_C515AC69-34CD-414B-8916-54C30F0D5A33.png",
+        "timestamp" : 1790883398.784
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "E0AAA3E1-1926-45DC-9329-6B262261C8C3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-recovered-no-auto-export_0_E7B0D143-F79B-41AF-87B8-532F8D482A8F.png",
+        "timestamp" : 1790883394.008
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "32903C66-E59D-48AB-AD97-E501D3EDFEC1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-before-exit_0_EE913355-7E9C-4DE0-A396-90FA9940636A.png",
+        "timestamp" : 1790883379.157
+      }
+    ],
+    "testIdentifier" : "ExportProcessExitTests/testMovieUnknownReplyReentry()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testMovieUnknownReplyReentry"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "D29FE258-9294-4467-9BA3-7EF118F9EC7C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-explicit-retry_0_F477E1F0-1E62-4422-872B-A29F9B3CC7F4.png",
+        "timestamp" : 1790883514.054
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "F58033A1-5341-4324-8A98-293CFCC13970.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-recovered-no-auto-export_0_C807694F-3ED9-4FEB-B45E-42E0A3102D2C.png",
+        "timestamp" : 1790883511.659
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "DC1AF739-D6CB-4D66-BBE6-6D58A3D971FB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-before-exit_0_CB70FB5A-1E98-4DCA-BA01-FEF2B0AEBE40.png",
+        "timestamp" : 1790883502.114
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "316727B4-A43A-4D7F-831D-B31BBEA18271.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-explicit-retry_0_07B3491E-BEE3-401D-9C31-54CA77D76D79.png",
+        "timestamp" : 1790883488.469
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "D2733B8A-DA00-436A-A53D-6701A60687A3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-recovered-no-auto-export_0_E970DF2D-C533-4C2D-85FB-DF7157DE397B.png",
+        "timestamp" : 1790883485.968
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "exportedFileName" : "29F535D8-2057-4BBD-87C4-61FE42C88FC3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-before-exit_0_4FE7A9EF-BBD4-40D5-ABE4-5E1823C2C85C.png",
+        "timestamp" : 1790883475.721
+      }
+    ],
+    "testIdentifier" : "ExportProcessExitTests/testPhotoUnknownReplyReentry()",
+    "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testPhotoUnknownReplyReentry"
+  }
+]

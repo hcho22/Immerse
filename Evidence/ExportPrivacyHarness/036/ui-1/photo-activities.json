@@ -1,0 +1,936 @@
+{
+  "testIdentifier" : "ExportProcessExitTests/testPhotoUnknownReplyReentry()",
+  "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testPhotoUnknownReplyReentry",
+  "testName" : "testPhotoUnknownReplyReentry()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883462.709,
+          "title" : "Start Test at 2026-10-01 12:37:42.709"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883462.809,
+          "title" : "Set Up"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883463.25,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883465.811,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883462.814,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883462.813,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883469.124,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.123,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883468.105,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.329,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.338,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.451,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.563,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883469.889,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883469.328,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.172,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883471.171,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883471.261,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.369,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.377,
+              "title" : "Find the \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.482,
+              "title" : "Check for interrupting elements affecting \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.573,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883471.891,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883471.368,
+          "title" : "Tap \"start\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.188,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883473.187,
+          "title" : "Checking `Expect predicate `label == \"paused-beforeCopy\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.307,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.315,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.422,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.554,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883473.895,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883473.307,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.183,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883475.182,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883475.294,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883475.419,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-before-exit_0_4FE7A9EF-BBD4-40D5-ABE4-5E1823C2C85C.png",
+              "payloadId" : "0~td_l6K_X1-dfetxsbpuOGHjeb7BjJnrmPAFiX7vjjdZ7G9wz1x59u_3B3VQvG82x0KR9NjZFaGkzTtCvxXXsBg==",
+              "timestamp" : 1790883475.721,
+              "uuid" : "29F535D8-2057-4BBD-87C4-61FE42C88FC3"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.721,
+              "title" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883475.721,
+          "title" : "Added attachment named '3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.725,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.735,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.861,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883475.962,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883476.291,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883475.724,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883476.294,
+          "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883477.125,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883479.906,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883476.297,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883476.295,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883483.352,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883483.351,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883482.329,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883483.538,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883483.546,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883483.674,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883483.769,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883484.088,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883483.537,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883485.385,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883485.385,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883485.516,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883485.63,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-recovered-no-auto-export_0_E970DF2D-C533-4C2D-85FB-DF7157DE397B.png",
+              "payloadId" : "0~gq_stja86PgEJsuAuQow9ogIniHH-CBVRuvW3upapOJtXINmY3_N0GHSOmz4LLJ0npk13RANUBCtiCxF6ciFXQ==",
+              "timestamp" : 1790883485.968,
+              "uuid" : "D2733B8A-DA00-436A-A53D-6701A60687A3"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883485.968,
+              "title" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-recovered-no-auto-export"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883485.968,
+          "title" : "Added attachment named '3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-recovered-no-auto-export'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883485.971,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883485.979,
+              "title" : "Find the \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883486.093,
+              "title" : "Check for interrupting elements affecting \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883486.218,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883486.579,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883485.97,
+          "title" : "Tap \"retry\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883487.865,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883487.864,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883487.985,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883488.134,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-explicit-retry_0_07B3491E-BEE3-401D-9C31-54CA77D76D79.png",
+              "payloadId" : "0~Hne1kHChXobHLXOHLeo7O2JoNaBuljsBI6TgfLP8Nan6nqKwDW4lrLP1iPtrjfKm93NRU5S_xfo_R4YQB4rrtw==",
+              "timestamp" : 1790883488.469,
+              "uuid" : "316727B4-A43A-4D7F-831D-B31BBEA18271"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883488.469,
+              "title" : "3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-explicit-retry"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883488.469,
+          "title" : "Added attachment named '3E15E564-B8D8-4851-BFD0-DEDA337F4F0E-disposable1990s-beforeCopy-explicit-retry'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883488.471,
+          "title" : "Terminate com.immerse.validation.ExportPrivacyHarness036:71278"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883490.143,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883492.492,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883489.486,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883489.484,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883495.594,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883495.594,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883494.561,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883495.789,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883495.796,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883495.91,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883496.02,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883496.347,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883495.788,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883497.646,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883497.645,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883497.745,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883497.862,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883497.871,
+              "title" : "Find the \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883497.999,
+              "title" : "Check for interrupting elements affecting \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883498.099,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883498.421,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883497.861,
+          "title" : "Tap \"start\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883499.706,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883499.705,
+          "title" : "Checking `Expect predicate `label == \"paused-beforeReply\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883499.82,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883499.829,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883499.95,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883500.069,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883500.392,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883499.819,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883501.655,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883501.654,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883501.752,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883501.852,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-before-exit_0_CB70FB5A-1E98-4DCA-BA01-FEF2B0AEBE40.png",
+              "payloadId" : "0~rttUNZhQQ1H8ok6ri7HDSNcdkH_ZZ2Ry1omuHnG6QFrEwe64EhxSfIGbXTPg_elTiGNHeBfuQxnHuzTV2e7Jog==",
+              "timestamp" : 1790883502.114,
+              "uuid" : "DC1AF739-D6CB-4D66-BBE6-6D58A3D971FB"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.114,
+              "title" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883502.114,
+          "title" : "Added attachment named '6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.116,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.13,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.241,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.349,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.668,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883502.116,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883502.671,
+          "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883503.315,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883505.67,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883502.674,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883502.673,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883509.063,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.063,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883508.027,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.265,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.272,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.395,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.517,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883509.847,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883509.264,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.155,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883511.154,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883511.252,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883511.363,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-recovered-no-auto-export_0_C807694F-3ED9-4FEB-B45E-42E0A3102D2C.png",
+              "payloadId" : "0~w_kxVfvOu0sroY-zAej2pgX3CH0-yF6opFD2ROMMaEXFHwG_tW47P0Xk51KrRmdZ78cp5qG0bKdlsvoZ5TXUQw==",
+              "timestamp" : 1790883511.659,
+              "uuid" : "F58033A1-5341-4324-8A98-293CFCC13970"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.659,
+              "title" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-recovered-no-auto-export"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883511.659,
+          "title" : "Added attachment named '6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-recovered-no-auto-export'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.663,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.673,
+              "title" : "Find the \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.798,
+              "title" : "Check for interrupting elements affecting \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883511.892,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883512.217,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883511.662,
+          "title" : "Tap \"retry\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883513.516,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883513.515,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883513.631,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883513.737,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-explicit-retry_0_F477E1F0-1E62-4422-872B-A29F9B3CC7F4.png",
+              "payloadId" : "0~LEjqocAclqkZFW4WvFUkXtCxSVew9KLypYJvs077A-JpT02XApntD6EwIDXAtxY0cetN71CCMKu8e2i2bJ_U1w==",
+              "timestamp" : 1790883514.054,
+              "uuid" : "D29FE258-9294-4467-9BA3-7EF118F9EC7C"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883514.054,
+              "title" : "6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-explicit-retry"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883514.054,
+          "title" : "Added attachment named '6A82B4E8-107F-4E49-B4D9-DD5CD5031472-disposable1990s-beforeReply-explicit-retry'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883514.056,
+          "title" : "Terminate com.immerse.validation.ExportPrivacyHarness036:74699"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883515.131,
+          "title" : "Tear Down"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883515.252,
+          "title" : "Checking for crash reports corresponding to unexpected termination of com.immerse.validation.ExportPrivacyHarness036"
+        }
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

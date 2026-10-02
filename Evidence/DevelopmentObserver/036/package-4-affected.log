@@ -1,0 +1,114 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmRuntimeTests DevelopmentObserverTests.swift
+[4/5] Emitting module FilmRuntimeTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmRuntimePackageTests
+Build complete! (3.90s)
+Test Suite 'Selected tests' started at 2026-10-01 12:52:17.646.
+Test Suite 'FilmRuntimePackageTests.xctest' started at 2026-10-01 12:52:17.648.
+Test Suite 'DevelopmentObserverTests' started at 2026-10-01 12:52:17.648.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver]' passed (5.576 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDefaultAndEnabledCompletionAllCameras]' passed (3.814 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation]' passed (1.852 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testEnabledPauseReleaseCompletesWithoutExtraRendering]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testEnabledPauseReleaseCompletesWithoutExtraRendering]' passed (1.014 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testInstantDiscardCancelsPendingRevealWithoutRefundOrReroll]' passed (0.812 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard]' passed (1.755 seconds).
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' started.
+Test Case '-[FilmRuntimeTests.DevelopmentObserverTests testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob]' passed (10.473 seconds).
+Test Suite 'DevelopmentObserverTests' passed at 2026-10-01 12:52:42.945.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 25.295 (25.296) seconds
+Test Suite 'FilmExportTests' started at 2026-10-01 12:52:42.945.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources]' passed (1.446 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testDevelopedExportUsesEditWithoutChoosingOrDeletingOriginals]' passed (1.773 seconds).
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' started.
+Test Case '-[FilmRuntimeTests.FilmExportTests testPartialOriginalFailureRetainsSourcesAndRetrySkipsReceiptAlreadySaved]' passed (1.723 seconds).
+Test Suite 'FilmExportTests' passed at 2026-10-01 12:52:47.887.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 4.942 (4.943) seconds
+Test Suite 'FilmProcessorTests' started at 2026-10-01 12:52:47.887.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInstantWaitsForVerifiedPrintAndNeverRerendersEarlierPrints]' passed (1.633 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testInterruptedRealDevelopmentResumesSameMasterAndRecipeResetIsExact]' passed (1.438 seconds).
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' started.
+Test Case '-[FilmRuntimeTests.FilmProcessorTests testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders]' passed (1.312 seconds).
+Test Suite 'FilmProcessorTests' passed at 2026-10-01 12:52:52.271.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 4.383 (4.384) seconds
+Test Suite 'SoundtrackTests' started at 2026-10-01 12:52:52.271.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence]' passed (1.900 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie]' passed (1.844 seconds).
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' started.
+Test Case '-[FilmRuntimeTests.SoundtrackTests testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment]' passed (1.917 seconds).
+Test Suite 'SoundtrackTests' passed at 2026-10-01 12:52:57.933.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 5.661 (5.662) seconds
+Test Suite 'FilmRuntimePackageTests.xctest' passed at 2026-10-01 12:52:57.933.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 40.282 (40.285) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 12:52:57.933.
+	 Executed 16 tests, with 0 failures (0 unexpected) in 40.282 (40.287) seconds
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/8A7D1232-DB35-4E62-A252-E67DC1A4E9DF
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/0BF39D0A-A54B-43E7-99FC-CD737CFCD64A
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/11EC1B66-F98B-457D-A9E1-BAEAFE1F6035
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E8A8988D-7470-44BB-8BFE-3BBC0976CE48
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1B5BE038-931E-4531-972D-77D12D83808E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1E246C73-365E-4214-9AFB-A2ED61216C1F
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/2E7E4C91-AF57-4C15-83B7-E33D76077846
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/23B80B23-10D5-4FFA-9433-9F8B71128F6F
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/11C8A28F-0213-4500-971C-7715E1A0AA2B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4AF2CB53-BF8D-4701-9235-7DB8D7643D2E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/85DF6F01-6699-4B24-882C-D5A392E0E8FC
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B50E6840-4FD0-4B09-B617-2DD23DF41966
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D7B7700C-5941-43E7-83A6-B4AEEACABA1A
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1159A6AC-6750-4234-91C2-2F775A64352E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9918D31E-F908-4430-873A-D0A22F89212B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/EB4E2CEB-E705-4345-834D-95A301E7A4EA
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1B02F575-1E28-4FD0-BEE4-09320B0B0728
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/7AADBEBD-7944-400B-88BA-D0FC91A15558
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/9CFD891B-B7B3-4DFE-875B-6B78929D1A74
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/1CB731F3-64EA-4708-BF09-4B7C3722613D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4F4F1D86-56A2-4D6E-BAA6-E9EB276E192F
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/C8B84B84-AC87-499C-B6B4-892DCB8B309A
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D2E1CEF4-0E33-4CB4-996C-E2AC727413A4
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D56CF8AB-E0E9-43D1-8B8F-CC4079ED415B
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/3F147AC7-8CD5-48AA-8C6C-5041C6264197
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/4E252F00-1090-42AA-A963-098774A9492E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/8A26D8EF-39F3-42CB-8637-843BA4DE5608
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/8E7D96C6-62C9-4B49-8523-7AC0442FAC0D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/76751E76-A9C6-416C-BA63-4A35E58524B3
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/DAFFF4B8-D8E9-4F10-A15D-C2553FA66F77
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/3CEF7B40-3557-4818-8598-D7E1DB5C3721
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/54C5C517-3A5D-4D9F-A4C2-011EC0FB3DFD
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B7940FE5-259E-4A3F-BA19-41C2C8972BA3
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/76FEBA4E-5F49-46B7-92E3-8959F8217074
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/0D91D9D5-1155-4980-9E4B-EF8D8D453C35
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/E1AEF026-0978-44CF-BC45-ED1138DB04A7
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/DE8B7CC1-1670-4B61-B794-7B9FCC2E4F61
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/D908AB34-F374-49FB-8573-E2FAC5FBBF78
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/AF1BEC85-31FE-45ED-958A-D8C4B5FF533A
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/26223649-694B-4216-9F13-466B89BB963D
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/80BF04C0-74CD-42E6-87F3-3AA4A2D0E011
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/73FC3E17-54CE-4362-9914-D497B2C665D0
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/F3A2F9CB-F84F-41CE-B9B8-FC45B053414C
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/B5D9F96E-2A52-44D9-B376-D185DBC839E2
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/921C5694-2E9D-4C1C-A7AE-088CBA11606E
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/001AA7C7-18D6-483F-9A57-6B46AF151980
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/FF28C5B3-2006-4305-AE53-00F909E60D28
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/FAE8775E-7317-4714-A89E-3A763D683FE9
+DEVELOPMENT_SCENARIO /var/folders/9t/k_yy9fqs5vd27rf12jx_rzqh0000gn/T/DevelopmentScenarios/5A4CBEB4-1103-4131-B2AD-64B907C5A2E0
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":14060368362216495616,\"sequenceNumber\":1},\"2\":{\"seed\":10343180616928131418,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"CF7318A5-67AB-4E5C-984E-9B63AAC66C36\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"CF7318A5-67AB-4E5C-984E-9B63AAC66C36","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"13a65d9b9afde499d422f8384e3461a35dcecf1730be2bab1b2e4bdfcf42cccc"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":3213338214765407940,\"sequenceNumber\":1},\"2\":{\"seed\":9642271427938581713,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"8E4CE705-B40C-4CC6-B7A3-32054185DAA1\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"8E4CE705-B40C-4CC6-B7A3-32054185DAA1","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"5c85cf81d518fe7787e57fdf03f971b4120d91c6a9d851fcdf430e7d49dcb2a0"}
+SOUNDTRACK_FIXTURE {"audioSHA256":"e8a7ca7d3fe4c0a25a8f83cdfadc93530cba057f14829426252df1f9c809ee7a","developmentRun":"{\"assignments\":{\"1\":{\"seed\":11016522590023026061,\"sequenceNumber\":1},\"2\":{\"seed\":10737474314850180209,\"sequenceNumber\":2}},\"completedSequences\":[1,2],\"filmID\":\"3D0434E8-9606-489E-9ABB-F7097418E2EE\",\"isComplete\":true,\"printProcess\":\"color\",\"treatmentVersion\":\"film-look-1-provisional\"}","filmID":"3D0434E8-9606-489E-9ABB-F7097418E2EE","generatorManifest":"{\"movie\":{\"codecFourCC\":\"avc1\",\"durationSeconds\":0.16833333333333333,\"encodedHeight\":96,\"encodedWidth\":160,\"nominalFrameRate\":17.821783,\"orientation\":\"landscape\",\"preferredTransform\":{\"a\":1,\"b\":0,\"c\":0,\"d\":1,\"tx\":0,\"ty\":0},\"relativePath\":\"synthetic-developed-movie.mov\"},\"note\":\"Synthetic native API fixture for render discovery only; not production treatment quality and not a DEC-04 decision.\",\"photo\":{\"hasAlpha\":false,\"pixelHeight\":480,\"pixelWidth\":640,\"relativePath\":\"synthetic-developed-photo.jpg\",\"uniformTypeIdentifier\":\"public.jpeg\"},\"settings\":{\"movieDurationSeconds\":0.16,\"movieFrameRate\":18,\"movieHeight\":96,\"movieOrientation\":\"landscape\",\"movieWidth\":160,\"photoHeight\":480,\"photoWidth\":640}}","licenseSHA256":"4e784377cd2244719159e62682882d93dae6c391fc28c06bef72d4413cb76e7c","sourceSHA256":"3a204199a85cdcdc2fb129f5c9967d33ca9cb99a3bb111c87f83efcafa1a0636"}
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

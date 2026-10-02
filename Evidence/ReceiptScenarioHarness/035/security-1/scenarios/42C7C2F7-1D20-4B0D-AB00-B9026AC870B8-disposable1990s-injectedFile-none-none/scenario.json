@@ -1,0 +1,12 @@
+{
+  "captureUUID" : "050D81B9-9D5D-453C-84B8-BC4F65669A70",
+  "configuration" : {
+    "backend" : "injectedFile",
+    "cameraID" : "disposable1990s",
+    "fault" : "none",
+    "pauseAt" : "none",
+    "runID" : "42C7C2F7-1D20-4B0D-AB00-B9026AC870B8"
+  },
+  "prepared" : false,
+  "savedAt" : 812562800
+}

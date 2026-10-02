@@ -1,0 +1,120 @@
+{
+  "assets" : [
+    {
+      "actualHash" : "63eab393f3b6c1195de51d3f35e42a1d99a7d05f533c3b1beded6a7c9702d164",
+      "decodedFrames" : 4,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "63eab393f3b6c1195de51d3f35e42a1d99a7d05f533c3b1beded6a7c9702d164",
+      "kind" : "movie",
+      "path" : "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/movie-2-882F154E-564B-484D-9365-69CFE3C97DDE.mov",
+      "sequence" : 0
+    },
+    {
+      "actualHash" : "df75b9780f044680a8b92c13adad51771851550823c0361f1c1f6abffcc07898",
+      "decodedFrames" : 3,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "df75b9780f044680a8b92c13adad51771851550823c0361f1c1f6abffcc07898",
+      "kind" : "source",
+      "path" : "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/source-2.mov",
+      "sequence" : 2
+    },
+    {
+      "actualHash" : "33499897f11a63f131c1bd40375a1d0102fcb0a1acd33ea0f8779befb6b578fb",
+      "decodedFrames" : 4,
+      "duration" : 0.16833333333333333,
+      "expectedHash" : "33499897f11a63f131c1bd40375a1d0102fcb0a1acd33ea0f8779befb6b578fb",
+      "kind" : "clip",
+      "path" : "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/clip-2.mov",
+      "sequence" : 2
+    }
+  ],
+  "development" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 8585277250014997680,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 6829395159213653552,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "9F522523-76C0-4D87-B93E-83597A5BD1CF",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "dispositions" : {
+
+  },
+  "externalFiles" : {
+    "AE8940CD-188B-47C2-8E58-A635643AAF91-1.mov" : "78a5f91b4cc03e82feaaa77576d2657546e1db8af3f1d8fb2a52791e9323ad7c"
+  },
+  "films" : [
+    {
+      "camera" : {
+        "capacity" : {
+          "seconds" : {
+            "_0" : 200
+          }
+        },
+        "displayName" : "1960s Super 8 Home Movie",
+        "id" : "super8HomeMovie",
+        "medium" : "movie",
+        "revealRule" : "movieDevelopment",
+        "supportsBuiltInSoundtrack" : true
+      },
+      "captures" : [
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "discardedPlaceholder",
+          "savedAt" : 812572801,
+          "sequenceNumber" : 1
+        },
+        {
+          "kind" : {
+            "movieClip" : {
+              "orientation" : "landscape",
+              "seconds" : 0.16833333333333333
+            }
+          },
+          "revealState" : "revealed",
+          "savedAt" : 812572802,
+          "sequenceNumber" : 2
+        }
+      ],
+      "completionState" : {
+        "completedEarly" : {
+          "wasted" : {
+            "seconds" : {
+              "_0" : 199.66333333333333
+            }
+          }
+        }
+      },
+      "developmentState" : "developed",
+      "id" : "9F522523-76C0-4D87-B93E-83597A5BD1CF",
+      "isArchived" : false,
+      "loadedAt" : 812577545.020817,
+      "movieOrientation" : "portrait",
+      "title" : "Private synthetic export"
+    }
+  ],
+  "privateFiles" : {
+    "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/clip-2.mov" : "33499897f11a63f131c1bd40375a1d0102fcb0a1acd33ea0f8779befb6b578fb",
+    "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/movie-2-882F154E-564B-484D-9365-69CFE3C97DDE.mov" : "63eab393f3b6c1195de51d3f35e42a1d99a7d05f533c3b1beded6a7c9702d164",
+    "Media\/9F522523-76C0-4D87-B93E-83597A5BD1CF\/source-2.mov" : "df75b9780f044680a8b92c13adad51771851550823c0361f1c1f6abffcc07898",
+    "film-store.sqlite" : "a209ba85773882b79b8147779c406fbb67a12dcb723ba7c4ea7ca3168e651cc8",
+    "film-store.sqlite-shm" : "5e5fe8bd0d43a5fd384ac3475e4ae214df974b2c7c4c542711a0faab38391ec5",
+    "film-store.sqlite-wal" : "49dcf3b4020a752b2a7a73be1e7a10ff4249e6d532cd57a6e9250524f675b903"
+  }
+}

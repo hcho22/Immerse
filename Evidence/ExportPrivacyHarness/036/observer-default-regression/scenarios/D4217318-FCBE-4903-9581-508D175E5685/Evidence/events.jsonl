@@ -1,0 +1,6 @@
+{"backend":"injected-private-writer","bundle":"com.immerse.validation.ExportPrivacyHarness036","camera":"disposable1990s","event":"session-open","label":"sealed-reject","process":"10447","processSequence":"1","run":"D4217318-FCBE-4903-9581-508D175E5685","runtime":"Version 26.5 (Build 23F77)","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:59:34Z"}
+{"developed":"false","event":"native-fixture-created","film":"6D9ABB66-7EE5-4BA1-903F-9957E8F3F073","process":"10447","processSequence":"2","utc":"2026-10-01T19:59:34Z"}
+{"event":"inventory","file":"inventory-A4ED28A8-753A-488B-9B6C-2180D9BFD7AF.json","label":"prepared","process":"10447","processSequence":"3","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:59:34Z"}
+{"event":"export-requested","originals":"true","process":"10447","processSequence":"4","sequences":"[1]","utc":"2026-10-01T19:59:34Z"}
+{"error":"mediaNotRevealed","event":"export-error","process":"10447","processSequence":"5","utc":"2026-10-01T19:59:34Z"}
+{"event":"inventory","file":"inventory-49A8EC76-E0CD-4522-BF87-EFBAE12A169B.json","label":"sealed-rejected","process":"10447","processSequence":"6","summary":"films=1;sources=1;copies=0","utc":"2026-10-01T19:59:34Z"}

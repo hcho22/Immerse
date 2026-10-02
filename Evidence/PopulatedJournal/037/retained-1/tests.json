@@ -1,0 +1,112 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "RetainedWorkflowTests.swift:27: Failed to tap \"Cancel\" Button: No matches found for Elements matching predicate '\"Cancel\" IN identifiers' from input {(\n    Button, identifier: 'inspect-state', label: 'Inspect synthetic state',\n    Button, identifier: 'BackButton', label: 'Film Journal',\n    Button, label: 'Film actions',\n    Button, label: 'Complete Film',\n    Button, label: 'Open Camera'\n)}",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "20s",
+                  "durationInSeconds" : 20.83781409263611,
+                  "name" : "testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "RetainedWorkflowTests.swift:12: Failed to tap \"Cancel\" Button: No matches found for Elements matching predicate '\"Cancel\" IN identifiers' from input {(\n    Button, identifier: 'inspect-state', label: 'Inspect synthetic state',\n    Button, identifier: 'BackButton', label: 'Film Journal',\n    Button, label: 'Film actions',\n    Button, identifier: 'confirm-delete-film', label: 'Delete Film',\n    Button, label: 'Open Camera',\n    Button, identifier: 'confirm-delete-film', label: 'Delete Film'\n)}",
+                      "nodeType" : "Failure Message"
+                    },
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "17s",
+                  "durationInSeconds" : 17.727905988693237,
+                  "name" : "testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "25s",
+                  "durationInSeconds" : 25.708452939987183,
+                  "name" : "testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1m 7s",
+                  "durationInSeconds" : 67.30102300643921,
+                  "name" : "testSavedDarkroomEditAndExactResetPersistAcrossRelaunch()",
+                  "nodeIdentifier" : "RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "RetainedWorkflowTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "PopulatedJournalHarnessTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests",
+          "nodeType" : "UI test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "PopulatedJournalHarness",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

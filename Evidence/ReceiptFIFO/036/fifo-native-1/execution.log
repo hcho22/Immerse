@@ -1,0 +1,7 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/Export036-fifo-native-1.xcresult
+
+2026-10-01 13:04:42.800 xcodebuild[36554:150480967] [MT] IDETestOperationsObserverDebug: 55.542 elapsed -- Testing started completed.
+2026-10-01 13:04:42.800 xcodebuild[36554:150480967] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 13:04:42.801 xcodebuild[36554:150480967] [MT] IDETestOperationsObserverDebug: 55.542 sec, +55.542 sec -- end
+Testing started

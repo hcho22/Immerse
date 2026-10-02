@@ -1,0 +1,2 @@
+XCUIAccessibilityAuditType(rawValue: 1): Contrast failed for SwiftUI.AccessibilityNode
+No element supplied by auditor

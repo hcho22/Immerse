@@ -1,0 +1,71 @@
+{
+  "assets" : {
+    "clip-1" : "8f06a1e5363122be9d4b967c0aff798934d2ba959edf0f5a759f53741eb09a68",
+    "movie-0" : "d005ea0bb9f9c6e71fad5346aabfdd7103f0f007204748ea2b942aa8d940ffd5"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 165
+        }
+      },
+      "displayName" : "1960s 16mm Cinema",
+      "id" : "cinema16mm",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 164.83166666666668
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "536EFF6D-43AD-43E6-B4AE-E3B02B4639A1",
+    "isArchived" : false,
+    "loadedAt" : 812581680.318115,
+    "movieOrientation" : "portrait",
+    "title" : "Private synthetic export"
+  },
+  "privateFiles" : [
+    "Media\/536EFF6D-43AD-43E6-B4AE-E3B02B4639A1\/clip-1.mov",
+    "Media\/536EFF6D-43AD-43E6-B4AE-E3B02B4639A1\/movie-1-0ECC4FB4-65C4-4478-99B8-4DD8521FB095.mov",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 89079,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 9009702583001223499,
+        "sequenceNumber" : 1
+      }
+    },
+    "completedSequences" : [
+      1
+    ],
+    "filmID" : "536EFF6D-43AD-43E6-B4AE-E3B02B4639A1",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

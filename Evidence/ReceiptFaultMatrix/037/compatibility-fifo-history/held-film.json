@@ -1,0 +1,28 @@
+{
+  "camera" : {
+    "capacity" : {
+      "seconds" : {
+        "_0" : 165
+      }
+    },
+    "displayName" : "1960s 16mm Cinema",
+    "id" : "cinema16mm",
+    "medium" : "movie",
+    "revealRule" : "movieDevelopment",
+    "supportsBuiltInSoundtrack" : true
+  },
+  "captures" : [
+
+  ],
+  "completionState" : {
+    "open" : {
+
+    }
+  },
+  "developmentState" : "notStarted",
+  "id" : "9C47CC0B-19F3-48EB-AFF7-EA3226DD432F",
+  "isArchived" : false,
+  "loadedAt" : 812579066.119859,
+  "movieOrientation" : "portrait",
+  "title" : "Delete pending"
+}

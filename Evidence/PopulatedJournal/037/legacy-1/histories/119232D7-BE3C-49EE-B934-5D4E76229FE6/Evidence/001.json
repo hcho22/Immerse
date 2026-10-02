@@ -1,0 +1,72 @@
+{
+  "films" : [
+    {
+      "captures" : [
+        {
+          "sequence" : 1,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        },
+        {
+          "sequence" : 2,
+          "sourceSHA256" : "fbcf28d0f56ddfb6d7eb6dd647b4358417edddabd30345752e9e5e2d5ea9c9cf"
+        }
+      ],
+      "film" : {
+        "camera" : {
+          "capacity" : {
+            "exposures" : {
+              "_0" : 27
+            }
+          },
+          "displayName" : "1990s Disposable",
+          "id" : "disposable1990s",
+          "medium" : "photo",
+          "revealRule" : "rollLevelDevelopment",
+          "supportsBuiltInSoundtrack" : false
+        },
+        "captures" : [
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "sealed",
+            "savedAt" : 812580776.357139,
+            "sequenceNumber" : 1
+          },
+          {
+            "kind" : {
+              "photo" : {
+
+              }
+            },
+            "revealState" : "sealed",
+            "savedAt" : 812580776.388556,
+            "sequenceNumber" : 2
+          }
+        ],
+        "completionState" : {
+          "open" : {
+
+          }
+        },
+        "developmentState" : "notStarted",
+        "id" : "DC1CD7F3-4203-4349-B2DE-ED1F1FF515B8",
+        "isArchived" : false,
+        "loadedAt" : 812580775.674681,
+        "title" : "Private synthetic Film"
+      }
+    }
+  ],
+  "privateFiles" : [
+    "Media\/DC1CD7F3-4203-4349-B2DE-ED1F1FF515B8\/source-1.bin",
+    "Media\/DC1CD7F3-4203-4349-B2DE-ED1F1FF515B8\/source-2.bin",
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 74738,
+  "reason" : "seeded",
+  "utc" : "2026-10-01T20:52:56Z"
+}

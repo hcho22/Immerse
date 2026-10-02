@@ -1,0 +1,17 @@
+2026-09-30 21:07:22.856686-0700 Immerse[40380:134855443] [General] Failed to send CA Event for app launch measurements for ca_event_type: 0 event_name: com.apple.app_launch_measurement.FirstFramePresentationMetric
+2026-09-30 21:07:24.997360-0700 Immerse[40380:134854815] [SwiftUI] Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.
+Test Suite 'Selected tests' started at 2026-09-30 21:07:25.612.
+Test Suite 'ImmerseTests.xctest' started at 2026-09-30 21:07:25.614.
+Test Suite 'StoreKitSubscriptionTests' started at 2026-09-30 21:07:25.614.
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm]' started.
+2026-09-30 21:07:26.984775-0700 Immerse[40380:134855456] [General] Failed to send CA Event for app launch measurements for ca_event_type: 1 event_name: com.apple.app_launch_measurement.ExtendedLaunchMetrics
+2026-09-30 21:07:27.359928-0700 Immerse[40380:134855443] [StoreKit] Making a purchase without listening for transaction updates risks missing successful purchases. Create a Task to iterate Transaction.updates at launch.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/StoreKitSubscriptionTests.swift:49: error: -[ImmerseTests.StoreKitSubscriptionTests testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm] : XCTAssertEqual failed: ("active") is not equal to ("expired")
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/App/Immerse/Tests/StoreKitSubscriptionTests.swift:53: error: -[ImmerseTests.StoreKitSubscriptionTests testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm] : XCTAssertEqual failed: ("allowed(EntitlementCore.NewFilmEntitlement.subscription)") is not equal to ("denied(EntitlementCore.EntitlementDenial.subscriptionRequired)")
+Test Case '-[ImmerseTests.StoreKitSubscriptionTests testRealLocalPurchaseReopenRestoreAndExpirationPreserveExistingFilm]' failed (3.183 seconds).
+Test Suite 'StoreKitSubscriptionTests' failed at 2026-09-30 21:07:28.802.
+	 Executed 1 test, with 2 failures (0 unexpected) in 3.183 (3.187) seconds
+Test Suite 'ImmerseTests.xctest' failed at 2026-09-30 21:07:28.803.
+	 Executed 1 test, with 2 failures (0 unexpected) in 3.183 (3.189) seconds
+Test Suite 'Selected tests' failed at 2026-09-30 21:07:28.804.
+	 Executed 1 test, with 2 failures (0 unexpected) in 3.183 (3.192) seconds

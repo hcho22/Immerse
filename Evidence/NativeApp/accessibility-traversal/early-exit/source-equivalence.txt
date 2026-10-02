@@ -1,0 +1,3 @@
+Only five bounded search/position loops changed to early exit on fresh AX success conditions.
+Iteration limits, post-loop assertions, consecutive settlement, matching, ten rows, snapshots, audit and no-progress throw are byte-identical.
+This is source equivalence evidence, not an executed native failure-path test.

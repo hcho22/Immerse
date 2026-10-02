@@ -1,0 +1,611 @@
+{
+  "testIdentifier" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+  "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+  "testName" : "testPairedSystemLargestTraversal()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "Screen Recording 2026-10-01 at 10.36.47 AM.mp4",
+              "payloadId" : "0~O5pFmvzt9KI-6ImCCWZbPjAO1nYBnoryjJYyEBDIvlM2tlleE1V00YEx_aFZCVBWzi9uLgDw2raf05hPtEtbUA==",
+              "timestamp" : 1790876207.793,
+              "uuid" : "5EAB5241-5F29-4CA0-A2D9-3813AC394429"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876207.793,
+              "title" : "kXCTAttachmentScreenRecording"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876207.254,
+          "title" : "Start Test at 2026-10-01 10:36:47.253"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876207.799,
+          "title" : "Set Up"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876207.807,
+              "title" : "Device orientation changed to Portrait"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876207.848,
+              "title" : "Wait for com.apple.springboard to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876207.802,
+          "title" : "Setting device orientation to Portrait"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876211.18,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876214.609,
+                  "title" : "Wait for com.immerse.FilmJournal to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876207.969,
+              "title" : "Launch com.immerse.FilmJournal"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876207.967,
+          "title" : "Open com.immerse.FilmJournal"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "A-no-audit_0_A6054EE4-4915-4C3F-A19A-1544A2D1333C.launch",
+              "payloadId" : "0~pzL5PTSwX4ZLGAuQRQoe-IowSLkJ82EzWdokv5f-qn5UMCjICW83Sjy9iLRLx0_b7AdpN_qjuKolJM0azIWyjw==",
+              "timestamp" : 1790876216.478,
+              "uuid" : "2A773D12-9905-4B97-AFD2-686B564A75AA"
+            }
+          ],
+          "childActivities" : [
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "",
+                  "name" : "Complete Issue Description.txt",
+                  "uuid" : "D249648A-0B1B-47BC-8B44-DEC63AD56C96"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "title" : "Complete Issue Description"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876216.306,
+              "title" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead."
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876216.478,
+              "title" : "A-no-audit.launch"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876216.478,
+          "title" : "Added attachment named 'A-no-audit.launch'"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876217.61,
+                  "title" : "Checking existence of `\"Your Journal begins here\" StaticText`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876217.608,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"Your Journal begins here\" StaticText`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876216.603,
+          "title" : "Waiting 10.0s for \"Your Journal begins here\" StaticText to exist"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "Synthesized Event 2026-10-01 at 10.36.58 AM",
+              "payloadId" : "0~S3r9pCrAYiH10KzoYFJRC7jss2Jxkk9ECJ2qA7euPB4AdZAqfDcCmt0eerwv5IL775B_KiMLuk65Ui7hcITaZw==",
+              "timestamp" : 1790876218.533,
+              "uuid" : "433BB75E-BAC0-41B7-8ED7-D92C5B6777DC"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876217.827,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876217.837,
+              "title" : "Find the \"start-film\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876217.948,
+              "title" : "Check for interrupting elements affecting \"start-film\" Button"
+            },
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "Synthesized Event 2026-10-01 at 10.36.58 AM",
+                  "payloadId" : "0~S3r9pCrAYiH10KzoYFJRC7jss2Jxkk9ECJ2qA7euPB4AdZAqfDcCmt0eerwv5IL775B_KiMLuk65Ui7hcITaZw==",
+                  "timestamp" : 1790876218.533,
+                  "uuid" : "433BB75E-BAC0-41B7-8ED7-D92C5B6777DC"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876218.533,
+                  "title" : "kXCTAttachmentLegacySynthesizedEvent"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876218.086,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876218.536,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876217.826,
+          "title" : "Tap \"start-film\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876220.965,
+                  "title" : "Checking existence of `\"Choose a Camera\" NavigationBar`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876220.964,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"Choose a Camera\" NavigationBar`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876219.961,
+          "title" : "Waiting 5.0s for \"Choose a Camera\" NavigationBar to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876222.409,
+              "title" : "Find the \"camera-cinema16mm\" Button (retry 1)"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876223.588,
+              "title" : "Find the \"camera-cinema16mm\" Button (retry 2)"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876221.229,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "UI Snapshot 2026-10-01 at 10.37.04 AM",
+              "payloadId" : "0~UWiunD1M1uwIXLPoiqEem3xc0zPnlqeIXY4SdD_Qx8uSXc2vmJ-9EruyNjNjhFucWFNK8RO3jJbyb93AfUyAng==",
+              "timestamp" : 1790876224.106,
+              "uuid" : "223AA541-0FD0-43E1-ADCE-5AF4C17102D7"
+            },
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "Synthesized Event 2026-10-01 at 10.37.04 AM",
+              "payloadId" : "0~F37pJzJp8TMPJzrKzvWASsDoMCQBTBSZB19xkZfsQ5Awr_3o2XahZmKe_W7AQQMzvoiSuSqHMzOWO-KHg3t_MA==",
+              "timestamp" : 1790876224.54,
+              "uuid" : "42603661-F684-46EA-A58E-26F300C68820"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876223.751,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876223.765,
+              "title" : "Find the Target Application 'com.immerse.FilmJournal'"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876223.926,
+              "title" : "Check for interrupting elements affecting \"Immerse\" Application"
+            },
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "UI Snapshot 2026-10-01 at 10.37.04 AM",
+                  "payloadId" : "0~UWiunD1M1uwIXLPoiqEem3xc0zPnlqeIXY4SdD_Qx8uSXc2vmJ-9EruyNjNjhFucWFNK8RO3jJbyb93AfUyAng==",
+                  "timestamp" : 1790876224.106,
+                  "uuid" : "223AA541-0FD0-43E1-ADCE-5AF4C17102D7"
+                },
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "Synthesized Event 2026-10-01 at 10.37.04 AM",
+                  "payloadId" : "0~F37pJzJp8TMPJzrKzvWASsDoMCQBTBSZB19xkZfsQ5Awr_3o2XahZmKe_W7AQQMzvoiSuSqHMzOWO-KHg3t_MA==",
+                  "timestamp" : 1790876224.54,
+                  "uuid" : "42603661-F684-46EA-A58E-26F300C68820"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876224.106,
+                  "title" : "kXCTAttachmentLegacySnapshot"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876224.54,
+                  "title" : "kXCTAttachmentLegacySynthesizedEvent"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876224.094,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876224.543,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876223.75,
+          "title" : "Swipe up Target Application 'com.immerse.FilmJournal'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876226.33,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876226.777,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876227.11,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876227.449,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876227.745,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876228.026,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876228.305,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876228.613,
+          "title" : "Find the \"camera-cinema16mm\" Button"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "UI Snapshot 2026-10-01 at 10.37.09 AM",
+              "payloadId" : "0~hOF8Bmymw94wTw7I_HAKqtp_5KaAM9GuXO2kNXox5SBEgkT-rFo8WG1tMyioDc22xJcqcaOoWVyRgQOdAXqO6w==",
+              "timestamp" : 1790876229.415,
+              "uuid" : "DC01C1D6-6641-4B2B-AEFB-BD30278DAA01"
+            },
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "Synthesized Event 2026-10-01 at 10.37.09 AM",
+              "payloadId" : "0~hXR_IKZTMSJd3vk_IGzNV9AjeAl0B7-8bH0I4gjevP8-AE6qvVlqbAFeI48AtcR1BQ6TdameoBWHPADZLMUU6Q==",
+              "timestamp" : 1790876229.749,
+              "uuid" : "FD6B0BF2-6DB6-4819-9A13-89CEAE81137B"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876228.892,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876228.901,
+              "title" : "Find the \"camera-cinema16mm\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876229.17,
+              "title" : "Check for interrupting elements affecting \"camera-cinema16mm\" Button"
+            },
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "UI Snapshot 2026-10-01 at 10.37.09 AM",
+                  "payloadId" : "0~hOF8Bmymw94wTw7I_HAKqtp_5KaAM9GuXO2kNXox5SBEgkT-rFo8WG1tMyioDc22xJcqcaOoWVyRgQOdAXqO6w==",
+                  "timestamp" : 1790876229.415,
+                  "uuid" : "DC01C1D6-6641-4B2B-AEFB-BD30278DAA01"
+                },
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "Synthesized Event 2026-10-01 at 10.37.09 AM",
+                  "payloadId" : "0~hXR_IKZTMSJd3vk_IGzNV9AjeAl0B7-8bH0I4gjevP8-AE6qvVlqbAFeI48AtcR1BQ6TdameoBWHPADZLMUU6Q==",
+                  "timestamp" : 1790876229.749,
+                  "uuid" : "FD6B0BF2-6DB6-4819-9A13-89CEAE81137B"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876229.415,
+                  "title" : "kXCTAttachmentLegacySnapshot"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876229.749,
+                  "title" : "kXCTAttachmentLegacySynthesizedEvent"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876229.408,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876229.752,
+              "title" : "Wait for com.immerse.FilmJournal to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876228.891,
+          "title" : "Tap \"camera-cinema16mm\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876231.291,
+                  "title" : "Checking existence of `\"16mm\" NavigationBar`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876231.29,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"16mm\" NavigationBar`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876230.248,
+          "title" : "Waiting 5.0s for \"16mm\" NavigationBar to exist"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790876231.491,
+          "title" : "Checking existence of `\"Trial status unavailable\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()"
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1790876231.678,
+          "title" : "XCTAssertTrue failed"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "App UI hierarchy for com.immerse_0_5F3F30BA-5E47-429B-9C68-06F75FCB9942.FilmJournal",
+              "payloadId" : "0~Q63XAOtRZqqJ9bDcIYPughG0hdtpUQ6kUFANh6_YUkmYMlTQuRt-qZiDxGKnDYlKwCmKr3scoxW55OSR3Je0wQ==",
+              "timestamp" : 1790876235,
+              "uuid" : "6230EC73-A851-459C-84AD-C677B8A9513E"
+            },
+            {
+              "lifetime" : "deleteOnSuccess",
+              "name" : "UI Snapshot 2026-10-01 at 10.37.15 AM",
+              "payloadId" : "0~Tf6PXl47ZqSBgogwHKKJsXFV7JPHU_J-FwL0IUfbcU1bxtyjvv_i_-Wt49rm6fn55VqvdqEgkT_eD5OuMpfPKg==",
+              "timestamp" : 1790876235.001,
+              "uuid" : "14F07400-ADAB-4154-BECC-0DF35F9F3178"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876233.421,
+              "title" : "Find the \"film-title-heading\" StaticText (retry 1)"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876234.583,
+              "title" : "Find the \"film-title-heading\" StaticText (retry 2)"
+            },
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "App UI hierarchy for com.immerse_0_5F3F30BA-5E47-429B-9C68-06F75FCB9942.FilmJournal",
+                  "payloadId" : "0~Q63XAOtRZqqJ9bDcIYPughG0hdtpUQ6kUFANh6_YUkmYMlTQuRt-qZiDxGKnDYlKwCmKr3scoxW55OSR3Je0wQ==",
+                  "timestamp" : 1790876235,
+                  "uuid" : "6230EC73-A851-459C-84AD-C677B8A9513E"
+                },
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "UI Snapshot 2026-10-01 at 10.37.15 AM",
+                  "payloadId" : "0~Tf6PXl47ZqSBgogwHKKJsXFV7JPHU_J-FwL0IUfbcU1bxtyjvv_i_-Wt49rm6fn55VqvdqEgkT_eD5OuMpfPKg==",
+                  "timestamp" : 1790876235.001,
+                  "uuid" : "14F07400-ADAB-4154-BECC-0DF35F9F3178"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876234.74,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 87267"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876235,
+                  "title" : "App UI hierarchy for com.immerse.FilmJournal"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876235.001,
+                  "title" : "kXCTAttachmentLegacySnapshot"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876234.739,
+              "title" : "Collecting debug information to assist test failure triage"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876235.029,
+              "title" : "Requesting snapshot of accessibility hierarchy for app with pid 87267"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876235.284,
+              "title" : "Find: Descendants matching type StaticText"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876235.287,
+              "title" : "Find: Elements matching predicate '\"film-title-heading\" IN identifiers'"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876235.299,
+              "title" : "Requesting snapshot of accessibility hierarchy for app with pid 87267"
+            },
+            {
+              "attachments" : [
+                {
+                  "lifetime" : "",
+                  "name" : "Complete Issue Description.txt",
+                  "uuid" : "42BA8F09-6060-46FD-9F70-2017D218F495"
+                },
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "App UI hierarchy for com.immerse_0_9D29FE71-A7F0-4CF2-A053-A3ED8CCBF302.FilmJournal",
+                  "payloadId" : "0~8fzhTmlUv7aDwYvadKg6CWYPp-E_SWTjSjvdZEKLnZ9rBMnJDV-zxqs_46jQGR8IwzvRM6pltc3Q0JG6hhL2tA==",
+                  "timestamp" : 1790876235.552,
+                  "uuid" : "3B2160C1-51E0-4B7C-8273-7573F19F97D8"
+                },
+                {
+                  "lifetime" : "deleteOnSuccess",
+                  "name" : "UI Snapshot 2026-10-01 at 10.37.15 AM",
+                  "payloadId" : "0~Tf6PXl47ZqSBgogwHKKJsXFV7JPHU_J-FwL0IUfbcU1bxtyjvv_i_-Wt49rm6fn55VqvdqEgkT_eD5OuMpfPKg==",
+                  "timestamp" : 1790876235.552,
+                  "uuid" : "422AEF3A-027D-40CF-A8D4-57036E7388C0"
+                }
+              ],
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "title" : "Complete Issue Description"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876235.552,
+                  "title" : "App UI hierarchy for com.immerse.FilmJournal"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790876235.552,
+                  "title" : "kXCTAttachmentLegacySnapshot"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "title" : "SetupTraversalDiagnosisTests.testPairedSystemLargestTraversal()"
+                }
+              ],
+              "isAssociatedWithFailure" : true,
+              "startTime" : 1790876235.552,
+              "title" : "Failed to get matching snapshot: No matches found for Elements matching predicate '\"film-title-heading\" IN identifiers' from input {(\n    StaticText, label: 'Film Journal',\n    StaticText, label: '16mm',\n    StaticText, label: 'Your Journal begins here',\n    StaticText, label: 'Capacity',\n    StaticText, label: 'Capacity, 2:45 of film',\n    StaticText, label: 'One silent Movie after Development',\n    StaticText, label: 'Deliberate framing, finer grain',\n    StaticText, label: 'Silent capture',\n    StaticText, label: 'Silent capture'\n)}\nPossibly caused by runtime issues:\nAutomation type mismatch: computed Other from legacy attributes vs StaticText from modern attribute. Input attributes and values: {\n    \"XC_kAXXCAttributeAutomationType\" = 48;\n    \"XC_kAXXCAttributeElementBaseType\" = UILabel;\n    \"XC_kAXXCAttributeElementType\" = UILabel;\n    \"XC_kAXXCAttributeTraits\" = 8590000128;\n}\nSee test report attachments for more detail."
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790876235.592,
+              "title" : "Tear Down"
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1790876232.247,
+          "title" : "Find the \"film-title-heading\" StaticText"
+        }
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

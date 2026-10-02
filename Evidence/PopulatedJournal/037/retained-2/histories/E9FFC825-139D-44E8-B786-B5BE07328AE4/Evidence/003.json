@@ -1,0 +1,13 @@
+{
+  "films" : [
+
+  ],
+  "privateFiles" : [
+    "film-store.sqlite",
+    "film-store.sqlite-shm",
+    "film-store.sqlite-wal"
+  ],
+  "process" : 55722,
+  "reason" : "explicit",
+  "utc" : "2026-10-01T20:47:12Z"
+}

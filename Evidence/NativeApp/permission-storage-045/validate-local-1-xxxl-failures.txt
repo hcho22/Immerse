@@ -1,0 +1,23 @@
+validate-local run 1 (IMMERSE_WORKFLOW_SIMULATOR_UDID and IMMERSE_SIMULATOR_UDID = AA6AD12A-9D0E-4948-ABD2-760AA97B6A60), exit 65.
+Simulator content size accessibility-extra-extra-extra-large, appearance light; harness gate not yet pinned to large.
+All package/probe/build stages before the harness passed; ImmerseUITests did not run because the script stops on failure.
+Result bundle: DerivedData/Populated-20261001T231824Z.xcresult
+Passed testDeniedAddOnlyPhotosExportIsNeverSuccessAndPointsToSettings()
+Failed testEarlyPhotoDevelopmentDarkroomAndRemoval()
+  - PopulatedWorkflowTests.swift:15: Failed to tap "Remove originals after verified Development" Button: No matches found for Elements matching predicate '"Remove originals after verified Development" IN identifiers' from in
+Failed testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment()
+  - PopulatedWorkflowTests.swift:126: XCTAssertTrue failed
+  - PopulatedWorkflowTests.swift:127: XCTAssertTrue failed
+Passed testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom()
+Passed testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback()
+Passed testDarkroomAccessibleControlsReachNonGestureEditingPaths()
+Failed testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport()
+  - RetainedWorkflowTests.swift:40: Failed to tap "Save Originals to Photos after reveal" Button: No matches found for Elements matching predicate '"Save Originals to Photos after reveal" IN identifiers' from input {(
+Passed testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation()
+Failed testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume()
+  - RetainedWorkflowTests.swift:60: XCTAssertTrue failed
+  - RetainedWorkflowTests.swift:62: XCTAssertTrue failed
+  - RetainedWorkflowTests.swift:66: XCTAssertTrue failed
+  - RetainedWorkflowTests.swift:72: XCTAssertTrue failed
+  - RetainedWorkflowTests.swift:73: XCTAssertTrue failed
+Passed testSavedDarkroomEditAndExactResetPersistAcrossRelaunch()

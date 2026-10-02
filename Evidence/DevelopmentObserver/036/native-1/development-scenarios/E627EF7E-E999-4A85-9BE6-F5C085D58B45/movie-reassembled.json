@@ -1,0 +1,83 @@
+{
+  "assets" : {
+    "clip-2" : "39d7e54fa2a425433294716528c1eae38365d5e7590ec20593b800afe09b4643",
+    "movie-0" : "a369e1d16eb288233fa7cfec4517baa19942a7fbcfd65082a4f766d8789d54f9",
+    "source-2" : "c4ca91b1f3faf5ddf4e25f048e652d3c2b1b79a37d2c85fff477195b499a36f6"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 165
+        }
+      },
+      "displayName" : "1960s 16mm Cinema",
+      "id" : "cinema16mm",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "discardedPlaceholder",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      },
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572802,
+        "sequenceNumber" : 2
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 164.66333333333333
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "CEB7C0C9-D080-4298-89CA-19FFA94AF184",
+    "isArchived" : false,
+    "loadedAt" : 812577284.220276,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic Development boundary"
+  },
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 1380140177793640950,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 6282091740255559762,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      1,
+      2
+    ],
+    "filmID" : "CEB7C0C9-D080-4298-89CA-19FFA94AF184",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  },
+  "workFiles" : [
+
+  ]
+}

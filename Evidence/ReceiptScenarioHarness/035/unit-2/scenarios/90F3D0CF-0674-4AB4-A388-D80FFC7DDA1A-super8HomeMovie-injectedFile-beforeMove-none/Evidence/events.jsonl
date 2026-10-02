@@ -1,0 +1,29 @@
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"beforeMove","namespace":"com.immerse.validation.receipt035.90F3D0CF-0674-4AB4-A388-D80FFC7DDA1A-super8HomeMovie-injectedFile-beforeMove-none","pauseAt":"none","process":"39098","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"90F3D0CF-0674-4AB4-A388-D80FFC7DDA1A-super8HomeMovie-injectedFile-beforeMove-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"2","sha256":"none","status":"-25300","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"3","sha256":"none","status":"-25300","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-add","process":"39098","processSequence":"4","sha256":"d4a9020bbe98d95155c72847f1bfa0bb4d955ae017947ea4ae5266bbd9fcbdf6","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"5","sha256":"d4a9020bbe98d95155c72847f1bfa0bb4d955ae017947ea4ae5266bbd9fcbdf6","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"6","sha256":"d4a9020bbe98d95155c72847f1bfa0bb4d955ae017947ea4ae5266bbd9fcbdf6","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"captureID":"D20544D8-F496-4C34-9CDA-43AEAC124C34.mov","event":"prepared-input","filmID":"B9ADFEC0-ABE7-49A0-A072-7EEE8D2C756B","process":"39098","processSequence":"7","sha256":"9c8a12ee848d00ac2a0ca509151bca0b8de71cb4fd507a75e0e775cd691cf29c","utc":"2026-10-01T19:16:54Z"}
+{"event":"commit-requested","process":"39098","processSequence":"8","utc":"2026-10-01T19:16:54Z"}
+{"event":"production-checkpoint","phase":"prepared","process":"39098","processSequence":"9","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"10","sha256":"d4a9020bbe98d95155c72847f1bfa0bb4d955ae017947ea4ae5266bbd9fcbdf6","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"11","sha256":"d4a9020bbe98d95155c72847f1bfa0bb4d955ae017947ea4ae5266bbd9fcbdf6","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"actualStatus":"0","backend":"injectedFile","dispatched":"true","event":"adapter-update","process":"39098","processSequence":"12","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"13","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"event":"production-checkpoint","phase":"receiptResolved","process":"39098","processSequence":"14","utc":"2026-10-01T19:16:54Z"}
+{"error":"simulatedFailure(FilmPersistence.SaveFailureInjection.beforeDurableMove)","event":"commit-error","process":"39098","processSequence":"15","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"16","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"17","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"event":"inventory","file":"inventory-01C16CF0-4F74-4541-91F6-597269CA6EE9.json","process":"39098","processSequence":"18","summary":"films=1;saved=0;pending=true;consumed=true;hash=none","utc":"2026-10-01T19:16:54Z"}
+{"account":"device-trial","backend":"injectedFile","bundle":"com.immerse.validation.ReceiptScenarioHarness035","event":"session-open","fault":"beforeMove","namespace":"com.immerse.validation.receipt035.90F3D0CF-0674-4AB4-A388-D80FFC7DDA1A-super8HomeMovie-injectedFile-beforeMove-none","pauseAt":"none","process":"39098","processSequence":"1","runtime":"Version 26.5 (Build 23F77)","scenario":"90F3D0CF-0674-4AB4-A388-D80FFC7DDA1A-super8HomeMovie-injectedFile-beforeMove-none","simulator":"AA6AD12A-9D0E-4948-ABD2-760AA97B6A60","utc":"2026-10-01T19:16:54Z"}
+{"event":"recovery-started","process":"39098","processSequence":"2","projectionInjection":"disabled","receiptInjection":"preserved until explicit resolve","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"3","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"event":"recovery-returned","process":"39098","processSequence":"4","utc":"2026-10-01T19:16:54Z"}
+{"event":"recovery-started","process":"39098","processSequence":"5","projectionInjection":"disabled","receiptInjection":"preserved until explicit resolve","utc":"2026-10-01T19:16:54Z"}
+{"event":"recovery-returned","process":"39098","processSequence":"6","utc":"2026-10-01T19:16:54Z"}
+{"event":"commit-requested","process":"39098","processSequence":"7","utc":"2026-10-01T19:16:54Z"}
+{"event":"commit-returned","process":"39098","processSequence":"8","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"9","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"backend":"injectedFile","event":"adapter-read","process":"39098","processSequence":"10","sha256":"a86f3cdcfd717b3c33b909e682238321e2ed5cdb11c58191d1562c887f7e3b3d","status":"0","utc":"2026-10-01T19:16:54Z"}
+{"event":"inventory","file":"inventory-CBBAF1E1-7497-4658-9627-190A0110236A.json","process":"39098","processSequence":"11","summary":"films=1;saved=1;pending=false;consumed=true;hash=true","utc":"2026-10-01T19:16:54Z"}

@@ -1,0 +1,7 @@
+{
+  "backend" : "native-synthetic-no-external-services",
+  "camera" : "instant1970s",
+  "createdUTC" : "2026-10-01T19:54:57Z",
+  "film" : "FBB168F2-FFDB-4BE7-ABA7-542C81C78830",
+  "label" : "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)"
+}

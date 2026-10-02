@@ -1,0 +1,15 @@
+import json, os, re, subprocess, sys
+S = '/tmp/claude-501/-Users-hcho--treehouse-Immerse-3833fe-1-Immerse/cfe1e158-dab8-44ca-b9c3-c872753fde5a/scratchpad'
+out = sys.argv[1]
+d = json.load(open(os.path.join(out, 'manifest.json')))
+atts = {a['suggestedHumanReadableName'].split('_0_')[0]: a['exportedFileName'] for t in d for a in t['attachments']}
+for pose in ['pose-16mm-load', 'pose-16mm-title', 'pose-16mm-command', 'rest-description', 'rest-silent-capture', 'rest-trial-status']:
+    frames = open(os.path.join(out, atts[pose + '-frames'])).read().split('\n')
+    nav = re.search(r"navigation \(([-\d.]+), ([-\d.]+), ([-\d.]+), ([-\d.]+)\)", frames[1])
+    for line in frames[2:]:
+        m = re.match(r"(\S+) exists=(\w+) frame=\(([-\d.]+), ([-\d.]+), ([-\d.]+), ([-\d.]+)\)", line)
+        if not m: print(pose, line); continue
+        name = m.group(1)
+        if pose.startswith('rest-') and pose != 'rest-' + name: continue
+        r = subprocess.run([f'{S}/contrast', os.path.join(out, atts[pose]), *m.groups()[2:]], capture_output=True, text=True).stdout.strip()
+        print(f"{pose} | {name} | y={float(m.group(4)):.0f}..{float(m.group(4))+float(m.group(6)):.0f} nav maxY={float(nav.group(2))+float(nav.group(4)):.0f} | {r}")

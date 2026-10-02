@@ -1,0 +1,1651 @@
+{
+  "testIdentifier" : "ExportProcessExitTests/testMovieUnknownReplyReentry()",
+  "testIdentifierURL" : "test://com.apple.xcode/ExportPrivacyHarness/ExportPrivacyUITests/ExportProcessExitTests/testMovieUnknownReplyReentry",
+  "testName" : "testMovieUnknownReplyReentry()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883351.532,
+          "title" : "Start Test at 2026-10-01 12:35:51.532"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883352.143,
+          "title" : "Set Up"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883354.612,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883357.812,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883352.162,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883352.16,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883361.179,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883361.178,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883360.152,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883361.506,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883361.515,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883361.648,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883361.787,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883362.232,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883361.505,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883362.909,
+          "title" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883363.576,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.356,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.567,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.571,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.581,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.785,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883364.797,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883363.73,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883363.575,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883365.591,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.227,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.42,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.424,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.433,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.63,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883366.643,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883365.723,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883365.59,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883367.567,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.22,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.409,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.413,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.423,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.629,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883368.646,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883367.698,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883367.566,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883369.547,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.154,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.348,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.352,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.362,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.556,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883370.568,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883369.676,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883369.546,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883371.59,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883371.589,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883371.699,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883371.816,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883371.848,
+              "title" : "Find the \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883371.97,
+              "title" : "Check for interrupting elements affecting \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883372.082,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883372.424,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883371.815,
+          "title" : "Tap \"start\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883373.717,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883373.716,
+          "title" : "Checking `Expect predicate `label == \"paused-beforeCopy\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883373.84,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883373.849,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883373.967,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883374.121,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883374.45,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883373.839,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883375.748,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883376.388,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883376.636,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883376.64,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883376.65,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883377.037,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883377.05,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 58584"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883375.871,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883375.746,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883377.775,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883377.771,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883377.931,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883378.142,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-before-exit_0_EE913355-7E9C-4DE0-A396-90FA9940636A.png",
+              "payloadId" : "0~mAMVfHTER2YInyjwbGV1QoUpdPcqPuoH_knu-bAmoxy2hlsLJh0eQIljtSnzr44ntuxchYqsjIceJ8pvRmjoZA==",
+              "timestamp" : 1790883379.157,
+              "uuid" : "32903C66-E59D-48AB-AD97-E501D3EDFEC1"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.157,
+              "title" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883379.157,
+          "title" : "Added attachment named '9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.16,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.17,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.322,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.543,
+              "title" : "Synthesize event"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883379.906,
+                  "title" : "Unable to monitor event loop"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883379.908,
+                  "title" : "Unable to monitor animations"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883379.898,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883379.159,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883379.917,
+          "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883382.157,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883385.649,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883380.291,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883380.288,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883389.022,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.021,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883387.991,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.28,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.292,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.442,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.64,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883389.982,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883389.28,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883391.29,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883391.932,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883392.12,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883392.123,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883392.129,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883392.315,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883392.331,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883391.431,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883391.289,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883393.362,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883393.361,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883393.508,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883393.638,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-recovered-no-auto-export_0_E7B0D143-F79B-41AF-87B8-532F8D482A8F.png",
+              "payloadId" : "0~svLILdp5f_XyaXJG8jHFXlpj3XQ83vCxCZvf-qVgiYXR9qUUleXKo9h4xa5sgOF9SCSgWi_gcW-ZXuzSIbEXbg==",
+              "timestamp" : 1790883394.008,
+              "uuid" : "E0AAA3E1-1926-45DC-9329-6B262261C8C3"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.008,
+              "title" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-recovered-no-auto-export"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883394.008,
+          "title" : "Added attachment named '9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-recovered-no-auto-export'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.011,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.021,
+              "title" : "Find the \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.167,
+              "title" : "Check for interrupting elements affecting \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.349,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883394.697,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883394.011,
+          "title" : "Tap \"retry\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883395.992,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883396.678,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883396.891,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883396.896,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883396.908,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883397.109,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883397.12,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 60838"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883396.138,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883395.991,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883397.972,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883397.971,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883398.121,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883398.259,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-explicit-retry_0_C515AC69-34CD-414B-8916-54C30F0D5A33.png",
+              "payloadId" : "0~9kIOQS7HjWVvJguDkwOFJVEC9qWcKOq0cYu3mFuOV8356Nz9kAGYXHoJ2O9F0Mc5l8Rkf-DyqJtJQxBc4cnt0w==",
+              "timestamp" : 1790883398.784,
+              "uuid" : "F616BD24-E506-49E4-A0B4-92DD93B5F4B8"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883398.784,
+              "title" : "9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-explicit-retry"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883398.784,
+          "title" : "Added attachment named '9C1C8A8C-A152-4835-971A-7B7D0D5DF7CE-cinema16mm-beforeCopy-explicit-retry'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883398.786,
+          "title" : "Terminate com.immerse.validation.ExportPrivacyHarness036:60838"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883400.436,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883403.677,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883399.811,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883399.809,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883407.123,
+                  "title" : "Checking existence of `\"prepare\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.122,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"prepare\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883406.111,
+          "title" : "Waiting 10.0s for \"prepare\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.369,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.378,
+              "title" : "Find the \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.505,
+              "title" : "Check for interrupting elements affecting \"prepare\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.663,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883407.997,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883407.368,
+          "title" : "Tap \"prepare\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883409.299,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883409.882,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883410.097,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883410.101,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883410.111,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883410.315,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883410.326,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883409.437,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883409.298,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883411.366,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883411.967,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883412.157,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883412.161,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883412.175,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883412.369,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883412.382,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883411.5,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883411.365,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883413.34,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883413.951,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883414.143,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883414.148,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883414.157,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883414.351,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883414.363,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883413.473,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883413.339,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883415.357,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883415.987,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883416.177,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883416.181,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883416.191,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883416.372,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883416.382,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883415.498,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883415.356,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883417.33,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883417.329,
+          "title" : "Checking `Expect predicate `label == \"prepare-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883417.456,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883417.568,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883417.579,
+              "title" : "Find the \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883417.726,
+              "title" : "Check for interrupting elements affecting \"start\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883417.849,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883418.18,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883417.567,
+          "title" : "Tap \"start\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883419.481,
+              "title" : "Find the \"phase\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883419.48,
+          "title" : "Checking `Expect predicate `label == \"paused-beforeReply\"` for object \"phase\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883419.611,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883419.622,
+              "title" : "Find the \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883419.758,
+              "title" : "Check for interrupting elements affecting \"inspect\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883419.884,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883420.214,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883419.611,
+          "title" : "Tap \"inspect\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883421.518,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.133,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.327,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.33,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.338,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.52,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883422.533,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 62646"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883421.654,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883421.517,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883423.55,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883423.549,
+          "title" : "Checking `Expect predicate `label == \"inspect-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883423.685,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883423.814,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-before-exit_0_B5965801-B538-43B2-A1F6-84E7CA6A1992.png",
+              "payloadId" : "0~t-G-OXieVtjopQOhRxWcTzY79UTk7BvDt4sb-QK4vq-ynExbEqNKIL-wv36YC0zZ1CTcZTaBOV4PAt_zowujbQ==",
+              "timestamp" : 1790883424.256,
+              "uuid" : "0E808CBF-DDC7-4EE7-8EC1-BB714AC3919B"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.256,
+              "title" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-before-exit"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883424.256,
+          "title" : "Added attachment named 'DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-before-exit'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.259,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.269,
+              "title" : "Find the \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.407,
+              "title" : "Check for interrupting elements affecting \"terminate\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.544,
+              "title" : "Synthesize event"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883424.911,
+                  "title" : "Unable to monitor event loop"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883424.914,
+                  "title" : "Unable to monitor animations"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.905,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883424.258,
+          "title" : "Tap \"terminate\" Button"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883424.92,
+          "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to become Not Running"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883425.998,
+                  "title" : "Setting up automation session"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883428.99,
+                  "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883424.955,
+              "title" : "Launch com.immerse.validation.ExportPrivacyHarness036"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883424.953,
+          "title" : "Open com.immerse.validation.ExportPrivacyHarness036"
+        },
+        {
+          "childActivities" : [
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883432.23,
+                  "title" : "Checking existence of `\"recover\" Button`"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883432.229,
+              "title" : "Checking `Expect predicate `existsNoRetry == 1` for object \"recover\" Button`"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883431.218,
+          "title" : "Waiting 10.0s for \"recover\" Button to exist"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883432.494,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883432.503,
+              "title" : "Find the \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883432.65,
+              "title" : "Check for interrupting elements affecting \"recover\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883432.786,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883433.127,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883432.493,
+          "title" : "Tap \"recover\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883434.414,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.029,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.198,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.203,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.216,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.393,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883435.404,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883434.552,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883434.413,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883436.459,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883436.458,
+          "title" : "Checking `Expect predicate `label == \"recover-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883436.566,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883436.672,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-recovered-no-auto-export_0_ABAA6549-7625-4E48-B26A-EBB85DB3E56F.png",
+              "payloadId" : "0~v9UGEFke_ON1WXjZ0SMoY9zShjWYjFxiokVa47RAtQAV6n4_InCYbZLjuyia02_Z3_xIwkzYrMyKI_YOjnYeyw==",
+              "timestamp" : 1790883436.986,
+              "uuid" : "0AFAC2A7-45CD-476C-B3CC-2CDB07328E77"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883436.986,
+              "title" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-recovered-no-auto-export"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883436.986,
+          "title" : "Added attachment named 'DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-recovered-no-auto-export'"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883436.989,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883437.012,
+              "title" : "Find the \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883437.146,
+              "title" : "Check for interrupting elements affecting \"retry\" Button"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883437.266,
+              "title" : "Synthesize event"
+            },
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883437.597,
+              "title" : "Wait for com.immerse.validation.ExportPrivacyHarness036 to idle"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883436.988,
+          "title" : "Tap \"retry\" Button"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883438.895,
+              "title" : "Find the \"status\" StaticText"
+            },
+            {
+              "childActivities" : [
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883439.614,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883439.804,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883439.808,
+                  "title" : "Find: Elements matching predicate '\"status\" IN identifiers'"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883439.818,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883440.034,
+                  "title" : "Find: Descendants matching type StaticText"
+                },
+                {
+                  "isAssociatedWithFailure" : false,
+                  "startTime" : 1790883440.045,
+                  "title" : "Requesting snapshot of accessibility hierarchy for app with pid 66108"
+                }
+              ],
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883439.028,
+              "title" : "Capturing element debug description"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883438.894,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883440.939,
+              "title" : "Find the \"status\" StaticText"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883440.938,
+          "title" : "Checking `Expect predicate `label == \"retry-ok\"` for object \"status\" StaticText`"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883441.082,
+          "title" : "Find the \"inventory\" StaticText"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883441.203,
+          "title" : "Find the Target Application 'com.immerse.validation.ExportPrivacyHarness036'"
+        },
+        {
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-explicit-retry_0_E7C712B3-7704-4E97-A02A-65D729409A5D.png",
+              "payloadId" : "0~gNTR8t1ihG3ZMQ3BDbX4VlH_WxkPnzXTGrBAUX71ujbmYn5XTgTII4SWA6cMQjd4hrfK7xqv_WN-fNTFM9_T9g==",
+              "timestamp" : 1790883441.549,
+              "uuid" : "8474ADE5-415B-4A9C-AD0F-2E8D3708F748"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1790883441.549,
+              "title" : "DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-explicit-retry"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883441.549,
+          "title" : "Added attachment named 'DFAFCA5A-B33D-4F9A-BF13-B09831A13C66-cinema16mm-beforeReply-explicit-retry'"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883441.551,
+          "title" : "Terminate com.immerse.validation.ExportPrivacyHarness036:66108"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883442.572,
+          "title" : "Tear Down"
+        },
+        {
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1790883442.693,
+          "title" : "Checking for crash reports corresponding to unexpected termination of com.immerse.validation.ExportPrivacyHarness036"
+        }
+      ],
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

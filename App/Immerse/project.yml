@@ -1,0 +1,81 @@
+name: Immerse
+options:
+  minimumXcodeGenVersion: 2.43.0
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 26.0
+packages:
+  FilmDomain:
+    path: ../../Packages/FilmDomain
+  FilmPersistence:
+    path: ../../Packages/FilmPersistence
+  FilmRuntime:
+    path: ../../Packages/FilmRuntime
+  RenderCore:
+    path: ../../Packages/RenderCore
+  NativeAdapters:
+    path: ../../Packages/NativeAdapters
+  EntitlementCore:
+    path: ../../Packages/EntitlementCore
+  MediaCatalog:
+    path: ../../Packages/MediaCatalog
+targets:
+  Immerse:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources: [Sources]
+    dependencies:
+      - package: FilmDomain
+      - package: FilmPersistence
+      - package: FilmRuntime
+      - package: RenderCore
+      - package: NativeAdapters
+      - package: EntitlementCore
+      - package: MediaCatalog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Immerse
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: "Capture new photos and silent movie clips for your Films."
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: "Save only the revealed photos or movies you choose to your Photos library."
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        TARGETED_DEVICE_FAMILY: 1
+  ImmerseUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: Immerse
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.UITests
+        GENERATE_INFOPLIST_FILE: YES
+  ImmerseTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: Immerse
+      - package: EntitlementCore
+      - package: FilmDomain
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.Tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Immerse:
+    build:
+      targets:
+        Immerse: all
+        ImmerseUITests: [test]
+        ImmerseTests: [test]
+    test:
+      targets: [ImmerseTests, ImmerseUITests]
+      parallelizable: false

@@ -1,0 +1,49 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 2,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "PopulatedJournalHarness · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1790861253.585,
+  "passedTests" : 2,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790861072.657,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to tap \"confirm-discard-photo\" Button: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x600002112f80>.\nSparse tree of matches:\n→Application, pid: 49036, label: 'Private Workflow Harness'\n  ↳Window (Main)\n    ↳Other\n      ↳Popover\n        ↳Other\n          ↳Sheet, label: 'Discard photo 1?'\n            ↳Other\n              ↳Other\n                ↳Other\n                  ↳ScrollView\n                    ↳Other\n                      ↳Other\n                        ↳Button, identifier: 'confirm-discard-photo', label: 'Discard'\n                          ↳Button, identifier: 'confirm-discard-photo', label: 'Discard'",
+      "targetName" : "PopulatedJournalHarnessTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval()",
+      "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval",
+      "testName" : "testEarlyPhotoDevelopmentDarkroomAndRemoval()"
+    }
+  ],
+  "title" : "Test - PopulatedJournalHarness",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 3
+}

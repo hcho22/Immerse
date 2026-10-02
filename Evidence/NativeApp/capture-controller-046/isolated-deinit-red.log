@@ -1,0 +1,12 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/IsolatedDeinit-046-red.xcresult
+
+2026-10-01 18:02:13.030 xcodebuild[4240:158234728] [MT] IDETestOperationsObserverDebug: 25.629 elapsed -- Testing started completed.
+2026-10-01 18:02:13.030 xcodebuild[4240:158234728] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 18:02:13.030 xcodebuild[4240:158234728] [MT] IDETestOperationsObserverDebug: 25.629 sec, +25.629 sec -- end
+Failing tests:
+	JournalIntegrationTests.testPermissionAndStorageFailuresGiveGuidanceWithoutPlaceholderErrorText()
+
+** TEST FAILED **
+
+Testing started

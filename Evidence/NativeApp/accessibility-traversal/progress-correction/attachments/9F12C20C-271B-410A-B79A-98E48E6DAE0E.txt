@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790878052.425758 uptime=1245428.4268695521 event=scroll.progress requested=220.0 gesture=220.0 before=(16.0, 16.0, 370.0, 93.33333333333333) label=Silent capture after=(16.0, 8.666666666666686, 370.0, 217.33333333333334) label=Deliberate framing, finer grain

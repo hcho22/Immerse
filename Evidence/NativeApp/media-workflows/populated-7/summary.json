@@ -1,0 +1,49 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+        "deviceName" : "Immerse v1 Validation",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 2,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "PopulatedJournalHarness · Built with macOS 26.6.2",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1790861666.671,
+  "passedTests" : 2,
+  "result" : "Failed",
+  "skippedTests" : 0,
+  "startTime" : 1790861460.749,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to tap \"Film actions\" Button: No matches found for Elements matching predicate '\"Film actions\" IN identifiers' from input {(\n    Button, identifier: 'BackButton', label: 'Renamed synthetic Film',\n    Button, label: 'Disposable, Oct 1, Renamed synthetic Film, Developed photo 2, Film used, 25 exposures wasted', value: 100 percent\n)}\nPossibly caused by runtime issues:\nAutomation type mismatch: computed Button from legacy attributes vs ProgressIndicator from modern attribute. Input attributes and values: {\n    \"XC_kAXXCAttributeAutomationType\" = 35;\n    \"XC_kAXXCAttributeElementBaseType\" = UIResponder;\n    \"XC_kAXXCAttributeElementType\" = \"SwiftUI.AccessibilityNode\";\n    \"XC_kAXXCAttributeTraits\" = 8589935105;\n}\nSee test report attachments for more detail.",
+      "targetName" : "PopulatedJournalHarnessTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval()",
+      "testIdentifierURL" : "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval",
+      "testName" : "testEarlyPhotoDevelopmentDarkroomAndRemoval()"
+    }
+  ],
+  "title" : "Test - PopulatedJournalHarness",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 3
+}

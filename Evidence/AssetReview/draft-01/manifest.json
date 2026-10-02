@@ -1,0 +1,329 @@
+{
+  "assets" : [
+    {
+      "audioTracks" : 0,
+      "camera" : "disposable1990s",
+      "decodedFrames" : 1,
+      "path" : "disposable1990s.jpg",
+      "photo" : {
+        "hasAlpha" : false,
+        "pixelHeight" : 1086,
+        "pixelWidth" : 1448,
+        "relativePath" : "disposable1990s.jpg",
+        "uniformTypeIdentifier" : "public.jpeg"
+      },
+      "role" : "Developed draft photo",
+      "seed" : 2026100100,
+      "sha256" : "f66d15b86f406e882c367e26773dab06450c6a245c65103c3f25d0db216e6478"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "instant1970s",
+      "decodedFrames" : 1,
+      "path" : "instant1970s.jpg",
+      "photo" : {
+        "hasAlpha" : false,
+        "pixelHeight" : 2048,
+        "pixelWidth" : 2048,
+        "relativePath" : "instant1970s.jpg",
+        "uniformTypeIdentifier" : "public.jpeg"
+      },
+      "role" : "Developed draft photo",
+      "seed" : 2026100101,
+      "sha256" : "9238e5c3c7c0113b3c15e334f3efff438f24f8e5ebf4285f1ee5b4fde468bd9f"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "mediumFormat6x6",
+      "decodedFrames" : 1,
+      "path" : "mediumFormat6x6.jpg",
+      "photo" : {
+        "hasAlpha" : false,
+        "pixelHeight" : 3072,
+        "pixelWidth" : 3072,
+        "relativePath" : "mediumFormat6x6.jpg",
+        "uniformTypeIdentifier" : "public.jpeg"
+      },
+      "role" : "Developed draft photo",
+      "seed" : 2026100102,
+      "sha256" : "7144203b51d0e9d8b8b7f0f49cb5daa5f9e86622b581178d4d81f23cb3949f3f"
+    },
+    {
+      "audioTracks" : 1,
+      "decodedFrames" : 1056000,
+      "duration" : 22,
+      "path" : "window-light.wav",
+      "role" : "Draft original instrumental: Window Light, 96 BPM, eight bars",
+      "sha256" : "b98b8e6bb6f9301d8da96a524dce971b8fc81db7113d483ade52cb3a4462d95c"
+    },
+    {
+      "audioTracks" : 0,
+      "decodedFrames" : 120,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 480,
+        "encodedWidth" : 640,
+        "nominalFrameRate" : 30,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "source-landscape.mov"
+      },
+      "path" : "source-landscape.mov",
+      "role" : "Silent digital-pan source, not camera capture",
+      "sha256" : "c2862bf6f87acc68329ee997c0794d64502a90a2dcc8f98d5fdb1149689e40ab"
+    },
+    {
+      "audioTracks" : 0,
+      "decodedFrames" : 120,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 640,
+        "encodedWidth" : 480,
+        "nominalFrameRate" : 30,
+        "orientation" : "portrait",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "source-portrait.mov"
+      },
+      "path" : "source-portrait.mov",
+      "role" : "Silent digital-pan source, not camera capture",
+      "sha256" : "f9eb47e5f1ef60456c29002fe03f242032c2af4be64c7ac24d4971106fab04d2"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "super8HomeMovie",
+      "decodedFrames" : 72,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 17.992502,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "super8HomeMovie-clip-1.mov"
+      },
+      "path" : "super8HomeMovie-clip-1.mov",
+      "role" : "Developed draft clip; locked landscape",
+      "seed" : 2026100110,
+      "sha256" : "75f5760d20c8b62c89168f1a0d772105c6139b8ffb78989e006f0d34cae33055"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "super8HomeMovie",
+      "decodedFrames" : 72,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 17.992502,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "super8HomeMovie-clip-2.mov"
+      },
+      "path" : "super8HomeMovie-clip-2.mov",
+      "role" : "Developed draft clip; locked landscape",
+      "seed" : 2026100111,
+      "sha256" : "1b8268880387df010b31f83e0873e0ccade9a102af53b866f38d9ecfda96da70"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "super8HomeMovie",
+      "decodedFrames" : 144,
+      "duration" : 8,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 8,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 18,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "super8HomeMovie-silent.mov"
+      },
+      "path" : "super8HomeMovie-silent.mov",
+      "role" : "Silent draft Movie",
+      "sha256" : "85ebf4b86d27df816116d86a4b763bb37d0825ffafbe4895a52aa499faf4aebc"
+    },
+    {
+      "audioTracks" : 1,
+      "camera" : "super8HomeMovie",
+      "decodedFrames" : 144,
+      "duration" : 8,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 8,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 18,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "super8HomeMovie-instrumental.mov"
+      },
+      "path" : "super8HomeMovie-instrumental.mov",
+      "role" : "Draft Movie with original instrumental",
+      "sha256" : "1dbb439f6114293c9b6c447264404dd0fc3a812d8424e6dadad614ae284e23a9"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "cinema16mm",
+      "decodedFrames" : 96,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 24,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "cinema16mm-clip-1.mov"
+      },
+      "path" : "cinema16mm-clip-1.mov",
+      "role" : "Developed draft clip; locked landscape",
+      "seed" : 2026100120,
+      "sha256" : "d87ae0b8e159a7f898e2d8bb944b1e08a459c5453470d376329fded72e54697a"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "cinema16mm",
+      "decodedFrames" : 96,
+      "duration" : 4,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 4,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 24,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "cinema16mm-clip-2.mov"
+      },
+      "path" : "cinema16mm-clip-2.mov",
+      "role" : "Developed draft clip; locked landscape",
+      "seed" : 2026100121,
+      "sha256" : "33449768b530553160fcf644ec5d830aa5613f56c3c2947a0f819e8031252a2e"
+    },
+    {
+      "audioTracks" : 0,
+      "camera" : "cinema16mm",
+      "decodedFrames" : 192,
+      "duration" : 8,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 8,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 24,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "cinema16mm-silent.mov"
+      },
+      "path" : "cinema16mm-silent.mov",
+      "role" : "Silent draft Movie",
+      "sha256" : "1ada4025748f6f5bb68f9d015e31318fbe8cd431cda2ac1a828d8c7de284177f"
+    },
+    {
+      "audioTracks" : 1,
+      "camera" : "cinema16mm",
+      "decodedFrames" : 192,
+      "duration" : 8,
+      "movie" : {
+        "codecFourCC" : "avc1",
+        "durationSeconds" : 8,
+        "encodedHeight" : 1440,
+        "encodedWidth" : 1920,
+        "nominalFrameRate" : 24,
+        "orientation" : "landscape",
+        "preferredTransform" : {
+          "a" : 1,
+          "b" : 0,
+          "c" : 0,
+          "d" : 1,
+          "tx" : 0,
+          "ty" : 0
+        },
+        "relativePath" : "cinema16mm-instrumental.mov"
+      },
+      "path" : "cinema16mm-instrumental.mov",
+      "role" : "Draft Movie with original instrumental",
+      "sha256" : "d847394903da83b35633b1cbc5304e8f09ac6f8a8d95f1a5483aae31979a4fcf"
+    }
+  ],
+  "movieSource" : "Generated digital pan of the still, not captured motion. Two four-second silent clips: landscape then portrait.",
+  "musicSource" : "Original deterministic score and synthesis in AssetReviewGenerator\/Music.swift; no sampled recording.",
+  "schemaVersion" : 1,
+  "source" : "Built-in image generation, 2026-10-01. See ..\/sources\/PROVENANCE.md.",
+  "sourceSHA256" : "d9f73e6861de1647208f91229f479d7b95474e735da10f19f37405cb482a038f",
+  "status" : "Draft review only; not production cleared, hardware evidence or approved DEC-04\/05\/11.",
+  "treatmentVersion" : "film-look-1-provisional"
+}

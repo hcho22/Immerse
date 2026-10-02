@@ -1,0 +1,89 @@
+{
+  "assets" : {
+    "clip-1" : "9c757d6d035b02a9632e9286ff46f42275e184419d22c387fc72ffbe20eff1f7",
+    "clip-2" : "3505ac30a4b3be8efdd94372b0c4f1406f3b262bae394ca4574651b174e7fef8",
+    "movie-0" : "586782a8c2ece3a8d3c67f1184011d9fc5e9859a80079c738e793a03356a04f1"
+  },
+  "film" : {
+    "camera" : {
+      "capacity" : {
+        "seconds" : {
+          "_0" : 200
+        }
+      },
+      "displayName" : "1960s Super 8 Home Movie",
+      "id" : "super8HomeMovie",
+      "medium" : "movie",
+      "revealRule" : "movieDevelopment",
+      "supportsBuiltInSoundtrack" : true
+    },
+    "captures" : [
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572801,
+        "sequenceNumber" : 1
+      },
+      {
+        "kind" : {
+          "movieClip" : {
+            "orientation" : "landscape",
+            "seconds" : 0.16833333333333333
+          }
+        },
+        "revealState" : "revealed",
+        "savedAt" : 812572802,
+        "sequenceNumber" : 2
+      }
+    ],
+    "completionState" : {
+      "completedEarly" : {
+        "wasted" : {
+          "seconds" : {
+            "_0" : 199.66333333333333
+          }
+        }
+      }
+    },
+    "developmentState" : "developed",
+    "id" : "4EF449A1-A143-45B3-8EFC-CEDDC03861D5",
+    "isArchived" : false,
+    "loadedAt" : 812581424.904392,
+    "movieOrientation" : "portrait",
+    "title" : "Synthetic process exit"
+  },
+  "privateFiles" : [
+    "3A6\/App\/Media\/4EF449A1-A143-45B3-8EFC-CEDDC03861D5\/clip-1.mov",
+    "3A6\/App\/Media\/4EF449A1-A143-45B3-8EFC-CEDDC03861D5\/clip-2.mov",
+    "3A6\/App\/Media\/4EF449A1-A143-45B3-8EFC-CEDDC03861D5\/movie-1-2-1D110C64-2BF0-429C-A582-6E8588110981.mov",
+    "3A6\/App\/film-store.sqlite",
+    "3A6\/App\/film-store.sqlite-shm",
+    "3A6\/App\/film-store.sqlite-wal"
+  ],
+  "process" : 13218,
+  "run" : {
+    "assignments" : {
+      "1" : {
+        "seed" : 13949844038031152431,
+        "sequenceNumber" : 1
+      },
+      "2" : {
+        "seed" : 5109657966164580166,
+        "sequenceNumber" : 2
+      }
+    },
+    "completedSequences" : [
+      2,
+      1
+    ],
+    "filmID" : "4EF449A1-A143-45B3-8EFC-CEDDC03861D5",
+    "isComplete" : true,
+    "printProcess" : "color",
+    "treatmentVersion" : "film-look-1-provisional"
+  }
+}

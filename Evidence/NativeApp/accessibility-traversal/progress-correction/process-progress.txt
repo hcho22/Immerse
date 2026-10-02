@@ -1,0 +1,3 @@
+71609       01:40  35.7 /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild
+74184       01:17  10.9 /Users/hcho/Library/Developer/CoreSimulator/Devices/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60/data/Containers/Bundle/Application/EAE2CED3-8DDC-43F3-9802-D656730C1EF4/ImmerseUITests-Runner.app/ImmerseUITests-Runner
+75934       01:03  46.8 /Users/hcho/Library/Developer/CoreSimulator/Devices/AA6AD12A-9D0E-4948-ABD2-760AA97B6A60/data/Containers/Bundle/Application/20823EA2-A709-43BC-8517-37A6E9127AB5/Immerse.app/Immerse

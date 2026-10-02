@@ -1,0 +1,3 @@
+mode=receipt-scope
+selection=ReceiptScopeTests
+result=DerivedData/Export036-receipt-scope-039-1.xcresult

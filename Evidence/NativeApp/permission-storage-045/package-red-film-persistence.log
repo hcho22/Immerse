@@ -1,0 +1,26 @@
+[0/1] Planning build
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Compiling FilmPersistenceTests PrivacyRecoveryTests.swift
+[4/5] Emitting module FilmPersistenceTests
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmPersistencePackageTests
+Build complete! (3.86s)
+Test Suite 'Selected tests' started at 2026-10-01 15:53:39.164.
+Test Suite 'FilmPersistencePackageTests.xctest' started at 2026-10-01 15:53:39.166.
+Test Suite 'PrivacyRecoveryTests' started at 2026-10-01 15:53:39.166.
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected]' started.
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Tests/FilmPersistenceTests/PrivacyRecoveryTests.swift:113: error: -[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected] : XCTAssertThrowsError failed: did not throw an error
+/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/Packages/FilmPersistence/Tests/FilmPersistenceTests/PrivacyRecoveryTests.swift:124: error: -[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected] : XCTAssertFalse failed
+Test Case '-[FilmPersistenceTests.PrivacyRecoveryTests testDiscardKeepsTombstoneWhenExistingStagedCopyCannotBeInspected]' failed (0.313 seconds).
+Test Suite 'PrivacyRecoveryTests' failed at 2026-10-01 15:53:39.480.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.313 (0.314) seconds
+Test Suite 'FilmPersistencePackageTests.xctest' failed at 2026-10-01 15:53:39.480.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.313 (0.314) seconds
+Test Suite 'Selected tests' failed at 2026-10-01 15:53:39.480.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.313 (0.316) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

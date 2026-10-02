@@ -1,0 +1,31 @@
+Building for debugging...
+[0/3] Write sources
+[1/3] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module FilmPersistence
+[4/5] Compiling FilmPersistence FilmRepository.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking FilmPersistencePackageTests
+Build complete! (4.69s)
+Test Suite 'Selected tests' started at 2026-10-01 06:17:28.259.
+Test Suite 'FilmPersistencePackageTests.xctest' started at 2026-10-01 06:17:28.261.
+Test Suite 'SourceCleanupTests' started at 2026-10-01 06:17:28.261.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testChangedMasterAfterDecodeKeepsSource]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testChangedMasterAfterDecodeKeepsSource]' passed (2.840 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testCompletedRollAcceptsOriginalChoiceBeforeDevelopmentWithoutRevealingSources]' passed (0.025 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testExportRequestedCannotDeleteSourceUntilMatchingSuccessfulReceiptAndDecode]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testExportRequestedCannotDeleteSourceUntilMatchingSuccessfulReceiptAndDecode]' passed (2.670 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testMovieCleanupRequiresDecodableClipAndFullMovieWhileRetainingBoth]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testMovieCleanupRequiresDecodableClipAndFullMovieWhileRetainingBoth]' passed (2.809 seconds).
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testNondecodableMasterAndSealedOriginalCannotAuthorizeCleanupOrExport]' started.
+Test Case '-[FilmPersistenceTests.SourceCleanupTests testNondecodableMasterAndSealedOriginalCannotAuthorizeCleanupOrExport]' passed (0.032 seconds).
+Test Suite 'SourceCleanupTests' passed at 2026-10-01 06:17:36.638.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 8.375 (8.377) seconds
+Test Suite 'FilmPersistencePackageTests.xctest' passed at 2026-10-01 06:17:36.638.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 8.375 (8.377) seconds
+Test Suite 'Selected tests' passed at 2026-10-01 06:17:36.638.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 8.375 (8.379) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

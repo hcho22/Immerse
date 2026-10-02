@@ -1,0 +1,7 @@
+{
+  "backend" : "native-synthetic-no-external-services",
+  "camera" : "cinema16mm",
+  "createdUTC" : "2026-10-01T19:55:20Z",
+  "film" : "F58038D7-8DF9-4917-B4D5-B8B40D96457C",
+  "label" : "throw-beforeRevealOrCleanup(FilmRuntime.DevelopmentFinalization.sourceCleanup)"
+}

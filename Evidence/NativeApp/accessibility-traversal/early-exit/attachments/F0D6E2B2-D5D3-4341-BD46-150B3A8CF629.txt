@@ -1,0 +1,1 @@
+SETUP_PAIR time=1790878991.291687 uptime=1246367.14134217 event=scroll.progress requested=-394.66666666666674 gesture=-220.0 before=(16.0, 29.33333333333337, 370.0, 93.33333333333333) label=Silent capture after=(16.0, -87.33333333333337, 370.0, 240.66666666666666) label=Movie Orientation

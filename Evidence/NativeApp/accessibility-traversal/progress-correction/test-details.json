@@ -1,0 +1,76 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "deviceName" : "Immerse v1 Validation",
+      "modelName" : "iPhone 17 Pro",
+      "osBuildNumber" : "23F77",
+      "osVersion" : "26.5",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "duration" : "Ran for 10 minutes",
+  "durationInSeconds" : 600,
+  "hasMediaAttachments" : true,
+  "hasPerformanceMetrics" : false,
+  "startTime" : 1790877670.888,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal()",
+  "testIdentifierURL" : "test://com.apple.xcode/Immerse/ImmerseUITests/SetupTraversalDiagnosisTests/testPairedSystemLargestTraversal",
+  "testName" : "testPairedSystemLargestTraversal()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Failed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "details" : "0~XGGHP4MmqiJFMIEbxWGGDGLZx65C_GBugtI4ZDDqIgIMjyLELoakHQ5vpBFdQaWMwPtKFscWTqaTU-mhRMnRew==",
+                  "name" : "2026-10-01 181110 +0000-Spindump_0_3F814A3F-52DF-4645-9255-FE7665DFA2B8.txt",
+                  "nodeIdentifier" : "DFDCEB80-1398-452D-9BC2-0216A9F73841",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Test exceeded execution time allowance of 10 minutes",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed"
+            },
+            {
+              "children" : [
+                {
+                  "name" : "Complete Issue Description.txt",
+                  "nodeIdentifier" : "DD949001-16C7-4C7F-BA76-565077EE9071",
+                  "nodeType" : "Attachment"
+                }
+              ],
+              "name" : "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported and may result in a broken view hierarchy. Add your view above UIHostingController.view in a common superview or insert it into your SwiftUI content in a UIViewRepresentable instead.",
+              "nodeType" : "Runtime Warning"
+            }
+          ],
+          "duration" : "10m",
+          "durationInSeconds" : 605.0929999351501,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Failed"
+        }
+      ],
+      "details" : "iOS Simulator 26.5",
+      "duration" : "10m",
+      "durationInSeconds" : 605.0929999351501,
+      "name" : "iPhone 17 Pro",
+      "nodeIdentifier" : "AA6AD12A-9D0E-4948-ABD2-760AA97B6A60",
+      "nodeType" : "Device",
+      "result" : "Failed"
+    }
+  ]
+}
