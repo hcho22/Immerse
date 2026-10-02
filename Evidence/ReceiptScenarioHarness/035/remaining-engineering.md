@@ -59,6 +59,11 @@ It reproduced and fixed existing-but-uninspectable staging, tombstone and pendin
 It also reproduced the Photos denial alert that gave storage advice with raw error text, and replaced that text across the app's failure surfaces.
 Physical storage pressure, PhotoKit writes, restricted/limited Photos states, a denied Camera on the simulator and prompt timing remain open.
 
+`Evidence/NativeApp/capture-controller-quiescence-046.md` covers Priority 3's `CaptureController` boundary with the actual controller and backend on a camera-less simulator.
+It reproduced and fixed Discard deleting another capture's unfinished save, `open` starting the session after Done, and late save events raising failure alerts during Delete Film and Resume Save.
+The actual app now declines the real simulator Camera request at Load Film; 045's statement that a denied Camera cannot be staged on the simulator is corrected there.
+Actual AVFoundation callbacks, a running session, reopening an existing Film with Camera denied in the actual views, restricted Camera and prompt timing remain open.
+
 ## Historical Inventory
 
 Source inspection: production base `63c21ce0590bb6aefe7a36f38fb0229c9e715813`.

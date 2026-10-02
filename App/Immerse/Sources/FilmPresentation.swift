@@ -1,3 +1,4 @@
+import EntitlementCore
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
@@ -105,6 +106,8 @@ enum FailureCopy {
             return "Photos access was not granted, so nothing was saved and this Film is unchanged. Save again to answer the Photos request."
         case FilmExportError.writeFailed:
             return "Photos could not finish saving, so this Film is unchanged. Anything already saved stays in Photos. Check available storage, then save again."
+        case let error as TrialKeychainError:
+            return "Immerse could not read or update this iPhone's secure Trial record (Keychain \(error.status)). Trial eligibility has not been reset, and any capture waiting to save stays private. Try again while your iPhone is unlocked."
         case FilmExportError.missingReceipt:
             return "Photos did not confirm the save, so this Film is unchanged. A copy may already be in Photos; check there before saving again."
         default:

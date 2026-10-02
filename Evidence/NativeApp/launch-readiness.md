@@ -193,6 +193,13 @@ Staging recovery, privacy tombstones and pending Trial saves no longer treat an 
 A denied add-only Photos status in the actual populated views now shows Photos guidance instead of storage advice and raw error text, and Settings shows readable permission states.
 This is partial CAP-09/STO/PRV/QA-09 software evidence on macOS temporary directories and a simulator privacy revoke, not PhotoKit, device storage-pressure, Camera prompt or physical acceptance.
 
+The `CaptureController` continuation is recorded in `Evidence/NativeApp/capture-controller-quiescence-046.md`.
+Hosted tests drive the actual controller, backend, Trial owner and repository on a camera-less simulator, with Camera authorization injected through the existing protocol and the shipping default unchanged.
+Four reproduced defects are fixed: Discard deleted another capture's unfinished save, an `open` still finishing a save started the session after Done, and late save events showed storage failure alerts during Delete Film and Resume Save.
+The actual app now declines the real simulator Camera request at Load Film, loads nothing and shows Camera Off in Settings; a Keychain Trial failure no longer gives storage advice.
+The iOS 26.2 hosted stage, which CI runs, exposed an abort in `SubscriptionController`'s `isolated deinit`; a plain deinit replaces it and all 16 hosted tests pass on 26.2.
+This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a running camera, AVFoundation callback, physical interruption or device acceptance.
+
 ## Required Native Manual Matrix
 
 Use only captain-authorized devices and synthetic/private test media. The captain

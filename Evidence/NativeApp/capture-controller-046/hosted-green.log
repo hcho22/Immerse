@@ -1,0 +1,7 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/CaptureController-046-green.xcresult
+
+2026-10-01 17:36:27.382 xcodebuild[73863:157854837] [MT] IDETestOperationsObserverDebug: 20.570 elapsed -- Testing started completed.
+2026-10-01 17:36:27.383 xcodebuild[73863:157854837] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 17:36:27.383 xcodebuild[73863:157854837] [MT] IDETestOperationsObserverDebug: 20.570 sec, +20.570 sec -- end
+Testing started

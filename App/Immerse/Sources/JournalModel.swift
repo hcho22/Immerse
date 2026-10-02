@@ -24,7 +24,8 @@ final class JournalModel {
     let repository: FilmRepository
     let processor: FilmProcessor
     let trial: TrialCoordinator
-    let capture = CaptureController()
+    let capture: CaptureController
+    private let cameraAuthorizer: any CapturePermissionAuthorizing
     let billing = SubscriptionController()
     let mediaCatalog: BundleMediaCatalog?
     let catalogError: String?
@@ -38,7 +39,10 @@ final class JournalModel {
     private(set) var pendingFilms: Set<UUID> = []
     private(set) var initialRecoveryPending = true
 
-    init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore()) throws {
+    init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
+         cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer()) throws {
+        self.cameraAuthorizer = cameraAuthorizer
+        capture = CaptureController(authorizer: cameraAuthorizer)
         do {
             guard let resources = Bundle.main.resourceURL,
                   let manifest = Bundle.main.url(forResource: "MediaCatalog", withExtension: "json") else {
@@ -112,9 +116,8 @@ final class JournalModel {
     func load(camera: CameraPackage, title: String, orientation: MovieOrientation) async throws -> Film {
         guard !initialRecoveryPending else { throw JournalError.operationInProgress }
         // Permission is checked before any Film or Trial activation is written.
-        let authorizer = AVFoundationCaptureAuthorizer()
-        let allowed = authorizer.authorizationStatus() == .authorized
-            ? true : await authorizer.requestAccess()
+        let allowed = cameraAuthorizer.authorizationStatus() == .authorized
+            ? true : await cameraAuthorizer.requestAccess()
         guard allowed else { throw JournalError.cameraDenied }
         await billing.refresh()
         if billing.access == .active {
@@ -141,6 +144,15 @@ final class JournalModel {
         try await processor.develop(filmID: id)
     }
 
+    /// Instant prints develop as each save lands. A print saved while another operation owns
+    /// or is removing the Film stays sealed and is offered through Resume Development.
+    func developSavedPrint(_ id: UUID) {
+        perform { [self] in
+            guard film(id) != nil, !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { return }
+            try await develop(id)
+        }
+    }
+
     func chooseOriginals(_ id: UUID, sequences: [Int], export: Bool) throws {
         for sequence in sequences where try repository.originalDisposition(filmID: id, sequenceNumber: sequence) == nil {
             try repository.chooseOriginalExport(filmID: id, sequenceNumber: sequence, export: export)
@@ -162,9 +174,14 @@ final class JournalModel {
         mediaRevision = UUID()
         // Clear every app-owned visible image/player before acknowledging removal.
         defer { refresh(); hiddenFilms.remove(id); mediaRevision = UUID() }
-        try await capture.cancelForPrivacy(filmID: id)
-        if let sequence { try await processor.discard(filmID: id, sequence: sequence) }
-        else { try await trial.deleteFilm(filmID: id, processor: processor) }
+        if let sequence {
+            // Discard tombstones only this revealed capture, including any staged copy of it.
+            // Another capture's unfinished save stays staged for its retry.
+            try await processor.discard(filmID: id, sequence: sequence)
+        } else {
+            try await capture.cancelForPrivacy(filmID: id)
+            try await trial.deleteFilm(filmID: id, processor: processor)
+        }
     }
 
     func export(_ id: UUID, originals: Bool) async throws {

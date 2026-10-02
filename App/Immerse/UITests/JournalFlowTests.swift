@@ -64,6 +64,47 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(app, name: "Settings-landscape-accessibility-largest")
     }
 
+    func testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings() throws {
+        let app = XCUIApplication()
+        app.resetAuthorizationStatus(for: .camera)
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        app.buttons["camera-disposable1990s"].tap()
+        let load = app.buttons["load-film"]
+        for _ in 0..<8 where !load.isHittable { app.swipeUp() }
+
+        // Answer the actual system Camera request as a person declining it. Without this
+        // monitor, XCTest's own alert handling would allow access.
+        var declined = false
+        let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
+            let deny = alert.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Don")).firstMatch
+            guard alert.label.localizedCaseInsensitiveContains("Camera"), deny.exists else { return false }
+            deny.tap()
+            declined = true
+            return true
+        }
+        defer { removeUIInterruptionMonitor(monitor) }
+        load.tap()
+        app.navigationBars.firstMatch.tap()
+        let denied = app.staticTexts["Camera access is off. No Film was loaded. Allow Camera in iPhone Settings."]
+        XCTAssertTrue(denied.waitForExistence(timeout: 10))
+        XCTAssertTrue(declined, "Load Film must ask for Camera access")
+        retainScreenshot(app, name: "Load-camera-denied")
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 5))
+        app.buttons["Settings"].tap()
+        // Form rows combine the label and value into one accessibility element.
+        let camera = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera, ")).firstMatch
+        for _ in 0..<8 where !camera.exists { app.swipeUp() }
+        XCTAssertEqual(camera.label, "Camera, Off", "Settings reports the declined Camera access")
+        retainScreenshot(app, name: "Settings-camera-denied")
+    }
+
     private func retainScreenshot(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name

@@ -1,0 +1,19 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/CaptureController-046-red.xcresult
+
+2026-10-01 17:34:36.074 xcodebuild[60852:157811635] [MT] IDETestOperationsObserverDebug: 30.622 elapsed -- Testing started completed.
+2026-10-01 17:34:36.074 xcodebuild[60852:157811635] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 17:34:36.074 xcodebuild[60852:157811635] [MT] IDETestOperationsObserverDebug: 30.622 sec, +30.622 sec -- end
+Failing tests:
+	CaptureControllerIntegrationTests.testDeletingFilmWhileItsSaveIsHeldIgnoresTheLateSaveEvent()
+	CaptureControllerIntegrationTests.testDiscardingRevealedPrintKeepsAnotherCapturesUnfinishedSave()
+	CaptureControllerIntegrationTests.testDoneDuringCameraOpenFinishesTheSaveWithoutStartingTheSession()
+	CaptureControllerIntegrationTests.testDoneDuringCameraOpenFinishesTheSaveWithoutStartingTheSession()
+	CaptureControllerIntegrationTests.testOpeningAnotherFilmFinishesThePreviousFilmsSaveFirst()
+	CaptureControllerIntegrationTests.testResumeSaveForAttachedInstantCameraShowsNoFailure()
+	CaptureControllerIntegrationTests.testResumeSaveForAttachedInstantCameraShowsNoFailure()
+	CaptureControllerIntegrationTests.testResumeSaveForAttachedInstantCameraShowsNoFailure()
+
+** TEST FAILED **
+
+Testing started

@@ -10,6 +10,7 @@
 		02FD7E75DF77B0109CA571BB /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = B549794A50EBE804BFE73FEC /* EntitlementCore */; };
 		042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */; };
 		1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */; };
+		279F9A68D0943C4A060B5F54 /* CaptureControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E169BC5D2C79D13E86476FFB /* CaptureControllerIntegrationTests.swift */; };
 		2E67A8B62F3CA31DDDB0D064 /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */; };
 		447BA416FD2D827F9B770AF2 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = B7AE777EF9385D731C173E89 /* RenderCore */; };
 		4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD585D6F2151663DA3927D1E /* ImmerseApp.swift */; };
@@ -84,6 +85,7 @@
 		CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MediaCatalog.json; sourceTree = "<group>"; };
 		D2B43A4D3825AFE1F924B37B /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
 		DD83CB89DEA95F2368FD8F65 /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
+		E169BC5D2C79D13E86476FFB /* CaptureControllerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureControllerIntegrationTests.swift; sourceTree = "<group>"; };
 		E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmPresentation.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 		DD1EAF1F13BA30FFB30F928C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E169BC5D2C79D13E86476FFB /* CaptureControllerIntegrationTests.swift */,
 				46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */,
 				8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */,
 				0AC13BF357CB3AF716BC273D /* Fixtures */,
@@ -357,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279F9A68D0943C4A060B5F54 /* CaptureControllerIntegrationTests.swift in Sources */,
 				1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */,
 				7A1F3ED8838FF78DCAB255B3 /* StoreKitSubscriptionTests.swift in Sources */,
 			);

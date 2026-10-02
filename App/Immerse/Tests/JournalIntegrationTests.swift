@@ -92,17 +92,29 @@ final class JournalIntegrationTests: XCTestCase {
         let camera = try XCTUnwrap(FailureCopy.message(for: JournalError.cameraDenied))
         XCTAssertTrue(camera.contains("iPhone Settings"), camera)
         XCTAssertFalse(camera.contains("No new Film"), "Reopening an existing Film's camera loads nothing")
+        let keychain = try XCTUnwrap(FailureCopy.message(for: trialRecordFailure(errSecInteractionNotAllowed)))
+        XCTAssertFalse(keychain.contains("storage"), keychain)
+        XCTAssertTrue(keychain.contains("has not been reset"), keychain)
         let storage = try XCTUnwrap(FailureCopy.message(for: CocoaError(.fileWriteOutOfSpace)))
         XCTAssertTrue(storage.hasPrefix(FailureCopy.retry), storage)
         XCTAssertTrue(storage.contains("enough space"), storage)
         let failures: [Error] = [JournalError.cameraDenied, FilmExportError.permissionDenied, FilmExportError.needsPermission,
                                  FilmExportError.writeFailed("synthetic"), FilmExportError.missingReceipt,
-                                 PersistenceError.invalidMedia, NativeCaptureError.invalidMedia, CocoaError(.fileReadNoPermission)]
+                                 PersistenceError.invalidMedia, NativeCaptureError.invalidMedia, CocoaError(.fileReadNoPermission),
+                                 trialRecordFailure(errSecNotAvailable)]
         for failure in failures {
             let message = try XCTUnwrap(FailureCopy.message(for: failure))
             XCTAssertFalse(message.contains("couldn’t be completed"), message)
             XCTAssertFalse(message.contains("error"), message)
         }
+    }
+
+    func testJournalThatCannotOpenItsStorageFailsWithoutCrashing() async throws {
+        // A regular file where the Journal directory belongs, as when app storage cannot be opened.
+        let blocker = FileManager.default.temporaryDirectory.appendingPathComponent("JournalBlocked-\(UUID())")
+        try Data().write(to: blocker)
+        defer { try? FileManager.default.removeItem(at: blocker) }
+        XCTAssertThrowsError(try JournalModel(root: blocker.appendingPathComponent("FilmJournal")))
     }
 
     func testEmptyFilmCannotDevelopAndCanBeDeleted() async throws {
@@ -175,18 +187,21 @@ final class JournalIntegrationTests: XCTestCase {
         calls.makeReadable()
         guard case .consumed = try await model.trial.state() else { return XCTFail("Unknown committed outcome cannot refund") }
     }
+}
 
-    private func syntheticPhoto() throws -> Data {
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
-        let image = UIGraphicsImageRenderer(size: CGSize(width: 128, height: 96), format: format).image { context in
-            UIColor.systemRed.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 64, height: 96))
-            UIColor.systemGreen.setFill()
-            context.fill(CGRect(x: 64, y: 0, width: 64, height: 96))
-        }
-        return try XCTUnwrap(image.jpegData(compressionQuality: 0.9))
-    }
+/// The error the production store raises when Keychain returns `status`.
+private func trialRecordFailure(_ status: OSStatus) -> Error {
+    do { _ = try KeychainDeviceTrialStore(calls: FailingReceiptCalls(status: status)).read() }
+    catch { return error }
+    XCTFail("Keychain status \(status) did not fail the Trial record read")
+    return CancellationError()
+}
+
+private struct FailingReceiptCalls: TrialKeychainCalling {
+    let status: OSStatus
+    func read(service: String) -> TrialKeychainRead { TrialKeychainRead(status: status, data: nil) }
+    func add(service: String, data: Data) -> OSStatus { status }
+    func update(service: String, data: Data) -> OSStatus { status }
 }
 
 private final class JournalReceiptCalls: TrialKeychainCalling, Sendable {

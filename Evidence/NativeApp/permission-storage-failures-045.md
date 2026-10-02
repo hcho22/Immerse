@@ -152,5 +152,6 @@ The uninspectable cases use POSIX permissions on macOS temporary directories.
 They do not execute iOS sandbox, data-protection or flash I/O failures, physical storage pressure or power loss.
 The Photos case reads the simulator's add-only authorization after a host revoke; no PhotoKit write, restricted or limited status, prompt presentation or real Photos library is exercised.
 The camera denial is covered only by the hosted copy test, because the simulator cannot stage a denied camera.
+Checkpoint 046 found that the simulator does present the actual Camera request and that XCTest allows it unless a test declines it; see `capture-controller-quiescence-046.md`.
 `CaptureStartupCoordinator` and its package tests are not used by the app, which checks Camera permission inline in `JournalModel.load` and `CaptureController.open`; its tests do not establish app behavior.
 Original QA-13 accessibility failures, hardware capture/Photos/Keychain/backup gates and product decisions are unchanged and remain open.

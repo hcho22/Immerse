@@ -9,7 +9,9 @@ final class SubscriptionController {
     private(set) var products: [Product] = []
     private(set) var busy = false
     var message: String?
-    private var listener: Task<Void, Never>?
+    // Written once in init and only cancelled in deinit. An `isolated deinit` aborted on the
+    // iOS 26.2 runtime when the controller was released on the main thread outside a task.
+    @ObservationIgnored private nonisolated(unsafe) var listener: Task<Void, Never>?
     var configured: Bool { store.configuration != nil }
 
     init(configuration: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration()) {
@@ -23,7 +25,7 @@ final class SubscriptionController {
         }
     }
 
-    isolated deinit { listener?.cancel() }
+    deinit { listener?.cancel() }
 
     func refresh() async { access = await store.access() }
 
