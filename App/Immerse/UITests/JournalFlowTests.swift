@@ -30,6 +30,25 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["No archived Films"].exists)
     }
 
+    /// The audit exceptions stay narrow against the real auditor: with only the label accepted, the same
+    /// Super 8 audit still reports "Portrait" and "Landscape". If the auditor stops flagging them, this fails,
+    /// and the Dynamic Type entries in `AuditException.accepted` should be re-examined.
+    func testAuditStillReportsFindingsOutsideItsExceptions() throws {
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        app.buttons["camera-super8HomeMovie"].tap()
+        XCTAssertTrue(app.staticTexts["Capacity, 3:20 of film"].waitForExistence(timeout: 5))
+        let labelOnly = AuditException.accepted.filter { $0.type == .dynamicType && $0.label == "Movie Orientation" }
+        XCTAssertEqual(labelOnly.count, 1)
+        var reported: [String] = []
+        XCTExpectFailure("Findings outside the exceptions must fail the audit") {
+            reported = (try? audit(app, name: "Super8-load-default", for: .dynamicType, exceptions: labelOnly)) ?? []
+        }
+        XCTAssertEqual(Set(reported), ["Portrait", "Landscape"])
+    }
+
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
@@ -121,17 +140,26 @@ final class JournalFlowTests: XCTestCase {
         add(attachment)
     }
 
-    private func audit(_ app: XCUIApplication, name: String) throws {
+    /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns
+    /// the labels of the findings it reported.
+    @discardableResult
+    private func audit(_ app: XCUIApplication, name: String, for types: XCUIAccessibilityAuditType = .all,
+                       exceptions: [AuditException] = AuditException.accepted) throws -> [String] {
         let tree = XCTAttachment(string: app.debugDescription)
         tree.name = "\(name)-accessibility-tree"
         tree.lifetime = .keepAlways
         add(tree)
-        try app.performAccessibilityAudit { issue in
+        var reported: [String] = []
+        try app.performAccessibilityAudit(for: types) { issue in
+            let label = issue.element?.label
+            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label)
             let detail = XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied by auditor")")
-            detail.name = "\(name)-audit-node"
+            detail.name = "\(name)-audit-node\(accepted ? "-accepted-exception" : "")"
             detail.lifetime = .keepAlways
             self.add(detail)
-            return false
+            if !accepted { reported.append(label ?? "") }
+            return accepted
         }
+        return reported
     }
 }

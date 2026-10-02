@@ -165,10 +165,10 @@ private struct OrientationChoice: View {
     @Binding var selection: MovieOrientation
 
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 2) { options }
-            VStack(spacing: 2) { options }
-        }
+        // One layout keeps both options' identity across text sizes. `ViewThatFits` swapped in a
+        // separate copy of the buttons when the text grew, which Xcode's Dynamic Type audit reports as
+        // text that cannot change size, and it kept the side-by-side copy while "Landscape" broke mid-word.
+        SegmentLayout(spacing: 2) { options }
         .padding(2)
         .background(Color(uiColor: .tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10))
         .accessibilityElement(children: .contain)
@@ -192,4 +192,51 @@ private struct OrientationChoice: View {
     }
 
     private static let selectedFill = Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? .systemGray3 : .systemBackground })
+}
+
+/// Places its subviews side by side in equal widths when each fits on its own unwrapped width, and
+/// stacks them at full width otherwise.
+private struct SegmentLayout: Layout {
+    var spacing: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width ?? idealWidth(subviews)
+        if fitsSideBySide(width, subviews) {
+            let height = subviews.map { $0.sizeThatFits(ProposedViewSize(width: segment(width, subviews), height: nil)).height }.max() ?? 0
+            return CGSize(width: width, height: height)
+        }
+        let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
+        return CGSize(width: width, height: heights.reduce(0, +) + spacing * CGFloat(max(subviews.count - 1, 0)))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        if fitsSideBySide(bounds.width, subviews) {
+            let width = segment(bounds.width, subviews)
+            for (index, subview) in subviews.enumerated() {
+                let x = bounds.minX + CGFloat(index) * (width + spacing)
+                subview.place(at: CGPoint(x: x, y: bounds.minY), proposal: ProposedViewSize(width: width, height: bounds.height))
+            }
+            return
+        }
+        var y = bounds.minY
+        for subview in subviews {
+            let height = subview.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
+            subview.place(at: CGPoint(x: bounds.minX, y: y), proposal: ProposedViewSize(width: bounds.width, height: height))
+            y += height + spacing
+        }
+    }
+
+    private func fitsSideBySide(_ width: CGFloat, _ subviews: Subviews) -> Bool {
+        idealWidth(subviews) <= width
+    }
+
+    /// The width that shows every subview at its widest unwrapped size in equal segments.
+    private func idealWidth(_ subviews: Subviews) -> CGFloat {
+        let widest = subviews.map { $0.sizeThatFits(.unspecified).width }.max() ?? 0
+        return widest * CGFloat(subviews.count) + spacing * CGFloat(max(subviews.count - 1, 0))
+    }
+
+    private func segment(_ width: CGFloat, _ subviews: Subviews) -> CGFloat {
+        (width - spacing * CGFloat(max(subviews.count - 1, 0))) / CGFloat(max(subviews.count, 1))
+    }
 }

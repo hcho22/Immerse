@@ -1,0 +1,44 @@
+Dynamic Type probe runs, 2026-10-02, Xcode 26.5 (17F42), iPhone 17 Pro simulator iOS 26.5 (23F77),
+light appearance, large text. Probe: DynamicTypeProbeTests.swift.txt, temporarily appended to the UI test target.
+Each audit relaunches the app, opens the Super 8 load screen at the default size and runs
+performAccessibilityAudit(for: .dynamicType). Lines are the probe's printed console output; y is the flagged
+element's minY in points. Result bundles: DerivedData/Probe-<variant>.xcresult (not committed).
+
+Variant (source change from base 14328bf)                                     Flagged
+base (unchanged)                                                              Portrait, Landscape, Movie Orientation (1 of 1)
+v1 container .accessibilityLabel("Movie Orientation") removed                Movie Orientation, Portrait, Landscape (1 of 1)
+v2 label only, OrientationChoice removed                                      Movie Orientation (1 of 1)
+v3 v2 plus explicit .font(.body) on the label                                 Movie Orientation (1 of 1)
+v4 label as a plain Text row, no VStack                                       Handheld..., Silent capture (run 1); Movie Orientation y=393 (run 2, and 4 of 4 in v4c)
+v5 v4 with the text "Probe row"                                               Probe row y=393 (4 of 4)
+v6 base with the mic.slash icon at .title3 instead of a fixed 20 pt           4 of 4 flag Movie Orientation, Portrait, Landscape; 2 of 4 also Handheld, Silent capture, Film title
+v7 base plus a Text("Probe tail") row after the orientation block             Movie Orientation, Portrait, Landscape, Probe tail y=484 (4 of 4)
+f1 base with the HStack candidate .lineLimit(1).fixedSize()                   Movie Orientation, Portrait, Landscape (4 of 4)
+f2 orientation block moved to directly after Capacity (ViewThatFits)          Portrait y=281, Landscape y=281, Handheld y=378, Silent capture y=447 (4 of 4)
+f3 f2 with a plain HStack instead of ViewThatFits                             Handheld y=378, Silent capture y=447 (4 of 4)
+fix1 SegmentLayout, original order                                            Movie Orientation y=408, Portrait y=438, Landscape y=438 (2 of 2)
+fix1-up SegmentLayout, block moved to directly after Capacity                 Handheld y=378, Silent capture y=447 (2 of 2)
+scrollview fix1 with Form replaced by ScrollView+VStack (probe only)          none (run 1); every text element (run 2)
+
+Per-size sweep (testProbeSweep): one launch per category, frames as [minY-maxY] in points, screen height 874.
+fix1 (SegmentLayout, original order):
+L     Silent capture[340-393] Movie Orientat[408-428] Portrait[438-467] Landscape[438-467] Film title[534-554] Trial status u[634-686]
+XL    Silent capture[346-400] Movie Orientat[415-438] Portrait[448-479] Landscape[448-479] Film title[546-569] Trial status u[651-705]
+XXL   Silent capture[377-433] Movie Orientat[448-473] Portrait[483-517] Landscape[483-517] Film title[584-609] Trial status u[693-749]
+XXXL  Silent capture[418-477] Movie Orientat[492-520] Portrait[530-565] Landscape[530-565] Film title[632-660] Trial status u[747-806]
+AX M  Silent capture[486-550] Movie Orientat[565-598] Portrait[608-650] Landscape[608-650] Film title[717-751] Trial status u[843-907]
+AX L  Silent capture[526-596] Movie Orientat[611-650] Portrait[660-708] Landscape[710-758] Film title[825-864]
+AX XL Handheld, pron[453-627] Silent capture[627-705] Movie Orientat[720-768] Portrait[778-834] Landscape[836-892]
+AX XXL Handheld, pron[546-744] Silent capture[744-831] Movie Orientat[846-958] Portrait[968-1032] Landscape[1034-1099]
+AX XXXL One silent Mov[365-583] Handheld, pron[583-862] Silent capture[862-955]
+f3 (plain HStack, block moved up), flagged Handheld and Silent capture:
+AX XL  One silent Mov[521-647] Handheld, pron[647-821] Silent capture[821-899]
+AX XXL One silent Mov[622-821] Handheld, pron[821-1019]
+AX XXXL One silent Mov[666-883]
+
+Reading: in every variant the flagged elements are those on screen at AX XL and no longer on screen at AX XXXL.
+Rows already gone at AX XL (Film title, Trial status) and rows still partly on screen at AX XXXL (One silent
+Movie in f3, Silent capture in fix1) are not flagged. The test's screen recording shows the auditor growing the
+text in place, XS to AX XXXL, without scrolling.
+SegmentLayout sizes: side by side through AX M, stacked from AX L; "Landscape" no longer wraps mid-word (the
+ViewThatFits version showed "Land-scape" at XXXL in the recording).

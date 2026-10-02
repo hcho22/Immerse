@@ -108,3 +108,10 @@ Firstmate answered `qa13-audit-mismatch-049` on 2026-10-02.
 Contrast sampling approximates the text color from the element's pixels; anti-aliasing and icons inside an element can lower the ratio slightly but cannot raise it above the true text contrast.
 The auditor's exact sampling method and timing are not visible; its App Screenshot is the closest available record of the pose.
 Simulator rendering only; VoiceOver, Switch Control and device displays were not exercised.
+
+## Later Correction 052
+
+`qa13-audit-exceptions-052.md` supersedes the retained-failure status above, under the captain's 2026-10-02 instruction to fix the red check.
+The `ViewThatFits` version of the choice swapped its buttons for a second copy as text grew, which is why the audit kept flagging "Portrait" and "Landscape"; one custom layout replaces it.
+The label's finding, and the buttons' finding in their current position, follow the Form rows that leave the screen during the auditor's in-place size sweep, and are accepted as exact exceptions with that evidence.
+The contrast findings above are accepted as exact exceptions per audit point and label, with the at-rest measurements recorded there.

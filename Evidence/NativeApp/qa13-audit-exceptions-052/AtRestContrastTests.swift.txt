@@ -1,0 +1,58 @@
+import XCTest
+
+/// Diagnostic only, kept outside the test suite (Evidence/NativeApp/qa13-audit-exceptions-052/).
+/// Opens the 16mm load screen at the largest text size, as testLargestDynamicTypeCatalogAndLandscapeSettings
+/// does, then scrolls each named element fully between the navigation bar and the bottom edge band and
+/// records its frame with a screenshot, for measurement with contrast.swift.txt.
+@MainActor
+final class AtRestContrastTests: XCTestCase {
+    private let labels = ["Deliberate framing, finer grain", "Silent capture", "Movie Orientation", "Portrait", "Landscape",
+                          "Trial status unavailable", "Your Camera and Movie Orientation", "Subscription", "Load Film"]
+
+    func testRecordNamedElementsAtRest() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].waitForExistence(timeout: 5))
+        for label in labels {
+            let element = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
+            rest(app, element)
+            let lines = ["window \(app.windows.firstMatch.frame)", "navigation \(app.navigationBars.firstMatch.frame)",
+                         "\(label) exists=\(element.exists) frame=\(element.exists ? "\(element.frame)" : "-")"]
+            let text = XCTAttachment(string: lines.joined(separator: "\n"))
+            text.name = "rest-\(label)-frames"
+            text.lifetime = .keepAlways
+            add(text)
+            let shot = XCTAttachment(screenshot: app.screenshot())
+            shot.name = "rest-\(label)"
+            shot.lifetime = .keepAlways
+            add(shot)
+        }
+    }
+
+    /// Short drags until the element is fully between the navigation bar and the bottom edge band. Rows are
+    /// created lazily, so a missing element is looked for further down.
+    private func rest(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch.frame
+        for _ in 0..<40 {
+            let top = app.navigationBars.firstMatch.frame.maxY + 16
+            let bottom = window.maxY - 80
+            guard element.exists else { app.swipeUp(); continue }
+            let frame = element.frame
+            if frame.minY < top {
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.45))
+                    .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.55)))
+            } else if frame.maxY > bottom {
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.55))
+                    .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.45)))
+            } else { break }
+        }
+        Thread.sleep(forTimeInterval: 1)
+    }
+}
