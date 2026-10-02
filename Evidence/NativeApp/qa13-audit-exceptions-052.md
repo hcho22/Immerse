@@ -43,8 +43,8 @@ The elements do follow Dynamic Type: in the per-size sweep the label is 20 pt ta
 
 ## Exceptions
 
-`App/Immerse/UITests/AuditExceptions.swift` lists each accepted finding as an exact audit point (the name passed to the `audit` helper in `JournalFlowTests`), one audit type and one exact element label.
-The helper's issue handler accepts a finding only on an exact match of all three; a finding with no element is never accepted, and every other finding still fails the test.
+`App/Immerse/UITests/AuditExceptions.swift` lists each accepted finding as an exact audit point (the name passed to the `audit` helper in `JournalFlowTests`), one audit type and one exact element label, plus the exact identifier where another element shares the label.
+The helper's issue handler accepts a finding only on an exact match of all of them; a finding with no element is never accepted, and every other finding still fails the test.
 The four audits that call `performAccessibilityAudit()` directly have no exceptions.
 
 | Audit point | Type | Element | Measurement |
@@ -58,11 +58,13 @@ The four audits that call `performAccessibilityAudit()` directly have no excepti
 | `16mm-command-accessibility-largest` | Contrast | "Portrait" | At rest 21.00:1 light, 9.12:1 dark; the same in the auditor's screenshots. |
 | `16mm-command-accessibility-largest` | Contrast | "Trial status unavailable" | At rest 21.00:1 light, 13.94:1 dark; the same in the auditor's screenshots. |
 | `16mm-command-accessibility-largest` | Contrast | "Your Camera and Movie Orientation cannot change after loading." | At rest 21.00:1 light, 13.94:1 dark; the same in the auditor's screenshots, where the row runs past the bottom edge. |
+| `16mm-command-accessibility-largest` | Contrast | "Film title" heading, identifier `film-title-heading` | At rest 21.00:1 light, 13.94:1 dark. Flagged in one dark run whose command pose scrolled further, putting it under the scroll-edge blur (20.64:1 in that screenshot). The title field shares the label, so the identifier must match too. |
 
 Contrast was measured with `qa13-measurement-049/contrast.swift.txt` on each element's reported frame (`contrast-measurements.log`).
 "At rest" means the 16mm load screen at AX XXXL with the element scrolled fully between the navigation bar and 80 pt above the screen bottom (`AtRestContrastTests.swift.txt`, run temporarily, not part of the suite); screenshots `rest-*.png`.
 Every listed element is above 4.5:1 at rest in both appearances, and no listed element is below 9.12:1 there.
-Only elements flagged on this source in five local audit runs (three light, two dark) or in CI runs 36979920415 and 36995398670 are listed.
+Only elements flagged on this source in local audit runs (seven light, three dark) or in CI runs 36979920415 and 36995398670 are listed.
+How far the test's swipes scroll before the command audit varies from run to run, so which rows sit under the top or bottom edge there varies too; that is how the "Film title" heading came to be flagged in only one dark run.
 "Load Film" and "Subscription", flagged in 049 on older source, measure 7.23:1 and 21.00:1 light and 8.24:1 and 13.94:1 dark at rest but are not listed; if they or any other element are flagged later, that finding must be measured and re-examined, not added automatically.
 The same applies if row order or copy on the Super 8 load screen changes and a different element falls into the Dynamic Type band.
 
@@ -81,7 +83,34 @@ With two tests of seven launches, the standard-size half still exceeded the allo
 
 ## Executed Gates
 
-To be completed with the final local runs and the PR's CI run.
+Environment: macOS 26.6.2, Xcode 26.5 (17F42), Swift 6.3.2; new task-owned iPhone 17 Pro simulators on iOS 26.5 (23F77) `6CCFC689-F961-4141-AA5F-FD026F032199` (light, large text, as CI pins) and iOS 26.2 (23C54) `5ABCEA87-5FA7-4CCA-A4E5-3D0E39DBCF2D`.
+The host ran other workloads throughout (load average up to about 400), so local durations are not CI durations.
+
+Full `sh Scripts/validate-local.sh` with all three simulator variables, on commit `ef8829d`, exited 0:
+
+| Stage | Outcome |
+| --- | --- |
+| Requirement map, packages, probes, documents ZIP, unsigned builds | Passed: FilmDomain 17, MediaCatalog 4, RenderFixtures 2, RenderCore 11, FilmPersistence 29, NativeAdapters 28, EntitlementCore 6, FilmRuntime 48; TrialCommitStudy 17, DevelopmentProcessExit 3; 25-entry ZIP comparison. |
+| Populated harness (`Populated-20261002T220341Z.xcresult`) | 12 of 12 passed. |
+| Production UI (`Validation-20261002T221453Z.xcresult`) | 7 passed and 1 expected failure: both original audit tests, the declined-Camera test, three `ContentSizeTests`, the matcher test, and `testAuditStillReportsFindingsOutsideItsExceptions` failing as designed on "Portrait" and "Landscape". |
+| iOS 26.2 hosted (`StoreKit-20261002T222441Z.xcresult`) | 24 of 24 passed: 9 CaptureController, 11 Journal and 4 local StoreKit tests. This is the stage CI has never reached. |
+
+The earlier run on the previous working tree (`validate-local-1`) passed every stage before the UI stage, which failed only because the then-two-part `ContentSizeTests` exceeded the allowance; that led to the three-part split.
+
+After `ef8829d`, a dark run flagged the "Film title" heading as described above; its entry and identifier matching were then added.
+On that final source `ImmerseUITests` passed in light on `6CCFC689` (`UI3-light`) and in dark on a fresh iOS 26.5 simulator `940137D1-7B30-497B-B06D-69E54D9F6FBF` (`UI3-dark`): 8 passed and 1 expected failure each.
+Two earlier dark runs on `6CCFC689` ran a previously installed test bundle after the appearance switch (their test lists did not match the source), which is why the final dark run used a fresh simulator; the app code in those bundles matched, so their findings are still recorded above.
+`super8-xs-l-axl-axxxl-light.png` and `-dark.png` show the Super 8 load screen at XS, L, AX L and AX XXXL: the options sit side by side through the default size, stack at accessibility sizes, and nothing is clipped.
+
+Result bundle hashes (SHA-256 of sorted per-file SHA-256 lines):
+
+| Artifact | Hash |
+| --- | --- |
+| `Validation-20261002T221453Z.xcresult` | `103b200ec79c32166a00286f4c0f605a359b891c4c26624c36da121926454f69` |
+| `Populated-20261002T220341Z.xcresult` | `721e64fb965d9e8df03e5948d28c6206b38c8987363ef5df0ef3b14755ff720a` |
+| `StoreKit-20261002T222441Z.xcresult` | `1839c8a9286881743479efa11819777e83408f56bf7eb5411e431471c672474b` |
+
+A record cannot include the CI run of the commit that adds it; that run is reported on the PR.
 
 ## Limits
 

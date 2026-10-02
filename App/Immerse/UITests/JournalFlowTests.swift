@@ -152,7 +152,8 @@ final class JournalFlowTests: XCTestCase {
         var reported: [String] = []
         try app.performAccessibilityAudit(for: types) { issue in
             let label = issue.element?.label
-            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label)
+            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label,
+                                                  identifier: issue.element?.identifier)
             let detail = XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied by auditor")")
             detail.name = "\(name)-audit-node\(accepted ? "-accepted-exception" : "")"
             detail.lifetime = .keepAlways

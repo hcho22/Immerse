@@ -1,7 +1,8 @@
 import XCTest
 
 /// One accessibility audit finding that measurement shows is not a defect, accepted only at one audit point,
-/// for one audit type and one exact element label. Every other finding still fails the test.
+/// for one audit type and one exact element label, and the exact identifier where the label is shared.
+/// Every other finding still fails the test.
 ///
 /// Entries are not added for a newly flagged element without the same measurement. If row order or copy
 /// changes and a different element is flagged, re-examine it instead of extending this list.
@@ -10,6 +11,7 @@ struct AuditException: Equatable {
     let audit: String
     let type: XCUIAccessibilityAuditType
     let label: String
+    var identifier: String? = nil
 
     static let accepted: [AuditException] = [
         // Dynamic Type at the Super 8 load screen, default text size. The auditor grows the text in place,
@@ -32,27 +34,45 @@ struct AuditException: Equatable {
         AuditException(audit: "16mm-command-accessibility-largest", type: .contrast, label: "Trial status unavailable"),
         AuditException(audit: "16mm-command-accessibility-largest", type: .contrast,
                        label: "Your Camera and Movie Orientation cannot change after loading."),
+        // Under the scroll-edge blur when the command pose scrolls further (20.64:1 in that dark screenshot);
+        // 21.00:1 light and 13.94:1 dark at rest. The title field shares its label, so the identifier must match.
+        AuditException(audit: "16mm-command-accessibility-largest", type: .contrast, label: "Film title",
+                       identifier: "film-title-heading"),
     ]
 
     /// Whether `exceptions` accept a finding; a finding without an element label is never accepted.
     static func accepts(_ exceptions: [AuditException], audit: String, type: XCUIAccessibilityAuditType,
-                        label: String?) -> Bool {
+                        label: String?, identifier: String?) -> Bool {
         guard let label else { return false }
-        return exceptions.contains(AuditException(audit: audit, type: type, label: label))
+        return exceptions.contains {
+            $0.audit == audit && $0.type == type && $0.label == label && ($0.identifier == nil || $0.identifier == identifier)
+        }
     }
 }
 
 /// The matching stays exact: another audit point, audit type or label is reported.
 final class AuditExceptionTests: XCTestCase {
-    private let list = [AuditException(audit: "point", type: .contrast, label: "Accepted")]
+    private let list = [AuditException(audit: "point", type: .contrast, label: "Accepted"),
+                        AuditException(audit: "point", type: .contrast, label: "Shared", identifier: "heading")]
 
     func testOnlyTheExactAuditTypeAndLabelAreAccepted() {
-        XCTAssertTrue(AuditException.accepts(list, audit: "point", type: .contrast, label: "Accepted"))
-        XCTAssertFalse(AuditException.accepts(list, audit: "point", type: .contrast, label: "Unlisted low contrast"))
-        XCTAssertFalse(AuditException.accepts(list, audit: "point", type: .contrast, label: "Accepted text"))
-        XCTAssertFalse(AuditException.accepts(list, audit: "point", type: .contrast, label: nil))
-        XCTAssertFalse(AuditException.accepts(list, audit: "point", type: .dynamicType, label: "Accepted"))
-        XCTAssertFalse(AuditException.accepts(list, audit: "point", type: [.contrast, .dynamicType], label: "Accepted"))
-        XCTAssertFalse(AuditException.accepts(list, audit: "other point", type: .contrast, label: "Accepted"))
+        XCTAssertTrue(accepts("point", .contrast, "Accepted", ""))
+        XCTAssertFalse(accepts("point", .contrast, "Unlisted low contrast", ""))
+        XCTAssertFalse(accepts("point", .contrast, "Accepted text", ""))
+        XCTAssertFalse(accepts("point", .contrast, nil, nil))
+        XCTAssertFalse(accepts("point", .dynamicType, "Accepted", ""))
+        XCTAssertFalse(accepts("point", [.contrast, .dynamicType], "Accepted", ""))
+        XCTAssertFalse(accepts("other point", .contrast, "Accepted", ""))
+    }
+
+    func testAnIdentifiedExceptionNeedsTheExactIdentifier() {
+        XCTAssertTrue(accepts("point", .contrast, "Shared", "heading"))
+        XCTAssertFalse(accepts("point", .contrast, "Shared", "field"))
+        XCTAssertFalse(accepts("point", .contrast, "Shared", ""))
+        XCTAssertFalse(accepts("point", .contrast, "Shared", nil))
+    }
+
+    private func accepts(_ audit: String, _ type: XCUIAccessibilityAuditType, _ label: String?, _ identifier: String?) -> Bool {
+        AuditException.accepts(list, audit: audit, type: type, label: label, identifier: identifier)
     }
 }
