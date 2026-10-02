@@ -209,7 +209,8 @@ Reopening an existing Film's camera with the actual request declined is now cove
 
 `Evidence/NativeApp/qa13-measurement-049.md` measures the original QA-13 findings as a person sees them.
 The Super 8 segmented Movie Orientation titles did not follow Dynamic Type; a scalable choice replaces them and a new UI test asserts the growth.
-Every other named element measures above WCAG when fully visible, the 16mm description falls below only under the iOS 26 scroll-edge band, and several auditor findings do not match the measured rendering. QA-13 stays failed pending Firstmate's decision.
+Every other named element measures above WCAG when fully visible, the 16mm description falls below only under the iOS 26 scroll-edge band after scrolling, and several auditor findings do not match the measured rendering.
+Firstmate kept those as retained QA-13 failures, with the band case as a documented exception; the original line-45 capacity check now asserts the load screen's own element. QA-13 stays failed.
 This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a running camera, AVFoundation callback, physical interruption or device acceptance.
 
 ## Required Native Manual Matrix

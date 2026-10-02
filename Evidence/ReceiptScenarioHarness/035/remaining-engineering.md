@@ -70,7 +70,7 @@ Device touch, assistive technologies and a full dark-mode screen review remain o
 `Evidence/NativeApp/visual-sweep-048.md` reviews the reachable screens in dark and light, fixes small-screen capture layout and dark-mode Done buttons, and covers reopening a Film's camera with the actual request declined in the actual views.
 A live preview, recording, focus/exposure controls and accessibility text-size sweeps of the capture screen remain open on the camera-less simulator.
 
-`Evidence/NativeApp/qa13-measurement-049.md` fixes the Movie Orientation Dynamic Type defect and records measured contrast and scaling for every remaining original audit finding; their disposition awaits Firstmate.
+`Evidence/NativeApp/qa13-measurement-049.md` fixes the Movie Orientation Dynamic Type defect and records measured contrast and scaling for every remaining original audit finding; Firstmate kept them as retained QA-13 failures.
 
 ## Historical Inventory
 

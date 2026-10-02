@@ -87,6 +87,22 @@ Result bundle hashes, computed as the SHA-256 of sorted per-file SHA-256 lines i
 
 Changed sources are hashed in `qa13-measurement-049/source.sha256` against base `35a6ae3`.
 
+## Firstmate Decision and Follow-Up
+
+Firstmate answered `qa13-audit-mismatch-049` on 2026-10-02.
+
+- Line 45 (authorized change): `testLargestDynamicTypeCatalogAndLandscapeSettings` now asserts the load screen's own `Capacity, 2:45 of film` element instead of any `2:45 of film` text, with the reason in a comment. It keeps `.exists`, so the audit that follows runs at the same moment as before. Proof that it still fails when the load screen does not show 2:45: with the 16mm load screen's capacity temporarily changed to "2:46 of film" while the outgoing camera row still read "2:45 of film", the test failed at line 45 (`Line45-049-broken.xcresult`); the change was then restored. On the restored source the full `ImmerseUITests` passed line 45 in light and dark (`Line45-049-restored-light`, `-dark`).
+- Line 16 in `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` (`staticTexts["3:20 of film"]` for Super 8) has the same pattern: that load screen also exposes only "Capacity, 3:20 of film". It has not failed in any run and was not changed, because only line 45 was authorized.
+- Band case: the description is under the scroll-edge band only after scrolling. In the resting, unscrolled 16mm load screen at the largest text size it sits at y = 583 to 800 pt, fully below the navigation bar (bottom edge 189 pt), at 21.00:1 light and 13.94:1 dark (replay `pose-16mm-load`). It reaches the band only at the title audit's pose, after the test's swipe-up loop. Under Firstmate's rule this is iOS system behavior, retained as a documented QA-13 exception with these measurements; no layout change was made. Restored runs measured it at 1.76:1 light and 3.66:1 dark at that pose.
+- The segmented-style Movie Orientation choice stays (decision d).
+- The Dynamic Type findings on "Movie Orientation", "Portrait" and "Landscape", and the contrast findings that measure 8 to 21:1 or name no element, remain retained QA-13 failures with this evidence (decision a). No audit was suppressed, filtered or re-posed, and CI and the validation pipeline still treat the QA-13 failure as a failure.
+
+| Artifact | Hash |
+| --- | --- |
+| `Line45-049-broken.xcresult` | `2d778d94c7a8c03b29594e75636d02bf312d0620775bd3d76a774ff5e05922f3` |
+| `Line45-049-restored-light.xcresult` | `f2ba91e78a30422e1b6801cdc755b9656b5d7d7cbd5085b0c98f7261b0d767ca` |
+| `Line45-049-restored-dark.xcresult` | `b66cef6714793fe56a21e55104f1d5299a0e6d7a8a4f7681fb519e69693d9b3c` |
+
 ## Limits
 
 Contrast sampling approximates the text color from the element's pixels; anti-aliasing and icons inside an element can lower the ratio slightly but cannot raise it above the true text contrast.

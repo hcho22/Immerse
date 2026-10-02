@@ -42,7 +42,10 @@ final class JournalFlowTests: XCTestCase {
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         XCTAssertTrue(camera.isHittable)
         camera.tap()
-        XCTAssertTrue(app.staticTexts["2:45 of film"].exists)
+        // The load screen exposes its capacity as one "Capacity, 2:45 of film" element. A bare "2:45 of film"
+        // query also matched the outgoing camera row mid-push, so it passed or failed with timing
+        // (Evidence/NativeApp/qa13-measurement-049.md).
+        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].exists)
         try app.performAccessibilityAudit()
         retainScreenshot(app, name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
