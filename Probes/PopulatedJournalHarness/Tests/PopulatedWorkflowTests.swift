@@ -41,8 +41,11 @@ final class PopulatedWorkflowTests: XCTestCase {
         app.buttons["Film actions"].tap()
         app.buttons["Rename"].tap()
         let title = app.alerts.textFields.firstMatch
-        title.tap()
+        // A tap on an already focused field moves the cursor to the nearest word boundary, so place it past the end of the title.
+        title.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.5)).tap()
         title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (title.value as? String)?.count ?? 100))
+        // An empty field reports either no text or its placeholder.
+        XCTAssertTrue(["", title.placeholderValue].contains(title.value as? String), "The Rename field is empty before typing")
         title.typeText("Renamed synthetic Film")
         app.alerts.buttons["Save"].tap()
         XCTAssertTrue(app.navigationBars["Renamed synthetic Film"].waitForExistence(timeout: 10))
