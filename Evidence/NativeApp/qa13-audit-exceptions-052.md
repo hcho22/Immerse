@@ -71,6 +71,7 @@ The same applies if row order or copy on the Super 8 load screen changes and a d
 ## Narrowness Checks
 
 - `AuditExceptionTests.testOnlyTheExactAuditTypeAndLabelAreAccepted` checks that another label, a longer label, no label, another audit type, a combined audit type and another audit point are all reported.
+- `AuditExceptionTests.testAnIdentifiedExceptionNeedsTheExactIdentifier` checks that an entry with an identifier rejects the same label with another identifier or none, so the title field is not covered by the heading's entry.
 - `JournalFlowTests.testAuditStillReportsFindingsOutsideItsExceptions` runs the real Super 8 Dynamic Type audit with only the label's entry and expects the audit to fail, reporting exactly "Portrait" and "Landscape".
   If the auditor stops flagging them, this test fails, which is the signal to re-examine and remove the Dynamic Type entries.
 
