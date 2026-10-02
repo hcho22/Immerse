@@ -1,0 +1,8 @@
+Writing result bundle at path:
+	/Users/hcho/.treehouse/Immerse-3833fe/1/Immerse/DerivedData/StoreKit-final-20261002T050640Z.xcresult
+
+2026-10-01 22:07:45.609 xcodebuild[43676:173882730] [MT] IDETestOperationsObserverDebug: 48.287 elapsed -- Testing started completed.
+2026-10-01 22:07:45.609 xcodebuild[43676:173882730] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-01 22:07:45.610 xcodebuild[43676:173882730] [MT] IDETestOperationsObserverDebug: 48.287 sec, +48.287 sec -- end
+Testing started
+storekit exit 0 StoreKit-final-20261002T050640Z

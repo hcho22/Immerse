@@ -32,7 +32,7 @@ limits are in `../AssetReview/README.md`. It is not production asset clearance.
 
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
-The [physical validation handoff](manual-validation.md) pins candidate `bd9594a`,
+The [physical validation handoff](manual-validation.md) pins candidate `71391e4` ([final gate](final-candidate-050.md)),
 records the exact manual-test deferral and earlier probe-only authority, and gives
 future HC_iPhone13 Xcode steps, per-case outcomes/evidence fields, full receipt
 failpoints and iPhone 11/two-device prerequisites. All physical cases remain

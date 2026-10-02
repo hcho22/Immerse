@@ -2,8 +2,8 @@
 
 Prepared 2026-10-01 for Firstmate instruction 029 and reconciled on 2026-10-02 after checkpoint 049. **Plan only; every physical
 scenario below is deferred and unaccepted. v1 is not ready for manual sign-off.**
-The software candidate is `bd9594a5beb42febc873848bf0a2fb0c1145c2ae` on
-`fm/immerse-v1-implementation`, the last source change; the earlier pin was `241dafd`.
+The software candidate is `71391e483a80f3df38d995f5320c8a77c17cef61` on
+`fm/immerse-v1-implementation`; app sources last changed at `bd9594a`, tests at this commit, and the earlier pin was `241dafd`.
 Later document-only commits do not change the software. Record the exact eventual tested revision and configuration;
 reassess affected scenarios after any production, asset, signing or OS change.
 
