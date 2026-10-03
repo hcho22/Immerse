@@ -60,7 +60,7 @@ The compensating check is `ContentSizeTests`, which measures directly instead of
   Every style grows by at least 6.7 percent per step from L up here (`content-size-growth-light.log`), and text clipped by a container gains only a pixel or two, so the margin also catches that clipping.
   Below L the text must only never shrink: Apple's table keeps the footnote style at 12 points at XS, S and M, and the note measures 82 px at all three.
 - Each test measures one size and checks growth against whichever neighboring sizes are already measured in the same run, so a full run checks every step from XS to AX XXXL whatever order the tests run in.
-- It measures in the simulator's appearance. Setting `XCUIDevice.shared.appearance` from the test did not change the app's rendering on iOS 26.5, so dark coverage comes from running the suite on a dark simulator (below); CI runs light.
+- It measures in the simulator's appearance. Setting `XCUIDevice.shared.appearance` from the test did not change the app's rendering on iOS 26.5, so dark coverage of this measurement comes from running the suite on a dark simulator (below).
 
 ## Deterministic Audit Poses
 
@@ -123,9 +123,29 @@ Every run flagged exactly one finding, the 16mm description at the title pose (a
 In the same runs `ContentSizeTests` measured all 15 elements at all 12 sizes in the run's appearance; `super8-xs-l-axl-axxxl-light.png` and `-dark.png` show the Super 8 screen at XS, L, AX L and AX XXXL with nothing clipped.
 Two negative checks on the same measurement code, each restored afterwards, failed as intended: a fixed 17-point font on the "Movie Orientation" label (no growth from L to XL), and the label clipped to a 20-point frame (no growth from AX M to AX L).
 
-Fresh derived data is used for these runs because `xcodebuild test` against the shared `DerivedData/ValidationSimulator` folder sometimes ran a previously built UI-test bundle after a source change (test lists or failure messages that did not match the source); earlier records here that came from such runs say so.
+Fresh derived data is used for the confirmation runs because `xcodebuild test` against the shared `DerivedData/ValidationSimulator` folder sometimes ran a previously built UI-test bundle after a source change (test lists or failure messages that did not match the source); earlier records here that came from such runs say so.
 
-Earlier full gate, on commit `ef8829d` (before the determinism work): `sh Scripts/validate-local.sh` with all three simulator variables exited 0.
+Full gate on the final source, with the dark audit pass added to `Scripts/validate-local.sh`: erased simulators and no previous build products, all three simulator variables, exit 0 in 2,440 s (40.7 min) on this loaded host.
+
+| Stage | Outcome | Local duration |
+| --- | --- | --- |
+| Requirement map, packages, probes, documents ZIP, unsigned builds | Passed: FilmDomain 17, MediaCatalog 4, RenderFixtures 2, RenderCore 11, FilmPersistence 29, NativeAdapters 28, EntitlementCore 6, FilmRuntime 48; TrialCommitStudy 17, DevelopmentProcessExit 3; 25-entry ZIP comparison. | |
+| Populated harness (`Populated-20261003T060250Z.xcresult`) | 12 of 12 passed. | 713 s |
+| Production UI, light (`Validation-20261003T061454Z.xcresult`) | 17 passed, 1 expected failure (the contrast negative test). | 720 s |
+| Accessibility audits, dark (`ValidationDark-20261003T062701Z.xcresult`) | 5 passed, 1 expected failure: `JournalFlowTests` and `AuditExceptionTests` from the same build with the simulator set to dark. | 236 s |
+| iOS 26.2 hosted (`StoreKit-20261003T063104Z.xcresult`) | 24 of 24 passed: 9 CaptureController, 11 Journal and 4 local StoreKit tests. | 251 s |
+
+CI time budget: in main run 37012282575 the job reached the UI stage 15.7 minutes after `xcodebuild -version` and failed at 19.9 minutes; its populated-harness stage took about 8.9 minutes against 11.9 here.
+Scaling the new stages by that ratio gives about 9 minutes for the light UI stage, 3 for the dark pass and 3 for the iOS 26.2 stage, so roughly 33 minutes for the job against its 40-minute limit; the PR's CI run gives the real figure.
+
+| Artifact | Hash |
+| --- | --- |
+| `Validation-20261003T061454Z.xcresult` | `f4c58b40464d6042dac043a51f3d025832041984929dc2d8c6bf977ef3c4462d` |
+| `ValidationDark-20261003T062701Z.xcresult` | `9e69bc04b51a32c37cea6a44d8b94154aff4a35ab0b939ae62290c5ad259ad1b` |
+| `Populated-20261003T060250Z.xcresult` | `1e699d4bae51189237b2af0bb0f647e0f7ed6167087d73a7c2a50a02c57c3299` |
+| `StoreKit-20261003T063104Z.xcresult` | `865286c6938a0526e1a8a4138fcacf465bab0eb782ef1b23924034af773b43b2` |
+
+Earlier full gate, on commit `ef8829d` (before the determinism work), also exited 0:
 
 | Stage | Outcome |
 | --- | --- |
@@ -134,13 +154,13 @@ Earlier full gate, on commit `ef8829d` (before the determinism work): `sh Script
 | Production UI (`Validation-20261002T221453Z.xcresult`) | Passed on that source. |
 | iOS 26.2 hosted (`StoreKit-20261002T222441Z.xcresult`) | 24 of 24 passed: 9 CaptureController, 11 Journal and 4 local StoreKit tests. This is the stage CI has never reached. |
 
-Since `ef8829d` only UI test sources, two accessibility identifiers in `CameraCatalogView.swift` and documents changed; the package, harness, build and iOS 26.2 stages were not rerun locally.
 A record cannot include the CI run of the commit that adds it; that run is reported on the PR.
 
 ## Limits
 
 The auditor's internal method is not documented; the position rule and the in-place clamping are inferred from the probe variants, per-size frames, the frames in its findings and its screen recordings.
 `ContentSizeTests` measures text height in screenshots, not font metrics; a change that keeps text height but breaks reading, such as truncation with an ellipsis, is not caught by it.
-Setting `XCUIDevice.shared.appearance` from a test did not change the app's rendering on iOS 26.5, so CI, which pins light, covers light only; dark was confirmed locally.
+Setting `XCUIDevice.shared.appearance` from a test did not change the app's rendering on iOS 26.5.
+`Scripts/validate-local.sh`, and so CI, runs the full UI suite in light and then the accessibility audits (`JournalFlowTests`, `AuditExceptionTests`) again from the same build with the simulator set to dark; `ContentSizeTests` in dark was confirmed locally only.
 Contrast sampling approximates the text color from the element's pixels and cannot report a ratio above the true text contrast.
 Simulator rendering only.
