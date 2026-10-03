@@ -300,6 +300,9 @@
 					1069C31E8F44C6294DCA89D8 = {
 						TestTargetID = FF0469481DB495A7FC25D880;
 					};
+					FF0469481DB495A7FC25D880 = {
+						DevelopmentTeam = QH9S83CX4Y;
+					};
 				};
 			};
 			buildConfigurationList = 5D290F28DE0C2BD9E3A075A2 /* Build configuration list for PBXProject "Immerse" */;
@@ -451,6 +454,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
@@ -594,6 +598,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
