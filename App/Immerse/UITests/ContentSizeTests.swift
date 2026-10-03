@@ -156,6 +156,7 @@ final class ContentSizeTests: XCTestCase {
                     XCTAssertGreaterThanOrEqual(frame.minX, window.minX, "\(target.name) \(tag) starts on screen")
                     XCTAssertLessThanOrEqual(frame.maxX, window.maxX, "\(target.name) \(tag) ends on screen")
                     let ink = inkExtent(shot, frame, in: window, tinted: target.tinted)
+                    XCTAssertLessThanOrEqual(ink.top, ink.bottom, "\(target.name) \(tag) text is found in its frame")
                     XCTAssertGreaterThan(ink.top, 0, "\(target.name) \(tag) text is not clipped at the top")
                     XCTAssertLessThan(ink.bottom, ink.height - 1, "\(target.name) \(tag) text is not clipped at the bottom")
                     results.append(((target.name, tag), Sample(frame: frame, ink: ink.bottom - ink.top + 1, navigation: navigation)))
