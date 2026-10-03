@@ -175,8 +175,7 @@ final class JournalFlowTests: XCTestCase {
         var reported: [String] = []
         let handler: (XCUIAccessibilityAuditIssue) throws -> Bool = { issue in
             let label = issue.element?.label
-            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label,
-                                                  identifier: issue.element?.identifier)
+            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label)
             let detail = XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied by auditor")")
             detail.name = "\(name)-audit-node\(accepted ? "-accepted-exception" : "")"
             detail.lifetime = .keepAlways

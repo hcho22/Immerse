@@ -74,7 +74,7 @@ The audit helper therefore runs every other audit type first and the two resizin
 
 ## Exceptions
 
-`App/Immerse/UITests/AuditExceptions.swift` lists each accepted finding as an exact audit point (the name passed to the `audit` helper in `JournalFlowTests`), one audit type and one exact element label, plus the exact identifier where another element shares the label.
+`App/Immerse/UITests/AuditExceptions.swift` lists each accepted finding as an exact audit point (the name passed to the `audit` helper in `JournalFlowTests`), one audit type and one exact element label.
 The helper's issue handler accepts a finding only on an exact match of all of them; a finding with no element is never accepted, and every other finding still fails the test.
 The four audits that call `performAccessibilityAudit()` directly have no exceptions.
 
@@ -104,7 +104,6 @@ If any element is flagged later, that finding must be measured and re-examined, 
 ## Narrowness Checks
 
 - `AuditExceptionTests.testOnlyTheExactAuditTypeAndLabelAreAccepted` checks that another label, a longer label, no label, another audit type, a combined audit type and another audit point are all reported.
-- `AuditExceptionTests.testAnIdentifiedExceptionNeedsTheExactIdentifier` checks that an entry with an identifier rejects the same label with another identifier or none.
 - `JournalFlowTests.testAuditStillReportsContrastFindingsOutsideItsExceptions` runs the real contrast audit at the same 16mm title pose with the description's entry withheld and expects the audit to fail, reporting exactly that element.
   If the auditor stops flagging it, this test fails, which is the signal to re-examine the entry.
 
@@ -154,6 +153,8 @@ Earlier full gate, on commit `ef8829d` (before the determinism work), also exite
 | Production UI (`Validation-20261002T221453Z.xcresult`) | Passed on that source. |
 | iOS 26.2 hosted (`StoreKit-20261002T222441Z.xcresult`) | 24 of 24 passed: 9 CaptureController, 11 Journal and 4 local StoreKit tests. This is the stage CI has never reached. |
 
+After the final-source runs above, the unused identifier matching and its `AuditExceptionTests` case were removed, and the dark pass no longer reruns `AuditExceptionTests`, whose matching does not depend on appearance.
+The production UI suite is now 16 tests plus the expected failure, and the dark pass 3 plus the expected failure; the records above keep the counts of the runs as executed.
 A record cannot include the CI run of the commit that adds it; that run is reported on the PR.
 
 ## Limits
@@ -161,6 +162,6 @@ A record cannot include the CI run of the commit that adds it; that run is repor
 The auditor's internal method is not documented; the position rule and the in-place clamping are inferred from the probe variants, per-size frames, the frames in its findings and its screen recordings.
 `ContentSizeTests` measures text height in screenshots, not font metrics; a change that keeps text height but breaks reading, such as truncation with an ellipsis, is not caught by it.
 Setting `XCUIDevice.shared.appearance` from a test did not change the app's rendering on iOS 26.5.
-`Scripts/validate-local.sh`, and so CI, runs the full UI suite in light and then the accessibility audits (`JournalFlowTests`, `AuditExceptionTests`) again from the same build with the simulator set to dark; `ContentSizeTests` in dark was confirmed locally only.
+`Scripts/validate-local.sh`, and so CI, runs the full UI suite in light and then the accessibility audits (`JournalFlowTests`) again from the same build with the simulator set to dark; `ContentSizeTests` in dark was confirmed locally only.
 Contrast sampling approximates the text color from the element's pixels and cannot report a ratio above the true text contrast.
 Simulator rendering only.
