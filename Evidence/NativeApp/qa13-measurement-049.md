@@ -113,5 +113,5 @@ Simulator rendering only; VoiceOver, Switch Control and device displays were not
 
 `qa13-audit-exceptions-052.md` supersedes the retained-failure status above, under the captain's 2026-10-02 instruction to fix the red check.
 The `ViewThatFits` version of the choice swapped its buttons for a second copy as text grew, which is why the audit kept flagging "Portrait" and "Landscape"; one custom layout replaces it.
-The label's finding, and the buttons' finding in their current position, follow the Form rows that leave the screen during the auditor's in-place size sweep, and are accepted as exact exceptions with that evidence.
-The contrast findings above are accepted as exact exceptions per audit point and label, with the at-rest measurements recorded there.
+The remaining Dynamic Type findings follow the Form rows rather than the elements and vary from run to run, so the three Load-screen audits no longer run the Dynamic Type type; `ContentSizeTests` measures every Load-screen text element at all twelve sizes instead.
+With deterministic scrolling, the only contrast finding left is the 16mm description under the scroll-edge band, accepted as one exact exception; the other contrast findings above no longer occur and their measurements are kept in 052.

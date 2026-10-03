@@ -156,11 +156,11 @@ revisits earlier rows. No required finding is waived. The repeated obstacle is
 escalated with exact nodes and retained screenshots. Full QA-13 remains unaccepted.
 
 Later, `qa13-measurement-049.md` and `qa13-audit-exceptions-052.md` resolved the
-automated audits on the simulator: a real Movie Orientation layout defect was fixed,
-the Dynamic Type finding that remained was shown to follow whichever Form rows leave
-the screen during the auditor's in-place size sweep (which also fits the earlier
-Silent capture flags), and contrast findings measured 9.12 to 21.00:1 at rest. Those
-are accepted only as exact exceptions. Device and assistive-technology QA-13 stays open.
+automated audits on the simulator: a real Movie Orientation layout defect was fixed;
+the remaining Dynamic Type findings followed the Form rows and varied run to run
+(which also fits the earlier Silent capture flags), so the Load-screen audits measure
+text size directly instead; audited scroll positions are now deterministic, and one
+exact, measured contrast exception remains. Device and assistive-technology QA-13 stays open.
 
 The framework also reported a UIKitToolbar/UIHostingController
 runtime warning on standard SwiftUI toolbar use; it is retained, not claimed fixed.

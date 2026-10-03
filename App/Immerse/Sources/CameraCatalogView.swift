@@ -81,10 +81,11 @@ private struct LoadFilmView: View {
                 }
             }
             Section {
-                Label(entitlementLabel, systemImage: "ticket")
+                Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
                 Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
                                    subscriptionsAvailable: model.billing.configured))
                     .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("load-note")
             }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
             if let error { Section { Text(error).foregroundStyle(.red) } }

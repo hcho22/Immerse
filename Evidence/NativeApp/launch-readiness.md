@@ -223,8 +223,8 @@ This is partial CAP-08/09, PRV, DEV-05 and QA-09/13 software evidence, not a run
 
 `Evidence/NativeApp/qa13-audit-exceptions-052.md` makes the original audit tests pass, under the captain's 2026-10-02 instruction to fix the red check.
 The Movie Orientation choice swapped its buttons for a second copy when text grew, which the Dynamic Type audit flags, and it broke "Landscape" mid-word; one custom layout now keeps the buttons and stacks them only when they do not fit.
-The remaining Dynamic Type finding follows whichever Form rows leave the screen during the auditor's in-place size sweep, and the contrast findings measure 9.12 to 21.00:1 at rest in light and dark.
-Those are accepted as exact, measured exceptions (audit point, audit type and label), with tests proving any other finding still fails.
+Xcode's Dynamic Type check then flagged different Form rows from run to run, so by Firstmate's decision the three Load-screen audits skip only that type and `ContentSizeTests` measures every Load-screen text element at all twelve sizes, failing on missing growth or clipping.
+The audited scroll positions are now deterministic, and the one remaining contrast finding (the 16mm description under the scroll-edge band, 21.00:1 light and 13.94:1 dark at rest) is an exact exception, with tests proving any other finding still fails.
 The automated simulator audits now pass; QA-13's device, assistive-technology and performance parts stay open.
 
 ## Required Native Manual Matrix

@@ -18,7 +18,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Capacity, 3:20 of film"].exists)
         XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
-        try audit(app, name: "Super8-load-default")
+        try audit(app, name: "Super8-load-default", for: Self.formAuditTypes)
         retainScreenshot(app, name: "Super8-load-default")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
@@ -30,23 +30,29 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["No archived Films"].exists)
     }
 
-    /// The audit exceptions stay narrow against the real auditor: with only the label accepted, the same
-    /// Super 8 audit still reports "Portrait" and "Landscape". If the auditor stops flagging them, this fails,
-    /// and the Dynamic Type entries in `AuditException.accepted` should be re-examined.
-    func testAuditStillReportsFindingsOutsideItsExceptions() throws {
+    /// The contrast exceptions stay narrow against the real auditor: at the same 16mm title pose, with only the
+    /// description's entry withheld, the audit fails on exactly that element. The held-drag pose puts it under the
+    /// navigation bar in every run; if the auditor stops flagging it, re-examine that entry.
+    func testAuditStillReportsContrastFindingsOutsideItsExceptions() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
-        app.buttons["camera-super8HomeMovie"].tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 3:20 of film"].waitForExistence(timeout: 5))
-        let labelOnly = AuditException.accepted.filter { $0.type == .dynamicType && $0.label == "Movie Orientation" }
-        XCTAssertEqual(labelOnly.count, 1)
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].waitForExistence(timeout: 5))
+        let title = app.staticTexts["film-title-heading"]
+        scrollUp(app, until: title)
+        XCTAssertTrue(title.isHittable)
+        let withheld = AuditException.accepted.filter { $0.label != "Deliberate framing, finer grain" }
+        XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
         var reported: [String] = []
-        XCTExpectFailure("Findings outside the exceptions must fail the audit") {
-            reported = (try? audit(app, name: "Super8-load-default", for: .dynamicType, exceptions: labelOnly)) ?? []
+        XCTExpectFailure("A finding outside the exceptions must fail the audit") {
+            reported = (try? audit(app, name: "16mm-title-accessibility-largest", for: .contrast, exceptions: withheld)) ?? []
         }
-        XCTAssertEqual(Set(reported), ["Portrait", "Landscape"])
+        XCTAssertEqual(reported, ["Deliberate framing, finer grain"])
     }
 
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
@@ -70,14 +76,14 @@ final class JournalFlowTests: XCTestCase {
         try app.performAccessibilityAudit()
         retainScreenshot(app, name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
-        for _ in 0..<8 where !title.isHittable { app.swipeUp() }
+        scrollUp(app, until: title)
         XCTAssertTrue(title.isHittable)
-        try audit(app, name: "16mm-title-accessibility-largest")
+        try audit(app, name: "16mm-title-accessibility-largest", for: Self.formAuditTypes)
         retainScreenshot(app, name: "16mm-title-accessibility-largest")
         let load = app.buttons["load-film"]
-        for _ in 0..<8 where !load.isHittable { app.swipeUp() }
+        scrollUp(app, until: load)
         XCTAssertTrue(load.isHittable)
-        try audit(app, name: "16mm-command-accessibility-largest")
+        try audit(app, name: "16mm-command-accessibility-largest", for: Self.formAuditTypes)
         retainScreenshot(app, name: "16mm-command-accessibility-largest")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
@@ -133,6 +139,23 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(app, name: "Settings-camera-denied")
     }
 
+    /// Every audit type except Dynamic Type, for the three audits of the Form-based Load screens. Xcode's Dynamic
+    /// Type check grows the text in place, and over this lazy Form it flagged different rows from run to run,
+    /// scrolled or not (Evidence/NativeApp/qa13-audit-exceptions-052.md). `ContentSizeTests` instead measures every
+    /// text element on these screens at all twelve sizes; Dynamic Type stays in the other audits.
+    private static let formAuditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
+
+    /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
+    /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
+    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs along the right edge, outside the rows' controls.
+    private func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
+        for _ in 0..<16 where !element.isHittable {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+    }
+
     private func retainScreenshot(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name
@@ -150,7 +173,7 @@ final class JournalFlowTests: XCTestCase {
         tree.lifetime = .keepAlways
         add(tree)
         var reported: [String] = []
-        try app.performAccessibilityAudit(for: types) { issue in
+        let handler: (XCUIAccessibilityAuditIssue) throws -> Bool = { issue in
             let label = issue.element?.label
             let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label,
                                                   identifier: issue.element?.identifier)
@@ -161,6 +184,14 @@ final class JournalFlowTests: XCTestCase {
             if !accepted { reported.append(label ?? "") }
             return accepted
         }
+        // The Dynamic Type and clipped-text checks grow and shrink the text in place. In a scrolled list the offset
+        // clamps while the content is short and is not restored, so every other check runs first, at the pose the
+        // test set (Evidence/NativeApp/qa13-audit-exceptions-052.md).
+        let resizing: XCUIAccessibilityAuditType = [.dynamicType, .textClipped]
+        let others = types.subtracting(resizing)
+        if !others.isEmpty { try app.performAccessibilityAudit(for: others, handler) }
+        let resized = types.intersection(resizing)
+        if !resized.isEmpty { try app.performAccessibilityAudit(for: resized, handler) }
         return reported
     }
 }

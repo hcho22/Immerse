@@ -1,0 +1,21 @@
+ContentSizeTests text height (ink rows at 3x, neutral pixels unless tinted) per element and size, light, iOS 26.5 iPhone 17 Pro,
+run CS-try5 on the final measurement code except the 4 percent growth margin, which was added after it; all 12 tests passed.
+element                 XS       S       M       L      XL     XXL    XXXL    AX M    AX L   AX XL  AX XXL AX XXXL
+Capacity                39      43      45      48      53      58      62     174     203     243     284     318
+Reveal                  39      42      45      47      52      57     149     177     208     251     461     513
+Controls                39      43      45      48      53     125     138     176     208     374     462     672
+Silent capture          39      42      45      47      52      57      62      75      88     107     125     141
+Movie Orientation       32      35      37      39      43      47      51      61      72      88     270     300
+Portrait                32      35      37      39      43      47      51      61      71      86     102     114
+Landscape               39      41      45      47      52      57      62      74      87     106     124     139
+Film title              33      36      38      40      45      48      52      62      73      88     104     117
+Title field             39      41      45      47      52      57      62      75      88     107     271     302
+Entitlement             32      35      37      39      43      47      51      60     191     230     270     300
+Note                    82      82      82      90     103     114     125     237     271     329     517     587
+Subscription            39      42      45      47      52      57      62      75      88     107     125     141
+Load Film               39      42      45      48      53      59      64      78      92     112     131     148
+16mm Capacity           39      43      45      48      53      58      62     174     203     243     284     318
+16mm Controls           39      43      45      48      53      58      63     177     209     252     462     513
+
+Smallest step from L up: Film title XL to XXL x1.067, 16mm Capacity XXL to XXXL x1.069, Capacity XXL to XXXL x1.069
+Below L the note (footnote style) stays at 82 px from XS to M, matching Apple's footnote sizes (12 pt at XS, S and M).

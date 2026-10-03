@@ -1,0 +1,165 @@
+Audit determinism runs, 2026-10-02, Xcode 26.5, iPhone 17 Pro iOS 26.5 simulators erased before every run (fresh test bundle),
+light 6CCFC689-F961-4141-AA5F-FD026F032199, dark 940137D1-7B30-497B-B06D-69E54D9F6FBF, large text; JournalFlowTests and AuditExceptionTests.
+Each line: test | audit point | type | element | element minY at the finding | accepted by the exception list then in force or reported.
+Pose lines: minY of markers in the accessibility tree recorded just before each 16mm audit.
+
+## Det-*: held drags replace free swipes for the two 16mm poses; audit helper runs all types together
+== Det-light-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Det-dark-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Det-light-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=8.7 | ACCEPTED
+== Det-dark-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=8.7 | ACCEPTED
+== Det-light-3
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Movie Orientation | y=0.0 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Portrait | y=135.3 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Trial status unavailable | y=593.7 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Your Camera and Movie Orientation cannot chan | y=749.0 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Det-dark-3
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Failed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | DT | Landscape | y=538.3 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | DT | Movie Orientation | y=329.7 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | DT | Portrait | y=465.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | DT | Silent capture | y=236.3 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+Det-light-1 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-light-1 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Det-dark-1 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-dark-1 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Det-light-2 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-light-2 16mm-title-accessibility-largest     heading=681.3 description=8.7 load=-
+Det-dark-2 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-dark-2 16mm-title-accessibility-largest     heading=681.3 description=8.7 load=-
+Det-light-3 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-light-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Det-dark-3 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Det-dark-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+
+## Split-*: as Det, and the helper runs every other type before Dynamic Type (Split-light-3 and later were stopped when Firstmate chose option B)
+== Split-light-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Failed testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Failed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Failed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Film title | y=562.7 | REPORTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Handheld, pronounced grain and flicker | y=288.0 | REPORTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Silent capture | y=356.7 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Handheld, pronounced grain and flicker | y=288.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Silent capture | y=356.7 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | DT | Landscape | y=198.3 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | DT | Portrait | y=125.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=8.7 | ACCEPTED
+== Split-dark-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=13.3 | ACCEPTED
+== Split-light-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Failed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Film title | y=562.7 | REPORTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Handheld, pronounced grain and flicker | y=288.0 | REPORTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Silent capture | y=356.7 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Movie Orientation | y=-23.7 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Portrait | y=111.7 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Your Camera and Movie Orientation cannot chan | y=725.3 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Split-dark-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testAuditStillReportsFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Landscape | y=439.0 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  FilmAndSettingsDiscloseRestore | Super8-load-default | DT | Portrait | y=439.0 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Landscape | y=439.0 | REPORTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Movie Orientation | y=408.7 | ACCEPTED
+  tsFindingsOutsideItsExceptions | Super8-load-default | DT | Portrait | y=439.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Movie Orientation | y=-10.3 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Portrait | y=125.0 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Trial status unavailable | y=583.3 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Your Camera and Movie Orientation cannot chan | y=738.7 | ACCEPTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=13.3 | ACCEPTED
+Split-light-1 16mm-command-accessibility-largest   heading=-77.3 description=- load=726.7
+Split-light-1 16mm-title-accessibility-largest     heading=681.3 description=8.7 load=-
+Split-dark-1 16mm-command-accessibility-largest   heading=-77.3 description=- load=726.7
+Split-dark-1 16mm-title-accessibility-largest     heading=686.0 description=13.3 load=-
+Split-light-2 16mm-command-accessibility-largest   heading=-77.3 description=- load=726.7
+Split-light-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Split-dark-2 16mm-command-accessibility-largest   heading=-77.3 description=- load=726.7
+Split-dark-2 16mm-title-accessibility-largest     heading=686.0 description=13.3 load=-
+
+## Earlier free-swipe runs, same pre-audit command pose, different contrast findings
+C-light-1 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+C-light-1 16mm-title-accessibility-largest     heading=582.7 description=-90.0 load=-
+C-light-2 16mm-command-accessibility-largest   heading=-77.3 description=- load=726.7
+C-light-2 16mm-title-accessibility-largest     heading=561.0 description=-111.7 load=-
+C-light-3 16mm-command-accessibility-largest   heading=-73.0 description=- load=731.0
+C-light-3 16mm-title-accessibility-largest     heading=626.3 description=-46.3 load=-
+
+## Final-light-2: Dynamic Type no longer requested at the three Form audit points, helper still ran clipped text together with contrast
+== Final-light-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Failed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Movie Orientation | y=0.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Portrait | y=135.3 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Trial status unavailable | y=593.7 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-command-accessibility-largest | contrast | Your Camera and Movie Orientation cannot chan | y=749.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+Final-light-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Final-light-2 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Final-light-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Screen recording A70BB62C...mp4 in that bundle shows the text shrinking to the smallest sizes and growing back during the command audit.
