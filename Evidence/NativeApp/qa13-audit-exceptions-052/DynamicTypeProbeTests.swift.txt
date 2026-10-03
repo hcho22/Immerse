@@ -1,0 +1,50 @@
+import XCTest
+
+/// Diagnostic only, kept outside the test suite. Appended to App/Immerse/UITests/JournalFlowTests.swift for a run
+/// and removed again. Run one test with -only-testing:ImmerseUITests/AuditProbeTests/<name>.
+@MainActor
+final class AuditProbeTests: XCTestCase {
+    /// The Super 8 default audit point, Dynamic Type only, repeated with a fresh launch each time.
+    func testProbeSuper8DynamicType() throws {
+        for run in 0..<4 {
+            let app = XCUIApplication()
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+            app.buttons["start-film"].tap()
+            app.buttons["camera-super8HomeMovie"].tap()
+            XCTAssertTrue(app.buttons["load-film"].waitForExistence(timeout: 5))
+            var found: [String] = []
+            try app.performAccessibilityAudit(for: .dynamicType) { issue in
+                found.append("\(issue.element?.label ?? "-") y=\(Int(issue.element?.frame.minY ?? -1))")
+                return true
+            }
+            print("PROBE-RESULT \(run): \(found)")
+            app.terminate()
+        }
+    }
+
+    /// Frames of the load screen's text and buttons at each size from the default up, one launch per size.
+    func testProbeSweep() throws {
+        for category in ["L", "XL", "XXL", "XXXL", "AccessibilityM", "AccessibilityL", "AccessibilityXL", "AccessibilityXXL", "AccessibilityXXXL"] {
+            let app = XCUIApplication()
+            app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"]
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+            app.buttons["start-film"].tap()
+            let camera = app.buttons["camera-super8HomeMovie"]
+            for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+            camera.tap()
+            sleep(1)
+            var rows: [String] = []
+            func visit(_ e: XCUIElementSnapshot) {
+                if !e.label.isEmpty && (e.elementType == .staticText || e.elementType == .button) {
+                    rows.append("\(e.label.prefix(14))[\(Int(e.frame.minY))-\(Int(e.frame.maxY))]")
+                }
+                e.children.forEach(visit)
+            }
+            visit(try app.collectionViews.firstMatch.snapshot())
+            print("PROBE-SWEEP \(category): \(rows.joined(separator: " "))")
+            app.terminate()
+        }
+    }
+}

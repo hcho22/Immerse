@@ -155,6 +155,13 @@ in that fresh run, with Load Film visible in its pre-audit tree; the audit then
 revisits earlier rows. No required finding is waived. The repeated obstacle is
 escalated with exact nodes and retained screenshots. Full QA-13 remains unaccepted.
 
+Later, `qa13-measurement-049.md` and `qa13-audit-exceptions-052.md` resolved the
+automated audits on the simulator: a real Movie Orientation layout defect was fixed;
+the remaining Dynamic Type findings followed the Form rows and varied run to run
+(which also fits the earlier Silent capture flags), so the Load-screen audits measure
+text size directly instead; audited scroll positions are now deterministic, and one
+exact, measured contrast exception remains. Device and assistive-technology QA-13 stays open.
+
 The framework also reported a UIKitToolbar/UIHostingController
 runtime warning on standard SwiftUI toolbar use; it is retained, not claimed fixed.
 Launch arguments requesting dark appearance did not reliably produce dark output

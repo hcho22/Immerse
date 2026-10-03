@@ -34,6 +34,7 @@
 		9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
 		A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 54847413BC0280518CA9021C /* NativeAdapters */; };
 		B18ADCB2236DD2A8140DB998 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3B89AA2B651AFE7F3D95FAF4 /* README.md */; };
+		B79E3FD0070E23CBC9D3BE61 /* AuditExceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */; };
 		B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
 		BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 30073B98740522EE1997D947 /* LocalSubscriptions.storekit */; };
 		D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
@@ -74,6 +75,7 @@
 		6C4F11F94E6BAC2977A36307 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		6C7B00AA020EF955ACC8304F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		766A569971585250535D6ED0 /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditExceptions.swift; sourceTree = "<group>"; };
 		89ACDE1C9DC707276CC92690 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
 		8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitSubscriptionTests.swift; sourceTree = "<group>"; };
 		9437363FB48E8E817EB59821 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
@@ -124,6 +126,7 @@
 		09867DCEC7620CD397443498 /* UITests */ = {
 			isa = PBXGroup;
 			children = (
+				7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */,
 				C7787955A98AAA8C3A558DBD /* ContentSizeTests.swift */,
 				45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */,
 			);
@@ -355,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B79E3FD0070E23CBC9D3BE61 /* AuditExceptions.swift in Sources */,
 				4DD14408EB5093E7CF2A15EE /* ContentSizeTests.swift in Sources */,
 				865894FD2C75EFF6AEED9DEC /* JournalFlowTests.swift in Sources */,
 			);

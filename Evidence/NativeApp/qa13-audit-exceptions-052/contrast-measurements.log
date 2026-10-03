@@ -1,0 +1,42 @@
+Contrast findings on this source, 2026-10-02, Xcode 26.5, iPhone 17 Pro simulator iOS 26.5, largest text size (AX XXXL).
+Tool: ../qa13-measurement-049/contrast.swift.txt on the element's reported frame in a 3x screenshot.
+Runs C-light-1..3 and C-dark-1..2 ran JournalFlowTests with the Dynamic Type exceptions only (no contrast entries yet).
+
+## At the audit pose, in the auditor's own App Screenshot (taken within 2 ms of the issue)
+C-light-1 16mm-command-accessibility-largest | Portrait | frame y=135.3 h=71.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+C-light-1 16mm-command-accessibility-largest | Your Camera and Movie Orientation cannot | frame y=749.0 h=238.7 | bg #FFFFFF text #000000 contrast 21.00:1 visible 52%
+C-light-1 16mm-command-accessibility-largest | Trial status unavailable | frame y=593.7 h=155.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+C-light-1 16mm-command-accessibility-largest | Movie Orientation | frame y=0.0 h=125.3 | bg #C2C2C6 text #FFFFFF contrast 1.78:1 visible 100%
+C-light-1 16mm-title-accessibility-largest | Deliberate framing, finer grain | frame y=-90.0 h=217.3 | bg #C2C2C6 text #FDFDFE contrast 1.75:1 visible 58%
+C-light-2 16mm-title-accessibility-largest | Silent capture | frame y=120.7 h=63.3 | bg #FFFFFF text #010101 contrast 20.87:1 visible 100%
+C-light-2 16mm-title-accessibility-largest | Deliberate framing, finer grain | frame y=-111.7 h=217.3 | bg #C2C2C6 text #FFFFFF contrast 1.78:1 visible 48%
+C-light-3 16mm-title-accessibility-largest | Deliberate framing, finer grain | frame y=-46.3 h=217.3 | bg #C2C2C6 text #323233 contrast 7.21:1 visible 79%
+C-dark-1 16mm-command-accessibility-largest | Portrait | frame y=125.7 h=71.3 | bg #48484A text #FFFFFF contrast 9.12:1 visible 100%
+C-dark-1 16mm-command-accessibility-largest | Your Camera and Movie Orientation cannot | frame y=739.3 h=238.7 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 57%
+C-dark-1 16mm-command-accessibility-largest | Trial status unavailable | frame y=584.0 h=155.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+C-dark-1 16mm-command-accessibility-largest | Movie Orientation | frame y=-9.7 h=125.3 | bg #000000 text #6F6F6F contrast 4.18:1 visible 92%
+C-dark-1 16mm-title-accessibility-largest | Silent capture | frame y=133.0 h=63.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+C-dark-1 16mm-title-accessibility-largest | Deliberate framing, finer grain | frame y=-99.3 h=217.3 | bg #000000 text #666666 contrast 3.66:1 visible 54%
+C-dark-2 16mm-title-accessibility-largest | Silent capture | frame y=122.7 h=63.3 | bg #272728 text #FFFFFF contrast 14.43:1 visible 100%
+C-dark-2 16mm-title-accessibility-largest | Deliberate framing, finer grain | frame y=-109.7 h=217.3 | bg #000000 text #BBBBBF contrast 10.97:1 visible 49%
+
+## At rest (AtRestContrastTests.swift.txt): 16mm load screen at AX XXXL, each element scrolled fully between
+## the navigation bar (bottom edge 189 pt) and 80 pt above the screen bottom
+Rest-light | Load Film | y=726.7 h=93.3 | bg #FFFFFF text #09634E contrast 7.23:1 visible 100%
+Rest-light | Subscription | y=661.7 h=93.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Your Camera and Movie Orientation | y=388.0 h=238.7 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Trial status unavailable | y=232.7 h=155.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Landscape | y=529.0 h=71.3 | bg #EFEFF0 text #000000 contrast 18.27:1 visible 100%
+Rest-light | Portrait | y=455.7 h=71.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Movie Orientation | y=612.3 h=125.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Silent capture | y=504.0 h=93.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Deliberate framing, finer grain | y=286.7 h=217.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-dark | Load Film | y=726.7 h=93.3 | bg #2C2C2E text #7ED8BA contrast 8.24:1 visible 100%
+Rest-dark | Subscription | y=687.3 h=93.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Your Camera and Movie Orientation | y=413.7 h=238.7 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Trial status unavailable | y=258.3 h=155.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Landscape | y=537.7 h=71.3 | bg #3E3E42 text #FFFFFF contrast 10.65:1 visible 100%
+Rest-dark | Portrait | y=464.3 h=71.3 | bg #48484A text #FFFFFF contrast 9.12:1 visible 100%
+Rest-dark | Movie Orientation | y=621.3 h=125.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Silent capture | y=513.0 h=93.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Deliberate framing, finer grain | y=295.7 h=217.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%

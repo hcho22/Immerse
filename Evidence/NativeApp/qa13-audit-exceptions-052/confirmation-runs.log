@@ -1,0 +1,70 @@
+Final-source confirmation, 2026-10-03, Xcode 26.5, full ImmerseUITests on iPhone 17 Pro iOS 26.5 simulators erased before every run
+and built into a new derived-data folder each time (fresh test bundle): light 6CCFC689-F961-4141-AA5F-FD026F032199, dark 940137D1-7B30-497B-B06D-69E54D9F6FBF, large text.
+
+Confirm-light-1 exit 0 tests 18 passed 17 failed 0 expected 1
+Confirm-dark-1 exit 0 tests 18 passed 17 failed 0 expected 1
+Confirm-light-2 exit 0 tests 18 passed 17 failed 0 expected 1
+Confirm-dark-2 exit 0 tests 18 passed 17 failed 0 expected 1
+Confirm-light-3 exit 0 tests 18 passed 17 failed 0 expected 1
+Confirm-dark-3 exit 0 tests 18 passed 17 failed 0 expected 1
+[exited with code 0]
+
+Every audit finding per run (accepted by the exception list or reported):
+== Confirm-light-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=13.3 | ACCEPTED
+== Confirm-dark-1
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Confirm-light-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Confirm-dark-2
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Confirm-light-3
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+== Confirm-dark-3
+  testAnIdentifiedExceptionNeedsTheExactIdentifier=Passed testOnlyTheExactAuditTypeAndLabelAreAccepted=Passed testLoadScreenTextAtAccessibilityExtraExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraExtraLarge=Passed testLoadScreenTextAtAccessibilityExtraLarge=Passed testLoadScreenTextAtAccessibilityLarge=Passed testLoadScreenTextAtAccessibilityMedium=Passed testLoadScreenTextAtExtraExtraExtraLarge=Passed testLoadScreenTextAtExtraExtraLarge=Passed testLoadScreenTextAtExtraLarge=Passed testLoadScreenTextAtExtraSmall=Passed testLoadScreenTextAtLarge=Passed testLoadScreenTextAtMedium=Passed testLoadScreenTextAtSmall=Passed testAuditStillReportsContrastFindingsOutsideItsExceptions=Expected Failure testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore=Passed testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings=Passed testLargestDynamicTypeCatalogAndLandscapeSettings=Passed
+  stFindingsOutsideItsExceptions | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | REPORTED
+  ypeCatalogAndLandscapeSettings | 16mm-title-accessibility-largest | contrast | Deliberate framing, finer grain | y=4.0 | ACCEPTED
+
+Pre-audit poses (the title pose is recorded by both the largest-size test and the contrast negative test):
+Confirm-light-1 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-light-1 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-light-1 16mm-title-accessibility-largest     heading=686.0 description=13.3 load=-
+Confirm-dark-1 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-dark-1 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-dark-1 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-light-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-light-2 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-light-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-dark-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-dark-2 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-dark-2 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-light-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-light-3 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-light-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-dark-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+Confirm-dark-3 16mm-command-accessibility-largest   heading=-78.0 description=- load=726.7
+Confirm-dark-3 16mm-title-accessibility-largest     heading=676.7 description=4.0 load=-
+
+Negative checks on the same measurement code (fresh builds, light), each restored afterwards:
+Negative-fixed-font: Movie Orientation label given .font(.system(size: 17)); L and XL tests: failed 'Movie Orientation text grows from L (39 px) to XL (39 px)'.
+Negative-clipped: Movie Orientation label given .frame(height: 20).clipped(); AX M and AX L tests: failed 'Movie Orientation text grows from AccessibilityM (60 px) to AccessibilityL (60 px)'.
+
+Result bundle hashes (SHA-256 of sorted per-file SHA-256 lines):
+Confirm-light-1.xcresult 0b731c7d2807417fe8eec5fb96c2cf66cbef2c319d5af457eb68b74de7d6eaa8
+Confirm-dark-1.xcresult b950de7ef89ef5bfe87734c6ebc0f0348c7e9e156e91f16dd7cab3fc0723653d
+Confirm-light-2.xcresult c8e0fd99c2c8a4db76bd6a2168b323b6e69c5a5c382bb0ed4b7f629c4165232f
+Confirm-dark-2.xcresult 75b10ab6cb923ecef0aba4a7ef9fe7350110a6003f1798e81c43d16c66c1a5c4
+Confirm-light-3.xcresult 89cafb9ca14b1bb4a181f9138957a42dac3108e59a1ac01e1d2401e17010350c
+Confirm-dark-3.xcresult a3ac42018fa00c50f03799314ff887083f0ad019e20bd926dc51f678dbe5cbf2
+Negative-fixed-font.xcresult 5240c9dc00f978dfd42536ce76beb78f19a0ceac05ccf095bd4b79b20792d156
+Negative-clipped.xcresult 28c9d639f267f0dedf3bb9d8cbab4dd5fa897e6e404dc158a0c0f37372f1fc05

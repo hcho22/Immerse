@@ -28,10 +28,15 @@ real purchases, services, or a connected phone. XcodeGen is required only after
 changing project configuration; the generated project is committed for CI.
 The gate also verifies coverage of all 122 intake task IDs, 72 acceptance clauses
 and nine invariants. Coverage is not acceptance. UI audits include the largest
-Dynamic Type size and scroll to the title and Load Film command. For separate
-dark-appearance coverage, set `xcrun simctl ui <task-owned-uuid> appearance dark`
-before the UI run, then restore its appearance. Do not infer dark coverage from
-an `AppleInterfaceStyle` launch argument; it did not change the observed pixels.
+Dynamic Type size and scroll to the title and Load Film command. Their only
+accepted findings are the exact, measured entries in `UITests/AuditExceptions.swift`;
+the Load Film screens' text sizing is measured by `ContentSizeTests` instead of the
+Dynamic Type audit (`Evidence/NativeApp/qa13-audit-exceptions-052.md`). The script
+runs the accessibility audits (`JournalFlowTests`) a second time with the
+simulator set to dark appearance; for other dark coverage, set
+`xcrun simctl ui <task-owned-uuid> appearance dark` before the UI run, then restore
+its appearance. Do not infer dark coverage from an `AppleInterfaceStyle` launch
+argument or `XCUIDevice.shared.appearance`; neither changed the observed pixels.
 
 ## Product Configuration
 

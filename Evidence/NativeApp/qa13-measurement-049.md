@@ -108,3 +108,10 @@ Firstmate answered `qa13-audit-mismatch-049` on 2026-10-02.
 Contrast sampling approximates the text color from the element's pixels; anti-aliasing and icons inside an element can lower the ratio slightly but cannot raise it above the true text contrast.
 The auditor's exact sampling method and timing are not visible; its App Screenshot is the closest available record of the pose.
 Simulator rendering only; VoiceOver, Switch Control and device displays were not exercised.
+
+## Later Correction 052
+
+`qa13-audit-exceptions-052.md` supersedes the retained-failure status above, under the captain's 2026-10-02 instruction to fix the red check.
+The `ViewThatFits` version of the choice swapped its buttons for a second copy as text grew, which is why the audit kept flagging "Portrait" and "Landscape"; one custom layout replaces it.
+The remaining Dynamic Type findings follow the Form rows rather than the elements and vary from run to run, so the three Load-screen audits no longer run the Dynamic Type type; `ContentSizeTests` measures every Load-screen text element at all twelve sizes instead.
+With deterministic scrolling, the only contrast finding left is the 16mm description under the scroll-edge band, accepted as one exact exception; the other contrast findings above no longer occur and their measurements are kept in 052.

@@ -71,6 +71,7 @@ Device touch, assistive technologies and a full dark-mode screen review remain o
 A live preview, recording, focus/exposure controls and accessibility text-size sweeps of the capture screen remain open on the camera-less simulator.
 
 `Evidence/NativeApp/qa13-measurement-049.md` fixes the Movie Orientation Dynamic Type defect and records measured contrast and scaling for every remaining original audit finding; Firstmate kept them as retained QA-13 failures.
+`Evidence/NativeApp/qa13-audit-exceptions-052.md` later makes the original audit tests pass on the simulator; QA-13's device, assistive-technology and performance parts remain open.
 
 ## Historical Inventory
 
