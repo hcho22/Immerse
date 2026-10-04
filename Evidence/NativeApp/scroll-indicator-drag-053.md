@@ -208,7 +208,7 @@ Stage durations in seconds, from the step logs of main run 37178893732 (`d9fe760
 | Report upload and teardown | 29 | 48 | 48 |
 | Total | 1,933 | 3,263 | 4,336 (72.3 min) |
 
-- The light stage of 37210213939 includes PR #11's `MovieCapacityUITests` (123 s), kept in the budget in case it lands first.
+- The light stage of 37210213939 includes PR #11's `MovieCapacityUITests` (123 s), kept in the budget because PR #11 landed first (`31be8d3`, the base this branch is rebased on).
 - The 36 added `ContentSizeTests` are estimated from the Load Film tests: 368 s for those 12 in 37210213939's light stage against 362 s in this review's light run, where the added 36 took 1,055 s (Journal and catalog 153, Settings top 379, Settings bottom 523), so about 1,073 s in CI.
 - The dark stage keeps the measured `JournalFlowTests` time; dropping Dynamic Type from those audits can only shorten it.
 - The job's timeout is 110 minutes: 1.5 times the 72.3-minute estimate is 108.4, rounded up to a multiple of 10.
