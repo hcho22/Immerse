@@ -109,7 +109,7 @@ Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A) revises `dyn-
   `swipeUp()` did not scroll the list in landscape, so the flicks go through the same coordinates as the held drags.
   Navigation titles are system text and are not included, as before; the toolbar buttons have no text.
 - `Scripts/validate-local.sh`, and so CI, runs all 48 `ContentSizeTests` in light with the rest of the UI suite.
-  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of 40 for the added work.
+  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of the 70 that PR #11, which landed first, had set.
 
 ### How the Measurement Changed
 
@@ -169,7 +169,7 @@ Before that source, two earlier attempts stopped on their first failure: one ran
 | Accessibility audits and text-size measurement, dark (`ValidationDark-20261004T161550Z.xcresult`) | 51 passed, 1 expected failure | 1,556 s |
 | iOS 26.2 hosted (`StoreKit-20261004T164150Z.xcresult`) | 29 of 29 passed | 119 s |
 
-The 20 proof runs and this gate used the earlier arithmetic; the review round below reran the class on the current source.
+The 20 proof runs and this gate used the earlier arithmetic; the review round below reran the class with the current arithmetic, before the rebase onto PR #11.
 
 ### Review Round: Exact Frame Edges, and No Dark Rerun
 
@@ -182,12 +182,15 @@ Such a sample came out 1 px short, and the clipping checks could take a row outs
 
 The whole class then ran once on each of the two simulators above, light and dark, at the same time, after uninstalling the app and test runner, at host load averages of about 6 to 9.
 Both passed 48 of 48 in 1,463 s.
+These runs, and the ones below, were on the source before the rebase onto PR #11 (`31be8d3`); the rebased class targets PR #11's spoken accessibility labels for the Movie capacities ("3 minutes 20 seconds of film" instead of "3:20 of film"), with the drawn text unchanged, and CI runs it.
 
 - The catalog's Super 8 and 16mm capacities measure 24, 24 and 24 px and the Settings testing note 76, 76 and 76 px at XS, S and M, in light and dark; the 23, 24, 23 and 76, 76, 75 px came from the earlier arithmetic.
 - No element measured shorter at a larger size below L in either appearance, so the 1 px allowance was not used.
   It and the Camera-name clearance stay as decided in `raster-rules`; removing either is a Firstmate decision.
 - The smallest growth from L up is 6.4 percent (section headers, 47 to 50 px from XXL to XXXL) in both appearances, above the 4 percent rule.
 - 66 of the 588 samples per appearance differ between light and dark by 1 px, none by more: antialiased edge rows cross the ink threshold differently on light and dark backgrounds.
+
+On the final source before the rebase, `b28a9b3`, with the same test code, 4 more consecutive full runs passed 48 of 48 in light and 4 in dark, in about 1,455 to 1,498 s each at host load averages of about 8 to 15, before they were stopped at Firstmate's request to free the host for the rebase.
 
 The dark rerun of `ContentSizeTests` is dropped from `Scripts/validate-local.sh`, and so from CI.
 The measurement does not depend on appearance: the 10 light and 10 dark proof runs each passed 48 of 48 every time, and so did both runs here, with samples within 1 px of each other, so the rerun doubled the class's cost without a different outcome.
