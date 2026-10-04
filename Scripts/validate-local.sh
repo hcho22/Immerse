@@ -2,7 +2,7 @@
 set -eu
 cd "$(dirname "$0")/.."
 # Simulator UI gates run with light appearance and large text, like the retained
-# harness runner, and the production accessibility audits run once more in dark;
+# harness runner, and the production accessibility audits and text-size measurement run once more in dark;
 # each simulator's own preferences are restored on exit.
 pinned_simulators=""
 pin_simulator() {
@@ -60,14 +60,14 @@ if [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
         -only-testing:ImmerseUITests \
         -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
         CODE_SIGNING_ALLOWED=NO test
-    # The accessibility audits again in dark appearance, from the same build; a test cannot switch the
-    # app's appearance itself (Evidence/NativeApp/qa13-audit-exceptions-052.md).
+    # The accessibility audits and the text-size measurement again in dark appearance, from the same build;
+    # a test cannot switch the app's appearance itself (Evidence/NativeApp/qa13-audit-exceptions-052.md).
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance dark
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
         -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" \
         -derivedDataPath DerivedData/ValidationSimulator \
         -resultBundlePath "DerivedData/ValidationDark-$(date -u +%Y%m%dT%H%M%SZ).xcresult" \
-        -only-testing:ImmerseUITests/JournalFlowTests \
+        -only-testing:ImmerseUITests/JournalFlowTests -only-testing:ImmerseUITests/ContentSizeTests \
         -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
         CODE_SIGNING_ALLOWED=NO test-without-building
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance light

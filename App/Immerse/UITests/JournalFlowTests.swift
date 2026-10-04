@@ -6,7 +6,7 @@ final class JournalFlowTests: XCTestCase {
         let app = XCUIApplication.shippingGate()
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        try app.performAccessibilityAudit()
+        try app.performAccessibilityAudit(for: Self.auditTypes)
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
@@ -18,7 +18,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
         XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
-        try audit(app, name: "Super8-load-default", for: Self.formAuditTypes)
+        try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
@@ -63,7 +63,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
-        try app.performAccessibilityAudit()
+        try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "Catalog-accessibility-largest")
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
@@ -73,24 +73,24 @@ final class JournalFlowTests: XCTestCase {
         // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].exists)
-        try app.performAccessibilityAudit()
+        try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
         scrollUp(app, until: title)
         XCTAssertTrue(title.isHittable)
-        try audit(app, name: "16mm-title-accessibility-largest", for: Self.formAuditTypes)
+        try audit(app, name: "16mm-title-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-title-accessibility-largest")
         let load = app.buttons["load-film"]
         scrollUp(app, until: load)
         XCTAssertTrue(load.isHittable)
-        try audit(app, name: "16mm-command-accessibility-largest", for: Self.formAuditTypes)
+        try audit(app, name: "16mm-command-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-command-accessibility-largest")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
-        try app.performAccessibilityAudit()
+        try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "Settings-landscape-accessibility-largest")
     }
 
@@ -139,11 +139,12 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(name: "Settings-camera-denied")
     }
 
-    /// Every audit type except Dynamic Type, for the three audits of the Form-based Load screens. Xcode's Dynamic
-    /// Type check grows the text in place, and over this lazy Form it flagged different rows from run to run,
-    /// scrolled or not (Evidence/NativeApp/qa13-audit-exceptions-052.md). `ContentSizeTests` instead measures every
-    /// text element on these screens at all twelve sizes; Dynamic Type stays in the other audits.
-    private static let formAuditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
+    /// Every audit type except Dynamic Type, for every audit. Xcode's Dynamic Type check grows the text in place and
+    /// flagged correctly resizing text from run to run: rows of the lazy Load Film Form, scrolled or not
+    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md), and later the 16mm Load screen at its top and the empty
+    /// Journal (Evidence/NativeApp/scroll-indicator-drag-053.md). `ContentSizeTests` instead measures every text
+    /// element on the audited screens at all twelve sizes.
+    private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
 
     /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
     /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
@@ -158,15 +159,8 @@ final class JournalFlowTests: XCTestCase {
         }
     }
 
-    /// Retains the screen as it appears. In landscape, `app.screenshot()` turned the image sideways a second time and
-    /// cropped it, and the screen's own capture keeps the display's portrait pixels with an orientation flag that the
-    /// attachment drops, so the screen capture is redrawn upright (Evidence/NativeApp/scroll-indicator-drag-053.md).
     private func retainScreenshot(name: String) {
-        let screen = XCUIScreen.main.screenshot().image
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = screen.scale
-        let upright = UIGraphicsImageRenderer(size: screen.size, format: format).image { _ in screen.draw(at: .zero) }
-        let attachment = XCTAttachment(image: upright)
+        let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)

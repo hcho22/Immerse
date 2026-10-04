@@ -29,12 +29,13 @@ changing project configuration; the generated project is committed for CI.
 The gate also verifies coverage of all 122 intake task IDs, 72 acceptance clauses
 and nine invariants. Coverage is not acceptance. UI audits include the largest
 Dynamic Type size and scroll to the title and Load Film command. Their only
-accepted findings are the exact, measured entries in `UITests/AuditExceptions.swift`;
-the Load Film screens' text sizing is measured by `ContentSizeTests` instead of the
-Dynamic Type audit (`Evidence/NativeApp/qa13-audit-exceptions-052.md`). The script
-runs the `JournalFlowTests` accessibility audits a second time with the
-simulator set to dark appearance; for other dark coverage, including the populated
-Journal card contrast audit in `MovieCapacityUITests`, set
+accepted findings are the exact, measured entries in `UITests/AuditExceptions.swift`.
+Text sizing on every audited screen is measured by `ContentSizeTests` at all twelve
+sizes instead of the Dynamic Type audit, which is not run
+(`Evidence/NativeApp/qa13-audit-exceptions-052.md`). The script runs the
+`JournalFlowTests` accessibility audits and that measurement (`ContentSizeTests`)
+a second time with the simulator set to dark appearance; for other dark coverage,
+including the populated Journal card contrast audit in `MovieCapacityUITests`, set
 `xcrun simctl ui <task-owned-uuid> appearance dark` before the UI run, then restore
 its appearance. Do not infer dark coverage from an `AppleInterfaceStyle` launch
 argument or `XCUIDevice.shared.appearance`; neither changed the observed pixels.
