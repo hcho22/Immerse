@@ -66,10 +66,20 @@ Then 30 repetitions each of the new test and `testDeletingFilmWhileItsSaveIsHeld
 
 ## Rebased Head
 
-No validation run on the rebased head is recorded here yet.
 `b4d9527` made the `JournalFlowTests` audits pass and rewrote `ContentSizeTests`, so their outcome with this change has to be observed on the rebased head, not inferred from the runs above.
 The Debug testing section is the first Settings section in every Debug UI run, including `shippingGate()` launches, because the launch argument only turns the switch off.
 `testLargestDynamicTypeCatalogAndLandscapeSettings` therefore audits that section in landscape at the largest accessibility text size.
+
+On 2026-10-03, `7e61621` was checked on that one test only, not the full script.
+A first run built with Xcode's default local signing failed contrast on the 16mm entitlement line ("One Trial Film on this iPhone") at the Load Film audit.
+That build could read the simulator Keychain, so the Load screen showed the unused-Trial line and its longer note instead of "Trial status unavailable".
+The held drags then stopped with Load Film at y = 828.7, not at the y = 726.7 pose recorded in 052, and the entitlement line sat under the navigation bar.
+The script and CI build with `CODE_SIGNING_ALLOWED=NO`, where the Keychain read fails, as in every 052 run.
+Built that way, on a new iPhone 17 Pro simulator with iOS 26.5, light appearance and large text, the test passed.
+It reached Load Film at y = 726.7, its only finding was the accepted 16mm description at the title pose, and the landscape Settings audit, Debug testing section included, reported nothing.
+The same build and simulator switched to dark failed the test twice, at host load averages of about 500 to 860.
+Both times the only findings were Dynamic Type on "One silent Movie after Development" and "Deliberate framing, finer grain" at the 16mm load audit before any scrolling; contrast at both 16mm poses and the landscape Settings audit passed.
+Those two rows are unchanged by this branch, but `b4d9527` was not run under the same conditions, so whether the dark result is new or the host-load nondeterminism described in 052 is still open.
 
 ## Limits
 
