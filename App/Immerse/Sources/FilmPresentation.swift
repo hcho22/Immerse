@@ -128,6 +128,14 @@ extension Color {
     /// Fill for filled actions. The dark-mode accent is too light under a white label, so filled
     /// actions use a deeper green that keeps both the label and the fill's edge readable.
     static let primaryAction = Color("PrimaryAction")
+
+    /// Secondary text on a card. On the white light-mode card the system secondary label is 3.44:1, under the
+    /// 4.5:1 bar, so light mode raises its opacity to at least 71% (4.58:1); dark mode keeps the system color.
+    static let cardSecondaryText = Color(uiColor: UIColor { traits in
+        let system = UIColor.secondaryLabel.resolvedColor(with: traits)
+        guard traits.userInterfaceStyle != .dark else { return system }
+        return system.withAlphaComponent(max(system.cgColor.alpha, 0.71))
+    })
 }
 
 extension View {

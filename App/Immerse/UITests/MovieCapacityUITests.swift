@@ -3,18 +3,19 @@ import XCTest
 /// Movie time reads as minutes and seconds from the catalog to the Journal: the 16mm catalog row and Load screen,
 /// then the loaded Film's detail header, capture line and Journal row, with VoiceOver speaking the units. Loading
 /// uses the Debug testing unlock and answers a fresh Camera request itself, and each test deletes the Film it
-/// loaded, so it neither depends on nor leaves Camera or Journal state that other tests assume.
+/// loaded, so it neither depends on nor leaves Camera or Journal state that other tests assume. The populated
+/// Journal card is also audited for contrast, since the suite's other audits only see an empty Journal.
 @MainActor
 final class MovieCapacityUITests: XCTestCase {
-    func testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal() {
-        check(size: nil)
+    func testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal() throws {
+        try check(size: nil)
     }
 
-    func testMovieTimeReadsAsMinutesAndSecondsAtLargestText() {
-        check(size: "UICTContentSizeCategoryAccessibilityXXXL")
+    func testMovieTimeReadsAsMinutesAndSecondsAtLargestText() throws {
+        try check(size: "UICTContentSizeCategoryAccessibilityXXXL")
     }
 
-    private func check(size: String?) {
+    private func check(size: String?) throws {
         let app = XCUIApplication()
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
         if let size { app.launchArguments += ["-UIPreferredContentSizeCategoryName", size] }
@@ -75,6 +76,7 @@ final class MovieCapacityUITests: XCTestCase {
         for _ in 0..<8 where !row.isHittable { app.swipeUp() }
         XCTAssertTrue(row.label.contains("2 minutes 45 seconds left"), row.label)
         retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
+        try app.performAccessibilityAudit(for: .contrast)
     }
 
     /// Deletes the Film a test loaded from a fresh launch, whatever screen the test stopped on.

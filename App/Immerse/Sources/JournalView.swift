@@ -92,7 +92,7 @@ private struct JournalFilmRow: View {
     private func row(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
-                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(.secondary)
+                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }
@@ -121,7 +121,7 @@ private struct JournalFilmRow: View {
                 }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
-            }.font(.caption).foregroundStyle(.secondary)
+            }.font(.caption).foregroundStyle(Color.cardSecondaryText)
         }
         .padding(18)
         .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
