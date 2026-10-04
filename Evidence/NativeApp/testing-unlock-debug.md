@@ -100,6 +100,15 @@ After turning the switch off in Settings and relaunching, the Load screen read "
 Turning the switch on again and relaunching brought back the indicator, and the Instant Camera loaded.
 `sh Scripts/verify-release-excludes-testing-unlock.sh` passed on the same head.
 
+### CI Rename Step Race
+
+CI on `71017a8` failed `PopulatedWorkflowTests.testEarlyPhotoDevelopmentDarkroomAndRemoval` at "The Rename field is empty before typing", while the other 11 harness tests passed.
+The test read the Rename field 0.03 to 0.23 s after `typeText` returned from 22 deletes; the retained screen recording shows the field between "Private" and "P" at those reads and empty about 0.2 to 0.35 s later.
+On iOS 26 the keyboard runs in its own process, so typed edits can land after XCUITest's idle wait.
+Main's CI on `b4d9527` and the PR #10 CI passed this test, and three local runs of the unchanged test passed, so the race is timing-dependent and predates this branch.
+The test now waits up to 10 s for the field to be empty before typing and to hold the new title before tapping Save.
+With the wait, the test passed in three local runs on an iOS 26.5 simulator under heavy host load; CI has not yet run it.
+
 ## Limits
 
 - Simulator results on iOS 26.2 (unit) and 26.5 (UI) with injected in-memory Keychain calls; no physical Keychain, camera or Home Screen launch was exercised.
