@@ -1,0 +1,20 @@
+#!/bin/sh
+# usage: inplace.sh <udid> <test> <start-size> <result-name>
+set -u
+cd <repo>
+S=<scratch>
+rm -f $S/inplace/ready $S/inplace/swept
+xcrun simctl ui $1 content_size $3
+xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse -destination "platform=iOS Simulator,id=$1" \
+  -derivedDataPath DerivedData/FlakeProbe -resultBundlePath DerivedData/FlakeProbe/$4.xcresult \
+  -only-testing:ImmerseUITests/ContentSizeTests/$2 -test-timeouts-enabled YES -maximum-test-execution-time-allowance 400 \
+  CODE_SIGNING_ALLOWED=NO test-without-building > $S/inplace/$4.log 2>&1 < /dev/null &
+pid=$!
+i=0; while [ ! -f $S/inplace/ready ] && [ $i -lt 600 ]; do sleep 0.5; i=$((i+1)); done
+echo "ready after $i half-seconds"
+for size in extra-small small medium large extra-large extra-extra-large extra-extra-extra-large accessibility-medium accessibility-large accessibility-extra-large accessibility-extra-extra-large accessibility-extra-extra-extra-large; do
+  xcrun simctl ui $1 content_size $size; sleep 0.3
+done
+touch $S/inplace/swept
+wait $pid; echo "xcodebuild exit $?"
+xcrun simctl ui $1 content_size large

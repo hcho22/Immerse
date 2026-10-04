@@ -62,6 +62,17 @@ The compensating check is `ContentSizeTests`, which measures directly instead of
 - Each test measures one size and checks growth against whichever neighboring sizes are already measured in the same run, so a full run checks every step from XS to AX XXXL whatever order the tests run in.
 - It measures in the simulator's appearance. Setting `XCUIDevice.shared.appearance` from the test did not change the app's rendering on iOS 26.5, so dark coverage of this measurement comes from running the suite on a dark simulator (below).
 
+### Revision: No Audit Runs Dynamic Type (2026-10-04)
+
+Decision `dyn-type-determinism` is revised by Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A), on the evidence in `scroll-indicator-drag-053.md`.
+Dynamic Type also flagged correctly resizing text, from time to time, at two audits that kept it: the 16mm Load screen at its top at the largest size and the empty Journal at the default size.
+Text stepped in place through every size on the Load screens measured the same as at a fresh launch, so those findings come from the auditor's timing, which a test cannot control.
+Every audit in `JournalFlowTests` now runs every audit type except Dynamic Type (`auditTypes`); contrast, hit regions, element descriptions, clipped text and the other types are unchanged, and the one exception in `AuditExceptions.swift` is unchanged.
+`ContentSizeTests` now measures all the text those Dynamic Type checks covered, at all twelve sizes: the Load screens as above, the empty Journal's title, the Camera catalog's headers, names and capacities, and every text element of Settings in landscape, where Settings is audited.
+Navigation titles are system text and are not included, as before.
+`Scripts/validate-local.sh`, and so CI, runs `ContentSizeTests` in light; its dark rerun was dropped from the gate because dark gave the same results (`scroll-indicator-drag-053.md`).
+The details and runs are in `scroll-indicator-drag-053.md`.
+
 ## Deterministic Audit Poses
 
 The largest-size test reached its two 16mm audit points with free `swipeUp()` gestures, which coast a different distance each run, so different rows sat under the navigation bar and the bottom edge at each audit.

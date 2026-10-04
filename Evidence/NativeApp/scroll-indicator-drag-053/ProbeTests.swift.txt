@@ -1,0 +1,71 @@
+// Temporary probes run inside ContentSizeTests (not part of the suite); see ../scroll-indicator-drag-053.md.
+// The in-place probe is driven by inplace.sh.txt, which steps the simulator text size from the host.
+
+    // PROBE (temporary): back-to-back held drags at CI pace; records how far a reference row moves per drag.
+    func testProbeScrubRight() throws { probe(dx: 0.98) }
+    func testProbeScrubLeft() throws { probe(dx: 0.02) }
+
+    private func probe(dx: CGFloat) {
+        let app = XCUIApplication()
+        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let row = app.buttons["camera-super8HomeMovie"]
+        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
+        row.tap()
+        XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5))
+        Thread.sleep(forTimeInterval: 1)
+        var log: [String] = []
+        var previous: [String: CGFloat] = [:]
+        var reversed = 0
+        for step in 0..<8 {
+            // Chained: two drags with no snapshot between, as fast as XCTest allows.
+            for _ in 0..<(step == 0 ? 3 : 1) {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: dx, dy: 0.7))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -380)),
+                            withVelocity: .slow, thenHoldForDuration: 0.2)
+            }
+            guard let root = try? app.snapshot() else { continue }
+            var positions: [String: CGFloat] = [:]
+            func visit(_ e: XCUIElementSnapshot) {
+                if e.elementType == .staticText || e.elementType == .button, !e.label.isEmpty { positions[e.label] = e.frame.minY }
+                e.children.forEach(visit)
+            }
+            visit(root)
+            let deltas = positions.compactMap { key, y in previous[key].map { y - $0 } }
+            let delta = deltas.isEmpty ? CGFloat.nan : deltas.sorted()[deltas.count / 2]
+            if delta > 0 { reversed += 1 }
+            log.append("step \(step) dx=\(dx) median delta=\(delta) visible=\(positions.keys.sorted().prefix(4))")
+            previous = positions
+        }
+        let a = XCTAttachment(string: log.joined(separator: "\n")); a.name = "probe"; a.lifetime = .keepAlways; add(a)
+        XCTAssertEqual(reversed, 0, log.joined(separator: "\n"))
+    }
+
+    // PROBE (temporary): the host steps the simulator's text size while the Load screen stays open.
+    func testProbeInPlaceSuper8() throws { inPlace("camera-super8HomeMovie", "Super 8", Self.superEight) }
+    func testProbeInPlace16mm() throws { inPlace("camera-cinema16mm", "16mm", Self.sixteenMillimeter) }
+
+    private func inPlace(_ camera: String, _ title: String, _ targets: [Target]) {
+        let dir = "<scratch>/inplace"
+        let app = XCUIApplication()
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let row = app.buttons[camera]
+        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
+        row.tap()
+        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5))
+        Thread.sleep(forTimeInterval: 1)
+        let before = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Capacity'")).firstMatch.frame
+        attach(app.screenshot(), "before \(before)")
+        FileManager.default.createFile(atPath: dir + "/ready", contents: nil)
+        for _ in 0..<240 where !FileManager.default.fileExists(atPath: dir + "/swept") { Thread.sleep(forTimeInterval: 0.5) }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: dir + "/swept"))
+        Thread.sleep(forTimeInterval: 2)
+        let after = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Capacity'")).firstMatch.frame
+        attach(app.screenshot(), "after \(after)")
+        let rows = measure(app, targets, "inplace").map { "\($0.0.name) frame=\($0.1.frame) ink=\($0.1.ink)" }
+        let a = XCTAttachment(string: "before=\(before) after=\(after)\n" + rows.joined(separator: "\n")); a.name = "inplace"; a.lifetime = .keepAlways; add(a)
+    }
