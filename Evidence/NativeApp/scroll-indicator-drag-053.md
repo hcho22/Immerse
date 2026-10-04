@@ -152,6 +152,18 @@ All 20 runs passed 48 of 48, at host load averages from about 11 to 700; a run t
 
 Before the final source, two earlier attempts stopped on their first failure: one ran a stale UI-test bundle from shared derived data (its failure lines matched no assertion in the source, as 052 recorded), hence the uninstall before each run, and one found the AX XXL and AX XXXL Settings timeouts that led to the two halves.
 
+### Full Gate
+
+`sh Scripts/validate-local.sh` on the final source, with all three simulator variables (the light iOS 26.5 simulator above for the UI and harness stages, a new iPhone 17 Pro iOS 26.2 simulator for StoreKit), exited 0 in 4,353 s at host load averages of about 7 to 30:
+
+| Stage | Outcome | Duration |
+| --- | --- | --- |
+| Requirement map, packages, probes, documents ZIP, unsigned builds, release excludes the testing unlock | Passed | |
+| Populated harness (`Populated-20261004T153943Z.xcresult`) | 12 of 12 passed | 526 s |
+| Production UI, light (`Validation-20261004T154834Z.xcresult`) | 53 passed, 1 expected failure (the contrast negative test) | 1,632 s |
+| Accessibility audits and text-size measurement, dark (`ValidationDark-20261004T161550Z.xcresult`) | 51 passed, 1 expected failure | 1,556 s |
+| iOS 26.2 hosted (`StoreKit-20261004T164150Z.xcresult`) | 29 of 29 passed | 119 s |
+
 ## Limits
 
 The CI recording, not a local run, reproduces the scroll-indicator trigger; local runs show the identical poses up to the divergence and that the left-margin drag scrolls the same way.
