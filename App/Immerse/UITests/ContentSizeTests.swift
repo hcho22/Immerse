@@ -349,11 +349,12 @@ final class ContentSizeTests: XCTestCase {
     /// Scrolls the screen down, or up from its end, in held drags, between the named navigation bar and the home
     /// indicator. An element's top edge is checked once it is on screen with the text below it, and its bottom edge
     /// once that is on screen with the text above it; an element that fits is checked in one pose. Each drag is
-    /// short enough that every edge reaches such a pose.
+    /// short enough that every edge reaches such a pose. Each edge keeps the text's distance from the frame's exact
+    /// edge in pixels, so the text height is the frame's height less those two, from one pose or two.
     private func measure(_ app: XCUIApplication, _ targets: [Target], _ category: String,
                          below bar: String, upward: Bool = false) -> [((name: String, variant: String), Sample)] {
         let tag = "\(category) \(Self.appearance)"
-        var tops: [String: Int] = [:], bottoms: [String: Int] = [:], frames: [String: CGRect] = [:], seen: Set<String> = []
+        var tops: [String: CGFloat] = [:], bottoms: [String: CGFloat] = [:], frames: [String: CGRect] = [:], seen: Set<String> = []
         var results: [((name: String, variant: String), Sample)] = []
         var navigation: CGFloat = 0
         func pending(_ root: XCUIElementSnapshot) -> Target? {
@@ -403,7 +404,7 @@ final class ContentSizeTests: XCTestCase {
                     XCTAssertLessThanOrEqual(ink.top, ink.bottom, "\(target.name) \(tag) text is found in its frame")
                     if edges.top {
                         XCTAssertGreaterThan(ink.top, 0, "\(target.name) \(tag) text is not clipped at the top")
-                        tops[target.name] = ink.top
+                        tops[target.name] = CGFloat(ink.origin + ink.top) - frame.minY * shot.scale
                     }
                     if edges.bottom, target.clearance != nil {
                         let start = max(frame.minY, top)
@@ -411,14 +412,14 @@ final class ContentSizeTests: XCTestCase {
                         let clear = inkExtent(shot, area, in: window, tinted: target.tinted)
                         XCTAssertLessThan(clear.bottom, clear.height - 1, "\(target.name) \(tag) text is not clipped at the bottom")
                         // How far the text ends above the frame's bottom; negative where a descender reaches past it.
-                        bottoms[target.name] = Int(((frame.maxY - start) * shot.scale).rounded()) - 1 - clear.bottom
+                        bottoms[target.name] = frame.maxY * shot.scale - CGFloat(clear.origin + clear.bottom + 1)
                     } else if edges.bottom {
                         XCTAssertLessThan(ink.bottom, ink.height - 1, "\(target.name) \(tag) text is not clipped at the bottom")
-                        bottoms[target.name] = ink.height - 1 - ink.bottom
+                        bottoms[target.name] = frame.maxY * shot.scale - CGFloat(ink.origin + ink.bottom + 1)
                     }
                     if let inset = tops[target.name], let outset = bottoms[target.name] {
-                        let height = Int((frame.height * shot.scale).rounded())
-                        results.append(((target.name, tag), Sample(frame: frame, ink: height - inset - outset, navigation: navigation)))
+                        let height = Int((frame.height * shot.scale - inset - outset).rounded())
+                        results.append(((target.name, tag), Sample(frame: frame, ink: height, navigation: navigation)))
                     }
                 }
                 attach(shot, "\(tag) \(due.map(\.0.name).joined(separator: ", "))")
@@ -450,18 +451,19 @@ final class ContentSizeTests: XCTestCase {
     }
 
     /// Rows of an element's area in a screen screenshot that hold text: pixels far from the area's most common
-    /// color, and unless the text is tinted, neutral ones only.
+    /// color, and unless the text is tinted, neutral ones only. They count from the first row of the area's crop,
+    /// which `CGRect.integral` widens to whole pixels; `origin` is that row in the screenshot.
     private func inkExtent(_ screenshot: UIImage, _ frame: CGRect, in window: CGRect,
-                           tinted: Bool) -> (top: Int, bottom: Int, height: Int) {
-        guard let full = screenshot.cgImage else { return (0, 0, 0) }
+                           tinted: Bool) -> (top: Int, bottom: Int, height: Int, origin: Int) {
+        guard let full = screenshot.cgImage else { return (0, 0, 0, 0) }
         let scale = CGFloat(full.width) / window.width
         let crop = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale, height: frame.height * scale).integral
-        guard let image = full.cropping(to: crop) else { return (0, 0, 0) }
+        guard let image = full.cropping(to: crop) else { return (0, 0, 0, Int(crop.minY)) }
         let width = image.width, height = image.height
         var data = [UInt8](repeating: 0, count: width * height * 4)
         guard let context = CGContext(data: &data, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
                                       space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
-        else { return (0, 0, height) }
+        else { return (0, 0, height, Int(crop.minY)) }
         context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
         // Colors in 8-level steps per channel, so antialiasing does not split the background. A flat table, since a
         // landscape paragraph's area holds about two million pixels.
@@ -482,7 +484,7 @@ final class ContentSizeTests: XCTestCase {
                 if distance > 200, tinted || neutral { top = min(top, y); bottom = max(bottom, y); break }
             }
         }
-        return (top, bottom, height)
+        return (top, bottom, height, Int(crop.minY))
     }
 
     private func attach(_ screenshot: UIImage, _ name: String) {
