@@ -80,19 +80,19 @@ private struct LoadFilmView: View {
                         .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
                 }
             }
-            Section {
-                #if DEBUG
-                if model.testingUnlock.enabled {
+            #if DEBUG
+            if model.testingUnlock.enabled {
+                Section {
                     TestingUnlockNotice()
                     Text(LoadCopy.fixed(medium: camera.medium))
                         .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                } else {
-                    entitlement
                 }
-                #else
-                entitlement
-                #endif
+            } else {
+                Section { entitlement }
             }
+            #else
+            Section { entitlement }
+            #endif
             Section { NavigationLink("Subscription") { SubscriptionView() } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {
