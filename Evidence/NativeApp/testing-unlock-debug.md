@@ -109,6 +109,20 @@ Main's CI on `b4d9527` and the PR #10 CI passed this test, and three local runs 
 The test now waits up to 10 s for the field to be empty before typing and to hold the new title before tapping Save.
 With the wait, the test passed in three local runs on an iOS 26.5 simulator under heavy host load; CI has not yet run it.
 
+### CI Clipped-Text Finding on the Load Screen
+
+CI on `cab756d` and `4647833` failed `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` with one finding at `Super8-load-default`: clipped text on the entitlement line, "Trial status unavailable".
+Main's CI on `b4d9527` and the PR #10 CI passed that test.
+On iOS 26.5 iPhone 17 Pro simulators with light appearance, large text and `CODE_SIGNING_ALLOWED=NO`, the head failed 3 of 3 runs and unmodified `b4d9527` passed 2 of 2, with identical accessibility trees at the audited pose.
+The failing run's screen recording shows the clipped-text check resizing the text in place, with the entitlement line cut by the bottom edge of the screen at one size.
+The finding followed any conditional that held the entitlement row: the unlock's `if`/`else` inside its Section (`cab756d`), around the Section (`4647833`) and as two separate `if` statements all failed with it.
+Main's unconditional Section in the same head passed.
+`LoadFilmView` now chooses between two whole forms built by one `form(access:)` helper, so the entitlement rows are no longer inside a conditional, and the form with the unlock off and in Release is main's.
+The unlocked form still shows the indicator and the fixed-Camera copy.
+Built that way, the catalog test passed twice (179 s and 184 s) on `Immerse Unlock 26.5`.
+On a second iOS 26.5 iPhone 17 Pro simulator with the same settings, `TestingUnlockUITests` passed in 273 s and `testLargestDynamicTypeCatalogAndLandscapeSettings` passed in 263 s.
+Host load averages were about 340 to 950; the full script and the dark pass were not rerun.
+
 ## Limits
 
 - Simulator results on iOS 26.2 (unit) and 26.5 (UI) with injected in-memory Keychain calls; no physical Keychain, camera or Home Screen launch was exercised.

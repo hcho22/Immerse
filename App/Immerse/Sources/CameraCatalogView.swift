@@ -49,6 +49,31 @@ private struct LoadFilmView: View {
     @State private var samples = false
 
     var body: some View {
+        Group {
+            #if DEBUG
+            if model.testingUnlock.enabled {
+                form {
+                    TestingUnlockNotice()
+                    Text(LoadCopy.fixed(medium: camera.medium))
+                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                }
+            } else {
+                form { entitlement }
+            }
+            #else
+            form { entitlement }
+            #endif
+        }
+        .navigationTitle(camera.shortName)
+        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
+        .task { if title.isEmpty { title = suggestedTitle } }
+        .interactiveDismissDisabled(loading)
+    }
+
+    /// The Load Film form around its access rows. The testing unlock chooses a whole form, not conditional
+    /// rows: inside a conditional, the entitlement line drew a clipped-text audit finding
+    /// (Evidence/NativeApp/testing-unlock-debug.md).
+    private func form(@ViewBuilder access: () -> some View) -> some View {
         Form {
             if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
                 Section {
@@ -80,19 +105,7 @@ private struct LoadFilmView: View {
                         .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
                 }
             }
-            #if DEBUG
-            if model.testingUnlock.enabled {
-                Section {
-                    TestingUnlockNotice()
-                    Text(LoadCopy.fixed(medium: camera.medium))
-                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                }
-            } else {
-                Section { entitlement }
-            }
-            #else
-            Section { entitlement }
-            #endif
+            Section { access() }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {
@@ -120,10 +133,6 @@ private struct LoadFilmView: View {
                 }.disabled(loading).accessibilityIdentifier("load-film")
             }
         }
-        .navigationTitle(camera.shortName)
-        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
-        .task { if title.isEmpty { title = suggestedTitle } }
-        .interactiveDismissDisabled(loading)
     }
 
     private var suggestedTitle: String {
