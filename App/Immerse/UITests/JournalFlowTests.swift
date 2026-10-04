@@ -13,9 +13,9 @@ final class JournalFlowTests: XCTestCase {
             XCTAssertTrue(app.buttons["camera-\(id)"].exists)
         }
         app.buttons["camera-super8HomeMovie"].tap()
-        // Assert the load screen's own capacity element; a bare "3:20 of film" query also matched the
+        // Assert the load screen's own capacity element; a bare capacity query also matched the
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
-        XCTAssertTrue(app.staticTexts["Capacity, 3:20 of film"].exists)
+        XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
         XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.formAuditTypes)
@@ -42,7 +42,7 @@ final class JournalFlowTests: XCTestCase {
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         camera.tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
         scrollUp(app, until: title)
         XCTAssertTrue(title.isHittable)
@@ -69,10 +69,10 @@ final class JournalFlowTests: XCTestCase {
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         XCTAssertTrue(camera.isHittable)
         camera.tap()
-        // The load screen exposes its capacity as one "Capacity, 2:45 of film" element. A bare "2:45 of film"
-        // query also matched the outgoing camera row mid-push, so it passed or failed with timing
+        // The load screen exposes its capacity as one "Capacity, 2 minutes 45 seconds of film" element. A bare
+        // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).
-        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].exists)
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].exists)
         try app.performAccessibilityAudit()
         retainScreenshot(app, name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]

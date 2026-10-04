@@ -20,7 +20,7 @@ struct CameraCatalogView: View {
                                         .accessibilityHidden(true)
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text(camera.shortName).font(.system(.title3, design: .serif))
-                                        Text(camera.capacityLabel).font(.caption).foregroundStyle(.secondary)
+                                        camera.capacityText.font(.caption).foregroundStyle(.secondary)
                                     }.padding(.vertical, 8)
                                 }
                             }.accessibilityIdentifier("camera-\(camera.id.rawValue)")
@@ -81,7 +81,7 @@ private struct LoadFilmView: View {
                 }
             }
             Section {
-                LabeledContent("Capacity", value: camera.capacityLabel)
+                LabeledContent("Capacity") { camera.capacityText }
                 Text(camera.revealLabel)
                 Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 if camera.medium == .movie {

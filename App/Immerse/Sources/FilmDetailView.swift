@@ -78,7 +78,7 @@ struct FilmDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(film.camera.displayName).font(.system(.title2, design: .serif))
             Text(film.journalState).font(.headline)
-            Text(model.hasPendingSave(filmID) ? "Finishing save" : film.remainingLabel)
+            (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText)
                 .font(.subheadline.monospaced()).foregroundStyle(.secondary)
             if model.hasPendingSave(filmID) { ProgressView().accessibilityLabel("Finishing save") }
             else { ProgressView(value: film.progress) }

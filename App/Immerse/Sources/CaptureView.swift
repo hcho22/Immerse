@@ -22,9 +22,9 @@ struct CaptureView: View {
                         Text(film.camera.displayName).font(.system(.title3, design: .serif))
                         TimelineView(.periodic(from: .now, by: 0.1)) { context in
                             if let start = capture.recordingStarted {
-                                Text(String(format: "%.1f seconds left", max(0, (film.remainingMovieSeconds ?? 0) - context.date.timeIntervalSince(start))))
+                                film.remainingText(recordedFor: context.date.timeIntervalSince(start))
                                     .font(.body.monospaced()).foregroundStyle(.red)
-                            } else { Text(model.hasPendingSave(filmID) ? "Finishing save" : film.remainingLabel).font(.body.monospaced()) }
+                            } else { (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText).font(.body.monospaced()) }
                         }
                         // Status sits above the viewfinder so guidance is visible without scrolling.
                         if film.completionState != .open {

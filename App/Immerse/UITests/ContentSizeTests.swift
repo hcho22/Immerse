@@ -39,7 +39,7 @@ final class ContentSizeTests: XCTestCase {
     }
 
     private static let superEight: [Target] = [
-        Target(name: "Capacity", type: .staticText, label: "Capacity, 3:20 of film"),
+        Target(name: "Capacity", type: .staticText, label: "Capacity, 3 minutes 20 seconds of film"),
         Target(name: "Reveal", type: .staticText, label: "One silent Movie after Development"),
         Target(name: "Controls", type: .staticText, label: "Handheld, pronounced grain and flicker"),
         Target(name: "Silent capture", type: .staticText, label: "Silent capture"),
@@ -55,7 +55,7 @@ final class ContentSizeTests: XCTestCase {
     ]
 
     private static let sixteenMillimeter: [Target] = [
-        Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2:45 of film"),
+        Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 45 seconds of film"),
         Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, finer grain"),
     ]
 

@@ -3,6 +3,7 @@ import FilmDomain
 import FilmPersistence
 import NativeAdapters
 import Security
+import SwiftUI
 import Synchronization
 import UIKit
 import XCTest
@@ -187,6 +188,34 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeLeft)?.rotationAngle, 0, "Home side right")
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeRight)?.rotationAngle, 180)
         XCTAssertNil(CaptureFrameOrientation(device: .faceUp))
+    }
+
+    /// The actual capture screen while a 16mm clip records, retained as a screenshot. The simulator has no camera,
+    /// so a recording start stands in for a clip: the line counts down in red in the resting line's minutes and
+    /// seconds, while the shutter and the missing-camera message still show the simulator's idle camera.
+    func testCaptureScreenWhileRecordingCountsDownInMinutesAndSeconds() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
+                                                   movieOrientation: .landscape, access: .subscription)
+        model.refresh()
+        XCTAssertEqual(film.remainingLabel(recordedFor: 12.5), "2:33 left")
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: CaptureView(filmID: film.id).environment(model))
+        let start = Date(timeIntervalSinceNow: -12.5)
+        model.capture.recordingStarted = start
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await Task.sleep(for: .seconds(1))
+        let shown = film.remainingLabel(recordedFor: Date().timeIntervalSince(start))
+        let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        let attachment = XCTAttachment(image: screenshot)
+        attachment.name = "Capture-recording-\(shown)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     func testDeniedCameraOnReopenAttachesNothingAndLoadsNoFilm() async throws {

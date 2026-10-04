@@ -92,7 +92,7 @@ private struct JournalFilmRow: View {
     private func row(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
-                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(.secondary)
+                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }
@@ -114,14 +114,17 @@ private struct JournalFilmRow: View {
                     .accessibilityLabel("Film used").accessibilityValue("\(Int(film.progress * 100)) percent")
             }
             HStack {
-                Label(model.hasPendingSave(film.id) ? "Finishing save" : film.remainingLabel,
-                      systemImage: model.hasPendingSave(film.id) ? "clock" : film.camera.medium == .photo ? "rectangle.stack" : "film")
+                Label {
+                    model.hasPendingSave(film.id) ? Text("Finishing save") : film.remainingText
+                } icon: {
+                    Image(systemName: model.hasPendingSave(film.id) ? "clock" : film.camera.medium == .photo ? "rectangle.stack" : "film")
+                }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
-            }.font(.caption).foregroundStyle(.secondary)
+            }.font(.caption).foregroundStyle(Color.cardSecondaryText)
         }
         .padding(18)
-        .background(.background, in: RoundedRectangle(cornerRadius: 8))
+        .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal)
         .accessibilityElement(children: .combine)
     }

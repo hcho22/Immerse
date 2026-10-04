@@ -17,10 +17,17 @@ extension CameraPackage {
     }
 
     var symbol: String { medium == .photo ? "camera" : "movieclapper" }
-    var capacityLabel: String {
+    var capacityLabel: String { describedCapacity(MovieDurationText.clock) }
+
+    /// What VoiceOver reads for `capacityLabel`, with Movie time in spoken units rather than "2:45".
+    var capacitySpokenLabel: String { describedCapacity(MovieDurationText.spoken) }
+
+    var capacityText: Text { Text(capacityLabel).accessibilityLabel(capacitySpokenLabel) }
+
+    private func describedCapacity(_ duration: (Int) -> String) -> String {
         switch capacity {
         case let .exposures(count): "\(count) exposures"
-        case let .seconds(count): "\(count / 60):\(String(format: "%02d", count % 60)) of film"
+        case let .seconds(count): "\(duration(count)) of film"
         }
     }
     var revealLabel: String {
@@ -51,15 +58,32 @@ extension Film {
         return "On the roll"
     }
 
-    var remainingLabel: String {
+    var remainingLabel: String { remainingLabel(recordedFor: 0) }
+
+    /// What VoiceOver reads for `remainingLabel`, with Movie time in spoken units rather than "2:45".
+    var remainingSpokenLabel: String { remainingSpokenLabel(recordedFor: 0) }
+
+    var remainingText: Text { remainingText(recordedFor: 0) }
+
+    /// The remaining capacity while a clip has been recording for `elapsed` seconds. Movie time counts down in
+    /// the same whole seconds as the resting line, so it starts where that line stood and changes once a second.
+    func remainingLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.clock, elapsed) }
+
+    func remainingSpokenLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.spoken, elapsed) }
+
+    func remainingText(recordedFor elapsed: TimeInterval) -> Text {
+        Text(remainingLabel(recordedFor: elapsed)).accessibilityLabel(remainingSpokenLabel(recordedFor: elapsed))
+    }
+
+    private func remaining(_ duration: (Int) -> String, _ elapsed: TimeInterval) -> String {
         if case let .completedEarly(wasted) = completionState {
             switch wasted {
             case let .exposures(count): return "\(count) exposures wasted"
-            case let .seconds(count): return String(format: "%.3f seconds wasted", count)
+            case let .seconds(seconds): return "\(duration(MovieDurationText.wholeSeconds(seconds))) wasted"
             }
         }
         if let remainingExposures { return "\(remainingExposures) exposures left" }
-        return String(format: "%.3f seconds left", remainingMovieSeconds ?? 0)
+        return "\(duration(MovieDurationText.wholeSeconds((remainingMovieSeconds ?? 0) - elapsed))) left"
     }
 
     var exactWasteLabel: String {
@@ -76,10 +100,42 @@ extension Film {
     }
 }
 
+/// Movie time as the catalog, Load screen, Film rows and capture line show it, in minutes and seconds, so they
+/// cannot drift.
+enum MovieDurationText {
+    /// Whole seconds, counting a partial second as a whole one, so "0:00" appears only when no frame is left
+    /// and a new Film reads the same as its Camera's capacity.
+    static func wholeSeconds(_ seconds: TimeInterval) -> Int {
+        let frames = MovieFrames.count(seconds: seconds) ?? 0
+        return (frames + MovieFrames.perSecond - 1) / MovieFrames.perSecond
+    }
+
+    /// "2:45", "0:09" or "0:00".
+    static func clock(_ seconds: Int) -> String {
+        "\(seconds / 60):\(String(format: "%02d", seconds % 60))"
+    }
+
+    /// "2 minutes 45 seconds", "1 minute" or "0 seconds", for VoiceOver.
+    static func spoken(_ seconds: Int) -> String {
+        func units(_ count: Int, _ unit: String) -> String { "\(count) \(unit)\(count == 1 ? "" : "s")" }
+        let minutes = seconds / 60, rest = seconds % 60
+        if minutes == 0 { return units(rest, "second") }
+        return rest == 0 ? units(minutes, "minute") : "\(units(minutes, "minute")) \(units(rest, "second"))"
+    }
+}
+
 extension Color {
     /// Fill for filled actions. The dark-mode accent is too light under a white label, so filled
     /// actions use a deeper green that keeps both the label and the fill's edge readable.
     static let primaryAction = Color("PrimaryAction")
+
+    /// Secondary text on a card. On the white light-mode card the system secondary label is 3.44:1, under the
+    /// 4.5:1 bar, so light mode raises its opacity to at least 71% (4.58:1); dark mode keeps the system color.
+    static let cardSecondaryText = Color(uiColor: UIColor { traits in
+        let system = UIColor.secondaryLabel.resolvedColor(with: traits)
+        guard traits.userInterfaceStyle != .dark else { return system }
+        return system.withAlphaComponent(max(system.cgColor.alpha, 0.71))
+    })
 }
 
 extension View {
