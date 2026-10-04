@@ -3,7 +3,7 @@
 Prepared 2026-10-02 for the captain's request: "for immerse, can you unlock the subscription for now so that i can test all cameras and features manually?"
 Branch `fm/immerse-testing-unlock`; the base is `b4d9527` (PR #9).
 The change was prepared on `14328bf` and rebased onto `b4d9527` on 2026-10-03.
-Every outcome in this file was observed on 2026-10-02, before that rebase; see [Rebased Head](#rebased-head) for what remains to be observed.
+Every outcome outside [Rebased Head](#rebased-head) was observed on 2026-10-02, before that rebase.
 Manual steps are in [manual-validation.md](manual-validation.md#debug-testing-unlock).
 
 ## What Changed
@@ -79,7 +79,26 @@ Built that way, on a new iPhone 17 Pro simulator with iOS 26.5, light appearance
 It reached Load Film at y = 726.7, its only finding was the accepted 16mm description at the title pose, and the landscape Settings audit, Debug testing section included, reported nothing.
 The same build and simulator switched to dark failed the test twice, at host load averages of about 500 to 860.
 Both times the only findings were Dynamic Type on "One silent Movie after Development" and "Deliberate framing, finer grain" at the 16mm load audit before any scrolling; contrast at both 16mm poses and the landscape Settings audit passed.
-Those two rows are unchanged by this branch, but `b4d9527` was not run under the same conditions, so whether the dark result is new or the host-load nondeterminism described in 052 is still open.
+Those two rows are unchanged by this branch.
+
+Later on 2026-10-03, `7af6aba` and unmodified `b4d9527` were compared on one new iPhone 17 Pro simulator with iOS 26.5, dark appearance and large text, each built with `CODE_SIGNING_ALLOWED=NO` into its own derived data, at host load averages of about 500 to 1,000.
+The same test ran four times, alternating head and base:
+
+- Head, first run: every audit passed, including the 16mm load audit with Dynamic Type and the landscape Settings audit with the Debug testing section.
+  The test still failed because it ran 184 s against the script's 180 s allowance, during teardown, and the simulator then shut down.
+  The other three runs used a 600 s allowance.
+- Base, first run: failed Dynamic Type on "Deliberate framing, finer grain" at the 16mm load audit, the same audit point and element as the dark failures above.
+- Head, second run: passed in 147 s.
+- Base, second run: passed in 137 s.
+
+So the dark Dynamic Type finding at the 16mm load audit also comes and goes on `b4d9527` without this change, as 052 describes for the Form audit points, and is not caused by this branch.
+In both head and base runs, the retained landscape Settings screenshot shows the portrait rendering turned sideways in the left part of the image, so the audit result is the evidence for that pose, not the screenshot.
+
+The unlock itself was driven on `7af6aba` through the real UI with a temporary UI test that was not committed, on a separate new iOS 26.5 simulator built with Xcode's default simulator signing so that the Trial record could be read.
+With the unlock on by default after a fresh install, all five Cameras loaded and each Load screen showed the indicator instead of the Trial line.
+After turning the switch off in Settings and relaunching, the Load screen read "One Trial Film on this iPhone", the next load used the Trial and the one after was refused with "A Trial Film is already waiting in your Journal".
+Turning the switch on again and relaunching brought back the indicator, and the Instant Camera loaded.
+`sh Scripts/verify-release-excludes-testing-unlock.sh` passed on the same head.
 
 ## Limits
 
