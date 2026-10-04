@@ -114,8 +114,11 @@ private struct JournalFilmRow: View {
                     .accessibilityLabel("Film used").accessibilityValue("\(Int(film.progress * 100)) percent")
             }
             HStack {
-                Label(model.hasPendingSave(film.id) ? "Finishing save" : film.remainingLabel,
-                      systemImage: model.hasPendingSave(film.id) ? "clock" : film.camera.medium == .photo ? "rectangle.stack" : "film")
+                Label {
+                    model.hasPendingSave(film.id) ? Text("Finishing save") : film.remainingText
+                } icon: {
+                    Image(systemName: model.hasPendingSave(film.id) ? "clock" : film.camera.medium == .photo ? "rectangle.stack" : "film")
+                }
                 Spacer(minLength: 8)
                 Image(systemName: "chevron.right")
             }.font(.caption).foregroundStyle(.secondary)

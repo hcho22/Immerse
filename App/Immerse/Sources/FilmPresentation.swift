@@ -20,7 +20,7 @@ extension CameraPackage {
     var capacityLabel: String {
         switch capacity {
         case let .exposures(count): "\(count) exposures"
-        case let .seconds(count): "\(count / 60):\(String(format: "%02d", count % 60)) of film"
+        case let .seconds(count): "\(MovieDurationText.clock(count)) of film"
         }
     }
     var revealLabel: String {
@@ -51,15 +51,22 @@ extension Film {
         return "On the roll"
     }
 
-    var remainingLabel: String {
+    var remainingLabel: String { remaining(MovieDurationText.clock) }
+
+    /// What VoiceOver reads for `remainingLabel`, with Movie time in spoken units rather than "2:45".
+    var remainingSpokenLabel: String { remaining(MovieDurationText.spoken) }
+
+    var remainingText: Text { Text(remainingLabel).accessibilityLabel(remainingSpokenLabel) }
+
+    private func remaining(_ duration: (Int) -> String) -> String {
         if case let .completedEarly(wasted) = completionState {
             switch wasted {
             case let .exposures(count): return "\(count) exposures wasted"
-            case let .seconds(count): return String(format: "%.3f seconds wasted", count)
+            case let .seconds(seconds): return "\(duration(MovieDurationText.wholeSeconds(seconds))) wasted"
             }
         }
         if let remainingExposures { return "\(remainingExposures) exposures left" }
-        return String(format: "%.3f seconds left", remainingMovieSeconds ?? 0)
+        return "\(duration(MovieDurationText.wholeSeconds(remainingMovieSeconds ?? 0))) left"
     }
 
     var exactWasteLabel: String {
@@ -73,6 +80,29 @@ extension Film {
         case let .exposures(total): return Double(savedCaptureCount) / Double(total)
         case let .seconds(total): return consumedMovieSeconds / Double(total)
         }
+    }
+}
+
+/// Movie time as the Load screen and Film rows show it, in minutes and seconds, so the two cannot drift.
+enum MovieDurationText {
+    /// Whole seconds, counting a partial second as a whole one, so "0:00" appears only when no frame is left
+    /// and a new Film reads the same as its Camera's capacity.
+    static func wholeSeconds(_ seconds: TimeInterval) -> Int {
+        let frames = MovieFrames.count(seconds: seconds) ?? 0
+        return (frames + MovieFrames.perSecond - 1) / MovieFrames.perSecond
+    }
+
+    /// "2:45", "0:09" or "0:00".
+    static func clock(_ seconds: Int) -> String {
+        "\(seconds / 60):\(String(format: "%02d", seconds % 60))"
+    }
+
+    /// "2 minutes 45 seconds", "1 minute" or "0 seconds", for VoiceOver.
+    static func spoken(_ seconds: Int) -> String {
+        func units(_ count: Int, _ unit: String) -> String { "\(count) \(unit)\(count == 1 ? "" : "s")" }
+        let minutes = seconds / 60, rest = seconds % 60
+        if minutes == 0 { return units(rest, "second") }
+        return rest == 0 ? units(minutes, "minute") : "\(units(minutes, "minute")) \(units(rest, "second"))"
     }
 }
 

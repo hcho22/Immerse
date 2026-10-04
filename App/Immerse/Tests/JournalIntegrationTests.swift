@@ -152,11 +152,57 @@ final class JournalIntegrationTests: XCTestCase {
                        "Another change to this Film is still finishing. Try again when it completes.")
     }
 
-    func testEarlyCompletionWarningShowsUnusedSecondsLikeTheOtherMovieLabels() throws {
+    func testEarlyCompletionWarningStatesExactUnusedSecondsWhileTheRowShowsMinutesAndSeconds() throws {
         var film = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
         _ = try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(104), orientation: .landscape)
         XCTAssertEqual(film.exactWasteLabel, "196.533 unused seconds")
-        XCTAssertEqual(film.remainingLabel, "196.533 seconds left")
+        XCTAssertEqual(film.remainingLabel, "3:17 left")
+        XCTAssertEqual(film.remainingSpokenLabel, "3 minutes 17 seconds left")
+        _ = try film.completeEarly()
+        XCTAssertEqual(film.remainingLabel, "3:17 wasted")
+        XCTAssertEqual(film.remainingSpokenLabel, "3 minutes 17 seconds wasted")
+    }
+
+    func testNewMovieFilmRowMatchesTheLoadScreenCapacity() throws {
+        for camera in [CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
+            let film = try Film(camera: camera, title: "Synthetic reel", movieOrientation: .landscape)
+            XCTAssertEqual("\(film.remainingLabel.dropLast(" left".count)) of film", camera.capacityLabel)
+        }
+        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
+        XCTAssertEqual(film.remainingLabel, "2:45 left")
+        XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 45 seconds left")
+        XCTAssertEqual(CameraCatalog.super8HomeMovie.capacityLabel, "3:20 of film")
+    }
+
+    func testPhotoFilmRowsKeepExposureCounts() throws {
+        let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        XCTAssertEqual(film.remainingLabel, "27 exposures left")
+        XCTAssertEqual(film.remainingSpokenLabel, "27 exposures left")
+    }
+
+    func testMovieDurationTextRoundsPartialSecondsUpFromWholeFrames() {
+        XCTAssertEqual(MovieDurationText.wholeSeconds(0), 0)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(-1), 0)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(MovieFrames.seconds(1)), 1, "One frame left is not 0:00")
+        XCTAssertEqual(MovieDurationText.wholeSeconds(MovieFrames.seconds(30)), 1)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(MovieFrames.seconds(31)), 2)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(59.5), 60)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(120), 120)
+        // Summed frame seconds can land a hair off the whole second; frames keep it exact.
+        XCTAssertEqual(MovieDurationText.wholeSeconds(MovieFrames.seconds(4950)), 165)
+        XCTAssertEqual(MovieDurationText.wholeSeconds(MovieFrames.seconds(5896)), 197)
+    }
+
+    func testMovieDurationTextClockAndSpokenForms() {
+        let cases: [(Int, String, String)] = [
+            (0, "0:00", "0 seconds"), (1, "0:01", "1 second"), (9, "0:09", "9 seconds"), (59, "0:59", "59 seconds"),
+            (60, "1:00", "1 minute"), (61, "1:01", "1 minute 1 second"), (120, "2:00", "2 minutes"),
+            (165, "2:45", "2 minutes 45 seconds"), (200, "3:20", "3 minutes 20 seconds"), (600, "10:00", "10 minutes"),
+        ]
+        for (seconds, clock, spoken) in cases {
+            XCTAssertEqual(MovieDurationText.clock(seconds), clock)
+            XCTAssertEqual(MovieDurationText.spoken(seconds), spoken)
+        }
     }
 
     func testLoadSheetDescribesTheEntitlementThatLoadingWillUse() {

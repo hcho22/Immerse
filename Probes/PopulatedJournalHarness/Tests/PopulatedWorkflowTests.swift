@@ -83,7 +83,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         let app = launch(arguments: ["--movie", "--hide-inspection-bar"])
         openFilm(app)
         XCTAssertTrue(app.buttons["Save Developed to Photos"].exists)
-        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "seconds wasted")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label ENDSWITH %@", " wasted")).firstMatch.exists)
         XCTAssertFalse(app.buttons["Darkroom"].exists)
         let player = app.descendants(matching: .any)["developed-movie-player"]
         XCTAssertTrue(player.waitForExistence(timeout: 20))
@@ -94,7 +94,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         discardClip(2, app: app)
         XCTAssertFalse(player.waitForExistence(timeout: 3))
         XCTAssertFalse(app.buttons["Save Developed to Photos"].exists)
-        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "seconds wasted")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label ENDSWITH %@", " wasted")).firstMatch.exists)
         XCTAssertEqual(app.staticTexts.matching(identifier: "Discarded").count, 2)
         XCTAssertTrue(app.staticTexts["01"].exists)
         XCTAssertTrue(app.staticTexts["02"].exists)
