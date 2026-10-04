@@ -117,7 +117,8 @@ remain partial. Exact commands and affected outcomes are in that source-bound re
 
 Current QA-13 automated audits: `Evidence/NativeApp/qa13-audit-exceptions-052.md`
 fixes the Movie Orientation layout defect, makes audited scroll positions
-deterministic, measures Load-screen text size directly and accepts one exact,
+deterministic, measures text size directly on every audited screen
+(`Evidence/NativeApp/scroll-indicator-drag-053.md`) and accepts one exact,
 measured contrast exception, so the original audit tests pass on the simulator. The earlier
 diagnoses below keep their historical results.
 

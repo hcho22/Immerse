@@ -69,4 +69,3 @@
         let rows = measure(app, targets, "inplace").map { "\($0.0.name) frame=\($0.1.frame) ink=\($0.1.ink)" }
         let a = XCTAttachment(string: "before=\(before) after=\(after)\n" + rows.joined(separator: "\n")); a.name = "inplace"; a.lifetime = .keepAlways; add(a)
     }
-
