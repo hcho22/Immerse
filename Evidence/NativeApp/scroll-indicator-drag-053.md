@@ -108,12 +108,14 @@ Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A) revises `dyn-
   Settings is measured in two halves because, at the largest sizes on this host, scrolling the whole screen in held drags took longer than the 3-minute allowance per test (two runs timed out at AX XXL and AX XXXL at load averages of about 450); the top half scrolls down from the top, the bottom half up from the end, which coasting flicks reach quickly.
   `swipeUp()` did not scroll the list in landscape, so the flicks go through the same coordinates as the held drags.
   Navigation titles are system text and are not included, as before; the toolbar buttons have no text.
-- `Scripts/validate-local.sh`, and so CI, runs `ContentSizeTests` again in dark appearance; the CI job's timeout is 70 minutes instead of 40 for the added work.
+- `Scripts/validate-local.sh`, and so CI, runs all 48 `ContentSizeTests` in light with the rest of the UI suite.
+  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of 40 for the added work.
 
 ### How the Measurement Changed
 
 - Some Settings paragraphs are taller than the landscape screen at the largest sizes (the backup copy is 651 pt there, against about 290 pt between the navigation bar and the bottom).
   Each element's top edge is now checked once it is on screen with at least 50 pt of the element below it, more than the space between a frame's edge and its text at the largest size (about 25 pt above a section header), and its bottom edge once it is on screen with as much above it; the text height is the frame less those two margins.
+  Since the review round below, each margin is measured in pixels from the frame's exact edge, and text within half a pixel of that edge counts as clipped.
   An element that fits is checked in one pose, as before, and the drags are short enough that every edge reaches such a pose in either direction (380 pt in portrait as before, 240 pt in landscape).
   An element must keep its height between the two poses.
 - The navigation bar that bounds the visible area is named per screen; sheets keep the Journal's bar in the hierarchy behind them.
@@ -140,9 +142,12 @@ Three results were identical in both runs and both appearances without any text-
 - At XS the "p" of "Disposable", in the serif display face, ends exactly on the name's own line box: its 3 px foot is drawn on the last pixel row of the frame and nothing beyond it.
   For the five Camera names only, the bottom edge is judged against the 5 pt gap above the capacity line, so text cut by its row still fails.
 
+The pixel counts above were taken with the earlier arithmetic, which counted margins inside a crop that `CGRect.integral` widens to whole pixels; the review round below has the counts as now measured.
+Both tolerances remain as decided.
+
 ### Proof
 
-On the final source, the whole `ContentSizeTests` class (48 tests: 12 Load Film, 12 Journal and catalog, 12 Settings top and 12 Settings bottom) ran 10 consecutive times on each of two new iPhone 17 Pro simulators with iOS 26.5, one light and one dark, both large text, built with `CODE_SIGNING_ALLOWED=NO`, the app and test runner uninstalled before every run.
+On the source of `7420a38`, before the review round below changed the arithmetic, the whole `ContentSizeTests` class (48 tests: 12 Load Film, 12 Journal and catalog, 12 Settings top and 12 Settings bottom) ran 10 consecutive times on each of two new iPhone 17 Pro simulators with iOS 26.5, one light and one dark, both large text, built with `CODE_SIGNING_ALLOWED=NO`, the app and test runner uninstalled before every run.
 All 20 runs passed 48 of 48, at host load averages from about 11 to 700; a run took 25 to 48 minutes on this host.
 
 | Appearance | Runs | Passed per run | Run time |
@@ -150,11 +155,11 @@ All 20 runs passed 48 of 48, at host load averages from about 11 to 700; a run t
 | light | 10 consecutive | 48 of 48 | 1,491 to 2,905 s |
 | dark | 10 consecutive | 48 of 48 | 1,499 to 2,905 s |
 
-Before the final source, two earlier attempts stopped on their first failure: one ran a stale UI-test bundle from shared derived data (its failure lines matched no assertion in the source, as 052 recorded), hence the uninstall before each run, and one found the AX XXL and AX XXXL Settings timeouts that led to the two halves.
+Before that source, two earlier attempts stopped on their first failure: one ran a stale UI-test bundle from shared derived data (its failure lines matched no assertion in the source, as 052 recorded), hence the uninstall before each run, and one found the AX XXL and AX XXXL Settings timeouts that led to the two halves.
 
 ### Full Gate
 
-`sh Scripts/validate-local.sh` on the final source, with all three simulator variables (the light iOS 26.5 simulator above for the UI and harness stages, a new iPhone 17 Pro iOS 26.2 simulator for StoreKit), exited 0 in 4,353 s at host load averages of about 7 to 30:
+`sh Scripts/validate-local.sh` on the same source, which still ran `ContentSizeTests` again in dark, with all three simulator variables (the light iOS 26.5 simulator above for the UI and harness stages, a new iPhone 17 Pro iOS 26.2 simulator for StoreKit), exited 0 in 4,353 s at host load averages of about 7 to 30:
 
 | Stage | Outcome | Duration |
 | --- | --- | --- |
@@ -163,6 +168,50 @@ Before the final source, two earlier attempts stopped on their first failure: on
 | Production UI, light (`Validation-20261004T154834Z.xcresult`) | 53 passed, 1 expected failure (the contrast negative test) | 1,632 s |
 | Accessibility audits and text-size measurement, dark (`ValidationDark-20261004T161550Z.xcresult`) | 51 passed, 1 expected failure | 1,556 s |
 | iOS 26.2 hosted (`StoreKit-20261004T164150Z.xcresult`) | 29 of 29 passed | 119 s |
+
+The 20 proof runs and this gate used the earlier arithmetic; the review round below reran the class on the current source.
+
+### Review Round: Exact Frame Edges, and No Dark Rerun
+
+Review found that the text height subtracted margins counted from the first and last rows of each element's crop, which `CGRect.integral` widens by a row wherever a frame edge is off the pixel grid, including floating-point noise in frames on the 1/3-pt grid.
+Such a sample came out 1 px short, and the clipping checks could take a row outside the frame for its first or last row.
+
+- `inkExtent` now also returns its crop's first row in the screenshot, and each margin is the distance in pixels from the frame's exact edge to the text.
+  The text height is the frame's height less both margins, rounded once; when both edges are checked in one pose, that is the rows from the first to the last row of text, as before.
+- Text within half a pixel of the frame's exact top or bottom edge fails as clipped; for the Camera names the bottom is still judged against the capacity line below.
+
+The whole class then ran once on each of the two simulators above, light and dark, at the same time, after uninstalling the app and test runner, at host load averages of about 6 to 9.
+Both passed 48 of 48 in 1,463 s.
+
+- The catalog's Super 8 and 16mm capacities measure 24, 24 and 24 px and the Settings testing note 76, 76 and 76 px at XS, S and M, in light and dark; the 23, 24, 23 and 76, 76, 75 px came from the earlier arithmetic.
+- No element measured shorter at a larger size below L in either appearance, so the 1 px allowance was not used.
+  It and the Camera-name clearance stay as decided in `raster-rules`; removing either is a Firstmate decision.
+- The smallest growth from L up is 6.4 percent (section headers, 47 to 50 px from XXL to XXXL) in both appearances, above the 4 percent rule.
+- 66 of the 588 samples per appearance differ between light and dark by 1 px, none by more: antialiased edge rows cross the ink threshold differently on light and dark backgrounds.
+
+The dark rerun of `ContentSizeTests` is dropped from `Scripts/validate-local.sh`, and so from CI.
+The measurement does not depend on appearance: the 10 light and 10 dark proof runs each passed 48 of 48 every time, and so did both runs here, with samples within 1 px of each other, so the rerun doubled the class's cost without a different outcome.
+The dark `JournalFlowTests` pass, with contrast and every other audit type at all seven audit points, is unchanged.
+
+### CI Time Budget
+
+Stage durations in seconds, from the step logs of main run 37178893732 (`d9fe760`, 32.2 min) and PR #11's run 37210213939 (54.4 min, the slowest recent success), and the budget for this branch from the slower run:
+
+| Stage | 37178893732 | 37210213939 | Budget |
+| --- | --- | --- | --- |
+| Setup, checkout, simulators | 24 | 38 | 38 |
+| Requirement map, packages, probes, documents ZIP, unsigned builds, release check | 480 | 845 | 845 |
+| Populated harness | 525 | 833 | 833 |
+| Production UI, light | 617 | 814 | 1,887 |
+| Accessibility audits, dark | 147 | 232 | 232 |
+| iOS 26.2 hosted | 111 | 453 | 453 |
+| Report upload and teardown | 29 | 48 | 48 |
+| Total | 1,933 | 3,263 | 4,336 (72.3 min) |
+
+- The light stage of 37210213939 includes PR #11's `MovieCapacityUITests` (123 s), kept in the budget in case it lands first.
+- The 36 added `ContentSizeTests` are estimated from the Load Film tests: 368 s for those 12 in 37210213939's light stage against 362 s in this review's light run, where the added 36 took 1,055 s (Journal and catalog 153, Settings top 379, Settings bottom 523), so about 1,073 s in CI.
+- The dark stage keeps the measured `JournalFlowTests` time; dropping Dynamic Type from those audits can only shorten it.
+- The job's timeout is 110 minutes: 1.5 times the 72.3-minute estimate is 108.4, rounded up to a multiple of 10.
 
 ## Limits
 

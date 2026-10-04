@@ -70,7 +70,7 @@ Text stepped in place through every size on the Load screens measured the same a
 Every audit in `JournalFlowTests` now runs every audit type except Dynamic Type (`auditTypes`); contrast, hit regions, element descriptions, clipped text and the other types are unchanged, and the one exception in `AuditExceptions.swift` is unchanged.
 `ContentSizeTests` now measures all the text those Dynamic Type checks covered, at all twelve sizes: the Load screens as above, the empty Journal's title, the Camera catalog's headers, names and capacities, and every text element of Settings in landscape, where Settings is audited.
 Navigation titles are system text and are not included, as before.
-`Scripts/validate-local.sh`, and so CI, runs `ContentSizeTests` in light and again in dark.
+`Scripts/validate-local.sh`, and so CI, runs `ContentSizeTests` in light; its dark rerun was dropped from the gate because dark gave the same results (`scroll-indicator-drag-053.md`).
 The details and runs are in `scroll-indicator-drag-053.md`.
 
 ## Deterministic Audit Poses

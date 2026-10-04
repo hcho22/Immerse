@@ -317,13 +317,13 @@ final class ContentSizeTests: XCTestCase {
         summary.lifetime = .keepAlways
         add(summary)
 
-        // Every text style grows at each step from L up, by at least 6.7 percent in measured text height here, so a
+        // Every text style grows at each step from L up, by at least 6.3 percent in measured text height here, so a
         // 4 percent minimum also catches text clipped by a container, whose visible slice gains only a pixel or two.
         // Below L, Apple's Dynamic Type table keeps some styles at one size (footnote is 12 points at XS, S and M),
-        // so there the text must only never shrink. At one size the frame is the same, but the rendered height can
-        // differ by a pixel with the text's position on the pixel grid: the catalog capacities measure 23, 24 and
-        // 23 px and the Settings testing note 76, 76 and 75 px at XS, S and M, in light and dark. So where the frame
-        // height is unchanged, 1 px less is allowed; a shorter frame, or any larger loss, still fails.
+        // so there the text must only never shrink. Where the frame height is unchanged, 1 px less is allowed, in case
+        // the text's position on the pixel grid moves an edge row (decision `raster-rules`); measured from the frames'
+        // exact edges, the catalog capacities are 24 px and the Settings testing note 76 px at XS, S and M, in light
+        // and dark. A shorter frame, or any larger loss, still fails.
         let index = Self.sizes.firstIndex(of: category)!
         let neighbors = [index - 1, index + 1].filter { Self.sizes.indices.contains($0) }
         for neighbor in neighbors {
@@ -350,7 +350,8 @@ final class ContentSizeTests: XCTestCase {
     /// indicator. An element's top edge is checked once it is on screen with the text below it, and its bottom edge
     /// once that is on screen with the text above it; an element that fits is checked in one pose. Each drag is
     /// short enough that every edge reaches such a pose. Each edge keeps the text's distance from the frame's exact
-    /// edge in pixels, so the text height is the frame's height less those two, from one pose or two.
+    /// edge in pixels, so the text height is the frame's height less those two, from one pose or two. Text that comes
+    /// within half a pixel of an edge, or of the line below a Camera name, is clipped.
     private func measure(_ app: XCUIApplication, _ targets: [Target], _ category: String,
                          below bar: String, upward: Bool = false) -> [((name: String, variant: String), Sample)] {
         let tag = "\(category) \(Self.appearance)"
@@ -403,19 +404,18 @@ final class ContentSizeTests: XCTestCase {
                     let ink = inkExtent(shot, visible, in: window, tinted: target.tinted)
                     XCTAssertLessThanOrEqual(ink.top, ink.bottom, "\(target.name) \(tag) text is found in its frame")
                     if edges.top {
-                        XCTAssertGreaterThan(ink.top, 0, "\(target.name) \(tag) text is not clipped at the top")
-                        tops[target.name] = CGFloat(ink.origin + ink.top) - frame.minY * shot.scale
+                        let inset = CGFloat(ink.origin + ink.top) - frame.minY * shot.scale
+                        XCTAssertGreaterThanOrEqual(inset, 0.5, "\(target.name) \(tag) text is not clipped at the top")
+                        tops[target.name] = inset
                     }
-                    if edges.bottom, target.clearance != nil {
-                        let start = max(frame.minY, top)
-                        let area = CGRect(x: frame.minX, y: start, width: frame.width, height: floor - start)
-                        let clear = inkExtent(shot, area, in: window, tinted: target.tinted)
-                        XCTAssertLessThan(clear.bottom, clear.height - 1, "\(target.name) \(tag) text is not clipped at the bottom")
+                    if edges.bottom {
+                        let above = target.clearance == nil ? ink : inkExtent(
+                            shot, CGRect(x: frame.minX, y: visible.minY, width: frame.width, height: floor - visible.minY),
+                            in: window, tinted: target.tinted)
+                        let end = CGFloat(above.origin + above.bottom + 1)
+                        XCTAssertGreaterThanOrEqual(floor * shot.scale - end, 0.5, "\(target.name) \(tag) text is not clipped at the bottom")
                         // How far the text ends above the frame's bottom; negative where a descender reaches past it.
-                        bottoms[target.name] = frame.maxY * shot.scale - CGFloat(clear.origin + clear.bottom + 1)
-                    } else if edges.bottom {
-                        XCTAssertLessThan(ink.bottom, ink.height - 1, "\(target.name) \(tag) text is not clipped at the bottom")
-                        bottoms[target.name] = frame.maxY * shot.scale - CGFloat(ink.origin + ink.bottom + 1)
+                        bottoms[target.name] = frame.maxY * shot.scale - end
                     }
                     if let inset = tops[target.name], let outset = bottoms[target.name] {
                         let height = Int((frame.height * shot.scale - inset - outset).rounded())
@@ -454,16 +454,16 @@ final class ContentSizeTests: XCTestCase {
     /// color, and unless the text is tinted, neutral ones only. They count from the first row of the area's crop,
     /// which `CGRect.integral` widens to whole pixels; `origin` is that row in the screenshot.
     private func inkExtent(_ screenshot: UIImage, _ frame: CGRect, in window: CGRect,
-                           tinted: Bool) -> (top: Int, bottom: Int, height: Int, origin: Int) {
-        guard let full = screenshot.cgImage else { return (0, 0, 0, 0) }
+                           tinted: Bool) -> (top: Int, bottom: Int, origin: Int) {
+        guard let full = screenshot.cgImage else { return (0, 0, 0) }
         let scale = CGFloat(full.width) / window.width
         let crop = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale, height: frame.height * scale).integral
-        guard let image = full.cropping(to: crop) else { return (0, 0, 0, Int(crop.minY)) }
+        guard let image = full.cropping(to: crop) else { return (0, 0, Int(crop.minY)) }
         let width = image.width, height = image.height
         var data = [UInt8](repeating: 0, count: width * height * 4)
         guard let context = CGContext(data: &data, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
                                       space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
-        else { return (0, 0, height, Int(crop.minY)) }
+        else { return (0, 0, Int(crop.minY)) }
         context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
         // Colors in 8-level steps per channel, so antialiasing does not split the background. A flat table, since a
         // landscape paragraph's area holds about two million pixels.
@@ -484,7 +484,7 @@ final class ContentSizeTests: XCTestCase {
                 if distance > 200, tinted || neutral { top = min(top, y); bottom = max(bottom, y); break }
             }
         }
-        return (top, bottom, height, Int(crop.minY))
+        return (top, bottom, Int(crop.minY))
     }
 
     private func attach(_ screenshot: UIImage, _ name: String) {
