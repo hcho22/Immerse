@@ -119,8 +119,9 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "16mm capacity", type: .staticText, label: "2 minutes 45 seconds of film"),
     ]
 
-    /// Settings as a Debug build shows it with the testing unlock off, including the testing section.
-    private static let settings: [Target] = [
+    /// Settings as a Debug build shows it with the testing unlock off, including the testing section, in two halves:
+    /// at the largest sizes the whole screen takes longer to scroll through than one test may run.
+    private static let settingsTop: [Target] = [
         Target(name: "Debug testing header", type: .staticText, label: "Debug testing", header: true),
         Target(name: "Testing unlock", type: .staticText, label: "Testing unlock - Debug build"),
         Target(name: "Testing unlock note", type: .staticText, labelPrefix: "Debug builds only."),
@@ -130,6 +131,9 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", tinted: true, optional: true),
         Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone"),
         Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
+    ]
+
+    private static let settingsBottom: [Target] = [
         Target(name: "Photos header", type: .staticText, label: "Saving to Photos", header: true),
         Target(name: "Photos exports", type: .staticText, labelPrefix: "Exports are optional."),
         Target(name: "Privacy header", type: .staticText, label: "Privacy", header: true),
@@ -145,13 +149,11 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Version", type: .staticText, labelPrefix: "Immerse, "),
     ]
 
-    private static let allTargets = superEight + sixteenMillimeter + journal + catalog + settings
-
     private static let sizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL",
                                 "AccessibilityM", "AccessibilityL", "AccessibilityXL", "AccessibilityXXL", "AccessibilityXXXL"]
 
     /// Samples by target and then by size and appearance, from every size measured in this run. Each test
-    /// measures one size of one group of screens, to stay inside the per-test time allowance, and checks growth
+    /// measures one size of one group of text, to stay inside the per-test time allowance, and checks growth
     /// against whichever neighboring sizes are already here, so a full run checks every step from XS to AX XXXL
     /// in any order.
     private static var measured: [String: [String: Sample]] = [:]
@@ -186,18 +188,31 @@ final class ContentSizeTests: XCTestCase {
     func testJournalAndCatalogTextAtAccessibilityExtraExtraLarge() throws { checkJournalAndCatalog("AccessibilityXXL") }
     func testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge() throws { checkJournalAndCatalog("AccessibilityXXXL") }
 
-    func testLandscapeSettingsTextAtExtraSmall() throws { checkLandscapeSettings("XS") }
-    func testLandscapeSettingsTextAtSmall() throws { checkLandscapeSettings("S") }
-    func testLandscapeSettingsTextAtMedium() throws { checkLandscapeSettings("M") }
-    func testLandscapeSettingsTextAtLarge() throws { checkLandscapeSettings("L") }
-    func testLandscapeSettingsTextAtExtraLarge() throws { checkLandscapeSettings("XL") }
-    func testLandscapeSettingsTextAtExtraExtraLarge() throws { checkLandscapeSettings("XXL") }
-    func testLandscapeSettingsTextAtExtraExtraExtraLarge() throws { checkLandscapeSettings("XXXL") }
-    func testLandscapeSettingsTextAtAccessibilityMedium() throws { checkLandscapeSettings("AccessibilityM") }
-    func testLandscapeSettingsTextAtAccessibilityLarge() throws { checkLandscapeSettings("AccessibilityL") }
-    func testLandscapeSettingsTextAtAccessibilityExtraLarge() throws { checkLandscapeSettings("AccessibilityXL") }
-    func testLandscapeSettingsTextAtAccessibilityExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXL") }
-    func testLandscapeSettingsTextAtAccessibilityExtraExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXXL") }
+    func testLandscapeSettingsTopTextAtExtraSmall() throws { checkLandscapeSettings("XS", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtSmall() throws { checkLandscapeSettings("S", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtMedium() throws { checkLandscapeSettings("M", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtLarge() throws { checkLandscapeSettings("L", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtExtraLarge() throws { checkLandscapeSettings("XL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtExtraExtraLarge() throws { checkLandscapeSettings("XXL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtExtraExtraExtraLarge() throws { checkLandscapeSettings("XXXL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtAccessibilityMedium() throws { checkLandscapeSettings("AccessibilityM", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtAccessibilityLarge() throws { checkLandscapeSettings("AccessibilityL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtAccessibilityExtraLarge() throws { checkLandscapeSettings("AccessibilityXL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtAccessibilityExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXL", fromEnd: false) }
+    func testLandscapeSettingsTopTextAtAccessibilityExtraExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXXL", fromEnd: false) }
+
+    func testLandscapeSettingsBottomTextAtExtraSmall() throws { checkLandscapeSettings("XS", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtSmall() throws { checkLandscapeSettings("S", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtMedium() throws { checkLandscapeSettings("M", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtLarge() throws { checkLandscapeSettings("L", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtExtraLarge() throws { checkLandscapeSettings("XL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtExtraExtraLarge() throws { checkLandscapeSettings("XXL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtExtraExtraExtraLarge() throws { checkLandscapeSettings("XXXL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtAccessibilityMedium() throws { checkLandscapeSettings("AccessibilityM", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtAccessibilityLarge() throws { checkLandscapeSettings("AccessibilityL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtAccessibilityExtraLarge() throws { checkLandscapeSettings("AccessibilityXL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtAccessibilityExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXL", fromEnd: true) }
+    func testLandscapeSettingsBottomTextAtAccessibilityExtraExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXXL", fromEnd: true) }
 
     private func check(_ category: String) {
         var rows: [String] = []
@@ -232,8 +247,11 @@ final class ContentSizeTests: XCTestCase {
     }
 
     /// Settings in landscape, where the audit checks it at the largest size. Some paragraphs are taller than the
-    /// landscape screen there, so each edge of an element is checked in a pose where that edge is on screen.
-    private func checkLandscapeSettings(_ category: String) {
+    /// landscape screen there, so each edge of an element is checked in a pose where that edge is on screen. The top
+    /// half is measured scrolling down from the top, and the bottom half scrolling up from the end, which swipes
+    /// reach quickly because the list stops there.
+    private func checkLandscapeSettings(_ category: String, fromEnd: Bool) {
+        let targets = fromEnd ? Self.settingsBottom : Self.settingsTop
         let app = launch(category)
         defer { XCUIDevice.shared.orientation = .portrait }
         app.buttons["start-film"].tap()
@@ -247,9 +265,19 @@ final class ContentSizeTests: XCTestCase {
         let settled = NSPredicate { _, _ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height }
         wait(for: [XCTNSPredicateExpectation(predicate: settled, object: nil)], timeout: 10)
         Thread.sleep(forTimeInterval: 1)
-        let rows = record(measure(app, Self.settings, category, below: "Settings"))
+        if fromEnd {
+            // Flicks that coast reach the end quickly; `swipeUp()` did not scroll this list in landscape.
+            let version = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Immerse, ")).firstMatch
+            for _ in 0..<20 {
+                if version.exists && version.frame.maxY <= app.frame.maxY - 34 { break }
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.8))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+                            withVelocity: .fast, thenHoldForDuration: 0)
+            }
+        }
+        let rows = record(measure(app, targets, category, below: "Settings", upward: fromEnd))
         app.terminate()
-        finish(category, rows, Self.settings)
+        finish(category, rows, targets)
     }
 
     /// Launches at the text size in portrait, whatever orientation an earlier test that ran out of time left.
@@ -268,7 +296,10 @@ final class ContentSizeTests: XCTestCase {
     private func waitForTrialStatus(_ app: XCUIApplication) {
         let line = app.staticTexts["load-entitlement"]
         // At the larger sizes the line starts below the screen, and the lazy list adds it only once shown.
-        for _ in 0..<10 where !line.exists { app.swipeUp() }
+        for _ in 0..<10 {
+            if line.exists { break }
+            app.swipeUp()
+        }
         let settled = NSPredicate(format: "exists == true AND label != %@", "Checking Trial status")
         wait(for: [XCTNSPredicateExpectation(predicate: settled, object: line)], timeout: 30)
     }
@@ -315,12 +346,12 @@ final class ContentSizeTests: XCTestCase {
         }
     }
 
-    /// Scrolls the screen down in held drags from where it opens, between the named navigation bar and the home
+    /// Scrolls the screen down, or up from its end, in held drags, between the named navigation bar and the home
     /// indicator. An element's top edge is checked once it is on screen with the text below it, and its bottom edge
     /// once that is on screen with the text above it; an element that fits is checked in one pose. Each drag is
     /// short enough that every edge reaches such a pose.
     private func measure(_ app: XCUIApplication, _ targets: [Target], _ category: String,
-                         below bar: String) -> [((name: String, variant: String), Sample)] {
+                         below bar: String, upward: Bool = false) -> [((name: String, variant: String), Sample)] {
         let tag = "\(category) \(Self.appearance)"
         var tops: [String: Int] = [:], bottoms: [String: Int] = [:], frames: [String: CGRect] = [:], seen: Set<String> = []
         var results: [((name: String, variant: String), Sample)] = []
@@ -396,7 +427,8 @@ final class ContentSizeTests: XCTestCase {
             if targets.allSatisfy({ target in
                 results.contains { $0.0.name == target.name } || (target.optional && !seen.contains(target.name))
             }) { break }
-            drag(app, by: -min(380, bottom - top - context), landscape: window.width > window.height)
+            let step = min(380, bottom - top - context)
+            drag(app, by: upward ? step : -step, landscape: window.width > window.height)
         }
         for target in targets where !results.contains(where: { $0.0.name == target.name }) {
             if target.optional && !seen.contains(target.name) { continue }
@@ -405,13 +437,14 @@ final class ContentSizeTests: XCTestCase {
         return results
     }
 
-    /// A slow drag that ends held, so the list does not coast; negative distances scroll toward the end. It runs
+    /// A slow drag that ends held, so the list does not coast; negative distances scroll toward the end, from 70 percent
+    /// of the height, and positive ones toward the start, from 25 percent. It runs
     /// in the left margin, outside the rows' controls and away from the scroll indicator: on the right edge a drag
     /// that starts while the indicator still shows from the previous one grabs it and scrubs the list back toward
     /// its start (Evidence/NativeApp/scroll-indicator-drag-053.md). In landscape the margin includes the safe area
     /// beside the Dynamic Island, where a drag 17 pt from the edge did not scroll, so it starts 44 pt in.
     private func drag(_ app: XCUIApplication, by distance: CGFloat, landscape: Bool = false) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: landscape ? 0.05 : 0.02, dy: 0.7))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: landscape ? 0.05 : 0.02, dy: distance < 0 ? 0.7 : 0.25))
         start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)),
                     withVelocity: .slow, thenHoldForDuration: 0.2)
     }

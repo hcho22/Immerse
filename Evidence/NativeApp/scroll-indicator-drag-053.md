@@ -89,18 +89,72 @@ All on new iPhone 17 Pro simulators with iOS 26.5, large text, built with `CODE_
 | `testLargestDynamicTypeCatalogAndLandscapeSettings` | base | dark | about 80 to 280 | 10 | 0 |
 | same, with 16 extra busy processes | base | dark | about 250 to 830 | 5 | 0 |
 | `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore`, with 16 extra busy processes | base | light | about 250 to 830 | 5 | 0 |
-| `ContentSizeTests` AX XXXL | this branch | light | about 100 to 850 | 10 | 0 |
-| `ContentSizeTests` AX XXXL | this branch | dark | about 100 to 850 | 10 | 0 |
-| `testLargestDynamicTypeCatalogAndLandscapeSettings` | this branch | light | about 100 to 850 | 10 | 0 |
-| `testLargestDynamicTypeCatalogAndLandscapeSettings` | this branch | dark | about 100 to 850 | 10 | 0 |
-| `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | this branch | light | about 100 | 10 | 0 |
-| `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | this branch | dark | about 100 | 10 | 1 (empty Journal Dynamic Type) |
+| `ContentSizeTests` AX XXXL | left-margin fix | light | about 100 to 850 | 10 | 0 |
+| `ContentSizeTests` AX XXXL | left-margin fix | dark | about 100 to 850 | 10 | 0 |
+| `testLargestDynamicTypeCatalogAndLandscapeSettings` | left-margin fix | light | about 100 to 850 | 10 | 0 |
+| `testLargestDynamicTypeCatalogAndLandscapeSettings` | left-margin fix | dark | about 100 to 850 | 10 | 0 |
+| `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | left-margin fix | light | about 100 | 10 | 0 |
+| `testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | left-margin fix | dark | about 100 | 10 | 1 (empty Journal Dynamic Type) |
 
-A first dark run of the largest-size test on this branch never started: its runner was killed before connecting, at a load average of about 850, and the rerun is the row above.
+"Left-margin fix" is this branch before the decision below, with Dynamic Type still in those audits.
+A first dark run of the largest-size test on that source never started: its runner was killed before connecting, at a load average of about 850, and the rerun is the row above.
+
+## Decision: No Audit Runs Dynamic Type
+
+Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A) revises `dyn-type-determinism`: drop Dynamic Type from every in-place audit and measure all the text those checks covered directly, in light and dark (recorded next to the original decision in `qa13-audit-exceptions-052.md`).
+
+- `JournalFlowTests` runs every audit type except Dynamic Type at all seven audit points (`auditTypes`); every other type, the helper's ordering and the one exception are unchanged.
+- `ContentSizeTests` keeps its Load Film measurement and adds three groups, each a test per size: `testJournalAndCatalogTextAt…` measures the empty Journal's title and the catalog's two headers, five Camera names and five capacities; `testLandscapeSettingsTopTextAt…` and `testLandscapeSettingsBottomTextAt…` measure 21 Settings texts in landscape, where Settings is audited: seven headers, the testing switch and its note, the backup, Trial, Photos and privacy copy, the three permission rows, "Open iPhone Settings", Subscription and the version row, plus the Trial error an unsigned build shows.
+  Settings is measured in two halves because, at the largest sizes on this host, scrolling the whole screen in held drags took longer than the 3-minute allowance per test (two runs timed out at AX XXL and AX XXXL at load averages of about 450); the top half scrolls down from the top, the bottom half up from the end, which coasting flicks reach quickly.
+  `swipeUp()` did not scroll the list in landscape, so the flicks go through the same coordinates as the held drags.
+  Navigation titles are system text and are not included, as before; the toolbar buttons have no text.
+- `Scripts/validate-local.sh`, and so CI, runs `ContentSizeTests` again in dark appearance; the CI job's timeout is 70 minutes instead of 40 for the added work.
+
+### How the Measurement Changed
+
+- Some Settings paragraphs are taller than the landscape screen at the largest sizes (the backup copy is 651 pt there, against about 290 pt between the navigation bar and the bottom).
+  Each element's top edge is now checked once it is on screen with at least 50 pt of the element below it, more than the space between a frame's edge and its text at the largest size (about 25 pt above a section header), and its bottom edge once it is on screen with as much above it; the text height is the frame less those two margins.
+  An element that fits is checked in one pose, as before, and the drags are short enough that every edge reaches such a pose in either direction (380 pt in portrait as before, 240 pt in landscape).
+  An element must keep its height between the two poses.
+- The navigation bar that bounds the visible area is named per screen; sheets keep the Journal's bar in the hierarchy behind them.
+- Screens are captured with `XCUIScreen.main.uprightScreenshot()` (`UITests/UITestSupport.swift`), since `app.screenshot()` is wrong in landscape.
+- In landscape the drag starts 44 pt from the left edge: at 17 pt, beside the Dynamic Island, it did not scroll; 44 pt is still left of the rows at 78 pt.
+- Each test sets portrait before launching, because a test that ran out of time left the simulator in landscape for the next one.
+
+### Test Problems Found and Fixed
+
+Two full runs of all 36 tests in light and dark found these before the final rules:
+
+- The Load screen's entitlement line was measured while it still read "Checking Trial status" (its "g" made it 63 px against 60 px for "Trial status unavailable" at the next size).
+  The measurement now holds its pose until that line changes; Settings, which shows nothing while the status is read, first reads it on the Disposable Load screen.
+- The empty Journal's element spans its camera symbol, whose top touches the frame, and the "Open iPhone Settings" button's text frame starts at its gear, which the list keeps near one size (92 px at XXXL against 88 px at AX M).
+  Both are measured beside their symbol: below the camera, right of the gear.
+- Frame heights at one size differed only by floating-point rounding (13.333333333333314 against 13.333333333333371 pt) and are compared to 0.001 pt.
+
+### Two Tolerances, Decision `raster-rules` (Firstmate, 2026-10-04, option A)
+
+Three results were identical in both runs and both appearances without any text-size defect:
+
+- Below L, Apple keeps caption and footnote at one size at XS, S and M, and the frames are identical there (13.333 and 42.333 pt), but the rendered height moves by a pixel with the text's position on the pixel grid: the catalog's Super 8 and 16mm capacities measure 23, 24 and 23 px and the Settings testing note 76, 76 and 75 px.
+  Below L only, where the frame height is unchanged, the text may be 1 px shorter; a shorter frame or any larger loss still fails, and the 4 percent rule from L up is unchanged.
+- At XS the "p" of "Disposable", in the serif display face, ends exactly on the name's own line box: its 3 px foot is drawn on the last pixel row of the frame and nothing beyond it.
+  For the five Camera names only, the bottom edge is judged against the 5 pt gap above the capacity line, so text cut by its row still fails.
+
+### Proof
+
+On the final source, the whole `ContentSizeTests` class (48 tests: 12 Load Film, 12 Journal and catalog, 12 Settings top and 12 Settings bottom) ran 10 consecutive times on each of two new iPhone 17 Pro simulators with iOS 26.5, one light and one dark, both large text, built with `CODE_SIGNING_ALLOWED=NO`, the app and test runner uninstalled before every run.
+All 20 runs passed 48 of 48, at host load averages from about 11 to 700; a run took 25 to 48 minutes on this host.
+
+| Appearance | Runs | Passed per run | Run time |
+| --- | --- | --- | --- |
+| light | 10 consecutive | 48 of 48 | 1,491 to 2,905 s |
+| dark | 10 consecutive | 48 of 48 | 1,499 to 2,905 s |
+
+Before the final source, two earlier attempts stopped on their first failure: one ran a stale UI-test bundle from shared derived data (its failure lines matched no assertion in the source, as 052 recorded), hence the uninstall before each run, and one found the AX XXL and AX XXXL Settings timeouts that led to the two halves.
 
 ## Limits
 
 The CI recording, not a local run, reproduces the scroll-indicator trigger; local runs show the identical poses up to the divergence and that the left-margin drag scrolls the same way.
 The in-place probes ran once per final size: AX XXXL, XXL and AX M on Super 8, and AX XXXL on 16mm.
-Every booted iOS 26.5 simulator on this host ran `mediaanalysisd` at about 250 to 320 percent CPU, including these two, which only ran `ImmerseUITests`; local durations are not CI durations.
+Every booted iOS 26.5 simulator on this host ran `mediaanalysisd` at about 250 to 320 percent CPU, including these two, which only ran `ImmerseUITests`; from the extended measurement's proof runs on, it was disabled in these two simulators (`launchctl disable` and `bootout` of `com.apple.mediaanalysisd`), at Firstmate's request to spare the shared host. Local durations are not CI durations.
 Simulator rendering only.
