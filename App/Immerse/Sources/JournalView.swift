@@ -124,7 +124,7 @@ private struct JournalFilmRow: View {
             }.font(.caption).foregroundStyle(.secondary)
         }
         .padding(18)
-        .background(.background, in: RoundedRectangle(cornerRadius: 8))
+        .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal)
         .accessibilityElement(children: .combine)
     }
