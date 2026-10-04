@@ -17,10 +17,17 @@ extension CameraPackage {
     }
 
     var symbol: String { medium == .photo ? "camera" : "movieclapper" }
-    var capacityLabel: String {
+    var capacityLabel: String { describedCapacity(MovieDurationText.clock) }
+
+    /// What VoiceOver reads for `capacityLabel`, with Movie time in spoken units rather than "2:45".
+    var capacitySpokenLabel: String { describedCapacity(MovieDurationText.spoken) }
+
+    var capacityText: Text { Text(capacityLabel).accessibilityLabel(capacitySpokenLabel) }
+
+    private func describedCapacity(_ duration: (Int) -> String) -> String {
         switch capacity {
         case let .exposures(count): "\(count) exposures"
-        case let .seconds(count): "\(MovieDurationText.clock(count)) of film"
+        case let .seconds(count): "\(duration(count)) of film"
         }
     }
     var revealLabel: String {
@@ -51,14 +58,24 @@ extension Film {
         return "On the roll"
     }
 
-    var remainingLabel: String { remaining(MovieDurationText.clock) }
+    var remainingLabel: String { remainingLabel(recordedFor: 0) }
 
     /// What VoiceOver reads for `remainingLabel`, with Movie time in spoken units rather than "2:45".
-    var remainingSpokenLabel: String { remaining(MovieDurationText.spoken) }
+    var remainingSpokenLabel: String { remainingSpokenLabel(recordedFor: 0) }
 
-    var remainingText: Text { Text(remainingLabel).accessibilityLabel(remainingSpokenLabel) }
+    var remainingText: Text { remainingText(recordedFor: 0) }
 
-    private func remaining(_ duration: (Int) -> String) -> String {
+    /// The remaining capacity while a clip has been recording for `elapsed` seconds. Movie time counts down in
+    /// the same whole seconds as the resting line, so it starts where that line stood and changes once a second.
+    func remainingLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.clock, elapsed) }
+
+    func remainingSpokenLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.spoken, elapsed) }
+
+    func remainingText(recordedFor elapsed: TimeInterval) -> Text {
+        Text(remainingLabel(recordedFor: elapsed)).accessibilityLabel(remainingSpokenLabel(recordedFor: elapsed))
+    }
+
+    private func remaining(_ duration: (Int) -> String, _ elapsed: TimeInterval) -> String {
         if case let .completedEarly(wasted) = completionState {
             switch wasted {
             case let .exposures(count): return "\(count) exposures wasted"
@@ -66,7 +83,7 @@ extension Film {
             }
         }
         if let remainingExposures { return "\(remainingExposures) exposures left" }
-        return "\(duration(MovieDurationText.wholeSeconds(remainingMovieSeconds ?? 0))) left"
+        return "\(duration(MovieDurationText.wholeSeconds((remainingMovieSeconds ?? 0) - elapsed))) left"
     }
 
     var exactWasteLabel: String {
@@ -83,7 +100,8 @@ extension Film {
     }
 }
 
-/// Movie time as the Load screen and Film rows show it, in minutes and seconds, so the two cannot drift.
+/// Movie time as the catalog, Load screen, Film rows and capture line show it, in minutes and seconds, so they
+/// cannot drift.
 enum MovieDurationText {
     /// Whole seconds, counting a partial second as a whole one, so "0:00" appears only when no frame is left
     /// and a new Film reads the same as its Camera's capacity.

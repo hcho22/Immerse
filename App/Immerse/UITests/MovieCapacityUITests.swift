@@ -1,28 +1,42 @@
 import XCTest
 
-/// A loaded Movie Film's Journal row shows its remaining capacity the way the Load screen shows it,
-/// as minutes and seconds, and VoiceOver speaks the units. Loading uses the Debug testing unlock.
+/// Movie time reads as minutes and seconds from the catalog to the Journal: the 16mm catalog row and Load screen,
+/// then the loaded Film's detail header, capture line and Journal row, with VoiceOver speaking the units. Loading
+/// uses the Debug testing unlock and answers a fresh Camera request itself, and each test deletes the Film it
+/// loaded, so it neither depends on nor leaves Camera or Journal state that other tests assume.
 @MainActor
 final class MovieCapacityUITests: XCTestCase {
-    func testJournalRowShowsRemainingMovieCapacityAsMinutesAndSeconds() throws {
-        try checkJournalRow(size: nil)
+    func testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal() {
+        check(size: nil)
     }
 
-    func testJournalRowShowsRemainingMovieCapacityAtLargestText() throws {
-        try checkJournalRow(size: "UICTContentSizeCategoryAccessibilityXXXL")
+    func testMovieTimeReadsAsMinutesAndSecondsAtLargestText() {
+        check(size: "UICTContentSizeCategoryAccessibilityXXXL")
     }
 
-    private func checkJournalRow(size: String?) throws {
+    private func check(size: String?) {
         let app = XCUIApplication()
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
         if let size { app.launchArguments += ["-UIPreferredContentSizeCategoryName", size] }
+        // An earlier test can leave Camera declined, so Load Film asks afresh and a person allows it.
+        app.resetAuthorizationStatus(for: .camera)
+        var allowed = false
+        let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
+            let allow = alert.buttons["Allow"]
+            guard alert.label.localizedCaseInsensitiveContains("Camera"), allow.exists else { return false }
+            allow.tap()
+            allowed = true
+            return true
+        }
+        defer { removeUIInterruptionMonitor(monitor) }
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        XCTAssertTrue(camera.label.contains("2 minutes 45 seconds of film"), camera.label)
         camera.tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 2:45 of film"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         let field = app.textFields["film-title"]
         for _ in 0..<8 where !field.isHittable { app.swipeUp() }
@@ -31,19 +45,59 @@ final class MovieCapacityUITests: XCTestCase {
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 40) + title)
         let load = app.buttons["load-film"]
         for _ in 0..<8 where !load.isHittable { app.swipeUp() }
+        defer { deleteFilm(titled: title, app) }
         load.tap()
 
-        // A new Film opens on top of the Journal; going back shows its row.
-        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
-        for _ in 0..<5 where !row.waitForExistence(timeout: 2) {
-            app.navigationBars.buttons.element(boundBy: 0).tap()
+        // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the
+        // request is showing, which can appear late.
+        let detail = app.navigationBars[title]
+        for _ in 0..<20 where !detail.exists {
+            app.navigationBars.firstMatch.tap()
+            _ = detail.waitForExistence(timeout: 0.5)
         }
-        XCTAssertTrue(row.exists)
+        XCTAssertTrue(detail.exists)
+        XCTAssertTrue(allowed, "Load Film asks for Camera access")
+        XCTAssertTrue(app.staticTexts["2 minutes 45 seconds left"].exists, "Film detail header")
+
+        let open = app.buttons["Open Camera"]
+        for _ in 0..<5 where !open.isHittable { app.swipeUp() }
+        open.tap()
+        let done = app.buttons["Done"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["2 minutes 45 seconds left"].exists, "Capture line")
+        retainScreenshot(app, name: "Capture-movie-line-\(size ?? "default")")
+        done.tap()
+
+        XCTAssertTrue(detail.waitForExistence(timeout: 5))
+        detail.buttons.element(boundBy: 0).tap()
+        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
         for _ in 0..<8 where !row.isHittable { app.swipeUp() }
         XCTAssertTrue(row.label.contains("2 minutes 45 seconds left"), row.label)
-        XCTAssertFalse(row.label.contains(".000"), row.label)
+        retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
+    }
+
+    /// Deletes the Film a test loaded from a fresh launch, whatever screen the test stopped on.
+    private func deleteFilm(titled title: String, _ app: XCUIApplication) {
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+        guard row.waitForExistence(timeout: 5) else { return }
+        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
+        row.tap()
+        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5))
+        app.buttons["Film actions"].tap()
+        app.buttons["Delete Film"].tap()
+        let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+    }
+
+    private func retainScreenshot(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "Journal-movie-row-\(size ?? "default")"
+        attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
     }

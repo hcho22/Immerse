@@ -167,17 +167,42 @@ final class JournalIntegrationTests: XCTestCase {
         for camera in [CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
             let film = try Film(camera: camera, title: "Synthetic reel", movieOrientation: .landscape)
             XCTAssertEqual("\(film.remainingLabel.dropLast(" left".count)) of film", camera.capacityLabel)
+            XCTAssertEqual("\(film.remainingSpokenLabel.dropLast(" left".count)) of film", camera.capacitySpokenLabel)
         }
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
         XCTAssertEqual(film.remainingLabel, "2:45 left")
         XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 45 seconds left")
+        XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 45 seconds of film")
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacityLabel, "3:20 of film")
+        XCTAssertEqual(CameraCatalog.super8HomeMovie.capacitySpokenLabel, "3 minutes 20 seconds of film")
+    }
+
+    func testRecordingLineCountsDownFromTheRestingLineOnceASecond() throws {
+        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
+        XCTAssertEqual(film.remainingLabel(recordedFor: 0), film.remainingLabel)
+        XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:45 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:44 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:44 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 45), "2:00 left")
+        XCTAssertEqual(film.remainingSpokenLabel(recordedFor: 45), "2 minutes left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 164.99), "0:01 left", "Any frame left is not 0:00")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 165), "0:00 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 170), "0:00 left")
+        // A partial second left at rest holds until it has recorded, then the line drops a whole second.
+        var reel = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
+        _ = try reel.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(104), orientation: .landscape)
+        XCTAssertEqual(reel.remainingLabel, "3:17 left")
+        XCTAssertEqual(reel.remainingLabel(recordedFor: 0.5), "3:17 left")
+        XCTAssertEqual(reel.remainingLabel(recordedFor: 0.6), "3:16 left")
+        XCTAssertEqual(reel.remainingSpokenLabel(recordedFor: 0.6), "3 minutes 16 seconds left")
     }
 
     func testPhotoFilmRowsKeepExposureCounts() throws {
         let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
         XCTAssertEqual(film.remainingLabel, "27 exposures left")
         XCTAssertEqual(film.remainingSpokenLabel, "27 exposures left")
+        XCTAssertEqual(CameraCatalog.disposable1990s.capacityLabel, "27 exposures")
+        XCTAssertEqual(CameraCatalog.disposable1990s.capacitySpokenLabel, "27 exposures")
     }
 
     func testMovieDurationTextRoundsPartialSecondsUpFromWholeFrames() {
