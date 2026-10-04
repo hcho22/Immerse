@@ -175,9 +175,12 @@ final class ContentSizeTests: XCTestCase {
         return results
     }
 
-    /// A slow drag that ends held, so the list does not coast; negative distances scroll toward the end.
+    /// A slow drag that ends held, so the list does not coast; negative distances scroll toward the end. It runs
+    /// in the left margin, outside the rows' controls and away from the scroll indicator: on the right edge a drag
+    /// that starts while the indicator still shows from the previous one grabs it and scrubs the list back toward
+    /// its start (Evidence/NativeApp/scroll-indicator-drag-053.md).
     private func drag(_ app: XCUIApplication, by distance: CGFloat) {
-        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.7))
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
         start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)),
                     withVelocity: .slow, thenHoldForDuration: 0.2)
     }

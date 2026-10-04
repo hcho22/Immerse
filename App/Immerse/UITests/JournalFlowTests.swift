@@ -19,7 +19,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.formAuditTypes)
-        retainScreenshot(app, name: "Super8-load-default")
+        retainScreenshot(name: "Super8-load-default")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists)
@@ -64,7 +64,7 @@ final class JournalFlowTests: XCTestCase {
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         try app.performAccessibilityAudit()
-        retainScreenshot(app, name: "Catalog-accessibility-largest")
+        retainScreenshot(name: "Catalog-accessibility-largest")
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         XCTAssertTrue(camera.isHittable)
@@ -74,24 +74,24 @@ final class JournalFlowTests: XCTestCase {
         // (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].exists)
         try app.performAccessibilityAudit()
-        retainScreenshot(app, name: "16mm-load-accessibility-largest")
+        retainScreenshot(name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
         scrollUp(app, until: title)
         XCTAssertTrue(title.isHittable)
         try audit(app, name: "16mm-title-accessibility-largest", for: Self.formAuditTypes)
-        retainScreenshot(app, name: "16mm-title-accessibility-largest")
+        retainScreenshot(name: "16mm-title-accessibility-largest")
         let load = app.buttons["load-film"]
         scrollUp(app, until: load)
         XCTAssertTrue(load.isHittable)
         try audit(app, name: "16mm-command-accessibility-largest", for: Self.formAuditTypes)
-        retainScreenshot(app, name: "16mm-command-accessibility-largest")
+        retainScreenshot(name: "16mm-command-accessibility-largest")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft
         XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
         try app.performAccessibilityAudit()
-        retainScreenshot(app, name: "Settings-landscape-accessibility-largest")
+        retainScreenshot(name: "Settings-landscape-accessibility-largest")
     }
 
     func testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings() throws {
@@ -125,7 +125,7 @@ final class JournalFlowTests: XCTestCase {
         }
         XCTAssertTrue(denied.exists)
         XCTAssertTrue(declined, "Load Film must ask for Camera access")
-        retainScreenshot(app, name: "Load-camera-denied")
+        retainScreenshot(name: "Load-camera-denied")
         XCTAssertFalse(app.alerts.firstMatch.exists)
 
         app.navigationBars.buttons.element(boundBy: 0).tap()
@@ -136,7 +136,7 @@ final class JournalFlowTests: XCTestCase {
         let camera = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera, ")).firstMatch
         for _ in 0..<8 where !camera.exists { app.swipeUp() }
         XCTAssertEqual(camera.label, "Camera, Off", "Settings reports the declined Camera access")
-        retainScreenshot(app, name: "Settings-camera-denied")
+        retainScreenshot(name: "Settings-camera-denied")
     }
 
     /// Every audit type except Dynamic Type, for the three audits of the Form-based Load screens. Xcode's Dynamic
@@ -147,17 +147,26 @@ final class JournalFlowTests: XCTestCase {
 
     /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
     /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
-    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs along the right edge, outside the rows' controls.
+    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs in the left margin, outside the rows' controls
+    /// and away from the scroll indicator, which a right-edge drag can grab and scrub the list back toward its start
+    /// (Evidence/NativeApp/scroll-indicator-drag-053.md).
     private func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
         for _ in 0..<16 where !element.isHittable {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.7))
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
             start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
     }
 
-    private func retainScreenshot(_ app: XCUIApplication, name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+    /// Retains the screen as it appears. In landscape, `app.screenshot()` turned the image sideways a second time and
+    /// cropped it, and the screen's own capture keeps the display's portrait pixels with an orientation flag that the
+    /// attachment drops, so the screen capture is redrawn upright (Evidence/NativeApp/scroll-indicator-drag-053.md).
+    private func retainScreenshot(name: String) {
+        let screen = XCUIScreen.main.screenshot().image
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = screen.scale
+        let upright = UIGraphicsImageRenderer(size: screen.size, format: format).image { _ in screen.draw(at: .zero) }
+        let attachment = XCTAttachment(image: upright)
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
