@@ -41,9 +41,15 @@ final class MovieCapacityUITests: XCTestCase {
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         let field = app.textFields["film-title"]
         for _ in 0..<8 where !field.isHittable { app.swipeUp() }
-        field.tap()
-        // The field starts with the suggested title; replace it.
-        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 40) + title)
+        // The field starts with the suggested title, which wraps at the largest sizes. A tap puts the cursor where it
+        // lands, so tap past the end of the last line before deleting the suggestion.
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 100) + title)
+        // Typed edits reach the field from the out-of-process keyboard after typeText returns, so wait for them to land.
+        let entered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", title), object: field)
+        guard XCTWaiter().wait(for: [entered], timeout: 10) == .completed else {
+            return XCTFail("The title field holds \"\(field.value as? String ?? "")\" instead of \"\(title)\"")
+        }
         let load = app.buttons["load-film"]
         for _ in 0..<8 where !load.isHittable { app.swipeUp() }
         defer { deleteFilm(titled: title, app) }
