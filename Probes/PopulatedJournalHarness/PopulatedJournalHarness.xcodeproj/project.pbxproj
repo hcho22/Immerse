@@ -29,6 +29,7 @@
 		A8745D718F6267AE8FF68268 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 12F2D9D75387D3F28C80CD90 /* MediaCatalog */; };
 		C8033A34AC916AF7899B0A98 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7174548584A2CC7E0017F828 /* EntitlementCore */; };
 		CB961F2737A4730613BA5774 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 28283260002FB1D79AAC7C9D /* NativeAdapters */; };
+		CEC0D82590BBF96DC2C822CE /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */; };
 		CECCEBA019C00D8C6D4C6325 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACA806F51C52F191067D24F /* SubscriptionController.swift */; };
 		E356F161029518C4A53542B1 /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8681BF5B8F679782806990D9 /* JournalModel.swift */; };
 		F1712FD6166F62ECC9ACC8F0 /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 27B793DD093A09187B9C988B /* RenderFixtures */; };
@@ -71,6 +72,7 @@
 		94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetainedWorkflowTests.swift; sourceTree = "<group>"; };
 		9B34F2940DAEFDE2A09B4462 /* CameraSamplesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSamplesView.swift; sourceTree = "<group>"; };
 		9C07737AFFDECE551D6E1CF8 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
+		A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlock.swift; sourceTree = "<group>"; };
 		BACA806F51C52F191067D24F /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
 		C98F98988E7D41895751822D /* PopulatedJournalHarnessTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PopulatedJournalHarnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1C097FF52FC8220B01E1FA9 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
@@ -181,6 +183,7 @@
 				40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */,
 				BACA806F51C52F191067D24F /* SubscriptionController.swift */,
 				E41D46942323019637CC91E2 /* SubscriptionView.swift */,
+				A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */,
 				B0809EC777C54FB6ED215563 /* Resources */,
 			);
 			name = Sources;
@@ -309,6 +312,7 @@
 				6AFFE8F4C9F144833B546A12 /* SoundtrackView.swift in Sources */,
 				CECCEBA019C00D8C6D4C6325 /* SubscriptionController.swift in Sources */,
 				43C42CCDE4B42C45BCB57C9F /* SubscriptionView.swift in Sources */,
+				CEC0D82590BBF96DC2C822CE /* TestingUnlock.swift in Sources */,
 				6CD8EC42521CB218F1B49E00 /* WorkflowHarnessApp.swift in Sources */,
 				3E2A41A4D33819C4550FE228 /* WorkflowScenario.swift in Sources */,
 			);

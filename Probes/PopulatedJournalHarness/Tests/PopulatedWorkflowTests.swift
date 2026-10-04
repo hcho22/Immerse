@@ -44,9 +44,11 @@ final class PopulatedWorkflowTests: XCTestCase {
         // A tap on an already focused field moves the cursor to the nearest word boundary, so place it past the end of the title.
         title.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.5)).tap()
         title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (title.value as? String)?.count ?? 100))
+        // Typed edits reach the field from the out-of-process keyboard after typeText returns, so wait for them to land.
         // An empty field reports either no text or its placeholder.
-        XCTAssertTrue(["", title.placeholderValue].contains(title.value as? String), "The Rename field is empty before typing")
+        XCTAssertTrue(waitForValue(title, in: ["", title.placeholderValue ?? ""], timeout: 10), "The Rename field is empty before typing")
         title.typeText("Renamed synthetic Film")
+        XCTAssertTrue(waitForValue(title, in: ["Renamed synthetic Film"], timeout: 10), "The Rename field holds the new title before saving")
         app.alerts.buttons["Save"].tap()
         XCTAssertTrue(app.navigationBars["Renamed synthetic Film"].waitForExistence(timeout: 10))
         app.buttons["Film actions"].tap()
@@ -168,6 +170,11 @@ final class PopulatedWorkflowTests: XCTestCase {
             return labels.contains(element.label)
         }
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
+    }
+
+    private func waitForValue(_ element: XCUIElement, in values: [String], timeout: TimeInterval) -> Bool {
+        let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value IN %@", values), object: element)
         return XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
     }
 

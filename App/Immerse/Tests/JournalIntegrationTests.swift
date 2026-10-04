@@ -3,6 +3,7 @@ import FilmDomain
 import FilmPersistence
 import FilmRuntime
 import NativeAdapters
+import Observation
 import RenderCore
 import Security
 import Synchronization
@@ -253,6 +254,29 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Staging/\(film.id)").path))
         calls.makeReadable()
         guard case .consumed = try await model.trial.state() else { return XCTFail("Unknown committed outcome cannot refund") }
+    }
+
+    func testFilmDeletedBetweenListingAndPendingSaveCheckLeavesTheJournalWithoutAnAlert() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalConcurrentDelete-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        let kept = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                   title: "Synthetic kept roll", access: .subscription)
+        let deleted = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6,
+                                                      title: "Synthetic deleted roll", access: .subscription)
+        let files = try CapturedMediaFiles(directory: model.repository.captureStagingDirectory(filmID: kept.id))
+        _ = try files.savePhoto(syntheticPhoto(), id: UUID())
+        // Another owner deletes a Film once the Journal has listed it, before its pending-save check.
+        withObservationTracking { _ = model.films } onChange: {
+            do { try FilmRepository(rootURL: root).deleteFilm(filmID: deleted.id) }
+            catch { XCTFail("Concurrent deletion failed: \(error)") }
+        }
+        model.refresh()
+        XCTAssertEqual(try model.repository.allFilms().map(\.id), [kept.id])
+        XCTAssertNil(model.alert, model.alert?.message ?? "")
+        XCTAssertEqual(model.films.map(\.id), [kept.id])
+        XCTAssertEqual(model.pendingFilms, [kept.id])
+        XCTAssertTrue(model.hasPendingSave(kept.id))
     }
 }
 

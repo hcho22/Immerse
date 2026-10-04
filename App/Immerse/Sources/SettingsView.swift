@@ -8,6 +8,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                #if DEBUG
+                TestingUnlockSection(unlock: model.testingUnlock)
+                #endif
                 Section("Storage and backup") { Text(PrivacyCopy.backup) }
                 Section("Trial") {
                     if let error = model.trialError {

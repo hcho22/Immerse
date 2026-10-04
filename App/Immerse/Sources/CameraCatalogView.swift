@@ -49,6 +49,31 @@ private struct LoadFilmView: View {
     @State private var samples = false
 
     var body: some View {
+        Group {
+            #if DEBUG
+            if model.testingUnlock.enabled {
+                form {
+                    TestingUnlockNotice()
+                    Text(LoadCopy.fixed(medium: camera.medium))
+                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                }
+            } else {
+                form { entitlement }
+            }
+            #else
+            form { entitlement }
+            #endif
+        }
+        .navigationTitle(camera.shortName)
+        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
+        .task { if title.isEmpty { title = suggestedTitle } }
+        .interactiveDismissDisabled(loading)
+    }
+
+    /// The Load Film form around its access rows. The testing unlock chooses a whole form, not conditional
+    /// rows: inside a conditional, the entitlement line drew a clipped-text audit finding
+    /// (Evidence/NativeApp/testing-unlock-debug.md).
+    private func form(@ViewBuilder access: () -> some View) -> some View {
         Form {
             if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
                 Section {
@@ -80,13 +105,7 @@ private struct LoadFilmView: View {
                         .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
                 }
             }
-            Section {
-                Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
-                Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
-                                   subscriptionsAvailable: model.billing.configured))
-                    .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("load-note")
-            }
+            Section { access() }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {
@@ -114,14 +133,18 @@ private struct LoadFilmView: View {
                 }.disabled(loading).accessibilityIdentifier("load-film")
             }
         }
-        .navigationTitle(camera.shortName)
-        .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
-        .task { if title.isEmpty { title = suggestedTitle } }
-        .interactiveDismissDisabled(loading)
     }
 
     private var suggestedTitle: String {
         "\(camera.shortName) - Roll #\(String(format: "%02d", model.films.filter { $0.camera.id == camera.id }.count + 1))"
+    }
+
+    @ViewBuilder private var entitlement: some View {
+        Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
+        Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
+                           subscriptionsAvailable: model.billing.configured))
+            .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+            .accessibilityIdentifier("load-note")
     }
 
     private var entitlementLabel: String {
@@ -154,9 +177,12 @@ enum LoadCopy {
             case nil: nil
             }
         }
-        let fixed = medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
+        return [entitlement, fixed(medium: medium)].compactMap { $0 }.joined(separator: " ")
+    }
+
+    static func fixed(medium: CameraMedium) -> String {
+        medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
             : "Your Camera cannot change after loading."
-        return [entitlement, fixed].compactMap { $0 }.joined(separator: " ")
     }
 }
 

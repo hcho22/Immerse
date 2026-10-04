@@ -48,6 +48,12 @@ prices, verifies transactions, handles pending/cancelled/error states, observes
 updates and restores only after the user requests it. Existing Film operations
 never depend on a current subscription. No app-maintained paid Boolean is trusted.
 
+Debug builds alone add the captain-requested testing unlock (`Sources/TestingUnlock.swift`, under `#if DEBUG`).
+It starts on, loads every Camera as a subscription Film without touching the Trial record or StoreKit, and shows **Testing unlock - Debug build** on the Load Film and Subscription screens.
+Settings > Debug testing turns it off for Trial and plan checks; the choice persists on the device.
+It appears only when the scheme's Run action uses Debug.
+`Scripts/verify-release-excludes-testing-unlock.sh`, run by the local validation script, fails if Release contains it.
+
 The test target alone bundles `Tests/Fixtures/LocalSubscriptions.storekit`.
 Its prices and product IDs are synthetic test data, never live recommendations.
 The local StoreKit fixture failed to activate on iOS 26.5, matching an Apple-known

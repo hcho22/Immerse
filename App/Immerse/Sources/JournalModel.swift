@@ -40,6 +40,10 @@ final class JournalModel {
     var mediaRevision = UUID()
     private(set) var pendingFilms: Set<UUID> = []
     private(set) var initialRecoveryPending = true
+    #if DEBUG
+    /// Off for directly constructed Journals; the app's Journal reads the persisted switch.
+    @ObservationIgnored var testingUnlock = TestingUnlock(defaults: nil)
+    #endif
 
     init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
          cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer(),
@@ -78,7 +82,13 @@ final class JournalModel {
     private func reloadFilms() {
         do {
             films = try repository.allFilms()
-            pendingFilms = Set(try films.filter { try repository.hasPendingCapture(filmID: $0.id) }.map(\.id))
+            var pending: Set<UUID> = []
+            // The Trial owner deletes Films off the main actor, so a listed Film can be gone by its check.
+            for film in films {
+                do { if try repository.hasPendingCapture(filmID: film.id) { pending.insert(film.id) } }
+                catch PersistenceError.filmNotFound { films.removeAll { $0.id == film.id } }
+            }
+            pendingFilms = pending
         } catch {
             pendingFilms = Set(films.map(\.id))
             report(error)
@@ -131,10 +141,15 @@ final class JournalModel {
             ? true : await cameraAuthorizer.requestAccess()
         guard allowed else { throw JournalError.cameraDenied }
         await billing.refresh()
+        #if DEBUG
+        let access = testingUnlock.loadAccess(billing.access)
+        #else
+        let access = billing.access
+        #endif
         let film: Film
         do {
             film = try await trial.load(camera: camera, title: title,
-                orientation: camera.medium == .movie ? orientation : nil, subscription: billing.access)
+                orientation: camera.medium == .movie ? orientation : nil, subscription: access)
         } catch let EntitlementDenial.currentDeviceTrialAlreadyInProgress(id) {
             throw JournalError.trialInProgress(id)
         } catch EntitlementDenial.currentDeviceTrialConsumed {

@@ -75,8 +75,8 @@ Keep both records. No evidence of this document's preparation is a rerun.
 | iPhone 11 / iOS 26 | Required by ARC-08 / architecture S1. | Suitable authorized hardware. HC_iPhone13 timings cannot replace this early floor check. |
 | Second physical iPhone | Required by TRI-11, ARC-11/S12, ARC-12/S13 and QA-15. | Dedicated authorized restore target and protected data; destination-unused and destination-consumed Trial histories. Simulator copies do not satisfy this. |
 | Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12 device/OS/accessibility matrix and budgets remain open. Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
-| Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. |
-| Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Shipping UI exposes no test switch. |
+| Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. The Debug-only [testing unlock](#debug-testing-unlock) covers loading and capturing with all five Cameras without the Trial; it is not paid-entitlement or Trial evidence. |
+| Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Release UI exposes no test switch; Debug builds expose only the [testing unlock](#debug-testing-unlock). |
 
 ## Xcode Build and Run
 
@@ -113,8 +113,10 @@ test now and do not authorize the agent to connect or operate HC_iPhone13.
    redacted match in the report. Do not choose a different bundle to evade Trial,
    enable automatic provisioning changes, create certificates or use
    `-allowProvisioningUpdates`. If existing provisioning is insufficient, stop.
-6. Inspect **Edit Scheme > Run**: production executable Immerse, no launch size
+6. Inspect **Edit Scheme > Run**: Build Configuration **Debug**, production executable Immerse, no launch size
    override, fixture arguments or StoreKit configuration for normal app checks.
+   The [testing unlock](#debug-testing-unlock) appears only when the Run action uses Debug;
+   a Run action switched to Release installs the shipping gate with no unlock.
    `Tests/Fixtures/LocalSubscriptions.storekit` belongs to the local test target,
    not production Run; its synthetic prices are not approved billing. Live
    `ImmerseMonthlyProductID` / `ImmerseYearlyProductID` are intentionally absent.
@@ -168,6 +170,21 @@ real receipt readback for Keychain claims. Do not infer a successful save from a
 shutter animation, export from a button tap, removal from dismissal, or recovery
 from an exit code. Preserve failing evidence. Public-safe summaries redact
 device/signing details and include no personal captures or Apple credentials.
+
+## Debug Testing Unlock
+
+The captain asked on 2026-10-02 to unlock the subscription so every Camera and feature can be tested by hand.
+Debug builds therefore start with a testing unlock on.
+It exists only in Debug: `App/Immerse/Sources/TestingUnlock.swift` is compiled under `#if DEBUG`, and `sh Scripts/verify-release-excludes-testing-unlock.sh` (part of `Scripts/validate-local.sh`) builds Release and fails if the unlock's type, defaults key or copy is in the bundle.
+Release, TestFlight and App Store builds keep the StoreKit subscription and one-Film-per-iPhone Trial gate unchanged.
+
+- **It appears only when Xcode's Run action uses the Debug configuration.** Check **Edit Scheme > Run > Build Configuration**; the committed scheme uses Debug. A local switch to Release hides the unlock and its switch completely.
+- While on, Load Film loads every Camera as a subscription Film. The Load Film screen and the Subscription (plan) screen show **Testing unlock - Debug build**, so screenshots are never mistaken for a real subscription.
+- Loading or capturing while on never reads the Trial for eligibility and never writes, consumes or resets the Trial record or any StoreKit state. The Subscription screen still shows the real StoreKit status.
+- The switch is **Settings > Debug testing > Testing unlock - Debug build**, the first Settings section. It is saved on the iPhone, so it holds when Immerse is launched from the Home Screen as well as from Xcode.
+- **Turn the switch off before any Trial, locked-load or plan-screen check** (for example T01...T12 and M27). With it off, the Debug build gates new Films exactly as Release does.
+- Films loaded while the unlock was on are subscription Films. After the switch is turned off they keep their capture rights and stay developable, viewable, editable and exportable (ADR 0006), and they stay on the phone until deleted. The Trial remains unused by them.
+- Hosted tests cover on, off and off-after-on (`App/Immerse/Tests/TestingUnlockTests.swift`) and the indicator and persisted switch across relaunches (`App/Immerse/UITests/TestingUnlockUITests.swift`); outcomes are in [testing-unlock-debug.md](testing-unlock-debug.md). Physical-device behavior is untested until this manual phase.
 
 ## Ordinary App Scenarios
 
