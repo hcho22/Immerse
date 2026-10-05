@@ -109,7 +109,7 @@ Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A) revises `dyn-
   `swipeUp()` did not scroll the list in landscape, so the flicks go through the same coordinates as the held drags.
   Navigation titles are system text and are not included, as before; the toolbar buttons have no text.
 - `Scripts/validate-local.sh`, and so CI, runs all 48 `ContentSizeTests` in light with the rest of the UI suite.
-  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of the 70 that PR #11, which landed first, had set (120 since the dark `MovieCapacityUITests` rerun; see CI Time Budget).
+  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout was raised from the 70 minutes that PR #11, which landed first, had set (CI Time Budget, below).
 
 ### How the Measurement Changed
 
