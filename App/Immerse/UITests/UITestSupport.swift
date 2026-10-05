@@ -13,6 +13,7 @@ extension XCUIScreen {
     }
 }
 
+@MainActor
 extension XCTestCase {
     /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
     /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit

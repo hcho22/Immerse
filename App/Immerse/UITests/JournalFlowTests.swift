@@ -12,7 +12,10 @@ final class JournalFlowTests: XCTestCase {
         for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
             XCTAssertTrue(app.buttons["camera-\(id)"].exists)
         }
-        app.buttons["camera-super8HomeMovie"].tap()
+        let camera = app.buttons["camera-super8HomeMovie"]
+        camera.tap()
+        // Audit only once the outgoing camera row has left the tree, after the push (Evidence/NativeApp/push-audit-055.md).
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // Assert the load screen's own capacity element; a bare capacity query also matched the
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
@@ -69,6 +72,10 @@ final class JournalFlowTests: XCTestCase {
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         XCTAssertTrue(camera.isHittable)
         camera.tap()
+        // The tap can return before the push ends, or even starts, while the outgoing camera rows are still in the tree
+        // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
+        // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // The load screen exposes its capacity as one "Capacity, 2 minutes 45 seconds of film" element. A bare
         // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).

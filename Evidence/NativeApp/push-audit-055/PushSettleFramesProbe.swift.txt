@@ -1,0 +1,27 @@
+    func testTemporaryPushSettleProbe() throws {
+        for i in 0..<8 {
+            let app = XCUIApplication.shippingGate()
+            app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+            app.buttons["start-film"].tap()
+            XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+            try? app.performAccessibilityAudit(for: Self.auditTypes) { _ in true }
+            let camera = app.buttons["camera-cinema16mm"]
+            for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+            camera.tap()
+            let tapped = Date()
+            let capacity = app.staticTexts["Capacity, 2 minutes 45 seconds of film"]
+            let rowAfterTap = camera.exists
+            let rowFrame = rowAfterTap ? "\(camera.frame)" : "absent"
+            let capacityX = capacity.exists ? capacity.frame.minX : -1
+            let settled = camera.waitForNonExistence(timeout: 5)
+            let waited = Date().timeIntervalSince(tapped)
+            var found: [String] = []
+            try? app.performAccessibilityAudit(for: Self.auditTypes) { issue in
+                found.append("\(issue.element?.label ?? "nil"):\(issue.detailedDescription)")
+                return true
+            }
+            print("PROBE \(i) rowAfterTap \(rowAfterTap) row \(rowFrame) capacityX \(capacityX) settledCapacityX \(capacity.frame.minX) settled \(settled) waited \(String(format: "%.2f", waited))s [\(found.joined(separator: " | "))]")
+        }
+    }
