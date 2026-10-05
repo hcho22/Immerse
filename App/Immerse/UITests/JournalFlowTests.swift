@@ -146,19 +146,6 @@ final class JournalFlowTests: XCTestCase {
     /// element on the audited screens at all twelve sizes.
     private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
 
-    /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
-    /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
-    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs in the left margin, outside the rows' controls
-    /// and away from the scroll indicator, which a right-edge drag can grab and scrub the list back toward its start
-    /// (Evidence/NativeApp/scroll-indicator-drag-053.md).
-    private func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
-        for _ in 0..<16 where !element.isHittable {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
-                        withVelocity: .slow, thenHoldForDuration: 0.3)
-        }
-    }
-
     private func retainScreenshot(name: String) {
         let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())
         attachment.name = name

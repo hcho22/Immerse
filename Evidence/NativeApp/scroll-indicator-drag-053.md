@@ -39,7 +39,7 @@ On a new iPhone 17 Pro simulator with iOS 26.5 (23F77), light appearance and lar
 
 ### Fix
 
-`drag(_:by:)` in `ContentSizeTests` and `scrollUp(_:until:)` in `JournalFlowTests` start their held drags in the left margin instead of the right edge.
+`drag(_:by:)` in `ContentSizeTests` and `scrollUp(_:until:)` (then in `JournalFlowTests`, now in `UITestSupport.swift`) start their held drags in the left margin instead of the right edge.
 The left margin holds no controls and no scroll indicator, and a vertical drag there does not start the back-swipe gesture.
 The thresholds, labels, sizes and stop conditions are unchanged.
 
