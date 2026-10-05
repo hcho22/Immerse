@@ -39,4 +39,3 @@
         print("CF fixed pose \(fixed) contained \(window.contains(fixed)) focused \(focusedAfter)")
         XCTAssertTrue(focusedAfter, "Same tap once the whole field is inside the window")
     }
-
