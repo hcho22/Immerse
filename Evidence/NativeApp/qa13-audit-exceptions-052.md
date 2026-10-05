@@ -173,6 +173,6 @@ A record cannot include the CI run of the commit that adds it; that run is repor
 The auditor's internal method is not documented; the position rule and the in-place clamping are inferred from the probe variants, per-size frames, the frames in its findings and its screen recordings.
 `ContentSizeTests` measures text height in screenshots, not font metrics; a change that keeps text height but breaks reading, such as truncation with an ellipsis, is not caught by it.
 Setting `XCUIDevice.shared.appearance` from a test did not change the app's rendering on iOS 26.5.
-`Scripts/validate-local.sh`, and so CI, runs the full UI suite in light and then the accessibility audits (`JournalFlowTests`) again from the same build with the simulator set to dark; `ContentSizeTests` in dark was confirmed locally only.
+`Scripts/validate-local.sh`, and so CI, runs the full UI suite in light and then the accessibility audits again from the same build with the simulator set to dark (`App/Immerse/README.md`); `ContentSizeTests` in dark was confirmed locally only.
 Contrast sampling approximates the text color from the element's pixels and cannot report a ratio above the true text contrast.
 Simulator rendering only.
