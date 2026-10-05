@@ -109,7 +109,7 @@ Firstmate decision `dyn-type-inplace-flake` (2026-10-04, option A) revises `dyn-
   `swipeUp()` did not scroll the list in landscape, so the flicks go through the same coordinates as the held drags.
   Navigation titles are system text and are not included, as before; the toolbar buttons have no text.
 - `Scripts/validate-local.sh`, and so CI, runs all 48 `ContentSizeTests` in light with the rest of the UI suite.
-  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of the 70 that PR #11, which landed first, had set.
+  A dark rerun of them was added at first and later dropped (Review Round, below); the CI job's timeout is 110 minutes instead of the 70 that PR #11, which landed first, had set (120 since the dark `MovieCapacityUITests` rerun; see CI Time Budget).
 
 ### How the Measurement Changed
 
@@ -206,15 +206,17 @@ Stage durations in seconds, from the step logs of main run 37178893732 (`d9fe760
 | Requirement map, packages, probes, documents ZIP, unsigned builds, release check | 480 | 845 | 845 |
 | Populated harness | 525 | 833 | 833 |
 | Production UI, light | 617 | 814 | 1,887 |
-| Accessibility audits, dark | 147 | 232 | 232 |
+| Accessibility audits, dark | 147 | 232 | 355 |
 | iOS 26.2 hosted | 111 | 453 | 453 |
 | Report upload and teardown | 29 | 48 | 48 |
-| Total | 1,933 | 3,263 | 4,336 (72.3 min) |
+| Total | 1,933 | 3,263 | 4,459 (74.3 min) |
 
 - The light stage of 37210213939 includes PR #11's `MovieCapacityUITests` (123 s), kept in the budget because PR #11 landed first (`31be8d3`, the base this branch is rebased on).
 - The 36 added `ContentSizeTests` are estimated from the Load Film tests: 368 s for those 12 in 37210213939's light stage against 362 s in this review's light run, where the added 36 took 1,055 s (Journal and catalog 153, Settings top 379, Settings bottom 523), so about 1,073 s in CI.
 - The dark stage keeps the measured `JournalFlowTests` time; dropping Dynamic Type from those audits can only shorten it.
-- The job's timeout is 110 minutes: 1.5 times the 72.3-minute estimate is 108.4, rounded up to a multiple of 10.
+- The dark stage now also reruns `MovieCapacityUITests`, so the populated Journal card's contrast audit runs in dark too; it adds the class's 123 s from the light stage of 37210213939 (its two tests took 119 s in a local dark run).
+- The job's timeout is 120 minutes: 1.5 times the 74.3-minute estimate is 111.5, rounded up to a multiple of 10.
+  It was 110 minutes, set from the 72.3-minute estimate before the dark `MovieCapacityUITests` rerun was added.
 
 ## Limits
 
