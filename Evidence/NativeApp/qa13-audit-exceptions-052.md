@@ -76,7 +76,7 @@ The details and runs are in `scroll-indicator-drag-053.md`.
 ## Deterministic Audit Poses
 
 The largest-size test reached its two 16mm audit points with free `swipeUp()` gestures, which coast a different distance each run, so different rows sat under the navigation bar and the bottom edge at each audit.
-`scrollUp(_:until:)` in `JournalFlowTests` now scrolls in equal, slow 300-point drags that end held, so the list never coasts, with the same stop condition as before (the heading, then Load Film, can be tapped).
+`scrollUp(_:until:)` (then in `JournalFlowTests`, now in `UITestSupport.swift`) now scrolls in equal, slow 300-point drags that end held, so the list never coasts, with the same stop condition as before (the heading, then Load Film, can be tapped).
 Across every later fresh run the command pose was identical (Load Film at y = 726.7) and the title pose put the description at y = 4.0 to 13.3, always under the bar.
 
 Even at an identical starting pose, one run flagged four contrast findings at the command audit ("Movie Orientation", "Portrait", "Trial status unavailable", "Your Camera and Movie Orientation...") with the list about 380 points from where the test left it: a check that grows and shrinks the text in place lets the scroll offset clamp while the content is short, and the offset is not restored.

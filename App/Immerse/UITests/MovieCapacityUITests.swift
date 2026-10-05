@@ -40,9 +40,16 @@ final class MovieCapacityUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         let field = app.textFields["film-title"]
-        for _ in 0..<8 where !field.isHittable { app.swipeUp() }
         // The field starts with the suggested title, which wraps at the largest sizes. A tap puts the cursor where it
-        // lands, so tap past the end of the last line before deleting the suggestion.
+        // lands, so tap past the end of the last line before deleting the suggestion. That point is on screen only
+        // once the whole field is: a free swipe that coasted short left the field's center hittable but its last line
+        // under the window's bottom edge, and the tap there gave the field no focus.
+        // The Form adds and removes the field's row as it nears the screen, so the field can exist and be gone a moment
+        // later, and reading a missing element's frame fails the test; one snapshot reads both and throws instead.
+        let window = app.windows.firstMatch.frame
+        let onScreen = { (try? field.snapshot()).map { window.contains($0.frame) } ?? false }
+        scrollUp(app, until: onScreen)
+        XCTAssertTrue(onScreen(), "The whole title field is on screen")
         field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 100) + title)
         // Typed edits reach the field from the out-of-process keyboard after typeText returns, so wait for them to land.
@@ -79,7 +86,7 @@ final class MovieCapacityUITests: XCTestCase {
         detail.buttons.element(boundBy: 0).tap()
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
-        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
+        scrollUp(app, until: row)
         XCTAssertTrue(row.label.contains("2 minutes 45 seconds left"), row.label)
         retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
         try app.performAccessibilityAudit(for: .contrast)

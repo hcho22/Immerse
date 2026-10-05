@@ -1,0 +1,41 @@
+// Temporary method added to MovieCapacityUITests for the 054 counterfactual; not part of the suite.
+    func testCounterfactualTitleTapPose() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
+        let field = app.textFields["film-title"]
+        let window = app.windows.firstMatch.frame
+        func drag(_ distance: CGFloat) {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        for _ in 0..<16 where !field.exists { drag(300) }
+        // Park the field's center just above the window's bottom edge, the pose a short coast left in CI.
+        for _ in 0..<10 {
+            let delta = field.frame.midY - (window.maxY - 25)
+            print("CF frame \(field.frame) delta \(delta)")
+            if abs(delta) <= 15 { break }
+            // Drags shorter than about 40 points did not move the list, so short corrections go there and back.
+            if abs(delta) < 150 { drag(delta - 200); drag(200) } else { drag(min(300, max(-250, delta))) }
+        }
+        let pose = field.frame
+        print("CF pose \(pose) window \(window) contained \(window.contains(pose)) tapY \(pose.minY + 0.9 * pose.height)")
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
+        let focused = (field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false
+        print("CF original tap focused \(focused)")
+        XCTAssertFalse(window.contains(pose))
+        XCTAssertFalse(focused, "Original tap at the partly visible pose")
+        scrollUp(app) { window.contains(field.frame) }
+        let fixed = field.frame
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
+        let focusedAfter = (field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false
+        print("CF fixed pose \(fixed) contained \(window.contains(fixed)) focused \(focusedAfter)")
+        XCTAssertTrue(focusedAfter, "Same tap once the whole field is inside the window")
+    }

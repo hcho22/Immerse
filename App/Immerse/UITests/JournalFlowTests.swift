@@ -12,7 +12,10 @@ final class JournalFlowTests: XCTestCase {
         for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
             XCTAssertTrue(app.buttons["camera-\(id)"].exists)
         }
-        app.buttons["camera-super8HomeMovie"].tap()
+        let camera = app.buttons["camera-super8HomeMovie"]
+        camera.tap()
+        // Audit only once the outgoing camera row has left the tree, after the push (Evidence/NativeApp/push-audit-055.md).
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // Assert the load screen's own capacity element; a bare capacity query also matched the
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
@@ -69,6 +72,10 @@ final class JournalFlowTests: XCTestCase {
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         XCTAssertTrue(camera.isHittable)
         camera.tap()
+        // The tap can return before the push ends, or even starts, while the outgoing camera rows are still in the tree
+        // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
+        // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // The load screen exposes its capacity as one "Capacity, 2 minutes 45 seconds of film" element. A bare
         // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).
@@ -145,19 +152,6 @@ final class JournalFlowTests: XCTestCase {
     /// Journal (Evidence/NativeApp/scroll-indicator-drag-053.md). `ContentSizeTests` instead measures every text
     /// element on the audited screens at all twelve sizes.
     private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
-
-    /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.
-    /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
-    /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs in the left margin, outside the rows' controls
-    /// and away from the scroll indicator, which a right-edge drag can grab and scrub the list back toward its start
-    /// (Evidence/NativeApp/scroll-indicator-drag-053.md).
-    private func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
-        for _ in 0..<16 where !element.isHittable {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
-                        withVelocity: .slow, thenHoldForDuration: 0.3)
-        }
-    }
 
     private func retainScreenshot(name: String) {
         let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())
