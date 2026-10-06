@@ -58,6 +58,35 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertEqual(reported, ["Deliberate framing, finer grain"])
     }
 
+    /// Every Camera's Load screen at the smallest text size, where the Film title field's text is shortest: 19 points,
+    /// which the hit-region check reported as too small to tap until the field's frame became at least 44 points tall
+    /// (Evidence/NativeApp/title-field-hit-area-056.md). Each audit waits until the tapped Camera row has left the
+    /// tree, after the push, so the outgoing catalog is not audited.
+    func testExtraSmallLoadScreensAudit() throws {
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXS"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        for (id, name) in [("disposable1990s", "Disposable"), ("instant1970s", "Instant"), ("mediumFormat6x6", "6x6"),
+                           ("super8HomeMovie", "Super 8"), ("cinema16mm", "16mm")] {
+            let camera = app.buttons["camera-\(id)"]
+            scrollUp(app, until: camera)
+            camera.tap()
+            XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+            XCTAssertTrue(app.navigationBars[name].exists)
+            let field = app.textFields["film-title"]
+            scrollUp(app, until: field)
+            XCTAssertTrue(field.isHittable)
+            try audit(app, name: "\(name)-load-extra-small", for: Self.auditTypes)
+            retainScreenshot(name: "\(name)-load-extra-small")
+            // The Journal's bar stays in the tree under the catalog sheet on smaller iPhones, so go back from this bar.
+            app.navigationBars[name].buttons.element(boundBy: 0).tap()
+            XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        }
+    }
+
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
         let app = XCUIApplication.shippingGate()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]

@@ -35,6 +35,11 @@ final class ContentSizeTests: XCTestCase {
         /// A symbol drawn inside the element's frame, which the list keeps near one size: the text is measured
         /// below it (`above`) or beside it (`leading`), by the symbol's accessibility identifier.
         var symbol: (identifier: String, side: SymbolSide)? = nil
+        /// The identifier of a text element above whose line box this element's taller frame reaches: the text is
+        /// measured below that element's frame.
+        var below: String? = nil
+        /// The least height of the element's frame, the area that takes a tap, at every size.
+        var minimumHeight: CGFloat? = nil
 
         @MainActor func find(in root: XCUIElementSnapshot) -> XCUIElementSnapshot? {
             var matches: [XCUIElementSnapshot] = []
@@ -52,7 +57,11 @@ final class ContentSizeTests: XCTestCase {
 
         /// The area that holds the element's text: its frame, less its symbol's side when it has one.
         @MainActor func textFrame(in root: XCUIElementSnapshot) -> CGRect? {
-            guard let frame = find(in: root)?.frame else { return nil }
+            guard var frame = find(in: root)?.frame else { return nil }
+            if let below, let above = Target(name: "", type: .staticText, identifier: below).find(in: root)?.frame {
+                frame = CGRect(x: frame.minX, y: max(frame.minY, above.maxY), width: frame.width,
+                               height: frame.maxY - max(frame.minY, above.maxY))
+            }
             guard let symbol else { return frame }
             var images: [CGRect] = []
             func visit(_ element: XCUIElementSnapshot) {
@@ -87,7 +96,9 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Portrait", type: .button, label: "Portrait"),
         Target(name: "Landscape", type: .button, label: "Landscape"),
         Target(name: "Film title", type: .staticText, identifier: "film-title-heading"),
-        Target(name: "Title field", type: .textField, identifier: "film-title"),
+        // The field's frame is at least 44 points tall, centered on its text, so at the smaller sizes it reaches over
+        // the heading's line box (Evidence/NativeApp/title-field-hit-area-056.md).
+        Target(name: "Title field", type: .textField, identifier: "film-title", below: "film-title-heading", minimumHeight: 44),
         Target(name: "Entitlement", type: .staticText, identifier: "load-entitlement", unsettled: "Checking Trial status"),
         Target(name: "Note", type: .staticText, identifier: "load-note"),
         Target(name: "Subscription", type: .button, label: "Subscription"),
@@ -379,6 +390,9 @@ final class ContentSizeTests: XCTestCase {
             for target in targets where results.allSatisfy({ $0.0.name != target.name }) {
                 guard let frame = target.textFrame(in: root), !frame.isEmpty else { continue }
                 seen.insert(target.name)
+                if let minimum = target.minimumHeight, let element = target.find(in: root) {
+                    XCTAssertGreaterThanOrEqual(element.frame.height, minimum, "\(target.name) \(tag) frame is at least \(Int(minimum)) points tall")
+                }
                 let needed = min(frame.height, context)
                 // The edge the text must stay clear of at the bottom: its frame, or the line below it once that is listed.
                 let floor: CGFloat? = if let label = target.clearance {

@@ -101,7 +101,7 @@ private struct LoadFilmView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityIdentifier("film-title-heading")
                         .accessibilityAddTraits(.isHeader)
-                    TextField("Title", text: $title, axis: .vertical)
+                    FilmTitleField(placeholder: "Title", text: $title)
                         .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
                 }
             }
@@ -265,5 +265,141 @@ private struct SegmentLayout: Layout {
 
     private func segment(_ width: CGFloat, _ subviews: Subviews) -> CGFloat {
         (width - spacing * CGFloat(max(subviews.count - 1, 0))) / CGFloat(max(subviews.count, 1))
+    }
+}
+
+/// Places its one subview at its ideal height over the space its minimum height takes in the layout, centered on
+/// it to the pixel as `FilmTitleTextView.InsetTextView` centers its text, so the subview's frame can reach past the
+/// space the layout gives it.
+private struct OverhangingHeight: Layout {
+    var scale: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        subviews[0].sizeThatFits(ProposedViewSize(width: proposal.width, height: 0))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let full = subviews[0].sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
+        let above = FilmTitleTextView.InsetTextView.topInset(extra: full - bounds.height, scale: scale)
+        subviews[0].place(at: CGPoint(x: bounds.minX, y: bounds.minY - above), anchor: .topLeading,
+                          proposal: ProposedViewSize(width: bounds.width, height: nil))
+    }
+}
+
+/// The Film title field: a wrapping text view whose frame, the area that takes a tap and that accessibility
+/// reports, is at least 44 points tall at every text size, while its text sits where a SwiftUI field's would.
+/// SwiftUI's vertical `TextField` keeps its frame at its text's height whatever frame surrounds it, 19 points at XS,
+/// which Xcode's audit reports as too small to tap (Evidence/NativeApp/title-field-hit-area-056.md).
+private struct FilmTitleField: View {
+    let placeholder: String
+    @Binding var text: String
+
+    @Environment(\.displayScale) private var scale
+
+    var body: some View {
+        OverhangingHeight(scale: scale) { FilmTitleTextView(placeholder: placeholder, text: $text) }
+    }
+}
+
+private struct FilmTitleTextView: UIViewRepresentable {
+    static let minimumHeight: CGFloat = 44
+    let placeholder: String
+    @Binding var text: String
+
+    func makeUIView(context: Context) -> InsetTextView {
+        let view = InsetTextView()
+        view.delegate = context.coordinator
+        view.placeholderLabel.text = placeholder
+        view.tintColor = UIColor(named: "AccentColor")
+        return view
+    }
+
+    func updateUIView(_ view: InsetTextView, context: Context) {
+        context.coordinator.text = $text
+        if view.text != text { view.text = text; view.textDidChange() }
+    }
+
+    /// A zero height asks for the text alone; any other proposal gets the text grown to the minimum tap height.
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: InsetTextView, context: Context) -> CGSize? {
+        guard let width = proposal.width, width.isFinite else { return nil }
+        let natural = uiView.naturalHeight(width: width)
+        return CGSize(width: width, height: proposal.height == 0 ? natural : max(Self.minimumHeight, natural))
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(text: $text) }
+
+    final class Coordinator: NSObject, UITextViewDelegate {
+        var text: Binding<String>
+        init(text: Binding<String>) { self.text = text }
+        func textViewDidChange(_ view: UITextView) {
+            text.wrappedValue = view.text
+            (view as? InsetTextView)?.textDidChange()
+        }
+    }
+
+    /// Centers its text in any extra height, so the text stays where the layout put it.
+    final class InsetTextView: UITextView {
+        let placeholderLabel = UILabel()
+        private let sizer = UITextView()
+
+        init() {
+            super.init(frame: .zero, textContainer: nil)
+            backgroundColor = .clear
+            isScrollEnabled = false
+            textContainer.lineFragmentPadding = 0
+            textContainerInset = .zero
+            font = .preferredFont(forTextStyle: .body)
+            adjustsFontForContentSizeCategory = true
+            textColor = .label
+            placeholderLabel.font = font
+            placeholderLabel.adjustsFontForContentSizeCategory = true
+            placeholderLabel.textColor = .placeholderText
+            placeholderLabel.numberOfLines = 0
+            placeholderLabel.isAccessibilityElement = false
+            addSubview(placeholderLabel)
+            sizer.isScrollEnabled = false
+            sizer.textContainer.lineFragmentPadding = 0
+            sizer.textContainerInset = .zero
+        }
+
+        required init?(coder: NSCoder) { fatalError("init(coder:) is not supported") }
+
+        /// A text field to accessibility, as SwiftUI's vertical field is: `UITextView` adds one more trait bit than
+        /// SwiftUI's field reports (bit 47, measured), which makes accessibility report it as a text view.
+        override var accessibilityTraits: UIAccessibilityTraits {
+            get { super.accessibilityTraits.subtracting(UIAccessibilityTraits(rawValue: 1 << 47)) }
+            set { super.accessibilityTraits = newValue }
+        }
+
+        /// The text's own height at `width`, measured without the insets and rounded up to whole points, as SwiftUI's
+        /// vertical `TextField` sizes itself at every text size (two pixels taller than the text view at AX XXL).
+        func naturalHeight(width: CGFloat) -> CGFloat {
+            sizer.font = font
+            sizer.text = text
+            return sizer.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height.rounded(.up)
+        }
+
+        /// The part of the extra height above the text: half, to the pixel, so every edge stays on the pixel grid
+        /// and the frame is exactly the minimum height.
+        static func topInset(extra: CGFloat, scale: CGFloat) -> CGFloat {
+            let scale = max(scale, 1)
+            return (max(0, extra) / 2 * scale).rounded(.down) / scale
+        }
+
+        func textDidChange() {
+            placeholderLabel.isHidden = !text.isEmpty
+            setNeedsLayout()
+        }
+
+        override func layoutSubviews() {
+            let extra = bounds.height - naturalHeight(width: bounds.width)
+            let top = Self.topInset(extra: extra, scale: traitCollection.displayScale)
+            let insets = UIEdgeInsets(top: top, left: 0, bottom: max(0, extra - top), right: 0)
+            if textContainerInset != insets { textContainerInset = insets }
+            super.layoutSubviews()
+            placeholderLabel.isHidden = !text.isEmpty
+            let size = placeholderLabel.sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))
+            placeholderLabel.frame = CGRect(x: 0, y: top, width: bounds.width, height: size.height)
+        }
     }
 }

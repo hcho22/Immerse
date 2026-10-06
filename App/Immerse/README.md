@@ -28,7 +28,9 @@ real purchases, services, or a connected phone. XcodeGen is required only after
 changing project configuration; the generated project is committed for CI.
 The gate also verifies coverage of all 122 intake task IDs, 72 acceptance clauses
 and nine invariants. Coverage is not acceptance. UI audits include the largest
-Dynamic Type size and scroll to the title and Load Film command. Their only
+Dynamic Type size and scroll to the title and Load Film command, and every Camera's
+Load screen at the smallest size, where the Film title field's frame must stay at
+least 44 points tall (`Evidence/NativeApp/title-field-hit-area-056.md`). Their only
 accepted findings are the exact, measured entries in `UITests/AuditExceptions.swift`.
 Text sizing on every audited screen is measured by `ContentSizeTests` at all twelve
 sizes instead of the Dynamic Type audit, which is not run
