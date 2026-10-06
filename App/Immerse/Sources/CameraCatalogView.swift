@@ -341,6 +341,7 @@ private struct FilmTitleTextView: UIViewRepresentable {
     final class InsetTextView: UITextView {
         let placeholderLabel = UILabel()
         private let sizer = UITextView()
+        private var haloRect = CGRect.null
 
         init() {
             super.init(frame: .zero, textContainer: nil)
@@ -371,6 +372,15 @@ private struct FilmTitleTextView: UIViewRepresentable {
             set { super.accessibilityTraits = newValue }
         }
 
+        /// The text's own rect, where SwiftUI's field had its whole frame. The frame around it reaches over the
+        /// bottom of the heading at the smaller sizes, so the VoiceOver cursor and the focus ring outline this instead.
+        private var textRect: CGRect { bounds.inset(by: textContainerInset) }
+
+        override var accessibilityPath: UIBezierPath? {
+            get { UIAccessibility.convertToScreenCoordinates(UIBezierPath(rect: textRect), in: self) }
+            set { super.accessibilityPath = newValue }
+        }
+
         /// The text's own height at `width`, measured without the insets and rounded up to whole points, as SwiftUI's
         /// vertical `TextField` sizes itself at every text size (two pixels taller than the text view at AX XXL).
         func naturalHeight(width: CGFloat) -> CGFloat {
@@ -396,6 +406,7 @@ private struct FilmTitleTextView: UIViewRepresentable {
             let top = Self.topInset(extra: extra, scale: traitCollection.displayScale)
             let insets = UIEdgeInsets(top: top, left: 0, bottom: max(0, extra - top), right: 0)
             if textContainerInset != insets { textContainerInset = insets }
+            if haloRect != textRect { haloRect = textRect; focusEffect = UIFocusHaloEffect(rect: textRect) }
             super.layoutSubviews()
             placeholderLabel.isHidden = !text.isEmpty
             let size = placeholderLabel.sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))

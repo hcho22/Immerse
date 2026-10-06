@@ -23,7 +23,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars["Super 8"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists)
         app.buttons["Settings"].tap()
@@ -121,7 +121,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(load.isHittable)
         try audit(app, name: "16mm-command-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-command-accessibility-largest")
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars["16mm"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft
@@ -164,7 +164,7 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(name: "Load-camera-denied")
         XCTAssertFalse(app.alerts.firstMatch.exists)
 
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 5))
         app.buttons["Settings"].tap()

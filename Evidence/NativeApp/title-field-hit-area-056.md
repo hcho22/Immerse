@@ -37,6 +37,8 @@ Matching details, each measured against SwiftUI's view:
 - `UITextView` reports one more accessibility trait bit than SwiftUI's field (bit 47; 0x800000040000 against 0x40000), which XCTest reads as a text view; the view drops it, so the field is still a `TextField` to accessibility and to the existing tests.
 
 The frame reaches up to 12.5 pt above the text at XS, over the bottom of the heading's line box, and down into the row's bottom inset; it stays inside the 74 pt row, which clips, at every size.
+Indicators drawn around that frame would cross the heading, so the view outlines only its text: its `accessibilityPath`, which VoiceOver draws its cursor around, and its focus effect, a `UIFocusHaloEffect` on the same rect, both cover the text's own rect, where SwiftUI's field had its whole frame.
+The frame itself, which takes taps and which the audit and `ContentSizeTests` read, is unchanged.
 
 ## Results
 
@@ -62,6 +64,21 @@ The same held-drag poses were captured before (main's `CameraCatalogView.swift`)
 - iPhone SE light: 15 of 15 identical; dark: 13 of 15, and the other two, at different drag poses, are identical once shifted.
 - `title-field-hit-area-056/title-row-before-after-light.png` and `-dark.png` show the title row at XS, L and AX XXXL with the field's frame outlined.
 
+### Focus Indicators
+
+Full Keyboard Access focus on the Disposable Load screen's title field, at XS and L, light and dark, on main (SwiftUI's field), on the 44 pt frame before the indicators were moved, and after (`title-field-hit-area-056/focus-before-after-light.png` and `-dark.png`):
+
+| Highlight rows (px at 3x) | XS | L |
+| --- | --- | --- |
+| Main | 1218 to 1274, 19 pt | 1254 to 1322, 23 pt |
+| 44 pt frame | 1179 to 1313, 45 pt, over the heading | 1221 to 1355, 45 pt, over the heading |
+| After | 1218 to 1274, 19 pt | 1255 to 1320, 22 pt |
+
+- Light and dark gave the same rows; at XS the highlight is on the same pixels as main's.
+- At L it is 1 px shorter at the top and 2 px at the bottom than main's: the system rounds the default halo of a view outward to whole points (main's 22 pt field starts at 418.33 pt), and it does not round a custom halo rect. Both cover only the text, clear of the heading.
+- The title text is on the same pixels as main's in every focused capture.
+- The Full Keyboard Access ring does not draw while XCTest drives the app, and stayed hidden after a test run until the simulator rebooted; the captures enable Full Keyboard Access with `FullKeyboardAccessFocusRingEnabled` on, launch the app with `simctl`, and send hardware Tab, Space and arrow keys from the host through SimulatorKit (`title-field-hit-area-056/FullKeyboardAccessKeys.m.txt`).
+
 ### Editing
 
 At XS, with the same steps on SwiftUI's field and the prototype of this field: tapping the field focuses it with the Return key shown, Return inserts a new line ("Ab\ncd"), deleting the suggestion shows the "Title" placeholder at the same pixels, and a long title wraps to the same 57 pt height.
@@ -79,9 +96,10 @@ Two differences remain:
   The 12 Load screen tests and the XS audit passed 13 of 13 in light and in dark.
 - `Scripts/validate-local.sh` on the change rebased onto `4247d28`, with one task-owned iOS 26.5 simulator for the UI and workflow gates and an iOS 26.2 one for StoreKit, passed: the populated Journal harness 12 of 12, the UI tests 56 of 56 in light, the dark audits 6 of 6 and StoreKit 35 of 35.
   An earlier dark pass failed in the empty-Journal tests and the Movie card audit on this branch and, identically, on `4247d28`: an interrupted validation run had left a Film on the simulator; after removing the app the run above passed.
-- The SE run also showed that `navigationBars.buttons.element(boundBy: 0)` can tap the Journal's bar under the catalog sheet; the new test goes back from the Camera's own bar.
+- The SE run also showed that `navigationBars.buttons.element(boundBy: 0)` can tap the Journal's bar under the catalog sheet; every UI test now goes back from a Load screen through that Camera's own bar.
 
 ## Limits
 
 Simulator only: no physical iPhone, VoiceOver, Voice Control or Bold Text session was run, and the caret and placeholder-value differences above are recorded, not judged.
+The VoiceOver cursor and Voice Control overlays were not observed; the accessibility path uses the same rect as the Full Keyboard Access halo shown above.
 The field elsewhere in the app (the Rename Film alert) is a system alert field and was not changed.

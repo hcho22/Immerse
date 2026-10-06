@@ -238,7 +238,7 @@ final class ContentSizeTests: XCTestCase {
             // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
             Thread.sleep(forTimeInterval: 1)
             rows += record(measure(app, targets, category, below: title))
-            app.navigationBars.buttons.element(boundBy: 0).tap()
+            app.navigationBars[title].buttons.element(boundBy: 0).tap()
         }
         app.terminate()
         finish(category, rows, Self.superEight + Self.sixteenMillimeter)
@@ -268,7 +268,7 @@ final class ContentSizeTests: XCTestCase {
         app.buttons["start-film"].tap()
         app.buttons["camera-disposable1990s"].tap()
         waitForTrialStatus(app)
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft

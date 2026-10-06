@@ -1,0 +1,57 @@
+// Throwaway host tool used for note 056's Full Keyboard Access captures; not part of any target.
+// Build: clang -fobjc-arc -framework Foundation hidkeys.m -o hidkeys
+// Throwaway: sends HID keyboard usages to a booted simulator through SimulatorKit, as idb does.
+// usage: hidkeys <udid> <usage>[+shift] ...   (USB HID usages: Tab 43, Space 44, Return 40, Down 81, Up 82)
+#import <Foundation/Foundation.h>
+#import <dlfcn.h>
+#import <objc/message.h>
+typedef void *(*IndigoKeyFn)(uint32_t usage, int direction);
+int main(int argc, char **argv) { @autoreleasepool {
+    NSString *dev = @"/Applications/Xcode.app/Contents/Developer";
+    dlopen("/Library/Developer/PrivateFrameworks/CoreSimulator.framework/CoreSimulator", RTLD_NOW);
+    void *kit = dlopen([[dev stringByAppendingString:@"/Library/PrivateFrameworks/SimulatorKit.framework/SimulatorKit"] UTF8String], RTLD_NOW);
+    if (!kit) { fprintf(stderr, "%s\n", dlerror()); return 1; }
+    IndigoKeyFn key = (IndigoKeyFn)dlsym(kit, "IndigoHIDMessageForKeyboardArbitrary");
+    NSError *err = nil;
+    id ctx = ((id(*)(id,SEL,id,id*))objc_msgSend)(NSClassFromString(@"SimServiceContext"), NSSelectorFromString(@"sharedServiceContextForDeveloperDir:error:"), dev, &err);
+    id set = ((id(*)(id,SEL,id*))objc_msgSend)(ctx, NSSelectorFromString(@"defaultDeviceSetWithError:"), &err);
+    NSDictionary *byUDID = ((id(*)(id,SEL))objc_msgSend)(set, NSSelectorFromString(@"devicesByUDID"));
+    id device = byUDID[[[NSUUID alloc] initWithUUIDString:@(argv[1])]];
+    if (!device || !key) { fprintf(stderr, "no device or symbol\n"); return 1; }
+    id hid = ((id(*)(id,SEL,id,id*))objc_msgSend)([NSClassFromString(@"SimulatorKit.SimDeviceLegacyHIDClient") alloc], NSSelectorFromString(@"initWithDevice:error:"), device, &err);
+    if (!hid) { fprintf(stderr, "hid: %s\n", err.description.UTF8String); return 1; }
+    dispatch_queue_t q = dispatch_queue_create("hid", 0);
+    void (^send)(uint32_t, int) = ^(uint32_t usage, int dir) {
+        dispatch_semaphore_t s = dispatch_semaphore_create(0);
+        ((void(*)(id,SEL,void*,BOOL,id,id))objc_msgSend)(hid, NSSelectorFromString(@"sendWithMessage:freeWhenDone:completionQueue:completion:"), key(usage, dir), YES, q, ^(NSError *e){ if (e) fprintf(stderr, "send: %s\n", e.description.UTF8String); dispatch_semaphore_signal(s); });
+        dispatch_semaphore_wait(s, DISPATCH_TIME_FOREVER);
+        usleep(50000);
+    };
+    for (int i = 2; i < argc; i++) {
+        NSString *a = @(argv[i]); BOOL shift = [a hasSuffix:@"+shift"];
+        uint32_t u = (uint32_t)[a intValue];
+        if (shift) send(225, 1);
+        send(u, 1); send(u, 2);
+        if (shift) send(225, 2);
+        usleep(450000);
+    }
+} return 0; }
+
+/* shoot.sh, which drove it:
+#!/bin/sh
+# shoot.sh <variant> <size> : install variant, open the Disposable Load screen with Full Keyboard Access keys, save <variant>-<size>.png
+R=/Users/hcho/.treehouse/Immerse-3833fe/2/Immerse; U=$(cat $TMPDIR/udid); H=$TMPDIR/hidkeys; P=$TMPDIR/venv/bin/python
+xcrun simctl terminate $U com.immerse.FilmJournal 2>/dev/null
+xcrun simctl install $U $R/DerivedData/Ring-$1/Build/Products/Debug-iphonesimulator/Immerse.app
+xcrun simctl ui $U content_size $2
+xcrun simctl launch $U com.immerse.FilmJournal >/dev/null; sleep 4
+for i in 1 2 3 4 5; do
+  xcrun simctl io $U screenshot $TMPDIR/probe.png >/dev/null 2>&1
+  $P -c "from PIL import Image;import sys;sys.exit(0 if Image.open('$TMPDIR/probe.png').convert('RGB').getpixel((603,2422))[1]>150 else 1)" && break
+  $H $U 43 2>/dev/null; sleep 0.8
+done
+$H $U 44 2>/dev/null; sleep 2
+$H $U 82 82 44 2>/dev/null; sleep 2.5
+xcrun simctl io $U screenshot $TMPDIR/$1-$2.png >/dev/null 2>&1
+sips -Z 600 $TMPDIR/$1-$2.png --out $TMPDIR/$1-$2s.png >/dev/null
+*/
