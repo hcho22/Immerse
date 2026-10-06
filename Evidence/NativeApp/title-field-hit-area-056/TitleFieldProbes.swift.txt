@@ -1,0 +1,107 @@
+// Temporary probes run from JournalFlowTests during the 056 diagnosis; removed before commit.
+// The Load screen briefly read a ProbeTitleVariant launch argument to switch between field variants (see the note).
+
+    func testTemporaryTitleFieldProbe() throws {
+        let sizes = (ProcessInfo.processInfo.environment["PROBE_SIZES"].flatMap { $0.isEmpty ? nil : $0 } ?? "XS,S,M,L,XL,XXL,XXXL,AccessibilityM,AccessibilityL,AccessibilityXL,AccessibilityXXL,AccessibilityXXXL").split(separator: ",")
+        let cameras = (ProcessInfo.processInfo.environment["PROBE_CAMERAS"].flatMap { $0.isEmpty ? nil : $0 } ?? "disposable1990s:Disposable").split(separator: ",")
+        for size in sizes {
+            let app = XCUIApplication.shippingGate()
+            app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(size)",
+                                    "-ProbeTitleVariant", ProcessInfo.processInfo.environment["PROBE_VARIANT", default: ""]]
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+            app.buttons["start-film"].tap()
+            XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+            for entry in cameras {
+                let parts = entry.split(separator: ":")
+                let bar = app.navigationBars[String(parts[1])]
+                let camera = app.buttons["camera-\(parts[0])"]
+                scrollUp(app, until: camera)
+                camera.tap()
+                XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+                scrollUp(app, until: app.descendants(matching: .any).matching(identifier: "film-title").firstMatch)
+                Thread.sleep(forTimeInterval: 1)
+                let heading = app.staticTexts["film-title-heading"]
+                let field = app.descendants(matching: .any).matching(identifier: "film-title").firstMatch
+                let entitlement = app.staticTexts["load-entitlement"]
+                let cell = app.cells.containing(.any, identifier: "film-title").firstMatch
+                probeLog("PROBE-NEXT \(parts[1]) \(size) entitlement=\(entitlement.exists ? entitlement.frame : .zero) type=\(field.elementType.rawValue) cell=\(cell.frame)")
+                probeLog("PROBE \(parts[1]) \(size) field=\(field.frame) heading=\(heading.frame) hittable=\(field.isHittable)")
+                var found: [String] = []
+                try? app.performAccessibilityAudit(for: .hitRegion) { issue in
+                    found.append("\(issue.element?.identifier ?? "nil") \(issue.element?.frame ?? .zero)")
+                    return true
+                }
+                probeLog("PROBE-AUDIT \(parts[1]) \(size) [\(found.joined(separator: " | "))]")
+                retainScreenshot(name: "probe-\(parts[1])-\(size)")
+                if ProcessInfo.processInfo.environment["PROBE_TAP", default: ""].isEmpty == false {
+                    let top = field.frame.minY
+                    field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0)).withOffset(CGVector(dx: 0, dy: 1)).tap()
+                    Thread.sleep(forTimeInterval: 1)
+                    probeLog("PROBE-TAP-TOP \(parts[1]) \(size) at=\(top + 1) focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false)")
+                    bar.buttons.element(boundBy: 0).tap()
+                    XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+                    let again = app.buttons["camera-\(parts[0])"]
+                    again.tap()
+                    XCTAssertTrue(again.waitForNonExistence(timeout: 5))
+                    scrollUp(app, until: field)
+                    Thread.sleep(forTimeInterval: 1)
+                    let bottom = field.frame.maxY
+                    field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1)).withOffset(CGVector(dx: 0, dy: -1)).tap()
+                    Thread.sleep(forTimeInterval: 1)
+                    probeLog("PROBE-TAP-BOTTOM \(parts[1]) \(size) at=\(bottom - 1) focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false)")
+                }
+                bar.buttons.element(boundBy: 0).tap()
+                XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+            }
+            app.terminate()
+        }
+    }
+
+    func testTemporaryEditingProbe() throws {
+        let size = ProcessInfo.processInfo.environment["PROBE_SIZES"].flatMap { $0.isEmpty ? nil : $0 } ?? "XS"
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(size)",
+                                "-ProbeTitleVariant", ProcessInfo.processInfo.environment["PROBE_VARIANT", default: ""]]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let camera = app.buttons["camera-disposable1990s"]
+        camera.tap()
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+        let field = app.descendants(matching: .any).matching(identifier: "film-title").firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        probeLog("PROBE-EDIT type=\(field.elementType.rawValue) label=\(field.label) value=\(field.value ?? "nil") placeholder=\(field.placeholderValue ?? "nil")")
+        // Tap the heading: does it focus the field?
+        app.staticTexts["film-title-heading"].tap()
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT heading-tap focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false) keyboard=\(app.keyboards.count)")
+        // Tap 3 pt below the field's frame (inside the row inset).
+        let below = field.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1)).withOffset(CGVector(dx: 0, dy: 3))
+        below.tap()
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT below-tap focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false) keyboard=\(app.keyboards.count)")
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.5)).tap()
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT field-tap focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false) keyboard=\(app.keyboards.count) return=\(app.keyboards.buttons.allElementsBoundByIndex.map(\.label).filter { ["return", "Return", "Done", "done", "Go", "Next"].contains($0) })")
+        retainScreenshot(name: "probe-edit-focused")
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 40))
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT empty value=\(field.value ?? "nil") placeholder=\(field.placeholderValue ?? "nil") frame=\(field.frame)")
+        retainScreenshot(name: "probe-edit-empty")
+        field.typeText("Ab\ncd")
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT after-return value=\((field.value as? String).map { $0.debugDescription } ?? "nil") focused=\((field.value(forKey: "hasKeyboardFocus") as? Bool) ?? false) frame=\(field.frame)")
+        retainScreenshot(name: "probe-edit-return")
+        field.typeText(" a much longer Film title that wraps onto a second line and maybe a third one too")
+        Thread.sleep(forTimeInterval: 1)
+        probeLog("PROBE-EDIT long frame=\(field.frame)")
+        retainScreenshot(name: "probe-edit-long")
+    }
+
+    private func probeLog(_ line: String) {
+        let a = XCTAttachment(string: line)
+        a.name = "probeline"
+        a.lifetime = .keepAlways
+        add(a)
+    }
