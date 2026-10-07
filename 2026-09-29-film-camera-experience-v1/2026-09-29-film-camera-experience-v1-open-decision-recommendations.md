@@ -124,7 +124,7 @@ Where a recommendation above disagrees with PRD 2.0, PRD 2.0 governs, and the ce
 
 ### Captain decisions of 2026-10-06
 
-- Color Films get no contrast control. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording ("appropriate contrast/contrast grades") is unchanged and is read this way (tracker DRK-02, DRK-03, DRK-10).
+- Color Films get no contrast control. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording ("appropriate contrast/contrast grades") is unchanged and is read this way (tracker DRK-02, DRK-03, DRK-10). **Superseded on 2026-10-07 for contrast: see the addendum below.**
 - A look is checked against its Format Reference through side-by-side review boards built from public or licensed reference imagery, and the captain approves each Camera (tracker QA-16).
 - The documents land first as one docs-only change, then PRD 2.0 is implemented in slices, and the manual iPhone test candidate is the build that includes PRD 2.0 (tracker, "PRD 2.0 implementation slices").
 - ADR 0015, cited by PRD 2.0 and CONTEXT.md, was supplied by the captain and is added as delivered.
@@ -149,7 +149,7 @@ The remaining values close through the QA-16 review boards, one Camera at a time
 
 | Area | Recommendation above | Now |
 | --- | --- | --- |
-| Contrast | Grades 0 to 5 in whole-grade steps | Grades 0 to 5 apply to black-and-white Films only. Color Films have no contrast control (captain, 2026-10-06). |
+| Contrast | Grades 0 to 5 in whole-grade steps | Grades 0 to 5 apply to every Photo Film, color and black-and-white, Instant prints included (captain, 2026-10-07, reversing the 2026-10-06 decision that color Films have no contrast control; PRD 2.1 FR-07). |
 | Crop | Per-photo only; preserve aspect for 6x6 | No crop for an Instant print (PRD 2.0). The 6x6 rule stands. |
 | Chemical toning | Only for an explicitly approved silver-gelatin print process, after reviewing comparison prints | The applicable stock is decided: black-and-white 6×6 Medium Format Films. The amount range and the comparison-print review are still open. |
 
@@ -161,3 +161,11 @@ Exposure, color filtration, Dodge/Burn, Reset, Instant source export timing and 
 - DEC-12: the 167-second 16mm Movie, with grain, halation, jitter and weave, is heavier than the provisional preset the Movie assembly and Development budgets assumed, so the early check ARC-08 should time the 16mm at its new capacity.
 - DEC-01: the renamed Cameras and the rule that Format Reference names never reach the product are inputs to the final copy.
 - DEC-13 and DEC-14: unchanged.
+
+### Captain decision of 2026-10-07: contrast on every Photo Film
+
+The captain said: "please update the prd so that the contrast can be adjusted in the darkroom as well."
+Asked which contrast control color Films, including Instant prints, should get, the captain chose "Grades on every Film".
+Contrast grades 0 to 5 apply to every Photo Film, color and black-and-white, and this replaces the contrast half of the 2026-10-06 bullet above.
+Chemical toning stays black-and-white only, and color filtration or balance stays for color work.
+PRD 2.1 FR-07 carries the decision (tracker DRK-02, DRK-03, DRK-10, DEC-11).

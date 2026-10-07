@@ -24,7 +24,7 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 Gap: this table is the build, not PRD version 2.0.
 PRD 2.0 renames the 6x6 and 16mm Cameras without a decade, sets the 16mm Cinema to 2:47, adds a color or black-and-white Film Stock choice on those two Cameras, and changes every Camera's look.
 It also changes capture behavior: the Disposable's borderless 3:2 frame and fixed exposure, the Super 8's fixed focus and the 6x6's reversed rear viewfinder.
-In the Darkroom, Instant prints lose crop, and under the captain's 2026-10-06 decision color Films lose contrast, leaving contrast grades and toning to black-and-white Films.
+In the Darkroom, Instant prints lose crop and chemical toning is limited to black-and-white Films; under the captain's 2026-10-07 decision (PRD 2.1) contrast grades stay on every Photo Film, color included.
 None of that is built yet; the tracker's "PRD 2.0 implementation slices" give the order.
 Flash, manual focus and exposure appear only when the lens supports them.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
@@ -203,7 +203,7 @@ The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/ma
 - DEC-03: sign-off of the native stack (minimum iOS 26, iPhone only and no backend are settled).
 - DEC-04: exact tone, contrast and grain values for each Camera and Film Stock, toning values, and export codecs, resolution and audio (partly decided: PRD 2.0 sets each Camera's Format Reference, picture shape, look, imperfections and frame rates).
 - DEC-05: production sample media and licensed soundtracks.
-- DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection (partly decided: no crop on Instant prints and no contrast control on color Films).
+- DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection (partly decided: no crop on Instant prints, contrast grades on every Photo Film, toning on black-and-white Films only).
 - DEC-12: storage, device, accessibility and reliability budgets.
 - DEC-13: support, privacy disclosures and launch review.
 - DEC-14: numeric learning targets (no analytics is settled).
@@ -212,7 +212,7 @@ DEC-09 and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD sect
 
 ## Further reading
 
-- [PRD, version 2.0](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
+- [PRD, version 2.1](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
 - [Domain glossary](2026-09-29-film-camera-experience-v1/sources/CONTEXT.md)
 - [Architecture baseline](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md)
 - [ADR collection](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md) and [individual ADRs](2026-09-29-film-camera-experience-v1/adr)

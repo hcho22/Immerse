@@ -1,12 +1,12 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 2.0 (updated October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
+**Prepared:** September 29, 2026 · **Version:** 2.1 (updated October 7, 2026; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 
 ## Start here
 
-1. Read the [detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) for the product scope, users, user stories, user journeys, Camera catalog, rules, acceptance criteria, state model, proposed engineering modules, and unresolved decisions. Group and Account requirements are preserved in its "Deferred to v2" section 8. Version 1.5 stays unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md) as history; PRD 2.0 supersedes it. "Version 2.0" is the version of this document set, and "v2" still means the later release with Groups and Accounts.
+1. Read the [detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) for the product scope, users, user stories, user journeys, Camera catalog, rules, acceptance criteria, state model, proposed engineering modules, and unresolved decisions. Group and Account requirements are preserved in its "Deferred to v2" section 8. Version 1.5 stays unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md) as history; PRD 2.0 supersedes it. "Version 2.1" is the version of this document set, and "v2" still means the later release with Groups and Accounts.
 2. Use the [task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) to record implementation progress. Task IDs map to the PRD; completed discovery is separated from unfinished native work, and Group-only and Account-only tasks are listed under Deferred to v2.
 3. Read the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md) for all eleven original decisions, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0) and reconciliation notes, including which ADRs now apply only to v2. Individual ADRs are also included in `adr/`.
 4. Read the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) for the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
@@ -20,8 +20,9 @@ The filenames begin with `2026-09-29` so this package can be sorted and retained
 Version 2.0 (October 6, 2026) lands PRD version 2.0, ADRs 0013 to 0015 and the refreshed domain-model snapshot.
 It records the captain's decisions of 2026-10-05 and 2026-10-06 about how each Camera looks and behaves: results show each format as freshly processed, not aged (ADR 0013); the 6×6 Medium Format and the 16mm Cinema each offer a color or black-and-white Film Stock at Load Film (ADR 0014); and each Camera is judged against one internal, named Format Reference (ADR 0015).
 It also renames those two Cameras without a decade, sets the 16mm Cinema to 2:47, and gives every Camera a written look.
-The captain's answers of 2026-10-06 are recorded in the tracker: color Films get no contrast control, looks are checked through side-by-side review boards with the captain approving each Camera, and PRD 2.0 is implemented in slices after the documents land.
-PRD 2.0 and ADRs 0013 to 0015 are the captain's text and are copied unchanged; PRD version 1.5 and ADRs 0001 to 0012 stay byte for byte as they were.
+The captain's answers of 2026-10-06 are recorded in the tracker: looks are checked through side-by-side review boards with the captain approving each Camera, and PRD 2.0 is implemented in slices after the documents land.
+On 2026-10-07 the captain decided that Darkroom contrast grades apply to every Photo Film, color included (this reversed his 2026-10-06 answer that color Films get no contrast control), with chemical toning staying black-and-white only; the PRD was amended to version 2.1 in its same file.
+PRD 2.0 (apart from the 2026-10-07 contrast amendment above) and ADRs 0013 to 0015 are the captain's text and are copied unchanged; PRD version 1.5 and ADRs 0001 to 0012 stay byte for byte as they were.
 The tracker gained fourteen tasks and the evidence map and acceptance companion gained matching rows, all untested, because no app code changed.
 PRD 2.0's document guide says ADRs 0013 to 0015 are "not yet in this collection"; they are now.
 No FR, DEC or section number and no existing task ID changed.

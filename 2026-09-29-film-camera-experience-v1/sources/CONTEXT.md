@@ -34,6 +34,10 @@
 > On 2026-10-06 the 6×6 Medium Format gained the Film Stock choice, with Kodak Tri-X 400 as its black-and-white Format Reference film, and the 1990s Disposable's Format Reference was given 800-speed color film.
 > Relationships rules record that a 16mm Cinema Recorded Clip has no per-clip limit that the 6×6 Medium Format's Viewfinder shows the scene reversed left to right, and that each Instant print carries a slight variation in color and density.
 > PRD version 2.0 (2026-10-06), a separate file from version 1.5, carries these decisions, and the Viewfinder rule's list of effects it must not preview was reworded to name effects that v1 Cameras have.
+>
+> **2026-10-07 note (PRD version 2.1).**
+> The Darkroom rule on contrast changed: every Photo Film, color or black-and-white, may use contrast grades, while chemical toning stays black-and-white only.
+> This reverses the contrast half of the 2026-10-06 decision.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -681,8 +685,9 @@ _Avoid_: Draft, incomplete album
 - The **Darkroom** exposes only controls corresponding to techniques physically possible in analog darkroom printing or processing.
 - Digital-only content manipulation is outside the **Darkroom** boundary.
 - The **Darkroom** does not offer a saturation control.
-- Color Films may use physical-printing equivalents such as color filtration or color balance; black-and-white Films may use contrast grades or chemical toning.
-- In v1 the only black-and-white Photo Films are 6×6 Medium Format Films loaded with the black-and-white **Film Stock**.
+- Color Films may use physical-printing equivalents such as color filtration or color balance, and every Photo Film, color or black-and-white, may use contrast grades; only black-and-white Films may use chemical toning.
+- Contrast grades adjust a print's contrast in the **Darkroom**; each Camera's own developed contrast is set by its **Developed Treatment**, which the user cannot change.
+- In v1 the only black-and-white Photo Films, and so the only Films that may use chemical toning, are 6×6 Medium Format Films loaded with the black-and-white **Film Stock**.
 - The **Darkroom** includes reversible **Dodge/Burn** adjustments.
 - A user may keep multiple **Unfinished Films** and resume any of them later.
 - Starting or resuming another **Film** does not reveal the captures in an **Unfinished Film**.

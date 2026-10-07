@@ -1,7 +1,7 @@
 # Film Camera Experience - V1 Architecture Baseline
 
 **Document date:** September 30, 2026 (version 1.1 note added October 6, 2026) · **Version:** 1.1 (1.0 was first issued with PRD version 1.3) · **Platform:** iOS 26, iPhone only\
-**Companion:** [Detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) · [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md)  
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) · [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md)  
 **Status:** Approved architecture baseline; native implementation not yet built.
 
 ## 1. Status and authority
