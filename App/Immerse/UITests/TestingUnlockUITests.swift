@@ -42,9 +42,7 @@ final class TestingUnlockUITests: XCTestCase {
     /// Relaunches, so the result shows what the persisted switch gives a home-screen launch.
     private func assertLoadAndPlans(_ app: XCUIApplication, unlocked: Bool) {
         app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        app.buttons["start-film"].tap()
-        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        openCameraCatalog(app)
         app.buttons["camera-disposable1990s"].tap()
         let load = app.buttons["load-film"]
         for _ in 0..<8 where !(load.exists && load.isHittable) { app.swipeUp() }

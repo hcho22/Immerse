@@ -32,4 +32,22 @@ extension XCTestCase {
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
     }
+
+    /// Taps Start a Film and waits for the Camera catalog sheet. One CI run (main, run 37627486582) delivered the tap at the
+    /// button's centre, (201, 822), exactly where every passing launch did, and the Journal stayed on screen for the next
+    /// six seconds with no sheet; no repeat could reproduce it (Evidence/NativeApp/ci-flakes-057.md). The tap therefore
+    /// gets one more try, but only after the first one demonstrably did nothing, and the miss is kept as a screenshot.
+    func openCameraCatalog(_ app: XCUIApplication) {
+        let start = app.buttons["start-film"]
+        let catalog = app.navigationBars["Choose a Camera"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+        if catalog.waitForExistence(timeout: 5) { return }
+        let miss = XCTAttachment(screenshot: app.screenshot())
+        miss.name = "Start-a-Film-tap-did-not-open-the-catalog"
+        miss.lifetime = .keepAlways
+        add(miss)
+        start.tap()
+        XCTAssertTrue(catalog.waitForExistence(timeout: 5), "The Camera catalog did not open after two taps on Start a Film")
+    }
 }
