@@ -16,7 +16,12 @@
 > It covers onboarding, the Film Journal, choosing and previewing a Camera, Load Film, capture, Movie recording, completion and early Development, Development, reveal, the Darkroom, Save to Photos, settings, and error and empty states.
 > The captain approved its iOS design on 2026-09-30.
 > It is kept outside this repository as a design reference only: it is not a requirement, a decision or evidence of native behavior, and its code and review controls must not be promoted into the product.
-> The questions it raised that are still pending are listed in [PRD section 18](../2026-09-29-film-camera-experience-v1-prd.md#18-current-evidence-and-definition-of-done).
+> The questions it raised that are still pending are listed in [PRD section 18](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#18-current-evidence-and-definition-of-done).
+>
+> **Version 2.0 note (2026-10-06, PRD version 2.0).**
+> Both prototypes were built before PRD version 2.0.
+> Neither has a Film Stock choice at Load Film for the 6×6 Medium Format or the 16mm Cinema, the Instant print's white card, the reversed 6×6 viewfinder, the Disposable's low-light cue, or the renamed Cameras, so their screens are not a design for those parts.
+> The Film Stock control is therefore a flow choice that the approved prototype does not settle.
 
 Question: which of three structurally different iPhone-style layouts makes loading, intentional capture, delayed reveal, and shared Host Release feel clearest?
 

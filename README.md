@@ -21,6 +21,9 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld look, grain and flicker |
 | 1960s 16mm Cinema | Movie | 2:45 (165 seconds) | One silent Movie after Development | Finer grain |
 
+Gap: this table is the build, not PRD version 2.0.
+PRD 2.0 renames the 6x6 and 16mm Cameras without a decade, sets the 16mm Cinema to 2:47, adds a color or black-and-white Film Stock choice on those two Cameras, and changes every Camera's look.
+None of that is built yet; the tracker's "PRD 2.0 implementation slices" give the order.
 Flash, manual focus and exposure appear only when the lens supports them.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
 Movie capture uses a 4:3 native format that is provisional pending DEC-04.
@@ -207,7 +210,8 @@ DEC-09 and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD sect
 
 ## Further reading
 
-- [PRD](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md)
+- [PRD, version 2.0](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
+- [Domain glossary](2026-09-29-film-camera-experience-v1/sources/CONTEXT.md)
 - [Architecture baseline](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md)
 - [ADR collection](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md) and [individual ADRs](2026-09-29-film-camera-experience-v1/adr)
 - [Task tracker](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-task-tracker.md)

@@ -1,7 +1,7 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** September 30, 2026 (original baseline September 29, 2026) · **Version:** 1.5 · **Platform:** iOS 26, iPhone only\
-**Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md)  
+**Date:** October 6, 2026 (original baseline September 29, 2026; versions 1.1 to 1.5 were September 30, 2026) · **Version:** 2.0 · **Platform:** iOS 26, iPhone only\
+**Companion:** [Detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md))  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
 
@@ -11,7 +11,7 @@ This is the canonical checkbox list for the dated PRD. Every functional area has
 
 Suggested annotation: `Owner: … | Status: in progress / blocked / done | Evidence: … | Completed: YYYY-MM-DD`. State any unresolved prerequisite rather than checking a task off because a mockup demonstrates it. `DEC` items resolve open choices; `ARC` items design implementation; other groups implement or verify the recorded product behavior. All are needed for the corresponding scoped function unless the product owner explicitly revises scope.
 
-**Task counts (version 1.5).** The tracker contains 238 items: five completed discovery/prototype items, four DEC items decided (DEC-09 and DEC-15 to DEC-17 on 2026-09-30, checked), 121 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2, version 1.3 added five early-check tasks (ARC-08 to ARC-12), version 1.4 added none, and version 1.5 changed no IDs. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
+**Task counts (version 2.0).** The tracker contains 252 items: five completed discovery/prototype items, four DEC items decided (DEC-09 and DEC-15 to DEC-17 on 2026-09-30, checked), 135 unchecked v1 tasks (implementation, decision, architecture, and verification), and 108 unchecked tasks deferred to v2 with Groups and Accounts. Every ID from version 1.1 is unchanged (227); version 1.2 added six (DEC-15, DEC-16, DEC-17, STO-11, TRI-11, QA-15) and moved 14 Account-only tasks to v2, version 1.3 added five early-check tasks (ARC-08 to ARC-12), version 1.4 added none, version 1.5 changed no IDs, and version 2.0 added fourteen (CAM-13 to CAM-17, SET-09, CAP-11 to CAP-14, DEV-11, DRK-09, DRK-10, QA-16) and rewrote the text of twelve existing tasks without changing an ID, with the earlier wording preserved in the table at the end of the Deferred to v2 section. Deferred tasks are not part of v1 acceptance and their checkboxes must not be read as v1 progress. Where a v1 task originally mixed personal and Group work, or needed an Account or server, it keeps its ID with that clause removed or rewritten; the removed wording is preserved in the tables at the end of the Deferred to v2 section.
 
 Each task inherits the acceptance criteria and privacy/reveal constraints of its referenced PRD section. For example, completing a Photos export task requires permission and failure behavior, not just a visible button. The final QA section supplies cross-feature verification, not a replacement for task-level checks.
 
@@ -30,10 +30,10 @@ Dependency: resolve relevant choices before the affected implementation is accep
 - [ ] DEC-01 — Select final brand/product name and final user-facing terminology/copy.
 - [ ] DEC-02 — Set monthly/yearly pricing and specify purchase restoration, offers, refunds/revocations, and entitlement edge handling without changing existing-Film access promises. Timing (captain decision 2026-09-30): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2; nothing in M0-M1 depends on the price.
 - [ ] DEC-03 — Choose the native application stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 has no backend or authentication provider.
-- [ ] DEC-04 — Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls.
+- [ ] DEC-04 - Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls. Partly decided 2026-10-05 and 2026-10-06 (captain, PRD version 2.0): each Camera's Format Reference, picture shape, look, imperfections and frame rate (Super 8 18 fps, 16mm 24 fps) are set in PRD section 6. Still open: exact tone, contrast and grain values for each Camera and Film Stock, the Instant's contrast and print-to-print variation (they wait on a study of preserved 1970s prints), toning control values, and export codecs/resolution/audio guarantees. Captain decision 2026-10-06: each look is checked against its Format Reference through side-by-side review boards built from public or licensed reference imagery, and the captain approves each Camera (QA-16).
 - [ ] DEC-05 — Select and clear production sample media and export-licensed built-in instrumental soundtracks.
 - [x] DEC-09 — Define empty-Film early Development and presentation when every Movie clip is removed. Decided 2026-09-30: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export. Status: done | Evidence: captain decision relayed in Firstmate v1 implementation brief; PRD section 15 | Completed: 2026-09-30
-- [ ] DEC-11 — Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior.
+- [ ] DEC-11 - Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior. Partly decided (PRD version 2.0 and the captain, 2026-10-06): Instant prints have no crop; color Films get no contrast control; contrast grades and chemical toning apply only to black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (the captain's answer to how PRD FR-07's "appropriate contrast/contrast grades" applies; the PRD's own text is unchanged). Still open: control ranges, Instant original-export timing, soundtrack reselection.
 - [ ] DEC-12 — Define low-storage behavior, supported-device/accessibility matrix, media durability, and measurable performance/reliability budgets.
 - [ ] DEC-13 — Define support escalation, privacy disclosures, and platform/launch review requirements.
 - [ ] DEC-14 — Approve numeric learning targets for the TestFlight and interview plan (PRD section 2.2). Settled 2026-09-30: no analytics SDK or service in v1; no implicit media telemetry.
@@ -77,12 +77,18 @@ Dependency: DEC-04–DEC-05, ARC-02–ARC-03. PRD FR-01.
 - [ ] CAM-01 — Model immutable complete Camera packages: medium, framing, behavior, capacity, audio, treatment, and Reveal Rule.
 - [ ] CAM-02 — Implement 1990s Disposable: 27 exposures, fixed focus, supported optional flash, roll Development.
 - [ ] CAM-03 — Implement 1970s Instant: 10 exposures, per-exposure Development, personal-only eligibility.
-- [ ] CAM-05 — Implement 1960s 6×6 Medium Format: 12 square exposures, waist-level presentation, deliberate focus/exposure.
-- [ ] CAM-06 — Implement 1960s Super 8 Home Movie: 200-second fixed capacity, pronounced grain/flicker, silent capture.
-- [ ] CAM-07 — Implement 1960s 16mm Cinema: 165-second fixed capacity, finer grain/cinematic character, silent capture.
-- [ ] CAM-10 — Create curated sample media and plain-language capacity/control/reveal/audio descriptions for every Camera.
-- [ ] CAM-11 — Use descriptive historical-format names; exclude digital formats, separate stock selection, and unapproved manufacturer branding.
-- [ ] CAM-12 — Validate format-distinct developed treatments and bounded authentic imperfections without synthetic catastrophic capture destruction.
+- [ ] CAM-05 - Implement the 6×6 Medium Format (no decade, PRD 2.0): 12 square exposures, waist-level presentation, deliberate focus/exposure, optical focus only.
+- [ ] CAM-06 - Implement 1960s Super 8 Home Movie: 200-second fixed capacity at 18 frames per second, fine grain, brightness flicker, an unsteady frame and dust and hair in the gate, silent capture.
+- [ ] CAM-07 - Implement the 16mm Cinema (no decade, PRD 2.0): 167-second (2:47) fixed capacity at 24 frames per second, visible grain, highlight halation, minor jitter and weave, no per-clip limit, silent capture.
+- [ ] CAM-10 - Create curated sample media and plain-language capacity/control/reveal/audio descriptions for every Camera and, on the 6×6 Medium Format and the 16mm Cinema, for each Film Stock.
+- [ ] CAM-11 - Use descriptive historical-format names; exclude digital formats, any stock selection other than the Film Stock choice at Load Film on the 6×6 Medium Format and the 16mm Cinema (ADR 0014), and unapproved manufacturer branding; Format Reference names never reach the product (ADR 0015).
+- [ ] CAM-12 - Validate format-distinct developed treatments, judged against each Camera's Format Reference with no aging added (ADRs 0013 and 0015), and bounded authentic imperfections without synthetic catastrophic capture destruction.
+
+- [ ] CAM-13 - (PRD 2.0 slice 1) Rename the 6×6 Medium Format and the 16mm Cinema without a decade in the catalog, Load Film, capture and Film detail, and set the 16mm Cinema capacity to 2:47 (167 seconds); Films already loaded keep the package they locked.
+- [ ] CAM-14 - (PRD 2.0 slice 1) Make the white card part of every developed Instant print: the developed master, the Journal and Darkroom views and Save Developed to Photos.
+- [ ] CAM-15 - (PRD 2.0 slice 1) Update catalog, Load Film and Camera sample copy for the new per-Camera looks and controls, including the explanation that the 6×6 Medium Format's viewfinder shows the scene reversed left to right.
+- [ ] CAM-16 - (PRD 2.0 slice 3) Model Film Stock in the domain and persistence: record it on the Film at Load Film where the Camera offers one, fix it for that Film, keep earlier Films readable as having no Film Stock, and give the 6×6 Medium Format and 16mm Cinema packages one treatment per Film Stock (ADR 0014).
+- [ ] CAM-17 - (PRD 2.0 slice 4) Implement the per-Camera developed looks and imperfections of PRD sections 6.1 to 6.3 as a new treatment version that leaves unfinished Films renderable, with fresh results (ADR 0013) and no manufacturer or film name in any product string (ADR 0015). Dependency: the open part of DEC-04 and QA-16.
 
 Retired v1 task IDs: CAM-04, CAM-08, and CAM-09. See the PRD's v1 scope and Camera catalog.
 
@@ -93,9 +99,10 @@ Dependency: UX, CAM, entitlement interfaces. PRD FR-03.
 - [ ] SET-01 — Start with Camera selection.
 - [ ] SET-03 — Permit curated Camera Preview before subscribing or starting the Trial with no live filter feed or user capture access.
 - [ ] SET-04 — Ensure browsing/canceling previews consumes no Trial and creates no active Film.
-- [ ] SET-05 — Add explicit Load Film confirmation showing Camera, capacity, and Reveal Rule.
-- [ ] SET-06 — Lock Camera package permanently at Load while preserving adjustable supported focus/flash/exposure controls.
+- [ ] SET-05 - Add explicit Load Film confirmation showing Camera, capacity, and Reveal Rule and, on the 6×6 Medium Format and the 16mm Cinema, the Film Stock.
+- [ ] SET-06 - Lock Camera package and, where the Camera offers one, Film Stock permanently at Load while preserving adjustable supported focus/flash/exposure controls.
 - [ ] SET-08 — Add Movie Orientation setup and lock at the agreed boundary.
+- [ ] SET-09 - (PRD 2.0 slice 3) Add the Film Stock choice, color or black-and-white, to Load Film for the 6×6 Medium Format and the 16mm Cinema, confirmed and fixed by Load Film; no choice on any other Camera.
 
 ## CAP — Native capture and viewfinder
 
@@ -103,7 +110,7 @@ Dependency: CAM, SET, ARC-03. PRD FR-04.
 
 - [ ] CAP-01 — Build native in-app Photo capture with durable-save confirmation and correct exposure accounting.
 - [ ] CAP-02 — Reject/import no existing media from Photos, Files, or other apps into a Film.
-- [ ] CAP-03 — Render Camera-authentic framing/capture cues without developed grain, color, leaks, scratches, or tape-damage preview.
+- [ ] CAP-03 - Render Camera-authentic framing/capture cues without previewing the developed result: grain, color variation, halation, flicker, frame unsteadiness, dust, or edge softening.
 - [ ] CAP-04 — Support front/rear lenses across personal Photo and Movie capture without replacing the selected Camera.
 - [ ] CAP-05 — Mirror front viewfinders but produce unmirrored saved/developed photo and movie results.
 - [ ] CAP-06 — Permit lens switching only between exposures/clips; block switches during capture/recording.
@@ -111,6 +118,10 @@ Dependency: CAM, SET, ARC-03. PRD FR-04.
 - [ ] CAP-08 — Support entitled personal offline capture with no server dependency; Trial start needs no connectivity (DEC-15).
 - [ ] CAP-09 — Handle camera permission, save failures, storage interruptions, and relaunch without false successful-save/capacity consumption.
 - [ ] CAP-10 — Keep saved sealed media private: no review, individual delete, thumbnails, or automatic Photos export before reveal.
+- [ ] CAP-11 - (PRD 2.0 slice 2) 1990s Disposable: a borderless 3:2 viewfinder and developed picture with no date stamp.
+- [ ] CAP-12 - (PRD 2.0 slice 2) 1990s Disposable: fixed exposure, so scene brightness and flash decide how an exposure develops, and a live low-light cue advising flash that never previews the developed result. Needs an early check that a fixed exposure is achievable on the supported iPhones.
+- [ ] CAP-13 - (PRD 2.0 slice 2) 1960s Super 8 Home Movie: a fixed-focus lens and automatic exposure.
+- [ ] CAP-14 - (PRD 2.0 slice 2) 6×6 Medium Format: a rear viewfinder that shows the scene reversed left to right, developed exposures that are not reversed, a front viewfinder that keeps its mirrored behavior, and optical-only focus with no synthesized background blur.
 
 ## MOV — Personal Movie mechanics
 
@@ -142,18 +153,21 @@ Dependency: CAP, MOV where relevant, durable storage. PRD FR-06.
 - [ ] DEV-07 — Resume interrupted Development after relaunch with saved captures and assigned treatment intact.
 - [ ] DEV-08 — Hide unfinished results and prevent recovery from restoring discarded/deleted content.
 - [ ] DEV-10 — Verify developed masters/clips before allowing source cleanup; implement the DEC-09 empty-Film policy.
+- [ ] DEV-11 - (PRD 2.0 slice 3) Develop black-and-white Films: the 6×6 Medium Format black-and-white photo path, which enables the Darkroom's black-and-white controls, and the 16mm Cinema black-and-white Movie path, both fixed by the Film Stock chosen at Load Film.
 
 ## DRK — Analog photo Darkroom
 
 Dependency: DEV, DEC-04/DEC-11. PRD FR-07.
 
 - [ ] DRK-01 — Implement independent, reversible per-exposure recipes over preserved developed masters.
-- [ ] DRK-02 — Implement print exposure and medium-appropriate contrast/contrast-grade controls.
-- [ ] DRK-03 — Implement eligible color filtration/balance and medium-appropriate chemical toning without saturation.
-- [ ] DRK-04 — Implement agreed analog-print crop behavior without changing the underlying Camera package.
+- [ ] DRK-02 - Implement print exposure and, for black-and-white Films only, contrast grades; color Films have no contrast control (captain decision 2026-10-06).
+- [ ] DRK-03 - Implement eligible color filtration/balance and, for black-and-white Films only, chemical toning, without saturation.
+- [ ] DRK-04 - Implement agreed analog-print crop behavior without changing the underlying Camera package; Instant prints have no crop.
 - [ ] DRK-05 — Implement reversible local Dodge/Burn masks within analog exposure-adjustment limits.
 - [ ] DRK-06 — Add Reset to Original and verify exact recovery of the original developed appearance.
 - [ ] DRK-08 — Exclude Movie Darkroom, treatment swaps, AI/content manipulation, and saturation controls.
+- [ ] DRK-09 - (PRD 2.0 slice 1) Offer no crop control for an Instant print and reject an Instant recipe that carries a crop, keeping the square picture and its white card whole.
+- [ ] DRK-10 - (PRD 2.0 slice 1) Remove the contrast control from color Films and offer contrast grades and chemical toning only on black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (captain decision 2026-10-06).
 
 ## STO — Personal persistence and Photos integration
 
@@ -237,6 +251,34 @@ Dependency: relevant implemented slices; test continuously rather than waiting u
 - [ ] QA-13 — Verify supported devices (iPhone, iOS 26), accessibility, front mirroring/output orientation, mic/camera/Photos denial, low storage, relaunch, export fidelity, and agreed performance budgets.
 - [ ] QA-14 — Complete production asset/licensing, disclosures/support, platform review, unresolved-decision review, and evidence-backed release sign-off; do not use prototype checks as native completion evidence.
 - [ ] QA-15 — Verify iOS device backup and restore: Films, sealed and developed states and Darkroom edits return on a replacement iPhone while the Trial record does not; restoring an older backup can bring back both media discarded after that backup and an entire Film deleted after it; and the privacy copy and Delete Film confirmation disclose both DEC-17 outcomes.
+- [ ] QA-16 - (PRD 2.0 slice 4) Build side-by-side review boards of each Camera's developed output against its Format Reference, using public or licensed reference imagery and covering both Film Stocks where offered; the captain approves each Camera (captain decision 2026-10-06). Boards are specification review, not hardware acceptance.
+
+## PRD 2.0 implementation slices
+
+Captain decision, 2026-10-06: the documents land first, as one docs-only change, and PRD version 2.0 is then implemented in the slices below, in this order.
+The manual iPhone test candidate is the build that includes PRD 2.0.
+Task IDs stay in their own groups above; this table gives the order only.
+
+| Slice | Work | Tasks |
+| --- | --- | --- |
+| 1 | Names and capacity, the Instant card and no crop, contrast removal on color Films, catalog copy | CAM-13, CAM-14, DRK-09, DRK-10, CAM-15 |
+| 2 | Capture behavior: Disposable 3:2, fixed exposure and low-light cue, Super 8 fixed focus, 6×6 reversed viewfinder | CAP-11, CAP-12, CAP-13, CAP-14 |
+| 3 | Film Stock end to end: model, Load Film choice, black-and-white development | CAM-16, SET-09, DEV-11 |
+| 4 | Per-Camera looks against their Format References, as the open DEC-04 values close | CAM-17, QA-16 |
+
+## Captain decisions recorded in version 2.0
+
+These record what the captain said on 2026-10-06 after reading the comparison of PRD version 2.0 with the repository, and the ADR 0015 file he supplied the same day.
+The PRD and ADR text is the captain's and is not edited here; where a decision changes how a PRD sentence applies, the decision is recorded in this tracker instead.
+
+| Question | Captain's decision (2026-10-06) | Recorded in |
+| --- | --- | --- |
+| ADR 0015 was cited by PRD 2.0 and CONTEXT.md but not delivered | Supplied by the captain; it is added to `adr/` and the ADR collection as delivered. | ADR collection, README |
+| Contrast control on color Films (PRD FR-07 says contrast grades and chemical toning apply to black-and-white Films; the app offered grades on every Photo Film) | Color Films get no contrast control at all. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording is unchanged. | DEC-11, DRK-02, DRK-03, DRK-10 |
+| How a look is checked against its Format Reference | Side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera. | DEC-04, QA-16 |
+| Sequencing | Land the documents first as one docs-only change; then implement in the slices above; the manual iPhone test candidate is the build that includes PRD 2.0. | The slices above, Milestone tracking |
+
+The captain's words were "go with your recommendations on all four, adr 15 downloaded".
 
 ## Deferred to v2 — Group and Account tasks
 
@@ -531,6 +573,29 @@ Each row shows the version 1.1 text of a task that keeps its ID in v1 with its t
 
 Group names and dependencies changed in v1.2: TRI was "Account-scoped one-Film trial" with dependency "IDN, ARC-05, CAP durability"; BIL had dependency "DEC-02, ARC-05"; IDN and IDD have no v1 tasks (IDN was "Authentication" with dependency "ARC-05", IDD was "Account deletion lifecycle" with dependency "IDN, BIL, TRI; relevant DEC-07 decision"). New IDs added in v1.2: DEC-15, DEC-16, DEC-17, STO-11, TRI-11 and QA-15.
 
+### Camera look, Film Stock and Darkroom clauses changed in v1 tasks (version 2.0)
+
+Each row shows the version 1.5 text of a v1 task that keeps its ID with its text rewritten for PRD version 2.0 and the captain's 2026-10-06 decisions. These rows are history; the tasks above are current.
+
+| Task | Version 1.5 text (verbatim) |
+| --- | --- |
+| CAM-05 | Implement 1960s 6×6 Medium Format: 12 square exposures, waist-level presentation, deliberate focus/exposure. |
+| CAM-06 | Implement 1960s Super 8 Home Movie: 200-second fixed capacity, pronounced grain/flicker, silent capture. |
+| CAM-07 | Implement 1960s 16mm Cinema: 165-second fixed capacity, finer grain/cinematic character, silent capture. |
+| CAM-10 | Create curated sample media and plain-language capacity/control/reveal/audio descriptions for every Camera. |
+| CAM-11 | Use descriptive historical-format names; exclude digital formats, separate stock selection, and unapproved manufacturer branding. |
+| CAM-12 | Validate format-distinct developed treatments and bounded authentic imperfections without synthetic catastrophic capture destruction. |
+| SET-05 | Add explicit Load Film confirmation showing Camera, capacity, and Reveal Rule. |
+| SET-06 | Lock Camera package permanently at Load while preserving adjustable supported focus/flash/exposure controls. |
+| CAP-03 | Render Camera-authentic framing/capture cues without developed grain, color, leaks, scratches, or tape-damage preview. |
+| DRK-02 | Implement print exposure and medium-appropriate contrast/contrast-grade controls. |
+| DRK-03 | Implement eligible color filtration/balance and medium-appropriate chemical toning without saturation. |
+| DRK-04 | Implement agreed analog-print crop behavior without changing the underlying Camera package. |
+| DEC-04 | Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls. |
+| DEC-11 | Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior. |
+
+The two DEC rows are unchanged in their first sentence; version 2.0 appended the decided parts, so their earlier text is the sentence shown.
+
 ## Milestone tracking
 
 Milestones are dependency groupings, not additional task counts or committed launch dates.
@@ -543,6 +608,8 @@ Milestones are dependency groupings, not additional task counts or committed lau
 | M3 — Shared photos (deferred to v2) | Group-only tasks under Deferred to v2: IDN-02, IDN-03, IDN-05, GRP, POL, SYN, CLS, REL, EXP | Concurrent real devices; sealed capture through Host Release |
 | M4 — Personal privacy lifecycle | PRV (v1 tasks); GMV, MEM, the Group tasks of PRV, and all IDD tasks are deferred to v2 | Tested personal Discard/Movie reassembly |
 | M5 — Release readiness | QA, outstanding DEC (NTF and the Group and Account QA tasks deferred to v2) | Native, billing, privacy, media-quality evidence |
+
+The version 2.0 tasks follow the slice order in "PRD 2.0 implementation slices": slices 1 and 2 belong to M1 and M2 as the Cameras they touch do, and slices 3 and 4 to M2. The manual iPhone test candidate is the build that includes PRD 2.0.
 
 The early checks ARC-08 to ARC-12 belong to the milestones named in their task text (M1 and M2, with the backup drill repeated in M5) even though their IDs are in the ARC group.
 
@@ -558,3 +625,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | 2026-09-30 | Version 1.3: the captain approved the v1 architecture pack, revision 3. Added the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) document and five early-check tasks, ARC-08 to ARC-12; no existing ID, status or decision changed. |
 | 2026-09-30 | Version 1.4: added the PRD's Users (1.1) and User journeys (5.1) sections and recorded the approved v1 clickable prototype in PRD section 18, as a design reference only with its questions pending. No task ID, task count, status or decision changed. |
 | 2026-09-30 | Version 1.5: recorded the captain's DEC-09 empty-Film decision and added the evidence map. No task ID changed. |
+| 2026-10-06 | Version 2.0: PRD version 2.0 (ADRs 0013 to 0015) landed beside PRD 1.5. Added fourteen tasks (CAM-13 to CAM-17, SET-09, CAP-11 to CAP-14, DEV-11, DRK-09, DRK-10, QA-16) in the order of the new implementation slices section, rewrote the text of twelve existing tasks with the version 1.5 wording preserved at the end of the Deferred to v2 section, and noted the decided parts of DEC-04 and DEC-11. Recorded the captain's four 2026-10-06 decisions. No ID was renumbered and no task status changed. |
