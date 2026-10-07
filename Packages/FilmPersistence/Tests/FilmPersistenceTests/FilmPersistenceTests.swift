@@ -53,7 +53,7 @@ final class FilmPersistenceTests: XCTestCase {
     func testFilmStateAndAssetsReloadFromDiskInNewRepositoryInstance() throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.mediumFormat6x6,
-            title: "6x6 - Roll #01"
+            title: "6×6 - Roll #01"
         )
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source-1".utf8))
 

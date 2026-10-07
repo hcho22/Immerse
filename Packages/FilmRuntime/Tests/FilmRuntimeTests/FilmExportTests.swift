@@ -1,7 +1,9 @@
+import CoreGraphics
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
 import Foundation
+import ImageIO
 import NativeAdapters
 import RenderCore
 import RenderFixtures
@@ -30,6 +32,35 @@ final class FilmExportTests: XCTestCase {
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
         XCTAssertFalse(try repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .source))
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .master))
+    }
+
+    func testDevelopedInstantExportAlwaysIncludesTheWhiteCard() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let (_, film, processor, _) = try await setup(root: root, count: 2)
+        // Print 1 is exported as developed; print 2 carries a Darkroom edit.
+        let edited = try await processor.saveRecipe(filmID: film.id, sequence: 2,
+            recipe: DarkroomRecipe(printExposureStops: -2, contrastGrade: 5))
+        let writer = RecordingWriter()
+        let coordinator = PhotoExportCoordinator(authorizer: Authorization(status: .authorized), writer: writer)
+        try await processor.export(filmID: film.id, sequences: [1, 2], originals: false, coordinator: coordinator)
+        let saved = await writer.saved
+        XCTAssertEqual(saved.count, 2)
+        XCTAssertEqual(saved[1], edited)
+        for data in saved {
+            let source = try XCTUnwrap(CGImageSourceCreateWithData(data as CFData, nil))
+            let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+            XCTAssertEqual(image.width, InstantPrintCard.width)
+            XCTAssertEqual(image.height, InstantPrintCard.height)
+            // The bottom border of the card is white even after a -2 stop exposure.
+            var pixel = [UInt8](repeating: 0, count: 4)
+            let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+            context.draw(image, in: CGRect(x: -image.width / 2, y: -InstantPrintCard.bottomBorder / 2, width: image.width, height: image.height))
+            XCTAssertGreaterThanOrEqual(Int(pixel[0]), 248)
+            XCTAssertGreaterThanOrEqual(Int(pixel[1]), 248)
+            XCTAssertGreaterThanOrEqual(Int(pixel[2]), 248)
+        }
     }
 
     func testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources() async throws {

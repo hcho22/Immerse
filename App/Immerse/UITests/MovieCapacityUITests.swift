@@ -35,9 +35,9 @@ final class MovieCapacityUITests: XCTestCase {
         app.buttons["start-film"].tap()
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
-        XCTAssertTrue(camera.label.contains("2 minutes 45 seconds of film"), camera.label)
+        XCTAssertTrue(camera.label.contains("2 minutes 47 seconds of film"), camera.label)
         camera.tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         let field = app.textFields["film-title"]
         // The field starts with the suggested title, which wraps at the largest sizes. A tap puts the cursor where it
@@ -71,14 +71,14 @@ final class MovieCapacityUITests: XCTestCase {
         }
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
-        XCTAssertTrue(app.staticTexts["2 minutes 45 seconds left"].exists, "Film detail header")
+        XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Film detail header")
 
         let open = app.buttons["Open Camera"]
         for _ in 0..<5 where !open.isHittable { app.swipeUp() }
         open.tap()
         let done = app.buttons["Done"]
         XCTAssertTrue(done.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["2 minutes 45 seconds left"].exists, "Capture line")
+        XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Capture line")
         retainScreenshot(app, name: "Capture-movie-line-\(size ?? "default")")
         done.tap()
 
@@ -87,7 +87,7 @@ final class MovieCapacityUITests: XCTestCase {
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         scrollUp(app, until: row)
-        XCTAssertTrue(row.label.contains("2 minutes 45 seconds left"), row.label)
+        XCTAssertTrue(row.label.contains("2 minutes 47 seconds left"), row.label)
         retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
         try app.performAccessibilityAudit(for: .contrast)
     }

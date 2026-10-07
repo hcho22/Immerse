@@ -170,9 +170,9 @@ final class JournalIntegrationTests: XCTestCase {
             XCTAssertEqual("\(film.remainingSpokenLabel.dropLast(" left".count)) of film", camera.capacitySpokenLabel)
         }
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
-        XCTAssertEqual(film.remainingLabel, "2:45 left")
-        XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 45 seconds left")
-        XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 45 seconds of film")
+        XCTAssertEqual(film.remainingLabel, "2:47 left")
+        XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 47 seconds left")
+        XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 47 seconds of film")
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacityLabel, "3:20 of film")
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacitySpokenLabel, "3 minutes 20 seconds of film")
     }
@@ -180,13 +180,13 @@ final class JournalIntegrationTests: XCTestCase {
     func testRecordingLineCountsDownFromTheRestingLineOnceASecond() throws {
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
         XCTAssertEqual(film.remainingLabel(recordedFor: 0), film.remainingLabel)
-        XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:45 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:44 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:44 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 45), "2:00 left")
-        XCTAssertEqual(film.remainingSpokenLabel(recordedFor: 45), "2 minutes left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 164.99), "0:01 left", "Any frame left is not 0:00")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 165), "0:00 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:47 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:46 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:46 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 47), "2:00 left")
+        XCTAssertEqual(film.remainingSpokenLabel(recordedFor: 47), "2 minutes left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 166.99), "0:01 left", "Any frame left is not 0:00")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 167), "0:00 left")
         XCTAssertEqual(film.remainingLabel(recordedFor: 170), "0:00 left")
         // A partial second left at rest holds until it has recorded, then the line drops a whole second.
         var reel = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
@@ -222,7 +222,7 @@ final class JournalIntegrationTests: XCTestCase {
         let cases: [(Int, String, String)] = [
             (0, "0:00", "0 seconds"), (1, "0:01", "1 second"), (9, "0:09", "9 seconds"), (59, "0:59", "59 seconds"),
             (60, "1:00", "1 minute"), (61, "1:01", "1 minute 1 second"), (120, "2:00", "2 minutes"),
-            (165, "2:45", "2 minutes 45 seconds"), (200, "3:20", "3 minutes 20 seconds"), (600, "10:00", "10 minutes"),
+            (165, "2:45", "2 minutes 45 seconds"), (167, "2:47", "2 minutes 47 seconds"), (200, "3:20", "3 minutes 20 seconds"), (600, "10:00", "10 minutes"),
         ]
         for (seconds, clock, spoken) in cases {
             XCTAssertEqual(MovieDurationText.clock(seconds), clock)

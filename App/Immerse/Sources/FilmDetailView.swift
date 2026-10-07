@@ -131,9 +131,9 @@ struct FilmDetailView: View {
                         if capture.revealState == .revealed {
                             Button { selectedPhoto = capture } label: {
                                 RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber)
-                                    .aspectRatio(1, contentMode: .fit)
+                                    .aspectRatio(film.camera.printAspectRatio, contentMode: .fit)
                             }.buttonStyle(.plain).accessibilityLabel("Open photo \(capture.sequenceNumber)")
-                        } else { placeholder(capture).aspectRatio(1, contentMode: .fit) }
+                        } else { placeholder(capture).aspectRatio(film.camera.printAspectRatio, contentMode: .fit) }
                         Text(String(format: "%02d", capture.sequenceNumber)).font(.caption.monospaced())
                     }
                 }

@@ -81,8 +81,10 @@ final class NativeRenderTests: XCTestCase {
         let source = root.appendingPathComponent("synthetic-developed-photo.jpg")
         let instant = try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.instant1970s, seed: 19)
         let square = try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.mediumFormat6x6, seed: 19)
-        XCTAssertEqual(try image(instant).width, 2048)
-        XCTAssertEqual(try image(instant).height, 2048)
+        // The 2048 x 2048 picture sits on its white card (InstantPrintCardTests checks the pixels).
+        XCTAssertEqual(try image(instant).width, InstantPrintCard.width)
+        XCTAssertEqual(try image(instant).height, InstantPrintCard.height)
+        XCTAssertEqual(InstantPrintCard.pictureSide, 2048)
         XCTAssertEqual(try image(square).width, 3072)
         XCTAssertEqual(try image(square).height, 3072)
         XCTAssertThrowsError(try NativePhotoRenderer.print(master: square,

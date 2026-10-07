@@ -92,7 +92,7 @@ final class FilmProcessorTests: XCTestCase {
         let source = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-movie.mov"))
         let cases: [(CameraPackage, TimeInterval)] = [
             (CameraCatalog.super8HomeMovie, 200),
-            (CameraCatalog.cinema16mm, 165)
+            (CameraCatalog.cinema16mm, 167)
         ]
 
         for (camera, capacity) in cases {

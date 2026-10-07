@@ -3,10 +3,33 @@ import ImageIO
 import RenderCore
 import SwiftUI
 
+/// Sets an Instant print's white card apart from a white screen: a hairline edge everywhere, and in the large views
+/// also a margin and a soft shadow, so the card reads as a print in light and dark appearance.
+private struct ControlsHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
+}
+
+private struct PrintCardEdge: ViewModifier {
+    let isInstant: Bool
+    var large = false
+
+    func body(content: Content) -> some View {
+        if isInstant {
+            let edged = content.overlay(Rectangle().strokeBorder(Color.primary.opacity(0.22), lineWidth: 0.5))
+            if large { edged.shadow(color: .primary.opacity(0.28), radius: 5, y: 1).padding(16) } else { edged }
+        } else {
+            content
+        }
+    }
+}
+
 struct RevealedPhoto: View {
     @Environment(JournalModel.self) private var model
     let filmID: UUID
     let sequence: Int
+    /// Whether to set an Instant print's card apart from the screen, for the large views rather than thumbnails.
+    var showsCardEdge = false
     @State private var image: UIImage?
     @State private var failed = false
 
@@ -15,6 +38,7 @@ struct RevealedPhoto: View {
             Rectangle().fill(Color(uiColor: .secondarySystemBackground))
             if !model.hiddenFilms.contains(filmID), let image {
                 Image(uiImage: image).resizable().scaledToFit()
+                    .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s, large: showsCardEdge))
             } else if failed { Image(systemName: "exclamationmark.triangle") }
             else { ProgressView() }
         }
@@ -59,7 +83,7 @@ struct PhotoView: View {
         NavigationStack {
             VStack {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
-                else { RevealedPhoto(filmID: filmID, sequence: sequence) }
+                else { RevealedPhoto(filmID: filmID, sequence: sequence, showsCardEdge: true) }
                 if let error { Text(error).foregroundStyle(.red).padding() }
             }
             .navigationTitle("Photo \(sequence)").navigationBarTitleDisplayMode(.inline)
@@ -104,6 +128,10 @@ struct DarkroomView: View {
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
     @State private var error: String?
+    /// The height of everything under the print, measured at the current text size.
+    @State private var controlsHeight: CGFloat = 260
+
+    private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
 
     enum PrintTool: String, CaseIterable, Identifiable {
         case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn", toning = "Chemical toning"
@@ -120,31 +148,32 @@ struct DarkroomView: View {
         }
     }
 
+    /// The smallest height the print preview is scaled down to before the screen scrolls.
+    private static let minimumPrintHeight: CGFloat = 160
+
+    /// The space under the controls that the floating Reset to Original button covers.
+    private static let bottomBarClearance: CGFloat = 48
+
+    /// The print takes the height the controls leave at their full size, and below the navigation bar: the sheet's
+    /// safe area starts under the bar, and the content scrolls only when even the smallest print does not fit.
+    private func printHeight(in available: CGFloat) -> CGFloat {
+        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 32 - Self.bottomBarClearance)
+    }
+
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 18) {
-                    if let image, !model.hiddenFilms.contains(filmID) {
-                        Image(uiImage: image).resizable().scaledToFit()
-                            .overlay { brushSurface }
-                            .accessibilityLabel("Photo \(sequence), print preview")
-                    } else { ProgressView().frame(height: 240) }
-                    HStack {
-                        ForEach(PrintTool.allCases.filter { choice in
-                            choice != .toning || process.supportsChemicalToning
-                        }.filter { choice in choice != .filtration || process == .color }) { choice in
-                            Button { tool = choice } label: {
-                                Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
-                                    .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
-                            }.accessibilityLabel(choice.rawValue).help(choice.rawValue)
-                                .accessibilityAddTraits(tool == choice ? .isSelected : [])
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack(spacing: 18) {
+                        printPreview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
+                        VStack(spacing: 18) { toolRow; Text(tool.rawValue).font(.headline); controls
+                            if rendering { ProgressView("Rendering print") }
+                            if let error { Text(error).foregroundStyle(.red) }
                         }
-                    }
-                    Text(tool.rawValue).font(.headline)
-                    controls
-                    if rendering { ProgressView("Rendering print") }
-                    if let error { Text(error).foregroundStyle(.red) }
-                }.padding()
+                        .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
+                    }.padding()
+                }
+                .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
             }
             .navigationTitle("Darkroom").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -173,6 +202,36 @@ struct DarkroomView: View {
             }
             .onDisappear { renderTask?.cancel(); image = nil }
         }
+    }
+
+    /// The print scaled to fit its region. An Instant card gets a margin for its shadow, inside the region.
+    @ViewBuilder private var printPreview: some View {
+        if let image, !model.hiddenFilms.contains(filmID) {
+            Image(uiImage: image).resizable().scaledToFit()
+                .overlay { brushSurface }
+                .modifier(PrintCardEdge(isInstant: isInstant))
+                .accessibilityLabel("Photo \(sequence), print preview")
+                .shadow(color: isInstant ? .primary.opacity(0.28) : .clear, radius: 5, y: 1)
+                .padding(isInstant ? 16 : 0)
+        } else { ProgressView() }
+    }
+
+    /// One tool per button across the width. The icons stop growing with the text size at the largest ordinary size,
+    /// so five of them always fit inside the side margins.
+    private var toolRow: some View {
+        HStack {
+            ForEach(PrintTool.allCases.filter { choice in
+                choice != .toning || process.supportsChemicalToning
+            }.filter { choice in choice != .filtration || process == .color }
+                // An Instant print keeps its square picture and white card whole, so it has no crop.
+                .filter { choice in choice != .crop || !isInstant }) { choice in
+                Button { tool = choice } label: {
+                    Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
+                        .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
+                }.accessibilityLabel(choice.rawValue).help(choice.rawValue)
+                    .accessibilityAddTraits(tool == choice ? .isSelected : [])
+            }
+        }.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
     }
 
     @ViewBuilder private var controls: some View {
@@ -266,18 +325,24 @@ struct DarkroomView: View {
         }
     }
 
+    /// Dodge/Burn strokes. On an Instant print they are fractions of the picture and the card takes none, so the
+    /// surface covers the picture only.
     @ViewBuilder private var brushSurface: some View {
         if tool == .brush && recipe.crop == nil {
             GeometryReader { geometry in
-                Color.clear.contentShape(Rectangle())
+                let fractions = isInstant ? InstantPrintCard.pictureFractions : CGRect(x: 0, y: 0, width: 1, height: 1)
+                let area = CGRect(x: fractions.minX * geometry.size.width, y: fractions.minY * geometry.size.height,
+                                  width: fractions.width * geometry.size.width, height: fractions.height * geometry.size.height)
+                Color.clear.frame(width: area.width, height: area.height).contentShape(Rectangle())
                     .gesture(DragGesture(minimumDistance: 0).onChanged { value in
-                        let point = MaskPoint(x: min(1, max(0, value.location.x / geometry.size.width)),
-                                              y: min(1, max(0, value.location.y / geometry.size.height)))
+                        let point = MaskPoint(x: min(1, max(0, value.location.x / area.width)),
+                                              y: min(1, max(0, value.location.y / area.height)))
                         if brushPoints.count < 500 { brushPoints.append(point) }
                     }.onEnded { _ in
                         recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind, points: brushPoints, exposureStops: 0.4))
                         brushPoints = []; render()
                     })
+                    .position(x: area.midX, y: area.midY)
             }
         }
     }

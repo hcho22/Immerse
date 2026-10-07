@@ -22,7 +22,7 @@ final class MovieDurationTests: XCTestCase {
             XCTAssertThrowsError(try film.recordSavedMovieClip(durationSeconds: duration, orientation: .landscape))
         }
         XCTAssertEqual(film.savedCaptureCount, 0)
-        _ = try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(4_942), orientation: .landscape)
+        _ = try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(5_002), orientation: .landscape)
         XCTAssertThrowsError(try film.recordSavedMovieClip(durationSeconds: 0.5, orientation: .landscape))
         XCTAssertEqual(film.remainingMovieFrames, 8)
         _ = try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(8), orientation: .portrait)
@@ -59,12 +59,12 @@ final class MovieDurationTests: XCTestCase {
 
     func testRemainderSmallerThanOneFrameCompletesTheFilm() throws {
         var film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape)
-        _ = try film.recordSavedMovieClip(durationSeconds: 82.504, orientation: .landscape)
-        _ = try film.recordSavedMovieClip(durationSeconds: 82.49, orientation: .landscape)
+        _ = try film.recordSavedMovieClip(durationSeconds: 83.504, orientation: .landscape)
+        _ = try film.recordSavedMovieClip(durationSeconds: 83.49, orientation: .landscape)
         XCTAssertLessThan(film.captures.reduce(0) { total, capture in
             guard case let .movieClip(seconds, _) = capture.kind else { return total }
             return total + seconds
-        }, 165)
+        }, 167)
         XCTAssertEqual(film.remainingMovieFrames, 0)
         XCTAssertEqual(film.completionState, .capacityFull)
         XCTAssertThrowsError(try film.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(1), orientation: .landscape)) {

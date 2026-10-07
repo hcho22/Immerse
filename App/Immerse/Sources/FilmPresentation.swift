@@ -3,6 +3,7 @@ import FilmDomain
 import FilmPersistence
 import FilmRuntime
 import NativeAdapters
+import RenderCore
 import SwiftUI
 
 extension CameraPackage {
@@ -10,10 +11,18 @@ extension CameraPackage {
         switch id {
         case .disposable1990s: "Disposable"
         case .instant1970s: "Instant"
-        case .mediumFormat6x6: "6x6"
+        case .mediumFormat6x6: "6×6"
         case .super8HomeMovie: "Super 8"
         case .cinema16mm: "16mm"
         }
+    }
+
+    /// What VoiceOver reads for `shortName`: "6×6" would be read as "6 times 6".
+    var spokenShortName: String { id == .mediumFormat6x6 ? "6 by 6" : shortName }
+
+    /// Width over height of this Camera's developed print: a square picture, or the Instant's taller card.
+    var printAspectRatio: CGFloat {
+        id == .instant1970s ? CGFloat(InstantPrintCard.width) / CGFloat(InstantPrintCard.height) : 1
     }
 
     var symbol: String { medium == .photo ? "camera" : "movieclapper" }
@@ -37,14 +46,33 @@ extension CameraPackage {
         case .movieDevelopment: "One silent Movie after Development"
         }
     }
+    /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Fixed focus, optional flash"
-        case .instant1970s: "Square prints"
+        case .disposable1990s: "Fixed focus, fixed exposure, optional flash"
+        case .instant1970s: "Square pictures on a white card"
         case .mediumFormat6x6: "Square framing, deliberate focus and exposure"
-        case .super8HomeMovie: "Handheld, pronounced grain and flicker"
-        case .cinema16mm: "Deliberate framing, finer grain"
+        case .super8HomeMovie: "Handheld, fixed focus, automatic exposure, 18 frames per second"
+        case .cinema16mm: "Deliberate framing, 24 frames per second"
         }
+    }
+
+    /// How a Film from this Camera develops. Names a look only in descriptive terms, never a maker or a film.
+    var lookLabel: String {
+        switch id {
+        case .disposable1990s: "Warm, saturated color, heavy grain, harsh flash and soft edges"
+        case .instant1970s: "Brilliant, warm color and soft detail"
+        case .mediumFormat6x6: "Natural, warm color, very fine grain and gentle contrast"
+        case .super8HomeMovie: "Rich color, fine grain, an unsteady frame, flicker, dust and hair"
+        case .cinema16mm: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"
+        }
+    }
+
+    /// An explanation the Load Film screen gives for this Camera alone (PRD FR-03).
+    var viewfinderNote: String? {
+        id == .mediumFormat6x6
+            ? "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."
+            : nil
     }
 }
 

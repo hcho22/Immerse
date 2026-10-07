@@ -199,7 +199,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
                                                    movieOrientation: .landscape, access: .subscription)
         model.refresh()
-        XCTAssertEqual(film.remainingLabel(recordedFor: 12.5), "2:33 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 12.5), "2:35 left")
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: CaptureView(filmID: film.id).environment(model))

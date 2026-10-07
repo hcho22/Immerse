@@ -115,6 +115,7 @@ private struct JournalFilmRow: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
                 Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
+                    .accessibilityLabel(film.camera.spokenShortName)
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }
@@ -125,7 +126,7 @@ private struct JournalFilmRow: View {
                     HStack(spacing: 4) {
                         ForEach(shown) { capture in
                             RevealedPhoto(filmID: film.id, sequence: capture.sequenceNumber)
-                                .aspectRatio(1, contentMode: .fit).clipped()
+                                .aspectRatio(film.camera.printAspectRatio, contentMode: .fit).clipped()
                         }
                     }
                 }

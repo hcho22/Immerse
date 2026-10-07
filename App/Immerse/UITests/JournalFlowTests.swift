@@ -19,10 +19,12 @@ final class JournalFlowTests: XCTestCase {
         // Assert the load screen's own capacity element; a bare capacity query also matched the
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
-        XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
+        // The Form is lazy and its Camera description is long enough that the command is below the first screen.
+        scrollUp(app, until: app.buttons["load-film"])
+        XCTAssertTrue(app.buttons["load-film"].exists)
         app.navigationBars["Super 8"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists)
@@ -45,17 +47,17 @@ final class JournalFlowTests: XCTestCase {
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         camera.tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
         scrollUp(app, until: title)
         XCTAssertTrue(title.isHittable)
-        let withheld = AuditException.accepted.filter { $0.label != "Deliberate framing, finer grain" }
+        let withheld = AuditException.accepted.filter { $0.label != "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" }
         XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
         var reported: [String] = []
         XCTExpectFailure("A finding outside the exceptions must fail the audit") {
             reported = (try? audit(app, name: "16mm-title-accessibility-largest", for: .contrast, exceptions: withheld)) ?? []
         }
-        XCTAssertEqual(reported, ["Deliberate framing, finer grain"])
+        XCTAssertEqual(reported, ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"])
     }
 
     /// Every Camera's Load screen at the smallest text size, where the Film title field's text is shortest: 19 points,
@@ -66,7 +68,7 @@ final class JournalFlowTests: XCTestCase {
     /// (run 37627486582), which the allowance counts as a failure (Evidence/NativeApp/ci-flakes-057.md).
     func testExtraSmallLoadScreenAuditDisposable() throws { try auditExtraSmallLoadScreen(id: "disposable1990s", name: "Disposable") }
     func testExtraSmallLoadScreenAuditInstant() throws { try auditExtraSmallLoadScreen(id: "instant1970s", name: "Instant") }
-    func testExtraSmallLoadScreenAudit6x6() throws { try auditExtraSmallLoadScreen(id: "mediumFormat6x6", name: "6x6") }
+    func testExtraSmallLoadScreenAudit6x6() throws { try auditExtraSmallLoadScreen(id: "mediumFormat6x6", name: "6×6") }
     func testExtraSmallLoadScreenAuditSuper8() throws { try auditExtraSmallLoadScreen(id: "super8HomeMovie", name: "Super 8") }
     func testExtraSmallLoadScreenAudit16mm() throws { try auditExtraSmallLoadScreen(id: "cinema16mm", name: "16mm") }
 
@@ -108,10 +110,10 @@ final class JournalFlowTests: XCTestCase {
         // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
         // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
-        // The load screen exposes its capacity as one "Capacity, 2 minutes 45 seconds of film" element. A bare
+        // The load screen exposes its capacity as one "Capacity, 2 minutes 47 seconds of film" element. A bare
         // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).
-        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].exists)
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].exists)
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
