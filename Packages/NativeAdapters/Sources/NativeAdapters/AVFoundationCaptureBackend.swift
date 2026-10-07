@@ -542,8 +542,9 @@ public actor AVFoundationCaptureBackend {
     }
 }
 
-/// Reads the viewfinder's automatic exposure once it has settled and reports the scene light it implies. KVO
-/// callbacks arrive on arbitrary threads; the pause flag is the only shared state.
+/// Reads each settled change of the viewfinder's automatic exposure and reports the scene light it implies, so a
+/// lens that is not streaming yet reports nothing. KVO callbacks arrive on arbitrary threads; the pause flag is the
+/// only shared state.
 private final class SceneLightMeter: @unchecked Sendable {
     private var observations: [NSKeyValueObservation] = []
     private let lock = NSLock()
@@ -562,7 +563,7 @@ private final class SceneLightMeter: @unchecked Sendable {
             ))
         }
         observations = [
-            device.observe(\.exposureDuration, options: [.initial, .new]) { device, _ in read(device) },
+            device.observe(\.exposureDuration, options: [.new]) { device, _ in read(device) },
             device.observe(\.iso, options: [.new]) { device, _ in read(device) },
             device.observe(\.isAdjustingExposure, options: [.new]) { device, _ in read(device) }
         ]
