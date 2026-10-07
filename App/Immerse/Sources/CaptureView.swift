@@ -42,19 +42,28 @@ struct CaptureView: View {
                         if capture.phase == .interrupted || error != nil || capture.message?.contains("Retry") == true {
                             Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
                         }
-                        let square = film.camera.id == .mediumFormat6x6 || film.camera.id == .instant1970s
+                        let behavior = CaptureBehavior.for(film.camera.id)
+                        let mirrored = behavior.isViewfinderMirrored(position: capture.position)
                         ZStack {
                             Color.black
                             if let preview = capture.preview {
-                                CameraPreview(source: preview, position: capture.position, square: square)
+                                CameraPreview(source: preview, mirrored: mirrored, fillsFrame: behavior.viewfinder.cropsCapture)
                             } else { Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white) }
                         }
-                        // The 4:3 capture fills a 3:4 viewfinder in a portrait interface and a 4:3 one in landscape.
-                        .aspectRatio(square ? 1 : verticalSizeClass == .compact ? 4.0 / 3 : 3.0 / 4, contentMode: .fit)
+                        .overlay(alignment: .top) {
+                            if capture.showsLowLightCue { LowLightCueView().padding(8) }
+                        }
+                        // The 4:3 capture fills a 3:4 viewfinder in a portrait interface and a 4:3 one in landscape;
+                        // the square and 3:2 Cameras crop it to the shape they develop to.
+                        .aspectRatio(behavior.viewfinder.aspectRatio(landscape: verticalSizeClass == .compact), contentMode: .fit)
                         .clipped()
-                        .accessibilityLabel(capture.position == .front ? "Mirrored front viewfinder" : "Rear viewfinder")
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel(viewfinderLabel(position: capture.position, behavior: behavior))
+                        .onChange(of: capture.showsLowLightCue) { _, showing in
+                            if showing { AccessibilityNotification.Announcement(LowLightCueView.spokenText).post() }
+                        }
                         if film.completionState == .open {
-                            if film.camera.id == .mediumFormat6x6 {
+                            if behavior.offersManualFocus {
                                 if capture.controls.manualFocus {
                                     VStack(alignment: .leading) {
                                         Text("Focus").font(.caption)
@@ -63,6 +72,8 @@ struct CaptureView: View {
                                         }).accessibilityLabel("Focus")
                                     }
                                 } else { Text("Manual focus unavailable on this lens").font(.caption).foregroundStyle(.secondary) }
+                            }
+                            if behavior.offersExposureBias {
                                 if let minimum = capture.controls.minimumExposureBias, let maximum = capture.controls.maximumExposureBias, minimum < maximum {
                                     VStack(alignment: .leading) {
                                         Text("Exposure \(capture.exposure, specifier: "%.1f") EV").font(.caption.monospaced())
@@ -72,8 +83,11 @@ struct CaptureView: View {
                                     }
                                 }
                             }
-                            if film.camera.id == .disposable1990s && !capture.controls.flash {
+                            if behavior.offersFlash && !capture.controls.flash {
                                 Text("Flash unavailable on this lens").font(.caption).foregroundStyle(.secondary)
+                            }
+                            if behavior.exposure == .fixed && capture.preview != nil && !capture.controls.fixedExposure {
+                                Text("Fixed exposure unavailable on this lens").font(.caption).foregroundStyle(.secondary)
                             }
                         }
                     }
@@ -102,7 +116,7 @@ struct CaptureView: View {
                         .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
                         .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
                         .accessibilityIdentifier("capture-shutter")
-                        if film.camera.id == .disposable1990s && capture.controls.flash {
+                        if CaptureBehavior.for(film.camera.id).offersFlash && capture.controls.flash {
                             Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
                                 .toggleStyle(.button).labelStyle(.iconOnly).disabled(capture.phase != .idle)
                         } else { Image(systemName: film.camera.medium == .movie ? "mic.slash" : "bolt.slash").foregroundStyle(.secondary).frame(width: 44) }
@@ -131,6 +145,11 @@ struct CaptureView: View {
             .sheet(item: $instantPrint) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
         }
     }
+    private func viewfinderLabel(position: CapturePosition, behavior: CaptureBehavior) -> String {
+        if position == .front { return "Mirrored front viewfinder" }
+        return behavior.reversesRearViewfinder ? "Rear viewfinder, reversed left to right" : "Rear viewfinder"
+    }
+
     private func open(_ film: Film) {
         Task {
             cameraDenied = false
@@ -144,10 +163,29 @@ struct CaptureView: View {
     }
 }
 
+/// The Disposable's low-light cue: exposure guidance only. It never changes the picture behind it, so the
+/// viewfinder does not preview how the exposure will develop. It sits at the viewfinder's top edge, which stays
+/// above the shutter bar when a tall viewfinder scrolls. The capsule is its own dark ground, so the
+/// white text keeps its contrast over any scene and in both appearances, and the text wraps at large sizes.
+private struct LowLightCueView: View {
+    static let spokenText = "Low light. Turn the flash on."
+    var body: some View {
+        Label("Low light - use flash", systemImage: "bolt.fill")
+            .font(.callout.weight(.semibold))
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Self.spokenText)
+            .accessibilityIdentifier("low-light-cue")
+    }
+}
+
 private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
-    let position: CapturePosition
-    let square: Bool
+    let mirrored: Bool
+    let fillsFrame: Bool
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
         surface.source = source
@@ -155,8 +193,8 @@ private struct CameraPreview: UIViewRepresentable {
         return surface
     }
     func updateUIView(_ uiView: PreviewSurface, context: Context) {
-        uiView.preview?.videoGravity = square ? .resizeAspectFill : .resizeAspect
-        uiView.position = position
+        uiView.preview?.videoGravity = fillsFrame ? .resizeAspectFill : .resizeAspect
+        uiView.mirrored = mirrored
         uiView.setNeedsLayout()
     }
 }
@@ -166,7 +204,7 @@ private struct CameraPreview: UIViewRepresentable {
 /// landscape side to the other keeps the same size, so the scene's geometry is observed too.
 private final class PreviewSurface: UIView {
     var source: CapturePreviewSource?
-    var position = CapturePosition.rear
+    var mirrored = false
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
     }
@@ -187,6 +225,6 @@ private final class PreviewSurface: UIView {
     private func rotatePreview() {
         guard let preview, let source, let interface = window?.windowScene?.effectiveGeometry.interfaceOrientation,
               let orientation = CaptureFrameOrientation(interface: interface) else { return }
-        try? source.update(preview, position: position, orientation: orientation)
+        try? source.update(preview, mirrored: mirrored, orientation: orientation)
     }
 }

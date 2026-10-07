@@ -44,17 +44,20 @@ public struct CaptureSessionRequest: Equatable, Sendable {
     public let mediaKind: CaptureMediaKind
     public let permissionPromptPolicy: PermissionPromptPolicy
     public let lockedMovieOrientation: MovieOrientation?
+    public let behavior: CaptureBehavior
 
     public init(
         preferredPosition: CapturePosition,
         mediaKind: CaptureMediaKind,
         permissionPromptPolicy: PermissionPromptPolicy = .deferToFlowCoordinator,
-        lockedMovieOrientation: MovieOrientation? = nil
+        lockedMovieOrientation: MovieOrientation? = nil,
+        behavior: CaptureBehavior = .deviceDefault
     ) {
         self.preferredPosition = preferredPosition
         self.mediaKind = mediaKind
         self.permissionPromptPolicy = permissionPromptPolicy
         self.lockedMovieOrientation = lockedMovieOrientation
+        self.behavior = behavior
     }
 }
 
@@ -62,12 +65,14 @@ public struct CaptureSessionPlan: Equatable, Sendable {
     public let activePosition: CapturePosition
     public let mediaKind: CaptureMediaKind
     public let lockedMovieOrientation: MovieOrientation?
+    public let behavior: CaptureBehavior
     private let capabilities: CaptureCapabilities
 
     public init(request: CaptureSessionRequest, capabilities: CaptureCapabilities) {
         self.activePosition = request.preferredPosition
         self.mediaKind = request.mediaKind
         self.lockedMovieOrientation = request.lockedMovieOrientation
+        self.behavior = request.behavior
         self.capabilities = capabilities
     }
 

@@ -18,7 +18,7 @@ final class NativeRenderTests: XCTestCase {
         XCTAssertNotEqual(master, try Data(contentsOf: source))
         let decoded = try image(master)
         XCTAssertEqual(decoded.width, 640)
-        XCTAssertEqual(decoded.height, 480)
+        XCTAssertEqual(decoded.height, 426, "The Disposable's 4:3 capture develops as a borderless 3:2 picture")
         let edited = try NativePhotoRenderer.print(
             master: master, recipe: DarkroomRecipe(printExposureStops: 0.7, contrastGrade: 3,
                 colorFiltration: ColorFiltration(cyan: 8, magenta: -3, yellow: 5),
@@ -28,11 +28,50 @@ final class NativeRenderTests: XCTestCase {
         )
         XCTAssertNotEqual(master, edited)
         XCTAssertEqual(try image(edited).width, 320)
-        XCTAssertEqual(try image(edited).height, 240)
+        XCTAssertEqual(try image(edited).height, 214, "Half of the 426 rows, rounded out to whole pixels")
         XCTAssertEqual(try NativePhotoRenderer.print(master: master, recipe: .original, camera: CameraCatalog.disposable1990s), master)
         XCTAssertThrowsError(try NativePhotoRenderer.print(master: master,
             recipe: DarkroomRecipe(printExposureStops: .nan), camera: CameraCatalog.disposable1990s))
         XCTAssertThrowsError(try NativePhotoRenderer.print(master: master, recipe: .original, camera: CameraCatalog.cinema16mm))
+    }
+
+    func testDisposableDevelopsEveryCaptureShapeAsABorderlessThreeByTwoAtTheTwelveMegapixelLimit() async throws {
+        for (width, height, expected) in [
+            (640, 480, (640, 426)),      // the phone's 4:3 landscape capture keeps its long side
+            (480, 640, (426, 640)),      // portrait develops 2:3
+            (1280, 720, (1080, 720)),    // a wider source keeps its short side
+            (4032, 3024, (4032, 2688)),  // a real 12 MP capture stays under the master limit uncropped in size
+            (6000, 8000, (2829, 4243))   // a larger source is scaled to about 12 MP after the crop
+        ] {
+            let root = makeRoot()
+            defer { try? FileManager.default.removeItem(at: root) }
+            var settings = RenderFixtureSettings.defaultExperimental
+            settings.photoWidth = width
+            settings.photoHeight = height
+            _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root, settings: settings)
+            let source = root.appendingPathComponent("synthetic-developed-photo.jpg")
+            let developed = try image(try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.disposable1990s, seed: 5))
+            XCTAssertEqual(developed.width, expected.0, "\(width)x\(height)")
+            XCTAssertEqual(developed.height, expected.1, "\(width)x\(height)")
+            XCTAssertLessThanOrEqual(developed.width * developed.height, 12_010_000, "The 12 MP master limit, to the scaled extent's rounding")
+            // Every pixel row and column is picture: the grain tile covers the whole frame and nothing is stamped on it.
+            let ratio = Double(max(developed.width, developed.height)) / Double(min(developed.width, developed.height))
+            XCTAssertEqual(ratio, 1.5, accuracy: 0.01)
+        }
+    }
+
+    func testOtherPhotoCamerasKeepTheirShapes() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.photoWidth = 480
+        settings.photoHeight = 640
+        _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root, settings: settings)
+        let source = root.appendingPathComponent("synthetic-developed-photo.jpg")
+        let instant = try image(try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.instant1970s, seed: 5))
+        let square = try image(try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.mediumFormat6x6, seed: 5))
+        XCTAssertEqual([instant.width, instant.height], [2048, 2048])
+        XCTAssertEqual([square.width, square.height], [3072, 3072])
     }
 
     func testSquareCameraOutputsAndBoundedDifferentTreatments() async throws {

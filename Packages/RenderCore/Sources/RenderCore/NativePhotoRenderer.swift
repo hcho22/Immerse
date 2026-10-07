@@ -30,6 +30,7 @@ public enum NativePhotoRenderer {
             let target: CGFloat = camera.id == .instant1970s ? 2048 : 3072
             image = image.transformed(by: CGAffineTransform(scaleX: target / side, y: target / side))
         } else {
+            if camera.id == .disposable1990s { image = cropToThreeByTwo(image) }
             let scale = min(1, sqrt(12_000_000 / (image.extent.width * image.extent.height)))
             image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
         }
@@ -135,6 +136,23 @@ public enum NativePhotoRenderer {
             mask.exposureStops.isFinite && abs(mask.exposureStops) <= 1 &&
             mask.points.allSatisfy { $0.x.isFinite && $0.y.isFinite && (0...1).contains($0.x) && (0...1).contains($0.y) }
         }) else { throw NativeRenderError.invalidRecipe }
+    }
+
+    /// The Disposable's borderless 3:2 picture: the phone's 4:3 capture cropped about its center, with the long
+    /// side kept so a portrait capture becomes 2:3. It matches the viewfinder's fill of its 3:2 frame and adds
+    /// no border and no date stamp. The 12 MP master limit applies after the crop.
+    static func cropToThreeByTwo(_ image: CIImage) -> CIImage {
+        let width = image.extent.width, height = image.extent.height
+        let landscape = width >= height
+        let long = landscape ? width : height, short = landscape ? height : width
+        // A source narrower than 3:2 (the 4:3 capture) keeps its long side; a wider one keeps its short side.
+        let keptLong = min(long, (short * 3 / 2).rounded(.down))
+        let keptShort = (keptLong * 2 / 3).rounded(.down)
+        let size = landscape ? CGSize(width: keptLong, height: keptShort) : CGSize(width: keptShort, height: keptLong)
+        return normalize(image.cropped(to: CGRect(
+            x: ((width - size.width) / 2).rounded(.down), y: ((height - size.height) / 2).rounded(.down),
+            width: size.width, height: size.height
+        )))
     }
 
     static func normalize(_ image: CIImage) -> CIImage {
