@@ -1,7 +1,7 @@
 # Film Camera Experience — V1 Task Tracker
 
 **Date:** October 6, 2026 (original baseline September 29, 2026; versions 1.1 to 1.5 were September 30, 2026) · **Version:** 2.0 · **Platform:** iOS 26, iPhone only\
-**Companion:** [Detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md))  
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md))  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.
 
@@ -33,7 +33,7 @@ Dependency: resolve relevant choices before the affected implementation is accep
 - [ ] DEC-04 - Approve each Camera's rendering, output resolution/codec/frame-rate/audio specifications and medium-specific controls. Partly decided 2026-10-05 and 2026-10-06 (captain, PRD version 2.0): each Camera's Format Reference, picture shape, look, imperfections and frame rate (Super 8 18 fps, 16mm 24 fps) are set in PRD section 6. Still open: exact tone, contrast and grain values for each Camera and Film Stock, the Instant's contrast and print-to-print variation (they wait on a study of preserved 1970s prints), toning control values, and export codecs/resolution/audio guarantees. Captain decision 2026-10-06: each look is checked against its Format Reference through side-by-side review boards built from public or licensed reference imagery, and the captain approves each Camera (QA-16).
 - [ ] DEC-05 — Select and clear production sample media and export-licensed built-in instrumental soundtracks.
 - [x] DEC-09 — Define empty-Film early Development and presentation when every Movie clip is removed. Decided 2026-09-30: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export. Status: done | Evidence: captain decision relayed in Firstmate v1 implementation brief; PRD section 15 | Completed: 2026-09-30
-- [ ] DEC-11 - Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior. Partly decided (PRD version 2.0 and the captain, 2026-10-06): Instant prints have no crop; color Films get no contrast control; contrast grades and chemical toning apply only to black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (the captain's answer to how PRD FR-07's "appropriate contrast/contrast grades" applies; the PRD's own text is unchanged). Still open: control ranges, Instant original-export timing, soundtrack reselection.
+- [ ] DEC-11 - Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior. Partly decided (PRD version 2.0 and the captain, 2026-10-06): Instant prints have no crop; contrast grades 0 to 5 apply to every Photo Film, color and Instant included, and chemical toning applies only to black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (captain, 2026-10-07, reversing the 2026-10-06 contrast half; PRD 2.1 FR-07 says so). Still open: control ranges, Instant original-export timing, soundtrack reselection.
 - [ ] DEC-12 — Define low-storage behavior, supported-device/accessibility matrix, media durability, and measurable performance/reliability budgets.
 - [ ] DEC-13 — Define support escalation, privacy disclosures, and platform/launch review requirements.
 - [ ] DEC-14 — Approve numeric learning targets for the TestFlight and interview plan (PRD section 2.2). Settled 2026-09-30: no analytics SDK or service in v1; no implicit media telemetry.
@@ -160,14 +160,14 @@ Dependency: CAP, MOV where relevant, durable storage. PRD FR-06.
 Dependency: DEV, DEC-04/DEC-11. PRD FR-07.
 
 - [ ] DRK-01 — Implement independent, reversible per-exposure recipes over preserved developed masters.
-- [ ] DRK-02 - Implement print exposure and, for black-and-white Films only, contrast grades; color Films have no contrast control (captain decision 2026-10-06).
-- [ ] DRK-03 - Implement eligible color filtration/balance and, for black-and-white Films only, chemical toning, without saturation.
+- [ ] DRK-02 - Implement print exposure and contrast grades 0 to 5 on every Photo Film, color and black-and-white, Instant prints included (captain decision 2026-10-07; each Camera's own developed contrast stays set by its Developed Treatment).
+- [ ] DRK-03 - Implement eligible color filtration/balance and, for black-and-white Films only, chemical toning, without saturation (contrast grades are DRK-02 and apply to every Photo Film).
 - [ ] DRK-04 - Implement agreed analog-print crop behavior without changing the underlying Camera package; Instant prints have no crop.
 - [ ] DRK-05 — Implement reversible local Dodge/Burn masks within analog exposure-adjustment limits.
 - [ ] DRK-06 — Add Reset to Original and verify exact recovery of the original developed appearance.
 - [ ] DRK-08 — Exclude Movie Darkroom, treatment swaps, AI/content manipulation, and saturation controls.
 - [ ] DRK-09 - (PRD 2.0 slice 1) Offer no crop control for an Instant print and reject an Instant recipe that carries a crop, keeping the square picture and its white card whole.
-- [ ] DRK-10 - (PRD 2.0 slice 1) Remove the contrast control from color Films and offer contrast grades and chemical toning only on black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (captain decision 2026-10-06).
+- [ ] DRK-10 - (PRD 2.0 slice 1) Keep contrast grades 0 to 5 on every Photo Film, color and Instant included, and offer chemical toning only on black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (captain decisions 2026-10-06 and 2026-10-07; the app already offers grades on every Photo Film, so this task confirms that and gates toning).
 
 ## STO — Personal persistence and Photos integration
 
@@ -261,7 +261,7 @@ Task IDs stay in their own groups above; this table gives the order only.
 
 | Slice | Work | Tasks |
 | --- | --- | --- |
-| 1 | Names and capacity, the Instant card and no crop, contrast removal on color Films, catalog copy | CAM-13, CAM-14, DRK-09, DRK-10, CAM-15 |
+| 1 | Names and capacity, the Instant card and no crop, toning gated to black-and-white Films with contrast kept on every Photo Film, catalog copy | CAM-13, CAM-14, DRK-09, DRK-10, CAM-15 |
 | 2 | Capture behavior: Disposable 3:2, fixed exposure and low-light cue, Super 8 fixed focus, 6×6 reversed viewfinder | CAP-11, CAP-12, CAP-13, CAP-14 |
 | 3 | Film Stock end to end: model, Load Film choice, black-and-white development | CAM-16, SET-09, DEV-11 |
 | 4 | Per-Camera looks against their Format References, as the open DEC-04 values close | CAM-17, QA-16 |
@@ -274,7 +274,8 @@ The PRD and ADR text is the captain's and is not edited here; where a decision c
 | Question | Captain's decision (2026-10-06) | Recorded in |
 | --- | --- | --- |
 | ADR 0015 was cited by PRD 2.0 and CONTEXT.md but not delivered | Supplied by the captain; it is added to `adr/` and the ADR collection as delivered. | ADR collection, README |
-| Contrast control on color Films (PRD FR-07 says contrast grades and chemical toning apply to black-and-white Films; the app offered grades on every Photo Film) | Color Films get no contrast control at all. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording is unchanged. | DEC-11, DRK-02, DRK-03, DRK-10 |
+| Contrast control on color Films (PRD FR-07 says contrast grades and chemical toning apply to black-and-white Films; the app offered grades on every Photo Film) | Superseded 2026-10-07 (see the next row). Color Films get no contrast control at all. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording is unchanged. | DEC-11, DRK-02, DRK-03, DRK-10 |
+| Contrast control on color Films, asked again after the 2026-10-06 decision ("Grades on every Film") | Captain, 2026-10-07: "please update the prd so that the contrast can be adjusted in the darkroom as well." Contrast grades 0 to 5 apply to every Photo Film, color and black-and-white, Instant prints included. Chemical toning stays black-and-white only. PRD 2.1 FR-07 carries it (the PRD was edited at the captain's request, which overrides the note above for this decision). | DEC-11, DRK-02, DRK-03, DRK-10, PRD 2.1 |
 | How a look is checked against its Format Reference | Side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera. | DEC-04, QA-16 |
 | Sequencing | Land the documents first as one docs-only change; then implement in the slices above; the manual iPhone test candidate is the build that includes PRD 2.0. | The slices above, Milestone tracking |
 
@@ -596,6 +597,19 @@ Each row shows the version 1.5 text of a v1 task that keeps its ID with its text
 
 The two DEC rows are unchanged in their first sentence; version 2.0 appended the decided parts, so their earlier text is the sentence shown.
 
+### Contrast wording superseded on 2026-10-07 (version 2.1)
+
+The captain's 2026-10-07 decision restored contrast grades on color Films.
+These rows are the 2026-10-06 wording, kept as history; the tasks above are current.
+
+| Task | 2026-10-06 text (verbatim) |
+| --- | --- |
+| DEC-11 | Specify analog Darkroom ranges/crop boundaries, Instant original-export choice timing, and personal soundtrack reselection behavior. Partly decided (PRD version 2.0 and the captain, 2026-10-06): Instant prints have no crop; color Films get no contrast control; contrast grades and chemical toning apply only to black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (the captain's answer to how PRD FR-07's "appropriate contrast/contrast grades" applies; the PRD's own text is unchanged). Still open: control ranges, Instant original-export timing, soundtrack reselection. |
+| DRK-02 | Implement print exposure and, for black-and-white Films only, contrast grades; color Films have no contrast control (captain decision 2026-10-06). |
+| DRK-03 | Implement eligible color filtration/balance and, for black-and-white Films only, chemical toning, without saturation. |
+| DRK-10 | (PRD 2.0 slice 1) Remove the contrast control from color Films and offer contrast grades and chemical toning only on black-and-white Films, which in v1 are 6×6 Medium Format Films on the black-and-white Film Stock (captain decision 2026-10-06). |
+| Slice 1 row | / 1 / Names and capacity, the Instant card and no crop, contrast removal on color Films, catalog copy / CAM-13, CAM-14, DRK-09, DRK-10, CAM-15 / |
+
 ## Milestone tracking
 
 Milestones are dependency groupings, not additional task counts or committed launch dates.
@@ -626,3 +640,4 @@ Privacy architecture is required before implementation, not deferred until M4; s
 | 2026-09-30 | Version 1.4: added the PRD's Users (1.1) and User journeys (5.1) sections and recorded the approved v1 clickable prototype in PRD section 18, as a design reference only with its questions pending. No task ID, task count, status or decision changed. |
 | 2026-09-30 | Version 1.5: recorded the captain's DEC-09 empty-Film decision and added the evidence map. No task ID changed. |
 | 2026-10-06 | Version 2.0: PRD version 2.0 (ADRs 0013 to 0015) landed beside PRD 1.5. Added fourteen tasks (CAM-13 to CAM-17, SET-09, CAP-11 to CAP-14, DEV-11, DRK-09, DRK-10, QA-16) in the order of the new implementation slices section, rewrote the text of twelve existing tasks with the version 1.5 wording preserved at the end of the Deferred to v2 section, and noted the decided parts of DEC-04 and DEC-11. Recorded the captain's four 2026-10-06 decisions. No ID was renumbered and no task status changed. |
+| 2026-10-07 | Version 2.1: PRD version 2.1 (same file) amends FR-07 at the captain's request: Darkroom contrast grades 0 to 5 apply to every Photo Film, color and Instant included; chemical toning stays black-and-white only. Reworded DEC-11, DRK-02, DRK-03, DRK-10 and the slice 1 row and added the captain's decision to the decisions table, with the 2026-10-06 wording kept as history. No ID, task count or status changed. |

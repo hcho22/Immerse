@@ -1,12 +1,12 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** October 6, 2026 (version 2.0; versions 1.1 to 1.5 were September 30, 2026; original consolidation September 29, 2026) · **Filename date:** 2026-10-06 · **Version:** 2.0\
+**Document date:** October 7, 2026 (version 2.1; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026; original consolidation September 29, 2026) · **Filename date:** 2026-10-06 · **Version:** 2.1\
 **Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)\
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
 **Scope:** Personal Photo and Movie Films only, as an on-phone app with no server, Accounts, sign-in or analytics. Shared Photo and Movie Group Films and everything that needs an Account are deferred to v2; see section 8.  
 **Supersedes:** version 1.5, which stays unchanged in [2026-09-29-film-camera-experience-v1-prd.md](2026-09-29-film-camera-experience-v1-prd.md).  
-**Version and release:** 2.0 is the version of this document. The product release it specifies is still v1, and “v2” in this document always means the later release with Groups and Accounts.
+**Version and release:** 2.1 is the version of this document (the file keeps its version 2.0 name so existing links work). The product release it specifies is still v1, and “v2” in this document always means the later release with Groups and Accounts.
 
 ## Document guide and authority
 
@@ -83,6 +83,15 @@ This resolves only DEC-09.
 All other open DEC items stay open.
 Version 1.5 also adds the evidence map for implementation traceability; it is not a completion claim.
 
+**Version 2.1 Darkroom contrast on every Photo Film (2026-10-07).**
+The captain said: "please update the prd so that the contrast can be adjusted in the darkroom as well."
+Asked which contrast control color Films, including Instant prints, should get, the captain chose "Grades on every Film".
+This replaces the contrast half of the 2026-10-06 decision (version 2.0, item 7), which had limited contrast grades and chemical toning to black-and-white Films.
+Contrast grades 0 to 5 now apply to the developed exposures of every Photo Camera, color and black-and-white, including Instant prints.
+Chemical toning stays black-and-white only, color filtration or balance stays for color work, Instant prints still have no crop, and Movies still have no Darkroom.
+Each Camera's developed look keeps its own contrast, set by its Developed Treatment, which the user cannot change.
+Only FR-07 and version 2.0 note item 7 change; no FR, DEC or section number changes.
+
 **Version 2.0 Camera looks and Format References (2026-10-06).**
 The captain decided how each Camera's developed results should look, one decision at a time, on 2026-10-05 and 2026-10-06.
 Version 2.0 is published as this separate file, and version 1.5 stays unchanged in its own file.
@@ -97,7 +106,7 @@ What changed:
 4. **Names.** The 1960s 6×6 Medium Format is now the 6×6 Medium Format, and the 1960s 16mm Cinema is now the 16mm Cinema, because their color reference films are present-day ones.
 5. **Movie capacities and frame rates.** Each capacity is one real load of its Format Reference, so the statement that capacities were compressed is withdrawn. The 16mm Cinema changes from 2:45 / 165 seconds to 2:47 / 167 seconds. Super 8 runs at 18 frames per second and 16mm at 24.
 6. **Per-Camera look and behavior.** Picture shape, look, imperfections, and exposure, focus and viewfinder behavior are set for all five Cameras in sections 6.1 to 6.3, FR-04 and FR-05.
-7. **Darkroom.** It stays photo-only. Instant prints are eligible but cannot be cropped. Contrast grades and chemical toning apply to black-and-white 6×6 Medium Format Films.
+7. **Darkroom.** It stays photo-only. Instant prints are eligible but cannot be cropped. Contrast grades apply to every Photo Film, color and black-and-white (amended in version 2.1); chemical toning applies to black-and-white Films only.
 
 What stays open: the remainder of DEC-04, including exact tone, contrast and grain values and the Instant's contrast, which waits on a study of preserved 1970s prints.
 No developed output has been compared with a Format Reference, so the looks in section 6 are specifications, not verified results.
@@ -539,7 +548,7 @@ Development assigns each capture a one-time Developed Treatment. The treatment s
 
 Provide reversible adjustments per developed exposure, limited to analog printing/processing equivalents: print exposure, appropriate contrast/contrast grades, color filtration or balance for color work, crop, applicable chemical toning, and local Dodge/Burn. Controls must be appropriate to the medium; no universal modern saturation slider.
 
-Developed exposures from every Photo Camera are eligible, including Instant prints. Instant prints are the one exception to the analog-equivalent test: they receive the same adjustments as other color exposures except crop, so the square picture and its white card always stay whole. Contrast grades and chemical toning apply to black-and-white Films, which in v1 are 6×6 Medium Format Films loaded with the black-and-white Film Stock.
+Developed exposures from every Photo Camera are eligible, including Instant prints. Instant prints are the one exception to the analog-equivalent test: they receive the same adjustments as other color exposures except crop, so the square picture and its white card always stay whole. Contrast grades 0 to 5 apply to the developed exposures of every Photo Camera, color and black-and-white, including Instant prints. Chemical toning applies to black-and-white Films, which in v1 are 6×6 Medium Format Films loaded with the black-and-white Film Stock. Each Camera's developed look keeps its own contrast, set by its Developed Treatment, which the user cannot change.
 
 Do not allow Camera/stock changes, treatment rerolls, digital-only object removal, AI content replacement, or similar manipulation. Preserve the exact original developed master and provide Reset to Original. Edits to one exposure never alter another.
 
@@ -1261,6 +1270,7 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | Movie capacities described as deliberately compressed; 16mm Cinema at 2:45 | Captain decision, 2026-10-05 (version 2.0): each capacity is one real load of its Format Reference; the 16mm Cinema is 2:47 / 167 seconds at 24 frames per second. |
 | A Darkroom for Movies | Captain decision, 2026-10-05 (version 2.0): chosen and withdrawn the same day; the Darkroom stays photo-only. |
 | A spring-wind limit on each 16mm clip, as on the reference camera | Captain decision, 2026-10-06 (version 2.0): no per-clip limit. |
+| No contrast control on color Films; grades black-and-white only | Captain decision, 2026-10-06 (version 2.0), reversed 2026-10-07 (version 2.1): Darkroom contrast grades 0 to 5 apply to every Photo Film, color and Instant included; chemical toning stays black-and-white only. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
