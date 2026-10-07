@@ -230,7 +230,7 @@ Dependency: DEC-02 (resolved before billing work starts in M2), ARC-05. PRD FR-2
 
 Dependency: ARC-05, CAP durability; DEC-15 and DEC-16 (decided) for Trial start without connectivity and restored Trial Films. PRD FR-21. TRI-05 to TRI-08 and TRI-10 moved to Deferred to v2 in version 1.2.
 
-- [ ] TRI-01 — Implement the per-iPhone Photo OR Movie Trial entitlement under [PRD FR-21](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film), including its unused-Film replacement rule.
+- [ ] TRI-01 — Implement the per-iPhone Photo OR Movie Trial entitlement under [PRD FR-21](2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film), including its unused-Film replacement rule.
 - [ ] TRI-02 — Record the iPhone's Trial entitlement in the Keychain so it survives deleting and reinstalling the app, stays bound to this physical iPhone, and is not restored onto another iPhone; a Trial Film restored from a backup keeps its own capture rights and coexists without consuming or blocking this iPhone's entitlement (DEC-16).
 - [ ] TRI-03 — Apply FR-21's first-save consumption rules to this iPhone's device-bound entitlement, including the distinction from restored Film rights.
 - [ ] TRI-04 — Write the Trial record atomically around the first successful save so app termination cannot leave a free second Trial; capture and Trial start need no server or connectivity (DEC-15).

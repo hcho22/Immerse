@@ -41,7 +41,7 @@ No requirement, task ID or recorded decision changed.
 The baseline defaults D1 to D8 are engineering defaults, not decisions; the native stack (DEC-03) and the price (DEC-02) stay open.
 
 Version 1.2 (September 30, 2026) makes v1 a personal, on-phone iOS 26 iPhone app.
-The [PRD's Trial rules](2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film) define device-bound entitlement, unused-Trial replacement and restored-Trial rights (ADR 0012). v1 has no server, Accounts, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+The [PRD's Trial rules](2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film) define device-bound entitlement, unused-Trial replacement and restored-Trial rights (ADR 0012). v1 has no server, Accounts, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
 Films are included in iOS device backups while the app offers no sync of its own, and the Trial record stays bound to the device.
 v1 has no analytics SDK or service; learning comes from App Store Connect, Apple's crash and performance reports, TestFlight testers and interviews.
 Prices and offers are decided before billing work starts in milestone 2.
