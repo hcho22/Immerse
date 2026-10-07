@@ -38,11 +38,15 @@ final class CaptureController {
     /// a cue for a control the active lens lacks would advise something it cannot do.
     var showsLowLightCue: Bool { isLowLight && controls.flash && !flash }
 
-    /// The session a Film's Camera asks for: its capture behavior travels with the plan to the backend.
-    static func sessionPlan(for film: Film, position: CapturePosition, capabilities: CaptureCapabilities) -> CaptureSessionPlan {
+    /// The session a Film's Camera asks for: its capture behavior and the Focus control's position travel with the
+    /// plan to the backend.
+    static func sessionPlan(
+        for film: Film, position: CapturePosition, focus: Double, capabilities: CaptureCapabilities
+    ) -> CaptureSessionPlan {
         CaptureSessionPlan(request: CaptureSessionRequest(
             preferredPosition: position, mediaKind: film.camera.medium == .photo ? .photo : .movie,
-            lockedMovieOrientation: film.movieOrientation, behavior: .for(film.camera.id)
+            lockedMovieOrientation: film.movieOrientation, behavior: .for(film.camera.id),
+            manualLensPosition: Float(focus)
         ), capabilities: capabilities)
     }
 
@@ -105,7 +109,7 @@ final class CaptureController {
         guard model.film(film.id)?.completionState == .open, request == sessionRequest else { return }
         let capabilities = AVFoundationCaptureDeviceDiscoverer().capabilities()
         if !capabilities.isAvailable(position) { position = .rear }
-        let plan = Self.sessionPlan(for: film, position: position, capabilities: capabilities)
+        let plan = Self.sessionPlan(for: film, position: position, focus: focus, capabilities: capabilities)
         try await backend.start(plan: plan)
         // A close requested during start stops the session after it on the backend's executor.
         guard request == sessionRequest else { return }

@@ -66,12 +66,14 @@ final class CaptureBehaviorTests: XCTestCase {
     func testSessionPlanCarriesTheCameraBehavior() {
         let capabilities = CaptureCapabilities(availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true)
         let plan = CaptureSessionPlan(request: CaptureSessionRequest(
-            preferredPosition: .rear, mediaKind: .photo, behavior: .for(.disposable1990s)
+            preferredPosition: .rear, mediaKind: .photo, behavior: .for(.mediumFormat6x6), manualLensPosition: 0.1
         ), capabilities: capabilities)
-        XCTAssertEqual(plan.behavior, CaptureBehavior.for(.disposable1990s))
+        XCTAssertEqual(plan.behavior, CaptureBehavior.for(.mediumFormat6x6))
+        XCTAssertEqual(plan.manualLensPosition, 0.1, "The person's focus travels with the plan")
         let plain = CaptureSessionPlan(request: CaptureSessionRequest(preferredPosition: .rear, mediaKind: .movie),
                                        capabilities: capabilities)
         XCTAssertEqual(plain.behavior, CaptureBehavior.deviceDefault)
+        XCTAssertEqual(plain.manualLensPosition, FixedFocus.lensPosition, "The Focus control's resting value")
     }
 
     func testFixedExposureGivesEveryLensTheSameLightValue() {

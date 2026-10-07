@@ -63,6 +63,8 @@ public actor AVFoundationCaptureBackend {
     private let sceneLightContinuation: AsyncStream<Double>.Continuation
     private var meter: SceneLightMeter?
     private var fixedExposureHeld = false
+    /// Where `.manual` focus holds every lens of this session: the plan's, then wherever the person last set it.
+    private var manualLensPosition = FixedFocus.lensPosition
     private let session = AVCaptureSession()
     private let files: CapturedMediaFiles
     private let committer: any CaptureSaveCommitting
@@ -110,6 +112,7 @@ public actor AVFoundationCaptureBackend {
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
         device.setFocusModeLocked(lensPosition: position)
+        manualLensPosition = position
     }
 
     public func setExposureBias(_ bias: Float) throws {
@@ -131,10 +134,12 @@ public actor AVFoundationCaptureBackend {
             throw NativeCaptureError.notRunning
         }
         guard operations.operationID == nil else { throw NativeCaptureError.busy }
-        guard next.mediaKind != .movie || next.lockedMovieOrientation != nil else {
+        guard next.mediaKind != .movie || next.lockedMovieOrientation != nil,
+              (0...1).contains(next.manualLensPosition) else {
             throw NativeCaptureError.configurationFailed
         }
         if session.isRunning { session.stopRunning() }
+        manualLensPosition = next.manualLensPosition
         try configure(next)
         restartMeter()
         installNotificationsIfNeeded()
@@ -165,7 +170,8 @@ public actor AVFoundationCaptureBackend {
         self.plan = CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: position, mediaKind: plan.mediaKind,
-                lockedMovieOrientation: plan.lockedMovieOrientation, behavior: plan.behavior
+                lockedMovieOrientation: plan.lockedMovieOrientation, behavior: plan.behavior,
+                manualLensPosition: manualLensPosition
             ),
             capabilities: AVFoundationCaptureDeviceDiscoverer().capabilities()
         )
@@ -358,9 +364,9 @@ public actor AVFoundationCaptureBackend {
         try applyLensBehavior(next.behavior, to: newInput.device)
     }
 
-    /// Holds the lens in the Camera's focus and exposure behavior. Only `.fixed` focus changes anything the phone
-    /// would not do itself; every other mode returns to the continuous, unbiased automatic default, except the
-    /// person's own `.manual` focus and exposure bias, which stay where they were set.
+    /// Holds the lens in the Camera's focus and exposure behavior. `.fixed` focus locks the fixed lens position and
+    /// `.manual` focus the person's (`manualLensPosition`), wherever the lens supports it; every other mode returns to
+    /// the continuous, unbiased automatic default, except `.manualBias`, which keeps the bias the lens holds.
     private func applyLensBehavior(_ behavior: CaptureBehavior, to device: AVCaptureDevice) throws {
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
@@ -381,7 +387,9 @@ public actor AVFoundationCaptureBackend {
                 device.focusMode = .continuousAutoFocus
             }
         case .manual:
-            break
+            if device.isLockingFocusWithCustomLensPositionSupported {
+                device.setFocusModeLocked(lensPosition: manualLensPosition)
+            }
         }
     }
 

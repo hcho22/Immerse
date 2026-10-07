@@ -247,8 +247,9 @@ final class CaptureControllerIntegrationTests: XCTestCase {
             let film = try model.repository.createFilm(
                 camera: camera, title: "Synthetic \(camera.id.rawValue)",
                 movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
-            let plan = CaptureController.sessionPlan(for: film, position: .front, capabilities: capabilities)
+            let plan = CaptureController.sessionPlan(for: film, position: .front, focus: 0.25, capabilities: capabilities)
             XCTAssertEqual(plan.behavior, CaptureBehavior.for(camera.id), camera.id.rawValue)
+            XCTAssertEqual(plan.manualLensPosition, 0.25, "The Focus control's position reaches the lens")
             XCTAssertEqual(plan.mediaKind, camera.medium == .photo ? .photo : .movie)
             XCTAssertEqual(plan.activePosition, .front)
             XCTAssertEqual(plan.lockedMovieOrientation, camera.medium == .movie ? .portrait : nil)
