@@ -2,7 +2,7 @@
 
 **Collection date:** September 29, 2026 · **Version:** 2.0 (ADRs 0013 to 0015 and their reconciliation notes added October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
-**Companion:** [Detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
 ## Reading this collection
 

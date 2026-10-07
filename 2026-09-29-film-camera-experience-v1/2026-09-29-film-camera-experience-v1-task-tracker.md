@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Task Tracker
 
-**Date:** October 6, 2026 (original baseline September 29, 2026; versions 1.1 to 1.5 were September 30, 2026) · **Version:** 2.0 · **Platform:** iOS 26, iPhone only\
+**Date:** October 7, 2026 (original baseline September 29, 2026; versions 1.1 to 1.5 were September 30, 2026; version 2.0 was October 6, 2026) · **Version:** 2.1 · **Platform:** iOS 26, iPhone only\
 **Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md))  
 **Status:** Planning baseline. Native implementation tasks are not complete.\
 **Scope:** v1 is personal Photo and Movie Films only, as an on-phone iOS 26 iPhone app with no server, Accounts, sign-in or analytics. All Group tasks and all Account-only tasks are deferred to v2 and listed, with their IDs unchanged, under "Deferred to v2" below.

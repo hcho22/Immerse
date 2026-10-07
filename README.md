@@ -212,7 +212,7 @@ DEC-09 and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD sect
 
 ## Further reading
 
-- [PRD, version 2.0](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
+- [PRD, version 2.1](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
 - [Domain glossary](2026-09-29-film-camera-experience-v1/sources/CONTEXT.md)
 - [Architecture baseline](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md)
 - [ADR collection](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md) and [individual ADRs](2026-09-29-film-camera-experience-v1/adr)
