@@ -17,6 +17,12 @@ final class CaptureController {
     private(set) var phase = CapturePhase.interrupted
     private(set) var busy = false
     private(set) var controls = NativeCameraControls()
+    /// The scene is dim enough that the Disposable's fixed exposure would develop dark (`LowLightCue`).
+    private(set) var isLowLight = false
+    private var lowLightCue = LowLightCue()
+    private var lightTask: Task<Void, Never>?
+    /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
+    private var metersSceneLight = false
     var message: String?
     var flash = false
     var focus: Double = 0.8
@@ -27,6 +33,22 @@ final class CaptureController {
     var presented = false
 
     init(authorizer: any CapturePermissionAuthorizing) { self.authorizer = authorizer }
+
+    /// The Disposable's viewfinder advises flash in low light, only when flash is available and still off:
+    /// a cue for a control the active lens lacks would advise something it cannot do.
+    var showsLowLightCue: Bool { isLowLight && controls.flash && !flash }
+
+    /// The session a Film's Camera asks for: its capture behavior and the Focus control's position travel with the
+    /// plan to the backend.
+    static func sessionPlan(
+        for film: Film, position: CapturePosition, focus: Double, capabilities: CaptureCapabilities
+    ) -> CaptureSessionPlan {
+        CaptureSessionPlan(request: CaptureSessionRequest(
+            preferredPosition: position, mediaKind: film.camera.medium == .photo ? .photo : .movie,
+            lockedMovieOrientation: film.movieOrientation, behavior: .for(film.camera.id),
+            manualLensPosition: Float(focus)
+        ), capabilities: capabilities)
+    }
 
     func open(film: Film, model: JournalModel) async throws {
         guard !busy else { throw JournalError.operationInProgress }
@@ -48,6 +70,7 @@ final class CaptureController {
             eventsTask?.cancel()
             backend = next
             filmID = film.id
+            read(sceneLight: next.sceneLight)
             eventsTask = Task { [weak self, weak model] in
                 for await event in next.events {
                     guard !Task.isCancelled, let self, let model else { return }
@@ -86,13 +109,13 @@ final class CaptureController {
         guard model.film(film.id)?.completionState == .open, request == sessionRequest else { return }
         let capabilities = AVFoundationCaptureDeviceDiscoverer().capabilities()
         if !capabilities.isAvailable(position) { position = .rear }
-        let plan = CaptureSessionPlan(request: CaptureSessionRequest(preferredPosition: position,
-            mediaKind: film.camera.medium == .photo ? .photo : .movie, lockedMovieOrientation: film.movieOrientation), capabilities: capabilities)
+        let plan = Self.sessionPlan(for: film, position: position, focus: focus, capabilities: capabilities)
         try await backend.start(plan: plan)
         // A close requested during start stops the session after it on the backend's executor.
         guard request == sessionRequest else { return }
+        watchSceneLight(behavior: plan.behavior)
         controls = await backend.controls()
-        if film.camera.id == .disposable1990s { try await backend.lockDisposableFocus() }
+        exposure = Double(controls.exposureBias)
         preview = await backend.previewSource()
         await updatePhase(backend)
         message = nil
@@ -115,12 +138,39 @@ final class CaptureController {
 
     func switchLens(camera: CameraPackage) async throws {
         guard let backend else { return }
+        let request = sessionRequest
         let next: CapturePosition = position == .rear ? .front : .rear
         try await backend.switchLens(to: next)
         position = next
         flash = false
+        if request == sessionRequest { watchSceneLight(behavior: .for(camera.id)) }
         controls = await backend.controls()
-        if camera.id == .disposable1990s { try await backend.lockDisposableFocus() }
+        exposure = Double(controls.exposureBias)
+    }
+
+    /// The one reader of a backend's scene light. Readings reach the cue only while `metersSceneLight`.
+    private func read(sceneLight readings: AsyncStream<Double>) {
+        lightTask?.cancel()
+        lightTask = Task { [weak self] in
+            for await sceneEV100 in readings {
+                guard !Task.isCancelled, let self else { return }
+                guard self.metersSceneLight else { continue }
+                self.lowLightCue.update(sceneEV100: sceneEV100)
+                self.isLowLight = self.lowLightCue.isShowing
+            }
+        }
+    }
+
+    /// Starts the low-light cue afresh for a live viewfinder, for Cameras that show one.
+    private func watchSceneLight(behavior: CaptureBehavior) {
+        stopWatchingSceneLight()
+        metersSceneLight = behavior.showsLowLightCue
+    }
+
+    private func stopWatchingSceneLight() {
+        metersSceneLight = false
+        lowLightCue = LowLightCue()
+        isLowLight = false
     }
 
     func setFocus() async throws { try await backend?.setManualFocus(Float(focus)) }
@@ -129,6 +179,7 @@ final class CaptureController {
     func suspend() {
         sessionRequest += 1
         preview = nil
+        stopWatchingSceneLight()
         Task { await backend?.suspend(); await updatePhase(backend) }
     }
 
@@ -136,6 +187,7 @@ final class CaptureController {
         guard self.filmID == filmID else { return }
         sessionRequest += 1
         preview = nil
+        stopWatchingSceneLight()
         try await backend?.finishPendingSaves()
         await updatePhase(backend)
     }
@@ -144,9 +196,12 @@ final class CaptureController {
         guard self.filmID == filmID else { return }
         sessionRequest += 1
         preview = nil
+        stopWatchingSceneLight()
         try await backend?.cancelForPrivacy()
         eventsTask?.cancel()
         eventsTask = nil
+        lightTask?.cancel()
+        lightTask = nil
         backend = nil
         self.filmID = nil
         phase = .interrupted
@@ -189,3 +244,22 @@ extension CaptureFrameOrientation {
         }
     }
 }
+
+#if DEBUG
+extension CaptureController {
+    /// Hosted tests have no camera, so they set what a lens would report.
+    func setForTesting(controls: NativeCameraControls, sceneEV100: Double? = nil) {
+        self.controls = controls
+        if let sceneEV100 {
+            lowLightCue.update(sceneEV100: sceneEV100)
+            isLowLight = lowLightCue.isShowing
+        }
+    }
+
+    /// Stands in for attaching a backend's scene light.
+    func attachForTesting(sceneLight: AsyncStream<Double>) { read(sceneLight: sceneLight) }
+
+    /// Stands in for a session starting on a Camera with this behavior.
+    func startForTesting(behavior: CaptureBehavior) { watchSceneLight(behavior: behavior) }
+}
+#endif

@@ -239,6 +239,120 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertFalse(calls.wasWritten, "No Trial activation is written before Camera access")
     }
 
+    func testSessionPlanCarriesEachCamerasCaptureBehavior() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let capabilities = CaptureCapabilities(availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true)
+        for camera in CameraCatalog.all {
+            let film = try model.repository.createFilm(
+                camera: camera, title: "Synthetic \(camera.id.rawValue)",
+                movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+            let plan = CaptureController.sessionPlan(for: film, position: .front, focus: 0.25, capabilities: capabilities)
+            XCTAssertEqual(plan.behavior, CaptureBehavior.for(camera.id), camera.id.rawValue)
+            XCTAssertEqual(plan.manualLensPosition, 0.25, "The Focus control's position reaches the lens")
+            XCTAssertEqual(plan.mediaKind, camera.medium == .photo ? .photo : .movie)
+            XCTAssertEqual(plan.activePosition, .front)
+            XCTAssertEqual(plan.lockedMovieOrientation, camera.medium == .movie ? .portrait : nil)
+        }
+        let super8 = CaptureBehavior.for(.super8HomeMovie)
+        XCTAssertEqual(super8.focus, .fixed)
+        XCTAssertEqual(super8.exposure, .automatic)
+        let disposable = CaptureBehavior.for(.disposable1990s)
+        XCTAssertEqual(disposable.focus, .fixed)
+        XCTAssertEqual(disposable.exposure, .fixed)
+    }
+
+    func testLowLightCueAdvisesFlashOnlyWhenTheSceneIsDimAndFlashIsAvailableAndOff() {
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        capture.setForTesting(controls: withFlash, sceneEV100: FixedExposure.referenceEV100)
+        XCTAssertFalse(capture.showsLowLightCue, "A scene at the fixed exposure needs no cue")
+        capture.setForTesting(controls: withFlash, sceneEV100: FixedExposure.referenceEV100 - 4)
+        XCTAssertTrue(capture.showsLowLightCue)
+        capture.flash = true
+        XCTAssertFalse(capture.showsLowLightCue, "Flash is already on")
+        capture.flash = false
+        capture.setForTesting(controls: NativeCameraControls(), sceneEV100: FixedExposure.referenceEV100 - 4)
+        XCTAssertFalse(capture.showsLowLightCue, "A lens without flash gets no advice to use it")
+        capture.setForTesting(controls: withFlash, sceneEV100: FixedExposure.referenceEV100 - 1)
+        XCTAssertFalse(capture.showsLowLightCue, "The scene is bright again")
+    }
+
+    /// A backend's scene light is one stream for its whole life, so closing the viewfinder must not end it. The
+    /// simulator has no lens, so the test feeds that stream and stands in for each session start.
+    func testLowLightCueKeepsReadingTheSceneAfterTheViewfinderClosesAndOpensAgain() async throws {
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        capture.setForTesting(controls: withFlash)
+        let (sceneLight, lens) = AsyncStream.makeStream(of: Double.self, bufferingPolicy: .bufferingNewest(1))
+        capture.attachForTesting(sceneLight: sceneLight)
+        capture.startForTesting(behavior: .for(.disposable1990s))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await waitUntil { capture.showsLowLightCue }
+
+        capture.suspend()
+        XCTAssertFalse(capture.showsLowLightCue, "A closed viewfinder shows no cue")
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await Task.sleep(for: .milliseconds(200))
+        XCTAssertFalse(capture.showsLowLightCue, "A closed viewfinder reads no scene")
+
+        capture.startForTesting(behavior: .for(.disposable1990s))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await waitUntil { capture.showsLowLightCue }
+        lens.yield(FixedExposure.referenceEV100)
+        try await waitUntil { !capture.showsLowLightCue }
+
+        capture.startForTesting(behavior: .for(.mediumFormat6x6))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await Task.sleep(for: .milliseconds(200))
+        XCTAssertFalse(capture.showsLowLightCue, "Only the Disposable shows the cue")
+    }
+
+    /// The actual capture screens, retained as screenshots at the default and the largest text size. The simulator has
+    /// no camera, so the viewfinder shows its empty frame in each Camera's shape, and the Disposable's cue is
+    /// raised from a synthetic dim reading.
+    func testCaptureScreensShowEachCamerasViewfinderShapeAndTheLowLightCue() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        for (camera, cue) in [(CameraCatalog.disposable1990s, true), (CameraCatalog.mediumFormat6x6, false),
+                              (CameraCatalog.super8HomeMovie, false)] {
+            let film = try model.repository.createFilm(
+                camera: camera, title: "Synthetic \(camera.id.rawValue)",
+                movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+            model.refresh()
+            for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
+                for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
+                    let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+                    let window = UIWindow(windowScene: scene)
+                    // Taller than the screen, so the whole viewfinder shows instead of scrolling under the shutter bar.
+                    window.frame = CGRect(x: 0, y: 0, width: scene.screen.bounds.width, height: scene.screen.bounds.height * 2.2)
+                    window.overrideUserInterfaceStyle = style
+                    window.rootViewController = UIHostingController(
+                        rootView: CaptureView(filmID: film.id).environment(model).dynamicTypeSize(size))
+                    window.makeKeyAndVisible()
+                    // Closing the last screen pauses its camera and clears the reading, and that can land after
+                    // this screen shows, so set the reading once the screen has settled.
+                    try await Task.sleep(for: .seconds(1))
+                    model.capture.setForTesting(controls: withFlash, sceneEV100: cue ? 4 : FixedExposure.referenceEV100)
+                    try await Task.sleep(for: .milliseconds(300))
+                    let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+                        _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+                    }
+                    window.isHidden = true
+                    window.rootViewController = nil
+                    let attachment = XCTAttachment(image: screenshot)
+                    attachment.name = "Capture-\(camera.id.rawValue)-\(sizeName)-\(styleName)"
+                    attachment.lifetime = .keepAlways
+                    add(attachment)
+                }
+            }
+        }
+    }
+
     private func makeModel() async throws -> (URL, HeldReceiptCalls, JournalModel) {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureController-\(UUID())")
         let calls = HeldReceiptCalls()

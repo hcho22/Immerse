@@ -15,18 +15,19 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 
 | Camera | Medium | Capacity | Reveal | Controls in the capture screen |
 | --- | --- | --- | --- | --- |
-| 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, optional flash |
+| 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Borderless 3:2 framing, fixed focus and exposure, optional flash with a low-light cue |
 | 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square framing |
-| 1960s 6x6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, manual focus and exposure sliders |
-| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld look, grain and flicker |
+| 1960s 6x6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, rear viewfinder reversed left to right, manual focus and exposure sliders |
+| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Fixed focus, handheld look, grain and flicker |
 | 1960s 16mm Cinema | Movie | 2:45 (165 seconds) | One silent Movie after Development | Finer grain |
 
 Gap: this table is the build, not PRD version 2.0.
 PRD 2.0 renames the 6x6 and 16mm Cameras without a decade, sets the 16mm Cinema to 2:47, adds a color or black-and-white Film Stock choice on those two Cameras, and changes every Camera's look.
-It also changes capture behavior: the Disposable's borderless 3:2 frame and fixed exposure, the Super 8's fixed focus and the 6x6's reversed rear viewfinder.
 In the Darkroom, Instant prints lose crop and chemical toning is limited to black-and-white Films; under the captain's 2026-10-07 decision (PRD 2.1) contrast grades stay on every Photo Film, color included.
 None of that is built yet; the tracker's "PRD 2.0 implementation slices" give the order.
-Flash, manual focus and exposure appear only when the lens supports them.
+PRD 2.0's capture behavior (slice 2) is built, as the table shows; developed exposures are never reversed.
+The Disposable's fixed exposure (EV 12), its low-light cue threshold and the fixed lens position are provisional pending DEC-04 and a physical-phone check ([`Evidence/NativeApp/capture-behavior-prd2-slice2.md`](Evidence/NativeApp/capture-behavior-prd2-slice2.md)).
+Flash, manual focus and exposure appear only when the lens supports them, and the capture screen says when a lens cannot hold the Disposable's fixed exposure.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
 Movie capture uses a 4:3 native format that is provisional pending DEC-04.
 

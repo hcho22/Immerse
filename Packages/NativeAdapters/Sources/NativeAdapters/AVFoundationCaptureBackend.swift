@@ -10,6 +10,10 @@ public struct NativeCameraControls: Sendable {
     public var manualFocus = false
     public var minimumExposureBias: Float?
     public var maximumExposureBias: Float?
+    /// The bias the active lens's automatic exposure holds now, which the 6×6 exposure control shows.
+    public var exposureBias: Float = 0
+    /// Whether the active lens can hold the Disposable's custom exposure.
+    public var fixedExposure = false
     public init() {}
 }
 
@@ -27,20 +31,22 @@ public final class CapturePreviewSource: @unchecked Sendable {
         return layer
     }
 
+    /// `mirrored` reverses the viewfinder left to right (`CaptureBehavior.isViewfinderMirrored`). It is set on
+    /// the preview layer's own connection, so saved photos and clips, which use their output connections, never change.
     @MainActor
     public func update(
         _ layer: AVCaptureVideoPreviewLayer,
-        position: CapturePosition,
+        mirrored: Bool,
         orientation: CaptureFrameOrientation
     ) throws {
         guard layer.session === session, let connection = layer.connection,
               connection.isVideoRotationAngleSupported(orientation.rotationAngle),
-              position != .front || connection.isVideoMirroringSupported else {
+              !mirrored || connection.isVideoMirroringSupported else {
             throw NativeCaptureError.unsupportedConnection
         }
         connection.videoRotationAngle = orientation.rotationAngle
         connection.automaticallyAdjustsVideoMirroring = false
-        if connection.isVideoMirroringSupported { connection.isVideoMirrored = position == .front }
+        if connection.isVideoMirroringSupported { connection.isVideoMirrored = mirrored }
     }
 }
 
@@ -50,6 +56,15 @@ public actor AVFoundationCaptureBackend {
 
     public nonisolated let events: AsyncStream<CaptureSaveEvent>
     private let eventContinuation: AsyncStream<CaptureSaveEvent>.Continuation
+    /// The scene's light value (`SceneLight.ev100`) as the viewfinder's automatic exposure reads it, for the
+    /// Disposable's low-light cue. It is silent while a fixed exposure is held for a capture and while automatic
+    /// exposure is still adjusting. It is one stream for the backend's life, so read it from one task.
+    public nonisolated let sceneLight: AsyncStream<Double>
+    private let sceneLightContinuation: AsyncStream<Double>.Continuation
+    private var meter: SceneLightMeter?
+    private var fixedExposureHeld = false
+    /// Where `.manual` focus holds every lens of this session: the plan's, then wherever the person last set it.
+    private var manualLensPosition = FixedFocus.lensPosition
     private let session = AVCaptureSession()
     private let files: CapturedMediaFiles
     private let committer: any CaptureSaveCommitting
@@ -69,6 +84,7 @@ public actor AVFoundationCaptureBackend {
         self.files = try CapturedMediaFiles(directory: stagingDirectory)
         self.committer = committer
         (events, eventContinuation) = AsyncStream.makeStream()
+        (sceneLight, sceneLightContinuation) = AsyncStream.makeStream(bufferingPolicy: .bufferingNewest(1))
     }
 
     public var phase: CapturePhase { operations.phase }
@@ -83,7 +99,9 @@ public actor AVFoundationCaptureBackend {
         if device.isExposureModeSupported(.continuousAutoExposure) {
             result.minimumExposureBias = device.minExposureTargetBias
             result.maximumExposureBias = device.maxExposureTargetBias
+            result.exposureBias = device.exposureTargetBias
         }
+        result.fixedExposure = device.isExposureModeSupported(.custom)
         return result
     }
 
@@ -94,13 +112,7 @@ public actor AVFoundationCaptureBackend {
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
         device.setFocusModeLocked(lensPosition: position)
-    }
-
-    public func lockDisposableFocus() throws {
-        guard let device = input?.device, device.isFocusModeSupported(.locked) else { return }
-        try device.lockForConfiguration()
-        defer { device.unlockForConfiguration() }
-        device.focusMode = .locked
+        manualLensPosition = position
     }
 
     public func setExposureBias(_ bias: Float) throws {
@@ -122,11 +134,14 @@ public actor AVFoundationCaptureBackend {
             throw NativeCaptureError.notRunning
         }
         guard operations.operationID == nil else { throw NativeCaptureError.busy }
-        guard next.mediaKind != .movie || next.lockedMovieOrientation != nil else {
+        guard next.mediaKind != .movie || next.lockedMovieOrientation != nil,
+              (0...1).contains(next.manualLensPosition) else {
             throw NativeCaptureError.configurationFailed
         }
         if session.isRunning { session.stopRunning() }
+        manualLensPosition = next.manualLensPosition
         try configure(next)
+        restartMeter()
         installNotificationsIfNeeded()
         session.startRunning()
         guard session.isRunning else { throw NativeCaptureError.notRunning }
@@ -155,14 +170,17 @@ public actor AVFoundationCaptureBackend {
         self.plan = CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: position, mediaKind: plan.mediaKind,
-                lockedMovieOrientation: plan.lockedMovieOrientation
+                lockedMovieOrientation: plan.lockedMovieOrientation, behavior: plan.behavior,
+                manualLensPosition: manualLensPosition
             ),
             capabilities: AVFoundationCaptureDeviceDiscoverer().capabilities()
         )
         ensureUnmirroredOutput()
+        try applyLensBehavior(plan.behavior, to: device)
+        restartMeter()
     }
 
-    public func capturePhoto(orientation: CaptureFrameOrientation, flash: Bool = false) throws {
+    public func capturePhoto(orientation: CaptureFrameOrientation, flash: Bool = false) async throws {
         guard session.isRunning, let photoOutput else { throw NativeCaptureError.notRunning }
         try operations.requireIdle()
         guard !isRecovering, try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
@@ -176,9 +194,25 @@ public actor AVFoundationCaptureBackend {
         } else {
             settings.flashMode = .off
         }
+        let holdsFixedExposure = plan?.behavior.exposure == .fixed && input?.device.isExposureModeSupported(.custom) == true
+        if holdsFixedExposure { settings.photoQualityPrioritization = .speed }
         let id = try operations.begin(.photo)
         do { try files.prepare(PendingCaptureRecord(id: id, mediaKind: .photo)) }
         catch { operations.finish(id: id); throw error }
+        if holdsFixedExposure, let device = input?.device {
+            // The operation is open, so no other capture, lens switch or recovery can start while this waits.
+            do {
+                try await holdFixedExposure(on: device)
+                guard session.isRunning, !operations.isInterrupted, !privacyCancelled else {
+                    throw NativeCaptureError.interrupted
+                }
+            } catch {
+                releaseFixedExposure()
+                try? files.removeUncommitted(id: id)
+                operations.finish(id: id)
+                throw error
+            }
+        }
         let delegate = PhotoSaveDelegate { [weak self] data, failed in
             Task { await self?.photoFinished(id: id, data: data, failed: failed) }
         }
@@ -219,6 +253,7 @@ public actor AVFoundationCaptureBackend {
 
     public func suspend(reason: NativeCaptureInterruptionReason = .applicationInactive) {
         operations.interrupt()
+        releaseFixedExposure()
         if movieOutput?.isRecording == true { movieOutput?.stopRecording() }
         if session.isRunning { session.stopRunning() }
         eventContinuation.yield(.interrupted(reason))
@@ -288,6 +323,7 @@ public actor AVFoundationCaptureBackend {
 
     public func shutdown() {
         suspend()
+        meter = nil
         notifications.removeAll()
         // Pending save delegates retain their file until commit; shutdown never discards it.
     }
@@ -312,6 +348,8 @@ public actor AVFoundationCaptureBackend {
             guard session.canAddOutput(output) else { throw NativeCaptureError.configurationFailed }
             if session.canSetSessionPreset(.photo) { session.sessionPreset = .photo }
             session.addOutput(output)
+            // A frame from before the custom exposure took effect must never become the exposure.
+            if next.behavior.exposure == .fixed, output.isZeroShutterLagSupported { output.isZeroShutterLagEnabled = false }
             photoOutput = output
         } else {
             let output = AVCaptureMovieFileOutput()
@@ -323,6 +361,76 @@ public actor AVFoundationCaptureBackend {
         }
         plan = next
         ensureUnmirroredOutput()
+        try applyLensBehavior(next.behavior, to: newInput.device)
+    }
+
+    /// Holds the lens in the Camera's focus and exposure behavior. `.fixed` focus locks the fixed lens position and
+    /// `.manual` focus the person's (`manualLensPosition`), wherever the lens supports it; every other mode returns to
+    /// the continuous, unbiased automatic default, except `.manualBias`, which keeps the bias the lens holds.
+    private func applyLensBehavior(_ behavior: CaptureBehavior, to device: AVCaptureDevice) throws {
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        if behavior.exposure != .manualBias, device.isExposureModeSupported(.continuousAutoExposure) {
+            // A fixed exposure is held per capture, so the viewfinder always meters automatically.
+            if device.exposureMode != .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
+            if device.exposureTargetBias != 0 { device.setExposureTargetBias(0) }
+        }
+        switch behavior.focus {
+        case .fixed:
+            if device.isLockingFocusWithCustomLensPositionSupported {
+                device.setFocusModeLocked(lensPosition: FixedFocus.lensPosition)
+            } else if device.isFocusModeSupported(.locked) {
+                device.focusMode = .locked
+            }
+        case .deviceDefault:
+            if device.focusMode != .continuousAutoFocus, device.isFocusModeSupported(.continuousAutoFocus) {
+                device.focusMode = .continuousAutoFocus
+            }
+        case .manual:
+            if device.isLockingFocusWithCustomLensPositionSupported {
+                device.setFocusModeLocked(lensPosition: manualLensPosition)
+            }
+        }
+    }
+
+    private func restartMeter() {
+        meter = nil
+        guard plan?.behavior.showsLowLightCue == true, let device = input?.device else { return }
+        let continuation = sceneLightContinuation
+        meter = SceneLightMeter(device: device) { continuation.yield($0) }
+    }
+
+    /// Applies the Disposable's fixed exposure and returns once the lens reports it in effect.
+    private func holdFixedExposure(on device: AVCaptureDevice) async throws {
+        let format = device.activeFormat
+        let exposure = FixedExposure.settings(
+            aperture: Double(device.lensAperture), isoRange: format.minISO...format.maxISO,
+            durationRange: format.minExposureDuration.seconds...format.maxExposureDuration.seconds
+        )
+        try device.lockForConfiguration()
+        fixedExposureHeld = true
+        meter?.isPaused = true
+        await withCheckedContinuation { continuation in
+            let once = ResumeOnce(continuation)
+            device.setExposureModeCustom(
+                duration: CMTime(seconds: exposure.duration, preferredTimescale: 1_000_000_000), iso: exposure.iso
+            ) { _ in once.resume() }
+            device.unlockForConfiguration()
+            // The handler is documented to run, but a capture must never wait on it forever.
+            DispatchQueue.global().asyncAfter(deadline: .now() + 1) { once.resume() }
+        }
+    }
+
+    /// Returns the viewfinder to automatic exposure after a capture, an interruption or a failure.
+    private func releaseFixedExposure() {
+        guard fixedExposureHeld else { return }
+        fixedExposureHeld = false
+        if let device = input?.device, device.isExposureModeSupported(.continuousAutoExposure),
+           (try? device.lockForConfiguration()) != nil {
+            device.exposureMode = .continuousAutoExposure
+            device.unlockForConfiguration()
+        }
+        meter?.isPaused = false
     }
 
     private func selectMovieFormat(_ device: AVCaptureDevice) throws {
@@ -368,6 +476,7 @@ public actor AVFoundationCaptureBackend {
     }
 
     private func photoFinished(id: UUID, data: Data?, failed: Bool) async {
+        releaseFixedExposure()
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         photoDelegate = nil
         if privacyCancelled { operations.finish(id: id); return }
@@ -430,6 +539,47 @@ public actor AVFoundationCaptureBackend {
     private func interruptionEnded() {
         eventContinuation.yield(.interruptionEnded)
         // Restarting the session and recording both require explicit caller actions.
+    }
+}
+
+/// Reads each settled change of the viewfinder's automatic exposure and reports the scene light it implies, so a
+/// lens that is not streaming yet reports nothing. KVO callbacks arrive on arbitrary threads; the pause flag is the
+/// only shared state.
+private final class SceneLightMeter: @unchecked Sendable {
+    private var observations: [NSKeyValueObservation] = []
+    private let lock = NSLock()
+    private var paused = false
+
+    var isPaused: Bool {
+        get { lock.withLock { paused } }
+        set { lock.withLock { paused = newValue } }
+    }
+
+    init(device: AVCaptureDevice, report: @escaping @Sendable (Double) -> Void) {
+        let read: @Sendable (AVCaptureDevice) -> Void = { [weak self] device in
+            guard let self, !self.isPaused, !device.isAdjustingExposure else { return }
+            report(SceneLight.ev100(
+                aperture: Double(device.lensAperture), duration: device.exposureDuration.seconds, iso: device.iso
+            ))
+        }
+        observations = [
+            device.observe(\.exposureDuration, options: [.new]) { device, _ in read(device) },
+            device.observe(\.iso, options: [.new]) { device, _ in read(device) },
+            device.observe(\.isAdjustingExposure, options: [.new]) { device, _ in read(device) }
+        ]
+    }
+}
+
+private final class ResumeOnce: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Void, Never>?
+    init(_ continuation: CheckedContinuation<Void, Never>) { self.continuation = continuation }
+    func resume() {
+        let pending = lock.withLock { () -> CheckedContinuation<Void, Never>? in
+            defer { continuation = nil }
+            return continuation
+        }
+        pending?.resume()
     }
 }
 

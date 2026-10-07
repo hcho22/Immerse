@@ -391,7 +391,7 @@ private struct FilmTitleTextView: UIViewRepresentable {
 
         /// The part of the extra height above the text: half, to the pixel, so every edge stays on the pixel grid
         /// and the frame is exactly the minimum height.
-        static func topInset(extra: CGFloat, scale: CGFloat) -> CGFloat {
+        nonisolated static func topInset(extra: CGFloat, scale: CGFloat) -> CGFloat {
             let scale = max(scale, 1)
             return (max(0, extra) / 2 * scale).rounded(.down) / scale
         }
