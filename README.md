@@ -23,6 +23,8 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 
 Gap: this table is the build, not PRD version 2.0.
 PRD 2.0 renames the 6x6 and 16mm Cameras without a decade, sets the 16mm Cinema to 2:47, adds a color or black-and-white Film Stock choice on those two Cameras, and changes every Camera's look.
+It also changes capture behavior: the Disposable's borderless 3:2 frame and fixed exposure, the Super 8's fixed focus and the 6x6's reversed rear viewfinder.
+In the Darkroom, Instant prints lose crop, and under the captain's 2026-10-06 decision color Films lose contrast, leaving contrast grades and toning to black-and-white Films.
 None of that is built yet; the tracker's "PRD 2.0 implementation slices" give the order.
 Flash, manual focus and exposure appear only when the lens supports them.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
@@ -189,19 +191,19 @@ Packages:
 ## Status and open decisions
 
 **Done in software.** The full personal v1 flow above is implemented, with package, hosted and simulator UI tests passing in CI on `main`.
-Implementation progress is traced in the [evidence map](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md) and [acceptance companion](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md); the [task tracker](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-task-tracker.md) keeps its 121 v1 tasks unchecked until acceptance, so its checkboxes do not show code progress.
+Implementation progress is traced in the [evidence map](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md) and [acceptance companion](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md); the [task tracker](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-task-tracker.md) keeps its 135 v1 tasks unchecked until acceptance, so its checkboxes do not show code progress.
 
 **Needs a physical iPhone.** Real capture, Keychain Trial behavior across reinstall, Photos writes, power loss, backup and restore, iPhone 11 performance and assistive-technology accessibility have not been validated on hardware.
 The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/manual-validation.md) and the release handoff in [`Evidence/NativeApp/launch-readiness.md`](Evidence/NativeApp/launch-readiness.md); the build is not release-ready.
 
-**Open captain decisions.** None of these is decided; the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
+**Open captain decisions.** None of these is fully decided; the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
 
 - DEC-01: final brand, product name and copy.
 - DEC-02: monthly and yearly pricing and offers.
 - DEC-03: sign-off of the native stack (minimum iOS 26, iPhone only and no backend are settled).
-- DEC-04: each Camera's rendering, output specs and controls.
+- DEC-04: exact tone, contrast and grain values for each Camera and Film Stock, toning values, and export codecs, resolution and audio (partly decided: PRD 2.0 sets each Camera's Format Reference, picture shape, look, imperfections and frame rates).
 - DEC-05: production sample media and licensed soundtracks.
-- DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection.
+- DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection (partly decided: no crop on Instant prints and no contrast control on color Films).
 - DEC-12: storage, device, accessibility and reliability budgets.
 - DEC-13: support, privacy disclosures and launch review.
 - DEC-14: numeric learning targets (no analytics is settled).
