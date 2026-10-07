@@ -1,10 +1,18 @@
 # Film Camera Experience - V1 Architecture Baseline
 
-**Document date:** September 30, 2026 · **Version:** 1.0 (first issued with PRD version 1.3) · **Platform:** iOS 26, iPhone only\
-**Companion:** [Detailed PRD](2026-09-29-film-camera-experience-v1-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) · [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md)  
+**Document date:** September 30, 2026 (version 1.1 note added October 6, 2026) · **Version:** 1.1 (1.0 was first issued with PRD version 1.3) · **Platform:** iOS 26, iPhone only\
+**Companion:** [Detailed PRD, version 2.0](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) · [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md)  
 **Status:** Approved architecture baseline; native implementation not yet built.
 
 ## 1. Status and authority
+
+**Version 1.1 note (2026-10-06, PRD version 2.0).**
+PRD version 2.0 and ADRs 0013 to 0015 add a Film Stock to two Cameras and a Format Reference to every Camera.
+The rest of this document is unchanged and its approval of 2026-09-30 is not reopened; three rows below carry a short "PRD 2.0" addition so the baseline matches the PRD, and nothing else changes:
+a Film records its Film Stock when it loads where the Camera offers one (the film entity, FR-03, section 11 invariant of PRD 2.0);
+the 6×6 Medium Format and 16mm Cinema packages each hold one treatment per Film Stock (the Camera Catalog component);
+and a shipped package version, including its Film Stock treatments, stays in the app while an unfinished Film needs it (risk RK-11).
+Defaults D1 to D8 are unchanged, and the stored treatment seed in D5 is assigned and stored the same way for either Film Stock.
 
 On 2026-09-30 the captain approved the v1 architecture pack, revision 3, as a whole, and asked for the PRD to be updated from it.
 This document records what that pack establishes, at the level of detail that does not belong in the PRD.
@@ -76,7 +84,7 @@ Source: PRD 12; pack section 4.
 
 | PRD module (section 12) | Component in the app | What it does | Milestone | Source |
 | --- | --- | --- | --- | --- |
-| Camera Catalog | Bundled Camera packages | Five immutable, versioned Camera packages and curated samples. A Film records the version it locked. | M1, M2 | FR-01; CAM-01 |
+| Camera Catalog | Bundled Camera packages | Five immutable, versioned Camera packages and curated samples. A Film records the version it locked. PRD 2.0: the 6×6 Medium Format and the 16mm Cinema each hold one treatment per Film Stock (color or black-and-white), and the Film records which Film Stock it loaded. | M1, M2 | FR-01; CAM-01; CAM-16 |
 | Film Lifecycle | FilmDomain | Setup, load, capacity, completion, state transitions. No UI and no I/O. | M1, M2 | PRD 11; ARC-02 |
 | Capture Engine | Capture Engine (AVFoundation) | Durable saves (temp file, flush, rename, commit, then debit), interruptions, front and rear lenses. No microphone. | M1, M2 | FR-04, FR-05; CAP-01; MOV-07 |
 | Development Engine | RenderCore | One-time stored treatment per capture, resumable jobs, Movie assembly, foreground execution. | M1, M2 | FR-06; DEV-06, DEV-07; MOV-03 |
@@ -109,7 +117,7 @@ Source: PRD 11, 12.1; FR-08; pack section 5.
 
 | Entity | Where | Holds | Ownership, privacy or retention rule | Source | Kind |
 | --- | --- | --- | --- | --- | --- |
-| film | SQLite | One row per personal Film. | Camera package immutable after Load Film. Capture, development, archive, entitlement and deletion are separate states; archive flags live in this row (default D6). Delete Film removes every row and file for the Film from current storage; an older backup can bring it back (DEC-17). | FR-03, FR-18; PRD 11 | Requirement-derived rule, default mechanism |
+| film | SQLite | One row per personal Film. | Camera package immutable after Load Film; where the Camera offers a Film Stock (PRD 2.0, ADR 0014), the Film records the Film Stock chosen at Load Film and it is fixed for that Film. Capture, development, archive, entitlement and deletion are separate states; archive flags live in this row (default D6). Delete Film removes every row and file for the Film from current storage; an older backup can bring it back (DEC-17). | FR-03, FR-18; PRD 11; ADR 0014 | Requirement-derived rule, default mechanism |
 | film.trial_source, film.trial_origin_device | SQLite | Whether a Film came from this phone's Trial entitlement, and which phone started it. | A restored Trial Film keeps its own capture rights and never consumes or blocks this phone's entitlement. The mechanism that tells 'restored' from 'own' is default D2. | FR-21; DEC-16 | Requirement-derived rule, default mechanism |
 | capture | SQLite | Chronology marker per photo or clip. | Separate from files so Discard can remove media and keep a numbered placeholder. Capacity is never refunded. Failed unsaved captures consume nothing. Treatment assigned once (default D5). | FR-04, FR-06, FR-16; PRD 12.1; DEV-06 | Requirement-derived rule, default mechanism |
 | media_asset | SQLite and files | Source, master and Developed Clip files. | No thumbnail for sealed captures. Sources deleted only after the master or Developed Clip is verified, and, when originals are exported, after a successful Photos save. Masters and Developed Clips are kept until the photo or clip is Discarded or the Film is deleted. Discard removes the discarded capture's media and leaves its numbered placeholder. Delete Film removes everything for the Film. Included in the device backup. | FR-08, FR-16, FR-18; STO-03 to STO-09, STO-11; MOV-10; PRV-01, PRV-05 | Requirement-derived |
@@ -232,7 +240,7 @@ Source: pack section 8.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | RK-01 | Development is too slow or unreliable on the oldest iPhone | Medium | High | Development is foreground GPU work: iPhones cannot submit Metal work from the background. A 27-frame roll or a 200-second Movie must finish, or resume after interruption. The render times in the earlier architecture report (0.3 seconds a photo, 75 seconds per 150-second Movie) are guesses. | Measure Photo and Movie Development on an iPhone 11 (iOS 26's floor), foreground only (early check S1). Design for interruption, as DEV-07 requires. If it is too slow, raise the supported-device floor (DEC-12) rather than add a server. | M2 (measure in M1-M2) | FR-06; DEV-07; DEC-12; pack section 8 |
 | 2 | RK-21 | Films are protected only if the user has an iOS backup | Medium | High | Local-only storage is a product principle (PRD 2.1 item 8, FR-08). Backup was allowed (PRD 1.2 backup decision), but it depends on the user's iCloud or computer backup being on, not full, and not switched off for this app. Video Films are large. | Be honest in the storage copy (STO-02), keep caches and temp files out of the backup (STO-11), prompt export after Development without promising a backup, and run the backup and restore drill (early check S13, QA-15). | M2 (copy STO-02), M5 (QA-15) | FR-08; STO-02, STO-11; PRD 1.2 backup decision; pack section 8 |
-| 3 | RK-11 | Old Camera-package versions must stay in the app while any unfinished Film needs them | Medium | Medium | Unfinished Films can wait months (user story 6) and Development uses the locked package (CAM-01). | Keep every shipped version; the Film stores its version; the app refuses cleanly with an update prompt if it lacks one. | M1 | CAM-01; user story 6 |
+| 3 | RK-11 | Old Camera-package versions must stay in the app while any unfinished Film needs them | Medium | Medium | Unfinished Films can wait months (user story 6) and Development uses the locked package (CAM-01). | Keep every shipped version, including the treatment for each Film Stock on the two Cameras that offer one (ADR 0013, ADR 0014); the Film stores its version; the app refuses cleanly with an update prompt if it lacks one. | M1 | CAM-01; user story 6 |
 | 4 | RK-17 | StoreKit offline checks and restore are unverified | Medium | Medium | Apple's reference page does not say StoreKit reads entitlements offline; the claim comes from developer reports. With no server the phone is the only judge. Refund and revocation handling is open under DEC-02. | Early check S8: read entitlements offline after one online sync, and restore with no app Account. | M2 | BIL-03, BIL-06; DEC-02; pack section 8 |
 | 5 | RK-22 | Movie assembly, rebuild and export fidelity | Medium | Medium | Cuts, borders for opposite orientation, optional bundled soundtrack; HEVC, HDR and orientation on real hardware; a rebuild must not reroll any treatment. | Early check S11 plus golden tests; keep every Developed Clip as its own file (MOV-10). | M2 (early check), M4 (rebuild) | MOV-10, MOV-11; PRV-07; FR-16 |
 | 6 | RK-23 | Trial rules have tricky edges on the device | Medium | Medium | Trial start with no connectivity (DEC-15), atomic first-save consumption, zero-save deletion leaving the entitlement, restored Trial Films coexisting with the destination entitlement, telling 'restored' from 'own' without a server, and the termination-then-reinstall window at the first save (section 8.1). | Model-based tests of the Trial state machine, termination tests around the first save, and a two-iPhone test (early check S12), which also measures the open first-save window in section 8.1. | M2 | FR-21; TRI-01 to TRI-04; DEC-15, DEC-16; QA-12 |

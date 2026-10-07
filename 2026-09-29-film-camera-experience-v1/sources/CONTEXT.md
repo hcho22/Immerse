@@ -9,7 +9,7 @@
 >
 > **Version 1.2 scope note (2026-09-30, PRD version 1.2, ADR 0012).**
 > By captain decision, v1 is a personal, on-phone iOS 26 iPhone app.
-> The per-iPhone Trial follows [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film). v1 has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
+> The per-iPhone Trial follows [PRD FR-21](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film). v1 has no server, Account, sign-in or Account deletion flow; Accounts return in v2 when Groups need them.
 > The terms Account, Trial Film, Trial Activation and Cancel Unused Trial were rewritten below, and the Trial rules were rewritten for the per-iPhone Trial.
 > The Account-only rules (Delete Account, Deletion Pending, Account-scoped Trial eligibility and Trial preservation after Account deletion) moved, verbatim, to the "Deferred to v2 - Account rules" section after the Relationships list; read any remaining mention of Account, sign-in, Account deletion or Deletion Pending as v2 design.
 > Films are included in iOS device backups, and the per-iPhone Trial record stays bound to the device and does not come back through a restore; restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
@@ -23,6 +23,17 @@
 > **Version 1.4 note (2026-09-30, PRD version 1.4).**
 > No domain rule or term changed.
 > The PRD gained a Users section (1.1), built from existing requirements and the market research kept outside this package, and a User journeys section (5.1), built from existing requirements, and records the approved v1 clickable prototype in section 18 as a design reference only.
+>
+> **2026-10-05 note (ADRs 0013, 0014 and 0015; PRD version 2.0).**
+> The terms Developed Treatment and Authentic Imperfection were sharpened: a Developed Treatment shows its Historical Format as freshly processed, and aging is not an Authentic Imperfection.
+> Two terms were added: Format Reference, the one named internal original each Camera's Developed Treatment is judged against, and Film Stock, the color or black-and-white choice that the 6×6 Medium Format and the 16mm Cinema offer at Load Film.
+> The 1960s 6×6 Medium Format and the 1960s 16mm Cinema were renamed 6×6 Medium Format and 16mm Cinema, because their reference films are present-day ones.
+> The 16mm Cinema's capacity changed from 2:45 to 2:47, and the sentence calling Movie capacities intentionally compressed was replaced, because each capacity is one real load of its Format Reference.
+> Every catalog entry now states its picture shape and look, and Relationships rules were added for each Camera's Format Reference, its exposure, focus and color-balance behavior, its Authentic Imperfections, and the Instant print's white card, Darkroom eligibility and crop.
+> The Load Film definition and the "Film type" Flagged ambiguity were updated for Film Stock, and three Flagged ambiguities were added.
+> On 2026-10-06 the 6×6 Medium Format gained the Film Stock choice, with Kodak Tri-X 400 as its black-and-white Format Reference film, and the 1990s Disposable's Format Reference was given 800-speed color film.
+> Relationships rules record that a 16mm Cinema Recorded Clip has no per-clip limit that the 6×6 Medium Format's Viewfinder shows the scene reversed left to right, and that each Instant print carries a slight variation in color and density.
+> PRD version 2.0 (2026-10-06), a separate file from version 1.5, carries these decisions, and the Viewfinder rule's list of effects it must not preview was reworded to name effects that v1 Cameras have.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -41,7 +52,7 @@ The primary **Film Library** action that begins setup of a new **Film**.
 _Avoid_: Capture, Join Film, Add Shared Exposures, apply filter
 
 **Load Film**:
-The explicit final setup confirmation that fixes a Film's selected **Camera** before capture becomes available.
+The explicit final setup confirmation that fixes a Film's selected **Camera**, and for the 6×6 Medium Format and the 16mm Cinema its **Film Stock**, before capture becomes available.
 _Avoid_: Capture, Development, Trial Activation, Add Shared Exposures
 
 **Film Title**:
@@ -55,6 +66,10 @@ _Avoid_: Scheduled event dates
 **Camera**:
 A complete vintage-inspired capture package that defines the medium, visual treatment, controls, and limits of a **Film**.
 _Avoid_: Filter, preset, effect, separately selectable film type
+
+**Film Stock**:
+The color or black-and-white film chosen for a 6×6 Medium Format or 16mm Cinema **Film** at **Load Film** and fixed for that Film; no other v1 Camera offers one.
+_Avoid_: Film type, filter, look, second Camera
 
 **Viewfinder**:
 The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment.
@@ -75,6 +90,10 @@ _Avoid_: First-capture side effect, post-capture Camera change
 **Historical Format**:
 A recognizable camera or recording-medium category chosen for its nostalgic and behaviorally distinct experience without presenting it as an exact manufacturer model.
 _Avoid_: Licensed model name, fictional brand, exact hardware replica
+
+**Format Reference**:
+The one named original camera and film that a Camera's **Developed Treatment** is judged against, as that original performed when new; it is internal and never identifies the Camera to users.
+_Avoid_: Product name, user-facing model name, composite era feel
 
 **Analog Camera**:
 A Camera based on a physical film, instant pack, cartridge, or tape format rather than a digital sensor or digital recording medium.
@@ -137,8 +156,8 @@ A Camera-authentic reveal ritual that makes previously hidden captures available
 _Avoid_: Export, render, processing
 
 **Developed Treatment**:
-The one-time Camera-defined visual and audible result assigned during Development, including any capture-specific analog variation or imperfection.
-_Avoid_: Rerollable filter, interchangeable Camera treatment
+The one-time Camera-defined visual and audible result assigned during Development, showing the Historical Format as freshly processed in its era and including any capture-specific analog variation or imperfection.
+_Avoid_: Rerollable filter, interchangeable Camera treatment, aged or faded vintage look
 
 **Save Originals to Photos**:
 The optional export of original source captures to the user's Apple Photos library after personal reveal or Group Film Release.
@@ -157,8 +176,8 @@ The seven days after Group Film Release during which a Participant may save thei
 _Avoid_: Developed Film expiry, subscription grace period
 
 **Authentic Imperfection**:
-A Camera-specific variation or flaw derived from the Historical Format or actual capture conditions without arbitrarily destroying an otherwise valid capture.
-_Avoid_: Randomly blanked frame, synthetic catastrophic failure
+A Camera-specific variation or flaw that the Historical Format's own capture or processing produced in its era, or that actual capture conditions cause, without arbitrarily destroying an otherwise valid capture.
+_Avoid_: Randomly blanked frame, synthetic catastrophic failure, age fading, yellowing, storage or projection wear
 
 **Discard**:
 The permanent removal of a revealed capture without restoring the Exposure or recording time it consumed.
@@ -380,6 +399,7 @@ _Avoid_: Draft, incomplete album
 - Both personal and Group Film creation use an explicit **Load Film** confirmation showing the selected Camera, capture capacity, and Reveal Rule before capture becomes available.
 - Load Film irreversibly fixes the selected Camera package for the Film; it is not an Exposure, a recording, or Development and does not bypass existing Trial Activation, Subscription, permission, or Group capture-access requirements.
 - For a Group Film, the Host's Load Film confirmation performs the existing **Camera Lock**, rather than requiring a second locking step or a separate loading action from each Participant.
+- For the 6×6 Medium Format and the 16mm Cinema only, Load Film also confirms and irreversibly fixes the **Film Stock**, color or black-and-white; a Film Stock never changes mid-Film or after Development ([ADR 0014](../adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md)).
 - Locking the Camera package does not freeze supported Camera-authentic capture controls; focus, flash, and exposure remain adjustable where the selected Camera and active phone lens support them.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
@@ -404,7 +424,7 @@ _Avoid_: Draft, incomplete album
 - **Save Originals to Photos** is optional and available after personal reveal or Group Film Release, subject to Photos permission.
 - The developed master and reversible Darkroom edit data are retained after source cleanup.
 - When original export is chosen, source copies are removed only after saving to Photos succeeds.
-- When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-09-29-film-camera-experience-v1-prd.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-09-29-film-camera-experience-v1-prd.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
+- When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
 - The original-export choice is presented at personal Development or Group Film Release.
 - For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
 - Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
@@ -419,9 +439,14 @@ _Avoid_: Draft, incomplete album
 - Capture controls must belong to the selected **Camera** and be genuinely supported by the active phone lens; unsupported controls are hidden with a brief explanation rather than presented as nonfunctional controls.
 - Hardware-aware control availability does not change the **Film**'s framing, capacity, **Developed Treatment**, or **Reveal Rule**.
 - Each **Camera** provides a **Viewfinder** appropriate to its Historical Format.
-- A **Viewfinder** may show framing, aspect ratio, focus behavior, flash state, exposure guidance, or period-appropriate overlays, but not final grain, color variation, scratches, light leaks, or tape damage.
+- A **Viewfinder** may show framing, aspect ratio, focus behavior, flash state, exposure guidance, or period-appropriate overlays, but not the developed result: final grain, color variation, halation, flicker, frame unsteadiness, dust, or edge softening.
 - Each **Camera** is identified by a descriptive **Historical Format** rather than an invented brand or exact manufacturer model.
 - The Camera catalog prioritizes nostalgic and behaviorally distinct **Historical Formats**, not literal historical sales rank or cosmetically different treatments.
+- Each **Camera** has one **Format Reference**, and its **Developed Treatment** is judged against that original as it performed when new; the Camera is still identified to users only by its descriptive **Historical Format** ([ADR 0015](../adr/0015-each-camera-is-judged-against-one-named-format-reference.md)).
+- The **Format Reference** for the 1970s Instant is the original 1970s Polaroid integral print, and for the 1990s Disposable it is the Kodak Fun Saver 35mm single-use camera with flash, loaded with 800-speed color film.
+- The **Format Reference** for the 6×6 Medium Format is a Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 for the color **Film Stock** and Kodak Tri-X 400 for the black-and-white **Film Stock**.
+- The **Format Reference** for the 16mm Cinema is the Bolex H16 Reflex, loaded with Kodak Vision3 250D color negative film for the color **Film Stock** and Eastman Double-X for the black-and-white **Film Stock**.
+- The **Format Reference** for the 1960s Super 8 Home Movie is the Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second.
 - The v1 Camera catalog contains only **Analog Cameras**; nostalgic digital Cameras belong to a later release with their own authentic review and editing rules.
 - A **Film**'s **Camera** cannot be replaced after **Load Film**, including during capture or after Development.
 - A **Film** has one editable **Film Title** and one system-derived **Capture Date Range**.
@@ -478,6 +503,7 @@ _Avoid_: Draft, incomplete album
 - Guest deletion follows existing privacy-removal rules: it restores no consumed Exposures or recording time, delayed uploads cannot restore deleted contributions, and affected Developed Movies are rebuilt from surviving unchanged Developed Clips without repeating Development.
 - Delete Guest Identity never automatically Develops or Releases a Film and cannot recall copies already exported outside the app.
 - A discarded Instant Exposure remains a used frame in its Instant Film pack.
+- A developed Instant Exposure is the whole print: its square picture on a white card, shown and exported together everywhere, including **Save Developed to Photos**; the card is never an optional frame.
 - Discard creates a **Discarded Frame** in the developed Film while permanently removing the underlying private media.
 - A **Group Film** is created with exactly one **Host** and zero or more other **Participants**; deletion of the Host's Account never assigns a successor.
 - V1 fixes the **Host** role to the Group Film's original creating **Account** for the Film's lifetime, with no co-hosts, Host transfers, reassignment, or automatic takeover.
@@ -502,11 +528,11 @@ _Avoid_: Draft, incomplete album
 - An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
 - Personal Film use, including Subscription purchase, capture, Development, Darkroom work, export and the Trial Film, does not require an Account; v1 has no Account or sign-in.
 - Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
-- V1 Trial eligibility and unused-Film replacement are defined in [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film).
+- V1 Trial eligibility and unused-Film replacement are defined in [PRD FR-21](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film).
 - The iPhone remembers its Trial entitlement in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore.
 - **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and it never needs connectivity (DEC-15).
 - After Trial Activation, Trial Film capture may continue without connectivity.
-- For device-bound consumption and Keychain-write rules, including the distinction from restored Film rights, see [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film).
+- For device-bound consumption and Keychain-write rules, including the distinction from restored Film rights, see [PRD FR-21](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film).
 - Failed captures that do not save successfully do not consume Trial Film eligibility.
 - The current iPhone's entitlement can have at most one Trial Film initiated from it at a time; a Trial Film with no successfully saved captures may be deleted without any cancellation step, and deleting it does not consume eligibility.
 - [ADR 0012](../adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md) records the accepted cost of granting an entitlement per physical iPhone.
@@ -625,11 +651,26 @@ _Avoid_: Draft, incomplete album
 - Affected unfinished results remain hidden until their Development completes under the existing **Reveal Rule**; resuming does not reseal previously revealed Instant Exposures or restore content removed through existing privacy actions.
 - Resuming Group Film Development remains Host-only and leads to **Private Review** on completion, never automatic Release or Participant preview.
 - A **Developed Treatment** may include **Authentic Imperfections**, but random Development effects must not make an otherwise valid capture completely unusable.
+- A **Developed Treatment** shows its **Historical Format** as freshly processed in its era, not as surviving prints or reels look decades later; fading, yellowing, dye shift, and wear from storage or repeated projection are not **Authentic Imperfections** ([ADR 0013](../adr/0013-developed-treatments-show-the-medium-fresh-not-aged.md)).
 - Severe failures may result from authentic capture conditions such as darkness, motion, an obstructed lens, or incorrect manual exposure.
+- The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an Exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects.
+- The 1990s Disposable's **Developed Treatment** adds no light leaks, red-eye, or dust and scratches.
+- The 1960s Super 8 Home Movie's **Authentic Imperfections** are an unsteady frame, brightness flicker, and dust and hair in the gate, each present from capture or first showing rather than from age.
+- The 16mm Cinema's **Authentic Imperfections** are visible grain, minor jitter and weave, and soft focus with vignetting toward the edges; it has no brightness flicker and no dust or hair in the gate.
+- The 16mm Cinema shows highlight halation on both **Film Stocks**: a neutral glow in black-and-white and a red glow in color; the red glow is a deliberate departure from its color **Format Reference**, whose anti-halation backing prevents it.
+- A 16mm Cinema **Recorded Clip** has no per-clip limit and may run for the whole **Duration Limit**; the spring-wound run time of its **Format Reference** is deliberately not reproduced.
+- The 16mm Cinema's color **Film Stock** keeps a fixed daylight color balance: daylight develops neutral, warm indoor light develops orange, and Development does not correct it.
+- The 6×6 Medium Format's **Viewfinder** shows the scene reversed left to right, as a waist-level finder does; its developed Exposures are not reversed, and **Selfie Capture** keeps its existing mirrored Viewfinder.
+- The 6×6 Medium Format's focus is optical only: its **Developed Treatment** never synthesizes background blur, so depth of field is whatever the device lens produced at capture.
+- The 1990s Disposable's **Viewfinder** shows a live low-light cue advising flash when the scene is too dim for its fixed exposure; the cue is exposure guidance and never previews the developed result.
 - The **Darkroom** may adjust a Developed Treatment within analog constraints but cannot replace it.
 - V1 Darkroom adjustments apply only to Photo Films, including personal Exposures (and, in v2, eligible Group Film Private Prints); Movie Films have no Darkroom or post-Development Basic Edits.
 - A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Withdraw, Developed Export, and silent-format Soundtrack choice remain separate actions, not Movie Darkroom editing.
 - A developed **Exposure** may receive its own **Basic Edits** independently of every other Exposure in the Film.
+- Developed Exposures from every Photo Camera are eligible for the **Darkroom**, including Instant prints; the original developed print is preserved, and Reset returns to it.
+- Each developed Instant Exposure carries a slight variation in color and density of its own, assigned once at Development, so no two prints are identical; the 1970s Instant adds no uneven-chemistry or spread flaws.
+- The **Darkroom** offers no crop for an Instant print; its square picture and white card always stay whole.
+- Instant prints are the one exception to the physical-technique test for **Basic Edits**: they receive the same Basic Edits as other color Exposures, except crop, even though an instant print has no darkroom printing stage.
 - After Group Film Release, the Host and Participants with current access may use the Darkroom only on Group Exposures they captured themselves.
 - Group Film Basic Edits belong to a **Private Print**, visible only to its contributor and available for Developed Export; each Private Print derives from exactly one Group Exposure.
 - The shared Group Film always displays the original developed results, never a contributor's Private Print or Darkroom edits.
@@ -641,6 +682,7 @@ _Avoid_: Draft, incomplete album
 - Digital-only content manipulation is outside the **Darkroom** boundary.
 - The **Darkroom** does not offer a saturation control.
 - Color Films may use physical-printing equivalents such as color filtration or color balance; black-and-white Films may use contrast grades or chemical toning.
+- In v1 the only black-and-white Photo Films are 6×6 Medium Format Films loaded with the black-and-white **Film Stock**.
 - The **Darkroom** includes reversible **Dodge/Burn** adjustments.
 - A user may keep multiple **Unfinished Films** and resume any of them later.
 - Starting or resuming another **Film** does not reveal the captures in an **Unfinished Film**.
@@ -736,16 +778,16 @@ _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 
 ### Photo Cameras
 
-- **1990s Disposable**: 27 Exposures, fixed focus, optional flash, and roll-level Development.
-- **1970s Instant**: a 10-Exposure pack with individual Exposure Development.
-- **1960s 6×6 Medium Format**: 12 square Exposures, a waist-level-viewfinder presentation, deliberate focus and exposure controls, and roll-level Development.
+- **1990s Disposable**: 27 borderless 3:2 Exposures with no date stamp, showing warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges; fixed focus, fixed exposure, optional flash, and roll-level Development.
+- **1970s Instant**: a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.
+- **6×6 Medium Format**: 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a waist-level **Viewfinder** that shows the scene reversed left to right, deliberate focus and exposure controls, and roll-level Development; it carries no decade because its color film is a present-day one.
 
 ### Movie Cameras
 
-- **1960s Super 8 Home Movie**: 3:20 of handheld cartridge footage with pronounced grain and flicker.
-- **1960s 16mm Cinema**: 2:45 of deliberately framed, finer-grained motion film with a cinematic cadence.
+- **1960s Super 8 Home Movie**: 3:20 of silent handheld cartridge footage at 18 frames per second, with a fixed-focus lens, automatic exposure, strong, rich color, fine grain, an unsteady frame, brightness flicker, and dust and hair in the gate.
+- **16mm Cinema**: 2:47 of deliberately framed motion film at 24 frames per second, with visible grain, highlight halation, minor jitter and weave, and soft, darkened edges, in color or black-and-white according to the **Film Stock** chosen at Load Film; it carries no decade because its color film is a present-day one.
 
-The v1 Movie capacities are intentionally compressed for a completable mobile experience; authenticity applies to each Camera's behavior and character rather than reproducing full historical film lengths.
+Each v1 Movie capacity is one real load of its **Format Reference**: a 50-foot Super 8 cartridge at 18 frames per second (3:20) and a 100-foot 16mm spool at 24 frames per second (2:47).
 
 ## Example dialogue
 
@@ -775,7 +817,7 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Number of exposures/films" mixed the capacity of a photo film with the film itself — resolved: a photo **Film** has an **Exposure Limit**; a movie **Film** has a **Duration Limit**.
 - "Finish Film Early" was initially rejected as an early-preview loophole — revised for physical-camera authenticity: personal **Roll Films** may use **Rewind & Develop Early**, permanently wasting remaining Exposures after an explicit warning.
 - A **Film** was initially described as event-bounded — resolved: the roll capacity is the boundary; its **Film Title** is editable and it may span multiple events.
-- "Film type" was used for the underlying vintage treatment — resolved: **Camera** is the complete selectable package in v1, and there is no separate film-stock choice.
+- "Film type" was used for the underlying vintage treatment — resolved: **Camera** is the complete selectable package in v1, and there is no separate film-stock choice, except that the 6×6 Medium Format and the 16mm Cinema each offer a color or black-and-white **Film Stock** at Load Film.
 - "Front camera" could be confused with a separately selected vintage **Camera** — resolved: **Selfie Capture** uses the phone's front lens within the same Film and Camera package; v1 is not rear-camera-only.
 - Movie "orientation" could mean an individual clip's capture orientation or the final movie's presentation — resolved: clips may mix portrait and landscape, while **Movie Orientation** fixes one presentation frame chosen at Film setup, with opposite-orientation clips fitted using borders.
 - Personal Film deletion could be confused with per-capture **Discard** — resolved: **Delete Film** removes the whole personal Film from current app-controlled storage after a warning, including an unfinished Film without preview; Discard removes one revealed capture while retaining the Film's chronology. Restoring an iOS backup made before either removal can bring the removed data back (DEC-17).
@@ -793,6 +835,9 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - A pending identity could otherwise create new contributions or change ownership during cleanup — resolved: it cannot join or capture in Group Films, add shared Exposures, or participate in identity claiming or linking until its deletion completes.
 - Voluntary departure and Host removal have different rejoining rights — resolved: **Leave Film** permits eligible rejoining while the Film is open, but **Remove Participant** permanently blocks that known identity from the same Film in v1, including after Guest Identity claiming.
 - A permanent removal block could be mistaken for a guaranteed ban on a physical person — resolved: v1 blocks known identities and retains account-free Guest entry despite the possibility of a new, unlinked identity on another device; leaked-code revocation limits entry through that code, not person-level identity evasion.
+- "The original look" of a Camera could mean the medium when new, the same medium as it survives today, or the faded look that retro camera apps have made familiar — resolved: a **Developed Treatment** shows the Historical Format as freshly processed in its era, and aging is not an **Authentic Imperfection**.
+- "Matching the original camera" was first resolved as evoking a composite era feel with no named original, then reversed — resolved: each **Camera** has one internal **Format Reference**, a named original camera and film, and its **Developed Treatment** is judged against it; the name never reaches users.
+- "1960s 6×6 Medium Format" and "1960s 16mm Cinema" each paired a 1960s name with a film first made decades later — resolved: the Cameras are **6×6 Medium Format** and **16mm Cinema** with no decade, so a present-day film contradicts nothing.
 - "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead.
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.
 - A universal no-preview rule conflicted with historically instant formats — resolved: each **Camera** owns a **Reveal Rule**, and Camera authenticity takes precedence over uniform behavior.
@@ -800,7 +845,7 @@ The v1 Movie capacities are intentionally compressed for a completable mobile ex
 - "Export" could mean sharing the developed Group Film or saving original source captures — resolved: any Participant with access may export released developed media, but may save only their own originals.
 - Saving developed images to native Photos was a condition of keeping personal Films device-local — resolved: v1 offers Save Developed to Photos for revealed media, while personal Film state and reversible edit history remain device-local without app-managed cloud backup.
 - Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved (version 1.2): v1 has no sign-in or Account, and the Trial is one Film per iPhone remembered in the Keychain, so it needs no identity; the version 1.1 Account-scoped resolution is preserved in the deferred section above.
-- A per-iPhone Trial could be mistaken for a per-Account or cross-device Trial — resolved: [PRD FR-21](../2026-09-29-film-camera-experience-v1-prd.md#fr-21--one-complete-trial-film) defines the entitlement and restored-Film rules; ADR 0012 records the rationale.
+- A per-iPhone Trial could be mistaken for a per-Account or cross-device Trial — resolved: [PRD FR-21](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film) defines the entitlement and restored-Film rules; ADR 0012 records the rationale.
 - Device backup could be mistaken for app-managed sync or for restoring the Trial — resolved: Films are included in iOS device backups and return on a restored phone, the app offers no sync of its own, and the Trial record stays bound to the device and does not come back through a restore.
 - "Add My Camera" could imply selecting a different Camera or moving a personal Film — resolved: **Add Shared Exposures** is an optional, explicit contribution of one full Subscriber Load to the existing Group Exposure Pool, with the exact Exposure count shown in its button label.
 - The no-deletion-before-reveal rule could leave a Participant's content permanently dependent on an inactive Host — resolved: **Withdraw Unreleased Captures** allows bulk removal of that Participant's own saved contributions before Release without preview, selective deletion, capacity refund, or Host approval.

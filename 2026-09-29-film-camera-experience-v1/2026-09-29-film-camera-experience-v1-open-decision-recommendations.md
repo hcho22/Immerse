@@ -115,3 +115,49 @@ exercise both possible policies without turning either into the captain's choice
 **Affected tracker IDs:** DEC-14, QA-14 and any future launch-readiness checklist.
 
 **Supporting evidence so far:** no analytics code exists, preserving the no-analytics requirement.
+
+## Addendum, 2026-10-06 - Effect of PRD 2.0 and the captain's answers
+
+The sections above are the September 30 recommendations and are kept as written.
+This addendum records what PRD version 2.0 (with ADRs 0013 to 0015) and the captain's 2026-10-06 answers settle, change or leave open.
+Where a recommendation above disagrees with PRD 2.0, PRD 2.0 governs, and the cells below say which ones.
+
+### Captain decisions of 2026-10-06
+
+- Color Films get no contrast control. Contrast grades and chemical toning are black-and-white only, which in v1 means 6×6 Medium Format Films on the black-and-white Film Stock. PRD FR-07's wording ("appropriate contrast/contrast grades") is unchanged and is read this way (tracker DRK-02, DRK-03, DRK-10).
+- A look is checked against its Format Reference through side-by-side review boards built from public or licensed reference imagery, and the captain approves each Camera (tracker QA-16).
+- The documents land first as one docs-only change, then PRD 2.0 is implemented in slices, and the manual iPhone test candidate is the build that includes PRD 2.0 (tracker, "PRD 2.0 implementation slices").
+- ADR 0015, cited by PRD 2.0 and CONTEXT.md, was supplied by the captain and is added as delivered.
+
+### DEC-04 - what PRD 2.0 settles and what stays open
+
+Settled by PRD 2.0 (PRD section 6, FR-04, FR-05, section 15): each Camera's Format Reference, picture shape, look, imperfections and frame rate, and the 16mm Cinema capacity of 2:47 (167 seconds).
+These cells of the render matrix above are superseded:
+
+| Camera row | Cell above | Now |
+| --- | --- | --- |
+| Disposable 27 | "date-free border option only if approved copy allows"; a 4000 x 3000 4:3 export as the example | Borderless 3:2 picture with no date stamp is decided. The pixel size stays open. |
+| Instant 10 | "exactly 2048 x 2048 pixels before any approved frame/border treatment"; "Softer contrast, instant-print frame" | The white card is always part of the print and of its export, with brilliant warm saturated color and soft detail. The master is therefore larger than the bare square, and its size stays open. Contrast and print-to-print variation wait on a study of preserved 1970s prints. |
+| 6x6 12 | "smoother roll-film contrast, visible but restrained grain" | Color: natural warm color, very fine grain, gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only. |
+| Super 8 200s | "gate weave/grain" | 18 fps, fine grain, strong rich color, an unsteady frame, brightness flicker, and dust and hair in the gate. |
+| 16mm 165s | "165s"; "Cleaner cinema grain, stable frame" | 167 seconds at 24 fps, visible grain, highlight halation, minor jitter and weave, soft darkened edges, no flicker and no dust or hair, in color or black-and-white. |
+
+Still open: exact tone, contrast and grain values for each Camera and Film Stock, the Instant's contrast and variation, toning control values, and export codec, resolution and audio guarantees.
+The remaining values close through the QA-16 review boards, one Camera at a time, with the captain approving each.
+
+### DEC-11 - what changes
+
+| Area | Recommendation above | Now |
+| --- | --- | --- |
+| Contrast | Grades 0 to 5 in whole-grade steps | Grades 0 to 5 apply to black-and-white Films only. Color Films have no contrast control (captain, 2026-10-06). |
+| Crop | Per-photo only; preserve aspect for 6x6 | No crop for an Instant print (PRD 2.0). The 6x6 rule stands. |
+| Chemical toning | Only for an explicitly approved silver-gelatin print process, after reviewing comparison prints | The applicable stock is decided: black-and-white 6×6 Medium Format Films. The amount range and the comparison-print review are still open. |
+
+Exposure, color filtration, Dodge/Burn, Reset, Instant source export timing and soundtrack reselection are unchanged and open as before.
+
+### Other decisions touched
+
+- DEC-05: each Film Stock needs its own Format Reference film (ADR 0014), so curated samples are needed for each of the two stocks on the 6×6 Medium Format and the 16mm Cinema (tracker CAM-10). Rights status is unchanged.
+- DEC-12: the 167-second 16mm Movie, with grain, halation, jitter and weave, is heavier than the provisional preset the Movie assembly and Development budgets assumed, so the early check ARC-08 should time the 16mm at its new capacity.
+- DEC-01: the renamed Cameras and the rule that Format Reference names never reach the product are inputs to the final copy.
+- DEC-13 and DEC-14: unchanged.
