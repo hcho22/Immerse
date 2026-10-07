@@ -43,15 +43,15 @@ struct CaptureView: View {
                             Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
                         }
                         let behavior = CaptureBehavior.for(film.camera.id)
-                        let mirrored = behavior.isViewfinderMirrored(position: capture.position)
+                        let showsLowLightCue = behavior.showsLowLightCue && capture.showsLowLightCue
                         ZStack {
                             Color.black
                             if let preview = capture.preview {
-                                CameraPreview(source: preview, mirrored: mirrored, fillsFrame: behavior.viewfinder.cropsCapture)
+                                CameraPreview(source: preview, position: capture.position, behavior: behavior)
                             } else { Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white) }
                         }
                         .overlay(alignment: .top) {
-                            if capture.showsLowLightCue { LowLightCueView().padding(8) }
+                            if showsLowLightCue { LowLightCueView().padding(8) }
                         }
                         // The 4:3 capture fills a 3:4 viewfinder in a portrait interface and a 4:3 one in landscape;
                         // the square and 3:2 Cameras crop it to the shape they develop to.
@@ -59,7 +59,7 @@ struct CaptureView: View {
                         .clipped()
                         .accessibilityElement(children: .contain)
                         .accessibilityLabel(viewfinderLabel(position: capture.position, behavior: behavior))
-                        .onChange(of: capture.showsLowLightCue) { _, showing in
+                        .onChange(of: showsLowLightCue) { _, showing in
                             if showing { AccessibilityNotification.Announcement(LowLightCueView.spokenText).post() }
                         }
                         if film.completionState == .open {
@@ -178,14 +178,13 @@ private struct LowLightCueView: View {
             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Self.spokenText)
-            .accessibilityIdentifier("low-light-cue")
     }
 }
 
 private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
-    let mirrored: Bool
-    let fillsFrame: Bool
+    let position: CapturePosition
+    let behavior: CaptureBehavior
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
         surface.source = source
@@ -193,8 +192,8 @@ private struct CameraPreview: UIViewRepresentable {
         return surface
     }
     func updateUIView(_ uiView: PreviewSurface, context: Context) {
-        uiView.preview?.videoGravity = fillsFrame ? .resizeAspectFill : .resizeAspect
-        uiView.mirrored = mirrored
+        uiView.preview?.videoGravity = behavior.viewfinder.cropsCapture ? .resizeAspectFill : .resizeAspect
+        uiView.mirrored = behavior.isViewfinderMirrored(position: position)
         uiView.setNeedsLayout()
     }
 }

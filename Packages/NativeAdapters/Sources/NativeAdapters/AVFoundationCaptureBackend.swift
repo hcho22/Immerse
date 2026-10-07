@@ -10,6 +10,8 @@ public struct NativeCameraControls: Sendable {
     public var manualFocus = false
     public var minimumExposureBias: Float?
     public var maximumExposureBias: Float?
+    /// The bias the active lens's automatic exposure holds now, which the 6×6 exposure control shows.
+    public var exposureBias: Float = 0
     /// Whether the active lens can hold the Disposable's custom exposure.
     public var fixedExposure = false
     public init() {}
@@ -55,7 +57,8 @@ public actor AVFoundationCaptureBackend {
     public nonisolated let events: AsyncStream<CaptureSaveEvent>
     private let eventContinuation: AsyncStream<CaptureSaveEvent>.Continuation
     /// The scene's light value (`SceneLight.ev100`) as the viewfinder's automatic exposure reads it, for the
-    /// Disposable's low-light cue. It is silent while a fixed exposure is held for a capture.
+    /// Disposable's low-light cue. It is silent while a fixed exposure is held for a capture and while automatic
+    /// exposure is still adjusting. It is one stream for the backend's life, so read it from one task.
     public nonisolated let sceneLight: AsyncStream<Double>
     private let sceneLightContinuation: AsyncStream<Double>.Continuation
     private var meter: SceneLightMeter?
@@ -94,6 +97,7 @@ public actor AVFoundationCaptureBackend {
         if device.isExposureModeSupported(.continuousAutoExposure) {
             result.minimumExposureBias = device.minExposureTargetBias
             result.maximumExposureBias = device.maxExposureTargetBias
+            result.exposureBias = device.exposureTargetBias
         }
         result.fixedExposure = device.isExposureModeSupported(.custom)
         return result
@@ -355,15 +359,15 @@ public actor AVFoundationCaptureBackend {
     }
 
     /// Holds the lens in the Camera's focus and exposure behavior. Only `.fixed` focus changes anything the phone
-    /// would not do itself; every other mode returns to the continuous automatic default, except the
+    /// would not do itself; every other mode returns to the continuous, unbiased automatic default, except the
     /// person's own `.manual` focus and exposure bias, which stay where they were set.
     private func applyLensBehavior(_ behavior: CaptureBehavior, to device: AVCaptureDevice) throws {
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
-        if behavior.exposure != .manualBias, device.exposureMode != .continuousAutoExposure,
-           device.isExposureModeSupported(.continuousAutoExposure) {
+        if behavior.exposure != .manualBias, device.isExposureModeSupported(.continuousAutoExposure) {
             // A fixed exposure is held per capture, so the viewfinder always meters automatically.
-            device.exposureMode = .continuousAutoExposure
+            if device.exposureMode != .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
+            if device.exposureTargetBias != 0 { device.setExposureTargetBias(0) }
         }
         switch behavior.focus {
         case .fixed:
@@ -530,8 +534,8 @@ public actor AVFoundationCaptureBackend {
     }
 }
 
-/// Reads the viewfinder's automatic exposure and reports the scene light it implies. KVO callbacks arrive on
-/// arbitrary threads; the pause flag is the only shared state.
+/// Reads the viewfinder's automatic exposure once it has settled and reports the scene light it implies. KVO
+/// callbacks arrive on arbitrary threads; the pause flag is the only shared state.
 private final class SceneLightMeter: @unchecked Sendable {
     private var observations: [NSKeyValueObservation] = []
     private let lock = NSLock()
@@ -544,14 +548,15 @@ private final class SceneLightMeter: @unchecked Sendable {
 
     init(device: AVCaptureDevice, report: @escaping @Sendable (Double) -> Void) {
         let read: @Sendable (AVCaptureDevice) -> Void = { [weak self] device in
-            guard let self, !self.isPaused else { return }
+            guard let self, !self.isPaused, !device.isAdjustingExposure else { return }
             report(SceneLight.ev100(
                 aperture: Double(device.lensAperture), duration: device.exposureDuration.seconds, iso: device.iso
             ))
         }
         observations = [
             device.observe(\.exposureDuration, options: [.initial, .new]) { device, _ in read(device) },
-            device.observe(\.iso, options: [.new]) { device, _ in read(device) }
+            device.observe(\.iso, options: [.new]) { device, _ in read(device) },
+            device.observe(\.isAdjustingExposure, options: [.new]) { device, _ in read(device) }
         ]
     }
 }

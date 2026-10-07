@@ -278,6 +278,37 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertFalse(capture.showsLowLightCue, "The scene is bright again")
     }
 
+    /// A backend's scene light is one stream for its whole life, so closing the viewfinder must not end it. The
+    /// simulator has no lens, so the test feeds that stream and stands in for each session start.
+    func testLowLightCueKeepsReadingTheSceneAfterTheViewfinderClosesAndOpensAgain() async throws {
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        capture.setForTesting(controls: withFlash)
+        let (sceneLight, lens) = AsyncStream.makeStream(of: Double.self, bufferingPolicy: .bufferingNewest(1))
+        capture.attachForTesting(sceneLight: sceneLight)
+        capture.startForTesting(behavior: .for(.disposable1990s))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await waitUntil { capture.showsLowLightCue }
+
+        capture.suspend()
+        XCTAssertFalse(capture.showsLowLightCue, "A closed viewfinder shows no cue")
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await Task.sleep(for: .milliseconds(200))
+        XCTAssertFalse(capture.showsLowLightCue, "A closed viewfinder reads no scene")
+
+        capture.startForTesting(behavior: .for(.disposable1990s))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await waitUntil { capture.showsLowLightCue }
+        lens.yield(FixedExposure.referenceEV100)
+        try await waitUntil { !capture.showsLowLightCue }
+
+        capture.startForTesting(behavior: .for(.mediumFormat6x6))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await Task.sleep(for: .milliseconds(200))
+        XCTAssertFalse(capture.showsLowLightCue, "Only the Disposable shows the cue")
+    }
+
     /// The actual capture screens, retained as screenshots at the default and the largest text size. The simulator has
     /// no camera, so the viewfinder shows its empty frame in each Camera's shape, and the Disposable's cue is
     /// raised from a synthetic dim reading.
