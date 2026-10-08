@@ -164,6 +164,7 @@ exact, measured contrast exception remains. Device and assistive-technology QA-1
 
 The framework also reported a UIKitToolbar/UIHostingController
 runtime warning on standard SwiftUI toolbar use; it is retained, not claimed fixed.
+`ci-flakes-057.md` later removed it from launch by moving the Journal's Start a Film out of the bottom toolbar; the photo screens' bottom toolbars are unchanged.
 Launch arguments requesting dark appearance did not reliably produce dark output
 in the first screenshot; no dark-mode acceptance is inferred from those arguments.
 

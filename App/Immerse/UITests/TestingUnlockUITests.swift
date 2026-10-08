@@ -15,14 +15,23 @@ extension XCUIApplication {
 /// Debug default.
 @MainActor
 final class TestingUnlockUITests: XCTestCase {
-    func testUnlockIndicatorFollowsThePersistedSettingsSwitch() throws {
+    /// One test per switch value: both together took 1 minute 26 seconds to 1 minute 35 seconds on CI, which a runner at
+    /// about half speed would push past the 3-minute allowance (Evidence/NativeApp/ci-flakes-057.md). The on test turns
+    /// the switch off and then on, and the off test turns it off from on, the state both tests end in, so each makes
+    /// its own change across a relaunch in either order.
+    func testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn() throws {
         let app = XCUIApplication()
+        setUnlock(app, on: false)
         setUnlock(app, on: true)
         assertLoadAndPlans(app, unlocked: true)
+    }
+
+    func testUnlockIndicatorHidesAfterTheSettingsSwitchIsTurnedOff() throws {
+        let app = XCUIApplication()
+        // Leaves the unlock on, the Debug default, even when an assertion below fails.
+        addTeardownBlock { @MainActor in self.setUnlock(app, on: true) }
         setUnlock(app, on: false)
         assertLoadAndPlans(app, unlocked: false)
-        setUnlock(app, on: true)
-        assertLoadAndPlans(app, unlocked: true)
     }
 
     private func setUnlock(_ app: XCUIApplication, on: Bool) {
@@ -42,9 +51,7 @@ final class TestingUnlockUITests: XCTestCase {
     /// Relaunches, so the result shows what the persisted switch gives a home-screen launch.
     private func assertLoadAndPlans(_ app: XCUIApplication, unlocked: Bool) {
         app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        app.buttons["start-film"].tap()
-        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        openCameraCatalog(app)
         app.buttons["camera-disposable1990s"].tap()
         let load = app.buttons["load-film"]
         for _ in 0..<8 where !(load.exists && load.isHittable) { app.swipeUp() }
