@@ -8,6 +8,7 @@ private enum JournalRoute: Hashable {
 
 struct JournalView: View {
     @Environment(JournalModel.self) private var model
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var setup = false
     @State private var settings = false
     @State private var path: [JournalRoute] = []
@@ -16,6 +17,8 @@ struct JournalView: View {
         @Bindable var model = model
         NavigationStack(path: $path) {
             FilmList(archived: false)
+                .safeAreaBar(edge: .bottom, spacing: 0) { startFilm }
+                .ignoresSafeArea(.container, edges: .bottom)
                 .navigationTitle("Film Journal")
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
@@ -25,12 +28,6 @@ struct JournalView: View {
                         NavigationLink(value: JournalRoute.archive) {
                             Label("Archive", systemImage: "archivebox")
                         }
-                    }
-                    ToolbarItem(placement: .bottomBar) {
-                        Button("Start a Film", systemImage: "plus") { setup = true }
-                            .primaryAction()
-                            .accessibilityIdentifier("start-film")
-                            .disabled(model.initialRecoveryPending)
                     }
                 }
                 .navigationDestination(for: JournalRoute.self) { route in
@@ -47,6 +44,28 @@ struct JournalView: View {
         .alert(item: $model.alert) { alert in
             Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
         }
+    }
+
+    /// Start a Film where the iOS 26 bottom toolbar drew it, with the same circle, symbol and Film inset. A
+    /// `.bottomBar` toolbar item made UIKit add its toolbar to the hosting controller's view at every launch, which
+    /// SwiftUI reports as unsupported (Evidence/NativeApp/ci-flakes-057.md). Like a bar item, it keeps one size at
+    /// every text size and offers the large content viewer instead.
+    private var startFilm: some View {
+        let diameter: CGFloat = verticalSizeClass == .compact ? 44 : 48
+        return Button { setup = true } label: {
+            Label("Start a Film", systemImage: "plus")
+                .labelStyle(.iconOnly)
+                .font(.system(size: 17, weight: .medium))
+                .imageScale(.large)
+                .foregroundStyle(Color.primaryActionSymbol)
+                .frame(width: diameter, height: diameter)
+        }
+        .glassEffect(.regular.tint(.primaryAction).interactive(), in: .circle)
+        .accessibilityShowsLargeContentViewer()
+        .accessibilityIdentifier("start-film")
+        .disabled(model.initialRecoveryPending)
+        .padding(.top, 10)
+        .padding(.bottom, 28)
     }
 }
 

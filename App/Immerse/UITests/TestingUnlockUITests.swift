@@ -15,14 +15,21 @@ extension XCUIApplication {
 /// Debug default.
 @MainActor
 final class TestingUnlockUITests: XCTestCase {
-    func testUnlockIndicatorFollowsThePersistedSettingsSwitch() throws {
+    /// One test per switch value: both together took 1 minute 26 seconds to 1 minute 35 seconds on CI, which a runner at
+    /// about half speed would push past the 3-minute allowance (Evidence/NativeApp/ci-flakes-057.md). Each sets the
+    /// switch from whichever state it finds, so neither depends on the other's result.
+    func testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn() throws {
         let app = XCUIApplication()
         setUnlock(app, on: true)
         assertLoadAndPlans(app, unlocked: true)
+    }
+
+    func testUnlockIndicatorHidesAfterTheSettingsSwitchIsTurnedOff() throws {
+        let app = XCUIApplication()
+        // Leaves the unlock on, the Debug default, even when an assertion below fails.
+        addTeardownBlock { @MainActor in self.setUnlock(app, on: true) }
         setUnlock(app, on: false)
         assertLoadAndPlans(app, unlocked: false)
-        setUnlock(app, on: true)
-        assertLoadAndPlans(app, unlocked: true)
     }
 
     private func setUnlock(_ app: XCUIApplication, on: Bool) {

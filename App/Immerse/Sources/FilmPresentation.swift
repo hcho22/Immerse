@@ -129,6 +129,10 @@ extension Color {
     /// actions use a deeper green that keeps both the label and the fill's edge readable.
     static let primaryAction = Color("PrimaryAction")
 
+    /// A symbol on a `primaryAction` glass circle, as the iOS 26 bottom toolbar drew it: the fill with white added,
+    /// 66% in light mode and 59% in dark.
+    static let primaryActionSymbol = Color("PrimaryActionSymbol")
+
     /// Secondary text on a card. On the white light-mode card the system secondary label is 3.44:1, under the
     /// 4.5:1 bar, so light mode raises its opacity to at least 71% (4.58:1); dark mode keeps the system color.
     static let cardSecondaryText = Color(uiColor: UIColor { traits in
