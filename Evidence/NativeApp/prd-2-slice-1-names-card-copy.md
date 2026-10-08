@@ -93,3 +93,10 @@ The harness shots are on an iPhone SE (3rd generation), the smallest supported i
 
 No physical iPhone, no real camera capture, and no review of the Instant look against its Format Reference (the later looks slice).
 The Catalog's "Choose a Camera" title truncates and "Disposable" hyphenates at the largest accessibility size; both predate this slice.
+
+## Re-verification of the Darkroom bottom margin
+
+After the pipeline's fix commit (`6f0552d`, merged with main as `599502b`) the iPhone SE (3rd generation) harness ran in light and in dark: the Darkroom fit test with its Dodge/Burn checks, the Instant card test, the early photo test and the three retained Darkroom tests all pass, and the Darkroom fit, Dodge/Burn and Instant Darkroom screenshots above were captured again from that run.
+On the iPhone 17 the hosted suite passes, including the Darkroom error test, apart from the four local StoreKit fixture tests.
+`testLargestDynamicTypeCatalogAndLandscapeSettings` reported "Text clipped" once while the harness was running on the same machine and passed twice when rerun alone.
+
