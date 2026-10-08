@@ -64,7 +64,7 @@ private struct LoadFilmView: View {
             form { entitlement }
             #endif
         }
-        .navigationTitle(camera.shortNameText)
+        .navigationTitle(SpokenText.title(camera.shortName))
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
         .interactiveDismissDisabled(loading)

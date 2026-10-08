@@ -1,3 +1,4 @@
+import Accessibility
 import EntitlementCore
 import FilmDomain
 import FilmPersistence
@@ -17,13 +18,10 @@ extension CameraPackage {
         }
     }
 
-    /// What VoiceOver reads for `shortName` and `displayName`.
-    var spokenShortName: String { SpokenText.of(shortName) }
-    var spokenDisplayName: String { SpokenText.of(displayName) }
-
-    /// The Camera's names as text that VoiceOver reads naturally. Every place the name is shown uses these.
-    var shortNameText: Text { Text(shortName).accessibilityLabel(spokenShortName) }
-    var displayNameText: Text { Text(displayName).accessibilityLabel(spokenDisplayName) }
+    /// The Camera's names as text that VoiceOver reads naturally. Every view that shows a name uses these; a navigation
+    /// title uses `SpokenText.title`.
+    var shortNameText: Text { Text(SpokenText.shown(shortName)) }
+    var displayNameText: Text { Text(SpokenText.shown(displayName)) }
 
     /// The title Load Film suggests for this Camera's `roll`th Film, such as "6×6 - Roll #01".
     func suggestedTitle(roll: Int) -> String { "\(shortName) - Roll #\(String(format: "%02d", roll))" }
@@ -87,15 +85,28 @@ extension CameraPackage {
 
 /// Product text as VoiceOver should read it: the product spells "6×6", which VoiceOver would read as "6 times 6".
 enum SpokenText {
+    /// `text` as written, with each "6×6" pronounced "6 by 6". A pronunciation keeps the accessibility label the shown
+    /// text: the clipped-text audit measures the label in the text's frame, and a "6 by 6" label, longer than the
+    /// "6×6" drawn there, was reported as clipped.
+    static func shown(_ text: String) -> AttributedString {
+        var sixBySix = AttributedString("6×6")
+        sixBySix.accessibilitySpeechPhoneticNotation = "sɪks baɪ sɪks"
+        let parts = text.components(separatedBy: "6×6")
+        return parts.dropFirst().reduce(AttributedString(parts[0])) { $0 + sixBySix + AttributedString($1) }
+    }
+
+    /// A navigation title, labeled with `of(text)`: the navigation bar drops a pronunciation, and the clipped-text
+    /// audit does not measure the bar's title.
+    static func title(_ text: String) -> Text { Text(text).accessibilityLabel(of(text)) }
+
+    /// `text` with each "6×6" written as VoiceOver says it.
     static func of(_ text: String) -> String { text.replacingOccurrences(of: "6×6", with: "6 by 6") }
 }
 
 extension Film {
-    /// The title as typed, which VoiceOver reads with any "6×6" spoken as "6 by 6", as in a suggested 6×6 title.
-    var spokenTitle: String { SpokenText.of(title) }
-
-    /// The title as text that VoiceOver reads naturally. Every place the title is shown uses this.
-    var titleText: Text { Text(title).accessibilityLabel(spokenTitle) }
+    /// The title as typed, which VoiceOver reads with any "6×6" spoken as "6 by 6", as in a suggested 6×6 title. Every
+    /// view that shows the title uses this; a navigation title uses `SpokenText.title`.
+    var titleText: Text { Text(SpokenText.shown(title)) }
 
     var journalState: String {
         if developmentState == .developed { return "Developed" }

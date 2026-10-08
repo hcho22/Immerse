@@ -123,7 +123,7 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Disposable capacity", type: .staticText, label: "27 exposures"),
         Target(name: "Instant", type: .staticText, label: "Instant", clearance: "10 exposures"),
         Target(name: "Instant capacity", type: .staticText, label: "10 exposures"),
-        Target(name: "6×6", type: .staticText, label: "6 by 6", clearance: "12 exposures"),
+        Target(name: "6×6", type: .staticText, label: "6×6", clearance: "12 exposures"),
         Target(name: "6×6 capacity", type: .staticText, label: "12 exposures"),
         Target(name: "Movie header", type: .staticText, label: "Movie", header: true),
         Target(name: "Super 8", type: .staticText, label: "Super 8", clearance: "3 minutes 20 seconds of film"),
@@ -240,7 +240,7 @@ final class ContentSizeTests: XCTestCase {
             // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
             Thread.sleep(forTimeInterval: 1)
             rows += record(measure(app, targets, category, below: title))
-            app.navigationBars[title].buttons.element(boundBy: 0).tap()
+            goBack(app, from: title, to: "Choose a Camera")
         }
         app.terminate()
         finish(category, rows, Self.superEight + Self.sixteenMillimeter)
@@ -270,7 +270,7 @@ final class ContentSizeTests: XCTestCase {
         app.buttons["start-film"].tap()
         app.buttons["camera-disposable1990s"].tap()
         waitForTrialStatus(app)
-        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft

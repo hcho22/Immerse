@@ -1,3 +1,4 @@
+import Accessibility
 import EntitlementCore
 import FilmDomain
 import FilmPersistence
@@ -219,17 +220,18 @@ final class JournalIntegrationTests: XCTestCase {
         }
     }
 
+    /// The 6×6 is drawn as "6×6" and spoken as "6 by 6" wherever its name is shown. No other Camera's name changes.
     func testSixBySixIsSpokenAsSixBySixWhereverItsNameIsShown() {
         let medium = CameraCatalog.mediumFormat6x6
         XCTAssertEqual(medium.shortName, "6×6")
-        XCTAssertEqual(medium.spokenShortName, "6 by 6")
         XCTAssertEqual(medium.displayName, "6×6 Medium Format")
-        XCTAssertEqual(medium.spokenDisplayName, "6 by 6 Medium Format")
+        assertShown(medium.shortName, spokenAs: "6 by 6")
+        assertShown(medium.displayName, spokenAs: "6 by 6 Medium Format")
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
-            XCTAssertEqual(camera.spokenShortName, camera.shortName)
-            XCTAssertEqual(camera.spokenDisplayName, camera.displayName)
+            assertShown(camera.shortName, spokenAs: camera.shortName)
+            assertShown(camera.displayName, spokenAs: camera.displayName)
         }
-        for camera in CameraCatalog.all { XCTAssertFalse(camera.spokenDisplayName.contains("×"), camera.displayName) }
+        for camera in CameraCatalog.all { XCTAssertFalse(SpokenText.of(camera.displayName).contains("×"), camera.displayName) }
     }
 
     /// A Film keeps its title as given, and VoiceOver reads any "6×6" in it as "6 by 6": the title Load Film suggests
@@ -238,15 +240,27 @@ final class JournalIntegrationTests: XCTestCase {
         let medium = CameraCatalog.mediumFormat6x6
         let suggested = try Film(camera: medium, title: medium.suggestedTitle(roll: 1))
         XCTAssertEqual(suggested.title, "6×6 - Roll #01")
-        XCTAssertEqual(suggested.spokenTitle, "6 by 6 - Roll #01")
+        assertShown(suggested.title, spokenAs: "6 by 6 - Roll #01")
         let typed = try Film(camera: CameraCatalog.disposable1990s, title: "Square 6×6 prints")
         XCTAssertEqual(typed.title, "Square 6×6 prints")
-        XCTAssertEqual(typed.spokenTitle, "Square 6 by 6 prints")
+        assertShown(typed.title, spokenAs: "Square 6 by 6 prints")
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
             let film = try Film(camera: camera, title: camera.suggestedTitle(roll: 12),
                                 movieOrientation: camera.medium == .movie ? .portrait : nil)
-            XCTAssertEqual(film.spokenTitle, film.title)
+            assertShown(film.title, spokenAs: film.title)
         }
+    }
+
+    /// `text` is drawn as written, with a "6 by 6" pronunciation on its "6×6" when `spoken` differs from it, and a
+    /// navigation title showing it is labeled `spoken`.
+    private func assertShown(_ text: String, spokenAs spoken: String, file: StaticString = #filePath, line: UInt = #line) {
+        let shown = SpokenText.shown(text)
+        XCTAssertEqual(String(shown.characters), text, file: file, line: line)
+        let pronounced = shown.runs.compactMap { run in
+            run.accessibilitySpeechPhoneticNotation.map { "\(String(shown[run.range].characters)): \($0)" }
+        }
+        XCTAssertEqual(pronounced, spoken == text ? [] : ["6×6: sɪks baɪ sɪks"], text, file: file, line: line)
+        XCTAssertEqual(SpokenText.of(text), spoken, file: file, line: line)
     }
 
     /// A Darkroom error shows between the print and its controls without resizing or moving the print, so the print

@@ -25,7 +25,7 @@ final class JournalFlowTests: XCTestCase {
         // The Form is lazy and its Camera description is long enough that the command is below the first screen.
         scrollUp(app, until: app.buttons["load-film"])
         XCTAssertTrue(app.buttons["load-film"].exists)
-        app.navigationBars["Super 8"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "Super 8", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists)
         app.buttons["Settings"].tap()
@@ -88,8 +88,7 @@ final class JournalFlowTests: XCTestCase {
         try audit(app, name: "\(name)-load-extra-small", for: Self.auditTypes)
         retainScreenshot(name: "\(name)-load-extra-small")
         // The Journal's bar stays in the tree under the catalog sheet on smaller iPhones, so go back from this bar.
-        app.navigationBars[name].buttons.element(boundBy: 0).tap()
-        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        goBack(app, from: name, to: "Choose a Camera")
     }
 
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
@@ -126,7 +125,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(load.isHittable)
         try audit(app, name: "16mm-command-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-command-accessibility-largest")
-        app.navigationBars["16mm"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "16mm", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft
@@ -169,7 +168,7 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(name: "Load-camera-denied")
         XCTAssertFalse(app.alerts.firstMatch.exists)
 
-        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 5))
         app.buttons["Settings"].tap()

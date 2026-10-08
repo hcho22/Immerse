@@ -33,6 +33,17 @@ extension XCTestCase {
         }
     }
 
+    /// Taps Back on the pushed screen whose bar is titled `title`, then waits until that bar has left the tree and the
+    /// `previous` screen's bar shows. The tap can return before the pop ends: one CI run (37788441803) then found the
+    /// Load screen still in the tree and no Cancel button on the catalog. A dropped tap fails here rather than at the
+    /// next step.
+    func goBack(_ app: XCUIApplication, from title: String, to previous: String) {
+        let bar = app.navigationBars[title]
+        bar.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(bar.waitForNonExistence(timeout: 5), "\(title) still showed 5 seconds after Back")
+        XCTAssertTrue(app.navigationBars[previous].waitForExistence(timeout: 5), "\(previous) did not show after Back")
+    }
+
     /// Taps Start a Film once and waits for the Camera catalog sheet. One CI run (main, run 37627486582) delivered a tap
     /// at the button's centre, (201, 822), where every passing launch did, and the Journal stayed on screen for the
     /// next six seconds with no sheet; no repeat reproduced it (Evidence/NativeApp/ci-flakes-057.md). A second tap

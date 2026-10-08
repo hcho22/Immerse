@@ -33,7 +33,7 @@ struct FilmDetailView: View {
                         }
                     }.padding()
                 }
-                .navigationTitle(film.titleText).navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(SpokenText.title(film.title)).navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { filmMenu(film) } }
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
