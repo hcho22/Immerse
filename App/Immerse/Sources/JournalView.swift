@@ -62,6 +62,7 @@ struct JournalView: View {
                 .dynamicTypeSize(...DynamicTypeSize.xxLarge)
                 .foregroundStyle(Color.primaryActionSymbol)
                 .frame(width: diameter, height: diameter)
+                .contentShape(.circle)
         }
         .glassEffect(.regular.tint(.primaryAction).interactive(), in: .circle)
         .accessibilityShowsLargeContentViewer()

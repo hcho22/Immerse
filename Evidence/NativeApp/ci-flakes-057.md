@@ -52,6 +52,8 @@ The Journal's Start a Film button was the only bottom bar on the launch screen, 
 The symbol colour is the new `PrimaryActionSymbol` colour (the fill with white added, 66% in light and 59% in dark, as measured from the bar's rendering).
 Like a bar item, the circle keeps one size at every text size, the symbol follows the text size up to Extra Extra Large, and larger sizes offer the large content viewer.
 The accessibility identifier, label and disabled-until-recovery behavior are unchanged.
+The label has a circular content shape, like the app's other framed button labels.
+On the iPhone 17 Pro, XCUITest taps near the circle's left and top edges, on its upper-left diagonal, in the frame's corner and near the left edge in landscape opened the catalog both with and without that shape, and a tap 5 pt outside the frame did not, so the whole circle was already tappable and the shape makes that explicit.
 The bottom bars in the photo screens are in sheets, not on the launch screen, and are unchanged.
 
 Before and after, Xcode 26.5, iPhone 17 Pro simulator on iOS 26.5, portrait, Large text, `Evidence/NativeApp/ci-flakes-057/journal-{before,after}-{light,dark}.png`:
@@ -85,8 +87,10 @@ A second tap would hide a real defect, so there is none.
 The other tests that tap Start a Film, in `JournalFlowTests`, `MovieCapacityUITests` and `ContentSizeTests`, still tap it once inline, without that screenshot; new tests use `openCameraCatalog`.
 
 The one test also took 1 minute 26 seconds to 1 minute 35 seconds for six launches, about twice its time to spare against the allowance.
-It is now two tests, one per switch value (`testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn` and `testUnlockIndicatorHidesAfterTheSettingsSwitchIsTurnedOff`), each setting the switch from whichever state it finds, so both values still prove they persist across a relaunch.
-The off test turns the unlock back on in a teardown block.
+It is now two tests, one per switch value (`testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn` and `testUnlockIndicatorHidesAfterTheSettingsSwitchIsTurnedOff`), of three launches each.
+The on test turns the switch off and then on before its check; the off test turns it off from on, the state both tests end in, and turns the unlock back on in a teardown block.
+So each test makes its own change and proves it persists across a relaunch, in either order or alone.
+On an iPhone 17 Pro simulator here the on test took 52 seconds and the off test 45.
 
 ## Validation
 

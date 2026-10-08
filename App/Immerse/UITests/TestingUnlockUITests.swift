@@ -16,10 +16,12 @@ extension XCUIApplication {
 @MainActor
 final class TestingUnlockUITests: XCTestCase {
     /// One test per switch value: both together took 1 minute 26 seconds to 1 minute 35 seconds on CI, which a runner at
-    /// about half speed would push past the 3-minute allowance (Evidence/NativeApp/ci-flakes-057.md). Each sets the
-    /// switch from whichever state it finds, so neither depends on the other's result.
+    /// about half speed would push past the 3-minute allowance (Evidence/NativeApp/ci-flakes-057.md). The on test turns
+    /// the switch off and then on, and the off test turns it off from on, the state both tests end in, so each makes
+    /// its own change across a relaunch in either order.
     func testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn() throws {
         let app = XCUIApplication()
+        setUnlock(app, on: false)
         setUnlock(app, on: true)
         assertLoadAndPlans(app, unlocked: true)
     }
