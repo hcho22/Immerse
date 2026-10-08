@@ -30,7 +30,8 @@ Temporary logging in the title field's delegate (`shouldChangeTextIn`, selection
   A write-back would also have moved the cursor to the end, which cannot produce "16mm -0".
 
 The autocorrection of the suggestion's last word is the only edit besides the typed keys, and "01" is exactly the text that came back.
-On a slow runner its replacement landed among the deletes, against text that had already changed.
+On CI its replacement landed among the deletes, against text that had already changed.
+The timing that let it land there is not established: the failing test took 27 seconds, in line with passing runs.
 
 ## Trigger, Masking Condition and Divergence
 
