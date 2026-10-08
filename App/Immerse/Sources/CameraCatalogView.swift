@@ -19,8 +19,7 @@ struct CameraCatalogView: View {
                                     Image(systemName: camera.symbol).font(.system(size: 24)).frame(width: 36)
                                         .accessibilityHidden(true)
                                     VStack(alignment: .leading, spacing: 5) {
-                                        Text(camera.shortName).font(.system(.title3, design: .serif))
-                                            .accessibilityLabel(camera.spokenShortName)
+                                        camera.shortNameText.font(.system(.title3, design: .serif))
                                         camera.capacityText.font(.caption).foregroundStyle(.secondary)
                                     }.padding(.vertical, 8)
                                 }
@@ -65,7 +64,7 @@ private struct LoadFilmView: View {
             form { entitlement }
             #endif
         }
-        .navigationTitle(camera.shortName)
+        .navigationTitle(camera.shortNameText)
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
         .interactiveDismissDisabled(loading)

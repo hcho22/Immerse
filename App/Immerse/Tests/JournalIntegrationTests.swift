@@ -197,6 +197,40 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(reel.remainingSpokenLabel(recordedFor: 0.6), "3 minutes 16 seconds left")
     }
 
+    /// PRD 2.1 sections 6.1 and 6.2 as Load Film shows them: what each Camera does, how it develops, and never a maker
+    /// or film name (ADR 0015). The 6×6 is spoken as "6 by 6" wherever its name is shown.
+    func testLoadFilmCopyFollowsPRD21AndNeverNamesAFormatReference() {
+        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map { ($0.id, "\($0.controlsLabel). \($0.lookLabel)") })
+        XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
+        XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
+        XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("saturated"))
+        XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
+        XCTAssertTrue(copy[.super8HomeMovie]!.contains("Strong") && copy[.super8HomeMovie]!.contains("18 frames"))
+        XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))
+        XCTAssertNotNil(CameraCatalog.mediumFormat6x6.viewfinderNote)
+        XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("reversed left to right"))
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 { XCTAssertNil(camera.viewfinderNote, camera.displayName) }
+        let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
+                         "Vision3", "Double-X", "Eastman", "500C"]
+        for camera in CameraCatalog.all {
+            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.lookLabel, camera.viewfinderNote ?? ""]
+            for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }
+        }
+    }
+
+    func testSixBySixIsSpokenAsSixBySixWhereverItsNameIsShown() {
+        let medium = CameraCatalog.mediumFormat6x6
+        XCTAssertEqual(medium.shortName, "6×6")
+        XCTAssertEqual(medium.spokenShortName, "6 by 6")
+        XCTAssertEqual(medium.displayName, "6×6 Medium Format")
+        XCTAssertEqual(medium.spokenDisplayName, "6 by 6 Medium Format")
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
+            XCTAssertEqual(camera.spokenShortName, camera.shortName)
+            XCTAssertEqual(camera.spokenDisplayName, camera.displayName)
+        }
+        for camera in CameraCatalog.all { XCTAssertFalse(camera.spokenDisplayName.contains("×"), camera.displayName) }
+    }
+
     func testPhotoFilmRowsKeepExposureCounts() throws {
         let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
         XCTAssertEqual(film.remainingLabel, "27 exposures left")

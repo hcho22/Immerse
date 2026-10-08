@@ -20,7 +20,7 @@ struct CameraSamplesView: View {
                     }
                 }.padding()
             }
-            .navigationTitle(camera.shortName)
+            .navigationTitle(camera.shortNameText)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     // iOS 26 fills an icon-only confirmation with the tint.

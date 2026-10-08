@@ -133,12 +133,22 @@ final class InstantPrintCardTests: XCTestCase {
         }
     }
 
-    func testAMasterFromBeforeTheCardIsAdjustedWholeWithoutGainingOne() throws {
+    func testAnInstantMasterWithoutTheCardFailsClearlyInsteadOfRenderingWithoutOne() throws {
         let bare = try Self.solidJPEG(width: 256, height: 256, red: 60, green: 90, blue: 140)
-        let printed = try NativePhotoRenderer.print(master: bare, recipe: DarkroomRecipe(printExposureStops: 1), camera: CameraCatalog.instant1970s)
-        let pixels = try Pixels(printed)
-        XCTAssertEqual(pixels.width, 256)
-        XCTAssertEqual(pixels.height, 256)
+        let instant = CameraCatalog.instant1970s
+        // Edited, reset and exported prints all meet the same check, so no path shows or maps onto a card that is not there.
+        for recipe in [DarkroomRecipe(printExposureStops: 1), DarkroomRecipe(dodgeBurnMasks: [
+            LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: 0.5)]), .original] {
+            XCTAssertThrowsError(try NativePhotoRenderer.print(master: bare, recipe: recipe, camera: instant)) {
+                XCTAssertEqual($0 as? NativeRenderError, .instantMasterWithoutCard)
+            }
+        }
+        // The same picture is an ordinary print for a Camera that has no card.
+        XCTAssertNoThrow(try NativePhotoRenderer.print(master: bare, recipe: DarkroomRecipe(printExposureStops: 1),
+                                                       camera: CameraCatalog.mediumFormat6x6))
+        XCTAssertThrowsError(try NativePhotoRenderer.print(master: Data("not an image".utf8), recipe: .original, camera: instant)) {
+            XCTAssertEqual($0 as? NativeRenderError, .unreadableSource)
+        }
     }
 
     // MARK: Helpers

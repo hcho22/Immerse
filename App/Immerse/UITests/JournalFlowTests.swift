@@ -49,7 +49,7 @@ final class JournalFlowTests: XCTestCase {
         camera.tap()
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
-        scrollUp(app, until: title)
+        scrollUpUntilWhole(app, title)
         XCTAssertTrue(title.isHittable)
         let withheld = AuditException.accepted.filter { $0.label != "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" }
         XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
@@ -117,7 +117,7 @@ final class JournalFlowTests: XCTestCase {
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
-        scrollUp(app, until: title)
+        scrollUpUntilWhole(app, title)
         XCTAssertTrue(title.isHittable)
         try audit(app, name: "16mm-title-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-title-accessibility-largest")
@@ -186,6 +186,16 @@ final class JournalFlowTests: XCTestCase {
     /// Journal (Evidence/NativeApp/scroll-indicator-drag-053.md). `ContentSizeTests` instead measures every text
     /// element on the audited screens at all twelve sizes.
     private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
+
+    /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
+    /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
+    /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
+    /// navigation bar, where the audit flags them too.
+    private func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch.frame
+        scrollUp(app, until: element)
+        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
+    }
 
     private func retainScreenshot(name: String) {
         let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())

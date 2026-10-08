@@ -17,8 +17,13 @@ extension CameraPackage {
         }
     }
 
-    /// What VoiceOver reads for `shortName`: "6×6" would be read as "6 times 6".
+    /// What VoiceOver reads for `shortName` and `displayName`: "6×6" would be read as "6 times 6".
     var spokenShortName: String { id == .mediumFormat6x6 ? "6 by 6" : shortName }
+    var spokenDisplayName: String { displayName.replacingOccurrences(of: "6×6", with: "6 by 6") }
+
+    /// The Camera's names as text that VoiceOver reads naturally. Every place the name is shown uses these.
+    var shortNameText: Text { Text(shortName).accessibilityLabel(spokenShortName) }
+    var displayNameText: Text { Text(displayName).accessibilityLabel(spokenDisplayName) }
 
     /// Width over height of this Camera's developed print: a square picture, or the Instant's taller card.
     var printAspectRatio: CGFloat {
@@ -49,9 +54,9 @@ extension CameraPackage {
     /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Fixed focus, fixed exposure, optional flash"
-        case .instant1970s: "Square pictures on a white card"
-        case .mediumFormat6x6: "Square framing, deliberate focus and exposure"
+        case .disposable1990s: "Fixed focus, fixed exposure, optional flash and a live low-light cue"
+        case .instant1970s: "Square picture on a white card"
+        case .mediumFormat6x6: "Square framing, deliberate focus and exposure, optical focus only"
         case .super8HomeMovie: "Handheld, fixed focus, automatic exposure, 18 frames per second"
         case .cinema16mm: "Deliberate framing, 24 frames per second"
         }
@@ -60,10 +65,10 @@ extension CameraPackage {
     /// How a Film from this Camera develops. Names a look only in descriptive terms, never a maker or a film.
     var lookLabel: String {
         switch id {
-        case .disposable1990s: "Warm, saturated color, heavy grain, harsh flash and soft edges"
-        case .instant1970s: "Brilliant, warm color and soft detail"
-        case .mediumFormat6x6: "Natural, warm color, very fine grain and gentle contrast"
-        case .super8HomeMovie: "Rich color, fine grain, an unsteady frame, flicker, dust and hair"
+        case .disposable1990s: "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"
+        case .instant1970s: "Brilliant, warm, saturated color and soft detail"
+        case .mediumFormat6x6: "Borderless square picture, natural, warm color, very fine grain and gentle contrast"
+        case .super8HomeMovie: "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"
         case .cinema16mm: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"
         }
     }
@@ -212,6 +217,8 @@ enum FailureCopy {
             return "Photos could not finish saving, so this Film is unchanged. Anything already saved stays in Photos. Check available storage, then save again."
         case let error as TrialKeychainError:
             return "Immerse could not read or update this iPhone's secure Trial record (Keychain \(error.status)). Trial eligibility has not been reset, and any capture waiting to save stays private. Try again while your iPhone is unlocked."
+        case NativeRenderError.instantMasterWithoutCard:
+            return "This print is not in the card format every Instant print uses, so it cannot be shown or edited. Nothing was changed."
         case FilmExportError.missingReceipt:
             return "Photos did not confirm the save, so this Film is unchanged. A copy may already be in Photos; check there before saving again."
         default:

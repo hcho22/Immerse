@@ -24,11 +24,11 @@ extension XCTestCase {
         scrollUp(app) { element.isHittable }
     }
 
-    /// Scrolls up in the same held drags until `done` holds.
-    @nonobjc func scrollUp(_ app: XCUIApplication, until done: () -> Bool) {
+    /// Scrolls up in the same held drags, `distance` points each, until `done` holds.
+    @nonobjc func scrollUp(_ app: XCUIApplication, by distance: CGFloat = 300, until done: () -> Bool) {
         for _ in 0..<16 where !done() {
             let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)),
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
     }

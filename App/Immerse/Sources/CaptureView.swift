@@ -19,7 +19,7 @@ struct CaptureView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     if let film = model.film(filmID) {
-                        Text(film.camera.displayName).font(.system(.title3, design: .serif))
+                        film.camera.displayNameText.font(.system(.title3, design: .serif))
                         TimelineView(.periodic(from: .now, by: 0.1)) { context in
                             if let start = capture.recordingStarted {
                                 film.remainingText(recordedFor: context.date.timeIntervalSince(start))

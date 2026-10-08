@@ -114,8 +114,7 @@ private struct JournalFilmRow: View {
     private func row(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
-                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
-                    .accessibilityLabel(film.camera.spokenShortName)
+                film.camera.shortNameText.font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }

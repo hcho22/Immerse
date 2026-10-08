@@ -3,13 +3,15 @@ import ImageIO
 import RenderCore
 import SwiftUI
 
-/// Sets an Instant print's white card apart from a white screen: a hairline edge everywhere, and in the large views
-/// also a margin and a soft shadow, so the card reads as a print in light and dark appearance.
+/// The height of the Darkroom's controls, which the print preview leaves room for.
 private struct ControlsHeightKey: PreferenceKey {
     static let defaultValue: CGFloat = 0
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
+/// Sets an Instant print's white card apart from a white screen: a hairline edge everywhere, and in the large views
+/// also a margin and a soft shadow, so the card reads as a print in light and dark appearance. The margin is padding,
+/// so the print fits inside whatever size the view is given.
 private struct PrintCardEdge: ViewModifier {
     let isInstant: Bool
     var large = false
@@ -166,8 +168,12 @@ struct DarkroomView: View {
                 ScrollView {
                     VStack(spacing: 18) {
                         printPreview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
+                            // Rendering is shown over the print, not among the controls, so the controls keep one height
+                            // and the print does not shrink and grow back on every render.
+                            .overlay(alignment: .topTrailing) {
+                                if rendering { ProgressView().accessibilityLabel("Rendering print") }
+                            }
                         VStack(spacing: 18) { toolRow; Text(tool.rawValue).font(.headline); controls
-                            if rendering { ProgressView("Rendering print") }
                             if let error { Text(error).foregroundStyle(.red) }
                         }
                         .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
@@ -204,15 +210,13 @@ struct DarkroomView: View {
         }
     }
 
-    /// The print scaled to fit its region. An Instant card gets a margin for its shadow, inside the region.
+    /// The print scaled to fit its region, with an Instant card's margin and shadow inside it.
     @ViewBuilder private var printPreview: some View {
         if let image, !model.hiddenFilms.contains(filmID) {
             Image(uiImage: image).resizable().scaledToFit()
                 .overlay { brushSurface }
-                .modifier(PrintCardEdge(isInstant: isInstant))
                 .accessibilityLabel("Photo \(sequence), print preview")
-                .shadow(color: isInstant ? .primary.opacity(0.28) : .clear, radius: 5, y: 1)
-                .padding(isInstant ? 16 : 0)
+                .modifier(PrintCardEdge(isInstant: isInstant, large: true))
         } else { ProgressView() }
     }
 

@@ -19,7 +19,7 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 - **Darkroom and the card (decision).**
   Print exposure, contrast grade, color filtration and Dodge/Burn reach the picture only and leave the card white, because the card is unexposed paper, not part of the exposure.
   Dodge/Burn points are fractions of the picture, and the Darkroom's brush surface covers the picture only.
-  A master that is not card-sized (a bare 2048 x 2048 print from an earlier development build) is adjusted whole and gains no card; no shipped release has such a master.
+  A master that is not card-sized is not a supported state (no release has shipped one): `print` fails with `NativeRenderError.instantMasterWithoutCard`, for an edit, a reset and an export alike, rather than render without a card or map a Dodge/Burn point onto a card that is not there.
 - **No crop for an Instant print.**
   `NativePhotoRenderer.validate` rejects any Instant recipe that carries a crop, so `saveDarkroomRecipe` and `print` reject it too, and the Darkroom hides its Crop tool for an Instant print.
   Every other tool stays.
@@ -29,7 +29,8 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 - **Catalog and Load Film copy (CAM-15).**
   Each Load Film screen shows the Camera's controls line, its developed-look line and, for the 6×6, that its viewfinder shows the scene reversed left to right while the photos are not.
   The wording follows PRD 2.1 sections 6.1 and 6.2 and names no maker or film.
-  The Film Stock choice, the Disposable's low-light cue and the other capture behavior belong to later slices, so the copy does not promise them yet beyond what the tables say.
+  Slice 2's capture behavior (the Disposable's borderless 3:2 frame, fixed exposure and live low-light cue, the Super 8's fixed focus and the 6×6's reversed viewfinder) is merged, so the copy states it for every Camera as PRD 2.1 sections 6.1 and 6.2 do.
+  Only the Film Stock choice, which arrives in slice 3, is left out.
   No Camera sample media is configured, so there is no separate sample copy.
 
 ## Test changes worth knowing

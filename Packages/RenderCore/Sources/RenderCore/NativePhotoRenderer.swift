@@ -11,6 +11,8 @@ public enum NativeRenderError: Error, Equatable {
     case invalidMovie
     case writerFailed
     case writerTimedOut
+    /// An Instant master that is not the card-sized print every developed Instant exposure is.
+    case instantMasterWithoutCard
 }
 
 /// Versioned engineering preset. DEC-04/DEC-11 visual and output approval remains open.
@@ -46,6 +48,9 @@ public enum NativePhotoRenderer {
     public static func print(master: Data, recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws -> Data {
         guard camera.medium == .photo else { throw NativeRenderError.wrongMedium }
         try validate(recipe, camera: camera, process: process)
+        // Every developed Instant master is the card-sized print; anything else would render, or map a Dodge/Burn
+        // point, without its card.
+        if camera.id == .instant1970s { try requireCardSized(master) }
         // Reset is byte-exact: never re-encode the original master.
         if recipe == .original { return master }
         guard let decoded = CIImage(data: master, options: [.applyOrientationProperty: true]) else {
@@ -53,13 +58,23 @@ public enum NativePhotoRenderer {
         }
         var image = normalize(decoded)
         // Adjustments reach the picture only. The card is unexposed paper, so print exposure, contrast, filtration
-        // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture. A master of another
-        // size is a bare picture from before the card and is adjusted whole.
-        let hasCard = camera.id == .instant1970s && InstantPrintCard.isCardSized(image.extent)
-        if hasCard { image = InstantPrintCard.picture(of: image) }
+        // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture.
+        let isInstant = camera.id == .instant1970s
+        if isInstant { image = InstantPrintCard.picture(of: image) }
         image = adjust(image, recipe: recipe)
-        if hasCard { image = InstantPrintCard.mount(image) }
+        if isInstant { image = InstantPrintCard.mount(image) }
         return try jpeg(image)
+    }
+
+    private static func requireCardSized(_ master: Data) throws {
+        guard let source = CGImageSourceCreateWithData(master as CFData, nil),
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = properties[kCGImagePropertyPixelWidth] as? Int,
+              let height = properties[kCGImagePropertyPixelHeight] as? Int else { throw NativeRenderError.unreadableSource }
+        let rotated = ((properties[kCGImagePropertyOrientation] as? Int) ?? 1) > 4
+        guard (rotated ? (height, width) : (width, height)) == (InstantPrintCard.width, InstantPrintCard.height) else {
+            throw NativeRenderError.instantMasterWithoutCard
+        }
     }
 
     private static func adjust(_ source: CIImage, recipe: DarkroomRecipe) -> CIImage {
@@ -242,10 +257,6 @@ public enum InstantPrintCard {
         x: Double(sideBorder) / Double(width), y: Double(sideBorder) / Double(height),
         width: Double(pictureSide) / Double(width), height: Double(pictureSide) / Double(height)
     )
-
-    static func isCardSized(_ extent: CGRect) -> Bool {
-        Int(extent.width.rounded()) == width && Int(extent.height.rounded()) == height
-    }
 
     /// The picture inside a card-sized image, moved to the origin. Core Image's origin is the bottom left.
     static func picture(of card: CIImage) -> CIImage {

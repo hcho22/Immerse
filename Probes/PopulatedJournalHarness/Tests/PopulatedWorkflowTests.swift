@@ -217,6 +217,20 @@ final class PopulatedWorkflowTests: XCTestCase {
                 XCTAssertTrue(window.contains(value.frame), "\(name): the value is not clipped")
                 XCTAssertTrue(window.contains(exposure.frame), "\(name): the slider is on screen")
                 snapshot(app, name)
+                // Rendering never resizes the print: releasing the slider starts a render, and the print keeps its frame while
+                // it runs and after it ends. The progress sits over the print, not among the controls.
+                if label == "Instant" {
+                    let before = print.frame
+                    exposure.adjust(toNormalizedSliderPosition: 0.75)
+                    for _ in 0..<20 {
+                        XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): the print keeps its height while rendering")
+                        XCTAssertEqual(print.frame.minY, before.minY, accuracy: 1, "\(name): the print keeps its place while rendering")
+                        Thread.sleep(forTimeInterval: 0.1)
+                    }
+                    app.buttons["Reset to Original"].tap()
+                    Thread.sleep(forTimeInterval: 1)
+                    XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): and after resetting")
+                }
                 // Everything fits at rest, so a swipe has nothing to scroll and the print cannot slide under the bar.
                 let restingTop = print.frame.minY
                 XCTAssertTrue(exposure.isHittable, "\(name): the slider can be used without scrolling")

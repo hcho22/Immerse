@@ -91,7 +91,7 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Capacity", type: .staticText, label: "Capacity, 3 minutes 20 seconds of film"),
         Target(name: "Reveal", type: .staticText, label: "One silent Movie after Development"),
         Target(name: "Controls", type: .staticText, label: "Handheld, fixed focus, automatic exposure, 18 frames per second"),
-        Target(name: "Look", type: .staticText, label: "Rich color, fine grain, an unsteady frame, flicker, dust and hair"),
+        Target(name: "Look", type: .staticText, label: "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"),
         Target(name: "Silent capture", type: .staticText, label: "Silent capture"),
         Target(name: "Movie Orientation", type: .staticText, label: "Movie Orientation"),
         Target(name: "Portrait", type: .button, label: "Portrait"),
