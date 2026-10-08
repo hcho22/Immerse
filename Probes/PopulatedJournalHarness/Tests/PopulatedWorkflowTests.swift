@@ -174,6 +174,8 @@ final class PopulatedWorkflowTests: XCTestCase {
     /// iPhone, at the default and the largest text size. At rest the whole print, an Instant card included, sits below the
     /// navigation bar and inside the screen, scaled to the space the controls leave; the controls clear the reset button;
     /// and the tool row and slider keep the same side margins. At the largest size the slider can also be scrolled to.
+    /// With Dodge/Burn's longer controls nothing tappable rests under the reset button's bar, and the last row scrolls
+    /// clear of it and takes taps.
     func testDarkroomFitsThePrintAndItsControlsForEveryPhotoCamera() throws {
         for (mode, label) in [("--instant", "Instant"), ("--developed-photo", "Disposable"), ("--medium-format", "6x6")] {
             for largest in [false, true] {
@@ -237,6 +239,35 @@ final class PopulatedWorkflowTests: XCTestCase {
                 app.swipeUp()
                 XCTAssertEqual(print.frame.minY, restingTop, accuracy: 1, "\(name): the print stays below the bar after a swipe")
                 XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): still below the bar after a swipe")
+                // Dodge/Burn has the most controls, which overflow the screen once the print is at its smallest. The floating
+                // Reset to Original bar takes every tap across the screen's width from 15 pt above its button, so at rest no
+                // control may show there. XCUITest reports a control's whole frame, so only the part the scroll area shows counts.
+                app.buttons["Dodge / Burn"].tap()
+                let point = app.buttons["Dodge point"]
+                let undo = app.buttons["Undo last stroke"]
+                XCTAssertTrue(undo.waitForExistence(timeout: 5), "\(name) Dodge / Burn")
+                Thread.sleep(forTimeInterval: 1.5)
+                let resetBar = CGRect(x: window.minX, y: reset.frame.minY - 15, width: window.width, height: window.maxY - reset.frame.minY + 15)
+                let controlsArea = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch.frame
+                XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): Dodge / Burn keeps the print below the bar")
+                for control in app.buttons.allElementsBoundByIndex + app.sliders.allElementsBoundByIndex
+                where control.isHittable && control.label != "Reset to Original" {
+                    XCTAssertFalse(control.frame.intersection(controlsArea).intersects(resetBar), "\(name): \(control.label) rests under the Reset bar")
+                }
+                snapshot(app, "\(name)-dodge-burn")
+                // The last row scrolls fully clear of the bar, and its controls then take a tap. The held drags in the left
+                // margin neither coast nor move a slider or paint on the print.
+                let clear = min(controlsArea.maxY + 1, resetBar.minY)
+                for _ in 0..<12 where undo.frame.maxY > clear {
+                    let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.6))
+                    start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -120)), withVelocity: .slow, thenHoldForDuration: 0.3)
+                }
+                XCTAssertLessThanOrEqual(undo.frame.maxY, clear, "\(name): the last row scrolls fully into view, clear of the Reset bar")
+                XCTAssertFalse(undo.isEnabled, "\(name): no stroke yet")
+                point.tap()
+                XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
+                undo.tap()
+                XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
                 app.terminate()
             }
         }

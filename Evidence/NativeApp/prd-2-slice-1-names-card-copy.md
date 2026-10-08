@@ -53,7 +53,7 @@ The harness shots are on an iPhone SE (3rd generation), the smallest supported i
 | `instant-photo-screen-se-light.png`, `-dark.png` | A print on its card in the Photo screen, with margin and shadow |
 | `instant-darkroom-se-light.png`, `-dark.png` | The Darkroom for an Instant print: four tools, no Crop |
 | `darkroom-fit-se-{instant,disposable,6x6}-{default,largest}-{light,dark}.png` | The Darkroom at rest at the default and the largest text size: print fully below the bar, margins kept, nothing overlapping |
-| `instant-darkroom-dodge-burn-se-light.png`, `-dark.png` | A tool with more controls, where the content scrolls under the Reset button |
+| `instant-darkroom-dodge-burn-se-light.png`, `-dark.png` | Dodge/Burn at rest: its controls stop above the Reset button's bar, and the rest scroll into view |
 | `super8-load-iphone17.png`, `16mm-load-largest-iphone17.png` | Load Film copy |
 | `6x6-load-extra-small-iphone17.png` | 6×6 Load Film with the reversed-viewfinder note |
 | `catalog-largest-iphone17.png` | The catalog at the largest text size |
@@ -65,10 +65,17 @@ The harness shots are on an iPhone SE (3rd generation), the smallest supported i
   An Instant print's cell now has the card's aspect (`CameraPackage.printAspectRatio`), so there are no gray bars beside the card, and the card has a hairline edge in light and dark.
   Every other Camera keeps a square cell, so a Disposable's 3:2 picture is letterboxed in it as before.
 - **Darkroom layout.**
-  The print preview is scaled to the height the controls leave at their full size (at least 160 pt, with 48 pt kept clear for the floating Reset button), so the whole print, an Instant card included, sits below the navigation bar at every text size, and the Exposure tool never needs scrolling on the iPhone SE.
+  The print preview is scaled to the height the controls leave at their full size (at least 160 pt), so the whole print, an Instant card included, sits below the navigation bar at every text size, and the Exposure tool never needs scrolling on the iPhone SE.
   Tools with more controls (Filtration, Dodge/Burn) scroll once the print is at its smallest.
+  The scroll area stops 4 pt above the floating Reset to Original bar, so no control rests under the bar, and the last row scrolls fully clear of it, ending 16 pt above it.
+  Controls that run past the scroll area at rest fade out over its 12 pt bottom margin rather than end in a sliver of a slider.
+  The bar is the sheet's bottom safe area (86 pt on the iPhone SE), and hit-testing the window showed that it takes every tap across the full screen width from its top edge, 15 pt above the Reset button.
+  Before, the scroll view reached under the bar: at rest on the iPhone SE, Dodge point, Undo last stroke and part of a slider showed there and looked usable, but taps on them reached the bar.
+  The 48 pt formerly kept clear under the controls counted the bar a second time, since the safe area already leaves it out, so the print is now up to 48 pt taller.
   The tool icons stop growing at the largest ordinary Dynamic Type size, so five tools always fit between the 16 pt side margins; before, at the largest accessibility size they overflowed and widened the whole column.
   `testDarkroomFitsThePrintAndItsControlsForEveryPhotoCamera` (populated Journal harness) checks, for an Instant, a Disposable and a 6×6 print at the default and the largest text size, that the print lies entirely below the navigation bar (with clear space) and inside the screen, above the controls and not squeezed away, that the tools and slider keep their side margins, that the controls clear the Reset button, and that a swipe cannot move the print under the bar.
+  With Dodge/Burn selected, it also checks that no hittable control shows under the Reset button's bar at rest, and that once held drags scroll the last row clear, Dodge point and Undo last stroke take their taps.
+  With the scroll view reaching under the bar, it failed 12 times: Dodge point, Undo last stroke and a slider at the default size, and a slider at the largest size, for each Camera.
   Only the tool row, the tool's title and its controls are measured (`DarkroomLayout` in `PhotoView.swift`): rendering shows over the print and an error between the print and the controls, so neither resizes the print or rescales a Dodge/Burn stroke.
   `testADarkroomErrorNeitherResizesNorMovesThePrint` (`JournalIntegrationTests`) hosts the layout, shows and clears an error, and checks that the print keeps its frame while only the controls move; with the error back among the measured controls it fails, the print shrinking from 610.7 to 550.3 pt.
 - **6×6 spelling.**

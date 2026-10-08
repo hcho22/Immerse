@@ -11,8 +11,10 @@ private struct ControlsHeightKey: PreferenceKey {
 
 /// The Darkroom's print above its controls. The print takes the height the controls leave at their full size, and
 /// below the navigation bar: the sheet's safe area starts under the bar, and the content scrolls only when even the
-/// smallest print does not fit. Rendering shows over the print and an error between the print and the controls, both
-/// outside the measured controls, so neither resizes the print on every render or rescales a Dodge/Burn stroke.
+/// smallest print does not fit. The scroll area stops above the floating Reset to Original bar, so no control rests
+/// under it, where its taps would reach the bar, and the last row scrolls fully clear of it. Rendering shows over the
+/// print and an error between the print and the controls, both outside the measured controls, so neither resizes the
+/// print on every render or rescales a Dodge/Burn stroke.
 struct DarkroomLayout<Preview: View, Controls: View>: View {
     let rendering: Bool
     let error: String?
@@ -24,11 +26,17 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
     /// The smallest height the print preview is scaled down to before the screen scrolls.
     private static var minimumPrintHeight: CGFloat { 160 }
 
-    /// The space under the controls that the floating Reset to Original button covers.
-    private static var bottomBarClearance: CGFloat { 48 }
+    /// The controls' bottom margin, over which controls that run past the scroll area fade out rather than end in a
+    /// sliver. The last row, scrolled fully into view, ends above it.
+    private static var bottomMargin: CGFloat { 12 }
+
+    /// The space between the scroll area and the floating Reset to Original bar. The bar itself is the bottom safe area,
+    /// which takes every tap across the screen's width; kept off it, the scroll view ends above the bar instead of
+    /// drawing controls under it.
+    private static var bottomBarSpacing: CGFloat { 4 }
 
     private func printHeight(in available: CGFloat) -> CGFloat {
-        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 32 - Self.bottomBarClearance)
+        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
     }
 
     var body: some View {
@@ -42,9 +50,16 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
                     if let error { Text(error).foregroundStyle(.red) }
                     VStack(spacing: 18) { controls }
                         .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
-                }.padding()
+                }.padding([.horizontal, .top]).padding(.bottom, Self.bottomMargin)
             }
             .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
+            .mask {
+                VStack(spacing: 0) {
+                    Color.black
+                    LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: Self.bottomMargin)
+                }.ignoresSafeArea(edges: .top)
+            }
+            .padding(.bottom, Self.bottomBarSpacing)
         }
     }
 }
