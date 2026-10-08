@@ -29,7 +29,7 @@ public enum NativePhotoRenderer {
             image = normalize(image.cropped(to: CGRect(
                 x: (image.extent.width - side) / 2, y: (image.extent.height - side) / 2, width: side, height: side
             )))
-            let target: CGFloat = camera.id == .instant1970s ? 2048 : 3072
+            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : 3072)
             image = image.transformed(by: CGAffineTransform(scaleX: target / side, y: target / side))
         } else {
             if camera.id == .disposable1990s { image = cropToThreeByTwo(image) }

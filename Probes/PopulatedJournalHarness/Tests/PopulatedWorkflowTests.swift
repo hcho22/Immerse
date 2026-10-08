@@ -176,101 +176,103 @@ final class PopulatedWorkflowTests: XCTestCase {
     /// and the tool row and slider keep the same side margins. At the largest size the slider can also be scrolled to.
     /// With Dodge/Burn's longer controls nothing tappable rests under the reset button's bar, and the last row scrolls
     /// clear of it and takes taps.
-    func testDarkroomFitsThePrintAndItsControlsForEveryPhotoCamera() throws {
-        for (mode, label) in [("--instant", "Instant"), ("--developed-photo", "Disposable"), ("--medium-format", "6x6")] {
-            for largest in [false, true] {
-                var arguments = [mode]
-                if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
-                let app = launch(arguments: arguments)
-                openFilm(app)
-                let open = app.buttons["Open photo 1"]
-                // At the largest size the print grid starts below the first screen and its rows are created as they scroll in.
-                for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
-                XCTAssertTrue(open.exists, "\(label) \(largest)")
-                open.tap()
-                app.buttons["Darkroom"].tap()
-                let exposure = app.sliders["Print exposure"]
-                XCTAssertTrue(exposure.waitForExistence(timeout: 10), label)
-                let name = "Darkroom-\(label)-\(largest ? "largest" : "default")"
-                let window = app.windows.firstMatch.frame
-                let bar = app.navigationBars["Darkroom"]
-                let reset = app.buttons["Reset to Original"]
-                let print = app.images["Photo 1, print preview"]
-                XCTAssertTrue(print.waitForExistence(timeout: 10), "\(name) print")
-                // Let the first render and the controls' measured height settle before reading frames.
-                Thread.sleep(forTimeInterval: 1.5)
-                // The print, at rest: clear of the bar above, inside the screen, and a usable size.
-                XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
-                XCTAssertTrue(window.contains(print.frame), "\(name): the print is on screen")
-                XCTAssertGreaterThanOrEqual(print.frame.height, 100, "\(name): the print is not squeezed away")
-                // The controls, at rest: full size, in the side margins, clear of the reset button.
-                let margin: CGFloat = 16
-                for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Dodge / Burn"].map({ app.buttons[$0] }) where control.exists {
-                    XCTAssertGreaterThanOrEqual(control.frame.minX, margin - 2, "\(name): \(control.label) keeps its left margin")
-                    XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX - margin + 2, "\(name): \(control.label) keeps its right margin")
-                }
-                XCTAssertGreaterThanOrEqual(exposure.frame.minX, margin - 2, "\(name): slider left margin")
-                XCTAssertLessThanOrEqual(exposure.frame.maxX, window.maxX - margin + 2, "\(name): slider right margin")
-                XCTAssertLessThanOrEqual(print.frame.maxY, exposure.frame.minY, "\(name): the print is above the controls")
-                XCTAssertLessThanOrEqual(exposure.frame.maxY, reset.frame.minY, "\(name): the slider clears the reset button")
-                let value = app.staticTexts["0.0 stops"]
-                XCTAssertTrue(value.exists, "\(name) value")
-                XCTAssertLessThanOrEqual(value.frame.maxY, reset.frame.minY, "\(name): the value clears the reset button")
-                XCTAssertTrue(window.contains(value.frame), "\(name): the value is not clipped")
-                XCTAssertTrue(window.contains(exposure.frame), "\(name): the slider is on screen")
-                snapshot(app, name)
-                // Rendering never resizes the print: releasing the slider starts a render, and the print keeps its frame while
-                // it runs and after it ends. The progress sits over the print, not among the controls.
-                if label == "Instant" {
-                    let before = print.frame
-                    exposure.adjust(toNormalizedSliderPosition: 0.75)
-                    for _ in 0..<20 {
-                        XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): the print keeps its height while rendering")
-                        XCTAssertEqual(print.frame.minY, before.minY, accuracy: 1, "\(name): the print keeps its place while rendering")
-                        Thread.sleep(forTimeInterval: 0.1)
-                    }
-                    app.buttons["Reset to Original"].tap()
-                    Thread.sleep(forTimeInterval: 1)
-                    XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): and after resetting")
-                }
-                // Everything fits at rest, so a swipe has nothing to scroll and the print cannot slide under the bar.
-                let restingTop = print.frame.minY
-                XCTAssertTrue(exposure.isHittable, "\(name): the slider can be used without scrolling")
-                app.swipeUp()
-                XCTAssertEqual(print.frame.minY, restingTop, accuracy: 1, "\(name): the print stays below the bar after a swipe")
-                XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): still below the bar after a swipe")
-                // Dodge/Burn has the most controls, which overflow the screen once the print is at its smallest. The floating
-                // Reset to Original bar takes every tap across the screen's width from 15 pt above its button, so at rest no
-                // control may show there. XCUITest reports a control's whole frame, so only the part the scroll area shows counts.
-                app.buttons["Dodge / Burn"].tap()
-                let point = app.buttons["Dodge point"]
-                let undo = app.buttons["Undo last stroke"]
-                XCTAssertTrue(undo.waitForExistence(timeout: 5), "\(name) Dodge / Burn")
-                Thread.sleep(forTimeInterval: 1.5)
-                let resetBar = CGRect(x: window.minX, y: reset.frame.minY - 15, width: window.width, height: window.maxY - reset.frame.minY + 15)
-                let controlsArea = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch.frame
-                XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): Dodge / Burn keeps the print below the bar")
-                for control in app.buttons.allElementsBoundByIndex + app.sliders.allElementsBoundByIndex
-                where control.isHittable && control.label != "Reset to Original" {
-                    XCTAssertFalse(control.frame.intersection(controlsArea).intersects(resetBar), "\(name): \(control.label) rests under the Reset bar")
-                }
-                snapshot(app, "\(name)-dodge-burn")
-                // The last row scrolls fully clear of the bar, and its controls then take a tap. The held drags in the left
-                // margin neither coast nor move a slider or paint on the print.
-                let clear = min(controlsArea.maxY + 1, resetBar.minY)
-                for _ in 0..<12 where undo.frame.maxY > clear {
-                    let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.6))
-                    start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -120)), withVelocity: .slow, thenHoldForDuration: 0.3)
-                }
-                XCTAssertLessThanOrEqual(undo.frame.maxY, clear, "\(name): the last row scrolls fully into view, clear of the Reset bar")
-                XCTAssertFalse(undo.isEnabled, "\(name): no stroke yet")
-                point.tap()
-                XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
-                undo.tap()
-                XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
-                app.terminate()
-            }
+    func testDarkroomFitsAnInstantPrintAtTheDefaultSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: false) }
+    func testDarkroomFitsAnInstantPrintAtTheLargestSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: true) }
+    func testDarkroomFitsADisposablePrintAtTheDefaultSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: false) }
+    func testDarkroomFitsADisposablePrintAtTheLargestSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: true) }
+    func testDarkroomFitsA6x6PrintAtTheDefaultSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: false) }
+    func testDarkroomFitsA6x6PrintAtTheLargestSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: true) }
+
+    private func assertDarkroomFits(_ mode: String, label: String, largest: Bool) {
+        var arguments = [mode]
+        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        let app = launch(arguments: arguments)
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        // At the largest size the print grid starts below the first screen and its rows are created as they scroll in.
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        XCTAssertTrue(open.exists, "\(label) \(largest)")
+        open.tap()
+        app.buttons["Darkroom"].tap()
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.waitForExistence(timeout: 10), label)
+        let name = "Darkroom-\(label)-\(largest ? "largest" : "default")"
+        let window = app.windows.firstMatch.frame
+        let bar = app.navigationBars["Darkroom"]
+        let reset = app.buttons["Reset to Original"]
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 10), "\(name) print")
+        // Let the first render and the controls' measured height settle before reading frames.
+        Thread.sleep(forTimeInterval: 1.5)
+        // The print, at rest: clear of the bar above, inside the screen, and a usable size.
+        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
+        XCTAssertTrue(window.contains(print.frame), "\(name): the print is on screen")
+        XCTAssertGreaterThanOrEqual(print.frame.height, 100, "\(name): the print is not squeezed away")
+        // The controls, at rest: full size, in the side margins, clear of the reset button.
+        let margin: CGFloat = 16
+        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Dodge / Burn"].map({ app.buttons[$0] }) where control.exists {
+            XCTAssertGreaterThanOrEqual(control.frame.minX, margin - 2, "\(name): \(control.label) keeps its left margin")
+            XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX - margin + 2, "\(name): \(control.label) keeps its right margin")
         }
+        XCTAssertGreaterThanOrEqual(exposure.frame.minX, margin - 2, "\(name): slider left margin")
+        XCTAssertLessThanOrEqual(exposure.frame.maxX, window.maxX - margin + 2, "\(name): slider right margin")
+        XCTAssertLessThanOrEqual(print.frame.maxY, exposure.frame.minY, "\(name): the print is above the controls")
+        XCTAssertLessThanOrEqual(exposure.frame.maxY, reset.frame.minY, "\(name): the slider clears the reset button")
+        let value = app.staticTexts["0.0 stops"]
+        XCTAssertTrue(value.exists, "\(name) value")
+        XCTAssertLessThanOrEqual(value.frame.maxY, reset.frame.minY, "\(name): the value clears the reset button")
+        XCTAssertTrue(window.contains(value.frame), "\(name): the value is not clipped")
+        XCTAssertTrue(window.contains(exposure.frame), "\(name): the slider is on screen")
+        snapshot(app, name)
+        // Rendering never resizes the print: releasing the slider starts a render, and the print keeps its frame while
+        // it runs and after it ends. The progress sits over the print, not among the controls.
+        if label == "Instant" {
+            let before = print.frame
+            exposure.adjust(toNormalizedSliderPosition: 0.75)
+            for _ in 0..<20 {
+                XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): the print keeps its height while rendering")
+                XCTAssertEqual(print.frame.minY, before.minY, accuracy: 1, "\(name): the print keeps its place while rendering")
+                Thread.sleep(forTimeInterval: 0.1)
+            }
+            app.buttons["Reset to Original"].tap()
+            Thread.sleep(forTimeInterval: 1)
+            XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): and after resetting")
+        }
+        // Everything fits at rest, so a swipe has nothing to scroll and the print cannot slide under the bar.
+        let restingTop = print.frame.minY
+        XCTAssertTrue(exposure.isHittable, "\(name): the slider can be used without scrolling")
+        app.swipeUp()
+        XCTAssertEqual(print.frame.minY, restingTop, accuracy: 1, "\(name): the print stays below the bar after a swipe")
+        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): still below the bar after a swipe")
+        // Dodge/Burn has the most controls, which overflow the screen once the print is at its smallest. The floating
+        // Reset to Original bar takes every tap across the screen's width from 15 pt above its button, so at rest no
+        // control may show there. XCUITest reports a control's whole frame, so only the part the scroll area shows counts.
+        app.buttons["Dodge / Burn"].tap()
+        let point = app.buttons["Dodge point"]
+        let undo = app.buttons["Undo last stroke"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 5), "\(name) Dodge / Burn")
+        Thread.sleep(forTimeInterval: 1.5)
+        let resetBar = CGRect(x: window.minX, y: reset.frame.minY - 15, width: window.width, height: window.maxY - reset.frame.minY + 15)
+        let controlsArea = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch.frame
+        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): Dodge / Burn keeps the print below the bar")
+        for control in app.buttons.allElementsBoundByIndex + app.sliders.allElementsBoundByIndex
+        where control.isHittable && control.label != "Reset to Original" {
+            XCTAssertFalse(control.frame.intersection(controlsArea).intersects(resetBar), "\(name): \(control.label) rests under the Reset bar")
+        }
+        snapshot(app, "\(name)-dodge-burn")
+        // The last row scrolls fully clear of the bar, and its controls then take a tap. The held drags in the left
+        // margin neither coast nor move a slider or paint on the print.
+        let clear = min(controlsArea.maxY + 1, resetBar.minY)
+        for _ in 0..<12 where undo.frame.maxY > clear {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.6))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -120)), withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        XCTAssertLessThanOrEqual(undo.frame.maxY, clear, "\(name): the last row scrolls fully into view, clear of the Reset bar")
+        XCTAssertFalse(undo.isEnabled, "\(name): no stroke yet")
+        point.tap()
+        XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
+        undo.tap()
+        XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
     }
 
     private func launch(arguments: [String] = []) -> XCUIApplication {
