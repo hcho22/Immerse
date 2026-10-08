@@ -90,7 +90,8 @@ final class ContentSizeTests: XCTestCase {
     private static let superEight: [Target] = [
         Target(name: "Capacity", type: .staticText, label: "Capacity, 3 minutes 20 seconds of film"),
         Target(name: "Reveal", type: .staticText, label: "One silent Movie after Development"),
-        Target(name: "Controls", type: .staticText, label: "Handheld, pronounced grain and flicker"),
+        Target(name: "Controls", type: .staticText, label: "Handheld, fixed focus, automatic exposure, 18 frames per second"),
+        Target(name: "Look", type: .staticText, label: "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"),
         Target(name: "Silent capture", type: .staticText, label: "Silent capture"),
         Target(name: "Movie Orientation", type: .staticText, label: "Movie Orientation"),
         Target(name: "Portrait", type: .button, label: "Portrait"),
@@ -106,8 +107,9 @@ final class ContentSizeTests: XCTestCase {
     ]
 
     private static let sixteenMillimeter: [Target] = [
-        Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 45 seconds of film"),
-        Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, finer grain"),
+        Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 47 seconds of film"),
+        Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, 24 frames per second"),
+        Target(name: "16mm Look", type: .staticText, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
     ]
 
     /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
@@ -121,13 +123,13 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Disposable capacity", type: .staticText, label: "27 exposures"),
         Target(name: "Instant", type: .staticText, label: "Instant", clearance: "10 exposures"),
         Target(name: "Instant capacity", type: .staticText, label: "10 exposures"),
-        Target(name: "6x6", type: .staticText, label: "6x6", clearance: "12 exposures"),
-        Target(name: "6x6 capacity", type: .staticText, label: "12 exposures"),
+        Target(name: "6×6", type: .staticText, label: "6×6", clearance: "12 exposures"),
+        Target(name: "6×6 capacity", type: .staticText, label: "12 exposures"),
         Target(name: "Movie header", type: .staticText, label: "Movie", header: true),
         Target(name: "Super 8", type: .staticText, label: "Super 8", clearance: "3 minutes 20 seconds of film"),
         Target(name: "Super 8 capacity", type: .staticText, label: "3 minutes 20 seconds of film"),
-        Target(name: "16mm", type: .staticText, label: "16mm", clearance: "2 minutes 45 seconds of film"),
-        Target(name: "16mm capacity", type: .staticText, label: "2 minutes 45 seconds of film"),
+        Target(name: "16mm", type: .staticText, label: "16mm", clearance: "2 minutes 47 seconds of film"),
+        Target(name: "16mm capacity", type: .staticText, label: "2 minutes 47 seconds of film"),
     ]
 
     /// Settings as a Debug build shows it with the testing unlock off, including the testing section, in two halves:
@@ -238,7 +240,7 @@ final class ContentSizeTests: XCTestCase {
             // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
             Thread.sleep(forTimeInterval: 1)
             rows += record(measure(app, targets, category, below: title))
-            app.navigationBars[title].buttons.element(boundBy: 0).tap()
+            goBack(app, from: title, to: "Choose a Camera")
         }
         app.terminate()
         finish(category, rows, Self.superEight + Self.sixteenMillimeter)
@@ -268,7 +270,7 @@ final class ContentSizeTests: XCTestCase {
         app.buttons["start-film"].tap()
         app.buttons["camera-disposable1990s"].tap()
         waitForTrialStatus(app)
-        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft

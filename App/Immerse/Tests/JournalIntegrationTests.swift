@@ -1,3 +1,4 @@
+import Accessibility
 import EntitlementCore
 import FilmDomain
 import FilmPersistence
@@ -6,6 +7,7 @@ import NativeAdapters
 import Observation
 import RenderCore
 import Security
+import SwiftUI
 import Synchronization
 import UIKit
 import XCTest
@@ -170,9 +172,9 @@ final class JournalIntegrationTests: XCTestCase {
             XCTAssertEqual("\(film.remainingSpokenLabel.dropLast(" left".count)) of film", camera.capacitySpokenLabel)
         }
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
-        XCTAssertEqual(film.remainingLabel, "2:45 left")
-        XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 45 seconds left")
-        XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 45 seconds of film")
+        XCTAssertEqual(film.remainingLabel, "2:47 left")
+        XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 47 seconds left")
+        XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 47 seconds of film")
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacityLabel, "3:20 of film")
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacitySpokenLabel, "3 minutes 20 seconds of film")
     }
@@ -180,13 +182,13 @@ final class JournalIntegrationTests: XCTestCase {
     func testRecordingLineCountsDownFromTheRestingLineOnceASecond() throws {
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
         XCTAssertEqual(film.remainingLabel(recordedFor: 0), film.remainingLabel)
-        XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:45 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:44 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:44 left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 45), "2:00 left")
-        XCTAssertEqual(film.remainingSpokenLabel(recordedFor: 45), "2 minutes left")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 164.99), "0:01 left", "Any frame left is not 0:00")
-        XCTAssertEqual(film.remainingLabel(recordedFor: 165), "0:00 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:47 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:46 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:46 left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 47), "2:00 left")
+        XCTAssertEqual(film.remainingSpokenLabel(recordedFor: 47), "2 minutes left")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 166.99), "0:01 left", "Any frame left is not 0:00")
+        XCTAssertEqual(film.remainingLabel(recordedFor: 167), "0:00 left")
         XCTAssertEqual(film.remainingLabel(recordedFor: 170), "0:00 left")
         // A partial second left at rest holds until it has recorded, then the line drops a whole second.
         var reel = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
@@ -195,6 +197,107 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(reel.remainingLabel(recordedFor: 0.5), "3:17 left")
         XCTAssertEqual(reel.remainingLabel(recordedFor: 0.6), "3:16 left")
         XCTAssertEqual(reel.remainingSpokenLabel(recordedFor: 0.6), "3 minutes 16 seconds left")
+    }
+
+    /// PRD 2.1 sections 6.1 and 6.2 as Load Film shows them: what each Camera does, how it develops, and never a maker
+    /// or film name (ADR 0015). The 6×6 is spoken as "6 by 6" wherever its name is shown.
+    func testLoadFilmCopyFollowsPRD21AndNeverNamesAFormatReference() {
+        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map { ($0.id, "\($0.controlsLabel). \($0.lookLabel)") })
+        XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
+        XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
+        XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("saturated"))
+        XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
+        XCTAssertTrue(copy[.super8HomeMovie]!.contains("Strong") && copy[.super8HomeMovie]!.contains("18 frames"))
+        XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))
+        XCTAssertNotNil(CameraCatalog.mediumFormat6x6.viewfinderNote)
+        XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("reversed left to right"))
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 { XCTAssertNil(camera.viewfinderNote, camera.displayName) }
+        let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
+                         "Vision3", "Double-X", "Eastman", "500C"]
+        for camera in CameraCatalog.all {
+            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.lookLabel, camera.viewfinderNote ?? ""]
+            for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }
+        }
+    }
+
+    /// The 6×6 is drawn as "6×6" and spoken as "6 by 6" wherever its name is shown. No other Camera's name changes.
+    func testSixBySixIsSpokenAsSixBySixWhereverItsNameIsShown() {
+        let medium = CameraCatalog.mediumFormat6x6
+        XCTAssertEqual(medium.shortName, "6×6")
+        XCTAssertEqual(medium.displayName, "6×6 Medium Format")
+        assertShown(medium.shortName, spokenAs: "6 by 6")
+        assertShown(medium.displayName, spokenAs: "6 by 6 Medium Format")
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
+            assertShown(camera.shortName, spokenAs: camera.shortName)
+            assertShown(camera.displayName, spokenAs: camera.displayName)
+        }
+        for camera in CameraCatalog.all { XCTAssertFalse(SpokenText.of(camera.displayName).contains("×"), camera.displayName) }
+    }
+
+    /// A Film keeps its title as given, and VoiceOver reads any "6×6" in it as "6 by 6": the title Load Film suggests
+    /// for a 6×6 Film as well as a typed one, wherever the title is shown (the Journal row and the Film screen's title).
+    func testFilmTitlesKeepTheirTextAndAreSpokenWithSixBySix() throws {
+        let medium = CameraCatalog.mediumFormat6x6
+        let suggested = try Film(camera: medium, title: medium.suggestedTitle(roll: 1))
+        XCTAssertEqual(suggested.title, "6×6 - Roll #01")
+        assertShown(suggested.title, spokenAs: "6 by 6 - Roll #01")
+        let typed = try Film(camera: CameraCatalog.disposable1990s, title: "Square 6×6 prints")
+        XCTAssertEqual(typed.title, "Square 6×6 prints")
+        assertShown(typed.title, spokenAs: "Square 6 by 6 prints")
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
+            let film = try Film(camera: camera, title: camera.suggestedTitle(roll: 12),
+                                movieOrientation: camera.medium == .movie ? .portrait : nil)
+            assertShown(film.title, spokenAs: film.title)
+        }
+    }
+
+    /// `text` is drawn as written, with a "6 by 6" pronunciation on its "6×6" when `spoken` differs from it, and a
+    /// navigation title showing it is labeled `spoken`.
+    private func assertShown(_ text: String, spokenAs spoken: String, file: StaticString = #filePath, line: UInt = #line) {
+        let shown = SpokenText.shown(text)
+        XCTAssertEqual(String(shown.characters), text, file: file, line: line)
+        let pronounced = shown.runs.compactMap { run in
+            run.accessibilitySpeechPhoneticNotation.map { "\(String(shown[run.range].characters)): \($0)" }
+        }
+        XCTAssertEqual(pronounced, spoken == text ? [] : ["6×6: sɪks baɪ sɪks"], text, file: file, line: line)
+        XCTAssertEqual(SpokenText.of(text), spoken, file: file, line: line)
+    }
+
+    /// A Darkroom error shows between the print and its controls without resizing or moving the print, so the print
+    /// and a Dodge/Burn stroke on it keep one scale; only the controls move down while it shows.
+    func testADarkroomErrorNeitherResizesNorMovesThePrint() async throws {
+        let probe = DarkroomLayoutProbe()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        XCTAssertEqual(resting.controls.minY, resting.print.maxY + 18, accuracy: 0.5, "The controls sit right under the print")
+
+        probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
+        let failed = try await settledFrames(probe)
+        XCTAssertEqual(failed.print, resting.print, "An error leaves the print's size and place alone")
+        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY + 18, "The error shows between the print and the controls")
+
+        probe.error = nil
+        let cleared = try await settledFrames(probe)
+        XCTAssertEqual(cleared.print, resting.print)
+        XCTAssertEqual(cleared.controls, resting.controls)
+    }
+
+    /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
+    private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
+        var last: (print: CGRect, controls: CGRect)?
+        for _ in 0..<100 {
+            try await Task.sleep(for: .milliseconds(50))
+            let now = (print: probe.printFrame, controls: probe.controlsFrame)
+            if !now.print.isNull, !now.controls.isNull, let last, last.print == now.print, last.controls == now.controls {
+                return now
+            }
+            last = now
+        }
+        throw DarkroomLayoutDidNotSettle()
     }
 
     func testPhotoFilmRowsKeepExposureCounts() throws {
@@ -222,7 +325,7 @@ final class JournalIntegrationTests: XCTestCase {
         let cases: [(Int, String, String)] = [
             (0, "0:00", "0 seconds"), (1, "0:01", "1 second"), (9, "0:09", "9 seconds"), (59, "0:59", "59 seconds"),
             (60, "1:00", "1 minute"), (61, "1:01", "1 minute 1 second"), (120, "2:00", "2 minutes"),
-            (165, "2:45", "2 minutes 45 seconds"), (200, "3:20", "3 minutes 20 seconds"), (600, "10:00", "10 minutes"),
+            (165, "2:45", "2 minutes 45 seconds"), (167, "2:47", "2 minutes 47 seconds"), (200, "3:20", "3 minutes 20 seconds"), (600, "10:00", "10 minutes"),
         ]
         for (seconds, clock, spoken) in cases {
             XCTAssertEqual(MovieDurationText.clock(seconds), clock)
@@ -402,3 +505,28 @@ private final class JournalReceiptCalls: TrialKeychainCalling, Sendable {
         }
     }
 }
+
+/// Records the frames a hosted `DarkroomLayout` gives a stand-in print and its controls.
+@MainActor @Observable
+private final class DarkroomLayoutProbe {
+    var error: String?
+    @ObservationIgnored var printFrame = CGRect.null
+    @ObservationIgnored var controlsFrame = CGRect.null
+}
+
+private struct DarkroomLayoutProbeView: View {
+    let probe: DarkroomLayoutProbe
+
+    var body: some View {
+        DarkroomLayout(rendering: false, error: probe.error) {
+            Color.gray.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.printFrame = $0 }
+        } controls: {
+            VStack(spacing: 18) {
+                Text("Exposure").font(.headline)
+                Slider(value: .constant(0.5))
+            }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
+        }
+    }
+}
+
+private struct DarkroomLayoutDidNotSettle: Error {}

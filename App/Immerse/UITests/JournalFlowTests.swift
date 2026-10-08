@@ -19,11 +19,13 @@ final class JournalFlowTests: XCTestCase {
         // Assert the load screen's own capacity element; a bare capacity query also matched the
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
-        XCTAssertTrue(app.buttons["load-film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
-        app.navigationBars["Super 8"].buttons.element(boundBy: 0).tap()
+        // The Form is lazy and its Camera description is long enough that the command is below the first screen.
+        scrollUp(app, until: app.buttons["load-film"])
+        XCTAssertTrue(app.buttons["load-film"].exists)
+        goBack(app, from: "Super 8", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists)
         app.buttons["Settings"].tap()
@@ -45,17 +47,17 @@ final class JournalFlowTests: XCTestCase {
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
         camera.tap()
-        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
-        scrollUp(app, until: title)
+        scrollUpUntilWhole(app, title)
         XCTAssertTrue(title.isHittable)
-        let withheld = AuditException.accepted.filter { $0.label != "Deliberate framing, finer grain" }
+        let withheld = AuditException.accepted.filter { $0.label != "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" }
         XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
         var reported: [String] = []
         XCTExpectFailure("A finding outside the exceptions must fail the audit") {
             reported = (try? audit(app, name: "16mm-title-accessibility-largest", for: .contrast, exceptions: withheld)) ?? []
         }
-        XCTAssertEqual(reported, ["Deliberate framing, finer grain"])
+        XCTAssertEqual(reported, ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"])
     }
 
     /// Every Camera's Load screen at the smallest text size, where the Film title field's text is shortest: 19 points,
@@ -66,7 +68,7 @@ final class JournalFlowTests: XCTestCase {
     /// (run 37627486582), which the allowance counts as a failure (Evidence/NativeApp/ci-flakes-057.md).
     func testExtraSmallLoadScreenAuditDisposable() throws { try auditExtraSmallLoadScreen(id: "disposable1990s", name: "Disposable") }
     func testExtraSmallLoadScreenAuditInstant() throws { try auditExtraSmallLoadScreen(id: "instant1970s", name: "Instant") }
-    func testExtraSmallLoadScreenAudit6x6() throws { try auditExtraSmallLoadScreen(id: "mediumFormat6x6", name: "6x6") }
+    func testExtraSmallLoadScreenAudit6x6() throws { try auditExtraSmallLoadScreen(id: "mediumFormat6x6", name: "6×6") }
     func testExtraSmallLoadScreenAuditSuper8() throws { try auditExtraSmallLoadScreen(id: "super8HomeMovie", name: "Super 8") }
     func testExtraSmallLoadScreenAudit16mm() throws { try auditExtraSmallLoadScreen(id: "cinema16mm", name: "16mm") }
 
@@ -86,8 +88,7 @@ final class JournalFlowTests: XCTestCase {
         try audit(app, name: "\(name)-load-extra-small", for: Self.auditTypes)
         retainScreenshot(name: "\(name)-load-extra-small")
         // The Journal's bar stays in the tree under the catalog sheet on smaller iPhones, so go back from this bar.
-        app.navigationBars[name].buttons.element(boundBy: 0).tap()
-        XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
+        goBack(app, from: name, to: "Choose a Camera")
     }
 
     func testLargestDynamicTypeCatalogAndLandscapeSettings() throws {
@@ -108,14 +109,14 @@ final class JournalFlowTests: XCTestCase {
         // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
         // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
-        // The load screen exposes its capacity as one "Capacity, 2 minutes 45 seconds of film" element. A bare
+        // The load screen exposes its capacity as one "Capacity, 2 minutes 47 seconds of film" element. A bare
         // capacity query also matched the outgoing camera row mid-push, so it passed or failed with timing
         // (Evidence/NativeApp/qa13-measurement-049.md).
-        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 45 seconds of film"].exists)
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].exists)
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "16mm-load-accessibility-largest")
         let title = app.staticTexts["film-title-heading"]
-        scrollUp(app, until: title)
+        scrollUpUntilWhole(app, title)
         XCTAssertTrue(title.isHittable)
         try audit(app, name: "16mm-title-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-title-accessibility-largest")
@@ -124,7 +125,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(load.isHittable)
         try audit(app, name: "16mm-command-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "16mm-command-accessibility-largest")
-        app.navigationBars["16mm"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "16mm", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         app.buttons["Settings"].tap()
         XCUIDevice.shared.orientation = .landscapeLeft
@@ -167,7 +168,7 @@ final class JournalFlowTests: XCTestCase {
         retainScreenshot(name: "Load-camera-denied")
         XCTAssertFalse(app.alerts.firstMatch.exists)
 
-        app.navigationBars["Disposable"].buttons.element(boundBy: 0).tap()
+        goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 5))
         app.buttons["Settings"].tap()
@@ -184,6 +185,16 @@ final class JournalFlowTests: XCTestCase {
     /// Journal (Evidence/NativeApp/scroll-indicator-drag-053.md). `ContentSizeTests` instead measures every text
     /// element on the audited screens at all twelve sizes.
     private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
+
+    /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
+    /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
+    /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
+    /// navigation bar, where the audit flags them too.
+    private func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch.frame
+        scrollUp(app, until: element)
+        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
+    }
 
     private func retainScreenshot(name: String) {
         let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())

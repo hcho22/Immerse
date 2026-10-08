@@ -33,7 +33,7 @@ struct FilmDetailView: View {
                         }
                     }.padding()
                 }
-                .navigationTitle(film.title).navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(SpokenText.title(film.title)).navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { filmMenu(film) } }
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
@@ -76,7 +76,7 @@ struct FilmDetailView: View {
 
     private func header(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(film.camera.displayName).font(.system(.title2, design: .serif))
+            film.camera.displayNameText.font(.system(.title2, design: .serif))
             Text(film.journalState).font(.headline)
             (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText)
                 .font(.subheadline.monospaced()).foregroundStyle(.secondary)
@@ -131,9 +131,9 @@ struct FilmDetailView: View {
                         if capture.revealState == .revealed {
                             Button { selectedPhoto = capture } label: {
                                 RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber)
-                                    .aspectRatio(1, contentMode: .fit)
+                                    .aspectRatio(film.camera.printAspectRatio, contentMode: .fit)
                             }.buttonStyle(.plain).accessibilityLabel("Open photo \(capture.sequenceNumber)")
-                        } else { placeholder(capture).aspectRatio(1, contentMode: .fit) }
+                        } else { placeholder(capture).aspectRatio(film.camera.printAspectRatio, contentMode: .fit) }
                         Text(String(format: "%02d", capture.sequenceNumber)).font(.caption.monospaced())
                     }
                 }

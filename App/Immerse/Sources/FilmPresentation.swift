@@ -1,8 +1,10 @@
+import Accessibility
 import EntitlementCore
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
 import NativeAdapters
+import RenderCore
 import SwiftUI
 
 extension CameraPackage {
@@ -10,10 +12,24 @@ extension CameraPackage {
         switch id {
         case .disposable1990s: "Disposable"
         case .instant1970s: "Instant"
-        case .mediumFormat6x6: "6x6"
+        case .mediumFormat6x6: "6×6"
         case .super8HomeMovie: "Super 8"
         case .cinema16mm: "16mm"
         }
+    }
+
+    /// The Camera's names as text that VoiceOver reads naturally. Every view that shows a name uses these; a navigation
+    /// title uses `SpokenText.title`.
+    var shortNameText: Text { Text(SpokenText.shown(shortName)) }
+    var displayNameText: Text { Text(SpokenText.shown(displayName)) }
+
+    /// The title Load Film suggests for this Camera's `roll`th Film, such as "6×6 - Roll #01".
+    func suggestedTitle(roll: Int) -> String { "\(shortName) - Roll #\(String(format: "%02d", roll))" }
+
+    /// Width over height of the cell a developed print is shown in on the Journal and Film screens: the Instant's
+    /// card, and square for every other Camera, so a Disposable's 3:2 picture is letterboxed in its square cell.
+    var printAspectRatio: CGFloat {
+        id == .instant1970s ? CGFloat(InstantPrintCard.width) / CGFloat(InstantPrintCard.height) : 1
     }
 
     var symbol: String { medium == .photo ? "camera" : "movieclapper" }
@@ -37,18 +53,61 @@ extension CameraPackage {
         case .movieDevelopment: "One silent Movie after Development"
         }
     }
+    /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Fixed focus, optional flash"
-        case .instant1970s: "Square prints"
-        case .mediumFormat6x6: "Square framing, deliberate focus and exposure"
-        case .super8HomeMovie: "Handheld, pronounced grain and flicker"
-        case .cinema16mm: "Deliberate framing, finer grain"
+        case .disposable1990s: "Fixed focus, fixed exposure, optional flash and a live low-light cue"
+        case .instant1970s: "Square picture on a white card"
+        case .mediumFormat6x6: "Square framing, deliberate focus and exposure, optical focus only"
+        case .super8HomeMovie: "Handheld, fixed focus, automatic exposure, 18 frames per second"
+        case .cinema16mm: "Deliberate framing, 24 frames per second"
         }
+    }
+
+    /// How a Film from this Camera develops. Names a look only in descriptive terms, never a maker or a film.
+    var lookLabel: String {
+        switch id {
+        case .disposable1990s: "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"
+        case .instant1970s: "Brilliant, warm, saturated color and soft detail"
+        case .mediumFormat6x6: "Borderless square picture, natural, warm color, very fine grain and gentle contrast"
+        case .super8HomeMovie: "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"
+        case .cinema16mm: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"
+        }
+    }
+
+    /// An explanation the Load Film screen gives for this Camera alone (PRD FR-03).
+    var viewfinderNote: String? {
+        id == .mediumFormat6x6
+            ? "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."
+            : nil
     }
 }
 
+/// Product text as VoiceOver should read it: the product spells "6×6", which VoiceOver would read as "6 times 6".
+enum SpokenText {
+    /// `text` as written, with each "6×6" pronounced "6 by 6". A pronunciation keeps the accessibility label the shown
+    /// text: the clipped-text audit measures the label in the text's frame, and a "6 by 6" label, longer than the
+    /// "6×6" drawn there, was reported as clipped.
+    static func shown(_ text: String) -> AttributedString {
+        var sixBySix = AttributedString("6×6")
+        sixBySix.accessibilitySpeechPhoneticNotation = "sɪks baɪ sɪks"
+        let parts = text.components(separatedBy: "6×6")
+        return parts.dropFirst().reduce(AttributedString(parts[0])) { $0 + sixBySix + AttributedString($1) }
+    }
+
+    /// A navigation title, labeled with `of(text)`: the navigation bar drops a pronunciation, and the clipped-text
+    /// audit does not measure the bar's title.
+    static func title(_ text: String) -> Text { Text(text).accessibilityLabel(of(text)) }
+
+    /// `text` with each "6×6" written as VoiceOver says it.
+    static func of(_ text: String) -> String { text.replacingOccurrences(of: "6×6", with: "6 by 6") }
+}
+
 extension Film {
+    /// The title as typed, which VoiceOver reads with any "6×6" spoken as "6 by 6", as in a suggested 6×6 title. Every
+    /// view that shows the title uses this; a navigation title uses `SpokenText.title`.
+    var titleText: Text { Text(SpokenText.shown(title)) }
+
     var journalState: String {
         if developmentState == .developed { return "Developed" }
         if developmentState == .developing { return "Developing" }
@@ -184,6 +243,8 @@ enum FailureCopy {
             return "Photos could not finish saving, so this Film is unchanged. Anything already saved stays in Photos. Check available storage, then save again."
         case let error as TrialKeychainError:
             return "Immerse could not read or update this iPhone's secure Trial record (Keychain \(error.status)). Trial eligibility has not been reset, and any capture waiting to save stays private. Try again while your iPhone is unlocked."
+        case NativeRenderError.instantMasterWithoutCard:
+            return "This print is not in the card format every Instant print uses, so it cannot be shown or edited. Nothing was changed."
         case FilmExportError.missingReceipt:
             return "Photos did not confirm the save, so this Film is unchanged. A copy may already be in Photos; check there before saving again."
         default:

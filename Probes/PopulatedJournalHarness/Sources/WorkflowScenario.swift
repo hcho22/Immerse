@@ -76,9 +76,11 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         } else {
             let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-mixed") ? "instant-mixed"
                 : arguments.contains("--instant") ? "instant" : arguments.contains("--empty") ? "empty"
-                : arguments.contains("--developed-photo") ? "developed-photo" : "early-photo"
+                : arguments.contains("--developed-photo") ? "developed-photo"
+                : arguments.contains("--medium-format") ? "medium-format" : "early-photo"
             let movie = mode == "movie", instant = mode.hasPrefix("instant")
-            let camera = movie ? CameraCatalog.cinema16mm : instant ? CameraCatalog.instant1970s : CameraCatalog.disposable1990s
+            let camera = movie ? CameraCatalog.cinema16mm : instant ? CameraCatalog.instant1970s
+                : mode == "medium-format" ? CameraCatalog.mediumFormat6x6 : CameraCatalog.disposable1990s
             let model = scenario.model
             let film = try model.repository.createFilm(camera: camera, title: "Private synthetic Film",
                 movieOrientation: movie ? .portrait : nil, access: .subscription)
@@ -101,8 +103,9 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
                     }
                 }
-                if movie || mode == "developed-photo" { try model.repository.completeEarly(filmID: film.id) }
-                if movie || mode == "developed-photo" || mode == "instant" {
+                let developsEarly = mode == "developed-photo" || mode == "medium-format"
+                if movie || developsEarly { try model.repository.completeEarly(filmID: film.id) }
+                if movie || developsEarly || mode == "instant" {
                     model.refresh(); try await model.develop(film.id)
                 }
             }

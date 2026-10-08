@@ -114,18 +114,18 @@ private struct JournalFilmRow: View {
     private func row(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline) {
-                Text(film.camera.shortName).font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
+                film.camera.shortNameText.font(.caption.monospaced()).foregroundStyle(Color.cardSecondaryText)
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }
-            Text(film.title).font(.system(.title2, design: .serif)).lineLimit(3)
+            film.titleText.font(.system(.title2, design: .serif)).lineLimit(3)
             if film.camera.medium == .photo && !model.hiddenFilms.contains(film.id) {
                 let shown = Array(film.captures.filter { $0.revealState == .revealed }.prefix(3))
                 if !shown.isEmpty {
                     HStack(spacing: 4) {
                         ForEach(shown) { capture in
                             RevealedPhoto(filmID: film.id, sequence: capture.sequenceNumber)
-                                .aspectRatio(1, contentMode: .fit).clipped()
+                                .aspectRatio(film.camera.printAspectRatio, contentMode: .fit).clipped()
                         }
                     }
                 }

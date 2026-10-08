@@ -11,7 +11,7 @@ final class FilmDomainTests: XCTestCase {
         XCTAssertEqual(CameraCatalog.mediumFormat6x6.capacity, .exposures(12))
         XCTAssertEqual(CameraCatalog.super8HomeMovie.capacity, .seconds(200))
         XCTAssertEqual(CameraCatalog.super8HomeMovie.revealRule, .movieDevelopment)
-        XCTAssertEqual(CameraCatalog.cinema16mm.capacity, .seconds(165))
+        XCTAssertEqual(CameraCatalog.cinema16mm.capacity, .seconds(167))
         XCTAssertTrue(CameraCatalog.super8HomeMovie.supportsBuiltInSoundtrack)
         XCTAssertTrue(CameraCatalog.cinema16mm.supportsBuiltInSoundtrack)
     }
@@ -31,7 +31,7 @@ final class FilmDomainTests: XCTestCase {
     }
 
     func testLoadedCameraDoesNotChangeWhenTitleOrArchiveChanges() throws {
-        var film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "6x6 - Roll #01")
+        var film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "6×6 - Roll #01")
         _ = try film.recordSavedPhoto()
 
         try film.rename(to: "Kyoto alleys")
@@ -146,8 +146,8 @@ final class FilmDomainTests: XCTestCase {
         _ = try film.recordSavedMovieClip(durationSeconds: 64, orientation: .portrait)
         let wasted = try film.completeEarly()
 
-        XCTAssertEqual(wasted, .seconds(101))
-        XCTAssertEqual(film.completionState, .completedEarly(wasted: .seconds(101)))
+        XCTAssertEqual(wasted, .seconds(103))
+        XCTAssertEqual(film.completionState, .completedEarly(wasted: .seconds(103)))
         XCTAssertTrue(film.canStartDevelopment)
     }
 

@@ -11,6 +11,8 @@ public enum NativeRenderError: Error, Equatable {
     case invalidMovie
     case writerFailed
     case writerTimedOut
+    /// An Instant master that is not the card-sized print every developed Instant exposure is.
+    case instantMasterWithoutCard
 }
 
 /// Versioned engineering preset. DEC-04/DEC-11 visual and output approval remains open.
@@ -27,7 +29,7 @@ public enum NativePhotoRenderer {
             image = normalize(image.cropped(to: CGRect(
                 x: (image.extent.width - side) / 2, y: (image.extent.height - side) / 2, width: side, height: side
             )))
-            let target: CGFloat = camera.id == .instant1970s ? 2048 : 3072
+            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : 3072)
             image = image.transformed(by: CGAffineTransform(scaleX: target / side, y: target / side))
         } else {
             if camera.id == .disposable1990s { image = cropToThreeByTwo(image) }
@@ -38,18 +40,45 @@ public enum NativePhotoRenderer {
         if process == .silverGelatin {
             image = image.applyingFilter("CIColorControls", parameters: [kCIInputSaturationKey: 0])
         }
+        // The card is part of the developed master, so every view and export of the print includes it.
+        if camera.id == .instant1970s { image = InstantPrintCard.mount(image) }
         return try jpeg(image)
     }
 
     public static func print(master: Data, recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws -> Data {
         guard camera.medium == .photo else { throw NativeRenderError.wrongMedium }
         try validate(recipe, camera: camera, process: process)
+        // Every developed Instant master is the card-sized print; anything else would render, or map a Dodge/Burn
+        // point, without its card.
+        if camera.id == .instant1970s { try requireCardSized(master) }
         // Reset is byte-exact: never re-encode the original master.
         if recipe == .original { return master }
-        guard var image = CIImage(data: master, options: [.applyOrientationProperty: true]) else {
+        guard let decoded = CIImage(data: master, options: [.applyOrientationProperty: true]) else {
             throw NativeRenderError.unreadableSource
         }
-        image = normalize(image).applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: recipe.printExposureStops])
+        var image = normalize(decoded)
+        // Adjustments reach the picture only. The card is unexposed paper, so print exposure, contrast, filtration
+        // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture.
+        let isInstant = camera.id == .instant1970s
+        if isInstant { image = InstantPrintCard.picture(of: image) }
+        image = adjust(image, recipe: recipe)
+        if isInstant { image = InstantPrintCard.mount(image) }
+        return try jpeg(image)
+    }
+
+    private static func requireCardSized(_ master: Data) throws {
+        guard let source = CGImageSourceCreateWithData(master as CFData, nil),
+              let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = properties[kCGImagePropertyPixelWidth] as? Int,
+              let height = properties[kCGImagePropertyPixelHeight] as? Int else { throw NativeRenderError.unreadableSource }
+        let rotated = ((properties[kCGImagePropertyOrientation] as? Int) ?? 1) > 4
+        guard (rotated ? (height, width) : (width, height)) == (InstantPrintCard.width, InstantPrintCard.height) else {
+            throw NativeRenderError.instantMasterWithoutCard
+        }
+    }
+
+    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe) -> CIImage {
+        var image = source.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: recipe.printExposureStops])
         if let grade = recipe.contrastGrade {
             image = image.applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 0.7 + Double(grade) * 0.15])
         }
@@ -107,7 +136,7 @@ public enum NativePhotoRenderer {
                 width: crop.width * size.width, height: crop.height * size.height
             ).integral))
         }
-        return try jpeg(image)
+        return image
     }
 
     public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws {
@@ -125,6 +154,8 @@ public enum NativePhotoRenderer {
             }
         }
         if let crop = recipe.crop {
+            // An Instant print keeps its square picture and white card whole, so it takes no crop at all.
+            guard camera.id != .instant1970s else { throw NativeRenderError.invalidRecipe }
             guard [crop.x, crop.y, crop.width, crop.height].allSatisfy(\.isFinite),
                   crop.x >= 0, crop.y >= 0, crop.width > 0, crop.height > 0,
                   crop.x + crop.width <= 1, crop.y + crop.height <= 1,
@@ -204,5 +235,41 @@ enum FilmLook {
         }
         return image.applyingFilter("CIVignette", parameters: [kCIInputIntensityKey: 0.22, kCIInputRadiusKey: 1.5])
             .cropped(to: source.extent)
+    }
+}
+
+/// The white card of a developed 1970s Instant print (PRD 2.1 FR-07, ADR 0013).
+///
+/// The picture stays exactly 2048 x 2048 pixels and the card is added around it, in the proportions of the Instant's
+/// Format Reference, the original 1970s integral print: a 79 mm square picture on a 88 x 107 mm card, with equal
+/// narrow top and side borders (4.5 mm) and a deeper bottom border (23.5 mm). The card is clean white, never aged.
+public enum InstantPrintCard {
+    public static let pictureSide = 2048
+    /// Top, left and right border, in pixels (4.5 / 79 of the picture).
+    public static let sideBorder = 117
+    /// Bottom border, in pixels (23.5 / 79 of the picture).
+    public static let bottomBorder = 609
+    public static let width = pictureSide + 2 * sideBorder
+    public static let height = pictureSide + sideBorder + bottomBorder
+
+    /// The picture's place on the card as fractions of the card, from its top left corner.
+    public static let pictureFractions = CGRect(
+        x: Double(sideBorder) / Double(width), y: Double(sideBorder) / Double(height),
+        width: Double(pictureSide) / Double(width), height: Double(pictureSide) / Double(height)
+    )
+
+    /// The picture inside a card-sized image, moved to the origin. Core Image's origin is the bottom left.
+    static func picture(of card: CIImage) -> CIImage {
+        NativePhotoRenderer.normalize(card.cropped(to: CGRect(
+            x: sideBorder, y: bottomBorder, width: pictureSide, height: pictureSide
+        )))
+    }
+
+    /// A 2048 x 2048 picture on the white card.
+    static func mount(_ picture: CIImage) -> CIImage {
+        let paper = CIImage(color: .white).cropped(to: CGRect(x: 0, y: 0, width: width, height: height))
+        return NativePhotoRenderer.normalize(picture).transformed(
+            by: CGAffineTransform(translationX: CGFloat(sideBorder), y: CGFloat(bottomBorder))
+        ).composited(over: paper)
     }
 }

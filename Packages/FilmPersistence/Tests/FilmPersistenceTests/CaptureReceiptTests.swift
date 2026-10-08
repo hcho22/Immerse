@@ -33,16 +33,16 @@ final class CaptureReceiptTests: XCTestCase {
         var repository = try FilmRepository(rootURL: root)
         let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape)
         let data = Data("native-clip".utf8)
-        try repository.saveMovieClip(filmID: film.id, sourceData: data, durationSeconds: 165, orientation: .portrait, captureID: "clip")
+        try repository.saveMovieClip(filmID: film.id, sourceData: data, durationSeconds: 167, orientation: .portrait, captureID: "clip")
         repository = try FilmRepository(rootURL: root)
-        let after = try repository.saveMovieClip(filmID: film.id, sourceData: data, durationSeconds: 165, orientation: .portrait, captureID: "clip")
-        XCTAssertEqual(after.consumedMovieSeconds, 165)
+        let after = try repository.saveMovieClip(filmID: film.id, sourceData: data, durationSeconds: 167, orientation: .portrait, captureID: "clip")
+        XCTAssertEqual(after.consumedMovieSeconds, 167)
         XCTAssertEqual(after.savedCaptureCount, 1)
         XCTAssertThrowsError(try repository.saveMovieClip(
-            filmID: film.id, sourceData: data, durationSeconds: 164, orientation: .portrait, captureID: "clip"
+            filmID: film.id, sourceData: data, durationSeconds: 166, orientation: .portrait, captureID: "clip"
         )) { XCTAssertEqual($0 as? PersistenceError, .conflictingCaptureReceipt) }
         XCTAssertThrowsError(try repository.saveMovieClip(
-            filmID: film.id, sourceData: data, durationSeconds: 165, orientation: .landscape, captureID: "clip"
+            filmID: film.id, sourceData: data, durationSeconds: 167, orientation: .landscape, captureID: "clip"
         )) { XCTAssertEqual($0 as? PersistenceError, .conflictingCaptureReceipt) }
     }
 

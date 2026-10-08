@@ -76,9 +76,9 @@ private struct ProbeSetup: View {
     private var originalForm: some View {
         Form {
             Section {
-                LabeledContent("Capacity", value: "2:45 of film")
+                LabeledContent("Capacity", value: "2:47 of film")
                 Text("One silent Movie after Development")
-                Text("Deliberate framing, finer grain").foregroundStyle(.primary)
+                Text("Deliberate framing, 24 frames per second").foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true).probe("camera-description")
                 HStack {
                     Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
@@ -118,10 +118,10 @@ private struct ProbeSetup: View {
     private var sections: some View {
         Group {
             section {
-                row { LabeledContent("Capacity", value: "2:45 of film") }
+                row { LabeledContent("Capacity", value: "2:47 of film") }
                 row { Text("One silent Movie after Development") }
                 row {
-                    Text("Deliberate framing, finer grain").foregroundStyle(.primary)
+                    Text("Deliberate framing, 24 frames per second").foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true).probe("camera-description")
                 }
                 row { HStack {

@@ -39,8 +39,8 @@ final class SetupAuditTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5))
         let viewport = app.scrollViews.firstMatch
         let rows = [
-            app.staticTexts["Capacity, 2:45 of film"], app.staticTexts["One silent Movie after Development"],
-            app.staticTexts["Deliberate framing, finer grain"], app.staticTexts["Silent capture"].firstMatch,
+            app.staticTexts["Capacity, 2:47 of film"], app.staticTexts["One silent Movie after Development"],
+            app.staticTexts["Deliberate framing, 24 frames per second"], app.staticTexts["Silent capture"].firstMatch,
             app.staticTexts["Movie Orientation"], app.buttons["Movie Orientation, Portrait"],
             app.staticTexts["film-title-heading"], app.textFields["Film title"],
             app.staticTexts["One Trial Film on this iPhone"],

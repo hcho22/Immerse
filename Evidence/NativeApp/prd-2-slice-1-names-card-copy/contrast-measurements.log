@@ -1,0 +1,9 @@
+16mm Load screen look line at rest, 2026-10-07, Xcode 26.5, iPhone 17 Pro simulator iOS 26.5, largest text size (AX XXXL).
+Pose: AtRestLookLineTests.swift.txt (run temporarily, not part of the suite), each line scrolled fully between
+the navigation bar plus 16 pt (bar bottom edge 189 pt) and 80 pt above the screen bottom (874 pt), as 052 defines "at rest".
+Tool: ../qa13-measurement-049/contrast.swift.txt on the element's reported frame in the 3x screenshot.
+
+Rest-light | Visible grain, a red highlight glow, minor jitter and weave, soft dark edges | y=380.7 h=403.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100% | rest-16mm-look-largest-light.png
+Rest-light | Deliberate framing, 24 frames per second | y=216.7 h=279.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-dark | Visible grain, a red highlight glow, minor jitter and weave, soft dark edges | y=380.7 h=403.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100% | rest-16mm-look-largest-dark.png
+Rest-dark | Deliberate framing, 24 frames per second | y=216.7 h=279.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%

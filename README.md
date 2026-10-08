@@ -13,20 +13,24 @@ Where the product documents and the code differ, it describes the code and notes
 
 The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift`](Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift).
 
-| Camera | Medium | Capacity | Reveal | Controls in the capture screen |
+| Camera | Medium | Capacity | Reveal | Controls and look on the Load Film screen |
 | --- | --- | --- | --- | --- |
-| 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Borderless 3:2 framing, fixed focus and exposure, optional flash with a low-light cue |
-| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square framing |
-| 1960s 6x6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, rear viewfinder reversed left to right, manual focus and exposure sliders |
-| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Fixed focus, handheld look, grain and flicker |
-| 1960s 16mm Cinema | Movie | 2:45 (165 seconds) | One silent Movie after Development | Finer grain |
+| 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
+| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; brilliant, warm, saturated color and soft detail |
+| 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; borderless square picture, natural, warm color, very fine grain and gentle contrast |
+| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; strong, rich color, fine grain, an unsteady frame, flicker, dust and hair |
+| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; visible grain, a red highlight glow, minor jitter and weave, soft dark edges |
 
-Gap: this table is the build, not PRD version 2.0.
-PRD 2.0 renames the 6x6 and 16mm Cameras without a decade, sets the 16mm Cinema to 2:47, adds a color or black-and-white Film Stock choice on those two Cameras, and changes every Camera's look.
-In the Darkroom, Instant prints lose crop and chemical toning is limited to black-and-white Films; under the captain's 2026-10-07 decision (PRD 2.1) contrast grades stay on every Photo Film, color included.
-None of that is built yet; the tracker's "PRD 2.0 implementation slices" give the order.
+A developed Instant print is a 2048 x 2048 picture on a clean white card (2282 x 2774 in all), in the proportions of the original 1970s integral print.
+The card is part of the developed master, so the Journal, the Darkroom and Save Developed to Photos all show it.
+Darkroom adjustments (print exposure, contrast, filtration, Dodge/Burn) reach the picture only and leave the card white, and an Instant print has no crop.
+Films loaded before a package changes keep the package they locked, so a 16mm Film loaded earlier keeps its old name and 165 seconds.
+
+Gap: this table is the build, not all of PRD version 2.1.
+The looks themselves are not retuned yet, and the Film Stock choice (color or black-and-white) on the 6×6 and the 16mm Cinema is not built, so no Film is black-and-white and chemical toning is not offered.
 PRD 2.0's capture behavior (slice 2) is built, as the table shows; developed exposures are never reversed.
 The Disposable's fixed exposure (EV 12), its low-light cue threshold and the fixed lens position are provisional pending DEC-04 and a physical-phone check ([`Evidence/NativeApp/capture-behavior-prd2-slice2.md`](Evidence/NativeApp/capture-behavior-prd2-slice2.md)).
+The tracker's "PRD 2.0 implementation slices" give the order.
 Flash, manual focus and exposure appear only when the lens supports them, and the capture screen says when a lens cannot hold the Disposable's fixed exposure.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
 Movie capture uses a 4:3 native format that is provisional pending DEC-04.
@@ -40,14 +44,15 @@ All screens live in [`App/Immerse/Sources`](App/Immerse/Sources).
   The Camera permission is requested here and in Open Camera, not at launch.
 - **Capture.** Open Camera shows a live viewfinder, remaining exposures or M:SS time, and a shutter that saves each capture privately inside the app.
   Saves that were interrupted are recovered at launch or resumed with Resume Save.
-- **Early completion.** Disposable, 6x6 and Movie Films can be completed early ("Rewind & Develop Early" or "Stop & Develop Early") once they have at least one saved capture; unused capacity is permanently wasted.
+- **Early completion.** Disposable, 6×6 and Movie Films can be completed early ("Rewind & Develop Early" or "Stop & Develop Early") once they have at least one saved capture; unused capacity is permanently wasted.
   Instant Films have no early completion because each print develops on its own.
 - **Development.** A full or early-completed Film is developed once.
   Before Development you choose whether original captures are saved to Photos after the reveal or removed after verified Development.
   Photo Films reveal every print; Movie Films assemble their clips, in order, into one silent Movie with a player in the Film screen.
 - **Journal.** The Journal groups Films as On the roll, Ready to develop, Developing, Pack complete and Developed, with progress and up to three revealed thumbnails per photo Film.
   Films can be renamed and moved to and from the Archive.
-- **Darkroom.** Revealed photos open in a Darkroom with exposure, contrast, color filtration, crop and point-based dodge and burn, saved as reversible edits with Reset to Original.
+- **Darkroom.** Revealed photos open in a Darkroom with exposure, contrast grades 0 to 5, color filtration, crop and point-based dodge and burn, saved as reversible edits with Reset to Original.
+  Every Photo Film gets the contrast grades, Instant prints included, but an Instant print has no crop, so its square picture and white card stay whole.
   Chemical toning exists in code but only for a silver-gelatin print process; every current Camera uses the provisional color process, so toning is not offered today.
 - **Discard.** A single photo or Movie clip can be discarded after reveal, with no refund of exposures or time.
   Discarding a clip rebuilds the Movie from the surviving clips without redevelopment (ADR 0007); a Movie whose clips are all discarded keeps numbered placeholders with no playback or export (DEC-09).

@@ -1,0 +1,62 @@
+import XCTest
+
+/// Diagnostic only, kept outside the test suite (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
+/// Opens the 16mm Load screen at the largest text size, as the 16mm title audit does, then scrolls the look line
+/// (and the controls line above it, for comparison with 052) fully between the navigation bar and the bottom edge band
+/// in short held drags in the left margin, and records its frame with a screenshot, for measurement with
+/// ../qa13-measurement-049/contrast.swift.txt.
+@MainActor
+final class AtRestLookLineTests: XCTestCase {
+    private let labels = ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges",
+                          "Deliberate framing, 24 frames per second"]
+
+    func testRecordLookLineAtRest() throws {
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
+        for label in labels {
+            let element = app.staticTexts[label]
+            let top = app.navigationBars.firstMatch.frame.maxY + 16
+            let bottom = app.windows.firstMatch.frame.maxY - 80
+            rest(app, element, top: top, bottom: bottom)
+            XCTAssertTrue(element.frame.minY >= top && element.frame.maxY <= bottom, "\(label) at rest")
+            let lines = ["window \(app.windows.firstMatch.frame)", "navigation \(app.navigationBars.firstMatch.frame)",
+                         "\(label) frame=\(element.frame)"]
+            let text = XCTAttachment(string: lines.joined(separator: "\n"))
+            text.name = "rest-\(label.prefix(20))-frames"
+            text.lifetime = .keepAlways
+            add(text)
+            let shot = XCTAttachment(screenshot: app.screenshot())
+            shot.name = "rest-\(label.prefix(20))"
+            shot.lifetime = .keepAlways
+            add(shot)
+        }
+    }
+
+    /// Short held drags in the left margin until the element is fully between `top` and `bottom`.
+    private func rest(_ app: XCUIApplication, _ element: XCUIElement, top: CGFloat, bottom: CGFloat) {
+        for _ in 0..<40 {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.5))
+            if !element.exists {
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -100)),
+                            withVelocity: .slow, thenHoldForDuration: 0.3)
+                continue
+            }
+            let frame = element.frame
+            // A drag shorter than about 40 points does not scroll the list.
+            let move: CGFloat = frame.minY < top ? min(100, max(40, top - frame.minY + 20))
+                : frame.maxY > bottom ? -min(100, max(40, frame.maxY - bottom + 20)) : 0
+            if move == 0 { break }
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: move)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        Thread.sleep(forTimeInterval: 1)
+    }
+}

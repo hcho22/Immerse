@@ -19,7 +19,7 @@ struct CameraCatalogView: View {
                                     Image(systemName: camera.symbol).font(.system(size: 24)).frame(width: 36)
                                         .accessibilityHidden(true)
                                     VStack(alignment: .leading, spacing: 5) {
-                                        Text(camera.shortName).font(.system(.title3, design: .serif))
+                                        camera.shortNameText.font(.system(.title3, design: .serif))
                                         camera.capacityText.font(.caption).foregroundStyle(.secondary)
                                     }.padding(.vertical, 8)
                                 }
@@ -64,7 +64,7 @@ private struct LoadFilmView: View {
             form { entitlement }
             #endif
         }
-        .navigationTitle(camera.shortName)
+        .navigationTitle(SpokenText.title(camera.shortName))
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
         .interactiveDismissDisabled(loading)
@@ -84,6 +84,10 @@ private struct LoadFilmView: View {
                 LabeledContent("Capacity") { camera.capacityText }
                 Text(camera.revealLabel)
                 Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                Text(camera.lookLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                if let note = camera.viewfinderNote {
+                    Text(note).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                }
                 if camera.medium == .movie {
                     HStack {
                         Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
@@ -136,7 +140,7 @@ private struct LoadFilmView: View {
     }
 
     private var suggestedTitle: String {
-        "\(camera.shortName) - Roll #\(String(format: "%02d", model.films.filter { $0.camera.id == camera.id }.count + 1))"
+        camera.suggestedTitle(roll: model.films.filter { $0.camera.id == camera.id }.count + 1)
     }
 
     @ViewBuilder private var entitlement: some View {

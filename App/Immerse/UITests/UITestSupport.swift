@@ -24,13 +24,24 @@ extension XCTestCase {
         scrollUp(app) { element.isHittable }
     }
 
-    /// Scrolls up in the same held drags until `done` holds.
-    @nonobjc func scrollUp(_ app: XCUIApplication, until done: () -> Bool) {
+    /// Scrolls up in the same held drags, `distance` points each, until `done` holds.
+    @nonobjc func scrollUp(_ app: XCUIApplication, by distance: CGFloat = 300, until done: () -> Bool) {
         for _ in 0..<16 where !done() {
             let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)),
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
+    }
+
+    /// Taps Back on the pushed screen whose bar is titled `title`, then waits until that bar has left the tree and the
+    /// `previous` screen's bar shows. The tap can return before the pop ends: one CI run (37788441803) then found the
+    /// Load screen still in the tree and no Cancel button on the catalog. A dropped tap fails here rather than at the
+    /// next step.
+    func goBack(_ app: XCUIApplication, from title: String, to previous: String) {
+        let bar = app.navigationBars[title]
+        bar.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(bar.waitForNonExistence(timeout: 5), "\(title) still showed 5 seconds after Back")
+        XCTAssertTrue(app.navigationBars[previous].waitForExistence(timeout: 5), "\(previous) did not show after Back")
     }
 
     /// Taps Start a Film once and waits for the Camera catalog sheet. One CI run (main, run 37627486582) delivered a tap

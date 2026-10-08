@@ -68,7 +68,7 @@ final class TestingUnlockTests: XCTestCase {
     func testTurningTheUnlockOffKeepsItsFilmsUsableAndRestoresTrialGating() async throws {
         let (root, calls, model) = try await makeModel(unlocked: true)
         defer { try? FileManager.default.removeItem(at: root) }
-        let photos = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Unlocked 6x6", orientation: .portrait)
+        let photos = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Unlocked 6×6", orientation: .portrait)
         let movie = try await model.load(camera: CameraCatalog.super8HomeMovie, title: "Unlocked Super 8", orientation: .portrait)
         try await save(photos, model)
 

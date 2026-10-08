@@ -68,7 +68,7 @@ public enum CameraCatalog {
 
     public static let mediumFormat6x6 = CameraPackage(
         id: .mediumFormat6x6,
-        displayName: "1960s 6x6 Medium Format",
+        displayName: "6×6 Medium Format",
         medium: .photo,
         capacity: .exposures(12),
         revealRule: .rollLevelDevelopment
@@ -85,9 +85,9 @@ public enum CameraCatalog {
 
     public static let cinema16mm = CameraPackage(
         id: .cinema16mm,
-        displayName: "1960s 16mm Cinema",
+        displayName: "16mm Cinema",
         medium: .movie,
-        capacity: .seconds(165),
+        capacity: .seconds(167),
         revealRule: .movieDevelopment,
         supportsBuiltInSoundtrack: true
     )

@@ -138,9 +138,9 @@ import XCTest
         app.buttons["Dodge point"].tap()
         let undo = app.buttons["Undo last stroke"]
         XCTAssertTrue(undo.isEnabled)
-        // At the default text size the last row rests in the bottom bar's edge band, where a tap
-        // reaches the bar instead. Scroll it clear as a person would, starting on the plain heading
-        // so the drag cannot move a slider or paint on the print.
+        // At the default text size the last row rests below the scroll area, which stops above the
+        // bottom bar. Scroll it clear as a person would, starting on the plain heading so the drag
+        // cannot move a slider or paint on the print.
         let bar = app.buttons["Reset to Original"]
         let heading = app.staticTexts["Dodge / Burn"]
         for _ in 0..<4 where undo.frame.maxY > bar.frame.minY - 12 {
