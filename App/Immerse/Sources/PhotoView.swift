@@ -9,6 +9,46 @@ private struct ControlsHeightKey: PreferenceKey {
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
+/// The Darkroom's print above its controls. The print takes the height the controls leave at their full size, and
+/// below the navigation bar: the sheet's safe area starts under the bar, and the content scrolls only when even the
+/// smallest print does not fit. Rendering shows over the print and an error between the print and the controls, both
+/// outside the measured controls, so neither resizes the print on every render or rescales a Dodge/Burn stroke.
+struct DarkroomLayout<Preview: View, Controls: View>: View {
+    let rendering: Bool
+    let error: String?
+    @ViewBuilder let preview: Preview
+    @ViewBuilder let controls: Controls
+    /// The height of everything under the print, measured at the current text size.
+    @State private var controlsHeight: CGFloat = 260
+
+    /// The smallest height the print preview is scaled down to before the screen scrolls.
+    private static var minimumPrintHeight: CGFloat { 160 }
+
+    /// The space under the controls that the floating Reset to Original button covers.
+    private static var bottomBarClearance: CGFloat { 48 }
+
+    private func printHeight(in available: CGFloat) -> CGFloat {
+        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 32 - Self.bottomBarClearance)
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 18) {
+                    preview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
+                        .overlay(alignment: .topTrailing) {
+                            if rendering { ProgressView().accessibilityLabel("Rendering print") }
+                        }
+                    if let error { Text(error).foregroundStyle(.red) }
+                    VStack(spacing: 18) { controls }
+                        .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
+                }.padding()
+            }
+            .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
+        }
+    }
+}
+
 /// Sets an Instant print's white card apart from a white screen: a hairline edge everywhere, and in the large views
 /// also a margin and a soft shadow, so the card reads as a print in light and dark appearance. The margin is padding,
 /// so the print fits inside whatever size the view is given.
@@ -130,8 +170,6 @@ struct DarkroomView: View {
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
     @State private var error: String?
-    /// The height of everything under the print, measured at the current text size.
-    @State private var controlsHeight: CGFloat = 260
 
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
 
@@ -150,36 +188,12 @@ struct DarkroomView: View {
         }
     }
 
-    /// The smallest height the print preview is scaled down to before the screen scrolls.
-    private static let minimumPrintHeight: CGFloat = 160
-
-    /// The space under the controls that the floating Reset to Original button covers.
-    private static let bottomBarClearance: CGFloat = 48
-
-    /// The print takes the height the controls leave at their full size, and below the navigation bar: the sheet's
-    /// safe area starts under the bar, and the content scrolls only when even the smallest print does not fit.
-    private func printHeight(in available: CGFloat) -> CGFloat {
-        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 32 - Self.bottomBarClearance)
-    }
-
     var body: some View {
         NavigationStack {
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: 18) {
-                        printPreview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
-                            // Rendering is shown over the print, not among the controls, so the controls keep one height
-                            // and the print does not shrink and grow back on every render.
-                            .overlay(alignment: .topTrailing) {
-                                if rendering { ProgressView().accessibilityLabel("Rendering print") }
-                            }
-                        VStack(spacing: 18) { toolRow; Text(tool.rawValue).font(.headline); controls
-                            if let error { Text(error).foregroundStyle(.red) }
-                        }
-                        .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
-                    }.padding()
-                }
-                .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
+            DarkroomLayout(rendering: rendering, error: error) {
+                printPreview
+            } controls: {
+                toolRow; Text(tool.rawValue).font(.headline); controls
             }
             .navigationTitle("Darkroom").navigationBarTitleDisplayMode(.inline)
             .toolbar {

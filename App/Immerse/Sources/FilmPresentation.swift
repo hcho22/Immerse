@@ -17,15 +17,19 @@ extension CameraPackage {
         }
     }
 
-    /// What VoiceOver reads for `shortName` and `displayName`: "6×6" would be read as "6 times 6".
-    var spokenShortName: String { id == .mediumFormat6x6 ? "6 by 6" : shortName }
-    var spokenDisplayName: String { displayName.replacingOccurrences(of: "6×6", with: "6 by 6") }
+    /// What VoiceOver reads for `shortName` and `displayName`.
+    var spokenShortName: String { SpokenText.of(shortName) }
+    var spokenDisplayName: String { SpokenText.of(displayName) }
 
     /// The Camera's names as text that VoiceOver reads naturally. Every place the name is shown uses these.
     var shortNameText: Text { Text(shortName).accessibilityLabel(spokenShortName) }
     var displayNameText: Text { Text(displayName).accessibilityLabel(spokenDisplayName) }
 
-    /// Width over height of this Camera's developed print: a square picture, or the Instant's taller card.
+    /// The title Load Film suggests for this Camera's `roll`th Film, such as "6×6 - Roll #01".
+    func suggestedTitle(roll: Int) -> String { "\(shortName) - Roll #\(String(format: "%02d", roll))" }
+
+    /// Width over height of the cell a developed print is shown in on the Journal and Film screens: the Instant's
+    /// card, and square for every other Camera, so a Disposable's 3:2 picture is letterboxed in its square cell.
     var printAspectRatio: CGFloat {
         id == .instant1970s ? CGFloat(InstantPrintCard.width) / CGFloat(InstantPrintCard.height) : 1
     }
@@ -81,7 +85,18 @@ extension CameraPackage {
     }
 }
 
+/// Product text as VoiceOver should read it: the product spells "6×6", which VoiceOver would read as "6 times 6".
+enum SpokenText {
+    static func of(_ text: String) -> String { text.replacingOccurrences(of: "6×6", with: "6 by 6") }
+}
+
 extension Film {
+    /// The title as typed, which VoiceOver reads with any "6×6" spoken as "6 by 6", as in a suggested 6×6 title.
+    var spokenTitle: String { SpokenText.of(title) }
+
+    /// The title as text that VoiceOver reads naturally. Every place the title is shown uses this.
+    var titleText: Text { Text(title).accessibilityLabel(spokenTitle) }
+
     var journalState: String {
         if developmentState == .developed { return "Developed" }
         if developmentState == .developing { return "Developing" }

@@ -10,7 +10,7 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
   A Film persists its whole `CameraPackage`, so a Film loaded earlier keeps "1960s 16mm Cinema" and 165 seconds.
   `PRD2Slice1Tests` in `Packages/FilmPersistence` reopens the store and checks both.
   Each Camera's short name was already decade-free; the 6×6's now uses the multiplication sign.
-  The product spells it "6×6" (PRD 2.1) and VoiceOver reads the short name as "6 by 6"; code identifiers keep `6x6`.
+  The product spells it "6×6" (PRD 2.1) and VoiceOver reads it as "6 by 6" wherever it is shown; code identifiers keep `6x6`.
 - **The Instant card.**
   `InstantPrintCard` (`Packages/RenderCore/Sources/RenderCore/NativePhotoRenderer.swift`) puts the 2048 x 2048 picture on a clean white card, 2282 x 2774 pixels in all.
   The proportions come from the Instant's Format Reference, the original 1970s integral print: a 79 mm picture on an 88 x 107 mm card, with 4.5 mm top and side borders (117 px) and a 23.5 mm bottom border (609 px).
@@ -36,7 +36,8 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 ## Test changes worth knowing
 
 - The accepted contrast finding in `AuditExceptions.swift` moved from the 16mm controls line to the new look line below it: at the largest text size the held drags now stop with the look line's first lines under the navigation bar's scroll-edge blur.
-  Both lines use the same primary color on the same card as the line it replaced (21.00:1 light and 13.94:1 dark at rest per `qa13-audit-exceptions-052.md`).
+  The look line was measured on its own at rest, as 052 measured the line it replaced: 21.00:1 light and 13.94:1 dark (iPhone 17 Pro, iOS 26.5, AX XXXL).
+  It was scrolled fully between the navigation bar and 80 pt above the screen bottom by the diagnostic `prd-2-slice-1-names-card-copy/AtRestLookLineTests.swift.txt` (run temporarily, not part of the suite) and measured with `qa13-measurement-049/contrast.swift.txt`; the values, with the controls line above it for comparison, are in `prd-2-slice-1-names-card-copy/contrast-measurements.log`, and the screenshots are `rest-16mm-look-largest-light.png` and `-dark.png`.
 - `JournalFlowTests` scrolls to Load Film before asserting it exists, since the longer Camera description pushes the lazy Form's last row off the first screen.
 - `ContentSizeTests` measures the new Look lines on the Super 8 and 16mm Load screens.
 - `PopulatedJournalHarness` gained `testInstantPrintShowsItsCardAndTheDarkroomOffersNoCrop` and a check that a color Film keeps Crop and Contrast with no toning.
@@ -56,18 +57,24 @@ The harness shots are on an iPhone SE (3rd generation), the smallest supported i
 | `super8-load-iphone17.png`, `16mm-load-largest-iphone17.png` | Load Film copy |
 | `6x6-load-extra-small-iphone17.png` | 6×6 Load Film with the reversed-viewfinder note |
 | `catalog-largest-iphone17.png` | The catalog at the largest text size |
+| `rest-16mm-look-largest-light.png`, `-dark.png` | The 16mm look line at rest at the largest text size, where its contrast was measured |
 
 ## Follow-up fixes (captain's review of the first screenshots)
 
 - **Film and Journal thumbnails.**
   An Instant print's cell now has the card's aspect (`CameraPackage.printAspectRatio`), so there are no gray bars beside the card, and the card has a hairline edge in light and dark.
+  Every other Camera keeps a square cell, so a Disposable's 3:2 picture is letterboxed in it as before.
 - **Darkroom layout.**
   The print preview is scaled to the height the controls leave at their full size (at least 160 pt, with 48 pt kept clear for the floating Reset button), so the whole print, an Instant card included, sits below the navigation bar at every text size, and the Exposure tool never needs scrolling on the iPhone SE.
   Tools with more controls (Filtration, Dodge/Burn) scroll once the print is at its smallest.
   The tool icons stop growing at the largest ordinary Dynamic Type size, so five tools always fit between the 16 pt side margins; before, at the largest accessibility size they overflowed and widened the whole column.
   `testDarkroomFitsThePrintAndItsControlsForEveryPhotoCamera` (populated Journal harness) checks, for an Instant, a Disposable and a 6×6 print at the default and the largest text size, that the print lies entirely below the navigation bar (with clear space) and inside the screen, above the controls and not squeezed away, that the tools and slider keep their side margins, that the controls clear the Reset button, and that a swipe cannot move the print under the bar.
+  Only the tool row, the tool's title and its controls are measured (`DarkroomLayout` in `PhotoView.swift`): rendering shows over the print and an error between the print and the controls, so neither resizes the print or rescales a Dodge/Burn stroke.
+  `testADarkroomErrorNeitherResizesNorMovesThePrint` (`JournalIntegrationTests`) hosts the layout, shows and clears an error, and checks that the print keeps its frame while only the controls move; with the error back among the measured controls it fails, the print shrinking from 610.7 to 550.3 pt.
 - **6×6 spelling.**
-  The display name and short name use the multiplication sign, and VoiceOver reads the short name as "6 by 6".
+  The display name and short name use the multiplication sign, and VoiceOver reads "6×6" as "6 by 6" (`SpokenText` in `FilmPresentation.swift`) in both names and in a shown Film title, such as the suggested "6×6 - Roll #01", in the Journal row and the Film screen's title (`Film.titleText`).
+  The saved title stays as typed.
+  The two title fields (Load Film and Rename) are excepted: VoiceOver reads and moves through an editable field's own characters, so a spoken form there would not match the text being edited.
 
 ## Results
 

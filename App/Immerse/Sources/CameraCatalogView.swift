@@ -140,7 +140,7 @@ private struct LoadFilmView: View {
     }
 
     private var suggestedTitle: String {
-        "\(camera.shortName) - Roll #\(String(format: "%02d", model.films.filter { $0.camera.id == camera.id }.count + 1))"
+        camera.suggestedTitle(roll: model.films.filter { $0.camera.id == camera.id }.count + 1)
     }
 
     @ViewBuilder private var entitlement: some View {

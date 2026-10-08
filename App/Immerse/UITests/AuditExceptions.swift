@@ -13,9 +13,8 @@ struct AuditException: Equatable {
 
     static let accepted: [AuditException] = [
         // Contrast at the 16mm title audit at the largest text size. The test's held drags stop with this
-        // description's first lines under the navigation bar's scroll-edge blur in every run; it is set like the
-        // controls line before it, which measured 21.00:1 light and 13.94:1 dark at rest
-        // (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
+        // look line's first lines under the navigation bar's scroll-edge blur in every run; at rest it measured
+        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
         AuditException(audit: "16mm-title-accessibility-largest", type: .contrast, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
     ]
 

@@ -118,7 +118,7 @@ private struct JournalFilmRow: View {
                 Spacer()
                 Text(film.loadedAt, format: .dateTime.month(.abbreviated).day()).font(.caption)
             }
-            Text(film.title).font(.system(.title2, design: .serif)).lineLimit(3)
+            film.titleText.font(.system(.title2, design: .serif)).lineLimit(3)
             if film.camera.medium == .photo && !model.hiddenFilms.contains(film.id) {
                 let shown = Array(film.captures.filter { $0.revealState == .revealed }.prefix(3))
                 if !shown.isEmpty {

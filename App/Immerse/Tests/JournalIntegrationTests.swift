@@ -6,6 +6,7 @@ import NativeAdapters
 import Observation
 import RenderCore
 import Security
+import SwiftUI
 import Synchronization
 import UIKit
 import XCTest
@@ -231,6 +232,60 @@ final class JournalIntegrationTests: XCTestCase {
         for camera in CameraCatalog.all { XCTAssertFalse(camera.spokenDisplayName.contains("×"), camera.displayName) }
     }
 
+    /// A Film keeps its title as given, and VoiceOver reads any "6×6" in it as "6 by 6": the title Load Film suggests
+    /// for a 6×6 Film as well as a typed one, wherever the title is shown (the Journal row and the Film screen's title).
+    func testFilmTitlesKeepTheirTextAndAreSpokenWithSixBySix() throws {
+        let medium = CameraCatalog.mediumFormat6x6
+        let suggested = try Film(camera: medium, title: medium.suggestedTitle(roll: 1))
+        XCTAssertEqual(suggested.title, "6×6 - Roll #01")
+        XCTAssertEqual(suggested.spokenTitle, "6 by 6 - Roll #01")
+        let typed = try Film(camera: CameraCatalog.disposable1990s, title: "Square 6×6 prints")
+        XCTAssertEqual(typed.title, "Square 6×6 prints")
+        XCTAssertEqual(typed.spokenTitle, "Square 6 by 6 prints")
+        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
+            let film = try Film(camera: camera, title: camera.suggestedTitle(roll: 12),
+                                movieOrientation: camera.medium == .movie ? .portrait : nil)
+            XCTAssertEqual(film.spokenTitle, film.title)
+        }
+    }
+
+    /// A Darkroom error shows between the print and its controls without resizing or moving the print, so the print
+    /// and a Dodge/Burn stroke on it keep one scale; only the controls move down while it shows.
+    func testADarkroomErrorNeitherResizesNorMovesThePrint() async throws {
+        let probe = DarkroomLayoutProbe()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        XCTAssertEqual(resting.controls.minY, resting.print.maxY + 18, accuracy: 0.5, "The controls sit right under the print")
+
+        probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
+        let failed = try await settledFrames(probe)
+        XCTAssertEqual(failed.print, resting.print, "An error leaves the print's size and place alone")
+        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY + 18, "The error shows between the print and the controls")
+
+        probe.error = nil
+        let cleared = try await settledFrames(probe)
+        XCTAssertEqual(cleared.print, resting.print)
+        XCTAssertEqual(cleared.controls, resting.controls)
+    }
+
+    /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
+    private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
+        var last: (print: CGRect, controls: CGRect)?
+        for _ in 0..<100 {
+            try await Task.sleep(for: .milliseconds(50))
+            let now = (print: probe.printFrame, controls: probe.controlsFrame)
+            if !now.print.isNull, !now.controls.isNull, let last, last.print == now.print, last.controls == now.controls {
+                return now
+            }
+            last = now
+        }
+        throw DarkroomLayoutDidNotSettle()
+    }
+
     func testPhotoFilmRowsKeepExposureCounts() throws {
         let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
         XCTAssertEqual(film.remainingLabel, "27 exposures left")
@@ -436,3 +491,28 @@ private final class JournalReceiptCalls: TrialKeychainCalling, Sendable {
         }
     }
 }
+
+/// Records the frames a hosted `DarkroomLayout` gives a stand-in print and its controls.
+@MainActor @Observable
+private final class DarkroomLayoutProbe {
+    var error: String?
+    @ObservationIgnored var printFrame = CGRect.null
+    @ObservationIgnored var controlsFrame = CGRect.null
+}
+
+private struct DarkroomLayoutProbeView: View {
+    let probe: DarkroomLayoutProbe
+
+    var body: some View {
+        DarkroomLayout(rendering: false, error: probe.error) {
+            Color.gray.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.printFrame = $0 }
+        } controls: {
+            VStack(spacing: 18) {
+                Text("Exposure").font(.headline)
+                Slider(value: .constant(0.5))
+            }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
+        }
+    }
+}
+
+private struct DarkroomLayoutDidNotSettle: Error {}
