@@ -4,10 +4,12 @@ cd "$(dirname "$0")/.."
 # Simulator UI gates run with light appearance and large text, like the retained
 # harness runner, and the production accessibility audits (JournalFlowTests and the
 # populated Journal card in MovieCapacityUITests) run once more in dark;
-# each simulator's own preferences are restored on exit.
+# each simulator's own preferences are restored on exit. Every simulator booted here has
+# its photo-analysis service switched off first (Scripts/quiet-simulator.sh).
 pinned_simulators=""
 pin_simulator() {
     xcrun simctl bootstatus "$1" -b > /dev/null
+    sh Scripts/quiet-simulator.sh "$1"
     case " $pinned_simulators " in
         *" $1:"*) ;;
         *) pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)" ;;
@@ -75,6 +77,7 @@ if [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance light
 fi
 if [ -n "${IMMERSE_STOREKIT_SIMULATOR_UDID:-}" ]; then
+    sh Scripts/quiet-simulator.sh "$IMMERSE_STOREKIT_SIMULATOR_UDID"
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
         -destination "platform=iOS Simulator,id=$IMMERSE_STOREKIT_SIMULATOR_UDID" \
         -derivedDataPath DerivedData/ValidationSimulator \
