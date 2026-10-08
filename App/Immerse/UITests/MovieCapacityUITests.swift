@@ -18,6 +18,10 @@ final class MovieCapacityUITests: XCTestCase {
     private func check(size: String?) throws {
         let app = XCUIApplication()
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
+        // The tap that focuses the title field makes UIKit accept an autocorrection of the suggestion's last word, and
+        // on a slow runner it once landed among the typed deletes and put "01" back
+        // (Evidence/NativeApp/title-autocorrection-058.md).
+        app.launchArguments += ["-KeyboardAutocorrection", "NO"]
         if let size { app.launchArguments += ["-UIPreferredContentSizeCategoryName", size] }
         // An earlier test can leave Camera declined, so Load Film asks afresh and a person allows it.
         app.resetAuthorizationStatus(for: .camera)
