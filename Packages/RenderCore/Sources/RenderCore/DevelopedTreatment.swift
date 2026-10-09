@@ -398,7 +398,8 @@ struct DevelopedTreatment {
         ])
     }
 
-    /// The standard deviation of the grain's clumped noise before scaling, measured by `FilmLookTests`.
+    /// The standard deviation of the grain's clumped noise before scaling, for clumps of 1.2 pixels and more, measured
+    /// on an even mid-gray (`FilmLookTests.testGrainAmplitudeIsTheDeviationItAddsToMidGray`).
     static let clumpedNoiseDeviation = 0.071
 
     static func gray(_ level: Double) -> CIColor {

@@ -202,7 +202,9 @@ final class JournalIntegrationTests: XCTestCase {
     /// PRD 2.1 sections 6.1 and 6.2 as Load Film shows them: what each Camera does, how it develops, and never a maker
     /// or film name (ADR 0015). The 6×6 is spoken as "6 by 6" wherever its name is shown.
     func testLoadFilmCopyFollowsPRD21AndNeverNamesAFormatReference() {
-        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map { ($0.id, "\($0.controlsLabel). \($0.lookLines.joined(separator: ". "))") })
+        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map {
+            ($0.id, "\($0.controlsLabel). \($0.lookLines(filmStock: $0.defaultFilmStock).joined(separator: ". "))")
+        })
         XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
         XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
         XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("saturated"))
@@ -212,8 +214,13 @@ final class JournalIntegrationTests: XCTestCase {
         // The two Cameras with a Film Stock describe both looks (PRD 2.1 sections 6.1 and 6.2).
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("Color: natural, warm color")
                       && copy[.mediumFormat6x6]!.contains("Black and white: high contrast and distinct grain"))
-        // The 16mm keeps main's line until CAM-17 renders the glow per Film Stock.
-        XCTAssertTrue(copy[.cinema16mm]!.contains("highlight glow"))
+        // The 16mm names the glow its chosen Film Stock develops: red on color, neutral on black-and-white.
+        XCTAssertEqual(CameraCatalog.cinema16mm.lookLines(filmStock: .color),
+                       ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"])
+        XCTAssertEqual(CameraCatalog.cinema16mm.lookLines(filmStock: .blackAndWhite),
+                       ["Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"])
+        XCTAssertEqual(CameraCatalog.mediumFormat6x6.lookLines(filmStock: .blackAndWhite),
+                       CameraCatalog.mediumFormat6x6.lookLines(filmStock: .color), "The 6×6 describes both stocks either way")
         for camera in CameraCatalog.all where camera.filmStocks.isEmpty {
             XCTAssertFalse(copy[camera.id]!.localizedCaseInsensitiveContains("black and white"), camera.displayName)
         }
@@ -224,7 +231,8 @@ final class JournalIntegrationTests: XCTestCase {
         let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
                          "Vision3", "Double-X", "Eastman", "500C"]
         for camera in CameraCatalog.all {
-            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.viewfinderNote ?? ""] + camera.lookLines
+            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.viewfinderNote ?? ""]
+                + ([nil] + FilmStock.allCases.map(Optional.some)).flatMap { camera.lookLines(filmStock: $0) }
                 + camera.filmStocks.map(\.label)
             for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }
         }

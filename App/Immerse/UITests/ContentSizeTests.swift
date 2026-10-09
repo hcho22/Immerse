@@ -2,7 +2,8 @@ import XCTest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
 /// light or dark appearance: the empty Journal, the Camera catalog, the Super 8, 16mm and 6×6 Load Film screens (the 16mm
-/// with its Film Stock choice, the control the 6×6 shows too) and Settings in landscape. It stands in for Xcode's
+/// with its Film Stock choice, the control the 6×6 shows too, and its look line on either stock) and Settings in
+/// landscape. It stands in for Xcode's
 /// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
 /// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
 /// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
@@ -126,6 +127,12 @@ final class ContentSizeTests: XCTestCase {
                label: "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."),
     ]
 
+    /// The 16mm look line once Black and white is chosen, which names the glow that stock develops.
+    private static let sixteenMillimeterBlackAndWhite: [Target] = [
+        Target(name: "16mm Black and white look", type: .staticText,
+               label: "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"),
+    ]
+
     /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
     private static let journal: [Target] = [
         Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here", symbol: ("camera", .above)),
@@ -202,18 +209,18 @@ final class ContentSizeTests: XCTestCase {
     func testLoadScreenTextAtAccessibilityExtraExtraLarge() throws { check("AccessibilityXXL") }
     func testLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { check("AccessibilityXXXL") }
 
-    func testSixBySixLoadScreenTextAtExtraSmall() throws { checkSixBySix("XS") }
-    func testSixBySixLoadScreenTextAtSmall() throws { checkSixBySix("S") }
-    func testSixBySixLoadScreenTextAtMedium() throws { checkSixBySix("M") }
-    func testSixBySixLoadScreenTextAtLarge() throws { checkSixBySix("L") }
-    func testSixBySixLoadScreenTextAtExtraLarge() throws { checkSixBySix("XL") }
-    func testSixBySixLoadScreenTextAtExtraExtraLarge() throws { checkSixBySix("XXL") }
-    func testSixBySixLoadScreenTextAtExtraExtraExtraLarge() throws { checkSixBySix("XXXL") }
-    func testSixBySixLoadScreenTextAtAccessibilityMedium() throws { checkSixBySix("AccessibilityM") }
-    func testSixBySixLoadScreenTextAtAccessibilityLarge() throws { checkSixBySix("AccessibilityL") }
-    func testSixBySixLoadScreenTextAtAccessibilityExtraLarge() throws { checkSixBySix("AccessibilityXL") }
-    func testSixBySixLoadScreenTextAtAccessibilityExtraExtraLarge() throws { checkSixBySix("AccessibilityXXL") }
-    func testSixBySixLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { checkSixBySix("AccessibilityXXXL") }
+    func testFilmStockLoadScreenTextAtExtraSmall() throws { checkFilmStockScreens("XS") }
+    func testFilmStockLoadScreenTextAtSmall() throws { checkFilmStockScreens("S") }
+    func testFilmStockLoadScreenTextAtMedium() throws { checkFilmStockScreens("M") }
+    func testFilmStockLoadScreenTextAtLarge() throws { checkFilmStockScreens("L") }
+    func testFilmStockLoadScreenTextAtExtraLarge() throws { checkFilmStockScreens("XL") }
+    func testFilmStockLoadScreenTextAtExtraExtraLarge() throws { checkFilmStockScreens("XXL") }
+    func testFilmStockLoadScreenTextAtExtraExtraExtraLarge() throws { checkFilmStockScreens("XXXL") }
+    func testFilmStockLoadScreenTextAtAccessibilityMedium() throws { checkFilmStockScreens("AccessibilityM") }
+    func testFilmStockLoadScreenTextAtAccessibilityLarge() throws { checkFilmStockScreens("AccessibilityL") }
+    func testFilmStockLoadScreenTextAtAccessibilityExtraLarge() throws { checkFilmStockScreens("AccessibilityXL") }
+    func testFilmStockLoadScreenTextAtAccessibilityExtraExtraLarge() throws { checkFilmStockScreens("AccessibilityXXL") }
+    func testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { checkFilmStockScreens("AccessibilityXXXL") }
 
     func testJournalAndCatalogTextAtExtraSmall() throws { checkJournalAndCatalog("XS") }
     func testJournalAndCatalogTextAtSmall() throws { checkJournalAndCatalog("S") }
@@ -273,8 +280,10 @@ final class ContentSizeTests: XCTestCase {
         finish(category, rows, Self.superEight + Self.sixteenMillimeter)
     }
 
-    /// The 6×6 Load screen, in tests of its own so the Super 8 and 16mm tests stay inside the per-test time allowance.
-    private func checkSixBySix(_ category: String) {
+    /// The 6×6 Load screen, and the 16mm Load screen's look line with Black and white chosen, in tests of their own so
+    /// the Super 8 and 16mm tests stay inside the per-test time allowance.
+    private func checkFilmStockScreens(_ category: String) {
+        var rows: [String] = []
         let app = launch(category)
         app.buttons["start-film"].tap()
         let row = app.buttons["camera-mediumFormat6x6"]
@@ -283,9 +292,24 @@ final class ContentSizeTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
-        let rows = record(measure(app, Self.sixBySix, category, below: "6×6"))
+        rows += record(measure(app, Self.sixBySix, category, below: "6×6"))
+        goBack(app, from: "6×6", to: "Choose a Camera")
+
+        let reel = app.buttons["camera-cinema16mm"]
+        for _ in 0..<8 where !reel.isHittable { drag(app, by: -300) }
+        reel.tap()
+        XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
+        Thread.sleep(forTimeInterval: 1)
+        let blackAndWhite = app.buttons["Black and white"]
+        for _ in 0..<8 where !blackAndWhite.isHittable { drag(app, by: -300) }
+        blackAndWhite.tap()
+        XCTAssertTrue(blackAndWhite.isSelected, "Black and white \(category)")
+        // Back to the top, so the line is measured scrolling down to it as every other line is.
+        for _ in 0..<8 where !app.staticTexts["Capacity, 2 minutes 47 seconds of film"].isHittable { drag(app, by: 300) }
+        Thread.sleep(forTimeInterval: 0.5)
+        rows += record(measure(app, Self.sixteenMillimeterBlackAndWhite, category, below: "16mm"))
         app.terminate()
-        finish(category, rows, Self.sixBySix)
+        finish(category, rows, Self.sixBySix + Self.sixteenMillimeterBlackAndWhite)
     }
 
     private func checkJournalAndCatalog(_ category: String) {

@@ -186,6 +186,16 @@ final class FilmLookTests: XCTestCase {
         XCTAssertLessThan(instant, 2.5, "\(instant)")
     }
 
+    /// A grain's amplitude is the standard deviation, in 8-bit levels, it adds to an even mid-gray, at any clump size.
+    func testGrainAmplitudeIsTheDeviationItAddsToMidGray() throws {
+        for pixels in [1.25, 2, 4] {
+            let grain = FilmLook.Grain(amplitude: 10, size: pixels / 512)
+            let treatment = FilmLook.Treatment(emulsion: Self.identity(grain: grain), lens: FilmLook.Lens())
+            let developed = try render(Self.even(0.214), treatment: treatment)
+            XCTAssertEqual(developed.centerDeviation, 10, accuracy: 1.5, "\(pixels)-pixel clumps")
+        }
+    }
+
     /// Grain adds texture without moving the tone: an even mid-gray keeps its level.
     func testGrainKeepsTheTone() throws {
         for (camera, filmStock) in Self.treatments {
