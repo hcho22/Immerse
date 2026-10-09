@@ -115,7 +115,7 @@ The configuration shipped here is the passing one, with the 6×6's per-stock lin
 
 On 2026-10-08 and 2026-10-09 (Xcode 26.5, iOS 26.5 simulators, iPhone 17 Pro unless noted), with the first build, before the black-and-white tone and grain fix (ffb54db), unless noted:
 
-- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 31 (rerun after the fix), FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
+- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 30 (rerun after the fix and after the renderer's own Film Stock check was removed, leaving that rule to `FilmStockTests.testNoOtherCameraTakesAFilmStock` and `FilmStockStoreTests`), FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
 - Hosted `ImmerseTests` (without the StoreKit tests, which need the iOS 26.2 fixture runtime): 40 pass.
 - `ImmerseUITests`, the whole suite in light: 65 pass; `JournalFlowTests`, `MovieCapacityUITests` and `FilmStockUITests` again in dark, as `Scripts/validate-local.sh` reruns them: 14 pass. The two 16mm largest-text audit tests passed 3 of 3 in light and 3 of 3 in dark on the shipped configuration.
 - `FilmStockUITests` also passes on an iPhone SE (3rd generation) in light and dark.
