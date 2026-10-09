@@ -116,7 +116,8 @@ enum FilmLook {
         emulsion: .color(ColorEmulsion(
             warmth: 0, saturation: 1.05,
             tone: ToneCurve(contrast: 1.12, black: 0.015, white: 0.98),
-            grain: Grain(amplitude: 4, size: 0.0009, chroma: 0.3, shadows: 0.3)
+            grain: Grain(amplitude: 4, size: 0.0009, chroma: 0.3, shadows: 0.3),
+            fixedBalance: 5500
         )),
         halation: Halation(threshold: 0.6, radius: 0.006, strength: 0.35, color: RGB(1, 0.18, 0.05)),
         lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.5),
@@ -191,6 +192,10 @@ extension FilmLook {
         var shadows: RGB = .zero
         var highlights: RGB = .zero
         var grain: Grain
+        /// The light color temperature, in kelvin, a stock with a fixed balance records as neutral. A Movie clip recorded
+        /// in warmer light develops warm and in cooler light cool, against the light its capture recorded
+        /// (`SceneWhiteBalance`); nil follows the phone's white balance.
+        var fixedBalance: Double? = nil
     }
 
     /// A black-and-white film and its print: one silver layer exposed by the capture's light.

@@ -15,29 +15,37 @@ struct DevelopedTreatment {
     private let look: Look
     private let seed: UInt64
     private let flashFired: Bool
+    private let sceneWhiteBalance: SceneWhiteBalance?
 
-    /// - Parameter flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.
-    init(version: String, camera: CameraID, filmStock: FilmStock?, seed: UInt64, flashFired: Bool = false) throws {
+    /// - Parameters:
+    ///   - flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.
+    ///   - sceneWhiteBalance: the light a Movie clip was recorded in, which only a Film Stock with a fixed color
+    ///     balance uses.
+    init(version: String, camera: CameraID, filmStock: FilmStock?, seed: UInt64, flashFired: Bool = false,
+         sceneWhiteBalance: SceneWhiteBalance? = nil) throws {
         guard let version = TreatmentVersion(rawValue: version) else { throw NativeRenderError.unrenderableTreatment }
         switch version {
         case .one, .two:
-            self.init(look: .legacy(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired)
+            self.init(look: .legacy(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
+                      sceneWhiteBalance: nil)
         case .three:
-            self.init(FilmLook.treatment(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired)
+            self.init(FilmLook.treatment(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
+                      sceneWhiteBalance: sceneWhiteBalance)
         }
     }
 
     /// A version 3 treatment as it stands, which tests use to look at one effect at a time.
-    init(_ treatment: FilmLook.Treatment, seed: UInt64, flashFired: Bool = false) {
+    init(_ treatment: FilmLook.Treatment, seed: UInt64, flashFired: Bool = false, sceneWhiteBalance: SceneWhiteBalance? = nil) {
         let flash = flashFired ? treatment.flash : nil
         self.init(look: .perCamera(treatment, cube: Self.cube(treatment.emulsion, extraContrast: flash?.contrast ?? 0)),
-                  seed: seed, flashFired: flashFired)
+                  seed: seed, flashFired: flashFired, sceneWhiteBalance: sceneWhiteBalance)
     }
 
-    private init(look: Look, seed: UInt64, flashFired: Bool) {
+    private init(look: Look, seed: UInt64, flashFired: Bool, sceneWhiteBalance: SceneWhiteBalance?) {
         self.look = look
         self.seed = seed
         self.flashFired = flashFired
+        self.sceneWhiteBalance = sceneWhiteBalance
     }
 
     /// The developed picture, or one developed Movie frame, at the source's size. `frame` counts the Movie's frames at
@@ -85,6 +93,11 @@ struct DevelopedTreatment {
             let warmth = variation.warmth * random(0, salt: 2, signed: true)
             let tint = variation.tint * random(0, salt: 3, signed: true)
             image = Self.balance(image, warmth: warmth, tint: tint, gain: pow(2, density))
+        }
+
+        // A stock with a fixed balance records the light's own color, which the phone's white balance had taken out.
+        if case let .color(emulsion) = treatment.emulsion, let balance = emulsion.fixedBalance, let light = sceneWhiteBalance {
+            image = Self.fixBalance(image, film: balance, light: light)
         }
 
         // The film and its print.
@@ -335,6 +348,16 @@ struct DevelopedTreatment {
             ])
         // Linear dodge adds the glow and keeps the picture opaque.
         return glow.applyingFilter("CILinearDodgeBlendMode", parameters: [kCIInputBackgroundImageKey: image]).cropped(to: extent)
+    }
+
+    /// The light's color as a film balanced for `film` kelvin records it: light warmer than the film's balance turns
+    /// warm and cooler light cool. The light's temperature is held to 2000 to 10000 kelvin.
+    static func fixBalance(_ image: CIImage, film: Double, light: SceneWhiteBalance) -> CIImage {
+        let temperature = min(max(light.temperature, 2000), 10000)
+        return image.applyingFilter("CITemperatureAndTint", parameters: [
+            "inputNeutral": CIVector(x: film, y: 0),
+            "inputTargetNeutral": CIVector(x: temperature, y: light.tint)
+        ])
     }
 
     /// Gains on red, green and blue in linear light: warmth up on red and down on blue, tint down on green, and an

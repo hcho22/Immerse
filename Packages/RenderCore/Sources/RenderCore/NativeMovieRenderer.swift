@@ -12,9 +12,10 @@ public enum NativeMovieRenderer {
         orientation: MovieOrientation, longEdge: Int = 1920, treatmentVersion: String = NativePhotoRenderer.treatmentVersion
     ) async throws {
         guard camera.medium == .movie else { throw NativeRenderError.wrongMedium }
-        let treatment = try DevelopedTreatment(version: treatmentVersion, camera: camera.id, filmStock: filmStock, seed: seed)
         guard longEdge > 0, longEdge % 16 == 0 else { throw NativeRenderError.invalidMovie }
         let asset = AVURLAsset(url: source)
+        let treatment = try DevelopedTreatment(version: treatmentVersion, camera: camera.id, filmStock: filmStock, seed: seed,
+                                               sceneWhiteBalance: try await sceneWhiteBalance(of: asset))
         let tracks = try await asset.loadTracks(withMediaType: .video)
         guard tracks.count == 1, let track = tracks.first,
               try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie }
@@ -108,6 +109,14 @@ public enum NativeMovieRenderer {
         input.markAsFinished()
         await writer.finishWriting()
         guard writer.status == .completed else { throw NativeRenderError.writerFailed }
+    }
+
+    /// The light the clip was recorded in, which the capture writes into the clip's QuickTime metadata.
+    static func sceneWhiteBalance(of asset: AVURLAsset) async throws -> SceneWhiteBalance? {
+        let identifier = AVMetadataItem.identifier(forKey: SceneWhiteBalance.metadataKey, keySpace: .quickTimeMetadata)
+        let items = AVMetadataItem.metadataItems(from: try await asset.load(.metadata), filteredByIdentifier: identifier!)
+        guard let value = try await items.first?.load(.stringValue) else { return nil }
+        return SceneWhiteBalance(metadataValue: value)
     }
 
     /// `preferredTransform` uses a top-left origin and Core Image a bottom-left one, so the

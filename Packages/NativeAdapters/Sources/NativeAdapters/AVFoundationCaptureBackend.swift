@@ -234,6 +234,7 @@ public actor AVFoundationCaptureBackend {
                 orientation: orientation.clipOrientation, remainingFrames: remainingFrames))
         } catch { operations.finish(id: id); throw error }
         movieOutput.maxRecordedDuration = CMTime(value: CMTimeValue(remainingFrames), timescale: CMTimeScale(MovieFrames.perSecond))
+        movieOutput.metadata = input.map { [Self.sceneWhiteBalanceItem($0.device)] }
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
                 await self?.movieFinished(
@@ -244,6 +245,18 @@ public actor AVFoundationCaptureBackend {
         }
         movieDelegate = delegate
         movieOutput.startRecording(to: files.movieDestination(id: id), recordingDelegate: delegate)
+    }
+
+    /// The light the clip starts in, as the lens's white balance judges it, for a Film Stock with a fixed color
+    /// balance to develop against. The viewfinder and the recording keep the phone's automatic white balance.
+    private static func sceneWhiteBalanceItem(_ device: AVCaptureDevice) -> AVMetadataItem {
+        let values = device.temperatureAndTintValues(for: device.deviceWhiteBalanceGains)
+        let item = AVMutableMetadataItem()
+        item.keySpace = .quickTimeMetadata
+        item.key = SceneWhiteBalance.metadataKey as NSString
+        item.value = SceneWhiteBalance(temperature: Double(values.temperature), tint: Double(values.tint)).metadataValue as NSString
+        item.dataType = kCMMetadataBaseDataType_UTF8 as String
+        return item
     }
 
     public func stopMovie() {

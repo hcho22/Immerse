@@ -358,6 +358,90 @@ final class FilmLookTests: XCTestCase {
         XCTAssertLessThan(means.max()! - means.min()!, 1.5, "No flicker (\(means))")
     }
 
+    /// The 16mm's color Film Stock keeps a fixed daylight balance: a clip recorded in warm indoor light develops
+    /// orange, daylight neutral and shade blue, against the light the capture recorded. Without a record, and on the
+    /// black-and-white stock, the phone's white balance stands.
+    func testTheSixteenMillimeterColorStockKeepsItsDaylightBalance() throws {
+        var treatment = FilmLook.cinemaColor
+        treatment.gate = nil
+        treatment.lens = FilmLook.Lens()
+        treatment.halation = nil
+        let gray = Self.even(0.18, side: 256)
+        func balance(_ light: SceneWhiteBalance?, _ look: FilmLook.Treatment = treatment) throws -> (red: Double, green: Double, blue: Double) {
+            try pixels(DevelopedTreatment(look, seed: 3, sceneWhiteBalance: light).apply(to: gray)).meanColor(x: 64..<192, y: 64..<192)
+        }
+        let tungsten = try balance(SceneWhiteBalance(temperature: 3200, tint: 0))
+        XCTAssertGreaterThan(tungsten.red - tungsten.blue, 40, "Warm indoor light develops orange (\(tungsten))")
+        XCTAssertGreaterThan(tungsten.green - tungsten.blue, 10, "orange, not red (\(tungsten))")
+        let daylight = try balance(SceneWhiteBalance(temperature: 5500, tint: 0))
+        XCTAssertEqual(daylight.red, daylight.blue, accuracy: 3, "Daylight develops neutral (\(daylight))")
+        let shade = try balance(SceneWhiteBalance(temperature: 8000, tint: 0))
+        XCTAssertGreaterThan(shade.blue - shade.red, 8, "Shade develops cool (\(shade))")
+        let unrecorded = try balance(nil)
+        XCTAssertEqual(unrecorded.red, unrecorded.blue, accuracy: 3, "No record leaves the phone's balance (\(unrecorded))")
+        var mono = FilmLook.cinemaBlackAndWhite
+        mono.gate = nil
+        let monoTungsten = try balance(SceneWhiteBalance(temperature: 3200, tint: 0), mono)
+        XCTAssertEqual(monoTungsten.red, monoTungsten.blue, accuracy: 1, "Black-and-white stays gray")
+        for camera in [FilmLook.disposable, FilmLook.instant, FilmLook.mediumFormatColor, FilmLook.super8] {
+            guard case let .color(emulsion) = camera.emulsion else { continue }
+            XCTAssertNil(emulsion.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
+        }
+    }
+
+    /// A clip carries its recorded light in its QuickTime metadata, which Development reads.
+    func testADevelopedClipReadsTheLightItWasRecordedIn() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("FilmLookTests-\(UUID())")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("tungsten.mov"), plain = root.appendingPathComponent("plain.mov")
+        try await writeGrayClip(to: source, light: SceneWhiteBalance(temperature: 3000, tint: 0))
+        try await writeGrayClip(to: plain, light: nil)
+        let recorded = try await NativeMovieRenderer.sceneWhiteBalance(of: AVURLAsset(url: source))
+        XCTAssertEqual(recorded, SceneWhiteBalance(temperature: 3000, tint: 0))
+        let unrecorded = try await NativeMovieRenderer.sceneWhiteBalance(of: AVURLAsset(url: plain))
+        XCTAssertNil(unrecorded)
+        let developed = root.appendingPathComponent("developed.mov")
+        try await NativeMovieRenderer.developClip(source: source, destination: developed, camera: CameraCatalog.cinema16mm,
+            filmStock: .color, seed: 2, orientation: .landscape, longEdge: 320)
+        let frames = try await decodedFrames(developed)
+        let frame = try XCTUnwrap(frames.first)
+        let color = frame.meanColor(x: 120..<200, y: 90..<150)
+        XCTAssertGreaterThan(color.red - color.blue, 30, "Orange (\(color))")
+    }
+
+    /// One second of even gray at 30 fps, with the light it was recorded in when given.
+    private func writeGrayClip(to url: URL, light: SceneWhiteBalance?) async throws {
+        let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
+        if let light {
+            let item = AVMutableMetadataItem()
+            item.keySpace = .quickTimeMetadata
+            item.key = SceneWhiteBalance.metadataKey as NSString
+            item.value = light.metadataValue as NSString
+            item.dataType = kCMMetadataBaseDataType_UTF8 as String
+            writer.metadata = [item]
+        }
+        let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264,
+            AVVideoWidthKey: 320, AVVideoHeightKey: 240])
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey as String: 320, kCVPixelBufferHeightKey as String: 240])
+        writer.add(input)
+        XCTAssertTrue(writer.startWriting())
+        writer.startSession(atSourceTime: .zero)
+        for frame in 0..<30 {
+            while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
+            var buffer: CVPixelBuffer?
+            CVPixelBufferPoolCreatePixelBuffer(nil, try XCTUnwrap(adaptor.pixelBufferPool), &buffer)
+            CIContext().render(Self.even(0.18, side: 320), to: try XCTUnwrap(buffer), bounds: CGRect(x: 0, y: 0, width: 320, height: 240),
+                               colorSpace: CGColorSpaceCreateDeviceRGB())
+            XCTAssertTrue(adaptor.append(try XCTUnwrap(buffer), withPresentationTime: CMTime(value: Int64(frame), timescale: 30)))
+        }
+        input.markAsFinished()
+        await writer.finishWriting()
+        XCTAssertEqual(writer.status, .completed)
+    }
+
     // MARK: - Helpers
 
     private static let treatments: [(CameraID, FilmStock?)] = [
