@@ -3,8 +3,9 @@ import XCTest
 @MainActor
 final class PopulatedWorkflowTests: XCTestCase {
     func testEarlyPhotoDevelopmentDarkroomAndRemoval() throws {
-        // Rename types deletes into the pre-filled title, and the tap that focuses a pre-filled field makes UIKit
-        // accept an autocorrection that can land among them (Evidence/NativeApp/title-autocorrection-058.md).
+        // Rename types deletes into the pre-filled title. With autocorrection off the field receives only the typed
+        // keys; otherwise the tap that focuses a pre-filled field makes UIKit accept an autocorrection
+        // (Evidence/NativeApp/title-autocorrection-058.md).
         let app = launch(arguments: ["-KeyboardAutocorrection", "NO"])
         openFilm(app)
         XCTAssertEqual(app.buttons.matching(identifier: "Open photo 1").count, 0)

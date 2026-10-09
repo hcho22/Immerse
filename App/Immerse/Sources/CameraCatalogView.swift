@@ -320,7 +320,10 @@ private struct FilmTitleTextView: UIViewRepresentable {
 
     func updateUIView(_ view: InsetTextView, context: Context) {
         context.coordinator.text = $text
-        if view.text != text { view.text = text; view.textDidChange() }
+        // While the field is being edited its own text is the newest title. SwiftUI can pass the title from before the
+        // latest edit, and writing that back restored a deleted character behind the cursor
+        // (Evidence/NativeApp/title-autocorrection-058.md).
+        if !view.isFirstResponder, view.text != text { view.text = text; view.textDidChange() }
     }
 
     /// A zero height asks for the text alone; any other proposal gets the text grown to the minimum tap height.

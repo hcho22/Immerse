@@ -1,8 +1,9 @@
-# Title Autocorrection Among Typed Deletes 058
+# Title Field Write-Back Among Typed Deletes 058
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work.
 Main's Native validation run https://github.com/hcho22/Immerse/actions/runs/37725735419 (job local-native, the commit for PR 20, which changed only test scripts and `AGENTS.md`) failed one UI test, and the next main run passed.
 This record covers simulator evidence for the automated UI tests only.
+The file keeps its first name, from the autocorrection diagnosis it started with, so existing links still work.
 
 ## Failure
 
@@ -16,33 +17,52 @@ The run's recording (`title-autocorrection-058/ci-failure-frames.png`) shows:
 - 55 ms into the deletes the field held "16mm -0", which is not a prefix of the suggestion, so something other than a delete edited it.
 - Then "16mm", "16m", "1Capaci" and "1Capacity check 4C09", with the title typed after a leftover "1".
 
-Fifteen deletes leave "1" if, after seven of them ("16mm - R"), one key event instead replaced the two characters before the cursor with "01" ("16mm -01").
-The remaining seven deletes then pass through "16mm -0", "16mm" and "16m" to "1", which accounts for every recorded frame and the final value.
+## Cause
 
-## What Puts "01" Back
+The Load screen's title field is `FilmTitleTextView` (`App/Immerse/Sources/CameraCatalogView.swift`), a `UITextView` representable.
+Each edit sends the field's text to the binding in `textViewDidChange`, and `updateUIView` wrote the binding's text into the field whenever the two differed.
+SwiftUI sometimes called `updateUIView` with the title from before the latest typed delete, so the field took back a character that had just been deleted.
+UIKit left the cursor where the delete had put it, before the restored character, so the field was no longer a prefix of the suggestion with the cursor at its end.
+The remaining deletes passed through "16mm -0", the state in the CI recording, and the restored "0" took one of the fifteen deletes, so a "1" of the suggestion was left and the title was typed after it.
+The logged failures that left "16" instead also had autocorrection edits of the changed text after the write-back.
+Why SwiftUI passed the older title is not established.
 
+A logged failure from the looping test below, with the test's `-KeyboardAutocorrection NO` launch argument:
+
+```
+18:01:34.130 edit source=KEY range=14,1 text=[] before=[16mm - Roll #01] cursor=15
+18:01:34.192 edit source=KEY range=13,1 text=[] before=[16mm - Roll #0] cursor=14
+18:01:34.207 updateUIView write old=[16mm - Roll #] new=[16mm - Roll #0] focused=1
+18:01:34.269 edit source=KEY range=12,1 text=[] before=[16mm - Roll #0] cursor=13
+...
+18:01:34.691 edit source=KEY range=5,1 text=[] before=[16mm -0] cursor=6
+...
+18:01:34.965 edit source=KEY range=1,1 text=[] before=[16] cursor=2
+18:01:35.019 edit source=KEY range=1,0 text=[C] before=[1] cursor=1
+=> "1Capacity check D2C6" instead of "Capacity check D2C6"
+```
+
+## Trigger, Masking Condition and Divergence
+
+- Trigger: SwiftUI calling `updateUIView` with the title from before the latest edit while the field is being edited.
+- Masking condition: timing; locally the race needed the extra main-thread time that per-edit logging adds, and what timing let CI hit it without logging is not established.
+- Earliest divergence: an `updateUIView` write while the field is first responder.
+
+## Earlier Autocorrection Diagnosis
+
+The first diagnosis blamed UIKit's autocorrection, and none of its runs reproduced the failure.
 Temporary logging in the title field's delegate (`shouldChangeTextIn`, selection changes, `textViewDidChange` and the representable's `updateUIView` writes, with call stacks) on an iPhone 17 Pro simulator on iOS 26.5 with Xcode 26.5, as CI creates, in 25 diagnostic runs, all launched without `-KeyboardAutocorrection NO`, showed:
 
 - The tap that focuses the field makes UIKit accept an autocorrection of the suggestion's last word, replacing "01" (range 13, 2) with "01", twice: `-[UITextSelectionInteraction _handleMultiTapGesture:]` to `-[_UIKeyboardStateManager acceptAutocorrectionWithCompletionHandler:requestedByRemoteInputDestination:]`, applied in its completion block and again through `acceptAutocorrectionForWordTerminator:`.
   At focus the text is unchanged, so the edit is invisible.
-- XCUITest's typed keys arrive separately, as hardware key events (`-[UIApplication _handleUnicodeEvent:]` to `-[_UIKeyboardStateManager handleKeyEvent:]`, deletes through `handleDeleteAsRepeat:`).
-- In all 25 of those runs the app's own write-back never fired during editing: `updateUIView` wrote text only once per launch, when the field first appeared, so the representable's binding did not cause this.
-  A write-back would also have moved the cursor to the end, which cannot produce "16mm -0".
-
-The autocorrection of the suggestion's last word is the only edit besides the typed keys, and "01" is exactly the text that came back.
-On CI its replacement landed among the deletes, against text that had already changed.
-The timing that let it land there is not established: the failing test took 27 seconds, in line with passing runs.
-
-## Trigger, Masking Condition and Divergence
-
-- Trigger: an autocorrection edit for the suggested title, made when the field gains focus, applied after the typed deletes have started.
-- Masking condition: timing between UIKit's keyboard work and the synthesized key events.
   In the 22 of those 25 runs that logged it, the acceptance finished 1.1 to 2.7 seconds before the first delete.
-- Earliest divergence: the field's text during the deletes ("16mm -0" in the failing run, a prefix of the suggestion in every passing run).
+- XCUITest's typed keys arrive separately, as hardware key events (`-[UIApplication _handleUnicodeEvent:]` to `-[_UIKeyboardStateManager handleKeyEvent:]`, deletes through `handleDeleteAsRepeat:`).
+- In all 25 of those runs `updateUIView` wrote text only once per launch, when the field first appeared.
 
-## Local Runs
+That diagnosis concluded that the binding could not have caused the failure and that a write-back would have moved the cursor to the end.
+Both conclusions were wrong: the logged failures in this record show the write-back during the deletes, with the cursor left before the restored text.
 
-These runs used the diagnostic build, before the fix:
+These runs, with the same logging and no launch argument, did not reproduce the failure:
 
 - Unchanged timing: 3 of 3 passed, then 10 of 10 with 20 CPU-bound processes loading the host's 20 cores.
 - With the app's main thread blocked for 150 ms after every edit, so key events queue up: 3 of 3 passed.
@@ -50,41 +70,57 @@ These runs used the diagnostic build, before the fix:
 - With `kbd` stopped for 1.5 seconds from the first delete: 3 of 3 passed.
 - With `kbd` stopped from focus until the first delete, the deletes never arrived and the test hit its allowance, so typing depends on `kbd` and that probe was not a valid reproduction.
 
-None reproduced the failure, so the CI recording, not a local run, is the reproduction.
-The exact UIKit timing that applied the replacement on CI is not established.
+The test then launched with `-KeyboardAutocorrection NO`.
+One logged run with that argument passed, and its first edit was the first typed delete.
+A repeat ran 10 iterations per arm with logging on a newly created simulator: with the argument, 10 of 10 passed with no `acceptAutocorrection` edit; without it, 10 of 10 passed, each with the two focus-time replacements of range (13, 2) with "01".
+So the argument removes the focus-time autocorrection, but none of these runs failed, so none tested whether that edit caused the failure.
+
+## Reproduction
+
+The no-mistakes test phase logged every edit with its call-stack source and every `updateUIView` write, in the same test on newly created iPhone 17 Pro simulators on iOS 26.5 in light at the large text size:
+
+| Launch argument | Runs | Failed | Focus-time (13, 2) "01" autocorrections | `updateUIView` writes during the deletes |
+| --- | --- | --- | --- | --- |
+| `-KeyboardAutocorrection NO` | 56 | 3 | 0 | 3, one in each failing run |
+| None | 15 | 2 | 30, two in every run | 2, one in each failing run |
+
+The failures held "16Capacity check …" (all three with the argument) or "1Capacity check …" and "16Capacity check …" (without it).
+In each, `updateUIView` wrote "16mm - Roll #0" over "16mm - Roll #" after the second delete, and no passing run had such a write.
+In all three failing runs with the argument, `acceptAutocorrection` edits of the changed text followed the write-back, so the argument stops the autocorrection at focus, not every autocorrection.
+Without the logging, the test passed 10 of 10 without the argument on unchanged app code, and every run of the committed test passed, so locally the race needed the extra main-thread time the logging adds to each edit.
+CI hit it without any logging; what timing let it there is not established.
+
+A temporary looping UI test then made the race quicker to catch.
+In one launch it opened the 16mm Load screen 60 times, each time tapping past the end of "16mm - Roll #01", typing 15 deletes and a new title in one `typeText`, waiting 10 seconds for the exact title and going back to the catalog.
+With the same logging and `-KeyboardAutocorrection NO`, on two newly created iPhone 17 Pro simulators on iOS 26.5 in light at the large text size, run in parallel:
+
+- 2 of 120 cycles failed, both on one simulator, holding "1Capacity check D2C6" and "1Capacity check 1FA2", the form of the CI failure.
+- Each failing cycle had exactly one `updateUIView` write while the field was first responder, "16mm - Roll #0" over "16mm - Roll #" after the second delete, and no passing cycle had one.
+- No cycle logged an autocorrection edit.
 
 ## Fix
 
-The test launches the app with `-KeyboardAutocorrection NO`.
-No app code changed.
-Both tests in the class share the launch, so the largest-text test, which types into the same field, gets the same change.
-The test still loads a 16mm Film and checks Movie time as minutes and seconds on the catalog row, Load screen, Film detail, capture line and Journal row, and still waits for the field to hold exactly the typed title before loading.
-The populated harness Rename test (`PopulatedWorkflowTests.testEarlyPhotoDevelopmentDarkroomAndRemoval`) taps past the end of the pre-filled title "Private synthetic Film" and types deletes into it the same way, so it now launches the same way.
-It was not observed failing; it changed for the same exposure.
-With the flag it passed 3 of 3 on a newly created iPhone 17 Pro simulator on iOS 26.5 in light.
+`updateUIView` writes the binding's text into the field only while the field is not first responder.
+While someone edits the field, its text is the newest title and the binding follows it through `textViewDidChange`.
+Nothing else in the app changes the title then: the Load screen sets the suggestion once, when it appears.
+The test is unchanged and still waits for the field to hold exactly the typed title before loading, then checks Movie time as minutes and seconds on the catalog row, Load screen, Film detail, capture line and Journal row.
 
-### Counterfactual
+The test keeps `-KeyboardAutocorrection NO`, so the field receives only the typed keys, but that argument is not the fix: with it, the write-back still corrupted the title.
+The populated harness Rename test (`PopulatedWorkflowTests.testEarlyPhotoDevelopmentDarkroomAndRemoval`) also types deletes into a pre-filled title and launches the same way.
+Its field is SwiftUI's own `TextField` in an alert, not `FilmTitleTextView`, and it was not observed failing.
 
-After the 25 diagnostic runs without the flag, one more run used the same diagnostic build, with the delegate edit logging and call stacks still in place, launched with `-KeyboardAutocorrection NO` through the test's `app.launchArguments`.
-It ran one iteration of `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` on the same iPhone 17 Pro iOS 26.5 simulator in light.
-That single run passed, and its log held no `shouldChangeTextIn` edit of range (13, 2) with "01" at focus.
-The first edit the field received was the first typed delete (range 14, 1, at "16mm - Roll #01" with the cursor at 15), followed only by the typed deletes and characters.
+## Runs After the Fix
 
-A repeat restored the same logging temporarily (`shouldChangeTextIn` with the keyboard frames of its call stack, and `updateUIView` writes) and ran 10 iterations of the same test per arm on a newly created iPhone 17 Pro simulator on iOS 26.5 in light, with Xcode 26.5:
+The same looping test and logging, with the fix and a log line wherever `updateUIView` skipped a different title, ran two launches on each of the same two simulators in parallel:
 
-- With the flag: 10 of 10 passed, and no run logged an `acceptAutocorrection` edit.
-  Each run's 34 edits were exactly the 15 typed deletes, the first at range (14, 1) with the cursor at 15, and the title's 19 typed characters.
-- Without the flag, as a control with the same build and simulator: 10 of 10 passed, and every run logged the two replacements of range (13, 2) with "01" from `-[UITextSelectionInteraction _handleMultiTapGesture:]`, through `acceptAutocorrectionWithCompletionHandler:requestedByRemoteInputDestination:` and then `acceptAutocorrectionForWordTerminator:`, 1.0 to 1.4 seconds before the first delete.
-- In both arms `updateUIView` wrote text once per launch, when the field first appeared.
+- 240 of 240 cycles passed, and no cycle logged an autocorrection edit.
+- `updateUIView` wrote nothing while the field was first responder and skipped six older titles that the old code would have written back.
+- Five came during the deletes, older titles over the field's text: "16mm - Roll #0" over "16mm - Roll #" (one edit behind), "16mm - Roll #" over "16mm - Roll ", "16mm - Rol" over "16mm - Ro", "16mm - Roll #0" over "16mm - Roll " (two edits behind) and "1" over the emptied field.
+- One came while the title was typed, "Capacity check 5BC" over "Capacity check 5BC2", so the old code could also drop a typed character.
 
-So the launch argument reaches the in-app `_UIKeyboardStateManager` autocorrection path and removes the only edit besides the typed keys.
-The temporary logging was then removed.
+The logging and the looping test were then removed, and the committed `MovieCapacityUITests` ran on those simulators with the 3-minute allowance:
 
-## Local Runs After the Fix
+- Light, `-test-iterations 5` on each simulator: both tests 10 of 10.
+- Dark, `-test-iterations 2` on one simulator: both tests 2 of 2.
 
-On the simulator the 25 diagnostic runs used, without the diagnostic logging, the whole `MovieCapacityUITests` class, as the script's two passes run it:
-
-- Light, `-test-iterations 10`: `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` 10 of 10, `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` 10 of 10.
-- Dark, `-test-iterations 5`: 5 of 5 and 5 of 5.
-
-Local runs never reproduced the failure, so these counts show the change keeps the tests passing; the counterfactual above, not the counts, shows the edit that corrupted the title is gone.
+Without the logging the old code also passed locally, so these counts show the fix keeps the tests passing; the logged loops above, not these counts, show the write-back is gone.
