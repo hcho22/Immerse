@@ -56,7 +56,7 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 | `FilmRuntimeTests/FilmStockDevelopmentTests` | Production Development, Darkroom toning and Save to Photos for a black-and-white 6×6; a black-and-white 16mm Movie end to end, including Discard reassembly and export; an earlier Film finishing a version 1 Development in color |
 | `ImmerseTests` | Load copy for both Cameras; copy names no film; `testLoadFilmRecordsTheChosenFilmStockAndNeverLoadsWithoutOne` |
 | `ImmerseUITests/FilmStockUITests` | The choice on both Cameras (Color first, Black and white chosen), an audit of the screen in light and dark (it joins the dark rerun in `Scripts/validate-local.sh`), loading with the suggested title, and the Film screen; no choice on the other three Cameras |
-| `ImmerseUITests/ContentSizeTests` | "Film Stock", "Color" and "Black and white" at all twelve sizes |
+| `ImmerseUITests/ContentSizeTests` | "Film Stock", "Color" and "Black and white" on the 16mm Load screen, and the 6×6 Load screen's controls line, its three look lines and its viewfinder note (`testSixBySixLoadScreenTextAt…`, one test per size), at all twelve sizes |
 | `PopulatedJournalHarness` | A toned black-and-white 6×6 print in the Darkroom, Photo, Film and Journal screens; the Darkroom fit at the default and largest sizes with toning; a black-and-white 16mm Developed Movie |
 
 ## Test changes worth knowing
@@ -69,18 +69,18 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 ## Screenshots
 
 Under `prd-2-slice-3-film-stock/`, from `FilmStockUITests` and the populated Journal harness (black-and-white tests run with the natural still and movie of `Evidence/AssetReview`), each on an iPhone 17 Pro (`iphone17pro`) and an iPhone SE (3rd generation) (`iphonese`), iOS 26.5, in light and dark: 44 files.
-The 20 `bw-*` files were captured with the first build, before the black-and-white tone and grain fix (ffb54db): they show its too-bright black-and-white tones, not the fixed look, and are pending a refresh with the fixed renderer.
+The 20 `bw-*` files were re-rendered on 2026-10-09 with the fixed renderer, after the black-and-white tone and grain fix (ffb54db): the first build's renders were too bright, with the window and tablecloth blown out, and these keep highlight detail with mid-tones at display mid-gray.
 The other 24 files show no developed picture, so the fix does not change them.
 
 | File stem | Shows |
 | --- | --- |
 | `6x6-load-color`, `6x6-load-black-and-white`, `16mm-load-color`, `16mm-load-black-and-white` | Load Film with each Film Stock selected |
 | `6x6-film-screen-black-and-white`, `16mm-film-screen-black-and-white` | The loaded Film's screen naming "Black and white Film Stock" |
-| `bw-6x6-film-screen` | Developed black-and-white 6×6 prints on the Film screen (before the fix; pending refresh) |
-| `bw-6x6-darkroom-sepia` | The Darkroom with Chemical toning (sepia) on a black-and-white print; no Filtration tool (before the fix; pending refresh) |
-| `bw-6x6-journal` | The Journal card with the toned print beside an untoned one (before the fix; pending refresh) |
-| `bw-6x6-darkroom-fit-largest` | The black-and-white Darkroom at the largest text size, fitting with five tools (before the fix; pending refresh) |
-| `bw-16mm-developed-movie` | A frame of a black-and-white 16mm Developed Movie on the Film screen (before the fix; pending refresh) |
+| `bw-6x6-film-screen` | Developed black-and-white 6×6 prints on the Film screen |
+| `bw-6x6-darkroom-sepia` | The Darkroom with Chemical toning (sepia) on a black-and-white print; no Filtration tool |
+| `bw-6x6-journal` | The Journal card with the toned print beside an untoned one |
+| `bw-6x6-darkroom-fit-largest` | The black-and-white Darkroom at the largest text size, fitting with five tools |
+| `bw-16mm-developed-movie` | A frame of a black-and-white 16mm Developed Movie on the Film screen |
 
 ## Deferred to CAM-17: the 16mm's stock-specific glow wording
 
@@ -119,5 +119,6 @@ On 2026-10-08 and 2026-10-09 (Xcode 26.5, iOS 26.5 simulators, iPhone 17 Pro unl
 - Hosted `ImmerseTests` (without the StoreKit tests, which need the iOS 26.2 fixture runtime): 40 pass.
 - `ImmerseUITests`, the whole suite in light: 65 pass; `JournalFlowTests`, `MovieCapacityUITests` and `FilmStockUITests` again in dark, as `Scripts/validate-local.sh` reruns them: 14 pass. The two 16mm largest-text audit tests passed 3 of 3 in light and 3 of 3 in dark on the shipped configuration.
 - `FilmStockUITests` also passes on an iPhone SE (3rd generation) in light and dark.
-- Populated Journal harness: all 23 tests pass; its black-and-white tests and Darkroom fit tests also pass in dark and on the iPhone SE in light and dark. Not rerun since the fix; its black-and-white screenshots are pending refresh.
+- The 12 `testSixBySixLoadScreenTextAt…` measurements, added after the first validation run, pass in light and dark (2026-10-09).
+- Populated Journal harness: all 23 tests pass; its black-and-white tests and Darkroom fit tests also pass in dark and on the iPhone SE in light and dark. After the fix, its three black-and-white tests (toning, the 16mm Developed Movie and the largest-size Darkroom fit) passed again on both iPhones in light and dark, and produced the `bw-*` screenshots.
 - The color masters and Movie frames of all five Cameras hash the same before and after the change.
