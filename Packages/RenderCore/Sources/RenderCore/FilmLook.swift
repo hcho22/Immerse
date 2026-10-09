@@ -119,7 +119,7 @@ enum FilmLook {
             grain: Grain(amplitude: 4, size: 0.0009, chroma: 0.3, shadows: 0.3),
             fixedBalance: 5500
         )),
-        halation: Halation(threshold: 0.55, radius: 0.008, strength: 0.6, color: RGB(1, 0.18, 0.05)),
+        halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
         lens: Lens(softness: 0.0004, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
@@ -132,7 +132,7 @@ enum FilmLook {
             tone: ToneCurve(contrast: 1.4, black: 0.01, white: 0.985),
             grain: Grain(amplitude: 5.5, size: 0.001)
         )),
-        halation: Halation(threshold: 0.55, radius: 0.008, strength: 0.45, color: RGB(1, 1, 1)),
+        halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.25, color: RGB(1, 1, 1)),
         lens: Lens(softness: 0.0004, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
