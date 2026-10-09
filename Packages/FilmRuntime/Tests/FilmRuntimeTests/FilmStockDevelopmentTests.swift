@@ -136,8 +136,9 @@ final class FilmStockDevelopmentTests: XCTestCase {
         XCTAssertEqual(try repository.developmentRun(filmID: film.id)?.treatmentVersion, "film-look-1-provisional")
         let master = try Data(contentsOf: repository.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .master).url)
         XCTAssertEqual(master, try NativePhotoRenderer.develop(source: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"),
-            camera: CameraCatalog.mediumFormat6x6, seed: XCTUnwrap(repository.developmentRun(filmID: film.id)?.assignments[1]?.seed)),
-            "The color master, byte for byte")
+            camera: CameraCatalog.mediumFormat6x6, seed: XCTUnwrap(repository.developmentRun(filmID: film.id)?.assignments[1]?.seed),
+            treatmentVersion: "film-look-1-provisional"),
+            "The version 1 color master, byte for byte")
         XCTAssertEqual(try repository.photoPrintProcess(filmID: film.id), .color)
     }
 

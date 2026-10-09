@@ -31,7 +31,7 @@ extension FilmRepository {
                 try film.startDevelopment()
                 try save(film)
             }
-            var run = try developmentRun(filmID: filmID) ?? DevelopmentRun(filmID: filmID)
+            var run = try developmentRun(filmID: filmID) ?? DevelopmentRun(film: film)
             if !run.isComplete || film.captures.contains(where: { run.assignments[$0.sequenceNumber] == nil }) {
                 try run.assignMissingTreatments(for: film)
                 try database.setValue(filmID: filmID, key: "development", data: encoder.encode(run))

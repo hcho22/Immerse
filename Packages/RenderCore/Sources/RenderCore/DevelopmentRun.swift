@@ -2,6 +2,14 @@ import FilmDomain
 import CryptoKit
 import Foundation
 
+extension Film {
+    /// The treatment version this Film develops with: the one its Camera package recorded at Load Film, so a Film
+    /// keeps the look it started with after an update changes its Camera's (ADR 0013, RK-11).
+    public var treatmentVersion: String {
+        camera.treatmentVersion ?? NativePhotoRenderer.lockedBeforeVersionsTreatmentVersion
+    }
+}
+
 public struct TreatmentAssignment: Codable, Equatable, Sendable {
     public let sequenceNumber: Int
     public let seed: UInt64
@@ -31,18 +39,25 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
     public private(set) var completedSequences: Set<Int>
     public private(set) var isComplete: Bool
 
-    public init(filmID: UUID) {
-        self.filmID = filmID
-        self.treatmentVersion = NativePhotoRenderer.treatmentVersion
+    /// A Development run for the Film, in the treatment version its Camera package recorded at Load Film.
+    public init(film: Film) {
+        self.filmID = film.id
+        self.treatmentVersion = film.treatmentVersion
         self.assignments = [:]
         self.completedSequences = []
         self.isComplete = false
     }
 
+    /// The treatment version a capture renders with: its own, or the run's for a capture assigned before captures
+    /// recorded one.
+    public func treatmentVersion(of assignment: TreatmentAssignment) -> String {
+        assignment.treatmentVersion ?? treatmentVersion
+    }
+
     /// Whether this build can render the capture's assigned treatment. Only a new render depends on it; masters and
     /// clips already rendered stay usable.
     public func rendersAssignedTreatment(_ assignment: TreatmentAssignment) -> Bool {
-        NativePhotoRenderer.renderableTreatmentVersions.contains(assignment.treatmentVersion ?? treatmentVersion)
+        NativePhotoRenderer.renderableTreatmentVersions.contains(treatmentVersion(of: assignment))
     }
 
     public mutating func assignMissingTreatments(for film: Film) throws {
@@ -58,7 +73,8 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
         for capture in film.captures where assignments[capture.sequenceNumber] == nil {
             assignments[capture.sequenceNumber] = TreatmentAssignment(
                 sequenceNumber: capture.sequenceNumber,
-                seed: Self.seed(filmID: film.id, sequenceNumber: capture.sequenceNumber)
+                seed: Self.seed(filmID: film.id, sequenceNumber: capture.sequenceNumber),
+                treatmentVersion: film.treatmentVersion
             )
         }
     }
@@ -70,7 +86,8 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
         if assignments[sequenceNumber] == nil {
             assignments[sequenceNumber] = TreatmentAssignment(
                 sequenceNumber: sequenceNumber,
-                seed: Self.seed(filmID: film.id, sequenceNumber: sequenceNumber)
+                seed: Self.seed(filmID: film.id, sequenceNumber: sequenceNumber),
+                treatmentVersion: film.treatmentVersion
             )
         }
         completedSequences.insert(sequenceNumber)

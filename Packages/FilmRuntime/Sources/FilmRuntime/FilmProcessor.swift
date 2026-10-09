@@ -163,7 +163,7 @@ enum DevelopmentWorker {
                 }
                 if kind == .master {
                     let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed,
-                        filmStock: film.filmStock)
+                        filmStock: film.filmStock, treatmentVersion: run.treatmentVersion(of: treatment))
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()
@@ -173,7 +173,8 @@ enum DevelopmentWorker {
                 } else {
                     let output = work.appendingPathComponent("\(capture.sequenceNumber).mov")
                     try await NativeMovieRenderer.developClip(source: source.url, destination: output,
-                        camera: film.camera, filmStock: film.filmStock, seed: treatment.seed, orientation: film.movieOrientation!)
+                        camera: film.camera, filmStock: film.filmStock, seed: treatment.seed, orientation: film.movieOrientation!,
+                        treatmentVersion: run.treatmentVersion(of: treatment))
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()

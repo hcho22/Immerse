@@ -38,6 +38,10 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
     public let capacity: FilmCapacity
     public let revealRule: RevealRule
     public let supportsBuiltInSoundtrack: Bool
+    /// The version of the Developed Treatments this package develops with. A Film keeps the package it locked at Load
+    /// Film, so it develops with the treatments it started with after an update changes a Camera's look (ADR 0013,
+    /// CAM-01, RK-11). Nil in a package locked before packages recorded one.
+    public let treatmentVersion: String?
 
     public init(
         id: CameraID,
@@ -45,7 +49,8 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
         medium: CameraMedium,
         capacity: FilmCapacity,
         revealRule: RevealRule,
-        supportsBuiltInSoundtrack: Bool = false
+        supportsBuiltInSoundtrack: Bool = false,
+        treatmentVersion: String? = nil
     ) {
         self.id = id
         self.displayName = displayName
@@ -53,6 +58,7 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
         self.capacity = capacity
         self.revealRule = revealRule
         self.supportsBuiltInSoundtrack = supportsBuiltInSoundtrack
+        self.treatmentVersion = treatmentVersion
     }
 }
 
@@ -72,12 +78,17 @@ extension CameraPackage {
 }
 
 public enum CameraCatalog {
+    /// The treatment version today's packages carry: each Camera's and Film Stock's own look (PRD 2.1 section 6,
+    /// slice 4). Rendering it, and every earlier version a Film can still need, is `RenderCore`'s.
+    public static let treatmentVersion = "film-look-3"
+
     public static let disposable1990s = CameraPackage(
         id: .disposable1990s,
         displayName: "1990s Disposable",
         medium: .photo,
         capacity: .exposures(27),
-        revealRule: .rollLevelDevelopment
+        revealRule: .rollLevelDevelopment,
+        treatmentVersion: treatmentVersion
     )
 
     public static let instant1970s = CameraPackage(
@@ -85,7 +96,8 @@ public enum CameraCatalog {
         displayName: "1970s Instant",
         medium: .photo,
         capacity: .exposures(10),
-        revealRule: .instantPerExposure
+        revealRule: .instantPerExposure,
+        treatmentVersion: treatmentVersion
     )
 
     public static let mediumFormat6x6 = CameraPackage(
@@ -93,7 +105,8 @@ public enum CameraCatalog {
         displayName: "6×6 Medium Format",
         medium: .photo,
         capacity: .exposures(12),
-        revealRule: .rollLevelDevelopment
+        revealRule: .rollLevelDevelopment,
+        treatmentVersion: treatmentVersion
     )
 
     public static let super8HomeMovie = CameraPackage(
@@ -102,7 +115,8 @@ public enum CameraCatalog {
         medium: .movie,
         capacity: .seconds(200),
         revealRule: .movieDevelopment,
-        supportsBuiltInSoundtrack: true
+        supportsBuiltInSoundtrack: true,
+        treatmentVersion: treatmentVersion
     )
 
     public static let cinema16mm = CameraPackage(
@@ -111,7 +125,8 @@ public enum CameraCatalog {
         medium: .movie,
         capacity: .seconds(167),
         revealRule: .movieDevelopment,
-        supportsBuiltInSoundtrack: true
+        supportsBuiltInSoundtrack: true,
+        treatmentVersion: treatmentVersion
     )
 
     public static let all: [CameraPackage] = [
