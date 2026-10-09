@@ -19,7 +19,7 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; brilliant, warm, saturated color and soft detail |
 | 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; strong, rich color, fine grain, an unsteady frame, flicker, dust and hair |
-| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |
+| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a red highlight glow, minor jitter and weave, soft dark edges |
 
 A developed Instant print is a 2048 x 2048 picture on a clean white card (2282 x 2774 in all), in the proportions of the original 1970s integral print.
 The card is part of the developed master, so the Journal, the Darkroom and Save Developed to Photos all show it.
