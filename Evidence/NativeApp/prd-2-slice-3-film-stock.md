@@ -23,6 +23,9 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
   `renderableTreatmentVersions` keeps `film-look-1-provisional`, so a Film whose captures were assigned version 1 before the update still finishes developing; version 1 Films were all loaded before Film Stock and develop in color (`FilmStockDevelopmentTests.testAnEarlierFilmDevelopingWhenTheAppUpdatedFinishesInColor`).
 - **Black-and-white development (DEV-11).**
   `FilmLook.monochrome` builds the picture from the capture's light, never from the color look: a panchromatic channel mix in linear light (more blue-sensitive than the eye), a print curve with a deeper toe, a steeper middle and a brighter shoulder, and coarse gray grain blended so it shows most in the middle tones and leaves black and white clean.
+  Core Image's tone curve reads and writes display tones itself, so the curve takes the linear mix as it is and pivots on display mid-gray.
+  The grain is a soft-light blend over display tones from an untagged tile, whose level 128 stays 0.5, the blend's neutral point, so it adds texture without moving the tone.
+  The first build of this slice converted to display tones before the curve and tagged the tile as device RGB: mid-gray developed at about 174 of 255 instead of 128 on the 6×6 (161 on the 16mm), blowing out highlights; review caught it, and `testBlackAndWhiteKeepsDisplayMidGrayWithAndWithoutGrain` now fails on that chain.
   The 16mm Cinema's black-and-white Movie uses the same path per frame with fresh grain each frame, so every Developed Clip, the assembled Developed Movie (a passthrough of the clips), a Movie rebuilt after a Discard and Save Developed to Photos are monochrome.
   Every value, color and black-and-white, is in one table, `FilmLook.treatment` in `Packages/RenderCore/Sources/RenderCore/NativePhotoRenderer.swift`.
   The values are provisional (DEC-04) and tuned against review boards in slice 4 (CAM-17, QA-16); the 16mm's highlight glow (red on color, neutral on black and white) is not built for either Film Stock yet (see "Deferred to CAM-17" below).
@@ -48,7 +51,7 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 | --- | --- |
 | `FilmDomainTests/FilmStockTests` | Only the two Cameras offer a stock; both stocks recorded and stored; required and refused; fixed through captures, rename, Archive, early completion, Development and Discard; earlier records decode with none |
 | `FilmPersistenceTests/FilmStockStoreTests` | A pre-change store opens and develops in color; each stock survives operations and reopening; the Darkroom follows the stock; a refused Film writes nothing |
-| `RenderCoreTests/FilmStockRenderTests` | Gray 6×6 master; higher contrast than, and different from, the color look; distinct gray grain on an even scene; color output unchanged; no other Camera takes a stock; every 16mm clip and assembled frame gray at 24 fps; version 1 still renders |
+| `RenderCoreTests/FilmStockRenderTests` | Gray 6×6 master; higher contrast than, and different from, the color look; distinct gray grain on an even scene; display mid-gray keeps its tone on both Cameras with and without grain while darker and lighter tones spread; color output unchanged; no other Camera takes a stock; every 16mm clip and assembled frame gray at 24 fps; version 1 still renders |
 | `RenderCoreTests/ChemicalToningTests` | Toning on a real black-and-white 6×6 master; the print process follows the stock |
 | `FilmRuntimeTests/FilmStockDevelopmentTests` | Production Development, Darkroom toning and Save to Photos for a black-and-white 6×6; a black-and-white 16mm Movie end to end, including Discard reassembly and export; an earlier Film finishing a version 1 Development in color |
 | `ImmerseTests` | Load copy for both Cameras; copy names no film; `testLoadFilmRecordsTheChosenFilmStockAndNeverLoadsWithoutOne` |
@@ -60,7 +63,7 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 
 - `audit(_:name:for:exceptions:)`, `enterFilmTitle` and `deleteFilm(titled:)` moved to `UITestSupport.swift` so the Film Stock tests share them; `deleteFilm` waits for the Film screen's actions rather than its navigation bar, which labels a 6×6 title "6 by 6".
 - `FilmStockUITests` loads with the title Load Film suggests: on an iPhone SE (3rd generation) the keyboard a typed title raises covers the Load Film button, and typing there sometimes did not land in the field in time.
-- `testBlackAndWhiteGrainIsDistinctOnAnEvenScene` checks that black-and-white grain is over twice the color stock's and clearly visible (above 4 levels; the provisional values give about 6), not a tuned number.
+- `testBlackAndWhiteGrainIsDistinctOnAnEvenScene` checks that black-and-white grain is over twice the color stock's and clearly visible (above 4 levels; the provisional values give about 8 against the color stock's about 2), not a tuned number.
 - SwiftPM can keep a stale build of `Probes/TrialCommitStudy` after `Film` gains a field: its process-exit test then crashed with signal 11 until `swift package --package-path Probes/TrialCommitStudy clean`, after which all 17 tests pass (AGENTS.md already warns of stale build plans).
 
 ## Screenshots
@@ -110,7 +113,7 @@ The configuration shipped here is the passing one, with the 6×6's per-stock lin
 
 On 2026-10-08 and 2026-10-09 (Xcode 26.5, iOS 26.5 simulators, iPhone 17 Pro unless noted):
 
-- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 30, FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
+- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 31, FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
 - Hosted `ImmerseTests` (without the StoreKit tests, which need the iOS 26.2 fixture runtime): 40 pass.
 - `ImmerseUITests`, the whole suite in light: 65 pass; `JournalFlowTests`, `MovieCapacityUITests` and `FilmStockUITests` again in dark, as `Scripts/validate-local.sh` reruns them: 14 pass. The two 16mm largest-text audit tests passed 3 of 3 in light and 3 of 3 in dark on the shipped configuration.
 - `FilmStockUITests` also passes on an iPhone SE (3rd generation) in light and dark.

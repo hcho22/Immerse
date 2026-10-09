@@ -1,9 +1,10 @@
 @preconcurrency import AVFoundation
 import CoreGraphics
+import CoreImage
 import FilmDomain
 import Foundation
 import ImageIO
-import RenderCore
+@testable import RenderCore
 import RenderFixtures
 import UniformTypeIdentifiers
 import XCTest
@@ -68,6 +69,25 @@ final class FilmStockRenderTests: XCTestCase {
                              "Grain on an even scene (\(mono.centerDeviation) vs \(color.centerDeviation))")
         // Clearly visible on its own, not just next to the color stock's very fine grain; the provisional values give about 6.
         XCTAssertGreaterThan(mono.centerDeviation, 4)
+    }
+
+    /// The black-and-white print curve pivots on display mid-gray: an even mid-gray scene keeps its tone through the
+    /// whole black-and-white chain, with and without grain, while darker tones print darker and lighter tones lighter.
+    func testBlackAndWhiteKeepsDisplayMidGrayWithAndWithoutGrain() {
+        for camera in [CameraID.mediumFormat6x6, .cinema16mm] {
+            guard case let .monochrome(look) = FilmLook.treatment(camera: camera, filmStock: .blackAndWhite) else {
+                return XCTFail("\(camera) has no black-and-white treatment")
+            }
+            let clean = FilmLook.Monochrome(spectral: look.spectral, curve: look.curve, grainAmplitude: 0, grainSize: look.grainSize)
+            XCTAssertEqual(meanLevel(FilmLook.monochrome(evenGray(128), clean, seed: 9, frame: 0)), 128, accuracy: 3,
+                           "\(camera) without grain")
+            XCTAssertEqual(meanLevel(FilmLook.monochrome(evenGray(128), look, seed: 9, frame: 0)), 128, accuracy: 3,
+                           "\(camera) with grain")
+            XCTAssertLessThan(meanLevel(FilmLook.monochrome(evenGray(64), clean, seed: 9, frame: 0)), 64 - 10,
+                              "\(camera) prints a dark tone darker")
+            XCTAssertGreaterThan(meanLevel(FilmLook.monochrome(evenGray(192), clean, seed: 9, frame: 0)), 192 + 10,
+                                 "\(camera) prints a light tone lighter")
+        }
     }
 
     /// Color development of the two Cameras is unchanged by Film Stock: the color Film Stock and a Film loaded before
@@ -145,6 +165,23 @@ final class FilmStockRenderTests: XCTestCase {
         let earlier = Data("{\"filmID\":\"\(film.id)\",\"treatmentVersion\":\"film-look-1-provisional\",\"assignments\":{},\"completedSequences\":[],\"isComplete\":false}".utf8)
         let restored = try JSONDecoder().decode(DevelopmentRun.self, from: earlier)
         XCTAssertTrue(restored.rendersAssignedTreatment(TreatmentAssignment(sequenceNumber: 1, seed: 1, treatmentVersion: nil)))
+    }
+
+    /// An even sRGB gray at an 8-bit level, as a capture brings it into Core Image's linear working space.
+    private func evenGray(_ level: Int) -> CIImage {
+        let value = CGFloat(level) / 255
+        return CIImage(color: CIColor(red: value, green: value, blue: value, colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!)!)
+            .cropped(to: CGRect(x: 0, y: 0, width: 512, height: 512))
+    }
+
+    /// The mean 8-bit sRGB level of a gray picture's 512 x 512 corner.
+    private func meanLevel(_ image: CIImage) -> Double {
+        var bytes = [UInt8](repeating: 0, count: 512 * 512 * 4)
+        CIContext().render(image, toBitmap: &bytes, rowBytes: 512 * 4, bounds: CGRect(x: 0, y: 0, width: 512, height: 512),
+                           format: .RGBA8, colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!)
+        let pixels = DecodedPixels(width: 512, height: 512, bytes: bytes)
+        XCTAssertLessThanOrEqual(pixels.largestChannelSpread, 2)
+        return stride(from: 0, to: bytes.count, by: 4).reduce(0.0) { $0 + Double(bytes[$1]) } / Double(512 * 512)
     }
 
     private func writeEvenGray(to url: URL, side: Int) throws {

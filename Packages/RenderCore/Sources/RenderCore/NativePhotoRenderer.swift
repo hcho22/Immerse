@@ -291,24 +291,23 @@ enum FilmLook {
         ]).applyingFilter("CITemperatureAndTint", parameters: [
             "inputNeutral": CIVector(x: 6500, y: 0), "inputTargetNeutral": CIVector(x: 6100, y: 4)
         ])
-        let grain = noise(seed: seed, frame: frame) { value in
+        let grain = noise(seed: seed, frame: frame, colorSpace: CGColorSpaceCreateDeviceRGB()) { value in
             let level = UInt8(UInt64(value) * UInt64(look.grainAlpha) / 255)
             return (level, look.grainAlpha)
         }.applyingFilter("CIAffineTile").cropped(to: source.extent)
         return grain.composited(over: image)
     }
 
-    private static func monochrome(_ source: CIImage, _ look: Monochrome, seed: UInt64, frame: Int) -> CIImage {
+    static func monochrome(_ source: CIImage, _ look: Monochrome, seed: UInt64, frame: Int) -> CIImage {
         // Every channel carries the same exposure from here on, so the picture stays neutral gray to the last pixel.
         let layer = CIVector(x: look.spectral.red, y: look.spectral.green, z: look.spectral.blue, w: 0)
-        var image = source.applyingFilter("CIColorMatrix", parameters: [
-            "inputRVector": layer, "inputGVector": layer, "inputBVector": layer
-        ]).applyingFilter("CILinearToSRGBToneCurve")
         var curve: [String: Any] = [:]
         for (index, point) in look.curve.enumerated() { curve["inputPoint\(index)"] = CIVector(cgPoint: point) }
-        image = image.applyingFilter("CIToneCurve", parameters: curve)
+        var image = source.applyingFilter("CIColorMatrix", parameters: [
+            "inputRVector": layer, "inputGVector": layer, "inputBVector": layer
+        ]).applyingFilter("CIToneCurve", parameters: curve).applyingFilter("CILinearToSRGBToneCurve")
         let amplitude = Int(look.grainAmplitude)
-        let tile = noise(seed: seed, frame: frame) { value in
+        let tile = noise(seed: seed, frame: frame, colorSpace: nil) { value in
             (UInt8(128 + (Int(value) - 128) * amplitude / 128), 255)
         }
         let size = tile.extent.width * look.grainSize
@@ -321,8 +320,9 @@ enum FilmLook {
     }
 
     /// A 128 x 128 tile of gray noise from the capture's seed and the Movie frame, each pixel's level and alpha made
-    /// from one random byte.
-    private static func noise(seed: UInt64, frame: Int, _ pixel: (UInt8) -> (level: UInt8, alpha: UInt8)) -> CIImage {
+    /// from one random byte. A nil color space leaves the levels as they are, so level 128 stays 0.5.
+    private static func noise(seed: UInt64, frame: Int, colorSpace: CGColorSpace?,
+                              _ pixel: (UInt8) -> (level: UInt8, alpha: UInt8)) -> CIImage {
         var random = seed &+ UInt64(frame) &* 0x9e3779b97f4a7c15
         var bytes = [UInt8](repeating: 0, count: 128 * 128 * 4)
         for index in stride(from: 0, to: bytes.count, by: 4) {
@@ -331,7 +331,7 @@ enum FilmLook {
             bytes[index] = level; bytes[index + 1] = level; bytes[index + 2] = level; bytes[index + 3] = alpha
         }
         return CIImage(bitmapData: Data(bytes), bytesPerRow: 128 * 4, size: CGSize(width: 128, height: 128),
-                       format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB())
+                       format: .RGBA8, colorSpace: colorSpace)
     }
 }
 
