@@ -118,7 +118,6 @@ import XCTest
         if let run = before.run {
             XCTAssertEqual(after.run?.assignments, run.assignments, file: file, line: line)
             XCTAssertEqual(after.run?.treatmentVersion, run.treatmentVersion, file: file, line: line)
-            XCTAssertEqual(after.run?.printProcess, run.printProcess, file: file, line: line)
         }
         for (key, hash) in before.assets where key.hasPrefix("master-") || key.hasPrefix("clip-") {
             XCTAssertEqual(after.assets[key], hash, file: file, line: line)
@@ -149,7 +148,7 @@ import XCTest
             duration = generated.movie.durationSeconds
             repository = try FilmRepository(rootURL: root)
             let camera = CameraCatalog.package(for: camera)
-            film = try repository.createFilm(camera: camera, title: "Synthetic process exit", movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+            film = try repository.createFilm(camera: camera, title: "Synthetic process exit", movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)
             for sequence in 1...count {
                 let date = Date(timeIntervalSince1970: 1_790_880_000 + Double(sequence))
                 if camera.medium == .photo { try repository.savePhotoCapture(filmID: film.id, sourceData: photo, savedAt: date) }

@@ -4,8 +4,10 @@ import FilmDomain
 import Foundation
 
 public enum NativeMovieRenderer {
+    /// One Developed Clip: every frame of the clip in the Camera's treatment for the Film's Film Stock, at the Camera's
+    /// frame rate. A nil Film Stock, a Camera without one or a Film loaded before Film Stock existed, develops as color.
     public static func developClip(
-        source: URL, destination: URL, camera: CameraPackage, seed: UInt64,
+        source: URL, destination: URL, camera: CameraPackage, filmStock: FilmStock? = nil, seed: UInt64,
         orientation: MovieOrientation, longEdge: Int = 1920
     ) async throws {
         guard camera.medium == .movie else { throw NativeRenderError.wrongMedium }
@@ -71,7 +73,7 @@ public enum NativeMovieRenderer {
             guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer) == kCVReturnSuccess, let buffer else {
                 throw NativeRenderError.writerFailed
             }
-            let treated = try FilmLook.apply(to: image, camera: camera.id, seed: seed, frame: frame)
+            let treated = try FilmLook.apply(to: image, camera: camera.id, filmStock: filmStock, seed: seed, frame: frame)
             context.render(treated, to: buffer, bounds: bounds, colorSpace: colorSpace)
             guard adaptor.append(buffer, withPresentationTime: CMTime(value: Int64(frame), timescale: Int32(fps))) else {
                 throw NativeRenderError.writerFailed

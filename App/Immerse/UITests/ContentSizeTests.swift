@@ -1,12 +1,12 @@
 import XCTest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
-/// light or dark appearance: the empty Journal, the Camera catalog, the Super 8 and 16mm Load Film screens and
-/// Settings in landscape. It stands in for Xcode's Dynamic Type audit, which grows the text in place and flagged
-/// correctly resizing text from run to run (Evidence/NativeApp/qa13-audit-exceptions-052.md and
-/// Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's text must grow by at least 4 percent at every
-/// step from L to AX XXXL, never shrink below L, and never be clipped by its frame or the screen. Navigation titles
-/// are system text and are not included.
+/// light or dark appearance: the empty Journal, the Camera catalog, the Super 8, 16mm and 6×6 Load Film screens (the 16mm
+/// with its Film Stock choice, the control the 6×6 shows too) and Settings in landscape. It stands in for Xcode's
+/// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
+/// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
+/// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
+/// its frame or the screen. Navigation titles are system text and are not included.
 @MainActor
 final class ContentSizeTests: XCTestCase {
     /// A text element to measure, found in an accessibility snapshot by type and identifier, exact label or label prefix.
@@ -110,6 +110,20 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 47 seconds of film"),
         Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, 24 frames per second"),
         Target(name: "16mm Look", type: .staticText, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
+        Target(name: "Film Stock", type: .staticText, label: "Film Stock"),
+        Target(name: "Color", type: .button, label: "Color"),
+        Target(name: "Black and white", type: .button, label: "Black and white"),
+    ]
+
+    /// The 6×6 Load screen's own text: its controls line, its look lines, one per Film Stock, and its viewfinder note. The
+    /// Film Stock choice is the control the 16mm screen shows and is measured there.
+    private static let sixBySix: [Target] = [
+        Target(name: "6×6 Controls", type: .staticText, label: "Square framing, deliberate focus and exposure, optical focus only"),
+        Target(name: "6×6 Picture", type: .staticText, label: "Borderless square picture"),
+        Target(name: "6×6 Color look", type: .staticText, label: "Color: natural, warm color, very fine grain and gentle contrast"),
+        Target(name: "6×6 Black and white look", type: .staticText, label: "Black and white: high contrast and distinct grain"),
+        Target(name: "6×6 Viewfinder note", type: .staticText,
+               label: "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."),
     ]
 
     /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
@@ -188,6 +202,19 @@ final class ContentSizeTests: XCTestCase {
     func testLoadScreenTextAtAccessibilityExtraExtraLarge() throws { check("AccessibilityXXL") }
     func testLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { check("AccessibilityXXXL") }
 
+    func testSixBySixLoadScreenTextAtExtraSmall() throws { checkSixBySix("XS") }
+    func testSixBySixLoadScreenTextAtSmall() throws { checkSixBySix("S") }
+    func testSixBySixLoadScreenTextAtMedium() throws { checkSixBySix("M") }
+    func testSixBySixLoadScreenTextAtLarge() throws { checkSixBySix("L") }
+    func testSixBySixLoadScreenTextAtExtraLarge() throws { checkSixBySix("XL") }
+    func testSixBySixLoadScreenTextAtExtraExtraLarge() throws { checkSixBySix("XXL") }
+    func testSixBySixLoadScreenTextAtExtraExtraExtraLarge() throws { checkSixBySix("XXXL") }
+    func testSixBySixLoadScreenTextAtAccessibilityMedium() throws { checkSixBySix("AccessibilityM") }
+    func testSixBySixLoadScreenTextAtAccessibilityLarge() throws { checkSixBySix("AccessibilityL") }
+    func testSixBySixLoadScreenTextAtAccessibilityExtraLarge() throws { checkSixBySix("AccessibilityXL") }
+    func testSixBySixLoadScreenTextAtAccessibilityExtraExtraLarge() throws { checkSixBySix("AccessibilityXXL") }
+    func testSixBySixLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { checkSixBySix("AccessibilityXXXL") }
+
     func testJournalAndCatalogTextAtExtraSmall() throws { checkJournalAndCatalog("XS") }
     func testJournalAndCatalogTextAtSmall() throws { checkJournalAndCatalog("S") }
     func testJournalAndCatalogTextAtMedium() throws { checkJournalAndCatalog("M") }
@@ -244,6 +271,21 @@ final class ContentSizeTests: XCTestCase {
         }
         app.terminate()
         finish(category, rows, Self.superEight + Self.sixteenMillimeter)
+    }
+
+    /// The 6×6 Load screen, in tests of its own so the Super 8 and 16mm tests stay inside the per-test time allowance.
+    private func checkSixBySix(_ category: String) {
+        let app = launch(category)
+        app.buttons["start-film"].tap()
+        let row = app.buttons["camera-mediumFormat6x6"]
+        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
+        row.tap()
+        XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
+        // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
+        Thread.sleep(forTimeInterval: 1)
+        let rows = record(measure(app, Self.sixBySix, category, below: "6×6"))
+        app.terminate()
+        finish(category, rows, Self.sixBySix)
     }
 
     private func checkJournalAndCatalog(_ category: String) {

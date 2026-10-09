@@ -17,7 +17,7 @@ import ProductionReceiptHarness
             if String(describing: $0) == args[5] { _exit(77) }
         })
         let film = try await owner.start(camera: camera, title: "Production process-exit fixture",
-            orientation: camera.medium == .movie ? .portrait : nil)
+            orientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock)
         let repository = try FilmRepository(rootURL: root)
         let files = try CapturedMediaFiles(directory: repository.captureStagingDirectory(filmID: film.id))
         let id = UUID(uuidString: "00000000-0000-0000-0000-000000000789")!

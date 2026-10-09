@@ -34,6 +34,7 @@
 		9269012BBD3C11F2ADE457CC /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = ECB5677E8658852E42741E9E /* FilmRuntime */; };
 		92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
 		9394253F3D5130352B73610C /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 15E6FEB6B2A025E914F0F602 /* MediaCatalog */; };
+		9652515411BF45FF595BE59F /* FilmStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6999265B7FB892C983479167 /* FilmStockUITests.swift */; };
 		97EDC540558F6430442A6076 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = B003DCAC6B4E5C9D271D55C2 /* FilmDomain */; };
 		9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
 		A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 54847413BC0280518CA9021C /* NativeAdapters */; };
@@ -79,6 +80,7 @@
 		5345D75982C156D9821482BB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		58B299AC9D190C1CBF43EE00 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
 		6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCatalogView.swift; sourceTree = "<group>"; };
+		6999265B7FB892C983479167 /* FilmStockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmStockUITests.swift; sourceTree = "<group>"; };
 		6B0CC430495062A502C3A2E1 /* TestingUnlockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlockUITests.swift; sourceTree = "<group>"; };
 		6C4F11F94E6BAC2977A36307 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		6C7B00AA020EF955ACC8304F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			children = (
 				7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */,
 				C7787955A98AAA8C3A558DBD /* ContentSizeTests.swift */,
+				6999265B7FB892C983479167 /* FilmStockUITests.swift */,
 				45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */,
 				3568BB0435FFA16C201C1D53 /* MovieCapacityUITests.swift */,
 				6B0CC430495062A502C3A2E1 /* TestingUnlockUITests.swift */,
@@ -378,6 +381,7 @@
 			files = (
 				B79E3FD0070E23CBC9D3BE61 /* AuditExceptions.swift in Sources */,
 				4DD14408EB5093E7CF2A15EE /* ContentSizeTests.swift in Sources */,
+				9652515411BF45FF595BE59F /* FilmStockUITests.swift in Sources */,
 				865894FD2C75EFF6AEED9DEC /* JournalFlowTests.swift in Sources */,
 				794E3ACF96A45D8B9AB462E8 /* MovieCapacityUITests.swift in Sources */,
 				45097BC08691DFDDD74D842B /* TestingUnlockUITests.swift in Sources */,

@@ -79,7 +79,7 @@ actor ExportScenario {
         let repository = try FilmRepository(rootURL: root)
         let camera = CameraCatalog.package(for: manifest.camera)
         let film = try repository.createFilm(camera: camera, title: "Private synthetic export",
-            movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+            movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)
         manifest.filmID = film.id
         try persistManifest()
         for sequence in 1...manifest.count {

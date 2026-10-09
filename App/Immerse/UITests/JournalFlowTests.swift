@@ -184,7 +184,7 @@ final class JournalFlowTests: XCTestCase {
     /// (Evidence/NativeApp/qa13-audit-exceptions-052.md), and later the 16mm Load screen at its top and the empty
     /// Journal (Evidence/NativeApp/scroll-indicator-drag-053.md). `ContentSizeTests` instead measures every text
     /// element on the audited screens at all twelve sizes.
-    private static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
+    static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
 
     /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
     /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
@@ -201,36 +201,5 @@ final class JournalFlowTests: XCTestCase {
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
-    }
-
-    /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns
-    /// the labels of the findings it reported.
-    @discardableResult
-    private func audit(_ app: XCUIApplication, name: String, for types: XCUIAccessibilityAuditType = .all,
-                       exceptions: [AuditException] = AuditException.accepted) throws -> [String] {
-        let tree = XCTAttachment(string: app.debugDescription)
-        tree.name = "\(name)-accessibility-tree"
-        tree.lifetime = .keepAlways
-        add(tree)
-        var reported: [String] = []
-        let handler: (XCUIAccessibilityAuditIssue) throws -> Bool = { issue in
-            let label = issue.element?.label
-            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label)
-            let detail = XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied by auditor")")
-            detail.name = "\(name)-audit-node\(accepted ? "-accepted-exception" : "")"
-            detail.lifetime = .keepAlways
-            self.add(detail)
-            if !accepted { reported.append(label ?? "") }
-            return accepted
-        }
-        // The Dynamic Type and clipped-text checks grow and shrink the text in place. In a scrolled list the offset
-        // clamps while the content is short and is not restored, so every other check runs first, at the pose the
-        // test set (Evidence/NativeApp/qa13-audit-exceptions-052.md).
-        let resizing: XCUIAccessibilityAuditType = [.dynamicType, .textClipped]
-        let others = types.subtracting(resizing)
-        if !others.isEmpty { try app.performAccessibilityAudit(for: others, handler) }
-        let resized = types.intersection(resizing)
-        if !resized.isEmpty { try app.performAccessibilityAudit(for: resized, handler) }
-        return reported
     }
 }

@@ -157,13 +157,13 @@ enum DevelopmentWorker {
             guard let treatment = run.assignments[capture.sequenceNumber] else { throw PersistenceError.treatmentConflict }
             let kind: StoredAsset.Kind = film.camera.medium == .photo ? .master : .clip
             if try repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: kind) == nil {
-                guard run.rendersWithCurrentTreatment(treatment) else { throw PersistenceError.treatmentConflict }
+                guard run.rendersAssignedTreatment(treatment) else { throw PersistenceError.treatmentConflict }
                 guard let source = try repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: .source) else {
                     throw PersistenceError.captureNotFound
                 }
                 if kind == .master {
                     let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed,
-                        process: run.printProcess ?? .color)
+                        filmStock: film.filmStock)
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()
@@ -173,7 +173,7 @@ enum DevelopmentWorker {
                 } else {
                     let output = work.appendingPathComponent("\(capture.sequenceNumber).mov")
                     try await NativeMovieRenderer.developClip(source: source.url, destination: output,
-                        camera: film.camera, seed: treatment.seed, orientation: film.movieOrientation!)
+                        camera: film.camera, filmStock: film.filmStock, seed: treatment.seed, orientation: film.movieOrientation!)
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()

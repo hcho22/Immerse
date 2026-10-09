@@ -31,7 +31,7 @@ final class TestingUnlockTests: XCTestCase {
         let (root, calls, model) = try await makeModel(unlocked: true)
         defer { try? FileManager.default.removeItem(at: root) }
         for camera in CameraCatalog.all {
-            let film = try await model.load(camera: camera, title: "Unlocked \(camera.shortName)", orientation: .landscape)
+            let film = try await model.load(camera: camera, title: "Unlocked \(camera.shortName)", orientation: .landscape, filmStock: camera.defaultFilmStock)
             XCTAssertEqual(try model.repository.filmAccess(filmID: film.id), .subscription, camera.shortName)
             XCTAssertEqual(film.movieOrientation, camera.medium == .movie ? .landscape : nil, camera.shortName)
         }
@@ -48,7 +48,7 @@ final class TestingUnlockTests: XCTestCase {
     func testSwitchedOffTheTrialAndItsLimitsApplyAsInRelease() async throws {
         let (root, calls, model) = try await makeModel(unlocked: false)
         defer { try? FileManager.default.removeItem(at: root) }
-        let film = try await model.load(camera: CameraCatalog.cinema16mm, title: "Trial roll", orientation: .portrait)
+        let film = try await model.load(camera: CameraCatalog.cinema16mm, title: "Trial roll", orientation: .portrait, filmStock: .color)
         guard case .trial = try model.repository.filmAccess(filmID: film.id) else { return XCTFail("Uses the Trial") }
         XCTAssertTrue(calls.wasWritten)
         do {
@@ -68,7 +68,7 @@ final class TestingUnlockTests: XCTestCase {
     func testTurningTheUnlockOffKeepsItsFilmsUsableAndRestoresTrialGating() async throws {
         let (root, calls, model) = try await makeModel(unlocked: true)
         defer { try? FileManager.default.removeItem(at: root) }
-        let photos = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Unlocked 6×6", orientation: .portrait)
+        let photos = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Unlocked 6×6", orientation: .portrait, filmStock: .color)
         let movie = try await model.load(camera: CameraCatalog.super8HomeMovie, title: "Unlocked Super 8", orientation: .portrait)
         try await save(photos, model)
 

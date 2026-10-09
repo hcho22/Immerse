@@ -115,7 +115,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let first = try await model.trial.start(camera: CameraCatalog.disposable1990s, title: "Synthetic Trial roll")
         let second = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6,
-                                                     title: "Synthetic paid roll", access: .subscription)
+                                                     title: "Synthetic paid roll", filmStock: .color, access: .subscription)
         try await openWithoutSimulatorCamera(first, model)
         let unfinished = try stageUnfinishedSave(first, model)
 
@@ -146,7 +146,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         let attached = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
                                                        title: "Synthetic attached roll", access: .subscription)
         let removed = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6,
-                                                      title: "Synthetic removed roll", access: .subscription)
+                                                      title: "Synthetic removed roll", filmStock: .color, access: .subscription)
         try await openWithoutSimulatorCamera(attached, model)
         try model.repository.deleteFilm(filmID: removed.id)
         do { try await model.capture.open(film: removed, model: model); XCTFail("A deleted Film cannot attach") }
@@ -197,7 +197,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         let (root, _, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
         let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
-                                                   movieOrientation: .landscape, access: .subscription)
+                                                   movieOrientation: .landscape, filmStock: .color, access: .subscription)
         model.refresh()
         XCTAssertEqual(film.remainingLabel(recordedFor: 12.5), "2:35 left")
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
@@ -239,6 +239,26 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertFalse(calls.wasWritten, "No Trial activation is written before Camera access")
     }
 
+    /// Load Film records the Film Stock it confirmed (ADR 0014), and the Darkroom follows it. A 6×6 Load without one
+    /// loads no Film and leaves the Trial unused.
+    func testLoadFilmRecordsTheChosenFilmStockAndNeverLoadsWithoutOne() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        do {
+            _ = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "No Film Stock", orientation: .portrait)
+            XCTFail("A 6×6 Film is loaded with a Film Stock")
+        } catch FilmDomainError.filmStockRequired { }
+        XCTAssertTrue(try model.repository.allFilms().isEmpty)
+        let unused = try await model.trial.state()
+        XCTAssertEqual(unused, .unused)
+        let film = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Harbour", orientation: .portrait,
+                                        filmStock: .blackAndWhite)
+        XCTAssertEqual(film.filmStock, .blackAndWhite)
+        XCTAssertEqual(model.film(film.id)?.filmStock, .blackAndWhite)
+        XCTAssertEqual(try model.repository.film(id: film.id).filmStock, .blackAndWhite)
+        XCTAssertEqual(try model.repository.photoPrintProcess(filmID: film.id), .silverGelatin)
+    }
+
     func testSessionPlanCarriesEachCamerasCaptureBehavior() async throws {
         let (root, _, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -246,7 +266,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         for camera in CameraCatalog.all {
             let film = try model.repository.createFilm(
                 camera: camera, title: "Synthetic \(camera.id.rawValue)",
-                movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+                movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)
             let plan = CaptureController.sessionPlan(for: film, position: .front, focus: 0.25, capabilities: capabilities)
             XCTAssertEqual(plan.behavior, CaptureBehavior.for(camera.id), camera.id.rawValue)
             XCTAssertEqual(plan.manualLensPosition, 0.25, "The Focus control's position reaches the lens")
@@ -322,7 +342,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
                               (CameraCatalog.super8HomeMovie, false)] {
             let film = try model.repository.createFilm(
                 camera: camera, title: "Synthetic \(camera.id.rawValue)",
-                movieOrientation: camera.medium == .movie ? .portrait : nil, access: .subscription)
+                movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)
             model.refresh()
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
                 for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {

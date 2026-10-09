@@ -60,4 +60,79 @@ extension XCTestCase {
         add(miss)
         XCTFail("The Camera catalog did not open within 5 seconds of the tap on Start a Film")
     }
+
+    /// Replaces the Load screen's suggested Film title with `title`, failing the test and returning false if the typed
+    /// title does not land in the field.
+    @discardableResult func enterFilmTitle(_ title: String, _ app: XCUIApplication) -> Bool {
+        let field = app.textFields["film-title"]
+        // The field starts with the suggested title, which wraps at the largest sizes. A tap puts the cursor where it
+        // lands, so tap past the end of the last line before deleting the suggestion. That point is on screen only
+        // once the whole field is: a free swipe that coasted short left the field's center hittable but its last line
+        // under the window's bottom edge, and the tap there gave the field no focus.
+        // The Form adds and removes the field's row as it nears the screen, so the field can exist and be gone a moment
+        // later, and reading a missing element's frame fails the test; one snapshot reads both and throws instead.
+        let window = app.windows.firstMatch.frame
+        let onScreen = { (try? field.snapshot()).map { window.contains($0.frame) } ?? false }
+        scrollUp(app, until: onScreen)
+        XCTAssertTrue(onScreen(), "The whole title field is on screen")
+        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 100) + title)
+        // Typed edits reach the field from the out-of-process keyboard after typeText returns, so wait for them to land.
+        let entered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", title), object: field)
+        guard XCTWaiter().wait(for: [entered], timeout: 10) == .completed else {
+            XCTFail("The title field holds \"\(field.value as? String ?? "")\" instead of \"\(title)\"")
+            return false
+        }
+        return true
+    }
+
+    /// Deletes the Film a test loaded from a fresh launch, whatever screen the test stopped on.
+    func deleteFilm(titled title: String, _ app: XCUIApplication) {
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+        guard row.waitForExistence(timeout: 5) else { return }
+        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
+        row.tap()
+        // The Film screen's actions, rather than its bar, which reads a 6×6 title as "6 by 6".
+        XCTAssertTrue(app.buttons["Film actions"].waitForExistence(timeout: 5))
+        app.buttons["Film actions"].tap()
+        app.buttons["Delete Film"].tap()
+        let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+    }
+
+    /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns
+    /// the labels of the findings it reported.
+    @discardableResult
+    func audit(_ app: XCUIApplication, name: String, for types: XCUIAccessibilityAuditType = .all,
+                       exceptions: [AuditException] = AuditException.accepted) throws -> [String] {
+        let tree = XCTAttachment(string: app.debugDescription)
+        tree.name = "\(name)-accessibility-tree"
+        tree.lifetime = .keepAlways
+        add(tree)
+        var reported: [String] = []
+        let handler: (XCUIAccessibilityAuditIssue) throws -> Bool = { issue in
+            let label = issue.element?.label
+            let accepted = AuditException.accepts(exceptions, audit: name, type: issue.auditType, label: label)
+            let detail = XCTAttachment(string: "\(issue.auditType): \(issue.detailedDescription)\n\(issue.element?.debugDescription ?? "No element supplied by auditor")")
+            detail.name = "\(name)-audit-node\(accepted ? "-accepted-exception" : "")"
+            detail.lifetime = .keepAlways
+            self.add(detail)
+            if !accepted { reported.append(label ?? "") }
+            return accepted
+        }
+        // The Dynamic Type and clipped-text checks grow and shrink the text in place. In a scrolled list the offset
+        // clamps while the content is short and is not restored, so every other check runs first, at the pose the
+        // test set (Evidence/NativeApp/qa13-audit-exceptions-052.md).
+        let resizing: XCUIAccessibilityAuditType = [.dynamicType, .textClipped]
+        let others = types.subtracting(resizing)
+        if !others.isEmpty { try app.performAccessibilityAudit(for: others, handler) }
+        let resized = types.intersection(resizing)
+        if !resized.isEmpty { try app.performAccessibilityAudit(for: resized, handler) }
+        return reported
+    }
 }

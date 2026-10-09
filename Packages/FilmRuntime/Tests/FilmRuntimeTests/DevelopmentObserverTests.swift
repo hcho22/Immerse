@@ -260,11 +260,11 @@ private actor DevelopmentGate {
         if let run = earlier.run {
             XCTAssertEqual(later.run?.filmID, run.filmID, file: file, line: line)
             XCTAssertEqual(later.run?.treatmentVersion, run.treatmentVersion, file: file, line: line)
-            XCTAssertEqual(later.run?.printProcess, run.printProcess, file: file, line: line)
             XCTAssertEqual(later.run?.assignments, run.assignments, file: file, line: line)
         }
         for (key, hash) in earlier.retainedHashes { XCTAssertEqual(later.retainedHashes[key], hash, file: file, line: line) }
         XCTAssertEqual(later.film.captures.map(\.id), earlier.film.captures.map(\.id), file: file, line: line)
+        XCTAssertEqual(later.film.filmStock, earlier.film.filmStock, file: file, line: line)
         XCTAssertEqual(later.film.consumedMovieSeconds, earlier.film.consumedMovieSeconds, file: file, line: line)
         XCTAssertEqual(later.film.movieOrientation, earlier.film.movieOrientation, file: file, line: line)
     }
@@ -304,7 +304,7 @@ private actor DevelopmentGate {
             repository = try FilmRepository(rootURL: root)
             let package = CameraCatalog.package(for: camera)
             film = try repository.createFilm(camera: package, title: "Synthetic Development boundary",
-                movieOrientation: package.medium == .movie ? .portrait : nil, access: .subscription)
+                movieOrientation: package.medium == .movie ? .portrait : nil, filmStock: package.defaultFilmStock, access: .subscription)
             for sequence in 1...count {
                 let date = Date(timeIntervalSince1970: 1_790_880_000 + Double(sequence))
                 if package.medium == .photo { try repository.savePhotoCapture(filmID: film.id, sourceData: photo, savedAt: date) }

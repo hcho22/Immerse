@@ -1,0 +1,55 @@
+import XCTest
+
+/// Diagnostic only: steps through the 16mm Load screen at the largest size in held 80 pt drags, running only the
+/// clipped-text audit at each pose, and records which poses report a finding with no element, with every text frame.
+@MainActor
+final class ClippedPoseDiagnostic: XCTestCase {
+    func testMapClippedFindings() throws {
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+        var log: [String] = []
+        for pose in 0..<44 {
+            if pose < 18 {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -80)), withVelocity: .slow, thenHoldForDuration: 0.3)
+                continue
+            }
+            Thread.sleep(forTimeInterval: 0.5)
+            var findings: [String] = []
+            try? app.performAccessibilityAudit(for: XCUIAccessibilityAuditType.all.subtracting([.dynamicType, .textClipped])) { issue in
+                findings.append("other:\(issue.auditType.rawValue):\(issue.element?.label.prefix(20) ?? "NO-ELEMENT")")
+                return true
+            }
+            try? app.performAccessibilityAudit(for: .textClipped) { issue in
+                findings.append(issue.element?.label ?? "NO-ELEMENT")
+                return true
+            }
+            var frames: [String] = []
+            if let root = try? app.snapshot() {
+                func visit(_ e: XCUIElementSnapshot) {
+                    if [.staticText, .button, .textField].contains(e.elementType), e.frame.maxY > 0, e.frame.minY < 874,
+                       !["Settings", "Archive", "Start a Film", "Choose a Camera", "16mm"].contains(e.label), !e.label.hasPrefix("Film Journal"),
+                       !e.label.hasPrefix("Your Journal") {
+                        frames.append("\(e.label.prefix(28)) y=\(Int(e.frame.minY))..\(Int(e.frame.maxY))")
+                    }
+                    e.children.forEach(visit)
+                }
+                visit(root)
+            }
+            log.append("pose \(pose): findings=\(findings) | " + frames.joined(separator: "; "))
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -80)), withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        let text = XCTAttachment(string: log.joined(separator: "\n"))
+        text.name = "clipped-map"
+        text.lifetime = .keepAlways
+        add(text)
+    }
+}

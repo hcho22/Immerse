@@ -68,7 +68,7 @@ final class TrialIntegrationTests: XCTestCase {
         let repository = try FilmRepository(rootURL: root)
         let device = try store.ensureDeviceRecord()
         let film = try repository.createFilm(camera: camera, title: "Restored pending operation",
-            movieOrientation: camera.medium == .movie ? .portrait : nil, access: .trial(originDevice: device.deviceID))
+            movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .trial(originDevice: device.deviceID))
         let date = Date(timeIntervalSince1970: 1_790_870_000)
         let id = UUID()
         let files = try CapturedMediaFiles(directory: repository.captureStagingDirectory(filmID: film.id))
@@ -292,7 +292,7 @@ final class TrialIntegrationTests: XCTestCase {
         let repository = try FilmRepository(rootURL: root)
         XCTAssertTrue(try repository.pendingTrialConsumptions().isEmpty)
         try await coordinator.deleteFilm(filmID: film.id)
-        let next = try await coordinator.start(camera: CameraCatalog.cinema16mm, title: "Replacement", orientation: .landscape)
+        let next = try await coordinator.start(camera: CameraCatalog.cinema16mm, title: "Replacement", orientation: .landscape, filmStock: .color)
         XCTAssertNotEqual(next.id, film.id)
         XCTAssertFalse(try XCTUnwrap(store.read()).isConsumed)
     }
@@ -307,7 +307,7 @@ final class TrialIntegrationTests: XCTestCase {
         let empty = try repository.createFilm(camera: CameraCatalog.instant1970s, title: "Restored empty", access: .trial(originDevice: UUID()))
         let destination = MemoryDeviceStore()
         let coordinator = try TrialCoordinator(root: root, store: destination)
-        let own = try await coordinator.start(camera: CameraCatalog.mediumFormat6x6, title: "Destination Trial")
+        let own = try await coordinator.start(camera: CameraCatalog.mediumFormat6x6, title: "Destination Trial", filmStock: .color)
         for film in [captured, empty] {
             let receiver = try await coordinator.receiver(filmID: film.id)
             try await receiver.commit(.photoSaved(source))

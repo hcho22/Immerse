@@ -82,22 +82,33 @@ private struct FixtureTrialStore: DeviceTrialStoring {
             let camera = movie ? CameraCatalog.cinema16mm : instant ? CameraCatalog.instant1970s
                 : mode == "medium-format" ? CameraCatalog.mediumFormat6x6 : CameraCatalog.disposable1990s
             let model = scenario.model
+            // `--black-and-white` loads the 6×6 or 16mm Film on the black-and-white Film Stock; otherwise a Camera with a
+            // Film Stock gets Load Film's default, color.
+            let filmStock = arguments.contains("--black-and-white") ? FilmStock.blackAndWhite : camera.defaultFilmStock
             let film = try model.repository.createFilm(camera: camera, title: "Private synthetic Film",
-                movieOrientation: movie ? .portrait : nil, access: .subscription)
+                movieOrientation: movie ? .portrait : nil, filmStock: filmStock, access: .subscription)
             if mode != "empty" {
                 let fixtures = directory.appendingPathComponent("Fixtures")
                 var settings = RenderFixtureSettings.defaultExperimental
                 settings.photoWidth = 320; settings.photoHeight = 240
                 settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
                 let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
+                // `--photo-source PATH` and `--movie-source PATH` capture a still or a silent movie already on disk instead
+                // of the generated fixtures, so screenshots can show a natural scene. Both are harness-only evidence aids.
+                let source = { (flag: String) -> URL? in
+                    arguments.firstIndex(of: flag).flatMap { arguments.indices.contains($0 + 1) ? URL(fileURLWithPath: arguments[$0 + 1]) : nil }
+                }
                 if movie {
-                    let data = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-movie.mov"))
+                    let clip = source("--movie-source") ?? fixtures.appendingPathComponent("synthetic-developed-movie.mov")
+                    let data = try Data(contentsOf: clip)
+                    let seconds = source("--movie-source") == nil ? manifest.movie.durationSeconds
+                        : try await VerifiedMedia.movie(at: clip).durationSeconds ?? 0
                     for _ in 0..<2 {
                         try model.repository.saveMovieClip(filmID: film.id, sourceData: data,
-                            durationSeconds: manifest.movie.durationSeconds, orientation: .landscape)
+                            durationSeconds: seconds, orientation: .landscape)
                     }
                 } else {
-                    let data = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
+                    let data = try Data(contentsOf: source("--photo-source") ?? fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
                     for index in 1...2 {
                         try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }

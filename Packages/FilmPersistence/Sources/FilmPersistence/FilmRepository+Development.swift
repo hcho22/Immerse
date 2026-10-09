@@ -95,10 +95,11 @@ extension FilmRepository {
         }
     }
 
+    /// The print process the Film's Film Stock fixed at Load Film, which the Darkroom's controls and every print follow.
     public func photoPrintProcess(filmID: UUID) throws -> PhotoPrintProcess {
         let film = try film(id: filmID)
         guard film.camera.medium == .photo else { throw FilmDomainError.wrongCameraMedium }
-        return try developmentRun(filmID: filmID)?.printProcess ?? .color
+        return film.printProcess
     }
 
     private func verifyAsset(filmID: UUID, sequence: Int, kind: StoredAsset.Kind, evidence: [VerifiedMedia]) throws {

@@ -77,6 +77,7 @@ struct FilmDetailView: View {
     private func header(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             film.camera.displayNameText.font(.system(.title2, design: .serif))
+            if let stock = film.filmStock { Text("\(stock.label) Film Stock").font(.subheadline) }
             Text(film.journalState).font(.headline)
             (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText)
                 .font(.subheadline.monospaced()).foregroundStyle(.secondary)

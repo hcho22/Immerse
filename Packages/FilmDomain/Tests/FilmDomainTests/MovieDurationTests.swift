@@ -17,7 +17,7 @@ final class MovieDurationTests: XCTestCase {
     }
 
     func testFinalFrameCompletesBudgetAndNonfiniteDurationsNeverDebit() throws {
-        var film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .portrait)
+        var film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .portrait, filmStock: .color)
         for duration in [Double.nan, .infinity, -.infinity, 0, -0.1] {
             XCTAssertThrowsError(try film.recordSavedMovieClip(durationSeconds: duration, orientation: .landscape))
         }
@@ -58,7 +58,7 @@ final class MovieDurationTests: XCTestCase {
     }
 
     func testRemainderSmallerThanOneFrameCompletesTheFilm() throws {
-        var film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape)
+        var film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape, filmStock: .color)
         _ = try film.recordSavedMovieClip(durationSeconds: 83.504, orientation: .landscape)
         _ = try film.recordSavedMovieClip(durationSeconds: 83.49, orientation: .landscape)
         XCTAssertLessThan(film.captures.reduce(0) { total, capture in

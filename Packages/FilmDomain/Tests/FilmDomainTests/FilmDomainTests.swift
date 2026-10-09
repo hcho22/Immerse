@@ -31,7 +31,7 @@ final class FilmDomainTests: XCTestCase {
     }
 
     func testLoadedCameraDoesNotChangeWhenTitleOrArchiveChanges() throws {
-        var film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "6×6 - Roll #01")
+        var film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "6×6 - Roll #01", filmStock: .color)
         _ = try film.recordSavedPhoto()
 
         try film.rename(to: "Kyoto alleys")
@@ -140,7 +140,8 @@ final class FilmDomainTests: XCTestCase {
         var film = try Film(
             camera: CameraCatalog.cinema16mm,
             title: "16mm - Roll #01",
-            movieOrientation: .portrait
+            movieOrientation: .portrait,
+            filmStock: .color
         )
 
         _ = try film.recordSavedMovieClip(durationSeconds: 64, orientation: .portrait)

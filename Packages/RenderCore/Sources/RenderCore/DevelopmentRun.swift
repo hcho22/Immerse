@@ -25,25 +25,24 @@ public enum DevelopmentRunError: Error, Equatable, Sendable {
 public struct DevelopmentRun: Codable, Equatable, Sendable {
     public let filmID: UUID
     public let treatmentVersion: String
-    // Optional for decoding earlier runs, whose provisional treatment was color.
-    public let printProcess: PhotoPrintProcess?
+    // A run records no print process: Development and the Darkroom follow the Film's Film Stock (`Film.printProcess`).
+    // Earlier runs stored "printProcess", always color, which decoding ignores.
     public private(set) var assignments: [Int: TreatmentAssignment]
     public private(set) var completedSequences: Set<Int>
     public private(set) var isComplete: Bool
 
-    public init(filmID: UUID, printProcess: PhotoPrintProcess = .color) {
+    public init(filmID: UUID) {
         self.filmID = filmID
         self.treatmentVersion = NativePhotoRenderer.treatmentVersion
-        self.printProcess = printProcess
         self.assignments = [:]
         self.completedSequences = []
         self.isComplete = false
     }
 
-    /// Whether the current renderer can render this capture's assigned treatment. Only a
-    /// new render depends on it; masters and clips already rendered stay usable.
-    public func rendersWithCurrentTreatment(_ assignment: TreatmentAssignment) -> Bool {
-        (assignment.treatmentVersion ?? treatmentVersion) == NativePhotoRenderer.treatmentVersion
+    /// Whether this build can render the capture's assigned treatment. Only a new render depends on it; masters and
+    /// clips already rendered stay usable.
+    public func rendersAssignedTreatment(_ assignment: TreatmentAssignment) -> Bool {
+        NativePhotoRenderer.renderableTreatmentVersions.contains(assignment.treatmentVersion ?? treatmentVersion)
     }
 
     public mutating func assignMissingTreatments(for film: Film) throws {

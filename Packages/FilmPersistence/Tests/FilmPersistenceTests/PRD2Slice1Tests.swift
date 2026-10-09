@@ -19,7 +19,7 @@ final class PRD2Slice1Tests: XCTestCase {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let repository = try FilmRepository(rootURL: root)
-        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "New reel", movieOrientation: .landscape)
+        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "New reel", movieOrientation: .landscape, filmStock: .color)
         XCTAssertEqual(film.camera.capacity, .seconds(167))
         XCTAssertEqual(film.remainingMovieFrames, 167 * MovieFrames.perSecond)
     }
@@ -30,8 +30,8 @@ final class PRD2Slice1Tests: XCTestCase {
                                    revealRule: .movieDevelopment, supportsBuiltInSoundtrack: true)
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
-        let old = try FilmRepository(rootURL: root).createFilm(camera: locked, title: "Old reel", movieOrientation: .landscape)
-        let new = try FilmRepository(rootURL: root).createFilm(camera: CameraCatalog.cinema16mm, title: "New reel", movieOrientation: .landscape)
+        let old = try FilmRepository(rootURL: root).createFilm(camera: locked, title: "Old reel", movieOrientation: .landscape, filmStock: .color)
+        let new = try FilmRepository(rootURL: root).createFilm(camera: CameraCatalog.cinema16mm, title: "New reel", movieOrientation: .landscape, filmStock: .color)
 
         let reopened = try FilmRepository(rootURL: root)
         let restoredOld = try reopened.film(id: old.id)
@@ -52,7 +52,7 @@ final class PRD2Slice1Tests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let repository = try FilmRepository(rootURL: root)
         for camera in CameraCatalog.all where camera.medium == .photo {
-            let film = try repository.createFilm(camera: camera, title: "\(camera.id)")
+            let film = try repository.createFilm(camera: camera, title: "\(camera.id)", filmStock: camera.filmStocks.isEmpty ? nil : .color)
             try repository.savePhotoCapture(filmID: film.id, sourceData: Data("source".utf8))
             if camera.revealRule == .instantPerExposure { try revealTestInstant(repository, filmID: film.id) }
             else {

@@ -72,6 +72,9 @@ substitute for native capture/quality evidence. The shipping catalog stays empty
 The media-workflow addendum adds decoded-pixel toning tests and a saved print
 process in the one-time Development run; old runs remain color. All current
 provisional Camera presets remain color, so toning is not exposed for them.
+**Superseded by PRD 2.1 slice 3 (2026-10-08) for toning: a Film's print process now
+comes from its Film Stock (`Film.printProcess`), not the Development run, and
+black-and-white 6×6 prints offer chemical toning (`Evidence/NativeApp/prd-2-slice-3-film-stock.md`).**
 The soundtrack catalog requires an explicit `initialChoiceOnly` or `allowed`
 policy before selection is exposed; nil stays unresolved. Native recovery tests
 exercise both possible policies without turning either into the captain's choice.

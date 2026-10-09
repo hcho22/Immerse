@@ -37,9 +37,10 @@ findings are the exact, measured entries in `UITests/AuditExceptions.swift`.
 Text sizing on every audited screen is measured by `ContentSizeTests` at all twelve
 sizes instead of the Dynamic Type audit, which is not run
 (`Evidence/NativeApp/qa13-audit-exceptions-052.md`). The script runs the
-`JournalFlowTests` accessibility audits and `MovieCapacityUITests`, with its
-populated Journal card contrast audit, a second time with the simulator set to
-dark appearance; for other dark coverage, including `ContentSizeTests`, set
+`JournalFlowTests` accessibility audits, `MovieCapacityUITests`, with its
+populated Journal card contrast audit, and `FilmStockUITests`, with its Film Stock
+Load Film audit, a second time with the simulator set to dark appearance; for
+other dark coverage, including `ContentSizeTests`, set
 `xcrun simctl ui <task-owned-uuid> appearance dark` before the UI run, then restore
 its appearance. Do not infer dark coverage from an `AppleInterfaceStyle` launch
 argument or `XCUIDevice.shared.appearance`; neither changed the observed pixels.
@@ -91,10 +92,11 @@ reselection, support/privacy URLs, budgets and launch approval remain open.
 samples and instrumentals. It is empty and its reselection policy is unresolved,
 so no synthetic sample or unlicensed music is exposed. See `Packages/MediaCatalog`
 and `Evidence/NativeApp/2026-10-01-media-workflows.md` for configuration, retained
-audio/license recovery and tests. Chemical toning is supported only for an explicitly
-saved silver-gelatin print process; all current provisional Camera presets remain
-color. No fixture is displayed as a real Camera sample. Remaining acceptance gaps and
-manual procedures live under `Evidence/` and the canonical requirement map.
+audio/license recovery and tests. Chemical toning is offered only on black-and-white
+6×6 prints, whose Film Stock makes their print process silver gelatin
+(`Evidence/NativeApp/prd-2-slice-3-film-stock.md`). No fixture is displayed as a real
+Camera sample. Remaining acceptance gaps and manual procedures live under
+`Evidence/` and the canonical requirement map.
 
 The app requests Camera at explicit Load Film/Open Camera and Photos add-only at
 explicit export. It never requests microphone, location or photo-library reading.

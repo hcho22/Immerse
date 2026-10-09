@@ -11,10 +11,10 @@ final class ChemicalToningTests: XCTestCase {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("Toning-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }
         _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root)
-        let camera = CameraCatalog.disposable1990s
-        // This is an explicit experimental print process, not a change to a Camera package.
+        // A black-and-white 6×6 Film, the one v1 Photo Film whose prints are silver gelatin (PRD 2.1 FR-07).
+        let camera = CameraCatalog.mediumFormat6x6
         let master = try NativePhotoRenderer.develop(source: root.appendingPathComponent("synthetic-developed-photo.jpg"),
-            camera: camera, seed: 42, process: .silverGelatin)
+            camera: camera, seed: 42, filmStock: .blackAndWhite)
         let neutral = try pixels(master)
         XCTAssertLessThan(averageChannelDifference(neutral), 2)
         for chemistry in ChemicalToning.Chemistry.allCases {
@@ -41,13 +41,26 @@ final class ChemicalToningTests: XCTestCase {
         let decoded = try JSONDecoder().decode(DarkroomRecipe.self, from: recipe)
         XCTAssertEqual(decoded, .original)
         let id = UUID()
-        let run = Data("{\"filmID\":\"\(id)\",\"treatmentVersion\":\"film-look-1-provisional\",\"assignments\":{},\"completedSequences\":[],\"isComplete\":false}".utf8)
-        let restored = try JSONDecoder().decode(DevelopmentRun.self, from: run)
-        XCTAssertNil(restored.printProcess)
-        XCTAssertEqual(restored.filmID, id)
-        XCTAssertEqual(DevelopmentRun(filmID: id).printProcess, .color)
-        XCTAssertEqual(try JSONDecoder().decode(DevelopmentRun.self,
-            from: JSONEncoder().encode(DevelopmentRun(filmID: id, printProcess: .silverGelatin))).printProcess, .silverGelatin)
+        // Runs stored before Film Stock, with and without the print process they then recorded, which was always color.
+        for process in ["", ",\"printProcess\":\"color\""] {
+            let run = Data("{\"filmID\":\"\(id)\",\"treatmentVersion\":\"film-look-1-provisional\",\"assignments\":{},\"completedSequences\":[],\"isComplete\":false\(process)}".utf8)
+            let restored = try JSONDecoder().decode(DevelopmentRun.self, from: run)
+            XCTAssertEqual(restored.filmID, id)
+            XCTAssertEqual(restored.treatmentVersion, "film-look-1-provisional")
+        }
+    }
+
+    /// The print process follows the Film Stock alone: black-and-white prints are silver gelatin and take toning, and
+    /// every other Film, including one loaded before Film Stock existed, prints in color.
+    func testPrintProcessFollowsTheFilmStock() throws {
+        XCTAssertEqual(PhotoPrintProcess(filmStock: .blackAndWhite), .silverGelatin)
+        XCTAssertEqual(PhotoPrintProcess(filmStock: .color), .color)
+        XCTAssertEqual(PhotoPrintProcess(filmStock: nil), .color)
+        XCTAssertEqual(try Film(camera: CameraCatalog.mediumFormat6x6, title: "Roll", filmStock: .blackAndWhite).printProcess, .silverGelatin)
+        XCTAssertEqual(try Film(camera: CameraCatalog.mediumFormat6x6, title: "Roll", filmStock: .color).printProcess, .color)
+        for camera in CameraCatalog.all where camera.medium == .photo && camera.filmStocks.isEmpty {
+            XCTAssertEqual(try Film(camera: camera, title: "Roll").printProcess, .color, camera.displayName)
+        }
     }
 
     private func pixels(_ data: Data) throws -> [UInt8] {

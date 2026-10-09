@@ -73,6 +73,8 @@ public enum FilmDomainError: Error, Equatable, Sendable {
     case wrongCameraMedium
     case movieOrientationRequired
     case movieOrientationNotAllowed
+    case filmStockRequired
+    case filmStockNotOffered
     case captureAlreadyComplete
     case noSavedCapturesForEarlyCompletion
     case earlyCompletionUnsupportedForInstant
@@ -96,6 +98,10 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
     public private(set) var isArchived: Bool
     public let loadedAt: Date
     public let movieOrientation: MovieOrientation?
+    /// The Film Stock confirmed at Load Film, fixed for the Film: nothing changes it mid-Film or after Development
+    /// (ADR 0014). Nil on a Camera that offers none, and on a 6×6 or 16mm Film loaded before Film Stock existed,
+    /// whose stored record has no value and which develops as color.
+    public let filmStock: FilmStock?
     public private(set) var completionState: CompletionState
     public private(set) var developmentState: DevelopmentState
     public private(set) var captures: [CaptureRecord]
@@ -105,13 +111,20 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         camera: CameraPackage,
         title: String,
         loadedAt: Date = Date(),
-        movieOrientation: MovieOrientation? = nil
+        movieOrientation: MovieOrientation? = nil,
+        filmStock: FilmStock? = nil
     ) throws {
         if camera.medium == .movie, movieOrientation == nil {
             throw FilmDomainError.movieOrientationRequired
         }
         if camera.medium == .photo, movieOrientation != nil {
             throw FilmDomainError.movieOrientationNotAllowed
+        }
+        // Load Film confirms a Film Stock wherever the Camera offers one, and only there.
+        if let filmStock {
+            guard camera.filmStocks.contains(filmStock) else { throw FilmDomainError.filmStockNotOffered }
+        } else if !camera.filmStocks.isEmpty {
+            throw FilmDomainError.filmStockRequired
         }
 
         self.id = id
@@ -120,6 +133,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         self.isArchived = false
         self.loadedAt = loadedAt
         self.movieOrientation = movieOrientation
+        self.filmStock = filmStock
         self.completionState = .open
         self.developmentState = .notStarted
         self.captures = []

@@ -173,6 +173,69 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "Instant-card-darkroom-dodge-burn")
     }
 
+    /// PRD 2.1 slice 3 (CAM-16, DEV-11, DRK-10): a 6×6 Film on the black-and-white Film Stock names it on the Film
+    /// screen and develops gray prints, and its Darkroom offers chemical toning beside contrast, crop and Dodge/Burn, with
+    /// no color filtration. A sepia-toned print is saved and shown on the Photo and Film screens and in the Journal.
+    func testBlackAndWhite6x6PrintTakesChemicalToning() throws {
+        let app = launch(arguments: ["--medium-format", "--black-and-white", "--hide-inspection-bar"] + Self.sourceArguments)
+        openFilm(app)
+        XCTAssertTrue(app.staticTexts["Black and white Film Stock"].exists)
+        let open = app.buttons["Open photo 1"]
+        XCTAssertTrue(open.waitForExistence(timeout: 20))
+        snapshot(app, "BW-6x6-film-screen")
+        open.tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
+        app.buttons["Darkroom"].tap()
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
+        for tool in ["Exposure", "Contrast", "Crop", "Dodge / Burn", "Chemical toning"] { XCTAssertTrue(app.buttons[tool].exists, tool) }
+        XCTAssertFalse(app.buttons["Filtration"].exists, "Filtration is for color prints")
+        app.buttons["Chemical toning"].tap()
+        let toner = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Chemical toning,")).firstMatch
+        for _ in 0..<3 where !toner.exists { app.swipeUp() }
+        XCTAssertTrue(toner.waitForExistence(timeout: 5), "The toner picker")
+        toner.tap()
+        let sepia = app.buttons["Sepia"]
+        XCTAssertTrue(sepia.waitForExistence(timeout: 5))
+        sepia.tap()
+        XCTAssertTrue(app.sliders["Toning amount"].waitForExistence(timeout: 5))
+        let save = app.buttons["Save"]
+        expectation(for: NSPredicate(format: "isEnabled == true"), evaluatedWith: save)
+        waitForExpectations(timeout: 30)
+        snapshot(app, "BW-6x6-darkroom-sepia")
+        save.tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 1)
+        snapshot(app, "BW-6x6-photo-sepia")
+        app.navigationBars["Photo 1"].buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 1)
+        snapshot(app, "BW-6x6-film-screen-sepia")
+        app.navigationBars["Private synthetic Film"].buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 1)
+        snapshot(app, "BW-6x6-journal")
+    }
+
+    /// PRD 2.1 slice 3 (DEV-11): a 16mm Film on the black-and-white Film Stock names it and develops a gray Movie.
+    func testBlackAndWhite16mmFilmShowsItsDevelopedMovie() throws {
+        let app = launch(arguments: ["--movie", "--black-and-white", "--hide-inspection-bar"] + Self.sourceArguments)
+        openFilm(app)
+        XCTAssertTrue(app.staticTexts["Black and white Film Stock"].exists)
+        let player = app.descendants(matching: .any)["developed-movie-player"]
+        XCTAssertTrue(player.waitForExistence(timeout: 60))
+        Thread.sleep(forTimeInterval: 2)
+        snapshot(app, "BW-16mm-developed-movie")
+    }
+
+    /// A natural still and silent movie for screenshots, when the run supplies them (TEST_RUNNER_PHOTO_SOURCE and
+    /// TEST_RUNNER_MOVIE_SOURCE); the generated fixtures otherwise.
+    private static var sourceArguments: [String] {
+        let environment = ProcessInfo.processInfo.environment
+        return [("--photo-source", "PHOTO_SOURCE"), ("--movie-source", "MOVIE_SOURCE")].flatMap { flag, key in
+            environment[key].map { [flag, $0] } ?? []
+        }
+    }
+
     /// The Darkroom lays out without overlap, clipping or lost margins for each Photo Camera on the smallest supported
     /// iPhone, at the default and the largest text size. At rest the whole print, an Instant card included, sits below the
     /// navigation bar and inside the screen, scaled to the space the controls leave; the controls clear the reset button;
@@ -185,9 +248,16 @@ final class PopulatedWorkflowTests: XCTestCase {
     func testDarkroomFitsADisposablePrintAtTheLargestSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: true) }
     func testDarkroomFitsA6x6PrintAtTheDefaultSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: false) }
     func testDarkroomFitsA6x6PrintAtTheLargestSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: true) }
+    func testDarkroomFitsABlackAndWhite6x6PrintAtTheDefaultSize() throws {
+        assertDarkroomFits("--medium-format", label: "6x6-black-and-white", largest: false, blackAndWhite: true)
+    }
+    func testDarkroomFitsABlackAndWhite6x6PrintAtTheLargestSize() throws {
+        assertDarkroomFits("--medium-format", label: "6x6-black-and-white", largest: true, blackAndWhite: true)
+    }
 
-    private func assertDarkroomFits(_ mode: String, label: String, largest: Bool) {
+    private func assertDarkroomFits(_ mode: String, label: String, largest: Bool, blackAndWhite: Bool = false) {
         var arguments = [mode]
+        if blackAndWhite { arguments.append("--black-and-white") }
         if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         let app = launch(arguments: arguments)
         openFilm(app)
@@ -213,7 +283,8 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(print.frame.height, 100, "\(name): the print is not squeezed away")
         // The controls, at rest: full size, in the side margins, clear of the reset button.
         let margin: CGFloat = 16
-        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Dodge / Burn"].map({ app.buttons[$0] }) where control.exists {
+        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn", "Chemical toning"].map({ app.buttons[$0] })
+        where control.exists {
             XCTAssertGreaterThanOrEqual(control.frame.minX, margin - 2, "\(name): \(control.label) keeps its left margin")
             XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX - margin + 2, "\(name): \(control.label) keeps its right margin")
         }

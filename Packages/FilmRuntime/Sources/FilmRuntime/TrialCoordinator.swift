@@ -47,30 +47,31 @@ public actor TrialCoordinator {
     /// The single new-Film entitlement decision production executes. An active subscription
     /// loads a subscription Film and leaves this iPhone's Trial untouched; otherwise the Film
     /// uses the Trial through `start`, which refuses a Trial in progress or already consumed.
-    public func load(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil,
+    public func load(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil, filmStock: FilmStock? = nil,
                      subscription: SubscriptionAccess) async throws -> Film {
         switch subscription {
         case .active:
             return try repository.createFilm(camera: camera, title: title, movieOrientation: orientation,
-                access: .subscription)
+                filmStock: filmStock, access: .subscription)
         case .notPurchased:
-            return try await start(camera: camera, title: title, orientation: orientation)
+            return try await start(camera: camera, title: title, orientation: orientation, filmStock: filmStock)
         case .expired:
             // PRD section 18 open question 7: whether a lapsed subscriber who never used the
             // Trial still gets it is undecided. Provisional default pending the captain: yes.
-            return try await start(camera: camera, title: title, orientation: orientation)
+            return try await start(camera: camera, title: title, orientation: orientation, filmStock: filmStock)
         }
     }
 
     /// Loads a Film on this iPhone's Trial. Production reaches it only through `load`.
-    public func start(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil) async throws -> Film {
+    public func start(camera: CameraPackage, title: String, orientation: MovieOrientation? = nil,
+                      filmStock: FilmStock? = nil) async throws -> Film {
         await enter(); defer { leave() }
         try await reconcileLocked()
         let record = try store.ensureDeviceRecord()
         switch try currentState() {
         case .unused:
             return try repository.createFilm(camera: camera, title: title, movieOrientation: orientation,
-                access: .trial(originDevice: record.deviceID))
+                filmStock: filmStock, access: .trial(originDevice: record.deviceID))
         case let .emptyFilmInProgress(id): throw EntitlementDenial.currentDeviceTrialAlreadyInProgress(id)
         case .consumed: throw EntitlementDenial.currentDeviceTrialConsumed
         }

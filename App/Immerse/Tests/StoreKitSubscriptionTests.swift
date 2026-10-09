@@ -155,7 +155,7 @@ final class StoreKitSubscriptionTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         let store = try store()
         _ = try await store.purchase(productID: month)
-        let paid = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic paid roll", orientation: .portrait)
+        let paid = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic paid roll", orientation: .portrait, filmStock: .color)
         XCTAssertEqual(try model.repository.filmAccess(filmID: paid.id), .subscription)
         let transaction = try XCTUnwrap(session.allTransactions().first)
         let revocationDelivered = expectation(description: "StoreKit delivers verified fixture revocation")

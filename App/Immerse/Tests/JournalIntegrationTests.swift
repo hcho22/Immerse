@@ -167,11 +167,11 @@ final class JournalIntegrationTests: XCTestCase {
 
     func testNewMovieFilmRowMatchesTheLoadScreenCapacity() throws {
         for camera in [CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
-            let film = try Film(camera: camera, title: "Synthetic reel", movieOrientation: .landscape)
+            let film = try Film(camera: camera, title: "Synthetic reel", movieOrientation: .landscape, filmStock: camera.defaultFilmStock)
             XCTAssertEqual("\(film.remainingLabel.dropLast(" left".count)) of film", camera.capacityLabel)
             XCTAssertEqual("\(film.remainingSpokenLabel.dropLast(" left".count)) of film", camera.capacitySpokenLabel)
         }
-        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
+        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape, filmStock: .color)
         XCTAssertEqual(film.remainingLabel, "2:47 left")
         XCTAssertEqual(film.remainingSpokenLabel, "2 minutes 47 seconds left")
         XCTAssertEqual(CameraCatalog.cinema16mm.capacitySpokenLabel, "2 minutes 47 seconds of film")
@@ -180,7 +180,7 @@ final class JournalIntegrationTests: XCTestCase {
     }
 
     func testRecordingLineCountsDownFromTheRestingLineOnceASecond() throws {
-        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape)
+        let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape, filmStock: .color)
         XCTAssertEqual(film.remainingLabel(recordedFor: 0), film.remainingLabel)
         XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:47 left")
         XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:46 left")
@@ -202,20 +202,30 @@ final class JournalIntegrationTests: XCTestCase {
     /// PRD 2.1 sections 6.1 and 6.2 as Load Film shows them: what each Camera does, how it develops, and never a maker
     /// or film name (ADR 0015). The 6×6 is spoken as "6 by 6" wherever its name is shown.
     func testLoadFilmCopyFollowsPRD21AndNeverNamesAFormatReference() {
-        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map { ($0.id, "\($0.controlsLabel). \($0.lookLabel)") })
+        let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map { ($0.id, "\($0.controlsLabel). \($0.lookLines.joined(separator: ". "))") })
         XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
         XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
         XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("saturated"))
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
         XCTAssertTrue(copy[.super8HomeMovie]!.contains("Strong") && copy[.super8HomeMovie]!.contains("18 frames"))
         XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))
+        // The two Cameras with a Film Stock describe both looks (PRD 2.1 sections 6.1 and 6.2).
+        XCTAssertTrue(copy[.mediumFormat6x6]!.contains("Color: natural, warm color")
+                      && copy[.mediumFormat6x6]!.contains("Black and white: high contrast and distinct grain"))
+        // The 16mm keeps main's line until CAM-17 renders the glow per Film Stock.
+        XCTAssertTrue(copy[.cinema16mm]!.contains("highlight glow"))
+        for camera in CameraCatalog.all where camera.filmStocks.isEmpty {
+            XCTAssertFalse(copy[camera.id]!.localizedCaseInsensitiveContains("black and white"), camera.displayName)
+        }
+        XCTAssertEqual(FilmStock.allCases.map(\.label), ["Color", "Black and white"])
         XCTAssertNotNil(CameraCatalog.mediumFormat6x6.viewfinderNote)
         XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("reversed left to right"))
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 { XCTAssertNil(camera.viewfinderNote, camera.displayName) }
         let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
                          "Vision3", "Double-X", "Eastman", "500C"]
         for camera in CameraCatalog.all {
-            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.lookLabel, camera.viewfinderNote ?? ""]
+            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.viewfinderNote ?? ""] + camera.lookLines
+                + camera.filmStocks.map(\.label)
             for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }
         }
     }
@@ -238,7 +248,7 @@ final class JournalIntegrationTests: XCTestCase {
     /// for a 6×6 Film as well as a typed one, wherever the title is shown (the Journal row and the Film screen's title).
     func testFilmTitlesKeepTheirTextAndAreSpokenWithSixBySix() throws {
         let medium = CameraCatalog.mediumFormat6x6
-        let suggested = try Film(camera: medium, title: medium.suggestedTitle(roll: 1))
+        let suggested = try Film(camera: medium, title: medium.suggestedTitle(roll: 1), filmStock: .color)
         XCTAssertEqual(suggested.title, "6×6 - Roll #01")
         assertShown(suggested.title, spokenAs: "6 by 6 - Roll #01")
         let typed = try Film(camera: CameraCatalog.disposable1990s, title: "Square 6×6 prints")
@@ -246,7 +256,7 @@ final class JournalIntegrationTests: XCTestCase {
         assertShown(typed.title, spokenAs: "Square 6 by 6 prints")
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
             let film = try Film(camera: camera, title: camera.suggestedTitle(roll: 12),
-                                movieOrientation: camera.medium == .movie ? .portrait : nil)
+                                movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock)
             assertShown(film.title, spokenAs: film.title)
         }
     }
@@ -334,15 +344,20 @@ final class JournalIntegrationTests: XCTestCase {
     }
 
     func testLoadSheetDescribesTheEntitlementThatLoadingWillUse() {
-        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, medium: .photo, subscriptionsAvailable: true),
+        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, camera: CameraCatalog.disposable1990s, subscriptionsAvailable: true),
                        "This Film is included in your subscription. Your Camera cannot change after loading.")
-        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, medium: .movie, subscriptionsAvailable: true),
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, camera: CameraCatalog.super8HomeMovie, subscriptionsAvailable: true),
                        "The first saved capture uses this iPhone's Trial. Your Camera and Movie Orientation cannot change after loading.")
         let consumed = DeviceTrialState.consumed(record: DeviceTrialConsumptionRecord(filmID: UUID(), consumedAt: Date()))
-        XCTAssertEqual(LoadCopy.note(access: .expired, trial: consumed, medium: .photo, subscriptionsAvailable: true),
+        XCTAssertEqual(LoadCopy.note(access: .expired, trial: consumed, camera: CameraCatalog.instant1970s, subscriptionsAvailable: true),
                        "This iPhone's Trial is used. A subscription is required to load another Film. Your Camera cannot change after loading.")
-        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: nil, medium: .photo, subscriptionsAvailable: true),
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: nil, camera: CameraCatalog.disposable1990s, subscriptionsAvailable: true),
                        "Your Camera cannot change after loading.")
+        // Load Film fixes the Film Stock on the two Cameras that offer one (ADR 0014).
+        XCTAssertEqual(LoadCopy.note(access: .active, trial: .unused, camera: CameraCatalog.mediumFormat6x6, subscriptionsAvailable: true),
+                       "This Film is included in your subscription. Your Camera and Film Stock cannot change after loading.")
+        XCTAssertEqual(LoadCopy.note(access: .notPurchased, trial: .unused, camera: CameraCatalog.cinema16mm, subscriptionsAvailable: true),
+                       "The first saved capture uses this iPhone's Trial. Your Camera, Film Stock and Movie Orientation cannot change after loading.")
     }
 
     func testLoadSheetNeverSuggestsSubscribingInABuildWithoutSubscriptions() throws {
@@ -351,10 +366,10 @@ final class JournalIntegrationTests: XCTestCase {
         let model = try JournalModel(root: root)
         XCTAssertFalse(model.billing.configured)
         let consumed = DeviceTrialState.consumed(record: DeviceTrialConsumptionRecord(filmID: UUID(), consumedAt: Date()))
-        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: consumed, medium: .photo,
+        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: consumed, camera: CameraCatalog.instant1970s,
                                      subscriptionsAvailable: model.billing.configured),
                        "This iPhone's Trial is used. Subscriptions are not available in this build. Your Camera cannot change after loading.")
-        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: .emptyFilmInProgress(filmID: UUID()), medium: .movie,
+        XCTAssertEqual(LoadCopy.note(access: model.billing.access, trial: .emptyFilmInProgress(filmID: UUID()), camera: CameraCatalog.super8HomeMovie,
                                      subscriptionsAvailable: model.billing.configured),
                        "This iPhone's Trial Film is already loaded. Open or delete it first. Your Camera and Movie Orientation cannot change after loading.")
     }
@@ -437,7 +452,7 @@ final class JournalIntegrationTests: XCTestCase {
         let kept = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
                                                    title: "Synthetic kept roll", access: .subscription)
         let deleted = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6,
-                                                      title: "Synthetic deleted roll", access: .subscription)
+                                                      title: "Synthetic deleted roll", filmStock: .color, access: .subscription)
         let files = try CapturedMediaFiles(directory: model.repository.captureStagingDirectory(filmID: kept.id))
         _ = try files.savePhoto(syntheticPhoto(), id: UUID())
         // Another owner deletes a Film once the Journal has listed it, before its pending-save check.
