@@ -24,6 +24,7 @@ LOOK_SOURCE = os.path.join(ROOT, "Packages/RenderCore/Sources/RenderCore/FilmLoo
 BOARDS = [
     {
         "id": "disposable",
+        "pairs": {("disposable1990s", None): [("disposable-02", "flash-01"), ("disposable-01", "flash-02"), ("disposable-04", "day-02"), ("disposable-06", "day-01")]},
         "name": "1990s Disposable",
         "cameras": [("disposable1990s", None)],
         "references": ["disposable"],
@@ -42,6 +43,7 @@ BOARDS = [
     },
     {
         "id": "instant",
+        "pairs": {("instant1970s", None): [("instant-02", "highlights-01"), ("instant-01", "day-02"), ("instant-03", "day-01")]},
         "name": "1970s Instant",
         "cameras": [("instant1970s", None)],
         "references": ["instant"],
@@ -59,6 +61,7 @@ BOARDS = [
     },
     {
         "id": "6x6",
+        "pairs": {("mediumFormat6x6", "color"): [("6x6-color-02", "skin-03"), ("6x6-color-03", "skin-01"), ("6x6-color-04", "day-01")], ("mediumFormat6x6", "blackAndWhite"): [("6x6-bw-06", "day-02"), ("6x6-bw-01", "highlights-03"), ("6x6-bw-05", "night-01")]},
         "name": "6×6 Medium Format",
         "cameras": [("mediumFormat6x6", "color"), ("mediumFormat6x6", "blackAndWhite")],
         "references": ["6x6-color", "6x6-bw"],
@@ -76,6 +79,7 @@ BOARDS = [
     },
     {
         "id": "super8",
+        "pairs": {("super8HomeMovie", None): [("super8-ternus1977-still-01", "day-02"), ("super8-phucat-still-01", "day-01"), ("super8-frame-01", "skin-01")]},
         "name": "1960s Super 8 Home Movie",
         "cameras": [("super8HomeMovie", None)],
         "references": ["super8", "dust"],
@@ -93,6 +97,7 @@ BOARDS = [
     },
     {
         "id": "16mm",
+        "pairs": {("cinema16mm", "color"): [("16mm-color-still-02", "day-02"), ("halation-02", "highlights-03"), ("16mm-color-still-01", "tungsten-skin-01")], ("cinema16mm", "blackAndWhite"): [("16mm-bw-still-03", "day-02"), ("16mm-bw-still-02", "highlights-01"), ("16mm-bw-mattebox-still-02", "day-01")]},
         "name": "16mm Cinema",
         "cameras": [("cinema16mm", "color"), ("cinema16mm", "blackAndWhite")],
         "references": ["16mm-color", "16mm-bw", "halation"],
@@ -115,6 +120,10 @@ BOARDS = [
 ]
 
 STOCK_NAMES = {None: "", "color": "Color", "blackAndWhite": "Black and white"}
+REFERENCE_GROUPS = {"disposable": "Single-use camera prints", "instant": "1970s integral prints", "6x6-color": "6×6 on the color stock",
+                    "6x6-bw": "6×6 on the black-and-white stock", "super8": "Super 8 home movies",
+                    "16mm-color": "Motion picture color negative", "16mm-bw": "Black-and-white motion picture film",
+                    "halation": "Highlight halation", "dust": "Dust and hair in the gate"}
 SCENE_LABELS = {"day": "Day", "flash": "Flash", "night": "Night or dim, no flash", "skin": "Skin tones",
                 "highlights": "Bright highlights", "video": "Moving scene", "tungsten": "Warm indoor light"}
 
@@ -132,10 +141,10 @@ def run(*args):
     subprocess.run(args, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def copy_image(source, destination, edge=1600):
+def copy_image(source, destination, edge=1400):
     """A JPEG copy at most `edge` pixels on its long side."""
     os.makedirs(os.path.dirname(destination), exist_ok=True)
-    run("sips", "-s", "format", "jpeg", "-s", "formatOptions", "90", "-Z", str(edge), source, "--out", destination)
+    run("sips", "-s", "format", "jpeg", "-s", "formatOptions", "84", "-Z", str(edge), source, "--out", destination)
 
 
 def copy_clip(source, destination):
@@ -168,11 +177,12 @@ STYLE = """
   * { box-sizing: border-box; letter-spacing: 0; }
   body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
   header, main, footer { width: min(1320px, 100%); margin: auto; padding: 24px; }
-  header { border-bottom: 1px solid var(--line); }
+  header { padding-bottom: 0; }
   .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
   h1 { margin: 0; font: 38px/1.15 Georgia, serif; }
   h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
-  h3 { font-size: 18px; margin: 0 0 8px; }
+  h3 { font: 21px/1.3 Georgia, serif; margin: 28px 0 8px; }
+  h4 { font-size: 17px; margin: 0 0 8px; }
   p { margin: 8px 0 14px; max-width: 90ch; }
   .muted, small { color: var(--muted); }
   .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
@@ -185,7 +195,10 @@ STYLE = """
   .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   figure { margin: 0; min-width: 0; }
-  figure img, figure video { display: block; width: 100%; height: auto; background: var(--surround); }
+  figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
+  .pair figure img, .pair figure video { height: 520px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
   figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
   .tag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--green); border: 1px solid var(--green);
          border-radius: 999px; padding: 1px 8px; margin-right: 6px; }
@@ -204,6 +217,7 @@ STYLE = """
     header, main, footer { padding: 20px 16px; }
     h1 { font-size: 30px; }
     .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
     .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   }
 """
@@ -215,7 +229,9 @@ def build(board, renders, sources, output, round_number):
         shutil.rmtree(directory)
     os.makedirs(directory)
     files = renders["files"]
-    scene_entries = {entry["id"]: entry for entry in sources if entry["role"] == "scene"}
+    credits = {entry["id"]: entry for entry in sources if entry["role"] == "scene"}
+    scene_entries = {scene["id"]: credits.get(scene.get("credit"), {})
+                     for scene in renders["photoScenes"] + renders.get("movieScenes", [])}
     photo_scenes = [scene for scene in renders["photoScenes"]]
     movie_scenes = renders.get("movieScenes", [])
     body = []
@@ -244,7 +260,7 @@ def build(board, renders, sources, output, round_number):
                 return entry
         return None
 
-    def place(entry_path, name, edge=1600):
+    def place(entry_path, name, edge=1400):
         destination = os.path.join(directory, name)
         if entry_path.endswith(".mov"):
             copy_clip(os.path.join(renders["root"], entry_path), destination)
@@ -255,9 +271,31 @@ def build(board, renders, sources, output, round_number):
     # Scenes, one section per Film Stock.
     for camera, stock in board["cameras"]:
         stock_name = STOCK_NAMES[stock]
-        heading = board["name"] + (" · %s Film Stock" % stock_name if stock else "")
+        heading = "%s Film Stock" % stock_name if stock else "Scenes"
         body.append('<section><h2>%s</h2>' % esc(heading))
+        pairs = board.get("pairs", {}).get((camera, stock), [])
+        if pairs:
+            references_by_id = {entry["id"]: entry for entry in sources if entry["role"] == "reference"}
+            body.append('<h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference '
+                        'format beside a scene of the same kind developed by the app. The subjects differ; judge color, '
+                        'contrast, grain and the format\'s imperfections.</p>')
+            for reference_id, scene_id in pairs:
+                reference = references_by_id[reference_id]
+                developed = rendered(camera, stock, scene_id, "developed")
+                slug = "%s-%s" % (stock or "look", scene_id)
+                reference_name = "ref-%s.jpg" % reference_id
+                copy_image(reference["local_path"], os.path.join(directory, reference_name))
+                body.append('<div class="row two pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s<br>'
+                            '<small>%s</small></figcaption></figure>' % (reference_name, esc(reference.get("title")),
+                                                                       esc(reference.get("title")), credit(reference)))
+                body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
+                            'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug),
+                                                                                    esc(scene_entries.get(scene_id, {}).get("title", scene_id))))
+        body.append('<h3>Every scene</h3>')
         for scene in photo_scenes:
+            # The recorded warm light matters only to the 16mm's color stock, which keeps a fixed daylight balance.
+            if scene.get("category") == "tungsten" and (camera, stock) != ("cinema16mm", "color"):
+                continue
             source_entry = scene_entries.get(scene["id"], {})
             label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
             source = rendered("source", None, scene["id"], "source")
@@ -265,17 +303,21 @@ def build(board, renders, sources, output, round_number):
             previous = rendered(camera, stock, scene["id"], "previous")
             crop = rendered(camera, stock, scene["id"], "crop")
             slug = "%s-%s" % (stock or "look", scene["id"])
-            body.append('<div class="scene"><h3><span class="tag">%s</span>%s</h3>' % (esc(label), esc(source_entry.get("title", scene["id"]))))
-            body.append('<div class="row four">')
+            title = source_entry.get("title", scene["id"])
+            if scene.get("light"):
+                title += " (marked as recorded under %s K light, as warm household bulbs give)" % scene["light"].split(",")[0]
+            body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4>' % (esc(label), esc(title)))
+            body.append('<div class="row">')
             body.append('<figure><img src="%s" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> '
                         '<small>%s</small></figcaption></figure>' % (place(source["path"], "scene-%s.jpg" % scene["id"]), credit(source_entry)))
             body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> '
                         '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), developed["seed"]))
-            body.append('<figure><img src="%s" alt="Developed with treatment version 2"><figcaption><strong>Before: version 2</strong> '
-                        '<small>the provisional shared look</small></figcaption></figure>' % place(previous["path"], "%s-v2.jpg" % slug))
             body.append('<figure><img src="%s" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> '
                         '<small>grain and softness as developed</small></figcaption></figure>' % place(crop["path"], "%s-crop.jpg" % slug, 640))
             body.append("</div>")
+            body.append('<details><summary>Compare with version 2, the provisional shared look it replaces</summary><div class="row">'
+                        '<figure><img src="%s" alt="Developed with treatment version 2" loading="lazy"><figcaption>Version 2</figcaption></figure>'
+                        '</div></details>' % place(previous["path"], "%s-v2.jpg" % slug))
             prints = [entry for entry in files if entry["camera"] == camera and entry["scene"] == scene["id"] and entry["kind"] == "print"]
             if prints:
                 body.append('<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">')
@@ -291,7 +333,7 @@ def build(board, renders, sources, output, round_number):
                 continue
             label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
             slug = "%s-%s" % (stock or "look", scene["id"])
-            body.append('<div class="scene"><h3><span class="tag">%s</span>%s</h3><div class="row two">' % (esc(label), esc(source_entry.get("title", scene["id"]))))
+            body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4><div class="row two">' % (esc(label), esc(source_entry.get("title", scene["id"]))))
             source_clip = os.path.join(renders["sourcesRoot"], scene["file"])
             source_name = "scene-%s.mp4" % scene["id"]
             if not os.path.exists(os.path.join(directory, source_name)):
@@ -305,20 +347,25 @@ def build(board, renders, sources, output, round_number):
         body.append("</section>")
 
     # Reference imagery.
-    body.append('<section><h2>Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format '
+    body.append('<section><h2>All Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format '
                 'Reference or the closest openly licensed equivalent, as credited. Judge the character, not the subject.</p>')
     for category in board["references"]:
         references = [entry for entry in sources if entry["role"] == "reference" and entry["category"] == category]
         if not references:
             continue
-        body.append('<h3>%s</h3><div class="refs">' % esc(category))
+        body.append('<h3>%s</h3><div class="refs">' % esc(REFERENCE_GROUPS.get(category, category)))
         for entry in references:
-            name = "ref-%s.jpg" % entry["id"]
-            copy_image(entry["local_path"], os.path.join(directory, name))
             notes = " ".join(text for text in [entry.get("description"), entry.get("notes")] if text)
-            body.append('<figure><img src="%s" alt="%s" loading="lazy"><figcaption><strong>%s</strong><br><small>%s</small><br>'
-                        '<small>%s</small></figcaption></figure>' % (name, esc(entry.get("title")), esc(entry.get("title")),
-                                                                   credit(entry), esc(notes)))
+            if entry["local_path"].endswith(".mov"):
+                name = "ref-%s.mp4" % entry["id"]
+                copy_clip(entry["local_path"], os.path.join(directory, name))
+                media = '<video src="%s" controls loop muted playsinline preload="metadata"></video>' % name
+            else:
+                name = "ref-%s.jpg" % entry["id"]
+                copy_image(entry["local_path"], os.path.join(directory, name))
+                media = '<img src="%s" alt="%s" loading="lazy">' % (name, esc(entry.get("title")))
+            body.append('<figure>%s<figcaption><strong>%s</strong><br><small>%s</small><br>'
+                        '<small>%s</small></figcaption></figure>' % (media, esc(entry.get("title")), credit(entry), esc(notes)))
         body.append("</div>")
     body.append("</section>")
 
@@ -336,8 +383,8 @@ def build(board, renders, sources, output, round_number):
                 '<button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span>'
                 '</form></section>' % (board["id"], esc(board["name"])))
     body.append("</main>")
-    body.append('<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Sources and licenses: '
-                '<code>SOURCES.md</code> beside the boards.</p></footer>')
+    body.append('<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and '
+                'reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>')
 
     script = """
 <script>
@@ -396,6 +443,8 @@ def main():
     for entry in sources:
         if entry.get("local_path") and not os.path.isabs(entry["local_path"]):
             entry["local_path"] = os.path.join(os.path.abspath(args.sources), entry["local_path"])
+    os.makedirs(args.output, exist_ok=True)
+    shutil.copy(os.path.join(args.sources, "SOURCES.md"), os.path.join(args.output, "SOURCES.md"))
     for board in BOARDS:
         if args.only and board["id"] not in args.only:
             continue

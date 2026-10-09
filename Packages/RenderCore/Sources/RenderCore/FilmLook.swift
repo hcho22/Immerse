@@ -46,13 +46,13 @@ enum FilmLook {
     /// background fall away. No light leaks, red-eye, dust or scratches (PRD 2.1 section 6.1).
     static let disposable = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.055, saturation: 1.18,
-            tone: ToneCurve(contrast: 1.22, black: 0.02, white: 0.99),
-            highlights: RGB(0.006, 0.003, -0.006),
+            warmth: 0.05, saturation: 1.08,
+            tone: ToneCurve(contrast: 1.1, midtones: 0.92, black: 0.03, white: 0.99),
+            highlights: RGB(0.004, 0.003, -0.006),
             grain: Grain(amplitude: 7, size: 0.0007, chroma: 0.3, shadows: 0.6)
         )),
         lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.6),
-        flash: Flash(falloff: 0.9, contrast: 0.15)
+        flash: Flash(falloff: 0.9, contrast: 0.1)
     )
 
     /// 1970s Instant. Format Reference: the original 1970s integral print, fresh from the camera. Brilliant, warm,
@@ -75,8 +75,8 @@ enum FilmLook {
     /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.035, saturation: 0.98,
-            tone: ToneCurve(contrast: 1.05, midtones: 0.98, black: 0.012, white: 0.985),
+            warmth: 0.04, saturation: 0.92,
+            tone: ToneCurve(contrast: 1.04, midtones: 0.96, black: 0.02, white: 0.975),
             shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(0.008, 0.004, -0.006),
             grain: Grain(amplitude: 1.6, size: 0.0004, chroma: 0.15)
         )),
@@ -88,7 +88,7 @@ enum FilmLook {
     static let mediumFormatBlackAndWhite = Treatment(
         emulsion: .monochrome(MonochromeEmulsion(
             spectral: RGB(0.30, 0.55, 0.15),
-            tone: ToneCurve(contrast: 1.45, black: 0.015, white: 0.985),
+            tone: ToneCurve(contrast: 1.5, black: 0.012, white: 0.985),
             grain: Grain(amplitude: 6.5, size: 0.0006)
         )),
         lens: Lens(edgeDarkening: 0.2)
@@ -99,12 +99,12 @@ enum FilmLook {
     /// the gate, each present from capture or first showing rather than from age (PRD 2.1 section 6.2).
     static let super8 = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.03, saturation: 1.3,
-            tone: ToneCurve(contrast: 1.4, midtones: 1.05, white: 0.99),
+            warmth: 0.05, saturation: 1.15,
+            tone: ToneCurve(contrast: 1.3, midtones: 1.03, white: 0.99),
             shadows: RGB(0, -0.002, 0.006),
             grain: Grain(amplitude: 3, size: 0.0012, chroma: 0.25)
         )),
-        lens: Lens(edgeSoftness: 0.0015, edgeDarkening: 0.45),
+        lens: Lens(softness: 0.0009, edgeSoftness: 0.0015, edgeDarkening: 0.45),
         gate: Gate(jitter: 0.0035, weave: 0.002, weavePeriod: 1.7, flicker: 0.06, dust: 0.6, hair: 0.5)
     )
 
@@ -119,8 +119,8 @@ enum FilmLook {
             grain: Grain(amplitude: 4, size: 0.0009, chroma: 0.3, shadows: 0.3),
             fixedBalance: 5500
         )),
-        halation: Halation(threshold: 0.6, radius: 0.006, strength: 0.35, color: RGB(1, 0.18, 0.05)),
-        lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.5),
+        halation: Halation(threshold: 0.55, radius: 0.008, strength: 0.6, color: RGB(1, 0.18, 0.05)),
+        lens: Lens(softness: 0.0004, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
 
@@ -129,11 +129,11 @@ enum FilmLook {
     static let cinemaBlackAndWhite = Treatment(
         emulsion: .monochrome(MonochromeEmulsion(
             spectral: RGB(0.29, 0.56, 0.15),
-            tone: ToneCurve(contrast: 1.35, black: 0.01, white: 0.985),
+            tone: ToneCurve(contrast: 1.4, black: 0.01, white: 0.985),
             grain: Grain(amplitude: 5.5, size: 0.001)
         )),
-        halation: Halation(threshold: 0.6, radius: 0.006, strength: 0.3, color: RGB(1, 1, 1)),
-        lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.5),
+        halation: Halation(threshold: 0.55, radius: 0.008, strength: 0.45, color: RGB(1, 1, 1)),
+        lens: Lens(softness: 0.0004, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
 }

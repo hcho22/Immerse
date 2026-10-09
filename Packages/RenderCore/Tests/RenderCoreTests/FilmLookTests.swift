@@ -94,7 +94,8 @@ final class FilmLookTests: XCTestCase {
             }
             for color in Self.patches {
                 let developed = develop(color)
-                XCTAssertGreaterThan(chroma(developed), chroma(color) * 0.85, "\(name): \(color) keeps its color strength")
+                // A stock may be gentler in color than the capture, but never washed out.
+                XCTAssertGreaterThan(chroma(developed), chroma(color) * 0.8, "\(name): \(color) keeps its color strength")
                 XCTAssertLessThan(hueDistance(developed, color), 20, "\(name): \(color) keeps its hue")
             }
         }
