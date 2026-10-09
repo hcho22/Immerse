@@ -13,8 +13,6 @@ public enum NativeRenderError: Error, Equatable {
     case writerTimedOut
     /// An Instant master that is not the card-sized print every developed Instant exposure is.
     case instantMasterWithoutCard
-    /// A Film Stock the Camera does not offer (ADR 0014).
-    case filmStockNotOffered
 }
 
 /// Versioned engineering preset. DEC-04/DEC-11 visual and output approval remains open.
@@ -32,7 +30,6 @@ public enum NativePhotoRenderer {
     /// A nil Film Stock, a Camera without one or a Film loaded before Film Stock existed, develops as color.
     public static func develop(source: URL, camera: CameraPackage, seed: UInt64, filmStock: FilmStock? = nil) throws -> Data {
         guard camera.medium == .photo else { throw NativeRenderError.wrongMedium }
-        try FilmLook.require(filmStock, offeredBy: camera)
         guard var image = CIImage(contentsOf: source, options: [.applyOrientationProperty: true]),
               !image.extent.isEmpty else { throw NativeRenderError.unreadableSource }
         image = normalize(image)
@@ -264,11 +261,6 @@ enum FilmLook {
     private static func curve(toe: (Double, Double), shoulder: (Double, Double)) -> [CGPoint] {
         [CGPoint(x: 0, y: 0), CGPoint(x: toe.0, y: toe.1), CGPoint(x: 0.5, y: 0.5),
          CGPoint(x: shoulder.0, y: shoulder.1), CGPoint(x: 1, y: 1)]
-    }
-
-    /// Rejects a Film Stock the Camera does not offer, so no other Camera reaches a black-and-white treatment.
-    static func require(_ filmStock: FilmStock?, offeredBy camera: CameraPackage) throws {
-        if let filmStock, !camera.filmStocks.contains(filmStock) { throw NativeRenderError.filmStockNotOffered }
     }
 
     static func apply(to source: CIImage, camera: CameraID, filmStock: FilmStock?, seed: UInt64, frame: Int = 0) throws -> CIImage {

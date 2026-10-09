@@ -106,24 +106,6 @@ final class FilmStockRenderTests: XCTestCase {
         XCTAssertEqual(colorFrames.map(\.bytes), framesWithout.map(\.bytes))
     }
 
-    func testNoOtherCameraTakesAFilmStock() async throws {
-        for camera in CameraCatalog.all where camera.filmStocks.isEmpty {
-            for stock in FilmStock.allCases {
-                if camera.medium == .photo {
-                    XCTAssertThrowsError(try NativePhotoRenderer.develop(source: photo, camera: camera, seed: 1, filmStock: stock)) {
-                        XCTAssertEqual($0 as? NativeRenderError, .filmStockNotOffered, camera.displayName)
-                    }
-                } else {
-                    do {
-                        try await NativeMovieRenderer.developClip(source: movie, destination: root.appendingPathComponent("x.mov"),
-                            camera: camera, filmStock: stock, seed: 1, orientation: .landscape, longEdge: 320)
-                        XCTFail("\(camera.displayName) developed a \(stock) Film Stock")
-                    } catch { XCTAssertEqual(error as? NativeRenderError, .filmStockNotOffered, camera.displayName) }
-                }
-            }
-        }
-    }
-
     /// A black-and-white 16mm Film's Developed Clip is monochrome in every frame, keeps the Camera's 24 frames per
     /// second and its length, and grains each frame afresh; the Developed Movie assembled from such clips is too.
     func testBlackAndWhiteSixteenMillimeterClipIsMonochromeInEveryFrame() async throws {

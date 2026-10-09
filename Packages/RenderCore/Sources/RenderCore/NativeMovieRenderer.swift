@@ -11,7 +11,6 @@ public enum NativeMovieRenderer {
         orientation: MovieOrientation, longEdge: Int = 1920
     ) async throws {
         guard camera.medium == .movie else { throw NativeRenderError.wrongMedium }
-        try FilmLook.require(filmStock, offeredBy: camera)
         guard longEdge > 0, longEdge % 16 == 0 else { throw NativeRenderError.invalidMovie }
         let asset = AVURLAsset(url: source)
         let tracks = try await asset.loadTracks(withMediaType: .video)
