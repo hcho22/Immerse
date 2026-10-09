@@ -79,14 +79,18 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 : arguments.contains("--developed-photo") ? "developed-photo"
                 : arguments.contains("--medium-format") ? "medium-format" : "early-photo"
             let movie = mode == "movie", instant = mode.hasPrefix("instant")
-            let camera = movie ? CameraCatalog.cinema16mm : instant ? CameraCatalog.instant1970s
+            // `--super8` films the Movie on the Super 8 instead of the 16mm.
+            let camera = movie ? (arguments.contains("--super8") ? CameraCatalog.super8HomeMovie : CameraCatalog.cinema16mm)
+                : instant ? CameraCatalog.instant1970s
                 : mode == "medium-format" ? CameraCatalog.mediumFormat6x6 : CameraCatalog.disposable1990s
             let model = scenario.model
             // `--black-and-white` loads the 6×6 or 16mm Film on the black-and-white Film Stock; otherwise a Camera with a
             // Film Stock gets Load Film's default, color.
             let filmStock = arguments.contains("--black-and-white") ? FilmStock.blackAndWhite : camera.defaultFilmStock
+            // `--landscape-movie` locks the Movie landscape, as its clips are; otherwise it is portrait.
+            let orientation: MovieOrientation = arguments.contains("--landscape-movie") ? .landscape : .portrait
             let film = try model.repository.createFilm(camera: camera, title: "Private synthetic Film",
-                movieOrientation: movie ? .portrait : nil, filmStock: filmStock, access: .subscription)
+                movieOrientation: movie ? orientation : nil, filmStock: filmStock, access: .subscription)
             if mode != "empty" {
                 let fixtures = directory.appendingPathComponent("Fixtures")
                 var settings = RenderFixtureSettings.defaultExperimental
