@@ -63,22 +63,24 @@ This is simulator and software evidence only; physical-iPhone behavior stays def
 
 - `audit(_:name:for:exceptions:)`, `enterFilmTitle` and `deleteFilm(titled:)` moved to `UITestSupport.swift` so the Film Stock tests share them; `deleteFilm` waits for the Film screen's actions rather than its navigation bar, which labels a 6×6 title "6 by 6".
 - `FilmStockUITests` loads with the title Load Film suggests: on an iPhone SE (3rd generation) the keyboard a typed title raises covers the Load Film button, and typing there sometimes did not land in the field in time.
-- `testBlackAndWhiteGrainIsDistinctOnAnEvenScene` checks that black-and-white grain is over twice the color stock's and clearly visible (above 4 levels; the provisional values give about 8 against the color stock's about 2), not a tuned number.
+- `testBlackAndWhiteGrainIsDistinctOnAnEvenScene` checks that black-and-white grain is over twice the color stock's and clearly visible (above 4 levels), not a tuned number; measured with the fixed renderer after the black-and-white tone and grain fix (ffb54db), the provisional values give about 8 against the color stock's about 2 (the first build gave about 6).
 - SwiftPM can keep a stale build of `Probes/TrialCommitStudy` after `Film` gains a field: its process-exit test then crashed with signal 11 until `swift package --package-path Probes/TrialCommitStudy clean`, after which all 17 tests pass (AGENTS.md already warns of stale build plans).
 
 ## Screenshots
 
 Under `prd-2-slice-3-film-stock/`, from `FilmStockUITests` and the populated Journal harness (black-and-white tests run with the natural still and movie of `Evidence/AssetReview`), each on an iPhone 17 Pro (`iphone17pro`) and an iPhone SE (3rd generation) (`iphonese`), iOS 26.5, in light and dark: 44 files.
+The 20 `bw-*` files were captured with the first build, before the black-and-white tone and grain fix (ffb54db): they show its too-bright black-and-white tones, not the fixed look, and are pending a refresh with the fixed renderer.
+The other 24 files show no developed picture, so the fix does not change them.
 
 | File stem | Shows |
 | --- | --- |
 | `6x6-load-color`, `6x6-load-black-and-white`, `16mm-load-color`, `16mm-load-black-and-white` | Load Film with each Film Stock selected |
 | `6x6-film-screen-black-and-white`, `16mm-film-screen-black-and-white` | The loaded Film's screen naming "Black and white Film Stock" |
-| `bw-6x6-film-screen` | Developed black-and-white 6×6 prints on the Film screen |
-| `bw-6x6-darkroom-sepia` | The Darkroom with Chemical toning (sepia) on a black-and-white print; no Filtration tool |
-| `bw-6x6-journal` | The Journal card with the toned print beside an untoned one |
-| `bw-6x6-darkroom-fit-largest` | The black-and-white Darkroom at the largest text size, fitting with five tools |
-| `bw-16mm-developed-movie` | A frame of a black-and-white 16mm Developed Movie on the Film screen |
+| `bw-6x6-film-screen` | Developed black-and-white 6×6 prints on the Film screen (before the fix; pending refresh) |
+| `bw-6x6-darkroom-sepia` | The Darkroom with Chemical toning (sepia) on a black-and-white print; no Filtration tool (before the fix; pending refresh) |
+| `bw-6x6-journal` | The Journal card with the toned print beside an untoned one (before the fix; pending refresh) |
+| `bw-6x6-darkroom-fit-largest` | The black-and-white Darkroom at the largest text size, fitting with five tools (before the fix; pending refresh) |
+| `bw-16mm-developed-movie` | A frame of a black-and-white 16mm Developed Movie on the Film screen (before the fix; pending refresh) |
 
 ## Deferred to CAM-17: the 16mm's stock-specific glow wording
 
@@ -111,11 +113,11 @@ The configuration shipped here is the passing one, with the 6×6's per-stock lin
 
 ## Verification
 
-On 2026-10-08 and 2026-10-09 (Xcode 26.5, iOS 26.5 simulators, iPhone 17 Pro unless noted):
+On 2026-10-08 and 2026-10-09 (Xcode 26.5, iOS 26.5 simulators, iPhone 17 Pro unless noted), with the first build, before the black-and-white tone and grain fix (ffb54db), unless noted:
 
-- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 31, FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
+- Packages: FilmDomain 23, MediaCatalog 4, RenderFixtures 2, RenderCore 31 (rerun after the fix), FilmPersistence 37, NativeAdapters 39, EntitlementCore 6 and FilmRuntime 52 tests pass; `Probes/TrialCommitStudy` 17 and `Probes/DevelopmentProcessExit` 3 pass; `Probes/AssetReviewGenerator`, `ExportPrivacyHarness` and `ReceiptScenarioHarness` build.
 - Hosted `ImmerseTests` (without the StoreKit tests, which need the iOS 26.2 fixture runtime): 40 pass.
 - `ImmerseUITests`, the whole suite in light: 65 pass; `JournalFlowTests`, `MovieCapacityUITests` and `FilmStockUITests` again in dark, as `Scripts/validate-local.sh` reruns them: 14 pass. The two 16mm largest-text audit tests passed 3 of 3 in light and 3 of 3 in dark on the shipped configuration.
 - `FilmStockUITests` also passes on an iPhone SE (3rd generation) in light and dark.
-- Populated Journal harness: all 23 tests pass; its black-and-white tests and Darkroom fit tests also pass in dark and on the iPhone SE in light and dark.
+- Populated Journal harness: all 23 tests pass; its black-and-white tests and Darkroom fit tests also pass in dark and on the iPhone SE in light and dark. Not rerun since the fix; its black-and-white screenshots are pending refresh.
 - The color masters and Movie frames of all five Cameras hash the same before and after the change.
