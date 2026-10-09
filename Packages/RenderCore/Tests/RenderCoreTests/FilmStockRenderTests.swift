@@ -67,7 +67,7 @@ final class FilmStockRenderTests: XCTestCase {
         XCTAssertLessThanOrEqual(mono.largestChannelSpread, 2)
         XCTAssertGreaterThan(mono.centerDeviation, color.centerDeviation * 2,
                              "Grain on an even scene (\(mono.centerDeviation) vs \(color.centerDeviation))")
-        // Clearly visible on its own, not just next to the color stock's very fine grain; the provisional values give about 6.
+        // Clearly visible on its own, not just next to the color stock's very fine grain; the provisional values give about 8.
         XCTAssertGreaterThan(mono.centerDeviation, 4)
     }
 
