@@ -22,7 +22,7 @@ final class FilmProcessorTests: XCTestCase {
 
         for (camera, capacity) in cases {
             let repository = try FilmRepository(rootURL: root.appendingPathComponent(camera.id.rawValue))
-            let film = try repository.createFilm(camera: camera, title: camera.displayName)
+            let film = try repository.createFilm(camera: camera, title: camera.displayName, filmStock: camera.defaultFilmStock)
             for expected in 1...capacity {
                 let saved = try repository.savePhotoCapture(filmID: film.id, sourceData: source)
                 XCTAssertEqual(saved.savedCaptureCount, expected)
@@ -97,7 +97,7 @@ final class FilmProcessorTests: XCTestCase {
 
         for (camera, capacity) in cases {
             let repository = try FilmRepository(rootURL: root.appendingPathComponent(camera.id.rawValue))
-            let film = try repository.createFilm(camera: camera, title: camera.displayName, movieOrientation: .landscape)
+            let film = try repository.createFilm(camera: camera, title: camera.displayName, movieOrientation: .landscape, filmStock: camera.defaultFilmStock)
             let first = try repository.saveMovieClip(filmID: film.id, sourceData: source,
                 durationSeconds: capacity - MovieFrames.seconds(8), orientation: .landscape)
             XCTAssertEqual(first.remainingMovieFrames, 8)
@@ -235,7 +235,7 @@ final class FilmProcessorTests: XCTestCase {
         let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixture, settings: settings)
         let source = try Data(contentsOf: fixture.appendingPathComponent("synthetic-developed-movie.mov"))
         let repository = try FilmRepository(rootURL: root)
-        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .portrait)
+        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .portrait, filmStock: .color)
         for _ in 0..<2 {
             try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: manifest.movie.durationSeconds, orientation: .landscape)
         }

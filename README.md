@@ -17,17 +17,19 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
 | 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; brilliant, warm, saturated color and soft detail |
-| 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; borderless square picture, natural, warm color, very fine grain and gentle contrast |
+| 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; strong, rich color, fine grain, an unsteady frame, flicker, dust and hair |
-| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; visible grain, a red highlight glow, minor jitter and weave, soft dark edges |
+| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |
 
 A developed Instant print is a 2048 x 2048 picture on a clean white card (2282 x 2774 in all), in the proportions of the original 1970s integral print.
 The card is part of the developed master, so the Journal, the Darkroom and Save Developed to Photos all show it.
 Darkroom adjustments (print exposure, contrast, filtration, Dodge/Burn) reach the picture only and leave the card white, and an Instant print has no crop.
 Films loaded before a package changes keep the package they locked, so a 16mm Film loaded earlier keeps its old name and 165 seconds.
+The 6×6 Medium Format and the 16mm Cinema load on a color or black-and-white Film Stock (ADR 0014), chosen at Load Film and fixed for the Film; Films loaded before Film Stock existed have none and develop in color.
+A black-and-white Film develops as its own monochrome treatment, prints and Developed Movie alike, and its prints take chemical toning in the Darkroom ([`Evidence/NativeApp/prd-2-slice-3-film-stock.md`](Evidence/NativeApp/prd-2-slice-3-film-stock.md)).
 
 Gap: this table is the build, not all of PRD version 2.1.
-The looks themselves are not retuned yet, and the Film Stock choice (color or black-and-white) on the 6×6 and the 16mm Cinema is not built, so no Film is black-and-white and chemical toning is not offered.
+The looks themselves are not retuned yet (slice 4): the black-and-white treatments' tone, contrast and grain are provisional, neither Film Stock of the 16mm Cinema has its highlight glow yet, and the 16mm Load Film line still says "a red highlight glow" for both stocks until that slice renders the glow (CAM-17).
 PRD 2.0's capture behavior (slice 2) is built, as the table shows; developed exposures are never reversed.
 The Disposable's fixed exposure (EV 12), its low-light cue threshold and the fixed lens position are provisional pending DEC-04 and a physical-phone check ([`Evidence/NativeApp/capture-behavior-prd2-slice2.md`](Evidence/NativeApp/capture-behavior-prd2-slice2.md)).
 The tracker's "PRD 2.0 implementation slices" give the order.
@@ -39,8 +41,8 @@ Movie capture uses a 4:3 native format that is provisional pending DEC-04.
 
 All screens live in [`App/Immerse/Sources`](App/Immerse/Sources).
 
-- **Load.** Start a Film from the Journal, pick a Camera, name the Film, and for Movie Cameras choose Portrait or Landscape.
-  The Camera and Movie orientation cannot change after loading.
+- **Load.** Start a Film from the Journal, pick a Camera, name the Film, on the 6×6 and the 16mm choose Color or Black and white, and for Movie Cameras choose Portrait or Landscape.
+  The Camera, Film Stock and Movie orientation cannot change after loading.
   The Camera permission is requested here and in Open Camera, not at launch.
 - **Capture.** Open Camera shows a live viewfinder, remaining exposures or M:SS time, and a shutter that saves each capture privately inside the app.
   Saves that were interrupted are recovered at launch or resumed with Resume Save.
@@ -53,7 +55,7 @@ All screens live in [`App/Immerse/Sources`](App/Immerse/Sources).
   Films can be renamed and moved to and from the Archive.
 - **Darkroom.** Revealed photos open in a Darkroom with exposure, contrast grades 0 to 5, color filtration, crop and point-based dodge and burn, saved as reversible edits with Reset to Original.
   Every Photo Film gets the contrast grades, Instant prints included, but an Instant print has no crop, so its square picture and white card stay whole.
-  Chemical toning exists in code but only for a silver-gelatin print process; every current Camera uses the provisional color process, so toning is not offered today.
+  Black-and-white 6×6 prints are silver gelatin: they take chemical toning (sepia or selenium) and no color filtration, which stays for color prints.
 - **Discard.** A single photo or Movie clip can be discarded after reveal, with no refund of exposures or time.
   Discarding a clip rebuilds the Movie from the surviving clips without redevelopment (ADR 0007); a Movie whose clips are all discarded keeps numbered placeholders with no playback or export (DEC-09).
 - **Photos export.** "Save Developed to Photos" and "Originals" use add-only Photos access, requested only when you export.
@@ -78,7 +80,7 @@ There is no sync or app-managed backup.
 
 These are reversible engineering defaults in the code, not approved decisions:
 
-- **Render presets.** Development and Darkroom output use a versioned `film-look-1-provisional` treatment pending DEC-04 and DEC-11.
+- **Render presets.** Development and Darkroom output use a versioned `film-look-2-provisional` treatment pending DEC-04 and DEC-11; it adds the black-and-white treatments, keeps every color treatment of `film-look-1-provisional` unchanged and still renders captures assigned that earlier version.
 - **Assets.** [`App/Immerse/Sources/Resources/MediaCatalog.json`](App/Immerse/Sources/Resources/MediaCatalog.json) is empty pending DEC-05, so the build shows no Camera samples and no built-in soundtracks (the Soundtrack picker stays hidden).
   Draft review material is in [`Evidence/AssetReview`](Evidence/AssetReview/README.md) and is not production clearance.
 - **Pricing.** No prices or live product IDs exist pending DEC-02.

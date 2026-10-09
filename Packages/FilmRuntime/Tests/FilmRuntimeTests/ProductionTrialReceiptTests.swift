@@ -61,7 +61,7 @@ final class ProductionTrialReceiptTests: XCTestCase {
                 let calls = ReceiptCalls()
                 let store = KeychainDeviceTrialStore(calls: calls)
                 let coordinator = try TrialCoordinator(root: app, store: store, projectionFailure: fault)
-                let film = try await coordinator.start(camera: camera, title: "Projection", orientation: camera.medium == .movie ? .portrait : nil)
+                let film = try await coordinator.start(camera: camera, title: "Projection", orientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock)
                 let receiver = try await coordinator.receiver(filmID: film.id)
                 let event = event(camera, fixtures)
                 do { try await receiver.commit(event); XCTFail("Expected fault") }
@@ -133,7 +133,7 @@ final class ProductionTrialReceiptTests: XCTestCase {
         let coordinator = try TrialCoordinator(root: root, store: KeychainDeviceTrialStore(calls: calls), checkpoint: {
             if $0 == .receiptResolved { await gate.suspend() }
         })
-        let film = try await coordinator.start(camera: CameraCatalog.cinema16mm, title: "Delete pending", orientation: .portrait)
+        let film = try await coordinator.start(camera: CameraCatalog.cinema16mm, title: "Delete pending", orientation: .portrait, filmStock: .color)
         let receiver = try await coordinator.receiver(filmID: film.id)
         let event = event(CameraCatalog.cinema16mm, fixtures)
         let save = Task { try await receiver.commit(event) }
@@ -236,7 +236,7 @@ final class ProductionTrialReceiptTests: XCTestCase {
         let legacy = try await coordinator.start(camera: CameraCatalog.disposable1990s, title: "Legacy obligation")
         let repository = try FilmRepository(rootURL: root)
         try repository.savePhotoCapture(filmID: legacy.id, sourceData: Data(contentsOf: fixtures.photo))
-        let existing = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Existing subscription rights", access: .subscription)
+        let existing = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Existing subscription rights", filmStock: .color, access: .subscription)
         calls.configure(applies: false, status: errSecNotAvailable, unreadableAfterWrite: true)
         do { _ = try await coordinator.state(); XCTFail("Legacy Trial unresolved") } catch { }
         let receiver = try await coordinator.receiver(filmID: existing.id)

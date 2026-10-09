@@ -64,14 +64,17 @@ extension CameraPackage {
         }
     }
 
-    /// How a Film from this Camera develops. Names a look only in descriptive terms, never a maker or a film.
-    var lookLabel: String {
+    /// How a Film from this Camera develops, one Load Film row per line; the 6×6 gives each Film Stock's look a line of
+    /// its own. Names a look only in descriptive terms, never a maker or a film.
+    var lookLines: [String] {
         switch id {
-        case .disposable1990s: "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"
-        case .instant1970s: "Brilliant, warm, saturated color and soft detail"
-        case .mediumFormat6x6: "Borderless square picture, natural, warm color, very fine grain and gentle contrast"
-        case .super8HomeMovie: "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"
-        case .cinema16mm: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"
+        case .disposable1990s: ["Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
+        case .instant1970s: ["Brilliant, warm, saturated color and soft detail"]
+        case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
+                                "Black and white: high contrast and distinct grain"]
+        case .super8HomeMovie: ["Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"]
+        // Main's 16mm line until CAM-17 renders the glow per Film Stock (Evidence/NativeApp/prd-2-slice-3-film-stock.md).
+        case .cinema16mm: ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"]
         }
     }
 
@@ -80,6 +83,16 @@ extension CameraPackage {
         id == .mediumFormat6x6
             ? "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."
             : nil
+    }
+}
+
+extension FilmStock {
+    /// The choice as Load Film and the Film screen name it; never a Format Reference's film (ADR 0015).
+    var label: String {
+        switch self {
+        case .color: "Color"
+        case .blackAndWhite: "Black and white"
+        }
     }
 }
 

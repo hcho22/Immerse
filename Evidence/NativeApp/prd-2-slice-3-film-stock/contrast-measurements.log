@@ -1,0 +1,37 @@
+16mm Load screen Film Stock choice and look lines at rest, 2026-10-08. First measured with the choice after a single look line, Xcode 26.5, iPhone 17 Pro simulator iOS 26.5, largest text size (AX XXXL).
+Pose: AtRestFilmStockTests.swift.txt (run temporarily, not part of the suite), each element scrolled between the navigation
+bar plus 16 pt (bar bottom edge 189 pt) and 80 pt above the screen bottom (874 pt), as 052 defines "at rest". At this size
+the look line is 589 pt tall and cannot fit that band; it was measured with its top 5.7 pt into the 16 pt margin, clear of the bar.
+Tool: ../qa13-measurement-049/contrast.swift.txt on the element's reported frame in the 3x screenshot.
+
+Rest-light | Film Stock heading | y=720.7 h=63.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Color (selected) | y=712.7 h=71.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Black and white | y=650.7 h=133.3 | bg #EFEFF0 text #000000 contrast 18.27:1 visible 100%
+Rest-light | Single look line (first wording) | y=194.7 h=589.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-dark | Film Stock heading | y=720.7 h=63.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Color (selected) | y=712.7 h=71.3 | bg #48484A text #FFFFFF contrast 9.12:1 visible 100%
+Rest-dark | Black and white | y=650.7 h=133.3 | bg #3E3E42 text #FFFFFF contrast 10.65:1 visible 100%
+Rest-dark | Single look line (first wording) | y=194.7 h=589.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+
+Audit pose with the Film Stock choice first placed after the look line (JournalFlowTests 16mm-title-accessibility-largest,
+held drags until the Film title heading is whole on screen): light flagged "Color" {{34.0, 91.0}, {334.0, 71.3}}, half under
+the navigation bar (bar bottom 189 pt); dark flagged "Color" and the "Film Stock" heading {{32.0, 17.7}, {233.3, 63.3}}; and one
+later dark run stopped 73 pt further, with "Color" {{34.0, 19.7}} wholly and "Black and white" {{34.0, 93.0}, {334.0, 133.3}}
+half under the bar. All measure at least 9.12:1 at rest (above), so each finding was the bar's blur, but which short control
+rests there changed from run to run. Before slice 3 the 589 pt look line filled that region whatever the pose.
+Decision: the choice now sits before the look lines (it also reads as choose, then see what each stock develops like).
+The single 589 pt 16mm look line then caused an elementless clipped-text finding at the Load Film button audit, so the look
+became two short lines; the second, "Highlight glow: red on color, neutral on black and white", rests under the bar at the
+title pose, and the one exception names it.
+
+Rest measurements after the split (same method, same day), with the choice before the look lines:
+Rest-light | Look line 1 "Visible grain, minor jitter and weave, soft dark edges" | y=504.7 h=279.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100%
+Rest-light | Glow line "Highlight glow: red on color, neutral on black and white" | y=442.7 h=341.3 | bg #FFFFFF text #000000 contrast 21.00:1 visible 100% | rest-16mm-glow-largest-light.png
+Rest-light | Film Stock heading 21.00:1, Color 21.00:1, Black and white 18.27:1 (as above)
+Rest-dark | Look line 1 | y=504.7 h=279.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100%
+Rest-dark | Glow line | y=442.7 h=341.3 | bg #2C2C2E text #FFFFFF contrast 13.94:1 visible 100% | rest-16mm-glow-largest-dark.png
+Rest-dark | Film Stock heading 13.94:1, Color 9.12:1, Black and white 10.65:1 (as above)
+
+Outcome (2026-10-09): the glow line and the Film Stock exceptions were withdrawn with the stock-specific 16mm wording (firstmate's
+option A, prd-2-slice-3-film-stock.md, "Deferred to CAM-17"). The 16mm keeps main's look line, main's audit poses and main's one
+exception; the Film Stock choice sits before that line, and these measurements remain as the record of the investigation.

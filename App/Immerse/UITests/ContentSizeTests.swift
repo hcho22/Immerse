@@ -1,12 +1,12 @@
 import XCTest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
-/// light or dark appearance: the empty Journal, the Camera catalog, the Super 8 and 16mm Load Film screens and
-/// Settings in landscape. It stands in for Xcode's Dynamic Type audit, which grows the text in place and flagged
-/// correctly resizing text from run to run (Evidence/NativeApp/qa13-audit-exceptions-052.md and
-/// Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's text must grow by at least 4 percent at every
-/// step from L to AX XXXL, never shrink below L, and never be clipped by its frame or the screen. Navigation titles
-/// are system text and are not included.
+/// light or dark appearance: the empty Journal, the Camera catalog, the Super 8 and 16mm Load Film screens (the 16mm
+/// with its Film Stock choice, the control the 6×6 shows too) and Settings in landscape. It stands in for Xcode's
+/// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
+/// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
+/// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
+/// its frame or the screen. Navigation titles are system text and are not included.
 @MainActor
 final class ContentSizeTests: XCTestCase {
     /// A text element to measure, found in an accessibility snapshot by type and identifier, exact label or label prefix.
@@ -110,6 +110,9 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 47 seconds of film"),
         Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, 24 frames per second"),
         Target(name: "16mm Look", type: .staticText, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
+        Target(name: "Film Stock", type: .staticText, label: "Film Stock"),
+        Target(name: "Color", type: .button, label: "Color"),
+        Target(name: "Black and white", type: .button, label: "Black and white"),
     ]
 
     /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.

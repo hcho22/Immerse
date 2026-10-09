@@ -1,0 +1,62 @@
+import XCTest
+
+/// Diagnostic only, kept outside the test suite (Evidence/NativeApp/prd-2-slice-3-film-stock.md).
+/// Opens the 16mm Load screen at the largest text size, as the 16mm title audit does, then scrolls the Film Stock
+/// heading and options and the look lines fully between the navigation bar and the bottom
+/// edge band in short held drags in the left margin, and records each frame with a screenshot, for measurement with
+/// ../qa13-measurement-049/contrast.swift.txt.
+@MainActor
+final class AtRestFilmStockTests: XCTestCase {
+    func testRecordFilmStockOptionsAtRest() throws {
+        let app = XCUIApplication.shippingGate()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        app.buttons["start-film"].tap()
+        let camera = app.buttons["camera-cinema16mm"]
+        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        camera.tap()
+        XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
+        let elements = [("look", app.staticTexts["Visible grain, minor jitter and weave, soft dark edges"]),
+                        ("glow", app.staticTexts["Highlight glow: red on color, neutral on black and white"]),
+                        ("heading", app.staticTexts["Film Stock"]), ("color", app.buttons["Color"]),
+                        ("black-and-white", app.buttons["Black and white"])]
+        for (name, element) in elements {
+            let top = app.navigationBars.firstMatch.frame.maxY + 16
+            let bottom = app.windows.firstMatch.frame.maxY - 80
+            rest(app, element, top: top, bottom: bottom)
+            XCTAssertTrue(element.frame.minY >= top && element.frame.maxY <= bottom, "\(name) at rest")
+            let lines = ["window \(app.windows.firstMatch.frame)", "navigation \(app.navigationBars.firstMatch.frame)",
+                         "\(name) frame=\(element.frame)"]
+            let text = XCTAttachment(string: lines.joined(separator: "\n"))
+            text.name = "rest-\(name)-frames"
+            text.lifetime = .keepAlways
+            add(text)
+            let shot = XCTAttachment(screenshot: app.screenshot())
+            shot.name = "rest-\(name)"
+            shot.lifetime = .keepAlways
+            add(shot)
+        }
+    }
+
+    /// Short held drags in the left margin until the element is fully between `top` and `bottom`.
+    private func rest(_ app: XCUIApplication, _ element: XCUIElement, top: CGFloat, bottom: CGFloat) {
+        for _ in 0..<40 {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.5))
+            if !element.exists {
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -100)),
+                            withVelocity: .slow, thenHoldForDuration: 0.3)
+                continue
+            }
+            let frame = element.frame
+            // A drag shorter than about 40 points does not scroll the list.
+            let move: CGFloat = frame.minY < top ? min(100, max(40, top - frame.minY + 20))
+                : frame.maxY > bottom ? -min(100, max(40, frame.maxY - bottom + 20)) : 0
+            if move == 0 { break }
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: move)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        Thread.sleep(forTimeInterval: 1)
+    }
+}

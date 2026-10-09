@@ -83,6 +83,7 @@ actor ReceiptCoordinator {
         }) else { throw StudyError.inProgress }
         return try repository.createFilm(camera: camera, title: "Private receipt study",
             movieOrientation: camera.medium == .movie ? .portrait : nil,
+            filmStock: camera.defaultFilmStock,
             access: .trial(originDevice: record.deviceID))
     }
 

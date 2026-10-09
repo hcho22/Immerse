@@ -141,7 +141,7 @@ final class SoundtrackTests: XCTestCase {
             duration = manifest.movie.durationSeconds
             let source = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-movie.mov"))
             repository = try FilmRepository(rootURL: root)
-            film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Private audio test", movieOrientation: .portrait)
+            film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Private audio test", movieOrientation: .portrait, filmStock: .color)
             for _ in 0..<2 {
                 try repository.saveMovieClip(filmID: film.id, sourceData: source, durationSeconds: duration, orientation: .landscape)
             }

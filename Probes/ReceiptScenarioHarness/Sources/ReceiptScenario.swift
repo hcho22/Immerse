@@ -117,7 +117,7 @@ actor ReceiptScenario {
         }
         saving = true; defer { saving = false }
         let camera = configuration.camera
-        let film = try await owner.start(camera: camera, title: "Synthetic receipt scenario", orientation: camera.medium == .movie ? .portrait : nil)
+        let film = try await owner.start(camera: camera, title: "Synthetic receipt scenario", orientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock)
         manifest.filmID = film.id
         try persistManifest()
         let repository = try FilmRepository(rootURL: root)
@@ -222,7 +222,7 @@ actor ReceiptScenario {
         evidence.record("second-load-requested")
         do {
             let film = try await owner.start(camera: configuration.camera, title: "Unexpected second load",
-                orientation: configuration.camera.medium == .movie ? .portrait : nil)
+                orientation: configuration.camera.medium == .movie ? .portrait : nil, filmStock: configuration.camera.defaultFilmStock)
             evidence.record("second-load-created", ["filmID": film.id.uuidString])
         } catch { evidence.record("second-load-error", ["error": String(describing: error)]); throw error }
     }

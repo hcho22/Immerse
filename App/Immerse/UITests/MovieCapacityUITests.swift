@@ -43,24 +43,7 @@ final class MovieCapacityUITests: XCTestCase {
         camera.tap()
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
-        let field = app.textFields["film-title"]
-        // The field starts with the suggested title, which wraps at the largest sizes. A tap puts the cursor where it
-        // lands, so tap past the end of the last line before deleting the suggestion. That point is on screen only
-        // once the whole field is: a free swipe that coasted short left the field's center hittable but its last line
-        // under the window's bottom edge, and the tap there gave the field no focus.
-        // The Form adds and removes the field's row as it nears the screen, so the field can exist and be gone a moment
-        // later, and reading a missing element's frame fails the test; one snapshot reads both and throws instead.
-        let window = app.windows.firstMatch.frame
-        let onScreen = { (try? field.snapshot()).map { window.contains($0.frame) } ?? false }
-        scrollUp(app, until: onScreen)
-        XCTAssertTrue(onScreen(), "The whole title field is on screen")
-        field.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.9)).tap()
-        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 100) + title)
-        // Typed edits reach the field from the out-of-process keyboard after typeText returns, so wait for them to land.
-        let entered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", title), object: field)
-        guard XCTWaiter().wait(for: [entered], timeout: 10) == .completed else {
-            return XCTFail("The title field holds \"\(field.value as? String ?? "")\" instead of \"\(title)\"")
-        }
+        guard enterFilmTitle(title, app) else { return }
         let load = app.buttons["load-film"]
         for _ in 0..<8 where !load.isHittable { app.swipeUp() }
         defer { deleteFilm(titled: title, app) }
@@ -94,24 +77,6 @@ final class MovieCapacityUITests: XCTestCase {
         XCTAssertTrue(row.label.contains("2 minutes 47 seconds left"), row.label)
         retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
         try app.performAccessibilityAudit(for: .contrast)
-    }
-
-    /// Deletes the Film a test loaded from a fresh launch, whatever screen the test stopped on.
-    private func deleteFilm(titled title: String, _ app: XCUIApplication) {
-        app.terminate()
-        app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
-        guard row.waitForExistence(timeout: 5) else { return }
-        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
-        row.tap()
-        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5))
-        app.buttons["Film actions"].tap()
-        app.buttons["Delete Film"].tap()
-        let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
-        confirm.tap()
-        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
     }
 
     private func retainScreenshot(_ app: XCUIApplication, name: String) {

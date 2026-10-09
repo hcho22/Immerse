@@ -65,6 +65,7 @@ public final class FilmRepository {
         camera: CameraPackage,
         title: String,
         movieOrientation: MovieOrientation? = nil,
+        filmStock: FilmStock? = nil,
         loadedAt: Date = Date(),
         access: FilmAccess = .subscription
     ) throws -> Film {
@@ -72,7 +73,8 @@ public final class FilmRepository {
             camera: camera,
             title: title,
             loadedAt: loadedAt,
-            movieOrientation: movieOrientation
+            movieOrientation: movieOrientation,
+            filmStock: filmStock
         )
         try database.withTransaction {
             if case let .trial(device) = access {

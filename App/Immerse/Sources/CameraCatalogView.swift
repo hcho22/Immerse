@@ -44,9 +44,17 @@ private struct LoadFilmView: View {
     var loaded: (Film) -> Void
     @State private var title = ""
     @State private var orientation = MovieOrientation.portrait
+    /// The Film Stock Load Film confirms, shown and loaded only on the Cameras that offer one (ADR 0014).
+    @State private var filmStock: FilmStock
     @State private var loading = false
     @State private var error: String?
     @State private var samples = false
+
+    init(camera: CameraPackage, loaded: @escaping (Film) -> Void) {
+        self.camera = camera
+        self.loaded = loaded
+        _filmStock = State(initialValue: camera.defaultFilmStock ?? .color)
+    }
 
     var body: some View {
         Group {
@@ -54,7 +62,7 @@ private struct LoadFilmView: View {
             if model.testingUnlock.enabled {
                 form {
                     TestingUnlockNotice()
-                    Text(LoadCopy.fixed(medium: camera.medium))
+                    Text(LoadCopy.fixed(camera: camera))
                         .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
             } else {
@@ -84,7 +92,16 @@ private struct LoadFilmView: View {
                 LabeledContent("Capacity") { camera.capacityText }
                 Text(camera.revealLabel)
                 Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                Text(camera.lookLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                // The choice comes before the look lines, which on the 6×6 say what each Film Stock develops like.
+                if !camera.filmStocks.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Film Stock").fixedSize(horizontal: false, vertical: true)
+                        SegmentedChoice(label: "Film Stock", options: camera.filmStocks.map { ($0, $0.label) }, selection: $filmStock)
+                    }
+                }
+                ForEach(camera.lookLines, id: \.self) { line in
+                    Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                }
                 if let note = camera.viewfinderNote {
                     Text(note).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
@@ -95,7 +112,9 @@ private struct LoadFilmView: View {
                     }.accessibilityElement(children: .combine)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
-                        OrientationChoice(selection: $orientation)
+                        SegmentedChoice(label: "Movie Orientation",
+                                        options: [(MovieOrientation.portrait, "Portrait"), (.landscape, "Landscape")],
+                                        selection: $orientation)
                     }
                 }
             }
@@ -120,7 +139,8 @@ private struct LoadFilmView: View {
                         do {
                             let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
                             let film = try await model.load(camera: camera, title: name.isEmpty ? suggestedTitle : name,
-                                                            orientation: orientation)
+                                                            orientation: orientation,
+                                                            filmStock: camera.filmStocks.isEmpty ? nil : filmStock)
                             loaded(film)
                         } catch {
                             switch error {
@@ -145,7 +165,7 @@ private struct LoadFilmView: View {
 
     @ViewBuilder private var entitlement: some View {
         Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
-        Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, medium: camera.medium,
+        Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, camera: camera,
                            subscriptionsAvailable: model.billing.configured))
             .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
             .accessibilityIdentifier("load-note")
@@ -165,7 +185,7 @@ private struct LoadFilmView: View {
 /// What loading this Film uses and what stays fixed, matching `TrialCoordinator.load` and the
 /// Load Film errors. Builds without subscription products never suggest subscribing.
 enum LoadCopy {
-    static func note(access: SubscriptionAccess, trial: DeviceTrialState?, medium: CameraMedium,
+    static func note(access: SubscriptionAccess, trial: DeviceTrialState?, camera: CameraPackage,
                      subscriptionsAvailable: Bool) -> String {
         let entitlement: String? = if access == .active {
             "This Film is included in your subscription."
@@ -181,49 +201,55 @@ enum LoadCopy {
             case nil: nil
             }
         }
-        return [entitlement, fixed(medium: medium)].compactMap { $0 }.joined(separator: " ")
+        return [entitlement, fixed(camera: camera)].compactMap { $0 }.joined(separator: " ")
     }
 
-    static func fixed(medium: CameraMedium) -> String {
-        medium == .movie ? "Your Camera and Movie Orientation cannot change after loading."
-            : "Your Camera cannot change after loading."
+    /// What Load Film fixes for this Film: the Camera, and the Film Stock and Movie Orientation where it has them.
+    static func fixed(camera: CameraPackage) -> String {
+        switch (camera.filmStocks.isEmpty, camera.medium) {
+        case (true, .photo): "Your Camera cannot change after loading."
+        case (true, .movie): "Your Camera and Movie Orientation cannot change after loading."
+        case (false, .photo): "Your Camera and Film Stock cannot change after loading."
+        case (false, .movie): "Your Camera, Film Stock and Movie Orientation cannot change after loading."
+        }
     }
 }
 
 /// Segmented-style choice whose text follows Dynamic Type; `UISegmentedControl` titles stay at one size.
 /// Its height follows the text, matching the native control's 32 points at the default size.
-private struct OrientationChoice: View {
-    @Binding var selection: MovieOrientation
+private struct SegmentedChoice<Value: Hashable>: View {
+    let label: String
+    let options: [(value: Value, title: String)]
+    @Binding var selection: Value
 
     var body: some View {
-        // One layout keeps both options' identity across text sizes. `ViewThatFits` swapped in a
+        // One layout keeps every option's identity across text sizes. `ViewThatFits` swapped in a
         // separate copy of the buttons when the text grew, which Xcode's Dynamic Type audit reports as
         // text that cannot change size, and it kept the side-by-side copy while "Landscape" broke mid-word.
-        SegmentLayout(spacing: 2) { options }
+        SegmentLayout(spacing: 2) {
+            ForEach(options, id: \.value) { option($0.value, $0.title) }
+        }
         .padding(2)
         .background(Color(uiColor: .tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10))
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("Movie Orientation")
+        .accessibilityLabel(label)
     }
 
-    @ViewBuilder private var options: some View {
-        option(.portrait, "Portrait")
-        option(.landscape, "Landscape")
-    }
-
-    private func option(_ value: MovieOrientation, _ title: String) -> some View {
+    private func option(_ value: Value, _ title: String) -> some View {
         Button { selection = value } label: {
-            Text(title).fixedSize(horizontal: false, vertical: true)
+            // A title that wraps at the larger sizes stays centered in its segment, as a single line is.
+            Text(title).fixedSize(horizontal: false, vertical: true).multilineTextAlignment(.center)
                 .padding(.vertical, 4).frame(maxWidth: .infinity).padding(.horizontal, 8)
-                .background(selection == value ? Self.selectedFill : .clear, in: RoundedRectangle(cornerRadius: 8))
+                .background(selection == value ? segmentSelectedFill : .clear, in: RoundedRectangle(cornerRadius: 8))
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(selection == value ? .isSelected : [])
     }
-
-    private static let selectedFill = Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? .systemGray3 : .systemBackground })
 }
+
+/// The selected segment's fill, as the native segmented control draws it in light and dark.
+private let segmentSelectedFill = Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? .systemGray3 : .systemBackground })
 
 /// Places its subviews side by side in equal widths when each fits on its own unwrapped width, and
 /// stacks them at full width otherwise.

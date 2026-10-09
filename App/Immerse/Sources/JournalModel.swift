@@ -134,7 +134,7 @@ final class JournalModel {
         }
     }
 
-    func load(camera: CameraPackage, title: String, orientation: MovieOrientation) async throws -> Film {
+    func load(camera: CameraPackage, title: String, orientation: MovieOrientation, filmStock: FilmStock? = nil) async throws -> Film {
         guard !initialRecoveryPending else { throw JournalError.operationInProgress }
         // Permission is checked before any Film or Trial activation is written.
         let allowed = cameraAuthorizer.authorizationStatus() == .authorized
@@ -149,7 +149,8 @@ final class JournalModel {
         let film: Film
         do {
             film = try await trial.load(camera: camera, title: title,
-                orientation: camera.medium == .movie ? orientation : nil, subscription: access)
+                orientation: camera.medium == .movie ? orientation : nil,
+                filmStock: filmStock, subscription: access)
         } catch let EntitlementDenial.currentDeviceTrialAlreadyInProgress(id) {
             throw JournalError.trialInProgress(id)
         } catch EntitlementDenial.currentDeviceTrialConsumed {

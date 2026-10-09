@@ -31,7 +31,7 @@ final class CaptureReceiptTests: XCTestCase {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         var repository = try FilmRepository(rootURL: root)
-        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape)
+        let film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic", movieOrientation: .landscape, filmStock: .color)
         let data = Data("native-clip".utf8)
         try repository.saveMovieClip(filmID: film.id, sourceData: data, durationSeconds: 167, orientation: .portrait, captureID: "clip")
         repository = try FilmRepository(rootURL: root)

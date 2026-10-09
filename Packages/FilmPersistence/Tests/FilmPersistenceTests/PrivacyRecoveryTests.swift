@@ -133,7 +133,7 @@ final class PrivacyRecoveryTests: XCTestCase {
         let manager = FailingRemovalFileManager()
         var repository = try FilmRepository(rootURL: root, fileManager: manager)
         let film = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic deleted")
-        let survivor = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic survivor")
+        let survivor = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic survivor", filmStock: .color)
         try repository.savePhotoCapture(filmID: film.id, sourceData: Data("private-source".utf8))
         try repository.savePhotoCapture(filmID: survivor.id, sourceData: Data("survivor".utf8))
         manager.failAtLastPathComponents = [film.id.uuidString]

@@ -19,6 +19,13 @@ public enum RevealRule: String, Codable, Equatable, Sendable {
     case movieDevelopment
 }
 
+/// The color or black-and-white film a 6×6 Medium Format or 16mm Cinema Film is loaded with, chosen at Load Film and
+/// fixed for that Film (ADR 0014). No other Camera offers one.
+public enum FilmStock: String, CaseIterable, Codable, Equatable, Sendable {
+    case color
+    case blackAndWhite
+}
+
 public enum FilmCapacity: Codable, Equatable, Sendable {
     case exposures(Int)
     case seconds(Int)
@@ -47,6 +54,21 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
         self.revealRule = revealRule
         self.supportsBuiltInSoundtrack = supportsBuiltInSoundtrack
     }
+}
+
+extension CameraPackage {
+    /// The Film Stocks Load Film offers for this Camera, color first, or none for a Camera that is a complete package
+    /// (ADR 0014). It follows the Camera, not the stored package, so a package a Film locked before Film Stock
+    /// existed answers the same as today's.
+    public var filmStocks: [FilmStock] {
+        switch id {
+        case .mediumFormat6x6, .cinema16mm: FilmStock.allCases
+        case .disposable1990s, .instant1970s, .super8HomeMovie: []
+        }
+    }
+
+    /// The Film Stock Load Film shows selected until the person chooses: color, where the Camera offers one.
+    public var defaultFilmStock: FilmStock? { filmStocks.first }
 }
 
 public enum CameraCatalog {

@@ -1,3 +1,4 @@
+import FilmDomain
 import Foundation
 
 public struct DarkroomRecipe: Codable, Equatable, Sendable {
@@ -31,11 +32,26 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
     }
 }
 
+/// How a Photo Film's prints are made, which decides the Darkroom's medium-specific controls (PRD 2.1 FR-07): color
+/// prints take filtration, silver gelatin prints from a black-and-white Film take chemical toning, and both take
+/// contrast grades.
 public enum PhotoPrintProcess: String, Codable, Sendable {
     case color
     case silverGelatin
 
+    /// The process a Film's Film Stock makes: silver gelatin for black-and-white, color for everything else,
+    /// including a Film without a Film Stock.
+    public init(filmStock: FilmStock?) {
+        self = filmStock == .blackAndWhite ? .silverGelatin : .color
+    }
+
     public var supportsChemicalToning: Bool { self == .silverGelatin }
+}
+
+extension Film {
+    /// The print process this Film's Film Stock fixed at Load Film. Development and the Darkroom both follow it, so
+    /// nothing else can switch a Film between color and black-and-white.
+    public var printProcess: PhotoPrintProcess { PhotoPrintProcess(filmStock: filmStock) }
 }
 
 public struct ChemicalToning: Codable, Equatable, Sendable {
