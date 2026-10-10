@@ -35,6 +35,11 @@
 > Relationships rules record that a 16mm Cinema Recorded Clip has no per-clip limit that the 6×6 Medium Format's Viewfinder shows the scene reversed left to right, and that each Instant print carries a slight variation in color and density.
 > PRD version 2.0 (2026-10-06), a separate file from version 1.5, carries these decisions, and the Viewfinder rule's list of effects it must not preview was reworded to name effects that v1 Cameras have.
 >
+> **2026-10-10 note (ADR 0016).**
+> On the 1970s Instant's look review board the captain chose a faded look for that Camera: lifted, milky blacks, muted color and age-style tints.
+> It is an exception to the rule below that a Developed Treatment shows its Historical Format as freshly processed (ADR 0013), which still holds for every other Camera, and to the catalog's "brilliant, warm, saturated color" for the Instant.
+> The terms and rules below were not rewritten; read the Instant's look through [ADR 0016](../adr/0016-the-instant-develops-with-a-faded-look-by-the-captains-choice.md).
+>
 > **2026-10-07 note (PRD version 2.1).**
 > The Darkroom rule on contrast changed: every Photo Film, color or black-and-white, may use contrast grades, while chemical toning stays black-and-white only.
 > This reverses the contrast half of the 2026-10-06 decision.

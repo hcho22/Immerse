@@ -367,16 +367,26 @@ def build(board, renders, sources, output, round_number):
                 continue
             label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
             slug = "%s-%s" % (stock or "look", scene["id"])
-            body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4><div class="row two">' % (esc(label), esc(source_entry.get("title", scene["id"]))))
+            body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4><div class="row %s">'
+                        % (esc(label), esc(source_entry.get("title", scene["id"])), "" if alternate else "two"))
             source_clip = os.path.join(renders["sourcesRoot"], scene["file"])
             source_name = "scene-%s.mp4" % scene["id"]
             if not os.path.exists(os.path.join(directory, source_name)):
                 copy_clip(source_clip, os.path.join(directory, source_name))
+            rate = 18 if camera == "super8HomeMovie" else 24
             body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Digital source clip</strong> '
                         '<small>%s</small></figcaption></figure>' % (source_name, credit(source_entry)))
-            body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> '
-                        '<small>seed %s, %s frames per second</small></figcaption></figure>' % (place(clip["path"], "%s.mp4" % slug), clip["seed"],
-                                                                                         18 if camera == "super8HomeMovie" else 24))
+            if alternate:
+                other = alternate_rendered(camera, stock, scene["id"], "clip")
+                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
+                            '<small>Developed Clip, %s frames per second</small></figcaption></figure>'
+                            % (place(clip["path"], "%s.mp4" % slug), esc(renders["primaryLabel"]), rate))
+                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
+                            '<small>Developed Clip, %s frames per second</small></figcaption></figure>'
+                            % (place(other["path"], "%s-b.mp4" % slug, root=alternate["root"]), esc(alternate["label"]), rate))
+            else:
+                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> '
+                            '<small>seed %s, %s frames per second</small></figcaption></figure>' % (place(clip["path"], "%s.mp4" % slug), clip["seed"], rate))
             body.append("</div></div>")
         body.append("</section>")
 

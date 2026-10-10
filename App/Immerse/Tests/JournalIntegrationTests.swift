@@ -207,7 +207,8 @@ final class JournalIntegrationTests: XCTestCase {
         })
         XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
         XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
-        XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("saturated"))
+        // The Instant's faded look is the captain's exception to PRD 2.1 section 6.1's wording (ADR 0016).
+        XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("faded color"))
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
         XCTAssertTrue(copy[.super8HomeMovie]!.contains("Strong") && copy[.super8HomeMovie]!.contains("18 frames"))
         XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))

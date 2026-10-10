@@ -15,17 +15,22 @@ enum TreatmentVersion: String, CaseIterable {
 }
 
 /// Treatment version 3: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections 6.1 to
-/// 6.3; ADRs 0013 to 0015).
+/// 6.3; ADRs 0013 to 0016).
 ///
 /// Each look reproduces its Format Reference as it performed when new: nothing fades, yellows, shifts in dye or wears,
-/// and every imperfection is one the format made at capture or processing (ADR 0013). A Format Reference's name is
-/// internal and stays in these comments; no product string carries it (ADR 0015). Spatial values are fractions of the
-/// developed picture's long edge, so a look is the same at any size.
+/// and every imperfection is one the format made at capture or processing (ADR 0013). The one exception is a Camera in
+/// `fadedByCaptainsChoice`, which the captain chose on its review board to develop with the faded look of surviving
+/// prints (ADR 0016). A Format Reference's name is internal and stays in these comments; no product string carries it
+/// (ADR 0015). Spatial values are fractions of the developed picture's long edge, so a look is the same at any size.
 ///
 /// DEC-04 status: every value below is provisional until the captain approves that Camera's review board (QA-16); the
-/// Instant's contrast and print-to-print variation stay provisional after that, pending a study of preserved 1970s
-/// prints.
+/// Instant's print-to-print variation stays provisional after that, pending a study of preserved 1970s prints.
 enum FilmLook {
+    /// The Cameras whose look is faded rather than fresh, each by the captain's choice on its review board (ADR 0016).
+    /// Every other Camera stays under ADR 0013.
+    static let fadedByCaptainsChoice: Set<CameraID> = [.instant1970s]
+
+
     /// The treatment a capture develops with: one per Camera, and one per Film Stock on the Cameras that offer one. A
     /// Film loaded before Film Stock existed has none and develops in color.
     static func treatment(camera: CameraID, filmStock: FilmStock?) -> Treatment {
@@ -46,27 +51,30 @@ enum FilmLook {
     /// background fall away. No light leaks, red-eye, dust or scratches (PRD 2.1 section 6.1).
     static let disposable = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.05, saturation: 1.08,
-            tone: ToneCurve(contrast: 1.1, midtones: 0.92, black: 0.03, white: 0.99),
-            highlights: RGB(0.004, 0.003, -0.006),
-            grain: Grain(amplitude: 7, size: 0.0007, chroma: 0.3, shadows: 0.6)
+            warmth: 0.055, layers: Layers(greenFromBlue: -0.05), saturation: 1.1,
+            tone: ToneCurve(contrast: 1.1, midtones: 0.88, black: 0.015, white: 0.99),
+            shadows: RGB(-0.004, 0.008, 0.004), highlights: RGB(0.004, 0.003, -0.006),
+            grain: Grain(amplitude: 8, size: 0.0009, chroma: 0.3, shadows: 0.6)
         )),
         lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.6),
         flash: Flash(falloff: 0.9, contrast: 0.1)
     )
 
-    /// 1970s Instant. Format Reference: the original 1970s integral print, fresh from the camera. Brilliant, warm,
-    /// saturated color and soft detail, each print slightly different in color and density, with no uneven-chemistry
-    /// or spread flaws (PRD 2.1 section 6.1). Its contrast and the size of its variation wait on a study of preserved
-    /// 1970s prints (DEC-04).
+    /// 1970s Instant. Format Reference: the original 1970s integral print. By the captain's choice on its review board
+    /// on 2026-10-10 ("faded"), it develops as surviving prints look, not as fresh ones did (ADR 0016, an exception to
+    /// ADR 0013 and to PRD 2.1 section 6.1's "brilliant, warm, saturated color"): lifted, milky blacks, softened
+    /// whites, low contrast, muted color with aqua blues and olive greens, blue in the shadows and yellow in the
+    /// highlights, soft detail and a coarse texture. Each print still differs slightly in color and density, with no
+    /// uneven-chemistry or spread flaws; the size of that variation waits on a study of preserved 1970s prints (DEC-04).
     static let instant = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.05, layers: Layers(redFromGreen: 0.06, greenFromBlue: 0.08), saturation: 1.12,
-            tone: ToneCurve(contrast: 1.0, midtones: 0.9, black: 0.008, white: 0.97),
-            shadows: RGB(0, 0.004, 0.012), highlights: RGB(0.001, 0, -0.002),
-            grain: Grain(amplitude: 3, size: 0.0012, chroma: 0.2)
+            warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
+            saturation: 0.85,
+            tone: ToneCurve(contrast: 0.82, midtones: 0.88, black: 0.13, white: 0.9),
+            shadows: RGB(0, 0.008, 0.03), highlights: RGB(0.012, 0.004, -0.03),
+            grain: Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
         )),
-        lens: Lens(softness: 0.001, edgeSoftness: 0.001, edgeDarkening: 0.35),
+        lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
         printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
     )
 
@@ -75,12 +83,12 @@ enum FilmLook {
     /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.04, saturation: 0.92,
-            tone: ToneCurve(contrast: 1.04, midtones: 0.96, black: 0.02, white: 0.975),
-            shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(0.008, 0.004, -0.006),
-            grain: Grain(amplitude: 1.6, size: 0.0004, chroma: 0.15)
+            warmth: 0.042, tint: 0.006, layers: Layers(redFromGreen: 0.08), saturation: 1.0,
+            tone: ToneCurve(contrast: 1.08, midtones: 0.92, shoulder: 0.06, black: 0.02, white: 0.975),
+            shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(0.003, 0.001, -0.003),
+            grain: Grain(amplitude: 2.2, size: 0.0005, chroma: 0.15)
         )),
-        lens: Lens(edgeDarkening: 0.2)
+        lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
     )
 
     /// 6×6 Medium Format, black-and-white Film Stock. Format Reference: the same camera with Kodak Tri-X 400. High
@@ -100,11 +108,11 @@ enum FilmLook {
     static let super8 = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.05, saturation: 1.15,
-            tone: ToneCurve(contrast: 1.3, midtones: 1.03, white: 0.99),
-            shadows: RGB(0, -0.002, 0.006),
+            tone: ToneCurve(contrast: 1.25, midtones: 1.03, white: 0.99),
+            shadows: RGB(-0.003, 0.004, 0.006), highlights: RGB(0.006, 0.003, -0.006),
             grain: Grain(amplitude: 3, size: 0.0012, chroma: 0.25)
         )),
-        lens: Lens(softness: 0.0009, edgeSoftness: 0.0015, edgeDarkening: 0.45),
+        lens: Lens(softness: 0.0013, edgeSoftness: 0.0015, edgeDarkening: 0.45),
         gate: Gate(jitter: 0.0035, weave: 0.002, weavePeriod: 1.7, flicker: 0.06, dust: 0.6, hair: 0.5)
     )
 
@@ -114,9 +122,10 @@ enum FilmLook {
     /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0, saturation: 1.05,
-            tone: ToneCurve(contrast: 1.12, black: 0.015, white: 0.98),
-            grain: Grain(amplitude: 4, size: 0.0009, chroma: 0.3, shadows: 0.3),
+            warmth: 0, saturation: 0.98,
+            tone: ToneCurve(contrast: 1.06, shoulder: 0.05, black: 0.015, white: 0.98),
+            highlights: RGB(0.005, 0.002, -0.005),
+            grain: Grain(amplitude: 3.2, size: 0.0008, chroma: 0.3, shadows: 0.3),
             fixedBalance: 5500
         )),
         halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
@@ -217,6 +226,9 @@ extension FilmLook {
         var contrast: Double
         /// A power applied to the tone before the curve: above 1 darkens the middle tones and below 1 lightens them.
         var midtones: Double = 1
+        /// A soft shoulder: how far the upper tones are pulled down, as display tone at three-quarter gray, with
+        /// black and white left where they are. Negative film rolls its highlights off gently.
+        var shoulder: Double = 0
         /// The display tones of the print's deepest black and brightest white.
         var black: Double = 0
         var white: Double = 1
@@ -225,7 +237,10 @@ extension FilmLook {
             let x = pow(min(max(tone, 0), 1), midtones)
             guard x > 0, x < 1 else { return black + (white - black) * x }
             let rising = pow(x, contrast)
-            return black + (white - black) * rising / (rising + pow(1 - x, contrast))
+            let curved = rising / (rising + pow(1 - x, contrast))
+            // Largest at three-quarter gray, where the factor is 1, and nothing at black or white.
+            let rolled = curved - shoulder * (256.0 / 27) * curved * curved * curved * (1 - curved)
+            return black + (white - black) * rolled
         }
     }
 

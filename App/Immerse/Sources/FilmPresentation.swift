@@ -70,7 +70,7 @@ extension CameraPackage {
     func lookLines(filmStock: FilmStock?) -> [String] {
         switch id {
         case .disposable1990s: ["Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
-        case .instant1970s: ["Brilliant, warm, saturated color and soft detail"]
+        case .instant1970s: ["Warm, faded color, soft contrast and soft detail"]
         case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
                                 "Black and white: high contrast and distinct grain"]
         case .super8HomeMovie: ["Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"]

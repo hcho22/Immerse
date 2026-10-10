@@ -13,3 +13,4 @@ This is costly to reverse after release, because a Developed Treatment is assign
 PRD version 2.0 reconciled the character wording in section 6 and the list of developed effects in FR-04 with this decision.
 
 Decided on 2026-10-05.
+Exception, 2026-10-10: the captain chose a faded look for the 1970s Instant on its review board; see ADR 0016.

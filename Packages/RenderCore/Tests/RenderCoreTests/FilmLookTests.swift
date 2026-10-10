@@ -77,9 +77,11 @@ final class FilmLookTests: XCTestCase {
     // MARK: - Fresh, not aged (ADR 0013)
 
     /// No look fades, yellows or shifts its dyes: blacks stay deep, white stays white, and color keeps its strength and
-    /// its hue. Black-and-white stays neutral gray.
+    /// its hue. Black-and-white stays neutral gray. The one exception is the Camera the captain chose a faded look for
+    /// (ADR 0016), which `testTheInstantDevelopsWithTheFadedLookTheCaptainChose` holds to that look instead.
     func testEveryLookIsFreshlyProcessedNotAged() {
-        for (camera, filmStock) in Self.treatments {
+        XCTAssertEqual(FilmLook.fadedByCaptainsChoice, [.instant1970s], "Only the captain's choice takes a Camera out of ADR 0013")
+        for (camera, filmStock) in Self.treatments where !FilmLook.fadedByCaptainsChoice.contains(camera) {
             let treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             let name = "\(camera) \(filmStock?.rawValue ?? "")"
             let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
@@ -98,6 +100,44 @@ final class FilmLookTests: XCTestCase {
                 XCTAssertGreaterThan(chroma(developed), chroma(color) * 0.8, "\(name): \(color) keeps its color strength")
                 XCTAssertLessThan(hueDistance(developed, color), 20, "\(name): \(color) keeps its hue")
             }
+        }
+    }
+
+    /// The print curve always rises from its black to its white, whatever its contrast, midtones and shoulder, and a
+    /// shoulder lowers the upper tones only.
+    func testThePrintCurveRisesFromBlackToWhiteAndAShoulderLowersOnlyTheUpperTones() {
+        for (camera, filmStock) in Self.treatments {
+            let tone: FilmLook.ToneCurve
+            switch FilmLook.treatment(camera: camera, filmStock: filmStock).emulsion {
+            case let .color(film): tone = film.tone
+            case let .monochrome(film): tone = film.tone
+            }
+            let levels = (0...100).map { tone(Double($0) / 100) }
+            XCTAssertEqual(levels.first!, tone.black, accuracy: 0.0001, "\(camera)")
+            XCTAssertEqual(levels.last!, tone.white, accuracy: 0.0001, "\(camera)")
+            for (lower, upper) in zip(levels, levels.dropFirst()) { XCTAssertGreaterThan(upper, lower, "\(camera) rises") }
+        }
+        let plain = FilmLook.ToneCurve(contrast: 1), soft = FilmLook.ToneCurve(contrast: 1, shoulder: 0.08)
+        XCTAssertEqual(soft(0.75), plain(0.75) - 0.08, accuracy: 0.001)
+        XCTAssertEqual(soft(0.1), plain(0.1), accuracy: 0.002, "Shadows keep their place")
+        XCTAssertEqual(soft(1), 1, accuracy: 0.0001)
+    }
+
+    /// The Instant develops with the faded look the captain chose on its review board on 2026-10-10 (ADR 0016): lifted,
+    /// milky blacks, softened whites, lower contrast than the capture, muted color, and age-style tints, blue in the
+    /// shadows and yellow in the highlights.
+    func testTheInstantDevelopsWithTheFadedLookTheCaptainChose() {
+        let emulsion = FilmLook.instant.emulsion
+        let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, emulsion) }
+        let black = develop(FilmLook.RGB(0.03, 0.03, 0.03)), white = develop(FilmLook.RGB(0.97, 0.97, 0.97))
+        XCTAssertGreaterThan(min(black.red, black.green, black.blue), 0.1, "Blacks are lifted and milky (\(black))")
+        XCTAssertLessThan(max(white.red, white.green, white.blue), 0.93, "Whites are softened (\(white))")
+        XCTAssertGreaterThan(black.blue, black.red + 0.01, "Blue in the shadows (\(black))")
+        XCTAssertGreaterThan(white.red, white.blue + 0.03, "Yellow in the highlights (\(white))")
+        let quarter = develop(FilmLook.RGB(0.25, 0.25, 0.25)).green, threeQuarter = develop(FilmLook.RGB(0.75, 0.75, 0.75)).green
+        XCTAssertLessThan(threeQuarter - quarter, 0.42, "Lower contrast than the capture's 0.5 (\(threeQuarter - quarter))")
+        for color in Self.patches {
+            XCTAssertLessThan(chroma(develop(color)), chroma(color) * 0.8, "\(color) is muted")
         }
     }
 
@@ -165,7 +205,7 @@ final class FilmLookTests: XCTestCase {
 
     /// PRD 2.1 section 6: heavy grain on the Disposable, visible grain on the 16mm, fine grain on the Super 8 and very
     /// fine grain on the 6×6's color stock, whose black-and-white stock has distinct grain; the Instant shows soft
-    /// detail with a light texture.
+    /// detail with a coarse texture, lighter than the Disposable's grain.
     func testGrainFollowsEachFormat() throws {
         var grain: [String: Double] = [:]
         for (camera, filmStock) in Self.treatments {
@@ -184,7 +224,7 @@ final class FilmLookTests: XCTestCase {
         XCTAssertGreaterThan(super8, square, "\(grain)")
         XCTAssertGreaterThan(squareMono, square * 2.5, "\(grain)")
         XCTAssertLessThan(square, 2.5, "Very fine (\(square))")
-        XCTAssertLessThan(instant, cinema, "The Instant's texture stays below a motion picture film's grain (\(grain))")
+        XCTAssertLessThan(instant, disposable, "The Instant's texture stays below the Disposable's heavy grain (\(grain))")
     }
 
     /// A grain's amplitude is the standard deviation, in 8-bit levels, it adds to an even mid-gray, at any clump size.
@@ -216,17 +256,18 @@ final class FilmLookTests: XCTestCase {
     /// sharp to its corners.
     func testSoftDarkEdgesWhereTheFormatHasThem() throws {
         let side = 1536
-        let checks = Self.checkerboard(side: CGFloat(side), square: 2)
+        let checks = Self.checkerboard(side: CGFloat(side), square: 6)
         for (camera, filmStock, softens) in [(CameraID.disposable1990s, FilmStock?.none, true), (.super8HomeMovie, nil, true),
                                             (.cinema16mm, .color, true), (.mediumFormat6x6, .color, false)] {
             var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             treatment.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
             treatment.gate = nil
             let pixels = try render(checks, treatment: treatment)
-            // Fine detail relative to the local brightness, so darker corners alone do not count as softer.
-            let middle = side / 2 - 32..<side / 2 + 32, corner = 16..<80
-            let center = pixels.localContrast(x: middle, y: middle) / pixels.meanLuminance(x: middle, y: middle)
-            let edge = pixels.localContrast(x: corner, y: corner) / pixels.meanLuminance(x: corner, y: corner)
+            // The sharpness of the checks' edges relative to the local brightness, so darker corners alone do not
+            // count as softer.
+            let middle = side / 2 - 36..<side / 2 + 36, corner = 12..<84
+            let center = pixels.edgeSharpness(x: middle, y: middle) / pow(pixels.meanLuminance(x: middle, y: middle), 2)
+            let edge = pixels.edgeSharpness(x: corner, y: corner) / pow(pixels.meanLuminance(x: corner, y: corner), 2)
             if softens {
                 XCTAssertLessThan(edge, center * 0.85, "\(camera) softens its corners (\(edge) vs \(center))")
             } else {
@@ -574,11 +615,13 @@ extension DecodedPixels {
         return total / Double(width * height * 3)
     }
 
-    /// The mean difference between horizontally neighboring pixels' luminance: how sharp fine detail is.
-    func localContrast(x: Range<Int>, y: Range<Int>) -> Double {
+    /// The mean squared difference between horizontally neighboring pixels' luminance: how sharp edges are. Blurring
+    /// an edge spreads its step over more pixels, which lowers this even where the step's size is unchanged.
+    func edgeSharpness(x: Range<Int>, y: Range<Int>) -> Double {
         var total = 0.0
         for row in y { for column in x.dropLast() {
-            total += abs(luminance(at: (row * width + column) * 4) - luminance(at: (row * width + column + 1) * 4))
+            let step = luminance(at: (row * width + column) * 4) - luminance(at: (row * width + column + 1) * 4)
+            total += step * step
         } }
         return total / Double((x.count - 1) * y.count)
     }

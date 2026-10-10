@@ -433,6 +433,8 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 | 1970s Instant | 10 exposures | Individual instant-print experience | Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws | Each exposure develops individually |
 | 6×6 Medium Format | 12 exposures | Square framing; a waist-level viewfinder that shows the scene reversed left to right; deliberate focus/exposure; Film Stock chosen at Load Film | Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur | Roll-level Development |
 
+**Exception, 2026-10-10 (ADR 0016).** On its look review board the captain chose a faded look for the 1970s Instant ("faded"): lifted, milky blacks, muted color and age-style tints replace "Brilliant, warm, saturated color" for that Camera alone; the rest of its row stands, and every other Camera stays freshly processed under ADR 0013.
+
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas. The 6×6 Medium Format and the 16mm Cinema carry no decade, because their color reference films are present-day ones (version 2.0).
 
 ### 6.2 Movie Cameras
