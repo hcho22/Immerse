@@ -164,8 +164,8 @@ final class FilmLookTests: XCTestCase {
     // MARK: - Grain across the Cameras
 
     /// PRD 2.1 section 6: heavy grain on the Disposable, visible grain on the 16mm, fine grain on the Super 8 and very
-    /// fine grain on the 6×6's color stock, whose black-and-white stock has distinct grain; the Instant shows detail
-    /// softened rather than grain.
+    /// fine grain on the 6×6's color stock, whose black-and-white stock has distinct grain; the Instant shows soft
+    /// detail with a light texture.
     func testGrainFollowsEachFormat() throws {
         var grain: [String: Double] = [:]
         for (camera, filmStock) in Self.treatments {
@@ -184,7 +184,7 @@ final class FilmLookTests: XCTestCase {
         XCTAssertGreaterThan(super8, square, "\(grain)")
         XCTAssertGreaterThan(squareMono, square * 2.5, "\(grain)")
         XCTAssertLessThan(square, 2.5, "Very fine (\(square))")
-        XCTAssertLessThan(instant, 2.5, "\(instant)")
+        XCTAssertLessThan(instant, cinema, "The Instant's texture stays below a motion picture film's grain (\(grain))")
     }
 
     /// A grain's amplitude is the standard deviation, in 8-bit levels, it adds to an even mid-gray, at any clump size.

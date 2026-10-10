@@ -235,6 +235,8 @@ def build(board, renders, sources, output, round_number):
     photo_scenes = [scene for scene in renders["photoScenes"]]
     movie_scenes = renders.get("movieScenes", [])
     body = []
+    # A second candidate look for this board, rendered from other values, shown beside the first.
+    alternate = renders.get("alternate") if board["id"] in renders.get("alternateBoards", []) else None
 
     body.append('<header><p class="eyebrow">Film Journal / Look review board %s / %s</p>' % (round_number, esc(renders["date"])))
     body.append("<h1>%s</h1>" % esc(board["name"]))
@@ -252,6 +254,9 @@ def build(board, renders, sources, output, round_number):
                 % (esc(board["reference_internal"]), esc(board["prd"]),
                    "".join("<li>%s</li>" % esc(item) for item in board["judge"])))
     body.append("<main>")
+    if alternate:
+        body.append('<section><h2>Two candidates</h2><dl class="facts"><dt>%s</dt><dd>%s</dd><dt>%s</dt><dd>%s</dd></dl></section>'
+                    % (esc(renders["primaryLabel"]), esc(renders["primaryNote"]), esc(alternate["label"]), esc(alternate["note"])))
 
     def rendered(camera, stock, scene, kind):
         for entry in files:
@@ -260,13 +265,20 @@ def build(board, renders, sources, output, round_number):
                 return entry
         return None
 
-    def place(entry_path, name, edge=1400):
+    def place(entry_path, name, edge=1400, root=None):
         destination = os.path.join(directory, name)
         if entry_path.endswith(".mov"):
-            copy_clip(os.path.join(renders["root"], entry_path), destination)
+            copy_clip(os.path.join(root or renders["root"], entry_path), destination)
         else:
-            copy_image(os.path.join(renders["root"], entry_path), destination, edge)
+            copy_image(os.path.join(root or renders["root"], entry_path), destination, edge)
         return name
+
+    def alternate_rendered(camera, stock, scene, kind):
+        for entry in alternate["files"]:
+            if (entry["camera"] == camera and entry.get("filmStock") == stock and entry["scene"] == scene
+                    and entry["kind"] == kind):
+                return entry
+        return None
 
     # Scenes, one section per Film Stock.
     for camera, stock in board["cameras"]:
@@ -285,12 +297,19 @@ def build(board, renders, sources, output, round_number):
                 slug = "%s-%s" % (stock or "look", scene_id)
                 reference_name = "ref-%s.jpg" % reference_id
                 copy_image(reference["local_path"], os.path.join(directory, reference_name))
-                body.append('<div class="row two pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s<br>'
-                            '<small>%s</small></figcaption></figure>' % (reference_name, esc(reference.get("title")),
+                body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s<br>'
+                            '<small>%s</small></figcaption></figure>' % ("" if alternate else "two", reference_name, esc(reference.get("title")),
                                                                        esc(reference.get("title")), credit(reference)))
-                body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
-                            'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug),
-                                                                                    esc(scene_entries.get(scene_id, {}).get("title", scene_id))))
+                scene_title = esc(scene_entries.get(scene_id, {}).get("title", scene_id))
+                if alternate:
+                    other = alternate_rendered(camera, stock, scene_id, "developed")
+                    body.append('<figure><img src="%s" alt="Candidate A"><figcaption><strong>%s:</strong> %s</figcaption></figure>'
+                                % (place(developed["path"], "%s.jpg" % slug), esc(renders["primaryLabel"]), scene_title))
+                    body.append('<figure><img src="%s" alt="Candidate B"><figcaption><strong>%s:</strong> %s</figcaption></figure></div>'
+                                % (place(other["path"], "%s-b.jpg" % slug, root=alternate["root"]), esc(alternate["label"]), scene_title))
+                else:
+                    body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
+                                'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
         body.append('<h3>Every scene</h3>')
         for scene in photo_scenes:
             # The recorded warm light matters only to the 16mm's color stock, which keeps a fixed daylight balance.
@@ -310,17 +329,32 @@ def build(board, renders, sources, output, round_number):
             body.append('<div class="row">')
             body.append('<figure><img src="%s" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> '
                         '<small>%s</small></figcaption></figure>' % (place(source["path"], "scene-%s.jpg" % scene["id"]), credit(source_entry)))
-            body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> '
-                        '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), developed["seed"]))
-            body.append('<figure><img src="%s" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> '
-                        '<small>grain and softness as developed</small></figcaption></figure>' % place(crop["path"], "%s-crop.jpg" % slug, 640))
-            body.append("</div>")
+            if alternate:
+                other = alternate_rendered(camera, stock, scene["id"], "developed")
+                other_crop = alternate_rendered(camera, stock, scene["id"], "crop")
+                body.append('<figure><img src="%s" alt="Candidate A"><figcaption><strong>%s</strong></figcaption></figure>'
+                            % (place(developed["path"], "%s.jpg" % slug), esc(renders["primaryLabel"])))
+                body.append('<figure><img src="%s" alt="Candidate B"><figcaption><strong>%s</strong></figcaption></figure>'
+                            % (place(other["path"], "%s-b.jpg" % slug, root=alternate["root"]), esc(alternate["label"])))
+                body.append("</div>")
+                body.append('<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">'
+                            '<figure><img src="%s" alt="Candidate A at full size" loading="lazy"><figcaption>%s</figcaption></figure>'
+                            '<figure><img src="%s" alt="Candidate B at full size" loading="lazy"><figcaption>%s</figcaption></figure></div></details>'
+                            % (place(crop["path"], "%s-crop.jpg" % slug, 640), esc(renders["primaryLabel"]),
+                               place(other_crop["path"], "%s-b-crop.jpg" % slug, 640, root=alternate["root"]), esc(alternate["label"])))
+            else:
+                body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> '
+                            '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), developed["seed"]))
+                body.append('<figure><img src="%s" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> '
+                            '<small>grain and softness as developed</small></figcaption></figure>' % place(crop["path"], "%s-crop.jpg" % slug, 640))
+                body.append("</div>")
             body.append('<details><summary>Compare with version 2, the provisional shared look it replaces</summary><div class="row">'
                         '<figure><img src="%s" alt="Developed with treatment version 2" loading="lazy"><figcaption>Version 2</figcaption></figure>'
                         '</div></details>' % place(previous["path"], "%s-v2.jpg" % slug))
             prints = [entry for entry in files if entry["camera"] == camera and entry["scene"] == scene["id"] and entry["kind"] == "print"]
             if prints:
-                body.append('<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">')
+                body.append('<p class="muted">Three more prints of the same scene%s, each with its own slight variation:</p><div class="row">'
+                            % (" (%s)" % renders["primaryLabel"] if alternate else ""))
                 for index, entry in enumerate(prints, 1):
                     body.append('<figure><img src="%s" alt="Another print of the scene"><figcaption>Print %d <small>seed %s</small>'
                                 '</figcaption></figure>' % (place(entry["path"], "%s-print-%d.jpg" % (slug, index)), index, entry["seed"]))
@@ -373,15 +407,24 @@ def build(board, renders, sources, output, round_number):
     body.append('<section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each '
                 'Camera\'s and Film Stock\'s look is set. Spatial values are fractions of the picture\'s long edge.</p>')
     for block in board["value_blocks"]:
+        if alternate:
+            body.append("<h3>%s</h3>" % esc(renders["primaryLabel"]))
         body.append("<pre><code>%s</code></pre>" % esc(value_block(block)))
+    if alternate:
+        body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
     body.append("</section>")
+    if alternate:
+        choices = ('<label><input type="radio" name="decision" value="approve-a"> Approve %s</label>'
+                   '<label><input type="radio" name="decision" value="approve-b"> Approve %s</label>'
+                   % (esc(renders["primaryLabel"]), esc(alternate["label"])))
+    else:
+        choices = '<label><input type="radio" name="decision" value="approve"> Approve these values for the %s</label>' % esc(board["name"])
     body.append('<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-%s" onsubmit="queueDecision(event)">'
-                '<label><input type="radio" name="decision" value="approve"> Approve these values for the %s</label>'
-                '<label><input type="radio" name="decision" value="change"> Request changes</label>'
+                '%s<label><input type="radio" name="decision" value="change"> Request changes</label>'
                 '<p><label for="notes" style="display:block">What should change, scene by scene if it helps</label>'
                 '<textarea id="notes" name="notes"></textarea></p>'
                 '<button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span>'
-                '</form></section>' % (board["id"], esc(board["name"])))
+                '</form></section>' % (board["id"], choices))
     body.append("</main>")
     body.append('<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and '
                 'reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>')
@@ -394,7 +437,8 @@ function queueDecision(event) {
   const decision = form.get('decision');
   if (!decision) return;
   const notes = (form.get('notes') || '').trim();
-  const text = (decision === 'approve' ? 'Approve the %(name)s look values.' : 'Change the %(name)s look.') + (notes ? ' ' + notes : '');
+  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
+  const text = (decision === 'change' ? 'Change the %(name)s look.' : chosen + ' (%(name)s).') + (notes ? ' ' + notes : '');
   if (window.lavish) {
     window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-%(id)s',
                                       data: { board: '%(id)s', decision: decision, notes: notes } });
@@ -431,6 +475,13 @@ def main():
     parser.add_argument("--round", default="01")
     parser.add_argument("--date", required=True)
     parser.add_argument("--only", nargs="*")
+    parser.add_argument("--alternate", help="renders of a second candidate look, shown beside the first on the --alternate-boards")
+    parser.add_argument("--alternate-boards", nargs="*", default=[])
+    parser.add_argument("--primary-label", default="A")
+    parser.add_argument("--primary-note", default="")
+    parser.add_argument("--alternate-label", default="B")
+    parser.add_argument("--alternate-note", default="")
+    parser.add_argument("--alternate-values", help="a file holding the second candidate's values as they would read in FilmLook.swift")
     args = parser.parse_args()
     renders = json.load(open(os.path.join(args.renders, "manifest.json")))
     scenes = json.load(open(args.scenes))
@@ -439,6 +490,12 @@ def main():
     renders["photoScenes"] = scenes["photos"]
     renders["movieScenes"] = scenes["movies"]
     renders["date"] = args.date
+    if args.alternate:
+        alternate = json.load(open(os.path.join(args.alternate, "manifest.json")))
+        alternate.update(root=os.path.abspath(args.alternate), label=args.alternate_label, note=args.alternate_note,
+                         values=open(args.alternate_values).read().rstrip() if args.alternate_values else "")
+        renders.update(alternate=alternate, alternateBoards=args.alternate_boards, primaryLabel=args.primary_label,
+                       primaryNote=args.primary_note)
     sources = json.load(open(os.path.join(args.sources, "manifest.json")))
     for entry in sources:
         if entry.get("local_path") and not os.path.isabs(entry["local_path"]):

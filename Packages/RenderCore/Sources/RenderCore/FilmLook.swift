@@ -61,12 +61,12 @@ enum FilmLook {
     /// 1970s prints (DEC-04).
     static let instant = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.055, tint: 0.01, saturation: 1.22,
-            tone: ToneCurve(contrast: 1.18, midtones: 0.97, black: 0.03, white: 0.98),
-            shadows: RGB(0, 0.004, 0.012), highlights: RGB(0.004, 0.002, -0.006),
-            grain: Grain(amplitude: 1.5, size: 0.0006, chroma: 0.2)
+            warmth: 0.05, layers: Layers(redFromGreen: 0.06, greenFromBlue: 0.08), saturation: 1.12,
+            tone: ToneCurve(contrast: 1.0, midtones: 0.9, black: 0.008, white: 0.97),
+            shadows: RGB(0, 0.004, 0.012), highlights: RGB(0.001, 0, -0.002),
+            grain: Grain(amplitude: 3, size: 0.0012, chroma: 0.2)
         )),
-        lens: Lens(softness: 0.0007, edgeSoftness: 0.0008, edgeDarkening: 0.25),
+        lens: Lens(softness: 0.001, edgeSoftness: 0.001, edgeDarkening: 0.35),
         printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
     )
 
@@ -183,6 +183,10 @@ extension FilmLook {
         var warmth: Double
         /// Moves the balance toward magenta (positive) or green, as a gain off green in linear light.
         var tint: Double = 0
+        /// How much each dye layer also records its neighbor's color, in linear light: red from green turns greens
+        /// toward olive, green from blue turns blues toward aqua, and blue from green quiets yellows. Neutral tones
+        /// stay neutral.
+        var layers = Layers()
         /// Color strength around each pixel's luminance in linear light; 1 keeps the capture's.
         var saturation: Double
         /// The print's characteristic curve, on each channel's display tone. A curve steeper than the identity also
@@ -285,6 +289,12 @@ extension FilmLook {
         var dust: Double = 0
         /// The chance that a clip was filmed with a hair in the gate.
         var hair: Double = 0
+    }
+
+    struct Layers: Equatable {
+        var redFromGreen: Double = 0
+        var greenFromBlue: Double = 0
+        var blueFromGreen: Double = 0
     }
 
     struct RGB: Equatable {
