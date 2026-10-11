@@ -22,7 +22,7 @@ It records the captain's decisions of 2026-10-05 and 2026-10-06 about how each C
 It also renames those two Cameras without a decade, sets the 16mm Cinema to 2:47, and gives every Camera a written look.
 The captain's answers of 2026-10-06 are recorded in the tracker: looks are checked through side-by-side review boards with the captain approving each Camera, and PRD 2.0 is implemented in slices after the documents land.
 On 2026-10-07 the captain decided that Darkroom contrast grades apply to every Photo Film, color included (this reversed his 2026-10-06 answer that color Films get no contrast control), with chemical toning staying black-and-white only; the PRD was amended to version 2.1 in its same file.
-On 2026-10-10, on their look review boards, the captain chose a faded look for the 1970s Instant ("faded") and a muted look with a highlight glow for the 1960s Super 8 Home Movie ("muted with a glow"), exceptions to ADR 0013 and to the wording of PRD sections 6.1 and 6.2 for those two Cameras; ADR 0016 records them, ADR 0013 gained one dated line pointing at it, PRD sections 6.1 and 6.2 each gained one, and the tracker records his words.
+On 2026-10-10, on their look review boards, the captain chose a faded look for the 1970s Instant ("faded") and a muted look with a highlight glow for the 1960s Super 8 Home Movie ("muted with a glow"), exceptions to ADR 0013 and to the wording of PRD sections 6.1 and 6.2 for those two Cameras, and on 2026-10-11 a black point lifted to about 4 percent for the 16mm Cinema's color Film Stock; ADR 0016 records them, ADR 0013 gained one dated line pointing at it, PRD sections 6.1 and 6.2 each gained one, and the tracker records his words.
 PRD 2.0 (apart from the 2026-10-07 contrast amendment and those 2026-10-10 lines) and ADRs 0013 to 0015 (apart from the 2026-10-10 line in ADR 0013) are the captain's text and are copied unchanged; PRD version 1.5 and ADRs 0001 to 0012 stay byte for byte as they were.
 The tracker gained fourteen tasks and the evidence map and acceptance companion gained matching rows, all untested, because no app code changed.
 PRD 2.0's document guide says ADRs 0013 to 0015 are "not yet in this collection"; they are now.
@@ -75,7 +75,7 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 - Dated implementation evidence map (added in version 1.5).
 - Dated open-decision recommendations (added during implementation; not approved decisions).
 - Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADRs 0012 to 0016.
-- Eleven original Markdown ADR files, unchanged, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0, as delivered; ADR 0013 with one pointer line added on 2026-10-10) and ADR 0016 (added on 2026-10-10 from the captain's answers on the Instant's and the Super 8's review boards).
+- Eleven original Markdown ADR files, unchanged, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0, as delivered; ADR 0013 with one pointer line added on 2026-10-10) and ADR 0016 (added on 2026-10-10 and extended on 2026-10-11 from the captain's answers on the Instant's, the Super 8's and the 16mm's review boards).
 - Source snapshots: CONTEXT.md (refreshed in version 2.0) and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 

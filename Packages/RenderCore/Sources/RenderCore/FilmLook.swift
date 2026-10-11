@@ -84,14 +84,17 @@ enum FilmLook {
     /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.045, tint: 0.004,
-            layers: Layers(redFromGreen: 0.1, redFromBlue: -0.12, greenFromBlue: 0.2, blueFromGreen: -0.1),
-            saturation: 1.15,
-            tone: ToneCurve(contrast: 1.2, midtones: 0.86, black: 0.012, white: 0.99),
-            shadows: RGB(-0.006, 0.005, 0.002), highlights: RGB(-0.004, 0, 0.006),
+            warmth: 0.04, tint: 0.004,
+            layers: Layers(redFromGreen: 0.08, redFromBlue: -0.06, greenFromBlue: 0.14, blueFromGreen: -0.05),
+            saturation: 1.16,
+            tone: ToneCurve(contrast: 1, points: [
+                CGPoint(x: 0, y: 0), CGPoint(x: 30, y: 25), CGPoint(x: 70, y: 75), CGPoint(x: 115, y: 120),
+                CGPoint(x: 190, y: 170), CGPoint(x: 255, y: 255)
+            ], shoulder: 0.03, black: 0.02, white: 0.975),
+            shadows: RGB(-0.006, 0.005, 0.002), highlights: RGB(-0.012, -0.003, 0.014),
             grain: Grain(amplitude: 2.2, size: 0.0005, chroma: 0.15)
         )),
-        lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
+        lens: Lens(softness: 0.0005, edgeDarkening: 0.2)
     )
 
     /// 6×6 Medium Format, black-and-white Film Stock. Format Reference: the same camera with Kodak Tri-X 400. High
@@ -126,11 +129,13 @@ enum FilmLook {
     /// 16mm Cinema, color Film Stock. Format Reference: the Bolex H16 Reflex with Kodak Vision3 250D. Visible grain, a
     /// red highlight glow (a deliberate departure: the reference film's backing prevents it), minor jitter and weave,
     /// and soft, darkened edges; no flicker, dust or hair. Its daylight balance is fixed, so warm indoor light develops
-    /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3).
+    /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3). Its black point is lifted to about
+    /// 4 percent, "a soft, grayed-out, lifted-black cinematic effect", which the captain asked for on its review board
+    /// past the fresh rule's limit for lifted blacks (ADR 0016).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.006, tint: 0.004, saturation: 1.05,
-            tone: ToneCurve(contrast: 1.06, midtones: 0.94, shoulder: 0.1, black: 0.027, white: 0.985),
+            tone: ToneCurve(contrast: 1.04, midtones: 0.92, shoulder: 0.07, black: 0.04, white: 0.99),
             highlights: RGB(0.005, 0.002, -0.005),
             grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
             fixedBalance: 5500
@@ -227,13 +232,18 @@ extension FilmLook {
         var grain: Grain
     }
 
-    /// An S-shaped print curve over display tones from black to white that keeps display mid-gray where it is.
+    /// A print curve over display tones from black to white: an S that keeps display mid-gray where it is, or a curve
+    /// drawn through given points.
     struct ToneCurve: Equatable {
         /// The curve's slope at mid-gray: 1 keeps the capture's contrast and higher values deepen shadows and brighten
         /// highlights.
         var contrast: Double
         /// A power applied to the tone before the curve: above 1 darkens the middle tones and below 1 lightens them.
         var midtones: Double = 1
+        /// A curve drawn point by point, as (capture tone, print tone) pairs on the 0 to 255 scale a point curve is
+        /// usually written in, from (0, 0) to (255, 255) with rising tones. When given, it replaces the S of
+        /// `contrast`; `midtones`, `shoulder`, `black` and `white` still apply around it.
+        var points: [CGPoint] = []
         /// A soft shoulder: how far the upper tones are pulled down, as display tone at three-quarter gray, with
         /// black and white left where they are. Negative film rolls its highlights off gently.
         var shoulder: Double = 0
@@ -244,11 +254,39 @@ extension FilmLook {
         func callAsFunction(_ tone: Double) -> Double {
             let x = pow(min(max(tone, 0), 1), midtones)
             guard x > 0, x < 1 else { return black + (white - black) * x }
-            let rising = pow(x, contrast)
-            let curved = rising / (rising + pow(1 - x, contrast))
+            let curved: Double
+            if points.isEmpty {
+                let rising = pow(x, contrast)
+                curved = rising / (rising + pow(1 - x, contrast))
+            } else {
+                curved = min(max(Self.interpolate(points, at: x * 255) / 255, 0), 1)
+            }
             // Largest at three-quarter gray, where the factor is 1, and nothing at black or white.
             let rolled = curved - shoulder * (256.0 / 27) * curved * curved * curved * (1 - curved)
             return black + (white - black) * rolled
+        }
+
+        /// The smooth curve through the points that never overshoots them or turns back (a monotone cubic).
+        static func interpolate(_ points: [CGPoint], at x: Double) -> Double {
+            guard points.count > 1, let first = points.first, let last = points.last else { return x }
+            if x <= first.x { return first.y }
+            if x >= last.x { return last.y }
+            let count = points.count
+            let widths = (0..<count - 1).map { points[$0 + 1].x - points[$0].x }
+            let slopes = (0..<count - 1).map { (points[$0 + 1].y - points[$0].y) / widths[$0] }
+            // Tangents: the harmonic mean of the neighboring slopes, flat where the slope changes sign.
+            var tangents = [CGFloat](repeating: 0, count: count)
+            tangents[0] = slopes[0]
+            tangents[count - 1] = slopes[count - 2]
+            for index in 1..<count - 1 where slopes[index - 1] * slopes[index] > 0 {
+                let left = 2 * widths[index] + widths[index - 1], right = widths[index] + 2 * widths[index - 1]
+                tangents[index] = (left + right) / (left / slopes[index - 1] + right / slopes[index])
+            }
+            let segment = (0..<count - 1).last { points[$0].x <= x } ?? 0
+            let width = widths[segment], t = (x - points[segment].x) / width
+            let t2 = t * t, t3 = t2 * t
+            return (2 * t3 - 3 * t2 + 1) * points[segment].y + (t3 - 2 * t2 + t) * width * tangents[segment]
+                + (-2 * t3 + 3 * t2) * points[segment + 1].y + (t3 - t2) * width * tangents[segment + 1]
         }
     }
 

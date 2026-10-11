@@ -89,7 +89,14 @@ final class FilmLookTests: XCTestCase {
             let name = "\(camera) \(filmStock?.rawValue ?? "")"
             let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
             let black = develop(FilmLook.RGB(0.03, 0.03, 0.03))
-            XCTAssertLessThan(max(black.red, black.green, black.blue), 0.06, "\(name): blacks stay deep, never faded")
+            // The 16mm's color stock has the black point the captain asked for on its board, lifted to about 4 percent
+            // (ADR 0016); every other fresh look keeps its blacks deeper.
+            let liftedByChoice = camera == .cinema16mm && filmStock == .color
+            XCTAssertLessThan(max(black.red, black.green, black.blue), liftedByChoice ? 0.085 : 0.06,
+                              "\(name): blacks stay deep, never faded")
+            if liftedByChoice, case let .color(film) = treatment.emulsion {
+                XCTAssertEqual(film.tone(0), 0.04, accuracy: 0.005, "The black point the captain asked for")
+            }
             let white = develop(FilmLook.RGB(0.97, 0.97, 0.97))
             XCTAssertGreaterThan(min(white.red, white.green, white.blue), 0.9, "\(name): white stays bright")
             XCTAssertLessThan(white.red - white.blue, 0.045, "\(name): white is not yellowed")
@@ -126,6 +133,26 @@ final class FilmLookTests: XCTestCase {
         XCTAssertEqual(soft(0.75), plain(0.75) - 0.08, accuracy: 0.001)
         XCTAssertEqual(soft(0.1), plain(0.1), accuracy: 0.002, "Shadows keep their place")
         XCTAssertEqual(soft(1), 1, accuracy: 0.0001)
+    }
+
+    /// A print curve drawn point by point passes through each point, as written on the 0 to 255 scale, and rises
+    /// smoothly between them without overshooting.
+    func testAPointCurvePassesThroughItsPoints() {
+        let points = [CGPoint(x: 0, y: 0), CGPoint(x: 30, y: 25), CGPoint(x: 70, y: 75), CGPoint(x: 115, y: 120),
+                      CGPoint(x: 190, y: 170), CGPoint(x: 255, y: 255)]
+        let curve = FilmLook.ToneCurve(contrast: 1, points: points)
+        for point in points {
+            XCTAssertEqual(curve(Double(point.x) / 255), Double(point.y) / 255, accuracy: 0.0005, "\(point)")
+        }
+        let levels = (0...255).map { curve(Double($0) / 255) }
+        for (lower, upper) in zip(levels, levels.dropFirst()) { XCTAssertGreaterThan(upper, lower) }
+        XCTAssertLessThan(curve(50.0 / 255), 75.0 / 255, "Between two points it stays between their tones")
+        XCTAssertGreaterThan(curve(50.0 / 255), 25.0 / 255)
+        // The same curve with a print black and white keeps its shape between them.
+        let printed = FilmLook.ToneCurve(contrast: 1, points: points, black: 0.02, white: 0.96)
+        XCTAssertEqual(printed(0), 0.02, accuracy: 0.0001)
+        XCTAssertEqual(printed(1), 0.96, accuracy: 0.0001)
+        XCTAssertEqual(printed(70.0 / 255), 0.02 + 0.94 * 75 / 255, accuracy: 0.0005)
     }
 
     /// The Instant develops with the faded look the captain chose on its review board on 2026-10-10 (ADR 0016): lifted,
