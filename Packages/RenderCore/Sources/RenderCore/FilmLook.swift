@@ -18,17 +18,18 @@ enum TreatmentVersion: String, CaseIterable {
 /// 6.3; ADRs 0013 to 0016).
 ///
 /// Each look reproduces its Format Reference as it performed when new: nothing fades, yellows, shifts in dye or wears,
-/// and every imperfection is one the format made at capture or processing (ADR 0013). The one exception is a Camera in
-/// `fadedByCaptainsChoice`, which the captain chose on its review board to develop with the faded look of surviving
-/// prints (ADR 0016). A Format Reference's name is internal and stays in these comments; no product string carries it
-/// (ADR 0015). Spatial values are fractions of the developed picture's long edge, so a look is the same at any size.
+/// and every imperfection is one the format made at capture or processing (ADR 0013). The exceptions are the Cameras
+/// in `captainsExceptions`, each given another look by the captain's own choice on its review board (ADR 0016). A
+/// Format Reference's name is internal and stays in these comments; no product string carries it (ADR 0015). Spatial
+/// values are fractions of the developed picture's long edge, so a look is the same at any size.
 ///
 /// DEC-04 status: every value below is provisional until the captain approves that Camera's review board (QA-16); the
 /// Instant's print-to-print variation stays provisional after that, pending a study of preserved 1970s prints.
 enum FilmLook {
-    /// The Cameras whose look is faded rather than fresh, each by the captain's choice on its review board (ADR 0016).
-    /// Every other Camera stays under ADR 0013.
-    static let fadedByCaptainsChoice: Set<CameraID> = [.instant1970s]
+    /// The Cameras whose look departs from ADR 0013's fresh rule, each by the captain's choice on its review board
+    /// (ADR 0016): the Instant is faded and the Super 8 is muted with a highlight glow. Every other Camera stays under
+    /// ADR 0013.
+    static let captainsExceptions: Set<CameraID> = [.instant1970s, .super8HomeMovie]
 
 
     /// The treatment a capture develops with: one per Camera, and one per Film Stock on the Cameras that offer one. A
@@ -83,9 +84,9 @@ enum FilmLook {
     /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.042, tint: 0.006, layers: Layers(redFromGreen: 0.08), saturation: 1.0,
-            tone: ToneCurve(contrast: 1.08, midtones: 0.92, shoulder: 0.06, black: 0.02, white: 0.975),
-            shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(0.003, 0.001, -0.003),
+            warmth: 0.05, tint: 0.008, layers: Layers(redFromGreen: 0.08), saturation: 1.1,
+            tone: ToneCurve(contrast: 1.05, midtones: 0.9, shoulder: 0.09, black: 0.02, white: 0.975),
+            shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(-0.008, -0.002, 0.012),
             grain: Grain(amplitude: 2.2, size: 0.0005, chroma: 0.15)
         )),
         lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
@@ -103,16 +104,20 @@ enum FilmLook {
     )
 
     /// 1960s Super 8 Home Movie. Format Reference: the Kodak Instamatic M4 with Kodachrome II at 18 frames per second,
-    /// projected. Strong, rich color and fine grain, with an unsteady frame, brightness flicker, and dust and hair in
-    /// the gate, each present from capture or first showing rather than from age (PRD 2.1 section 6.2).
+    /// projected. By the captain's choice on its review board on 2026-10-10 ("muted with a glow"), its color is not
+    /// PRD 2.1 section 6.2's "strong, rich color" (ADR 0016): lower contrast, slightly desaturated color, darker
+    /// shadows, lowered whites, teal in the shadows and warmth in the highlights, a soft picture, and a warm
+    /// reddish-orange glow around bright highlights. Its fine grain, unsteady frame, brightness flicker, and dust and
+    /// hair in the gate are as the PRD sets them; scratches and other wear are not added.
     static let super8 = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.05, saturation: 1.15,
-            tone: ToneCurve(contrast: 1.25, midtones: 1.03, white: 0.99),
-            shadows: RGB(-0.003, 0.004, 0.006), highlights: RGB(0.006, 0.003, -0.006),
-            grain: Grain(amplitude: 3, size: 0.0012, chroma: 0.25)
+            warmth: 0.05, saturation: 0.9,
+            tone: ToneCurve(contrast: 1.0, midtones: 1.08, white: 0.93),
+            shadows: RGB(-0.006, 0.01, 0.012), highlights: RGB(0.014, 0.006, -0.012),
+            grain: Grain(amplitude: 3.5, size: 0.0012, chroma: 0.25)
         )),
-        lens: Lens(softness: 0.0013, edgeSoftness: 0.0015, edgeDarkening: 0.45),
+        halation: Halation(threshold: 0.75, radius: 0.01, strength: 0.3, color: RGB(1, 0.35, 0.1)),
+        lens: Lens(softness: 0.0016, edgeSoftness: 0.0015, edgeDarkening: 0.45),
         gate: Gate(jitter: 0.0035, weave: 0.002, weavePeriod: 1.7, flicker: 0.06, dust: 0.6, hair: 0.5)
     )
 
@@ -122,14 +127,14 @@ enum FilmLook {
     /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0, saturation: 0.98,
-            tone: ToneCurve(contrast: 1.06, shoulder: 0.05, black: 0.015, white: 0.98),
+            warmth: 0.012, tint: 0.004, saturation: 1.0,
+            tone: ToneCurve(contrast: 1.04, midtones: 0.94, shoulder: 0.07, black: 0.027, white: 0.985),
             highlights: RGB(0.005, 0.002, -0.005),
             grain: Grain(amplitude: 3.2, size: 0.0008, chroma: 0.3, shadows: 0.3),
             fixedBalance: 5500
         )),
-        halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
-        lens: Lens(softness: 0.0004, edgeSoftness: 0.0012, edgeDarkening: 0.5),
+        halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.35, color: RGB(1, 0.18, 0.05)),
+        lens: Lens(softness: 0.0005, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
 

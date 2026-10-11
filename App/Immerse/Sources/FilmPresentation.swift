@@ -73,7 +73,7 @@ extension CameraPackage {
         case .instant1970s: ["Warm, faded color, soft contrast and soft detail"]
         case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
                                 "Black and white: high contrast and distinct grain"]
-        case .super8HomeMovie: ["Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"]
+        case .super8HomeMovie: ["Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
         case .cinema16mm:
             filmStock == .blackAndWhite
                 ? ["Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"]

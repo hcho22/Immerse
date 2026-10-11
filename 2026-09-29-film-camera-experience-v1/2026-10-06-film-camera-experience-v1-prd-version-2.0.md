@@ -445,6 +445,8 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 | 16mm Cinema | 2:47 / 167 seconds | 24 frames per second. Deliberate framing; Film Stock, color or black-and-white, chosen at Load Film. Visible grain, highlight halation (a red glow on color, a neutral glow on black-and-white), minor jitter and weave, and soft, darkened edges; no brightness flicker and no dust or hair in the gate. The color Film Stock keeps a fixed daylight balance, so warm indoor light develops orange | Silent; optional built-in soundtrack after Development |
 
 
+**Exception, 2026-10-10 (ADR 0016).** On its look review board the captain chose a muted look with a highlight glow for the 1960s Super 8 Home Movie ("muted with a glow"): lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights replace "Strong, rich color" for that Camera alone; the rest of its row stands, and the 16mm Cinema stays as written.
+
 Both Movie Cameras support personal Films. Each capacity is one real load of the Camera's Format Reference: a 50-foot Super 8 cartridge at 18 frames per second and a 100-foot 16mm spool at 24 frames per second. There is no capacity selector.
 
 ### 6.3 Format References and developed look (version 2.0)

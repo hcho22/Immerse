@@ -67,8 +67,10 @@ final class FilmLookTests: XCTestCase {
             let current = try render(scene, camera: camera, filmStock: filmStock)
             let earlier = try render(scene, camera: camera, filmStock: filmStock, version: "film-look-2-provisional")
             XCTAssertGreaterThan(current.meanColorDifference(from: earlier), 4, "\(name) differs from version 2")
+            // The two gentle color negative stocks, the 6×6's and the 16mm's, are the closest pair in color; what sets
+            // them further apart is the 16mm's motion, glow and frame.
             for (other, pixels) in looks {
-                XCTAssertGreaterThan(current.meanColorDifference(from: pixels), 3, "\(name) differs from \(other)")
+                XCTAssertGreaterThan(current.meanColorDifference(from: pixels), 2, "\(name) differs from \(other)")
             }
             looks[name] = current
         }
@@ -77,11 +79,12 @@ final class FilmLookTests: XCTestCase {
     // MARK: - Fresh, not aged (ADR 0013)
 
     /// No look fades, yellows or shifts its dyes: blacks stay deep, white stays white, and color keeps its strength and
-    /// its hue. Black-and-white stays neutral gray. The one exception is the Camera the captain chose a faded look for
-    /// (ADR 0016), which `testTheInstantDevelopsWithTheFadedLookTheCaptainChose` holds to that look instead.
+    /// its hue. Black-and-white stays neutral gray. The exceptions are the Cameras the captain chose another look for
+    /// on their review boards (ADR 0016), each held to its chosen look by a test of its own below.
     func testEveryLookIsFreshlyProcessedNotAged() {
-        XCTAssertEqual(FilmLook.fadedByCaptainsChoice, [.instant1970s], "Only the captain's choice takes a Camera out of ADR 0013")
-        for (camera, filmStock) in Self.treatments where !FilmLook.fadedByCaptainsChoice.contains(camera) {
+        XCTAssertEqual(FilmLook.captainsExceptions, [.instant1970s, .super8HomeMovie],
+                       "Only the captain's choice takes a Camera out of ADR 0013")
+        for (camera, filmStock) in Self.treatments where !FilmLook.captainsExceptions.contains(camera) {
             let treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             let name = "\(camera) \(filmStock?.rawValue ?? "")"
             let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
@@ -139,6 +142,49 @@ final class FilmLookTests: XCTestCase {
         for color in Self.patches {
             XCTAssertLessThan(chroma(develop(color)), chroma(color) * 0.8, "\(color) is muted")
         }
+    }
+
+    /// The Super 8 develops with the look the captain chose on its review board on 2026-10-10, "muted with a glow"
+    /// (ADR 0016): lowered whites, no more contrast than the capture, color quieter than the capture's, teal in the
+    /// shadows and warmth in the highlights, and a warm reddish-orange glow around bright highlights. Its blacks stay
+    /// deep, and its gate imperfections are unchanged.
+    func testTheSuperEightDevelopsMutedWithAGlowAsTheCaptainChose() throws {
+        let treatment = FilmLook.super8
+        let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
+        let black = develop(FilmLook.RGB(0.03, 0.03, 0.03)), white = develop(FilmLook.RGB(0.97, 0.97, 0.97))
+        XCTAssertLessThan(max(black.red, black.green, black.blue), 0.06, "Shadows stay dark (\(black))")
+        XCTAssertLessThan(max(white.red, white.green, white.blue), 0.95, "Whites are lowered (\(white))")
+        XCTAssertGreaterThan(white.red, white.blue + 0.01, "Warmth in the highlights (\(white))")
+        XCTAssertGreaterThan(black.blue, black.red, "Teal in the shadows (\(black))")
+        let quarter = develop(FilmLook.RGB(0.25, 0.25, 0.25)).green, threeQuarter = develop(FilmLook.RGB(0.75, 0.75, 0.75)).green
+        XCTAssertLessThan(threeQuarter - quarter, 0.5, "No more contrast than the capture (\(threeQuarter - quarter))")
+        for color in Self.patches {
+            XCTAssertLessThan(chroma(develop(color)), chroma(color), "\(color) is quieter than the capture")
+        }
+        let halation = try XCTUnwrap(treatment.halation)
+        XCTAssertGreaterThan(halation.color.red, halation.color.green, "The glow is reddish-orange")
+        XCTAssertGreaterThan(halation.color.green, halation.color.blue, "The glow is reddish-orange")
+        let gate = try XCTUnwrap(treatment.gate)
+        XCTAssertGreaterThan(gate.flicker, 0)
+        XCTAssertGreaterThan(gate.dust, 0)
+        XCTAssertGreaterThan(gate.hair, 0)
+
+        // Rendered: a bright light in a dark frame gets a warm ring, as the 16mm's does.
+        let light = CIFilter(name: "CIRadialGradient", parameters: [
+            "inputCenter": CIVector(x: 480, y: 480), "inputRadius0": 30, "inputRadius1": 31,
+            "inputColor0": CIColor(red: 1, green: 1, blue: 1, colorSpace: Self.linear)!,
+            "inputColor1": CIColor(red: 0.01, green: 0.01, blue: 0.01, colorSpace: Self.linear)!
+        ])!.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 960, height: 960))
+        var glowing = treatment
+        glowing.gate = nil
+        glowing.lens = FilmLook.Lens()
+        glowing.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
+        var plain = glowing
+        plain.halation = nil
+        let ring = try render(light, treatment: glowing).meanColor(x: 436..<444, y: 470..<490)
+        let dark = try render(light, treatment: plain).meanColor(x: 436..<444, y: 470..<490)
+        XCTAssertGreaterThan(ring.red, dark.red + 8, "A glow around the light (\(ring) vs \(dark))")
+        XCTAssertGreaterThan(ring.red - dark.red, ring.blue - dark.blue + 6, "Warm, not white (\(ring) vs \(dark))")
     }
 
     // MARK: - The Disposable

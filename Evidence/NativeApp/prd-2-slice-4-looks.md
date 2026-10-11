@@ -17,13 +17,13 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   Every value is in one place, `FilmLook` in `Packages/RenderCore/Sources/RenderCore/FilmLook.swift`, one `Treatment` per Camera and Film Stock with its Format Reference named in an internal comment.
   A treatment is the Film Stock's emulsion (color balance, color strength, an S-shaped print curve with print black and white, shadow and highlight color, grain) plus the Camera's lens, flash, print variation and gate.
   The emulsion is applied as a 32-point color cube over display tones, built once per capture or clip; spatial values are fractions of the picture's long edge, so a look is the same at any size.
-- **Fresh, not aged (ADR 0013), with the captain's exception (ADR 0016).**
-  No version 3 look lifts its blacks, yellows its whites, weakens color or turns its hues, except a Camera in `FilmLook.fadedByCaptainsChoice`, today the Instant: `FilmLookTests.testEveryLookIsFreshlyProcessedNotAged` checks every other color treatment on black, white and five color patches, and that black-and-white stays gray, and `testTheInstantDevelopsWithTheFadedLookTheCaptainChose` holds the Instant to its chosen look.
+- **Fresh, not aged (ADR 0013), with the captain's exceptions (ADR 0016).**
+  No version 3 look lifts its blacks, yellows its whites, weakens color or turns its hues, except the Cameras in `FilmLook.captainsExceptions`, the Instant and the Super 8: `FilmLookTests.testEveryLookIsFreshlyProcessedNotAged` checks every other color treatment on black, white and five color patches, and that black-and-white stays gray, while `testTheInstantDevelopsWithTheFadedLookTheCaptainChose` and `testTheSuperEightDevelopsMutedWithAGlowAsTheCaptainChose` hold those two to their chosen looks.
 - **Each Camera's imperfections (PRD 2.1 section 6).**
   - Disposable: warm, saturated color; heavy grain (amplitude 7) with extra grain in the shadows, so a dim scene without flash develops dark and grainy; a plastic lens's soft, 0.6-stop darker corners; and, on an exposure whose Exif says the flash fired, a hot center that falls 0.9 stops to the corners and harsher print contrast. No light leaks, red-eye, dust or scratches.
-  - Instant: the faded look the captain chose on its board (see "The Instant's faded look" below); each print gets its own density (up to 0.12 stops) and color (warmth and tint) from its seed, so it is assigned once and never rerolled. The size of the variation stays provisional pending the study of preserved 1970s prints.
+  - Instant: the faded look the captain chose on its board (see "Review boards" below); each print gets its own density (up to 0.12 stops) and color (warmth and tint) from its seed, so it is assigned once and never rerolled. The size of the variation stays provisional pending the study of preserved 1970s prints.
   - 6×6 color: natural, warm color, very fine grain, gentle contrast, sharp to the corners. Black-and-white: a new panchromatic silver layer with high contrast and distinct grain.
-  - Super 8: strong, rich color and fine grain; per-frame jitter and a slow weave drawn from just outside the frame so no edge shows; a brightness flicker of up to 0.06 stops; up to three dust specks on a frame; and, on about half of clips, a hair caught at the gate's edge for the whole clip.
+  - Super 8: the muted look with a glow the captain chose on its board (see "Review boards" below) and fine grain; per-frame jitter and a slow weave drawn from just outside the frame so no edge shows; a brightness flicker of up to 0.06 stops; up to three dust specks on a frame; and, on about half of clips, a hair caught at the gate's edge for the whole clip.
   - 16mm: visible grain; a glow around highlights, red on color and neutral on black-and-white; minor jitter and weave; soft, darker edges; no flicker, dust or hair.
 - **The 16mm color stock's fixed daylight balance (decision).**
   PRD 2.1 section 6.2 says warm indoor light develops orange on the color Film Stock, which the phone's automatic white balance would otherwise remove.
@@ -35,7 +35,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   The 16mm look line now follows the chosen Film Stock: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color (main's line) and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white.
   Keeping one line of nearly main's length avoids the longer wordings that slice 3 found tripping the elementless clipped-text audit finding at the largest text size.
   `ContentSizeTests.testFilmStockLoadScreenTextAt…` (renamed from `testSixBySixLoadScreenTextAt…`) now also measures the black-and-white line at every size.
-  The Instant's look line changed from "Brilliant, warm, saturated color and soft detail" to "Warm, faded color, soft contrast and soft detail", to say what the Camera now develops.
+  The Instant's look line changed from "Brilliant, warm, saturated color and soft detail" to "Warm, faded color, soft contrast and soft detail", and the Super 8's from "Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair" to "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair", to say what those Cameras now develop.
 
 ## Review boards (QA-16)
 

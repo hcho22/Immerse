@@ -36,9 +36,9 @@
 > PRD version 2.0 (2026-10-06), a separate file from version 1.5, carries these decisions, and the Viewfinder rule's list of effects it must not preview was reworded to name effects that v1 Cameras have.
 >
 > **2026-10-10 note (ADR 0016).**
-> On the 1970s Instant's look review board the captain chose a faded look for that Camera: lifted, milky blacks, muted color and age-style tints.
-> It is an exception to the rule below that a Developed Treatment shows its Historical Format as freshly processed (ADR 0013), which still holds for every other Camera, and to the catalog's "brilliant, warm, saturated color" for the Instant.
-> The terms and rules below were not rewritten; read the Instant's look through [ADR 0016](../adr/0016-the-instant-develops-with-a-faded-look-by-the-captains-choice.md).
+> On their look review boards the captain chose a faded look for the 1970s Instant (lifted, milky blacks, muted color and age-style tints) and a muted look with a highlight glow for the 1960s Super 8 Home Movie (lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights).
+> Both are exceptions to the rule below that a Developed Treatment shows its Historical Format as freshly processed (ADR 0013), which still holds for every other Camera, and to the catalog's "brilliant, warm, saturated color" for the Instant and "strong, rich color" for the Super 8; the Super 8's glow is also an Authentic Imperfection the rules below give only to the 16mm Cinema.
+> The terms and rules below were not rewritten; read those two Cameras' looks through [ADR 0016](../adr/0016-the-captains-exceptions-to-fresh-not-aged.md).
 >
 > **2026-10-07 note (PRD version 2.1).**
 > The Darkroom rule on contrast changed: every Photo Film, color or black-and-white, may use contrast grades, while chemical toning stays black-and-white only.

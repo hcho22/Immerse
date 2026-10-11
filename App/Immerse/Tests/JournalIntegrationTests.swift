@@ -210,7 +210,8 @@ final class JournalIntegrationTests: XCTestCase {
         // The Instant's faded look is the captain's exception to PRD 2.1 section 6.1's wording (ADR 0016).
         XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("faded color"))
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
-        XCTAssertTrue(copy[.super8HomeMovie]!.contains("Strong") && copy[.super8HomeMovie]!.contains("18 frames"))
+        // The Super 8's muted color and glow are the captain's exception to PRD 2.1 section 6.2's wording (ADR 0016).
+        XCTAssertTrue(copy[.super8HomeMovie]!.contains("Muted color, a warm glow") && copy[.super8HomeMovie]!.contains("18 frames"))
         XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))
         // The two Cameras with a Film Stock describe both looks (PRD 2.1 sections 6.1 and 6.2).
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("Color: natural, warm color")
