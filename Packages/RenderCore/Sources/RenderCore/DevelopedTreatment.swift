@@ -309,7 +309,8 @@ struct DevelopedTreatment {
             var balanced = FilmLook.RGB(linear.red * gains.red * normal, linear.green * gains.green * normal,
                                         linear.blue * gains.blue * normal)
             let layers = film.layers
-            balanced = FilmLook.RGB(balanced.red + layers.redFromGreen * (balanced.green - balanced.red),
+            balanced = FilmLook.RGB(balanced.red + layers.redFromGreen * (balanced.green - balanced.red)
+                                        + layers.redFromBlue * (balanced.blue - balanced.red),
                                     balanced.green + layers.greenFromBlue * (balanced.blue - balanced.green),
                                     balanced.blue + layers.blueFromGreen * (balanced.green - balanced.blue))
             let level = luminance(balanced)

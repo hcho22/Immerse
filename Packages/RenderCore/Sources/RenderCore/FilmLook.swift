@@ -84,9 +84,11 @@ enum FilmLook {
     /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.05, tint: 0.008, layers: Layers(redFromGreen: 0.08), saturation: 1.1,
-            tone: ToneCurve(contrast: 1.05, midtones: 0.9, shoulder: 0.09, black: 0.02, white: 0.975),
-            shadows: RGB(-0.002, 0.002, 0.004), highlights: RGB(-0.008, -0.002, 0.012),
+            warmth: 0.045, tint: 0.004,
+            layers: Layers(redFromGreen: 0.1, redFromBlue: -0.12, greenFromBlue: 0.2, blueFromGreen: -0.1),
+            saturation: 1.15,
+            tone: ToneCurve(contrast: 1.2, midtones: 0.86, black: 0.012, white: 0.99),
+            shadows: RGB(-0.006, 0.005, 0.002), highlights: RGB(-0.004, 0, 0.006),
             grain: Grain(amplitude: 2.2, size: 0.0005, chroma: 0.15)
         )),
         lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
@@ -97,10 +99,10 @@ enum FilmLook {
     static let mediumFormatBlackAndWhite = Treatment(
         emulsion: .monochrome(MonochromeEmulsion(
             spectral: RGB(0.30, 0.55, 0.15),
-            tone: ToneCurve(contrast: 1.5, black: 0.012, white: 0.985),
-            grain: Grain(amplitude: 6.5, size: 0.0006)
+            tone: ToneCurve(contrast: 1.5, midtones: 0.86, shoulder: 0.05, black: 0.004, white: 0.985),
+            grain: Grain(amplitude: 8, size: 0.0008)
         )),
-        lens: Lens(edgeDarkening: 0.2)
+        lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
     )
 
     /// 1960s Super 8 Home Movie. Format Reference: the Kodak Instamatic M4 with Kodachrome II at 18 frames per second,
@@ -127,13 +129,13 @@ enum FilmLook {
     /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.012, tint: 0.004, saturation: 1.0,
-            tone: ToneCurve(contrast: 1.04, midtones: 0.94, shoulder: 0.07, black: 0.027, white: 0.985),
+            warmth: 0.006, tint: 0.004, saturation: 1.05,
+            tone: ToneCurve(contrast: 1.06, midtones: 0.94, shoulder: 0.1, black: 0.027, white: 0.985),
             highlights: RGB(0.005, 0.002, -0.005),
-            grain: Grain(amplitude: 3.2, size: 0.0008, chroma: 0.3, shadows: 0.3),
+            grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
             fixedBalance: 5500
         )),
-        halation: Halation(threshold: 0.75, radius: 0.008, strength: 0.35, color: RGB(1, 0.18, 0.05)),
+        halation: Halation(threshold: 0.78, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
         lens: Lens(softness: 0.0005, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
@@ -197,9 +199,10 @@ extension FilmLook {
         var warmth: Double
         /// Moves the balance toward magenta (positive) or green, as a gain off green in linear light.
         var tint: Double = 0
-        /// How much each dye layer also records its neighbor's color, in linear light: red from green turns greens
-        /// toward olive, green from blue turns blues toward aqua, and blue from green quiets yellows. Neutral tones
-        /// stay neutral.
+        /// How much each dye layer also records, or with a negative value loses, another layer's color, in linear
+        /// light: red from green turns greens toward olive, red from blue below zero turns blues toward cyan and
+        /// warms skin, green from blue turns blues toward aqua, and blue from green quiets yellows or, below zero,
+        /// strengthens greens. Neutral tones stay neutral.
         var layers = Layers()
         /// Color strength around each pixel's luminance in linear light; 1 keeps the capture's.
         var saturation: Double
@@ -313,6 +316,7 @@ extension FilmLook {
 
     struct Layers: Equatable {
         var redFromGreen: Double = 0
+        var redFromBlue: Double = 0
         var greenFromBlue: Double = 0
         var blueFromGreen: Double = 0
     }

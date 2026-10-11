@@ -285,6 +285,23 @@ def build(board, renders, sources, output, round_number):
         stock_name = STOCK_NAMES[stock]
         heading = "%s Film Stock" % stock_name if stock else "Scenes"
         body.append('<section><h2>%s</h2>' % esc(heading))
+        # Pictures the captain supplied as the target for a stock. They are not openly licensed, so the board links to
+        # them where they are published and no copy is kept with the board.
+        remote = [entry for entry in renders.get("remoteReferences", [])
+                  if entry["board"] == board["id"] and entry["camera"] == camera and entry.get("filmStock") == stock]
+        if remote:
+            body.append('<h3>Side by side with the captain\'s reference pictures</h3><p class="muted">Supplied by the captain on %s '
+                        'as the target for this Film Stock. They are from a public forum post and are not openly licensed, so they '
+                        'are shown from where they are published and are not copied into the repository.</p>' % esc(renders["remoteDate"]))
+            for entry in remote:
+                developed = rendered(camera, stock, entry["scene"], "developed")
+                slug = "%s-%s" % (stock or "look", entry["scene"])
+                body.append('<div class="row two pair scene"><figure><img src="%s" alt="%s" referrerpolicy="no-referrer"><figcaption>'
+                            '<strong>%s</strong><br><small><a href="%s">where it is published</a> · not openly licensed, linked only</small>'
+                            '</figcaption></figure>' % (esc(entry["url"]), esc(entry["title"]), esc(entry["title"]), esc(entry["url"])))
+                body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
+                            'version 3:</strong> %s</figcaption></figure></div>'
+                            % (place(developed["path"], "%s.jpg" % slug), esc(scene_entries.get(entry["scene"], {}).get("title", entry["scene"]))))
         pairs = board.get("pairs", {}).get((camera, stock), [])
         if pairs:
             references_by_id = {entry["id"]: entry for entry in sources if entry["role"] == "reference"}
@@ -492,6 +509,8 @@ def main():
     parser.add_argument("--alternate-label", default="B")
     parser.add_argument("--alternate-note", default="")
     parser.add_argument("--alternate-values", help="a file holding the second candidate's values as they would read in FilmLook.swift")
+    parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
+    parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
     args = parser.parse_args()
     renders = json.load(open(os.path.join(args.renders, "manifest.json")))
     scenes = json.load(open(args.scenes))
@@ -506,6 +525,8 @@ def main():
                          values=open(args.alternate_values).read().rstrip() if args.alternate_values else "")
         renders.update(alternate=alternate, alternateBoards=args.alternate_boards, primaryLabel=args.primary_label,
                        primaryNote=args.primary_note)
+    if args.remote_references:
+        renders.update(remoteReferences=json.load(open(args.remote_references)), remoteDate=args.remote_date)
     sources = json.load(open(os.path.join(args.sources, "manifest.json")))
     for entry in sources:
         if entry.get("local_path") and not os.path.isabs(entry["local_path"]):

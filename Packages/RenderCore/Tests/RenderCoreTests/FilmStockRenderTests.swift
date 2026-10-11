@@ -45,8 +45,8 @@ final class FilmStockRenderTests: XCTestCase {
     }
 
     /// The black-and-white treatment starts from the capture's light, not from the color look: its tones differ from
-    /// the color master's, desaturated, and on a neutral ramp, where only the print curves differ, it spreads its tones
-    /// further.
+    /// the color master's, desaturated, and on a neutral ramp, where only the print curves differ, it is steeper
+    /// through the middle tones.
     func testBlackAndWhiteIsHigherContrastAndNotTheColorLookDesaturated() throws {
         let camera = CameraCatalog.mediumFormat6x6
         let mono = try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .blackAndWhite))
@@ -57,8 +57,18 @@ final class FilmStockRenderTests: XCTestCase {
         try writeGrayRamp(to: ramp, side: 1024)
         let monoRamp = try DecodedPixels(NativePhotoRenderer.develop(source: ramp, camera: camera, seed: 42, filmStock: .blackAndWhite))
         let colorRamp = try DecodedPixels(NativePhotoRenderer.develop(source: ramp, camera: camera, seed: 42, filmStock: .color))
-        XCTAssertGreaterThan(monoRamp.luminanceDeviation, colorRamp.luminanceDeviation * 1.1,
-                             "Black-and-white spreads its tones further (\(monoRamp.luminanceDeviation) vs \(colorRamp.luminanceDeviation))")
+        // The step from a darker to a lighter middle tone, where the print curves differ most; the whole ramp's spread
+        // says less, since both stocks reach black and white.
+        func middleStep(_ pixels: DecodedPixels) -> Double {
+            let rows = pixels.height / 4..<pixels.height * 3 / 4
+            func tone(_ fraction: Double) -> Double {
+                let column = Int(Double(pixels.width) * fraction)
+                return pixels.meanLuminance(x: column - 8..<column + 8, y: rows)
+            }
+            return tone(0.65) - tone(0.35)
+        }
+        XCTAssertGreaterThan(middleStep(monoRamp), middleStep(colorRamp) * 1.1,
+                             "Black-and-white is steeper through the middle tones (\(middleStep(monoRamp)) vs \(middleStep(colorRamp)))")
     }
 
     /// On an even mid-gray scene, the grain is all there is to see: black-and-white grain is coarser and stronger than
