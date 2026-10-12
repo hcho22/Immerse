@@ -6,6 +6,11 @@ this script (vision3_250d_lut.py and effects_16mm_reference.py), which are not c
 
 Needs numpy, scipy and pillow. Every number and picture written here comes from his functions; this script only chooses
 the colors and the test frame they are asked about.
+
+One constant of the look is not his file's. On 2026-10-12, with his files applied and shown on the 16mm review board,
+he wrote "the blacks are too strong for color. please tone it down" and then "please bring the black up to 4 percent".
+The look the app develops with is therefore his "print" look with its black level, BLACK, raised so that black
+develops to 4 percent of the tone scale, its slight cool tint kept. His file still holds his own value.
 """
 import json
 import os
@@ -19,7 +24,10 @@ import vision3_250d_lut as V
 
 OUT = sys.argv[1]
 os.makedirs(OUT, exist_ok=True)
-LOOK = "print"
+# His "print" look, with the black he asked for on the board (see above); his file's own is 0.0009, 0.0009, 0.0010.
+CAPTAINS_BLACK = [0.0030, 0.0030, 0.0033]
+V.LOOKS["applied"] = dict(V.LOOKS["print"], BLACK=CAPTAINS_BLACK)
+LOOK = "applied"
 M709_TO_2020 = np.linalg.inv(V.M2020_TO_709)
 rng = np.random.default_rng(20261012)
 
@@ -39,9 +47,11 @@ alog_grid = np.stack(np.meshgrid(*[np.linspace(0, 1, 5)] * 3, indexing="ij"), -1
 alog = np.concatenate([alog_grid, rng.uniform(0, 1, (300, 3))])
 # The picture as the phone made it: a 6 x 6 x 6 grid of display colors, which the pipeline test lays out as an image.
 display = np.stack(np.meshgrid(*[np.linspace(0, 1, 6)] * 3, indexing="ij"), -1).reshape(-1, 3)
-sanity = {str(k): v for k, v in V.SANITY[LOOK].items()}
+# His table of neutral values for the "print" look, and the same tones with the black he asked for.
+sanity = {str(k): v for k, v in V.SANITY["print"].items()}
+sanity_applied = {str(k): rows(V.render_scene709(np.full((1, 3), 0.18 * 2.0 ** k), LOOK))[0] for k in V.SANITY["print"]}
 # His constants as his file holds them, for a test to read the app's own values back against.
-look = V.LOOKS[LOOK]
+look = V.LOOKS["print"]
 constants = {
     "curve": look["CURVE"], "negativeGamma": V.NEG_GAMMA.tolist(), "exposure": look.get("EXPOSURE", 0.0),
     "balance": look["WB_GAIN"], "toe": look["TOE_STOPS"], "crosstalk": look["XTALK"], "slope": look["K"],
@@ -50,7 +60,7 @@ constants = {
     "shadowDesaturation": look["SH_DESAT"], "bandCenters": V.BAND_CENTRES.tolist(), "bandWidths": V.BAND_WIDTHS.tolist(),
 }
 json.dump({
-    "sanity": sanity, "constants": constants,
+    "sanity": sanity, "sanityApplied": sanity_applied, "constants": constants, "appliedBlack": CAPTAINS_BLACK,
     "scene": rows(scene), "sceneDeveloped": rows(V.render_scene709(scene, LOOK)),
     "appleLog": rows(alog), "appleLogDeveloped": rows(V.render_scene709(V.applelog_decode(alog) @ V.M2020_TO_709.T, LOOK)),
     "display": rows(display), "displayDeveloped": rows(V.render_scene709(V.inverse_knee(V.srgb_decode(display)), LOOK)),

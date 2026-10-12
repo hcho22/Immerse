@@ -165,11 +165,14 @@ enum FilmLook {
     /// constant here is his generator's "print" look and his reference for the per-frame passes
     /// (`Probes/FilmLookCalibration/16mm`), which `NegativeFilmTests` and `ScenePassesTests` hold this to. The
     /// negative's layer contrasts are the manufacturer's curves as digitized in spectral_film_lut; the rest was fitted
-    /// to that simulation and then timed by hand. Deep blacks, a long soft highlight shoulder, muted cyans and
-    /// purples and olive greens, daylight neutral with slightly warm highlights and cool shadows. Its daylight balance
-    /// is fixed, so warm indoor light develops orange and Development does not correct it (PRD 2.1 sections 6.2 and
-    /// 6.3). Visible grain, a red highlight glow (a deliberate departure: the reference film's backing prevents it),
-    /// minor jitter and weave, and soft, darkened edges; no flicker, dust or hair.
+    /// to that simulation and then timed by hand. One constant is not his file's: with the look on its board he found
+    /// the blacks too strong for color and asked for "the black up to 4 percent", so `black` is raised from his
+    /// file's 0.0009, 0.0009, 0.0010 to put black at 4 percent of the tone scale, its slight cool tint kept (ADR
+    /// 0016). A long soft highlight shoulder, muted cyans and purples and olive greens, daylight neutral with
+    /// slightly warm highlights and cool shadows. Its daylight balance is fixed, so warm indoor light develops orange
+    /// and Development does not correct it (PRD 2.1 sections 6.2 and 6.3). Visible grain, a red highlight glow (a
+    /// deliberate departure: the reference film's backing prevents it), minor jitter and weave, and soft, darkened
+    /// edges; no flicker, dust or hair.
     static let cinemaColor = Treatment(
         emulsion: .negative(NegativeFilm(
             negativeGamma: RGB(0.474, 0.555, 0.535),
@@ -179,7 +182,7 @@ enum FilmLook {
             output: .print(maximumDensity: 4.39),
             slope: RGB(4.64, 3.92, 3.96),
             grayDensity: 0.694,
-            black: RGB(0.0009, 0.0009, 0.0010),
+            black: RGB(0.0030, 0.0030, 0.0033),
             bands: [
                 NegativeFilm.Band(2.51, -0.009, -0.030), NegativeFilm.Band(1.45, -0.062, 0.010),
                 NegativeFilm.Band(-0.80, -0.027, 0.002), NegativeFilm.Band(-2.09, -0.169, 0.005),
