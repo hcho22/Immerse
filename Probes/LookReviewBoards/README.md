@@ -14,6 +14,7 @@ swift run -c release --package-path Probes/LookReviewBoards LookReviewBoards <sc
 `scenes.json` lists photo scenes and Movie scenes with paths relative to the file.
 Each photo is developed by every Photo Camera and Film Stock with `NativePhotoRenderer.develop`, and by both Movie Cameras as a two-second still clip from which one frame is kept; each Movie scene is developed with `NativeMovieRenderer.developClip`.
 A scene may set `"flash": true`, which writes the Exif flash record the Disposable reads, or `"light": "3200,0"`, which writes the clip's recorded white balance for the 16mm color Film Stock's fixed daylight balance.
+A scene with `"boards": ["16mm"]` is shown only on those boards.
 The output holds the developed pictures, the same scenes with treatment version 2, full-size center crops, extra Instant prints, the clips and a `manifest.json`.
 Movie scenes must be SDR; an HLG capture from a phone has to be tone-mapped first or it develops blown out.
 
@@ -30,7 +31,7 @@ Each board is a self-contained directory, `index.html` with the pictures and cli
 The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with each file's download URL) and `scenes.json`, so the same files can be fetched and rendered again.
 `--slim` writes smaller pictures and clips and leaves out the comparison with treatment version 2; it is the copy kept in the repository once a board is approved.
 
-- `--alternate <renders>` with `--alternate-boards` shows a second candidate look beside the first, rendered from values that are not in the app; `--alternate-film-stocks` limits it to some Film Stocks, and `--alternate-values <file>` prints its values on the board.
+- `--alternate <renders> [<renders>]` with `--alternate-boards` shows one or two further candidate looks beside the first, rendered from values that are not in the app; `--alternate-film-stocks` limits them to some Film Stocks, and `--alternate-label`, `--alternate-note` and `--alternate-values <file>` take one value per candidate, printed on the board.
   Use it for a look outside ADR 0013: such a look enters the app only on the captain's choice, recorded in ADR 0016.
 - `--remote-references <json>` links pictures the captain supplied that are not openly licensed.
   The board shows them from where they are published; they are never copied into the repository.

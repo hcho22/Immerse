@@ -206,6 +206,7 @@ STYLE = """
   figure { margin: 0; min-width: 0; }
   figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
   .pair figure img, .pair figure video { height: 520px; }
+  .row.four figure img, .row.four figure video { height: 320px; }
   details { margin-top: 10px; }
   summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
   figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
@@ -244,8 +245,8 @@ def build(board, renders, sources, output, round_number):
     photo_scenes = [scene for scene in renders["photoScenes"]]
     movie_scenes = renders.get("movieScenes", [])
     body = []
-    # A second candidate look for this board, rendered from other values, shown beside the first.
-    alternate = renders.get("alternate") if board["id"] in renders.get("alternateBoards", []) else None
+    # Further candidate looks for this board, rendered from other values, shown beside the first.
+    alternates = renders.get("alternates", []) if board["id"] in renders.get("alternateBoards", []) else []
 
     body.append('<header><p class="eyebrow">Film Journal / Look review board %s / %s</p>' % (round_number, esc(renders["date"])))
     body.append("<h1>%s</h1>" % esc(board["name"]))
@@ -263,9 +264,10 @@ def build(board, renders, sources, output, round_number):
                 % (esc(board["reference_internal"]), esc(board["prd"]),
                    "".join("<li>%s</li>" % esc(item) for item in board["judge"])))
     body.append("<main>")
-    if alternate:
-        body.append('<section><h2>Two candidates</h2><dl class="facts"><dt>%s</dt><dd>%s</dd><dt>%s</dt><dd>%s</dd></dl></section>'
-                    % (esc(renders["primaryLabel"]), esc(renders["primaryNote"]), esc(alternate["label"]), esc(alternate["note"])))
+    if alternates:
+        body.append('<section><h2>The candidates</h2><dl class="facts"><dt>%s</dt><dd>%s</dd>%s</dl></section>'
+                    % (esc(renders["primaryLabel"]), esc(renders["primaryNote"]),
+                       "".join("<dt>%s</dt><dd>%s</dd>" % (esc(alternate["label"]), esc(alternate["note"])) for alternate in alternates)))
 
     def rendered(camera, stock, scene, kind):
         for entry in files:
@@ -282,19 +284,33 @@ def build(board, renders, sources, output, round_number):
             copy_image(os.path.join(root or renders["root"], entry_path), destination, edge)
         return name
 
-    def alternate_rendered(camera, stock, scene, kind):
+    def alternate_rendered(alternate, camera, stock, scene, kind):
         for entry in alternate["files"]:
             if (entry["camera"] == camera and entry.get("filmStock") == stock and entry["scene"] == scene
                     and entry["kind"] == kind):
                 return entry
         return None
 
+    def columns(count):
+        """The row class for that many figures side by side."""
+        return {2: "two", 3: "", 4: "four"}[count]
+
     # Scenes, one section per Film Stock.
     for camera, stock in board["cameras"]:
         stock_name = STOCK_NAMES[stock]
-        # The second candidate may cover only some of the board's Film Stocks.
+        # The further candidates may cover only some of the board's Film Stocks.
         stocks = renders.get("alternateFilmStocks")
-        candidate = alternate if alternate and (not stocks or stock in stocks) else None
+        candidates = alternates if not stocks or stock in stocks else []
+
+        def looks(scene_id, kind, slug, extension, edge=None, camera=camera, stock=stock, candidates=candidates):
+            """The look in the app and each further candidate's, as (label, placed file) pairs."""
+            first = rendered(camera, stock, scene_id, kind)
+            placed = [(renders["primaryLabel"], place(first["path"], "%s.%s" % (slug, extension), edge))]
+            for alternate in candidates:
+                other = alternate_rendered(alternate, camera, stock, scene_id, kind)
+                placed.append((alternate["label"], place(other["path"], "%s-%s.%s" % (slug, alternate["suffix"], extension), edge,
+                                                         root=alternate["root"])))
+            return placed
         heading = "%s Film Stock" % stock_name if stock else "Scenes"
         body.append('<section><h2>%s</h2>' % esc(heading))
         # Pictures the captain supplied as the target for a stock. They are not openly licensed, so the board links to
@@ -311,15 +327,14 @@ def build(board, renders, sources, output, round_number):
                 slug = "%s-%s" % (stock or "look", entry["scene"])
                 body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s" referrerpolicy="no-referrer"><figcaption>'
                             '<strong>%s</strong><br><small><a href="%s">where it is published</a> · not openly licensed, linked only</small>'
-                            '</figcaption></figure>' % ("" if candidate else "two", esc(entry["url"]), esc(entry["title"]),
+                            '</figcaption></figure>' % (columns(2 + len(candidates)), esc(entry["url"]), esc(entry["title"]),
                                                         esc(entry["title"]), esc(entry["url"])))
                 scene_title = esc(scene_entries.get(entry["scene"], {}).get("title", entry["scene"]))
-                if candidate:
-                    other = alternate_rendered(camera, stock, entry["scene"], "developed")
-                    body.append('<figure><img src="%s" alt="Candidate A"><figcaption><strong>%s:</strong> %s</figcaption></figure>'
-                                % (place(developed["path"], "%s.jpg" % slug), esc(renders["primaryLabel"]), scene_title))
-                    body.append('<figure><img src="%s" alt="Candidate B"><figcaption><strong>%s:</strong> %s</figcaption></figure></div>'
-                                % (place(other["path"], "%s-b.jpg" % slug, root=alternate["root"]), esc(alternate["label"]), scene_title))
+                if candidates:
+                    for label, name in looks(entry["scene"], "developed", slug, "jpg"):
+                        body.append('<figure><img src="%s" alt="%s"><figcaption><strong>%s:</strong> %s</figcaption></figure>'
+                                    % (name, esc(label), esc(label), scene_title))
+                    body.append("</div>")
                 else:
                     body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
                                 'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
@@ -336,15 +351,15 @@ def build(board, renders, sources, output, round_number):
                 reference_name = "ref-%s.jpg" % reference_id
                 copy_image(reference["local_path"], os.path.join(directory, reference_name))
                 body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s<br>'
-                            '<small>%s</small></figcaption></figure>' % ("" if candidate else "two", reference_name, esc(reference.get("title")),
-                                                                       esc(reference.get("title")), credit(reference)))
+                            '<small>%s</small></figcaption></figure>' % (columns(2 + len(candidates)), reference_name,
+                                                                       esc(reference.get("title")), esc(reference.get("title")),
+                                                                       credit(reference)))
                 scene_title = esc(scene_entries.get(scene_id, {}).get("title", scene_id))
-                if candidate:
-                    other = alternate_rendered(camera, stock, scene_id, "developed")
-                    body.append('<figure><img src="%s" alt="Candidate A"><figcaption><strong>%s:</strong> %s</figcaption></figure>'
-                                % (place(developed["path"], "%s.jpg" % slug), esc(renders["primaryLabel"]), scene_title))
-                    body.append('<figure><img src="%s" alt="Candidate B"><figcaption><strong>%s:</strong> %s</figcaption></figure></div>'
-                                % (place(other["path"], "%s-b.jpg" % slug, root=alternate["root"]), esc(alternate["label"]), scene_title))
+                if candidates:
+                    for label, name in looks(scene_id, "developed", slug, "jpg"):
+                        body.append('<figure><img src="%s" alt="%s"><figcaption><strong>%s:</strong> %s</figcaption></figure>'
+                                    % (name, esc(label), esc(label), scene_title))
+                    body.append("</div>")
                 else:
                     body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
                                 'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
@@ -369,22 +384,20 @@ def build(board, renders, sources, output, round_number):
                 title += (" (marked as recorded under %s K light, as %s gives)"
                           % (kelvin, "warm household bulbs" if float(kelvin) < 5500 else "open shade or dusk"))
             body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4>' % (esc(label), esc(title)))
-            body.append('<div class="row">')
+            body.append('<div class="row %s">' % columns(2 + len(candidates) if candidates else 3))
             body.append('<figure><img src="%s" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> '
                         '<small>%s</small></figcaption></figure>' % (place(source["path"], "scene-%s.jpg" % scene["id"]), credit(source_entry)))
-            if candidate:
-                other = alternate_rendered(camera, stock, scene["id"], "developed")
-                other_crop = alternate_rendered(camera, stock, scene["id"], "crop")
-                body.append('<figure><img src="%s" alt="Candidate A"><figcaption><strong>%s</strong></figcaption></figure>'
-                            % (place(developed["path"], "%s.jpg" % slug), esc(renders["primaryLabel"])))
-                body.append('<figure><img src="%s" alt="Candidate B"><figcaption><strong>%s</strong></figcaption></figure>'
-                            % (place(other["path"], "%s-b.jpg" % slug, root=alternate["root"]), esc(alternate["label"])))
+            if candidates:
+                for label, name in looks(scene["id"], "developed", slug, "jpg"):
+                    body.append('<figure><img src="%s" alt="%s"><figcaption><strong>%s</strong></figcaption></figure>'
+                                % (name, esc(label), esc(label)))
                 body.append("</div>")
-                body.append('<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">'
-                            '<figure><img src="%s" alt="Candidate A at full size" loading="lazy"><figcaption>%s</figcaption></figure>'
-                            '<figure><img src="%s" alt="Candidate B at full size" loading="lazy"><figcaption>%s</figcaption></figure></div></details>'
-                            % (place(crop["path"], "%s-crop.jpg" % slug, 640), esc(renders["primaryLabel"]),
-                               place(other_crop["path"], "%s-b-crop.jpg" % slug, 640, root=alternate["root"]), esc(alternate["label"])))
+                body.append('<details><summary>Full size, center: grain and softness as developed</summary><div class="row %s">'
+                            % columns(1 + len(candidates)))
+                for label, name in looks(scene["id"], "crop", slug + "-crop", "jpg", 640):
+                    body.append('<figure><img src="%s" alt="%s at full size" loading="lazy"><figcaption>%s</figcaption></figure>'
+                                % (name, esc(label), esc(label)))
+                body.append("</div></details>")
             else:
                 body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> '
                             '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), developed["seed"]))
@@ -398,7 +411,7 @@ def build(board, renders, sources, output, round_number):
             prints = [entry for entry in files if entry["camera"] == camera and entry["scene"] == scene["id"] and entry["kind"] == "print"]
             if prints:
                 body.append('<p class="muted">Three more prints of the same scene%s, each with its own slight variation:</p><div class="row">'
-                            % (" (%s)" % renders["primaryLabel"] if candidate else ""))
+                            % (" (%s)" % renders["primaryLabel"] if candidates else ""))
                 for index, entry in enumerate(prints, 1):
                     body.append('<figure><img src="%s" alt="Another print of the scene"><figcaption>Print %d <small>seed %s</small>'
                                 '</figcaption></figure>' % (place(entry["path"], "%s-print-%d.jpg" % (slug, index)), index, entry["seed"]))
@@ -412,7 +425,7 @@ def build(board, renders, sources, output, round_number):
             label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
             slug = "%s-%s" % (stock or "look", scene["id"])
             body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4><div class="row %s">'
-                        % (esc(label), esc(source_entry.get("title", scene["id"])), "" if candidate else "two"))
+                        % (esc(label), esc(source_entry.get("title", scene["id"])), columns(2 + len(candidates))))
             source_clip = os.path.join(renders["sourcesRoot"], scene["file"])
             source_name = "scene-%s.mp4" % scene["id"]
             if not os.path.exists(os.path.join(directory, source_name)):
@@ -420,14 +433,10 @@ def build(board, renders, sources, output, round_number):
             rate = 18 if camera == "super8HomeMovie" else 24
             body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Digital source clip</strong> '
                         '<small>%s</small></figcaption></figure>' % (source_name, credit(source_entry)))
-            if candidate:
-                other = alternate_rendered(camera, stock, scene["id"], "clip")
-                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
-                            '<small>Developed Clip, %s frames per second</small></figcaption></figure>'
-                            % (place(clip["path"], "%s.mp4" % slug), esc(renders["primaryLabel"]), rate))
-                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
-                            '<small>Developed Clip, %s frames per second</small></figcaption></figure>'
-                            % (place(other["path"], "%s-b.mp4" % slug, root=alternate["root"]), esc(alternate["label"]), rate))
+            if candidates:
+                for label, name in looks(scene["id"], "clip", slug, "mp4"):
+                    body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
+                                '<small>Developed Clip, %s frames per second</small></figcaption></figure>' % (name, esc(label), rate))
             else:
                 body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> '
                             '<small>seed %s, %s frames per second</small></figcaption></figure>' % (place(clip["path"], "%s.mp4" % slug), clip["seed"], rate))
@@ -460,17 +469,17 @@ def build(board, renders, sources, output, round_number):
     # Values and the decision.
     body.append('<section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each '
                 'Camera\'s and Film Stock\'s look is set. Spatial values are fractions of the picture\'s long edge.</p>')
-    if alternate:
+    if alternates:
         body.append("<h3>%s</h3>" % esc(renders["primaryLabel"]))
     for block in board["value_blocks"]:
         body.append("<pre><code>%s</code></pre>" % esc(value_block(block)))
-    if alternate:
+    for alternate in alternates:
         body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
     body.append("</section>")
-    if alternate:
-        choices = ('<label><input type="radio" name="decision" value="approve-a"> Approve %s</label>'
-                   '<label><input type="radio" name="decision" value="approve-b"> Approve %s</label>'
-                   % (esc(renders["primaryLabel"]), esc(alternate["label"])))
+    if alternates:
+        choices = '<label><input type="radio" name="decision" value="approve-a"> Approve %s</label>' % esc(renders["primaryLabel"])
+        choices += "".join('<label><input type="radio" name="decision" value="approve-%s"> Approve %s</label>'
+                           % (alternate["suffix"], esc(alternate["label"])) for alternate in alternates)
     else:
         choices = '<label><input type="radio" name="decision" value="approve"> Approve these values for the %s</label>' % esc(board["name"])
     body.append('<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-%s" onsubmit="queueDecision(event)">'
@@ -529,15 +538,17 @@ def main():
     parser.add_argument("--round", default="01")
     parser.add_argument("--date", required=True)
     parser.add_argument("--only", nargs="*")
-    parser.add_argument("--alternate", help="renders of a second candidate look, shown beside the first on the --alternate-boards")
+    parser.add_argument("--alternate", nargs="*", default=[],
+                        help="renders of up to two further candidate looks, shown beside the first on the --alternate-boards")
     parser.add_argument("--alternate-boards", nargs="*", default=[])
     parser.add_argument("--alternate-film-stocks", nargs="*", default=[],
-                        help="the Film Stocks the second candidate covers (color, blackAndWhite); all of the board's when omitted")
+                        help="the Film Stocks the further candidates cover (color, blackAndWhite); all of the board's when omitted")
     parser.add_argument("--primary-label", default="A")
     parser.add_argument("--primary-note", default="")
-    parser.add_argument("--alternate-label", default="B")
-    parser.add_argument("--alternate-note", default="")
-    parser.add_argument("--alternate-values", help="a file holding the second candidate's values as they would read in FilmLook.swift")
+    parser.add_argument("--alternate-label", nargs="*", default=[], help="one label for each --alternate")
+    parser.add_argument("--alternate-note", nargs="*", default=[], help="one note for each --alternate")
+    parser.add_argument("--alternate-values", nargs="*", default=[],
+                        help="for each --alternate, a file holding its values as they would read in FilmLook.swift")
     parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
     parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
     parser.add_argument("--slim", action="store_true", help="smaller pictures and clips, for the copy kept in the repository")
@@ -551,11 +562,17 @@ def main():
     renders["photoScenes"] = scenes["photos"]
     renders["movieScenes"] = scenes["movies"]
     renders["date"] = args.date
-    if args.alternate:
-        alternate = json.load(open(os.path.join(args.alternate, "manifest.json")))
-        alternate.update(root=os.path.abspath(args.alternate), label=args.alternate_label, note=args.alternate_note,
-                         values=open(args.alternate_values).read().rstrip() if args.alternate_values else "")
-        renders.update(alternate=alternate, alternateBoards=args.alternate_boards,
+    alternates = []
+    for index, path in enumerate(args.alternate):
+        alternate = json.load(open(os.path.join(path, "manifest.json")))
+        values = args.alternate_values[index] if index < len(args.alternate_values) else None
+        alternate.update(root=os.path.abspath(path), suffix="bc"[index],
+                         label=args.alternate_label[index] if index < len(args.alternate_label) else "BC"[index],
+                         note=args.alternate_note[index] if index < len(args.alternate_note) else "",
+                         values=open(values).read().rstrip() if values else "")
+        alternates.append(alternate)
+    if alternates:
+        renders.update(alternates=alternates, alternateBoards=args.alternate_boards,
                        alternateFilmStocks=args.alternate_film_stocks, primaryLabel=args.primary_label,
                        primaryNote=args.primary_note)
     if args.remote_references:
