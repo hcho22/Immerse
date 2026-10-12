@@ -26,8 +26,9 @@ It is recorded here because it is taken whole from his files and not held to the
 It sits just outside two of them: a near-white tone develops to 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its color strength where the limit is 80, with greens, aquas and purples more muted than the scene.
 His files put black at about 1.3 percent, where he had chosen about 4 percent on this Camera's board on 2026-10-10 and 2026-10-11, "a soft, grayed-out, lifted-black cinematic effect" in his words.
 Shown the applied look on the board on 2026-10-12, he wrote "the blacks are too strong for color. please tone it down" and then "please bring the black up to 4 percent".
-So the look is his files with one constant changed by his own word: the black level, raised so that black develops to 4 percent of the tone scale, its slight cool tint kept.
-That is past the limit of about 3 percent the app's tests use for ADR 0013, and it is his choice, as it was before.
+The board then showed two ways to that black, his black level alone raised, or the print's density range shortened so that the shadows open with it, and he chose the second: "lets go with C".
+So the look is his files with one constant changed by his own word: the print's density range, 2.74 where his file has 4.39, which puts black at 4 percent of the tone scale and opens the shadows, with middle gray where it was.
+That black is past the limit of about 3 percent the app's tests use for ADR 0013, and it is his choice, as it was before.
 The 16mm Cinema's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
 The rest of what is decided for these Cameras stands.
@@ -35,7 +36,7 @@ A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
-The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by shortening the print's density range, which opens the shadows as well.
+The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
 Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.

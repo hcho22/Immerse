@@ -9,8 +9,10 @@ the colors and the test frame they are asked about.
 
 One constant of the look is not his file's. On 2026-10-12, with his files applied and shown on the 16mm review board,
 he wrote "the blacks are too strong for color. please tone it down" and then "please bring the black up to 4 percent".
-The look the app develops with is therefore his "print" look with its black level, BLACK, raised so that black
-develops to 4 percent of the tone scale, its slight cool tint kept. His file still holds his own value.
+The board showed two ways to that black: his black level alone raised (B), or the print's density range shortened so
+that black sits at 4 percent and the shadows open with it (C). He wrote "lets go with C". The look the app develops
+with is therefore his "print" look with its print density range, DMAX, at 2.74 where his file has 4.39. His file still
+holds his own value, and his own black level stands.
 """
 import json
 import os
@@ -24,9 +26,9 @@ import vision3_250d_lut as V
 
 OUT = sys.argv[1]
 os.makedirs(OUT, exist_ok=True)
-# His "print" look, with the black he asked for on the board (see above); his file's own is 0.0009, 0.0009, 0.0010.
-CAPTAINS_BLACK = [0.0030, 0.0030, 0.0033]
-V.LOOKS["applied"] = dict(V.LOOKS["print"], BLACK=CAPTAINS_BLACK)
+# His "print" look, with the print density range he chose on the board (see above); his file's own is 4.39.
+CAPTAINS_DENSITY_RANGE = 2.74
+V.LOOKS["applied"] = dict(V.LOOKS["print"], DMAX=CAPTAINS_DENSITY_RANGE)
 LOOK = "applied"
 M709_TO_2020 = np.linalg.inv(V.M2020_TO_709)
 rng = np.random.default_rng(20261012)
@@ -47,7 +49,7 @@ alog_grid = np.stack(np.meshgrid(*[np.linspace(0, 1, 5)] * 3, indexing="ij"), -1
 alog = np.concatenate([alog_grid, rng.uniform(0, 1, (300, 3))])
 # The picture as the phone made it: a 6 x 6 x 6 grid of display colors, which the pipeline test lays out as an image.
 display = np.stack(np.meshgrid(*[np.linspace(0, 1, 6)] * 3, indexing="ij"), -1).reshape(-1, 3)
-# His table of neutral values for the "print" look, and the same tones with the black he asked for.
+# His table of neutral values for the "print" look, and the same tones with the density range he chose.
 sanity = {str(k): v for k, v in V.SANITY["print"].items()}
 sanity_applied = {str(k): rows(V.render_scene709(np.full((1, 3), 0.18 * 2.0 ** k), LOOK))[0] for k in V.SANITY["print"]}
 # His constants as his file holds them, for a test to read the app's own values back against.
@@ -60,7 +62,8 @@ constants = {
     "shadowDesaturation": look["SH_DESAT"], "bandCenters": V.BAND_CENTRES.tolist(), "bandWidths": V.BAND_WIDTHS.tolist(),
 }
 json.dump({
-    "sanity": sanity, "sanityApplied": sanity_applied, "constants": constants, "appliedBlack": CAPTAINS_BLACK,
+    "sanity": sanity, "sanityApplied": sanity_applied, "constants": constants,
+    "applied": {"maximumDensity": CAPTAINS_DENSITY_RANGE},
     "scene": rows(scene), "sceneDeveloped": rows(V.render_scene709(scene, LOOK)),
     "appleLog": rows(alog), "appleLogDeveloped": rows(V.render_scene709(V.applelog_decode(alog) @ V.M2020_TO_709.T, LOOK)),
     "display": rows(display), "displayDeveloped": rows(V.render_scene709(V.inverse_knee(V.srgb_decode(display)), LOOK)),

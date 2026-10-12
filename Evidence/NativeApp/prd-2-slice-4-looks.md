@@ -27,7 +27,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   - 6×6 color: natural, warm color, very fine grain, gentle contrast, sharp to the corners. Black-and-white: a new panchromatic silver layer with high contrast and distinct grain.
   - Super 8: the muted look with a glow the captain chose on its board (see "Review boards" below) and fine grain; per-frame jitter and a slow weave drawn from just outside the frame so no edge shows; a brightness flicker of up to 0.06 stops; up to three dust specks on a frame; and, on about half of clips, a hair caught at the gate's edge for the whole clip.
   - 16mm: visible grain; a glow around highlights, red on color and neutral on black-and-white; minor jitter and weave; soft, darker edges; no flicker, dust or hair.
-    The color Film Stock's color and passes are the ones in the captain's own files since 2026-10-12 (next section): a long soft highlight shoulder, muted greens, aquas and purples, and daylight gray developed neutral, with black at the 4 percent he asked for once he saw them applied.
+    The color Film Stock's color and passes are the ones in the captain's own files since 2026-10-12 (next section): a long soft highlight shoulder, muted greens, aquas and purples, and daylight gray developed neutral, with black at 4 percent and the shadows opened, as he chose once he saw them applied.
     The black-and-white Film Stock keeps the values tuned on its board.
 - **Tone curves from the captain's notes.**
   `FilmLook.ToneCurve` takes either an S-curve or a point curve (`points`, a monotone cubic through the points as a photo editor draws one), since the captain wrote several notes as curve points and Lightroom slider values.
@@ -56,7 +56,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
 - **How the color is applied.**
   `FilmLook.NegativeFilm` (`NegativeFilm.swift`) is his film model, step for step: white-balance gain and exposure, log exposure with a soft toe, crosstalk between the layers, each layer's contrast, the print curve between clear film and maximum density, his black level, seven hue bands in OKLCh with his centers, widths and chroma gate (the fitted bands and his finishing bands added), the highlight and shadow desaturation, and the soft clip.
   `FilmLook.cinemaColor` holds his "print" constants, and a test reads each one back from his file; his "scan" variant is not in the app.
-  One constant is his later word and not his file's: the black level, raised so black develops to 4 percent (see "The black he asked for" below).
+  One constant is his later word and not his file's: the print's density range, shortened so that black develops to 4 percent and the shadows open (see "The black he asked for" below).
   A phone picture is display-referred, so his inverse knee opens its highlights first (`NegativeFilm.sceneLight(displayLight:)`).
 - **How the passes are applied.**
   `DevelopedTreatment.developInSceneLight` (`SceneDevelopment.swift`) runs his order on the scene's light: halation, soft edges with the vignette, overall softness, Apple Log tones on Rec.2020 primaries, grain in Apple Log units, the film, then weave with jitter, rotation and the over-scale.
@@ -76,7 +76,7 @@ Values are display tones from 0 to 1.
 | Test | What is compared | Tolerance stated | Measured |
 | --- | --- | --- | --- |
 | `NegativeFilmTests.testEveryConstantIsTheGenerators`, `ScenePassesTests.testEveryConstantIsTheReferences` | Every constant of the film and of the passes against the value in his file | Equal | Passes |
-| `NegativeFilmTests.testTheFilmGivesEveryNeutralValueTheGeneratorStates` | His `SANITY` table for "print", six neutral values from 6 stops under middle gray to 5 over | 0.02, his own | Passes for five of the six; the darkest, 6 stops under, is lifted by the black he asked for and is held to his function with that black (0.041 where his table has 0.014) |
+| `NegativeFilmTests.testTheFilmGivesEveryNeutralValueTheGeneratorStates` | His `SANITY` table for "print", six neutral values from 6 stops under middle gray to 5 over | 0.02, his own | Passes for middle gray and the three values over it; the two under it, 6 and 2 stops under, are opened by the density range he chose and are held to his function with it (0.049 and 0.196 where his table has 0.014 and 0.141) |
 | `testANeutralRampNeverReverses` | 200 neutral steps from 8 stops under to 7 over, each channel | Never falls | Passes |
 | `testTheFilmMatchesTheGeneratorOnAWideSetOfColors` | 704 scene colors (a neutral ramp, a 7 x 7 x 7 grid of phone colors, 300 random colors up to 5 stops over gray) and 425 Apple Log tones against his Python | 0.00002 in every channel (the fixture is rounded to six places) | Passes |
 | `testThePipelineDevelopsPhoneColorsAsTheGeneratorDoes` | 216 phone colors through Development's own steps (inverse knee, Apple Log, cube) against his exact function | 0.03 at worst, 0.003 on average | 0.025 at worst, on the purest green; every other color within 0.01 |
@@ -129,9 +129,11 @@ They were listed for firstmate.
   He chose a black point of about 4 percent on the 16mm board on 2026-10-10 and 2026-10-11.
   His files print black at 0.013 to 0.014, about 1.3 percent, and the app first applied them so.
   Shown that on the board on 2026-10-12 he wrote "the blacks are too strong for color. please tone it down", and then "please bring the black up to 4 percent".
-  The board put two ways of doing that beside his files as applied: his black level alone raised to 4 percent, or the print's density range shortened so that black sits at 4 percent and the shadows open with it.
-  His words name the black, so the app raises the black level alone: `black` is 0.0030, 0.0030, 0.0033 where his file has 0.0009, 0.0009, 0.0010, which keeps its slight cool tint.
-  Nothing else differs from his files: his file is unchanged in the probe, `make_fixtures.py` states the one difference, and the tests hold the app to his function with that black.
+  The board put two ways of doing that beside his files as applied: his black level alone raised to 4 percent (B), or the print's density range shortened so that black sits at 4 percent and the shadows open with it (C).
+  His words named the black, so the app first took B; with both in front of him on the next round he wrote "lets go with C".
+  The app now has C: `maximumDensity` is 2.74 where his file has 4.39, and his own black level stands.
+  A phone tone of 32 (of 255) develops to 23 where his files alone give 8, and 64 to 55 where they give 42; middle gray stays where it is, and highlights come down a touch (the phone's white to 237 where his files give 239).
+  Nothing else differs from his files: his file is unchanged in the probe, `make_fixtures.py` states the one difference, and the tests hold the app to his function with that density range.
   ADR 0016 records it as his choice.
 - **ADR 0013: just outside two of the app's limits.**
   Measured as `FilmLookTests` measures the fresh rule, his files keep blacks deep (0.015 at most for a 3 percent black, limit 0.06; 0.045 with the black he then asked for), white unyellowed and hues within 12 degrees, but a 97 percent white develops to 0.903, 0.902 and 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its strength where the limit is 80.

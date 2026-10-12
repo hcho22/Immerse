@@ -20,9 +20,10 @@ final class NegativeFilmTests: XCTestCase {
         }
         let sanity: [String: [Double]]
         let constants: Constants
-        /// Where the captain's own word changed a constant after his files were applied: the black he asked for,
-        /// and the generator's neutral values with it.
-        let appliedBlack: [Double]?, sanityApplied: [String: [Double]]?
+        /// Where the captain's own word changed a constant after his files were applied: the print density range
+        /// he chose, and the generator's neutral values with it.
+        struct Applied: Decodable { let maximumDensity: Double }
+        let applied: Applied?, sanityApplied: [String: [Double]]?
         let scene: [[Double]], sceneDeveloped: [[Double]]
         let appleLog: [[Double]], appleLogDeveloped: [[Double]]
         let display: [[Double]], displayDeveloped: [[Double]]
@@ -67,6 +68,11 @@ final class NegativeFilmTests: XCTestCase {
                                             capture: CGColorSpace.displayP3)
     private static let stocks = [cinema, mediumFormat]
 
+    /// Whether a stated neutral value is one the captain's later word moved: the 16mm's shadows.
+    private static func opened(_ stock: Stock, _ stops: String) -> Bool {
+        stock.colors.applied != nil && Double(stops)! < 0
+    }
+
     private func gray(_ level: Double) -> FilmLook.RGB { FilmLook.RGB(level, level, level) }
     private func color(_ values: [Double]) -> FilmLook.RGB { FilmLook.RGB(values[0], values[1], values[2]) }
 
@@ -74,15 +80,16 @@ final class NegativeFilmTests: XCTestCase {
 
     /// Every constant of each film is its generator's, read from the generator's own file. The 16mm develops with the
     /// "print" look and the 6×6 with the "scan" look; neither generator's other look is in the app. One constant is
-    /// the captain's later word and not his file's: the 16mm's black, which he asked on its board to have brought up
-    /// to 4 percent (ADR 0016).
+    /// the captain's later word and not his file's: the 16mm's print density range, which he chose on its board so
+    /// that black sits at 4 percent and the shadows open (ADR 0016).
     func testEveryConstantIsTheGenerators() {
         func bands(_ rows: [[Double]]) -> [FilmLook.NegativeFilm.Band] { rows.map { FilmLook.NegativeFilm.Band($0[0], $0[1], $0[2]) } }
         XCTAssertEqual(Self.cinema.colors.constants.curve, "print")
         XCTAssertEqual(Self.mediumFormat.colors.constants.curve, "scan")
         for stock in Self.stocks {
             let generator = stock.colors.constants, film = stock.film
-            XCTAssertEqual(film.output, generator.curve == "print" ? .print(maximumDensity: generator.maximumDensity) : .scan, stock.name)
+            let density = stock.colors.applied?.maximumDensity ?? generator.maximumDensity
+            XCTAssertEqual(film.output, generator.curve == "print" ? .print(maximumDensity: density) : .scan, stock.name)
             XCTAssertEqual(film.negativeGamma, color(generator.negativeGamma), stock.name)
             XCTAssertEqual(film.exposure, generator.exposure, stock.name)
             XCTAssertEqual(film.balance, color(generator.balance), stock.name)
@@ -91,7 +98,7 @@ final class NegativeFilmTests: XCTestCase {
             XCTAssertEqual(film.slope, color(generator.slope), stock.name)
             XCTAssertEqual(film.grayDensity, generator.grayDensity, stock.name)
             XCTAssertEqual(film.bias, color(generator.bias), stock.name)
-            XCTAssertEqual(film.black, color(stock.colors.appliedBlack ?? generator.black), stock.name)
+            XCTAssertEqual(film.black, color(generator.black), stock.name)
             XCTAssertEqual(film.bands, bands(generator.bands), stock.name)
             XCTAssertEqual(film.finish, bands(generator.finish), stock.name)
             XCTAssertEqual(film.highlightDesaturation, generator.highlightDesaturation, stock.name)
@@ -99,9 +106,9 @@ final class NegativeFilmTests: XCTestCase {
             XCTAssertEqual(FilmLook.NegativeFilm.bandCenters, generator.bandCenters, stock.name)
             XCTAssertEqual(FilmLook.NegativeFilm.bandWidths, generator.bandWidths, stock.name)
         }
-        XCTAssertEqual(Self.cinema.colors.appliedBlack, [0.0030, 0.0030, 0.0033])
-        XCTAssertEqual(Self.cinema.colors.constants.black, [0.0009, 0.0009, 0.0010], "His file still holds his own black")
-        XCTAssertNil(Self.mediumFormat.colors.appliedBlack, "The 6×6 is his file's throughout")
+        XCTAssertEqual(Self.cinema.colors.applied?.maximumDensity, 2.74)
+        XCTAssertEqual(Self.cinema.colors.constants.maximumDensity, 4.39, "His file still holds his own density range")
+        XCTAssertNil(Self.mediumFormat.colors.applied, "The 6×6 is his file's throughout")
         let black = Self.cinema.film.developed(scene: gray(0))
         XCTAssertEqual(black.red, 0.04, accuracy: 0.001, "The 16mm's black at 4 percent")
         XCTAssertEqual(black.green, 0.04, accuracy: 0.001)
@@ -109,20 +116,22 @@ final class NegativeFilmTests: XCTestCase {
     }
 
     /// Every neutral value each generator states for its look, from six stops under middle gray to five over, within
-    /// its tolerance of 0.02. The 16mm's black is the captain's later word, 4 percent, so its darkest stated value,
-    /// six stops under, is held to the generator's own function with that black, and sits 0.027 over the table's;
-    /// every other value of the table still holds.
+    /// its tolerance of 0.02. The 16mm's shadows are the captain's later word, so its two stated values under middle
+    /// gray, six stops and two stops under, are held to the generator's own function with the density range he
+    /// chose, and sit 0.034 and 0.054 over the table's; middle gray and everything over it still hold the table.
     func testTheFilmGivesEveryNeutralValueTheGeneratorStates() {
         for stock in Self.stocks {
             XCTAssertEqual(stock.colors.sanity.count, 6, stock.name)
             for (stops, stated) in stock.colors.sanity {
                 let developed = stock.film.developed(scene: gray(0.18 * pow(2, Double(stops)!)))
-                let lifted = stock.colors.appliedBlack != nil && stops == "-6"
-                let expected = lifted ? stock.colors.sanityApplied![stops]! : stated
+                let opened = Self.opened(stock, stops)
+                let expected = opened ? stock.colors.sanityApplied![stops]! : stated
                 XCTAssertEqual(developed.red, expected[0], accuracy: 0.02, "\(stock.name): \(stops) stops, red")
                 XCTAssertEqual(developed.green, expected[1], accuracy: 0.02, "\(stock.name): \(stops) stops, green")
                 XCTAssertEqual(developed.blue, expected[2], accuracy: 0.02, "\(stock.name): \(stops) stops, blue")
-                if lifted { XCTAssertEqual(developed.green - stated[1], 0.027, accuracy: 0.002, "The lifted black") }
+                if opened {
+                    XCTAssertEqual(developed.green - stated[1], stops == "-6" ? 0.034 : 0.054, accuracy: 0.002, "The opened shadows")
+                }
                 if let applied = stock.colors.sanityApplied?[stops] {
                     XCTAssertEqual(developed.green, applied[1], accuracy: 0.00001, "\(stock.name): \(stops) stops")
                 }
@@ -428,8 +437,8 @@ final class NegativeFilmTests: XCTestCase {
     func testThePipelineGivesTheNeutralValuesTheGeneratorStates() throws {
         for stock in Self.stocks {
             for (stops, stated) in stock.colors.sanity where Double(stops)! < 4 {
-                // The 16mm's darkest stated value is lifted by the black the captain asked for.
-                let expected = stock.colors.appliedBlack != nil && stops == "-6" ? stock.colors.sanityApplied![stops]! : stated
+                // The 16mm's stated shadows are opened by the density range the captain chose.
+                let expected = Self.opened(stock, stops) ? stock.colors.sanityApplied![stops]! : stated
                 // The phone tone whose scene light is that many stops from middle gray: its white for 3.85 stops.
                 let scene = 0.18 * pow(2, Double(stops)!)
                 let tone = Double(stops)! > 3 ? 1 : FilmLook.NegativeFilm.displayTone(scene)
