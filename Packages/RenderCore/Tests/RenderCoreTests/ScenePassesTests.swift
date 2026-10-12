@@ -116,6 +116,35 @@ final class ScenePassesTests: XCTestCase {
         }, "frame-passes.png")
     }
 
+    /// A portrait clip is the same film turned on its side: its glow, blur and grain are the size a landscape clip's
+    /// are, because lengths follow the frame's long edge. The reference only ever develops a landscape frame, so the
+    /// fixture frame is turned a quarter turn, developed, turned back and held to the same reference frame; and an
+    /// even gray frame gets grain of the same strength either way up. Lengths taken from the frame's width would
+    /// give the portrait frame three quarters of the blur and of the grain.
+    func testAPortraitFrameDevelopsAsTheSameFilmTurnedOnItsSide() throws {
+        func atOrigin(_ image: CIImage) -> CIImage {
+            image.transformed(by: CGAffineTransform(translationX: -image.extent.minX, y: -image.extent.minY))
+        }
+        var treatment = look
+        treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, halation: scene.halation, softEdges: scene.softEdges,
+                                               vignette: scene.vignette, softness: scene.softness)
+        let turned = atOrigin(try Fixtures.picture("Cinema16mmColor/frame.png").oriented(.right))
+        XCTAssertEqual(turned.extent.size, CGSize(width: 240, height: 320))
+        let developed = try DevelopedTreatment(treatment, seed: 9).apply(to: turned)
+        try assertMatches(Fixtures.tones(atOrigin(developed.oriented(.left))), "frame-passes.png")
+
+        treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, grain: scene.grain)
+        func spread(width: Int, height: Int) throws -> Double {
+            let tones = try Fixtures.tones(DevelopedTreatment(treatment, seed: 5).apply(to: Fixtures.even(tone: 0.46, width: width, height: height)))
+            let values = tones.channel(1)
+            let mean = values.reduce(0, +) / Double(values.count)
+            return (values.reduce(0) { $0 + pow($1 - mean, 2) } / Double(values.count)).squareRoot()
+        }
+        let landscape = try spread(width: 1440, height: 1080), portrait = try spread(width: 1080, height: 1440)
+        XCTAssertGreaterThan(landscape, 0.004, "The grain is visible")
+        XCTAssertEqual(portrait, landscape, accuracy: landscape * 0.05, "The same grain whichever way the Camera was held")
+    }
+
     /// The reference's own checks of these passes: halation leaves a frame with no strong highlight alone, a glow is
     /// red, then green, then blue, and never negative, and the vignette takes its full amount at the corner and
     /// nothing at the center.

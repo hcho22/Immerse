@@ -81,6 +81,7 @@ Values are display tones from 0 to 1.
 | `testThePipelineDevelopsPhoneColorsAsTheGeneratorDoes` | 216 phone colors through Development's own steps (inverse knee, Apple Log, cube) against his exact function | 0.03 at worst, 0.003 on average | 0.025 at worst, on the purest green; every other color within 0.01 |
 | `testThePipelineGivesTheNeutralValuesTheGeneratorStates` | His `SANITY` values a phone picture can reach (its white is 3.85 stops over gray) through the same steps, and a 256-step neutral ramp | 0.02, and 0.01 against his exact function; the ramp never falls | Passes |
 | `ScenePassesTests.testTheFrameWithNoPassesIsTheFilmAlone`, `testHalationMatchesTheReference`, `testSoftDarkenedEdgesMatchTheReference`, `testEveryPassBeforeTheGrainMatchesTheReference` | A 320 x 240 test frame (sky, dark ground, color patches, lamps bright enough to glow, fine detail, an even gray) against his reference's frame for each pass alone and for all of them in his order | Mean 0.003, 99 percent of values within 0.01, worst 0.08 | Mean about 0.001, 99 percent within about 0.005, worst about 0.06 at the rim of a lamp |
+| `testAPortraitFrameDevelopsAsTheSameFilmTurnedOnItsSide` | The test frame turned a quarter turn, developed and turned back, against the same reference frame; and grain on an even gray frame held either way up | The frame tolerances above; grain strength within 5 percent | Passes; with lengths taken from the frame's width it fails (99 percent within 0.018, grain a quarter weaker) |
 | `testHalationAndVignetteBehaveAsTheReferenceChecksThem` | His self-test's checks: nothing below the threshold is touched, the glow is red over green over blue, the vignette takes its whole amount at the corner | His own | Passes |
 | `testTheSwayIsTheReferences` | The weave's slow sway at six times, with his phases | 0.000000001 px | Passes |
 | `testAWovenFrameMatchesTheReference` | One frame moved and turned by the numbers his reference drew, against his woven frame | Mean 0.002, 99 percent within 0.02 | Passes |
@@ -102,6 +103,7 @@ They were listed for firstmate.
   His reference scales every length with the frame's width and develops a landscape frame.
   The app uses the long edge, so a portrait clip gets the same blur, glow and grain sizes as a landscape one; his code read literally would give a portrait clip three quarters of them.
   For a landscape clip the two are the same.
+  Firstmate confirmed the long edge on 2026-10-12: a portrait clip is the same film turned on its side.
 - **Grain comes from four stored fields.**
   His reference draws a new random field for every frame.
   The app makes four 512-pixel fields once, with his octaves, shared share and unit strength, and gives each frame one of them at an offset of its own.
