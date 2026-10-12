@@ -63,7 +63,8 @@ final class MediumFormatPassesTests: XCTestCase {
 
     // Tolerances for a whole frame against the reference's, in display tone (0 to 1): the mean difference, the
     // difference 99 percent of values stay within, and the largest. The reference frames are 8-bit and are his table
-    // read tetrahedrally, which Core Image's cube follows at twice the table's tones (`NegativeFilmTests`).
+    // read tetrahedrally, as Development reads it; the tolerances also hold where Core Image's own cube reads it
+    // (`NegativeFilmTests`).
     private func assertMatches(_ tones: Fixtures.Tones, _ fixture: String, file: StaticString = #filePath, line: UInt = #line) throws {
         let expected = try Fixtures.bytes("\(Self.folder)/\(fixture)")
         XCTAssertEqual(expected.count, tones.values.count, file: file, line: line)
@@ -131,8 +132,8 @@ final class MediumFormatPassesTests: XCTestCase {
     func testTheLensVignetteMatchesTheSpec() throws {
         try assertMatches(developed { $0.vignette = self.scene.vignette }, "frame-vignette.png")
 
-        // On an even gray, the center is untouched and the corner has 0.82 of the scene's light. Core Image reads the
-        // cube along its axes, which on grays sits up to 0.009 from the table's tetrahedral reading.
+        // On an even gray, the center is untouched and the corner has 0.82 of the scene's light.
+        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
         var treatment = look
         treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, capture: scene.capture, vignette: scene.vignette)
         let level = 118.0 / 255
@@ -145,8 +146,8 @@ final class MediumFormatPassesTests: XCTestCase {
         }
         let center = even.pixel(x: 120, y: 120), corner = even.pixel(x: 0, y: 0)
         let whole = expected(1), fallen = expected(1 - scene.vignette!.amount)
-        XCTAssertEqual(center[1], whole.green, accuracy: 0.01)
-        XCTAssertEqual(corner[1], fallen.green, accuracy: 0.01)
+        XCTAssertEqual(center[1], whole.green, accuracy: 0.002)
+        XCTAssertEqual(corner[1], fallen.green, accuracy: 0.002)
         XCTAssertLessThan(corner[1], center[1] - 0.03, "Darker corners")
         XCTAssertEqual(log2(1 - scene.vignette!.amount), -0.29, accuracy: 0.01, "About 0.3 of a stop")
     }
@@ -227,10 +228,10 @@ final class MediumFormatPassesTests: XCTestCase {
     }
 
     /// Through the whole of Development the grain is very fine: on an even middle gray at the master's width it
-    /// spreads each channel's tones as the spec's does through the captain's table, which is about one 8-bit step in
-    /// green, within a quarter. Core Image reads the cube along its axes, and around gray that reading answers a
-    /// small change of color a little more strongly than the table's tetrahedral reading does.
+    /// spreads each channel's tones as the spec's does through the captain's table, within a tenth, which is about
+    /// one 8-bit step in green.
     func testTheGrainIsVeryFineOnMiddleGray() throws {
+        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
         var treatment = look
         treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, capture: scene.capture, grain: scene.grain)
         // The phone tone nearest middle gray's light of 0.18.
@@ -241,7 +242,7 @@ final class MediumFormatPassesTests: XCTestCase {
             let mean = values.reduce(0, +) / Double(values.count)
             let spread = (values.reduce(0) { $0 + pow($1 - mean, 2) } / Double(values.count)).squareRoot()
             let want = Self.passes.grain.spreadOnMiddleGray[channel]
-            XCTAssertEqual(spread, want, accuracy: want * 0.25, "channel \(channel): \(spread) against the spec's \(want)")
+            XCTAssertEqual(spread, want, accuracy: want * 0.1, "channel \(channel): \(spread) against the spec's \(want)")
         }
         XCTAssertEqual(Self.passes.grain.spreadOnMiddleGray[1] * 255, 1.3, accuracy: 0.2, "About one 8-bit step in green")
     }

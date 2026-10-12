@@ -16,6 +16,8 @@ struct DevelopedTreatment {
     let seed: UInt64
     private let flashFired: Bool
     let sceneWhiteBalance: SceneWhiteBalance?
+    /// How a negative film's table is read. Tests set it to hold the fallback to Core Image's own color cube.
+    var tableReading = TableReading.Way.tetrahedral
 
     /// - Parameters:
     ///   - flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.
@@ -439,11 +441,23 @@ struct DevelopedTreatment {
     }
 }
 
-/// Each negative film's color cube, made the first time a capture develops with it.
+/// Each negative film's table, made the first time a capture develops with it: as an image for tetrahedral reading,
+/// and as cubes for Core Image's own filter only where that is what reads it.
 final class NegativeCubes: @unchecked Sendable {
     static let shared = NegativeCubes()
     private let lock = NSLock()
+    private var tables: [(film: FilmLook.NegativeFilm, side: Int, image: CIImage)] = []
     private var cubes: [(film: FilmLook.NegativeFilm, cube: FilmLook.NegativeFilm.Cube)] = []
+
+    func table(for film: FilmLook.NegativeFilm) -> (side: Int, image: CIImage) {
+        lock.lock()
+        defer { lock.unlock() }
+        if let made = tables.first(where: { $0.film == film }) { return (made.side, made.image) }
+        let (side, colors) = film.tones()
+        let image = TableReading.image(of: colors, side: side)
+        tables.append((film, side, image))
+        return (side, image)
+    }
 
     func cube(for film: FilmLook.NegativeFilm) -> FilmLook.NegativeFilm.Cube {
         lock.lock()

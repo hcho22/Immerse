@@ -17,9 +17,9 @@ extension FilmLook {
             case scan
         }
 
-        /// How the film reaches Core Image, which reads a color cube.
+        /// The table the film is read from.
         enum Table: Equatable {
-            /// The film's own function, over tones of the scene's light on Rec.709 primaries (`cubeTone`).
+            /// The film's own function at 64 tones a side of the scene's light on Rec.709 primaries (`cubeTone`).
             case function
             /// The generator's own table: the film at `side` Apple Log tones a side on Rec.2020 primaries, read
             /// between its tones tetrahedrally, as the captain's spec for the Film Stock reads it. Between its tones
@@ -108,11 +108,36 @@ extension FilmLook {
                                         -0.0182 * red - 0.1006 * green + 1.1187 * blue))
         }
 
-        /// A film's color cube as Core Image is handed it. Core Image keeps a cube's values in 8 bits, and half of
-        /// one of those steps shows in a look's flattest tones, as a slight unevenness in lifted blacks. So the cube
-        /// is handed over as two: each value's whole 8-bit steps, and what is left of it as a share of one step.
-        /// Core Image reads both in straight lines between their tones, so the two readings add up to the reading
-        /// of the values themselves, to 16 bits.
+        /// The film's table: the picture, as display tones, at every mix of `side` tones of red, green and blue, red
+        /// varying fastest. Development reads it between its tones tetrahedrally (`TableReading`).
+        ///
+        /// For `Table.function` the tones are Apple Log tones of the scene's light on Rec.709 primaries, stretched so
+        /// that no light is the first and `cubeBrightest` the last (`cubeTone`). On those primaries a phone picture's
+        /// most saturated colors lie on the table's faces, where it reads them exactly; on Rec.2020 primaries they
+        /// would fall inside it, across a kink.
+        ///
+        /// For `Table.appleLog` they are Apple Log tones on Rec.2020 primaries, and the table is the generator's own.
+        func tones() -> (side: Int, colors: [RGB]) {
+            switch table {
+            case .function:
+                let side = 64, last = 63.0
+                var colors: [RGB] = []
+                colors.reserveCapacity(side * side * side)
+                let light = (0..<side).map { Self.sceneLight(cubeTone: Double($0) / last) }
+                for blue in 0..<side { for green in 0..<side { for red in 0..<side {
+                    colors.append(developed(scene: RGB(light[red], light[green], light[blue])))
+                } } }
+                return (side, colors)
+            case let .appleLog(side):
+                return (side, appleLogTable(side: side))
+            }
+        }
+
+        /// A film's table as Core Image's own color cube takes it, for a renderer that cannot read the table
+        /// tetrahedrally. Core Image keeps a cube's values in 8 bits, and half of one of those steps shows in a
+        /// look's flattest tones, so the cube is handed over as two: each value's whole 8-bit steps, and what is left
+        /// of it as a share of one step. Core Image reads both in straight lines along each axis, so the two readings
+        /// add up to that reading of the values themselves, to 16 bits.
         struct Cube: Equatable {
             let dimension: Int
             /// Each value's whole 8-bit steps, as a cube of red, green, blue and alpha, red varying fastest.
@@ -121,36 +146,19 @@ extension FilmLook {
             let remainders: Data
         }
 
-        /// The film as a color cube, red varying fastest, as display tones.
-        ///
-        /// For `Table.function` the cube is asked in Apple Log tones of the scene's light on Rec.709 primaries,
-        /// stretched so that no light is the cube's first tone and `cubeBrightest` its last (`cubeTone`). On those
-        /// primaries a phone picture's most saturated colors lie on the cube's faces, where it reads them exactly; on
-        /// Rec.2020 primaries they would fall inside it, across a kink.
-        ///
-        /// For `Table.appleLog` the cube is asked in Apple Log tones on Rec.2020 primaries, as the generator's table
-        /// is. Core Image reads a cube between its tones in straight lines along each axis, not tetrahedrally, so the
-        /// cube holds the table's tetrahedral reading at twice the table's tones a side: every tone of the table, and
-        /// the reading halfway between each pair.
+        /// The film's table as cubes for Core Image's own filter. The function's table goes as it is. A generator's
+        /// table goes as its tetrahedral reading at twice its tones a side, every tone of the table and the reading
+        /// halfway between each pair, which brings the filter's reading closer to the tetrahedral one.
         func cube() -> Cube {
+            let (side, colors) = tones()
             let dimension = cubeDimension
             let count = dimension * dimension * dimension
             var steps = [Float](repeating: 1, count: count * 4), remainders = [Float](repeating: 1, count: count * 4)
             let last = Double(dimension - 1)
-            let color: (Int, Int, Int) -> RGB
-            switch table {
-            case .function:
-                func light(_ step: Int) -> Double { Self.sceneLight(cubeTone: Double(step) / last) }
-                color = { red, green, blue in developed(scene: RGB(light(red), light(green), light(blue))) }
-            case let .appleLog(side):
-                let table = appleLogTable(side: side)
-                color = { red, green, blue in
-                    Self.tetrahedral(table, side: side, at: RGB(Double(red) / last, Double(green) / last, Double(blue) / last))
-                }
-            }
             for blue in 0..<dimension { for green in 0..<dimension { for red in 0..<dimension {
-                let output = color(red, green, blue)
                 let index = (blue * dimension + green) * dimension + red
+                let output = dimension == side ? colors[index]
+                    : Self.tetrahedral(colors, side: side, at: RGB(Double(red) / last, Double(green) / last, Double(blue) / last))
                 for (channel, value) in [output.red, output.green, output.blue].enumerated() {
                     let held = min(max(value, 0), 1)
                     let whole = min((held * 255).rounded(.down), 254)
@@ -162,8 +170,8 @@ extension FilmLook {
                         remainders: remainders.withUnsafeBufferPointer { Data(buffer: $0) })
         }
 
-        /// The cube's tones a side: 64 for the function, which covers every light from none to six stops over middle
-        /// gray, and twice the table's tones for a table.
+        /// The tones a side of the cube Core Image's own filter takes: the function's 64, which cover every light from
+        /// none to six stops over middle gray, or twice a generator's table's.
         var cubeDimension: Int {
             switch table {
             case .function: 64

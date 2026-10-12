@@ -16,7 +16,7 @@ import Foundation
 ///       -> overall softness
 ///       -> Apple Log tones on Rec.2020 primaries
 ///       -> grain             (in Apple Log units, new on every frame and every photograph)
-///       -> the film          (a color cube: `NegativeFilm.cube`)
+///       -> the film          (its table, read tetrahedrally: `TableReading`)
 ///       -> weave             (drawn from a slightly enlarged picture, so no edge shows)
 ///
 /// Lengths scale with the frame's long edge, the gate's width however the Camera was held, which is the reference's
@@ -69,14 +69,17 @@ extension DevelopedTreatment {
         if let passes, let grain = passes.grain {
             image = grained(image, grain, width: width, referenceWidth: passes.referenceWidth, frame: frame)
         }
-        // The film, as a color cube asked in the tones its table is in.
+        // The film: its table, asked in the tones the table is in and read between them tetrahedrally.
         image = image.applyingFilter("CIColorClamp")
         if film.table == .function {
-            // Back from Apple Log to the scene's light on Rec.709 primaries, then the cube's own tones.
+            // Back from Apple Log to the scene's light on Rec.709 primaries, then the table's own tones.
             image = SceneLight.curve(image, SceneLight.appleLogDecoded, upTo: 1)
             image = SceneLight.curve(SceneLight.onRec709(image), SceneLight.cubeTone, upTo: FilmLook.NegativeFilm.cubeBrightest)
         }
-        image = Self.filmed(image, NegativeCubes.shared.cube(for: film))
+        let table = NegativeCubes.shared.table(for: film)
+        let read = tableReading == .tetrahedral ? TableReading.read(image, table: table.image, side: table.side) : nil
+        // Where Core Image cannot read the table tetrahedrally, its own color cube reads it along each axis.
+        image = read ?? Self.filmed(image, NegativeCubes.shared.cube(for: film))
 
         // The cube gives display tones; the weave resamples those, as the reference does, before Core Image is
         // handed them back as light.
@@ -88,8 +91,8 @@ extension DevelopedTreatment {
 
     // MARK: - Passes
 
-    /// The picture through the film's cube: the reading of its whole 8-bit steps and the reading of what is left of
-    /// each value, a share of one step, added together (`NegativeFilm.Cube`).
+    /// The picture through the film's cubes, by Core Image's own filter: the reading of the values' whole 8-bit steps
+    /// and the reading of what is left of each, a share of one step, added together (`NegativeFilm.Cube`).
     static func filmed(_ image: CIImage, _ cube: FilmLook.NegativeFilm.Cube) -> CIImage {
         func read(_ data: Data) -> CIImage {
             image.applyingFilter("CIColorCube", parameters: ["inputCubeDimension": cube.dimension, "inputCubeData": data])

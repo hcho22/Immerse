@@ -1,5 +1,6 @@
 import CoreImage
 import FilmDomain
+import Metal
 import XCTest
 @testable import RenderCore
 
@@ -222,7 +223,8 @@ final class NegativeFilmTests: XCTestCase {
             worst = max(worst, abs(read.red - want[0]), abs(read.green - want[1]), abs(read.blue - want[2]))
         }
         XCTAssertLessThan(worst, 0.000002, "worst difference \(worst)")
-        // The cube Core Image is handed holds that reading at every tone of the table and halfway between each pair.
+        // The cube Core Image's own filter is handed, where the reader cannot run, holds that reading at every tone of
+        // the table and halfway between each pair.
         let cube = Self.mediumFormat.film.cube()
         XCTAssertEqual(cube.dimension, 65)
         let steps = cube.steps.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
@@ -257,7 +259,7 @@ final class NegativeFilmTests: XCTestCase {
 
     /// 216 phone colors, every mix of six levels of red, green and blue on the capture's own primaries, through
     /// Development's own steps with the per-frame passes set aside, as a picture of one row of blocks.
-    private func developedPhoneColors(_ stock: Stock) throws -> [[Double]] {
+    private func developedPhoneColors(_ stock: Stock, reading: TableReading.Way = .tetrahedral) throws -> [[Double]] {
         let colors = stock.colors.display
         // One row of blocks, so the picture reads the same whichever way its rows run.
         let block = 8, width = colors.count * block, height = block
@@ -270,8 +272,44 @@ final class NegativeFilmTests: XCTestCase {
         }
         let picture = CIImage(bitmapData: Data(bytes), bytesPerRow: width * 4, size: CGSize(width: width, height: height),
                               format: .RGBA8, colorSpace: stock.capture)
-        let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: picture))
+        var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+        development.tableReading = reading
+        let developed = try Fixtures.tones(development.apply(to: picture))
         return colors.indices.map { developed.pixel(x: $0 * block + block / 2, y: block / 2) }
+    }
+
+    /// Tests of what the tetrahedral reader develops are skipped where Core Image cannot run it and Development falls
+    /// back to its own color cube, which `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` holds.
+    private func requireTetrahedralReader() throws {
+        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
+    }
+
+    /// A neutral ramp of the phone's 256 tones through the pipeline, against the film's own table read
+    /// tetrahedrally in Swift: the largest difference in any channel, the largest difference between the channels'
+    /// differences, which is a tint, and the largest step down from one tone to the next.
+    private func neutralRamp(_ stock: Stock, reading: TableReading.Way) throws -> (worst: Double, tint: Double, reversal: Double) {
+        var bytes = [UInt8](repeating: 255, count: 256 * 4 * 4)
+        for y in 0..<4 { for x in 0..<256 { for channel in 0..<3 { bytes[(y * 256 + x) * 4 + channel] = UInt8(x) } } }
+        let ramp = CIImage(bitmapData: Data(bytes), bytesPerRow: 256 * 4, size: CGSize(width: 256, height: 4), format: .RGBA8,
+                           colorSpace: stock.capture)
+        var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+        development.tableReading = reading
+        let developed = try Fixtures.tones(development.apply(to: ramp))
+        let table = stock.film.tones()
+        var worst = 0.0, tint = 0.0, reversal = 0.0
+        for x in 0..<256 {
+            let light = FilmLook.NegativeFilm.sceneLight(displayLight: FilmLook.NegativeFilm.displayLight(Double(x) / 255))
+            let tone = stock.film.table == .function ? FilmLook.NegativeFilm.cubeTone(sceneLight: light)
+                : FilmLook.NegativeFilm.appleLogEncoded(light)
+            let want = FilmLook.NegativeFilm.tetrahedral(table.colors, side: table.side, at: gray(tone))
+            let got = developed.pixel(x: x, y: 2)
+            let differences = [got[0] - want.red, got[1] - want.green, got[2] - want.blue]
+            worst = max(worst, differences.map { abs($0) }.max()!)
+            let mean = differences.reduce(0, +) / 3
+            tint = max(tint, differences.map { abs($0 - mean) }.max()!)
+            if x > 0 { for channel in 0..<3 { reversal = max(reversal, developed.pixel(x: x - 1, y: 2)[channel] - got[channel]) } }
+        }
+        return (worst, tint, reversal)
     }
 
     /// The worst and the mean difference, in any channel, between developed colors and the ones expected, and the
@@ -283,40 +321,105 @@ final class NegativeFilmTests: XCTestCase {
         return (differences.last!, differences.reduce(0, +) / Double(differences.count), differences[differences.count * 99 / 100])
     }
 
-    /// The 16mm through the pipeline (the phone's highlights opened, Apple Log tones, the color cube): the 216 phone
+    /// The 16mm through the pipeline (the phone's highlights opened, Apple Log tones, the film's table): the 216 phone
     /// colors come out as the generator's exact function develops them, to 0.03 at worst and 0.003 on average
-    /// (measured: 0.024 and 0.0005). The cube has 64 tones a side, read between its tones in straight lines, so the
-    /// agreement is not exact. The worst color is the phone's purest green; every other is within 0.01. The
-    /// generator's own tables, read as it reads them, are 0.073 (33 a side) and 0.068 (65 a side) off its exact
-    /// function at that green.
+    /// (measured: 0.024 and 0.0005). The table has 64 tones a side and is read between them, so the agreement is not
+    /// exact. The worst color is the phone's purest green; every other is within 0.01. The generator's own tables,
+    /// read as it reads them, are 0.073 (33 a side) and 0.068 (65 a side) off its exact function at that green.
     func testThePipelineDevelopsPhoneColorsAsTheGeneratorDoes() throws {
+        try requireTetrahedralReader()
         let result = difference(try developedPhoneColors(Self.cinema), Self.cinema.colors.displayDeveloped)
         XCTAssertLessThan(result.worst, 0.03, "worst channel difference \(result.worst)")
         XCTAssertLessThan(result.mean, 0.003, "mean channel difference \(result.mean)")
     }
 
-    /// The 6×6 through the pipeline (Display P3 opened, carried to Rec.2020, Apple Log tones, the color cube): the 216
-    /// phone colors come out as the captain's own table gives them, read tetrahedrally, to 0.001 on average, 0.01 for
-    /// 99 percent of values and 0.04 at worst (measured: 0.0006, 0.006 and 0.030, on a bright cyan). Core Image reads
-    /// a cube in straight lines along each axis, so the cube holds the table's tetrahedral reading at twice its
-    /// tones; what is left is the difference between the two readings inside those half-size cells, largest on the
-    /// most saturated colors.
+    /// The 6×6 through the pipeline (Display P3 opened, carried to Rec.2020, Apple Log tones, the table): the 216 phone
+    /// colors come out as the captain's own table gives them, read tetrahedrally, to 0.0005 on average, 0.004 for 99
+    /// percent of values and 0.01 at worst (measured: 0.00025, 0.0018 and 0.0057). What is left is the 16-bit numbers
+    /// Core Image works in and the curves it is handed as tables.
     ///
     /// His table is not his function between its tones: on these colors the two are 0.0025 apart on average and up to
     /// 0.08 apart on the most saturated ones, so the pipeline, which follows the table, is as far from the function.
     func testThePipelineDevelopsPhoneColorsAsTheCaptainsTableDoes() throws {
+        try requireTetrahedralReader()
         let stock = Self.mediumFormat
         let developed = try developedPhoneColors(stock)
         let table = difference(developed, try XCTUnwrap(stock.colors.displayTable))
-        XCTAssertLessThan(table.mean, 0.001, "mean difference from his table \(table.mean)")
-        XCTAssertLessThan(table.most, 0.01, "99 percent within \(table.most) of his table")
-        XCTAssertLessThan(table.worst, 0.04, "worst difference from his table \(table.worst)")
+        XCTAssertLessThan(table.mean, 0.0005, "mean difference from his table \(table.mean)")
+        XCTAssertLessThan(table.most, 0.004, "99 percent within \(table.most) of his table")
+        XCTAssertLessThan(table.worst, 0.01, "worst difference from his table \(table.worst)")
         let between = difference(try XCTUnwrap(stock.colors.displayTable), stock.colors.displayDeveloped)
         XCTAssertEqual(between.mean, 0.0025, accuracy: 0.0005, "His table and his function, on average")
         XCTAssertEqual(between.worst, 0.078, accuracy: 0.005, "His table and his function, at worst")
         let function = difference(developed, stock.colors.displayDeveloped)
         XCTAssertLessThan(function.mean, 0.004, "mean difference from his function \(function.mean)")
         XCTAssertLessThan(function.worst, 0.1, "worst difference from his function \(function.worst)")
+    }
+
+    /// Grays through the pipeline are the film's table's own grays: every one of the phone's 256 neutral tones comes
+    /// out within 0.002 of the table read tetrahedrally (measured: 0.0009), with no more than 0.001 between the
+    /// channels' differences (0.0005), which would be a tint, and never steps down. A tetrahedral reading of a gray
+    /// uses only the table's grays; a film's color changes begin sharply beside gray, and a reading along each axis
+    /// lets them in.
+    func testGraysAreReadFromTheTablesGraysAlone() throws {
+        try requireTetrahedralReader()
+        for stock in Self.stocks {
+            let ramp = try neutralRamp(stock, reading: .tetrahedral)
+            XCTAssertLessThan(ramp.worst, 0.002, "\(stock.name): worst \(ramp.worst)")
+            XCTAssertLessThan(ramp.tint, 0.001, "\(stock.name): tint \(ramp.tint)")
+            XCTAssertLessThan(ramp.reversal, 0.0002, "\(stock.name): largest step down \(ramp.reversal)")
+        }
+    }
+
+    /// The reader is there wherever Metal can make a library at run time, which is every iPhone the app runs on.
+    func testTheTetrahedralReaderIsMadeWhereMetalAllows() throws {
+        guard let device = MTLCreateSystemDefaultDevice(), device.supportsDynamicLibraries else {
+            throw XCTSkip("No Metal device that makes libraries at run time here")
+        }
+        XCTAssertNotNil(TableReading.kernel)
+    }
+
+    /// The reader against the same reading in Swift, on the captain's own table: 3,000 tones between the table's own,
+    /// to 0.001, which is the 16-bit numbers Core Image works in.
+    func testTheReaderReadsTheCaptainsTableAsSwiftDoes() throws {
+        try requireTetrahedralReader()
+        let file = try Fixtures.table("MediumFormatColor/immerse_6x6_color_scan_applelog_33.cube")
+        let tones = try XCTUnwrap(Self.mediumFormat.colors.tableTones), expected = try XCTUnwrap(Self.mediumFormat.colors.tableRead)
+        var pixels: [Float] = []
+        for tone in tones { pixels += [Float(tone[0]), Float(tone[1]), Float(tone[2]), 1] }
+        let picture = CIImage(bitmapData: pixels.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: tones.count * 16,
+                              size: CGSize(width: tones.count, height: 1), format: .RGBAf, colorSpace: nil)
+        let read = try XCTUnwrap(TableReading.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side))
+        let values = Fixtures.values(read)
+        var worst = 0.0
+        for (index, want) in expected.enumerated() {
+            let pixel = values.pixel(x: index, y: 0)
+            for channel in 0..<3 { worst = max(worst, abs(pixel[channel] - want[channel])) }
+        }
+        XCTAssertLessThan(worst, 0.001, "worst difference \(worst)")
+    }
+
+    /// Where Core Image cannot run the reader, its own color cube reads the film's table along each axis. For the
+    /// 6×6 that cube holds the table's tetrahedral reading at twice the table's tones, and both films' cubes are
+    /// handed over in 16 bits. That reading is close, and inside the generators' own tolerance of 0.02 on grays:
+    /// the 6×6's phone colors within 0.001 of his table on average, 0.01 for 99 percent and 0.04 at worst; the
+    /// 16mm's as its test above has them; grays within 0.01 (measured: 0.009 on the 6×6, 0.0045 on the 16mm), with
+    /// a tint of up to 0.004 (0.003 and 0.001), and steps down of no more than 0.0005.
+    func testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt() throws {
+        let roll = difference(try developedPhoneColors(Self.mediumFormat, reading: .coreImageCube),
+                              try XCTUnwrap(Self.mediumFormat.colors.displayTable))
+        XCTAssertLessThan(roll.mean, 0.001, "mean difference from his table \(roll.mean)")
+        XCTAssertLessThan(roll.most, 0.01, "99 percent within \(roll.most) of his table")
+        XCTAssertLessThan(roll.worst, 0.04, "worst difference from his table \(roll.worst)")
+        let cinema = difference(try developedPhoneColors(Self.cinema, reading: .coreImageCube), Self.cinema.colors.displayDeveloped)
+        XCTAssertLessThan(cinema.worst, 0.03, "worst difference from his function \(cinema.worst)")
+        XCTAssertLessThan(cinema.mean, 0.003, "mean difference from his function \(cinema.mean)")
+        for stock in Self.stocks {
+            let ramp = try neutralRamp(stock, reading: .coreImageCube)
+            XCTAssertLessThan(ramp.worst, 0.01, "\(stock.name): worst \(ramp.worst)")
+            XCTAssertLessThan(ramp.tint, 0.004, "\(stock.name): tint \(ramp.tint)")
+            XCTAssertLessThan(ramp.reversal, 0.0005, "\(stock.name): largest step down \(ramp.reversal)")
+        }
     }
 
     /// Each generator's neutral values through the same steps, for every one a phone picture can reach (its white is
