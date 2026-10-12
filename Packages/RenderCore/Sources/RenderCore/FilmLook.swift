@@ -27,13 +27,14 @@ enum TreatmentVersion: String, CaseIterable {
 /// Instant's print-to-print variation stays provisional after that, pending a study of preserved 1970s prints.
 enum FilmLook {
     /// The looks that depart from ADR 0013's fresh rule, each by the captain's own choice (ADR 0016): the Instant is
-    /// faded, the Super 8 is muted with a highlight glow, and the 16mm's color Film Stock is the look he asked to have
-    /// applied from his generator, whose whites sit a little under the rule's and whose greens, cyans and purples are
-    /// muted. Every other Camera and Film Stock stays under ADR 0013.
+    /// faded, the Super 8 is muted with a highlight glow, and the color Film Stocks of the 16mm and the 6×6 are the
+    /// looks he asked to have applied from his own files. The 16mm's whites sit a little under the rule's and its
+    /// greens, cyans and purples are muted; the 6×6's blacks are lifted and its whites sit under the rule's. Every
+    /// other Camera and Film Stock stays under ADR 0013.
     static func isCaptainsException(camera: CameraID, filmStock: FilmStock?) -> Bool {
         switch camera {
         case .instant1970s, .super8HomeMovie: true
-        case .cinema16mm: filmStock != .blackAndWhite
+        case .cinema16mm, .mediumFormat6x6: filmStock != .blackAndWhite
         default: false
         }
     }
@@ -86,21 +87,48 @@ enum FilmLook {
     )
 
     /// 6×6 Medium Format, color Film Stock. Format Reference: a Hasselblad 500C with its 80mm lens and Kodak Portra
-    /// 400. Natural, warm color, flattering skin tones, very fine grain and gentle contrast; focus is optical only, so
-    /// nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
+    /// 400, scanned as a modern lab scans the negative. This is the look the captain asked to have applied on
+    /// 2026-10-12: every constant here is his generator's "scan" look and section 5 of his spec
+    /// (`Probes/FilmLookCalibration/6x6`), which `NegativeFilmTests` and `ScenePassesTests` hold this to, and the
+    /// picture is read from his own table of 33 tones a side. The negative's layer contrasts come from the
+    /// manufacturer's curve as digitized in spectral_film_lut; the rest was fitted to that simulation and then
+    /// finished by hand. Gentle contrast with slightly lifted, very slightly cool blacks, highlights that keep detail
+    /// five stops over gray, cream-warm grays, quiet reds, pastel blues leaning to cyan and softer greens. Very fine
+    /// grain and a mild lens vignette; no softening, halation, weave, flicker, dust or hair, and focus is optical
+    /// only, so nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
     static let mediumFormatColor = Treatment(
-        emulsion: .color(ColorEmulsion(
-            warmth: 0.04, tint: 0.004,
-            layers: Layers(redFromGreen: 0.08, redFromBlue: -0.06, greenFromBlue: 0.14, blueFromGreen: -0.05),
-            saturation: 1.16,
-            tone: ToneCurve(contrast: 1, points: [
-                CGPoint(x: 0, y: 0), CGPoint(x: 30, y: 25), CGPoint(x: 70, y: 75), CGPoint(x: 115, y: 120),
-                CGPoint(x: 190, y: 170), CGPoint(x: 255, y: 255)
-            ], shoulder: 0.03, black: 0.02, white: 0.975),
-            shadows: RGB(-0.006, 0.005, 0.002), highlights: RGB(-0.012, -0.003, 0.014),
-            grain: Grain(amplitude: 2.2, size: 0.0005, chroma: 0.15)
+        emulsion: .negative(NegativeFilm(
+            negativeGamma: RGB(0.556, 0.550, 0.641),
+            exposure: 0.25,
+            balance: RGB(1.025, 1.000, 0.955),
+            toe: -1.08,
+            crosstalk: [RGB(1.1919, -0.2500, 0.0581), RGB(0.1446, 0.6054, 0.2500), RGB(0.0511, -0.0468, 0.9957)],
+            output: .scan,
+            slope: RGB(3.90, 3.98, 3.31),
+            grayDensity: 0.80,
+            black: RGB(0.0015, 0.0015, 0.0017),
+            bands: [
+                NegativeFilm.Band(-3.29, 0.378, -0.018), NegativeFilm.Band(-2.41, -0.152, 0.009),
+                NegativeFilm.Band(4.97, -0.136, 0.012), NegativeFilm.Band(7.37, 0.289, 0.073),
+                NegativeFilm.Band(-3.30, 0.304, 0.008), NegativeFilm.Band(-7.28, -0.054, 0.017),
+                NegativeFilm.Band(-4.49, -0.153, 0.023)
+            ],
+            finish: [
+                NegativeFilm.Band(3.0, -0.280, 0), NegativeFilm.Band(0, 0.080, 0.030), NegativeFilm.Band(0, 0, 0),
+                NegativeFilm.Band(-8.0, -0.220, 0.060), NegativeFilm.Band(0, -0.250, 0), NegativeFilm.Band(0, -0.030, 0.030),
+                NegativeFilm.Band(0, 0, 0)
+            ],
+            highlightDesaturation: 0.25, shadowDesaturation: 0.15,
+            table: .appleLog(side: 33)
         )),
-        lens: Lens(softness: 0.0005, edgeDarkening: 0.2)
+        lens: Lens(),
+        scene: ScenePasses(
+            referenceWidth: 3024,
+            capture: .displayP3,
+            vignette: ScenePasses.Vignette(amount: 0.18, start: 0.30, end: 1.0, power: 1.6),
+            grain: ScenePasses.Grain(deviation: RGB(0.0011, 0.0014, 0.0025), strength: 1.5, size: 0.00027,
+                                     secondOctaveSize: 2.5, secondOctaveWeight: 0.25, shared: 0.7)
+        )
     )
 
     /// 6×6 Medium Format, black-and-white Film Stock. Format Reference: the same camera with Kodak Tri-X 400. High
@@ -296,8 +324,16 @@ extension FilmLook {
             var overscale: Double
         }
 
+        /// The primaries the phone's picture is on when its highlights are opened: Rec.709 for a Movie clip, Display
+        /// P3 for a photograph.
+        enum Capture: Equatable {
+            case rec709
+            case displayP3
+        }
+
         /// The frame width at which per-pixel amounts are given.
         var referenceWidth: Double
+        var capture = Capture.rec709
         var halation: Halation?
         var softEdges: SoftEdges?
         var vignette: Vignette?

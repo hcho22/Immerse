@@ -17,6 +17,16 @@ extension FilmLook {
             case scan
         }
 
+        /// How the film reaches Core Image, which reads a color cube.
+        enum Table: Equatable {
+            /// The film's own function, over tones of the scene's light on Rec.709 primaries (`cubeTone`).
+            case function
+            /// The generator's own table: the film at `side` Apple Log tones a side on Rec.2020 primaries, read
+            /// between its tones tetrahedrally, as the captain's spec for the Film Stock reads it. Between its tones
+            /// that table is not the function: on saturated colors the two differ by a few hundredths.
+            case appleLog(side: Int)
+        }
+
         /// One band's changes: its hue turn in degrees, and its color strength and lightness as a change from 1.
         struct Band: Equatable {
             var turn: Double
@@ -60,6 +70,7 @@ extension FilmLook {
         /// How much color the brightest tones lose, and the darkest.
         var highlightDesaturation: Double
         var shadowDesaturation: Double
+        var table = Table.function
 
         /// Where the bands sit in OKLCh and how wide they are, in degrees.
         static let bandCenters: [Double] = [25, 55, 105, 140, 200, 255, 320]
@@ -97,22 +108,110 @@ extension FilmLook {
                                         -0.0182 * red - 0.1006 * green + 1.1187 * blue))
         }
 
-        /// The film as a color cube, red varying fastest, as display tones. The cube is asked in Apple Log tones of
-        /// the scene's light on Rec.709 primaries, stretched so that no light is the cube's first tone and
-        /// `cubeBrightest` its last (`cubeTone`). On those primaries a phone picture's most saturated colors lie on
-        /// the cube's faces, where it reads them exactly; on Rec.2020 primaries they would fall inside it, across a
-        /// kink.
-        func cube(dimension: Int) -> Data {
-            var values = [Float](repeating: 0, count: dimension * dimension * dimension * 4)
+        /// A film's color cube as Core Image is handed it. Core Image keeps a cube's values in 8 bits, and half of
+        /// one of those steps shows in a look's flattest tones, as a slight unevenness in lifted blacks. So the cube
+        /// is handed over as two: each value's whole 8-bit steps, and what is left of it as a share of one step.
+        /// Core Image reads both in straight lines between their tones, so the two readings add up to the reading
+        /// of the values themselves, to 16 bits.
+        struct Cube: Equatable {
+            let dimension: Int
+            /// Each value's whole 8-bit steps, as a cube of red, green, blue and alpha, red varying fastest.
+            let steps: Data
+            /// What is left of each value, as a share of one 8-bit step.
+            let remainders: Data
+        }
+
+        /// The film as a color cube, red varying fastest, as display tones.
+        ///
+        /// For `Table.function` the cube is asked in Apple Log tones of the scene's light on Rec.709 primaries,
+        /// stretched so that no light is the cube's first tone and `cubeBrightest` its last (`cubeTone`). On those
+        /// primaries a phone picture's most saturated colors lie on the cube's faces, where it reads them exactly; on
+        /// Rec.2020 primaries they would fall inside it, across a kink.
+        ///
+        /// For `Table.appleLog` the cube is asked in Apple Log tones on Rec.2020 primaries, as the generator's table
+        /// is. Core Image reads a cube between its tones in straight lines along each axis, not tetrahedrally, so the
+        /// cube holds the table's tetrahedral reading at twice the table's tones a side: every tone of the table, and
+        /// the reading halfway between each pair.
+        func cube() -> Cube {
+            let dimension = cubeDimension
+            let count = dimension * dimension * dimension
+            var steps = [Float](repeating: 1, count: count * 4), remainders = [Float](repeating: 1, count: count * 4)
             let last = Double(dimension - 1)
-            func light(_ step: Int) -> Double { Self.sceneLight(cubeTone: Double(step) / last) }
+            let color: (Int, Int, Int) -> RGB
+            switch table {
+            case .function:
+                func light(_ step: Int) -> Double { Self.sceneLight(cubeTone: Double(step) / last) }
+                color = { red, green, blue in developed(scene: RGB(light(red), light(green), light(blue))) }
+            case let .appleLog(side):
+                let table = appleLogTable(side: side)
+                color = { red, green, blue in
+                    Self.tetrahedral(table, side: side, at: RGB(Double(red) / last, Double(green) / last, Double(blue) / last))
+                }
+            }
             for blue in 0..<dimension { for green in 0..<dimension { for red in 0..<dimension {
-                let output = developed(scene: RGB(light(red), light(green), light(blue)))
-                let index = ((blue * dimension + green) * dimension + red) * 4
-                values[index] = Float(min(max(output.red, 0), 1)); values[index + 1] = Float(min(max(output.green, 0), 1))
-                values[index + 2] = Float(min(max(output.blue, 0), 1)); values[index + 3] = 1
+                let output = color(red, green, blue)
+                let index = (blue * dimension + green) * dimension + red
+                for (channel, value) in [output.red, output.green, output.blue].enumerated() {
+                    let held = min(max(value, 0), 1)
+                    let whole = min((held * 255).rounded(.down), 254)
+                    steps[index * 4 + channel] = Float(whole / 255)
+                    remainders[index * 4 + channel] = Float(held * 255 - whole)
+                }
             } } }
-            return values.withUnsafeBufferPointer { Data(buffer: $0) }
+            return Cube(dimension: dimension, steps: steps.withUnsafeBufferPointer { Data(buffer: $0) },
+                        remainders: remainders.withUnsafeBufferPointer { Data(buffer: $0) })
+        }
+
+        /// The cube's tones a side: 64 for the function, which covers every light from none to six stops over middle
+        /// gray, and twice the table's tones for a table.
+        var cubeDimension: Int {
+            switch table {
+            case .function: 64
+            case let .appleLog(side): 2 * side - 1
+            }
+        }
+
+        /// The generator's table for this film: the picture for every mix of `side` Apple Log tones of red, green
+        /// and blue, red varying fastest. These are the numbers the generator writes to its table file.
+        func appleLogTable(side: Int) -> [RGB] {
+            var table: [RGB] = []
+            table.reserveCapacity(side * side * side)
+            let last = Double(side - 1)
+            for blue in 0..<side { for green in 0..<side { for red in 0..<side {
+                table.append(developed(appleLog: RGB(Double(red) / last, Double(green) / last, Double(blue) / last)))
+            } } }
+            return table
+        }
+
+        /// A table read at one tone, each of whose parts runs from 0 to 1, tetrahedrally: the cell around the tone is
+        /// cut into six tetrahedra along its diagonal from black to white, and the reading is the straight blend of
+        /// the four corners of the one the tone is in.
+        static func tetrahedral(_ table: [RGB], side: Int, at tone: RGB) -> RGB {
+            func place(_ value: Double) -> (cell: Int, part: Double) {
+                let position = min(max(value, 0), 1) * Double(side - 1)
+                let cell = min(Int(position), side - 2)
+                return (cell, position - Double(cell))
+            }
+            let red = place(tone.red), green = place(tone.green), blue = place(tone.blue)
+            func corner(_ r: Int, _ g: Int, _ b: Int) -> RGB {
+                table[((blue.cell + b) * side + green.cell + g) * side + red.cell + r]
+            }
+            // From black, the largest part is stepped along first, then the next, then the smallest, to white.
+            let r = red.part, g = green.part, b = blue.part
+            let first: RGB, second: RGB, weights: (Double, Double, Double, Double)
+            if r > g {
+                if g > b { first = corner(1, 0, 0); second = corner(1, 1, 0); weights = (1 - r, r - g, g - b, b) }
+                else if r > b { first = corner(1, 0, 0); second = corner(1, 0, 1); weights = (1 - r, r - b, b - g, g) }
+                else { first = corner(0, 0, 1); second = corner(1, 0, 1); weights = (1 - b, b - r, r - g, g) }
+            } else {
+                if b > g { first = corner(0, 0, 1); second = corner(0, 1, 1); weights = (1 - b, b - g, g - r, r) }
+                else if b > r { first = corner(0, 1, 0); second = corner(0, 1, 1); weights = (1 - g, g - b, b - r, r) }
+                else { first = corner(0, 1, 0); second = corner(1, 1, 0); weights = (1 - g, g - r, r - b, b) }
+            }
+            let black = corner(0, 0, 0), white = corner(1, 1, 1)
+            return RGB(weights.0 * black.red + weights.1 * first.red + weights.2 * second.red + weights.3 * white.red,
+                       weights.0 * black.green + weights.1 * first.green + weights.2 * second.green + weights.3 * white.green,
+                       weights.0 * black.blue + weights.1 * first.blue + weights.2 * second.blue + weights.3 * white.blue)
         }
 
         /// The brightest scene light the cube holds: what an Apple Log tone of 1 stands for, about six stops over
@@ -160,12 +259,15 @@ extension FilmLook {
         /// The bands' changes in OKLCh, then the loss of color in the brightest and darkest tones.
         private func turnedBands(_ light: RGB) -> RGB {
             let red = max(light.red, 0), green = max(light.green, 0), blue = max(light.blue, 0)
-            let long = cbrt(0.4122214708 * red + 0.5363325363 * green + 0.0514459929 * blue)
-            let medium = cbrt(0.2119034982 * red + 0.6806995451 * green + 0.1073969566 * blue)
-            let short = cbrt(0.0883024619 * red + 0.2817188376 * green + 0.6299787005 * blue)
-            var lightness = 0.2104542553 * long + 0.7936177850 * medium - 0.0040720468 * short
-            let a = 1.9779984951 * long - 2.4285922050 * medium + 0.4505937099 * short
-            let b = 0.0259040371 * long + 0.7827717662 * medium - 0.8086757660 * short
+            func through(_ rows: [[Double]], _ x: Double, _ y: Double, _ z: Double) -> (Double, Double, Double) {
+                (rows[0][0] * x + rows[0][1] * y + rows[0][2] * z, rows[1][0] * x + rows[1][1] * y + rows[1][2] * z,
+                 rows[2][0] * x + rows[2][1] * y + rows[2][2] * z)
+            }
+            let cones = through(Self.conesFromLight, red, green, blue)
+            let long = cbrt(cones.0), medium = cbrt(cones.1), short = cbrt(cones.2)
+            let lab = through(Self.labFromCones, long, medium, short)
+            var lightness = lab.0
+            let a = lab.1, b = lab.2
             var chroma = hypot(a, b)
             let hue = Self.wrapped(atan2(b, a) * 180 / .pi)
             // A gray tone has no hue to turn: the bands count for nothing at zero chroma and fully from 0.03.
@@ -188,13 +290,35 @@ extension FilmLook {
             lightness *= lighter
             let angle = (hue + turn) * .pi / 180
             let newA = chroma * cos(angle), newB = chroma * sin(angle)
-            // OKLab back to linear light: the inverses of the two matrices above.
-            let l = pow(lightness + 0.3963377774 * newA + 0.2158037573 * newB, 3)
-            let m = pow(lightness - 0.1055613458 * newA - 0.0638541728 * newB, 3)
-            let s = pow(lightness - 0.0894841775 * newA - 1.2914855480 * newB, 3)
-            return RGB(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
-                       -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-                       -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
+            // OKLab back to linear light, through the inverses of the two matrices.
+            let roots = through(Self.conesFromLab, lightness, newA, newB)
+            let back = through(Self.lightFromCones, pow(roots.0, 3), pow(roots.1, 3), pow(roots.2, 3))
+            return RGB(back.0, back.1, back.2)
+        }
+
+        // OKLab's two matrices, as published, and their inverses, worked out from them as the generators do; the
+        // published inverses are rounded, and would leave the picture a millionth off the generators'.
+        private static let conesFromLight: [[Double]] = [
+            [0.4122214708, 0.5363325363, 0.0514459929], [0.2119034982, 0.6806995451, 0.1073969566],
+            [0.0883024619, 0.2817188376, 0.6299787005]
+        ]
+        private static let labFromCones: [[Double]] = [
+            [0.2104542553, 0.7936177850, -0.0040720468], [1.9779984951, -2.4285922050, 0.4505937099],
+            [0.0259040371, 0.7827717662, -0.8086757660]
+        ]
+        private static let lightFromCones = inverse(conesFromLight)
+        private static let conesFromLab = inverse(labFromCones)
+
+        /// The inverse of a matrix of three rows and three columns.
+        static func inverse(_ m: [[Double]]) -> [[Double]] {
+            let determinant = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+                + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
+            func cofactor(_ row: Int, _ column: Int) -> Double {
+                let r = [0, 1, 2].filter { $0 != row }, c = [0, 1, 2].filter { $0 != column }
+                let minor = m[r[0]][c[0]] * m[r[1]][c[1]] - m[r[0]][c[1]] * m[r[1]][c[0]]
+                return (row + column).isMultiple(of: 2) ? minor : -minor
+            }
+            return (0..<3).map { row in (0..<3).map { cofactor($0, row) / determinant } }
         }
 
         /// An angle in degrees brought into 0..<360.

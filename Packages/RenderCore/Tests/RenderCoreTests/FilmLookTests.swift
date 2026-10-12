@@ -84,7 +84,8 @@ final class FilmLookTests: XCTestCase {
     /// Stock by `NegativeFilmTests` and `ScenePassesTests`.
     func testEveryLookIsFreshlyProcessedNotAged() {
         let exceptions = Self.treatments.filter { FilmLook.isCaptainsException(camera: $0.0, filmStock: $0.1) }
-        XCTAssertEqual(exceptions.map { "\($0.0) \($0.1?.rawValue ?? "")" }, ["instant1970s ", "super8HomeMovie ", "cinema16mm color"],
+        XCTAssertEqual(exceptions.map { "\($0.0) \($0.1?.rawValue ?? "")" },
+                       ["instant1970s ", "mediumFormat6x6 color", "super8HomeMovie ", "cinema16mm color"],
                        "Only the captain's choice takes a look out of ADR 0013")
         for (camera, filmStock) in Self.treatments where !FilmLook.isCaptainsException(camera: camera, filmStock: filmStock) {
             let treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
@@ -290,10 +291,11 @@ final class FilmLookTests: XCTestCase {
             var scene = Self.even(0.214)
             if let passes = treatment.scene {
                 // A negative film's grain is one of its scene passes; the others are set aside like the lens and gate.
-                // Its strength in each pixel grows with the frame's width, so it is measured on a strip as wide as a
-                // Developed Clip, not on the small square the other formats are measured on.
-                treatment.scene = FilmLook.ScenePasses(referenceWidth: passes.referenceWidth, grain: passes.grain)
-                scene = scene.clampedToExtent().cropped(to: CGRect(x: 0, y: 0, width: 1920, height: 256))
+                // Its strength in each pixel grows with the frame's width, so it is measured on a strip as wide as
+                // the Camera develops, a Developed Clip or the 6×6's master, not on the small square the other
+                // formats are measured on.
+                treatment.scene = FilmLook.ScenePasses(referenceWidth: passes.referenceWidth, capture: passes.capture, grain: passes.grain)
+                scene = scene.clampedToExtent().cropped(to: CGRect(x: 0, y: 0, width: camera == .mediumFormat6x6 ? 3072 : 1920, height: 256))
             }
             let pixels = try render(scene, treatment: treatment)
             grain["\(camera) \(filmStock?.rawValue ?? "")"] = pixels.centerDeviation
@@ -340,9 +342,10 @@ final class FilmLookTests: XCTestCase {
     func testSoftDarkEdgesWhereTheFormatHasThem() throws {
         let side = 1536
         let checks = Self.checkerboard(side: CGFloat(side), square: 6)
-        // The 16mm's color Film Stock softens and darkens its edges in scene light; `ScenePassesTests` holds that.
+        // The color Film Stocks of the 16mm and the 6×6 soften or darken their edges in scene light;
+        // `ScenePassesTests` and `MediumFormatPassesTests` hold that.
         for (camera, filmStock, softens) in [(CameraID.disposable1990s, FilmStock?.none, true), (.super8HomeMovie, nil, true),
-                                            (.cinema16mm, .blackAndWhite, true), (.mediumFormat6x6, .color, false)] {
+                                            (.cinema16mm, .blackAndWhite, true), (.mediumFormat6x6, .blackAndWhite, false)] {
             var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             treatment.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
             treatment.gate = nil
@@ -556,8 +559,11 @@ final class FilmLookTests: XCTestCase {
         let monoTungsten = try balance(SceneWhiteBalance(temperature: 3200, tint: 0), mono)
         XCTAssertEqual(monoTungsten.red, monoTungsten.blue, accuracy: 1, "Black-and-white stays gray")
         for camera in [FilmLook.disposable, FilmLook.instant, FilmLook.mediumFormatColor, FilmLook.super8] {
-            guard case let .color(emulsion) = camera.emulsion else { continue }
-            XCTAssertNil(emulsion.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
+            switch camera.emulsion {
+            case let .color(emulsion): XCTAssertNil(emulsion.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
+            case let .negative(film): XCTAssertNil(film.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
+            case .monochrome: break
+            }
         }
     }
 

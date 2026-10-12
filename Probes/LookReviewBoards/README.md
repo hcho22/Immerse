@@ -8,8 +8,10 @@ The boards and their outcomes are in `Evidence/AssetReview/looks/` and `Evidence
 ## Render the scenes
 
 ```sh
-swift run -c release --package-path Probes/LookReviewBoards LookReviewBoards <scenes.json> <new output directory>
+swift run -c release --package-path Probes/LookReviewBoards LookReviewBoards <scenes.json> <new output directory> [camera ...]
 ```
+
+Naming Cameras by identifier (`cinema16mm`, `mediumFormat6x6` and so on) develops only those, for a round that changes one board.
 
 `scenes.json` lists photo scenes and Movie scenes with paths relative to the file.
 Each photo is developed by every Photo Camera and Film Stock with `NativePhotoRenderer.develop`, and by both Movie Cameras as a two-second still clip from which one frame is kept; each Movie scene is developed with `NativeMovieRenderer.developClip`.

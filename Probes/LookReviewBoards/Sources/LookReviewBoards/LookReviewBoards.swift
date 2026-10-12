@@ -54,7 +54,9 @@ import UniformTypeIdentifiers
 
     static func main() async throws {
         let args = CommandLine.arguments
-        guard args.count == 3 else { throw BoardError.usage }
+        guard args.count >= 3 else { throw BoardError.usage }
+        // Any further arguments name the Cameras to develop, by their identifiers; none develops every Camera.
+        let only = Set(args.dropFirst(3))
         let scenesURL = URL(fileURLWithPath: args[1]), output = URL(fileURLWithPath: args[2])
         guard !FileManager.default.fileExists(atPath: output.path) else { throw BoardError.destinationExists }
         let base = scenesURL.deletingLastPathComponent()
@@ -82,7 +84,7 @@ import UniformTypeIdentifiers
                                            path: "scenes/\(scene.id).jpg", seed: nil, version: nil))
         }
 
-        for (index, camera) in CameraCatalog.all.enumerated() {
+        for (index, camera) in CameraCatalog.all.enumerated() where only.isEmpty || only.contains(camera.id.rawValue) {
             for filmStock in camera.filmStocks.isEmpty ? [nil] : camera.filmStocks.map(Optional.some) {
                 let folder = camera.id.rawValue + (filmStock.map { "-\($0.rawValue)" } ?? "")
                 let directory = output.appendingPathComponent(folder)

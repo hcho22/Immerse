@@ -5,23 +5,24 @@ import FilmDomain
 import Foundation
 
 /// Development through a negative emulsion (`FilmLook.NegativeFilm`), which works on the scene's light rather than on
-/// display tones. The order is the captain's reference for the 16mm's per-frame passes
-/// (`Probes/FilmLookCalibration/16mm/effects_16mm_reference.py`):
+/// display tones. The order is the captain's: his reference for the 16mm's per-frame passes
+/// (`Probes/FilmLookCalibration/16mm/effects_16mm_reference.py`) and sections 2 and 5 of his spec for the 6×6
+/// (`Probes/FilmLookCalibration/6x6`), which name the same steps and leave out the ones a Camera does not have:
 ///
 ///     the picture, with a fixed-balance film's light restored
-///       -> scene light       (the phone's compressed highlights opened again)
+///       -> scene light       (the phone's compressed highlights opened again, on the capture's own primaries)
 ///       -> halation          (before anything blurs)
 ///       -> soft edges, darkened edges
 ///       -> overall softness
 ///       -> Apple Log tones on Rec.2020 primaries
-///       -> grain             (in Apple Log units, new on every frame)
-///       -> the film          (a color cube, asked in tones of the scene's light back on Rec.709 primaries)
+///       -> grain             (in Apple Log units, new on every frame and every photograph)
+///       -> the film          (a color cube: `NegativeFilm.cube`)
 ///       -> weave             (drawn from a slightly enlarged picture, so no edge shows)
 ///
 /// Lengths scale with the frame's long edge, the gate's width however the Camera was held, which is the reference's
 /// frame width for a landscape frame.
 extension DevelopedTreatment {
-    func developInSceneLight(_ source: CIImage, film: FilmLook.NegativeFilm, passes: FilmLook.ScenePasses?, cube: Data,
+    func developInSceneLight(_ source: CIImage, film: FilmLook.NegativeFilm, passes: FilmLook.ScenePasses?,
                              frame: Int, frameRate: Int) -> CIImage {
         let extent = source.extent
         let width = Double(max(extent.width, extent.height))
@@ -31,7 +32,15 @@ extension DevelopedTreatment {
         if let balance = film.fixedBalance, let light = sceneWhiteBalance {
             image = Self.fixBalance(image, film: balance, light: light)
         }
-        image = SceneLight.curve(image, SceneLight.opened, upTo: 1)
+        switch passes?.capture ?? .rec709 {
+        case .rec709:
+            image = SceneLight.curve(image, SceneLight.opened, upTo: 1)
+        case .displayP3:
+            // A photograph is opened on Display P3's primaries, then carried to Rec.2020, as the spec's input path
+            // has it; the passes below work on the same light on Rec.709 primaries, which changes none of them.
+            let opened = SceneLight.curve(SceneLight.matrix(image, SceneLight.displayP3FromRec709), SceneLight.opened, upTo: 1)
+            image = SceneLight.onRec709(SceneLight.matrix(opened, SceneLight.rec2020FromDisplayP3))
+        }
 
         if let halation = passes?.halation { image = Self.glow(image, halation, width: width) }
         if let edges = passes?.softEdges {
@@ -60,10 +69,14 @@ extension DevelopedTreatment {
         if let passes, let grain = passes.grain {
             image = grained(image, grain, width: width, referenceWidth: passes.referenceWidth, frame: frame)
         }
-        // The film: back from Apple Log to the scene's light on Rec.709 primaries, then the cube in its own tones.
-        image = SceneLight.curve(image.applyingFilter("CIColorClamp"), SceneLight.appleLogDecoded, upTo: 1)
-        image = SceneLight.curve(SceneLight.onRec709(image), SceneLight.cubeTone, upTo: FilmLook.NegativeFilm.cubeBrightest)
-            .applyingFilter("CIColorCube", parameters: ["inputCubeDimension": Self.negativeCubeDimension, "inputCubeData": cube])
+        // The film, as a color cube asked in the tones its table is in.
+        image = image.applyingFilter("CIColorClamp")
+        if film.table == .function {
+            // Back from Apple Log to the scene's light on Rec.709 primaries, then the cube's own tones.
+            image = SceneLight.curve(image, SceneLight.appleLogDecoded, upTo: 1)
+            image = SceneLight.curve(SceneLight.onRec709(image), SceneLight.cubeTone, upTo: FilmLook.NegativeFilm.cubeBrightest)
+        }
+        image = Self.filmed(image, NegativeCubes.shared.cube(for: film))
 
         // The cube gives display tones; the weave resamples those, as the reference does, before Core Image is
         // handed them back as light.
@@ -73,10 +86,21 @@ extension DevelopedTreatment {
         return image.applyingFilter("CISRGBToneCurveToLinear").cropped(to: extent)
     }
 
-    /// The film's cube covers every light from none to six stops over middle gray, so it has 64 tones a side.
-    static let negativeCubeDimension = 64
-
     // MARK: - Passes
+
+    /// The picture through the film's cube: the reading of its whole 8-bit steps and the reading of what is left of
+    /// each value, a share of one step, added together (`NegativeFilm.Cube`).
+    static func filmed(_ image: CIImage, _ cube: FilmLook.NegativeFilm.Cube) -> CIImage {
+        func read(_ data: Data) -> CIImage {
+            image.applyingFilter("CIColorCube", parameters: ["inputCubeDimension": cube.dimension, "inputCubeData": data])
+        }
+        let share = 1.0 / 255
+        let rest = read(cube.remainders).applyingFilter("CIColorMatrix", parameters: [
+            "inputRVector": CIVector(x: share, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: 0, y: share, z: 0, w: 0),
+            "inputBVector": CIVector(x: 0, y: 0, z: share, w: 0)
+        ])
+        return added(rest, to: read(cube.steps))
+    }
 
     /// The glow of the scene's light above the threshold, spread near and far, tinted and added back.
     static func glow(_ image: CIImage, _ halation: FilmLook.ScenePasses.Halation, width: Double) -> CIImage {
@@ -202,18 +226,17 @@ enum SceneLight {
     static let appleLogRange = 8.0
     static let appleLog = table(count: 16384, upTo: appleLogRange, FilmLook.NegativeFilm.appleLogEncoded)
 
+    /// Linear Rec.709 to linear Display P3 and linear Display P3 to linear Rec.2020, row by row, from the three
+    /// standards' primaries and their shared white (D65).
+    static let displayP3FromRec709: [[Double]] = [
+        [0.82246197, 0.17753803, 0], [0.03319420, 0.96680580, 0], [0.01708263, 0.07239744, 0.91051993]
+    ]
+    static let rec2020FromDisplayP3: [[Double]] = [
+        [0.75383303, 0.19859737, 0.04756960], [0.04574385, 0.94177722, 0.01247893], [-0.00121034, 0.01760172, 0.98360862]
+    ]
+
     /// Linear Rec.709 to linear Rec.2020, row by row: the inverse of the matrix the film uses to come back.
-    static let rec2020: [[Double]] = {
-        let m: [[Double]] = [[1.6605, -0.5876, -0.0728], [-0.1246, 1.1329, -0.0083], [-0.0182, -0.1006, 1.1187]]
-        let determinant = m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
-            + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
-        func cofactor(_ row: Int, _ column: Int) -> Double {
-            let r = [0, 1, 2].filter { $0 != row }, c = [0, 1, 2].filter { $0 != column }
-            let minor = m[r[0]][c[0]] * m[r[1]][c[1]] - m[r[0]][c[1]] * m[r[1]][c[0]]
-            return (row + column).isMultiple(of: 2) ? minor : -minor
-        }
-        return (0..<3).map { row in (0..<3).map { cofactor($0, row) / determinant } }
-    }()
+    static let rec2020 = FilmLook.NegativeFilm.inverse([[1.6605, -0.5876, -0.0728], [-0.1246, 1.1329, -0.0083], [-0.0182, -0.1006, 1.1187]])
 
     /// Apple Log tones back to scene light, and scene light to the film's cube tones (`NegativeFilm.cubeTone`).
     static let appleLogDecoded = table(count: 4096, upTo: 1, FilmLook.NegativeFilm.appleLogDecoded)
@@ -229,8 +252,11 @@ enum SceneLight {
     }
 
     /// The picture's scene light on Rec.2020 primaries.
-    static func onRec2020(_ image: CIImage) -> CIImage {
-        func row(_ index: Int) -> CIVector { CIVector(x: rec2020[index][0], y: rec2020[index][1], z: rec2020[index][2], w: 0) }
+    static func onRec2020(_ image: CIImage) -> CIImage { matrix(image, rec2020) }
+
+    /// The picture's light through a matrix given row by row.
+    static func matrix(_ image: CIImage, _ rows: [[Double]]) -> CIImage {
+        func row(_ index: Int) -> CIVector { CIVector(x: rows[index][0], y: rows[index][1], z: rows[index][2], w: 0) }
         return image.applyingFilter("CIColorMatrix", parameters: ["inputRVector": row(0), "inputGVector": row(1), "inputBVector": row(2)])
     }
 
@@ -251,36 +277,45 @@ enum SceneLight {
     }
 }
 
-/// The film's grain as tiles of noise, made once for each kind of grain and reused: white noise with a normal
-/// spread, softened to the grain's size, joined by a second, coarser octave, with a share of every layer's noise
-/// common to all three, and each layer brought to a deviation of 1. A frame takes one tile at an offset of its own.
+/// The film's grain as tiles of noise, made once for a kind of grain and reused: white noise with a normal spread,
+/// softened to the grain's size, joined by a second, coarser octave, with a share of every layer's noise common to
+/// all three, and each layer brought to a deviation of 1. A frame or a photograph takes one tile at an offset of its
+/// own. Eight tiles of 512 pixels a side is the captain's number for both negative Film Stocks. The tiles of the two
+/// kinds of grain asked for last are kept, so two Films developing at once do not remake each other's.
 final class GrainField: @unchecked Sendable {
     static let shared = GrainField()
     static let side = 512
-    static let count = 4
+    static let count = 8
 
-    private struct Key: Hashable {
+    private struct Kind: Hashable {
         let size: Int
         let secondOctaveSize: Double
         let secondOctaveWeight: Double
         let shared: Double
-        let index: Int
     }
 
     private let lock = NSLock()
-    private var tiles: [Key: CIImage] = [:]
+    /// The kinds kept, the one asked for last first.
+    private var kept: [(kind: Kind, tiles: [Int: CIImage])] = []
 
     /// `size` is the grain's blur radius in pixels of the frame.
     func tile(size: Double, grain: FilmLook.ScenePasses.Grain, index: Int) -> CIImage {
-        let key = Key(size: Int((size * 1000).rounded()), secondOctaveSize: grain.secondOctaveSize,
-                      secondOctaveWeight: grain.secondOctaveWeight, shared: grain.shared, index: min(max(index, 0), Self.count - 1))
+        let asked = Kind(size: Int((size * 1000).rounded()), secondOctaveSize: grain.secondOctaveSize,
+                         secondOctaveWeight: grain.secondOctaveWeight, shared: grain.shared)
+        let index = min(max(index, 0), Self.count - 1)
         lock.lock()
         defer { lock.unlock() }
-        if let tile = tiles[key] { return tile }
-        let values = Self.field(size: size, grain: grain, seed: UInt64(key.index) &* 0x9e37_79b9_7f4a_7c15 &+ 0x1234_5678)
+        if let position = kept.firstIndex(where: { $0.kind == asked }) {
+            kept.insert(kept.remove(at: position), at: 0)
+        } else {
+            kept.insert((asked, [:]), at: 0)
+            kept = Array(kept.prefix(2))
+        }
+        if let tile = kept[0].tiles[index] { return tile }
+        let values = Self.field(size: size, grain: grain, seed: UInt64(index) &* 0x9e37_79b9_7f4a_7c15 &+ 0x1234_5678)
         let tile = CIImage(bitmapData: values.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: Self.side * 16,
                            size: CGSize(width: Self.side, height: Self.side), format: .RGBAf, colorSpace: nil)
-        tiles[key] = tile
+        kept[0].tiles[index] = tile
         return tile
     }
 

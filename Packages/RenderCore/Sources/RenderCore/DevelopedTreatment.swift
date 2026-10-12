@@ -64,7 +64,7 @@ struct DevelopedTreatment {
     private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) -> CIImage {
         // A negative emulsion develops from the scene's light, through passes of its own (`SceneDevelopment.swift`).
         if case let .negative(film) = treatment.emulsion {
-            return developInSceneLight(source, film: film, passes: treatment.scene, cube: cube, frame: frame, frameRate: frameRate)
+            return developInSceneLight(source, film: film, passes: treatment.scene, frame: frame, frameRate: frameRate)
         }
         let extent = source.extent
         let longEdge = max(extent.width, extent.height)
@@ -286,10 +286,10 @@ struct DevelopedTreatment {
     static let cubeDimension = 32
 
     /// The emulsion as a color cube over display tones: color balance, color strength and the print curve for color,
-    /// or the panchromatic silver layer and its curve for black-and-white. A negative emulsion's cube is over the
-    /// Apple Log tones it is asked in instead, and is made once for each film.
+    /// or the panchromatic silver layer and its curve for black-and-white. A negative emulsion has none of this
+    /// kind: its cube is over tones of the scene's light and is made once for each film (`NegativeCubes`).
     static func cube(_ emulsion: FilmLook.Emulsion, extraContrast: Double = 0) -> Data {
-        if case let .negative(film) = emulsion { return NegativeCubes.shared.cube(for: film) }
+        if case .negative = emulsion { return Data() }
         let size = cubeDimension
         var values = [Float](repeating: 0, count: size * size * size * 4)
         for blue in 0..<size { for green in 0..<size { for red in 0..<size {
@@ -443,13 +443,13 @@ struct DevelopedTreatment {
 final class NegativeCubes: @unchecked Sendable {
     static let shared = NegativeCubes()
     private let lock = NSLock()
-    private var cubes: [(film: FilmLook.NegativeFilm, cube: Data)] = []
+    private var cubes: [(film: FilmLook.NegativeFilm, cube: FilmLook.NegativeFilm.Cube)] = []
 
-    func cube(for film: FilmLook.NegativeFilm) -> Data {
+    func cube(for film: FilmLook.NegativeFilm) -> FilmLook.NegativeFilm.Cube {
         lock.lock()
         defer { lock.unlock() }
         if let made = cubes.first(where: { $0.film == film }) { return made.cube }
-        let cube = film.cube(dimension: DevelopedTreatment.negativeCubeDimension)
+        let cube = film.cube()
         cubes.append((film, cube))
         return cube
     }
