@@ -1,6 +1,6 @@
 # The captain's exceptions to ADR 0013, chosen on the look review boards
 
-Two Cameras' Developed Treatments depart from ADR 0013, and one Film Stock of a third is taken whole from the captain's own files instead of being held to it, each by the captain's own choice (QA-16).
+Two Cameras' Developed Treatments depart from ADR 0013, and the color Film Stocks of two more are taken from the captain's own files instead of being held to it, each by the captain's own choice (QA-16).
 Everything else stays freshly processed under ADR 0013 unless the captain chooses otherwise on a Camera's own board, and any such choice is recorded here.
 
 **The 1970s Instant is faded.**
@@ -31,12 +31,22 @@ So the look is his files with one constant changed by his own word: the print's 
 That black is past the limit of about 3 percent the app's tests use for ADR 0013, and it is his choice, as it was before.
 The 16mm Cinema's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
+**The 6×6 Medium Format's color Film Stock develops with the look in the captain's own files.**
+On 2026-10-12 he sent the files that define it, a written spec, a look generator and the table it writes, with the words "please apply attached files to immerse 6x6 portra 400 film".
+The app applies them: the generator's default "scan" look, read from his table, with the spec's lens vignette and very fine grain.
+The look is his model of the reference film scanned as a modern lab scans a negative, and it adds no fading, yellowing or wear.
+It is recorded here because it is taken from his files and not held to the limits the app's tests use for ADR 0013, and it sits outside two of them: black is lifted to about 7.5 percent of the tone scale where the limit is about 3, and a near-white tone develops to 0.89 where the limit is 0.9.
+Its blues also turn about 20 degrees toward cyan, which is inside the limit.
+The board of 2026-10-12 shows the look beside the same with its greens strengthened, which he had asked for on an earlier candidate, and asks him to approve one.
+The 6×6 Medium Format's black-and-white Film Stock is unchanged and stays under ADR 0013.
+
 The rest of what is decided for these Cameras stands.
 A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
 The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
+For the 6×6's color Film Stock it was the look tuned on its board to the five reference pictures he gave, which stayed inside ADR 0013 and which the app carried until his files arrived.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
 Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.

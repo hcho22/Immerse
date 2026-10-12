@@ -1,0 +1,27 @@
+$ python derive.py
+finished look vs simulation: chart dE2000 mean 6.57 max 10.21 (blue flower)
+  skin patches: [ 5.32  8.27]
+
+input -> R G B out
+    0 -> [19 19 21]
+   16 -> [22 22 24]
+   32 -> [30 29 31]
+   64 -> [58 56 57]
+   96 -> [98 96 95]
+  128 -> [136 134 131]
+  160 -> [166 164 161]
+  192 -> [188 186 183]
+  224 -> [206 206 203]
+  240 -> [220 220 217]
+  255 -> [238 238 236]
+
+colour: OKLab dHue(deg)  chroma ratio  dL (vs neutral of same luma)
+  Red        +2.7    1.02   +0.034
+  Orange     -2.4    0.95   -0.010
+  Yellow     -7.6    0.73   -0.044
+  Green      +1.1    0.82   -0.097
+  Aqua       +0.5    1.01   -0.062
+  Blue      -21.6    0.69   +0.061
+  Purple     +4.8    0.57   +0.114
+  Magenta    +1.5    0.67   +0.078
+derive exit=0

@@ -20,6 +20,19 @@ The two pictures are JPEG copies (quality 90) of the PNG files the script wrote,
 The three photographs are scikit-image's sample pictures: `coffee` (Rachel Michetti, CC0), `chelsea` (Stefan van der Walt, CC0) and `rocket` (SpaceX, released into the public domain).
 The color chart is drawn from published reflectance data by colour-science.
 
+## 6×6 Medium Format, color Film Stock
+
+| File | What it is |
+| --- | --- |
+| `6x6-self-test.txt` | The generator's own self-test, `portra400_lut.py --test`. It passed. |
+| `6x6-derive.txt` | `derive.py`: how far his finished "scan" look sits from the simulation it was fitted to (color chart dE2000 mean 6.57, worst 10.21 on blue flower; skin 5.32 and 8.27), his tone curve through the table, and his look's net hue, color strength and lightness change by color. These are his spec's own numbers. |
+| `6x6-preview.jpg` | `preview.py`'s contact sheet: a color chart and three photographs, each as the original, his "scan" look and his "print" look. Only the "scan" look is in the app. |
+
+`derive.py` and `preview.py` write under `/tmp/claude-0`; they were run as copies with that path pointed at a scratch folder and nothing else changed.
+The picture is a JPEG copy (quality 90) of the PNG file the script wrote.
+In the same environment his generator rewrites both of the tables he sent, byte for byte.
+The photographs are the same three sample pictures as the 16mm's.
+
 ## The environment
 
 A scratch virtual environment (Python 3.12) under the task's temporary folder; nothing was installed system-wide and nothing from these packages is in the repository.
@@ -59,8 +72,9 @@ PyQt6 is a dependency of `spectral_film_lut`'s own window, which these runs neve
 ## Whether the project's notices need an entry
 
 The app carries no code and no data file from any of these packages.
-What it carries from this work is the captain's finished constants, written in `FilmLook.swift`.
-His generator labels three of them, the negative's per-layer contrast, as straight-line slopes of the film maker's published characteristic curves as `spectral_film_lut` digitized them, and the rest as fitted to that package's simulation and then tuned by hand.
+What it carries from this work is the captain's finished constants, written in `FilmLook.swift`, for both Film Stocks.
+His generators label the negative's per-layer contrast as straight-line slopes of the film maker's published characteristic curves as `spectral_film_lut` digitized them, and the rest as fitted to that package's simulation and then tuned by hand.
+His 6×6 spec notes that the package's data can be shipped with the MIT notice; the app ships none of it, and makes his table from his constants.
 The MIT License asks for its notice with copies or substantial portions of the software; a handful of numbers read from, or fitted against, its output is neither, so no notice is required.
 The project has no notices file today, and the app has no acknowledgements screen.
 Whether to credit the package anyway, as a courtesy, is the captain's call and was put to firstmate.
