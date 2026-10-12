@@ -27,6 +27,8 @@ python3 Probes/LookReviewBoards/build_boards.py --renders <renders> --sources <s
 `<sources>` is a directory with `manifest.json` and `SOURCES.md`: every test scene and reference image with its source page, author and license.
 Use only public-domain or openly licensed images there, and record each one's source and license.
 Each board is a self-contained directory, `index.html` with the pictures and clips it shows beside it, served for review with `lavish-axi <board>/index.html`.
+The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with each file's download URL) and `scenes.json`, so the same files can be fetched and rendered again.
+`--slim` writes smaller pictures and clips and leaves out the comparison with treatment version 2; it is the copy kept in the repository once a board is approved.
 
 - `--alternate <renders>` with `--alternate-boards` shows a second candidate look beside the first, rendered from values that are not in the app; `--alternate-film-stocks` limits it to some Film Stocks, and `--alternate-values <file>` prints its values on the board.
   Use it for a look outside ADR 0013: such a look enters the app only on the captain's choice, recorded in ADR 0016.

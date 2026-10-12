@@ -141,17 +141,25 @@ def run(*args):
     subprocess.run(args, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def copy_image(source, destination, edge=1400):
+# How large the boards' copies are: for review as served, or (--slim) small enough to keep in the repository.
+# The slim copy also leaves out each scene's comparison with treatment version 2.
+MEDIA = {"edge": 1400, "quality": 84, "clip_width": 1280, "clip_crf": 20, "previous": True}
+SLIM_MEDIA = {"edge": 900, "quality": 74, "clip_width": 640, "clip_crf": 28, "previous": False}
+
+
+def copy_image(source, destination, edge=None):
     """A JPEG copy at most `edge` pixels on its long side."""
     os.makedirs(os.path.dirname(destination), exist_ok=True)
-    run("sips", "-s", "format", "jpeg", "-s", "formatOptions", "84", "-Z", str(edge), source, "--out", destination)
+    run("sips", "-s", "format", "jpeg", "-s", "formatOptions", str(MEDIA["quality"]), "-Z", str(edge or MEDIA["edge"]),
+        source, "--out", destination)
 
 
 def copy_clip(source, destination):
-    """An H.264 MP4 a browser plays, 1280 pixels wide, silent."""
+    """An H.264 MP4 a browser plays, silent."""
     os.makedirs(os.path.dirname(destination), exist_ok=True)
-    run("ffmpeg", "-y", "-loglevel", "error", "-i", source, "-an", "-c:v", "libx264", "-crf", "20", "-preset", "slow",
-        "-vf", "scale=1280:-2", "-pix_fmt", "yuv420p", "-movflags", "+faststart", destination)
+    run("ffmpeg", "-y", "-loglevel", "error", "-i", source, "-an", "-c:v", "libx264", "-crf", str(MEDIA["clip_crf"]),
+        "-preset", "slow", "-vf", "scale=%d:-2" % MEDIA["clip_width"], "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+        destination)
 
 
 def esc(text):
@@ -241,8 +249,8 @@ def build(board, renders, sources, output, round_number):
     body.append('<header><p class="eyebrow">Film Journal / Look review board %s / %s</p>' % (round_number, esc(renders["date"])))
     body.append("<h1>%s</h1>" % esc(board["name"]))
     body.append('<p class="muted">Each scene developed by the app\'s own renderer (treatment version %s) beside the '
-                'phone capture it started from, the provisional look it replaces, and photographs made with the '
-                'Camera\'s Format Reference.</p>' % esc(renders["treatmentVersion"]))
+                'phone capture it started from%s and photographs made with the Camera\'s Format Reference.</p>'
+                % (esc(renders["treatmentVersion"]), ", the provisional look it replaces," if MEDIA["previous"] else ""))
     body.append('<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference '
                 'image stay internal and never ship in the app. Reference images are public-domain or openly licensed '
                 'photographs credited under each one; many are scans of surviving prints or reels, which have aged, so '
@@ -265,7 +273,7 @@ def build(board, renders, sources, output, round_number):
                 return entry
         return None
 
-    def place(entry_path, name, edge=1400, root=None):
+    def place(entry_path, name, edge=None, root=None):
         destination = os.path.join(directory, name)
         if entry_path.endswith(".mov"):
             copy_clip(os.path.join(root or renders["root"], entry_path), destination)
@@ -376,9 +384,10 @@ def build(board, renders, sources, output, round_number):
                 body.append('<figure><img src="%s" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> '
                             '<small>grain and softness as developed</small></figcaption></figure>' % place(crop["path"], "%s-crop.jpg" % slug, 640))
                 body.append("</div>")
-            body.append('<details><summary>Compare with version 2, the provisional shared look it replaces</summary><div class="row">'
-                        '<figure><img src="%s" alt="Developed with treatment version 2" loading="lazy"><figcaption>Version 2</figcaption></figure>'
-                        '</div></details>' % place(previous["path"], "%s-v2.jpg" % slug))
+            if MEDIA["previous"]:
+                body.append('<details><summary>Compare with version 2, the provisional shared look it replaces</summary><div class="row">'
+                            '<figure><img src="%s" alt="Developed with treatment version 2" loading="lazy"><figcaption>Version 2</figcaption></figure>'
+                            '</div></details>' % place(previous["path"], "%s-v2.jpg" % slug))
             prints = [entry for entry in files if entry["camera"] == camera and entry["scene"] == scene["id"] and entry["kind"] == "print"]
             if prints:
                 body.append('<p class="muted">Three more prints of the same scene%s, each with its own slight variation:</p><div class="row">'
@@ -524,7 +533,10 @@ def main():
     parser.add_argument("--alternate-values", help="a file holding the second candidate's values as they would read in FilmLook.swift")
     parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
     parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
+    parser.add_argument("--slim", action="store_true", help="smaller pictures and clips, for the copy kept in the repository")
     args = parser.parse_args()
+    if args.slim:
+        MEDIA.update(SLIM_MEDIA)
     renders = json.load(open(os.path.join(args.renders, "manifest.json")))
     scenes = json.load(open(args.scenes))
     renders["root"] = os.path.abspath(args.renders)
@@ -546,7 +558,10 @@ def main():
         if entry.get("local_path") and not os.path.isabs(entry["local_path"]):
             entry["local_path"] = os.path.join(os.path.abspath(args.sources), entry["local_path"])
     os.makedirs(args.output, exist_ok=True)
+    # The record needed to fetch the same files again: each one's download URL, and the scenes the renders used.
     shutil.copy(os.path.join(args.sources, "SOURCES.md"), os.path.join(args.output, "SOURCES.md"))
+    shutil.copy(os.path.join(args.sources, "manifest.json"), os.path.join(args.output, "sources.json"))
+    shutil.copy(args.scenes, os.path.join(args.output, "scenes.json"))
     for board in BOARDS:
         if args.only and board["id"] not in args.only:
             continue
