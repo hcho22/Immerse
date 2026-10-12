@@ -114,7 +114,7 @@ BOARDS = [
             "Black-and-white stock: visible grain and a neutral glow around bright highlights.",
             "Motion: minor jitter and weave only; no flicker, no dust or hair.",
             "Edges: soft and darker toward the corners.",
-            "Daylight balance: the tungsten scene develops orange.",
+            "Daylight balance: the warm indoor scene develops orange and the cool-light scenes develop blue.",
         ],
     },
 ]
@@ -125,7 +125,8 @@ REFERENCE_GROUPS = {"disposable": "Single-use camera prints", "instant": "1970s 
                     "16mm-color": "Motion picture color negative", "16mm-bw": "Black-and-white motion picture film",
                     "halation": "Highlight halation", "dust": "Dust and hair in the gate"}
 SCENE_LABELS = {"day": "Day", "flash": "Flash", "night": "Night or dim, no flash", "skin": "Skin tones",
-                "highlights": "Bright highlights", "video": "Moving scene", "tungsten": "Warm indoor light"}
+                "highlights": "Bright highlights", "video": "Moving scene", "tungsten": "Warm indoor light",
+                "shade": "Cool light: open shade or dusk"}
 
 
 def value_block(name):
@@ -303,7 +304,8 @@ def build(board, renders, sources, output, round_number):
         if remote:
             body.append('<h3>Side by side with the captain\'s reference pictures</h3><p class="muted">Supplied by the captain on %s '
                         'as the target for this Film Stock. They are from a public forum post and are not openly licensed, so they '
-                        'are shown from where they are published and are not copied into the repository.</p>' % esc(renders["remoteDate"]))
+                        'are shown from where they are published and are not copied into the repository.</p>'
+                        % esc(remote[0].get("date") or renders["remoteDate"]))
             for entry in remote:
                 developed = rendered(camera, stock, entry["scene"], "developed")
                 slug = "%s-%s" % (stock or "look", entry["scene"])
@@ -348,8 +350,11 @@ def build(board, renders, sources, output, round_number):
                                 'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
         body.append('<h3>Every scene</h3>')
         for scene in photo_scenes:
-            # The recorded warm light matters only to the 16mm's color stock, which keeps a fixed daylight balance.
-            if scene.get("category") == "tungsten" and (camera, stock) != ("cinema16mm", "color"):
+            # A scene may be kept to the boards it was added for.
+            if scene.get("boards") and board["id"] not in scene["boards"]:
+                continue
+            # A recorded light matters only to the 16mm's color stock, which keeps a fixed daylight balance.
+            if scene.get("light") and (camera, stock) != ("cinema16mm", "color"):
                 continue
             source_entry = scene_entries.get(scene["id"], {})
             label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
@@ -360,7 +365,9 @@ def build(board, renders, sources, output, round_number):
             slug = "%s-%s" % (stock or "look", scene["id"])
             title = source_entry.get("title", scene["id"])
             if scene.get("light"):
-                title += " (marked as recorded under %s K light, as warm household bulbs give)" % scene["light"].split(",")[0]
+                kelvin = scene["light"].split(",")[0]
+                title += (" (marked as recorded under %s K light, as %s gives)"
+                          % (kelvin, "warm household bulbs" if float(kelvin) < 5500 else "open shade or dusk"))
             body.append('<div class="scene"><h4><span class="tag">%s</span>%s</h4>' % (esc(label), esc(title)))
             body.append('<div class="row">')
             body.append('<figure><img src="%s" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> '

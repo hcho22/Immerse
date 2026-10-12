@@ -136,7 +136,7 @@ enum FilmLook {
     /// past the fresh rule's limit for lifted blacks (ADR 0016).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0, layers: Layers(redFromGreen: -0.04, redFromBlue: -0.06, greenFromBlue: 0.19), saturation: 1.24,
+            warmth: 0, layers: Layers(redFromGreen: -0.04, redFromBlue: -0.06, greenFromBlue: 0.15), saturation: 1.24,
             tone: ToneCurve(contrast: 1.2, midtones: 0.93, shoulder: 0.07, black: 0.04, white: 0.97),
             shadows: RGB(-0.01, 0.004, 0.02), highlights: RGB(-0.004, 0.004, 0.004),
             grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
