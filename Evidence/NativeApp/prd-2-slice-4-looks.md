@@ -62,6 +62,10 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   On 2026-10-12 he asked for a 6×6 candidate from the values in a published photo-editor preset (OpenFilmStocks, `2.1.5 Kodak Portra 400.xmp`, MIT License).
   Only its numbers were used; the file is not in the repository.
   Its color mixer has no equivalent in `FilmLook`, so the candidate was rendered with a mixer added to the renderer in the working tree only; it enters the app only if he chooses that candidate.
+- **A spec the captain wrote for the 16mm.**
+  On 2026-10-12 he replied on the 16mm board with a written spec for its color Film Stock: a low-contrast negative with layer crosstalk, printed through a steep print curve, with hue bands and a soft clip, and amounts for softness, diffusion, vignette, halation, grain and weave.
+  Its color model was built as written, checked against the spec's own numbers (middle gray 0.43, black 0.015, white 0.955) and against its reference code, and rendered as candidates in the working tree only.
+  The spec also asks for things beyond a look (brightness flicker on the 16mm, an aspect crop, user toggles, a second shipped look, log capture, naming); those were not built and went to firstmate as a question for the captain.
 - **A look outside ADR 0013 is the captain's choice.**
   Where his notes asked for a look the fresh rule excludes, the board showed two candidates, A inside the rule and B as his notes described, and only his answer put B in the app, recorded in ADR 0016.
 
@@ -71,7 +75,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
 | 1970s Instant | 1 (2026-10-09), then A and B, then 2 with B alone (2026-10-10) | "the image has to be more faded", then "faded", then "approved" | Approved 2026-10-10: the faded look, ADR 0016. Its print-to-print variation stays provisional until the study of preserved 1970s prints. |
 | 1960s Super 8 Home Movie | 1 (2026-10-09), 2 with A and B (2026-10-10), 3 with B alone | "muted with a glow" | Approved 2026-10-10: B, ADR 0016. |
 | 6×6 Medium Format | 1 (2026-10-09) to 8 (2026-10-12) | Slider notes, then five reference pictures, a point curve, "please replicate lightroom values", then "Round 5 values are better than the lightroom values. please retry with the .xmp values", then "the blacks are too strong. please bring down the contrast to 50" | Awaiting the captain on round 8, which shows the round 5 color look (A, in the app) beside the preset he named at Contrast 50 (B) and the same with the preset curve's lowest points eased, which is what opens the blacks (C). The preset's muted greens are just past ADR 0013's limit. Black-and-white follows his notes from round 4. |
-| 16mm Cinema | 1 (2026-10-09) to 7 (2026-10-12) | A description of the reference film, then slider values, "please replicate the lightroom values", then four reference pictures: "get as close as possible" | Awaiting the captain on round 7, tuned to his reference pictures. The 4 percent black point is his choice (ADR 0016). |
+| 16mm Cinema | 1 (2026-10-09) to 8 (2026-10-12) | A description of the reference film, then slider values, "please replicate the lightroom values", then four reference pictures: "get as close as possible", then a full written spec: "please try the following" | Awaiting the captain on round 8, which shows the look tuned to his reference pictures (A, in the app) beside his spec's Print look (B) and its Scan variant (C, whose lifted blacks are outside ADR 0013). The 4 percent black point in A is his choice (ADR 0016). |
 
 What the boards do not show: the test scenes are modern digital photographs and clips, not captures from an iPhone running the app, so the Disposable's fixed exposure, the real flash and the phone's own processing are absent.
 The Movie scenes were tone-mapped to SDR first; a phone may record HDR, which the manual candidate has to check.
