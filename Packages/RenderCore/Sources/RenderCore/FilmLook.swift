@@ -129,21 +129,16 @@ enum FilmLook {
     /// 16mm Cinema, color Film Stock. Format Reference: the Bolex H16 Reflex with Kodak Vision3 250D. Visible grain, a
     /// red highlight glow (a deliberate departure: the reference film's backing prevents it), minor jitter and weave,
     /// and soft, darkened edges; no flicker, dust or hair. Its daylight balance is fixed, so warm indoor light develops
-    /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3). Its black point is lifted to about
-    /// 4 percent, "a soft, grayed-out, lifted-black cinematic effect", which the captain asked for on its review board
+    /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3). Its color follows the reference
+    /// pictures the captain gave on its review board on 2026-10-12: blues turned toward aqua, strong warm reds and
+    /// yellows, cool shadows, and full contrast with a soft highlight roll-off. Its black point is lifted to about
+    /// 4 percent, "a soft, grayed-out, lifted-black cinematic effect", which the captain asked for on that board
     /// past the fresh rule's limit for lifted blacks (ADR 0016).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            // The captain's tone values, through Probes/LookReviewBoards/lightroom_curve.py: opened shadows, softened
-            // highlights, a slight lift at the top and a little haze. Those values leave color strength alone, so
-            // `saturation` makes up what the gentler curve takes from it.
-            warmth: 0.006, tint: 0.004, saturation: 1.1,
-            tone: ToneCurve(contrast: 1, points: [
-                CGPoint(x: 0, y: 0), CGPoint(x: 16, y: 19), CGPoint(x: 32, y: 38.9), CGPoint(x: 64, y: 75.9),
-                CGPoint(x: 96, y: 102.8), CGPoint(x: 128, y: 126.4), CGPoint(x: 160, y: 151.8),
-                CGPoint(x: 192, y: 181.4), CGPoint(x: 224, y: 218.6), CGPoint(x: 255, y: 255)
-            ], black: 0.04),
-            highlights: RGB(0.005, 0.002, -0.005),
+            warmth: 0, layers: Layers(redFromGreen: -0.04, redFromBlue: -0.06, greenFromBlue: 0.19), saturation: 1.24,
+            tone: ToneCurve(contrast: 1.2, midtones: 0.93, shoulder: 0.07, black: 0.04, white: 0.97),
+            shadows: RGB(-0.01, 0.004, 0.02), highlights: RGB(-0.004, 0.004, 0.004),
             grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
             fixedBalance: 5500
         )),

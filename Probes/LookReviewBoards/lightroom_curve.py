@@ -5,6 +5,7 @@ The captain writes some look notes as Lightroom slider values. Adobe does not pu
 stated approximation of their global effect on display tones (0 to 255), not Lightroom itself: Highlights and Shadows
 are locally adaptive in Lightroom and are treated here as smooth curve regions.
 
+  Contrast    an S around middle gray whose slope there is 1 + 0.38 per 100 units, applied first
   Blacks      moves the black end by 0.4 level per unit, fading out by tone 96
   Shadows     moves the tones around 64 by 0.32 level per unit
   Highlights  moves the tones around 192 by 0.34 level per unit, less at the white end
@@ -26,6 +27,9 @@ import math
 
 def basic(x, args):
     """One display tone (0 to 255) through the Basic values."""
+    if args.contrast and 0 < x < 255:
+        slope, tone = 1 + 0.38 * args.contrast / 100, x / 255
+        x = 255 * tone**slope / (tone**slope + (1 - tone) ** slope)
     blacks = 0.4 * args.blacks * max(0.0, 1 - x / 96) ** 2
     shadows = 0.32 * args.shadows * math.exp(-(((x - 64) / 48) ** 2))
     highlights = 0.34 * args.highlights * math.exp(-(((x - 192) / 56) ** 2))
@@ -60,7 +64,7 @@ def interpolate(points, x):
 
 def main():
     parser = argparse.ArgumentParser()
-    for name in ("highlights", "shadows", "whites", "blacks", "dehaze"):
+    for name in ("contrast", "highlights", "shadows", "whites", "blacks", "dehaze"):
         parser.add_argument("--" + name, type=float, default=0)
     parser.add_argument("--black-node", type=float, default=0, help="percent of the scale the bottom-left node is raised to")
     parser.add_argument("--then", default="", help='a point curve applied afterwards, as "in,out in,out ..."')
@@ -68,7 +72,7 @@ def main():
     after = [tuple(float(v) for v in pair.split(",")) for pair in args.then.split()] if args.then else None
 
     points = []
-    for x in (0, 16, 32, 64, 96, 128, 160, 192, 224, 255):
+    for x in (0, 8, 16, 32, 48, 64, 96, 128, 160, 192, 224, 240, 255):
         y = min(max(basic(x, args), 0), 255)
         if after:
             y = interpolate(after, y)
