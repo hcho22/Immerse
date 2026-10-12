@@ -1,6 +1,6 @@
 # The captain's exceptions to ADR 0013, chosen on the look review boards
 
-Two Cameras' Developed Treatments depart from ADR 0013, and a third departs from it in one tone, each by the captain's own choice on its look review board (QA-16).
+Two Cameras' Developed Treatments depart from ADR 0013, and one Film Stock of a third is taken whole from the captain's own files instead of being held to it, each by the captain's own choice (QA-16).
 Everything else stays freshly processed under ADR 0013 unless the captain chooses otherwise on a Camera's own board, and any such choice is recorded here.
 
 **The 1970s Instant is faded.**
@@ -18,17 +18,22 @@ The board showed candidate A, strong, rich color as the PRD sets it with his sof
 His answer was "muted with a glow".
 Scratches and a film-frame border, which his notes also mentioned, are not added: scratches are wear, and the picture stays a borderless 4:3.
 
-**The 16mm Cinema's color Film Stock has a slightly lifted black.**
-Its black point sits at about 4 percent of the tone scale, "a soft, grayed-out, lifted-black cinematic effect" in the captain's words, where ADR 0013 would keep the blacks deep.
-His notes on the 16mm's board asked for it on 2026-10-10 and again on 2026-10-11, the second time after the board told him that 4 percent passes the fresh rule's limit for lifted blacks and would be recorded as his choice.
-Nothing else about the 16mm Cinema departs from ADR 0013, and its black-and-white Film Stock keeps deep blacks.
+**The 16mm Cinema's color Film Stock develops with the look in the captain's own files.**
+On 2026-10-12 he sent the files that define it, a look generator and a reference for the per-frame passes, with the words "please apply the attached for immerse - 16mm camera kodak vision3 250d".
+The app applies them exactly: the generator's default "print" look and the reference's halation, soft darkened edges, softness, grain and weave.
+The look is his model of the reference film freshly processed, a low-contrast negative printed on print film, and it adds no fading, yellowing or wear.
+It is recorded here because it is taken whole from his files and not held to the limits the app's tests use for ADR 0013.
+It sits just outside two of them: a near-white tone develops to 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its color strength where the limit is 80, with greens, aquas and purples more muted than the scene.
+It replaces the black point he chose on this Camera's board on 2026-10-10 and 2026-10-11, about 4 percent of the tone scale, "a soft, grayed-out, lifted-black cinematic effect" in his words: his files put black at about 1.3 percent, deep as ADR 0013 has it.
+The board of 2026-10-12 tells him so and asks him to approve the look or send it back.
+The 16mm Cinema's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
 The rest of what is decided for these Cameras stands.
 A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
-The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's black point the 3 percent that the fresh rule allows.
+The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
-Decided on 2026-10-10 and extended on 2026-10-11.
+Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.

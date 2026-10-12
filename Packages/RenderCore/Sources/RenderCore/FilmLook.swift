@@ -18,19 +18,25 @@ enum TreatmentVersion: String, CaseIterable {
 /// 6.3; ADRs 0013 to 0016).
 ///
 /// Each look reproduces its Format Reference as it performed when new: nothing fades, yellows, shifts in dye or wears,
-/// and every imperfection is one the format made at capture or processing (ADR 0013). The exceptions are the Cameras
-/// in `captainsExceptions`, each given another look by the captain's own choice on its review board (ADR 0016). A
+/// and every imperfection is one the format made at capture or processing (ADR 0013). The exceptions are the looks
+/// `isCaptainsException` names, each given by the captain's own choice (ADR 0016). A
 /// Format Reference's name is internal and stays in these comments; no product string carries it (ADR 0015). Spatial
 /// values are fractions of the developed picture's long edge, so a look is the same at any size.
 ///
 /// DEC-04 status: every value below is provisional until the captain approves that Camera's review board (QA-16); the
 /// Instant's print-to-print variation stays provisional after that, pending a study of preserved 1970s prints.
 enum FilmLook {
-    /// The Cameras whose look departs from ADR 0013's fresh rule, each by the captain's choice on its review board
-    /// (ADR 0016): the Instant is faded and the Super 8 is muted with a highlight glow. Every other Camera stays under
-    /// ADR 0013.
-    static let captainsExceptions: Set<CameraID> = [.instant1970s, .super8HomeMovie]
-
+    /// The looks that depart from ADR 0013's fresh rule, each by the captain's own choice (ADR 0016): the Instant is
+    /// faded, the Super 8 is muted with a highlight glow, and the 16mm's color Film Stock is the look he asked to have
+    /// applied from his generator, whose whites sit a little under the rule's and whose greens, cyans and purples are
+    /// muted. Every other Camera and Film Stock stays under ADR 0013.
+    static func isCaptainsException(camera: CameraID, filmStock: FilmStock?) -> Bool {
+        switch camera {
+        case .instant1970s, .super8HomeMovie: true
+        case .cinema16mm: filmStock != .blackAndWhite
+        default: false
+        }
+    }
 
     /// The treatment a capture develops with: one per Camera, and one per Film Stock on the Cameras that offer one. A
     /// Film loaded before Film Stock existed has none and develops in color.
@@ -126,25 +132,52 @@ enum FilmLook {
         gate: Gate(jitter: 0.0035, weave: 0.002, weavePeriod: 1.7, flicker: 0.06, dust: 0.6, hair: 0.5)
     )
 
-    /// 16mm Cinema, color Film Stock. Format Reference: the Bolex H16 Reflex with Kodak Vision3 250D. Visible grain, a
-    /// red highlight glow (a deliberate departure: the reference film's backing prevents it), minor jitter and weave,
-    /// and soft, darkened edges; no flicker, dust or hair. Its daylight balance is fixed, so warm indoor light develops
-    /// orange and Development does not correct it (PRD 2.1 sections 6.2 and 6.3). Its color follows the reference
-    /// pictures the captain gave on its review board on 2026-10-12: blues turned toward aqua, strong warm reds and
-    /// yellows, cool shadows, and full contrast with a soft highlight roll-off. Its black point is lifted to about
-    /// 4 percent, "a soft, grayed-out, lifted-black cinematic effect", which the captain asked for on that board
-    /// past the fresh rule's limit for lifted blacks (ADR 0016).
+    /// 16mm Cinema, color Film Stock. Format Reference: the Bolex H16 Reflex with Kodak Vision3 250D, printed to Kodak
+    /// Vision 2383 and shown as a print. This is the look the captain asked to have applied on 2026-10-12: every
+    /// constant here is his generator's "print" look and his reference for the per-frame passes
+    /// (`Probes/FilmLookCalibration/16mm`), which `NegativeFilmTests` and `ScenePassesTests` hold this to. The
+    /// negative's layer contrasts are the manufacturer's curves as digitized in spectral_film_lut; the rest was fitted
+    /// to that simulation and then timed by hand. Deep blacks, a long soft highlight shoulder, muted cyans and
+    /// purples and olive greens, daylight neutral with slightly warm highlights and cool shadows. Its daylight balance
+    /// is fixed, so warm indoor light develops orange and Development does not correct it (PRD 2.1 sections 6.2 and
+    /// 6.3). Visible grain, a red highlight glow (a deliberate departure: the reference film's backing prevents it),
+    /// minor jitter and weave, and soft, darkened edges; no flicker, dust or hair.
     static let cinemaColor = Treatment(
-        emulsion: .color(ColorEmulsion(
-            warmth: 0, layers: Layers(redFromGreen: -0.04, redFromBlue: -0.06, greenFromBlue: 0.15), saturation: 1.24,
-            tone: ToneCurve(contrast: 1.2, midtones: 0.93, shoulder: 0.07, black: 0.04, white: 0.97),
-            shadows: RGB(-0.01, 0.004, 0.02), highlights: RGB(-0.004, 0.004, 0.004),
-            grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
-            fixedBalance: 5500
+        emulsion: .negative(NegativeFilm(
+            negativeGamma: RGB(0.474, 0.555, 0.535),
+            fixedBalance: 5500,
+            toe: -7.0,
+            crosstalk: [RGB(1.1452, -0.1926, 0.0474), RGB(0.0873, 0.7649, 0.1478), RGB(-0.0658, 0.0083, 1.0574)],
+            output: .print(maximumDensity: 4.39),
+            slope: RGB(4.64, 3.92, 3.96),
+            grayDensity: 0.694,
+            black: RGB(0.0009, 0.0009, 0.0010),
+            bands: [
+                NegativeFilm.Band(2.51, -0.009, -0.030), NegativeFilm.Band(1.45, -0.062, 0.010),
+                NegativeFilm.Band(-0.80, -0.027, 0.002), NegativeFilm.Band(-2.09, -0.169, 0.005),
+                NegativeFilm.Band(-2.05, -0.393, 0.025), NegativeFilm.Band(-0.55, -0.134, 0.015),
+                NegativeFilm.Band(1.78, -0.463, 0.056)
+            ],
+            finish: [
+                NegativeFilm.Band(0, 0, 0), NegativeFilm.Band(0, 0.040, 0.020), NegativeFilm.Band(0, 0, 0),
+                NegativeFilm.Band(-5.0, -0.050, 0), NegativeFilm.Band(0, 0, 0), NegativeFilm.Band(0, 0, 0),
+                NegativeFilm.Band(0, 0, 0)
+            ],
+            highlightDesaturation: 0.379, shadowDesaturation: 0
         )),
-        halation: Halation(threshold: 0.78, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
-        lens: Lens(softness: 0.0006, diffusion: 0.025, edgeSoftness: 0.0012, edgeDarkening: 0.5),
-        gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
+        lens: Lens(),
+        scene: ScenePasses(
+            referenceWidth: 1440,
+            halation: ScenePasses.Halation(threshold: 1.0, near: 0.004, far: 0.015, nearTint: RGB(1.00, 0.45, 0.10),
+                                           farTint: RGB(1.00, 0.12, 0.02), strength: 0.45),
+            softEdges: ScenePasses.SoftEdges(blur: 0.0030, start: 0.45, end: 1.05),
+            vignette: ScenePasses.Vignette(amount: 0.22, start: 0.35, end: 1.0, power: 1.5),
+            softness: 0.0005,
+            grain: ScenePasses.Grain(deviation: RGB(0.0028, 0.0034, 0.0062), strength: 1.5, size: 0.00042,
+                                     secondOctaveSize: 2.5, secondOctaveWeight: 0.35, shared: 0.7),
+            weave: ScenePasses.Weave(across: 0.0006, down: 0.0008, frequencies: [0.7, 1.9], jitter: 0.2, rotation: 0.015,
+                                     overscale: 1.006)
+        )
     )
 
     /// 16mm Cinema, black-and-white Film Stock. Format Reference: the same camera with Eastman Double-X. Visible grain,
@@ -175,28 +208,103 @@ extension FilmLook {
         var printVariation: PrintVariation?
         /// A Movie Camera's frame-to-frame imperfections.
         var gate: Gate?
+        /// What a Camera with a `negative` emulsion does to the picture in scene light. Such a treatment develops
+        /// through these alone: its `halation`, `lens` and `gate`, which work on display tones, stay empty.
+        var scene: ScenePasses?
 
         init(emulsion: Emulsion, halation: Halation? = nil, lens: Lens, flash: Flash? = nil,
-             printVariation: PrintVariation? = nil, gate: Gate? = nil) {
+             printVariation: PrintVariation? = nil, gate: Gate? = nil, scene: ScenePasses? = nil) {
             self.emulsion = emulsion
             self.halation = halation
             self.lens = lens
             self.flash = flash
             self.printVariation = printVariation
             self.gate = gate
+            self.scene = scene
         }
     }
 
     enum Emulsion: Equatable {
         case color(ColorEmulsion)
         case monochrome(MonochromeEmulsion)
+        /// A color negative developed from the scene's light (`NegativeFilm`); its grain is one of the `ScenePasses`.
+        case negative(NegativeFilm)
 
         var grain: Grain {
             switch self {
             case let .color(emulsion): emulsion.grain
             case let .monochrome(emulsion): emulsion.grain
+            case .negative: Grain(amplitude: 0, size: 0)
             }
         }
+    }
+
+    /// The passes a Camera with a negative emulsion makes on the scene's light, in this order: a glow around strong
+    /// highlights, soft edges, darkened edges and overall softness before the film; the film's grain, added to the
+    /// Apple Log tones the film is asked in; and, after the film, the gate's weave. They follow the captain's
+    /// reference for the 16mm's per-frame passes. Lengths are fractions of the frame's width, and amounts given per
+    /// pixel hold at `referenceWidth` and scale with the frame's width from there.
+    struct ScenePasses: Equatable {
+        /// A glow around strong highlights: the scene light above `threshold` (linear, middle gray 0.18), spread
+        /// near and far, tinted, and added back at `strength`, two fifths from the near spread and three from the far.
+        struct Halation: Equatable {
+            var threshold: Double
+            var near: Double
+            var far: Double
+            var nearTint: RGB
+            var farTint: RGB
+            var strength: Double
+        }
+
+        /// Softness toward the edges: the picture gives way to a copy blurred by `blur`, from nothing at `start` to
+        /// all of it at `end`, as distances from the center where 1 is the corner.
+        struct SoftEdges: Equatable {
+            var blur: Double
+            var start: Double
+            var end: Double
+        }
+
+        /// Darker edges: the light falls by `amount` at `end`, from none at `start`, along a curve of `power`.
+        struct Vignette: Equatable {
+            var amount: Double
+            var start: Double
+            var end: Double
+            var power: Double
+        }
+
+        /// The film's grain, new on every frame: each layer's deviation in Apple Log units per pixel, times
+        /// `strength`; the size of its clumps, with a second, coarser octave of `secondOctaveSize` times that size at
+        /// `secondOctaveWeight`; and the share of every layer's grain that all three have in common.
+        struct Grain: Equatable {
+            var deviation: RGB
+            var strength: Double
+            var size: Double
+            var secondOctaveSize: Double
+            var secondOctaveWeight: Double
+            var shared: Double
+        }
+
+        /// The gate's unsteadiness: a slow sway `across` and `down` the frame, the sum of two sines at `frequencies`
+        /// in hertz whose phases a clip keeps; a small jump on every frame, `jitter` pixels of deviation; a turn of
+        /// up to `rotation` degrees either way; all drawn from a picture enlarged by `overscale`, so no edge shows.
+        struct Weave: Equatable {
+            var across: Double
+            var down: Double
+            var frequencies: [Double]
+            var jitter: Double
+            var rotation: Double
+            var overscale: Double
+        }
+
+        /// The frame width at which per-pixel amounts are given.
+        var referenceWidth: Double
+        var halation: Halation?
+        var softEdges: SoftEdges?
+        var vignette: Vignette?
+        /// Softness over the whole picture, as a blur radius.
+        var softness: Double = 0
+        var grain: Grain?
+        var weave: Weave?
     }
 
     /// A color film and its print: color balance, color, tone and grain, applied to display tones.

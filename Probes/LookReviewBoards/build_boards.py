@@ -167,6 +167,11 @@ def esc(text):
     return html.escape(str(text or ""), quote=True)
 
 
+def paragraphs(text):
+    """A note as HTML: escaped, with a new paragraph wherever the note has a blank line."""
+    return "".join("<p>%s</p>" % esc(part.strip()) for part in text.split("\n\n") if part.strip())
+
+
 def credit(entry):
     parts = []
     if entry.get("author"):
@@ -197,6 +202,7 @@ STYLE = """
   .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
   .facts { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 5fr); gap: 10px 24px; margin: 18px 0; }
   dt { font-weight: 650; } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  dd p { margin: 0 0 10px; } dd p:last-child { margin-bottom: 0; }
   ul.judge { margin: 6px 0 0; padding-left: 20px; max-width: 90ch; }
   section { padding: 28px 0; border-top: 1px solid var(--line); margin-top: 28px; }
   .scene { margin: 0 0 36px; }
@@ -265,9 +271,9 @@ def build(board, renders, sources, output, round_number):
                    "".join("<li>%s</li>" % esc(item) for item in board["judge"])))
     body.append("<main>")
     if alternates:
-        body.append('<section><h2>The candidates</h2><dl class="facts"><dt>%s</dt><dd>%s</dd>%s</dl></section>'
-                    % (esc(renders["primaryLabel"]), esc(renders["primaryNote"]),
-                       "".join("<dt>%s</dt><dd>%s</dd>" % (esc(alternate["label"]), esc(alternate["note"])) for alternate in alternates)))
+        body.append('<section><h2>%s</h2><dl class="facts"><dt>%s</dt><dd>%s</dd>%s</dl></section>'
+                    % (esc(renders["looksHeading"]), esc(renders["primaryLabel"]), paragraphs(renders["primaryNote"]),
+                       "".join("<dt>%s</dt><dd>%s</dd>" % (esc(alternate["label"]), paragraphs(alternate["note"])) for alternate in alternates)))
 
     def rendered(camera, stock, scene, kind):
         for entry in files:
@@ -476,10 +482,12 @@ def build(board, renders, sources, output, round_number):
     for alternate in alternates:
         body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
     body.append("</section>")
-    if alternates:
+    # A look shown for comparison only is not one of the choices.
+    choosable = [alternate for alternate in alternates if not alternate["comparisonOnly"]]
+    if choosable:
         choices = '<label><input type="radio" name="decision" value="approve-a"> Approve %s</label>' % esc(renders["primaryLabel"])
         choices += "".join('<label><input type="radio" name="decision" value="approve-%s"> Approve %s</label>'
-                           % (alternate["suffix"], esc(alternate["label"])) for alternate in alternates)
+                           % (alternate["suffix"], esc(alternate["label"])) for alternate in choosable)
     else:
         choices = '<label><input type="radio" name="decision" value="approve"> Approve these values for the %s</label>' % esc(board["name"])
     body.append('<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-%s" onsubmit="queueDecision(event)">'
@@ -543,6 +551,9 @@ def main():
     parser.add_argument("--alternate-boards", nargs="*", default=[])
     parser.add_argument("--alternate-film-stocks", nargs="*", default=[],
                         help="the Film Stocks the further candidates cover (color, blackAndWhite); all of the board's when omitted")
+    parser.add_argument("--comparison-only", nargs="*", type=int, default=[],
+                        help="which --alternate looks (1 or 2) are shown for comparison only and cannot be chosen")
+    parser.add_argument("--looks-heading", default="The candidates", help="the heading over the looks' notes")
     parser.add_argument("--primary-label", default="A")
     parser.add_argument("--primary-note", default="")
     parser.add_argument("--alternate-label", nargs="*", default=[], help="one label for each --alternate")
@@ -566,7 +577,7 @@ def main():
     for index, path in enumerate(args.alternate):
         alternate = json.load(open(os.path.join(path, "manifest.json")))
         values = args.alternate_values[index] if index < len(args.alternate_values) else None
-        alternate.update(root=os.path.abspath(path), suffix="bc"[index],
+        alternate.update(root=os.path.abspath(path), suffix="bc"[index], comparisonOnly=index + 1 in args.comparison_only,
                          label=args.alternate_label[index] if index < len(args.alternate_label) else "BC"[index],
                          note=args.alternate_note[index] if index < len(args.alternate_note) else "",
                          values=open(values).read().rstrip() if values else "")
@@ -574,7 +585,7 @@ def main():
     if alternates:
         renders.update(alternates=alternates, alternateBoards=args.alternate_boards,
                        alternateFilmStocks=args.alternate_film_stocks, primaryLabel=args.primary_label,
-                       primaryNote=args.primary_note)
+                       primaryNote=args.primary_note, looksHeading=args.looks_heading)
     if args.remote_references:
         renders.update(remoteReferences=json.load(open(args.remote_references)), remoteDate=args.remote_date)
     sources = json.load(open(os.path.join(args.sources, "manifest.json")))

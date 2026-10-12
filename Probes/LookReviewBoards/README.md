@@ -33,6 +33,7 @@ The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with 
 
 - `--alternate <renders> [<renders>]` with `--alternate-boards` shows one or two further candidate looks beside the first, rendered from values that are not in the app; `--alternate-film-stocks` limits them to some Film Stocks, and `--alternate-label`, `--alternate-note` and `--alternate-values <file>` take one value per candidate, printed on the board.
   Use it for a look outside ADR 0013: such a look enters the app only on the captain's choice, recorded in ADR 0016.
+  `--comparison-only 1` marks a further look as shown for comparison and not a choice, such as the look the app carried before; `--looks-heading` words the heading over the looks' notes, and a note may hold several paragraphs separated by blank lines.
 - `--remote-references <json>` links pictures the captain supplied that are not openly licensed.
   The board shows them from where they are published; they are never copied into the repository.
 

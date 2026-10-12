@@ -1,0 +1,27 @@
+$ python derive_stock.py vision3_250d_lut print "Kodak Vision3 250D 5207" "Kodak Vision 2383"
+shipped vs simulation, chart dE2000: mean 3.48 max 8.50 (cyan); skin [ 2.58  2.31]
+  coffee: applelog33 vs srgb33 dE mean 0.15 p99 0.71 | 33 vs 65 mean 0.13 p99 0.76
+  chelsea: applelog33 vs srgb33 dE mean 0.29 p99 1.22 | 33 vs 65 mean 0.26 p99 1.15
+  rocket: applelog33 vs srgb33 dE mean 0.18 p99 0.68 | 33 vs 65 mean 0.16 p99 0.67
+tone curve in -> R G B
+    0 -> [3 3 4]
+   16 -> [4 4 4]
+   32 -> [8 8 9]
+   64 -> [42 42 44]
+   96 -> [93 93 94]
+  128 -> [137 137 137]
+  160 -> [170 169 168]
+  192 -> [192 191 190]
+  224 -> [210 210 208]
+  240 -> [223 223 221]
+  255 -> [239 239 238]
+colour: dHue(deg) chroma-ratio dL
+  Red        +8.2  1.10 +0.030
+  Orange     +6.0  1.09 -0.027
+  Yellow     -9.4  0.86 -0.060
+  Green      -6.7  0.65 -0.152
+  Aqua      +11.3  0.64 -0.047
+  Blue       -7.9  0.81 +0.033
+  Purple    +15.3  0.55 +0.114
+  Magenta    +4.6  0.68 +0.067
+derive exit=0

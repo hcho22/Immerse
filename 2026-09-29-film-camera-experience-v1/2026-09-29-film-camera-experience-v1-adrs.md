@@ -16,7 +16,7 @@ Their text is copied byte for byte from the captain's files, and the reconciliat
 PRD version 2.0 says, at its document guide, that ADRs 0013 to 0015 "are separate files and are not yet in this collection"; that sentence was true when the PRD was written and this version of the collection supersedes it.
 
 ADR 0016 was added in version 2.1 of this collection (2026-10-10).
-It records the captain's choices, made on their look review boards, of a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie (2026-10-10), and of a slightly lifted black for the 16mm Cinema's color Film Stock (2026-10-11), as exceptions to ADR 0013.
+It records the captain's choices, made on their look review boards, of a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie (2026-10-10), and his giving the 16mm Cinema's color Film Stock the look in his own files (2026-10-12, in place of the slightly lifted black he chose on 2026-10-11), as exceptions to ADR 0013.
 It was written from his answers on the boards at firstmate's instruction, and one line pointing at it was added to ADR 0013.
 
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
@@ -74,10 +74,10 @@ Group statements in these notes still describe the deferred v2 design.
 | 0010 | v2 Groups only. |
 | 0011 | v2 only. Host deletion behavior is Group design, and v1 has no Account deletion (ADR 0012), so the personal-Film survival note also applies only once Accounts return in v2. |
 | 0012 | Applies to v1. The Trial is one Film per iPhone held on the device, and v1 has no app Accounts, sign-in, server or Account deletion flow. It reverses the domain model's Account-scoped Trial; Accounts return in v2 with Groups. Added in version 1.2. |
-| 0013 | Applies to v1 personal Films and to every Camera except where ADR 0016 records the captain's exceptions (the 1970s Instant, the 1960s Super 8 Home Movie and the black point of the 16mm Cinema's color Film Stock). Developed Treatments show each format as freshly processed, never aged. Added in version 2.0. |
+| 0013 | Applies to v1 personal Films and to every Camera except where ADR 0016 records the captain's exceptions (the 1970s Instant, the 1960s Super 8 Home Movie and the 16mm Cinema's color Film Stock). Developed Treatments show each format as freshly processed, never aged. Added in version 2.0. |
 | 0014 | Applies to v1 personal Films: the 6×6 Medium Format and the 16mm Cinema offer a Film Stock at Load Film. It says nothing about who chooses a Group Film's Film Stock, which stays a v2 question. Added in version 2.0. |
 | 0015 | Applies to v1 personal Films and to every Camera. The Format Reference names are internal and never reach the product. Added in version 2.0. |
-| 0016 | Applies to v1 personal Films and to three places only: the 1970s Instant, whose Developed Treatment is the faded look; the 1960s Super 8 Home Movie, whose is muted with a highlight glow; and the 16mm Cinema's color Film Stock, whose black point is lifted to about 4 percent. The captain chose each on its review board, as exceptions to ADR 0013. Added in version 2.1. |
+| 0016 | Applies to v1 personal Films and to three places only: the 1970s Instant, whose Developed Treatment is the faded look; the 1960s Super 8 Home Movie, whose is muted with a highlight glow; and the 16mm Cinema's color Film Stock, whose look is the one in the captain's own files. The captain chose each, as exceptions to ADR 0013. Added in version 2.1. |
 
 The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
@@ -90,7 +90,7 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0013 (v1; refines 0001's authenticity):** ADR 0001 makes each Camera's behavior authentic. ADR 0013 adds that the visual character is the format as freshly processed in its era, and that fading, yellowing, dye shift and storage or projection wear are never added. It does not change any Reveal Rule. The Camera package versions it says must stay in the app while an unfinished Film needs them are the same rule as architecture risk RK-11 and task CAM-01.
 - **0014 (v1):** It narrows PRD FR-01's "no separate stock picker" to "no stock picker except on these two Cameras" and replaces the task CAM-11 wording that excluded separate stock selection (the old wording is preserved in the tracker). A Film Stock is fixed at Load Film with the Camera package, never after Development, so it does not reroll a Developed Treatment and does not conflict with ADR 0001. Chemical toning and contrast grades in the Darkroom apply only to the black-and-white Film Stock (PRD FR-07 and the captain's 2026-10-06 decision recorded in the tracker).
 - **0015 (v1):** It makes each Camera's look checkable against one named original. The captain decided on 2026-10-06 that the check is side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera (recorded in the tracker as QA-16). The manufacturer and film names appear in internal documents only, and no product string, store listing or Film Stock label may use them.
-- **0016 (v1; exceptions to 0013):** The 1970s Instant develops with a faded look: lifted, milky blacks, muted color and age-style tints, replacing "Brilliant, warm, saturated color" in PRD section 6.1 for that Camera. The 1960s Super 8 Home Movie develops muted, with a glow: lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights, replacing "Strong, rich color" in PRD section 6.2 for that Camera. The PRD carries a dated line under each table saying so. The 16mm Cinema's color Film Stock keeps everything PRD section 6.2 gives it and adds a black point lifted to about 4 percent, which the PRD does not speak to. ADR 0013 still governs everything else, and a later exception needs the captain's choice on that Camera's review board, recorded in ADR 0016. The app's not-aged tests cover every Camera except those in `FilmLook.captainsExceptions`, with a separate test holding each of those two to its chosen look, and allow the 16mm's color stock its lifted black alone.
+- **0016 (v1; exceptions to 0013):** The 1970s Instant develops with a faded look: lifted, milky blacks, muted color and age-style tints, replacing "Brilliant, warm, saturated color" in PRD section 6.1 for that Camera. The 1960s Super 8 Home Movie develops muted, with a glow: lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights, replacing "Strong, rich color" in PRD section 6.2 for that Camera. The PRD carries a dated line under each table saying so. The 16mm Cinema's color Film Stock keeps everything PRD section 6.2 gives it, with its color and per-frame passes taken exactly from the captain's own files, which replace the 4 percent black point he chose earlier. ADR 0013 still governs everything else, and a later exception needs the captain's choice on that Camera's review board, recorded in ADR 0016. The app's not-aged tests cover every Camera and Film Stock except those `FilmLook.isCaptainsException` names, with a separate test holding the Instant and the Super 8 each to its chosen look, and `NegativeFilmTests` and `ScenePassesTests` holding the 16mm's color stock to the captain's files.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -256,14 +256,14 @@ This is costly to reverse after release, because a Developed Treatment is assign
 PRD version 2.0 reconciled the character wording in section 6 and the list of developed effects in FR-04 with this decision.
 
 Decided on 2026-10-05.
-Exceptions, 2026-10-10 and 2026-10-11: on their review boards the captain chose a faded look for the 1970s Instant, a muted look with a highlight glow for the 1960s Super 8 Home Movie, and a slightly lifted black for the 16mm Cinema's color Film Stock; see ADR 0016.
+Exceptions, 2026-10-10 to 2026-10-12: on their review boards the captain chose a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie, and he gave the 16mm Cinema's color Film Stock the look in his own files; see ADR 0016.
 
 ---
 
 ### Reconciliation note for ADR 0013
 
 Applies to every Camera in the PRD version 2.0 catalog (sections 6.1 to 6.3, FR-04 and FR-06). It reconciles the character wording in section 6 and the list of effects the viewfinder must not preview in FR-04, as the ADR says. Imperfections that come from the format itself or from capture conditions are still Authentic Imperfections, so the Super 8's brightness flicker and dust and hair in the gate and the 16mm's halation, jitter and weave are in scope and an aged or faded look is not.
-Since 2026-10-10 two Cameras are exceptions: on their review boards the captain chose a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie, and on 2026-10-11 a slightly lifted black for the 16mm Cinema's color Film Stock (ADR 0016).
+Since 2026-10-10 two Cameras are exceptions: on their review boards the captain chose a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie, and on 2026-10-12 he gave the 16mm Cinema's color Film Stock the look in his own files, in place of the slightly lifted black he chose on 2026-10-11 (ADR 0016).
 The line beginning "Exceptions, 2026-10-10" was added to the ADR on those days, in its file and in the copy above, to point at ADR 0016; nothing else of its text changed.
 
 ### ADR 0014
@@ -328,7 +328,7 @@ Standalone source: [0016-the-captains-exceptions-to-fresh-not-aged.md](adr/0016-
 
 # The captain's exceptions to ADR 0013, chosen on the look review boards
 
-Two Cameras' Developed Treatments depart from ADR 0013, and a third departs from it in one tone, each by the captain's own choice on its look review board (QA-16).
+Two Cameras' Developed Treatments depart from ADR 0013, and one Film Stock of a third is taken whole from the captain's own files instead of being held to it, each by the captain's own choice (QA-16).
 Everything else stays freshly processed under ADR 0013 unless the captain chooses otherwise on a Camera's own board, and any such choice is recorded here.
 
 **The 1970s Instant is faded.**
@@ -346,20 +346,25 @@ The board showed candidate A, strong, rich color as the PRD sets it with his sof
 His answer was "muted with a glow".
 Scratches and a film-frame border, which his notes also mentioned, are not added: scratches are wear, and the picture stays a borderless 4:3.
 
-**The 16mm Cinema's color Film Stock has a slightly lifted black.**
-Its black point sits at about 4 percent of the tone scale, "a soft, grayed-out, lifted-black cinematic effect" in the captain's words, where ADR 0013 would keep the blacks deep.
-His notes on the 16mm's board asked for it on 2026-10-10 and again on 2026-10-11, the second time after the board told him that 4 percent passes the fresh rule's limit for lifted blacks and would be recorded as his choice.
-Nothing else about the 16mm Cinema departs from ADR 0013, and its black-and-white Film Stock keeps deep blacks.
+**The 16mm Cinema's color Film Stock develops with the look in the captain's own files.**
+On 2026-10-12 he sent the files that define it, a look generator and a reference for the per-frame passes, with the words "please apply the attached for immerse - 16mm camera kodak vision3 250d".
+The app applies them exactly: the generator's default "print" look and the reference's halation, soft darkened edges, softness, grain and weave.
+The look is his model of the reference film freshly processed, a low-contrast negative printed on print film, and it adds no fading, yellowing or wear.
+It is recorded here because it is taken whole from his files and not held to the limits the app's tests use for ADR 0013.
+It sits just outside two of them: a near-white tone develops to 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its color strength where the limit is 80, with greens, aquas and purples more muted than the scene.
+It replaces the black point he chose on this Camera's board on 2026-10-10 and 2026-10-11, about 4 percent of the tone scale, "a soft, grayed-out, lifted-black cinematic effect" in his words: his files put black at about 1.3 percent, deep as ADR 0013 has it.
+The board of 2026-10-12 tells him so and asks him to approve the look or send it back.
+The 16mm Cinema's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
 The rest of what is decided for these Cameras stands.
 A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
-The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's black point the 3 percent that the fresh rule allows.
+The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
-Decided on 2026-10-10 and extended on 2026-10-11.
+Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.
 
 ---
 

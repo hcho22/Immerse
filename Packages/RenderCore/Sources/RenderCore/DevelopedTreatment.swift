@@ -13,9 +13,9 @@ struct DevelopedTreatment {
     }
 
     private let look: Look
-    private let seed: UInt64
+    let seed: UInt64
     private let flashFired: Bool
-    private let sceneWhiteBalance: SceneWhiteBalance?
+    let sceneWhiteBalance: SceneWhiteBalance?
 
     /// - Parameters:
     ///   - flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.
@@ -62,6 +62,10 @@ struct DevelopedTreatment {
     // MARK: - Version 3
 
     private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) -> CIImage {
+        // A negative emulsion develops from the scene's light, through passes of its own (`SceneDevelopment.swift`).
+        if case let .negative(film) = treatment.emulsion {
+            return developInSceneLight(source, film: film, passes: treatment.scene, cube: cube, frame: frame, frameRate: frameRate)
+        }
         let extent = source.extent
         let longEdge = max(extent.width, extent.height)
         var image = source
@@ -268,7 +272,7 @@ struct DevelopedTreatment {
     }
 
     /// A deterministic value in 0..<1 (or -1..<1 when `signed`) for this capture, a frame and a purpose.
-    private func random(_ frame: Int, salt: UInt64, signed: Bool = false) -> Double {
+    func random(_ frame: Int, salt: UInt64, signed: Bool = false) -> Double {
         var value = seed &+ UInt64(truncatingIfNeeded: frame) &* 0x9e37_79b9_7f4a_7c15 &+ salt &* 0xd1b5_4a32_d192_ed03
         value = (value ^ (value >> 30)) &* 0xbf58_476d_1ce4_e5b9
         value = (value ^ (value >> 27)) &* 0x94d0_49bb_1331_11eb
@@ -282,8 +286,10 @@ struct DevelopedTreatment {
     static let cubeDimension = 32
 
     /// The emulsion as a color cube over display tones: color balance, color strength and the print curve for color,
-    /// or the panchromatic silver layer and its curve for black-and-white.
+    /// or the panchromatic silver layer and its curve for black-and-white. A negative emulsion's cube is over the
+    /// Apple Log tones it is asked in instead, and is made once for each film.
     static func cube(_ emulsion: FilmLook.Emulsion, extraContrast: Double = 0) -> Data {
+        if case let .negative(film) = emulsion { return NegativeCubes.shared.cube(for: film) }
         let size = cubeDimension
         var values = [Float](repeating: 0, count: size * size * size * 4)
         for blue in 0..<size { for green in 0..<size { for red in 0..<size {
@@ -307,6 +313,8 @@ struct DevelopedTreatment {
             let exposure = linear.red * film.spectral.red + linear.green * film.spectral.green + linear.blue * film.spectral.blue
             let gray = tone(encoded(exposure))
             return FilmLook.RGB(gray, gray, gray)
+        case let .negative(film):
+            return film.developed(display: color)
         case let .color(film):
             var tone = film.tone
             tone.contrast += extraContrast
@@ -428,5 +436,21 @@ struct DevelopedTreatment {
     static func encoded(_ light: Double) -> Double {
         let value = min(max(light, 0), 1)
         return value <= 0.0031308 ? value * 12.92 : 1.055 * pow(value, 1 / 2.4) - 0.055
+    }
+}
+
+/// Each negative film's color cube, made the first time a capture develops with it.
+final class NegativeCubes: @unchecked Sendable {
+    static let shared = NegativeCubes()
+    private let lock = NSLock()
+    private var cubes: [(film: FilmLook.NegativeFilm, cube: Data)] = []
+
+    func cube(for film: FilmLook.NegativeFilm) -> Data {
+        lock.lock()
+        defer { lock.unlock() }
+        if let made = cubes.first(where: { $0.film == film }) { return made.cube }
+        let cube = film.cube(dimension: DevelopedTreatment.negativeCubeDimension)
+        cubes.append((film, cube))
+        return cube
     }
 }

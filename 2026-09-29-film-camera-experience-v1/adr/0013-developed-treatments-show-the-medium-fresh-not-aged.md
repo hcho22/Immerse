@@ -13,4 +13,4 @@ This is costly to reverse after release, because a Developed Treatment is assign
 PRD version 2.0 reconciled the character wording in section 6 and the list of developed effects in FR-04 with this decision.
 
 Decided on 2026-10-05.
-Exceptions, 2026-10-10 and 2026-10-11: on their review boards the captain chose a faded look for the 1970s Instant, a muted look with a highlight glow for the 1960s Super 8 Home Movie, and a slightly lifted black for the 16mm Cinema's color Film Stock; see ADR 0016.
+Exceptions, 2026-10-10 to 2026-10-12: on their review boards the captain chose a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie, and he gave the 16mm Cinema's color Film Stock the look in his own files; see ADR 0016.

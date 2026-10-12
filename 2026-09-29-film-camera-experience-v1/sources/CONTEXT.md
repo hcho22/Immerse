@@ -38,7 +38,8 @@
 > **2026-10-10 note (ADR 0016).**
 > On their look review boards the captain chose a faded look for the 1970s Instant (lifted, milky blacks, muted color and age-style tints) and a muted look with a highlight glow for the 1960s Super 8 Home Movie (lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights).
 > Both are exceptions to the rule below that a Developed Treatment shows its Historical Format as freshly processed (ADR 0013), which still holds for every other Camera, and to the catalog's "brilliant, warm, saturated color" for the Instant and "strong, rich color" for the Super 8; the Super 8's glow is also an Authentic Imperfection the rules below give only to the 16mm Cinema.
-> On 2026-10-11 he also chose a black point lifted to about 4 percent for the 16mm Cinema's color Film Stock, the only place that Camera departs from the freshly processed rule.
+> On 2026-10-11 he also chose a black point lifted to about 4 percent for the 16mm Cinema's color Film Stock.
+> On 2026-10-12 he replaced that with the look in his own files for that Film Stock: a low-contrast negative printed on print film, with deep blacks again and greens, aquas and purples more muted than the scene, taken whole from those files instead of being held to the rule's limits.
 > The terms and rules below were not rewritten; read those looks through [ADR 0016](../adr/0016-the-captains-exceptions-to-fresh-not-aged.md).
 >
 > **2026-10-07 note (PRD version 2.1).**

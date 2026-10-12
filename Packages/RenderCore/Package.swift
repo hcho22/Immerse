@@ -25,7 +25,8 @@ let package = Package(
         ),
         .testTarget(
             name: "RenderCoreTests",
-            dependencies: ["RenderCore", "RenderFixtures"]
+            dependencies: ["RenderCore", "RenderFixtures"],
+            resources: [.copy("Fixtures")]
         )
     ],
     swiftLanguageModes: [.v6]

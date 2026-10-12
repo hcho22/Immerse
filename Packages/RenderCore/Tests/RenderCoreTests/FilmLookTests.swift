@@ -79,24 +79,19 @@ final class FilmLookTests: XCTestCase {
     // MARK: - Fresh, not aged (ADR 0013)
 
     /// No look fades, yellows or shifts its dyes: blacks stay deep, white stays white, and color keeps its strength and
-    /// its hue. Black-and-white stays neutral gray. The exceptions are the Cameras the captain chose another look for
-    /// on their review boards (ADR 0016), each held to its chosen look by a test of its own below.
+    /// its hue. Black-and-white stays neutral gray. The exceptions are the looks the captain chose himself (ADR 0016),
+    /// each held to its chosen look by tests of its own: the Instant and the Super 8 below, and the 16mm's color Film
+    /// Stock by `NegativeFilmTests` and `ScenePassesTests`.
     func testEveryLookIsFreshlyProcessedNotAged() {
-        XCTAssertEqual(FilmLook.captainsExceptions, [.instant1970s, .super8HomeMovie],
-                       "Only the captain's choice takes a Camera out of ADR 0013")
-        for (camera, filmStock) in Self.treatments where !FilmLook.captainsExceptions.contains(camera) {
+        let exceptions = Self.treatments.filter { FilmLook.isCaptainsException(camera: $0.0, filmStock: $0.1) }
+        XCTAssertEqual(exceptions.map { "\($0.0) \($0.1?.rawValue ?? "")" }, ["instant1970s ", "super8HomeMovie ", "cinema16mm color"],
+                       "Only the captain's choice takes a look out of ADR 0013")
+        for (camera, filmStock) in Self.treatments where !FilmLook.isCaptainsException(camera: camera, filmStock: filmStock) {
             let treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             let name = "\(camera) \(filmStock?.rawValue ?? "")"
             let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
             let black = develop(FilmLook.RGB(0.03, 0.03, 0.03))
-            // The 16mm's color stock has the black point the captain asked for on its board, lifted to about 4 percent
-            // (ADR 0016); every other fresh look keeps its blacks deeper.
-            let liftedByChoice = camera == .cinema16mm && filmStock == .color
-            XCTAssertLessThan(max(black.red, black.green, black.blue), liftedByChoice ? 0.085 : 0.06,
-                              "\(name): blacks stay deep, never faded")
-            if liftedByChoice, case let .color(film) = treatment.emulsion {
-                XCTAssertEqual(film.tone(0), 0.04, accuracy: 0.005, "The black point the captain asked for")
-            }
+            XCTAssertLessThan(max(black.red, black.green, black.blue), 0.06, "\(name): blacks stay deep, never faded")
             let white = develop(FilmLook.RGB(0.97, 0.97, 0.97))
             XCTAssertGreaterThan(min(white.red, white.green, white.blue), 0.9, "\(name): white stays bright")
             XCTAssertLessThan(white.red - white.blue, 0.045, "\(name): white is not yellowed")
@@ -123,6 +118,8 @@ final class FilmLookTests: XCTestCase {
             switch FilmLook.treatment(camera: camera, filmStock: filmStock).emulsion {
             case let .color(film): tone = film.tone
             case let .monochrome(film): tone = film.tone
+            // A negative film has no print curve of this kind; `NegativeFilmTests` holds its ramp.
+            case .negative: continue
             }
             let levels = (0...100).map { tone(Double($0) / 100) }
             XCTAssertEqual(levels.first!, tone.black, accuracy: 0.0001, "\(camera)")
@@ -290,7 +287,15 @@ final class FilmLookTests: XCTestCase {
             treatment.lens = FilmLook.Lens()
             treatment.gate = nil
             treatment.halation = nil
-            let pixels = try render(Self.even(0.214), treatment: treatment)
+            var scene = Self.even(0.214)
+            if let passes = treatment.scene {
+                // A negative film's grain is one of its scene passes; the others are set aside like the lens and gate.
+                // Its strength in each pixel grows with the frame's width, so it is measured on a strip as wide as a
+                // Developed Clip, not on the small square the other formats are measured on.
+                treatment.scene = FilmLook.ScenePasses(referenceWidth: passes.referenceWidth, grain: passes.grain)
+                scene = scene.clampedToExtent().cropped(to: CGRect(x: 0, y: 0, width: 1920, height: 256))
+            }
+            let pixels = try render(scene, treatment: treatment)
             grain["\(camera) \(filmStock?.rawValue ?? "")"] = pixels.centerDeviation
         }
         let disposable = grain["disposable1990s "]!, cinema = grain["cinema16mm color"]!, super8 = grain["super8HomeMovie "]!
@@ -335,8 +340,9 @@ final class FilmLookTests: XCTestCase {
     func testSoftDarkEdgesWhereTheFormatHasThem() throws {
         let side = 1536
         let checks = Self.checkerboard(side: CGFloat(side), square: 6)
+        // The 16mm's color Film Stock softens and darkens its edges in scene light; `ScenePassesTests` holds that.
         for (camera, filmStock, softens) in [(CameraID.disposable1990s, FilmStock?.none, true), (.super8HomeMovie, nil, true),
-                                            (.cinema16mm, .color, true), (.mediumFormat6x6, .color, false)] {
+                                            (.cinema16mm, .blackAndWhite, true), (.mediumFormat6x6, .color, false)] {
             var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
             treatment.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
             treatment.gate = nil
@@ -471,11 +477,19 @@ final class FilmLookTests: XCTestCase {
         ])!.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 960, height: 960))
         for filmStock in [FilmStock.color, .blackAndWhite] {
             var glowing = FilmLook.treatment(camera: .cinema16mm, filmStock: filmStock)
-            glowing.gate = nil
-            glowing.lens = FilmLook.Lens()
-            glowing.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
-            var plain = glowing
-            plain.halation = nil
+            var plain: FilmLook.Treatment
+            if let scene = glowing.scene {
+                // The color stock glows in scene light, before its film: its halation alone, and then without it.
+                glowing.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, halation: scene.halation)
+                plain = glowing
+                plain.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth)
+            } else {
+                glowing.gate = nil
+                glowing.lens = FilmLook.Lens()
+                glowing.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
+                plain = glowing
+                plain.halation = nil
+            }
             let glow = try render(light, treatment: glowing), none = try render(light, treatment: plain)
             // A ring just outside the light.
             let ring = glow.meanColor(x: 436..<444, y: 470..<490), dark = none.meanColor(x: 436..<444, y: 470..<490)
@@ -490,19 +504,22 @@ final class FilmLookTests: XCTestCase {
         }
     }
 
-    /// The 16mm jitters and weaves a little, with no brightness flicker and no dust or hair.
+    /// The 16mm jitters and weaves a little, with no brightness flicker and no dust or hair. The color Film Stock
+    /// weaves as the captain's reference does, in its scene passes, which have no flicker, dust or hair to give
+    /// (`ScenePassesTests` holds the weave itself); the black-and-white stock weaves through its gate.
     func testTheSixteenMillimeterWeavesWithoutFlickerDustOrHair() throws {
-        let gate = try XCTUnwrap(FilmLook.cinemaColor.gate)
+        XCTAssertNil(FilmLook.cinemaColor.gate)
+        XCTAssertNotNil(FilmLook.cinemaColor.scene?.weave)
+        let gate = try XCTUnwrap(FilmLook.cinemaBlackAndWhite.gate)
         XCTAssertEqual(gate.flicker, 0)
         XCTAssertEqual(gate.dust, 0)
         XCTAssertEqual(gate.hair, 0)
-        XCTAssertEqual(FilmLook.cinemaBlackAndWhite.gate, gate)
         XCTAssertLessThan(gate.jitter, try XCTUnwrap(FilmLook.super8.gate).jitter, "Minor next to the Super 8")
         let scene = Self.colorChart(width: 320, height: 240)
-        var still = FilmLook.cinemaColor
+        var still = FilmLook.cinemaBlackAndWhite
         still.gate = nil
         let reference = try render(scene, treatment: still)
-        let moving = DevelopedTreatment(FilmLook.cinemaColor, seed: 4)
+        let moving = DevelopedTreatment(FilmLook.cinemaBlackAndWhite, seed: 4)
         var offsets: [Int] = []
         var means: [Double] = []
         for frame in 0..<24 {
@@ -520,9 +537,7 @@ final class FilmLookTests: XCTestCase {
     /// black-and-white stock, the phone's white balance stands.
     func testTheSixteenMillimeterColorStockKeepsItsDaylightBalance() throws {
         var treatment = FilmLook.cinemaColor
-        treatment.gate = nil
-        treatment.lens = FilmLook.Lens()
-        treatment.halation = nil
+        treatment.scene = nil
         let gray = Self.even(0.18, side: 256)
         func balance(_ light: SceneWhiteBalance?, _ look: FilmLook.Treatment = treatment) throws -> (red: Double, green: Double, blue: Double) {
             try pixels(DevelopedTreatment(look, seed: 3, sceneWhiteBalance: light).apply(to: gray)).meanColor(x: 64..<192, y: 64..<192)

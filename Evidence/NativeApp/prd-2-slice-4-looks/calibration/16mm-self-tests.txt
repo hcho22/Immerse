@@ -1,0 +1,4 @@
+$ python vision3_250d_lut.py --test
+sanity checks passed
+$ python effects_16mm_reference.py
+effects self-test passed
