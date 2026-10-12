@@ -348,15 +348,16 @@ Scratches and a film-frame border, which his notes also mentioned, are not added
 
 **The 16mm Cinema's color Film Stock develops with the look in the captain's own files.**
 On 2026-10-12 he sent the files that define it, a look generator and a reference for the per-frame passes, with the words "please apply the attached for immerse - 16mm camera kodak vision3 250d".
-The app applies them exactly: the generator's default "print" look and the reference's halation, soft darkened edges, softness, grain and weave.
+The app applies them: the generator's default "print" look and the reference's halation, soft darkened edges, softness, grain and weave.
 The look is his model of the reference film freshly processed, a low-contrast negative printed on print film, and it adds no fading, yellowing or wear.
-It is recorded here because it is taken whole from his files and not held to the limits the app's tests use for ADR 0013.
-It sits just outside two of them: a near-white tone develops to 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its color strength where the limit is 80, with greens, aquas and purples more muted than the scene.
+It is recorded here because it is taken from his files and not held to the limits the app's tests use for ADR 0013.
+His files alone sit just outside two of them: a near-white tone develops to 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its color strength where the limit is 80, with greens, aquas and purples more muted than the scene.
 His files put black at about 1.3 percent, where he had chosen about 4 percent on this Camera's board on 2026-10-10 and 2026-10-11, "a soft, grayed-out, lifted-black cinematic effect" in his words.
 Shown the applied look on the board on 2026-10-12, he wrote "the blacks are too strong for color. please tone it down" and then "please bring the black up to 4 percent".
 The board then showed two ways to that black, his black level alone raised, or the print's density range shortened so that the shadows open with it, and he chose the second: "lets go with C".
 So the look is his files with one constant changed by his own word: the print's density range, 2.74 where his file has 4.39, which puts black at 4 percent of the tone scale and opens the shadows, with middle gray where it was.
 That black is past the limit of about 3 percent the app's tests use for ADR 0013, and it is his choice, as it was before.
+With it the near-white develops to 0.89 and the mid green keeps 69 percent of its strength.
 The 16mm Cinema's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
 **The 6×6 Medium Format's color Film Stock develops with the look in the captain's own files.**

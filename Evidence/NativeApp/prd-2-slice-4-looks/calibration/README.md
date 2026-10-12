@@ -3,6 +3,7 @@
 What the captain's own look files printed when run unchanged, kept as firstmate's messages 009 and 010 asked.
 The files themselves are in `Probes/FilmLookCalibration/`, and how the app is held to them is in `../../prd-2-slice-4-looks.md`.
 These runs measure his looks; no number from them went into the app, whose values are the constants written in his generators.
+The one exception is his own later word: on the 16mm board he chose a shorter print density range than his file's, which `../../prd-2-slice-4-looks.md` records; the runs here are of his files as he sent them.
 
 ## 16mm Cinema, color Film Stock
 

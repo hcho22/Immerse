@@ -146,9 +146,10 @@ They were listed for firstmate.
   Nothing else differs from his files: his file is unchanged in the probe, `make_fixtures.py` states the one difference, and the tests hold the app to his function with that density range.
   ADR 0016 records it as his choice.
 - **ADR 0013: just outside two of the app's limits.**
-  Measured as `FilmLookTests` measures the fresh rule, his files keep blacks deep (0.015 at most for a 3 percent black, limit 0.06; 0.045 with the black he then asked for), white unyellowed and hues within 12 degrees, but a 97 percent white develops to 0.903, 0.902 and 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its strength where the limit is 80.
+  Measured as `FilmLookTests` measures the fresh rule, his files keep blacks deep (0.015 at most for a 3 percent black, limit 0.06), white unyellowed and hues within 12 degrees, but a 97 percent white develops to 0.903, 0.902 and 0.898 where the limit is 0.9, and a mid green keeps 79 percent of its strength where the limit is 80.
   On a color chart his look mutes greens to 0.65, aquas to 0.64 and purples to 0.55 of the scene's strength (his `derive_stock.py`).
   This is his model of the film freshly printed and not aging, and it is recorded in ADR 0016 as his choice since he asked for this look in so many words.
+  With the density range he then chose (above), a 3 percent black develops to 0.050 at most, the 97 percent white to 0.893, 0.892 and 0.888, and the mid green keeps 69 percent of its strength.
 - **ADR 0015: no difference.**
   His files name the reference films and say the names never appear in the product; they are in a non-shipping probe and in comments only.
 
@@ -181,7 +182,7 @@ Whether to credit the package anyway was put to firstmate (`prd-2-slice-4-looks/
   Message 010 asks for parity with both, which cannot both be tight.
   The app follows the table: it is the file he sent for the app, his spec says to ship it, his own previews and measurements went through it, and message 010's last test names it.
   The function itself still matches his Python to 0.00002.
-  The board tells him and asks whether he would rather the app followed the function; firstmate was told.
+  Firstmate confirmed on 2026-10-12 that this is engineering and stands as built; the board states it.
 - **No table ships; the app makes it.**
   The app computes his table from his constants when a photograph develops.
   It equals his file at all 35,937 tones to six places, and his generator rewrites both of his tables byte for byte in the scratch environment.
