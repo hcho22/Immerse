@@ -134,14 +134,21 @@ enum FilmLook {
     /// past the fresh rule's limit for lifted blacks (ADR 0016).
     static let cinemaColor = Treatment(
         emulsion: .color(ColorEmulsion(
-            warmth: 0.006, tint: 0.004, saturation: 1.05,
-            tone: ToneCurve(contrast: 1.04, midtones: 0.92, shoulder: 0.07, black: 0.04, white: 0.99),
+            // The captain's tone values, through Probes/LookReviewBoards/lightroom_curve.py: opened shadows, softened
+            // highlights, a slight lift at the top and a little haze. Those values leave color strength alone, so
+            // `saturation` makes up what the gentler curve takes from it.
+            warmth: 0.006, tint: 0.004, saturation: 1.1,
+            tone: ToneCurve(contrast: 1, points: [
+                CGPoint(x: 0, y: 0), CGPoint(x: 16, y: 19), CGPoint(x: 32, y: 38.9), CGPoint(x: 64, y: 75.9),
+                CGPoint(x: 96, y: 102.8), CGPoint(x: 128, y: 126.4), CGPoint(x: 160, y: 151.8),
+                CGPoint(x: 192, y: 181.4), CGPoint(x: 224, y: 218.6), CGPoint(x: 255, y: 255)
+            ], black: 0.04),
             highlights: RGB(0.005, 0.002, -0.005),
             grain: Grain(amplitude: 3.4, size: 0.0008, chroma: 0.3),
             fixedBalance: 5500
         )),
         halation: Halation(threshold: 0.78, radius: 0.008, strength: 0.3, color: RGB(1, 0.18, 0.05)),
-        lens: Lens(softness: 0.0005, edgeSoftness: 0.0012, edgeDarkening: 0.5),
+        lens: Lens(softness: 0.0006, diffusion: 0.025, edgeSoftness: 0.0012, edgeDarkening: 0.5),
         gate: Gate(jitter: 0.0012, weave: 0.0012, weavePeriod: 2.4)
     )
 
@@ -241,8 +248,8 @@ extension FilmLook {
         /// A power applied to the tone before the curve: above 1 darkens the middle tones and below 1 lightens them.
         var midtones: Double = 1
         /// A curve drawn point by point, as (capture tone, print tone) pairs on the 0 to 255 scale a point curve is
-        /// usually written in, from (0, 0) to (255, 255) with rising tones. When given, it replaces the S of
-        /// `contrast`; `midtones`, `shoulder`, `black` and `white` still apply around it.
+        /// usually written in, from capture black (0) to capture white (255) with rising tones. When given, it
+        /// replaces the S of `contrast`; `midtones`, `shoulder`, `black` and `white` still apply around it.
         var points: [CGPoint] = []
         /// A soft shoulder: how far the upper tones are pulled down, as display tone at three-quarter gray, with
         /// black and white left where they are. Negative film rolls its highlights off gently.
@@ -316,6 +323,9 @@ extension FilmLook {
     struct Lens: Equatable {
         /// Softness over the whole picture, as a blur radius in fractions of the long edge.
         var softness: Double = 0
+        /// A veil of diffused light: the share of the picture replaced by a wide blur of itself, which lowers local
+        /// contrast and smooths skin without losing fine detail, as negative clarity does.
+        var diffusion: Double = 0
         /// Extra softness toward the corners, as the corners' blur radius in fractions of the long edge.
         var edgeSoftness: Double = 0
         /// How much darker the corners are than the center, in stops.

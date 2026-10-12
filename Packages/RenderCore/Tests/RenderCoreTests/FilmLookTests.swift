@@ -358,6 +358,33 @@ final class FilmLookTests: XCTestCase {
         }
     }
 
+    /// A veil of diffused light spreads light across an edge, lowering contrast around it, and leaves fine detail
+    /// and even tones away from the edge as they were: what a blur over the whole picture would not.
+    func testDiffusionVeilsAnEdgeAndKeepsFineDetail() throws {
+        let side = 1024
+        var plain = FilmLook.treatment(camera: .mediumFormat6x6, filmStock: .color)
+        plain.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
+        plain.lens = FilmLook.Lens()
+        var veiled = plain
+        veiled.lens.diffusion = 0.1
+
+        let light = Self.even(0.6, side: CGFloat(side)).cropped(to: CGRect(x: 0, y: 0, width: side / 2, height: side))
+        let halves = light.composited(over: Self.even(0.05, side: CGFloat(side)))
+        let rows = side / 2 - 40..<side / 2 + 40
+        let beside = side / 2 + 2..<side / 2 + 10, away = side * 3 / 4 - 20..<side * 3 / 4 + 20
+        let plainHalves = try render(halves, treatment: plain), veiledHalves = try render(halves, treatment: veiled)
+        XCTAssertGreaterThan(veiledHalves.meanLuminance(x: beside, y: rows), plainHalves.meanLuminance(x: beside, y: rows) + 5,
+                             "light veils the dark side of an edge")
+        XCTAssertEqual(veiledHalves.meanLuminance(x: away, y: rows), plainHalves.meanLuminance(x: away, y: rows), accuracy: 1,
+                       "an even tone away from the edge is unchanged")
+
+        let checks = Self.checkerboard(side: CGFloat(side), square: 6)
+        let sharp = try render(checks, treatment: plain).edgeSharpness(x: rows, y: rows)
+        let kept = try render(checks, treatment: veiled).edgeSharpness(x: rows, y: rows)
+        XCTAssertGreaterThan(kept, sharp * 0.6, "fine detail survives the veil (\(kept) vs \(sharp))")
+        XCTAssertLessThan(kept, sharp, "and its contrast is a little lower")
+    }
+
     // MARK: - The Instant
 
     /// Each print differs slightly from the next in color and density, chosen once from its seed: the same seed
