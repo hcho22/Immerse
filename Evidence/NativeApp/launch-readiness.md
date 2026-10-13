@@ -32,12 +32,13 @@ limits are in `../AssetReview/README.md`. It is not production asset clearance.
 
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
-The [physical validation handoff](manual-validation.md) pins candidate `71391e4` ([final gate](final-candidate-050.md)),
-records the exact manual-test deferral and earlier probe-only authority, and gives
+The [physical validation handoff](manual-validation.md) pins the manual candidate, since 2026-10-13 commit `5c3a217bd7d9b84b629dab912cbcda038aeff62d` on `main`, the first that holds all of PRD 2.1.
+It pinned `71391e4` before ([final gate](final-candidate-050.md)), which is now history and holds neither the review fixes below nor PRD 2.0 or 2.1.
+The handoff records the exact manual-test deferral and earlier probe-only authority, and gives
 future HC_iPhone13 Xcode steps, per-case outcomes/evidence fields, full receipt
 failpoints and iPhone 11/two-device prerequisites. All physical cases remain
 untested. It is preparation for eventual manual testing, not a request to start it.
-The candidate is the branch commit containing this file; exact execution outcomes
+Everything below this paragraph was written for the earlier candidate on its branch, and "the candidate" there means that branch commit unless a line names another; exact execution outcomes
 are in `2026-10-01-native-candidate.md`, `2026-10-01-media-workflows.md` and the
 superseding `../TrialKeychainProbe/2026-10-01-production-receipt-integration.md`.
 Draft asset preparation is separately recorded above. The
@@ -46,12 +47,18 @@ ask-user findings, reviews this evidence linkage, and must coordinate a separate
 ordinary release task before any future authorized exposure. Never merge here.
 
 **Review fixes after candidate `71391e4`:** the no-mistakes review changed app and package sources, so the manual candidate must be re-pinned to the commit that contains them.
+That re-pin was made on 2026-10-13: `5c3a217bd7d9b84b629dab912cbcda038aeff62d` contains these fixes, and the plan says how to tell when a later commit calls for another.
 Movie capacity is now accounted in whole 30 fps frames: clips whose frames total the reel complete the Film, and the final clip is capped at exactly the remaining frames instead of being rejected and blocking the Film.
 Movie capture now uses the largest native 4:3 format no larger than the earlier 1920x1080 `.high` preset (1440x1080 where offered), with a 3:4 portrait or 4:3 landscape viewfinder; the size is provisional pending DEC-04 and the format is a manual device check (M19).
 `TrialCoordinator.load` is now the single new-Film entitlement decision that production executes; the unused `EntitlementPolicy` rules and the unlinked `CapturePipeline` committer were removed, and the local StoreKit tests drive `JournalModel.load` and the production capture commit.
 A second review round corrected the landscape capture angles (home side right is 0 degrees) and portrait clip rotation in Development, made the viewfinder follow the interface orientation, stopped transient inactive phases from cancelling Development or Photos exports, reported partly saved exports, and hardened recovery, staging and removal re-entry.
 A third review round re-applies the viewfinder rotation when the iPhone turns straight from one landscape side to the other, shows each failure from a sheet or the camera screen exactly once (including a failed Instant print after the camera closes and Development started from the originals choice), and keeps the load screen from suggesting a subscription in builds without subscription products.
 These are software changes with package and hosted tests, not device evidence; M02, M04, M07, M09, M15 to M19 and M27 in the [physical handoff](manual-validation.md) must confirm them on a device.
+
+**PRD 2.0 and 2.1 after this handoff was written:** the four "PRD 2.0 implementation slices" of the task tracker merged to `main` between 2026-10-07 and 2026-10-13, and the candidate above holds them all.
+Their software evidence is in `capture-behavior-prd2-slice2.md`, `prd-2-slice-1-names-card-copy.md`, `prd-2-slice-3-film-stock.md` and `prd-2-slice-4-looks.md`, and none of it is device evidence.
+The physical handoff carries what each leaves for a phone: its "What changed between the earlier pin and this one" table names the scenarios, and L01 to L07 there are the looks slice's.
+The rest of this document predates those slices and describes the build as it stood on 2026-10-02.
 
 ## Candidate Identity and Local Gates
 

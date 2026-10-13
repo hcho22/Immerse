@@ -133,7 +133,7 @@ An unsigned simulator build may fail Keychain queries, so the Trial can report "
 The app target's signing team (`QH9S83CX4Y`) is committed in `project.yml`, so a team picked in Xcode survives regeneration.
 To install, sign in to that team in Xcode, turn on Developer Mode on the iPhone (Settings > Privacy & Security > Developer Mode), select the device and Run with the Debug configuration.
 Product IDs and production assets are not configured, so plans and samples look the same as in the simulator, while capture and the Keychain Trial record are real.
-[`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/manual-validation.md) holds the step-by-step physical validation plan; its note that signing is not configured predates the committed team.
+[`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/manual-validation.md) holds the step-by-step physical validation plan and names the commit to test.
 
 ### Debug testing unlock
 
