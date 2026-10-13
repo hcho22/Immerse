@@ -140,15 +140,21 @@ Minutes by phase, from the job logs of the last passing run before the looks (0e
 `Scripts/validate-local.sh` still runs everything, in the same order, on a Mac.
 CI runs it as four parts side by side, chosen with `IMMERSE_VALIDATE_PART`, each on its own runner with a 75-minute limit, behind a summary job that keeps the name `local-native`.
 
-| Part | Holds | Expected minutes |
+| Part | Holds | Minutes in this change's first two checks |
 | --- | --- | --- |
-| packages | Mac package tests and probes, document package, app builds, Release check, RenderCore in the simulator, StoreKit | 32 |
-| harness | the harness and its screen tests | 28 |
-| ui-text | `ContentSizeTests` | 41 |
-| ui-flows | every other suite of the app's screen tests, then the dark audits | 30 |
+| packages | Mac package tests and probes, document package, app builds, Release check, RenderCore in the simulator, StoreKit | 39 |
+| harness | the harness and its screen tests | 35 and 39 |
+| ui-text | `ContentSizeTests` | 38 and 52 |
+| ui-flows | every other suite of the app's screen tests, then the dark audits | 25 and 30 for the light suites alone |
 
-The expected minutes are sums of the measured phases plus each job's own checkout, simulator boot and build.
-The pull request that made this change records what the four jobs took on GitHub.
+Those are the jobs' times on GitHub, from start to end, in runs 38444526282 and 38445842024.
+Both runs carried a planted failing test that stopped ui-flows before its dark audits, which took 10 minutes in the single job, and a fault in the scripts' own tests stopped packages in the first.
+The pull request that made this change records the later runs.
+
+The parts take longer than the single job's phases suggested, which was 28 to 41 minutes each.
+One runner differs from the next by up to a third.
+`ContentSizeTests` took 32 minutes of test time on one runner and 43 on another, and the harness tests 26 and 29 against 20 in the last single job.
+So a part can pass 50 minutes, and the 75-minute limit is 23 minutes over the slowest part seen.
 
 No test left the check.
 `Scripts/validation-parts.sh` says what each part holds.
@@ -173,14 +179,17 @@ Markdown under `App` or the harness probe counts as code, because Xcode bundles 
 
 GitHub's standard macOS runners are free for a public repository, and an account that is not on an Enterprise plan runs 5 macOS jobs at once (GitHub's Actions limits page, read 2026-10-13).
 One run of the check uses four, so a second run started at the same time finds one runner free.
-The limits page does not say what happens to the jobs above the limit.
-A job waiting for a runner shows as queued, and the 75 minutes bound the time a job runs, not the time it waits.
-Two runs at once were not tried.
+The limits page does not say what happens to the jobs above the limit, so this change's own checks were made to overlap.
+With five macOS jobs running, the next two parts stayed queued for 17 and 25 minutes, and each started within three minutes of a running job ending.
+Jobs above the limit wait, then, and nothing fails.
+The 75 minutes are, by GitHub's definition of the setting, the time a job runs and not the time it waits.
 
-GitHub can also fail to supply a runner at all.
-On 2026-10-13 it cancelled a job after 15 minutes without a macOS runner, with "The job was not acquired by Runner of type hosted even after multiple attempts".
-With four jobs that can happen to one part while the others pass.
-The summary check is then red, and rerunning the failed job reruns that part alone.
+GitHub can also be short of runners, whatever the account's limit.
+On 2026-10-13 it noted "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times" on its jobs.
+Later that day two parts waited 26 and 31 minutes with fewer than five macOS jobs of the repository running, then started and ran as usual.
+Twice that day GitHub cancelled a job that had no runner, once after 15 minutes and once after 55, with "The job was not acquired by Runner of type hosted even after multiple attempts".
+The second was the harness part of run 38449942720, while two other parts of that run were running.
+The summary check is then red through no fault of the change, and rerunning the failed job reruns that part alone.
 
 ## Validation
 
@@ -190,5 +199,8 @@ The summary check is then red, and rerunning the failed job reruns that part alo
   With the real rule the failure stood and nothing was rerun.
   With a stand-in record that every touch leaves, the test was rerun alone, passed, and the run said so.
   With a test that fails every time, the rerun failed and so did the run.
+- On GitHub, in this change's own checks, a planted failing screen test with no discard in the simulator's log failed ui-flows without a rerun, and `local-native` was red while the other three parts passed (run 38445842024).
+  The commit after it removed the planted test.
 - Not exercised: a real dropped touch on demand.
   The real discard record has been read only from the three collected logs.
+- Not exercised on GitHub: the Markdown-only rule, which needs a pull request that changes Markdown alone.
