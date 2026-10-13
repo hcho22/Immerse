@@ -210,11 +210,19 @@ extension Color {
 
     /// Secondary text on a card. On the white light-mode card the system secondary label is 3.44:1, under the
     /// 4.5:1 bar, so light mode raises its opacity to at least 71% (4.58:1); dark mode keeps the system color.
-    static let cardSecondaryText = Color(uiColor: UIColor { traits in
-        let system = UIColor.secondaryLabel.resolvedColor(with: traits)
-        guard traits.userInterfaceStyle != .dark else { return system }
-        return system.withAlphaComponent(max(system.cgColor.alpha, 0.71))
-    })
+    static let cardSecondaryText = secondaryText(lightOpacity: 0.71)
+
+    /// Secondary text on the gray ground of a sealed or discarded frame, which is darker than a card: there the
+    /// system secondary label is 3.29:1 in light mode, so its opacity is at least 75% (4.82:1).
+    static let frameSecondaryText = secondaryText(lightOpacity: 0.75)
+
+    private static func secondaryText(lightOpacity: CGFloat) -> Color {
+        Color(uiColor: UIColor { traits in
+            let system = UIColor.secondaryLabel.resolvedColor(with: traits)
+            guard traits.userInterfaceStyle != .dark else { return system }
+            return system.withAlphaComponent(max(system.cgColor.alpha, lightOpacity))
+        })
+    }
 }
 
 extension View {

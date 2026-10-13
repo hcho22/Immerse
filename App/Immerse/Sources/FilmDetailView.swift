@@ -79,13 +79,16 @@ struct FilmDetailView: View {
             film.camera.displayNameText.font(.system(.title2, design: .serif))
             if let stock = film.filmStock { Text("\(stock.label) Film Stock").font(.subheadline) }
             Text(film.journalState).font(.headline)
+            // The system secondary label is 3.44:1 on this screen's white ground in light mode, under the 4.5:1 bar.
             (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText)
-                .font(.subheadline.monospaced()).foregroundStyle(.secondary)
+                .font(.subheadline.monospaced()).foregroundStyle(Color.cardSecondaryText)
             if model.hasPendingSave(filmID) { ProgressView().accessibilityLabel("Finishing save") }
-            else { ProgressView(value: film.progress) }
+            // The bar draws what the line above says in words, so VoiceOver reads the line alone; as its own
+            // element the 4-point bar was reported as a control too small to tap.
+            else { ProgressView(value: film.progress).accessibilityHidden(true) }
             if let range = film.captureDateRange {
                 Text("\(range.lowerBound.formatted(date: .abbreviated, time: .omitted)) - \(range.upperBound.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(Color.cardSecondaryText)
             }
         }
     }
@@ -167,7 +170,7 @@ struct FilmDetailView: View {
             VStack {
                 Image(systemName: capture.isDiscarded ? "minus" : "lock")
                 Text(capture.isDiscarded ? "Discarded" : "Sealed").font(.caption)
-            }.foregroundStyle(.secondary)
+            }.foregroundStyle(Color.frameSecondaryText)
         }.accessibilityElement(children: .combine)
     }
 
