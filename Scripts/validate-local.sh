@@ -57,6 +57,17 @@ if [ -n "${IMMERSE_WORKFLOW_SIMULATOR_UDID:-}" ]; then
 fi
 if [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
     pin_simulator "$IMMERSE_SIMULATOR_UDID"
+    # The render tests once more, inside the simulator. Core Image differs between a Mac and iOS in ways no test on a
+    # Mac sees: a filter's default, the widest table it takes (Evidence/NativeApp/prd-2-slice-4-looks.md). The
+    # version 2 pictures LegacyLookTests compares with were recorded on a Mac, and version 2 is frozen with one of
+    # those defaults in it, so that class runs on the Mac only.
+    (cd Packages/RenderCore && xcodebuild -quiet -scheme RenderCore \
+        -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" \
+        -derivedDataPath ../../DerivedData/RenderCoreSimulator \
+        -resultBundlePath "../../DerivedData/RenderCore-$(date -u +%Y%m%dT%H%M%SZ).xcresult" \
+        -skip-testing:RenderCoreTests/LegacyLookTests \
+        -test-timeouts-enabled YES -maximum-test-execution-time-allowance 300 \
+        CODE_SIGNING_ALLOWED=NO test)
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
         -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" \
         -derivedDataPath DerivedData/ValidationSimulator \

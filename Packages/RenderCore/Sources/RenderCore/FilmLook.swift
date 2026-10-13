@@ -443,8 +443,7 @@ extension FilmLook {
     struct Grain: Equatable {
         /// Strength: the standard deviation it adds to an even mid-gray, in 8-bit display levels.
         var amplitude: Double
-        /// The size of a grain clump, as a fraction of the picture's long edge; never below 1.2 pixels, the smallest
-        /// clump whose strength `DevelopedTreatment.clumpedNoiseDeviation` is calibrated for.
+        /// The size of a grain clump, as a fraction of the picture's long edge; never below 1.2 pixels.
         var size: Double
         /// 0 is gray grain, the same in every channel; 1 gives each color layer its own.
         var chroma: Double = 0

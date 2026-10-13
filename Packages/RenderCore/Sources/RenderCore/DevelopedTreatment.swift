@@ -139,21 +139,19 @@ struct DevelopedTreatment {
         guard grain.amplitude > 0 else { return image }
         let extent = image.extent
         let size = max(1.2, grain.size * longEdge)
+        // One of the grain's stored tiles of clumped noise, at an offset of this frame's own.
+        let tile = GrainField.shared.tile(GrainField.Make(size: Self.clumpSpread * size),
+                                          index: Int(random(frame, salt: 60) * Double(GrainField.count)))
+        let side = Double(GrainField.side)
+        let offset = CGPoint(x: random(frame, salt: 61) * side, y: random(frame, salt: 62) * side)
         // Each channel its own noise; the gray part repeats the red channel in every channel.
         let chroma = grain.chroma
-        let noise = noiseTile(frame: frame)
+        let noise = GrainField.tiled(tile, movedBy: offset).cropped(to: extent)
             .applyingFilter("CIColorMatrix", parameters: [
                 "inputRVector": CIVector(x: 1, y: 0, z: 0, w: 0),
                 "inputGVector": CIVector(x: 1 - chroma, y: chroma, z: 0, w: 0),
                 "inputBVector": CIVector(x: 1 - chroma, y: 0, z: chroma, w: 0)
             ])
-            .applyingFilter("CIAffineTile")
-            .cropped(to: CGRect(x: 0, y: 0, width: ceil(extent.width / size) + 2, height: ceil(extent.height / size) + 2))
-            .samplingLinear()
-            .transformed(by: CGAffineTransform(scaleX: size, y: size))
-            .clampedToExtent()
-            .applyingGaussianBlur(sigma: size * 0.5)
-            .cropped(to: extent)
         // Soft light changes mid-gray by half the blend's distance from 0.5, so twice the wanted spread goes in.
         let midtones = Self.centered(noise, deviation: 2 * grain.amplitude / 255)
         let display = image.applyingFilter("CILinearToSRGBToneCurve")
@@ -252,25 +250,6 @@ struct DevelopedTreatment {
         let overlay = CIImage(cgImage: drawn).transformed(by: placement)
             .composited(over: CIImage(color: .white)).cropped(to: extent)
         return Self.multiply(image, by: overlay)
-    }
-
-    /// 512 x 512 cells of uniform noise from the capture's seed and the frame, red, green and blue each their own. It is
-    /// untagged, so Core Image takes its values as they are.
-    private func noiseTile(frame: Int) -> CIImage {
-        let side = 512
-        var state = seed ^ (UInt64(truncatingIfNeeded: frame) &* 0x9e37_79b9_7f4a_7c15)
-        var bytes = [UInt8](repeating: 255, count: side * side * 4)
-        for index in stride(from: 0, to: bytes.count, by: 4) {
-            state = state &+ 0x9e37_79b9_7f4a_7c15
-            var value = (state ^ (state >> 30)) &* 0xbf58_476d_1ce4_e5b9
-            value = (value ^ (value >> 27)) &* 0x94d0_49bb_1331_11eb
-            value ^= value >> 31
-            bytes[index] = UInt8(truncatingIfNeeded: value)
-            bytes[index + 1] = UInt8(truncatingIfNeeded: value >> 8)
-            bytes[index + 2] = UInt8(truncatingIfNeeded: value >> 16)
-        }
-        return CIImage(bitmapData: Data(bytes), bytesPerRow: side * 4, size: CGSize(width: side, height: side),
-                       format: .RGBA8, colorSpace: nil)
     }
 
     /// A deterministic value in 0..<1 (or -1..<1 when `signed`) for this capture, a frame and a purpose.
@@ -408,20 +387,21 @@ struct DevelopedTreatment {
         mask.applyingFilter("CIMultiplyCompositing", parameters: [kCIInputBackgroundImageKey: image]).cropped(to: image.extent)
     }
 
-    /// Noise centered on 0.5 with the given standard deviation, from uniform noise blurred into clumps.
+    /// Noise centered on 0.5 with the given standard deviation, from clumped noise with a mean of 0 and a deviation
+    /// of 1 (`GrainField`).
     static func centered(_ noise: CIImage, deviation: Double) -> CIImage {
-        let gain = deviation / clumpedNoiseDeviation
-        return noise.applyingFilter("CIColorMatrix", parameters: [
-            "inputRVector": CIVector(x: gain, y: 0, z: 0, w: 0),
-            "inputGVector": CIVector(x: 0, y: gain, z: 0, w: 0),
-            "inputBVector": CIVector(x: 0, y: 0, z: gain, w: 0),
-            "inputBiasVector": CIVector(x: 0.5 - gain * 0.5, y: 0.5 - gain * 0.5, z: 0.5 - gain * 0.5, w: 0)
+        noise.applyingFilter("CIColorMatrix", parameters: [
+            "inputRVector": CIVector(x: deviation, y: 0, z: 0, w: 0),
+            "inputGVector": CIVector(x: 0, y: deviation, z: 0, w: 0),
+            "inputBVector": CIVector(x: 0, y: 0, z: deviation, w: 0),
+            "inputBiasVector": CIVector(x: 0.5, y: 0.5, z: 0.5, w: 0)
         ])
     }
 
-    /// The standard deviation of the grain's clumped noise before scaling, for clumps of 1.2 pixels and more, measured
-    /// on an even mid-gray (`FilmLookTests.testGrainAmplitudeIsTheDeviationItAddsToMidGray`).
-    static let clumpedNoiseDeviation = 0.071
+    /// The blur radius of a grain's clumps, as a share of the clump size a look gives. It is the spread the clumps
+    /// had when Core Image made them, by enlarging a picture of noise and blurring it by half the clump size, which
+    /// is the grain the captain approved on the review boards.
+    static let clumpSpread = 0.67
 
     static func gray(_ level: Double) -> CIColor {
         CIColor(red: level, green: level, blue: level, colorSpace: CGColorSpace(name: CGColorSpace.linearSRGB)!)!

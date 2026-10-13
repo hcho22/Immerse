@@ -1,4 +1,3 @@
-import Accelerate
 import CoreGraphics
 import CoreImage
 import FilmDomain
@@ -134,10 +133,9 @@ extension DevelopedTreatment {
         let extent = image.extent
         let field = GrainField.shared.tile(size: grain.size * width, grain: grain, index: Int(random(frame, salt: 70) * Double(GrainField.count)))
         let side = Double(GrainField.side)
-        let offset = CGAffineTransform(translationX: -(random(frame, salt: 71) * side).rounded(.down),
-                                       y: -(random(frame, salt: 72) * side).rounded(.down))
+        let offset = CGPoint(x: random(frame, salt: 71) * side, y: random(frame, salt: 72) * side)
         let amount = grain.strength * width / referenceWidth
-        let noise = field.samplingNearest().applyingFilter("CIAffineTile").transformed(by: offset).cropped(to: extent)
+        let noise = GrainField.tiled(field, movedBy: offset).cropped(to: extent)
             .applyingFilter("CIColorMatrix", parameters: [
                 "inputRVector": CIVector(x: grain.deviation.red * amount, y: 0, z: 0, w: 0),
                 "inputGVector": CIVector(x: 0, y: grain.deviation.green * amount, z: 0, w: 0),
@@ -223,11 +221,11 @@ enum SceneLight {
     static let workingSpace = CGColorSpace(name: CGColorSpace.extendedLinearSRGB)!
 
     /// Display light to scene light: the phone's compressed highlights opened again (`NegativeFilm.sceneLight`).
-    static let opened = table(count: 4096, upTo: 1, FilmLook.NegativeFilm.sceneLight(displayLight:))
+    static let opened = table(upTo: 1, FilmLook.NegativeFilm.sceneLight(displayLight:))
 
     /// Scene light to Apple Log tones, up to well past the brightest light a glow can add.
     static let appleLogRange = 8.0
-    static let appleLog = table(count: 16384, upTo: appleLogRange, FilmLook.NegativeFilm.appleLogEncoded)
+    static let appleLog = table(upTo: appleLogRange, FilmLook.NegativeFilm.appleLogEncoded)
 
     /// Linear Rec.709 to linear Display P3 and linear Display P3 to linear Rec.2020, row by row, from the three
     /// standards' primaries and their shared white (D65).
@@ -242,8 +240,8 @@ enum SceneLight {
     static let rec2020 = FilmLook.NegativeFilm.inverse([[1.6605, -0.5876, -0.0728], [-0.1246, 1.1329, -0.0083], [-0.0182, -0.1006, 1.1187]])
 
     /// Apple Log tones back to scene light, and scene light to the film's cube tones (`NegativeFilm.cubeTone`).
-    static let appleLogDecoded = table(count: 4096, upTo: 1, FilmLook.NegativeFilm.appleLogDecoded)
-    static let cubeTone = table(count: 16384, upTo: FilmLook.NegativeFilm.cubeBrightest, FilmLook.NegativeFilm.cubeTone(sceneLight:))
+    static let appleLogDecoded = table(upTo: 1, FilmLook.NegativeFilm.appleLogDecoded)
+    static let cubeTone = table(upTo: FilmLook.NegativeFilm.cubeBrightest, FilmLook.NegativeFilm.cubeTone(sceneLight:))
 
     /// The picture's scene light from Rec.2020 primaries back on Rec.709's.
     static func onRec709(_ image: CIImage) -> CIImage {
@@ -269,7 +267,13 @@ enum SceneLight {
         ])
     }
 
-    private static func table(count: Int, upTo limit: Double, _ curve: (Double) -> Double) -> Data {
+    /// The samples in each curve's table. Core Image takes no more than a renderer's widest texture: the iOS
+    /// simulator's renders nothing at all for a table of 16,384, where a Mac's renders it. 4,096 is within every
+    /// renderer's reach, and leaves each curve within 0.0005 of itself between its samples.
+    static let curveSamples = 4096
+
+    private static func table(upTo limit: Double, _ curve: (Double) -> Double) -> Data {
+        let count = curveSamples
         var values = [Float]()
         values.reserveCapacity(count * 3)
         for index in 0..<count {
@@ -277,135 +281,5 @@ enum SceneLight {
             values.append(contentsOf: [value, value, value])
         }
         return values.withUnsafeBufferPointer { Data(buffer: $0) }
-    }
-}
-
-/// The film's grain as tiles of noise, made once for a kind of grain and reused: white noise with a normal spread,
-/// softened to the grain's size, joined by a second, coarser octave, with a share of every layer's noise common to
-/// all three, and each layer brought to a deviation of 1. A frame or a photograph takes one tile at an offset of its
-/// own. Eight tiles of 512 pixels a side is the captain's number for both negative Film Stocks. The tiles of the two
-/// kinds of grain asked for last are kept, so two Films developing at once do not remake each other's.
-final class GrainField: @unchecked Sendable {
-    static let shared = GrainField()
-    static let side = 512
-    static let count = 8
-
-    private struct Kind: Hashable {
-        let size: Int
-        let secondOctaveSize: Double
-        let secondOctaveWeight: Double
-        let shared: Double
-    }
-
-    private let lock = NSLock()
-    /// The kinds kept, the one asked for last first.
-    private var kept: [(kind: Kind, tiles: [Int: CIImage])] = []
-
-    /// `size` is the grain's blur radius in pixels of the frame.
-    func tile(size: Double, grain: FilmLook.ScenePasses.Grain, index: Int) -> CIImage {
-        let asked = Kind(size: Int((size * 1000).rounded()), secondOctaveSize: grain.secondOctaveSize,
-                         secondOctaveWeight: grain.secondOctaveWeight, shared: grain.shared)
-        let index = min(max(index, 0), Self.count - 1)
-        lock.lock()
-        defer { lock.unlock() }
-        if let position = kept.firstIndex(where: { $0.kind == asked }) {
-            kept.insert(kept.remove(at: position), at: 0)
-        } else {
-            kept.insert((asked, [:]), at: 0)
-            kept = Array(kept.prefix(2))
-        }
-        if let tile = kept[0].tiles[index] { return tile }
-        let values = Self.field(size: size, grain: grain, seed: UInt64(index) &* 0x9e37_79b9_7f4a_7c15 &+ 0x1234_5678)
-        let tile = CIImage(bitmapData: values.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: Self.side * 16,
-                           size: CGSize(width: Self.side, height: Self.side), format: .RGBAf, colorSpace: nil)
-        kept[0].tiles[index] = tile
-        return tile
-    }
-
-    /// One tile's values, red, green, blue and an alpha of 1 for each cell, row by row. It repeats seamlessly.
-    static func field(size: Double, grain: FilmLook.ScenePasses.Grain, seed: UInt64) -> [Float] {
-        let cells = side * side
-        var state = seed
-        func octave(_ radius: Double) -> [[Double]] {
-            (0..<3).map { _ in normalized(blurred(whiteNoise(cells, &state), radius: radius)) }
-        }
-        let fine = octave(size), coarse = octave(size * grain.secondOctaveSize)
-        func mixed(_ first: [Double], _ firstShare: Double, _ second: [Double], _ secondShare: Double) -> [Double] {
-            var result = [Double](repeating: 0, count: cells)
-            var firstShare = firstShare, secondShare = secondShare
-            vDSP_vsmsmaD(first, 1, &firstShare, second, 1, &secondShare, &result, 1, vDSP_Length(cells))
-            return result
-        }
-        var layers = (0..<3).map { normalized(mixed(fine[$0], 1, coarse[$0], grain.secondOctaveWeight)) }
-        let common = layers[1]
-        layers = layers.map { normalized(mixed($0, 1 - grain.shared, common, grain.shared)) }
-        var values = [Float](repeating: 1, count: cells * 4)
-        for cell in 0..<cells {
-            values[cell * 4] = Float(layers[0][cell]); values[cell * 4 + 1] = Float(layers[1][cell])
-            values[cell * 4 + 2] = Float(layers[2][cell])
-        }
-        return values
-    }
-
-    private static func whiteNoise(_ count: Int, _ state: inout UInt64) -> [Double] {
-        func uniform() -> Double {
-            state = state &+ 0x9e37_79b9_7f4a_7c15
-            var value = (state ^ (state >> 30)) &* 0xbf58_476d_1ce4_e5b9
-            value = (value ^ (value >> 27)) &* 0x94d0_49bb_1331_11eb
-            value ^= value >> 31
-            return (Double(value >> 11) + 0.5) / Double(UInt64(1) << 53)
-        }
-        var noise = [Double](repeating: 0, count: count)
-        var index = 0
-        while index < count {
-            // Two normal draws from two uniform ones.
-            let radius = (-2 * log(uniform())).squareRoot(), angle = 2 * Double.pi * uniform()
-            noise[index] = radius * cos(angle)
-            if index + 1 < count { noise[index + 1] = radius * sin(angle) }
-            index += 2
-        }
-        return noise
-    }
-
-    /// A Gaussian blur of the tile that wraps around its edges, so the tile still repeats seamlessly.
-    private static func blurred(_ values: [Double], radius: Double) -> [Double] {
-        guard radius > 0.01 else { return values }
-        let reach = max(1, Int((4 * radius).rounded(.up)))
-        var kernel = (-reach...reach).map { exp(-0.5 * Double($0 * $0) / (radius * radius)) }
-        let total = kernel.reduce(0, +)
-        kernel = kernel.map { $0 / total }
-        // Each row, with its far end ahead of it and its near end after it, against the kernel.
-        func across(_ source: [Double]) -> [Double] {
-            var result = [Double](repeating: 0, count: source.count)
-            var padded = [Double](repeating: 0, count: side + 2 * reach)
-            source.withUnsafeBufferPointer { input in
-                result.withUnsafeMutableBufferPointer { output in
-                    padded.withUnsafeMutableBufferPointer { row in
-                        for index in 0..<side {
-                            let start = input.baseAddress! + index * side
-                            row.baseAddress!.update(from: start + side - reach, count: reach)
-                            (row.baseAddress! + reach).update(from: start, count: side)
-                            (row.baseAddress! + reach + side).update(from: start, count: reach)
-                            vDSP_convD(row.baseAddress!, 1, kernel, 1, output.baseAddress! + index * side, 1,
-                                       vDSP_Length(side), vDSP_Length(kernel.count))
-                        }
-                    }
-                }
-            }
-            return result
-        }
-        func turned(_ source: [Double]) -> [Double] {
-            var result = [Double](repeating: 0, count: source.count)
-            vDSP_mtransD(source, 1, &result, 1, vDSP_Length(side), vDSP_Length(side))
-            return result
-        }
-        return turned(across(turned(across(values))))
-    }
-
-    private static func normalized(_ values: [Double]) -> [Double] {
-        var result = [Double](repeating: 0, count: values.count)
-        var mean = 0.0, deviation = 0.0
-        vDSP_normalizeD(values, 1, &result, 1, &mean, &deviation, vDSP_Length(values.count))
-        return result
     }
 }

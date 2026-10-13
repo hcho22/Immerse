@@ -366,10 +366,13 @@ extension Fixtures.Tones {
 
 extension Fixtures {
     /// An image's values as Core Image holds them, unconverted: scene light or Apple Log tones. Rows from the top.
-    static func values(_ image: CIImage) -> Tones {
+    /// Core Image works in 16-bit numbers unless a test asks for 32.
+    static func values(_ image: CIImage, workingFormat: CIFormat? = nil) -> Tones {
         let width = Int(image.extent.width), height = Int(image.extent.height)
         var values = [Float](repeating: 0, count: width * height * 4)
-        CIContext(options: [.cacheIntermediates: false]).render(
+        var options: [CIContextOption: Any] = [.cacheIntermediates: false]
+        if let workingFormat { options[.workingFormat] = workingFormat.rawValue }
+        CIContext(options: options).render(
             image, toBitmap: &values, rowBytes: width * 16, bounds: image.extent, format: .RGBAf, colorSpace: nil)
         return Tones(width: width, height: height, values: values)
     }

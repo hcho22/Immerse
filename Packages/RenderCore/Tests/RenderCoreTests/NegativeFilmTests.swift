@@ -380,16 +380,16 @@ final class NegativeFilmTests: XCTestCase {
         }
     }
 
-    /// The reader is there wherever Metal can make a library at run time, which is every iPhone the app runs on.
-    func testTheTetrahedralReaderIsMadeWhereMetalAllows() throws {
-        guard let device = MTLCreateSystemDefaultDevice(), device.supportsDynamicLibraries else {
-            throw XCTSkip("No Metal device that makes libraries at run time here")
-        }
+    /// The reader is there wherever Core Image renders with Metal, which is every iPhone the app runs on, the iOS
+    /// simulator and a Mac.
+    func testTheTetrahedralReaderIsMadeWhereThereIsMetal() throws {
+        try XCTSkipUnless(MTLCreateSystemDefaultDevice() != nil, "No Metal device here")
         XCTAssertNotNil(TableReading.kernel)
     }
 
     /// The reader against the same reading in Swift, on the captain's own table: 3,000 tones between the table's own,
-    /// to 0.001, which is the 16-bit numbers Core Image works in.
+    /// to 0.001. The tones are handed over and read back in 32-bit numbers here, so that this measures the reader
+    /// alone; Development works in Core Image's 16-bit numbers, which the tests of the whole pipeline measure.
     func testTheReaderReadsTheCaptainsTableAsSwiftDoes() throws {
         try requireTetrahedralReader()
         let file = try Fixtures.table("MediumFormatColor/immerse_6x6_color_scan_applelog_33.cube")
@@ -399,7 +399,7 @@ final class NegativeFilmTests: XCTestCase {
         let picture = CIImage(bitmapData: pixels.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: tones.count * 16,
                               size: CGSize(width: tones.count, height: 1), format: .RGBAf, colorSpace: nil)
         let read = try XCTUnwrap(TableReading.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side))
-        let values = Fixtures.values(read)
+        let values = Fixtures.values(read, workingFormat: .RGBAf)
         var worst = 0.0
         for (index, want) in expected.enumerated() {
             let pixel = values.pixel(x: index, y: 0)
