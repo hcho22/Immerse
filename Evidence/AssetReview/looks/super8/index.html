@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1960s Super 8 Home Movie Look Board</title>
+<style>
+  :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff;
+          --surround: #8a8f8c; }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
+  header, main, footer { width: min(1320px, 100%); margin: auto; padding: 24px; }
+  header { padding-bottom: 0; }
+  .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
+  h1 { margin: 0; font: 38px/1.15 Georgia, serif; }
+  h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
+  h3 { font: 21px/1.3 Georgia, serif; margin: 28px 0 8px; }
+  h4 { font-size: 17px; margin: 0 0 8px; }
+  p { margin: 8px 0 14px; max-width: 90ch; }
+  .muted, small { color: var(--muted); }
+  .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
+  .facts { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 5fr); gap: 10px 24px; margin: 18px 0; }
+  dt { font-weight: 650; } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  dd p { margin: 0 0 10px; } dd p:last-child { margin-bottom: 0; }
+  ul.judge { margin: 6px 0 0; padding-left: 20px; max-width: 90ch; }
+  section { padding: 28px 0; border-top: 1px solid var(--line); margin-top: 28px; }
+  .scene { margin: 0 0 36px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  figure { margin: 0; min-width: 0; }
+  figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
+  .pair figure img, .pair figure video { height: 520px; }
+  .row.four figure img, .row.four figure video { height: 320px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
+  figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--green); border: 1px solid var(--green);
+         border-radius: 999px; padding: 1px 8px; margin-right: 6px; }
+  .refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  pre { background: #fff; border: 1px solid var(--line); padding: 14px; overflow-x: auto; font: 13px/1.5 ui-monospace, monospace; }
+  a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .decision { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; max-width: 760px; }
+  .decision label { display: flex; gap: 10px; align-items: center; min-height: 44px; font-weight: 600; }
+  .decision input[type=radio] { width: 20px; height: 20px; accent-color: var(--green); }
+  .decision textarea { width: 100%; min-height: 120px; font: inherit; padding: 10px; border: 1px solid #87958d; border-radius: 6px; }
+  .decision button { min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650; color: #fff; background: var(--green);
+                     border: 0; border-radius: 6px; margin-top: 12px; cursor: pointer; }
+  .queued { color: var(--green); font-weight: 650; margin-left: 12px; }
+  footer { border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 900px) {
+    header, main, footer { padding: 20px 16px; }
+    h1 { font-size: 30px; }
+    .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
+    .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<header><p class="eyebrow">Film Journal / Look review board final / 2026-10-12</p>
+<h1>1960s Super 8 Home Movie</h1>
+<p class="muted">Each scene developed by the app's own renderer (treatment version film-look-3) beside the phone capture it started from and photographs made with the Camera's Format Reference.</p>
+<p class="notice"><strong>Approved by the captain on 2026-10-10 (&quot;muted with a glow&quot;): the muted look with a highlight glow, his exception to ADR 0013 and to the PRD wording below (ADR 0016).</strong></p>
+<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference image stay internal and never ship in the app. Reference images are public-domain or openly licensed photographs credited under each one; many are scans of surviving prints or reels, which have aged, so judge them for the format's character as it was new. The test scenes are modern digital photographs, not captures from an iPhone running the app, so capture behavior (fixed exposure, the real flash) is not shown.</p>
+<dl class="facts"><dt>Format Reference</dt><dd>Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second</dd><dt>PRD 2.1 section 6</dt><dd>18 frames per second. Strong, rich color and fine grain, with an unsteady frame, brightness flicker, and dust and hair in the gate, each present from capture or first showing rather than from age.</dd><dt>What to judge</dt><dd><ul class="judge"><li>Color: strong and rich like fresh Kodachrome, deep blues and reds, never faded or shifted.</li><li>Grain: fine.</li><li>Motion: an unsteady frame and a slight brightness flicker; dust specks come and go; a hair may sit in the gate for a whole clip. None of it should spoil the picture.</li></ul></dd></dl></header>
+<main>
+<section><h2>Scenes</h2>
+<h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference format beside a scene of the same kind developed by the app. The subjects differ; judge color, contrast, grain and the format's imperfections.</p>
+<div class="row two pair scene"><figure><img src="ref-super8-ternus1977-still-01.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:02:20)"><figcaption><strong>Reference:</strong> Super 8 (1977): USA travel film stills (frame at 00:02:20)<br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-super8-phucat-still-01.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:00:02)"><figcaption><strong>Reference:</strong> Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:00:02)<br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-super8-frame-01.jpg" alt="Super 8 Kodachrome II frame (1972): portrait at an award ceremony"><figcaption><strong>Reference:</strong> Super 8 Kodachrome II frame (1972): portrait at an award ceremony<br><small>Jean-Paul De Preter. · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Rene_lambrechts-1476822848.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Natural-light portrait: older woman, light skin</figcaption></figure></div>
+<h3>Every scene</h3>
+<div class="scene"><h4><span class="tag">Day</span>Sunny beach boardwalk (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>TheWxResearcher · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Virginia_Beach_Oceanfront_2024-08-31.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101200</small></figcaption></figure>
+<figure><img src="look-day-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101201</small></figcaption></figure>
+<figure><img src="look-day-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>Pasture gate in Scotland (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-meadow-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pasture_gate.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101202</small></figcaption></figure>
+<figure><img src="look-meadow-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101203</small></figcaption></figure>
+<figure><img src="look-skin-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two women, medium-brown skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Moheen Reeyad · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Two_Bangladeshi_smiling_women_(01).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101204</small></figcaption></figure>
+<figure><img src="look-skin-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight)</h4>
+<div class="row ">
+<figure><img src="scene-skin-04.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-04.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101205</small></figcaption></figure>
+<figure><img src="look-skin-04-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Group toast lit by on-camera flash (compact camera, 2008)</h4>
+<div class="row ">
+<figure><img src="scene-flash-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Richie Diesterheft from Chicago, IL, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Graduation_Cheers!_(2658114583).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101206</small></figcaption></figure>
+<figure><img src="look-flash-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Night portrait with direct flash outdoors (compact camera, 2006)</h4>
+<div class="row ">
+<figure><img src="scene-flash-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Andrew Malone · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kate_at_night_(356377859).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101207</small></figcaption></figure>
+<figure><img src="look-flash-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7)</h4>
+<div class="row ">
+<figure><img src="scene-night-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101208</small></figcaption></figure>
+<figure><img src="look-night-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101209</small></figcaption></figure>
+<figure><img src="look-highlights-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Sun in frame over the sea with glints (iPhone 14 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>&quot;dronepicr&quot; · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Sunset_over_Kontogialos_Beach_in_Corfu,_Greece_(53698254280).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101210</small></figcaption></figure>
+<figure><img src="look-highlights-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Night street with bright signage, Akihabara (iPhone 15 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Stephen Kelly from San Francisco, CA, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Akihabara_Radio_Kaikan_Shopping_Building_(53416976349).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101211</small></figcaption></figure>
+<figure><img src="look-highlights-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Moving scene</span>Video: costumed dancers with drums in daylight (iPhone 13)</h4><div class="row two">
+<figure><video src="scene-clip-02-people-dancers.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Digital source clip</strong> <small>Rose Abrams · <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pyrkon_2026_marching_band.webm">source</a></small></figcaption></figure>
+<figure><video src="look-clip-02-people-dancers.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> <small>seed 2026101250, 18 frames per second</small></figcaption></figure>
+</div></div>
+<div class="scene"><h4><span class="tag">Moving scene</span>Video: pipes and drums band marching in sunshine (iPhone 13)</h4><div class="row two">
+<figure><video src="scene-clip-01-day-pipes-drums.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Digital source clip</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pipes_and_drums_march_in_Aberfeldy_for_the_Black_Watch_01.webm">source</a></small></figcaption></figure>
+<figure><video src="look-clip-01-day-pipes-drums.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> <small>seed 2026101251, 18 frames per second</small></figcaption></figure>
+</div></div>
+<div class="scene"><h4><span class="tag">Moving scene</span>Video: fairground ride at night with bright point lights</h4><div class="row two">
+<figure><video src="scene-clip-03-night-fairground.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Digital source clip</strong> <small>Paulo SP/ Wikimedia · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Luna_Park_Cais_8,_Funchal,_Madeira_-_Natal_2023_-_20231216_221125.webm">source</a></small></figcaption></figure>
+<figure><video src="look-clip-03-night-fairground.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> <small>seed 2026101252, 18 frames per second</small></figcaption></figure>
+</div></div>
+</section>
+<section><h2>All Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format Reference or the closest openly licensed equivalent, as credited. Judge the character, not the subject.</p>
+<h3>Super 8 home movies</h3><div class="refs">
+<figure><img src="ref-super8-frame-01.jpg" alt="Super 8 Kodachrome II frame (1972): portrait at an award ceremony" loading="lazy"><figcaption><strong>Super 8 Kodachrome II frame (1972): portrait at an award ceremony</strong><br><small>Jean-Paul De Preter. · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Rene_lambrechts-1476822848.jpg">source</a></small><br><small>Single frame grab of a man in a suit (writer René Lambrechts) from a Super 8 film shot on 26 April 1972, indoors. Shows Kodachrome II rendering of skin, a dark suit and a pale wall as transferred. Looks aged or transfer-shifted: a warm red-brown cast with lowered saturation and soft detail, so judge contrast and grain more than hue. The description explicitly states Super 8 mm film, Kodachrome II. Camera model not stated. Depicts an identifiable person. Commons file: &quot;Rene lambrechts-1476822848.jpg&quot;.</small></figcaption></figure>
+<figure><video src="ref-super8-phucat-excerpt.mp4" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base, Vietnam - 10 s excerpt</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>Ten-second excerpt (helicopters and airmen on the flight line in daylight) from an amateur Super 8 reel shot in 1966-67. Shows Super 8 grain, gate shape with rounded corners, softness, exposure breathing and Kodachrome-era colour as transferred. The transfer looks like a projection capture: soft, highlights clip to yellow-white in later scenes, slight warm/yellow cast. Pillarbox removed (cropped to the 4:3 picture). Film stock not stated. Super 8 launched in 1965 with Kodachrome II as Kodak&#x27;s colour cartridge stock, so Kodachrome II is likely but inferred. Camera not stated (not confirmed as a Kodak Instamatic M-series). Re-encoded to H.264 CRF 16 at native 29.97 fps, no audio. Source time range: 00:03:58-00:04:08. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-01.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:00:02)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:00:02)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: mountain peak beyond the base under a pale sky. Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:00:02. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-02.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:01:30)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:01:30)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: base overview with rows of yellow vehicles and hangars. Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:01:30. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-03.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:01:40)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:01:40)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: jet fighter on the runway. Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:01:40. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-04.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:03:20)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:03:20)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: valley landscape with trees and mountains under a blue sky. Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:03:20. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-05.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:04:06)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:04:06)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: helicopter on the flight line with soldiers. Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:04:06. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-phucat-still-06.jpg" alt="Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:05:45)" loading="lazy"><figcaption><strong>Super 8 (1966-67): Phu Cat Air Base stills (frame at 00:05:45)</strong><br><small>DFP32301 · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Super8_Footage_of_Phu_Cat_Air_Base,_Vietnam,_66-67_(Amateur_Film).webm">source</a></small><br><small>This frame: close view of an airman in olive uniform (skin tones). Stills from the Phu Cat Air Base Super 8 reel: landscape with mountain, base overview, jet on runway, valley landscape, helicopter with soldiers and a close airman portrait. Moderately aged/transfer-limited: soft, warm-yellow cast and clipped highlights in some shots; blues and greens survive. Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:05:45. Source video: &quot;Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm&quot; (1280x720, 381.7 s).</small></figcaption></figure>
+<figure><img src="ref-super8-ternus1977-still-01.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:02:20)" loading="lazy"><figcaption><strong>Super 8 (1977): USA travel film stills (frame at 00:02:20)</strong><br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small><br><small>This frame: New Orleans street with people (skin and clothing). Stills from a 1977 Super 8 travel film (New Orleans street with people, cathedral and flowers, red blossoms, Taos pueblo with a person, canyon landscape). Bright, saturated colour with a cyan lean in skies; low-resolution SD transfer (496x360 after cropping). Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:02:20. Source video: &quot;Reisevideo USA (1977) - im Original auf Super-8.webm&quot; (640x360, 1506.2 s).</small></figcaption></figure>
+<figure><img src="ref-super8-ternus1977-still-02.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:05:40)" loading="lazy"><figcaption><strong>Super 8 (1977): USA travel film stills (frame at 00:05:40)</strong><br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small><br><small>This frame: cathedral spires with flowering shrubs and blue sky. Stills from a 1977 Super 8 travel film (New Orleans street with people, cathedral and flowers, red blossoms, Taos pueblo with a person, canyon landscape). Bright, saturated colour with a cyan lean in skies; low-resolution SD transfer (496x360 after cropping). Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:05:40. Source video: &quot;Reisevideo USA (1977) - im Original auf Super-8.webm&quot; (640x360, 1506.2 s).</small></figcaption></figure>
+<figure><img src="ref-super8-ternus1977-still-03.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:11:30)" loading="lazy"><figcaption><strong>Super 8 (1977): USA travel film stills (frame at 00:11:30)</strong><br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small><br><small>This frame: red blossoms against green foliage. Stills from a 1977 Super 8 travel film (New Orleans street with people, cathedral and flowers, red blossoms, Taos pueblo with a person, canyon landscape). Bright, saturated colour with a cyan lean in skies; low-resolution SD transfer (496x360 after cropping). Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:11:30. Source video: &quot;Reisevideo USA (1977) - im Original auf Super-8.webm&quot; (640x360, 1506.2 s).</small></figcaption></figure>
+<figure><img src="ref-super8-ternus1977-still-04.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:14:00)" loading="lazy"><figcaption><strong>Super 8 (1977): USA travel film stills (frame at 00:14:00)</strong><br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small><br><small>This frame: adobe pueblo with a person in bright sun. Stills from a 1977 Super 8 travel film (New Orleans street with people, cathedral and flowers, red blossoms, Taos pueblo with a person, canyon landscape). Bright, saturated colour with a cyan lean in skies; low-resolution SD transfer (496x360 after cropping). Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:14:00. Source video: &quot;Reisevideo USA (1977) - im Original auf Super-8.webm&quot; (640x360, 1506.2 s).</small></figcaption></figure>
+<figure><img src="ref-super8-ternus1977-still-05.jpg" alt="Super 8 (1977): USA travel film stills (frame at 00:16:30)" loading="lazy"><figcaption><strong>Super 8 (1977): USA travel film stills (frame at 00:16:30)</strong><br><small>Jürgen Ternus · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Reisevideo_USA_(1977)_-_im_Original_auf_Super-8.webm">source</a></small><br><small>This frame: canyon landscape with distant mesas. Stills from a 1977 Super 8 travel film (New Orleans street with people, cathedral and flowers, red blossoms, Taos pueblo with a person, canyon landscape). Bright, saturated colour with a cyan lean in skies; low-resolution SD transfer (496x360 after cropping). Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:16:30. Source video: &quot;Reisevideo USA (1977) - im Original auf Super-8.webm&quot; (640x360, 1506.2 s).</small></figcaption></figure>
+</div>
+</section>
+<section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each Camera's and Film Stock's look is set. Spatial values are fractions of the picture's long edge.</p>
+<pre><code>    /// 1960s Super 8 Home Movie. Format Reference: the Kodak Instamatic M4 with Kodachrome II at 18 frames per second,
+    /// projected. By the captain&#x27;s choice on its review board on 2026-10-10 (&quot;muted with a glow&quot;), its color is not
+    /// PRD 2.1 section 6.2&#x27;s &quot;strong, rich color&quot; (ADR 0016): lower contrast, slightly desaturated color, darker
+    /// shadows, lowered whites, teal in the shadows and warmth in the highlights, a soft picture, and a warm
+    /// reddish-orange glow around bright highlights. Its fine grain, unsteady frame, brightness flicker, and dust and
+    /// hair in the gate are as the PRD sets them; scratches and other wear are not added.
+    static let super8 = Treatment(
+        emulsion: .color(ColorEmulsion(
+            warmth: 0.05, saturation: 0.9,
+            tone: ToneCurve(contrast: 1.0, midtones: 1.08, white: 0.93),
+            shadows: RGB(-0.006, 0.01, 0.012), highlights: RGB(0.014, 0.006, -0.012),
+            grain: Grain(amplitude: 3.5, size: 0.0012, chroma: 0.25)
+        )),
+        halation: Halation(threshold: 0.75, radius: 0.01, strength: 0.3, color: RGB(1, 0.35, 0.1)),
+        lens: Lens(softness: 0.0016, edgeSoftness: 0.0015, edgeDarkening: 0.45),
+        gate: Gate(jitter: 0.0035, weave: 0.002, weavePeriod: 1.7, flicker: 0.06, dust: 0.6, hair: 0.5)
+    )</code></pre>
+</section>
+<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-super8" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve"> Approve these values for the 1960s Super 8 Home Movie</label><label><input type="radio" name="decision" value="change"> Request changes</label><p><label for="notes" style="display:block">What should change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
+</main>
+<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>
+
+<script>
+function queueDecision(event) {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  const decision = form.get('decision');
+  if (!decision) return;
+  const notes = (form.get('notes') || '').trim();
+  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
+  const text = (decision === 'change' ? 'Change the 1960s Super 8 Home Movie look.' : chosen + ' (1960s Super 8 Home Movie).') + (notes ? ' ' + notes : '');
+  if (window.lavish) {
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-super8',
+                                      data: { board: 'super8', decision: decision, notes: notes } });
+  }
+  document.getElementById('queued').hidden = false;
+}
+</script>
+</body>
+</html>

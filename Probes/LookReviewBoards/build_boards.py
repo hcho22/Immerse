@@ -24,6 +24,7 @@ LOOK_SOURCE = os.path.join(ROOT, "Packages/RenderCore/Sources/RenderCore/FilmLoo
 BOARDS = [
     {
         "id": "disposable",
+        "approved": "Approved by the captain on 2026-10-10 (\"fresh\"): the look inside ADR 0013.",
         "pairs": {("disposable1990s", None): [("disposable-02", "flash-01"), ("disposable-01", "flash-02"), ("disposable-04", "day-02"), ("disposable-06", "day-01")]},
         "name": "1990s Disposable",
         "cameras": [("disposable1990s", None)],
@@ -43,6 +44,9 @@ BOARDS = [
     },
     {
         "id": "instant",
+        "approved": "Approved by the captain on 2026-10-10 (\"faded\", then \"approved\"): the faded look, his exception to "
+                    "ADR 0013 and to the PRD wording below (ADR 0016). The size of the print-to-print variation stays "
+                    "provisional until the study of preserved 1970s prints.",
         "pairs": {("instant1970s", None): [("instant-02", "highlights-01"), ("instant-01", "day-02"), ("instant-03", "day-01")]},
         "name": "1970s Instant",
         "cameras": [("instant1970s", None)],
@@ -61,6 +65,9 @@ BOARDS = [
     },
     {
         "id": "6x6",
+        "approved": "Approved by the captain on 2026-10-12 (\"everything looks good\"): the color Film Stock develops with "
+                    "the look in his own files, a lab scan with lifted blacks (ADR 0016); the black-and-white Film Stock "
+                    "as tuned on this board.",
         "pairs": {("mediumFormat6x6", "color"): [("6x6-color-02", "skin-03"), ("6x6-color-03", "skin-01"), ("6x6-color-04", "day-01")], ("mediumFormat6x6", "blackAndWhite"): [("6x6-bw-06", "day-02"), ("6x6-bw-01", "highlights-03"), ("6x6-bw-05", "night-01")]},
         "name": "6×6 Medium Format",
         "cameras": [("mediumFormat6x6", "color"), ("mediumFormat6x6", "blackAndWhite")],
@@ -79,6 +86,8 @@ BOARDS = [
     },
     {
         "id": "super8",
+        "approved": "Approved by the captain on 2026-10-10 (\"muted with a glow\"): the muted look with a highlight glow, "
+                    "his exception to ADR 0013 and to the PRD wording below (ADR 0016).",
         "pairs": {("super8HomeMovie", None): [("super8-ternus1977-still-01", "day-02"), ("super8-phucat-still-01", "day-01"), ("super8-frame-01", "skin-01")]},
         "name": "1960s Super 8 Home Movie",
         "cameras": [("super8HomeMovie", None)],
@@ -97,6 +106,10 @@ BOARDS = [
     },
     {
         "id": "16mm",
+        "approved": "Approved by the captain on 2026-10-12 (\"lets go with C\", \"black and white looks good\"): the "
+                    "color Film Stock develops with the look in his own files and the print density range he chose, "
+                    "black at 4 percent with the shadows opened (ADR 0016); the black-and-white Film Stock as it has "
+                    "stood since the first round.",
         "pairs": {("cinema16mm", "color"): [("16mm-color-still-02", "day-02"), ("halation-02", "highlights-03"), ("16mm-color-still-01", "tungsten-skin-01")], ("cinema16mm", "blackAndWhite"): [("16mm-bw-still-03", "day-02"), ("16mm-bw-still-02", "highlights-01"), ("16mm-bw-mattebox-still-02", "day-01")]},
         "name": "16mm Cinema",
         "cameras": [("cinema16mm", "color"), ("cinema16mm", "blackAndWhite")],
@@ -259,6 +272,8 @@ def build(board, renders, sources, output, round_number):
     body.append('<p class="muted">Each scene developed by the app\'s own renderer (treatment version %s) beside the '
                 'phone capture it started from%s and photographs made with the Camera\'s Format Reference.</p>'
                 % (esc(renders["treatmentVersion"]), ", the provisional look it replaces," if MEDIA["previous"] else ""))
+    if renders.get("approved") and board.get("approved"):
+        body.append('<p class="notice"><strong>%s</strong></p>' % esc(board["approved"]))
     body.append('<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference '
                 'image stay internal and never ship in the app. Reference images are public-domain or openly licensed '
                 'photographs credited under each one; many are scans of surviving prints or reels, which have aged, so '
@@ -563,6 +578,7 @@ def main():
     parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
     parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
     parser.add_argument("--slim", action="store_true", help="smaller pictures and clips, for the copy kept in the repository")
+    parser.add_argument("--approved", action="store_true", help="say on each board what the captain approved, for the copies kept after approval")
     args = parser.parse_args()
     if args.slim:
         MEDIA.update(SLIM_MEDIA)
@@ -573,6 +589,7 @@ def main():
     renders["photoScenes"] = scenes["photos"]
     renders["movieScenes"] = scenes["movies"]
     renders["date"] = args.date
+    renders["approved"] = args.approved
     alternates = []
     for index, path in enumerate(args.alternate):
         alternate = json.load(open(os.path.join(path, "manifest.json")))

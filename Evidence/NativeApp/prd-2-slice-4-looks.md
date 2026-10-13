@@ -301,9 +301,10 @@ The simulator is not an iPhone: a device's own renderer is first exercised at th
 - **How a board is made.**
   `Probes/LookReviewBoards` (commands in its README) develops each test scene through `NativePhotoRenderer.develop` and `NativeMovieRenderer.developClip`, the same calls Development makes, and `build_boards.py` lays each Camera's results beside its Format Reference imagery, the phone capture each started from and the values in `FilmLook.swift`.
   Each board was served to the captain as a Lavish review (`lavish-axi`), and his replies came back through it.
-  The copies kept in `Evidence/AssetReview/looks/<camera>/index.html` are the last round of each board, built with `--slim` (smaller pictures and clips, no version 2 comparison).
+  The copies kept in `Evidence/AssetReview/looks/<camera>/index.html` are final ones, built after the last approval with `--slim --approved`: each Camera's approved look alone, rendered through the final code, with the captain's words under its title, smaller pictures and clips, and no version 2 comparison.
+  The rounds themselves, with their candidates side by side, were served from the same paths and are not kept; the table below records each.
 - **Reference imagery and licenses.**
-  The boards use 60 reference files (photographs, film frames and short film excerpts made with each Format Reference or the closest openly licensed equivalent) and 22 test scenes.
+  The boards use 60 reference files (photographs, film frames and short film excerpts made with each Format Reference or the closest openly licensed equivalent) and 22 test scene files, 19 of them in use as 18 photo scenes and 3 clips.
   Every one is public domain, CC0, CC BY or CC BY-SA, read from Wikimedia Commons or Flickr at download time, and is credited on its board with its source page, author and license; `Evidence/AssetReview/looks/SOURCES.md` lists them all with the gaps and substitutions, and `sources.json` keeps each download URL.
   None is in the app, and the Format Reference names appear only on the boards, in comments and in these records.
 - **One departure: the captain's own reference pictures.**

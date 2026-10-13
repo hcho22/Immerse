@@ -32,6 +32,7 @@ Use only public-domain or openly licensed images there, and record each one's so
 Each board is a self-contained directory, `index.html` with the pictures and clips it shows beside it, served for review with `lavish-axi <board>/index.html`.
 The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with each file's download URL) and `scenes.json`, so the same files can be fetched and rendered again.
 `--slim` writes smaller pictures and clips and leaves out the comparison with treatment version 2; it is the copy kept in the repository once a board is approved.
+`--approved` adds each board's approval, in the captain's words, under its title; the words are in `build_boards.py` beside each board.
 
 - `--alternate <renders> [<renders>]` with `--alternate-boards` shows one or two further candidate looks beside the first, rendered from values that are not in the app; `--alternate-film-stocks` limits them to some Film Stocks, and `--alternate-label`, `--alternate-note` and `--alternate-values <file>` take one value per candidate, printed on the board.
   Use it for a look outside ADR 0013: such a look enters the app only on the captain's choice, recorded in ADR 0016.
