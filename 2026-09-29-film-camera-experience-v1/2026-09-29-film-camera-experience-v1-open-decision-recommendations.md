@@ -172,3 +172,17 @@ Asked which contrast control color Films, including Instant prints, should get, 
 Contrast grades 0 to 5 apply to every Photo Film, color and black-and-white, and this replaces the contrast half of the 2026-10-06 bullet above.
 Chemical toning stays black-and-white only, and color filtration or balance stays for color work.
 PRD 2.1 FR-07 carries the decision (tracker DRK-02, DRK-03, DRK-10, DEC-11).
+
+### Captain decisions of 2026-10-13: the Instant's contrast and the toning range
+
+These close two of the items listed above as still open.
+
+- DEC-04, the Instant's contrast and variation: the study of preserved 1970s prints was made (`Evidence/NativeApp/instant-study-and-toning-059.md`) and put before the captain on the Instant's review board.
+  He chose the contrast it supports: "B".
+  The print-to-print variation stays as it was: the board showed the wider variation the study supports beside it, and asked whether his "B" also meant that or the contrast only, he answered that B means "contrast only".
+- DEC-11, chemical toning: the comparison prints were generated and reviewed on a toning board.
+  The captain said: "sepia - untoned to 1. selenium - untoned to 1".
+  Each toner's slider starts at the untoned print and tops out at the strength the board showed as 1.00, the provisional `0...1` amount.
+
+Still open under DEC-04: export codec, resolution and audio guarantees.
+Still open under DEC-11: every control range but toning's, Instant source export timing and soundtrack reselection.
