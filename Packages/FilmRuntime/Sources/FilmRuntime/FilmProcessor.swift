@@ -82,9 +82,10 @@ public actor FilmProcessor {
         try await DevelopmentWorker.cleanup(root: root, filmID: filmID)
     }
 
+    /// Chooses silence or one built-in soundtrack for a developed Movie, any number of times (DEC-11): the Movie is
+    /// assembled again from its unchanged Developed Clips, and nothing is developed again.
     public func selectSoundtrack(filmID: UUID, assetID: String?, catalog: BundleMediaCatalog) async throws {
         guard !removing.contains(filmID), jobs[filmID] == nil else { throw PersistenceError.operationInProgress }
-        guard let policy = catalog.manifest.soundtrackReselection else { throw MediaCatalogError.invalidManifest }
         let root = self.root
         let observer = developmentObserver
         let job = Task.detached {
@@ -94,8 +95,7 @@ public actor FilmProcessor {
             else { verification = nil }
             try Task.checkCancellation()
             let repository = try FilmRepository(rootURL: root)
-            try repository.selectMovieSoundtrack(filmID: filmID, asset: asset, verification: verification,
-                                                reselectionPolicy: policy)
+            try repository.selectMovieSoundtrack(filmID: filmID, asset: asset, verification: verification)
             try Task.checkCancellation()
             try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer)
         }

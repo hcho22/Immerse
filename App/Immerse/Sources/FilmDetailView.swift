@@ -117,7 +117,6 @@ struct FilmDetailView: View {
                 }
             }
             if film.canPlaybackDevelopedMovie, let catalog = model.mediaCatalog,
-               catalog.manifest.soundtrackReselection != nil,
                !catalog.assets(for: film.camera.id, purpose: .instrumental).isEmpty {
                 Button("Soundtrack", systemImage: "music.note") { soundtrack = true }
             }

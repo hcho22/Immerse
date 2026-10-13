@@ -10,10 +10,12 @@ final class BundleMediaCatalogTests: XCTestCase {
         XCTAssertThrowsError(try BundleMediaCatalog(rootURL: fixture.root, manifestData: fixture.manifest())) {
             XCTAssertEqual($0 as? MediaCatalogError, .unapprovedRights)
         }
-        let empty = try JSONEncoder().encode(MediaCatalogManifest(schemaVersion: 1, soundtrackReselection: nil, assets: []))
+        let empty = try JSONEncoder().encode(MediaCatalogManifest(schemaVersion: 1, assets: []))
         let catalog = try BundleMediaCatalog(rootURL: fixture.root, manifestData: empty)
         XCTAssertTrue(catalog.manifest.assets.isEmpty)
-        XCTAssertNil(catalog.manifest.soundtrackReselection)
+        // A manifest written when the soundtrack rule was still a setting loads; the setting is no longer read.
+        let earlier = Data(#"{"schemaVersion":1,"soundtrackReselection":null,"assets":[]}"#.utf8)
+        XCTAssertTrue(try BundleMediaCatalog(rootURL: fixture.root, manifestData: earlier).manifest.assets.isEmpty)
     }
 
     func testVerifiedResourceAndLicenseCannotSilentlyChange() throws {
@@ -77,7 +79,7 @@ final class BundleMediaCatalogTests: XCTestCase {
                     permitsMovieExport: export, attribution: "Synthetic unit fixture"))
         }
         func manifest(assets: [CatalogMediaAsset]? = nil) throws -> Data {
-            try JSONEncoder().encode(MediaCatalogManifest(schemaVersion: 1, soundtrackReselection: nil, assets: assets ?? [asset()]))
+            try JSONEncoder().encode(MediaCatalogManifest(schemaVersion: 1, assets: assets ?? [asset()]))
         }
         func catalog(assets: [CatalogMediaAsset]? = nil) throws -> BundleMediaCatalog {
             try BundleMediaCatalog(rootURL: root, manifestData: manifest(assets: assets), allowSyntheticFixtures: true)
