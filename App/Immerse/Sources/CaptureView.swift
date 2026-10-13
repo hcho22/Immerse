@@ -12,6 +12,7 @@ struct CaptureView: View {
     @State private var cameraDenied = false
     @State private var instantPrint: CaptureRecord?
     @State private var lastRevealedSequence: Int?
+    @State private var originalAsk: OriginalAsk?
 
     var body: some View {
         @Bindable var capture = model.capture
@@ -142,7 +143,12 @@ struct CaptureView: View {
                 capture.suspend()
                 instantPrint = newest
             }
-            .sheet(item: $instantPrint) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
+            // The print is shown first; closing it brings the question about its original (DEC-11).
+            .sheet(item: $instantPrint, onDismiss: {
+                let prints = model.printsAwaitingOriginalChoice(filmID, among: lastRevealedSequence.map { [$0] } ?? [])
+                if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints) }
+            }) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
+            .sheet(item: $originalAsk) { ask in OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints) }
         }
     }
     private func viewfinderLabel(position: CapturePosition, behavior: CaptureBehavior) -> String {

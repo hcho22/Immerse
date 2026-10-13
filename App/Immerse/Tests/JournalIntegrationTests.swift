@@ -320,6 +320,52 @@ final class JournalIntegrationTests: XCTestCase {
         throw DarkroomLayoutDidNotSettle()
     }
 
+    /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. The question
+    /// reaches only revealed, kept prints with no choice recorded, never a sealed frame, and an answer for one print
+    /// leaves every other print's original as it was.
+    func testTheInstantAsksOnlyAboutRevealedPrintsWithNoRecordedChoice() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalIntegration-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic pack", access: .subscription)
+        let source = try syntheticPhoto()
+        for _ in 0..<2 { try model.repository.savePhotoCapture(filmID: film.id, sourceData: source) }
+        model.refresh()
+        try await model.develop(film.id)
+        try model.repository.savePhotoCapture(filmID: film.id, sourceData: source)
+        model.refresh()
+        XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.revealed, .revealed, .sealed])
+        XCTAssertEqual(model.revealedInstantPrints(film.id), [1, 2])
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [1, 2], "The sealed frame is never asked about")
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [2]), [2], "The question is for the print just revealed")
+
+        // Print 2's original is declined: it alone is removed, and print 1 still waits for its own answer.
+        try model.chooseOriginals(film.id, sequences: model.printsAwaitingOriginalChoice(film.id, among: [2]), export: false)
+        try await model.processor.cleanupSources(filmID: film.id)
+        XCTAssertFalse(try model.repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .source))
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 3, kind: .source))
+        XCTAssertNil(try model.repository.originalDisposition(filmID: film.id, sequenceNumber: 1))
+        XCTAssertNil(try model.repository.originalDisposition(filmID: film.id, sequenceNumber: 3))
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [1])
+
+        // Print 1's original is to be saved: it is kept until Photos has it, and the answer is not asked for again.
+        try model.chooseOriginals(film.id, sequences: [1], export: true)
+        try await model.processor.cleanupSources(filmID: film.id)
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [])
+
+        // A discarded print is not asked about, and no other Camera's Film is.
+        try await model.develop(film.id)
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [3]), [3])
+        try await model.remove(film.id, sequence: 3)
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [])
+        let roll = try model.repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic roll", access: .subscription)
+        model.refresh()
+        XCTAssertEqual(model.revealedInstantPrints(roll.id), [])
+    }
+
     /// Stops as the Darkroom shows and speaks them (DEC-11): in tenths, never "-0.0", and inside the limits.
     func testStopsTextShowsSpeaksAndKeepsTenthsInsideTheLimits() {
         XCTAssertEqual(StopsText.shown(0), "0.0 stops")

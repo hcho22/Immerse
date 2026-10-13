@@ -125,6 +125,16 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 }
             }
             try persist(Seed(mode: mode, filmID: film.id), to: seedURL)
+            // `--reveal-at-camera` develops the Film's sealed Instant print once the camera screen is open, as the app does
+            // when a save lands there, so a test can meet the reveal and the question about its original at the camera.
+            // The simulator has no camera, so nothing is captured.
+            if arguments.contains("--reveal-at-camera") {
+                Task {
+                    while !model.capture.presented { try? await Task.sleep(for: .milliseconds(100)) }
+                    try? await Task.sleep(for: .seconds(1))
+                    model.developSavedPrint(film.id) { _ in }
+                }
+            }
         }
         scenario.model.refresh()
         try await scenario.inspect(reason: reopening ? "reopen" : "seeded")

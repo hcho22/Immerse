@@ -204,6 +204,67 @@ final class PopulatedWorkflowTests: XCTestCase {
         return false
     }
 
+    /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. A print
+    /// revealed at the camera is shown first; closing it brings the question, for that print only, and the camera is
+    /// back afterwards. The earlier print, never asked about here, still waits under Originals on the Film screen.
+    func testInstantAsksAboutTheOriginalOfThePrintRevealedAtTheCamera() throws {
+        let app = launch(arguments: ["--instant-mixed", "--reveal-at-camera"])
+        openFilm(app)
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        app.buttons["Open Camera"].tap()
+        let revealed = app.navigationBars["Photo 2"]
+        XCTAssertTrue(revealed.waitForExistence(timeout: 60), "The print is revealed at the camera")
+        snapshot(app, "Instant-print-revealed-at-the-camera")
+        revealed.buttons["Done"].tap()
+        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(asked.waitForExistence(timeout: 10), "Closing the print brings the question about its original")
+        let keep = app.buttons["Save to Photos, then remove from Immerse"]
+        let remove = app.buttons["Remove from Immerse without saving"]
+        XCTAssertTrue(keep.exists)
+        XCTAssertTrue(remove.exists)
+        let confirm = app.buttons["confirm-original-choice"]
+        XCTAssertFalse(confirm.isEnabled, "Nothing is chosen for the user")
+        snapshot(app, "Instant-original-question-at-the-camera")
+        remove.tap()
+        XCTAssertTrue(confirm.isEnabled)
+        confirm.tap()
+        XCTAssertTrue(app.buttons["capture-shutter"].waitForExistence(timeout: 20), "The camera is back after the answer")
+        XCTAssertFalse(asked.exists)
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 10))
+        // The Film screen does not ask again about a print the camera asked about.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(asked.exists)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        // Print 1 was revealed before this session and never asked about here: its choice still waits under Originals.
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
+        snapshot(app, "Instant-earlier-print-waits-under-Originals")
+        app.buttons["Cancel"].tap()
+    }
+
+    /// A question about an original that is closed without an answer is not an answer: nothing is removed or saved, and
+    /// the choice waits under Originals on the Film screen.
+    func testInstantOriginalQuestionLeftUnansweredWaitsUnderOriginals() throws {
+        let app = launch(arguments: ["--instant-mixed"])
+        openFilm(app)
+        app.buttons["Resume Development"].tap()
+        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(asked.waitForExistence(timeout: 40), "The Film screen asks about the print it revealed")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(asked.exists, "The question is asked once")
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original captures")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Save to Photos, then remove from Immerse"].exists)
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].exists)
+        app.buttons["Cancel"].tap()
+    }
+
     func testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment() throws {
         let app = launch(arguments: ["--instant"])
         openFilm(app)
