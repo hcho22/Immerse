@@ -1,0 +1,78 @@
+{
+ "testNodes": [
+  {
+   "nodeType": "Test Plan",
+   "name": "Immerse",
+   "result": "Failed",
+   "children": [
+    {
+     "nodeType": "UI test bundle",
+     "name": "ImmerseUITests",
+     "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests",
+     "result": "Failed",
+     "children": [
+      {
+       "nodeType": "Test Suite",
+       "name": "JournalFlowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testAuditStillReportsContrastFindingsOutsideItsExceptions()",
+         "nodeIdentifier": "JournalFlowTests/testAuditStillReportsContrastFindingsOutsideItsExceptions()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testAuditStillReportsContrastFindingsOutsideItsExceptions",
+         "result": "Expected Failure",
+         "duration": "31s",
+         "durationInSeconds": 31.248568058013916
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testExtraSmallLoadScreensAudit()",
+         "nodeIdentifier": "JournalFlowTests/testExtraSmallLoadScreensAudit()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testExtraSmallLoadScreensAudit",
+         "result": "Failed",
+         "duration": "3m",
+         "durationInSeconds": 180,
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "Test exceeded execution time allowance of 3 minutes"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "TestingUnlockUITests",
+       "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/TestingUnlockUITests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testUnlockIndicatorFollowsThePersistedSettingsSwitch()",
+         "nodeIdentifier": "TestingUnlockUITests/testUnlockIndicatorFollowsThePersistedSettingsSwitch()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/TestingUnlockUITests/testUnlockIndicatorFollowsThePersistedSettingsSwitch",
+         "result": "Failed",
+         "duration": "1m 29s",
+         "durationInSeconds": 89.5184850692749,
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "TestingUnlockUITests.swift:47: XCTAssertTrue failed"
+          },
+          {
+           "nodeType": "Failure Message",
+           "name": "TestingUnlockUITests.swift:48: Failed to tap \"camera-disposable1990s\" Button: No matches found for Elements matching predicate '\"camera-disp"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens()": {
+  "testIdentifier": "PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens()",
+  "testIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens",
+  "testName": "testSixBySixBlackAndWhiteLookScreens()",
+  "testResult": "Failed",
+  "startTime": 1791903539.632,
+  "durationInSeconds": 78.34099209308624
+ }
+}
