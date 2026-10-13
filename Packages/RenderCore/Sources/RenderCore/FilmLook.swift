@@ -11,10 +11,18 @@ enum TreatmentVersion: String, CaseIterable {
     case two = "film-look-2-provisional"
     /// Each Camera's and Film Stock's own look, judged against its Format Reference (`FilmLook`).
     case three = "film-look-3"
+    /// Version 3 with the Instant's contrast as the captain chose it after the study of preserved 1970s prints
+    /// (`FilmLook`). Every other Camera and Film Stock develops exactly as in version 3.
+    case four = "film-look-4"
+
+    /// The version a Film loaded today develops with, which its Camera package records (`CameraCatalog`).
+    static let current = TreatmentVersion.four
 }
 
-/// Treatment version 3: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections 6.1 to
-/// 6.3; ADRs 0013 to 0016).
+/// Treatment versions 3 and 4: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections
+/// 6.1 to 6.3; ADRs 0013 to 0016). The two versions differ in the Instant alone: version 3 keeps the contrast it had
+/// before the study of preserved 1970s prints (`instantVersion3`), so a Film loaded under it still develops as it
+/// would have.
 ///
 /// Each look reproduces its Format Reference as it performed when new: nothing fades, yellows, shifts in dye or wears,
 /// and every imperfection is one the format made at capture or processing (ADR 0013). The exceptions are the looks
@@ -22,9 +30,8 @@ enum TreatmentVersion: String, CaseIterable {
 /// Format Reference's name is internal and stays in these comments; no product string carries it (ADR 0015). Spatial
 /// values are fractions of the developed picture's long edge, so a look is the same at any size.
 ///
-/// DEC-04 status: the captain approved every Camera's look on its review board (QA-16), the last on 2026-10-12. The
-/// Instant's contrast and print-to-print variation stay provisional all the same: the faded look he approved on
-/// 2026-10-10 is its current look and current contrast, and both wait on a study of preserved 1970s prints.
+/// DEC-04 status: the captain approved every Camera's look on its review board (QA-16), the last on 2026-10-12, and
+/// on 2026-10-13, with the study of preserved 1970s prints before him, the Instant's contrast.
 enum FilmLook {
     /// The looks that depart from ADR 0013's fresh rule, each by the captain's own choice (ADR 0016): the Instant is
     /// faded, the Super 8 is muted with a highlight glow, and the color Film Stocks of the 16mm and the 6×6 are the
@@ -39,12 +46,17 @@ enum FilmLook {
         }
     }
 
-    /// The treatment a capture develops with: one per Camera, and one per Film Stock on the Cameras that offer one. A
-    /// Film loaded before Film Stock existed has none and develops in color.
-    static func treatment(camera: CameraID, filmStock: FilmStock?) -> Treatment {
+    /// The treatment a capture develops with in a version: one per Camera, and one per Film Stock on the Cameras that
+    /// offer one. A Film loaded before Film Stock existed has none and develops in color. Versions 1 and 2 have no
+    /// table here (`LegacyLook` renders them).
+    static func treatment(version: TreatmentVersion = .current, camera: CameraID, filmStock: FilmStock?) -> Treatment {
         switch (camera, filmStock) {
         case (.disposable1990s, _): disposable
-        case (.instant1970s, _): instant
+        case (.instant1970s, _):
+            switch version {
+            case .one, .two, .three: instantVersion3
+            case .four: instant
+            }
         case (.mediumFormat6x6, .blackAndWhite): mediumFormatBlackAndWhite
         case (.mediumFormat6x6, _): mediumFormatColor
         case (.super8HomeMovie, _): super8
@@ -71,11 +83,31 @@ enum FilmLook {
     /// 1970s Instant. Format Reference: the original 1970s integral print. By the captain's choice on its review board
     /// on 2026-10-10 ("faded"), it develops as surviving prints look, not as fresh ones did (ADR 0016, an exception to
     /// ADR 0013 and to PRD 2.1 section 6.1's "brilliant, warm, saturated color"): lifted, milky blacks, softened
-    /// whites, low contrast, muted color with aqua blues and olive greens, blue in the shadows and yellow in the
-    /// highlights, soft detail and a coarse texture. Each print still differs slightly in color and density, with no
-    /// uneven-chemistry or spread flaws. This is its current look and current contrast: its contrast and the size of
-    /// that variation stay provisional until a study of preserved 1970s prints (DEC-04).
+    /// whites, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft
+    /// detail and a coarse texture. Each print still differs slightly in color and density, with no uneven-chemistry
+    /// or spread flaws.
+    ///
+    /// Its contrast is the one the captain chose on 2026-10-13 ("B") from the study of 37 preserved 1970s prints
+    /// (`Evidence/NativeApp/instant-study-and-toning-059.md`): black a little deeper than before, white where it
+    /// was, and between them the S-shaped curve of a print, steeper through the middle tones and easing into black
+    /// and into white, where the look he approved on 2026-10-10 held the middle tones flat. Measured as the scans
+    /// were, its prints sit closer to them in black, white, the spread of their tones and the strength of their color,
+    /// and short of them in each. The scans cannot give the film's curve itself, only its ends and its spread.
     static let instant = Treatment(
+        emulsion: .color(ColorEmulsion(
+            warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
+            saturation: 0.85,
+            tone: ToneCurve(contrast: 1.3, midtones: 0.9, black: 0.11, white: 0.9),
+            shadows: RGB(0, 0.008, 0.03), highlights: RGB(0.012, 0.004, -0.03),
+            grain: Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
+        )),
+        lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
+        printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
+    )
+
+    /// The Instant as treatment version 3 develops it: the faded look with the contrast it had before the study, a
+    /// curve flatter than the capture's own. Frozen: a Film loaded under version 3 keeps it.
+    static let instantVersion3 = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
             saturation: 0.85,

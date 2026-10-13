@@ -1,0 +1,74 @@
+import CoreImage
+import Foundation
+
+/// The Darkroom's chemical toners, in one place (PRD 2.1 FR-07, DEC-11). They tone the silver gelatin print of a
+/// black-and-white Film and nothing else (`PhotoPrintProcess.supportsChemicalToning`).
+///
+/// A recipe's `ChemicalToning.amount` is where the Darkroom's slider stands, from 0 at its low end to 1 at its top.
+/// Each toner turns that into a strength between its `start` and its `top`. A strength of 1 is the toner as the
+/// toning comparison board of 2026-10-13 showed it at 1.00, and 0 leaves the print untoned.
+///
+/// DEC-11 status: the captain chose both ranges on that board on 2026-10-13, in his words "sepia - untoned to 1.
+/// selenium - untoned to 1": each slider starts at the untoned print and tops out at a strength of 1. The board also
+/// showed selenium at two, three and four times that, and he kept 1. Change a range only on his word.
+enum ToningLook {
+    struct Toner: Equatable {
+        /// The strength at the slider's low end.
+        var start: Double
+        /// The strength at the slider's top.
+        var top: Double
+
+        /// The strength the slider gives where it stands, from 0 to 1.
+        func strength(at amount: Double) -> Double { start + (top - start) * amount }
+    }
+
+    /// Sepia: a warm brown through every tone, strongest in the middle tones, with the paper's white turned faintly
+    /// cream.
+    static let sepia = Toner(start: 0, top: 1)
+
+    /// Selenium: a slight cool purple in the shadows and middle tones that leaves the paper's white alone.
+    static let selenium = Toner(start: 0, top: 1)
+
+    /// How much selenium changes each channel's light at a strength of 1: red and blue up and green down, which is
+    /// purple. The change is weighted to the darker tones and is nothing at the paper's white.
+    static let seleniumTint = FilmLook.RGB(1.04, 0.94, 1.02)
+
+    static func toner(_ chemistry: ChemicalToning.Chemistry) -> Toner {
+        switch chemistry {
+        case .sepia: sepia
+        case .selenium: selenium
+        }
+    }
+
+    /// The strength a recipe's toning prints with.
+    static func strength(_ toning: ChemicalToning) -> Double {
+        toner(toning.chemistry).strength(at: toning.amount)
+    }
+
+    /// The print toned as the recipe asks.
+    static func apply(_ toning: ChemicalToning, to image: CIImage) -> CIImage {
+        toned(image, with: toning.chemistry, strength: strength(toning))
+    }
+
+    /// The print toned at a strength.
+    static func toned(_ image: CIImage, with chemistry: ChemicalToning.Chemistry, strength: Double) -> CIImage {
+        switch chemistry {
+        case .sepia:
+            // Core Image's sepia, with its intensity always given and never left to the filter's default.
+            return image.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: strength])
+        case .selenium:
+            // Each channel's light x becomes x * (1 + strength * (1 - x) * (tint - 1)): the tint in full at black,
+            // none of it at white.
+            func coefficients(_ tint: Double) -> CIVector {
+                let change = strength * (tint - 1)
+                return CIVector(x: 0, y: 1 + change, z: -change, w: 0)
+            }
+            return image.applyingFilter("CIColorPolynomial", parameters: [
+                "inputRedCoefficients": coefficients(seleniumTint.red),
+                "inputGreenCoefficients": coefficients(seleniumTint.green),
+                "inputBlueCoefficients": coefficients(seleniumTint.blue),
+                "inputAlphaCoefficients": CIVector(x: 0, y: 1, z: 0, w: 0)
+            ])
+        }
+    }
+}

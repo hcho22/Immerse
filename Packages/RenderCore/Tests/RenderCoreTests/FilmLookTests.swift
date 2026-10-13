@@ -9,31 +9,48 @@ import RenderFixtures
 import UniformTypeIdentifiers
 import XCTest
 
-/// Treatment version 3: each Camera and Film Stock develops with its own fresh look and the imperfections PRD 2.1
-/// section 6 gives it (ADRs 0013 to 0015). The captain approved every Camera's look on its review board (DEC-04,
-/// QA-16); the Instant's contrast and print-to-print variation stay provisional until a study of preserved 1970s
-/// prints. These tests hold each look's character and bounds, not its numbers.
+/// Treatment versions 3 and 4: each Camera and Film Stock develops with its own fresh look and the imperfections PRD
+/// 2.1 section 6 gives it (ADRs 0013 to 0015). The captain approved every Camera's look on its review board (DEC-04,
+/// QA-16), and the Instant's contrast after the study of preserved 1970s prints, which is what version 4 changes.
+/// These tests hold each look's character and bounds, not its numbers.
 final class FilmLookTests: XCTestCase {
     private static let linear = CGColorSpace(name: CGColorSpace.linearSRGB)!
     private static let sRGB = CGColorSpace(name: CGColorSpace.sRGB)!
 
     // MARK: - Versions
 
-    /// A Film loaded today records version 3 in its Camera package, and Development assigns it to every capture; a Film
-    /// whose package was locked before packages recorded a version develops with version 2.
+    /// A Film loaded today records version 4 in its Camera package, and Development assigns it to every capture; a Film
+    /// whose package recorded version 3 keeps version 3, and one locked before packages recorded a version develops
+    /// with version 2.
     func testDevelopmentAssignsTheTreatmentVersionTheFilmsPackageRecorded() throws {
-        XCTAssertEqual(NativePhotoRenderer.treatmentVersion, "film-look-3")
+        XCTAssertEqual(NativePhotoRenderer.treatmentVersion, "film-look-4")
+        XCTAssertEqual(TreatmentVersion.current.rawValue, CameraCatalog.treatmentVersion)
         XCTAssertEqual(NativePhotoRenderer.renderableTreatmentVersions,
-                       ["film-look-1-provisional", "film-look-2-provisional", "film-look-3"])
-        for camera in CameraCatalog.all { XCTAssertEqual(camera.treatmentVersion, "film-look-3", "\(camera.id)") }
+                       ["film-look-1-provisional", "film-look-2-provisional", "film-look-3", "film-look-4"])
+        for camera in CameraCatalog.all { XCTAssertEqual(camera.treatmentVersion, "film-look-4", "\(camera.id)") }
 
         let today = try Film(camera: CameraCatalog.mediumFormat6x6, title: "Today", filmStock: .color)
         var film = today
         _ = try film.recordSavedPhoto()
         var run = DevelopmentRun(film: film)
         try run.assignMissingTreatments(for: film)
-        XCTAssertEqual(run.treatmentVersion, "film-look-3")
-        XCTAssertEqual(run.assignments[1]?.treatmentVersion, "film-look-3")
+        XCTAssertEqual(run.treatmentVersion, "film-look-4")
+        XCTAssertEqual(run.assignments[1]?.treatmentVersion, "film-look-4")
+
+        // An Instant pack loaded under version 3: its package says so, and every print keeps that version, the ones
+        // exposed after the update too.
+        let versionThree = CameraPackage(id: .instant1970s, displayName: "1970s Instant", medium: .photo, capacity: .exposures(10),
+                                         revealRule: .instantPerExposure, treatmentVersion: "film-look-3")
+        var pack = try Film(camera: try JSONDecoder().decode(CameraPackage.self, from: JSONEncoder().encode(versionThree)), title: "Pack")
+        XCTAssertEqual(pack.treatmentVersion, "film-look-3")
+        _ = try pack.recordSavedPhoto()
+        var packRun = DevelopmentRun(film: pack)
+        try packRun.assignMissingTreatments(for: pack)
+        _ = try pack.recordSavedPhoto()
+        try packRun.assignMissingTreatments(for: pack)
+        XCTAssertEqual(packRun.treatmentVersion, "film-look-3")
+        XCTAssertEqual(packRun.assignments.values.map(\.treatmentVersion), ["film-look-3", "film-look-3"])
+        XCTAssertTrue(packRun.rendersAssignedTreatment(try XCTUnwrap(packRun.assignments[2])))
 
         // The package as the version 2 build locked it into a Film: no treatment version recorded.
         let locked = CameraPackage(id: .instant1970s, displayName: "1970s Instant", medium: .photo, capacity: .exposures(10),
@@ -136,20 +153,67 @@ final class FilmLookTests: XCTestCase {
     }
 
     /// The Instant develops with the faded look the captain chose on its review board on 2026-10-10 (ADR 0016): lifted,
-    /// milky blacks, softened whites, lower contrast than the capture, muted color, and age-style tints, blue in the
-    /// shadows and yellow in the highlights.
-    func testTheInstantDevelopsWithTheFadedLookTheCaptainChose() {
-        let emulsion = FilmLook.instant.emulsion
-        let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, emulsion) }
+    /// milky blacks, softened whites, muted color, and age-style tints, blue in the shadows and yellow in the
+    /// highlights. Its contrast is the one he chose on 2026-10-13 ("B") after the study of preserved 1970s prints:
+    /// more than the look had before, with black a little deeper, and still no more than the capture's own.
+    func testTheInstantKeepsTheFadedLookWithTheContrastTheCaptainChoseAfterTheStudy() {
+        let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, FilmLook.instant.emulsion) }
+        let before = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, FilmLook.instantVersion3.emulsion) }
         let black = develop(FilmLook.RGB(0.03, 0.03, 0.03)), white = develop(FilmLook.RGB(0.97, 0.97, 0.97))
         XCTAssertGreaterThan(min(black.red, black.green, black.blue), 0.1, "Blacks are lifted and milky (\(black))")
         XCTAssertLessThan(max(white.red, white.green, white.blue), 0.93, "Whites are softened (\(white))")
         XCTAssertGreaterThan(black.blue, black.red + 0.01, "Blue in the shadows (\(black))")
         XCTAssertGreaterThan(white.red, white.blue + 0.03, "Yellow in the highlights (\(white))")
+        XCTAssertLessThan(black.green, before(FilmLook.RGB(0.03, 0.03, 0.03)).green - 0.03, "Black sits deeper than before the study")
+        let contrast = { (look: (FilmLook.RGB) -> FilmLook.RGB) in
+            look(FilmLook.RGB(0.75, 0.75, 0.75)).green - look(FilmLook.RGB(0.25, 0.25, 0.25)).green
+        }
+        XCTAssertLessThan(contrast(develop), 0.5, "No more contrast than the capture's 0.5 (\(contrast(develop)))")
+        XCTAssertGreaterThan(contrast(develop), contrast(before) + 0.1, "More than before the study (\(contrast(before)))")
+        for color in Self.patches {
+            XCTAssertLessThan(chroma(develop(color)), chroma(color) * 0.9, "\(color) is muted")
+        }
+        // The curve is a print's: steepest in the middle, easing into black and into white.
+        guard case let .color(film) = FilmLook.instant.emulsion else { return XCTFail("The Instant is a color film") }
+        let slope = { (at: Double) in (film.tone(at + 0.01) - film.tone(at - 0.01)) / 0.02 }
+        XCTAssertGreaterThan(slope(0.5), slope(0.08), "Shadows ease into black")
+        XCTAssertGreaterThan(slope(0.5), slope(0.92), "Highlights ease into white")
+    }
+
+    /// Version 3 keeps the Instant as it was before the study, a curve flatter than the capture's and flattest in the
+    /// middle, so an Instant Film loaded under version 3 develops as it would have. Every other Camera and Film Stock
+    /// is the same in versions 3 and 4.
+    func testVersionThreeKeepsTheInstantAsItWasBeforeTheStudy() {
+        let earlier = FilmLook.treatment(version: .three, camera: .instant1970s, filmStock: nil)
+        // Every value of version 3's Instant, as the version 3 build (5c3a217) had it. Version 3 is frozen, so this
+        // copy never changes.
+        XCTAssertEqual(earlier, FilmLook.Treatment(
+            emulsion: .color(FilmLook.ColorEmulsion(
+                warmth: 0.09, tint: -0.005,
+                layers: FilmLook.Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15), saturation: 0.85,
+                tone: FilmLook.ToneCurve(contrast: 0.82, midtones: 0.88, black: 0.13, white: 0.9),
+                shadows: FilmLook.RGB(0, 0.008, 0.03), highlights: FilmLook.RGB(0.012, 0.004, -0.03),
+                grain: FilmLook.Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
+            )),
+            lens: FilmLook.Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
+            printVariation: FilmLook.PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
+        ))
+        XCTAssertEqual(earlier, FilmLook.instantVersion3)
+        XCTAssertNotEqual(earlier, FilmLook.treatment(version: .four, camera: .instant1970s, filmStock: nil))
+        XCTAssertEqual(FilmLook.treatment(camera: .instant1970s, filmStock: nil), FilmLook.instant, "Today's is version 4's")
+        guard case let .color(before) = earlier.emulsion else { return XCTFail("The Instant is a color film") }
+        let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, earlier.emulsion) }
         let quarter = develop(FilmLook.RGB(0.25, 0.25, 0.25)).green, threeQuarter = develop(FilmLook.RGB(0.75, 0.75, 0.75)).green
         XCTAssertLessThan(threeQuarter - quarter, 0.42, "Lower contrast than the capture's 0.5 (\(threeQuarter - quarter))")
-        for color in Self.patches {
-            XCTAssertLessThan(chroma(develop(color)), chroma(color) * 0.8, "\(color) is muted")
+        // The two versions' looks differ in nothing but the Instant's print curve.
+        var sameButTheCurve = FilmLook.instant
+        guard case var .color(emulsion) = sameButTheCurve.emulsion else { return XCTFail("The Instant is a color film") }
+        emulsion.tone = before.tone
+        sameButTheCurve.emulsion = .color(emulsion)
+        XCTAssertEqual(sameButTheCurve, earlier)
+        for (camera, filmStock) in Self.treatments where camera != .instant1970s {
+            XCTAssertEqual(FilmLook.treatment(version: .three, camera: camera, filmStock: filmStock),
+                           FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock), "\(camera) \(String(describing: filmStock))")
         }
     }
 
@@ -630,7 +694,7 @@ final class FilmLookTests: XCTestCase {
         ])!.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: side, height: side))
     }
 
-    private func render(_ scene: CIImage, camera: CameraID, filmStock: FilmStock?, version: String = "film-look-3",
+    private func render(_ scene: CIImage, camera: CameraID, filmStock: FilmStock?, version: String = NativePhotoRenderer.treatmentVersion,
                         seed: UInt64 = 7, flashFired: Bool = false) throws -> DecodedPixels {
         try pixels(DevelopedTreatment(version: version, camera: camera, filmStock: filmStock, seed: seed,
                                       flashFired: flashFired).apply(to: scene))
