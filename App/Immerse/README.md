@@ -85,12 +85,16 @@ fault/native-app gates, historical D3 migration and still-unaccepted hardware li
 ## Provisional Choices and Limits
 
 SwiftUI, raw SQLite and local package boundaries are reversible baseline defaults,
-not a newly approved DEC-03. Catalog sample rights, instrumental licenses, render
-quality/output specs, Darkroom ranges, Instant originals timing, soundtrack
-reselection, support/privacy URLs, budgets and launch approval remain open.
+not a newly approved DEC-03. The captain decided the Darkroom's ranges, the export
+sizes and formats, the Instant's question about each print's original and that a
+soundtrack can be changed later on 2026-10-13
+(`Evidence/NativeApp/darkroom-export-decisions-059.md`). His own sample shots,
+instrumental licenses, the Instant's contrast, toning strength, support/privacy
+wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
-samples and instrumentals. It is empty and its reselection policy is unresolved,
-so no synthetic sample or unlicensed music is exposed. See `Packages/MediaCatalog`
+samples and instrumentals. It is empty until he supplies his shots and a license
+allows a soundtrack inside exported Movies, so no synthetic sample or unlicensed
+music is exposed. See `Packages/MediaCatalog`
 and `Evidence/NativeApp/2026-10-01-media-workflows.md` for configuration, retained
 audio/license recovery and tests. Chemical toning is offered only on black-and-white
 6×6 prints, whose Film Stock makes their print process silver gelatin

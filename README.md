@@ -57,11 +57,14 @@ All screens live in [`App/Immerse/Sources`](App/Immerse/Sources).
 - **Journal.** The Journal groups Films as On the roll, Ready to develop, Developing, Pack complete and Developed, with progress and up to three revealed thumbnails per photo Film.
   Films can be renamed and moved to and from the Archive.
 - **Darkroom.** Revealed photos open in a Darkroom with exposure, contrast grades 0 to 5, color filtration, crop and point-based dodge and burn, saved as reversible edits with Reset to Original.
+  Its limits are the captain's of 2026-10-13: print exposure and Dodge and Burn each run to 3 stops either way, and filtration to 30 ([`Evidence/NativeApp/darkroom-export-decisions-059.md`](Evidence/NativeApp/darkroom-export-decisions-059.md)).
   Every Photo Film gets the contrast grades, Instant prints included, but an Instant print has no crop, so its square picture and white card stay whole.
   Black-and-white 6×6 prints are silver gelatin: they take chemical toning (sepia or selenium) and no color filtration, which stays for color prints.
 - **Discard.** A single photo or Movie clip can be discarded after reveal, with no refund of exposures or time.
   Discarding a clip rebuilds the Movie from the surviving clips without redevelopment (ADR 0007); a Movie whose clips are all discarded keeps numbered placeholders with no playback or export (DEC-09).
 - **Photos export.** "Save Developed to Photos" and "Originals" use add-only Photos access, requested only when you export.
+  Photos are saved as sRGB JPEG, the Disposable at no more than 12,000,000 pixels in 3:2, the 6×6 at 3072 × 3072 and an Instant print exactly as developed, 2282 × 2774; Movies as H.264 in a `.mov` at 1920 × 1440, or 1440 × 1920 for a portrait Movie, at 18 or 24 frames a second, silent (the captain, 2026-10-13).
+  An Instant asks about the original of each print after it is revealed.
   Exports are flattened results, cannot be recalled by the app, and stay in Photos after a Film is deleted.
 - **Delete.** Delete Film removes the Film, its captures and edits from app storage.
   The confirmation discloses that Photos exports remain and that restoring an older iOS backup can bring the Film back (DEC-17).
@@ -83,9 +86,11 @@ There is no sync or app-managed backup.
 
 These are reversible engineering defaults in the code, not approved decisions:
 
-- **Render output.** The Instant's contrast and print-to-print variation, toning values, export codecs, resolution and audio, and Darkroom ranges are pending DEC-04 and DEC-11.
+- **Render output.** The Instant's contrast and print-to-print variation and the toning values are pending DEC-04.
+  Export sizes and formats and the Darkroom's ranges are no longer provisional: the captain approved them on 2026-10-13.
   The looks themselves are no longer provisional (see Cameras above); the earlier versions, `film-look-1-provisional` and `film-look-2-provisional`, stay renderable unchanged for Films that started with them.
-- **Assets.** [`App/Immerse/Sources/Resources/MediaCatalog.json`](App/Immerse/Sources/Resources/MediaCatalog.json) is empty pending DEC-05, so the build shows no Camera samples and no built-in soundtracks (the Soundtrack picker stays hidden).
+- **Assets.** [`App/Immerse/Sources/Resources/MediaCatalog.json`](App/Immerse/Sources/Resources/MediaCatalog.json) is empty, so the build shows no Camera samples and no built-in soundtracks (the Soundtrack picker stays hidden).
+  By the captain's decision of 2026-10-13 (DEC-05) it stays empty until he supplies his own sample shots, one for each Camera and Film Stock, and until a license allows a soundtrack inside exported Movies.
   Draft review material is in [`Evidence/AssetReview`](Evidence/AssetReview/README.md) and is not production clearance.
 - **Pricing.** No prices or live product IDs exist pending DEC-02.
 - **Lapsed subscribers.** A lapsed subscriber who never used the Trial is currently granted it, a provisional default for PRD open question 7.
@@ -208,17 +213,16 @@ Implementation progress is traced in the [evidence map](2026-09-29-film-camera-e
 **Needs a physical iPhone.** Real capture, Keychain Trial behavior across reinstall, Photos writes, power loss, backup and restore, iPhone 11 performance and assistive-technology accessibility have not been validated on hardware.
 The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/manual-validation.md) and the release handoff in [`Evidence/NativeApp/launch-readiness.md`](Evidence/NativeApp/launch-readiness.md); the build is not release-ready.
 
-**Open captain decisions.** None of these is fully decided; the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
+**Open captain decisions.** Each of these has something still open (DEC-11 was decided on 2026-10-13 and is no longer among them); the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
 
 - DEC-01: final brand, product name and copy.
 - DEC-02: monthly and yearly pricing and offers.
 - DEC-03: sign-off of the native stack (minimum iOS 26, iPhone only and no backend are settled).
-- DEC-04: the Instant's contrast and print-to-print variation, toning values, and export codecs, resolution and audio (partly decided: PRD 2.0 sets each Camera's Format Reference, picture shape, look, imperfections and frame rates, and the captain's review-board approvals closed each look's tone, contrast and grain, all but the Instant's contrast).
-- DEC-05: production sample media and licensed soundtracks.
-- DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection (partly decided: no crop on Instant prints, contrast grades on every Photo Film, toning on black-and-white Films only).
-- DEC-12: storage, device, accessibility and reliability budgets.
-- DEC-13: support, privacy disclosures and launch review.
-- DEC-14: numeric learning targets (no analytics is settled).
+- DEC-04: the Instant's contrast and print-to-print variation, and the toning values (decided: each Camera's Format Reference, picture shape, look, imperfections and frame rates in PRD 2.0, each look's tone, contrast and grain on the review boards, all but the Instant's contrast, and the export sizes and formats on 2026-10-13).
+- DEC-05: the captain's own sample shots, one for each Camera and Film Stock (the rule is decided: only material he owns or has written rights to, and no built-in soundtrack until a license allows it inside exported Movies).
+- DEC-12: measuring the speed and storage targets approved on 2026-10-13 (iPhone 11 as the oldest phone), and the rows of the recommendation he was not asked about.
+- DEC-13: the support and App Store wording (its approach is approved).
+- DEC-14: the learning targets themselves (no analytics, and learning from TestFlight interviews, tester feedback and Apple's reports, is decided).
 
 DEC-09 and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD section 15.
 

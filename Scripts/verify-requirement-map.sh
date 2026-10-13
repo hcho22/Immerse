@@ -9,7 +9,7 @@ trap 'rm -rf "$temporary"' EXIT HUP INT TERM
 awk '
     /^## Deferred to v2/ { exit }
     /^- \[ \] [A-Z]+-[0-9][0-9] / { print $4 }
-    /^- \[x\] DEC-09 / { print $3 }
+    /^- \[x\] DEC-(09|11) / { print $3 }
 ' "$package/$package-task-tracker.md" | sort > "$temporary/tracker"
 awk -F '|' '
     { id=$2; gsub(/^ +| +$/, "", id) }

@@ -61,6 +61,11 @@ histories apart by their inspection reasons. The offline Ruby inspector compares
 UInt64 seeds exactly and normalizes only the order of Swift's completed-sequence
 Set. It is an additional required check, not inferred from a screenshot/test exit.
 
+`--reveal-at-camera`, with `--instant-mixed`, develops the Film's sealed Instant print once the
+camera screen is open, as the app does when a save lands there, so a test can meet the
+reveal and the question about the print's original at the camera. Nothing is captured:
+the simulator has no camera.
+
 These are functional navigation tests, not replacements for all-category
 accessibility audits or the hardware/manual matrix in
 `Evidence/NativeApp/launch-readiness.md`. Production export/privacy races have
