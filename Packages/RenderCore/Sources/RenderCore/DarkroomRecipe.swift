@@ -32,6 +32,23 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
     }
 }
 
+/// The Darkroom's limits, the captain's of 2026-10-13 (DEC-11): the one place the validator, the renderer and the
+/// Darkroom's controls read them from. A recipe outside them is invalid and is never clamped into them.
+public enum DarkroomLimits {
+    /// Print exposure, in stops.
+    public static let printExposureStops = -3.0...3.0
+    /// The step the print exposure and Dodge/Burn strength controls move in, in stops.
+    public static let exposureStep = 0.1
+    public static let contrastGrades = 0...5
+    /// Cyan, magenta and yellow filtration, set in whole units.
+    public static let colorFiltration = -30.0...30.0
+    /// The most Dodge/Burn lightens or darkens any part of a print, in stops: the limit of one stroke's
+    /// `LocalMask.exposureStops`, and of every stroke together where they overlap.
+    public static let localExposureStops = 3.0
+    /// The strength the Darkroom gives a stroke until the user chooses another, in stops.
+    public static let defaultStrokeStops = 0.4
+}
+
 /// How a Photo Film's prints are made, which decides the Darkroom's medium-specific controls (PRD 2.1 FR-07): color
 /// prints take filtration, silver gelatin prints from a black-and-white Film take chemical toning, and both take
 /// contrast grades.

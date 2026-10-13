@@ -320,6 +320,44 @@ final class JournalIntegrationTests: XCTestCase {
         throw DarkroomLayoutDidNotSettle()
     }
 
+    /// Stops as the Darkroom shows and speaks them (DEC-11): in tenths, never "-0.0", and inside the limits.
+    func testStopsTextShowsSpeaksAndKeepsTenthsInsideTheLimits() {
+        XCTAssertEqual(StopsText.shown(0), "0.0 stops")
+        XCTAssertEqual(StopsText.shown(-0.0000001), "0.0 stops")
+        XCTAssertEqual(StopsText.shown(3), "3.0 stops")
+        XCTAssertEqual(StopsText.shown(-3), "-3.0 stops")
+        XCTAssertEqual(StopsText.shown(1.4999999), "1.5 stops")
+        XCTAssertEqual(StopsText.spoken(0), "0 stops")
+        XCTAssertEqual(StopsText.spoken(-0.0000001), "0 stops")
+        XCTAssertEqual(StopsText.spoken(3), "plus 3 stops")
+        XCTAssertEqual(StopsText.spoken(-3), "minus 3 stops")
+        XCTAssertEqual(StopsText.spoken(1), "plus 1 stop")
+        XCTAssertEqual(StopsText.spoken(-1.5), "minus 1.5 stops")
+        XCTAssertEqual(StopsText.spoken(0.4, signed: false), "0.4 stops")
+        XCTAssertEqual(StopsText.spoken(1, signed: false), "1 stop")
+        let limits = DarkroomLimits.printExposureStops
+        XCTAssertEqual(StopsText.tenths(3.0000000000000004, in: limits), 3)
+        XCTAssertEqual(StopsText.tenths(-3.0000000000000004, in: limits), -3)
+        XCTAssertEqual(StopsText.tenths(2.9999999999999996, in: limits), 3)
+        XCTAssertEqual(StopsText.tenths(0.30000000000000004, in: limits), 0.3)
+        XCTAssertEqual(StopsText.tenths(-0.04, in: limits).sign, .plus, "Never a negative zero")
+        // Every position of both sliders is a recipe the renderer accepts.
+        for step in -30...30 {
+            let stops = StopsText.tenths(limits.lowerBound + Double(step + 30) * DarkroomLimits.exposureStep, in: limits)
+            XCTAssertNoThrow(try NativePhotoRenderer.validate(DarkroomRecipe(printExposureStops: stops, dodgeBurnMasks: [
+                LocalMask(kind: .dodge, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: abs(stops))
+            ]), camera: CameraCatalog.disposable1990s), "\(step)")
+        }
+    }
+
+    /// A print whose saved recipe is outside the limits says so, and says how to print it again.
+    func testAPrintOutsideTheDarkroomLimitsExplainsItselfAndTheWayBack() throws {
+        let message = try XCTUnwrap(FailureCopy.message(for: NativeRenderError.invalidRecipe))
+        XCTAssertTrue(message.contains("Reset to Original"))
+        XCTAssertTrue(message.contains("developed photo is unchanged"))
+        XCTAssertFalse(message.contains(FailureCopy.retry), "Not the storage guidance, which would mislead")
+    }
+
     func testPhotoFilmRowsKeepExposureCounts() throws {
         let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
         XCTAssertEqual(film.remainingLabel, "27 exposures left")

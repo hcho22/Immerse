@@ -134,6 +134,76 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "movie-player-observer-after-discard")
     }
 
+    /// DEC-11 (the captain, 2026-10-13): print exposure and Dodge/Burn each run to 3 stops either way. The sliders reach
+    /// both ends, show and speak the stops there, and a recipe at the ends saves, prints and comes back.
+    func testDarkroomExposureAndDodgeBurnReachThreeStopsAndSave() throws {
+        let app = launch(arguments: ["--developed-photo"])
+        openFilm(app)
+        app.buttons["Open photo 1"].tap()
+        app.buttons["Darkroom"].tap()
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.waitForExistence(timeout: 10))
+        XCTAssertEqual(exposure.value as? String, "0 stops")
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 10))
+        let developed = print.screenshot().pngRepresentation
+
+        exposure.adjust(toNormalizedSliderPosition: 1)
+        XCTAssertTrue(app.staticTexts["3.0 stops"].waitForExistence(timeout: 5), "The slider ends at plus 3 stops")
+        XCTAssertEqual(exposure.value as? String, "plus 3 stops")
+        XCTAssertTrue(waitForChange(of: print, from: developed), "Plus 3 stops prints a lighter picture")
+        snapshot(app, "Darkroom-exposure-plus-3-stops")
+        let lightest = print.screenshot().pngRepresentation
+        exposure.adjust(toNormalizedSliderPosition: 0)
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "The slider ends at minus 3 stops")
+        XCTAssertEqual(exposure.value as? String, "minus 3 stops")
+        XCTAssertTrue(waitForChange(of: print, from: lightest), "Minus 3 stops prints a darker picture")
+        snapshot(app, "Darkroom-exposure-minus-3-stops")
+
+        app.buttons["Dodge / Burn"].tap()
+        let strength = app.sliders["Local exposure strength"]
+        XCTAssertTrue(strength.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Strength: 0.4 stops"].exists, "A stroke starts at the strength it always had")
+        XCTAssertEqual(strength.value as? String, "0.4 stops")
+        strength.adjust(toNormalizedSliderPosition: 1)
+        // XCTest's own adjustment stops a step short on this slider, so finish as a finger does: drag the thumb to the end.
+        if !app.staticTexts["Strength: 3.0 stops"].exists {
+            strength.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
+                .press(forDuration: 0.2, thenDragTo: strength.coordinate(withNormalizedOffset: CGVector(dx: 1.2, dy: 0.5)))
+        }
+        XCTAssertTrue(app.staticTexts["Strength: 3.0 stops"].waitForExistence(timeout: 5), "A stroke reaches 3 stops")
+        XCTAssertEqual(strength.value as? String, "3 stops")
+        let darkest = print.screenshot().pngRepresentation
+        let point = app.buttons["Dodge point"]
+        for _ in 0..<4 where !point.isHittable { app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.1, thenDragTo: app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: -6))) }
+        point.tap()
+        XCTAssertTrue(waitForChange(of: print, from: darkest), "A 3 stop dodge on a print 3 stops down shows in the print")
+        snapshot(app, "Darkroom-minus-3-stops-with-a-3-stop-dodge")
+
+        let save = app.buttons["Save"]
+        expectation(for: NSPredicate(format: "isEnabled == true"), evaluatedWith: save)
+        waitForExpectations(timeout: 20)
+        save.tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10), "A recipe at the limits saves")
+        snapshot(app, "Photo-printed-at-the-limits")
+        app.buttons["Darkroom"].tap()
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 10), "The saved recipe comes back")
+        app.buttons["Dodge / Burn"].tap()
+        XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
+        app.buttons["Cancel"].tap()
+    }
+
+    private func waitForChange(of element: XCUIElement, from before: Data, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if element.screenshot().pngRepresentation != before { return true }
+            Thread.sleep(forTimeInterval: 0.25)
+        }
+        return false
+    }
+
     func testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment() throws {
         let app = launch(arguments: ["--instant"])
         openFilm(app)

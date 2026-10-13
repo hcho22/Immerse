@@ -178,6 +178,7 @@ struct DarkroomView: View {
     @State private var image: UIImage?
     @State private var tool = PrintTool.exposure
     @State private var brushKind = LocalMask.Kind.dodge
+    @State private var brushStops = DarkroomLimits.defaultStrokeStops
     @State private var brushPoints: [MaskPoint] = []
     @State private var brushX = 0.5
     @State private var brushY = 0.5
@@ -187,6 +188,9 @@ struct DarkroomView: View {
     @State private var error: String?
 
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
+
+    /// The strengths a Dodge/Burn stroke can be given: from the smallest step to the limit.
+    private static let strokeStops = DarkroomLimits.exposureStep...DarkroomLimits.localExposureStops
 
     enum PrintTool: String, CaseIterable, Identifiable {
         case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn", toning = "Chemical toning"
@@ -246,6 +250,10 @@ struct DarkroomView: View {
                 .overlay { brushSurface }
                 .accessibilityLabel("Photo \(sequence), print preview")
                 .modifier(PrintCardEdge(isInstant: isInstant, large: true))
+        } else if error != nil, !rendering {
+            // A print that cannot be made, such as one whose saved recipe is outside the limits, has no preview to wait for.
+            Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.secondary)
+                .accessibilityLabel("Print unavailable")
         } else { ProgressView() }
     }
 
@@ -270,13 +278,16 @@ struct DarkroomView: View {
     @ViewBuilder private var controls: some View {
         switch tool {
         case .exposure:
-            Text("\(recipe.printExposureStops, specifier: "%.1f") stops").monospacedDigit()
-            Slider(value: $recipe.printExposureStops, in: -2...2, step: 0.1, onEditingChanged: { if !$0 { render() } })
+            Text(StopsText.shown(recipe.printExposureStops)).monospacedDigit()
+            Slider(value: Binding(get: { recipe.printExposureStops }, set: {
+                recipe.printExposureStops = StopsText.tenths($0, in: DarkroomLimits.printExposureStops)
+            }), in: DarkroomLimits.printExposureStops, step: DarkroomLimits.exposureStep, onEditingChanged: { if !$0 { render() } })
                 .accessibilityLabel("Print exposure")
+                .accessibilityValue(StopsText.spoken(recipe.printExposureStops))
         case .contrast:
             Picker("Contrast grade", selection: Binding(get: { recipe.contrastGrade ?? -1 }, set: { recipe.contrastGrade = $0 < 0 ? nil : $0; render() })) {
                 Text("Original").tag(-1)
-                ForEach(0...5, id: \.self) { Text("Grade \($0)").tag($0) }
+                ForEach(DarkroomLimits.contrastGrades, id: \.self) { Text("Grade \($0)").tag($0) }
             }.pickerStyle(.menu)
         case .filtration:
             filtrationSlider("Cyan", path: \.cyan)
@@ -317,6 +328,12 @@ struct DarkroomView: View {
                 Text("Burn").tag(LocalMask.Kind.burn)
             }.pickerStyle(.segmented)
             VStack(alignment: .leading) {
+                // How far each stroke lightens or darkens the print. Strokes add up where they overlap, to the limit.
+                Text("Strength: \(StopsText.shown(brushStops))").monospacedDigit()
+                Slider(value: Binding(get: { brushStops }, set: { brushStops = StopsText.tenths($0, in: Self.strokeStops) }),
+                       in: Self.strokeStops, step: DarkroomLimits.exposureStep)
+                    .accessibilityLabel("Local exposure strength")
+                    .accessibilityValue(StopsText.spoken(brushStops, signed: false))
                 Text("Horizontal: \(Int(brushX * 100))%").monospacedDigit()
                 Slider(value: $brushX, in: 0...1, step: 0.05)
                     .accessibilityLabel("Local exposure horizontal position")
@@ -327,7 +344,7 @@ struct DarkroomView: View {
                     .accessibilityValue("\(Int(brushY * 100)) percent from top")
                 Button(brushKind == .dodge ? "Dodge point" : "Burn point", systemImage: "plus.circle") {
                     recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind,
-                        points: [MaskPoint(x: brushX, y: brushY)], exposureStops: 0.4))
+                        points: [MaskPoint(x: brushX, y: brushY)], exposureStops: brushStops))
                     render()
                 }
             }.disabled(recipe.crop != nil)
@@ -344,7 +361,7 @@ struct DarkroomView: View {
                 var filtration = recipe.colorFiltration ?? ColorFiltration()
                 filtration[keyPath: path] = $0
                 recipe.colorFiltration = filtration
-            }), in: -30...30, step: 1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel(name)
+            }), in: DarkroomLimits.colorFiltration, step: 1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel(name)
         }
     }
 
@@ -372,7 +389,7 @@ struct DarkroomView: View {
                                               y: min(1, max(0, value.location.y / area.height)))
                         if brushPoints.count < 500 { brushPoints.append(point) }
                     }.onEnded { _ in
-                        recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind, points: brushPoints, exposureStops: 0.4))
+                        recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind, points: brushPoints, exposureStops: brushStops))
                         brushPoints = []; render()
                     })
                     .position(x: area.midX, y: area.midY)

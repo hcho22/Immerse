@@ -120,6 +120,15 @@ public enum NativePhotoRenderer {
                 "inputBVector": CIVector(x: 0, y: 0, z: 1 - color.yellow / 150, w: 0)
             ])
         }
+        // Strokes add up where they overlap, each working on the print as the last left it, and together they never
+        // take any part of it more than the limit from its print exposure. Unbounded, a few overlapping strokes at the
+        // limit run past what the renderer can hold and print as rings, not as white or black.
+        let limit = DarkroomLimits.localExposureStops
+        let lightest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: limit])
+        let darkest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -limit])
+        // A value contrast pushed below zero grows more negative as it is lightened, so order the two bounds by value.
+        let ceiling = lightest.applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: darkest])
+        let floor = lightest.applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: darkest])
         for mask in recipe.dodgeBurnMasks {
             let ev = (mask.kind == .dodge ? 1.0 : -1.0) * abs(mask.exposureStops)
             let adjusted = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: ev])
@@ -135,7 +144,8 @@ public enum NativePhotoRenderer {
             }
             image = adjusted.applyingFilter("CIBlendWithMask", parameters: [
                 kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: combined
-            ])
+            ]).applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: ceiling])
+                .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
         }
         if let toning = recipe.chemicalToning {
             let toned: CIImage
@@ -171,11 +181,13 @@ public enum NativePhotoRenderer {
     }
 
     public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws {
-        guard recipe.printExposureStops.isFinite, (-2...2).contains(recipe.printExposureStops),
-              recipe.contrastGrade.map({ (0...5).contains($0) }) ?? true else { throw NativeRenderError.invalidRecipe }
+        guard recipe.printExposureStops.isFinite, DarkroomLimits.printExposureStops.contains(recipe.printExposureStops),
+              recipe.contrastGrade.map({ DarkroomLimits.contrastGrades.contains($0) }) ?? true else {
+            throw NativeRenderError.invalidRecipe
+        }
         if let color = recipe.colorFiltration {
             guard process == .color,
-                  [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && (-30...30).contains($0) }) else {
+                  [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && DarkroomLimits.colorFiltration.contains($0) }) else {
                 throw NativeRenderError.invalidRecipe
             }
         }
@@ -195,7 +207,7 @@ public enum NativePhotoRenderer {
             }
         }
         guard recipe.dodgeBurnMasks.allSatisfy({ mask in
-            mask.exposureStops.isFinite && abs(mask.exposureStops) <= 1 &&
+            mask.exposureStops.isFinite && abs(mask.exposureStops) <= DarkroomLimits.localExposureStops &&
             mask.points.allSatisfy { $0.x.isFinite && $0.y.isFinite && (0...1).contains($0.x) && (0...1).contains($0.y) }
         }) else { throw NativeRenderError.invalidRecipe }
     }
