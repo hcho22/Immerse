@@ -140,16 +140,16 @@ Minutes by phase, from the job logs of the last passing run before the looks (0e
 `Scripts/validate-local.sh` still runs everything, in the same order, on a Mac.
 CI runs it as four parts side by side, chosen with `IMMERSE_VALIDATE_PART`, each on its own runner with a 75-minute limit, behind a summary job that keeps the name `local-native`.
 
-| Part | Holds | Minutes in this change's first two checks |
+| Part | Holds | Minutes in this change's own checks |
 | --- | --- | --- |
-| packages | Mac package tests and probes, document package, app builds, Release check, RenderCore in the simulator, StoreKit | 39 |
-| harness | the harness and its screen tests | 35 and 39 |
-| ui-text | `ContentSizeTests` | 38 and 52 |
-| ui-flows | every other suite of the app's screen tests, then the dark audits | 25 and 30 for the light suites alone |
+| packages | Mac package tests and probes, document package, app builds, Release check, RenderCore in the simulator, StoreKit | 39 and 40 |
+| harness | the harness and its screen tests | 35, 39 and 34 |
+| ui-text | `ContentSizeTests` | 38, 52 and 49 |
+| ui-flows | every other suite of the app's screen tests, then the dark audits | 40 |
 
-Those are the jobs' times on GitHub, from start to end, in runs 38444526282 and 38445842024.
-Both runs carried a planted failing test that stopped ui-flows before its dark audits, which took 10 minutes in the single job, and a fault in the scripts' own tests stopped packages in the first.
-The pull request that made this change records the later runs.
+Those are the jobs' times on GitHub, from start to end, in runs 38444526282, 38445842024 and 38457648520.
+The last of the three was green, and took 51 minutes from its start to its summary check.
+The first two carried a planted failing test that stopped ui-flows before its dark audits, and a fault in the scripts' own tests stopped packages in the first.
 
 The parts take longer than the single job's phases suggested, which was 28 to 41 minutes each.
 One runner differs from the next by up to a third.
@@ -187,8 +187,9 @@ The 75 minutes are, by GitHub's definition of the setting, the time a job runs a
 GitHub can also be short of runners, whatever the account's limit.
 On 2026-10-13 it noted "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times" on its jobs.
 Later that day two parts waited 26 and 31 minutes with fewer than five macOS jobs of the repository running, then started and ran as usual.
-Twice that day GitHub cancelled a job that had no runner, once after 15 minutes and once after 55, with "The job was not acquired by Runner of type hosted even after multiple attempts".
-The second was the harness part of run 38449942720, while two other parts of that run were running.
+Twice that day GitHub gave up on jobs it had no runner for, with "The job was not acquired by Runner of type hosted even after multiple attempts".
+The first time it cancelled a job after 15 minutes.
+The second time it cancelled the harness and ui-flows parts of run 38449942720 after 55 minutes, while that run's other two parts were running.
 The summary check is then red through no fault of the change, and rerunning the failed job reruns that part alone.
 
 ## Validation

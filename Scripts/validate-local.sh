@@ -29,10 +29,12 @@ suites() {
 # its photo-analysis service switched off first (Scripts/quiet-simulator.sh).
 pinned_simulators=""
 pin_simulator() {
-    case " $pinned_simulators " in *" $1:"*) return ;; esac
     xcrun simctl bootstatus "$1" -b > /dev/null
     sh Scripts/quiet-simulator.sh "$1"
-    pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)"
+    case " $pinned_simulators " in
+        *" $1:"*) ;;
+        *) pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)" ;;
+    esac
     xcrun simctl ui "$1" appearance light
     xcrun simctl ui "$1" content_size large
 }
@@ -103,7 +105,8 @@ if runs packages && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
         CODE_SIGNING_ALLOWED=NO test)
 fi
 if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
-    pin_simulator "$IMMERSE_SIMULATOR_UDID"
+    # Run whole, the render tests above have pinned this simulator.
+    runs packages || pin_simulator "$IMMERSE_SIMULATOR_UDID"
     # Run whole, the app's screen tests are one run. As parts, ui-text takes the text-size suites, which are most
     # of the minutes, and ui-flows takes every other suite, whatever is added later.
     # shellcheck disable=SC2086 # the suite lists are words

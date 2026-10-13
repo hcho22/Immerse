@@ -104,6 +104,14 @@ class ValidateLocalTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(commands, WHOLE)
 
+    def test_run_whole_on_one_simulator_it_pins_that_simulator_before_the_harness_and_before_the_app(self):
+        # As the single job did, and as a run on a Mac with one simulator does.
+        shared = dict(SIMULATORS, IMMERSE_WORKFLOW_SIMULATOR_UDID="APP-SIM")
+        result, commands = self.validate(simulators=shared)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        harness = [command.replace("HARNESS-SIM", "APP-SIM") for command in HARNESS]
+        self.assertEqual(commands, VERSIONS + MAC + harness + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING)
+
     def test_each_part_runs_its_own_share(self):
         for part, expected in PARTS.items():
             with self.subTest(part):
