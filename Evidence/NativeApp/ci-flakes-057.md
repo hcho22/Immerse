@@ -45,6 +45,13 @@ The cause of the one lost tap is not established, and no run here reproduced the
 It is not recovery, tap position, runner slowness within the test or a disabled button.
 The one remaining suspect was the iOS 26 bottom toolbar, which every launch logged as "Adding 'UIKitToolbar' as a subview of UIHostingController.view is not supported".
 
+Found on 2026-10-13 (`Evidence/NativeApp/dropped-touch-059.md`): the simulator dropped the touch.
+The simulator log kept in that run's result bundle shows `backboardd` taking the tap's finger-down at 14:30:15, discarding the seven events after it with "didn't see a previous touch down or range-in event for pathIndex:2; skipping event", and cancelling the touch.
+The app received a cancelled touch, never a tap.
+The same records sit at a lost Back button tap in run 37788441803 and, after the toolbar was gone, at a lost tap on a Journal Film card in run 38412185318.
+So the toolbar was not the cause.
+The app change below removed a real runtime warning and did no harm, but it could not have prevented this loss.
+
 ### App fix: no bottom toolbar at launch
 
 On iOS 26.5 every SwiftUI `.bottomBar` toolbar item, even a bare one, makes UIKit add its toolbar to the hosting controller's view and logs that warning at launch.
@@ -84,6 +91,11 @@ Both ran on new iOS 26.5 simulators, an iPhone SE (3rd generation) and an iPhone
 
 `openCameraCatalog(_:)` in `UITestSupport.swift` taps Start a Film once and, if the catalog does not open within 5 seconds, keeps a screenshot named "Start-a-Film-tap-did-not-open-the-catalog" and fails with a clear message.
 A second tap would hide a real defect, so there is none.
+That rule is narrowed since 2026-10-13, in one case only.
+The captain was asked: "When a screen test fails and the simulator's own log proves it dropped that test's tap, may the check rerun that one test once and go green? Any other failure still fails, and a failed rerun fails. This narrows the project's existing rule against a second tap."
+His answer, to this and the two questions put with it: "yes to all".
+A test still taps once and never retries inside itself.
+`Scripts/screen-tests.sh` reruns the whole failed test once, alone, only on `backboardd`'s discard record inside that test's time window (`Evidence/NativeApp/dropped-touch-059.md`).
 The other tests that tap Start a Film, in `JournalFlowTests`, `MovieCapacityUITests` and `ContentSizeTests`, still tap it once inline, without that screenshot; new tests use `openCameraCatalog`.
 
 The one test also took 1 minute 26 seconds to 1 minute 35 seconds for six launches, about twice its time to spare against the allowance.

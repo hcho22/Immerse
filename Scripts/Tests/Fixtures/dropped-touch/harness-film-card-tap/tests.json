@@ -1,0 +1,59 @@
+{
+ "testNodes": [
+  {
+   "nodeType": "Test Plan",
+   "name": "PopulatedJournalHarness",
+   "result": "Failed",
+   "children": [
+    {
+     "nodeType": "UI test bundle",
+     "name": "PopulatedJournalHarnessTests",
+     "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests",
+     "result": "Failed",
+     "children": [
+      {
+       "nodeType": "Test Suite",
+       "name": "PopulatedWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testBlackAndWhite16mmFilmShowsItsDevelopedMovie()",
+         "nodeIdentifier": "PopulatedWorkflowTests/testBlackAndWhite16mmFilmShowsItsDevelopedMovie()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testBlackAndWhite16mmFilmShowsItsDevelopedMovie",
+         "result": "Passed",
+         "duration": "22s",
+         "durationInSeconds": 22.583495020866394
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testSixBySixBlackAndWhiteLookScreens()",
+         "nodeIdentifier": "PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens",
+         "result": "Failed",
+         "duration": "1m 18s",
+         "durationInSeconds": 78.34099209308624,
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "PopulatedWorkflowTests.swift:417: XCTAssertTrue failed"
+          },
+          {
+           "nodeType": "Failure Message",
+           "name": "PopulatedWorkflowTests.swift:264: XCTAssertTrue failed - Look-6x6-black-and-white"
+          },
+          {
+           "nodeType": "Failure Message",
+           "name": "PopulatedWorkflowTests.swift:267: Failed to tap \"Open photo 1\" Button: No matches found for Elements matching predicate '\"Open photo 1\" IN i"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

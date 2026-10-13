@@ -1,0 +1,83 @@
+{
+ "testNodes": [
+  {
+   "nodeType": "Test Plan",
+   "name": "Immerse",
+   "result": "Failed",
+   "children": [
+    {
+     "nodeType": "UI test bundle",
+     "name": "ImmerseUITests",
+     "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests",
+     "result": "Failed",
+     "children": [
+      {
+       "nodeType": "Test Suite",
+       "name": "ContentSizeTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/ContentSizeTests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge()",
+         "nodeIdentifier": "ContentSizeTests/testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/ContentSizeTests/testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge",
+         "result": "Passed",
+         "duration": "24s",
+         "durationInSeconds": 24.856037974357605
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testLandscapeSettingsTopTextAtLarge()",
+         "nodeIdentifier": "ContentSizeTests/testLandscapeSettingsTopTextAtLarge()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/ContentSizeTests/testLandscapeSettingsTopTextAtLarge",
+         "result": "Failed",
+         "duration": "16s",
+         "durationInSeconds": 16.423870086669922,
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "ContentSizeTests.swift:274: Failed to tap \"Cancel\" Button: No matches found for Elements matching predicate '\"Cancel\" IN identifiers' from i"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "JournalFlowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testAuditStillReportsContrastFindingsOutsideItsExceptions()",
+         "nodeIdentifier": "JournalFlowTests/testAuditStillReportsContrastFindingsOutsideItsExceptions()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testAuditStillReportsContrastFindingsOutsideItsExceptions",
+         "result": "Expected Failure",
+         "duration": "37s",
+         "durationInSeconds": 37.37842893600464
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testLargestDynamicTypeCatalogAndLandscapeSettings()",
+         "nodeIdentifier": "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()",
+         "nodeIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings",
+         "result": "Failed",
+         "duration": "1m 19s",
+         "durationInSeconds": 79.4401820898056,
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "JournalFlowTests.swift:103: Text clipped"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

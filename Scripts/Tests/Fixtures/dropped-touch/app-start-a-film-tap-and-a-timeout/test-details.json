@@ -1,0 +1,18 @@
+{
+ "JournalFlowTests/testExtraSmallLoadScreensAudit()": {
+  "testIdentifier": "JournalFlowTests/testExtraSmallLoadScreensAudit()",
+  "testIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testExtraSmallLoadScreensAudit",
+  "testName": "testExtraSmallLoadScreensAudit()",
+  "testResult": "Failed",
+  "startTime": 1791382819.129,
+  "durationInSeconds": 180
+ },
+ "TestingUnlockUITests/testUnlockIndicatorFollowsThePersistedSettingsSwitch()": {
+  "testIdentifier": "TestingUnlockUITests/testUnlockIndicatorFollowsThePersistedSettingsSwitch()",
+  "testIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/TestingUnlockUITests/testUnlockIndicatorFollowsThePersistedSettingsSwitch",
+  "testName": "testUnlockIndicatorFollowsThePersistedSettingsSwitch()",
+  "testResult": "Failed",
+  "startTime": 1791383334.689,
+  "durationInSeconds": 89.5184850692749
+ }
+}

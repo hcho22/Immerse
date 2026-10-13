@@ -7,3 +7,6 @@ DerivedData/
 # Xcode local user state
 *.xcuserstate
 xcuserdata/
+
+# Python bytecode from the scripts' tests
+__pycache__/
