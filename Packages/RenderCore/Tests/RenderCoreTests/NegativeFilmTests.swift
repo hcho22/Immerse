@@ -1,0 +1,539 @@
+import CoreImage
+import FilmDomain
+import Metal
+import XCTest
+@testable import RenderCore
+
+/// The color negative Film Stocks develop exactly as the captain's generators do
+/// (`Probes/FilmLookCalibration`): the 16mm Cinema's with `vision3_250d_lut.py`'s "print" look, and the 6×6 Medium
+/// Format's with `portra400_lut.py`'s "scan" look, read from the table that generator wrote. The fixtures are the
+/// generators' own numbers, written by the `make_fixtures.py` beside each.
+final class NegativeFilmTests: XCTestCase {
+    private struct Colors: Decodable {
+        /// The generator's own constants for the look, as its file holds them.
+        struct Constants: Decodable {
+            let curve: String
+            let negativeGamma: [Double], exposure: Double, balance: [Double], toe: Double, crosstalk: [[Double]]
+            let slope: [Double], grayDensity: Double, maximumDensity: Double, bias: [Double], black: [Double]
+            let bands: [[Double]], finish: [[Double]], highlightDesaturation: Double, shadowDesaturation: Double
+            let bandCenters: [Double], bandWidths: [Double]
+        }
+        let sanity: [String: [Double]]
+        let constants: Constants
+        /// Where the captain's own word changed a constant after his files were applied: the print density range
+        /// he chose, and the generator's neutral values with it.
+        struct Applied: Decodable { let maximumDensity: Double }
+        let applied: Applied?, sanityApplied: [String: [Double]]?
+        let scene: [[Double]], sceneDeveloped: [[Double]]
+        let appleLog: [[Double]], appleLogDeveloped: [[Double]]
+        let display: [[Double]], displayDeveloped: [[Double]]
+        /// For a stock read from the generator's table: tones between the table's own with the table's reading of
+        /// them, the table's reading of the phone colors, and the matrices of the photograph's way in.
+        let tableTones: [[Double]]?, tableRead: [[Double]]?, displayTable: [[Double]]?
+        let displayP3ToRec2020: [[Double]]?, rec709ToDisplayP3: [[Double]]?
+    }
+
+    /// One color negative Film Stock and the generator's numbers for it.
+    private struct Stock {
+        let name: String
+        let folder: String
+        let treatment: FilmLook.Treatment
+        /// The primaries a capture from this Camera arrives on.
+        let capture: CGColorSpace
+        let colors: Colors
+
+        init(_ name: String, folder: String, treatment: FilmLook.Treatment, capture: CFString) {
+            self.name = name
+            self.folder = folder
+            self.treatment = treatment
+            self.capture = CGColorSpace(name: capture)!
+            colors = try! JSONDecoder().decode(Colors.self, from: Data(contentsOf: Fixtures.url("\(folder)/colors.json")))
+        }
+
+        var film: FilmLook.NegativeFilm {
+            guard case let .negative(film) = treatment.emulsion else { fatalError("\(name) is a negative film") }
+            return film
+        }
+
+        /// The treatment with the per-frame passes set aside, but the capture's way in kept.
+        var filmAlone: FilmLook.Treatment {
+            var treatment = treatment
+            treatment.scene = FilmLook.ScenePasses(referenceWidth: treatment.scene!.referenceWidth, capture: treatment.scene!.capture)
+            return treatment
+        }
+    }
+
+    private static let cinema = Stock("16mm color", folder: "Cinema16mmColor", treatment: FilmLook.cinemaColor, capture: CGColorSpace.sRGB)
+    private static let mediumFormat = Stock("6x6 color", folder: "MediumFormatColor", treatment: FilmLook.mediumFormatColor,
+                                            capture: CGColorSpace.displayP3)
+    private static let stocks = [cinema, mediumFormat]
+
+    /// Whether a stated neutral value is one the captain's later word moved: the 16mm's shadows.
+    private static func opened(_ stock: Stock, _ stops: String) -> Bool {
+        stock.colors.applied != nil && Double(stops)! < 0
+    }
+
+    private func gray(_ level: Double) -> FilmLook.RGB { FilmLook.RGB(level, level, level) }
+    private func color(_ values: [Double]) -> FilmLook.RGB { FilmLook.RGB(values[0], values[1], values[2]) }
+
+    // MARK: - The film
+
+    /// Every constant of each film is its generator's, read from the generator's own file. The 16mm develops with the
+    /// "print" look and the 6×6 with the "scan" look; neither generator's other look is in the app. One constant is
+    /// the captain's later word and not his file's: the 16mm's print density range, which he chose on its board so
+    /// that black sits at 4 percent and the shadows open (ADR 0016).
+    func testEveryConstantIsTheGenerators() {
+        func bands(_ rows: [[Double]]) -> [FilmLook.NegativeFilm.Band] { rows.map { FilmLook.NegativeFilm.Band($0[0], $0[1], $0[2]) } }
+        XCTAssertEqual(Self.cinema.colors.constants.curve, "print")
+        XCTAssertEqual(Self.mediumFormat.colors.constants.curve, "scan")
+        for stock in Self.stocks {
+            let generator = stock.colors.constants, film = stock.film
+            let density = stock.colors.applied?.maximumDensity ?? generator.maximumDensity
+            XCTAssertEqual(film.output, generator.curve == "print" ? .print(maximumDensity: density) : .scan, stock.name)
+            XCTAssertEqual(film.negativeGamma, color(generator.negativeGamma), stock.name)
+            XCTAssertEqual(film.exposure, generator.exposure, stock.name)
+            XCTAssertEqual(film.balance, color(generator.balance), stock.name)
+            XCTAssertEqual(film.toe, generator.toe, stock.name)
+            XCTAssertEqual(film.crosstalk, generator.crosstalk.map(color), stock.name)
+            XCTAssertEqual(film.slope, color(generator.slope), stock.name)
+            XCTAssertEqual(film.grayDensity, generator.grayDensity, stock.name)
+            XCTAssertEqual(film.bias, color(generator.bias), stock.name)
+            XCTAssertEqual(film.black, color(generator.black), stock.name)
+            XCTAssertEqual(film.bands, bands(generator.bands), stock.name)
+            XCTAssertEqual(film.finish, bands(generator.finish), stock.name)
+            XCTAssertEqual(film.highlightDesaturation, generator.highlightDesaturation, stock.name)
+            XCTAssertEqual(film.shadowDesaturation, generator.shadowDesaturation, stock.name)
+            XCTAssertEqual(FilmLook.NegativeFilm.bandCenters, generator.bandCenters, stock.name)
+            XCTAssertEqual(FilmLook.NegativeFilm.bandWidths, generator.bandWidths, stock.name)
+        }
+        XCTAssertEqual(Self.cinema.colors.applied?.maximumDensity, 2.74)
+        XCTAssertEqual(Self.cinema.colors.constants.maximumDensity, 4.39, "His file still holds his own density range")
+        XCTAssertNil(Self.mediumFormat.colors.applied, "The 6×6 is his file's throughout")
+        let black = Self.cinema.film.developed(scene: gray(0))
+        XCTAssertEqual(black.red, 0.04, accuracy: 0.001, "The 16mm's black at 4 percent")
+        XCTAssertEqual(black.green, 0.04, accuracy: 0.001)
+        XCTAssertGreaterThan(black.blue, black.red, "A hair cool, as his own black is")
+    }
+
+    /// Every neutral value each generator states for its look, from six stops under middle gray to five over, within
+    /// its tolerance of 0.02. The 16mm's shadows are the captain's later word, so its two stated values under middle
+    /// gray, six stops and two stops under, are held to the generator's own function with the density range he
+    /// chose, and sit 0.034 and 0.054 over the table's; middle gray and everything over it still hold the table.
+    func testTheFilmGivesEveryNeutralValueTheGeneratorStates() {
+        for stock in Self.stocks {
+            XCTAssertEqual(stock.colors.sanity.count, 6, stock.name)
+            for (stops, stated) in stock.colors.sanity {
+                let developed = stock.film.developed(scene: gray(0.18 * pow(2, Double(stops)!)))
+                let opened = Self.opened(stock, stops)
+                let expected = opened ? stock.colors.sanityApplied![stops]! : stated
+                XCTAssertEqual(developed.red, expected[0], accuracy: 0.02, "\(stock.name): \(stops) stops, red")
+                XCTAssertEqual(developed.green, expected[1], accuracy: 0.02, "\(stock.name): \(stops) stops, green")
+                XCTAssertEqual(developed.blue, expected[2], accuracy: 0.02, "\(stock.name): \(stops) stops, blue")
+                if opened {
+                    XCTAssertEqual(developed.green - stated[1], stops == "-6" ? 0.034 : 0.054, accuracy: 0.002, "The opened shadows")
+                }
+                if let applied = stock.colors.sanityApplied?[stops] {
+                    XCTAssertEqual(developed.green, applied[1], accuracy: 0.00001, "\(stock.name): \(stops) stops")
+                }
+            }
+        }
+        // The 16mm: daylight gray develops neutral; shadows lean a hair cool and highlights a hair warm.
+        let cinema = Self.cinema.film
+        let middle = cinema.developed(scene: gray(0.18)), shadow = cinema.developed(scene: gray(0.045)), light = cinema.developed(scene: gray(0.72))
+        XCTAssertEqual(middle.red, middle.blue, accuracy: 0.001)
+        XCTAssertGreaterThan(shadow.blue, shadow.red)
+        XCTAssertGreaterThan(light.red, light.blue)
+        // The 6×6: gray develops a little bright and warm, and the scan's black is lifted and a hair cool.
+        let roll = Self.mediumFormat.film
+        let warm = roll.developed(scene: gray(0.18)), black = roll.developed(scene: gray(0.18 / 64))
+        XCTAssertGreaterThan(warm.red, warm.green)
+        XCTAssertGreaterThan(warm.green, warm.blue)
+        XCTAssertGreaterThan(black.blue, black.red)
+        XCTAssertGreaterThan(black.green, 0.06, "A lifted scan black")
+    }
+
+    /// A neutral ramp from eight stops under middle gray to seven over never reverses, in any channel.
+    func testANeutralRampNeverReverses() {
+        for stock in Self.stocks {
+            var last = gray(-1)
+            for step in 0..<200 {
+                let developed = stock.film.developed(scene: gray(0.18 * pow(2, -8 + 15 * Double(step) / 199)))
+                XCTAssertGreaterThanOrEqual(developed.red, last.red - 1e-6, "\(stock.name): step \(step)")
+                XCTAssertGreaterThanOrEqual(developed.green, last.green - 1e-6, "\(stock.name): step \(step)")
+                XCTAssertGreaterThanOrEqual(developed.blue, last.blue - 1e-6, "\(stock.name): step \(step)")
+                last = developed
+            }
+        }
+    }
+
+    /// Each film agrees with its generator on 704 scene colors (a neutral ramp, a 7 x 7 x 7 grid of phone colors and
+    /// 300 random ones up to five stops over gray) and on 425 Apple Log tones, to 0.00002 in every channel. The
+    /// fixture's values are rounded to six places.
+    func testTheFilmMatchesTheGeneratorOnAWideSetOfColors() {
+        for stock in Self.stocks {
+            XCTAssertEqual(stock.colors.scene.count, 704)
+            XCTAssertEqual(stock.colors.appleLog.count, 425)
+            var worst = 0.0
+            for (input, expected) in zip(stock.colors.scene, stock.colors.sceneDeveloped) {
+                let developed = stock.film.developed(scene: color(input))
+                worst = max(worst, abs(developed.red - expected[0]), abs(developed.green - expected[1]), abs(developed.blue - expected[2]))
+            }
+            XCTAssertLessThan(worst, 0.00002, "\(stock.name): scene colors")
+            worst = 0
+            for (input, expected) in zip(stock.colors.appleLog, stock.colors.appleLogDeveloped) {
+                let developed = stock.film.developed(appleLog: color(input))
+                worst = max(worst, abs(developed.red - expected[0]), abs(developed.green - expected[1]), abs(developed.blue - expected[2]))
+            }
+            XCTAssertLessThan(worst, 0.00002, "\(stock.name): Apple Log tones")
+        }
+    }
+
+    /// The curve into Apple Log and the one back agree, and the phone's white opens to 2.6 in scene light.
+    func testAppleLogAndSceneLight() {
+        for light in [0.0, 0.005, 0.01, 0.18, 1, 2.6, 6] {
+            XCTAssertEqual(FilmLook.NegativeFilm.appleLogDecoded(FilmLook.NegativeFilm.appleLogEncoded(light)), light, accuracy: 1e-9)
+        }
+        XCTAssertEqual(FilmLook.NegativeFilm.sceneLight(displayLight: 0.5), 0.5)
+        XCTAssertEqual(FilmLook.NegativeFilm.sceneLight(displayLight: 1), 2.6, accuracy: 1e-12)
+    }
+
+    // MARK: - The 6×6's table
+
+    /// The 6×6 is read from the generator's own table, the file the captain sent
+    /// (`immerse_6x6_color_scan_applelog_33.cube`). The table the app makes from his constants is that file, tone for
+    /// tone, at all 35,937 of its tones, to the file's six places.
+    func testTheTableTheAppMakesIsTheCaptainsTable() throws {
+        guard case let .appleLog(side) = Self.mediumFormat.film.table else { return XCTFail("The 6×6 is read from a table") }
+        XCTAssertEqual(side, 33)
+        let file = try Fixtures.table("MediumFormatColor/immerse_6x6_color_scan_applelog_33.cube")
+        XCTAssertEqual(file.side, 33)
+        let made = Self.mediumFormat.film.appleLogTable(side: side)
+        XCTAssertEqual(made.count, 35_937)
+        var worst = 0.0
+        for (ours, his) in zip(made, file.tones) {
+            // The file holds display tones between 0 and 1.
+            func held(_ value: Double) -> Double { min(max(value, 0), 1) }
+            worst = max(worst, abs(held(ours.red) - his.red), abs(held(ours.green) - his.green), abs(held(ours.blue) - his.blue))
+        }
+        XCTAssertLessThan(worst, 0.000001, "worst difference \(worst)")
+        XCTAssertEqual(Self.cinema.film.table, .function, "The 16mm follows its generator's function, which sent no table")
+    }
+
+    /// The app reads a table between its tones tetrahedrally, as the captain's spec and his own preview do: on 3,000
+    /// tones between the table's own, the app's reading of his file is his reader's, to 0.000002.
+    func testTheTableIsReadTetrahedrally() throws {
+        let file = try Fixtures.table("MediumFormatColor/immerse_6x6_color_scan_applelog_33.cube")
+        let colors = Self.mediumFormat.colors
+        let tones = try XCTUnwrap(colors.tableTones), expected = try XCTUnwrap(colors.tableRead)
+        XCTAssertEqual(tones.count, 3000)
+        var worst = 0.0
+        for (tone, want) in zip(tones, expected) {
+            let read = FilmLook.NegativeFilm.tetrahedral(file.tones, side: file.side, at: color(tone))
+            worst = max(worst, abs(read.red - want[0]), abs(read.green - want[1]), abs(read.blue - want[2]))
+        }
+        XCTAssertLessThan(worst, 0.000002, "worst difference \(worst)")
+    }
+
+    /// The matrices of a photograph's way in are the standards': Rec.709 to Display P3, and Display P3 to Rec.2020 as
+    /// the spec has it computed.
+    func testAPhotographsWayInUsesTheStandardsMatrices() throws {
+        let colors = Self.mediumFormat.colors
+        for (ours, theirs) in [(SceneLight.rec2020FromDisplayP3, try XCTUnwrap(colors.displayP3ToRec2020)),
+                               (SceneLight.displayP3FromRec709, try XCTUnwrap(colors.rec709ToDisplayP3))] {
+            for row in 0..<3 { for column in 0..<3 { XCTAssertEqual(ours[row][column], theirs[row][column], accuracy: 0.00000001) } }
+        }
+        XCTAssertEqual(Self.mediumFormat.treatment.scene?.capture, .displayP3)
+        XCTAssertEqual(Self.cinema.treatment.scene?.capture, .rec709)
+    }
+
+    // MARK: - The film in the app's pipeline
+
+    /// 216 phone colors, every mix of six levels of red, green and blue on the capture's own primaries, through
+    /// Development's own steps with the per-frame passes set aside, as a picture of one row of blocks.
+    private func developedPhoneColors(_ stock: Stock) throws -> [[Double]] {
+        let colors = stock.colors.display
+        // One row of blocks, so the picture reads the same whichever way its rows run.
+        let block = 8, width = colors.count * block, height = block
+        var bytes = [UInt8](repeating: 255, count: width * height * 4)
+        for (index, color) in colors.enumerated() {
+            for y in 0..<block { for x in 0..<block {
+                let offset = (y * width + index * block + x) * 4
+                for channel in 0..<3 { bytes[offset + channel] = UInt8((color[channel] * 255).rounded()) }
+            } }
+        }
+        let picture = CIImage(bitmapData: Data(bytes), bytesPerRow: width * 4, size: CGSize(width: width, height: height),
+                              format: .RGBA8, colorSpace: stock.capture)
+        let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: picture))
+        return colors.indices.map { developed.pixel(x: $0 * block + block / 2, y: block / 2) }
+    }
+
+    /// A neutral ramp of the phone's 256 tones through the pipeline, against the film's own table read
+    /// tetrahedrally in Swift: the largest difference in any channel, the largest difference between the channels'
+    /// differences, which is a tint, and the largest step down from one tone to the next.
+    private func neutralRamp(_ stock: Stock) throws -> (worst: Double, tint: Double, reversal: Double) {
+        var bytes = [UInt8](repeating: 255, count: 256 * 4 * 4)
+        for y in 0..<4 { for x in 0..<256 { for channel in 0..<3 { bytes[(y * 256 + x) * 4 + channel] = UInt8(x) } } }
+        let ramp = CIImage(bitmapData: Data(bytes), bytesPerRow: 256 * 4, size: CGSize(width: 256, height: 4), format: .RGBA8,
+                           colorSpace: stock.capture)
+        let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: ramp))
+        let table = stock.film.tones()
+        var worst = 0.0, tint = 0.0, reversal = 0.0
+        for x in 0..<256 {
+            let light = FilmLook.NegativeFilm.sceneLight(displayLight: FilmLook.NegativeFilm.displayLight(Double(x) / 255))
+            let tone = stock.film.table == .function ? FilmLook.NegativeFilm.cubeTone(sceneLight: light)
+                : FilmLook.NegativeFilm.appleLogEncoded(light)
+            let want = FilmLook.NegativeFilm.tetrahedral(table.colors, side: table.side, at: gray(tone))
+            let got = developed.pixel(x: x, y: 2)
+            let differences = [got[0] - want.red, got[1] - want.green, got[2] - want.blue]
+            worst = max(worst, differences.map { abs($0) }.max()!)
+            let mean = differences.reduce(0, +) / 3
+            tint = max(tint, differences.map { abs($0 - mean) }.max()!)
+            if x > 0 { for channel in 0..<3 { reversal = max(reversal, developed.pixel(x: x - 1, y: 2)[channel] - got[channel]) } }
+        }
+        return (worst, tint, reversal)
+    }
+
+    /// The worst and the mean difference, in any channel, between developed colors and the ones expected, and the
+    /// difference 99 percent of values stay within.
+    private func difference(_ developed: [[Double]], _ expected: [[Double]]) -> (worst: Double, mean: Double, most: Double) {
+        var differences: [Double] = []
+        for (pixel, want) in zip(developed, expected) { for channel in 0..<3 { differences.append(abs(pixel[channel] - want[channel])) } }
+        differences.sort()
+        return (differences.last!, differences.reduce(0, +) / Double(differences.count), differences[differences.count * 99 / 100])
+    }
+
+    /// The 16mm through the pipeline (the phone's highlights opened, Apple Log tones, the film's table): the 216 phone
+    /// colors come out as the generator's exact function develops them, to 0.03 at worst and 0.003 on average
+    /// (measured: 0.024 and 0.0005). The table has 64 tones a side and is read between them, so the agreement is not
+    /// exact. The worst color is the phone's purest green; every other is within 0.01. The generator's own tables,
+    /// read as it reads them, are 0.073 (33 a side) and 0.068 (65 a side) off its exact function at that green.
+    func testThePipelineDevelopsPhoneColorsAsTheGeneratorDoes() throws {
+        try requireTetrahedralReader()
+        let result = difference(try developedPhoneColors(Self.cinema), Self.cinema.colors.displayDeveloped)
+        XCTAssertLessThan(result.worst, 0.03, "worst channel difference \(result.worst)")
+        XCTAssertLessThan(result.mean, 0.003, "mean channel difference \(result.mean)")
+    }
+
+    /// The 6×6 through the pipeline (Display P3 opened, carried to Rec.2020, Apple Log tones, the table): the 216 phone
+    /// colors come out as the captain's own table gives them, read tetrahedrally, to 0.0005 on average, 0.004 for 99
+    /// percent of values and 0.01 at worst (measured: 0.00025, 0.0018 and 0.0057). What is left is the 16-bit numbers
+    /// Core Image works in and the curves it is handed as tables.
+    ///
+    /// His table is not his function between its tones: on these colors the two are 0.0025 apart on average and up to
+    /// 0.08 apart on the most saturated ones, so the pipeline, which follows the table, is as far from the function.
+    func testThePipelineDevelopsPhoneColorsAsTheCaptainsTableDoes() throws {
+        try requireTetrahedralReader()
+        let stock = Self.mediumFormat
+        let developed = try developedPhoneColors(stock)
+        let table = difference(developed, try XCTUnwrap(stock.colors.displayTable))
+        XCTAssertLessThan(table.mean, 0.0005, "mean difference from his table \(table.mean)")
+        XCTAssertLessThan(table.most, 0.004, "99 percent within \(table.most) of his table")
+        XCTAssertLessThan(table.worst, 0.01, "worst difference from his table \(table.worst)")
+        let between = difference(try XCTUnwrap(stock.colors.displayTable), stock.colors.displayDeveloped)
+        XCTAssertEqual(between.mean, 0.0025, accuracy: 0.0005, "His table and his function, on average")
+        XCTAssertEqual(between.worst, 0.078, accuracy: 0.005, "His table and his function, at worst")
+        let function = difference(developed, stock.colors.displayDeveloped)
+        XCTAssertLessThan(function.mean, 0.004, "mean difference from his function \(function.mean)")
+        XCTAssertLessThan(function.worst, 0.1, "worst difference from his function \(function.worst)")
+    }
+
+    /// Grays through the pipeline are the film's table's own grays: every one of the phone's 256 neutral tones comes
+    /// out within 0.002 of the table read tetrahedrally (measured: 0.0009), with no more than 0.001 between the
+    /// channels' differences (0.0005), which would be a tint, and never steps down. A tetrahedral reading of a gray
+    /// uses only the table's grays; a film's color changes begin sharply beside gray, and a reading along each axis
+    /// lets them in.
+    func testGraysAreReadFromTheTablesGraysAlone() throws {
+        try requireTetrahedralReader()
+        for stock in Self.stocks {
+            let ramp = try neutralRamp(stock)
+            XCTAssertLessThan(ramp.worst, 0.002, "\(stock.name): worst \(ramp.worst)")
+            XCTAssertLessThan(ramp.tint, 0.001, "\(stock.name): tint \(ramp.tint)")
+            XCTAssertLessThan(ramp.reversal, 0.0002, "\(stock.name): largest step down \(ramp.reversal)")
+        }
+    }
+
+    /// The reader is there wherever Core Image renders with Metal, which is every iPhone the app runs on, the iOS
+    /// simulator and a Mac.
+    func testTheTetrahedralReaderIsMadeWhereThereIsMetal() throws {
+        try XCTSkipUnless(MTLCreateSystemDefaultDevice() != nil, "No Metal device here")
+        XCTAssertNotNil(TableReading.shared.kernel)
+    }
+
+    /// The reader against the same reading in Swift, on the captain's own table: 3,000 tones between the table's own,
+    /// to 0.001. The tones are handed over and read back in 32-bit numbers here, so that this measures the reader
+    /// alone; Development works in Core Image's 16-bit numbers, which the tests of the whole pipeline measure.
+    func testTheReaderReadsTheCaptainsTableAsSwiftDoes() throws {
+        try requireTetrahedralReader()
+        let file = try Fixtures.table("MediumFormatColor/immerse_6x6_color_scan_applelog_33.cube")
+        let tones = try XCTUnwrap(Self.mediumFormat.colors.tableTones), expected = try XCTUnwrap(Self.mediumFormat.colors.tableRead)
+        var pixels: [Float] = []
+        for tone in tones { pixels += [Float(tone[0]), Float(tone[1]), Float(tone[2]), 1] }
+        let picture = CIImage(bitmapData: pixels.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: tones.count * 16,
+                              size: CGSize(width: tones.count, height: 1), format: .RGBAf, colorSpace: nil)
+        let read = try TableReading.shared.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side)
+        let values = Fixtures.values(read, workingFormat: .RGBAf)
+        var worst = 0.0
+        for (index, want) in expected.enumerated() {
+            let pixel = values.pixel(x: index, y: 0)
+            for channel in 0..<3 { worst = max(worst, abs(pixel[channel] - want[channel])) }
+        }
+        XCTAssertLessThan(worst, 0.001, "worst difference \(worst)")
+    }
+
+    /// Where Core Image cannot run the reader, neither color Film Stock develops, and nothing else reads its table.
+    func testWhereTheReaderCannotRunTheColorStocksDoNotDevelop() throws {
+        try XCTSkipUnless(TableReading.shared.kernel == nil, "Core Image runs the tetrahedral reader here")
+        XCTAssertFalse(NativePhotoRenderer.readsFilmTables)
+        let picture = CIImage(color: CIColor(red: 0.18, green: 0.18, blue: 0.18)).cropped(to: CGRect(x: 0, y: 0, width: 32, height: 32))
+        for stock in Self.stocks {
+            XCTAssertThrowsError(try DevelopedTreatment(stock.treatment, seed: 1).apply(to: picture), stock.name) {
+                XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+            }
+        }
+    }
+
+    /// A reader with no kernel fails every Development with the same error, asking for a kernel again each time,
+    /// and nothing else reads the table.
+    func testWithoutAKernelEveryDevelopmentFailsWithTheSameError() throws {
+        var asked = 0
+        let reader = TableReading { asked += 1; return nil }
+        for stock in Self.stocks {
+            var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+            development.tableReader = reader
+            for _ in 0..<3 {
+                XCTAssertThrowsError(try development.apply(to: Fixtures.even(tone: 0.5, colorSpace: stock.capture)), stock.name) {
+                    XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+                }
+            }
+        }
+        XCTAssertEqual(asked, 6, "A missing kernel is asked for again at every Development")
+    }
+
+    /// A kernel that did not prove, or could not be made, is not remembered: the Development that met it fails, and
+    /// the next one makes and proves a kernel again and develops as any other does, with no relaunch. A kernel that
+    /// has proved itself is kept.
+    func testAFailedProofIsNotRememberedAndTheNextDevelopmentSucceeds() throws {
+        try requireTetrahedralReader()
+        for stock in Self.stocks {
+            var asked = 0
+            let reader = TableReading {
+                asked += 1
+                return asked == 1 ? nil : TableReading.provedKernel()
+            }
+            let picture = Fixtures.even(tone: 0.5, colorSpace: stock.capture)
+            var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+            development.tableReader = reader
+            XCTAssertThrowsError(try development.apply(to: picture), stock.name) {
+                XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+            }
+            let developed = try Fixtures.tones(development.apply(to: picture))
+            let expected = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: picture))
+            XCTAssertEqual(developed.values, expected.values, "\(stock.name) develops as it does with the shared reader")
+            _ = try development.apply(to: picture)
+            XCTAssertEqual(asked, 2, "\(stock.name): a kernel that proved itself is kept")
+        }
+    }
+
+    /// Readers asking for the kernel at once make one between them, and each of them gets it.
+    func testReadersAskingAtOnceMakeOneKernel() throws {
+        try requireTetrahedralReader()
+        var asked = 0
+        let reader = TableReading { asked += 1; return TableReading.provedKernel() }
+        DispatchQueue.concurrentPerform(iterations: 8) { _ in XCTAssertNotNil(reader.kernel) }
+        XCTAssertEqual(asked, 1)
+    }
+
+    /// Each generator's neutral values through the same steps, for every one a phone picture can reach (its white is
+    /// 3.85 stops over gray), within the generator's tolerance of 0.02 and within 0.01 of its exact function; and a
+    /// neutral ramp of phone tones never reverses.
+    func testThePipelineGivesTheNeutralValuesTheGeneratorStates() throws {
+        try requireTetrahedralReader()
+        for stock in Self.stocks {
+            for (stops, stated) in stock.colors.sanity where Double(stops)! < 4 {
+                // The 16mm's stated shadows are opened by the density range the captain chose.
+                let expected = Self.opened(stock, stops) ? stock.colors.sanityApplied![stops]! : stated
+                // The phone tone whose scene light is that many stops from middle gray: its white for 3.85 stops.
+                let scene = 0.18 * pow(2, Double(stops)!)
+                let tone = Double(stops)! > 3 ? 1 : FilmLook.NegativeFilm.displayTone(scene)
+                let level = (tone * 255).rounded() / 255
+                let exact = stock.film.developed(display: gray(level))
+                let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(
+                    to: Fixtures.even(tone: level, colorSpace: stock.capture)))
+                let pixel = developed.pixel(x: 8, y: 8)
+                for (channel, wanted) in [exact.red, exact.green, exact.blue].enumerated() {
+                    XCTAssertEqual(pixel[channel], wanted, accuracy: 0.01, "\(stock.name): \(stops) stops, channel \(channel)")
+                    // The phone's tone is the nearest of its 256 to the stated light, a little off it in deep shadow.
+                    XCTAssertEqual(pixel[channel], expected[channel], accuracy: 0.02, "\(stock.name): \(stops) stops, channel \(channel)")
+                }
+            }
+            var bytes = [UInt8](repeating: 255, count: 256 * 4 * 4)
+            for y in 0..<4 { for x in 0..<256 { for channel in 0..<3 { bytes[(y * 256 + x) * 4 + channel] = UInt8(x) } } }
+            let ramp = CIImage(bitmapData: Data(bytes), bytesPerRow: 256 * 4, size: CGSize(width: 256, height: 4), format: .RGBA8,
+                               colorSpace: stock.capture)
+            let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: ramp))
+            for x in 1..<256 {
+                for channel in 0..<3 {
+                    XCTAssertGreaterThanOrEqual(developed.pixel(x: x, y: 2)[channel], developed.pixel(x: x - 1, y: 2)[channel] - 0.0005,
+                                                "\(stock.name): tone \(x), channel \(channel)")
+                }
+            }
+        }
+    }
+}
+
+/// Fixture files and the pictures tests make and read.
+enum Fixtures {
+    static func url(_ path: String) -> URL {
+        Bundle.module.url(forResource: "Fixtures", withExtension: nil)!.appendingPathComponent(path)
+    }
+
+    /// A developed picture's display tones (sRGB), unrounded, rows from the top.
+    struct Tones {
+        let width: Int, height: Int
+        let values: [Float]
+
+        func pixel(x: Int, y: Int) -> [Double] {
+            let offset = (y * width + x) * 4
+            return [Double(values[offset]), Double(values[offset + 1]), Double(values[offset + 2])]
+        }
+    }
+
+    static func tones(_ image: CIImage) throws -> Tones {
+        let width = Int(image.extent.width), height = Int(image.extent.height)
+        var values = [Float](repeating: 0, count: width * height * 4)
+        // Core Image writes a bitmap's rows from the top of the picture.
+        CIContext(options: [.cacheIntermediates: false]).render(
+            image, toBitmap: &values, rowBytes: width * 16, bounds: CGRect(x: 0, y: 0, width: width, height: height),
+            format: .RGBAf, colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!)
+        return Tones(width: width, height: height, values: values)
+    }
+
+    /// An even picture of one display tone, on sRGB's primaries unless another space is given.
+    static func even(tone: Double, width: Int = 16, height: Int = 16,
+                     colorSpace: CGColorSpace = CGColorSpace(name: CGColorSpace.sRGB)!) -> CIImage {
+        var bytes = [UInt8](repeating: 255, count: width * height * 4)
+        for index in stride(from: 0, to: bytes.count, by: 4) { for channel in 0..<3 { bytes[index + channel] = UInt8((tone * 255).rounded()) } }
+        return CIImage(bitmapData: Data(bytes), bytesPerRow: width * 4, size: CGSize(width: width, height: height), format: .RGBA8,
+                       colorSpace: colorSpace)
+    }
+
+    /// A color table file (.cube): its tones a side and its colors, red varying fastest.
+    static func table(_ path: String) throws -> (side: Int, tones: [FilmLook.RGB]) {
+        var side = 0
+        var tones: [FilmLook.RGB] = []
+        for line in try String(contentsOf: url(path), encoding: .utf8).split(separator: "\n") {
+            let parts = line.split(separator: " ")
+            if parts.first == "LUT_3D_SIZE" { side = Int(parts[1])! }
+            if parts.count == 3, let red = Double(parts[0]), let green = Double(parts[1]), let blue = Double(parts[2]) {
+                tones.append(FilmLook.RGB(red, green, blue))
+            }
+        }
+        XCTAssertEqual(tones.count, side * side * side)
+        return (side, tones)
+    }
+
+    /// A fixture picture, as the phone would deliver it.
+    static func picture(_ path: String) throws -> CIImage {
+        try XCTUnwrap(CIImage(contentsOf: url(path)))
+    }
+}

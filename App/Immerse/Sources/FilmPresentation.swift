@@ -64,17 +64,20 @@ extension CameraPackage {
         }
     }
 
-    /// How a Film from this Camera develops, one Load Film row per line; the 6×6 gives each Film Stock's look a line of
-    /// its own. Names a look only in descriptive terms, never a maker or a film.
-    var lookLines: [String] {
+    /// How a Film from this Camera develops on the chosen Film Stock, one Load Film row per line; the 6×6 gives each
+    /// Film Stock's look a line of its own, and the 16mm names the glow of the stock chosen (PRD 2.1 section 6.2).
+    /// Names a look only in descriptive terms, never a maker or a film.
+    func lookLines(filmStock: FilmStock?) -> [String] {
         switch id {
         case .disposable1990s: ["Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
-        case .instant1970s: ["Brilliant, warm, saturated color and soft detail"]
+        case .instant1970s: ["Warm, faded color, soft contrast and soft detail"]
         case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
                                 "Black and white: high contrast and distinct grain"]
-        case .super8HomeMovie: ["Strong, rich color, fine grain, an unsteady frame, flicker, dust and hair"]
-        // Main's 16mm line until CAM-17 renders the glow per Film Stock (Evidence/NativeApp/prd-2-slice-3-film-stock.md).
-        case .cinema16mm: ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"]
+        case .super8HomeMovie: ["Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
+        case .cinema16mm:
+            filmStock == .blackAndWhite
+                ? ["Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"]
+                : ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"]
         }
     }
 

@@ -9,6 +9,7 @@ import XCTest
 
 @MainActor final class DevelopmentProcessExitTests: XCTestCase {
     func testEveryCameraAtEveryExistingDevelopmentBoundary() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in CameraID.allCases {
             for boundary in ExitBoundary.allCases {
                 let fixture = try await Fixture(camera: camera, label: boundary.rawValue)
@@ -70,6 +71,7 @@ import XCTest
     }
 
     func testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in [CameraID.super8HomeMovie, .cinema16mm] {
             let fixture = try await Fixture(camera: camera, label: "discard-reassembly", count: 2)
             let owner = try FilmProcessor(root: fixture.root)

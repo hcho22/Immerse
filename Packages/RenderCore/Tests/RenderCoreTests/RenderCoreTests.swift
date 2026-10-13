@@ -9,7 +9,7 @@ final class RenderCoreTests: XCTestCase {
         _ = try film.recordSavedPhoto()
         try film.completeEarly()
 
-        var run = DevelopmentRun(filmID: film.id)
+        var run = DevelopmentRun(film: film)
         try run.assignMissingTreatments(for: film)
         let firstAssignments = run.assignments
         try run.markRendered(sequenceNumber: 1, in: film)
@@ -25,7 +25,7 @@ final class RenderCoreTests: XCTestCase {
 
     func testDevelopmentRunRejectsEmptyFilm() throws {
         let film = try Film(camera: CameraCatalog.disposable1990s, title: "Disposable - Roll #01")
-        var run = DevelopmentRun(filmID: film.id)
+        var run = DevelopmentRun(film: film)
 
         XCTAssertThrowsError(try run.assignMissingTreatments(for: film)) { error in
             XCTAssertEqual(error as? DevelopmentRunError, .emptyFilm)
@@ -39,7 +39,7 @@ final class RenderCoreTests: XCTestCase {
             _ = try film.recordSavedPhoto()
         }
 
-        var run = DevelopmentRun(filmID: film.id)
+        var run = DevelopmentRun(film: film)
         try run.assignMissingTreatments(for: film)
 
         XCTAssertEqual(run.assignments[7]?.seed, 0xdfa3c52769cb8401)

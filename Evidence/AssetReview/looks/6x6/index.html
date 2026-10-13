@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6×6 Medium Format Look Board</title>
+<style>
+  :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff;
+          --surround: #8a8f8c; }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
+  header, main, footer { width: min(1320px, 100%); margin: auto; padding: 24px; }
+  header { padding-bottom: 0; }
+  .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
+  h1 { margin: 0; font: 38px/1.15 Georgia, serif; }
+  h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
+  h3 { font: 21px/1.3 Georgia, serif; margin: 28px 0 8px; }
+  h4 { font-size: 17px; margin: 0 0 8px; }
+  p { margin: 8px 0 14px; max-width: 90ch; }
+  .muted, small { color: var(--muted); }
+  .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
+  .facts { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 5fr); gap: 10px 24px; margin: 18px 0; }
+  dt { font-weight: 650; } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  dd p { margin: 0 0 10px; } dd p:last-child { margin-bottom: 0; }
+  ul.judge { margin: 6px 0 0; padding-left: 20px; max-width: 90ch; }
+  section { padding: 28px 0; border-top: 1px solid var(--line); margin-top: 28px; }
+  .scene { margin: 0 0 36px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  figure { margin: 0; min-width: 0; }
+  figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
+  .pair figure img, .pair figure video { height: 520px; }
+  .row.four figure img, .row.four figure video { height: 320px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
+  figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--green); border: 1px solid var(--green);
+         border-radius: 999px; padding: 1px 8px; margin-right: 6px; }
+  .refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  pre { background: #fff; border: 1px solid var(--line); padding: 14px; overflow-x: auto; font: 13px/1.5 ui-monospace, monospace; }
+  a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .decision { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; max-width: 760px; }
+  .decision label { display: flex; gap: 10px; align-items: center; min-height: 44px; font-weight: 600; }
+  .decision input[type=radio] { width: 20px; height: 20px; accent-color: var(--green); }
+  .decision textarea { width: 100%; min-height: 120px; font: inherit; padding: 10px; border: 1px solid #87958d; border-radius: 6px; }
+  .decision button { min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650; color: #fff; background: var(--green);
+                     border: 0; border-radius: 6px; margin-top: 12px; cursor: pointer; }
+  .queued { color: var(--green); font-weight: 650; margin-left: 12px; }
+  footer { border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 900px) {
+    header, main, footer { padding: 20px 16px; }
+    h1 { font-size: 30px; }
+    .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
+    .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<header><p class="eyebrow">Film Journal / Look review board final / 2026-10-12</p>
+<h1>6×6 Medium Format</h1>
+<p class="muted">Each scene developed by the app's own renderer (treatment version film-look-3) beside the phone capture it started from and photographs made with the Camera's Format Reference.</p>
+<p class="notice"><strong>Approved by the captain on 2026-10-12 (&quot;everything looks good&quot;): the color Film Stock develops with the look in his own files, a lab scan with lifted blacks (ADR 0016); the black-and-white Film Stock as tuned on this board.</strong></p>
+<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference image stay internal and never ship in the app. Reference images are public-domain or openly licensed photographs credited under each one; many are scans of surviving prints or reels, which have aged, so judge them for the format's character as it was new. The test scenes are modern digital photographs, not captures from an iPhone running the app, so capture behavior (fixed exposure, the real flash) is not shown.</p>
+<dl class="facts"><dt>Format Reference</dt><dd>Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 (color Film Stock) or Kodak Tri-X 400 (black-and-white Film Stock)</dd><dt>PRD 2.1 section 6</dt><dd>Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur.</dd><dt>What to judge</dt><dd><ul class="judge"><li>Color stock: natural, warm color with flattering skin tones; very fine grain; gentle contrast.</li><li>Black-and-white stock: high contrast, distinct grain, rich blacks and clean whites.</li><li>Sharp to the corners: no added softness, no synthesized background blur.</li></ul></dd></dl></header>
+<main>
+<section><h2>Color Film Stock</h2>
+<h3>Side by side with the captain's reference pictures</h3><p class="muted">Supplied by the captain on 2026-10-11 as the target for this Film Stock. They are from a public forum post and are not openly licensed, so they are shown from where they are published and are not copied into the repository.</p>
+<div class="row two pair scene"><figure><img src="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-oit8060t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=a009aa2d1bffd385a0afa9836eb50aff6abb3aca" alt="Captain&#x27;s reference: sheep on a hillside" referrerpolicy="no-referrer"><figcaption><strong>Captain&#x27;s reference: sheep on a hillside</strong><br><small><a href="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-oit8060t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=a009aa2d1bffd385a0afa9836eb50aff6abb3aca">where it is published</a> · not openly licensed, linked only</small></figcaption></figure>
+<figure><img src="color-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Pasture gate in Scotland (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-46bkz40t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=37a1d80d126aab59acb88e5515a26c27c3b68262" alt="Captain&#x27;s reference: couple on a headland" referrerpolicy="no-referrer"><figcaption><strong>Captain&#x27;s reference: couple on a headland</strong><br><small><a href="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-46bkz40t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=37a1d80d126aab59acb88e5515a26c27c3b68262">where it is published</a> · not openly licensed, linked only</small></figcaption></figure>
+<figure><img src="color-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Natural-light portrait: older woman, light skin</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-7gc0g80t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=7d79f1a921618c04ff7e8dd730f16198d305aa21" alt="Captain&#x27;s reference: window onto a loch" referrerpolicy="no-referrer"><figcaption><strong>Captain&#x27;s reference: window onto a loch</strong><br><small><a href="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-7gc0g80t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=7d79f1a921618c04ff7e8dd730f16198d305aa21">where it is published</a> · not openly licensed, linked only</small></figcaption></figure>
+<figure><img src="color-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Backlit interior with bright windows (iPhone 13 Pro)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-0l63a50t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=4e8ac3e4965bca9fbbd533116004c51eea3517bf" alt="Captain&#x27;s reference: flowers on the water" referrerpolicy="no-referrer"><figcaption><strong>Captain&#x27;s reference: flowers on the water</strong><br><small><a href="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-0l63a50t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=4e8ac3e4965bca9fbbd533116004c51eea3517bf">where it is published</a> · not openly licensed, linked only</small></figcaption></figure>
+<figure><img src="color-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-lznb950t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=ba04a973ea5847f8f8d607c67e2a317dae91ba2c" alt="Captain&#x27;s reference: cliff and boulders" referrerpolicy="no-referrer"><figcaption><strong>Captain&#x27;s reference: cliff and boulders</strong><br><small><a href="https://preview.redd.it/500cm-w-80mm-planar-lens-on-kodak-portra-400-in-the-isle-of-v0-lznb950t2tef1.jpg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=ba04a973ea5847f8f8d607c67e2a317dae91ba2c">where it is published</a> · not openly licensed, linked only</small></figcaption></figure>
+<figure><img src="color-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure></div>
+<h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference format beside a scene of the same kind developed by the app. The subjects differ; judge color, contrast, grain and the format's imperfections.</p>
+<div class="row two pair scene"><figure><img src="ref-6x6-color-02.jpg" alt="Bronica SQ-A 6x6, Kodak Portra 400: two market women (Porto)"><figcaption><strong>Reference:</strong> Bronica SQ-A 6x6, Kodak Portra 400: two market women (Porto)<br><small>Sergio Miranda · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:What_A_Long_A_Funny_Chat_We_Had_With_Those_Ladies_(121962271).jpeg">source</a></small></figcaption></figure>
+<figure><img src="color-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Natural-light portrait: two women, medium-brown skin</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-6x6-color-03.jpg" alt="Rolleicord V 6x6, Kodak Portra 400: couple portrait (Porto)"><figcaption><strong>Reference:</strong> Rolleicord V 6x6, Kodak Portra 400: couple portrait (Porto)<br><small>Sergio Miranda from Maia, Portugal · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:A_nice_and_beautifull_couple..._(19151315240).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Natural-light portrait: older woman, light skin</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-6x6-color-04.jpg" alt="Hasselblad 500C, Kodak Portra 400: factory chimney and sky"><figcaption><strong>Reference:</strong> Hasselblad 500C, Kodak Portra 400: factory chimney and sky<br><small>ejstanz · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:White_smoke_from_Oji_Paper_Tomakomai_Mill_chimney.jpg">source</a></small></figcaption></figure>
+<figure><img src="color-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure></div>
+<h3>Every scene</h3>
+<div class="scene"><h4><span class="tag">Day</span>Sunny beach boardwalk (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>TheWxResearcher · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Virginia_Beach_Oceanfront_2024-08-31.jpg">source</a></small></figcaption></figure>
+<figure><img src="color-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101100</small></figcaption></figure>
+<figure><img src="color-day-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></figcaption></figure>
+<figure><img src="color-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101101</small></figcaption></figure>
+<figure><img src="color-day-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>Pasture gate in Scotland (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-meadow-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pasture_gate.jpg">source</a></small></figcaption></figure>
+<figure><img src="color-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101102</small></figcaption></figure>
+<figure><img src="color-meadow-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></figcaption></figure>
+<figure><img src="color-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101103</small></figcaption></figure>
+<figure><img src="color-skin-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two women, medium-brown skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Moheen Reeyad · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Two_Bangladeshi_smiling_women_(01).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101104</small></figcaption></figure>
+<figure><img src="color-skin-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight)</h4>
+<div class="row ">
+<figure><img src="scene-skin-04.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></figcaption></figure>
+<figure><img src="color-skin-04.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101105</small></figcaption></figure>
+<figure><img src="color-skin-04-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Group toast lit by on-camera flash (compact camera, 2008)</h4>
+<div class="row ">
+<figure><img src="scene-flash-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Richie Diesterheft from Chicago, IL, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Graduation_Cheers!_(2658114583).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101106</small></figcaption></figure>
+<figure><img src="color-flash-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Night portrait with direct flash outdoors (compact camera, 2006)</h4>
+<div class="row ">
+<figure><img src="scene-flash-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Andrew Malone · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kate_at_night_(356377859).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101107</small></figcaption></figure>
+<figure><img src="color-flash-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7)</h4>
+<div class="row ">
+<figure><img src="scene-night-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101108</small></figcaption></figure>
+<figure><img src="color-night-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></figcaption></figure>
+<figure><img src="color-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101109</small></figcaption></figure>
+<figure><img src="color-highlights-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Sun in frame over the sea with glints (iPhone 14 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>&quot;dronepicr&quot; · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Sunset_over_Kontogialos_Beach_in_Corfu,_Greece_(53698254280).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-highlights-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101110</small></figcaption></figure>
+<figure><img src="color-highlights-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Night street with bright signage, Akihabara (iPhone 15 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Stephen Kelly from San Francisco, CA, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Akihabara_Radio_Kaikan_Shopping_Building_(53416976349).jpg">source</a></small></figcaption></figure>
+<figure><img src="color-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101111</small></figcaption></figure>
+<figure><img src="color-highlights-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+</section>
+<section><h2>Black and white Film Stock</h2>
+<h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference format beside a scene of the same kind developed by the app. The subjects differ; judge color, contrast, grain and the format's imperfections.</p>
+<div class="row two pair scene"><figure><img src="ref-6x6-bw-06.jpg" alt="Hasselblad, Kodak Tri-X 400: market ladies in Vietnam"><figcaption><strong>Reference:</strong> Hasselblad, Kodak Tri-X 400: market ladies in Vietnam<br><small>Oscar Saunders · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Market_Ladies_(234008385).jpeg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-6x6-bw-01.jpg" alt="Rolleiflex 2.8C, Kodak Tri-X 400: Tokyo street with motorcycle"><figcaption><strong>Reference:</strong> Rolleiflex 2.8C, Kodak Tri-X 400: Tokyo street with motorcycle<br><small>Osamu Kaneko from Tokyo, Japan · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Tokyo_-_Flickr_-_osamukaneko_(7).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Night street with bright signage, Akihabara (iPhone 15 Pro)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-6x6-bw-05.jpg" alt="Hasselblad 503CW, Kodak Tri-X 400: glass in low light"><figcaption><strong>Reference:</strong> Hasselblad 503CW, Kodak Tri-X 400: glass in low light<br><small>Peng Chen · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Cerveza_(6512753205).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Dim night street with street lamps, no flash (Google Pixel 7)</figcaption></figure></div>
+<h3>Every scene</h3>
+<div class="scene"><h4><span class="tag">Day</span>Sunny beach boardwalk (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>TheWxResearcher · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Virginia_Beach_Oceanfront_2024-08-31.jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101100</small></figcaption></figure>
+<figure><img src="blackAndWhite-day-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101101</small></figcaption></figure>
+<figure><img src="blackAndWhite-day-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>Pasture gate in Scotland (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-meadow-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pasture_gate.jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101102</small></figcaption></figure>
+<figure><img src="blackAndWhite-meadow-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101103</small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two women, medium-brown skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Moheen Reeyad · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Two_Bangladeshi_smiling_women_(01).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101104</small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight)</h4>
+<div class="row ">
+<figure><img src="scene-skin-04.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-04.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101105</small></figcaption></figure>
+<figure><img src="blackAndWhite-skin-04-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Group toast lit by on-camera flash (compact camera, 2008)</h4>
+<div class="row ">
+<figure><img src="scene-flash-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Richie Diesterheft from Chicago, IL, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Graduation_Cheers!_(2658114583).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101106</small></figcaption></figure>
+<figure><img src="blackAndWhite-flash-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Night portrait with direct flash outdoors (compact camera, 2006)</h4>
+<div class="row ">
+<figure><img src="scene-flash-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Andrew Malone · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kate_at_night_(356377859).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101107</small></figcaption></figure>
+<figure><img src="blackAndWhite-flash-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7)</h4>
+<div class="row ">
+<figure><img src="scene-night-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101108</small></figcaption></figure>
+<figure><img src="blackAndWhite-night-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101109</small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Sun in frame over the sea with glints (iPhone 14 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>&quot;dronepicr&quot; · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Sunset_over_Kontogialos_Beach_in_Corfu,_Greece_(53698254280).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101110</small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Night street with bright signage, Akihabara (iPhone 15 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Stephen Kelly from San Francisco, CA, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Akihabara_Radio_Kaikan_Shopping_Building_(53416976349).jpg">source</a></small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101111</small></figcaption></figure>
+<figure><img src="blackAndWhite-highlights-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+</section>
+<section><h2>All Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format Reference or the closest openly licensed equivalent, as credited. Judge the character, not the subject.</p>
+<h3>6×6 on the color stock</h3><div class="refs">
+<figure><img src="ref-6x6-color-01.jpg" alt="Hasselblad, Kodak Portra 400: Hanoi street barber" loading="lazy"><figcaption><strong>Hasselblad, Kodak Portra 400: Hanoi street barber</strong><br><small>Oscar Saunders · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Hanoi_Haircut_(229287633).jpeg">source</a></small><br><small>Street barber cutting a customer&#x27;s hair under a parasol in Hanoi; warm mixed daylight, natural skin tones and the soft, low-contrast Portra palette. Fresh modern scan. 500px description: Portra 400, tags hasselblad / portra 400. Hasselblad model not stated. Commons file: &quot;Hanoi Haircut (229287633).jpeg&quot;.</small></figcaption></figure>
+<figure><img src="ref-6x6-color-02.jpg" alt="Bronica SQ-A 6x6, Kodak Portra 400: two market women (Porto)" loading="lazy"><figcaption><strong>Bronica SQ-A 6x6, Kodak Portra 400: two market women (Porto)</strong><br><small>Sergio Miranda · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:What_A_Long_A_Funny_Chat_We_Had_With_Those_Ladies_(121962271).jpeg">source</a></small><br><small>Two older women standing in an arcade beside a fruit crate; excellent skin-tone and pastel-colour reference with gentle contrast and fine grain. Fresh modern scan. Camera Bronica SQ-A, lens Zenzanon-S 50 mm, film Kodak Portra 400 (photographer&#x27;s description). Bronica is a 6x6 SLR, used because Hasselblad portrait examples are scarce. Commons file: &quot;What A Long A Funny Chat We Had With Those Ladies (121962271).jpeg&quot;.</small></figcaption></figure>
+<figure><img src="ref-6x6-color-03.jpg" alt="Rolleicord V 6x6, Kodak Portra 400: couple portrait (Porto)" loading="lazy"><figcaption><strong>Rolleicord V 6x6, Kodak Portra 400: couple portrait (Porto)</strong><br><small>Sergio Miranda from Maia, Portugal · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:A_nice_and_beautifull_couple..._(19151315240).jpg">source</a></small><br><small>Close two-person portrait in soft shade against a light wall: skin tones, dark hair and leather, low contrast and open shadows typical of Portra. Fresh modern scan. Camera Rolleicord V (6x6 TLR), Schneider Xenar 75 mm, Kodak Portra 400 (photographer&#x27;s description). Commons file: &quot;A nice and beautifull couple... (19151315240).jpg&quot;.</small></figcaption></figure>
+<figure><img src="ref-6x6-color-04.jpg" alt="Hasselblad 500C, Kodak Portra 400: factory chimney and sky" loading="lazy"><figcaption><strong>Hasselblad 500C, Kodak Portra 400: factory chimney and sky</strong><br><small>ejstanz · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:White_smoke_from_Oji_Paper_Tomakomai_Mill_chimney.jpg">source</a></small><br><small>Paper-mill chimneys with white smoke against a deep blue sky, full 6x6 frame with the black film border. Good for Portra&#x27;s blues, highlight roll-off in white smoke and grain at high resolution. Fresh scan (Epson V750). Hasselblad 500C, Planar 80 mm f/2.8, Portra 400, developed by a Tokyo lab (photographer&#x27;s description). Original is 8200 x 8200; local copy is the 1920 px Commons thumbnail. Commons file: &quot;White smoke from Oji Paper Tomakomai Mill chimney.jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+<figure><img src="ref-6x6-color-05.jpg" alt="Kiev 88 6x6, Kodak Portra 400: bubble maker in a Porto street" loading="lazy"><figcaption><strong>Kiev 88 6x6, Kodak Portra 400: bubble maker in a Porto street</strong><br><small>Sergio Miranda · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:The_Giant_Bubble_Maker_(165918291).jpeg">source</a></small><br><small>Street performer making giant soap bubbles in front of coloured doors with passers-by: varied saturated colours, skin and a bright daylight street. Fresh modern scan. Camera Kiev 88CM (6x6), Arsat C 80 mm, Kodak Portra 400 (photographer&#x27;s description). Commons file: &quot;The Giant Bubble Maker (165918291).jpeg&quot;.</small></figcaption></figure>
+<figure><img src="ref-6x6-color-06.jpg" alt="Rolleiflex 2.8F 6x6, Kodak Portra 400: smoky sunrise, Yosemite" loading="lazy"><figcaption><strong>Rolleiflex 2.8F 6x6, Kodak Portra 400: smoky sunrise, Yosemite</strong><br><small>Andrew Lambeth from San Francisco · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smokey_Sunrise_-_Flickr_-_walnerz.jpg">source</a></small><br><small>Sunrise over the Merced River with smoke haze and mirror reflections: bright pink-orange sky highlights against deep blue shadows, showing Portra&#x27;s highlight latitude. The colour is strong and may include the photographer&#x27;s scan adjustments. Rolleiflex 2.8F, Planar 80 mm, Portra 400, developed in CineStill C-41 (photographer&#x27;s description). Commons file: &quot;Smokey Sunrise - Flickr - walnerz.jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+</div>
+<h3>6×6 on the black-and-white stock</h3><div class="refs">
+<figure><img src="ref-6x6-bw-01.jpg" alt="Rolleiflex 2.8C, Kodak Tri-X 400: Tokyo street with motorcycle" loading="lazy"><figcaption><strong>Rolleiflex 2.8C, Kodak Tri-X 400: Tokyo street with motorcycle</strong><br><small>Osamu Kaneko from Tokyo, Japan · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Tokyo_-_Flickr_-_osamukaneko_(7).jpg">source</a></small><br><small>Tokyo street corner with a motorcyclist, crossing stripes and lit shop sign: punchy contrast, deep blacks and visible Tri-X grain. Fresh modern scan. Rolleiflex 2.8C Xenotar 80 mm, Kodak Tri-X 400 (photographer&#x27;s description). 6x6 TLR. Commons file: &quot;Tokyo - Flickr - osamukaneko (7).jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+<figure><img src="ref-6x6-bw-02.jpg" alt="Hasselblad 500 C/M, Kodak Tri-X 400: patio table in rain" loading="lazy"><figcaption><strong>Hasselblad 500 C/M, Kodak Tri-X 400: patio table in rain</strong><br><small>Tom Mills · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Snow,_ice_and_rain_(50889635622).jpg">source</a></small><br><small>Wet patio table, chairs and umbrella after snow and rain: full tonal scale from bright sky to dark wood, medium-format Tri-X grain. Fresh scan. Hasselblad 500 C/M, Zeiss Planar 80 mm, Tri-X 400, TMax developer (photographer&#x27;s description). Commons file: &quot;Snow, ice and rain (50889635622).jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+<figure><img src="ref-6x6-bw-03.jpg" alt="Hasselblad 500 C/M, Kodak Tri-X 400: kitten in afternoon sun" loading="lazy"><figcaption><strong>Hasselblad 500 C/M, Kodak Tri-X 400: kitten in afternoon sun</strong><br><small>Tom Mills · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Late_afternoon_nap_(50890661571).jpg">source</a></small><br><small>Kitten asleep on a bed in soft window light: smooth mid-tones, shallow depth of field and gentle highlight roll-off. Fresh scan. Hasselblad 500 C/M, Zeiss 80 mm, Tri-X 400, TMax developer (photographer&#x27;s description). Commons file: &quot;Late afternoon nap (50890661571).jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+<figure><img src="ref-6x6-bw-04.jpg" alt="Hasselblad, Kodak Tri-X 400: renovator in Vietnam" loading="lazy"><figcaption><strong>Hasselblad, Kodak Tri-X 400: renovator in Vietnam</strong><br><small>Oscar Saunders · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Renovator_(234127629).jpeg">source</a></small><br><small>Worker on a balcony of a white building with tangled cables: bright daylight highlights, deep shadow and a person, showing Tri-X contrast and grain. Fresh scan. 500px description: Tri-X 400; tags hasselblad, monochrome, film photography. Hasselblad model not stated. Commons file: &quot;Renovator (234127629).jpeg&quot;.</small></figcaption></figure>
+<figure><img src="ref-6x6-bw-05.jpg" alt="Hasselblad 503CW, Kodak Tri-X 400: glass in low light" loading="lazy"><figcaption><strong>Hasselblad 503CW, Kodak Tri-X 400: glass in low light</strong><br><small>Peng Chen · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Cerveza_(6512753205).jpg">source</a></small><br><small>Beer glass on a table with out-of-focus lights: low-light Tri-X at f/4, 1/15 s, with glowing bokeh highlights and soft grain. Fresh scan. Hasselblad 503CW, CFE 80 mm, Tri-X 400, HC-110 and TMax developer, Epson V600 scan (photographer&#x27;s description). Commons file: &quot;Cerveza (6512753205).jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
+<figure><img src="ref-6x6-bw-06.jpg" alt="Hasselblad, Kodak Tri-X 400: market ladies in Vietnam" loading="lazy"><figcaption><strong>Hasselblad, Kodak Tri-X 400: market ladies in Vietnam</strong><br><small>Oscar Saunders · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Market_Ladies_(234008385).jpeg">source</a></small><br><small>Busy street market with people and buildings: wide tonal range. The scan looks strongly sharpened and contrast-boosted (local-contrast processing), so judge grain and micro-contrast with care. 500px description: Tri-X 400; tags hasselblad. Hasselblad model not stated. Commons file: &quot;Market Ladies (234008385).jpeg&quot;.</small></figcaption></figure>
+</div>
+</section>
+<section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each Camera's and Film Stock's look is set. Spatial values are fractions of the picture's long edge.</p>
+<pre><code>    /// 6×6 Medium Format, color Film Stock. Format Reference: a Hasselblad 500C with its 80mm lens and Kodak Portra
+    /// 400, scanned as a modern lab scans the negative. This is the look the captain asked to have applied on
+    /// 2026-10-12: every constant here is his generator&#x27;s &quot;scan&quot; look and section 5 of his spec
+    /// (`Probes/FilmLookCalibration/6x6`), which `NegativeFilmTests` and `ScenePassesTests` hold this to, and the
+    /// picture is read from his own table of 33 tones a side. The negative&#x27;s layer contrasts come from the
+    /// manufacturer&#x27;s curve as digitized in spectral_film_lut; the rest was fitted to that simulation and then
+    /// finished by hand. Gentle contrast with slightly lifted, very slightly cool blacks, highlights that keep detail
+    /// five stops over gray, cream-warm grays, quiet reds, pastel blues leaning to cyan and softer greens. Very fine
+    /// grain and a mild lens vignette; no softening, halation, weave, flicker, dust or hair, and focus is optical
+    /// only, so nothing blurs the background (PRD 2.1 sections 6.1 and FR-04).
+    static let mediumFormatColor = Treatment(
+        emulsion: .negative(NegativeFilm(
+            negativeGamma: RGB(0.556, 0.550, 0.641),
+            exposure: 0.25,
+            balance: RGB(1.025, 1.000, 0.955),
+            toe: -1.08,
+            crosstalk: [RGB(1.1919, -0.2500, 0.0581), RGB(0.1446, 0.6054, 0.2500), RGB(0.0511, -0.0468, 0.9957)],
+            output: .scan,
+            slope: RGB(3.90, 3.98, 3.31),
+            grayDensity: 0.80,
+            black: RGB(0.0015, 0.0015, 0.0017),
+            bands: [
+                NegativeFilm.Band(-3.29, 0.378, -0.018), NegativeFilm.Band(-2.41, -0.152, 0.009),
+                NegativeFilm.Band(4.97, -0.136, 0.012), NegativeFilm.Band(7.37, 0.289, 0.073),
+                NegativeFilm.Band(-3.30, 0.304, 0.008), NegativeFilm.Band(-7.28, -0.054, 0.017),
+                NegativeFilm.Band(-4.49, -0.153, 0.023)
+            ],
+            finish: [
+                NegativeFilm.Band(3.0, -0.280, 0), NegativeFilm.Band(0, 0.080, 0.030), NegativeFilm.Band(0, 0, 0),
+                NegativeFilm.Band(-8.0, -0.220, 0.060), NegativeFilm.Band(0, -0.250, 0), NegativeFilm.Band(0, -0.030, 0.030),
+                NegativeFilm.Band(0, 0, 0)
+            ],
+            highlightDesaturation: 0.25, shadowDesaturation: 0.15,
+            table: .appleLog(side: 33)
+        )),
+        lens: Lens(),
+        scene: ScenePasses(
+            referenceWidth: 3024,
+            capture: .displayP3,
+            vignette: ScenePasses.Vignette(amount: 0.18, start: 0.30, end: 1.0, power: 1.6),
+            grain: ScenePasses.Grain(deviation: RGB(0.0011, 0.0014, 0.0025), strength: 1.5, size: 0.00027,
+                                     secondOctaveSize: 2.5, secondOctaveWeight: 0.25, shared: 0.7)
+        )
+    )</code></pre>
+<pre><code>    /// 6×6 Medium Format, black-and-white Film Stock. Format Reference: the same camera with Kodak Tri-X 400. High
+    /// contrast with distinct grain, from a panchromatic silver layer (PRD 2.1 section 6.1).
+    static let mediumFormatBlackAndWhite = Treatment(
+        emulsion: .monochrome(MonochromeEmulsion(
+            spectral: RGB(0.30, 0.55, 0.15),
+            tone: ToneCurve(contrast: 1.5, midtones: 0.86, shoulder: 0.05, black: 0.004, white: 0.985),
+            grain: Grain(amplitude: 8, size: 0.0008)
+        )),
+        lens: Lens(softness: 0.0003, edgeDarkening: 0.2)
+    )</code></pre>
+</section>
+<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-6x6" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve"> Approve these values for the 6×6 Medium Format</label><label><input type="radio" name="decision" value="change"> Request changes</label><p><label for="notes" style="display:block">What should change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
+</main>
+<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>
+
+<script>
+function queueDecision(event) {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  const decision = form.get('decision');
+  if (!decision) return;
+  const notes = (form.get('notes') || '').trim();
+  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
+  const text = (decision === 'change' ? 'Change the 6×6 Medium Format look.' : chosen + ' (6×6 Medium Format).') + (notes ? ' ' + notes : '');
+  if (window.lavish) {
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-6x6',
+                                      data: { board: '6x6', decision: decision, notes: notes } });
+  }
+  document.getElementById('queued').hidden = false;
+}
+</script>
+</body>
+</html>

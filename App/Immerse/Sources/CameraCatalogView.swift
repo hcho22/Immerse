@@ -99,7 +99,7 @@ private struct LoadFilmView: View {
                         SegmentedChoice(label: "Film Stock", options: camera.filmStocks.map { ($0, $0.label) }, selection: $filmStock)
                     }
                 }
-                ForEach(camera.lookLines, id: \.self) { line in
+                ForEach(camera.lookLines(filmStock: camera.filmStocks.isEmpty ? nil : filmStock), id: \.self) { line in
                     Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
                 if let note = camera.viewfinderNote {

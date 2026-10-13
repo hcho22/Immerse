@@ -1,9 +1,13 @@
+import RenderCore
 import XCTest
 
 @MainActor final class DevelopmentProcessExitUITests: XCTestCase {
     func testPhotoExitAfterRendering() { run(camera: "disposable1990s", boundary: "afterRendering", count: 1) }
     func testInstantExitBeforeSecondReveal() { run(camera: "instant1970s", boundary: "beforeReveal", count: 2) }
-    func testMovieExitAfterClipPersistence() { run(camera: "cinema16mm", boundary: "afterPersistence", count: 1) }
+    func testMovieExitAfterClipPersistence() throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        run(camera: "cinema16mm", boundary: "afterPersistence", count: 1)
+    }
     func testMovieDiscardExitAfterAssignments() { run(camera: "super8HomeMovie", boundary: "afterAssignments", count: 2, discard: true) }
 
     private func run(camera: String, boundary: String, count: Int, discard: Bool = false) {

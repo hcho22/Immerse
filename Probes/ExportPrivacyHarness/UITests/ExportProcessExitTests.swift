@@ -1,8 +1,12 @@
+import RenderCore
 import XCTest
 
 @MainActor final class ExportProcessExitTests: XCTestCase {
     func testPhotoUnknownReplyReentry() { run(camera: "disposable1990s", sources: 1) }
-    func testMovieUnknownReplyReentry() { run(camera: "cinema16mm", sources: 2) }
+    func testMovieUnknownReplyReentry() throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        run(camera: "cinema16mm", sources: 2)
+    }
 
     private func run(camera: String, sources: Int) {
         continueAfterFailure = false

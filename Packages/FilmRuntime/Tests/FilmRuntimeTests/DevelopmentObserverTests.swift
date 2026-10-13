@@ -64,6 +64,7 @@ private actor DevelopmentGate {
     }
 
     func testDefaultAndEnabledCompletionAllCameras() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in CameraID.allCases {
             let fixture = try await Fixture(camera: camera, label: "default-and-enabled")
             try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
@@ -88,6 +89,7 @@ private actor DevelopmentGate {
     }
 
     func testThrowAtEveryBoundaryPreservesRecoveryAndRetiresJob() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in [CameraID.disposable1990s, .instant1970s, .cinema16mm] {
             for stage in stages(camera) {
                 let fixture = try await Fixture(camera: camera, label: "throw-\(stage)", declineOriginals: true)
@@ -113,6 +115,7 @@ private actor DevelopmentGate {
     }
 
     func testCancellationAfterPauseCannotPerformNextSideEffectAndCanReenterWithoutObserver() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let cases = stages(.disposable1990s).map { (CameraID.disposable1990s, $0) }
             + [(.cinema16mm, .afterRendering(sequence: 1)), (.cinema16mm, .afterPersistence(sequence: 1)),
                (.instant1970s, .beforeRevealOrCleanup(.instantReveal(sequence: 1))),
@@ -147,6 +150,7 @@ private actor DevelopmentGate {
     }
 
     func testDeleteWaitsAtEveryPhotoBoundaryAndPreventsRecreation() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let cases = stages(.disposable1990s).map { (CameraID.disposable1990s, $0) }
             + [(.cinema16mm, .afterPersistence(sequence: 1)),
                (.instant1970s, .beforeRevealOrCleanup(.instantReveal(sequence: 1)))]
@@ -207,6 +211,7 @@ private actor DevelopmentGate {
     }
 
     func testMovieReassemblyThrowRetiresStaleMovieAndReleasesRemovalGuard() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture(camera: .cinema16mm, label: "movie-reassembly", count: 2)
         try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
         let initial = try await fixture.snapshot("movie-before-discard")

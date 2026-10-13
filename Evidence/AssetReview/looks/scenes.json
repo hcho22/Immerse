@@ -1,0 +1,151 @@
+{
+ "photos": [
+  {
+   "id": "day-01",
+   "file": "scenes/scene-day-01.jpg",
+   "category": "day",
+   "credit": "scene-day-01"
+  },
+  {
+   "id": "day-02",
+   "file": "scenes/scene-day-02.jpg",
+   "category": "day",
+   "credit": "scene-day-02"
+  },
+  {
+   "id": "meadow-01",
+   "file": "scenes/scene-meadow-01.jpg",
+   "category": "day",
+   "credit": "scene-meadow-01"
+  },
+  {
+   "id": "skin-01",
+   "file": "scenes/scene-skin-01.jpg",
+   "category": "skin",
+   "credit": "scene-skin-01"
+  },
+  {
+   "id": "skin-03",
+   "file": "scenes/scene-skin-03.jpg",
+   "category": "skin",
+   "credit": "scene-skin-03"
+  },
+  {
+   "id": "skin-04",
+   "file": "scenes/scene-skin-04.jpg",
+   "category": "skin",
+   "credit": "scene-skin-04"
+  },
+  {
+   "id": "flash-01",
+   "file": "scenes/scene-flash-01.jpg",
+   "category": "flash",
+   "flash": true,
+   "credit": "scene-flash-01"
+  },
+  {
+   "id": "flash-02",
+   "file": "scenes/scene-flash-02.jpg",
+   "category": "flash",
+   "flash": true,
+   "credit": "scene-flash-02"
+  },
+  {
+   "id": "night-01",
+   "file": "scenes/scene-night-01.jpg",
+   "category": "night",
+   "credit": "scene-night-01"
+  },
+  {
+   "id": "highlights-01",
+   "file": "scenes/scene-highlights-01.jpg",
+   "category": "highlights",
+   "credit": "scene-highlights-01"
+  },
+  {
+   "id": "highlights-02",
+   "file": "scenes/scene-highlights-02.jpg",
+   "category": "highlights",
+   "credit": "scene-highlights-02"
+  },
+  {
+   "id": "highlights-03",
+   "file": "scenes/scene-highlights-03.jpg",
+   "category": "highlights",
+   "credit": "scene-highlights-03"
+  },
+  {
+   "id": "tungsten-skin-01",
+   "file": "scenes/scene-skin-01.jpg",
+   "category": "tungsten",
+   "light": "3200,0",
+   "credit": "scene-skin-01"
+  },
+  {
+   "id": "harbor-01",
+   "file": "scenes/scene-harbor-01.jpg",
+   "category": "day",
+   "credit": "scene-harbor-01",
+   "boards": [
+    "16mm"
+   ]
+  },
+  {
+   "id": "harbor-02",
+   "file": "scenes/scene-harbor-02.jpg",
+   "category": "day",
+   "credit": "scene-harbor-02",
+   "boards": [
+    "16mm"
+   ]
+  },
+  {
+   "id": "statue-01",
+   "file": "scenes/scene-statue-01.jpg",
+   "category": "day",
+   "credit": "scene-statue-01",
+   "boards": [
+    "16mm"
+   ]
+  },
+  {
+   "id": "alley-01",
+   "file": "scenes/scene-alley-01.jpg",
+   "category": "night",
+   "credit": "scene-alley-01",
+   "boards": [
+    "16mm"
+   ]
+  },
+  {
+   "id": "shade-harbor-02",
+   "file": "scenes/scene-harbor-02.jpg",
+   "category": "shade",
+   "light": "7000,0",
+   "credit": "scene-harbor-02",
+   "boards": [
+    "16mm"
+   ]
+  }
+ ],
+ "movies": [
+  {
+   "id": "clip-02-people-dancers",
+   "file": "scenes/clip-02-people-dancers.mov",
+   "category": "video",
+   "credit": "scene-video-02-people-dancers"
+  },
+  {
+   "id": "clip-01-day-pipes-drums",
+   "file": "scenes/clip-01-day-pipes-drums.mov",
+   "category": "video",
+   "credit": "scene-video-01-day-pipes-drums"
+  },
+  {
+   "id": "clip-03-night-fairground",
+   "file": "scenes/clip-03-night-fairground.mov",
+   "category": "video",
+   "credit": "scene-video-03-night-fairground"
+  }
+ ]
+}

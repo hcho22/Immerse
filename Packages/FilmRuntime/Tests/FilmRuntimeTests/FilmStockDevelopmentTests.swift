@@ -33,6 +33,7 @@ final class FilmStockDevelopmentTests: XCTestCase {
     private var clip: URL { fixtures.appendingPathComponent("synthetic-developed-movie.mov") }
 
     func testABlackAndWhiteSixBySixFilmDevelopsPrintsTonesAndExportsMonochrome() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let repository = try FilmRepository(rootURL: root)
         let mono = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Harbour", filmStock: .blackAndWhite)
         let color = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Garden", filmStock: .color)
@@ -136,8 +137,9 @@ final class FilmStockDevelopmentTests: XCTestCase {
         XCTAssertEqual(try repository.developmentRun(filmID: film.id)?.treatmentVersion, "film-look-1-provisional")
         let master = try Data(contentsOf: repository.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .master).url)
         XCTAssertEqual(master, try NativePhotoRenderer.develop(source: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"),
-            camera: CameraCatalog.mediumFormat6x6, seed: XCTUnwrap(repository.developmentRun(filmID: film.id)?.assignments[1]?.seed)),
-            "The color master, byte for byte")
+            camera: CameraCatalog.mediumFormat6x6, seed: XCTUnwrap(repository.developmentRun(filmID: film.id)?.assignments[1]?.seed),
+            treatmentVersion: "film-look-1-provisional"),
+            "The version 1 color master, byte for byte")
         XCTAssertEqual(try repository.photoPrintProcess(filmID: film.id), .color)
     }
 

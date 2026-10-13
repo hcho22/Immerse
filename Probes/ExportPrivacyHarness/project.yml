@@ -55,6 +55,7 @@ targets:
     sources: [UITests]
     dependencies:
       - target: ExportPrivacyHarness
+      - package: RenderCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.validation.ExportPrivacyHarness036.UITests

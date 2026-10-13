@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1990s Disposable Look Board</title>
+<style>
+  :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff;
+          --surround: #8a8f8c; }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
+  header, main, footer { width: min(1320px, 100%); margin: auto; padding: 24px; }
+  header { padding-bottom: 0; }
+  .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
+  h1 { margin: 0; font: 38px/1.15 Georgia, serif; }
+  h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
+  h3 { font: 21px/1.3 Georgia, serif; margin: 28px 0 8px; }
+  h4 { font-size: 17px; margin: 0 0 8px; }
+  p { margin: 8px 0 14px; max-width: 90ch; }
+  .muted, small { color: var(--muted); }
+  .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
+  .facts { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 5fr); gap: 10px 24px; margin: 18px 0; }
+  dt { font-weight: 650; } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  dd p { margin: 0 0 10px; } dd p:last-child { margin-bottom: 0; }
+  ul.judge { margin: 6px 0 0; padding-left: 20px; max-width: 90ch; }
+  section { padding: 28px 0; border-top: 1px solid var(--line); margin-top: 28px; }
+  .scene { margin: 0 0 36px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  figure { margin: 0; min-width: 0; }
+  figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
+  .pair figure img, .pair figure video { height: 520px; }
+  .row.four figure img, .row.four figure video { height: 320px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
+  figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--green); border: 1px solid var(--green);
+         border-radius: 999px; padding: 1px 8px; margin-right: 6px; }
+  .refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  pre { background: #fff; border: 1px solid var(--line); padding: 14px; overflow-x: auto; font: 13px/1.5 ui-monospace, monospace; }
+  a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .decision { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; max-width: 760px; }
+  .decision label { display: flex; gap: 10px; align-items: center; min-height: 44px; font-weight: 600; }
+  .decision input[type=radio] { width: 20px; height: 20px; accent-color: var(--green); }
+  .decision textarea { width: 100%; min-height: 120px; font: inherit; padding: 10px; border: 1px solid #87958d; border-radius: 6px; }
+  .decision button { min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650; color: #fff; background: var(--green);
+                     border: 0; border-radius: 6px; margin-top: 12px; cursor: pointer; }
+  .queued { color: var(--green); font-weight: 650; margin-left: 12px; }
+  footer { border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 900px) {
+    header, main, footer { padding: 20px 16px; }
+    h1 { font-size: 30px; }
+    .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
+    .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<header><p class="eyebrow">Film Journal / Look review board final / 2026-10-12</p>
+<h1>1990s Disposable</h1>
+<p class="muted">Each scene developed by the app's own renderer (treatment version film-look-3) beside the phone capture it started from and photographs made with the Camera's Format Reference.</p>
+<p class="notice"><strong>Approved by the captain on 2026-10-10 (&quot;fresh&quot;): the look inside ADR 0013.</strong></p>
+<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference image stay internal and never ship in the app. Reference images are public-domain or openly licensed photographs credited under each one; many are scans of surviving prints or reels, which have aged, so judge them for the format's character as it was new. The test scenes are modern digital photographs, not captures from an iPhone running the app, so capture behavior (fixed exposure, the real flash) is not shown.</p>
+<dl class="facts"><dt>Format Reference</dt><dd>Kodak Fun Saver 35mm single-use camera with flash, loaded with 800-speed color film</dd><dt>PRD 2.1 section 6</dt><dd>Borderless 3:2 picture with no date stamp. Warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges. No light leaks, red-eye, or dust and scratches. Fixed exposure: a dim scene without flash develops dark and grainy, and flash lights only nearby subjects.</dd><dt>What to judge</dt><dd><ul class="judge"><li>Color: warm and saturated like a 1990s minilab print, never yellowed or faded.</li><li>Grain: heavy, as 800-speed film shows it; heavier in the dim, unflashed scene.</li><li>Flash: harsh, direct, flat on the subject, with the background falling away.</li><li>Lens: soft, slightly darker corners from the plastic lens.</li><li>Nothing the format did not make: no light leaks, red-eye, dust or scratches.</li></ul></dd></dl></header>
+<main>
+<section><h2>Scenes</h2>
+<h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference format beside a scene of the same kind developed by the app. The subjects differ; judge color, contrast, grain and the format's imperfections.</p>
+<div class="row two pair scene"><figure><img src="ref-disposable-02.jpg" alt="Kodak FunSaver: indoor flash portrait at night"><figcaption><strong>Reference:</strong> Kodak FunSaver: indoor flash portrait at night<br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4134724861/">source</a></small></figcaption></figure>
+<figure><img src="look-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Group toast lit by on-camera flash (compact camera, 2008)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-disposable-01.jpg" alt="Kodak FunSaver: flash-filled daylight portrait (San Francisco)"><figcaption><strong>Reference:</strong> Kodak FunSaver: flash-filled daylight portrait (San Francisco)<br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4060607777/">source</a></small></figcaption></figure>
+<figure><img src="look-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Night portrait with direct flash outdoors (compact camera, 2006)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-disposable-04.jpg" alt="Kodak FunSaver: daylight street mural"><figcaption><strong>Reference:</strong> Kodak FunSaver: daylight street mural<br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4135484368/">source</a></small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure></div>
+<div class="row two pair scene"><figure><img src="ref-disposable-06.jpg" alt="Kodak single-use (Kodak Flash, 800 film): daylight classic car"><figcaption><strong>Reference:</strong> Kodak single-use (Kodak Flash, 800 film): daylight classic car<br><small>Matthew Paul Argall · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/79157069@N03/48305852536/">source</a></small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure></div>
+<h3>Every scene</h3>
+<div class="scene"><h4><span class="tag">Day</span>Sunny beach boardwalk (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>TheWxResearcher · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Virginia_Beach_Oceanfront_2024-08-31.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100900</small></figcaption></figure>
+<figure><img src="look-day-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-day-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100901</small></figcaption></figure>
+<figure><img src="look-day-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Day</span>Pasture gate in Scotland (iPhone 13)</h4>
+<div class="row ">
+<figure><img src="scene-meadow-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pasture_gate.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100902</small></figcaption></figure>
+<figure><img src="look-meadow-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100903</small></figcaption></figure>
+<figure><img src="look-skin-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two women, medium-brown skin</h4>
+<div class="row ">
+<figure><img src="scene-skin-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Moheen Reeyad · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Two_Bangladeshi_smiling_women_(01).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100904</small></figcaption></figure>
+<figure><img src="look-skin-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight)</h4>
+<div class="row ">
+<figure><img src="scene-skin-04.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></figcaption></figure>
+<figure><img src="look-skin-04.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100905</small></figcaption></figure>
+<figure><img src="look-skin-04-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Group toast lit by on-camera flash (compact camera, 2008)</h4>
+<div class="row ">
+<figure><img src="scene-flash-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Richie Diesterheft from Chicago, IL, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Graduation_Cheers!_(2658114583).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100906</small></figcaption></figure>
+<figure><img src="look-flash-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Flash</span>Night portrait with direct flash outdoors (compact camera, 2006)</h4>
+<div class="row ">
+<figure><img src="scene-flash-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Andrew Malone · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kate_at_night_(356377859).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100907</small></figcaption></figure>
+<figure><img src="look-flash-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7)</h4>
+<div class="row ">
+<figure><img src="scene-night-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100908</small></figcaption></figure>
+<figure><img src="look-night-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100909</small></figcaption></figure>
+<figure><img src="look-highlights-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Sun in frame over the sea with glints (iPhone 14 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>&quot;dronepicr&quot; · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Sunset_over_Kontogialos_Beach_in_Corfu,_Greece_(53698254280).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100910</small></figcaption></figure>
+<figure><img src="look-highlights-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+<div class="scene"><h4><span class="tag">Bright highlights</span>Night street with bright signage, Akihabara (iPhone 15 Pro)</h4>
+<div class="row ">
+<figure><img src="scene-highlights-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Stephen Kelly from San Francisco, CA, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Akihabara_Radio_Kaikan_Shopping_Building_(53416976349).jpg">source</a></small></figcaption></figure>
+<figure><img src="look-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026100911</small></figcaption></figure>
+<figure><img src="look-highlights-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+</div>
+</div>
+</section>
+<section><h2>All Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format Reference or the closest openly licensed equivalent, as credited. Judge the character, not the subject.</p>
+<h3>Single-use camera prints</h3><div class="refs">
+<figure><img src="ref-disposable-01.jpg" alt="Kodak FunSaver: flash-filled daylight portrait (San Francisco)" loading="lazy"><figcaption><strong>Kodak FunSaver: flash-filled daylight portrait (San Francisco)</strong><br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4060607777/">source</a></small><br><small>Young woman photographed close-up on a sunny San Francisco street with the FunSaver&#x27;s built-in flash firing (photographer&#x27;s caption: &#x27;My poor flash-blinded roommate&#x27;). Shows direct on-camera flash as fill in daylight, hard frontal light on skin, warm 800-speed colour negative and slight edge softness of the plastic lens. Looks freshly processed: a lab print scan, no fading or colour shift. Camera identified by the photographer&#x27;s tags (kodakfunsaver, disposablecamera). The film is not stated; FunSaver cameras sold in the US in 2009 were loaded with Kodak 800-speed colour negative film (Max/Ultramax 800 family), so treat the stock as likely, not confirmed. Largest public Flickr size is the original scan (about 800 x 1200). Flickr title: &quot;My poor flash-blinded roommate.&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
+<figure><img src="ref-disposable-02.jpg" alt="Kodak FunSaver: indoor flash portrait at night" loading="lazy"><figcaption><strong>Kodak FunSaver: indoor flash portrait at night</strong><br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4134724861/">source</a></small><br><small>Indoor night-time portrait of a woman in a room, lit by the FunSaver&#x27;s direct flash: bright, flat light on the face and scarf, quick falloff to the background and the warm, saturated rendering of 800-speed consumer negative film. Representative of single-use camera indoor snapshots. Freshly processed lab scan, no fading. Same roll and photographer as disposable-01 (Flickr tags camera, disposable, funsaver, kodak). Film assumed to be the FunSaver&#x27;s 800-speed Kodak colour negative; not stated by the photographer. Flickr title: &quot;Photo&#x27;s a bit faily, but whatever.&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
+<figure><img src="ref-disposable-03.jpg" alt="Kodak FunSaver: indoor flash with mirror" loading="lazy"><figcaption><strong>Kodak FunSaver: indoor flash with mirror</strong><br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4135484278/">source</a></small><br><small>Indoor flash snapshot of two people at a mirror in a doorway at night: strong flash on the near subjects, hard shadows, grainy darker surround and warm skin typical of 800-speed consumer negative film. Fresh lab scan. Same roll as disposable-02 (taken 2009-11-25). Film assumed, not stated. Flickr title: &quot;Das and the mirror.&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
+<figure><img src="ref-disposable-04.jpg" alt="Kodak FunSaver: daylight street mural" loading="lazy"><figcaption><strong>Kodak FunSaver: daylight street mural</strong><br><small>danisabella · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/danisabella/4135484368/">source</a></small><br><small>Daylight street scene with a colourful mural and a passer-by: shows the FunSaver look without flash, bright saturated colours, high contrast, lens softness and vignetting toward the corners. Fresh lab scan. Same roll as disposable-02/03. Film assumed, not stated. Flickr title: &quot;graffiti on the way to temple&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
+<figure><img src="ref-disposable-05.jpg" alt="Kodak single-use (Kodak Flash, 800 film): indoor flash on shelves" loading="lazy"><figcaption><strong>Kodak single-use (Kodak Flash, 800 film): indoor flash on shelves</strong><br><small>Matthew Paul Argall · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/79157069@N03/33367329228/">source</a></small><br><small>Bedroom shelves with cameras, manga and plush toys lit by the single-use camera&#x27;s direct flash: saturated primaries (blue and green shelves, yellow wall), hard shadows and flash falloff. Modern processing and scan (2019), no fading. Generic Kodak single-use camera, not a FunSaver: the photographer names it &#x27;Kodak Flash Single Use Camera&#x27; and tags it kodak800 / 800isofilm (the non-US Kodak single-use model with 800-speed film). Included as a close stand-in because indoor FunSaver flash examples under open licences are scarce. Flickr title: &quot;Cameras, manga, and Garfield&quot;. Flickr description: &quot;Just a casual photo taken in my bedroom. Camera used: Kodak Flash Single Use Camera. &quot;. License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.</small></figcaption></figure>
+<figure><img src="ref-disposable-06.jpg" alt="Kodak single-use (Kodak Flash, 800 film): daylight classic car" loading="lazy"><figcaption><strong>Kodak single-use (Kodak Flash, 800 film): daylight classic car</strong><br><small>Matthew Paul Argall · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/79157069@N03/48305852536/">source</a></small><br><small>Green 1969 Pontiac GTO parked in shade on a sunny day: shows the single-use daylight look with bright greens, deep saturation, mild vignetting and plastic-lens softness. Modern processing and scan (2019), no fading. Photographer&#x27;s caption: &#x27;Kodak Flash Single Use Camera (preloaded with Kodak 800 film)&#x27;. Generic Kodak single-use, not a FunSaver. Flickr title: &quot;1969 Pontiac GTO&quot;. Flickr description: &quot;Camera used: Kodak Flash Single Use Camera (preloaded with Kodak 800 film) Location: Olinda, Victoria, Australia. Sometimes on the weekend, there are classic cars parked outside the three pubs in my neighbourhood. Not every weekend though. In this case, I was lucky, as this and a couple other clas&quot;. License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.</small></figcaption></figure>
+</div>
+</section>
+<section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each Camera's and Film Stock's look is set. Spatial values are fractions of the picture's long edge.</p>
+<pre><code>    /// 1990s Disposable. Format Reference: the Kodak Fun Saver single-use camera with flash and 800-speed color
+    /// negative film, printed by a minilab. Warm, saturated color with heavy grain that grows in an underexposed dim
+    /// scene, a plastic lens&#x27;s soft, darker corners, and harsh direct flash that lights the subject flat and lets the
+    /// background fall away. No light leaks, red-eye, dust or scratches (PRD 2.1 section 6.1).
+    static let disposable = Treatment(
+        emulsion: .color(ColorEmulsion(
+            warmth: 0.055, layers: Layers(greenFromBlue: -0.05), saturation: 1.1,
+            tone: ToneCurve(contrast: 1.1, midtones: 0.88, black: 0.015, white: 0.99),
+            shadows: RGB(-0.004, 0.008, 0.004), highlights: RGB(0.004, 0.003, -0.006),
+            grain: Grain(amplitude: 8, size: 0.0009, chroma: 0.3, shadows: 0.6)
+        )),
+        lens: Lens(edgeSoftness: 0.0012, edgeDarkening: 0.6),
+        flash: Flash(falloff: 0.9, contrast: 0.1)
+    )</code></pre>
+</section>
+<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-disposable" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve"> Approve these values for the 1990s Disposable</label><label><input type="radio" name="decision" value="change"> Request changes</label><p><label for="notes" style="display:block">What should change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
+</main>
+<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>
+
+<script>
+function queueDecision(event) {
+  event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  const decision = form.get('decision');
+  if (!decision) return;
+  const notes = (form.get('notes') || '').trim();
+  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
+  const text = (decision === 'change' ? 'Change the 1990s Disposable look.' : chosen + ' (1990s Disposable).') + (notes ? ' ' + notes : '');
+  if (window.lavish) {
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-disposable',
+                                      data: { board: 'disposable', decision: decision, notes: notes } });
+  }
+  document.getElementById('queued').hidden = false;
+}
+</script>
+</body>
+</html>

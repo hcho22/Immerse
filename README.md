@@ -16,10 +16,10 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | Camera | Medium | Capacity | Reveal | Controls and look on the Load Film screen |
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
-| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; brilliant, warm, saturated color and soft detail |
+| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; warm, faded color, soft contrast and soft detail |
 | 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
-| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; strong, rich color, fine grain, an unsteady frame, flicker, dust and hair |
-| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a red highlight glow, minor jitter and weave, soft dark edges |
+| 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair |
+| 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |
 
 A developed Instant print is a 2048 x 2048 picture on a clean white card (2282 x 2774 in all), in the proportions of the original 1970s integral print.
 The card is part of the developed master, so the Journal, the Darkroom and Save Developed to Photos all show it.
@@ -28,11 +28,14 @@ Films loaded before a package changes keep the package they locked, so a 16mm Fi
 The 6×6 Medium Format and the 16mm Cinema load on a color or black-and-white Film Stock (ADR 0014), chosen at Load Film and fixed for the Film; Films loaded before Film Stock existed have none and develop in color.
 A black-and-white Film develops as its own monochrome treatment, prints and Developed Movie alike, and its prints take chemical toning in the Darkroom ([`Evidence/NativeApp/prd-2-slice-3-film-stock.md`](Evidence/NativeApp/prd-2-slice-3-film-stock.md)).
 
-Gap: this table is the build, not all of PRD version 2.1.
-The looks themselves are not retuned yet (slice 4): the black-and-white treatments' tone, contrast and grain are provisional, neither Film Stock of the 16mm Cinema has its highlight glow yet, and the 16mm Load Film line still says "a red highlight glow" for both stocks until that slice renders the glow (CAM-17).
-PRD 2.0's capture behavior (slice 2) is built, as the table shows; developed exposures are never reversed.
+Each Camera and Film Stock develops with a look of its own, with that Camera's imperfections (treatment version `film-look-3`, [`Evidence/NativeApp/prd-2-slice-4-looks.md`](Evidence/NativeApp/prd-2-slice-4-looks.md)).
+The captain approved every Camera's look on a side-by-side review board; only the Instant's contrast and print-to-print variation stay provisional, until a study of preserved 1970s prints.
+A Film loaded before those looks keeps developing with the earlier treatment version it started with.
+
+Gap: this table is the build, and it differs from the text of PRD version 2.1 where the captain chose otherwise on a review board ([ADR 0016](2026-09-29-film-camera-experience-v1/adr/0016-the-captains-exceptions-to-fresh-not-aged.md)).
+The Instant develops faded where the PRD has "brilliant, warm, saturated color", the Super 8 muted with a glow where it has "strong, rich color", and the color Film Stocks of the 16mm and the 6×6 develop with the looks in his own files, which give the 6×6 a mild lens vignette the PRD does not list.
+All four of the tracker's "PRD 2.0 implementation slices" are built, as the table shows, and none is validated on a physical iPhone; developed exposures are never reversed.
 The Disposable's fixed exposure (EV 12), its low-light cue threshold and the fixed lens position are provisional pending DEC-04 and a physical-phone check ([`Evidence/NativeApp/capture-behavior-prd2-slice2.md`](Evidence/NativeApp/capture-behavior-prd2-slice2.md)).
-The tracker's "PRD 2.0 implementation slices" give the order.
 Flash, manual focus and exposure appear only when the lens supports them, and the capture screen says when a lens cannot hold the Disposable's fixed exposure.
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
 Movie capture uses a 4:3 native format that is provisional pending DEC-04.
@@ -80,7 +83,8 @@ There is no sync or app-managed backup.
 
 These are reversible engineering defaults in the code, not approved decisions:
 
-- **Render presets.** Development and Darkroom output use a versioned `film-look-2-provisional` treatment pending DEC-04 and DEC-11; it adds the black-and-white treatments, keeps every color treatment of `film-look-1-provisional` unchanged and still renders captures assigned that earlier version.
+- **Render output.** The Instant's contrast and print-to-print variation, toning values, export codecs, resolution and audio, and Darkroom ranges are pending DEC-04 and DEC-11.
+  The looks themselves are no longer provisional (see Cameras above); the earlier versions, `film-look-1-provisional` and `film-look-2-provisional`, stay renderable unchanged for Films that started with them.
 - **Assets.** [`App/Immerse/Sources/Resources/MediaCatalog.json`](App/Immerse/Sources/Resources/MediaCatalog.json) is empty pending DEC-05, so the build shows no Camera samples and no built-in soundtracks (the Soundtrack picker stays hidden).
   Draft review material is in [`Evidence/AssetReview`](Evidence/AssetReview/README.md) and is not production clearance.
 - **Pricing.** No prices or live product IDs exist pending DEC-02.
@@ -159,7 +163,7 @@ IMMERSE_WORKFLOW_SIMULATOR_UDID=<ios26.5-sim-udid> \
 sh Scripts/validate-local.sh
 ```
 
-- `IMMERSE_SIMULATOR_UDID` runs `ImmerseUITests` in light appearance and large text, then reruns the `JournalFlowTests` accessibility audits and `MovieCapacityUITests` in dark appearance.
+- `IMMERSE_SIMULATOR_UDID` reruns the `RenderCore` tests inside the simulator (all but `LegacyLookTests`), since Core Image differs between a Mac and iOS, runs `ImmerseUITests` in light appearance and large text, then reruns the `JournalFlowTests` accessibility audits and `MovieCapacityUITests` in dark appearance.
 - `IMMERSE_STOREKIT_SIMULATOR_UDID` runs the hosted `ImmerseTests`, including local StoreKit tests, on iOS 26.2, because the StoreKit fixture does not activate on iOS 26.5.
 - `IMMERSE_WORKFLOW_SIMULATOR_UDID` runs the populated Journal harness in [`Probes/PopulatedJournalHarness`](Probes/PopulatedJournalHarness/README.md).
 
@@ -175,7 +179,7 @@ CI ([`.github/workflows/native.yml`](.github/workflows/native.yml)) runs the sam
 | --- | --- |
 | [`App/Immerse`](App/Immerse/README.md) | The iOS app: SwiftUI sources, unit and UI tests, `project.yml` and the generated Xcode project |
 | [`Packages`](Packages) | Local Swift packages the app is built from (below) |
-| [`Probes`](Probes) | Non-shipping probes and harnesses for Trial, receipt, export, accessibility and populated-Journal scenarios, each with its own README |
+| [`Probes`](Probes) | Non-shipping probes and harnesses for Trial, receipt, export, accessibility and populated-Journal scenarios, the look review boards and the captain's look calibration files, each with its own README |
 | [`Evidence`](Evidence) | Dated test results, diagnoses and validation handoffs that back each requirement |
 | [`Scripts`](Scripts) | Local validation and document, requirement-map and Release checks |
 | [`2026-09-29-film-camera-experience-v1`](2026-09-29-film-camera-experience-v1/README.md) | The v1 product package: PRD, ADRs, architecture, task tracker, evidence map and open-decision recommendations |
@@ -209,7 +213,7 @@ The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/ma
 - DEC-01: final brand, product name and copy.
 - DEC-02: monthly and yearly pricing and offers.
 - DEC-03: sign-off of the native stack (minimum iOS 26, iPhone only and no backend are settled).
-- DEC-04: exact tone, contrast and grain values for each Camera and Film Stock, toning values, and export codecs, resolution and audio (partly decided: PRD 2.0 sets each Camera's Format Reference, picture shape, look, imperfections and frame rates).
+- DEC-04: the Instant's contrast and print-to-print variation, toning values, and export codecs, resolution and audio (partly decided: PRD 2.0 sets each Camera's Format Reference, picture shape, look, imperfections and frame rates, and the captain's review-board approvals closed each look's tone, contrast and grain, all but the Instant's contrast).
 - DEC-05: production sample media and licensed soundtracks.
 - DEC-11: Darkroom ranges, Instant original-export timing and soundtrack reselection (partly decided: no crop on Instant prints, contrast grades on every Photo Film, toning on black-and-white Films only).
 - DEC-12: storage, device, accessibility and reliability budgets.

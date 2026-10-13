@@ -1,0 +1,2 @@
+$ python portra400_lut.py --test
+sanity checks passed

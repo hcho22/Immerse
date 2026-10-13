@@ -1,3 +1,4 @@
+import RenderCore
 import XCTest
 
 @MainActor
@@ -87,6 +88,7 @@ final class PopulatedWorkflowTests: XCTestCase {
     }
 
     func testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom() throws {
+        try requireTetrahedralReader()
         let app = launch(arguments: ["--movie", "--hide-inspection-bar"])
         openFilm(app)
         XCTAssertTrue(app.buttons["Save Developed to Photos"].exists)
@@ -109,6 +111,7 @@ final class PopulatedWorkflowTests: XCTestCase {
     }
 
     func testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback() throws {
+        try requireTetrahedralReader()
         let app = launch(arguments: ["--movie", "--hide-inspection-bar", "--movie-player-observer"])
         openFilm(app)
         let player = app.descendants(matching: .any)["developed-movie-player"]
@@ -227,6 +230,46 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "BW-16mm-developed-movie")
     }
 
+    /// PRD 2.1 slice 4 (CAM-17): each Camera and Film Stock's developed look, on its Film screen and in the photo or
+    /// Developed Movie, for screenshots on a large and a small iPhone (Evidence/NativeApp/prd-2-slice-4-looks.md).
+    func testDisposableLookScreens() throws { lookScreens(["--developed-photo"], name: "Look-disposable") }
+    func testInstantLookScreens() throws { lookScreens(["--instant"], name: "Look-instant") }
+    func testSixBySixColorLookScreens() throws {
+        try requireTetrahedralReader()
+        lookScreens(["--medium-format"], name: "Look-6x6-color")
+    }
+    func testSixBySixBlackAndWhiteLookScreens() throws {
+        lookScreens(["--medium-format", "--black-and-white"], name: "Look-6x6-black-and-white")
+    }
+    func testSuperEightLookScreens() throws { lookScreens(["--movie", "--super8", "--landscape-movie"], name: "Look-super8") }
+    func testSixteenMillimeterColorLookScreens() throws {
+        try requireTetrahedralReader()
+        lookScreens(["--movie", "--landscape-movie"], name: "Look-16mm-color")
+    }
+    func testSixteenMillimeterBlackAndWhiteLookScreens() throws {
+        lookScreens(["--movie", "--landscape-movie", "--black-and-white"], name: "Look-16mm-black-and-white")
+    }
+
+    private func lookScreens(_ arguments: [String], name: String) {
+        let app = launch(arguments: arguments + ["--hide-inspection-bar"] + Self.sourceArguments)
+        openFilm(app)
+        if arguments.contains("--movie") {
+            let player = app.descendants(matching: .any)["developed-movie-player"]
+            XCTAssertTrue(player.waitForExistence(timeout: 120), name)
+            Thread.sleep(forTimeInterval: 2)
+            snapshot(app, "\(name)-developed-movie")
+            return
+        }
+        let open = app.buttons["Open photo 1"]
+        XCTAssertTrue(open.waitForExistence(timeout: 60), name)
+        Thread.sleep(forTimeInterval: 1)
+        snapshot(app, "\(name)-film-screen")
+        open.tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10), name)
+        Thread.sleep(forTimeInterval: 1.5)
+        snapshot(app, "\(name)-photo")
+    }
+
     /// A natural still and silent movie for screenshots, when the run supplies them (TEST_RUNNER_PHOTO_SOURCE and
     /// TEST_RUNNER_MOVIE_SOURCE); the generated fixtures otherwise.
     private static var sourceArguments: [String] {
@@ -246,8 +289,14 @@ final class PopulatedWorkflowTests: XCTestCase {
     func testDarkroomFitsAnInstantPrintAtTheLargestSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: true) }
     func testDarkroomFitsADisposablePrintAtTheDefaultSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: false) }
     func testDarkroomFitsADisposablePrintAtTheLargestSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: true) }
-    func testDarkroomFitsA6x6PrintAtTheDefaultSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: false) }
-    func testDarkroomFitsA6x6PrintAtTheLargestSize() throws { assertDarkroomFits("--medium-format", label: "6x6", largest: true) }
+    func testDarkroomFitsA6x6PrintAtTheDefaultSize() throws {
+        try requireTetrahedralReader()
+        assertDarkroomFits("--medium-format", label: "6x6", largest: false)
+    }
+    func testDarkroomFitsA6x6PrintAtTheLargestSize() throws {
+        try requireTetrahedralReader()
+        assertDarkroomFits("--medium-format", label: "6x6", largest: true)
+    }
     func testDarkroomFitsABlackAndWhite6x6PrintAtTheDefaultSize() throws {
         assertDarkroomFits("--medium-format", label: "6x6-black-and-white", largest: false, blackAndWhite: true)
     }
@@ -347,6 +396,12 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
         undo.tap()
         XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
+    }
+
+    /// A test whose Film is on the 16mm Cinema's or the 6×6 Medium Format's color Film Stock is skipped where Core
+    /// Image cannot run the tetrahedral reader: there the harness cannot develop that Film.
+    private func requireTetrahedralReader() throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
     }
 
     private func launch(arguments: [String] = []) -> XCUIApplication {
