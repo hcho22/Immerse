@@ -111,11 +111,14 @@ A user with such a recipe would reset that print's Darkroom edit, or move its sl
 
 Before, nothing asked: the choice was only under Originals on the Film screen.
 
-Now the screen a print is revealed on asks, once, about that print only:
+Now the screen a print is revealed on asks about its original, once:
 
 - At the camera the print is shown first.
-  Closing it brings the question.
+  Closing it brings the question, about that print only.
+- When one Development reveals more than one print at the camera, each is shown in the order it was taken, and closing each brings the question about that print before the next is shown.
+  None is asked about before it has been shown, none twice, and none is skipped.
 - On the Film screen, a print revealed by Resume Development, or one that lands after the camera was closed, is asked about there.
+  Prints revealed together there are asked about in one question, as they were before review.
 - Left unanswered, the choice waits under Originals.
   A print revealed while neither screen is open is not asked about and waits there too.
 - Choosing to save writes the original to Photos when the choice is confirmed, because the print is already revealed.
@@ -129,7 +132,8 @@ Now the screen a print is revealed on asks, once, about that print only:
 
 Run: the hosted `testTheInstantAsksOnlyAboutRevealedPrintsWithNoRecordedChoice`, and three populated harness tests, at the camera screen (`--reveal-at-camera`, which develops the sealed print once the camera screen is open, as the app does when a save lands there), on the Film screen, and left unanswered.
 The retained inspector checks that the answered print's original is gone and the other print's original and choice are untouched.
-A fourth harness test, `testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion`, was added in review (see After review).
+Two more harness tests were added in review (see After review): `testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion`, and `testInstantShowsAndAsksAboutEachOfTwoPrintsRevealedTogetherAtTheCamera`, which adds `--two-sealed` so that the one Development reveals two prints.
+The picture of the revealed print above was taken again in review, because the first one had the simulator's Camera request lying over the print.
 
 Not run: a real capture.
 The simulator has no camera, so the save that leads to the reveal was stood in for; saving an original to Photos was not run either, since the harness has no Photos access.
@@ -263,6 +267,34 @@ The new test waits for the print's sheet to come to rest before it taps Discard.
 Its first form tapped while the sheet was still rising, and on one run iOS ignored that tap; the simulator's log held no dropped touch, and the screen recording showed the sheet in motion.
 
 Nothing else was run again in review: the package tests, the hosted tests and the rest of the screen tests are the check's to run.
+
+### The second round
+
+A second round of review found three more things.
+
+When one Development revealed two prints at the camera, only the later one was shown and asked about, and the earlier one was asked about on neither screen.
+That happens when a print stays sealed, for example because the app went to the background while it developed, and the next shot's Development then reveals both.
+The camera now keeps the prints revealed while it is open in the order they were taken, shows each, and asks about each when it is closed, before the next is shown.
+The addendum's list of workings that are his to see gains a seventh entry for it.
+
+`DevelopedMovieFormat.size(_:)`, a second statement of the Movie's frame size that nothing called, is removed.
+
+The picture of the print revealed at the camera had the simulator's Camera request lying over the print.
+A person does not meet that request at a reveal, because the app settles Camera access before a Film is loaded.
+The camera tests now touch the print's title first, which lets XCTest answer a request that is up, and wait for the screen to be still.
+
+Run in the second round, on an iPhone 17 Pro simulator on iOS 26.5 made for the round and deleted after it:
+
+| Check | Result |
+| --- | --- |
+| `testInstantShowsAndAsksAboutEachOfTwoPrintsRevealedTogetherAtTheCamera` on the code before the fix | Fails: "Print 2 is shown at the camera"; only print 3 was on screen |
+| The same test on the fixed code, with the single-print test, the discard test and `testInstantOriginalQuestionLeftUnansweredWaitsUnderOriginals` | 4 passed, 0 failures |
+| The single-print test once more, with the simulator's Camera request reset so that it is up when the print is revealed | Passed; XCTest answered the request at the touch on the title, and the picture above is from this run |
+| `Scripts/verify-requirement-map.sh` | Pass |
+| `Scripts/verify-document-package.sh`, after the documents ZIP was made again | Pass |
+
+The harness build compiled RenderCore without the removed helper.
+No package test was run again in this round.
 
 ## Not shown here
 

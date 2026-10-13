@@ -10,11 +10,6 @@ import Foundation
 public enum DevelopedMovieFormat {
     public static let longEdge = 1920
 
-    /// The frame of a Movie in `orientation`, in the Camera's 4:3 proportions.
-    public static func size(_ orientation: MovieOrientation) -> (width: Int, height: Int) {
-        orientation == .landscape ? (longEdge, longEdge * 3 / 4) : (longEdge * 3 / 4, longEdge)
-    }
-
     public static func framesPerSecond(_ camera: CameraID) -> Int { camera == .super8HomeMovie ? 18 : 24 }
 
     /// The frames a Developed Clip of `seconds` has: every whole frame that fits, and at least one.

@@ -64,7 +64,8 @@ Set. It is an additional required check, not inferred from a screenshot/test exi
 `--reveal-at-camera`, with `--instant-mixed`, develops the Film's sealed Instant print once the
 camera screen is open, as the app does when a save lands there, so a test can meet the
 reveal and the question about the print's original at the camera. Nothing is captured:
-the simulator has no camera.
+the simulator has no camera. `--two-sealed` leaves that Film two sealed prints where there is
+otherwise one, so the one Development reveals both.
 
 These are functional navigation tests, not replacements for all-category
 accessibility audits or the hardware/manual matrix in

@@ -113,7 +113,10 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     }
                 } else {
                     let data = try Data(contentsOf: source("--photo-source") ?? fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
-                    for index in 1...2 {
+                    // `--two-sealed`, with `--instant-mixed`, leaves two sealed Instant prints where there is otherwise one,
+                    // so one Development reveals both.
+                    let captures = mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
+                    for index in 1...captures {
                         try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
                     }

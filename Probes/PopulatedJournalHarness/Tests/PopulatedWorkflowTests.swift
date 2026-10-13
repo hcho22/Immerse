@@ -218,6 +218,18 @@ final class PopulatedWorkflowTests: XCTestCase {
         return false
     }
 
+    /// The sheet of a print the camera has revealed, at rest with nothing over it. A simulator that has not been asked
+    /// yet shows the system's Camera request over the print, and XCTest answers it on the test's next touch, so the
+    /// print's title is touched before the screen is waited on.
+    @discardableResult
+    private func printRevealedAtTheCamera(_ sequence: Int, app: XCUIApplication, timeout: TimeInterval = 60) -> XCUIElement {
+        let print = app.navigationBars["Photo \(sequence)"]
+        XCTAssertTrue(print.waitForExistence(timeout: timeout), "Print \(sequence) is shown at the camera")
+        print.tap()
+        XCTAssertTrue(waitUntilStill(app), "The sheet of print \(sequence) has come to rest")
+        return print
+    }
+
     /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. A print
     /// revealed at the camera is shown first; closing it brings the question, for that print only, and the camera is
     /// back afterwards. The earlier print, never asked about here, still waits under Originals on the Film screen.
@@ -227,8 +239,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(app.buttons["Open photo 1"].exists)
         XCTAssertFalse(app.buttons["Open photo 2"].exists)
         app.buttons["Open Camera"].tap()
-        let revealed = app.navigationBars["Photo 2"]
-        XCTAssertTrue(revealed.waitForExistence(timeout: 60), "The print is revealed at the camera")
+        let revealed = printRevealedAtTheCamera(2, app: app)
         snapshot(app, "Instant-print-revealed-at-the-camera")
         revealed.buttons["Done"].tap()
         let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
@@ -266,9 +277,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         let app = launch(arguments: ["--instant-mixed", "--reveal-at-camera"])
         openFilm(app)
         app.buttons["Open Camera"].tap()
-        let revealed = app.navigationBars["Photo 2"]
-        XCTAssertTrue(revealed.waitForExistence(timeout: 60), "The print is revealed at the camera")
-        XCTAssertTrue(waitUntilStill(app), "The print's sheet has come to rest")
+        let revealed = printRevealedAtTheCamera(2, app: app)
         app.buttons["Discard"].tap()
         let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
@@ -284,6 +293,48 @@ final class PopulatedWorkflowTests: XCTestCase {
         // The Film screen asks nothing either: print 1 was revealed before the camera opened.
         Thread.sleep(forTimeInterval: 2)
         XCTAssertFalse(app.navigationBars["Originals"].exists)
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
+        app.buttons["Cancel"].tap()
+    }
+
+    /// Two prints that one Development reveals together at the camera are each shown in the order they were taken, and
+    /// closing each brings the question about that print's original before the next is shown: once each, none skipped.
+    /// The Film screen asks about neither again, and the question left unanswered waits under Originals.
+    func testInstantShowsAndAsksAboutEachOfTwoPrintsRevealedTogetherAtTheCamera() throws {
+        let app = launch(arguments: ["--instant-mixed", "--two-sealed", "--reveal-at-camera"])
+        openFilm(app)
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        XCTAssertFalse(app.buttons["Open photo 3"].exists)
+        app.buttons["Open Camera"].tap()
+        let later = app.navigationBars["Photo 3"]
+        let earlier = printRevealedAtTheCamera(2, app: app)
+        XCTAssertFalse(later.exists, "The earlier print is shown first")
+        earlier.buttons["Done"].tap()
+        let askedEarlier = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(askedEarlier.waitForExistence(timeout: 10), "Closing the earlier print brings the question about its original")
+        XCTAssertFalse(later.exists, "The later print waits for the answer")
+        app.buttons["Remove from Immerse without saving"].tap()
+        app.buttons["confirm-original-choice"].tap()
+        printRevealedAtTheCamera(3, app: app, timeout: 20)
+        XCTAssertFalse(askedEarlier.exists)
+        later.buttons["Done"].tap()
+        let askedLater = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 3")).firstMatch
+        XCTAssertTrue(askedLater.waitForExistence(timeout: 10), "Closing the later print brings the question about its original")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(askedLater.waitForNonExistence(timeout: 10))
+        XCTAssertFalse(earlier.waitForExistence(timeout: 5), "No print is shown a second time")
+        XCTAssertFalse(later.exists, "No print is shown a second time")
+        XCTAssertFalse(app.navigationBars["Originals"].exists, "No print is asked about a second time")
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Open photo 3"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Open photo 2"].exists)
+        // The Film screen does not ask again about the prints the camera asked about.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        // The unanswered question, and print 1's, wait under Originals.
         app.buttons["Originals"].tap()
         XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
