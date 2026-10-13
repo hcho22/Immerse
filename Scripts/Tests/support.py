@@ -79,7 +79,9 @@ class Sandbox:
         return os.path.join(self.tree, *parts)
 
     def run(self, command, fixture, xcodebuild_exits="0", log_fails=False, environment=None):
-        environment = dict(os.environ, PATH=self.tools + os.pathsep + os.environ["PATH"], STUB_STATE=self.state,
+        # Validation runs these tests itself, so its own part and simulators must not reach the copy under test.
+        inherited = {name: value for name, value in os.environ.items() if not name.startswith("IMMERSE_")}
+        environment = dict(inherited, PATH=self.tools + os.pathsep + os.environ["PATH"], STUB_STATE=self.state,
                            STUB_FIXTURE=fixture, STUB_XCODEBUILD_EXITS=xcodebuild_exits, **(environment or {}))
         if log_fails:
             environment["STUB_LOG_FAILS"] = "1"

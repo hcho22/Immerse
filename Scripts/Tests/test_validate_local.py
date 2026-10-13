@@ -3,6 +3,7 @@ import os
 import re
 import sys
 import unittest
+from unittest import mock
 
 from support import Sandbox, fixture
 
@@ -121,6 +122,15 @@ class ValidateLocalTests(unittest.TestCase):
 
     def test_run_whole_without_simulators_it_runs_the_mac_share_alone(self):
         result, commands = self.validate(simulators={})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(commands, VERSIONS + MAC)
+
+    def test_the_part_and_simulators_of_the_job_running_these_tests_do_not_reach_them(self):
+        # The packages part runs these tests with its own part and simulators in the environment.
+        job = {"IMMERSE_VALIDATE_PART": "packages", "IMMERSE_SIMULATOR_UDID": "JOB-SIM",
+               "IMMERSE_STOREKIT_SIMULATOR_UDID": "JOB-BILLING-SIM"}
+        with mock.patch.dict(os.environ, job):
+            result, commands = self.validate(simulators={})
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(commands, VERSIONS + MAC)
 
