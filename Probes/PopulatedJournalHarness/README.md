@@ -107,7 +107,9 @@ The test also checks that the guidance and the shutter are on screen without scr
 Read `Evidence/NativeApp/visual-sweep-048.md` for the outcomes and limits.
 
 `--black-and-white` loads the seeded 6×6 (`--medium-format`) or 16mm (`--movie`) Film on the black-and-white Film
-Stock; without it a Camera with a Film Stock gets Load Film's default, color. `--photo-source PATH` and
+Stock; without it a Camera with a Film Stock gets Load Film's default, color.
+`--super8` loads the `--movie` Film on the Super 8 instead of the 16mm, and `--landscape-movie` locks it landscape where it is otherwise portrait.
+`--photo-source PATH` and
 `--movie-source PATH` capture an existing still or silent movie instead of the generated fixtures, so screenshots can
 show a natural scene; the UI tests pass them on when the run sets `TEST_RUNNER_PHOTO_SOURCE` and
 `TEST_RUNNER_MOVIE_SOURCE` (for example `Evidence/AssetReview/sources/window-still-life-generated.png` and
