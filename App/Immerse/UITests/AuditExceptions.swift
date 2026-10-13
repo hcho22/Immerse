@@ -40,6 +40,12 @@ final class AuditExceptionTests: XCTestCase {
         XCTAssertFalse(accepts("other point", .contrast, "Accepted"))
     }
 
+    /// TEMPORARY, removed by the next commit: shows on GitHub that a failing screen test with no dropped touch in
+    /// the simulator's log is not rerun, fails its part and turns the summary check red.
+    func testPlantedFailureTurnsTheSummaryCheckRed() {
+        XCTFail("Planted failure: this test fails on purpose, once, to show that the check goes red.")
+    }
+
     private func accepts(_ audit: String, _ type: XCUIAccessibilityAuditType, _ label: String?) -> Bool {
         AuditException.accepts(list, audit: audit, type: type, label: label)
     }
