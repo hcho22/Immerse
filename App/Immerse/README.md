@@ -88,7 +88,7 @@ SwiftUI, raw SQLite and local package boundaries are reversible baseline default
 not a newly approved DEC-03. The captain decided the Darkroom's ranges, the export
 sizes and formats, the Instant's question about each print's original and that a
 soundtrack can be changed later on 2026-10-13
-(`Evidence/NativeApp/darkroom-export-decisions-059.md`). His own sample shots,
+(`Evidence/NativeApp/darkroom-export-decisions-060.md`). His own sample shots,
 instrumental licenses, the Instant's contrast, toning strength, support/privacy
 wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera

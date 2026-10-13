@@ -220,7 +220,7 @@ This replaces the "Provisional" in the render matrix's output cells.
 "Silent" is as the matrix has it: silent unless a licensed built-in soundtrack is chosen, and none ships (DEC-05 below).
 
 The Instant's size was left open by his first answer, because the white card is now part of the print.
-He was then shown a proposal with three choices and a rendered example (`Evidence/NativeApp/darkroom-export-decisions-059/instant-export-size-proposal.md`): A, the print as developed, 2282 × 2774; B, enlarged on export; C, new prints developed larger.
+He was then shown a proposal with three choices and a rendered example (`Evidence/NativeApp/darkroom-export-decisions-060/instant-export-size-proposal.md`): A, the print as developed, 2282 × 2774; B, enlarged on export; C, new prints developed larger.
 The same proposal asked whether Movies, which carry no color tags, should be tagged.
 
 The captain said, the same day: "instant export size: A,  leave Movies as they are"
@@ -304,7 +304,7 @@ The details below were not in what he read, so they are not treated as approved 
 | DEC-13 | The launch review packet's contents | Recommendation |
 | DEC-14 | "Record qualitative targets", with two examples | Recommendation; no targets are set |
 
-Three things in how the app carries his Darkroom decision are also his to see, because he was shown the limits and not their workings (`Evidence/NativeApp/darkroom-export-decisions-059.md`):
+Three things in how the app carries his Darkroom decision are also his to see, because he was shown the limits and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
 
 - Dodge and Burn has a strength slider, 0.1 to 3.0 stops, where every stroke used to be 0.4 stops.
 - Strokes add up where they overlap, and together they stop at 3 stops.

@@ -1,4 +1,4 @@
-# The captain's 2026-10-13 decisions in the app (059)
+# The captain's 2026-10-13 decisions in the app (060)
 
 **Date:** 2026-10-13.
 **Scope:** DEC-04 (export sizes and formats), DEC-05, DEC-11, DEC-12, DEC-13 and DEC-14.
@@ -8,7 +8,7 @@ What he was asked, in the words he read, and what he said are in the 2026-10-13 
 This note records what the app does about each answer, the choices made in carrying them, what was run, and what was not.
 
 Everything here ran on a Mac and an iPhone 17 Pro simulator on iOS 26.5.
-The StoreKit tests, which need the iOS 26.2 simulator, and the dark-appearance audits were not run for this note; nothing they cover was changed.
+The tables below say what was run before the merge with main and what was run again after it.
 Nothing ran on a phone.
 
 ## Darkroom limits (DEC-11)
@@ -57,7 +57,7 @@ The populated harness drives the real Darkroom (`testDarkroomExposureAndDodgeBur
 
 | Plus 3 stops | Minus 3 stops | Minus 3 stops with a 3-stop dodge |
 | --- | --- | --- |
-| ![The Darkroom at plus 3 stops](darkroom-export-decisions-059/darkroom-exposure-plus-3-stops.png) | ![The Darkroom at minus 3 stops](darkroom-export-decisions-059/darkroom-exposure-minus-3-stops.png) | ![A 3-stop dodge on a print 3 stops down](darkroom-export-decisions-059/darkroom-minus-3-stops-with-a-3-stop-dodge.png) |
+| ![The Darkroom at plus 3 stops](darkroom-export-decisions-060/darkroom-exposure-plus-3-stops.png) | ![The Darkroom at minus 3 stops](darkroom-export-decisions-060/darkroom-exposure-minus-3-stops.png) | ![A 3-stop dodge on a print 3 stops down](darkroom-export-decisions-060/darkroom-minus-3-stops-with-a-3-stop-dodge.png) |
 
 ### A recipe saved under the earlier limits
 
@@ -87,7 +87,7 @@ What the app does (`StoredRecipeLimitsTests`, and by hand in the simulator with 
 
 | The Film screen | Its Darkroom | After Reset to Original |
 | --- | --- | --- |
-| ![A warning mark in place of the print](darkroom-export-decisions-059/stored-recipe-outside-limits-film-screen.png) | ![The Darkroom explains and offers Reset](darkroom-export-decisions-059/stored-recipe-outside-limits-darkroom.png) | ![The print is back](darkroom-export-decisions-059/stored-recipe-outside-limits-after-reset.png) |
+| ![A warning mark in place of the print](darkroom-export-decisions-060/stored-recipe-outside-limits-film-screen.png) | ![The Darkroom explains and offers Reset](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom.png) | ![The print is back](darkroom-export-decisions-060/stored-recipe-outside-limits-after-reset.png) |
 
 ### If this change is reverted
 
@@ -119,7 +119,7 @@ Now the screen a print is revealed on asks, once, about that print only:
 
 | The print, revealed at the camera | The question that follows |
 | --- | --- |
-| ![The revealed print](darkroom-export-decisions-059/instant-print-revealed-at-the-camera.png) | ![The question about its original](darkroom-export-decisions-059/instant-original-question-at-the-camera.png) |
+| ![The revealed print](darkroom-export-decisions-060/instant-print-revealed-at-the-camera.png) | ![The question about its original](darkroom-export-decisions-060/instant-original-question-at-the-camera.png) |
 
 Run: the hosted `testTheInstantAsksOnlyAboutRevealedPrintsWithNoRecordedChoice`, and three populated harness tests, at the camera screen (`--reveal-at-camera`, which develops the sealed print once the camera screen is open, as the app does when a save lands there), on the Film screen, and left unanswered.
 The retained inspector checks that the answered print's original is gone and the other print's original and choice are untouched.
@@ -172,7 +172,7 @@ Two things are as they were and are worth knowing:
 - Movie capture records the largest 4:3 format within 1920 × 1080, which is 1440 × 1080 on most phones, and Development enlarges it to 1920 × 1440.
   That capture size is still provisional (`MovieCaptureFormat`).
 
-The proposal he chose from is kept as [`instant-export-size-proposal.md`](darkroom-export-decisions-059/instant-export-size-proposal.md), with the print it showed.
+The proposal he chose from is kept as [`instant-export-size-proposal.md`](darkroom-export-decisions-060/instant-export-size-proposal.md), with the print it showed.
 
 ## Samples and music (DEC-05)
 
@@ -203,6 +203,28 @@ These are records, not code.
 | `Probes/TrialCommitStudy`, `Probes/DevelopmentProcessExit`; `AssetReviewGenerator` and `LookReviewBoards` build | Pass |
 | The retained inspector's Instant checks, on the history that harness run left | Pass |
 | The earlier build's handling of a recipe at the wider limits | Run once against a copy of commit `5c3a217`; not a kept test |
+
+## After the merge with main
+
+The branch was brought up to main (`d82c6fa`, the check split into four parts) with one merge commit.
+Main changed no app code and no test of this change: only the workflow, the scripts, their tests and three documents.
+This record was renumbered from 059 to 060 in that merge, because main's dropped-touch record took 059.
+
+Run again on the merged code, as the `packages` part of `Scripts/validate-local.sh` (`IMMERSE_VALIDATE_PART=packages`), which holds every package test, the hosted app tests and the document checks:
+
+| Check | Result on the merged code |
+| --- | --- |
+| The scripts' own tests (`Scripts/Tests`) | 52 tests, OK |
+| `Scripts/verify-validation-parts.sh` | Pass; this change adds no package, probe, test target or screen-test suite |
+| `Scripts/verify-requirement-map.sh` and `Scripts/verify-document-package.sh` | Pass |
+| The eight packages on the Mac | Pass, with RenderCore at 106 tests (1 skipped) and FilmRuntime at 64 |
+| `Probes/TrialCommitStudy` and `Probes/DevelopmentProcessExit`; `AssetReviewGenerator` built | Pass |
+| The app built for the simulator and for a device; Release excludes the testing unlock | Pass |
+| The RenderCore tests inside an iOS 26.5 simulator | 102 passed, 1 skipped, 0 failures |
+| All of `ImmerseTests` inside an iOS 26.2 simulator, the StoreKit tests among them | 47 tests, 0 failures |
+
+Carried over from the commit before the merge (`a83a8cc`), because the merge changed nothing they build or run: the populated harness (33 tests) and the app's screen tests (76 passed and the one expected failure).
+The dark-appearance audits were not run by hand at either commit; the `ui-flows` part of the check runs them.
 
 ## Not shown here
 
