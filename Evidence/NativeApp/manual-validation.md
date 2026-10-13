@@ -24,6 +24,7 @@ Re-pin before any manual run if the app has changed since this commit.
 The app is built from `App/Immerse` and the local packages under `Packages` and from nothing else (`App/Immerse/project.yml`).
 To tell whether it has changed, run `git diff --stat 5c3a217bd7d9b84b629dab912cbcda038aeff62d origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this plan itself arrived in such a commit.
+`main`'s one later commit so far, `d82c6fa9e9e77968b204bb7d62371024e39fe794` (https://github.com/hcho22/Immerse/pull/27), changes only the check, its scripts and their tests, two records, `README.md` and `AGENTS.md`, so the pin stays at `5c3a217`.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 Record the exact eventual tested revision and configuration;
 reassess affected scenarios after any production, asset, signing or OS change.
@@ -99,7 +100,7 @@ The rows after it were recorded at the earlier candidates they name and keep the
 
 | Observed software gate | Bound evidence and limit |
 | --- | --- |
-| Gates at the pinned candidate `5c3a217` | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796` before the squash; the check on the squash commit itself was still running when this plan was re-pinned (https://github.com/hcho22/Immerse/actions/runs/38403410314), so read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
+| Gates at the pinned candidate `5c3a217` | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796`, which [059](dropped-touch-059.md) records as the same tree as `5c3a217`. The check on the squash commit itself, on `main`, was cancelled at its 120-minute limit with no test failed (run 38403410314, same record), so that commit has no finished check of its own. The check has since been split into four parts (CI row below), and `main`'s run on `d82c6fa`, which builds the same app, was waiting to start when this was written (https://github.com/hcho22/Immerse/actions/runs/38473025368): read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
 | Full local gate: 140 package tests, 20 study and process-exit tests, unsigned simulator/generic-device builds | `sh Scripts/validate-local.sh` at the 046 source ([capture controller report](capture-controller-quiescence-046.md)): FilmDomain 13, MediaCatalog 4, RenderFixtures 2, RenderCore 11, FilmPersistence 25, NativeAdapters 24, CapturePipeline 6, EntitlementCore 12, FilmRuntime 43, TrialCommitStudy 17, DevelopmentProcessExit 3. Later checkpoints changed app views, tests and validation stages; [056](title-field-hit-area-056.md) records the latest full gate. Covers actual SQLite, native synthetic decoding/rendering, receipt policies and recovery. No camera, physical Keychain, PhotoKit device write or power-loss observation. |
 | Hosted app tests | 12 Journal and CaptureController tests on iOS 26.5 and 26.2, plus 4 local StoreKit tests on 26.2 (046). Actual controller, capture backend, Trial owner, repository and processor on a camera-less simulator with injected Keychain calls. |
 | Actual-view UI tests | Populated harness 12 tests including drawn Dodge, declined Camera on reopen and small-screen shutter layout ([047](darkroom-gesture-tint-047.md), [048](visual-sweep-048.md)); production UI: declined Camera at Load Film ([049](qa13-measurement-049.md)) and every text element on the audited screens at all twelve text sizes ([052](qa13-audit-exceptions-052.md), [053](scroll-indicator-drag-053.md)). Simulator only. |
@@ -107,7 +108,7 @@ The rows after it were recorded at the earlier candidates they name and keep the
 | Export/privacy controller | [Checkpoint 036](../ExportPrivacyHarness/036/README.md) and [executable commands](../../Probes/ExportPrivacyHarness/README.md): real native synthetic masters/Movie renders, repository and FilmProcessor with held writer/reply, observed cancellation, exact failure outcomes, cleanup and private removal/re-entry. All writer/permission results are injected; no PhotoKit, physical storage failure or full M16/M23 acceptance. Completed external test copies remain unrecalled. |
 | Native accessibility | [QA-13 end-user check](qa13-measurement-049.md) and [audit fix and exceptions](qa13-audit-exceptions-052.md): the Movie Orientation choice follows Dynamic Type and keeps its buttons across text sizes. The original audits pass on the simulator with deterministic scroll positions and one exact, measured contrast exception (the 16mm description under the scroll-edge band, 21.00:1 light and 13.94:1 dark at rest); any other finding still fails. No audit runs the Dynamic Type type, which flagged correctly resizing text from run to run ([053](scroll-indicator-drag-053.md)), and `ContentSizeTests` measures every text element on the audited screens at all twelve sizes instead. The Load screen's Film title field keeps a frame at least 44 points tall at every size, and every Camera's Load screen is audited at the smallest size ([056](title-field-hit-area-056.md)). Earlier diagnoses, such as the [observer diagnosis](accessibility-observer-diagnosis.md), keep their records. Device VoiceOver, Switch Control and display checks remain open. |
 | Draft photo/Movie/music outputs | [Asset review](../AssetReview/README.md) has native decoded outputs and provenance, not production rights or Camera-quality approval. Production catalog is empty. |
-| CI | The Native validation check failed on every v1 run and on main, only on the two original audit tests ([051](ci-qa13-051.md)); [052](qa13-audit-exceptions-052.md) fixes them. Main then failed intermittently in `ContentSizeTests` on `b4d9527`, which [053](scroll-indicator-drag-053.md) addresses, and in `MovieCapacityUITests` on `cd3cbc0`, which [054](title-field-tap-054.md) addresses; [055](push-audit-055.md) fixes an intermittent audit over a push found while validating 054. On `72669c1` the extra-small Load audit ran past its allowance on a slow runner and one Start a Film tap in `TestingUnlockUITests` opened nothing; [057](ci-flakes-057.md) splits both tests and removes the Journal's launch-time bottom toolbar, and the lost tap is still not reproduced. On `491a14f` the Movie time test's title field kept a "1" of the suggestion when the field wrote back an older title from SwiftUI during its typed deletes; [058](title-autocorrection-058.md) stops the field taking the binding's text while it is being edited. Each change's CI run is reported on its PR. No release claim. |
+| CI | The Native validation check failed on every v1 run and on main, only on the two original audit tests ([051](ci-qa13-051.md)); [052](qa13-audit-exceptions-052.md) fixes them. Main then failed intermittently in `ContentSizeTests` on `b4d9527`, which [053](scroll-indicator-drag-053.md) addresses, and in `MovieCapacityUITests` on `cd3cbc0`, which [054](title-field-tap-054.md) addresses; [055](push-audit-055.md) fixes an intermittent audit over a push found while validating 054. On `72669c1` the extra-small Load audit ran past its allowance on a slow runner and one Start a Film tap in `TestingUnlockUITests` opened nothing; [057](ci-flakes-057.md) splits both tests and removes the Journal's launch-time bottom toolbar, and the lost tap is still not reproduced. On `491a14f` the Movie time test's title field kept a "1" of the suggestion when the field wrote back an older title from SwiftUI during its typed deletes; [058](title-autocorrection-058.md) stops the field taking the binding's text while it is being edited. On 2026-10-13 the check failed once on a pull request of six Markdown files, on a tap the simulator dropped, and was cancelled at its 120-minute limit on `main` at `5c3a217`; [059](dropped-touch-059.md) records both. Since `d82c6fa` the check runs `Scripts/validate-local.sh` as four parts side by side (packages, harness, ui-text, ui-flows; 75 minutes each) behind the one summary check `local-native`, a pull request that changes only Markdown runs the packages part alone, and a failed screen test is run once more only when the simulator's own log shows it dropped that test's touch. Each change's CI run is reported on its PR. No release claim. |
 
 Historical failure at `d233bb7` proved the old D3 SQL-before-Keychain uninstall
 window in software. The current receipt ordering corrects that implementation;
@@ -245,7 +246,7 @@ Release, TestFlight and App Store builds keep the StoreKit subscription and one-
 - The switch is **Settings > Debug testing > Testing unlock - Debug build**, the first Settings section. It is saved on the iPhone, so it holds when Immerse is launched from the Home Screen as well as from Xcode.
 - **Turn the switch off before any Trial, locked-load or plan-screen check** (for example T01...T12 and M27). With it off, the Debug build gates new Films exactly as Release does.
 - Films loaded while the unlock was on are subscription Films. After the switch is turned off they keep their capture rights and stay developable, viewable, editable and exportable (ADR 0006), and they stay on the phone until deleted. The Trial remains unused by them.
-- Scenarios L01 to L07 are run with the switch on. The earlier build that L07 installs first has the same unlock, on by default, so neither build uses the Trial there.
+- Scenarios L01 to L08 are run with the switch on. The earlier build that L07 installs first has the same unlock, on by default, so neither build uses the Trial there.
 - Hosted tests cover on, off and off-after-on (`App/Immerse/Tests/TestingUnlockTests.swift`) and the indicator and persisted switch across relaunches (`App/Immerse/UITests/TestingUnlockUITests.swift`); outcomes are in [testing-unlock-debug.md](testing-unlock-debug.md). Physical-device behavior is untested until this manual phase.
 
 ## Ordinary App Scenarios
@@ -279,7 +280,7 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M16 / FR-08 | Deny/restrict add-only Photos, fail actual write, cancel/retry and recover. No false success; retry cannot remove only usable media. Granting export permission never grants library read or triggers other exports. | Actual PhotoKit completion/error and UI outcome, counts, retained sources/masters. Controlled native write-failure harness may be needed. |
 | M17 / FR-08; STO; ARC-03 | Choose originals export: retain until successful Photos write AND decoded/hash-verified master. Decline: cleanup only after verified master and disclosure. Make master missing/corrupt/hash-matching undecodable; cleanup must stop. | Approved synthetic container fault and raw decode/hash checks, originals/masters/recipes/Developed Clips before/after. No corruption of captain media. |
 | M18 / FR-05; MOV-01,02,04,06,07 | Record separated active clips to exactly 200s Super 8 / 167s 16mm, with long idle/pause periods and interruption. Only successfully saved active duration debits; no over-budget footage; per-clip orientation locks at start. | Decoded track durations vs persisted capacity and wall time; no microphone prompt/input/audio track. Capacity is whole 30 fps frames (6000 Super 8, 5010 16mm; a 16mm Film loaded before PRD 2.1 slice 1 keeps 165 s, 4950): record the persisted remaining frames before the last clip and confirm that clip stops at exactly that duration, saves and completes the Film. Do not invent timing tolerance before DEC-04/12. |
-| M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder is 3:4 in portrait and 4:3 in landscape, same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; sizes and codec provisional pending DEC-04), and it carries no color tags. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
+| M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder is 3:4 in portrait and 4:3 in landscape, same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; sizes and codec provisional pending DEC-04), and it carries no color tags, which [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags) puts in front of the captain. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
 | M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No recorded audio, imported music or voice-over; same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity; DEC-05 cleared export rights and DEC-11 reselection policy absent. Missing production Soundtrack UI is not a pass. |
 | M21 / FR-16; PRV; QA-11 | Discard revealed photo/clip while viewing; revisit/force-quit/reopen. Numbered metadata-only placeholder, no source/master/clip/cache or old assembled Movie accessible; no capacity refund. Surviving clips keep byte/treatment identity/order/orientation/music. | Before/after media inventory/hash, stale viewer/export handle attempts, decoded rebuilt Movie; current-store scope only. |
 | M22 / FR-16; DEC-09 | Discard the final Movie clip. Retain Film and numbered discarded placeholders, no player or export, no reopened time budget. Relaunch and try stale handles. | Screens/state and storage, zero playable media. External Photos copies intentionally unchanged. |
@@ -298,7 +299,8 @@ PRD 2.1 slice 4 gave every Camera and Film Stock a look of its own (tracker CAM-
 Everything in it ran on a Mac and in the iPhone simulator only.
 The captain approved each look on a review board, and the boards are software renders of digital photographs and clips, not captures from the app.
 These seven scenarios are what that leaves for a phone, taken from [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md) and from "What no iPhone has run yet" in https://github.com/hcho22/Immerse/pull/25.
-All seven read **UNTESTED: physical execution deferred**.
+An eighth, L08, was added by the captain's word of 2026-10-13: it is not a check of the app but a look at exported Movies in other players, so that he can decide about color tags with the phone in hand.
+All eight read **UNTESTED: physical execution deferred**.
 They are written to be run by hand, alone, on HC_iPhone13, with the [Debug testing unlock](#debug-testing-unlock) on, so no Trial is used and every Camera loads.
 The authority and stop conditions at the top of this plan apply to each of them unchanged.
 
@@ -311,6 +313,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | L05 / FR-01 A11; CAM-02, 03, 05 to 07, CAM-12, CAM-17, CAP-12 | Capture real scenes on every Camera and Film Stock and compare each developed result by eye with its approved board in `Evidence/AssetReview/looks/`, the Disposable's fixed exposure and real flash and the corrected grain among them. | A verdict per look in the captain's words, screenshots. The captain's eye is the instrument. [Steps](#l05---each-look-on-real-captures-against-its-approved-board). |
 | L06 / ARC-08, QA-13 | Time Development for each Camera and Film Stock on HC_iPhone13. Every Development finishes; there is no time to pass or fail until DEC-12 sets budgets. | A time per Film with the phone's state. Does not replace the iPhone 11 in M29. [Steps](#l06---how-long-development-takes-on-the-phone). |
 | L07 / FR-06, section 11 "one treatment"; CAM-01, CAM-17, DEV-06, DEV-07 | Load Films with the build before this one, update to the candidate, and develop them. They develop with the look they started with, and a Film loaded after the update gets the new look. | Needs the earlier build installed first. Screenshots of the same subject from each Film. [Steps](#l07---a-film-started-before-this-build-keeps-its-look). |
+| L08 / FR-05, FR-08; MOV-11, DEC-04 | Save a Developed Movie from each Movie Camera to Photos and compare how that one file looks in Immerse, in Photos on the phone and in the other players the captain has, a Mac among them. **A decision scenario, not pass or fail:** no answer is expected of the app, and the outcome is his choice between leaving Movies untagged and having them tagged. | What he saw in each player, in his words, and his choice. [Steps](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags). |
 
 ### Before you start
 
@@ -554,7 +557,8 @@ Whether this phone adds HDR information to a photo, and whether that changes wha
   M19 already expects the original to be 1440 x 1080 at 30 frames per second on this phone.
 - Each Developed Movie has ordinary overall brightness: the bright part is bright, the dark part dark, and the middle tones are as in that Camera's other clips.
 - Each developed photo likewise.
-- No developed copy is marked HDR, and each looks the same in Photos as in Immerse.
+- No developed copy is marked HDR, and each has the same brightness in Photos as in Immerse.
+  A developed photo also has the same color in both; for a Movie's color see L08.
 - What Photos shows for an original photo is not known in advance: write it down.
 
 **It fails if.**
@@ -562,7 +566,8 @@ Whether this phone adds HDR information to a photo, and whether that changes wha
 - A Developed Movie or photo is blown out, with large areas plain white and everything far too bright, or washed to a flat gray, when the same Camera's ordinary scenes in L05 are not.
 - An original clip is HDR or Dolby Vision.
   Record it with its format line: the app did not get the format it asked for.
-- A developed copy looks plainly different in brightness or color in Photos than in Immerse.
+- A developed photo's copy looks plainly different in brightness or color in Photos than in Immerse, or a Developed Movie's copy is plainly brighter or darker there.
+  A difference in a Movie's color alone is not a failure here: it is what L08 is for.
 - Development fails on any of these Films.
 
 **Write down.**
@@ -601,9 +606,9 @@ The expectations are the looks record's and ADR 0016's.
 | 16mm Cinema, Black and white, `16mm` ("black and white looks good") | The same clips. | Gray only. Visible grain, a neutral glow around bright highlights, minor jitter and weave, soft, darker edges. No flicker, dust or hair. |
 
 **For every Movie.**
-Play it in Immerse, tap **Save Developed to Photos**, and play the copy in Photos.
-Color and brightness should look the same in both.
-A Developed Clip carries no color tags, so each player guesses its color, and no phone has shown its guess (`prd-2-slice-4-looks.md`, "What CI's Mac showed").
+Judge the look where Immerse plays it, on the Film's screen.
+A Developed Clip carries no color tags, so each other player guesses its color, and no phone has shown its guess (`prd-2-slice-4-looks.md`, "What CI's Mac showed").
+How the saved copy looks in Photos and elsewhere is not part of this verdict: it is L08, which the captain decides.
 
 **The grain, as corrected after approval.**
 After the captain approved the boards, a check in the simulator showed that iOS would have drawn the grain of five looks 1.6 times as strong as on the boards, and that the Mac had drawn the grain of the two color-table stocks finer than his files give it.
@@ -746,6 +751,80 @@ This scenario does not cover a Film loaded before PRD 2.1 slice 1 (the 16mm's ea
 **Write down.**
 Both commit hashes as built, the screenshots from part A and part B of the same subject for "OLD done", "OLD open" and "NEW" on each Camera, the Journal's list before and after the update, and a verdict per Camera.
 
+### L08 - An exported Movie in other players, for the captain's decision on color tags
+
+**This is a decision scenario, not a check.**
+Nothing here passes or fails, and no answer is expected of the app.
+Its outcome is the captain's choice between two things: leaving exported Movies as they are, without color tags, or having them tagged.
+On 2026-10-13, told that exported Movies carry no color tags today and that this look would be added to the iPhone test, he said "leave Movies as they are"; this scenario is so that he can decide about tagging with the phone in hand.
+
+**What the build does, from the code at the pinned commit.**
+
+- **Save Developed to Photos** on a Movie Film saves one file: the Film's whole Developed Movie, a `.mov`, copied to Photos byte for byte (`Packages/FilmRuntime/Sources/FilmRuntime/FilmExportWorker.swift`).
+- That Movie is the Film's Developed Clips joined end to end without being encoded again (`NativeMovieRenderer.assemble` in `Packages/RenderCore/Sources/RenderCore/NativeMovieRenderer.swift`).
+  It has no sound unless a soundtrack was chosen, and the build ships no soundtrack to choose.
+- Each Developed Clip is H.264 at about 8 megabits per second, 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, at 18 frames per second on the 1960s Super 8 Home Movie and 24 on the 16mm Cinema (`NativeMovieRenderer.developClip`, same file).
+  These sizes and the codec are provisional (DEC-04).
+- A color tag is a note in a video file that tells a player which standard its colors are written in.
+  `developClip` asks the writer for no color properties, so the clip carries no such note, and nothing in `assemble` adds one.
+  The looks record measured this on a Mac: the file reports its color space, transfer and primaries as unknown (`prd-2-slice-4-looks.md`, "What CI's Mac showed").
+- A developed photo is different: every master, print and exported photo is written as an sRGB JPEG (`NativePhotoRenderer.jpeg` in `Packages/RenderCore/Sources/RenderCore/NativePhotoRenderer.swift`).
+  That makes a photo a fair control for the two screens in step 5.
+
+**What is known and what is not.**
+A player that finds no tag has to guess.
+On the Mac that made the looks record, the system's reader guessed the standard the clip was written for at a Developed Clip's size and read its colors back within a level, and guessed another standard for a very small test clip and read colors up to 24 levels off; the record adds that another Mac need not guess the same.
+What Photos on the iPhone, QuickTime Player, a browser, a television or any other player does with this file cannot be told from the code, and this plan does not guess.
+
+**You need.**
+A developed 1960s Super 8 Home Movie Film and a developed 16mm Cinema Film on **Color**; the ones from L05 will do.
+Each should hold the gray card, the strongly colored objects and a bright light.
+A developed photo of the same card and objects from any Photo Camera, for the control.
+A Mac, and whatever other players you would really use or expect others to use.
+
+**Steps.**
+
+1. On each of the two Films tap **Save Developed to Photos**, and save the developed photo the same way from its Film.
+2. On the phone, play the Movie in Immerse and pause on the card and objects.
+   Then open the saved copy in the Photos app and pause on the same moment.
+   Write down whether the card's gray, the red, green and blue objects and the overall brightness and contrast look the same in the two.
+3. Send the saved Movie to the Mac by a route that keeps the file as it is, such as AirDrop.
+   On the Mac open it in QuickTime Player and choose Window > Show Movie Inspector.
+   Check that it is still H.264 at 1920 x 1440 or 1440 x 1920, and write down anything the inspector says about color.
+   If the route changed the file, you are then looking at that route's file: write the route down and try another.
+4. Play the file on the Mac, pause on the same moment, and hold the phone beside it with Immerse paused there too.
+   Write down what you see for the gray, the three colors, brightness and contrast.
+5. Do the control: open the saved photo on the phone and on the Mac, side by side.
+   If the photo looks alike on both screens, the screens agree, and a difference you saw in the Movie comes from how each player reads the Movie file.
+   If the photo differs too, the screens differ, and the Movie comparison on that pair says less.
+6. Repeat step 4 in every other player you have: for example a browser with the file dragged into a window, another phone, a television, or the app you would send a Movie through.
+   A player that converts what it is sent, as messaging apps often do, is still worth seeing; note that it converted.
+7. If you have a **Portrait** Movie Film, do steps 1 to 4 for it as well, since its picture is a different size.
+
+**Expect.**
+Nothing in particular.
+The Movies may look the same everywhere, or one player may show them more or less saturated, or lighter or darker in the shadows, than Immerse does.
+Either result is what this scenario is for.
+
+**It is not a failure if.**
+A player shows the Movie differently.
+The only failures to record elsewhere are ones other scenarios already own: a Movie that will not save (M15, M16), or one that is blown out or washed (L04).
+
+**The decision.**
+After looking, the captain chooses one:
+
+- **Leave Movies untagged**, as they are today and as he said on 2026-10-13.
+- **Have Movies tagged.**
+  That would be a change to the app, made and recorded after his word, with the candidate re-pinned; this plan asks nothing of the app toward it.
+
+**Write down and keep.**
+For each player: its name and version, the device and its system version, the route the file took, whether the file was still as saved, and what you saw for gray, red, green, blue, brightness and contrast, in your own words.
+The display settings of each screen (brightness, True Tone, Night Shift).
+The result of the control in step 5.
+The saved Movie files and photo themselves, kept privately and out of Git, so the same files can be looked at again.
+A photograph of two screens side by side may help memory but does not record color faithfully; the words are the evidence.
+Last, the choice, in the captain's words, with the date.
+
 ## Full Receipt Protocol
 
 These cases supplement M04/M07/M08/M24/M27 and cover FR-04 A05/A06,
@@ -840,10 +919,10 @@ nonmigration are both required; one cannot substitute for the other.
 | FR-02 A01...A02 | M03, M12, M24. |
 | FR-03 A01...A03 | M01, M02, M06, T01. |
 | FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08; the viewfinder never previewing the developed result is also watched in L03 and L05. |
-| FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06; approved output specs still needed. |
+| FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
 | FR-06 A01...A05 | M09...M11, M24, L01, L02, L07. |
 | FR-07 A01...A05 | M13, M14, M28, with A05 (no crop on an Instant print) in M13; approved ranges/applicability still needed. |
-| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports. |
+| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
 | FR-18 A01...A05 | M24, M25, T01, T07, T10, B03. |
 | FR-20 A01...A04 | M26, M27; refund/revocation and pricing remain DEC-02. |
