@@ -75,6 +75,8 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   `TableReading.swift` reads the table tetrahedrally instead, as his 6×6 spec says to, with a small Core Image kernel written in Metal: a gray's reading then uses only the table's grays.
   Grays now come out within 0.001 of the film's own table on both stocks, with no tint.
   The kernel is made at run time, the first time Development needs it, and is checked against the same reading in Swift before it is used.
+  A kernel that has proved itself is kept for the life of the process.
+  One that could not be made or did not prove is not remembered, so the next read makes and proves again; see "A failed proof is not kept" under "Tests".
   Nothing else reads the table.
   The slice first carried a fallback to Core Image's own cube for a renderer that cannot make or run the kernel; review removed it on 2026-10-12, because it gave a slightly different picture from the one the captain approved (grays up to 0.009 off on the 6×6 with a faint tint, colors up to 0.03) and a Developed Treatment is rendered once and kept.
   Where the kernel cannot be made or does not prove itself, a renderer without Metal, Development of the two color Film Stocks throws `NativeRenderError.tableReaderUnavailable` through the same path as any other Development failure, and every test that needs one of them developed is skipped with that reason (`NativePhotoRenderer.readsFilmTables`); see "The fallback's removal" under "Tests".
@@ -292,7 +294,7 @@ The final boards in the repository are rendered after the fix.
 What holds it now:
 
 - `GrainFieldTests` tests each of the three: a tile laid out one to one, a negative film's grain keeping its clumps through Core Image, the other looks' clumps, and every curve's size.
-- `sh Scripts/validate-local.sh` runs the render tests a second time inside the simulator, 93 tests since the review removed two (95 before), with every simulator run it does.
+- `sh Scripts/validate-local.sh` runs the render tests a second time inside the simulator, 96 tests as the suite stands after review (95 when this was found), with every simulator run it does.
 - `LegacyLookTests` stays a Mac-only check.
   Its version 2 pictures were recorded on a Mac, and version 2 is frozen with the tiling default in it, so on iOS its grain differs from those pictures as it always has; nothing about version 2 changed.
 
@@ -359,6 +361,7 @@ After it `swift test --package-path Packages/RenderCore` passed on the Mac with 
 The whole validation script, the app builds and the UI suites were not run again in that round.
 
 A second review round that day removed the fallback that read a film's table with Core Image's own cube and reworded three status notes; "The fallback's removal" below has what ran and where.
+A third stopped a failed proof of the kernel from being remembered; "A failed proof is not kept" below has it.
 
 | Where | What |
 | --- | --- |
@@ -411,3 +414,29 @@ The simulator-hosted tests were found by reading and were not run forced.
 **No look changed.**
 The scratch digest test of "The removal changed no look" ran again on the Mac before and after this round, and all 220 digests were identical, 54 of them frames and photographs of the two Film Stocks the kernel reads.
 The digests on the unchanged code were again the same on two runs, the scratch test is again not in the repository, and versions 1 and 2 are untouched.
+
+### A failed proof is not kept
+
+`TableReading` made and proved its kernel once for the process and kept whatever came of it, a miss included.
+With the fallback gone that miss was final: one failed proof, and the proof is a render, would have stopped every later Development of the two color Film Stocks until the app was relaunched.
+The case review named is a Develop tapped just before leaving the app, since iOS refuses GPU work from an app in the background; no iPhone has run the kernel, so that is iOS's documented behavior and not an observation here.
+
+Now only a kernel that has proved itself is kept, for the life of the process as before (`TableReading.shared`).
+A kernel that could not be made or did not prove is not remembered: the next read makes and proves again.
+A renderer that has no kernel still fails every time with `tableReaderUnavailable`, and nothing else reads the table.
+The read is behind a lock, so readers asking at once make one kernel between them, and `NativePhotoRenderer.readsFilmTables` asks the same way.
+How the table is read, and every user-facing word, are unchanged.
+
+| Test | What it holds |
+| --- | --- |
+| `testAFailedProofIsNotRememberedAndTheNextDevelopmentSucceeds` | With a reader whose first kernel fails and whose second proves, the first Development of each color Film Stock throws `tableReaderUnavailable`, the next develops exactly as it does with the shared reader, and the kernel is not asked for a third time |
+| `testWithoutAKernelEveryDevelopmentFailsWithTheSameError` | With a reader that has no kernel, three Developments of each color Film Stock each throw `tableReaderUnavailable`, and the kernel is asked for at every one |
+| `testReadersAskingAtOnceMakeOneKernel` | Eight readers asking at once all get a kernel, and one is made |
+
+The tests give `DevelopedTreatment` a reader of their own through `tableReader`; Development always reads with the shared one.
+
+On this Mac `swift test --package-path Packages/RenderCore` passed with 98 tests, and inside the iOS 26.5 simulator (iPhone 17 Pro) the render tests passed with 96.
+On both the only test skipped was `testWhereTheReaderCannotRunTheColorStocksDoNotDevelop`, because the kernel runs there.
+No other package's tests, no harness and no UI suite ran in this round.
+
+The scratch digest test ran once more on the Mac before and after: all 220 digests were identical, 54 of them frames and photographs of the two Film Stocks the kernel reads, the digests on the unchanged code were the same on two runs, and the scratch test is not in the repository.

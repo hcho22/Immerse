@@ -76,7 +76,7 @@ extension DevelopedTreatment {
             image = SceneLight.curve(SceneLight.onRec709(image), SceneLight.cubeTone, upTo: FilmLook.NegativeFilm.cubeBrightest)
         }
         let table = NegativeCubes.shared.table(for: film)
-        image = try TableReading.read(image, table: table.image, side: table.side)
+        image = try tableReader.read(image, table: table.image, side: table.side)
 
         // The table gives display tones; the weave resamples those, as the reference does, before Core Image is
         // handed them back as light.

@@ -11,13 +11,38 @@ import Foundation
 /// Image's, written in Metal and made when Development first needs it, and by nothing else: where Core Image cannot
 /// make or run it, a renderer without Metal, a film with a table does not develop
 /// (`NativeRenderError.tableReaderUnavailable`).
-enum TableReading {
+///
+/// A kernel is kept, for the life of the process, only once it has proved itself. One that could not be made or did
+/// not prove is not remembered, so the next read makes and proves again: a proof is a render, and a render that
+/// failed once must not stop every later Development. A renderer that has no kernel fails every time.
+final class TableReading: @unchecked Sendable {
+    /// The reader every Development reads with.
+    static let shared = TableReading()
+
+    private let lock = NSLock()
+    private var proved: CIKernel?
+    private let make: () -> CIKernel?
+
+    /// - Parameter make: a kernel that has proved itself, or nil. Tests give one that fails.
+    init(make: @escaping () -> CIKernel? = TableReading.provedKernel) {
+        self.make = make
+    }
+
     /// The kernel, proved against the same reading done in Swift, or nil where it cannot be made or does not prove.
-    static let kernel: CIKernel? = {
+    /// Readers asking at once make one between them.
+    var kernel: CIKernel? {
+        lock.lock()
+        defer { lock.unlock() }
+        if proved == nil { proved = make() }
+        return proved
+    }
+
+    /// A kernel made now and proved, or nil.
+    static func provedKernel() -> CIKernel? {
         guard let made = try? CIKernel.kernels(withMetalString: source).first(where: { $0.name == "readTetrahedrally" }),
               proves(made) else { return nil }
         return made
-    }()
+    }
 
     /// A table as an image for the kernel: `side` squares in a row, red across each square, green up it and blue
     /// from square to square, read at exactly one of its tones at a time.
@@ -36,8 +61,8 @@ enum TableReading {
 
     /// The picture read through a table, each of whose tones is asked for by a value from 0 to 1. Throws where there
     /// is no kernel to read it.
-    static func read(_ image: CIImage, table: CIImage, side: Int) throws -> CIImage {
-        guard let kernel, let read = apply(kernel, to: image, table: table, side: side) else {
+    func read(_ image: CIImage, table: CIImage, side: Int) throws -> CIImage {
+        guard let kernel, let read = Self.apply(kernel, to: image, table: table, side: side) else {
             throw NativeRenderError.tableReaderUnavailable
         }
         return read

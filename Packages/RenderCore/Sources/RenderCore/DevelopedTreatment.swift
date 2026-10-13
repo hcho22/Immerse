@@ -16,6 +16,8 @@ struct DevelopedTreatment {
     let seed: UInt64
     private let flashFired: Bool
     let sceneWhiteBalance: SceneWhiteBalance?
+    /// What reads a negative film's table. Tests give one whose kernel fails.
+    var tableReader = TableReading.shared
 
     /// - Parameters:
     ///   - flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.

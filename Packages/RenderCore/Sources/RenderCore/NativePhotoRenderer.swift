@@ -37,8 +37,9 @@ public enum NativePhotoRenderer {
 
     /// Whether this renderer can read a film's table, which the color Film Stocks of the 16mm Cinema and the 6×6
     /// Medium Format develop through. Where it cannot, a renderer without Metal, developing one of them throws
-    /// `NativeRenderError.tableReaderUnavailable`.
-    public static var readsFilmTables: Bool { TableReading.kernel != nil }
+    /// `NativeRenderError.tableReaderUnavailable`. A miss is not remembered: each asking makes and proves the reader
+    /// again until one has proved itself.
+    public static var readsFilmTables: Bool { TableReading.shared.kernel != nil }
 
     /// The developed master of one capture: the Camera's picture shape and its treatment, in the capture's assigned
     /// treatment version, for the Film's Film Stock. A nil Film Stock, a Camera without one or a Film loaded before

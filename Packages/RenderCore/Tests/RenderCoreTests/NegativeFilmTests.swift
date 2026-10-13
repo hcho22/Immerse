@@ -356,7 +356,7 @@ final class NegativeFilmTests: XCTestCase {
     /// simulator and a Mac.
     func testTheTetrahedralReaderIsMadeWhereThereIsMetal() throws {
         try XCTSkipUnless(MTLCreateSystemDefaultDevice() != nil, "No Metal device here")
-        XCTAssertNotNil(TableReading.kernel)
+        XCTAssertNotNil(TableReading.shared.kernel)
     }
 
     /// The reader against the same reading in Swift, on the captain's own table: 3,000 tones between the table's own,
@@ -370,7 +370,7 @@ final class NegativeFilmTests: XCTestCase {
         for tone in tones { pixels += [Float(tone[0]), Float(tone[1]), Float(tone[2]), 1] }
         let picture = CIImage(bitmapData: pixels.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: tones.count * 16,
                               size: CGSize(width: tones.count, height: 1), format: .RGBAf, colorSpace: nil)
-        let read = try TableReading.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side)
+        let read = try TableReading.shared.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side)
         let values = Fixtures.values(read, workingFormat: .RGBAf)
         var worst = 0.0
         for (index, want) in expected.enumerated() {
@@ -382,7 +382,7 @@ final class NegativeFilmTests: XCTestCase {
 
     /// Where Core Image cannot run the reader, neither color Film Stock develops, and nothing else reads its table.
     func testWhereTheReaderCannotRunTheColorStocksDoNotDevelop() throws {
-        try XCTSkipUnless(TableReading.kernel == nil, "Core Image runs the tetrahedral reader here")
+        try XCTSkipUnless(TableReading.shared.kernel == nil, "Core Image runs the tetrahedral reader here")
         XCTAssertFalse(NativePhotoRenderer.readsFilmTables)
         let picture = CIImage(color: CIColor(red: 0.18, green: 0.18, blue: 0.18)).cropped(to: CGRect(x: 0, y: 0, width: 32, height: 32))
         for stock in Self.stocks {
@@ -390,6 +390,57 @@ final class NegativeFilmTests: XCTestCase {
                 XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
             }
         }
+    }
+
+    /// A reader with no kernel fails every Development with the same error, asking for a kernel again each time,
+    /// and nothing else reads the table.
+    func testWithoutAKernelEveryDevelopmentFailsWithTheSameError() throws {
+        var asked = 0
+        let reader = TableReading { asked += 1; return nil }
+        for stock in Self.stocks {
+            var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+            development.tableReader = reader
+            for _ in 0..<3 {
+                XCTAssertThrowsError(try development.apply(to: Fixtures.even(tone: 0.5, colorSpace: stock.capture)), stock.name) {
+                    XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+                }
+            }
+        }
+        XCTAssertEqual(asked, 6, "A missing kernel is asked for again at every Development")
+    }
+
+    /// A kernel that did not prove, or could not be made, is not remembered: the Development that met it fails, and
+    /// the next one makes and proves a kernel again and develops as any other does, with no relaunch. A kernel that
+    /// has proved itself is kept.
+    func testAFailedProofIsNotRememberedAndTheNextDevelopmentSucceeds() throws {
+        try requireTetrahedralReader()
+        for stock in Self.stocks {
+            var asked = 0
+            let reader = TableReading {
+                asked += 1
+                return asked == 1 ? nil : TableReading.provedKernel()
+            }
+            let picture = Fixtures.even(tone: 0.5, colorSpace: stock.capture)
+            var development = DevelopedTreatment(stock.filmAlone, seed: 1)
+            development.tableReader = reader
+            XCTAssertThrowsError(try development.apply(to: picture), stock.name) {
+                XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+            }
+            let developed = try Fixtures.tones(development.apply(to: picture))
+            let expected = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: picture))
+            XCTAssertEqual(developed.values, expected.values, "\(stock.name) develops as it does with the shared reader")
+            _ = try development.apply(to: picture)
+            XCTAssertEqual(asked, 2, "\(stock.name): a kernel that proved itself is kept")
+        }
+    }
+
+    /// Readers asking for the kernel at once make one between them, and each of them gets it.
+    func testReadersAskingAtOnceMakeOneKernel() throws {
+        try requireTetrahedralReader()
+        var asked = 0
+        let reader = TableReading { asked += 1; return TableReading.provedKernel() }
+        DispatchQueue.concurrentPerform(iterations: 8) { _ in XCTAssertNotNil(reader.kernel) }
+        XCTAssertEqual(asked, 1)
     }
 
     /// Each generator's neutral values through the same steps, for every one a phone picture can reach (its white is
