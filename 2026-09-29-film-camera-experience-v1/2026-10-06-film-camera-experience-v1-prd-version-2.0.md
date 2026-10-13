@@ -433,8 +433,6 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 | 1970s Instant | 10 exposures | Individual instant-print experience | Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws | Each exposure develops individually |
 | 6×6 Medium Format | 12 exposures | Square framing; a waist-level viewfinder that shows the scene reversed left to right; deliberate focus/exposure; Film Stock chosen at Load Film | Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur | Roll-level Development |
 
-**Exception, 2026-10-10 (ADR 0016).** On its look review board the captain chose a faded look for the 1970s Instant ("faded"): lifted, milky blacks, muted color and age-style tints replace "Brilliant, warm, saturated color" for that Camera alone; the rest of its row stands, and every other Camera stays freshly processed under ADR 0013.
-
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas. The 6×6 Medium Format and the 16mm Cinema carry no decade, because their color reference films are present-day ones (version 2.0).
 
 ### 6.2 Movie Cameras
@@ -444,8 +442,6 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 | 1960s Super 8 Home Movie | 3:20 / 200 seconds | 18 frames per second. Handheld cartridge character, a fixed-focus lens, and automatic exposure. Strong, rich color and fine grain, with an unsteady frame, brightness flicker, and dust and hair in the gate | Silent; optional built-in soundtrack after Development |
 | 16mm Cinema | 2:47 / 167 seconds | 24 frames per second. Deliberate framing; Film Stock, color or black-and-white, chosen at Load Film. Visible grain, highlight halation (a red glow on color, a neutral glow on black-and-white), minor jitter and weave, and soft, darkened edges; no brightness flicker and no dust or hair in the gate. The color Film Stock keeps a fixed daylight balance, so warm indoor light develops orange | Silent; optional built-in soundtrack after Development |
 
-
-**Exception, 2026-10-10 (ADR 0016).** On its look review board the captain chose a muted look with a highlight glow for the 1960s Super 8 Home Movie ("muted with a glow"): lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights replace "Strong, rich color" for that Camera alone; the rest of its row stands, and the 16mm Cinema stays as written.
 
 Both Movie Cameras support personal Films. Each capacity is one real load of the Camera's Format Reference: a 50-foot Super 8 cartridge at 18 frames per second and a 100-foot 16mm spool at 24 frames per second. There is no capacity selector.
 

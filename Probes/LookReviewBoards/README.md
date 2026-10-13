@@ -39,13 +39,3 @@ The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with 
   `--comparison-only 1` marks a further look as shown for comparison and not a choice, such as the look the app carried before; `--looks-heading` words the heading over the looks' notes, and a note may hold several paragraphs separated by blank lines.
 - `--remote-references <json>` links pictures the captain supplied that are not openly licensed.
   The board shows them from where they are published; they are never copied into the repository.
-
-## Lightroom values
-
-```sh
-python3 Probes/LookReviewBoards/lightroom_curve.py --highlights -30 --shadows 40 --whites 15 --blacks -5 --dehaze -5 --black-node 4
-```
-
-The captain wrote some look notes as Lightroom slider values.
-This prints the `points`, `black` and `white` of a `FilmLook.ToneCurve` for them.
-Adobe does not publish the sliders' math, so it is a stated approximation of their effect, described at the top of the script, not Lightroom itself.

@@ -1,4 +1,3 @@
-import CoreGraphics
 import FilmDomain
 import Foundation
 
@@ -23,8 +22,9 @@ enum TreatmentVersion: String, CaseIterable {
 /// Format Reference's name is internal and stays in these comments; no product string carries it (ADR 0015). Spatial
 /// values are fractions of the developed picture's long edge, so a look is the same at any size.
 ///
-/// DEC-04 status: every value below is provisional until the captain approves that Camera's review board (QA-16); the
-/// Instant's print-to-print variation stays provisional after that, pending a study of preserved 1970s prints.
+/// DEC-04 status: the captain approved every Camera's look on its review board (QA-16), the last on 2026-10-12. The
+/// Instant's contrast and print-to-print variation stay provisional all the same: the faded look he approved on
+/// 2026-10-10 is its current look and current contrast, and both wait on a study of preserved 1970s prints.
 enum FilmLook {
     /// The looks that depart from ADR 0013's fresh rule, each by the captain's own choice (ADR 0016): the Instant is
     /// faded, the Super 8 is muted with a highlight glow, and the color Film Stocks of the 16mm and the 6×6 are the
@@ -73,7 +73,8 @@ enum FilmLook {
     /// ADR 0013 and to PRD 2.1 section 6.1's "brilliant, warm, saturated color"): lifted, milky blacks, softened
     /// whites, low contrast, muted color with aqua blues and olive greens, blue in the shadows and yellow in the
     /// highlights, soft detail and a coarse texture. Each print still differs slightly in color and density, with no
-    /// uneven-chemistry or spread flaws; the size of that variation waits on a study of preserved 1970s prints (DEC-04).
+    /// uneven-chemistry or spread flaws. This is its current look and current contrast: its contrast and the size of
+    /// that variation stay provisional until a study of preserved 1970s prints (DEC-04).
     static let instant = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
@@ -355,9 +356,8 @@ extension FilmLook {
         /// Moves the balance toward magenta (positive) or green, as a gain off green in linear light.
         var tint: Double = 0
         /// How much each dye layer also records, or with a negative value loses, another layer's color, in linear
-        /// light: red from green turns greens toward olive, red from blue below zero turns blues toward cyan and
-        /// warms skin, green from blue turns blues toward aqua, and blue from green quiets yellows or, below zero,
-        /// strengthens greens. Neutral tones stay neutral.
+        /// light: red from green turns greens toward olive, green from blue turns blues toward aqua, and blue from
+        /// green quiets yellows or, below zero, strengthens greens. Neutral tones stay neutral.
         var layers = Layers()
         /// Color strength around each pixel's luminance in linear light; 1 keeps the capture's.
         var saturation: Double
@@ -368,10 +368,6 @@ extension FilmLook {
         var shadows: RGB = .zero
         var highlights: RGB = .zero
         var grain: Grain
-        /// The light color temperature, in kelvin, a stock with a fixed balance records as neutral. A Movie clip recorded
-        /// in warmer light develops warm and in cooler light cool, against the light its capture recorded
-        /// (`SceneWhiteBalance`); nil follows the phone's white balance.
-        var fixedBalance: Double? = nil
     }
 
     /// A black-and-white film and its print: one silver layer exposed by the capture's light.
@@ -382,18 +378,13 @@ extension FilmLook {
         var grain: Grain
     }
 
-    /// A print curve over display tones from black to white: an S that keeps display mid-gray where it is, or a curve
-    /// drawn through given points.
+    /// A print curve over display tones from black to white: an S that keeps display mid-gray where it is.
     struct ToneCurve: Equatable {
         /// The curve's slope at mid-gray: 1 keeps the capture's contrast and higher values deepen shadows and brighten
         /// highlights.
         var contrast: Double
         /// A power applied to the tone before the curve: above 1 darkens the middle tones and below 1 lightens them.
         var midtones: Double = 1
-        /// A curve drawn point by point, as (capture tone, print tone) pairs on the 0 to 255 scale a point curve is
-        /// usually written in, from capture black (0) to capture white (255) with rising tones. When given, it
-        /// replaces the S of `contrast`; `midtones`, `shoulder`, `black` and `white` still apply around it.
-        var points: [CGPoint] = []
         /// A soft shoulder: how far the upper tones are pulled down, as display tone at three-quarter gray, with
         /// black and white left where they are. Negative film rolls its highlights off gently.
         var shoulder: Double = 0
@@ -404,39 +395,11 @@ extension FilmLook {
         func callAsFunction(_ tone: Double) -> Double {
             let x = pow(min(max(tone, 0), 1), midtones)
             guard x > 0, x < 1 else { return black + (white - black) * x }
-            let curved: Double
-            if points.isEmpty {
-                let rising = pow(x, contrast)
-                curved = rising / (rising + pow(1 - x, contrast))
-            } else {
-                curved = min(max(Self.interpolate(points, at: x * 255) / 255, 0), 1)
-            }
+            let rising = pow(x, contrast)
+            let curved = rising / (rising + pow(1 - x, contrast))
             // Largest at three-quarter gray, where the factor is 1, and nothing at black or white.
             let rolled = curved - shoulder * (256.0 / 27) * curved * curved * curved * (1 - curved)
             return black + (white - black) * rolled
-        }
-
-        /// The smooth curve through the points that never overshoots them or turns back (a monotone cubic).
-        static func interpolate(_ points: [CGPoint], at x: Double) -> Double {
-            guard points.count > 1, let first = points.first, let last = points.last else { return x }
-            if x <= first.x { return first.y }
-            if x >= last.x { return last.y }
-            let count = points.count
-            let widths = (0..<count - 1).map { points[$0 + 1].x - points[$0].x }
-            let slopes = (0..<count - 1).map { (points[$0 + 1].y - points[$0].y) / widths[$0] }
-            // Tangents: the harmonic mean of the neighboring slopes, flat where the slope changes sign.
-            var tangents = [CGFloat](repeating: 0, count: count)
-            tangents[0] = slopes[0]
-            tangents[count - 1] = slopes[count - 2]
-            for index in 1..<count - 1 where slopes[index - 1] * slopes[index] > 0 {
-                let left = 2 * widths[index] + widths[index - 1], right = widths[index] + 2 * widths[index - 1]
-                tangents[index] = (left + right) / (left / slopes[index - 1] + right / slopes[index])
-            }
-            let segment = (0..<count - 1).last { points[$0].x <= x } ?? 0
-            let width = widths[segment], t = (x - points[segment].x) / width
-            let t2 = t * t, t3 = t2 * t
-            return (2 * t3 - 3 * t2 + 1) * points[segment].y + (t3 - 2 * t2 + t) * width * tangents[segment]
-                + (-2 * t3 + 3 * t2) * points[segment + 1].y + (t3 - t2) * width * tangents[segment + 1]
         }
     }
 
@@ -465,9 +428,6 @@ extension FilmLook {
     struct Lens: Equatable {
         /// Softness over the whole picture, as a blur radius in fractions of the long edge.
         var softness: Double = 0
-        /// A veil of diffused light: the share of the picture replaced by a wide blur of itself, which lowers local
-        /// contrast and smooths skin without losing fine detail, as negative clarity does.
-        var diffusion: Double = 0
         /// Extra softness toward the corners, as the corners' blur radius in fractions of the long edge.
         var edgeSoftness: Double = 0
         /// How much darker the corners are than the center, in stops.
@@ -506,7 +466,6 @@ extension FilmLook {
 
     struct Layers: Equatable {
         var redFromGreen: Double = 0
-        var redFromBlue: Double = 0
         var greenFromBlue: Double = 0
         var blueFromGreen: Double = 0
     }

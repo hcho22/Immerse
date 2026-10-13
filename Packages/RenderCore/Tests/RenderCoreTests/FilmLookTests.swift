@@ -10,8 +10,9 @@ import UniformTypeIdentifiers
 import XCTest
 
 /// Treatment version 3: each Camera and Film Stock develops with its own fresh look and the imperfections PRD 2.1
-/// section 6 gives it (ADRs 0013 to 0015). The values are provisional until the captain approves each Camera's review
-/// board (DEC-04, QA-16), so these tests hold the character and the bounds, not the numbers.
+/// section 6 gives it (ADRs 0013 to 0015). The captain approved every Camera's look on its review board (DEC-04,
+/// QA-16); the Instant's contrast and print-to-print variation stay provisional until a study of preserved 1970s
+/// prints. These tests hold each look's character and bounds, not its numbers.
 final class FilmLookTests: XCTestCase {
     private static let linear = CGColorSpace(name: CGColorSpace.linearSRGB)!
     private static let sRGB = CGColorSpace(name: CGColorSpace.sRGB)!
@@ -131,26 +132,6 @@ final class FilmLookTests: XCTestCase {
         XCTAssertEqual(soft(0.75), plain(0.75) - 0.08, accuracy: 0.001)
         XCTAssertEqual(soft(0.1), plain(0.1), accuracy: 0.002, "Shadows keep their place")
         XCTAssertEqual(soft(1), 1, accuracy: 0.0001)
-    }
-
-    /// A print curve drawn point by point passes through each point, as written on the 0 to 255 scale, and rises
-    /// smoothly between them without overshooting.
-    func testAPointCurvePassesThroughItsPoints() {
-        let points = [CGPoint(x: 0, y: 0), CGPoint(x: 30, y: 25), CGPoint(x: 70, y: 75), CGPoint(x: 115, y: 120),
-                      CGPoint(x: 190, y: 170), CGPoint(x: 255, y: 255)]
-        let curve = FilmLook.ToneCurve(contrast: 1, points: points)
-        for point in points {
-            XCTAssertEqual(curve(Double(point.x) / 255), Double(point.y) / 255, accuracy: 0.0005, "\(point)")
-        }
-        let levels = (0...255).map { curve(Double($0) / 255) }
-        for (lower, upper) in zip(levels, levels.dropFirst()) { XCTAssertGreaterThan(upper, lower) }
-        XCTAssertLessThan(curve(50.0 / 255), 75.0 / 255, "Between two points it stays between their tones")
-        XCTAssertGreaterThan(curve(50.0 / 255), 25.0 / 255)
-        // The same curve with a print black and white keeps its shape between them.
-        let printed = FilmLook.ToneCurve(contrast: 1, points: points, black: 0.02, white: 0.96)
-        XCTAssertEqual(printed(0), 0.02, accuracy: 0.0001)
-        XCTAssertEqual(printed(1), 0.96, accuracy: 0.0001)
-        XCTAssertEqual(printed(70.0 / 255), 0.02 + 0.94 * 75 / 255, accuracy: 0.0005)
     }
 
     /// The Instant develops with the faded look the captain chose on its review board on 2026-10-10 (ADR 0016): lifted,
@@ -367,33 +348,6 @@ final class FilmLookTests: XCTestCase {
         }
     }
 
-    /// A veil of diffused light spreads light across an edge, lowering contrast around it, and leaves fine detail
-    /// and even tones away from the edge as they were: what a blur over the whole picture would not.
-    func testDiffusionVeilsAnEdgeAndKeepsFineDetail() throws {
-        let side = 1024
-        var plain = FilmLook.treatment(camera: .mediumFormat6x6, filmStock: .color)
-        plain.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
-        plain.lens = FilmLook.Lens()
-        var veiled = plain
-        veiled.lens.diffusion = 0.1
-
-        let light = Self.even(0.6, side: CGFloat(side)).cropped(to: CGRect(x: 0, y: 0, width: side / 2, height: side))
-        let halves = light.composited(over: Self.even(0.05, side: CGFloat(side)))
-        let rows = side / 2 - 40..<side / 2 + 40
-        let beside = side / 2 + 2..<side / 2 + 10, away = side * 3 / 4 - 20..<side * 3 / 4 + 20
-        let plainHalves = try render(halves, treatment: plain), veiledHalves = try render(halves, treatment: veiled)
-        XCTAssertGreaterThan(veiledHalves.meanLuminance(x: beside, y: rows), plainHalves.meanLuminance(x: beside, y: rows) + 5,
-                             "light veils the dark side of an edge")
-        XCTAssertEqual(veiledHalves.meanLuminance(x: away, y: rows), plainHalves.meanLuminance(x: away, y: rows), accuracy: 1,
-                       "an even tone away from the edge is unchanged")
-
-        let checks = Self.checkerboard(side: CGFloat(side), square: 6)
-        let sharp = try render(checks, treatment: plain).edgeSharpness(x: rows, y: rows)
-        let kept = try render(checks, treatment: veiled).edgeSharpness(x: rows, y: rows)
-        XCTAssertGreaterThan(kept, sharp * 0.6, "fine detail survives the veil (\(kept) vs \(sharp))")
-        XCTAssertLessThan(kept, sharp, "and its contrast is a little lower")
-    }
-
     // MARK: - The Instant
 
     /// Each print differs slightly from the next in color and density, chosen once from its seed: the same seed
@@ -558,12 +512,9 @@ final class FilmLookTests: XCTestCase {
         mono.gate = nil
         let monoTungsten = try balance(SceneWhiteBalance(temperature: 3200, tint: 0), mono)
         XCTAssertEqual(monoTungsten.red, monoTungsten.blue, accuracy: 1, "Black-and-white stays gray")
-        for camera in [FilmLook.disposable, FilmLook.instant, FilmLook.mediumFormatColor, FilmLook.super8] {
-            switch camera.emulsion {
-            case let .color(emulsion): XCTAssertNil(emulsion.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
-            case let .negative(film): XCTAssertNil(film.fixedBalance, "Only the 16mm's color stock keeps a fixed balance")
-            case .monochrome: break
-            }
+        for other in [FilmLook.disposable, FilmLook.instant, FilmLook.mediumFormatColor, FilmLook.super8] {
+            let lit = try balance(SceneWhiteBalance(temperature: 3200, tint: 0), other), unlit = try balance(nil, other)
+            XCTAssertTrue(lit == unlit, "Only the 16mm's color stock keeps a fixed balance (\(lit) vs \(unlit))")
         }
     }
 

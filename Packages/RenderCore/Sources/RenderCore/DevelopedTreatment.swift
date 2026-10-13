@@ -77,12 +77,6 @@ struct DevelopedTreatment {
         if lens.softness > 0 {
             image = image.clampedToExtent().applyingGaussianBlur(sigma: lens.softness * longEdge).cropped(to: extent)
         }
-        if lens.diffusion > 0 {
-            let veil = image.clampedToExtent().applyingGaussianBlur(sigma: 0.012 * longEdge).cropped(to: extent)
-            image = veil.applyingFilter("CIDissolveTransition", parameters: [
-                kCIInputTargetImageKey: image, kCIInputTimeKey: 1 - lens.diffusion
-            ]).cropped(to: extent)
-        }
         if lens.edgeSoftness > 0 {
             image = image.clampedToExtent().applyingFilter("CIMaskedVariableBlur", parameters: [
                 "inputMask": Self.radialMask(extent, inner: 0.35, centerLevel: 0, edgeLevel: 1),
@@ -105,11 +99,6 @@ struct DevelopedTreatment {
             let warmth = variation.warmth * random(0, salt: 2, signed: true)
             let tint = variation.tint * random(0, salt: 3, signed: true)
             image = Self.balance(image, warmth: warmth, tint: tint, gain: pow(2, density))
-        }
-
-        // A stock with a fixed balance records the light's own color, which the phone's white balance had taken out.
-        if case let .color(emulsion) = treatment.emulsion, let balance = emulsion.fixedBalance, let light = sceneWhiteBalance {
-            image = Self.fixBalance(image, film: balance, light: light)
         }
 
         // The film and its print.
@@ -304,8 +293,7 @@ struct DevelopedTreatment {
             var balanced = FilmLook.RGB(linear.red * gains.red * normal, linear.green * gains.green * normal,
                                         linear.blue * gains.blue * normal)
             let layers = film.layers
-            balanced = FilmLook.RGB(balanced.red + layers.redFromGreen * (balanced.green - balanced.red)
-                                        + layers.redFromBlue * (balanced.blue - balanced.red),
+            balanced = FilmLook.RGB(balanced.red + layers.redFromGreen * (balanced.green - balanced.red),
                                     balanced.green + layers.greenFromBlue * (balanced.blue - balanced.green),
                                     balanced.blue + layers.blueFromGreen * (balanced.green - balanced.blue))
             let level = luminance(balanced)

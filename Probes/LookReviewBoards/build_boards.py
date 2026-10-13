@@ -45,8 +45,8 @@ BOARDS = [
     {
         "id": "instant",
         "approved": "Approved by the captain on 2026-10-10 (\"faded\", then \"approved\"): the faded look, his exception to "
-                    "ADR 0013 and to the PRD wording below (ADR 0016). The size of the print-to-print variation stays "
-                    "provisional until the study of preserved 1970s prints.",
+                    "ADR 0013 and to the PRD wording below (ADR 0016). Its contrast and the size of its print-to-print variation "
+                    "stay provisional until the study of preserved 1970s prints.",
         "pairs": {("instant1970s", None): [("instant-02", "highlights-01"), ("instant-01", "day-02"), ("instant-03", "day-01")]},
         "name": "1970s Instant",
         "cameras": [("instant1970s", None)],

@@ -234,7 +234,7 @@ public actor AVFoundationCaptureBackend {
                 orientation: orientation.clipOrientation, remainingFrames: remainingFrames))
         } catch { operations.finish(id: id); throw error }
         movieOutput.maxRecordedDuration = CMTime(value: CMTimeValue(remainingFrames), timescale: CMTimeScale(MovieFrames.perSecond))
-        movieOutput.metadata = input.map { [Self.sceneWhiteBalanceItem($0.device)] }
+        movieOutput.metadata = input.flatMap { Self.sceneWhiteBalanceItem($0.device) }.map { [$0] }
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
                 await self?.movieFinished(
@@ -248,9 +248,15 @@ public actor AVFoundationCaptureBackend {
     }
 
     /// The light the clip starts in, as the lens's white balance judges it, for a Film Stock with a fixed color
-    /// balance to develop against. The viewfinder and the recording keep the phone's automatic white balance.
-    private static func sceneWhiteBalanceItem(_ device: AVCaptureDevice) -> AVMetadataItem {
-        let values = device.temperatureAndTintValues(for: device.deviceWhiteBalanceGains)
+    /// balance to develop against. The viewfinder and the recording keep the phone's automatic white balance. Nil
+    /// when a gain is outside the range the lens converts, 1 to its largest gain: the clip then carries no record and
+    /// develops with the phone's balance.
+    private static func sceneWhiteBalanceItem(_ device: AVCaptureDevice) -> AVMetadataItem? {
+        let gains = device.deviceWhiteBalanceGains
+        guard [gains.redGain, gains.greenGain, gains.blueGain].allSatisfy({ $0 >= 1 && $0 <= device.maxWhiteBalanceGain }) else {
+            return nil
+        }
+        let values = device.temperatureAndTintValues(for: gains)
         let item = AVMutableMetadataItem()
         item.keySpace = .quickTimeMetadata
         item.key = SceneWhiteBalance.metadataKey as NSString

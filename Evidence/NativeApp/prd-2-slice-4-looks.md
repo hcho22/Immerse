@@ -23,22 +23,24 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   `FilmLookTests.testEveryLookIsFreshlyProcessedNotAged` checks every other treatment on black, white and five color patches, and that black-and-white stays gray, while `testTheInstantDevelopsWithTheFadedLookTheCaptainChose` and `testTheSuperEightDevelopsMutedWithAGlowAsTheCaptainChose` hold those two to their chosen looks, and `NegativeFilmTests`, `ScenePassesTests` and `MediumFormatPassesTests` hold the two color Film Stocks to the captain's files.
 - **Each Camera's imperfections (PRD 2.1 section 6).**
   - Disposable: warm, saturated color; heavy grain (amplitude 8) with extra grain in the shadows, so a dim scene without flash develops dark and grainy; a plastic lens's soft, 0.6-stop darker corners; and, on an exposure whose Exif says the flash fired, a hot center that falls 0.9 stops to the corners and harsher print contrast. No light leaks, red-eye, dust or scratches.
-  - Instant: the faded look the captain chose on its board (see "Review boards" below); each print gets its own density (up to 0.12 stops) and color (warmth and tint) from its seed, so it is assigned once and never rerolled. The size of the variation stays provisional pending the study of preserved 1970s prints.
+  - Instant: the faded look the captain chose on its board (see "Review boards" below); each print gets its own density (up to 0.12 stops) and color (warmth and tint) from its seed, so it is assigned once and never rerolled. The faded look is its current look and current contrast; its contrast and the size of the variation both stay provisional pending the study of preserved 1970s prints.
   - 6×6 color: since 2026-10-12 the look in the captain's own files (below): gentle contrast with lifted blacks, cream-warm grays, very fine grain, a mild lens vignette and no softening. Black-and-white: a new panchromatic silver layer with high contrast and distinct grain.
   - Super 8: the muted look with a glow the captain chose on its board (see "Review boards" below) and fine grain; per-frame jitter and a slow weave drawn from just outside the frame so no edge shows; a brightness flicker of up to 0.06 stops; up to three dust specks on a frame; and, on about half of clips, a hair caught at the gate's edge for the whole clip.
   - 16mm: visible grain; a glow around highlights, red on color and neutral on black-and-white; minor jitter and weave; soft, darker edges; no flicker, dust or hair.
     The color Film Stock's color and passes are the ones in the captain's own files since 2026-10-12 (next section): a long soft highlight shoulder, muted greens, aquas and purples, and daylight gray developed neutral, with black at 4 percent and the shadows opened, as he chose once he saw them applied.
     The black-and-white Film Stock keeps the values tuned on its board.
-- **Tone curves from the captain's notes.**
-  `FilmLook.ToneCurve` takes either an S-curve or a point curve (`points`, a monotone cubic through the points as a photo editor draws one), since the captain wrote several notes as curve points and Lightroom slider values.
-  `Probes/LookReviewBoards/lightroom_curve.py` turns Basic-panel values into such a curve.
-  Adobe does not publish the sliders' math, so the script is a stated approximation of their effect, not Lightroom itself, and each board said so.
-  `Lens.diffusion` adds the veil of diffused light that negative Clarity gives.
+- **Options the board rounds used and no approved look sets (removed in review, 2026-10-12).**
+  The captain wrote several notes as curve points and Lightroom slider values, and the candidates built from them used four options: a point tone curve (`ToneCurve.points`, with `Probes/LookReviewBoards/lightroom_curve.py` turning Basic-panel values into one, as a stated approximation each board named as such), a veil of diffused light (`Lens.diffusion`), a fixed balance on a display-tone color emulsion (`ColorEmulsion.fixedBalance`) and a red-from-blue dye layer (`Layers.redFromBlue`).
+  His own files replaced the candidates that set them, so no look he approved sets any of the four.
+  The review removed all four with their render branches, the two tests that existed only for them and the script, before version 3 reaches main and its table is frozen.
+  Versions 1 and 2 never used them (`LegacyLook` has its own curve and its own renderer) and are untouched, and the negative film's fixed balance (`NegativeFilm.fixedBalance`) stays, since the 16mm's color Film Stock sets it.
+  No look changed: see "The removal changed no look" under "Tests".
 - **The 16mm color stock's fixed daylight balance (decision).**
   PRD 2.1 section 6.2 says warm indoor light develops orange on the color Film Stock, which the phone's automatic white balance would otherwise remove.
   The capture now writes the lens's white-balance reading at the start of each Movie clip into the clip as QuickTime metadata (`SceneWhiteBalance`, key `app.immerse.scene-white-balance`), and the 16mm color treatment (`fixedBalance: 5500`) develops the clip as daylight film records that light.
   The viewfinder and the recording keep the phone's automatic white balance, so nothing previews the developed color (FR-04), the same choice slice 2 made for the Disposable's fixed exposure.
   A clip without the record, every other Camera and the black-and-white stock are unaffected.
+  The reading is written only when every gain is inside the range the lens converts, 1 to its largest gain: outside it the conversion raises an exception Swift cannot catch, so that clip carries no record and develops with the phone's balance.
   The device reading is unproven until the manual candidate.
 - **Load Film copy.**
   The 16mm look line now follows the chosen Film Stock: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color (main's line) and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white.
@@ -290,7 +292,7 @@ The final boards in the repository are rendered after the fix.
 What holds it now:
 
 - `GrainFieldTests` tests each of the three: a tile laid out one to one, a negative film's grain keeping its clumps through Core Image, the other looks' clumps, and every curve's size.
-- `sh Scripts/validate-local.sh` runs the render tests a second time inside the simulator, 95 tests, with every simulator run it does.
+- `sh Scripts/validate-local.sh` runs the render tests a second time inside the simulator, 93 tests since the review removed two (95 before), with every simulator run it does.
 - `LegacyLookTests` stays a Mac-only check.
   Its version 2 pictures were recorded on a Mac, and version 2 is frozen with the tiling default in it, so on iOS its grain differs from those pictures as it always has; nothing about version 2 changed.
 
@@ -331,7 +333,7 @@ The simulator is not an iPhone: a device's own renderer is first exercised at th
 | Camera | Rounds | The captain's words | Outcome |
 | --- | --- | --- | --- |
 | 1990s Disposable | 1 (2026-10-09), 2 with A and B (2026-10-10), 3 with A alone | "fresh" | Approved 2026-10-10: A, inside ADR 0013. |
-| 1970s Instant | 1 (2026-10-09), then A and B, then 2 with B alone (2026-10-10) | "the image has to be more faded", then "faded", then "approved" | Approved 2026-10-10: the faded look, ADR 0016. Its print-to-print variation stays provisional until the study of preserved 1970s prints. |
+| 1970s Instant | 1 (2026-10-09), then A and B, then 2 with B alone (2026-10-10) | "the image has to be more faded", then "faded", then "approved" | Approved 2026-10-10: the faded look, ADR 0016, as its current look and current contrast. Its contrast and print-to-print variation both stay provisional until the study of preserved 1970s prints. |
 | 1960s Super 8 Home Movie | 1 (2026-10-09), 2 with A and B (2026-10-10), 3 with B alone | "muted with a glow" | Approved 2026-10-10: B, ADR 0016. |
 | 6×6 Medium Format | 1 (2026-10-09) to 11 (2026-10-12) | Slider notes, then five reference pictures, a point curve, "please replicate lightroom values", then "Round 5 values are better than the lightroom values. please retry with the .xmp values", then "the blacks are too strong. please bring down the contrast to 50", then a full written spec: "regenerate with following", then "the green looks desaturated compared to the reference picture. please increase the green saturation", then his own files: "please apply attached files to immerse 6x6 portra 400 film", then "everything looks good" | Approved 2026-10-12. Round 11 showed the look from his files, applied in the app and rendered through it (A), beside the same with its greens strengthened (B) and the previous look for comparison only, and the black-and-white Film Stock as it has stood since round 4. His reply was taken as approval of the Camera as it is in the app, A for color, and he was told so on the board and that saying "B" would bring the stronger greens in. A is recorded in ADR 0016. |
 | 16mm Cinema | 1 (2026-10-09) to 12 (2026-10-12) | A description of the reference film, then slider values, "please replicate the lightroom values", then four reference pictures: "get as close as possible", then a full written spec: "please try the following", then his own files: "please apply the attached for immerse - 16mm camera kodak vision3 250d", then, shown them applied, "the blacks are too strong for color. please tone it down", "please bring the black up to 4 percent" and, of the two ways to that black, "lets go with C", then "black and white looks good" | Approved 2026-10-12: the color Film Stock with the look from his files and the print's density range he chose (C), recorded in ADR 0016, and the black-and-white Film Stock, which has not changed since round 1. Round 12 showed C in the app and rendered through it, beside his black level alone raised and his files unchanged for comparison only. |
@@ -352,14 +354,32 @@ All of them were captured again on 2026-10-12, after the looks the captain appro
 On 2026-10-12, with the final code, `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both app builds, the 30 populated-harness tests, the 95 render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark.
 None of it is a device run.
 
+A review round later that day removed the four unused look options with the two tests that existed only for them (see "What changed") and stopped the capture writing a white-balance reading the lens cannot convert.
+After it `swift test --package-path Packages/RenderCore` passed on the Mac with 95 tests, the render tests passed once inside the simulator (iPhone 17 Pro, iOS 26.5) with 93 tests, none skipped, `Packages/NativeAdapters` built for the iOS simulator, and the document package matched its tree.
+The whole validation script, the app builds and the UI suites were not run again in that round.
+
 | Where | What |
 | --- | --- |
 | `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's |
 | `RenderCoreTests/NegativeFilmTests`, `ScenePassesTests`, `MediumFormatPassesTests` | The color Film Stocks of the 16mm and the 6×6 against the captain's own files: see "How the app is held to his files" under each |
-| `RenderCoreTests/FilmLookTests` | Versions assigned from the Film's package; unknown version refused; every look new and distinct; fresh, not aged, with the Instant and the Super 8 held to the looks the captain chose and the color Film Stocks of the 16mm and the 6×6 left to his files; the print curve and a point curve; Disposable flash from Exif, heavy and shadow grain; grain ranking across Cameras; grain keeps the tone; soft dark edges where the format has them; the diffusion veil; Instant print variation; Super 8 jitter, flicker, dust and gate hair; 16mm red and neutral glow, weave without flicker; the daylight balance and its clip metadata |
+| `RenderCoreTests/FilmLookTests` | Versions assigned from the Film's package; unknown version refused; every look new and distinct; fresh, not aged, with the Instant and the Super 8 held to the looks the captain chose and the color Film Stocks of the 16mm and the 6×6 left to his files; the print curve; Disposable flash from Exif, heavy and shadow grain; grain ranking across Cameras; grain keeps the tone; soft dark edges where the format has them; Instant print variation; Super 8 jitter, flicker, dust and gate hair; 16mm red and neutral glow, weave without flicker; the daylight balance and its clip metadata |
 | `RenderCoreTests/GrainFieldTests`, and the render tests rerun inside the iOS simulator | What differs between Core Image on a Mac and on iOS: see "What only the iOS simulator showed" |
 | `RenderCoreTests/FilmStockRenderTests` | Black-and-white higher in contrast on a neutral ramp; versions 1, 2 and 3 renderable |
 | `FilmRuntimeTests/TreatmentVersionDevelopmentTests` | Through the production processor: an unfinished roll, an Instant pack and a black-and-white 16mm reel locked before the update develop with version 2; a new roll with version 3 |
 | `FilmDomainTests/SceneWhiteBalanceTests` | The recorded light round-trips through its metadata value |
 | `ImmerseTests` | Load copy names the glow of the chosen stock and no film |
 | `ImmerseUITests/ContentSizeTests` | The 16mm black-and-white look line at all twelve sizes |
+
+### The removal changed no look
+
+Before the removal and again after it, a scratch test wrote a SHA-256 digest of every version 3 look on the Mac, and all 220 digests were identical:
+
+- each look's color cube as Development builds it, and the Disposable's again with its flash contrast (8 digests);
+- 4,913 display colors through each look's emulsion, compared to the last bit (7), and each print curve at 4,097 tones (5);
+- frames rendered through `DevelopedTreatment(version: "film-look-3", …)` for every Camera and Film Stock, with two seeds, three frame numbers, with and without a recorded 3200 K light, and the Disposable with and without flash, as float pixels and as 8-bit pixels (96 each);
+- developed photos from `NativePhotoRenderer.develop` for the four photo looks, with and without the Exif flash record (8).
+
+The digests on the unchanged code were the same on two runs, so a difference would have shown.
+The scratch test is not in the repository.
+Versions 1 and 2 are untouched: `LegacyLook.swift` did not change, and `LegacyLookTests` passes against the version 2 build's pictures.
+The comparison ran on the Mac only; inside the simulator the same looks are held by the render tests above.
