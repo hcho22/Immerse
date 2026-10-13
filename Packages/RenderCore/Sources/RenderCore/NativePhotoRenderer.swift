@@ -20,7 +20,17 @@ public enum NativeRenderError: Error, Equatable {
     case tableReaderUnavailable
 }
 
-/// Develops and prints photographs with each Camera's Developed Treatment. DEC-04/DEC-11 output approval remains open.
+/// The sizes developed photographs are made and saved to Photos at, the captain's of 2026-10-13 (DEC-04). They are
+/// JPEG in sRGB. The Instant's is its card, `InstantPrintCard`, whose size he has not yet decided.
+public enum DevelopedPhotoSize {
+    /// The most pixels a Disposable's borderless 3:2 picture has.
+    public static let disposableMaximumPixels = 12_000_000
+    /// The side of a 6×6 Medium Format picture, in pixels.
+    public static let mediumFormatSide = 3072
+}
+
+/// Develops and prints photographs with each Camera's Developed Treatment, in the sizes of `DevelopedPhotoSize` and
+/// within the Darkroom's limits, `DarkroomLimits`.
 public enum NativePhotoRenderer {
     /// The treatment version Development assigns to a Film loaded today: each Camera's and Film Stock's own look
     /// (`FilmLook`). A Film records its version in the Camera package it locked at Load Film.
@@ -57,12 +67,18 @@ public enum NativePhotoRenderer {
             image = normalize(image.cropped(to: CGRect(
                 x: (image.extent.width - side) / 2, y: (image.extent.height - side) / 2, width: side, height: side
             )))
-            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : 3072)
+            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : DevelopedPhotoSize.mediumFormatSide)
             image = image.transformed(by: CGAffineTransform(scaleX: target / side, y: target / side))
         } else {
             if camera.id == .disposable1990s { image = cropToThreeByTwo(image) }
-            let scale = min(1, sqrt(12_000_000 / (image.extent.width * image.extent.height)))
-            image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+            let width = image.extent.width, height = image.extent.height
+            let scale = sqrt(CGFloat(DevelopedPhotoSize.disposableMaximumPixels) / (width * height))
+            // A larger capture is brought down to whole pixels, so the picture never passes the limit by the pixel a
+            // fractional size rounds out to.
+            if scale < 1 {
+                image = image.transformed(by: CGAffineTransform(scaleX: (width * scale).rounded(.down) / width,
+                                                                y: (height * scale).rounded(.down) / height))
+            }
         }
         image = try treatment.apply(to: image)
         // The card is part of the developed master, so every view and export of the print includes it.
