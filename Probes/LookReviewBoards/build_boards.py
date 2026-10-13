@@ -45,8 +45,9 @@ BOARDS = [
     {
         "id": "instant",
         "approved": "Approved by the captain on 2026-10-10 (\"faded\", then \"approved\"): the faded look, his exception to "
-                    "ADR 0013 and to the PRD wording below (ADR 0016). Its contrast and the size of its print-to-print variation "
-                    "stay provisional until the study of preserved 1970s prints.",
+                    "ADR 0013 and to the PRD wording below (ADR 0016). On 2026-10-13, with the study of preserved 1970s prints "
+                    "on this board, he chose its contrast: \"B\", which he said means \"contrast only\". The contrast is the "
+                    "one the study supports, and the print-to-print variation stays as it was.",
         "pairs": {("instant1970s", None): [("instant-study-23", "flash-01"), ("instant-study-07", "flash-02"), ("instant-01", "day-02"),
                                            ("instant-03", "day-01")]},
         "name": "1970s Instant",
@@ -58,15 +59,16 @@ BOARDS = [
                   "iPhone running the app.",
         "cameras": [("instant1970s", None)],
         "references": ["instant", "instant-study"],
-        "value_blocks": ["instant"],
+        "value_blocks": ["instant", "instantVersion3"],
         "reference_internal": "The original 1970s Polaroid integral print (SX-70 film), as it looked fresh from the camera",
         "prd": "Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft "
                "detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread "
                "flaws. The contrast and the size of the variation wait on a study of preserved 1970s prints.",
         "judge": [
+            "Color: the faded look approved on 2026-10-10: muted and warm, with blue in the shadows and yellow in the highlights.",
             "Contrast: how deep the blacks go, how bright the whites are, and how far the middle tones spread between them.",
             "Variation: how much one print of a pack differs from the next in brightness and in color; never a flaw.",
-            "The faded color you approved on 2026-10-10 is not in question here and is the same in A and B.",
+            "Detail: soft, with a coarse texture.",
         ],
     },
     {
@@ -453,7 +455,9 @@ def build(board, renders, sources, output, round_number):
                 slug = "%s-%s" % (stock or "look", scene_id)
                 reference_name = "ref-%s.jpg" % reference_id
                 copy_image(reference["local_path"], os.path.join(directory, reference_name))
-                dated = " (%s)" % esc(reference["era_or_date"]) if reference.get("study") else ""
+                # A study print's date, unless its title already gives it.
+                dated = (" (%s)" % esc(reference["era_or_date"])
+                         if reference.get("study") and reference["era_or_date"] not in (reference.get("title") or "") else "")
                 body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s%s<br>'
                             '<small>%s</small></figcaption></figure>' % (columns(2 + len(candidates)), reference_name,
                                                                        esc(reference.get("title")), esc(reference.get("title")), dated,

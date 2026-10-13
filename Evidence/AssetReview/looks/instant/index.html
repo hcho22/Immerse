@@ -28,6 +28,20 @@
   .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
   .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pack { background: var(--surround); border-radius: 6px; padding: 14px; margin: 0 0 30px; }
+  .row.five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+  .row.five figure img { height: auto; background: none; }
+  .pack figcaption { color: #fff; margin-top: 6px; font-size: 13px; }
+  .strip { display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); gap: 8px; align-items: start; margin: 0 0 14px; }
+  .strip figure img { height: auto; aspect-ratio: 1; object-fit: cover; }
+  .strip figcaption { font-size: 13px; }
+  .scroll { overflow-x: auto; }
+  .scroll .strip { min-width: 900px; }
+  table { border-collapse: collapse; margin: 12px 0 18px; font-size: 15px; }
+  th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #e9eeeb; }
+  .decision h3 { margin: 18px 0 4px; font: 650 17px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .decision h3:first-child { margin-top: 0; }
   figure { margin: 0; min-width: 0; }
   figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
   .pair figure img, .pair figure video { height: 520px; }
@@ -52,192 +66,307 @@
     header, main, footer { padding: 20px 16px; }
     h1 { font-size: 30px; }
     .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    .row.five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row.five figure img { height: auto; }
     figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
     .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   }
 </style>
 </head>
 <body>
-<header><p class="eyebrow">Film Journal / Look review board final / 2026-10-12</p>
+<header><p class="eyebrow">Film Journal / Look review board 03 / 2026-10-13</p>
 <h1>1970s Instant</h1>
-<p class="muted">Each scene developed by the app's own renderer (treatment version film-look-3) beside the phone capture it started from and photographs made with the Camera's Format Reference.</p>
-<p class="notice"><strong>Approved by the captain on 2026-10-10 (&quot;faded&quot;, then &quot;approved&quot;): the faded look, his exception to ADR 0013 and to the PRD wording below (ADR 0016). Its contrast and the size of its print-to-print variation stay provisional until the study of preserved 1970s prints.</strong></p>
-<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference image stay internal and never ship in the app. Reference images are public-domain or openly licensed photographs credited under each one; many are scans of surviving prints or reels, which have aged, so judge them for the format's character as it was new. The test scenes are modern digital photographs, not captures from an iPhone running the app, so capture behavior (fixed exposure, the real flash) is not shown.</p>
-<dl class="facts"><dt>Format Reference</dt><dd>The original 1970s Polaroid integral print (SX-70 film), as it looked fresh from the camera</dd><dt>PRD 2.1 section 6</dt><dd>Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws. The contrast and the size of the variation wait on a study of preserved 1970s prints.</dd><dt>What to judge</dt><dd><ul class="judge"><li>Color: brilliant, warm and saturated, the print as it was fresh, not as surviving prints have faded.</li><li>Detail: soft, without grain.</li><li>Variation: each print slightly different in color and density; never a flaw.</li><li>Contrast and variation stay provisional until the study of preserved 1970s prints (DEC-04).</li></ul></dd></dl></header>
+<p class="muted">Each scene developed by the app's own renderer (treatment version film-look-4) beside the phone capture it started from and photographs made with the Camera's Format Reference.</p>
+<p class="notice"><strong>Approved by the captain on 2026-10-10 (&quot;faded&quot;, then &quot;approved&quot;): the faded look, his exception to ADR 0013 and to the PRD wording below (ADR 0016). On 2026-10-13, with the study of preserved 1970s prints on this board, he chose its contrast: &quot;B&quot;, which he said means &quot;contrast only&quot;. The contrast is the one the study supports, and the print-to-print variation stays as it was.</strong></p>
+<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference&#x27;s name and every reference image stay internal and never ship in the app. Reference images are public-domain or openly licensed photographs credited under each one. They are scans of prints about fifty years old, and this Camera&#x27;s look is the faded one you chose, so judge the developed pictures against them as they are; the study below says what in a scan is the film, what is age and what is the scanner. The test scenes are modern digital photographs, not captures from an iPhone running the app.</p>
+<dl class="facts"><dt>Format Reference</dt><dd>The original 1970s Polaroid integral print (SX-70 film), as it looked fresh from the camera</dd><dt>PRD 2.1 section 6</dt><dd>Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws. The contrast and the size of the variation wait on a study of preserved 1970s prints.</dd><dt>What to judge</dt><dd><ul class="judge"><li>Color: the faded look approved on 2026-10-10: muted and warm, with blue in the shadows and yellow in the highlights.</li><li>Contrast: how deep the blacks go, how bright the whites are, and how far the middle tones spread between them.</li><li>Variation: how much one print of a pack differs from the next in brightness and in color; never a flaw.</li><li>Detail: soft, with a coarse texture.</li></ul></dd></dl></header>
 <main>
+<section><h2>What the study of preserved prints found</h2><p>The study measured 37 scans of prints made between 1973 and 1979. All are openly licensed and are shown at the foot of this board with their sources. It weighed three things: what the standard reference on print permanence says these prints do with age, what a scanner does to a print, and what the scans themselves show.</p><p>Film, age and scanner. The reference (Wilhelm and Brower, The Permanence and Care of Color Photographs, 1993) found the dyes of these prints &quot;extremely stable in dark storage&quot;: a print kept in an album keeps its color and its contrast. What age adds is an overall yellowish stain, plainest in the whites, and fine cracks under the surface of early prints. A scanner changes more than age does. In 26 of the 37 scans the blacks are crushed to nothing or the whites burned out, by the scanner or by later editing, and those scans cannot say where a print&#x27;s black or white sits.</p><p>What the 11 usable scans show. The blacks of preserved prints are deeper than the app makes them, the whites sit a little below the white card as the app has them, the middle tones spread further apart, and the color is about twice as strong. Preserved prints are less flat than the contrast the Instant had before the study.</p><p>What the scans cannot show. No scan is of a known scene, so the exact shape of the film&#x27;s curve cannot be read from them, only where its two ends sit and how far the tones spread between them. Only three usable scans include the white card, so the black and white figures rest on three prints. The contrast the captain chose moves the app toward the scans on every measure and stops short of them on each.</p><p>Print to print. The best evidence is three sets of prints one photographer made in single evenings in 1976, 1978 and 1979. Four prints of the 1978 evening were scanned without adjustment, and they differ from one another more than twice as much in brightness as ten prints do in the app, and about one and a half times as much in color. Each of the four is of a different scene, so those are upper limits. The board showed a variation widened to match them beside the one the app had, and the captain kept the one the app had. Prints of different evenings differ far more, with green blacks one year and purple the next, but that is different batches of film, decades of different storage and different scanning sessions, not one pack.</p>
+<h3>Contrast: the scans beside the app before and after the study</h3><table><thead><tr><th>Measure</th><th>Preserved prints</th><th>Before the study (treatment version 3)</th><th>In the app (treatment version 4)</th></tr></thead><tbody><tr><td>Deepest black against the card&#x27;s white, as a density (higher is deeper)</td><td>1.73, 2.04 and 2.48 in the three scans that show the card</td><td>1.47</td><td>1.80</td></tr><tr><td>The same black as a display tone (0 is black, 1 is white)</td><td>0.04 to 0.15 against the card; 0.14 to 0.18 in four unadjusted scans without it</td><td>0.20</td><td>0.13</td></tr><tr><td>Brightest white against the card, as a display tone</td><td>0.77, 0.85 and 0.87</td><td>0.76</td><td>0.83</td></tr><tr><td>How far the tones spread between black and white (0 is not at all)</td><td>0.32, the median of the 11 usable scans</td><td>0.25</td><td>0.28</td></tr><tr><td>Color strength (mean CIELAB chroma)</td><td>14.8, the same median</td><td>7.3</td><td>10.1</td></tr></tbody></table>
+<p class="muted">The app&#x27;s figures are medians over the twelve scenes of this board. The scans are of other scenes, so read the columns as a direction, not as a target to hit.</p>
+<h3>Variation: the scans beside the app and the wider variation that was not taken</h3><table><thead><tr><th>Difference between prints (standard deviation, in stops)</th><th>Four prints of the 1978 evening</th><th>In the app, kept</th><th>Proposed from the study, not taken</th></tr></thead><tbody><tr><td>Brightness of the whites</td><td>0.139</td><td>0.052</td><td>0.086</td></tr><tr><td>Color of the whites, blue against red</td><td>0.024</td><td>0.016</td><td>0.022</td></tr><tr><td>Color of the whites, green against red</td><td>0.014</td><td>0.007</td><td>0.009</td></tr></tbody></table>
+<p class="muted">The app&#x27;s figures are ten prints of one scene at the contrast the captain chose, so nothing differs but the print. The evening&#x27;s are four prints of four scenes, so they are upper limits.</p>
+</section>
+<section><h2>The contrast before and after the study</h2><dl class="facts"><dt>In the app (treatment version 4)</dt><dd><p>The contrast the captain chose on 2026-10-13, B on this board when it was served to him. The same faded color, grain, softness and white card as before. Black sits a little deeper, at 11 percent of the tone scale, and white stays at 90. Between them is the S-shaped curve of a print: steeper through the middle tones and easing into black and into white.</p></dd><dt>Before the study (treatment version 3)</dt><dd><p>The look he approved on 2026-10-10 with the contrast it had until the study, A on this board when it was served. Its curve is flatter than the phone&#x27;s own: it opens the shadows and holds the middle tones close together. Black sits at 13 percent of the tone scale and white at 90. An Instant Film loaded under version 3 still develops this way.</p></dd></dl></section>
 <section><h2>Scenes</h2>
 <h3>Side by side with the Format Reference</h3><p class="muted">A photograph made with the reference format beside a scene of the same kind developed by the app. The subjects differ; judge color, contrast, grain and the format's imperfections.</p>
-<div class="row two pair scene"><figure><img src="ref-instant-02.jpg" alt="Polaroid SX-70 (1978): office interior"><figcaption><strong>Reference:</strong> Polaroid SX-70 (1978): office interior<br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Chuck_Jones_(228243289).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Backlit interior with bright windows (iPhone 13 Pro)</figcaption></figure></div>
-<div class="row two pair scene"><figure><img src="ref-instant-01.jpg" alt="Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood"><figcaption><strong>Reference:</strong> Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood<br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255758209/">source</a></small></figcaption></figure>
-<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure></div>
-<div class="row two pair scene"><figure><img src="ref-instant-03.jpg" alt="Polaroid integral print (1978): Villa Lanza di Trabia, Sicily"><figcaption><strong>Reference:</strong> Polaroid integral print (1978): Villa Lanza di Trabia, Sicily<br><small>Samuele Piazza · <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Bagheria_(Pa)_-_Villa_Lanza_di_Trabia.jpg">source</a></small></figcaption></figure>
-<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, version 3:</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure></div>
+<div class="row  pair scene"><figure><img src="ref-instant-study-23.jpg" alt="Sylvester Stallone, Helen Reddy"><figcaption><strong>Reference:</strong> Sylvester Stallone, Helen Reddy (1978-04-13)<br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/2398015575/">source</a></small></figcaption></figure>
+<figure><img src="look-flash-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4):</strong> Group toast lit by on-camera flash (compact camera, 2008)</figcaption></figure>
+<figure><img src="look-flash-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3):</strong> Group toast lit by on-camera flash (compact camera, 2008)</figcaption></figure>
+</div>
+<div class="row  pair scene"><figure><img src="ref-instant-study-07.jpg" alt="A genuine Polaroid of me from 1978-02-07"><figcaption><strong>Reference:</strong> A genuine Polaroid of me from 1978-02-07<br><small>bob walker · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · <a href="https://www.flickr.com/photos/rjw1/30549651397/">source</a></small></figcaption></figure>
+<figure><img src="look-flash-02.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4):</strong> Night portrait with direct flash outdoors (compact camera, 2006)</figcaption></figure>
+<figure><img src="look-flash-02-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3):</strong> Night portrait with direct flash outdoors (compact camera, 2006)</figcaption></figure>
+</div>
+<div class="row  pair scene"><figure><img src="ref-instant-01.jpg" alt="Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood"><figcaption><strong>Reference:</strong> Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood (1976-12-01)<br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255758209/">source</a></small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4):</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure>
+<figure><img src="look-day-02-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3):</strong> People playing capoeira in a city park (iPhone 13)</figcaption></figure>
+</div>
+<div class="row  pair scene"><figure><img src="ref-instant-03.jpg" alt="Polaroid integral print (1978): Villa Lanza di Trabia, Sicily"><figcaption><strong>Reference:</strong> Polaroid integral print (1978): Villa Lanza di Trabia, Sicily<br><small>Samuele Piazza · <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Bagheria_(Pa)_-_Villa_Lanza_di_Trabia.jpg">source</a></small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4):</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure>
+<figure><img src="look-day-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3):</strong> Sunny beach boardwalk (iPhone 13)</figcaption></figure>
+</div>
 <h3>Every scene</h3>
 <div class="scene"><h4><span class="tag">Day</span>Sunny beach boardwalk (iPhone 13)</h4>
 <div class="row ">
 <figure><img src="scene-day-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>TheWxResearcher · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Virginia_Beach_Oceanfront_2024-08-31.jpg">source</a></small></figcaption></figure>
-<figure><img src="look-day-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101000</small></figcaption></figure>
-<figure><img src="look-day-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-day-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-day-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-day-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108919</small></figcaption></figure>
-<figure><img src="look-day-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116838</small></figcaption></figure>
-<figure><img src="look-day-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124757</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-day-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-day-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13)</h4>
 <div class="row ">
 <figure><img src="scene-day-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></figcaption></figure>
-<figure><img src="look-day-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101001</small></figcaption></figure>
-<figure><img src="look-day-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-day-02.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-day-02-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-day-02-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108920</small></figcaption></figure>
-<figure><img src="look-day-02-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116839</small></figcaption></figure>
-<figure><img src="look-day-02-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124758</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-day-02-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-day-02-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Day</span>Pasture gate in Scotland (iPhone 13)</h4>
 <div class="row ">
 <figure><img src="scene-meadow-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Rose Abrams · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Pasture_gate.jpg">source</a></small></figcaption></figure>
-<figure><img src="look-meadow-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101002</small></figcaption></figure>
-<figure><img src="look-meadow-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-meadow-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-meadow-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-meadow-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108921</small></figcaption></figure>
-<figure><img src="look-meadow-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116840</small></figcaption></figure>
-<figure><img src="look-meadow-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124759</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-meadow-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-meadow-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin</h4>
 <div class="row ">
 <figure><img src="scene-skin-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></figcaption></figure>
-<figure><img src="look-skin-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101003</small></figcaption></figure>
-<figure><img src="look-skin-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-skin-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-skin-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-skin-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108922</small></figcaption></figure>
-<figure><img src="look-skin-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116841</small></figcaption></figure>
-<figure><img src="look-skin-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124760</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-skin-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-skin-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two women, medium-brown skin</h4>
 <div class="row ">
 <figure><img src="scene-skin-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Moheen Reeyad · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Two_Bangladeshi_smiling_women_(01).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-skin-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101004</small></figcaption></figure>
-<figure><img src="look-skin-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-skin-03.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-skin-03-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-skin-03-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108923</small></figcaption></figure>
-<figure><img src="look-skin-03-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116842</small></figcaption></figure>
-<figure><img src="look-skin-03-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124761</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-skin-03-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-skin-03-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight)</h4>
 <div class="row ">
 <figure><img src="scene-skin-04.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></figcaption></figure>
-<figure><img src="look-skin-04.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101005</small></figcaption></figure>
-<figure><img src="look-skin-04-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-skin-04.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-skin-04-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-skin-04-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108924</small></figcaption></figure>
-<figure><img src="look-skin-04-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116843</small></figcaption></figure>
-<figure><img src="look-skin-04-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124762</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-skin-04-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-skin-04-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Flash</span>Group toast lit by on-camera flash (compact camera, 2008)</h4>
 <div class="row ">
 <figure><img src="scene-flash-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Richie Diesterheft from Chicago, IL, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Graduation_Cheers!_(2658114583).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-flash-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101006</small></figcaption></figure>
-<figure><img src="look-flash-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-flash-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-flash-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-flash-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108925</small></figcaption></figure>
-<figure><img src="look-flash-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116844</small></figcaption></figure>
-<figure><img src="look-flash-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124763</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-flash-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-flash-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Flash</span>Night portrait with direct flash outdoors (compact camera, 2006)</h4>
 <div class="row ">
 <figure><img src="scene-flash-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Andrew Malone · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Kate_at_night_(356377859).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-flash-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101007</small></figcaption></figure>
-<figure><img src="look-flash-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-flash-02.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-flash-02-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-flash-02-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108926</small></figcaption></figure>
-<figure><img src="look-flash-02-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116845</small></figcaption></figure>
-<figure><img src="look-flash-02-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124764</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-flash-02-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-flash-02-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7)</h4>
 <div class="row ">
 <figure><img src="scene-night-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-night-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101008</small></figcaption></figure>
-<figure><img src="look-night-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-night-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-night-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-night-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108927</small></figcaption></figure>
-<figure><img src="look-night-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116846</small></figcaption></figure>
-<figure><img src="look-night-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124765</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-night-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-night-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro)</h4>
 <div class="row ">
 <figure><img src="scene-highlights-01.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></figcaption></figure>
-<figure><img src="look-highlights-01.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101009</small></figcaption></figure>
-<figure><img src="look-highlights-01-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-highlights-01.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-highlights-01-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-highlights-01-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108928</small></figcaption></figure>
-<figure><img src="look-highlights-01-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116847</small></figcaption></figure>
-<figure><img src="look-highlights-01-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124766</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-highlights-01-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-highlights-01-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Bright highlights</span>Sun in frame over the sea with glints (iPhone 14 Pro)</h4>
 <div class="row ">
 <figure><img src="scene-highlights-02.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>&quot;dronepicr&quot; · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Sunset_over_Kontogialos_Beach_in_Corfu,_Greece_(53698254280).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-highlights-02.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101010</small></figcaption></figure>
-<figure><img src="look-highlights-02-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-highlights-02.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-highlights-02-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-highlights-02-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108929</small></figcaption></figure>
-<figure><img src="look-highlights-02-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116848</small></figcaption></figure>
-<figure><img src="look-highlights-02-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124767</small></figcaption></figure>
-</div>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-highlights-02-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-highlights-02-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
 <div class="scene"><h4><span class="tag">Bright highlights</span>Night street with bright signage, Akihabara (iPhone 15 Pro)</h4>
 <div class="row ">
 <figure><img src="scene-highlights-03.jpg" alt="The scene as the phone captured it"><figcaption><strong>Phone capture</strong> <small>Stephen Kelly from San Francisco, CA, USA · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Akihabara_Radio_Kaikan_Shopping_Building_(53416976349).jpg">source</a></small></figcaption></figure>
-<figure><img src="look-highlights-03.jpg" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> <small>seed 2026101011</small></figcaption></figure>
-<figure><img src="look-highlights-03-crop.jpg" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> <small>grain and softness as developed</small></figcaption></figure>
+<figure><img src="look-highlights-03.jpg" alt="In the app (treatment version 4)"><figcaption><strong>In the app (treatment version 4)</strong></figcaption></figure>
+<figure><img src="look-highlights-03-b.jpg" alt="Before the study (treatment version 3)"><figcaption><strong>Before the study (treatment version 3)</strong></figcaption></figure>
 </div>
-<p class="muted">Three more prints of the same scene, each with its own slight variation:</p><div class="row">
-<figure><img src="look-highlights-03-print-1.jpg" alt="Another print of the scene"><figcaption>Print 1 <small>seed 2026108930</small></figcaption></figure>
-<figure><img src="look-highlights-03-print-2.jpg" alt="Another print of the scene"><figcaption>Print 2 <small>seed 2026116849</small></figcaption></figure>
-<figure><img src="look-highlights-03-print-3.jpg" alt="Another print of the scene"><figcaption>Print 3 <small>seed 2026124768</small></figcaption></figure>
+<details><summary>Full size, center: grain and softness as developed</summary><div class="row two">
+<figure><img src="look-highlights-03-crop.jpg" alt="In the app (treatment version 4) at full size" loading="lazy"><figcaption>In the app (treatment version 4)</figcaption></figure>
+<figure><img src="look-highlights-03-crop-b.jpg" alt="Before the study (treatment version 3) at full size" loading="lazy"><figcaption>Before the study (treatment version 3)</figcaption></figure>
+</div></details>
 </div>
-</div>
+</section>
+<section><h2>A pack of ten prints</h2><p class="muted">Each row is one Film: its ten exposures, each developed with the seed Development gives that exposure, so each print's variation is the one it would get in the app and never changes afterwards. The rows of a pair use the same ten seeds, so a print differs between them only in how far it moves, not in which way.</p>
+<h3>Ten prints of one scene, where nothing differs but the print</h3>
+<h4>In the app: the variation as it was, which the captain kept</h4><p class="muted">Brightness up to 0.12 stops either way, warmth up to 2.5 percent either way, green to magenta up to 1 percent.</p><div class="pack"><div class="row five">
+<figure><img src="pack-same-a-1.jpg" alt="Print 1 of the pack" loading="lazy"><figcaption>Print 1</figcaption></figure>
+<figure><img src="pack-same-a-2.jpg" alt="Print 2 of the pack" loading="lazy"><figcaption>Print 2</figcaption></figure>
+<figure><img src="pack-same-a-3.jpg" alt="Print 3 of the pack" loading="lazy"><figcaption>Print 3</figcaption></figure>
+<figure><img src="pack-same-a-4.jpg" alt="Print 4 of the pack" loading="lazy"><figcaption>Print 4</figcaption></figure>
+<figure><img src="pack-same-a-5.jpg" alt="Print 5 of the pack" loading="lazy"><figcaption>Print 5</figcaption></figure>
+<figure><img src="pack-same-a-6.jpg" alt="Print 6 of the pack" loading="lazy"><figcaption>Print 6</figcaption></figure>
+<figure><img src="pack-same-a-7.jpg" alt="Print 7 of the pack" loading="lazy"><figcaption>Print 7</figcaption></figure>
+<figure><img src="pack-same-a-8.jpg" alt="Print 8 of the pack" loading="lazy"><figcaption>Print 8</figcaption></figure>
+<figure><img src="pack-same-a-9.jpg" alt="Print 9 of the pack" loading="lazy"><figcaption>Print 9</figcaption></figure>
+<figure><img src="pack-same-a-10.jpg" alt="Print 10 of the pack" loading="lazy"><figcaption>Print 10</figcaption></figure>
+</div></div>
+<h4>The wider variation the study supports, shown to him and not taken</h4><p class="muted">Brightness up to 0.2 stops either way, warmth up to 3.5 percent, green to magenta up to 1.5 percent. Rendered from values that were never in the app.</p><div class="pack"><div class="row five">
+<figure><img src="pack-same-b-1.jpg" alt="Print 1 of the pack" loading="lazy"><figcaption>Print 1</figcaption></figure>
+<figure><img src="pack-same-b-2.jpg" alt="Print 2 of the pack" loading="lazy"><figcaption>Print 2</figcaption></figure>
+<figure><img src="pack-same-b-3.jpg" alt="Print 3 of the pack" loading="lazy"><figcaption>Print 3</figcaption></figure>
+<figure><img src="pack-same-b-4.jpg" alt="Print 4 of the pack" loading="lazy"><figcaption>Print 4</figcaption></figure>
+<figure><img src="pack-same-b-5.jpg" alt="Print 5 of the pack" loading="lazy"><figcaption>Print 5</figcaption></figure>
+<figure><img src="pack-same-b-6.jpg" alt="Print 6 of the pack" loading="lazy"><figcaption>Print 6</figcaption></figure>
+<figure><img src="pack-same-b-7.jpg" alt="Print 7 of the pack" loading="lazy"><figcaption>Print 7</figcaption></figure>
+<figure><img src="pack-same-b-8.jpg" alt="Print 8 of the pack" loading="lazy"><figcaption>Print 8</figcaption></figure>
+<figure><img src="pack-same-b-9.jpg" alt="Print 9 of the pack" loading="lazy"><figcaption>Print 9</figcaption></figure>
+<figure><img src="pack-same-b-10.jpg" alt="Print 10 of the pack" loading="lazy"><figcaption>Print 10</figcaption></figure>
+</div></div>
+<h3>Ten different pictures, as a pack is used</h3>
+<h4>In the app: the variation as it was, which the captain kept</h4><p class="muted">Brightness up to 0.12 stops either way, warmth up to 2.5 percent either way, green to magenta up to 1 percent.</p><div class="pack"><div class="row five">
+<figure><img src="pack-mixed-a-1.jpg" alt="Print 1 of the pack" loading="lazy"><figcaption>Print 1</figcaption></figure>
+<figure><img src="pack-mixed-a-2.jpg" alt="Print 2 of the pack" loading="lazy"><figcaption>Print 2</figcaption></figure>
+<figure><img src="pack-mixed-a-3.jpg" alt="Print 3 of the pack" loading="lazy"><figcaption>Print 3</figcaption></figure>
+<figure><img src="pack-mixed-a-4.jpg" alt="Print 4 of the pack" loading="lazy"><figcaption>Print 4</figcaption></figure>
+<figure><img src="pack-mixed-a-5.jpg" alt="Print 5 of the pack" loading="lazy"><figcaption>Print 5</figcaption></figure>
+<figure><img src="pack-mixed-a-6.jpg" alt="Print 6 of the pack" loading="lazy"><figcaption>Print 6</figcaption></figure>
+<figure><img src="pack-mixed-a-7.jpg" alt="Print 7 of the pack" loading="lazy"><figcaption>Print 7</figcaption></figure>
+<figure><img src="pack-mixed-a-8.jpg" alt="Print 8 of the pack" loading="lazy"><figcaption>Print 8</figcaption></figure>
+<figure><img src="pack-mixed-a-9.jpg" alt="Print 9 of the pack" loading="lazy"><figcaption>Print 9</figcaption></figure>
+<figure><img src="pack-mixed-a-10.jpg" alt="Print 10 of the pack" loading="lazy"><figcaption>Print 10</figcaption></figure>
+</div></div>
+<h4>The wider variation the study supports, shown to him and not taken</h4><p class="muted">Brightness up to 0.2 stops either way, warmth up to 3.5 percent, green to magenta up to 1.5 percent. Rendered from values that were never in the app.</p><div class="pack"><div class="row five">
+<figure><img src="pack-mixed-b-1.jpg" alt="Print 1 of the pack" loading="lazy"><figcaption>Print 1</figcaption></figure>
+<figure><img src="pack-mixed-b-2.jpg" alt="Print 2 of the pack" loading="lazy"><figcaption>Print 2</figcaption></figure>
+<figure><img src="pack-mixed-b-3.jpg" alt="Print 3 of the pack" loading="lazy"><figcaption>Print 3</figcaption></figure>
+<figure><img src="pack-mixed-b-4.jpg" alt="Print 4 of the pack" loading="lazy"><figcaption>Print 4</figcaption></figure>
+<figure><img src="pack-mixed-b-5.jpg" alt="Print 5 of the pack" loading="lazy"><figcaption>Print 5</figcaption></figure>
+<figure><img src="pack-mixed-b-6.jpg" alt="Print 6 of the pack" loading="lazy"><figcaption>Print 6</figcaption></figure>
+<figure><img src="pack-mixed-b-7.jpg" alt="Print 7 of the pack" loading="lazy"><figcaption>Print 7</figcaption></figure>
+<figure><img src="pack-mixed-b-8.jpg" alt="Print 8 of the pack" loading="lazy"><figcaption>Print 8</figcaption></figure>
+<figure><img src="pack-mixed-b-9.jpg" alt="Print 9 of the pack" loading="lazy"><figcaption>Print 9</figcaption></figure>
+<figure><img src="pack-mixed-b-10.jpg" alt="Print 10 of the pack" loading="lazy"><figcaption>Print 10</figcaption></figure>
+</div></div>
 </section>
 <section><h2>All Format Reference imagery</h2><p class="muted">Photographs and film frames made with the Format Reference or the closest openly licensed equivalent, as credited. Judge the character, not the subject.</p>
 <h3>1970s integral prints</h3><div class="refs">
-<figure><img src="ref-instant-01.jpg" alt="Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood" loading="lazy"><figcaption><strong>Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood</strong><br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255758209/">source</a></small><br><small>Daylight street view of Dillon&#x27;s Disco and a billboard, December 1976, on original SX-70 film. Shows the soft, low-contrast, slightly green-cyan and warm-highlight palette of 1970s SX-70 prints. Some age is visible (mild yellowing and softness); colours are muted rather than badly shifted. Scan of the image area only; the white frame is cropped off. Photographer states &#x27;Polaroid SX-70 photograph&#x27;. 1976 predates Time-Zero (1980), so this is original SX-70 film. Small scan (about 600 px). Flickr title: &quot;Dillon&#x27;s Disco, December 1976&quot;. Flickr description: &quot;After the premiere of A Star Is Born (Streisand version, 1976) guests partied nearby at Dillon&#x27;s Disco, 1081 Gayley Avenue, Westwood, Los Angeles CA. Today it is an El Pollo Loco restaurant. Polaroid SX-70 photograph.&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
-<figure><img src="ref-instant-02.jpg" alt="Polaroid SX-70 (1978): office interior" loading="lazy"><figcaption><strong>Polaroid SX-70 (1978): office interior</strong><br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Chuck_Jones_(228243289).jpg">source</a></small><br><small>Interior of an office with two men at a desk (cartoonist Chuck Jones and a visitor), 1978, original SX-70 film. Useful for indoor SX-70 colour: warm, low-saturation, soft shadows and slightly milky blacks. Aged moderately (warm/yellow cast, lowered contrast). Image area only, frame cropped. Caption: &#x27;Polaroid SX-70 photo&#x27;. Depicts identifiable people; internal reference use only. Small scan (about 600 px). Commons file: &quot;Chuck Jones (228243289).jpg&quot;.</small></figcaption></figure>
-<figure><img src="ref-instant-03.jpg" alt="Polaroid integral print (1978): Villa Lanza di Trabia, Sicily" loading="lazy"><figcaption><strong>Polaroid integral print (1978): Villa Lanza di Trabia, Sicily</strong><br><small>Samuele Piazza · <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Bagheria_(Pa)_-_Villa_Lanza_di_Trabia.jpg">source</a></small><br><small>Square daylight architecture photo with garden foreground, 1978, scanned from an instant print. Well preserved for its age: good contrast, blue sky intact, characteristic soft SX-70 rendering. Image area only, frame cropped. File is in Commons&#x27; Polaroid instant category and dated 1978; the square format matches SX-70 integral film, but the film type is inferred, not stated. Commons file: &quot;Bagheria (Pa) - Villa Lanza di Trabia.jpg&quot;.</small></figcaption></figure>
-<figure><img src="ref-instant-04.jpg" alt="Polaroid integral print (1978): room with clock radios" loading="lazy"><figcaption><strong>Polaroid integral print (1978): room with clock radios</strong><br><small>Infrogmation of New Orleans · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Clock_Radios_Room_Polaroid_Ifrog_1978.jpg">source</a></small><br><small>Indoor snapshot of a man with two clock radios, 24 March 1978. Strongly aged: heavy yellow/amber shift and lifted blacks. Useful as a &#x27;how an old print ages&#x27; counter-example, not as the fresh target look. Uploader states it is a Polaroid photo taken 1978 (time written on the print). Square image suggests SX-70 integral film; inferred. Commons file: &quot;Clock Radios Room Polaroid Ifrog 1978.jpg&quot;.</small></figcaption></figure>
+<figure><img src="ref-instant-01.jpg" alt="Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood" loading="lazy"><figcaption><strong>Polaroid SX-70 (1976): Dillon&#x27;s Disco, Westwood</strong><br><small>1976-12-01 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255758209/">source</a></small><br><small>Daylight street view of Dillon&#x27;s Disco and a billboard, December 1976, on original SX-70 film. Shows the soft, low-contrast, slightly green-cyan and warm-highlight palette of 1970s SX-70 prints. Some age is visible (mild yellowing and softness); colours are muted rather than badly shifted. Scan of the image area only; the white frame is cropped off. Photographer states &#x27;Polaroid SX-70 photograph&#x27;. 1976 predates Time-Zero (1980), so this is original SX-70 film. Small scan (about 600 px). Flickr title: &quot;Dillon&#x27;s Disco, December 1976&quot;. Flickr description: &quot;After the premiere of A Star Is Born (Streisand version, 1976) guests partied nearby at Dillon&#x27;s Disco, 1081 Gayley Avenue, Westwood, Los Angeles CA. Today it is an El Pollo Loco restaurant. Polaroid SX-70 photograph.&quot;. License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.</small></figcaption></figure>
+<figure><img src="ref-instant-02.jpg" alt="Polaroid SX-70 (1978): office interior" loading="lazy"><figcaption><strong>Polaroid SX-70 (1978): office interior</strong><br><small>Alan Light · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Chuck_Jones_(228243289).jpg">source</a></small><br><small>Interior of an office with two men at a desk (cartoonist Chuck Jones and a visitor), 1978, original SX-70 film. Useful for indoor SX-70 colour: warm, low-saturation, soft shadows and slightly milky blacks. Aged moderately (warm/yellow cast, lowered contrast). Image area only, frame cropped. Caption: &#x27;Polaroid SX-70 photo&#x27;. Depicts identifiable people; internal reference use only. Small scan (about 600 px). Commons file: &quot;Chuck Jones (228243289).jpg&quot;. Checked again on 2026-10-13: the photographer&#x27;s own copy of this picture on Flickr (https://www.flickr.com/photos/alan-light/49333638348/) now reads &#x27;Polaroid SX-70 photo&#x27; and also &#x27;Scanned from the original 35MM slide&#x27;, so this file may be a copy of the print on slide film, or not an instant print at all. The study of 2026-10-13 leaves it out, and the board no longer pairs a developed scene with it.</small></figcaption></figure>
+<figure><img src="ref-instant-03.jpg" alt="Polaroid integral print (1978): Villa Lanza di Trabia, Sicily" loading="lazy"><figcaption><strong>Polaroid integral print (1978): Villa Lanza di Trabia, Sicily</strong><br><small>1978 · Samuele Piazza · <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Bagheria_(Pa)_-_Villa_Lanza_di_Trabia.jpg">source</a></small><br><small>Square daylight architecture photo with garden foreground, 1978, scanned from an instant print. Well preserved for its age: good contrast, blue sky intact, characteristic soft SX-70 rendering. Image area only, frame cropped. File is in Commons&#x27; Polaroid instant category and dated 1978; the square format matches SX-70 integral film, but the film type is inferred, not stated. Commons file: &quot;Bagheria (Pa) - Villa Lanza di Trabia.jpg&quot;.</small></figcaption></figure>
+<figure><img src="ref-instant-04.jpg" alt="Polaroid integral print (1978): room with clock radios" loading="lazy"><figcaption><strong>Polaroid integral print (1978): room with clock radios</strong><br><small>1978-03-24 · Infrogmation of New Orleans · <a href="https://creativecommons.org/licenses/by-sa/2.0">CC BY-SA 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Clock_Radios_Room_Polaroid_Ifrog_1978.jpg">source</a></small><br><small>Indoor snapshot of a man with two clock radios, 24 March 1978. Strongly aged: heavy yellow/amber shift and lifted blacks. Useful as a &#x27;how an old print ages&#x27; counter-example, not as the fresh target look. Uploader states it is a Polaroid photo taken 1978 (time written on the print). Square image suggests SX-70 integral film; inferred. Commons file: &quot;Clock Radios Room Polaroid Ifrog 1978.jpg&quot;.</small></figcaption></figure>
 <figure><img src="ref-instant-05.jpg" alt="SX-70 camera, whole integral print with white frame (expired Time-Zero Artistic)" loading="lazy"><figcaption><strong>SX-70 camera, whole integral print with white frame (expired Time-Zero Artistic)</strong><br><small>hnt6581 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:600_-_Flickr_-_hnt6581.jpg">source</a></small><br><small>High-resolution scan of an entire integral print including the full white card with the wide bottom border. Gives exact frame/card geometry and paper white for the Instant Developed Print card. The picture itself is expired Time-Zero &#x27;Artistic&#x27; film (2013), so its colours are shifted and not representative of fresh 1970s film. Photographer: &#x27;Polaroid SX-70 / expired Polaroid TZ Artistic&#x27;. Use for the card layout, not for colour. Commons file: &quot;600 - Flickr - hnt6581.jpg&quot;. Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).</small></figcaption></figure>
 <figure><img src="ref-instant-06.jpg" alt="SX-70-type integral print with frame on Time-Zero film (2015)" loading="lazy"><figcaption><strong>SX-70-type integral print with frame on Time-Zero film (2015)</strong><br><small>dfuster74 · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/dfuster74/22096322702/">source</a></small><br><small>Whole print with white frame showing a boy with a drink, shot on real Polaroid Time-Zero integral film (the SX-70-camera film made 1980-2006) during Roid Week 2015. Shows the real dye look and frame, but the film was long expired, so expect a cyan/teal cast and lower density than fresh stock. Film identified by the photographer&#x27;s tags (timezero, tzfilm). Time-Zero is not original 1970s SX-70 film; expired. Flickr title: &quot;soda&quot;. Flickr description: &quot;&#x27;roid week 2015 - day 1&quot;. License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.</small></figcaption></figure>
 </div>
+<h3>Preserved 1970s prints the study measured</h3><div class="refs">
+<figure><img src="ref-instant-study-01.jpg" alt="Joe&#x27;s 4th birthday in 1973" loading="lazy"><figcaption><strong>Joe&#x27;s 4th birthday in 1973</strong><br><small>1973-10-27 · Joe Futrelle · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · <a href="https://www.flickr.com/photos/schneertz/2977777679/">source</a></small><br><small>Date written on the card. Film type inferred from the square picture and the card&#x27;s shape. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-02.jpg" alt="1975 MySpace profile photo" loading="lazy"><figcaption><strong>1975 MySpace profile photo</strong><br><small>1975 · Liza · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/lizadaly/3211269790/">source</a></small><br><small>Owner dates it 1975, &#x27;the day we got the Polaroid camera&#x27;. Film type inferred from the square picture and the card&#x27;s shape. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-03.jpg" alt="Polaroid circa 1976" loading="lazy"><figcaption><strong>Polaroid circa 1976</strong><br><small>about 1976 · Peter Francis · <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</a> · <a href="https://www.flickr.com/photos/202086558@N04/54751609346/">source</a></small><br><small>Owner dates it about 1976. How it was copied is not stated; the same owner&#x27;s other print is a camera copy. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-04.jpg" alt="Red and white" loading="lazy"><figcaption><strong>Red and white</strong><br><small>about 1976 · Peter Francis · <a href="https://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</a> · <a href="https://www.flickr.com/photos/202086558@N04/55100488913/">source</a></small><br><small>Owner dates it about 1976 and says it was re-photographed with a digital camera, not scanned. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-05.jpg" alt="John doin nuthin" loading="lazy"><figcaption><strong>John doin nuthin</strong><br><small>1976 or 1977 · Dennis Harper · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/dennisharper/4220334746/">source</a></small><br><small>Owner states the camera and dates it 1976 or 1977. Fine cracks show in the picture. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-06.jpg" alt="Found Polaroid" loading="lazy"><figcaption><strong>Found Polaroid</strong><br><small>about 1977 · Phillip Pessar · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/southbeachcars/6784001032/">source</a></small><br><small>A found print; the owner says every dated photograph in its album was from 1977. Film type inferred. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-07.jpg" alt="A genuine Polaroid of me from 1978-02-07" loading="lazy"><figcaption><strong>A genuine Polaroid of me from 1978-02-07</strong><br><small>1978-02-07 · bob walker · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · <a href="https://www.flickr.com/photos/rjw1/30549651397/">source</a></small><br><small>Owner gives the date. Film type inferred from the square picture. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-08.jpg" alt="Rhine" loading="lazy"><figcaption><strong>Rhine</strong><br><small>1978 · Steve · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · <a href="https://www.flickr.com/photos/ste3ve/4606488/">source</a></small><br><small>Owner dates it 1978. The scan is cropped to the picture with a sliver of card. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-09.jpg" alt="Robert T. Kelly" loading="lazy"><figcaption><strong>Robert T. Kelly</strong><br><small>about 1975 · Aaron Kelly · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/14865808@N00/40011657931/">source</a></small><br><small>Owner calls it a scan of a 42-year-old print kept in a box in a garage, taken about 1975. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-10.jpg" alt="MM00002415x" loading="lazy"><figcaption><strong>MM00002415x</strong><br><small>1976 · Florida Keys History Center-Monroe County Public L · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/keyslibraries/10059950275/">source</a></small><br><small>The library&#x27;s caption dates it 1976 and calls it a color instant print by Joe Regan. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-11.jpg" alt="Barbra Streisand - Polaroid SX-70" loading="lazy"><figcaption><strong>Barbra Streisand - Polaroid SX-70</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210266212/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. The published file was saved again by the photographer in 2014, so it is measured but kept out of the set statistics. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-12.jpg" alt="Barbra Streisand" loading="lazy"><figcaption><strong>Barbra Streisand</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210266216/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-13.jpg" alt="Barbra Streisand" loading="lazy"><figcaption><strong>Barbra Streisand</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210266217/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-14.jpg" alt="Chevy Chase" loading="lazy"><figcaption><strong>Chevy Chase</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210269246/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-15.jpg" alt="Kris Kristofferson &amp; Rita Coolidge" loading="lazy"><figcaption><strong>Kris Kristofferson &amp; Rita Coolidge</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210269247/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-16.jpg" alt="Gary Busey" loading="lazy"><figcaption><strong>Gary Busey</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210269248/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-17.jpg" alt="Lobby" loading="lazy"><figcaption><strong>Lobby</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255761214/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-18.jpg" alt="Tony Orlando" loading="lazy"><figcaption><strong>Tony Orlando</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255761216/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-19.jpg" alt="Bert Convy" loading="lazy"><figcaption><strong>Bert Convy</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255761218/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-20.jpg" alt="An overexposed Barbra Streisand" loading="lazy"><figcaption><strong>An overexposed Barbra Streisand</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255761220/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-21.jpg" alt="Barbra Stresiand&#x27;s mother 1976" loading="lazy"><figcaption><strong>Barbra Stresiand&#x27;s mother 1976</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255763558/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-22.jpg" alt="Tony Orlando" loading="lazy"><figcaption><strong>Tony Orlando</strong><br><small>1976-12-18 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255763559/">source</a></small><br><small>One of thirteen prints the photographer made in one evening and states are from this camera. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-23.jpg" alt="Sylvester Stallone, Helen Reddy" loading="lazy"><figcaption><strong>Sylvester Stallone, Helen Reddy</strong><br><small>1978-04-13 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/2398015575/">source</a></small><br><small>One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-24.jpg" alt="Sylvester Stallone" loading="lazy"><figcaption><strong>Sylvester Stallone</strong><br><small>1978-04-13 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/2398015747/">source</a></small><br><small>One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-25.jpg" alt="Sylvester Stallone" loading="lazy"><figcaption><strong>Sylvester Stallone</strong><br><small>1978-04-13 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/2398015853/">source</a></small><br><small>One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-26.jpg" alt="Sylvester Stallone" loading="lazy"><figcaption><strong>Sylvester Stallone</strong><br><small>1978-04-13 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/2398845058/">source</a></small><br><small>One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-27.jpg" alt="Buck Henry" loading="lazy"><figcaption><strong>Buck Henry</strong><br><small>1978-04-13 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255836854/">source</a></small><br><small>One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-28.jpg" alt="Bette Midler" loading="lazy"><figcaption><strong>Bette Midler</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210271756/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-29.jpg" alt="Bette Midler" loading="lazy"><figcaption><strong>Bette Midler</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/210271758/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-30.jpg" alt="Joel Grey" loading="lazy"><figcaption><strong>Joel Grey</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255839821/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-31.jpg" alt="Nick Nolte" loading="lazy"><figcaption><strong>Nick Nolte</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255839830/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-32.jpg" alt="Raquel Welch" loading="lazy"><figcaption><strong>Raquel Welch</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255841209/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-33.jpg" alt="Peter Falk" loading="lazy"><figcaption><strong>Peter Falk</strong><br><small>1979-11-07 · Alan Light · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a> · <a href="https://www.flickr.com/photos/alan-light/255841213/">source</a></small><br><small>One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979. License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.</small></figcaption></figure>
+<figure><img src="ref-instant-study-34.jpg" alt="Villa Palagonia (Bagheria) img031" loading="lazy"><figcaption><strong>Villa Palagonia (Bagheria) img031</strong><br><small>1978 · Samuele Piazza · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Villa_Palagonia_(Bagheria)_img031.jpg">source</a></small><br><small>Dated 1978 and filed among instant photographs; film type inferred from the square picture. Same photographer, town and year as the print before it. License read from the Wikimedia Commons API at download time.</small></figcaption></figure>
+</div>
 </section>
 <section><h2>Values in the app</h2><p class="muted">From <code>FilmLook.swift</code>: the one place each Camera's and Film Stock's look is set. Spatial values are fractions of the picture's long edge.</p>
+<h3>In the app (treatment version 4)</h3>
 <pre><code>    /// 1970s Instant. Format Reference: the original 1970s integral print. By the captain&#x27;s choice on its review board
     /// on 2026-10-10 (&quot;faded&quot;), it develops as surviving prints look, not as fresh ones did (ADR 0016, an exception to
     /// ADR 0013 and to PRD 2.1 section 6.1&#x27;s &quot;brilliant, warm, saturated color&quot;): lifted, milky blacks, softened
-    /// whites, low contrast, muted color with aqua blues and olive greens, blue in the shadows and yellow in the
-    /// highlights, soft detail and a coarse texture. Each print still differs slightly in color and density, with no
-    /// uneven-chemistry or spread flaws. This is its current look and current contrast: its contrast and the size of
-    /// that variation stay provisional until a study of preserved 1970s prints (DEC-04).
+    /// whites, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft
+    /// detail and a coarse texture. Each print still differs slightly in color and density, with no uneven-chemistry
+    /// or spread flaws.
+    ///
+    /// Its contrast is the one the captain chose on 2026-10-13 (&quot;B&quot;) from the study of 37 preserved 1970s prints
+    /// (`Evidence/NativeApp/instant-study-and-toning-059.md`): black a little deeper than before, white where it
+    /// was, and between them the S-shaped curve of a print, steeper through the middle tones and easing into black
+    /// and into white, where the look he approved on 2026-10-10 held the middle tones flat. Measured as the scans
+    /// were, its prints sit closer to them in black, white, the spread of their tones and the strength of their color,
+    /// and short of them in each. The scans cannot give the film&#x27;s curve itself, only its ends and its spread.
     static let instant = Treatment(
+        emulsion: .color(ColorEmulsion(
+            warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
+            saturation: 0.85,
+            tone: ToneCurve(contrast: 1.3, midtones: 0.9, black: 0.11, white: 0.9),
+            shadows: RGB(0, 0.008, 0.03), highlights: RGB(0.012, 0.004, -0.03),
+            grain: Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
+        )),
+        lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
+        printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
+    )</code></pre>
+<pre><code>    /// The Instant as treatment version 3 develops it: the faded look with the contrast it had before the study, a
+    /// curve flatter than the capture&#x27;s own. Frozen: a Film loaded under version 3 keeps it.
+    static let instantVersion3 = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
             saturation: 0.85,
@@ -248,23 +377,25 @@
         lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
         printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
     )</code></pre>
+<h3>Before the study (treatment version 3)</h3><pre><code></code></pre>
 </section>
-<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-instant" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve"> Approve these values for the 1970s Instant</label><label><input type="radio" name="decision" value="change"> Request changes</label><p><label for="notes" style="display:block">What should change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
+<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-instant" data-board="instant" data-name="1970s Instant" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve" data-question="1970s Instant"> Approve these values for the 1970s Instant</label><label><input type="radio" name="decision" value="change" data-question="1970s Instant"> Request changes</label><p><label for="notes" style="display:block">Anything to change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
 </main>
 <footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>
 
 <script>
 function queueDecision(event) {
   event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const decision = form.get('decision');
-  if (!decision) return;
-  const notes = (form.get('notes') || '').trim();
-  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
-  const text = (decision === 'change' ? 'Change the 1970s Instant look.' : chosen + ' (1970s Instant).') + (notes ? ' ' + notes : '');
+  const form = event.currentTarget;
+  const chosen = Array.from(form.querySelectorAll('input[type=radio]:checked'));
+  const notes = (new FormData(form).get('notes') || '').trim();
+  if (!chosen.length && !notes) return;
+  const answers = chosen.map(input => input.dataset.question + ': ' + input.parentElement.textContent.trim());
+  const text = form.dataset.name + '. ' + answers.join(' ') + (notes ? ' Notes: ' + notes : '');
+  const data = { board: form.dataset.board, notes: notes };
+  chosen.forEach(input => { data[input.name] = input.value; });
   if (window.lavish) {
-    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-instant',
-                                      data: { board: 'instant', decision: decision, notes: notes } });
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: form, queueKey: 'look-' + form.dataset.board, data: data });
   }
   document.getElementById('queued').hidden = false;
 }
