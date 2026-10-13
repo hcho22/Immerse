@@ -6,14 +6,37 @@ on:
 permissions:
   contents: read
 jobs:
-  # Validation in four parts side by side, each on its own runner (Scripts/validation-parts.sh says what each
-  # holds). One job ran them in turn for about two hours.
+  # Which parts this change needs: all four, or the packages part alone for a pull request that changes only
+  # Markdown (Scripts/validation-scope.sh). Every push to main runs all four.
+  scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      parts: ${{ steps.scope.outputs.parts }}
+      note: ${{ steps.scope.outputs.note }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Choose the parts
+        id: scope
+        run: |
+          # A pull request is checked out as its merge into the base branch, whose first parent is the base.
+          # If the change cannot be listed, the list stays empty and every part runs.
+          : > "$RUNNER_TEMP/changed.txt"
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            git diff --name-only --no-renames HEAD^1 HEAD > "$RUNNER_TEMP/changed.txt" || : > "$RUNNER_TEMP/changed.txt"
+          fi
+          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" | tee -a "$GITHUB_OUTPUT"
+  # Validation in parts side by side, each on its own runner (Scripts/validation-parts.sh says what each holds).
+  # One job ran them in turn for about two hours.
   part:
+    needs: scope
     name: ${{ matrix.part }}
     strategy:
       fail-fast: false
       matrix:
-        part: [packages, harness, ui-text, ui-flows]
+        part: ${{ fromJSON(needs.scope.outputs.parts) }}
     runs-on: macos-26
     timeout-minutes: 75
     env:
@@ -62,9 +85,9 @@ jobs:
         with:
           name: native-test-results-${{ matrix.part }}
           path: DerivedData/*.xcresult
-  # The one check to read: green only when every part is.
+  # The one check to read: green only when every part that ran is, and it says which parts did not run and why.
   local-native:
-    needs: part
+    needs: [scope, part]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -77,7 +100,11 @@ jobs:
       - name: Every part passed
         run: |
           {
+            echo "$SCOPE_NOTE"
             echo "Parts: ${{ needs.part.result }}"
             cat notes/*/part-notes.txt 2> /dev/null || echo "No part left a note."
           } | tee -a "$GITHUB_STEP_SUMMARY"
+          test "${{ needs.scope.result }}" = success
           test "${{ needs.part.result }}" = success
+        env:
+          SCOPE_NOTE: ${{ needs.scope.outputs.note }}
