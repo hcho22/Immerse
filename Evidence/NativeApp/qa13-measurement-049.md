@@ -1,5 +1,10 @@
 # QA-13 End-User Check 049
 
+**History of the earlier candidate.**
+The "final candidate" this record refers to is `71391e4`, whose gate is [final-candidate-050.md](final-candidate-050.md).
+Since 2026-10-13 the manual iPhone candidate is commit `5c3a217bd7d9b84b629dab912cbcda038aeff62d` on `main`, pinned in [manual-validation.md](manual-validation.md) under "The Candidate".
+The measurements below are kept as they were recorded; for what the audits accept today see [qa13-audit-exceptions-052.md](qa13-audit-exceptions-052.md).
+
 Continuation from `35a6ae3`, under Firstmate's answer to `qa13-next-check-048`: measure whether the Super 8 Movie Orientation text actually scales, sample rendered contrast of the named elements at the exact audit poses, fix real defects, and report anything that fails only under the iOS 26 scroll-edge band.
 The original audit tests (`JournalFlowTests`) were not filtered, re-posed or edited; QA-13 stays failed.
 All runs used the owned iPhone 17 Pro simulator `AA6AD12A-9D0E-4948-ABD2-760AA97B6A60`, iOS 26.5 (23F77), Xcode 26.5, with the system pinned to large text and the named appearance, restored after each run.
