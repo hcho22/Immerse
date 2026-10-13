@@ -29,12 +29,10 @@ suites() {
 # its photo-analysis service switched off first (Scripts/quiet-simulator.sh).
 pinned_simulators=""
 pin_simulator() {
+    case " $pinned_simulators " in *" $1:"*) return ;; esac
     xcrun simctl bootstatus "$1" -b > /dev/null
     sh Scripts/quiet-simulator.sh "$1"
-    case " $pinned_simulators " in
-        *" $1:"*) ;;
-        *) pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)" ;;
-    esac
+    pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)"
     xcrun simctl ui "$1" appearance light
     xcrun simctl ui "$1" content_size large
 }
@@ -45,7 +43,18 @@ restore_simulators() {
         xcrun simctl ui "$udid" content_size "${rest#*:}"
     done
 }
-trap restore_simulators EXIT
+# Scripts/screen-tests.sh notes each set of screen tests that passed only through its one rerun, which it is
+# allowed when the simulator's own log shows it dropped a failed test's touch. They are said again here, last.
+mkdir -p DerivedData
+rm -f DerivedData/validation-notes.txt
+finish() {
+    restore_simulators
+    if [ -s DerivedData/validation-notes.txt ]; then
+        echo "Validation notes:"
+        cat DerivedData/validation-notes.txt
+    fi
+}
+trap finish EXIT
 xcodebuild -version
 swift --version
 if runs packages; then
@@ -75,13 +84,9 @@ if runs harness && [ -n "${IMMERSE_WORKFLOW_SIMULATOR_UDID:-}" ]; then
     pin_simulator "$IMMERSE_WORKFLOW_SIMULATOR_UDID"
     # The Photos permission workflow needs a denied add-only status; the harness has no usage key to prompt.
     xcrun simctl privacy "$IMMERSE_WORKFLOW_SIMULATOR_UDID" revoke photos-add com.immerse.PopulatedJournalHarness
-    xcodebuild -quiet -project "Probes/$harness_probe/$harness_probe.xcodeproj" \
-        -scheme "$harness_probe" \
-        -destination "platform=iOS Simulator,id=$IMMERSE_WORKFLOW_SIMULATOR_UDID" \
-        -derivedDataPath DerivedData/PopulatedJournalHarness \
-        -resultBundlePath "DerivedData/Populated-$(date -u +%Y%m%dT%H%M%SZ).xcresult" \
-        -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
-        CODE_SIGNING_ALLOWED=NO test
+    sh Scripts/screen-tests.sh "$IMMERSE_WORKFLOW_SIMULATOR_UDID" Populated test "" \
+        -project "Probes/$harness_probe/$harness_probe.xcodeproj" -scheme "$harness_probe" \
+        -derivedDataPath DerivedData/PopulatedJournalHarness
 fi
 if runs packages && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
     pin_simulator "$IMMERSE_SIMULATOR_UDID"
@@ -107,27 +112,17 @@ if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; t
         ui-flows) selection="-only-testing:$app_screen_test_target$(suites -skip-testing $text_size_suites)" ;;
         *) selection="-only-testing:$app_screen_test_target" ;;
     esac
-    # shellcheck disable=SC2086 # the selection is flags
-    xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
-        -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" \
-        -derivedDataPath DerivedData/ValidationSimulator \
-        -resultBundlePath "DerivedData/Validation-$(date -u +%Y%m%dT%H%M%SZ).xcresult" \
-        $selection \
-        -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
-        CODE_SIGNING_ALLOWED=NO test
+    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation test "$selection" \
+        -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
 fi
 if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
     # The accessibility audits, including the populated Journal card and Film Stock audits, again in dark
     # appearance, from the same build; a test cannot switch the app's appearance itself (Evidence/NativeApp/qa13-audit-exceptions-052.md).
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance dark
-    # shellcheck disable=SC2086,SC2046 # the suite list and its flags are words
-    xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
-        -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" \
-        -derivedDataPath DerivedData/ValidationSimulator \
-        -resultBundlePath "DerivedData/ValidationDark-$(date -u +%Y%m%dT%H%M%SZ).xcresult" \
-        $(suites -only-testing $dark_suites) \
-        -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
-        CODE_SIGNING_ALLOWED=NO test-without-building
+    # shellcheck disable=SC2086 # the suite list is words
+    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" ValidationDark test-without-building \
+        "$(suites -only-testing $dark_suites)" \
+        -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance light
 fi
 if runs packages && [ -n "${IMMERSE_STOREKIT_SIMULATOR_UDID:-}" ]; then

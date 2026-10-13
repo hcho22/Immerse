@@ -35,6 +35,27 @@ jobs:
           esac
       - name: Validate
         run: sh Scripts/validate-local.sh
+      # A part that passed only because a screen test was run once more, on the simulator's own record that it
+      # dropped that test's touch (Scripts/screen-tests.sh), says so on the run's page and to the summary check.
+      - name: Say whether a screen test was rerun
+        if: always()
+        run: |
+          mkdir -p DerivedData
+          if [ -s DerivedData/validation-notes.txt ]; then
+            { echo "$IMMERSE_VALIDATE_PART: a screen test passed only through a rerun."; cat DerivedData/validation-notes.txt; } > DerivedData/part-notes.txt
+            while IFS= read -r note; do
+              echo "::warning title=$IMMERSE_VALIDATE_PART passed only through a rerun::$note"
+            done < DerivedData/validation-notes.txt
+          else
+            echo "$IMMERSE_VALIDATE_PART: no screen test was rerun." > DerivedData/part-notes.txt
+          fi
+          { echo '```'; cat DerivedData/part-notes.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain the part's notes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-notes-${{ matrix.part }}
+          path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -48,7 +69,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Collect the parts' notes
+        uses: actions/download-artifact@v4
+        with:
+          pattern: validation-notes-*
+          path: notes
       - name: Every part passed
         run: |
-          echo "Parts: ${{ needs.part.result }}"
+          {
+            echo "Parts: ${{ needs.part.result }}"
+            cat notes/*/part-notes.txt 2> /dev/null || echo "No part left a note."
+          } | tee -a "$GITHUB_STEP_SUMMARY"
           test "${{ needs.part.result }}" = success
