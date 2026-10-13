@@ -38,7 +38,7 @@ The app applies them: the generator's default "scan" look, read from his table, 
 The look is his model of the reference film scanned as a modern lab scans a negative, and it adds no fading, yellowing or wear.
 It is recorded here because it is taken from his files and not held to the limits the app's tests use for ADR 0013, and it sits outside two of them: black is lifted to about 7.5 percent of the tone scale where the limit is about 3, and a near-white tone develops to 0.89 where the limit is 0.9.
 Its blues also turn about 20 degrees toward cyan, which is inside the limit.
-The board of 2026-10-12 shows the look beside the same with its greens strengthened, which he had asked for on an earlier candidate, and asks him to approve one.
+Shown it on the board on 2026-10-12 beside the same with its greens strengthened, which he had asked for on an earlier candidate, he wrote "everything looks good", so the look stays as his files have it.
 The 6×6 Medium Format's black-and-white Film Stock is unchanged and stays under ADR 0013.
 
 The rest of what is decided for these Cameras stands.

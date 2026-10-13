@@ -74,7 +74,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   Grays now come out within 0.001 of the film's own table on both stocks, with no tint.
   The kernel is made at run time, the first time Development needs it, and is checked against the same reading in Swift before it is used.
   Where Core Image cannot make or run it, a renderer without Metal, Development falls back to Core Image's own cube, handed over as whole 8-bit steps plus remainders so that its 8 bits do not show; `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` holds that reading too.
-  The kernel has run on this Mac; its first run on an iPhone is the manual candidate's.
+  The kernel has run on this Mac and inside the iOS simulator, where the same tests hold it; its first run on an iPhone is the manual candidate's.
 
 ### How the app is held to his files
 
@@ -240,7 +240,10 @@ On three board scenes the app's renders agree with his table read in Python, by 
   White is not yellowed, every test color keeps at least 86 percent of its strength, and no hue turns more than 20 degrees (blue, toward cyan).
 - **ADR 0015: no difference.**
   The names in his files stay in the non-shipping probe and in comments.
-- **Not built**, because they are outside a look and stay with the captain: ProRAW or DNG capture and switching off the phone's own sharpening and noise reduction, the output format (the developed master is still an 8-bit sRGB JPEG), and what his spec leaves open (real scans, the reference scanner, how warm and bright the finish is).
+- **Kept as the look only.**
+  His spec also describes capture in ProRAW or DNG with the phone's own sharpening and noise reduction switched off, a 10-bit output format, and items it leaves open (real scans, a reference scanner, how warm and bright the finish is).
+  None of it is built: asked, the captain answered on 2026-10-12 "Immerse 6x6 spec beyond the look: keep it as the look only".
+  Capture is unchanged, and the developed master is still an 8-bit sRGB JPEG.
 
 ### The greens
 
@@ -256,6 +259,42 @@ The mean color strength of the green pixels, in OKLab chroma:
 
 His exact greens are as muted as the fitted ones his note was about, 2 to 3 degrees bluer and a little lighter; the grass in his reference picture measures 0.080.
 The lift is not in his files and is not in the app; it enters only if he chooses it.
+
+## What only the iOS simulator showed (2026-10-12)
+
+Every render test ran on a Mac, and the review boards were rendered on one.
+On 2026-10-12 the populated harness's 6×6 look test timed out on both simulators: its Film never appeared.
+Running the render tests inside the simulator then failed 283 assertions that pass on the Mac.
+Three things differ between Core Image on a Mac and on iOS, and each was a defect in this slice's own code.
+
+- **A curve table of 16,384 samples renders nothing on iOS.**
+  The simulator logs "Failed to render part of the image because memory requirement of -2147483648 too big" and returns an empty picture; 8,192 samples and fewer render, and a Mac renders all of them.
+  Two of the negative films' curves were that size, so both negative Film Stocks developed to an empty picture in the simulator from the day the 16mm look was applied.
+  The harness's 16mm test still passed, because it checks that the screens appear and not what the picture holds.
+  Every curve is now 4,096 samples (`SceneLight.curveSamples`), which leaves each curve within 0.0005 of itself.
+- **The tiling filter's default is not the same.**
+  Left to its default, `CIAffineTile` lays a tile out one to one on iOS and shrunk to two fifths on a Mac.
+  The grain tiles relied on the default, so on the Mac the negative films' grain was shrunk: neighboring pixels were alike by about 0.2 where the captain's reference gives 0.7.
+  Its strength was right, so the boards' grain for those two stocks was as strong as his files say and finer.
+  `GrainField.tiled` now sets the layout explicitly.
+- **The other looks' grain was 1.6 times as strong on iOS.**
+  Their grain was scaled by a constant measured on the Mac, through that same default.
+  The same code gave an even gray 16.0 levels of grain in the simulator where the Mac gave 10.0 on the Disposable, 6.8 against 4.3 on the Instant, 12.4 against 7.8 on the 6×6's black-and-white stock, 5.5 against 3.5 on the Super 8 and 8.7 against 5.4 on the 16mm's black-and-white stock; the clumps' shape was the same on both.
+  So the app in the simulator, and by the same code on an iPhone, would have developed those five looks with grain 1.6 times what the captain approved on the boards, and the simulator screenshots of 2026-10-11 show that stronger grain.
+  That grain now comes from the same stored, exactly normalized noise fields as the negative films' (`GrainField`), with the clump shape the boards showed (a blur of 0.67 of the clump size), so its strength is the look's own on every renderer.
+
+After the fix a test frame develops alike on both for every Camera and Film Stock: blocks of 40 pixels differ by 0.13 of a level at most on the two negative stocks and by 2 levels at most, which is grain, on the others, and each look's grain measures the same strength on both to a hundredth of a level.
+On the Mac the fix changes two things from what the boards showed before it: the two negative stocks' grain has the clumps his files give it, and the other looks' grain is about 5 percent weaker at the smallest clump size, since the old constant ran slightly strong there.
+The final boards in the repository are rendered after the fix.
+
+What holds it now:
+
+- `GrainFieldTests` tests each of the three: a tile laid out one to one, a negative film's grain keeping its clumps through Core Image, the other looks' clumps, and every curve's size.
+- `sh Scripts/validate-local.sh` runs the render tests a second time inside the simulator, 95 tests, with every simulator run it does.
+- `LegacyLookTests` stays a Mac-only check.
+  Its version 2 pictures were recorded on a Mac, and version 2 is frozen with the tiling default in it, so on iOS its grain differs from those pictures as it always has; nothing about version 2 changed.
+
+The simulator is not an iPhone: a device's own renderer is first exercised at the manual candidate.
 
 ## Review boards (QA-16)
 
@@ -279,7 +318,7 @@ The lift is not in his files and is not in the app; it enters only if he chooses
   On 2026-10-12 he replied on the 6×6 board with a written spec for its color Film Stock: the same negative model as the 16mm spec below, fitted to a simulation of the reference film and finished as a gentle lab-scan look.
   Its tone and color model was built from the constants in its text and holds its six stated neutral values within 0.006.
   Its hue-band values are in a generator file that was not supplied, so the candidate's bands were fitted to the spec's own table of net color changes, and the board says so.
-  What it asks for beyond a look (a shipped LUT file with a log path, ProRAW capture, an output encoding) was not built and went to firstmate as a question for the captain.
+  What it asks for beyond a look (a shipped LUT file with a log path, ProRAW capture, an output encoding) was not built; the captain later decided to keep it as the look only.
 - **A spec the captain wrote for the 16mm.**
   On 2026-10-12 he replied on the 16mm board with a written spec for its color Film Stock: a low-contrast negative with layer crosstalk, printed through a steep print curve, with hue bands and a soft clip, and amounts for softness, diffusion, vignette, halation, grain and weave.
   Its color model was built as written, checked against the spec's own numbers (middle gray 0.43, black 0.015, white 0.955) and against its reference code, and rendered as candidates in the working tree only.
@@ -293,8 +332,8 @@ The lift is not in his files and is not in the app; it enters only if he chooses
 | 1990s Disposable | 1 (2026-10-09), 2 with A and B (2026-10-10), 3 with A alone | "fresh" | Approved 2026-10-10: A, inside ADR 0013. |
 | 1970s Instant | 1 (2026-10-09), then A and B, then 2 with B alone (2026-10-10) | "the image has to be more faded", then "faded", then "approved" | Approved 2026-10-10: the faded look, ADR 0016. Its print-to-print variation stays provisional until the study of preserved 1970s prints. |
 | 1960s Super 8 Home Movie | 1 (2026-10-09), 2 with A and B (2026-10-10), 3 with B alone | "muted with a glow" | Approved 2026-10-10: B, ADR 0016. |
-| 6×6 Medium Format | 1 (2026-10-09) to 11 (2026-10-12) | Slider notes, then five reference pictures, a point curve, "please replicate lightroom values", then "Round 5 values are better than the lightroom values. please retry with the .xmp values", then "the blacks are too strong. please bring down the contrast to 50", then a full written spec: "regenerate with following", then "the green looks desaturated compared to the reference picture. please increase the green saturation", then his own files: "please apply attached files to immerse 6x6 portra 400 film" | Awaiting the captain on round 11, which shows the look from his files, applied in the app and rendered through it (A), beside the same with its greens strengthened (B) and the previous look for comparison only. It is recorded in ADR 0016. The black-and-white Film Stock follows his notes from round 4 and awaits him on the same board. |
-| 16mm Cinema | 1 (2026-10-09) to 12 (2026-10-12) | A description of the reference film, then slider values, "please replicate the lightroom values", then four reference pictures: "get as close as possible", then a full written spec: "please try the following", then his own files: "please apply the attached for immerse - 16mm camera kodak vision3 250d", then, shown them applied, "the blacks are too strong for color. please tone it down", "please bring the black up to 4 percent" and, of the two ways to that black, "lets go with C" | Awaiting the captain on round 12, which shows the look from his files with the print's density range he chose (C), in the app and rendered through it, beside his black level alone raised and his files unchanged for comparison only. It is recorded in ADR 0016. The black-and-white Film Stock has not changed since round 1 and awaits his word on the same board. |
+| 6×6 Medium Format | 1 (2026-10-09) to 11 (2026-10-12) | Slider notes, then five reference pictures, a point curve, "please replicate lightroom values", then "Round 5 values are better than the lightroom values. please retry with the .xmp values", then "the blacks are too strong. please bring down the contrast to 50", then a full written spec: "regenerate with following", then "the green looks desaturated compared to the reference picture. please increase the green saturation", then his own files: "please apply attached files to immerse 6x6 portra 400 film", then "everything looks good" | Approved 2026-10-12. Round 11 showed the look from his files, applied in the app and rendered through it (A), beside the same with its greens strengthened (B) and the previous look for comparison only, and the black-and-white Film Stock as it has stood since round 4. His reply was taken as approval of the Camera as it is in the app, A for color, and he was told so on the board and that saying "B" would bring the stronger greens in. A is recorded in ADR 0016. |
+| 16mm Cinema | 1 (2026-10-09) to 12 (2026-10-12) | A description of the reference film, then slider values, "please replicate the lightroom values", then four reference pictures: "get as close as possible", then a full written spec: "please try the following", then his own files: "please apply the attached for immerse - 16mm camera kodak vision3 250d", then, shown them applied, "the blacks are too strong for color. please tone it down", "please bring the black up to 4 percent" and, of the two ways to that black, "lets go with C", then "black and white looks good" | Approved 2026-10-12: the color Film Stock with the look from his files and the print's density range he chose (C), recorded in ADR 0016, and the black-and-white Film Stock, which has not changed since round 1. Round 12 showed C in the app and rendered through it, beside his black level alone raised and his files unchanged for comparison only. |
 
 What the boards do not show: the test scenes are modern digital photographs and clips, not captures from an iPhone running the app, so the Disposable's fixed exposure, the real flash and the phone's own processing are absent.
 The Movie scenes were tone-mapped to SDR first; a phone may record HDR, which the manual candidate has to check.
@@ -303,9 +342,9 @@ The warm-light 16mm scene is a daylight-balanced picture marked as recorded unde
 ## In the app
 
 `Probes/PopulatedJournalHarness` develops a private Film per Camera and Film Stock through the production Development from a natural photo and clip (two of the boards' openly licensed test scenes, passed as `TEST_RUNNER_PHOTO_SOURCE` and `TEST_RUNNER_MOVIE_SOURCE`), and `PopulatedWorkflowTests.test…LookScreens` photographs the Film screen and the developed photo or Developed Movie.
-All seven tests passed on an iPhone 17 Pro and an iPhone SE (3rd generation) simulator, iOS 26.5, on 2026-10-11; the 22 screenshots are in `prd-2-slice-4-looks/`, named `look-<camera>-<screen>-<device>.png`.
+All seven tests pass on an iPhone 17 Pro and an iPhone SE (3rd generation) simulator, iOS 26.5; the 22 screenshots are in `prd-2-slice-4-looks/`, named `look-<camera>-<screen>-<device>.png`.
 They show the looks inside the real views, not a capture: the harness seeds its Films and never opens the camera.
-The 16mm color and 6×6 color screenshots predate the looks applied on 2026-10-12 and are captured again once the captain has approved them.
+All of them were captured again on 2026-10-12, after the looks the captain approved that day and after the grain was made the same on iOS as on a Mac; the earlier set showed the five older looks with grain 1.6 times too strong.
 
 ## Tests
 
@@ -314,6 +353,7 @@ The 16mm color and 6×6 color screenshots predate the looks applied on 2026-10-1
 | `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's |
 | `RenderCoreTests/NegativeFilmTests`, `ScenePassesTests`, `MediumFormatPassesTests` | The color Film Stocks of the 16mm and the 6×6 against the captain's own files: see "How the app is held to his files" under each |
 | `RenderCoreTests/FilmLookTests` | Versions assigned from the Film's package; unknown version refused; every look new and distinct; fresh, not aged, with the Instant and the Super 8 held to the looks the captain chose and the color Film Stocks of the 16mm and the 6×6 left to his files; the print curve and a point curve; Disposable flash from Exif, heavy and shadow grain; grain ranking across Cameras; grain keeps the tone; soft dark edges where the format has them; the diffusion veil; Instant print variation; Super 8 jitter, flicker, dust and gate hair; 16mm red and neutral glow, weave without flicker; the daylight balance and its clip metadata |
+| `RenderCoreTests/GrainFieldTests`, and the render tests rerun inside the iOS simulator | What differs between Core Image on a Mac and on iOS: see "What only the iOS simulator showed" |
 | `RenderCoreTests/FilmStockRenderTests` | Black-and-white higher in contrast on a neutral ramp; versions 1, 2 and 3 renderable |
 | `FilmRuntimeTests/TreatmentVersionDevelopmentTests` | Through the production processor: an unfinished roll, an Instant pack and a black-and-white 16mm reel locked before the update develop with version 2; a new roll with version 3 |
 | `FilmDomainTests/SceneWhiteBalanceTests` | The recorded light round-trips through its metadata value |
