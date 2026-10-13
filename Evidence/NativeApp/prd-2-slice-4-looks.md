@@ -349,6 +349,9 @@ All of them were captured again on 2026-10-12, after the looks the captain appro
 
 ## Tests
 
+On 2026-10-12, with the final code, `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both app builds, the 30 populated-harness tests, the 95 render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark.
+None of it is a device run.
+
 | Where | What |
 | --- | --- |
 | `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's |
