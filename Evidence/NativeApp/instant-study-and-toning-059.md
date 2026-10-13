@@ -398,6 +398,27 @@ No screen's layout or text changed, only the pixels of a developed Instant print
 - That an Instant pack begun before an update and finished after it keeps its earlier contrast on a real device, across a real update.
   Here that is a test with a reopened store.
 
+## Impact, gaps and recovery
+
+- **Who it reaches.**
+  Nobody yet: v1 has not shipped, and its manual iPhone test and release are the captain's.
+  Once it ships, a new Instant Film develops with the contrast he chose, and the Darkroom's toning control is as it was.
+- **What it leaves alone.**
+  The faded color he approved, every other Camera's look, the print-to-print variation, every product string, and any picture already developed: a developed master is stored and never rendered again.
+- **Evidence gaps.**
+  Everything under "What a phone still has to show" and "Not run for this work" above.
+  The study's own limits are under "What the study cannot show".
+- **Human judgment.**
+  The captain's eye on both boards, which he has given.
+  His eye on an iPhone is still to come.
+- **Recovery, and its one limit.**
+  Before a build with treatment version 4 reaches a phone that keeps its data, reverting this change restores everything: new Development returns to version 3's contrast and nothing outside the repository is touched.
+  After that it is not a plain revert.
+  A Film loaded under version 4 records "film-look-4" in its Camera package, and a build that no longer knows that version refuses to develop it rather than develop it with another look.
+  Pictures already developed stay as they are either way.
+  So once version 4 has shipped, a wrong contrast is put right the way every look is, by a version 5 with version 4 kept renderable, not by removing version 4.
+  That is the project's standing rule for a version on main, and it applies here.
+
 ## How to make the measurements and the boards again
 
 ```sh
