@@ -11,8 +11,8 @@ import XCTest
 
 /// The 6×6 Medium Format and the 16mm Cinema develop with one treatment per Film Stock (ADR 0014, PRD 2.1 section 6).
 /// Black-and-white is its own monochrome rendering with high contrast and distinct grain, not the color look
-/// desaturated, and the color Film Stock develops as a Film without one. Values are provisional (DEC-04); these tests
-/// hold the character, not the numbers.
+/// desaturated, and the color Film Stock develops as a Film without one. The captain approved both Cameras' looks on
+/// their review boards on 2026-10-12 (DEC-04, QA-16); these tests hold the character, not the numbers.
 final class FilmStockRenderTests: XCTestCase {
     private var root: URL!
 
