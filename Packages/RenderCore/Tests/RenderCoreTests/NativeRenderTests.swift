@@ -61,6 +61,7 @@ final class NativeRenderTests: XCTestCase {
     }
 
     func testOtherPhotoCamerasKeepTheirShapes() async throws {
+        try requireTetrahedralReader()
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         var settings = RenderFixtureSettings.defaultExperimental
@@ -76,6 +77,7 @@ final class NativeRenderTests: XCTestCase {
     }
 
     func testSquareCameraOutputsAndBoundedDifferentTreatments() async throws {
+        try requireTetrahedralReader()
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         _ = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root)
@@ -140,6 +142,7 @@ final class NativeRenderTests: XCTestCase {
     }
 
     func testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape() async throws {
+        try requireTetrahedralReader()
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         var settings = RenderFixtureSettings.defaultExperimental

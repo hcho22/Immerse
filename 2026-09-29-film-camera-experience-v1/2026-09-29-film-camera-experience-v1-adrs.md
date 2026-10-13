@@ -319,7 +319,7 @@ Decided on 2026-10-05.
 
 ### Reconciliation note for ADR 0015
 
-Interpret the ADR through PRD section 6.3, which lists the five Format References, the two deliberate departures and what is not yet established. The ADR says a Camera departs from its reference only through a rule recorded in CONTEXT.md, and the domain-model snapshot (`sources/CONTEXT.md`) holds those rules. No developed output has yet been compared with a Format Reference, so the looks in PRD section 6 are specifications, not verified results.
+Interpret the ADR through PRD section 6.3, which lists the five Format References, the two deliberate departures and what is not yet established. The ADR says a Camera departs from its reference only through a rule recorded in CONTEXT.md, and the domain-model snapshot (`sources/CONTEXT.md`) holds those rules. Since PRD 2.0 slice 4 every Camera's and Film Stock's developed look has been judged beside its Format Reference on the QA-16 review boards and approved by the captain, on 2026-10-10 and 2026-10-12, with his exceptions recorded in ADR 0016. The boards are specification review of software renders of digital test scenes, not hardware acceptance, and the Instant's contrast and print-to-print variation stay provisional until the study of preserved 1970s prints.
 
 ### ADR 0016
 

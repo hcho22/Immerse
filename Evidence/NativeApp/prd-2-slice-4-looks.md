@@ -75,7 +75,9 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
   `TableReading.swift` reads the table tetrahedrally instead, as his 6×6 spec says to, with a small Core Image kernel written in Metal: a gray's reading then uses only the table's grays.
   Grays now come out within 0.001 of the film's own table on both stocks, with no tint.
   The kernel is made at run time, the first time Development needs it, and is checked against the same reading in Swift before it is used.
-  Where Core Image cannot make or run it, a renderer without Metal, Development falls back to Core Image's own cube, handed over as whole 8-bit steps plus remainders so that its 8 bits do not show; `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` holds that reading too.
+  Nothing else reads the table.
+  The slice first carried a fallback to Core Image's own cube for a renderer that cannot make or run the kernel; review removed it on 2026-10-12, because it gave a slightly different picture from the one the captain approved (grays up to 0.009 off on the 6×6 with a faint tint, colors up to 0.03) and a Developed Treatment is rendered once and kept.
+  Where the kernel cannot be made or does not prove itself, a renderer without Metal, Development of the two color Film Stocks throws `NativeRenderError.tableReaderUnavailable` through the same path as any other Development failure, and every test that needs one of them developed is skipped with that reason (`NativePhotoRenderer.readsFilmTables`); see "The fallback's removal" under "Tests".
   The kernel has run on this Mac and inside the iOS simulator, where the same tests hold it; its first run on an iPhone is the manual candidate's.
 
 ### How the app is held to his files
@@ -91,7 +93,6 @@ Values are display tones from 0 to 1.
 | `testTheFilmMatchesTheGeneratorOnAWideSetOfColors` | 704 scene colors (a neutral ramp, a 7 x 7 x 7 grid of phone colors, 300 random colors up to 5 stops over gray) and 425 Apple Log tones against his Python | 0.00002 in every channel (the fixture is rounded to six places) | Passes |
 | `testThePipelineDevelopsPhoneColorsAsTheGeneratorDoes` | 216 phone colors through Development's own steps (inverse knee, Apple Log, cube) against his exact function | 0.03 at worst, 0.003 on average | 0.025 at worst, on the purest green; every other color within 0.01 |
 | `testGraysAreReadFromTheTablesGraysAlone` | The phone's 256 neutral tones through the pipeline against the film's own table read tetrahedrally | 0.002, with no more than 0.001 between the channels, and never a step down | 0.0009 and 0.0005 |
-| `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` | The same colors and grays with Core Image's own cube, the fallback | Grays within 0.01, a tint of up to 0.004 | 0.0045 and 0.001 |
 | `testThePipelineGivesTheNeutralValuesTheGeneratorStates` | His `SANITY` values a phone picture can reach (its white is 3.85 stops over gray) through the same steps, and a 256-step neutral ramp | 0.02, and 0.01 against his exact function; the ramp never falls | Passes |
 | `ScenePassesTests.testTheFrameWithNoPassesIsTheFilmAlone`, `testHalationMatchesTheReference`, `testSoftDarkenedEdgesMatchTheReference`, `testEveryPassBeforeTheGrainMatchesTheReference` | A 320 x 240 test frame (sky, dark ground, color patches, lamps bright enough to glow, fine detail, an even gray) against his reference's frame for each pass alone and for all of them in his order | Mean 0.003, 99 percent of values within 0.01, worst 0.08 | Mean about 0.001, 99 percent within about 0.005, worst about 0.06 at the rim of a lamp |
 | `testAPortraitFrameDevelopsAsTheSameFilmTurnedOnItsSide` | The test frame turned a quarter turn, developed and turned back, against the same reference frame; and grain on an even gray frame held either way up | The frame tolerances above; grain strength within 5 percent | Passes; with lengths taken from the frame's width it fails (99 percent within 0.018, grain a quarter weaker) |
@@ -206,7 +207,6 @@ Values are display tones from 0 to 1.
 | `testThePipelineDevelopsPhoneColorsAsTheCaptainsTableDoes` | 216 Display P3 phone colors through Development against his table read tetrahedrally | Mean 0.0005, 99 percent within 0.004, worst 0.01 | 0.00025, 0.0018 and 0.0057 |
 | `testGraysAreReadFromTheTablesGraysAlone` | The phone's 256 neutral tones against his table | 0.002, no more than 0.001 between the channels, never a step down | 0.0009 and 0.00002 |
 | `testThePipelineGivesTheNeutralValuesTheGeneratorStates` | His `SANITY` values a phone picture can reach, through Development | 0.02 | Passes |
-| `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` | The same colors and grays with Core Image's own cube, the fallback | Mean 0.001, 99 percent within 0.01, worst 0.04; grays within 0.01 | 0.0006, 0.006 and 0.030; 0.009 |
 | `testAPhotographsWayInUsesTheStandardsMatrices` | The matrices of section 2's way in against colour-science's | 0.00000001 | Passes |
 | `MediumFormatPassesTests.testEveryConstantIsTheSpecs`, `testThePassesTheSpecLeavesOutAreOff` | Section 5's numbers; the grain under 0.6 times the 16mm's; no halation, softening, weave, flash look or print variation | Equal | Passes |
 | `testThePhotographWithNoPassesIsTheTableAlone`, `testTheLensVignetteMatchesTheSpec` | A 240-pixel square test frame against the same frame through his table, without and with the vignette; the corner's light on an even gray | Mean 0.003, 99 percent within 0.01, worst 0.04; the corner within 0.002 | Passes |
@@ -358,6 +358,8 @@ A review round later that day removed the four unused look options with the two 
 After it `swift test --package-path Packages/RenderCore` passed on the Mac with 95 tests, the render tests passed once inside the simulator (iPhone 17 Pro, iOS 26.5) with 93 tests, none skipped, `Packages/NativeAdapters` built for the iOS simulator, and the document package matched its tree.
 The whole validation script, the app builds and the UI suites were not run again in that round.
 
+A second review round that day removed the fallback that read a film's table with Core Image's own cube and reworded three status notes; "The fallback's removal" below has what ran and where.
+
 | Where | What |
 | --- | --- |
 | `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's |
@@ -383,3 +385,29 @@ The digests on the unchanged code were the same on two runs, so a difference wou
 The scratch test is not in the repository.
 Versions 1 and 2 are untouched: `LegacyLook.swift` did not change, and `LegacyLookTests` passes against the version 2 build's pictures.
 The comparison ran on the Mac only; inside the simulator the same looks are held by the render tests above.
+
+### The fallback's removal
+
+Development reads a film's table tetrahedrally or not at all: `TableReading.read` throws `NativeRenderError.tableReaderUnavailable` where there is no kernel, the cube type, its builder, its lookup and the choice between two readings are gone, and `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` went with them.
+`NativePhotoRenderer.readsFilmTables` says whether this renderer has the kernel, and every test that needs the 16mm's or the 6×6's color Film Stock developed asks it first and is skipped, with the reason "Core Image cannot run the tetrahedral reader here", where it does not: 33 in `RenderCoreTests`, 11 in `FilmRuntimeTests`, 2 in the process-exit probe, 1 in `ImmerseTests`, 6 in the populated harness and 4 in the export harness.
+The two harnesses' UI test bundles now link RenderCore so that they can ask.
+`testWhereTheReaderCannotRunTheColorStocksDoNotDevelop` holds the failure itself, and runs only where there is no kernel.
+
+**Which hosts ran the kernel in this round.**
+Both hosts that ran tests have the kernel, so no test was skipped for want of it:
+
+- This Mac ran it: `swift test --package-path Packages/RenderCore` passed with 95 tests, the only one skipped being the test that runs where there is no kernel; `Packages/FilmRuntime` passed with 55 tests and `Probes/DevelopmentProcessExit` with 3, none skipped.
+- The iOS 26.5 simulator on this Mac (iPhone 17 Pro) ran it: the render tests passed with 93 tests, again with only that one skipped; in the populated harness `testSixBySixColorLookScreens` and `testSixteenMillimeterColorLookScreens` passed, each developing its Film through the production Development; and `ImmerseTests/TestingUnlockTests` passed with 4 tests.
+- No host without the kernel was available, and no iPhone ran anything.
+  The export harness's test bundles were built for the simulator and not run, since its README keeps runs to its own script and simulator; the app's UI suite and the whole validation script were not run.
+
+**What a host without the kernel does, forced on this Mac.**
+With the kernel made absent by a scratch edit that is not in the repository, the tests that need one of the two Film Stocks were found by running, not by reading: 28 failed in `RenderCoreTests`, beside the 5 that already skipped there, 11 in `FilmRuntimeTests` and 2 in the process-exit probe, while `FilmPersistenceTests` (37 tests) and the Trial study (17) passed untouched.
+With the skips added, the same forced runs gave 33 skipped and 1 failed in `RenderCoreTests`, 11 skipped and none failed in `FilmRuntimeTests`, and 2 skipped and none failed in the probe, every skip with the stated reason.
+The one failure is `testTheTetrahedralReaderIsMadeWhereThereIsMetal`, which is that test's purpose: this Mac has Metal, so a missing kernel there is a defect and not a host's limit.
+`testWhereTheReaderCannotRunTheColorStocksDoNotDevelop` ran in that forced run and passed: both Film Stocks threw `tableReaderUnavailable`.
+The simulator-hosted tests were found by reading and were not run forced.
+
+**No look changed.**
+The scratch digest test of "The removal changed no look" ran again on the Mac before and after this round, and all 220 digests were identical, 54 of them frames and photographs of the two Film Stocks the kernel reads.
+The digests on the unchanged code were again the same on two runs, the scratch test is again not in the repository, and versions 1 and 2 are untouched.

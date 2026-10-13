@@ -61,6 +61,7 @@ final class FilmLookTests: XCTestCase {
 
     /// Version 3 is a new look for every Camera and Film Stock, and no two of them develop alike.
     func testEveryCameraAndFilmStockHasItsOwnLookUnlikeVersionTwo() throws {
+        try requireTetrahedralReader()
         let scene = Self.colorChart(width: 480, height: 360)
         var looks: [String: DecodedPixels] = [:]
         for (camera, filmStock) in Self.treatments {
@@ -226,6 +227,7 @@ final class FilmLookTests: XCTestCase {
 
     /// Through `develop`, a capture whose Exif says the flash fired develops differently from the same pixels without.
     func testADevelopedDisposableExposureFollowsItsFlash() throws {
+        try requireTetrahedralReader()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("FilmLookTests-\(UUID())")
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
@@ -247,6 +249,7 @@ final class FilmLookTests: XCTestCase {
     /// The Disposable's 800-speed grain is heavy, and heaviest in the shadows, so a dim scene without flash develops
     /// dark and grainy (PRD 2.1 FR-04).
     func testTheDisposablesGrainIsHeavyAndGrowsInADimScene() throws {
+        try requireTetrahedralReader()
         let mid = try render(Self.even(0.5), camera: .disposable1990s, filmStock: nil)
         let dim = try render(Self.even(0.12), camera: .disposable1990s, filmStock: nil)
         let squareDim = try render(Self.even(0.12), camera: .mediumFormat6x6, filmStock: .color)
@@ -263,6 +266,7 @@ final class FilmLookTests: XCTestCase {
     /// against each other: the captain's board notes ask for a fine, organic grain with clean shadows on the 16mm's
     /// color stock, which leaves it about as fine as the Super 8's.
     func testGrainFollowsEachFormat() throws {
+        try requireTetrahedralReader()
         var grain: [String: Double] = [:]
         for (camera, filmStock) in Self.treatments {
             var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
@@ -426,6 +430,7 @@ final class FilmLookTests: XCTestCase {
     /// The 16mm Cinema glows around its highlights, red on the color Film Stock and neutral on black-and-white, and
     /// leaves a scene without highlights alone.
     func testTheSixteenMillimeterGlowsRedOnColorAndNeutralOnBlackAndWhite() throws {
+        try requireTetrahedralReader()
         // A bright light 60 pixels across in a dark 960-pixel frame, the size a Developed Clip is made.
         let light = CIFilter(name: "CIRadialGradient", parameters: [
             "inputCenter": CIVector(x: 480, y: 480), "inputRadius0": 30, "inputRadius1": 31,
@@ -493,6 +498,7 @@ final class FilmLookTests: XCTestCase {
     /// orange, daylight neutral and shade blue, against the light the capture recorded. Without a record, and on the
     /// black-and-white stock, the phone's white balance stands.
     func testTheSixteenMillimeterColorStockKeepsItsDaylightBalance() throws {
+        try requireTetrahedralReader()
         var treatment = FilmLook.cinemaColor
         treatment.scene = nil
         let gray = Self.even(0.18, side: 256)
@@ -520,6 +526,7 @@ final class FilmLookTests: XCTestCase {
 
     /// A clip carries its recorded light in its QuickTime metadata, which Development reads.
     func testADevelopedClipReadsTheLightItWasRecordedIn() async throws {
+        try requireTetrahedralReader()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("FilmLookTests-\(UUID())")
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }

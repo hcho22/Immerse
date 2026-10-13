@@ -3,7 +3,16 @@ import CoreGraphics
 import CoreImage
 import Foundation
 import ImageIO
+import RenderCore
 import XCTest
+
+extension XCTestCase {
+    /// A test that needs the 16mm Cinema's or the 6×6 Medium Format's color Film Stock developed is skipped where
+    /// Core Image cannot run the tetrahedral reader: there those two Film Stocks do not develop.
+    func requireTetrahedralReader() throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+    }
+}
 
 /// Decoded RGBA pixels and the measures these tests compare.
 struct DecodedPixels {

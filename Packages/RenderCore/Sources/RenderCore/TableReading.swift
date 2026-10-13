@@ -8,17 +8,10 @@ import Foundation
 ///
 /// Core Image's own color cube reads along each axis instead, which lets the colors beside a gray into its reading:
 /// up to 0.009 off the table's on grays, with a faint tint. So the table is read here by a small kernel of Core
-/// Image's, written in Metal and made when Development first needs it. Where Core Image cannot make or run it, a
-/// renderer without Metal, `DevelopedTreatment` falls back to the film's cubes (`NegativeFilm.Cube`).
+/// Image's, written in Metal and made when Development first needs it, and by nothing else: where Core Image cannot
+/// make or run it, a renderer without Metal, a film with a table does not develop
+/// (`NativeRenderError.tableReaderUnavailable`).
 enum TableReading {
-    /// How a negative film's table is read.
-    enum Way: Equatable {
-        /// By the kernel here, where there is one.
-        case tetrahedral
-        /// By Core Image's own color cube. Tests use it to hold the fallback.
-        case coreImageCube
-    }
-
     /// The kernel, proved against the same reading done in Swift, or nil where it cannot be made or does not prove.
     static let kernel: CIKernel? = {
         guard let made = try? CIKernel.kernels(withMetalString: source).first(where: { $0.name == "readTetrahedrally" }),
@@ -41,11 +34,13 @@ enum TableReading {
                        size: CGSize(width: width, height: side), format: .RGBAf, colorSpace: nil).samplingNearest()
     }
 
-    /// The picture read through a table, each of whose tones is asked for by a value from 0 to 1, or nil where there
-    /// is no kernel.
-    static func read(_ image: CIImage, table: CIImage, side: Int) -> CIImage? {
-        guard let kernel else { return nil }
-        return apply(kernel, to: image, table: table, side: side)
+    /// The picture read through a table, each of whose tones is asked for by a value from 0 to 1. Throws where there
+    /// is no kernel to read it.
+    static func read(_ image: CIImage, table: CIImage, side: Int) throws -> CIImage {
+        guard let kernel, let read = apply(kernel, to: image, table: table, side: side) else {
+            throw NativeRenderError.tableReaderUnavailable
+        }
+        return read
     }
 
     private static func apply(_ kernel: CIKernel, to image: CIImage, table: CIImage, side: Int) -> CIImage? {

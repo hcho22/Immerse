@@ -232,24 +232,6 @@ final class NegativeFilmTests: XCTestCase {
             worst = max(worst, abs(read.red - want[0]), abs(read.green - want[1]), abs(read.blue - want[2]))
         }
         XCTAssertLessThan(worst, 0.000002, "worst difference \(worst)")
-        // The cube Core Image's own filter is handed, where the reader cannot run, holds that reading at every tone of
-        // the table and halfway between each pair.
-        let cube = Self.mediumFormat.film.cube()
-        XCTAssertEqual(cube.dimension, 65)
-        let steps = cube.steps.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
-        let remainders = cube.remainders.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
-        for (red, green, blue) in [(0, 0, 0), (64, 64, 64), (32, 0, 64), (17, 40, 3), (1, 1, 1), (63, 2, 31)] {
-            let read = FilmLook.NegativeFilm.tetrahedral(file.tones, side: file.side,
-                                                         at: FilmLook.RGB(Double(red) / 64, Double(green) / 64, Double(blue) / 64))
-            let index = (blue * 65 + green) * 65 + red
-            for (channel, want) in [read.red, read.green, read.blue].enumerated() {
-                // The two cubes Core Image is handed add up to the value: whole 8-bit steps and a share of one step.
-                let whole = Double(steps[index * 4 + channel]), rest = Double(remainders[index * 4 + channel])
-                XCTAssertEqual((whole * 255).rounded(), whole * 255, accuracy: 0.0001)
-                XCTAssertTrue((0...1).contains(rest))
-                XCTAssertEqual(whole + rest / 255, want, accuracy: 0.000002)
-            }
-        }
     }
 
     /// The matrices of a photograph's way in are the standards': Rec.709 to Display P3, and Display P3 to Rec.2020 as
@@ -268,7 +250,7 @@ final class NegativeFilmTests: XCTestCase {
 
     /// 216 phone colors, every mix of six levels of red, green and blue on the capture's own primaries, through
     /// Development's own steps with the per-frame passes set aside, as a picture of one row of blocks.
-    private func developedPhoneColors(_ stock: Stock, reading: TableReading.Way = .tetrahedral) throws -> [[Double]] {
+    private func developedPhoneColors(_ stock: Stock) throws -> [[Double]] {
         let colors = stock.colors.display
         // One row of blocks, so the picture reads the same whichever way its rows run.
         let block = 8, width = colors.count * block, height = block
@@ -281,29 +263,19 @@ final class NegativeFilmTests: XCTestCase {
         }
         let picture = CIImage(bitmapData: Data(bytes), bytesPerRow: width * 4, size: CGSize(width: width, height: height),
                               format: .RGBA8, colorSpace: stock.capture)
-        var development = DevelopedTreatment(stock.filmAlone, seed: 1)
-        development.tableReading = reading
-        let developed = try Fixtures.tones(development.apply(to: picture))
+        let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: picture))
         return colors.indices.map { developed.pixel(x: $0 * block + block / 2, y: block / 2) }
-    }
-
-    /// Tests of what the tetrahedral reader develops are skipped where Core Image cannot run it and Development falls
-    /// back to its own color cube, which `testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt` holds.
-    private func requireTetrahedralReader() throws {
-        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
     }
 
     /// A neutral ramp of the phone's 256 tones through the pipeline, against the film's own table read
     /// tetrahedrally in Swift: the largest difference in any channel, the largest difference between the channels'
     /// differences, which is a tint, and the largest step down from one tone to the next.
-    private func neutralRamp(_ stock: Stock, reading: TableReading.Way) throws -> (worst: Double, tint: Double, reversal: Double) {
+    private func neutralRamp(_ stock: Stock) throws -> (worst: Double, tint: Double, reversal: Double) {
         var bytes = [UInt8](repeating: 255, count: 256 * 4 * 4)
         for y in 0..<4 { for x in 0..<256 { for channel in 0..<3 { bytes[(y * 256 + x) * 4 + channel] = UInt8(x) } } }
         let ramp = CIImage(bitmapData: Data(bytes), bytesPerRow: 256 * 4, size: CGSize(width: 256, height: 4), format: .RGBA8,
                            colorSpace: stock.capture)
-        var development = DevelopedTreatment(stock.filmAlone, seed: 1)
-        development.tableReading = reading
-        let developed = try Fixtures.tones(development.apply(to: ramp))
+        let developed = try Fixtures.tones(DevelopedTreatment(stock.filmAlone, seed: 1).apply(to: ramp))
         let table = stock.film.tones()
         var worst = 0.0, tint = 0.0, reversal = 0.0
         for x in 0..<256 {
@@ -373,7 +345,7 @@ final class NegativeFilmTests: XCTestCase {
     func testGraysAreReadFromTheTablesGraysAlone() throws {
         try requireTetrahedralReader()
         for stock in Self.stocks {
-            let ramp = try neutralRamp(stock, reading: .tetrahedral)
+            let ramp = try neutralRamp(stock)
             XCTAssertLessThan(ramp.worst, 0.002, "\(stock.name): worst \(ramp.worst)")
             XCTAssertLessThan(ramp.tint, 0.001, "\(stock.name): tint \(ramp.tint)")
             XCTAssertLessThan(ramp.reversal, 0.0002, "\(stock.name): largest step down \(ramp.reversal)")
@@ -398,7 +370,7 @@ final class NegativeFilmTests: XCTestCase {
         for tone in tones { pixels += [Float(tone[0]), Float(tone[1]), Float(tone[2]), 1] }
         let picture = CIImage(bitmapData: pixels.withUnsafeBufferPointer { Data(buffer: $0) }, bytesPerRow: tones.count * 16,
                               size: CGSize(width: tones.count, height: 1), format: .RGBAf, colorSpace: nil)
-        let read = try XCTUnwrap(TableReading.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side))
+        let read = try TableReading.read(picture, table: TableReading.image(of: file.tones, side: file.side), side: file.side)
         let values = Fixtures.values(read, workingFormat: .RGBAf)
         var worst = 0.0
         for (index, want) in expected.enumerated() {
@@ -408,26 +380,15 @@ final class NegativeFilmTests: XCTestCase {
         XCTAssertLessThan(worst, 0.001, "worst difference \(worst)")
     }
 
-    /// Where Core Image cannot run the reader, its own color cube reads the film's table along each axis. For the
-    /// 6×6 that cube holds the table's tetrahedral reading at twice the table's tones, and both films' cubes are
-    /// handed over in 16 bits. That reading is close, and inside the generators' own tolerance of 0.02 on grays:
-    /// the 6×6's phone colors within 0.001 of his table on average, 0.01 for 99 percent and 0.04 at worst; the
-    /// 16mm's as its test above has them; grays within 0.01 (measured: 0.009 on the 6×6, 0.0045 on the 16mm), with
-    /// a tint of up to 0.004 (0.003 and 0.001), and steps down of no more than 0.0005.
-    func testWhereTheTableCannotBeReadTetrahedrallyCoreImagesCubeReadsIt() throws {
-        let roll = difference(try developedPhoneColors(Self.mediumFormat, reading: .coreImageCube),
-                              try XCTUnwrap(Self.mediumFormat.colors.displayTable))
-        XCTAssertLessThan(roll.mean, 0.001, "mean difference from his table \(roll.mean)")
-        XCTAssertLessThan(roll.most, 0.01, "99 percent within \(roll.most) of his table")
-        XCTAssertLessThan(roll.worst, 0.04, "worst difference from his table \(roll.worst)")
-        let cinema = difference(try developedPhoneColors(Self.cinema, reading: .coreImageCube), Self.cinema.colors.displayDeveloped)
-        XCTAssertLessThan(cinema.worst, 0.03, "worst difference from his function \(cinema.worst)")
-        XCTAssertLessThan(cinema.mean, 0.003, "mean difference from his function \(cinema.mean)")
+    /// Where Core Image cannot run the reader, neither color Film Stock develops, and nothing else reads its table.
+    func testWhereTheReaderCannotRunTheColorStocksDoNotDevelop() throws {
+        try XCTSkipUnless(TableReading.kernel == nil, "Core Image runs the tetrahedral reader here")
+        XCTAssertFalse(NativePhotoRenderer.readsFilmTables)
+        let picture = CIImage(color: CIColor(red: 0.18, green: 0.18, blue: 0.18)).cropped(to: CGRect(x: 0, y: 0, width: 32, height: 32))
         for stock in Self.stocks {
-            let ramp = try neutralRamp(stock, reading: .coreImageCube)
-            XCTAssertLessThan(ramp.worst, 0.01, "\(stock.name): worst \(ramp.worst)")
-            XCTAssertLessThan(ramp.tint, 0.004, "\(stock.name): tint \(ramp.tint)")
-            XCTAssertLessThan(ramp.reversal, 0.0005, "\(stock.name): largest step down \(ramp.reversal)")
+            XCTAssertThrowsError(try DevelopedTreatment(stock.treatment, seed: 1).apply(to: picture), stock.name) {
+                XCTAssertEqual($0 as? NativeRenderError, .tableReaderUnavailable)
+            }
         }
     }
 
@@ -435,6 +396,7 @@ final class NegativeFilmTests: XCTestCase {
     /// 3.85 stops over gray), within the generator's tolerance of 0.02 and within 0.01 of its exact function; and a
     /// neutral ramp of phone tones never reverses.
     func testThePipelineGivesTheNeutralValuesTheGeneratorStates() throws {
+        try requireTetrahedralReader()
         for stock in Self.stocks {
             for (stops, stated) in stock.colors.sanity where Double(stops)! < 4 {
                 // The 16mm's stated shadows are opened by the density range the captain chose.

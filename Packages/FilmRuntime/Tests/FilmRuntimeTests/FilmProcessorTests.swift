@@ -8,6 +8,7 @@ import XCTest
 
 final class FilmProcessorTests: XCTestCase {
     func testFullPhotoRollCapacitiesStaySealedUntilExplicitDevelopment() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let fixture = root.appendingPathComponent("Fixtures")
@@ -227,6 +228,7 @@ final class FilmProcessorTests: XCTestCase {
     }
 
     func testRealMovieDiscardReassemblesOnlyRetainedDevelopedClipThenKeepsEmptyPlaceholders() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
         let fixture = root.appendingPathComponent("Fixtures")

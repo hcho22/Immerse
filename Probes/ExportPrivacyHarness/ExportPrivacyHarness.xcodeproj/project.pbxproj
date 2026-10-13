@@ -15,6 +15,7 @@
 		36725F7871AC1968CEE520CF /* ExportProcessExitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0195D2DB22A891C42C08933 /* ExportProcessExitTests.swift */; };
 		394AEAD0D41282D278D514C9 /* ExportPrivacyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B979E7D80B4DAD457DD74 /* ExportPrivacyApp.swift */; };
 		3AB6AF815B4AAC24E15525EF /* DevelopmentProcessExitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 661A3CC13548DAB3A2441C1A /* DevelopmentProcessExitUITests.swift */; };
+		3C40C19D6C5EAC620BDB0D6E /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 454EF153617B0A8634C7F6F6 /* RenderCore */; };
 		402475D3F25EE25D8B2ABAFA /* ExportPrivacyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5777B8E30FBEE353F8192EC4 /* ExportPrivacyTests.swift */; };
 		46D510C7340C2BF50F1FBFC3 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 129BE51D6B17A8F5A7C2708E /* NativeAdapters */; };
 		5DA211CBC931F6194F807C1A /* CaptureBackendRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B978CFF178542FC2845001 /* CaptureBackendRecoveryTests.swift */; };
@@ -107,6 +108,14 @@
 				D3494B022FF07E15A212F64A /* RenderCore in Frameworks */,
 				46D510C7340C2BF50F1FBFC3 /* NativeAdapters in Frameworks */,
 				67DD287325296D39E6267971 /* RenderFixtures in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E111C9BE06C9020799BD24BE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C40C19D6C5EAC620BDB0D6E /* RenderCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +247,7 @@
 			buildConfigurationList = 0A4FDC947BBB43F0C66D77F7 /* Build configuration list for PBXNativeTarget "ExportPrivacyUITests" */;
 			buildPhases = (
 				B53FA3C48BC437F248799567 /* Sources */,
+				E111C9BE06C9020799BD24BE /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -246,6 +256,7 @@
 			);
 			name = ExportPrivacyUITests;
 			packageProductDependencies = (
+				454EF153617B0A8634C7F6F6 /* RenderCore */,
 			);
 			productName = ExportPrivacyUITests;
 			productReference = 6C1CF9C1C5C51D18D0C8FBD5 /* ExportPrivacyUITests.xctest */;
@@ -889,6 +900,10 @@
 		129BE51D6B17A8F5A7C2708E /* NativeAdapters */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NativeAdapters;
+		};
+		454EF153617B0A8634C7F6F6 /* RenderCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderCore;
 		};
 		7DDBADC727F2D38F87D4A8E6 /* FilmPersistence */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -3,11 +3,13 @@ import FilmPersistence
 import FilmRuntime
 import Foundation
 import NativeAdapters
+import RenderCore
 import XCTest
 @testable import ExportPrivacyHarness
 
 @MainActor final class ExportPrivacyTests: XCTestCase {
     func testDefaultPreparationAndRecoveryNeverExportAllCameras() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in CameraID.allCases {
             let scenario = try ExportScenario(camera: camera, label: "default-no-export")
             try await scenario.prepare()
@@ -201,6 +203,7 @@ import XCTest
     }
 
     func testMovieDiscardRetiresPrivateAssemblyButKeepsCompletedExternalCopy() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         for camera in [CameraID.super8HomeMovie, .cinema16mm] {
             for boundary in [ExportBoundary.beforeCopy, .beforeReply] {
                 let scenario = try ExportScenario(camera: camera, count: 2, label: "movie-discard-\(boundary.rawValue)")

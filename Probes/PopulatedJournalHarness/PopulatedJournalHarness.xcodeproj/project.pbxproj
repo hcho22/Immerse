@@ -27,6 +27,7 @@
 		8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */; };
 		9B2DB15E2A9CA3A3CA0B0B85 /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 6CDA3AAB98F34F05A92E201E /* FilmPersistence */; };
 		A8745D718F6267AE8FF68268 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 12F2D9D75387D3F28C80CD90 /* MediaCatalog */; };
+		B5EA37B2EB0AEC7AABB8CE8E /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D94448032AFF48A1178FC9E /* RenderCore */; };
 		C8033A34AC916AF7899B0A98 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7174548584A2CC7E0017F828 /* EntitlementCore */; };
 		CB961F2737A4730613BA5774 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 28283260002FB1D79AAC7C9D /* NativeAdapters */; };
 		CEC0D82590BBF96DC2C822CE /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */; };
@@ -85,6 +86,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7EECA39C217372BB2DBFCA6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5EA37B2EB0AEC7AABB8CE8E /* RenderCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		87DE2C9DD5A884FC1FE06E9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -198,6 +207,7 @@
 			buildConfigurationList = FB90C639C3BC3D14F2714900 /* Build configuration list for PBXNativeTarget "PopulatedJournalHarnessTests" */;
 			buildPhases = (
 				F5EBA4149F3B5552687F4569 /* Sources */,
+				7EECA39C217372BB2DBFCA6C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -206,6 +216,7 @@
 			);
 			name = PopulatedJournalHarnessTests;
 			packageProductDependencies = (
+				2D94448032AFF48A1178FC9E /* RenderCore */,
 			);
 			productName = PopulatedJournalHarnessTests;
 			productReference = C98F98988E7D41895751822D /* PopulatedJournalHarnessTests.xctest */;
@@ -614,6 +625,10 @@
 		28283260002FB1D79AAC7C9D /* NativeAdapters */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NativeAdapters;
+		};
+		2D94448032AFF48A1178FC9E /* RenderCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderCore;
 		};
 		3B6476416256E9ABC968E179 /* FilmRuntime */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -3,6 +3,7 @@ import EntitlementCore
 import FilmDomain
 import FilmPersistence
 import NativeAdapters
+import RenderCore
 import XCTest
 @testable import Immerse
 
@@ -66,6 +67,7 @@ final class TestingUnlockTests: XCTestCase {
     }
 
     func testTurningTheUnlockOffKeepsItsFilmsUsableAndRestoresTrialGating() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let (root, calls, model) = try await makeModel(unlocked: true)
         defer { try? FileManager.default.removeItem(at: root) }
         let photos = try await model.load(camera: CameraCatalog.mediumFormat6x6, title: "Unlocked 6×6", orientation: .portrait, filmStock: .color)

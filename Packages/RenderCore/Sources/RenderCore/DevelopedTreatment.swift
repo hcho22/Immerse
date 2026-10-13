@@ -16,8 +16,6 @@ struct DevelopedTreatment {
     let seed: UInt64
     private let flashFired: Bool
     let sceneWhiteBalance: SceneWhiteBalance?
-    /// How a negative film's table is read. Tests set it to hold the fallback to Core Image's own color cube.
-    var tableReading = TableReading.Way.tetrahedral
 
     /// - Parameters:
     ///   - flashFired: whether the flash lit the exposure, which only a Camera with a flash look uses.
@@ -57,16 +55,16 @@ struct DevelopedTreatment {
         case let .legacy(camera, filmStock):
             return try LegacyLook.apply(to: source, camera: camera, filmStock: filmStock, seed: seed, frame: frame)
         case let .perCamera(treatment, cube):
-            return render(source, treatment: treatment, cube: cube, frame: frame, frameRate: frameRate)
+            return try render(source, treatment: treatment, cube: cube, frame: frame, frameRate: frameRate)
         }
     }
 
     // MARK: - Version 3
 
-    private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) -> CIImage {
+    private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) throws -> CIImage {
         // A negative emulsion develops from the scene's light, through passes of its own (`SceneDevelopment.swift`).
         if case let .negative(film) = treatment.emulsion {
-            return developInSceneLight(source, film: film, passes: treatment.scene, frame: frame, frameRate: frameRate)
+            return try developInSceneLight(source, film: film, passes: treatment.scene, frame: frame, frameRate: frameRate)
         }
         let extent = source.extent
         let longEdge = max(extent.width, extent.height)
@@ -409,13 +407,11 @@ struct DevelopedTreatment {
     }
 }
 
-/// Each negative film's table, made the first time a capture develops with it: as an image for tetrahedral reading,
-/// and as cubes for Core Image's own filter only where that is what reads it.
+/// Each negative film's table as an image for tetrahedral reading, made the first time a capture develops with it.
 final class NegativeCubes: @unchecked Sendable {
     static let shared = NegativeCubes()
     private let lock = NSLock()
     private var tables: [(film: FilmLook.NegativeFilm, side: Int, image: CIImage)] = []
-    private var cubes: [(film: FilmLook.NegativeFilm, cube: FilmLook.NegativeFilm.Cube)] = []
 
     func table(for film: FilmLook.NegativeFilm) -> (side: Int, image: CIImage) {
         lock.lock()
@@ -425,14 +421,5 @@ final class NegativeCubes: @unchecked Sendable {
         let image = TableReading.image(of: colors, side: side)
         tables.append((film, side, image))
         return (side, image)
-    }
-
-    func cube(for film: FilmLook.NegativeFilm) -> FilmLook.NegativeFilm.Cube {
-        lock.lock()
-        defer { lock.unlock() }
-        if let made = cubes.first(where: { $0.film == film }) { return made.cube }
-        let cube = film.cube()
-        cubes.append((film, cube))
-        return cube
     }
 }

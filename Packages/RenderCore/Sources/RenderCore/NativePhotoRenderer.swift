@@ -15,6 +15,9 @@ public enum NativeRenderError: Error, Equatable {
     case instantMasterWithoutCard
     /// A treatment version this build cannot render, assigned by a later build.
     case unrenderableTreatment
+    /// A film's table cannot be read here: Core Image could not make or run the tetrahedral reader, the only way the
+    /// color Film Stocks of the 16mm Cinema and the 6×6 Medium Format develop.
+    case tableReaderUnavailable
 }
 
 /// Develops and prints photographs with each Camera's Developed Treatment. DEC-04/DEC-11 output approval remains open.
@@ -31,6 +34,11 @@ public enum NativePhotoRenderer {
     /// Every treatment version this build renders. A capture keeps the version it was assigned, so a Film that was
     /// unfinished or developing when the app was updated still finishes with the look it started with (CAM-01, RK-11).
     public static let renderableTreatmentVersions = Set(TreatmentVersion.allCases.map(\.rawValue))
+
+    /// Whether this renderer can read a film's table, which the color Film Stocks of the 16mm Cinema and the 6×6
+    /// Medium Format develop through. Where it cannot, a renderer without Metal, developing one of them throws
+    /// `NativeRenderError.tableReaderUnavailable`.
+    public static var readsFilmTables: Bool { TableReading.kernel != nil }
 
     /// The developed master of one capture: the Camera's picture shape and its treatment, in the capture's assigned
     /// treatment version, for the Film's Film Stock. A nil Film Stock, a Camera without one or a Film loaded before

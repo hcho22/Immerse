@@ -3,12 +3,14 @@ import FilmPersistence
 import FilmRuntime
 import Foundation
 import NativeAdapters
+import RenderCore
 import RenderFixtures
 import XCTest
 @testable import MediaCatalog
 
 final class SoundtrackTests: XCTestCase {
     func testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture()
         defer { fixture.remove() }
         let repository = fixture.repository
@@ -52,6 +54,7 @@ final class SoundtrackTests: XCTestCase {
     }
 
     func testAudioChangeRetiresOldMovieAndRejectsStaleRenderBeforeResumingSilence() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture()
         defer { fixture.remove() }
         let repository = fixture.repository
@@ -79,6 +82,7 @@ final class SoundtrackTests: XCTestCase {
     }
 
     func testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture()
         defer { fixture.remove() }
         let id = fixture.film.id

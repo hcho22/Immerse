@@ -33,6 +33,7 @@ final class FilmStockDevelopmentTests: XCTestCase {
     private var clip: URL { fixtures.appendingPathComponent("synthetic-developed-movie.mov") }
 
     func testABlackAndWhiteSixBySixFilmDevelopsPrintsTonesAndExportsMonochrome() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let repository = try FilmRepository(rootURL: root)
         let mono = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Harbour", filmStock: .blackAndWhite)
         let color = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Garden", filmStock: .color)

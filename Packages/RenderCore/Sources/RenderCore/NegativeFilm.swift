@@ -133,52 +133,6 @@ extension FilmLook {
             }
         }
 
-        /// A film's table as Core Image's own color cube takes it, for a renderer that cannot read the table
-        /// tetrahedrally. Core Image keeps a cube's values in 8 bits, and half of one of those steps shows in a
-        /// look's flattest tones, so the cube is handed over as two: each value's whole 8-bit steps, and what is left
-        /// of it as a share of one step. Core Image reads both in straight lines along each axis, so the two readings
-        /// add up to that reading of the values themselves, to 16 bits.
-        struct Cube: Equatable {
-            let dimension: Int
-            /// Each value's whole 8-bit steps, as a cube of red, green, blue and alpha, red varying fastest.
-            let steps: Data
-            /// What is left of each value, as a share of one 8-bit step.
-            let remainders: Data
-        }
-
-        /// The film's table as cubes for Core Image's own filter. The function's table goes as it is. A generator's
-        /// table goes as its tetrahedral reading at twice its tones a side, every tone of the table and the reading
-        /// halfway between each pair, which brings the filter's reading closer to the tetrahedral one.
-        func cube() -> Cube {
-            let (side, colors) = tones()
-            let dimension = cubeDimension
-            let count = dimension * dimension * dimension
-            var steps = [Float](repeating: 1, count: count * 4), remainders = [Float](repeating: 1, count: count * 4)
-            let last = Double(dimension - 1)
-            for blue in 0..<dimension { for green in 0..<dimension { for red in 0..<dimension {
-                let index = (blue * dimension + green) * dimension + red
-                let output = dimension == side ? colors[index]
-                    : Self.tetrahedral(colors, side: side, at: RGB(Double(red) / last, Double(green) / last, Double(blue) / last))
-                for (channel, value) in [output.red, output.green, output.blue].enumerated() {
-                    let held = min(max(value, 0), 1)
-                    let whole = min((held * 255).rounded(.down), 254)
-                    steps[index * 4 + channel] = Float(whole / 255)
-                    remainders[index * 4 + channel] = Float(held * 255 - whole)
-                }
-            } } }
-            return Cube(dimension: dimension, steps: steps.withUnsafeBufferPointer { Data(buffer: $0) },
-                        remainders: remainders.withUnsafeBufferPointer { Data(buffer: $0) })
-        }
-
-        /// The tones a side of the cube Core Image's own filter takes: the function's 64, which cover every light from
-        /// none to six stops over middle gray, or twice a generator's table's.
-        var cubeDimension: Int {
-            switch table {
-            case .function: 64
-            case let .appleLog(side): 2 * side - 1
-            }
-        }
-
         /// The generator's table for this film: the picture for every mix of `side` Apple Log tones of red, green
         /// and blue, red varying fastest. These are the numbers the generator writes to its table file.
         func appleLogTable(side: Int) -> [RGB] {

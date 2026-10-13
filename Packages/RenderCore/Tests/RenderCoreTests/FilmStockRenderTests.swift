@@ -33,6 +33,7 @@ final class FilmStockRenderTests: XCTestCase {
     private var movie: URL { root.appendingPathComponent("synthetic-developed-movie.mov") }
 
     func testBlackAndWhiteSixBySixDevelopsAMonochromeSquareMaster() throws {
+        try requireTetrahedralReader()
         let camera = CameraCatalog.mediumFormat6x6
         let master = try NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .blackAndWhite)
         XCTAssertEqual(master, try NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .blackAndWhite))
@@ -48,6 +49,7 @@ final class FilmStockRenderTests: XCTestCase {
     /// the color master's, desaturated, and on a neutral ramp, where only the print curves differ, it is steeper
     /// through the middle tones.
     func testBlackAndWhiteIsHigherContrastAndNotTheColorLookDesaturated() throws {
+        try requireTetrahedralReader()
         let camera = CameraCatalog.mediumFormat6x6
         let mono = try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .blackAndWhite))
         let color = try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .color))
@@ -74,6 +76,7 @@ final class FilmStockRenderTests: XCTestCase {
     /// On an even mid-gray scene, the grain is all there is to see: black-and-white grain is coarser and stronger than
     /// the color Film Stock's very fine grain, and it is gray.
     func testBlackAndWhiteGrainIsDistinctOnAnEvenScene() throws {
+        try requireTetrahedralReader()
         let gray = root.appendingPathComponent("mid-gray.png")
         try writeEvenGray(to: gray, side: 1024)
         let camera = CameraCatalog.mediumFormat6x6
@@ -82,7 +85,7 @@ final class FilmStockRenderTests: XCTestCase {
         XCTAssertLessThanOrEqual(mono.largestChannelSpread, 2)
         XCTAssertGreaterThan(mono.centerDeviation, color.centerDeviation * 2,
                              "Grain on an even scene (\(mono.centerDeviation) vs \(color.centerDeviation))")
-        // Clearly visible on its own, not just next to the color stock's very fine grain; the provisional values give about 8.
+        // Clearly visible on its own, not just next to the color stock's very fine grain; the approved values give about 8.
         XCTAssertGreaterThan(mono.centerDeviation, 4)
     }
 
@@ -109,6 +112,7 @@ final class FilmStockRenderTests: XCTestCase {
     /// Color development of the two Cameras is unchanged by Film Stock: the color Film Stock and a Film loaded before
     /// Film Stock existed develop the same master, byte for byte.
     func testColorFilmStockDevelopsExactlyAsAFilmWithoutOne() async throws {
+        try requireTetrahedralReader()
         let camera = CameraCatalog.mediumFormat6x6
         XCTAssertEqual(try NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, filmStock: .color),
                        try NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42))
@@ -125,6 +129,7 @@ final class FilmStockRenderTests: XCTestCase {
     /// A black-and-white 16mm Film's Developed Clip is monochrome in every frame, keeps the Camera's 24 frames per
     /// second and its length, and grains each frame afresh; the Developed Movie assembled from such clips is too.
     func testBlackAndWhiteSixteenMillimeterClipIsMonochromeInEveryFrame() async throws {
+        try requireTetrahedralReader()
         let mono = root.appendingPathComponent("mono.mov"), color = root.appendingPathComponent("color.mov")
         for (url, stock) in [(mono, FilmStock.blackAndWhite), (color, .color)] {
             try await NativeMovieRenderer.developClip(source: movie, destination: url, camera: CameraCatalog.cinema16mm,

@@ -63,8 +63,7 @@ final class MediumFormatPassesTests: XCTestCase {
 
     // Tolerances for a whole frame against the reference's, in display tone (0 to 1): the mean difference, the
     // difference 99 percent of values stay within, and the largest. The reference frames are 8-bit and are his table
-    // read tetrahedrally, as Development reads it; the tolerances also hold where Core Image's own cube reads it
-    // (`NegativeFilmTests`).
+    // read tetrahedrally, as Development reads it.
     private func assertMatches(_ tones: Fixtures.Tones, _ fixture: String, file: StaticString = #filePath, line: UInt = #line) throws {
         let expected = try Fixtures.bytes("\(Self.folder)/\(fixture)")
         XCTAssertEqual(expected.count, tones.values.count, file: file, line: line)
@@ -124,16 +123,17 @@ final class MediumFormatPassesTests: XCTestCase {
 
     /// With no passes the photograph is the captain's table alone, through the spec's way in for a photograph.
     func testThePhotographWithNoPassesIsTheTableAlone() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed { _ in }, "frame-look-only.png")
     }
 
     /// The lens vignette: the spec's fall of 0.18 at the corners, about 0.3 of a stop, from nothing at 0.30 of the way
     /// out along its curve of 1.6, in the scene's light before the film.
     func testTheLensVignetteMatchesTheSpec() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed { $0.vignette = self.scene.vignette }, "frame-vignette.png")
 
         // On an even gray, the center is untouched and the corner has 0.82 of the scene's light.
-        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
         var treatment = look
         treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, capture: scene.capture, vignette: scene.vignette)
         let level = 118.0 / 255
@@ -155,6 +155,7 @@ final class MediumFormatPassesTests: XCTestCase {
     /// Nothing softens the picture: the fine detail of the test frame, checks two pixels wide, keeps the contrast the
     /// reference's has, where the least blur would take most of it away.
     func testNothingSoftensThePicture() throws {
+        try requireTetrahedralReader()
         let tones = try developed { $0.vignette = self.scene.vignette; $0.grain = self.scene.grain }
         let expected = try Fixtures.bytes("\(Self.folder)/frame-vignette.png")
         func spread(_ value: (Int) -> Double) -> Double {
@@ -231,7 +232,7 @@ final class MediumFormatPassesTests: XCTestCase {
     /// spreads each channel's tones as the spec's does through the captain's table, within a tenth, which is about
     /// one 8-bit step in green.
     func testTheGrainIsVeryFineOnMiddleGray() throws {
-        try XCTSkipUnless(TableReading.kernel != nil, "Core Image cannot run the tetrahedral reader here")
+        try requireTetrahedralReader()
         var treatment = look
         treatment.scene = FilmLook.ScenePasses(referenceWidth: scene.referenceWidth, capture: scene.capture, grain: scene.grain)
         // The phone tone nearest middle gray's light of 0.18.
@@ -253,6 +254,7 @@ final class MediumFormatPassesTests: XCTestCase {
     /// they are compared in 12 x 12 blocks of 20 pixels: every block with no edge in it has the same mean tone to
     /// 0.006.
     func testTheWholeDevelopedPhotographComparesWithTheSpecs() throws {
+        try requireTetrahedralReader()
         let tones = try Fixtures.tones(DevelopedTreatment(look, seed: 3).apply(to: frame()))
         let expected = try Fixtures.bytes("\(Self.folder)/frame-developed.png")
         let block = 20

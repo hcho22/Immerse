@@ -22,7 +22,7 @@ import Foundation
 /// frame width for a landscape frame.
 extension DevelopedTreatment {
     func developInSceneLight(_ source: CIImage, film: FilmLook.NegativeFilm, passes: FilmLook.ScenePasses?,
-                             frame: Int, frameRate: Int) -> CIImage {
+                             frame: Int, frameRate: Int) throws -> CIImage {
         let extent = source.extent
         let width = Double(max(extent.width, extent.height))
         var image = source
@@ -76,11 +76,9 @@ extension DevelopedTreatment {
             image = SceneLight.curve(SceneLight.onRec709(image), SceneLight.cubeTone, upTo: FilmLook.NegativeFilm.cubeBrightest)
         }
         let table = NegativeCubes.shared.table(for: film)
-        let read = tableReading == .tetrahedral ? TableReading.read(image, table: table.image, side: table.side) : nil
-        // Where Core Image cannot read the table tetrahedrally, its own color cube reads it along each axis.
-        image = read ?? Self.filmed(image, NegativeCubes.shared.cube(for: film))
+        image = try TableReading.read(image, table: table.image, side: table.side)
 
-        // The cube gives display tones; the weave resamples those, as the reference does, before Core Image is
+        // The table gives display tones; the weave resamples those, as the reference does, before Core Image is
         // handed them back as light.
         if let passes, let weave = passes.weave {
             image = woven(image, weave, width: width, referenceWidth: passes.referenceWidth, frame: frame, frameRate: frameRate)
@@ -89,20 +87,6 @@ extension DevelopedTreatment {
     }
 
     // MARK: - Passes
-
-    /// The picture through the film's cubes, by Core Image's own filter: the reading of the values' whole 8-bit steps
-    /// and the reading of what is left of each, a share of one step, added together (`NegativeFilm.Cube`).
-    static func filmed(_ image: CIImage, _ cube: FilmLook.NegativeFilm.Cube) -> CIImage {
-        func read(_ data: Data) -> CIImage {
-            image.applyingFilter("CIColorCube", parameters: ["inputCubeDimension": cube.dimension, "inputCubeData": data])
-        }
-        let share = 1.0 / 255
-        let rest = read(cube.remainders).applyingFilter("CIColorMatrix", parameters: [
-            "inputRVector": CIVector(x: share, y: 0, z: 0, w: 0), "inputGVector": CIVector(x: 0, y: share, z: 0, w: 0),
-            "inputBVector": CIVector(x: 0, y: 0, z: share, w: 0)
-        ])
-        return added(rest, to: read(cube.steps))
-    }
 
     /// The glow of the scene's light above the threshold, spread near and far, tinted and added back.
     static func glow(_ image: CIImage, _ halation: FilmLook.ScenePasses.Halation, width: Double) -> CIImage {

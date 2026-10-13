@@ -95,21 +95,25 @@ final class ScenePassesTests: XCTestCase {
 
     /// With no passes the frame is the film alone.
     func testTheFrameWithNoPassesIsTheFilmAlone() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed { _ in }, "frame-look-only.png")
     }
 
     /// Halation: the reference's threshold, its near and far spreads and tints, and its strength.
     func testHalationMatchesTheReference() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed { $0.halation = self.scene.halation }, "frame-halation.png")
     }
 
     /// Soft, darkened edges: the reference's blur toward the corners and its vignette.
     func testSoftDarkenedEdgesMatchTheReference() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed { $0.softEdges = self.scene.softEdges; $0.vignette = self.scene.vignette }, "frame-soft-edges.png")
     }
 
     /// Halation, soft darkened edges and overall softness together, in the reference's order, then the film.
     func testEveryPassBeforeTheGrainMatchesTheReference() throws {
+        try requireTetrahedralReader()
         try assertMatches(developed {
             $0.halation = self.scene.halation; $0.softEdges = self.scene.softEdges; $0.vignette = self.scene.vignette
             $0.softness = self.scene.softness
@@ -122,6 +126,7 @@ final class ScenePassesTests: XCTestCase {
     /// even gray frame gets grain of the same strength either way up. Lengths taken from the frame's width would
     /// give the portrait frame three quarters of the blur and of the grain.
     func testAPortraitFrameDevelopsAsTheSameFilmTurnedOnItsSide() throws {
+        try requireTetrahedralReader()
         func atOrigin(_ image: CIImage) -> CIImage {
             image.transformed(by: CGAffineTransform(translationX: -image.extent.minX, y: -image.extent.minY))
         }
@@ -149,6 +154,7 @@ final class ScenePassesTests: XCTestCase {
     /// red, then green, then blue, and never negative, and the vignette takes its full amount at the corner and
     /// nothing at the center.
     func testHalationAndVignetteBehaveAsTheReferenceChecksThem() throws {
+        try requireTetrahedralReader()
         let extent = CGRect(x: 0, y: 0, width: 320, height: 240)
         func raw(_ image: CIImage) -> Fixtures.Tones { Fixtures.values(image.cropped(to: extent)) }
         let flat = Fixtures.light(0.18, in: extent)
@@ -213,6 +219,7 @@ final class ScenePassesTests: XCTestCase {
     /// The frame is unsteady from frame to frame, by no more than the reference's weave and over-scale move it, and
     /// its brightness does not flicker: the 16mm has no flicker, dust or hair.
     func testAClipWeavesSlightlyAndNeverFlickers() throws {
+        try requireTetrahedralReader()
         let picture = try Fixtures.picture("Cinema16mmColor/frame.png")
         let weaving = DevelopedTreatment(look.with { $0.scene = FilmLook.ScenePasses(referenceWidth: 1440, weave: self.scene.weave) }, seed: 21)
         let still = try Fixtures.tones(DevelopedTreatment(look.with { $0.scene = FilmLook.ScenePasses(referenceWidth: 1440) }, seed: 21)
@@ -301,6 +308,7 @@ final class ScenePassesTests: XCTestCase {
     /// edge in it (the weave moves edges by a pixel or so) has the same mean tone to 0.012, and over the even gray
     /// field the grain is as strong within a fifth.
     func testTheWholeDevelopedFrameComparesWithTheReferences() throws {
+        try requireTetrahedralReader()
         let tones = try Fixtures.tones(DevelopedTreatment(look, seed: 3).apply(to: Fixtures.picture("Cinema16mmColor/frame.png"),
                                                                                 frame: 10, frameRate: 24))
         let expected = try Fixtures.bytes("Cinema16mmColor/frame-developed.png")
