@@ -132,34 +132,3 @@ func decodedFrames(_ url: URL) async throws -> [DecodedPixels] {
     XCTAssertEqual(reader.status, .completed)
     return result
 }
-
-/// Twelve frames at 30 fps of a still, drifting one pixel a frame, as a 320 x 240 H.264 movie: a moving scene whose
-/// every frame is known.
-func writeStillMovie(from photo: URL, to url: URL, frames: Int = 12) async throws {
-    let still = try XCTUnwrap(CIImage(contentsOf: photo))
-    let width = 320, height = 240
-    let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
-    let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264,
-        AVVideoWidthKey: width, AVVideoHeightKey: height])
-    let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: [
-        kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-        kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height])
-    writer.add(input)
-    XCTAssertTrue(writer.startWriting())
-    writer.startSession(atSourceTime: .zero)
-    let context = CIContext()
-    let scale = CGFloat(width + 24) / still.extent.width
-    for frame in 0..<frames {
-        while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
-        var buffer: CVPixelBuffer?
-        CVPixelBufferPoolCreatePixelBuffer(nil, try XCTUnwrap(adaptor.pixelBufferPool), &buffer)
-        let image = still.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-            .transformed(by: CGAffineTransform(translationX: -CGFloat(frame), y: 0))
-        context.render(image, to: try XCTUnwrap(buffer), bounds: CGRect(x: 0, y: 0, width: width, height: height),
-                       colorSpace: CGColorSpaceCreateDeviceRGB())
-        XCTAssertTrue(adaptor.append(try XCTUnwrap(buffer), withPresentationTime: CMTime(value: Int64(frame), timescale: 30)))
-    }
-    input.markAsFinished()
-    await writer.finishWriting()
-    XCTAssertEqual(writer.status, .completed)
-}

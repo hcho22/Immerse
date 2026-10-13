@@ -13,6 +13,7 @@ This is software, simulator and review-board evidence only; physical-iPhone capt
 - **Versions 1 and 2 are frozen.**
   The provisional shared look moved unchanged from `NativePhotoRenderer.swift` into `LegacyLook.swift`.
   `LegacyLookTests` compares version 2 photos of every Camera and Film Stock, and Movie frames of both Movie Cameras, with 8 x 8 block means recorded from the version 2 build (0e69ed2) before any change; they agree within a level or two.
+  The Movie frames are the look's own renders, recorded again from that build without a clip in between ("What CI's Mac showed").
 - **Version 3, `film-look-3`: one look per Camera and Film Stock.**
   Every value is in one place, `FilmLook` in `Packages/RenderCore/Sources/RenderCore/FilmLook.swift`, one `Treatment` per Camera and Film Stock with its Format Reference named in an internal comment.
   A treatment is the Film Stock's emulsion (color balance, color strength, an S-shaped print curve with print black and white, shadow and highlight color, grain) plus the Camera's lens, flash, print variation and gate.
@@ -300,6 +301,50 @@ What holds it now:
 
 The simulator is not an iPhone: a device's own renderer is first exercised at the manual candidate.
 
+## What CI's Mac showed (2026-10-12)
+
+The pull request's first CI run (the `macos-26-arm64` runner, a virtual machine, Xcode 26.5) failed one render test and stopped there.
+`LegacyLookTests.testVersionTwoMovieFramesDevelopAsTheVersionTwoBuildDeveloped` missed 7 of its 9 frames: the Super 8's frame 0 by 12 levels, the 16mm color stock's three frames by 14 each, and the 16mm black-and-white stock's by 5, 4 and 4, against 3 allowed.
+The version 2 photos passed there, as did the other 97 render tests.
+On the Mac that recorded the values the same test passes with every difference 0.
+
+The values were not the look's.
+The test wrote a 320 x 240 H.264 movie, `developClip` read it and wrote a Developed Clip, and the test read that back, so two encodes and two readings stood between the look and each value.
+Neither movie carries color tags (`ffprobe` reports their color space, transfer and primaries as unknown), so VideoToolbox guesses them on reading and marks each frame `ColorInfoGuessedBy = VideoToolbox`.
+Measured on this Mac:
+
+| Flat patch written at | Red | Green | Blue | Gray | Guessed matrix |
+| --- | --- | --- | --- | --- | --- |
+| Written | 204, 25, 25 | 25, 178, 51 | 38, 51, 204 | 128, 128, 128 | |
+| Read back at 320 x 240 | 188, 5, 26 | 37, 202, 55 | 40, 42, 198 | 127, 128, 128 | ITU-R 601 |
+| Read back at 1920 x 1440 | 204, 24, 24 | 25, 177, 51 | 37, 51, 205 | 128, 128, 128 | ITU-R 709 |
+
+At the test's size the guess does not match what was written, and a color comes back up to 24 levels off; at the size Development writes it matches to a level.
+In the test's own blocks the frames the look was given differed from the frames written by up to 50 levels, and the frames read back from the Developed Clip differed from what the look rendered by up to 20 levels on color and 1 on black-and-white.
+So each value held this Mac's reading of two small untagged movies as much as version 2's look, and another Mac need not read them the same.
+What CI's Mac does differently was not observed: nothing ran there but that one job, whose log shows no hardware scaler (`IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver`).
+
+Now a version 2 Movie frame is measured as the look renders it.
+The test gives `DevelopedTreatment(version: "film-look-2-provisional", …)` the fixture photo as a 320 x 240 scene drifting one pixel a frame, at frames 0, 2 and 5 for the Super 8 and both 16mm Film Stocks, and measures Core Image's sRGB pixels with nothing encoded in between.
+The nine sets of values were recorded again from the version 2 build: its packages were extracted unchanged from 0e69ed2, and a scratch test gave the build's own look function the same scene and the same measure.
+Two recordings were identical, today's code matches all nine with every difference 0 on this Mac, and the scratch test is not in the repository.
+The photo values are unchanged, and no product code changed.
+
+The measure follows the look and not the renderer:
+
+- Core Image's software renderer in place of the Mac's GPU gives the same frames within 1 level.
+- The Super 8's contrast changed from 1.15 to 1.12 fails its three frames by 11 levels; the 16mm black-and-white curve's toe changed from 0.12 to 0.14 fails its three by 4 to 5; a look that ignores the frame number fails the Super 8's frames 2 and 5.
+
+`testAClipDevelopsWithTheVersionItIsGiven` keeps what the old test held only in passing, that `developClip` develops with the version it is given: the same clip developed as version 2 and as the current version, both read back in the same run, must differ.
+With `developClip` made to ignore its version the test fails.
+The helper that wrote the old test's movie (`writeStillMovie`) had no other caller and is gone.
+
+A Developed Clip's missing color tags are as on main and are not changed here.
+
+What ran for this repair: `swift test --package-path Packages/RenderCore --filter LegacyLookTests` on this Mac, 3 tests with 0 failures (the version 2 photos, the version 2 Movie frames, and the clip's version).
+`LegacyLookTests` is not run inside the simulator: `Scripts/validate-local.sh` skips it there (`-skip-testing:RenderCoreTests/LegacyLookTests`), because its version 2 values are a Mac's.
+CI's Mac has not run the repair; its check on the pushed commit is what shows whether the values hold there.
+
 ## Review boards (QA-16)
 
 - **How a board is made.**
@@ -365,7 +410,7 @@ A third stopped a failed proof of the kernel from being remembered; "A failed pr
 
 | Where | What |
 | --- | --- |
-| `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's |
+| `RenderCoreTests/LegacyLookTests` | Version 2 photos and Movie frames match the version 2 build's; a clip develops with the version it is given |
 | `RenderCoreTests/NegativeFilmTests`, `ScenePassesTests`, `MediumFormatPassesTests` | The color Film Stocks of the 16mm and the 6×6 against the captain's own files: see "How the app is held to his files" under each |
 | `RenderCoreTests/FilmLookTests` | Versions assigned from the Film's package; unknown version refused; every look new and distinct; fresh, not aged, with the Instant and the Super 8 held to the looks the captain chose and the color Film Stocks of the 16mm and the 6×6 left to his files; the print curve; Disposable flash from Exif, heavy and shadow grain; grain ranking across Cameras; grain keeps the tone; soft dark edges where the format has them; Instant print variation; Super 8 jitter, flicker, dust and gate hair; 16mm red and neutral glow, weave without flicker; the daylight balance and its clip metadata |
 | `RenderCoreTests/GrainFieldTests`, and the render tests rerun inside the iOS simulator | What differs between Core Image on a Mac and on iOS: see "What only the iOS simulator showed" |
