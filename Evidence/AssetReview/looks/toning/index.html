@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chemical Toning Board</title>
+<style>
+  :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff;
+          --surround: #8a8f8c; }
+  * { box-sizing: border-box; letter-spacing: 0; }
+  body { margin: 0; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f4; color: var(--ink); }
+  header, main, footer { width: min(1320px, 100%); margin: auto; padding: 24px; }
+  header { padding-bottom: 0; }
+  .eyebrow { color: var(--green); font-weight: 650; margin: 0 0 8px; font-size: 14px; }
+  h1 { margin: 0; font: 38px/1.15 Georgia, serif; }
+  h2 { margin: 0 0 8px; font: 26px/1.25 Georgia, serif; }
+  h3 { font: 21px/1.3 Georgia, serif; margin: 28px 0 8px; }
+  h4 { font-size: 17px; margin: 0 0 8px; }
+  p { margin: 8px 0 14px; max-width: 90ch; }
+  .muted, small { color: var(--muted); }
+  .notice { border-left: 3px solid #a34a27; padding: 4px 0 4px 16px; margin: 18px 0 0; color: #633b2b; max-width: 100ch; }
+  .facts { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 5fr); gap: 10px 24px; margin: 18px 0; }
+  dt { font-weight: 650; } dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  dd p { margin: 0 0 10px; } dd p:last-child { margin-bottom: 0; }
+  ul.judge { margin: 6px 0 0; padding-left: 20px; max-width: 90ch; }
+  section { padding: 28px 0; border-top: 1px solid var(--line); margin-top: 28px; }
+  .scene { margin: 0 0 36px; }
+  .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pack { background: var(--surround); border-radius: 6px; padding: 14px; margin: 0 0 30px; }
+  .row.five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+  .row.five figure img { height: auto; background: none; }
+  .pack figcaption { color: #fff; margin-top: 6px; font-size: 13px; }
+  .strip { display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); gap: 8px; align-items: start; margin: 0 0 14px; }
+  .strip figure img { height: auto; aspect-ratio: 1; object-fit: cover; }
+  .strip figcaption { font-size: 13px; }
+  .scroll { overflow-x: auto; }
+  .scroll .strip { min-width: 900px; }
+  table { border-collapse: collapse; margin: 12px 0 18px; font-size: 15px; }
+  th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #e9eeeb; }
+  .decision h3 { margin: 18px 0 4px; font: 650 17px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .decision h3:first-child { margin-top: 0; }
+  figure { margin: 0; min-width: 0; }
+  figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
+  .pair figure img, .pair figure video { height: 520px; }
+  .row.four figure img, .row.four figure video { height: 320px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--green); font-weight: 600; min-height: 32px; }
+  figcaption { margin-top: 8px; font-size: 14px; overflow-wrap: anywhere; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--green); border: 1px solid var(--green);
+         border-radius: 999px; padding: 1px 8px; margin-right: 6px; }
+  .refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  pre { background: #fff; border: 1px solid var(--line); padding: 14px; overflow-x: auto; font: 13px/1.5 ui-monospace, monospace; }
+  a { color: var(--green); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .decision { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; max-width: 760px; }
+  .decision label { display: flex; gap: 10px; align-items: center; min-height: 44px; font-weight: 600; }
+  .decision input[type=radio] { width: 20px; height: 20px; accent-color: var(--green); }
+  .decision textarea { width: 100%; min-height: 120px; font: inherit; padding: 10px; border: 1px solid #87958d; border-radius: 6px; }
+  .decision button { min-height: 44px; padding: 8px 18px; font: inherit; font-weight: 650; color: #fff; background: var(--green);
+                     border: 0; border-radius: 6px; margin-top: 12px; cursor: pointer; }
+  .queued { color: var(--green); font-weight: 650; margin-left: 12px; }
+  footer { border-top: 1px solid var(--line); font-size: 14px; }
+  @media (max-width: 900px) {
+    header, main, footer { padding: 20px 16px; }
+    h1 { font-size: 30px; }
+    .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    .row.five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row.five figure img { height: auto; }
+    figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
+    .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<header><p class="eyebrow">Film Journal / Toning comparison board 01 / 2026-10-13</p>
+<h1>Chemical toning</h1>
+<p class="muted">Black-and-white 6×6 Medium Format prints, toned in the Darkroom by the app's own print renderer, each toner at each strength.</p>
+<p class="notice"><strong>Decided by the captain on this board on 2026-10-13: &quot;sepia - untoned to 1. selenium - untoned to 1&quot;. Each toner&#x27;s slider starts at the untoned print and tops out at the strength shown as 1.00, the range the control already had.</strong></p>
+<p class="notice">Internal review for DEC-11. Chemical toning is offered only on the prints of a black-and-white 6×6 Medium Format Film. The test scenes are modern digital photographs developed as that Film, not captures from an iPhone running the app, and no toned darkroom print is shown beside them: none was found under an open license with its toner on record.</p>
+<dl class="facts"><dt>The control</dt><dd>In the Darkroom a black-and-white 6×6 print can be toned with Sepia or Selenium, or left untoned. Choosing a toner shows a slider, which runs from the untoned print at its low end to the strengths marked 1.00 below at its top, and stands at half way when a toner is first chosen. That range was a placeholder until the captain chose it on this board, and he kept it.</dd><dt>What was asked</dt><dd><ul class="judge"><li>For each toner, how strong it goes at the top of its slider: any strength shown below, or one between two of them.</li><li>For each toner, where its slider starts: from the untoned print, or from a strength that already shows.</li></ul></dd><dt>What was judged</dt><dd><ul class="judge"><li>Skin: whether a face still reads as a face at the top of each toner.</li><li>Deep shadow: whether blacks stay black, and what color the darkest tones take.</li><li>The paper&#x27;s white: whether the brightest tones stay clean.</li><li>The two toners should read as different from each other and from the untoned print.</li></ul></dd></dl></header>
+<main>
+<section><h2>What each toner does</h2><p>Sepia is strong. At the top of its slider it turns the whole print a deep yellow-brown, most of all in the middle tones, and tints the paper&#x27;s white faintly cream. At a quarter of the slider it is already plain to see.</p><p>Selenium is faint. At the top of its slider it adds a slight purple to the shadows and middle tones that few people would notice without the untoned print beside it, and at a quarter of the slider it cannot be seen at all. So that a top that shows could be chosen, each scene has a second selenium row at two, three and four times that top. Those strengths are not in the app: they are the same toner made stronger, shown here because they were part of the choice. Even at four times, selenium moves a print&#x27;s color less than sepia does at half of its slider.</p><p>Both toners leave a print&#x27;s brightness nearly as it was, and selenium leaves the paper&#x27;s white alone. Neither is matched to a toned darkroom print: none was found under an open license with its toner on record, so there is no reference print on this board.</p>
+<h3>How far each toner moves a print&#x27;s color</h3><table><thead><tr><th>Strength</th><th>Sepia: shadows</th><th>Sepia: middle tones</th><th>Sepia: light tones</th><th>Selenium: shadows</th><th>Selenium: middle tones</th><th>Selenium: light tones</th></tr></thead><tbody><tr><td>0.25</td><td>4</td><td>6</td><td>4</td><td>none</td><td>under 1</td><td>none</td></tr><tr><td>0.50</td><td>9</td><td>14</td><td>8</td><td>under 1</td><td>1 to 2</td><td>under 1</td></tr><tr><td>0.75</td><td>13</td><td>23</td><td>13</td><td>1</td><td>2</td><td>1</td></tr><tr><td>1.00, today&#x27;s top</td><td>19</td><td>34</td><td>18</td><td>1</td><td>3</td><td>2</td></tr><tr><td>2.00</td><td>not shown</td><td>not shown</td><td>not shown</td><td>3</td><td>6</td><td>4</td></tr><tr><td>3.00</td><td>not shown</td><td>not shown</td><td>not shown</td><td>4</td><td>8</td><td>5</td></tr><tr><td>4.00</td><td>not shown</td><td>not shown</td><td>not shown</td><td>5</td><td>11</td><td>7</td></tr></tbody></table>
+<p class="muted">Color differences from the untoned print in CIELAB units, as the mean over the five scenes of this board. About 2 is the least an eye picks out side by side, and 10 is plain at a glance.</p>
+</section>
+<section><h2>Every scene</h2><p class="muted">Open any print at its full board size by selecting it. A strength is a share of today's top, so 1.00 is the strongest the slider gives today.</p>
+<div class="scene"><h3><span class="tag">Skin tones</span>Natural-light portrait: older woman, light skin <small class="muted">Shixart1985 · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Smiling_senior_woman_with_curly_hair_portrait.jpg">source</a></small></h3>
+<h4>Sepia</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-01-untoned.jpg"><img src="skin-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="skin-01-sepia-025.jpg"><img src="skin-01-sepia-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="skin-01-sepia-050.jpg"><img src="skin-01-sepia-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="skin-01-sepia-075.jpg"><img src="skin-01-sepia-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="skin-01-sepia-100.jpg"><img src="skin-01-sepia-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-01-untoned.jpg"><img src="skin-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="skin-01-selenium-025.jpg"><img src="skin-01-selenium-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="skin-01-selenium-050.jpg"><img src="skin-01-selenium-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="skin-01-selenium-075.jpg"><img src="skin-01-selenium-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="skin-01-selenium-100.jpg"><img src="skin-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium, stronger than today's top</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-01-selenium-100.jpg"><img src="skin-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+<figure><a href="skin-01-selenium-200.jpg"><img src="skin-01-selenium-200.jpg" alt="2.00, 2 times today&#x27;s top" loading="lazy"></a><figcaption>2.00, 2 times today&#x27;s top</figcaption></figure>
+<figure><a href="skin-01-selenium-300.jpg"><img src="skin-01-selenium-300.jpg" alt="3.00, 3 times today&#x27;s top" loading="lazy"></a><figcaption>3.00, 3 times today&#x27;s top</figcaption></figure>
+<figure><a href="skin-01-selenium-400.jpg"><img src="skin-01-selenium-400.jpg" alt="4.00, 4 times today&#x27;s top" loading="lazy"></a><figcaption>4.00, 4 times today&#x27;s top</figcaption></figure>
+</div></div>
+</div>
+<div class="scene"><h3><span class="tag">Skin tones</span>Natural-light portrait: two boys, dark skin (beach daylight) <small class="muted">Mark Fischer · <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Yoff_Boys_(109381545).jpeg">source</a></small></h3>
+<h4>Sepia</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-04-untoned.jpg"><img src="skin-04-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="skin-04-sepia-025.jpg"><img src="skin-04-sepia-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="skin-04-sepia-050.jpg"><img src="skin-04-sepia-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="skin-04-sepia-075.jpg"><img src="skin-04-sepia-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="skin-04-sepia-100.jpg"><img src="skin-04-sepia-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-04-untoned.jpg"><img src="skin-04-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="skin-04-selenium-025.jpg"><img src="skin-04-selenium-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="skin-04-selenium-050.jpg"><img src="skin-04-selenium-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="skin-04-selenium-075.jpg"><img src="skin-04-selenium-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="skin-04-selenium-100.jpg"><img src="skin-04-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium, stronger than today's top</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="skin-04-selenium-100.jpg"><img src="skin-04-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+<figure><a href="skin-04-selenium-200.jpg"><img src="skin-04-selenium-200.jpg" alt="2.00, 2 times today&#x27;s top" loading="lazy"></a><figcaption>2.00, 2 times today&#x27;s top</figcaption></figure>
+<figure><a href="skin-04-selenium-300.jpg"><img src="skin-04-selenium-300.jpg" alt="3.00, 3 times today&#x27;s top" loading="lazy"></a><figcaption>3.00, 3 times today&#x27;s top</figcaption></figure>
+<figure><a href="skin-04-selenium-400.jpg"><img src="skin-04-selenium-400.jpg" alt="4.00, 4 times today&#x27;s top" loading="lazy"></a><figcaption>4.00, 4 times today&#x27;s top</figcaption></figure>
+</div></div>
+</div>
+<div class="scene"><h3><span class="tag">Night or dim, no flash</span>Dim night street with street lamps, no flash (Google Pixel 7) <small class="muted">Eden, Janine and Jim from New York City · <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a> · <a href="https://commons.wikimedia.org/wiki/File:13th_Street_Dead_End_(52460802838).jpg">source</a></small></h3>
+<h4>Sepia</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="night-01-untoned.jpg"><img src="night-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="night-01-sepia-025.jpg"><img src="night-01-sepia-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="night-01-sepia-050.jpg"><img src="night-01-sepia-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="night-01-sepia-075.jpg"><img src="night-01-sepia-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="night-01-sepia-100.jpg"><img src="night-01-sepia-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="night-01-untoned.jpg"><img src="night-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="night-01-selenium-025.jpg"><img src="night-01-selenium-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="night-01-selenium-050.jpg"><img src="night-01-selenium-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="night-01-selenium-075.jpg"><img src="night-01-selenium-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="night-01-selenium-100.jpg"><img src="night-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium, stronger than today's top</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="night-01-selenium-100.jpg"><img src="night-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+<figure><a href="night-01-selenium-200.jpg"><img src="night-01-selenium-200.jpg" alt="2.00, 2 times today&#x27;s top" loading="lazy"></a><figcaption>2.00, 2 times today&#x27;s top</figcaption></figure>
+<figure><a href="night-01-selenium-300.jpg"><img src="night-01-selenium-300.jpg" alt="3.00, 3 times today&#x27;s top" loading="lazy"></a><figcaption>3.00, 3 times today&#x27;s top</figcaption></figure>
+<figure><a href="night-01-selenium-400.jpg"><img src="night-01-selenium-400.jpg" alt="4.00, 4 times today&#x27;s top" loading="lazy"></a><figcaption>4.00, 4 times today&#x27;s top</figcaption></figure>
+</div></div>
+</div>
+<div class="scene"><h3><span class="tag">Day</span>People playing capoeira in a city park (iPhone 13) <small class="muted">Benoît Prieur · <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a> · <a href="https://commons.wikimedia.org/wiki/File:Capoeira_at_Lake_Eola_Park_(Orlando)_May_2023_(1).JPG">source</a></small></h3>
+<h4>Sepia</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="day-02-untoned.jpg"><img src="day-02-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="day-02-sepia-025.jpg"><img src="day-02-sepia-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="day-02-sepia-050.jpg"><img src="day-02-sepia-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="day-02-sepia-075.jpg"><img src="day-02-sepia-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="day-02-sepia-100.jpg"><img src="day-02-sepia-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="day-02-untoned.jpg"><img src="day-02-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="day-02-selenium-025.jpg"><img src="day-02-selenium-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="day-02-selenium-050.jpg"><img src="day-02-selenium-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="day-02-selenium-075.jpg"><img src="day-02-selenium-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="day-02-selenium-100.jpg"><img src="day-02-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium, stronger than today's top</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="day-02-selenium-100.jpg"><img src="day-02-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+<figure><a href="day-02-selenium-200.jpg"><img src="day-02-selenium-200.jpg" alt="2.00, 2 times today&#x27;s top" loading="lazy"></a><figcaption>2.00, 2 times today&#x27;s top</figcaption></figure>
+<figure><a href="day-02-selenium-300.jpg"><img src="day-02-selenium-300.jpg" alt="3.00, 3 times today&#x27;s top" loading="lazy"></a><figcaption>3.00, 3 times today&#x27;s top</figcaption></figure>
+<figure><a href="day-02-selenium-400.jpg"><img src="day-02-selenium-400.jpg" alt="4.00, 4 times today&#x27;s top" loading="lazy"></a><figcaption>4.00, 4 times today&#x27;s top</figcaption></figure>
+</div></div>
+</div>
+<div class="scene"><h3><span class="tag">Bright highlights</span>Backlit interior with bright windows (iPhone 13 Pro) <small class="muted">Y.ssk (requested credit line: &#x27;Y.ssk / Wikimedia Commons / CC BY-SA 4.0&#x27;) · <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a> · <a href="https://commons.wikimedia.org/wiki/File:Castle_Folly_Interior,_Saltram_House,_Plymouth.jpg">source</a></small></h3>
+<h4>Sepia</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="highlights-01-untoned.jpg"><img src="highlights-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="highlights-01-sepia-025.jpg"><img src="highlights-01-sepia-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="highlights-01-sepia-050.jpg"><img src="highlights-01-sepia-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="highlights-01-sepia-075.jpg"><img src="highlights-01-sepia-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="highlights-01-sepia-100.jpg"><img src="highlights-01-sepia-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="highlights-01-untoned.jpg"><img src="highlights-01-untoned.jpg" alt="Untoned" loading="lazy"></a><figcaption>Untoned</figcaption></figure>
+<figure><a href="highlights-01-selenium-025.jpg"><img src="highlights-01-selenium-025.jpg" alt="0.25" loading="lazy"></a><figcaption>0.25</figcaption></figure>
+<figure><a href="highlights-01-selenium-050.jpg"><img src="highlights-01-selenium-050.jpg" alt="0.50" loading="lazy"></a><figcaption>0.50</figcaption></figure>
+<figure><a href="highlights-01-selenium-075.jpg"><img src="highlights-01-selenium-075.jpg" alt="0.75" loading="lazy"></a><figcaption>0.75</figcaption></figure>
+<figure><a href="highlights-01-selenium-100.jpg"><img src="highlights-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+</div></div>
+<h4>Selenium, stronger than today's top</h4><div class="scroll"><div class="strip" style="--count: 5">
+<figure><a href="highlights-01-selenium-100.jpg"><img src="highlights-01-selenium-100.jpg" alt="1.00, today&#x27;s top" loading="lazy"></a><figcaption>1.00, today&#x27;s top</figcaption></figure>
+<figure><a href="highlights-01-selenium-200.jpg"><img src="highlights-01-selenium-200.jpg" alt="2.00, 2 times today&#x27;s top" loading="lazy"></a><figcaption>2.00, 2 times today&#x27;s top</figcaption></figure>
+<figure><a href="highlights-01-selenium-300.jpg"><img src="highlights-01-selenium-300.jpg" alt="3.00, 3 times today&#x27;s top" loading="lazy"></a><figcaption>3.00, 3 times today&#x27;s top</figcaption></figure>
+<figure><a href="highlights-01-selenium-400.jpg"><img src="highlights-01-selenium-400.jpg" alt="4.00, 4 times today&#x27;s top" loading="lazy"></a><figcaption>4.00, 4 times today&#x27;s top</figcaption></figure>
+</div></div>
+</div>
+</section>
+<section><h2>Values in the app</h2><p class="muted">From <code>ToningLook.swift</code>: the one place the toners are set. Your choices become each toner's <code>start</code> and <code>top</code>.</p><pre><code>
+    struct Toner: Equatable {
+        /// The strength at the slider&#x27;s low end.
+        var start: Double
+        /// The strength at the slider&#x27;s top.
+        var top: Double
+
+        /// The strength the slider gives where it stands, from 0 to 1.
+        func strength(at amount: Double) -&gt; Double { start + (top - start) * amount }
+    }
+
+    /// Sepia: a warm brown through every tone, strongest in the middle tones, with the paper&#x27;s white turned faintly
+    /// cream.
+    static let sepia = Toner(start: 0, top: 1)
+
+    /// Selenium: a slight cool purple in the shadows and middle tones that leaves the paper&#x27;s white alone.
+    static let selenium = Toner(start: 0, top: 1)
+
+    /// How much selenium changes each channel&#x27;s light at a strength of 1: red and blue up and green down, which is
+    /// purple. The change is weighted to the darker tones and is nothing at the paper&#x27;s white.
+    static let seleniumTint = FilmLook.RGB(1.04, 0.94, 1.02)</code></pre></section>
+<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-toning" data-board="toning" data-name="Chemical toning" onsubmit="queueDecision(event)"><label><input type="radio" name="decision" value="approve" data-question="Chemical toning"> Approve these values</label><label><input type="radio" name="decision" value="change" data-question="Chemical toning"> Request changes</label><p><label for="notes" style="display:block">Anything to change, scene by scene if it helps</label><textarea id="notes" name="notes"></textarea></p><button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span></form></section>
+</main>
+<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production print renderer. Every scene, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>
+
+<script>
+function queueDecision(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const chosen = Array.from(form.querySelectorAll('input[type=radio]:checked'));
+  const notes = (new FormData(form).get('notes') || '').trim();
+  if (!chosen.length && !notes) return;
+  const answers = chosen.map(input => input.dataset.question + ': ' + input.parentElement.textContent.trim());
+  const text = form.dataset.name + '. ' + answers.join(' ') + (notes ? ' Notes: ' + notes : '');
+  const data = { board: form.dataset.board, notes: notes };
+  chosen.forEach(input => { data[input.name] = input.value; });
+  if (window.lavish) {
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: form, queueKey: 'look-' + form.dataset.board, data: data });
+  }
+  document.getElementById('queued').hidden = false;
+}
+</script>
+</body>
+</html>

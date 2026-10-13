@@ -682,9 +682,14 @@ def build_toning(renders, sources, output, round_number):
                 '6×6 Medium Format Film. The test scenes are modern digital photographs developed as that Film, not captures '
                 'from an iPhone running the app, and no toned darkroom print is shown beside them: none was found under an '
                 'open license with its toner on record.</p>')
-    body.append('<dl class="facts"><dt>The control today</dt><dd>%s</dd><dt>What you are choosing</dt><dd><ul class="judge">%s</ul></dd>'
-                '<dt>What to judge</dt><dd><ul class="judge">%s</ul></dd></dl></header>'
-                % (esc(notes.get("control", "")), "".join("<li>%s</li>" % esc(item) for item in notes.get("choosing", [])),
+    # The copy kept after his answer records the question in the past tense.
+    decided = renders.get("approved") and renders.get("toningApproved")
+    body.append('<dl class="facts"><dt>%s</dt><dd>%s</dd><dt>%s</dt><dd><ul class="judge">%s</ul></dd>'
+                '<dt>%s</dt><dd><ul class="judge">%s</ul></dd></dl></header>'
+                % ("The control" if decided else "The control today", esc(notes.get("control", "")),
+                   "What was asked" if decided else "What you are choosing",
+                   "".join("<li>%s</li>" % esc(item) for item in notes.get("choosing", [])),
+                   "What was judged" if decided else "What to judge",
                    "".join("<li>%s</li>" % esc(item) for item in notes.get("judge", []))))
     body.append("<main>")
     if notes.get("text"):
