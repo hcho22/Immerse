@@ -47,20 +47,26 @@ BOARDS = [
         "approved": "Approved by the captain on 2026-10-10 (\"faded\", then \"approved\"): the faded look, his exception to "
                     "ADR 0013 and to the PRD wording below (ADR 0016). Its contrast and the size of its print-to-print variation "
                     "stay provisional until the study of preserved 1970s prints.",
-        "pairs": {("instant1970s", None): [("instant-02", "highlights-01"), ("instant-01", "day-02"), ("instant-03", "day-01")]},
+        "pairs": {("instant1970s", None): [("instant-study-23", "flash-01"), ("instant-study-07", "flash-02"), ("instant-01", "day-02"),
+                                           ("instant-03", "day-01")]},
         "name": "1970s Instant",
+        "notice": "Internal review for DEC-04 and QA-16. The Format Reference's name and every reference image stay internal and "
+                  "never ship in the app. Reference images are public-domain or openly licensed photographs credited under each "
+                  "one. They are scans of prints about fifty years old, and this Camera's look is the faded one you chose, so "
+                  "judge the developed pictures against them as they are; the study below says what in a scan is the film, "
+                  "what is age and what is the scanner. The test scenes are modern digital photographs, not captures from an "
+                  "iPhone running the app.",
         "cameras": [("instant1970s", None)],
-        "references": ["instant"],
+        "references": ["instant", "instant-study"],
         "value_blocks": ["instant"],
         "reference_internal": "The original 1970s Polaroid integral print (SX-70 film), as it looked fresh from the camera",
         "prd": "Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft "
                "detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread "
                "flaws. The contrast and the size of the variation wait on a study of preserved 1970s prints.",
         "judge": [
-            "Color: brilliant, warm and saturated, the print as it was fresh, not as surviving prints have faded.",
-            "Detail: soft, without grain.",
-            "Variation: each print slightly different in color and density; never a flaw.",
-            "Contrast and variation stay provisional until the study of preserved 1970s prints (DEC-04).",
+            "Contrast: how deep the blacks go, how bright the whites are, and how far the middle tones spread between them.",
+            "Variation: how much one print of a pack differs from the next in brightness and in color; never a flaw.",
+            "The faded color you approved on 2026-10-10 is not in question here and is the same in A and B.",
         ],
     },
     {
@@ -133,7 +139,8 @@ BOARDS = [
 ]
 
 STOCK_NAMES = {None: "", "color": "Color", "blackAndWhite": "Black and white"}
-REFERENCE_GROUPS = {"disposable": "Single-use camera prints", "instant": "1970s integral prints", "6x6-color": "6×6 on the color stock",
+REFERENCE_GROUPS = {"disposable": "Single-use camera prints", "instant": "1970s integral prints",
+                    "instant-study": "Preserved 1970s prints the study measured", "6x6-color": "6×6 on the color stock",
                     "6x6-bw": "6×6 on the black-and-white stock", "super8": "Super 8 home movies",
                     "16mm-color": "Motion picture color negative", "16mm-bw": "Black-and-white motion picture film",
                     "halation": "Highlight halation", "dust": "Dust and hair in the gate"}
@@ -157,8 +164,8 @@ def run(*args):
 
 # How large the boards' copies are: for review as served, or (--slim) small enough to keep in the repository.
 # The slim copy also leaves out each scene's comparison with treatment version 2.
-MEDIA = {"edge": 1400, "quality": 84, "clip_width": 1280, "clip_crf": 20, "previous": True}
-SLIM_MEDIA = {"edge": 900, "quality": 74, "clip_width": 640, "clip_crf": 28, "previous": False}
+MEDIA = {"edge": 1400, "quality": 84, "clip_width": 1280, "clip_crf": 20, "previous": True, "toning_edge": 1000}
+SLIM_MEDIA = {"edge": 900, "quality": 74, "clip_width": 640, "clip_crf": 28, "previous": False, "toning_edge": 560}
 
 
 def copy_image(source, destination, edge=None):
@@ -198,6 +205,51 @@ def credit(entry):
     return " · ".join(parts)
 
 
+def table(header, rows):
+    return "<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (
+        "".join("<th>%s</th>" % esc(cell) for cell in header),
+        "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % esc(cell) for cell in row) for row in rows))
+
+
+def decision_form(board_id, board_name, questions):
+    """The captain's answer: one choice for each question and a note, queued for the agent through Lavish."""
+    parts = ['<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-%s" data-board="%s" data-name="%s" '
+             'onsubmit="queueDecision(event)">' % (esc(board_id), esc(board_id), esc(board_name))]
+    for question in questions:
+        if question.get("title"):
+            parts.append("<h3>%s</h3>" % esc(question["title"]))
+        if question.get("help"):
+            parts.append('<p class="muted">%s</p>' % esc(question["help"]))
+        for value, label in question["options"]:
+            parts.append('<label><input type="radio" name="%s" value="%s" data-question="%s"> %s</label>'
+                         % (esc(question["id"]), esc(value), esc(question.get("title") or board_name), esc(label)))
+    parts.append('<p><label for="notes" style="display:block">Anything to change, scene by scene if it helps</label>'
+                 '<textarea id="notes" name="notes"></textarea></p>'
+                 '<button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span>'
+                 '</form></section>')
+    return "".join(parts)
+
+
+DECISION_SCRIPT = """
+<script>
+function queueDecision(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const chosen = Array.from(form.querySelectorAll('input[type=radio]:checked'));
+  const notes = (new FormData(form).get('notes') || '').trim();
+  if (!chosen.length && !notes) return;
+  const answers = chosen.map(input => input.dataset.question + ': ' + input.parentElement.textContent.trim());
+  const text = form.dataset.name + '. ' + answers.join(' ') + (notes ? ' Notes: ' + notes : '');
+  const data = { board: form.dataset.board, notes: notes };
+  chosen.forEach(input => { data[input.name] = input.value; });
+  if (window.lavish) {
+    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: form, queueKey: 'look-' + form.dataset.board, data: data });
+  }
+  document.getElementById('queued').hidden = false;
+}
+</script>"""
+
+
 STYLE = """
   :root { color-scheme: light; --ink: #19201e; --muted: #555e59; --line: #cbd2ce; --green: #09634e; --paper: #fff;
           --surround: #8a8f8c; }
@@ -222,6 +274,20 @@ STYLE = """
   .row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
   .row.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pack { background: var(--surround); border-radius: 6px; padding: 14px; margin: 0 0 30px; }
+  .row.five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+  .row.five figure img { height: auto; background: none; }
+  .pack figcaption { color: #fff; margin-top: 6px; font-size: 13px; }
+  .strip { display: grid; grid-template-columns: repeat(var(--count), minmax(0, 1fr)); gap: 8px; align-items: start; margin: 0 0 14px; }
+  .strip figure img { height: auto; aspect-ratio: 1; object-fit: cover; }
+  .strip figcaption { font-size: 13px; }
+  .scroll { overflow-x: auto; }
+  .scroll .strip { min-width: 900px; }
+  table { border-collapse: collapse; margin: 12px 0 18px; font-size: 15px; }
+  th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #e9eeeb; }
+  .decision h3 { margin: 18px 0 4px; font: 650 17px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .decision h3:first-child { margin-top: 0; }
   figure { margin: 0; min-width: 0; }
   figure img, figure video { display: block; width: 100%; height: 400px; object-fit: contain; background: #262927; }
   .pair figure img, .pair figure video { height: 520px; }
@@ -246,6 +312,8 @@ STYLE = """
     header, main, footer { padding: 20px 16px; }
     h1 { font-size: 30px; }
     .row, .row.two, .row.four { grid-template-columns: minmax(0, 1fr); }
+    .row.five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row.five figure img { height: auto; }
     figure img, figure video, .pair figure img, .pair figure video { height: auto; max-height: 70vh; }
     .facts { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   }
@@ -264,8 +332,12 @@ def build(board, renders, sources, output, round_number):
     photo_scenes = [scene for scene in renders["photoScenes"]]
     movie_scenes = renders.get("movieScenes", [])
     body = []
+    # The treatment version the renders were made with, as its number: "film-look-4" is version 4.
+    version = renders["treatmentVersion"].rsplit("-", 1)[-1]
     # Further candidate looks for this board, rendered from other values, shown beside the first.
     alternates = renders.get("alternates", []) if board["id"] in renders.get("alternateBoards", []) else []
+    # Whole Instant packs, ten prints of one Film: (label, note, renders) for each variation shown.
+    packs = renders.get("packs", []) if board["id"] == "instant" else []
 
     body.append('<header><p class="eyebrow">Film Journal / Look review board %s / %s</p>' % (round_number, esc(renders["date"])))
     body.append("<h1>%s</h1>" % esc(board["name"]))
@@ -274,17 +346,26 @@ def build(board, renders, sources, output, round_number):
                 % (esc(renders["treatmentVersion"]), ", the provisional look it replaces," if MEDIA["previous"] else ""))
     if renders.get("approved") and board.get("approved"):
         body.append('<p class="notice"><strong>%s</strong></p>' % esc(board["approved"]))
-    body.append('<p class="notice">Internal review for DEC-04 and QA-16. The Format Reference names and every reference '
+    body.append('<p class="notice">%s</p>' % esc(board.get("notice") or
+                'Internal review for DEC-04 and QA-16. The Format Reference names and every reference '
                 'image stay internal and never ship in the app. Reference images are public-domain or openly licensed '
                 'photographs credited under each one; many are scans of surviving prints or reels, which have aged, so '
                 'judge them for the format\'s character as it was new. The test scenes are modern digital photographs, '
                 'not captures from an iPhone running the app, so capture behavior (fixed exposure, the real flash) is '
-                'not shown.</p>')
+                'not shown.'))
     body.append('<dl class="facts"><dt>Format Reference</dt><dd>%s</dd><dt>PRD 2.1 section 6</dt><dd>%s</dd>'
                 '<dt>What to judge</dt><dd><ul class="judge">%s</ul></dd></dl></header>'
                 % (esc(board["reference_internal"]), esc(board["prd"]),
                    "".join("<li>%s</li>" % esc(item) for item in board["judge"])))
     body.append("<main>")
+    findings = renders.get("findings", {}).get(board["id"])
+    if findings:
+        body.append('<section><h2>%s</h2>%s' % (esc(findings["title"]), paragraphs(findings["text"])))
+        for item in findings.get("tables", []):
+            body.append("<h3>%s</h3>%s" % (esc(item["title"]), table(item["header"], item["rows"])))
+            if item.get("note"):
+                body.append('<p class="muted">%s</p>' % esc(item["note"]))
+        body.append("</section>")
     if alternates:
         body.append('<section><h2>%s</h2><dl class="facts"><dt>%s</dt><dd>%s</dd>%s</dl></section>'
                     % (esc(renders["looksHeading"]), esc(renders["primaryLabel"]), paragraphs(renders["primaryNote"]),
@@ -357,8 +438,9 @@ def build(board, renders, sources, output, round_number):
                                     % (name, esc(label), esc(label), scene_title))
                     body.append("</div>")
                 else:
-                    body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
-                                'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
+                    body.append('<figure><img src="%s" alt="Developed with treatment version %s"><figcaption><strong>Developed by the app, '
+                                'version %s:</strong> %s</figcaption></figure></div>'
+                                % (place(developed["path"], "%s.jpg" % slug), version, version, scene_title))
         pairs = board.get("pairs", {}).get((camera, stock), [])
         if pairs:
             references_by_id = {entry["id"]: entry for entry in sources if entry["role"] == "reference"}
@@ -371,9 +453,10 @@ def build(board, renders, sources, output, round_number):
                 slug = "%s-%s" % (stock or "look", scene_id)
                 reference_name = "ref-%s.jpg" % reference_id
                 copy_image(reference["local_path"], os.path.join(directory, reference_name))
-                body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s<br>'
+                dated = " (%s)" % esc(reference["era_or_date"]) if reference.get("study") else ""
+                body.append('<div class="row %s pair scene"><figure><img src="%s" alt="%s"><figcaption><strong>Reference:</strong> %s%s<br>'
                             '<small>%s</small></figcaption></figure>' % (columns(2 + len(candidates)), reference_name,
-                                                                       esc(reference.get("title")), esc(reference.get("title")),
+                                                                       esc(reference.get("title")), esc(reference.get("title")), dated,
                                                                        credit(reference)))
                 scene_title = esc(scene_entries.get(scene_id, {}).get("title", scene_id))
                 if candidates:
@@ -382,8 +465,9 @@ def build(board, renders, sources, output, round_number):
                                     % (name, esc(label), esc(label), scene_title))
                     body.append("</div>")
                 else:
-                    body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed by the app, '
-                                'version 3:</strong> %s</figcaption></figure></div>' % (place(developed["path"], "%s.jpg" % slug), scene_title))
+                    body.append('<figure><img src="%s" alt="Developed with treatment version %s"><figcaption><strong>Developed by the app, '
+                                'version %s:</strong> %s</figcaption></figure></div>'
+                                % (place(developed["path"], "%s.jpg" % slug), version, version, scene_title))
         body.append('<h3>Every scene</h3>')
         for scene in photo_scenes:
             # A scene may be kept to the boards it was added for.
@@ -420,8 +504,8 @@ def build(board, renders, sources, output, round_number):
                                 % (name, esc(label), esc(label)))
                 body.append("</div></details>")
             else:
-                body.append('<figure><img src="%s" alt="Developed with treatment version 3"><figcaption><strong>Developed, version 3</strong> '
-                            '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), developed["seed"]))
+                body.append('<figure><img src="%s" alt="Developed with treatment version %s"><figcaption><strong>Developed, version %s</strong> '
+                            '<small>seed %s</small></figcaption></figure>' % (place(developed["path"], "%s.jpg" % slug), version, version, developed["seed"]))
                 body.append('<figure><img src="%s" alt="A full-size crop of the developed picture"><figcaption><strong>Full size, center</strong> '
                             '<small>grain and softness as developed</small></figcaption></figure>' % place(crop["path"], "%s-crop.jpg" % slug, 640))
                 body.append("</div>")
@@ -430,7 +514,7 @@ def build(board, renders, sources, output, round_number):
                             '<figure><img src="%s" alt="Developed with treatment version 2" loading="lazy"><figcaption>Version 2</figcaption></figure>'
                             '</div></details>' % place(previous["path"], "%s-v2.jpg" % slug))
             prints = [entry for entry in files if entry["camera"] == camera and entry["scene"] == scene["id"] and entry["kind"] == "print"]
-            if prints:
+            if prints and not packs:
                 body.append('<p class="muted">Three more prints of the same scene%s, each with its own slight variation:</p><div class="row">'
                             % (" (%s)" % renders["primaryLabel"] if candidates else ""))
                 for index, entry in enumerate(prints, 1):
@@ -459,9 +543,30 @@ def build(board, renders, sources, output, round_number):
                     body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>%s</strong> '
                                 '<small>Developed Clip, %s frames per second</small></figcaption></figure>' % (name, esc(label), rate))
             else:
-                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version 3</strong> '
-                            '<small>seed %s, %s frames per second</small></figcaption></figure>' % (place(clip["path"], "%s.mp4" % slug), clip["seed"], rate))
+                body.append('<figure><video src="%s" controls loop muted playsinline preload="metadata"></video><figcaption><strong>Developed Clip, version %s</strong> '
+                            '<small>seed %s, %s frames per second</small></figcaption></figure>' % (place(clip["path"], "%s.mp4" % slug), version, clip["seed"], rate))
             body.append("</div></div>")
+        body.append("</section>")
+
+    if packs:
+        body.append('<section><h2>A pack of ten prints</h2><p class="muted">Each row is one Film: its ten exposures, each developed '
+                    'with the seed Development gives that exposure, so each print\'s variation is the one it would get in the app and '
+                    'never changes afterwards. The rows of a pair use the same ten seeds, so a print differs between them only '
+                    'in how far it moves, not in which way.</p>')
+        for pack in renders["packDefinitions"]:
+            same = len(set(pack["scenes"])) == 1
+            body.append("<h3>%s</h3>" % esc("Ten prints of one scene, where nothing differs but the print" if same
+                                           else "Ten different pictures, as a pack is used"))
+            for item in packs:
+                chosen = [entry for entry in item["files"] if entry["kind"] == "pack" and entry["pack"] == pack["id"]]
+                chosen.sort(key=lambda entry: entry["exposure"])
+                body.append('<h4>%s</h4><p class="muted">%s</p><div class="pack"><div class="row five">' % (esc(item["label"]), esc(item["note"])))
+                for entry in chosen:
+                    name = "pack-%s-%s-%d.jpg" % (pack["id"], item["suffix"], entry["exposure"])
+                    copy_image(os.path.join(item["root"], entry["path"]), os.path.join(directory, name), 700)
+                    body.append('<figure><img src="%s" alt="Print %d of the pack" loading="lazy"><figcaption>Print %d</figcaption></figure>'
+                                % (name, entry["exposure"], entry["exposure"]))
+                body.append("</div></div>")
         body.append("</section>")
 
     # Reference imagery.
@@ -482,8 +587,9 @@ def build(board, renders, sources, output, round_number):
                 name = "ref-%s.jpg" % entry["id"]
                 copy_image(entry["local_path"], os.path.join(directory, name))
                 media = '<img src="%s" alt="%s" loading="lazy">' % (name, esc(entry.get("title")))
-            body.append('<figure>%s<figcaption><strong>%s</strong><br><small>%s</small><br>'
-                        '<small>%s</small></figcaption></figure>' % (media, esc(entry.get("title")), credit(entry), esc(notes)))
+            dated = "%s · " % esc(entry["era_or_date"]) if entry.get("study") else ""
+            body.append('<figure>%s<figcaption><strong>%s</strong><br><small>%s%s</small><br>'
+                        '<small>%s</small></figcaption></figure>' % (media, esc(entry.get("title")), dated, credit(entry), esc(notes)))
         body.append("</div>")
     body.append("</section>")
 
@@ -496,42 +602,24 @@ def build(board, renders, sources, output, round_number):
         body.append("<pre><code>%s</code></pre>" % esc(value_block(block)))
     for alternate in alternates:
         body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
+    for label, values in renders.get("furtherValues", {}).get(board["id"], []):
+        body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(label), esc(values)))
     body.append("</section>")
     # A look shown for comparison only is not one of the choices.
     choosable = [alternate for alternate in alternates if not alternate["comparisonOnly"]]
-    if choosable:
-        choices = '<label><input type="radio" name="decision" value="approve-a"> Approve %s</label>' % esc(renders["primaryLabel"])
-        choices += "".join('<label><input type="radio" name="decision" value="approve-%s"> Approve %s</label>'
-                           % (alternate["suffix"], esc(alternate["label"])) for alternate in choosable)
+    questions = renders.get("questions", {}).get(board["id"])
+    if questions:
+        body.append(decision_form(board["id"], board["name"], questions))
     else:
-        choices = '<label><input type="radio" name="decision" value="approve"> Approve these values for the %s</label>' % esc(board["name"])
-    body.append('<section><h2>Your decision</h2><form class="decision" data-lavish-question="look-%s" onsubmit="queueDecision(event)">'
-                '%s<label><input type="radio" name="decision" value="change"> Request changes</label>'
-                '<p><label for="notes" style="display:block">What should change, scene by scene if it helps</label>'
-                '<textarea id="notes" name="notes"></textarea></p>'
-                '<button type="submit">Queue answer</button><span class="queued" id="queued" hidden>Queued. Press Send to Agent.</span>'
-                '</form></section>' % (board["id"], choices))
+        if choosable:
+            options = [("approve-a", "Approve %s" % renders["primaryLabel"])]
+            options += [("approve-%s" % alternate["suffix"], "Approve %s" % alternate["label"]) for alternate in choosable]
+        else:
+            options = [("approve", "Approve these values for the %s" % board["name"])]
+        body.append(decision_form(board["id"], board["name"], [{"id": "decision", "title": "", "options": options + [("change", "Request changes")]}]))
     body.append("</main>")
     body.append('<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production renderers. Every scene and '
                 'reference, with its source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>')
-
-    script = """
-<script>
-function queueDecision(event) {
-  event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const decision = form.get('decision');
-  if (!decision) return;
-  const notes = (form.get('notes') || '').trim();
-  const chosen = event.currentTarget.querySelector('input[name=decision]:checked').parentElement.textContent.trim();
-  const text = (decision === 'change' ? 'Change the %(name)s look.' : chosen + ' (%(name)s).') + (notes ? ' ' + notes : '');
-  if (window.lavish) {
-    window.lavish.queuePrompt(text, { tag: 'decision', text: text, element: event.currentTarget, queueKey: 'look-%(id)s',
-                                      data: { board: '%(id)s', decision: decision, notes: notes } });
-  }
-  document.getElementById('queued').hidden = false;
-}
-</script>""" % {"name": board["name"].replace("'", ""), "id": board["id"]}
 
     page = """<!doctype html>
 <html lang="en">
@@ -546,7 +634,123 @@ function queueDecision(event) {
 %s
 </body>
 </html>
-""" % (esc(board["name"]), STYLE, "\n".join(body), script)
+""" % (esc(board["name"]), STYLE, "\n".join(body), DECISION_SCRIPT)
+    with open(os.path.join(directory, "index.html"), "w") as handle:
+        handle.write(page)
+    return os.path.join(directory, "index.html")
+
+
+TONING_SOURCE = os.path.join(ROOT, "Packages/RenderCore/Sources/RenderCore/ToningLook.swift")
+TONERS = [("sepia", "Sepia"), ("selenium", "Selenium")]
+
+
+def build_toning(renders, sources, output, round_number):
+    """The comparison board for the Darkroom's chemical toners: each toner at each strength on black-and-white 6×6
+    prints, made by the production print renderer.
+    """
+    directory = os.path.join(output, "toning")
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+    os.makedirs(directory)
+    camera, stock = "mediumFormat6x6", "blackAndWhite"
+    credits = {entry["id"]: entry for entry in sources if entry["role"] == "scene"}
+    scenes = {scene["id"]: scene for scene in renders["photoScenes"]}
+    chosen = renders["toning"]
+    stronger = renders.get("strongerToning", {})
+    notes = renders.get("findings", {}).get("toning", {})
+
+    def find(files, scene, kind, chemistry=None, amount=None):
+        for entry in files:
+            if (entry["camera"] == camera and entry.get("filmStock") == stock and entry["scene"] == scene and entry["kind"] == kind
+                    and entry.get("chemistry") == chemistry and (amount is None or abs(entry["amount"] - amount) < 1e-6)):
+                return entry
+        raise SystemExit("No %s %s %s %s in the renders" % (scene, kind, chemistry, amount))
+
+    def figure(root, entry, name, caption):
+        copy_image(os.path.join(root, entry["path"]), os.path.join(directory, name), MEDIA["toning_edge"])
+        return ('<figure><a href="%s"><img src="%s" alt="%s" loading="lazy"></a><figcaption>%s</figcaption></figure>'
+                % (name, name, esc(caption), esc(caption)))
+
+    body = []
+    body.append('<header><p class="eyebrow">Film Journal / Toning comparison board %s / %s</p>' % (round_number, esc(renders["date"])))
+    body.append("<h1>Chemical toning</h1>")
+    body.append('<p class="muted">Black-and-white 6×6 Medium Format prints, toned in the Darkroom by the app\'s own print renderer, '
+                'each toner at each strength.</p>')
+    if renders.get("approved") and renders.get("toningApproved"):
+        body.append('<p class="notice"><strong>%s</strong></p>' % esc(renders["toningApproved"]))
+    body.append('<p class="notice">Internal review for DEC-11. Chemical toning is offered only on the prints of a black-and-white '
+                '6×6 Medium Format Film. The test scenes are modern digital photographs developed as that Film, not captures '
+                'from an iPhone running the app, and no toned darkroom print is shown beside them: none was found under an '
+                'open license with its toner on record.</p>')
+    body.append('<dl class="facts"><dt>The control today</dt><dd>%s</dd><dt>What you are choosing</dt><dd><ul class="judge">%s</ul></dd>'
+                '<dt>What to judge</dt><dd><ul class="judge">%s</ul></dd></dl></header>'
+                % (esc(notes.get("control", "")), "".join("<li>%s</li>" % esc(item) for item in notes.get("choosing", [])),
+                   "".join("<li>%s</li>" % esc(item) for item in notes.get("judge", []))))
+    body.append("<main>")
+    if notes.get("text"):
+        body.append('<section><h2>%s</h2>%s' % (esc(notes["title"]), paragraphs(notes["text"])))
+        for item in notes.get("tables", []):
+            body.append("<h3>%s</h3>%s" % (esc(item["title"]), table(item["header"], item["rows"])))
+            if item.get("note"):
+                body.append('<p class="muted">%s</p>' % esc(item["note"]))
+        body.append("</section>")
+
+    body.append('<section><h2>Every scene</h2><p class="muted">Open any print at its full board size by selecting it. '
+                'A strength is a share of today\'s top, so 1.00 is the strongest the slider gives today.</p>')
+    for scene_id in chosen["scenes"]:
+        scene = scenes[scene_id]
+        credit_entry = credits.get(scene.get("credit"), {})
+        label = SCENE_LABELS.get(scene.get("category"), scene.get("category", ""))
+        body.append('<div class="scene"><h3><span class="tag">%s</span>%s <small class="muted">%s</small></h3>'
+                    % (esc(label), esc(credit_entry.get("title", scene_id)), credit(credit_entry)))
+        untoned = find(renders["files"], scene_id, "developed")
+        for chemistry, name in TONERS:
+            body.append('<h4>%s</h4><div class="scroll"><div class="strip" style="--count: %d">' % (esc(name), len(chosen["amounts"]) + 1))
+            body.append(figure(renders["root"], untoned, "%s-untoned.jpg" % scene_id, "Untoned"))
+            for amount in chosen["amounts"]:
+                entry = find(renders["files"], scene_id, "toned", chemistry, amount)
+                caption = "%.2f%s" % (amount, ", today's top" if amount == max(chosen["amounts"]) else "")
+                body.append(figure(renders["root"], entry, "%s-%s-%03d.jpg" % (scene_id, chemistry, round(amount * 100)), caption))
+            body.append("</div></div>")
+            further = stronger.get(chemistry)
+            if further:
+                # A toner whose whole range is faint is also shown past today's top, from renders made with a higher top.
+                steps = [amount for amount in chosen["amounts"] if amount * further["top"] > 1 + 1e-6]
+                body.append('<h4>%s, stronger than today\'s top</h4><div class="scroll"><div class="strip" style="--count: %d">'
+                            % (esc(name), len(chosen["amounts"]) + 1))
+                top = find(renders["files"], scene_id, "toned", chemistry, max(chosen["amounts"]))
+                body.append(figure(renders["root"], top, "%s-%s-100.jpg" % (scene_id, chemistry), "1.00, today's top"))
+                for amount in steps:
+                    entry = find(further["files"], scene_id, "toned", chemistry, amount)
+                    strength = amount * further["top"]
+                    body.append(figure(further["root"], entry, "%s-%s-%03d.jpg" % (scene_id, chemistry, round(strength * 100)),
+                                       "%.2f, %g times today's top" % (strength, strength)))
+                body.append("</div></div>")
+        body.append("</div>")
+    body.append("</section>")
+
+    body.append('<section><h2>Values in the app</h2><p class="muted">From <code>ToningLook.swift</code>: the one place the toners are '
+                'set. Your choices become each toner\'s <code>start</code> and <code>top</code>.</p><pre><code>%s</code></pre></section>'
+                % esc(open(TONING_SOURCE).read().split("enum ToningLook {", 1)[1].split("    static func toner(", 1)[0].rstrip()))
+    body.append(decision_form("toning", "Chemical toning", renders.get("questions", {}).get("toning", [
+        {"id": "decision", "title": "", "options": [("approve", "Approve these values"), ("change", "Request changes")]}])))
+    body.append("</main>")
+    body.append('<footer><p>Rendered by <code>Probes/LookReviewBoards</code> with the production print renderer. Every scene, with its '
+                'source page, author and license: <a href="../SOURCES.md">SOURCES.md</a>.</p></footer>')
+    page = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chemical Toning Board</title>
+<style>%s</style>
+</head>
+<body>
+%s
+%s
+</body>
+</html>
+""" % (STYLE, "\n".join(body), DECISION_SCRIPT)
     with open(os.path.join(directory, "index.html"), "w") as handle:
         handle.write(page)
     return os.path.join(directory, "index.html")
@@ -577,11 +781,25 @@ def main():
                         help="for each --alternate, a file holding its values as they would read in FilmLook.swift")
     parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
     parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
+    parser.add_argument("--packs", nargs="*", default=[],
+                        help="LABEL=DIR for each set of renders whose Instant packs the Instant's board shows, in order; the "
+                             "primary renders' own packs when omitted")
+    parser.add_argument("--pack-notes", nargs="*", default=[], help="one note for each --packs")
+    parser.add_argument("--findings", help="JSON by board: what a study found (title, text, tables), shown before the scenes; "
+                                           "for the toning board also control, choosing and judge")
+    parser.add_argument("--questions", help="JSON by board: the questions of the decision form, each with id, title and options")
+    parser.add_argument("--further-values", help="JSON by board: [label, values] pairs printed after the values in the app")
+    parser.add_argument("--stronger-toning", nargs="*", default=[],
+                        help="CHEMISTRY=TOP=DIR: renders made with that toner's top raised to TOP, shown past today's top")
+    parser.add_argument("--toning-approved", default="", help="what the captain approved on the toning board, with --approved")
     parser.add_argument("--slim", action="store_true", help="smaller pictures and clips, for the copy kept in the repository")
+    parser.add_argument("--no-previous", action="store_true", help="leave out each scene's comparison with treatment version 2")
     parser.add_argument("--approved", action="store_true", help="say on each board what the captain approved, for the copies kept after approval")
     args = parser.parse_args()
     if args.slim:
         MEDIA.update(SLIM_MEDIA)
+    if args.no_previous:
+        MEDIA["previous"] = False
     renders = json.load(open(os.path.join(args.renders, "manifest.json")))
     scenes = json.load(open(args.scenes))
     renders["root"] = os.path.abspath(args.renders)
@@ -605,6 +823,26 @@ def main():
                        primaryNote=args.primary_note, looksHeading=args.looks_heading)
     if args.remote_references:
         renders.update(remoteReferences=json.load(open(args.remote_references)), remoteDate=args.remote_date)
+    # Instant packs: the renders named, or the primary renders' own.
+    pack_renders = []
+    for index, item in enumerate(args.packs):
+        label, path = item.split("=", 1)
+        pack_renders.append({"label": label, "note": args.pack_notes[index] if index < len(args.pack_notes) else "",
+                             "root": os.path.abspath(path), "suffix": "abcd"[index],
+                             "files": json.load(open(os.path.join(path, "manifest.json")))["files"]})
+    if not pack_renders and any(entry["kind"] == "pack" for entry in renders["files"]):
+        pack_renders.append({"label": "As the app develops it", "note": "", "root": renders["root"], "suffix": "a", "files": renders["files"]})
+    renders.update(packs=pack_renders, packDefinitions=scenes.get("instantPacks", []), toning=scenes.get("toning"),
+                   toningApproved=args.toning_approved)
+    for name in ("findings", "questions", "further_values"):
+        if getattr(args, name):
+            renders[{"further_values": "furtherValues"}.get(name, name)] = json.load(open(getattr(args, name)))
+    stronger = {}
+    for item in args.stronger_toning:
+        chemistry, top, path = item.split("=", 2)
+        stronger[chemistry] = {"top": float(top), "root": os.path.abspath(path),
+                               "files": json.load(open(os.path.join(path, "manifest.json")))["files"]}
+    renders["strongerToning"] = stronger
     sources = json.load(open(os.path.join(args.sources, "manifest.json")))
     for entry in sources:
         if entry.get("local_path") and not os.path.isabs(entry["local_path"]):
@@ -618,6 +856,9 @@ def main():
         if args.only and board["id"] not in args.only:
             continue
         print(build(board, renders, sources, args.output, args.round))
+    # The toning board is the Darkroom's, not a Camera's: built when the scenes name toned prints and it is asked for.
+    if renders["toning"] and (not args.only or "toning" in args.only):
+        print(build_toning(renders, sources, args.output, args.round))
 
 
 if __name__ == "__main__":
