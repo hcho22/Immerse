@@ -5,7 +5,8 @@ import Foundation
 
 /// The format Developed Clips and the Developed Movie are written and saved to Photos in, the captain's of 2026-10-13
 /// (DEC-04): H.264 in a `.mov`, 1920 x 1440, or 1440 x 1920 for a portrait Movie, at the Camera's frame rate, silent
-/// unless a licensed built-in soundtrack is chosen.
+/// unless a licensed built-in soundtrack is chosen. A clip carries no color tags: shown the question that day, he
+/// chose to leave Movies as they are, so never add tags here without his word.
 public enum DevelopedMovieFormat {
     public static let longEdge = 1920
 

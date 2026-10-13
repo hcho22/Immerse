@@ -21,7 +21,8 @@ public enum NativeRenderError: Error, Equatable {
 }
 
 /// The sizes developed photographs are made and saved to Photos at, the captain's of 2026-10-13 (DEC-04). They are
-/// JPEG in sRGB. The Instant's is its card, `InstantPrintCard`, whose size he has not yet decided.
+/// JPEG in sRGB. An Instant print is saved exactly as it was developed, at its card's size (`InstantPrintCard`), with
+/// no resampling.
 public enum DevelopedPhotoSize {
     /// The most pixels a Disposable's borderless 3:2 picture has.
     public static let disposableMaximumPixels = 12_000_000
@@ -259,7 +260,8 @@ public enum NativePhotoRenderer {
     }
 }
 
-/// The white card of a developed 1970s Instant print (PRD 2.1 FR-07, ADR 0013).
+/// The white card of a developed 1970s Instant print (PRD 2.1 FR-07, ADR 0013), 2282 x 2774 pixels, which is also the
+/// size the print is saved to Photos at (DEC-04, the captain, 2026-10-13).
 ///
 /// The picture stays exactly 2048 x 2048 pixels and the card is added around it, in the proportions of the Instant's
 /// Format Reference, the original 1970s integral print: a 79 mm square picture on a 88 x 107 mm card, with equal

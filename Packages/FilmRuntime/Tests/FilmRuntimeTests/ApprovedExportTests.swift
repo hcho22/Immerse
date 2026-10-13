@@ -14,8 +14,9 @@ import XCTest
 /// What Save Developed to Photos writes, read back from the file handed to Photos, against the sizes and formats the
 /// captain approved on 2026-10-13 (DEC-04): JPEG photos, the Disposable at no more than 12,000,000 pixels in its
 /// borderless 3:2 shape and the 6×6 at 3072 x 3072; Movies as H.264 in a `.mov` at 1920 x 1440, or 1440 x 1920 for a
-/// portrait Movie, the Super 8 at 18 frames a second and the 16mm at 24, silent. The Instant's size is not decided:
-/// its export is held to the card it is developed on.
+/// portrait Movie, the Super 8 at 18 frames a second and the 16mm at 24, silent. An Instant print is saved exactly as
+/// it was developed, 2282 x 2774, the 2048 x 2048 picture on its white card, with no resampling (his answer the same
+/// day: "instant export size: A").
 final class ApprovedExportTests: XCTestCase {
     private var root: URL!
 
@@ -57,16 +58,35 @@ final class ApprovedExportTests: XCTestCase {
         }
     }
 
-    /// The Instant's export size is not decided (DEC-04). Until it is, the export is the developed print: the
-    /// 2048 x 2048 picture on its white card.
-    func testAnInstantExportIsAJPEGOfThePrintOnItsCard() async throws {
-        let exported = try await exportedPhotos(camera: CameraCatalog.instant1970s, sourceWidth: 1600, sourceHeight: 1200, completesEarly: false)
-        XCTAssertEqual(exported.count, 2)
-        for file in exported {
-            let photo = try ExportedPhoto(file)
-            XCTAssertEqual(photo.type, UTType.jpeg.identifier)
-            XCTAssertEqual([photo.width, photo.height], [InstantPrintCard.width, InstantPrintCard.height])
-            XCTAssertEqual(photo.colorSpace, CGColorSpace.sRGB as String)
+    /// An Instant print is saved exactly as it was developed (DEC-04, the captain, 2026-10-13): a JPEG of 2282 x 2774,
+    /// the 2048 x 2048 picture on its white card. Unedited, the file handed to Photos is the developed print byte for
+    /// byte, so nothing is resampled or encoded again; an edited print keeps the size.
+    func testAnInstantExportIsTheDevelopedPrintByteForByteAt2282By2774() async throws {
+        XCTAssertEqual([InstantPrintCard.width, InstantPrintCard.height], [2282, 2774])
+        XCTAssertEqual(InstantPrintCard.pictureSide, 2048)
+        // A phone's capture, larger than the print, and a smaller one: neither changes the print's size.
+        for (width, height) in [(4032, 3024), (1600, 1200)] {
+            let (repository, film, processor) = try await developedPhotos(camera: CameraCatalog.instant1970s, filmStock: nil,
+                                                                        sourceWidth: width, sourceHeight: height, completesEarly: false)
+            let exported = try await export(processor, repository, film)
+            XCTAssertEqual(exported.count, 2)
+            for (index, file) in exported.enumerated() {
+                let photo = try ExportedPhoto(file)
+                XCTAssertEqual(photo.type, UTType.jpeg.identifier)
+                XCTAssertEqual([photo.width, photo.height], [2282, 2774], "\(width)x\(height)")
+                XCTAssertEqual(photo.colorSpace, CGColorSpace.sRGB as String)
+                let master = try repository.revealedAsset(filmID: film.id, sequenceNumber: index + 1, kind: .master)
+                XCTAssertEqual(try Data(contentsOf: file), try Data(contentsOf: master.url),
+                               "\(width)x\(height): print \(index + 1) is saved as developed, byte for byte")
+            }
+            // An edit prints the picture again and keeps the card and the size.
+            let edited = try await processor.saveRecipe(filmID: film.id, sequence: 1, recipe: DarkroomRecipe(printExposureStops: -3, contrastGrade: 5))
+            let again = try await export(processor, repository, film)
+            XCTAssertEqual(try Data(contentsOf: again[0]), edited)
+            let print = try ExportedPhoto(again[0])
+            XCTAssertEqual([print.width, print.height], [2282, 2774])
+            let master = try repository.revealedAsset(filmID: film.id, sequenceNumber: 2, kind: .master)
+            XCTAssertEqual(try Data(contentsOf: again[1]), try Data(contentsOf: master.url), "The other print is untouched")
         }
     }
 
@@ -129,6 +149,11 @@ final class ApprovedExportTests: XCTestCase {
                 XCTAssertEqual(transform, .identity, "\(name): the frame is stored upright")
                 let formats = try await track.load(.formatDescriptions)
                 XCTAssertEqual(formats.map { CMFormatDescriptionGetMediaSubType($0) }, [kCMVideoCodecType_H264], name)
+                // Movies carry no color tags. Shown the question on 2026-10-13, the captain chose to leave them as they are.
+                for key in [kCMFormatDescriptionExtension_ColorPrimaries, kCMFormatDescriptionExtension_TransferFunction,
+                            kCMFormatDescriptionExtension_YCbCrMatrix] {
+                    XCTAssertNil(CMFormatDescriptionGetExtension(formats[0], extensionKey: key), "\(name): \(key)")
+                }
                 // Each clip is its whole frames, the last held to the cut, so no frame is a sliver and the file's own
                 // frame rate never reads above the Camera's. The file's clock ticks 600 times a second, so a frame lands
                 // within a tick of its place.
