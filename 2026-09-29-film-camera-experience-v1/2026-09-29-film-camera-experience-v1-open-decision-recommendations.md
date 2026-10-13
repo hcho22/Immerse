@@ -225,7 +225,11 @@ The same proposal asked whether Movies, which carry no color tags, should be tag
 
 The captain said, the same day: "instant export size: A,  leave Movies as they are"
 
-So an Instant print is saved to Photos exactly as it was developed, and nothing about how a Developed Clip is written changes: Movies carry no color tags.
+So an Instant print is saved to Photos exactly as it was developed, and no color tags are added to Movies, by his decision.
+His answer was to the question about color tags; it does not say that nothing in how a Developed Clip is written changes.
+The change that carries these decisions does change one thing there: a newly developed clip is its whole frames, with the last one held to where the recording stopped, where a clip used to end on one more frame lasting a fraction of a frame.
+That is what makes the 18 and 24 frames a second he approved true of the file.
+A clip developed before this change is not developed again.
 Photos stay sRGB JPEG, as the approved looks were judged.
 Whether tagging would change anything on a phone is to be looked at during the manual iPhone test.
 
@@ -271,7 +275,9 @@ Decided 2026-10-13, as targets:
 None of this is measured, because no iPhone 11 is available, and it is measured when one is.
 The 16mm Cinema's Movie at its 167 seconds is among what must be timed (the 2026-10-06 addendum above).
 The alternative he was offered, making his iPhone 13 Pro the oldest supported phone, was not taken.
-The warning below 2 GB free is a target the app does not meet yet: it has no such warning today.
+The warning below 2 GB free was approved on 2026-10-13 as a target.
+It is not built by the change that carries these decisions, and it is not built anywhere yet: the app has no such warning.
+Building it is tracker task CAP-15, added unchecked.
 
 ### DEC-13 - support and App Store wording (E)
 
@@ -304,8 +310,11 @@ The details below were not in what he read, so they are not treated as approved 
 | DEC-13 | The launch review packet's contents | Recommendation |
 | DEC-14 | "Record qualitative targets", with two examples | Recommendation; no targets are set |
 
-Three things in how the app carries his Darkroom decision are also his to see, because he was shown the limits and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
+Six things in how the app carries his decisions are also his to see, because he was shown the limits, sizes and formats and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
 
 - Dodge and Burn has a strength slider, 0.1 to 3.0 stops, where every stroke used to be 0.4 stops.
 - Strokes add up where they overlap, and together they stop at 3 stops.
+- A print whose stored Darkroom settings are outside the limits says it cannot be made and why, Reset to Original prints it again, and Save Developed to Photos stops before anything is saved.
 - The Instant shows the print first and asks about its original when the print is closed.
+- A clip developed from now on is its whole frames, with the last one held to where the recording stopped, where each clip used to end on one more frame lasting a fraction of a frame.
+- A Disposable picture developed from now on from a capture larger than 12 megapixels is brought down to whole pixels, 4242 × 2828 from a 27-megapixel capture, where it used to come out a pixel larger each way, 4243 × 2829, which is 3,447 pixels over the 12,000,000-pixel limit.

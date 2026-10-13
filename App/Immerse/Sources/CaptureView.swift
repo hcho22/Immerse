@@ -138,7 +138,7 @@ struct CaptureView: View {
             .onChange(of: model.film(filmID)?.captures) { _, captures in
                 guard model.film(filmID)?.camera.revealRule == .instantPerExposure,
                       let newest = captures?.last(where: { $0.revealState == .revealed }),
-                      newest.sequenceNumber != lastRevealedSequence else { return }
+                      newest.sequenceNumber > lastRevealedSequence ?? 0 else { return }
                 lastRevealedSequence = newest.sequenceNumber
                 capture.suspend()
                 instantPrint = newest

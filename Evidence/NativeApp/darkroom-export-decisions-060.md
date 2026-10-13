@@ -30,6 +30,7 @@ The validator, the renderer and the Darkroom's sliders read them from it.
 ### Three choices made in carrying it
 
 He was shown the limits, not their workings, so these are named in the addendum as his to see.
+The addendum's list also names the Instant's question (below) and the two Development fixes found while reading the exports back (under Exports).
 
 1. **A strength slider for Dodge and Burn.**
    Every stroke used to be 0.4 stops, with no control.
@@ -85,6 +86,10 @@ What the app does (`StoredRecipeLimitsTests`, and by hand in the simulator with 
 - The developed master and every other print are untouched.
 - Reset to Original, saved, prints the developed master again, byte for byte.
 
+This handling is kept by the task's decision.
+The task asked for this state to be defined and tested, and this is the least that keeps it honest for the person holding the phone: the print says it cannot be made and why, Reset to Original prints it again, and an export stops before anything is saved to Photos.
+It is named in the addendum as his to see.
+
 | The Film screen | Its Darkroom | After Reset to Original |
 | --- | --- | --- |
 | ![A warning mark in place of the print](darkroom-export-decisions-060/stored-recipe-outside-limits-film-screen.png) | ![The Darkroom explains and offers Reset](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom.png) | ![The print is back](darkroom-export-decisions-060/stored-recipe-outside-limits-after-reset.png) |
@@ -116,6 +121,7 @@ Now the screen a print is revealed on asks, once, about that print only:
 - Choosing to save writes the original to Photos when the choice is confirmed, because the print is already revealed.
   If Photos refuses, the choice stands and can be tried again from the same sheet or from Originals.
 - A sealed frame is never asked about, and an answer for one print leaves every other print's original as it was.
+- A print discarded from the sheet that revealed it at the camera closes with no question, and no earlier print is shown or asked about in its place.
 
 | The print, revealed at the camera | The question that follows |
 | --- | --- |
@@ -123,6 +129,7 @@ Now the screen a print is revealed on asks, once, about that print only:
 
 Run: the hosted `testTheInstantAsksOnlyAboutRevealedPrintsWithNoRecordedChoice`, and three populated harness tests, at the camera screen (`--reveal-at-camera`, which develops the sealed print once the camera screen is open, as the app does when a save lands there), on the Film screen, and left unanswered.
 The retained inspector checks that the answered print's original is gone and the other print's original and choice are untouched.
+A fourth harness test, `testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion`, was added in review (see After review).
 
 Not run: a real capture.
 The simulator has no camera, so the save that leads to the reveal was stood in for; saving an original to Photos was not run either, since the harness has no Photos access.
@@ -164,6 +171,9 @@ Reading the files back found two differences, both fixed for what is developed f
    A clip is now its whole frames, with the last held to where the recording stopped, so the Movie still lasts exactly as long as was recorded and never reads above its Camera's frame rate.
 
 Neither changes a picture or Movie already developed: masters and Developed Clips are stored and are not developed again, and assembly is unchanged.
+Both change what is developed from now on, which he was not shown, so both are named in the addendum as his to see.
+His "leave Movies as they are" answered the question about color tags, and none is added.
+The second fix is kept because it is what makes the 18 and 24 frames a second he approved true of the file.
 
 Two things are as they were and are worth knowing:
 
@@ -184,8 +194,9 @@ It stays empty until he supplies his own shots, seven in all, and until a licens
 These are records, not code.
 
 - The speed and storage targets are approved and none is measured, because no iPhone 11 is available.
-- The app has no warning below 2 GB free yet.
-  That target is approved and not built.
+- The warning below 2 GB free was approved on 2026-10-13 as a target.
+  It is not built by this change, and it is not built anywhere yet: the app has no such warning.
+  Building it is tracker task CAP-15, added unchecked with this change.
 - The support and store wording is not written; only its approach is approved.
 - No analytics exists in the app, and no learning targets are set.
 
@@ -225,6 +236,33 @@ Run again on the merged code, as the `packages` part of `Scripts/validate-local.
 
 Carried over from the commit before the merge (`a83a8cc`), because the merge changed nothing they build or run: the populated harness (33 tests) and the app's screen tests (76 passed and the one expected failure).
 The dark-appearance audits were not run by hand at either commit; the `ui-flows` part of the check runs them.
+
+## After review
+
+Review of this change found one defect and three places where the record was not exact.
+
+The defect: discarding the print just revealed at the camera brought the print before it back up, and closing that asked about its original.
+The camera took any change of the newest revealed print as a new reveal, and a discard makes an older print the newest.
+It now takes only a print with a higher number than the newest it has seen revealed, so a discard shows and asks nothing.
+The Film screen was not affected, because it compares sets of revealed prints and a discard only takes one away.
+
+The record: the addendum no longer says that nothing in how a Developed Clip is written changes, its list of workings that are his to see has six entries, the handling of a stored value outside the limits is marked as kept, and the warning below 2 GB free has a tracker task, CAP-15.
+No code changed for those three.
+
+Run in review, on an iPhone 17 Pro simulator on iOS 26.5 made for the run and deleted after it:
+
+| Check | Result |
+| --- | --- |
+| `testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion` on the code before the fix | Fails: "No earlier print is shown in its place" |
+| The same test on the fixed code, with `testInstantAsksAboutTheOriginalOfThePrintRevealedAtTheCamera` and `testInstantOriginalQuestionLeftUnansweredWaitsUnderOriginals` | 3 passed, 0 failures |
+| The new test three more times | 3 passed |
+| `Scripts/verify-requirement-map.sh` | Pass, 137 intake IDs with CAP-15 |
+| `Scripts/verify-document-package.sh`, after the documents ZIP was made again | Pass |
+
+The new test waits for the print's sheet to come to rest before it taps Discard.
+Its first form tapped while the sheet was still rising, and on one run iOS ignored that tap; the simulator's log held no dropped touch, and the screen recording showed the sheet in motion.
+
+Nothing else was run again in review: the package tests, the hosted tests and the rest of the screen tests are the check's to run.
 
 ## Not shown here
 

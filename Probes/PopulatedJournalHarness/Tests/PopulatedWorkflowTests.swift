@@ -204,6 +204,20 @@ final class PopulatedWorkflowTests: XCTestCase {
         return false
     }
 
+    /// A sheet the app raises on its own, not after a tap of the test's, is still rising when its controls first exist,
+    /// and iOS ignores a tap sent while it rises. Two looks alike a quarter of a second apart mean it has come to rest.
+    private func waitUntilStill(_ app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        var last = app.screenshot().pngRepresentation
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.25)
+            let now = app.screenshot().pngRepresentation
+            if now == last { return true }
+            last = now
+        }
+        return false
+    }
+
     /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. A print
     /// revealed at the camera is shown first; closing it brings the question, for that print only, and the camera is
     /// back afterwards. The earlier print, never asked about here, still waits under Originals on the Film screen.
@@ -242,6 +256,37 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
         snapshot(app, "Instant-earlier-print-waits-under-Originals")
+        app.buttons["Cancel"].tap()
+    }
+
+    /// A print discarded from the sheet that revealed it at the camera closes with nothing after it: no earlier print is
+    /// shown in its place, and nothing is asked about a print the camera did not just reveal. Print 1, revealed before
+    /// the camera opened, still waits under Originals.
+    func testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion() throws {
+        let app = launch(arguments: ["--instant-mixed", "--reveal-at-camera"])
+        openFilm(app)
+        app.buttons["Open Camera"].tap()
+        let revealed = app.navigationBars["Photo 2"]
+        XCTAssertTrue(revealed.waitForExistence(timeout: 60), "The print is revealed at the camera")
+        XCTAssertTrue(waitUntilStill(app), "The print's sheet has come to rest")
+        app.buttons["Discard"].tap()
+        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
+        discardConfirmation.tap()
+        XCTAssertTrue(revealed.waitForNonExistence(timeout: 20), "The discarded print closes")
+        XCTAssertFalse(app.navigationBars["Photo 1"].waitForExistence(timeout: 5), "No earlier print is shown in its place")
+        XCTAssertFalse(app.navigationBars["Originals"].exists, "No question follows a discarded print")
+        snapshot(app, "Instant-print-discarded-at-the-camera")
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Discarded"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        // The Film screen asks nothing either: print 1 was revealed before the camera opened.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
         app.buttons["Cancel"].tap()
     }
 
