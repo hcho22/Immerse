@@ -37,6 +37,7 @@ struct FilmDetailView: View {
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { filmMenu(film) } }
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
+        .task { await model.storage.refresh() }
         .fullScreenCover(isPresented: $capturing) { CaptureView(filmID: filmID) }
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
@@ -101,6 +102,12 @@ struct FilmDetailView: View {
                 model.perform { try await model.recoverCapture(filmID) }
             }.disabled(model.initialRecoveryPending)
         } else {
+            // Before the step that needs space, Open Camera or Development, and never beside a developed Film.
+            if let step = film.stepNeedingSpace, let warning = model.storage.warning(for: step) {
+                LowStorageNotice(text: warning)
+                    .padding(12).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(uiColor: .secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12))
+            }
             if film.completionState == .open {
                 Button("Open Camera", systemImage: "camera") { capturing = true }.primaryAction()
             }

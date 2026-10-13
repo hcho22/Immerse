@@ -23,8 +23,8 @@ suites() {
 }
 # Simulator UI gates run with light appearance and large text, like the retained
 # harness runner, and the production accessibility audits (JournalFlowTests, the
-# populated Journal card in MovieCapacityUITests and the Film Stock choice in
-# FilmStockUITests) run once more in dark;
+# populated Journal card in MovieCapacityUITests, the Film Stock choice in
+# FilmStockUITests and the low-storage warning in LowStorageUITests) run once more in dark;
 # each simulator's own preferences are restored on exit. Every simulator booted here has
 # its photo-analysis service switched off first (Scripts/quiet-simulator.sh).
 pinned_simulators=""

@@ -75,6 +75,7 @@ private struct LoadFilmView: View {
         .navigationTitle(SpokenText.title(camera.shortName))
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
+        .task { await model.storage.refresh() }
         .interactiveDismissDisabled(loading)
     }
 
@@ -130,6 +131,7 @@ private struct LoadFilmView: View {
             }
             Section { access() }
             Section { NavigationLink("Subscription") { SubscriptionView() } }
+            if let warning = model.storage.warning(for: .capture) { Section { LowStorageNotice(text: warning) } }
             if let error { Section { Text(error).foregroundStyle(.red) } }
             Section {
                 Button {
