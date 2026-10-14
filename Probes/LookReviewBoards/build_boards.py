@@ -60,7 +60,7 @@ BOARDS = [
                   "iPhone running the app.",
         "cameras": [("instant1970s", None)],
         "references": ["instant", "instant-study"],
-        "value_blocks": ["instant", "instantVersion3"],
+        "value_blocks": ["instant"],
         "reference_internal": "The original 1970s Polaroid integral print (SX-70 film), as it looked fresh from the camera",
         "prd": "Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft "
                "detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread "
@@ -159,6 +159,15 @@ def value_block(name):
     if not match:
         raise SystemExit("No values for %s in FilmLook.swift" % name)
     return match.group(0).rstrip()
+
+
+def alternate_values(values):
+    """A further look's values: a block of FilmLook.swift named as FilmLook.NAME, or a file holding them."""
+    if not values:
+        return ""
+    if values.startswith("FilmLook."):
+        return value_block(values[len("FilmLook."):])
+    return open(values).read().rstrip()
 
 
 def run(*args):
@@ -606,7 +615,8 @@ def build(board, renders, sources, output, round_number):
     for block in board["value_blocks"]:
         body.append("<pre><code>%s</code></pre>" % esc(value_block(block)))
     for alternate in alternates:
-        body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
+        if alternate["values"]:
+            body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(alternate["label"]), esc(alternate["values"])))
     for label, values in renders.get("furtherValues", {}).get(board["id"], []):
         body.append("<h3>%s</h3><pre><code>%s</code></pre>" % (esc(label), esc(values)))
     body.append("</section>")
@@ -788,7 +798,8 @@ def main():
     parser.add_argument("--alternate-label", nargs="*", default=[], help="one label for each --alternate")
     parser.add_argument("--alternate-note", nargs="*", default=[], help="one note for each --alternate")
     parser.add_argument("--alternate-values", nargs="*", default=[],
-                        help="for each --alternate, a file holding its values as they would read in FilmLook.swift")
+                        help="for each --alternate, a file holding its values as they would read in FilmLook.swift, or "
+                             "FilmLook.NAME for a block the app keeps, such as instantVersion3")
     parser.add_argument("--remote-references", help="JSON list of pictures to link, not copy: board, camera, filmStock, scene, title, url")
     parser.add_argument("--remote-date", default="", help="the day the remote references were supplied")
     parser.add_argument("--packs", nargs="*", default=[],
@@ -826,7 +837,7 @@ def main():
         alternate.update(root=os.path.abspath(path), suffix="bc"[index], comparisonOnly=index + 1 in args.comparison_only,
                          label=args.alternate_label[index] if index < len(args.alternate_label) else "BC"[index],
                          note=args.alternate_note[index] if index < len(args.alternate_note) else "",
-                         values=open(values).read().rstrip() if values else "")
+                         values=alternate_values(values))
         alternates.append(alternate)
     if alternates:
         renders.update(alternates=alternates, alternateBoards=args.alternate_boards,

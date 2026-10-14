@@ -339,5 +339,5 @@ Both were decided later on 2026-10-13, on review boards of their own (`Evidence/
 With these, nothing DEC-04 listed as open after 2026-10-13 is open.
 He saw the looks and the toned prints on their boards.
 Later the same day he confirmed "version 4" on the kept Instant board, which names B as treatment version 4 and shows version 3 as "before the study", and "approved" on the kept toning board.
-Neither board's own text told him that an Instant Film loaded before version 4 keeps version 3's contrast for its whole pack; the Instant board carries it only as a code comment among the values it prints.
+The kept Instant board says in its own text, under "The contrast before and after the study", that an Instant Film loaded under version 3 still develops with the earlier contrast, and the copy served to him has the same sentence.
 The toners' range now lives in the doc comment of `ToningLook.swift`, in his words.

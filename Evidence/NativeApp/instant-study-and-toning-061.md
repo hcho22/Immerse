@@ -230,6 +230,7 @@ The proposal was shown to the captain and not taken: he kept the values in the "
 
 Served to the captain on 2026-10-13 from `Evidence/AssetReview/looks/instant/index.html`.
 The copy kept there now was rebuilt after his answers at repository size: version 4 as the app develops it beside version 3, the pack as the app develops it beside the wider variation he did not take, the study's findings and the 37 prints.
+Its "Values in the app" section, built by the tool as it was then, prints version 3's Instant under the version 4 heading and an empty block under version 3's; the values themselves are right.
 What follows describes the board as it was served.
 
 - **Contrast.**
