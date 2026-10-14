@@ -625,6 +625,69 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
     }
 
+    /// A Darkroom explanation takes its height from the print, so the selected tool stays where a finger finds it. With
+    /// the explanation of a print whose stored recipe is outside the limits showing (`--recipe-outside-limits`), at the
+    /// default text size the tool row, the tool's heading, its value and its slider all rest on screen, above the fade
+    /// and the Reset to Original bar, and the slider takes a drag with nothing scrolled. At the largest size the
+    /// explanation alone is taller than the screen, so the slider is scrolled to: it comes fully clear of the fade and
+    /// takes the same drag.
+    func testDarkroomRestsTheSelectedToolOnScreenUnderAnExplanation() throws { assertDarkroomExplains(largest: false) }
+    func testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize() throws { assertDarkroomExplains(largest: true) }
+
+    private func assertDarkroomExplains(largest: Bool) {
+        var arguments = ["--developed-photo", "--recipe-outside-limits"]
+        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        let app = launch(arguments: arguments)
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        XCTAssertTrue(open.exists, "\(largest)")
+        open.tap()
+        app.buttons["Darkroom"].tap()
+        let name = "Darkroom-explanation-\(largest ? "largest" : "default")"
+        let mark = app.images["Print unavailable"]
+        XCTAssertTrue(mark.waitForExistence(timeout: 20), "\(name): the print is refused")
+        let explanation = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "outside what this version of Immerse can print")).firstMatch
+        XCTAssertTrue(explanation.exists, "\(name): the Darkroom says why")
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.exists, "\(name) slider")
+        // Let the controls' measured height settle before reading frames.
+        Thread.sleep(forTimeInterval: 1.5)
+        let bar = app.navigationBars["Darkroom"]
+        let reset = app.buttons["Reset to Original"]
+        let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Print unavailable")).firstMatch.frame
+        // The scroll area's last 12 pt fade out, so a control in full view ends above them.
+        let clear = area.maxY - 12 + 1
+        snapshot(app, name)
+        if largest {
+            // The held drags in the left margin neither coast nor move a slider.
+            for _ in 0..<16 where exposure.frame.maxY > clear {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -240)), withVelocity: .slow, thenHoldForDuration: 0.3)
+            }
+            snapshot(app, "\(name)-slider")
+        } else {
+            XCTAssertGreaterThanOrEqual(mark.frame.minY, bar.frame.maxY, "\(name): the print's place is below the navigation bar")
+            XCTAssertLessThanOrEqual(mark.frame.maxY, explanation.frame.minY, "\(name): the explanation is under the print's place")
+            let tools = ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn"].map { app.buttons[$0] }
+            for control in [explanation, app.staticTexts["Exposure"], app.staticTexts["3.5 stops"]] + tools {
+                XCTAssertTrue(control.exists, name)
+                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
+                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
+            }
+        }
+        XCTAssertGreaterThanOrEqual(exposure.frame.minY, bar.frame.maxY, "\(name): the slider is in view")
+        XCTAssertLessThanOrEqual(exposure.frame.maxY, clear, "\(name): the slider is in view, above the fade")
+        XCTAssertLessThanOrEqual(area.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
+        XCTAssertTrue(reset.isHittable, "\(name): Reset to Original is on screen")
+        // A drag sent to where the slider's thumb is, which scrolls nothing: 3.5 stops rests at the slider's end.
+        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: exposure.coordinate(withNormalizedOffset: CGVector(dx: -0.2, dy: 0.5)))
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "\(name): the slider takes the drag")
+        XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 20), "\(name): inside the limits the print is made")
+        XCTAssertFalse(explanation.exists, "\(name): the explanation goes once the print can be made")
+    }
+
     /// A test whose Film is on the 16mm Cinema's or the 6×6 Medium Format's color Film Stock is skipped where Core
     /// Image cannot run the tetrahedral reader: there the harness cannot develop that Film.
     private func requireTetrahedralReader() throws {

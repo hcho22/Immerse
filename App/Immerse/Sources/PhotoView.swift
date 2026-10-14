@@ -13,8 +13,9 @@ private struct ControlsHeightKey: PreferenceKey {
 /// below the navigation bar: the sheet's safe area starts under the bar, and the content scrolls only when even the
 /// smallest print does not fit. The scroll area stops above the floating Reset to Original bar, so no control rests
 /// under it, where its taps would reach the bar, and the last row scrolls fully clear of it. Rendering shows over the
-/// print and an error between the print and the controls, both outside the measured controls, so neither resizes the
-/// print on every render or rescales a Dodge/Burn stroke.
+/// print, outside the measured controls, so it does not resize the print on every render or rescale a Dodge/Burn
+/// stroke. An error shows between the print and the controls and is measured with them: the print gives up the
+/// error's height, so the selected tool rests on screen under the error and does not wait below the fold.
 struct DarkroomLayout<Preview: View, Controls: View>: View {
     let rendering: Bool
     let error: String?
@@ -23,8 +24,9 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
     /// The height of everything under the print, measured at the current text size.
     @State private var controlsHeight: CGFloat = 260
 
-    /// The smallest height the print preview is scaled down to before the screen scrolls.
-    private static var minimumPrintHeight: CGFloat { 160 }
+    /// The smallest height the print preview is scaled down to before the screen scrolls. Under an error it is half
+    /// that: the longest explanation then leaves the Exposure tool on an iPhone SE's screen, with the print still shown.
+    private var minimumPrintHeight: CGFloat { error == nil ? 160 : 80 }
 
     /// The controls' bottom margin, over which controls that run past the scroll area fade out rather than end in a
     /// sliver. The last row, scrolled fully into view, ends above it.
@@ -36,7 +38,7 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
     private static var bottomBarSpacing: CGFloat { 4 }
 
     private func printHeight(in available: CGFloat) -> CGFloat {
-        max(Self.minimumPrintHeight, available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
+        max(minimumPrintHeight, available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
     }
 
     var body: some View {
@@ -47,9 +49,10 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
                         .overlay(alignment: .topTrailing) {
                             if rendering { ProgressView().accessibilityLabel("Rendering print") }
                         }
-                    if let error { Text(error).foregroundStyle(.red) }
-                    VStack(spacing: 18) { controls }
-                        .background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
+                    VStack(spacing: 18) {
+                        if let error { Text(error).foregroundStyle(.red) }
+                        controls
+                    }.background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
                 }.padding([.horizontal, .top]).padding(.bottom, Self.bottomMargin)
             }
             .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
@@ -312,11 +315,13 @@ struct DarkroomView: View {
                 recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
             }))
             if let crop = recipe.crop {
-                Text("Size").font(.caption)
-                Slider(value: Binding(get: { crop.width }, set: {
-                    let size = $0
-                    recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
-                }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size")
+                VStack(alignment: .leading) {
+                    Text("Size").font(.caption)
+                    Slider(value: Binding(get: { crop.width }, set: {
+                        let size = $0
+                        recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
+                    }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size")
+                }
                 if crop.width < 1 {
                     cropPosition("Horizontal", x: true)
                     cropPosition("Vertical", x: false)

@@ -131,6 +131,11 @@ import XCTest
         size.adjust(toNormalizedSliderPosition: 0.6)
         XCTAssertTrue(app.sliders["Crop Horizontal"].exists)
         XCTAssertTrue(app.sliders["Crop Vertical"].exists)
+        // The three crop captions sit alike, at their sliders' leading edge.
+        for caption in ["Size", "Horizontal", "Vertical"] {
+            XCTAssertEqual(app.staticTexts[caption].frame.minX, size.frame.minX, accuracy: 1, caption)
+        }
+        snapshot(app, "darkroom-crop-captions")
         crop.tap()
 
         app.buttons["Dodge / Burn"].tap()

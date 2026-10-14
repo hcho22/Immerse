@@ -1,7 +1,7 @@
 import CryptoKit
 import EntitlementCore
 import FilmDomain
-import FilmPersistence
+@testable import FilmPersistence
 import Foundation
 import Observation
 import RenderCore
@@ -141,6 +141,13 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         }
         scenario.model.refresh()
         try await scenario.inspect(reason: reopening ? "reopen" : "seeded")
+        // `--recipe-outside-limits` leaves print 1 a stored print exposure of 3.5 stops, which only a build with wider
+        // limits or a damaged store can: the app's own writers refuse it, so it goes to the store beside them. It is
+        // written after the inspection above, which prints every photo, so such a history is never inspected or reopened.
+        if !reopening, arguments.contains("--recipe-outside-limits"), let film = scenario.model.films.first {
+            try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1",
+                data: Data(#"{"printExposureStops":3.5,"dodgeBurnMasks":[]}"#.utf8))
+        }
         return scenario
     }
 

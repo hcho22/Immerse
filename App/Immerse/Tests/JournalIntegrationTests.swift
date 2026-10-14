@@ -283,9 +283,9 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(SpokenText.of(text), spoken, file: file, line: line)
     }
 
-    /// A Darkroom error shows between the print and its controls without resizing or moving the print, so the print
-    /// and a Dodge/Burn stroke on it keep one scale; only the controls move down while it shows.
-    func testADarkroomErrorNeitherResizesNorMovesThePrint() async throws {
+    /// A Darkroom error shows between the print and its controls in height the print gives up, so the controls keep
+    /// their place and the selected tool stays on screen under it; the print has its size back when the error goes.
+    func testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace() async throws {
         let probe = DarkroomLayoutProbe()
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let window = UIWindow(windowScene: scene)
@@ -297,8 +297,16 @@ final class JournalIntegrationTests: XCTestCase {
 
         probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
         let failed = try await settledFrames(probe)
-        XCTAssertEqual(failed.print, resting.print, "An error leaves the print's size and place alone")
-        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY + 18, "The error shows between the print and the controls")
+        XCTAssertEqual(failed.controls.minY, resting.controls.minY, accuracy: 0.5, "An error leaves the controls where they were")
+        XCTAssertEqual(failed.controls.size, resting.controls.size)
+        XCTAssertEqual(failed.print.minY, resting.print.minY, accuracy: 0.5, "The print keeps its top edge")
+        XCTAssertGreaterThan(failed.controls.minY, failed.print.maxY + 18 + 18, "The error shows between the print and the controls")
+
+        // An error with more to say than the print has room to give leaves a smaller print, never none, and the screen scrolls.
+        probe.error = String(repeating: "The print could not be rendered. ", count: 80)
+        let crowded = try await settledFrames(probe)
+        XCTAssertEqual(crowded.print.height, 80, accuracy: 0.5, "Under an error the print is never smaller than this")
+        XCTAssertEqual(crowded.print.minY, resting.print.minY, accuracy: 0.5)
 
         probe.error = nil
         let cleared = try await settledFrames(probe)

@@ -7,7 +7,7 @@ The Instant's contrast and print-to-print variation and the toning strength are 
 What he was asked, in the words he read, and what he said are in the 2026-10-13 addendum to the [open-decision recommendations](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md).
 This note records what the app does about each answer, the choices made in carrying them, what was run, and what was not.
 
-Everything here ran on a Mac and an iPhone 17 Pro simulator on iOS 26.5.
+Everything here ran on a Mac and an iPhone 17 Pro simulator on iOS 26.5; the round after testing also ran on an iPhone SE (3rd generation) simulator.
 The tables below say what was run before the merge with main and what was run again after it.
 Nothing ran on a phone.
 
@@ -75,19 +75,21 @@ Seven overlapping 0.4-stop strokes, 2.8 stops, print as before, and the test hol
 The Darkroom cannot make one.
 Only a build with wider limits, or a damaged store, can leave one.
 
-What the app does (`StoredRecipeLimitsTests`, and by hand in the simulator with a stored exposure of 3.5 stops):
+What the app does (`StoredRecipeLimitsTests`, by hand in the simulator with a stored exposure of 3.5 stops, and in the populated harness, whose `--recipe-outside-limits` stores the same value):
 
 - The recipe is read as it was stored, and nothing clamps it.
 - The print is refused wherever it would be made.
   The Film screen shows a warning mark in its place.
   Its Darkroom opens, says the settings are outside what this version can print, and offers Reset to Original.
+  The explanation takes its height from the print's place, so the tools, the selected tool's value and slider, and Reset to Original rest on one screen under it.
   Saving the same recipe again is refused.
 - Save Developed to Photos checks every recipe before it writes anything, so it stops with nothing saved.
 - The developed master and every other print are untouched.
 - Reset to Original, saved, prints the developed master again, byte for byte.
 
 This handling is kept by the task's decision.
-The task asked for this state to be defined and tested, and this is the least that keeps it honest for the person holding the phone: the print says it cannot be made and why, Reset to Original prints it again, and an export stops before anything is saved to Photos.
+The task asked for this state to be defined and tested, and this keeps it honest for the person holding the phone: the print says it cannot be made and why, Reset to Original prints it again, and an export stops before anything is saved to Photos.
+Testing added one thing to it, the Darkroom's layout under the explanation (see After testing); no word of the explanation changed.
 It is named in the addendum as his to see.
 
 | The Film screen | Its Darkroom | After Reset to Original |
@@ -295,6 +297,76 @@ Run in the second round, on an iPhone 17 Pro simulator on iOS 26.5 made for the 
 
 The harness build compiled RenderCore without the removed helper.
 No package test was run again in this round.
+
+## After testing
+
+Testing drove the app in the populated harness on an iPhone 17 Pro simulator in light and an iPhone SE (3rd generation) simulator in dark, both on iOS 26.5.
+Every scenario passed.
+It found two things to correct in how the Darkroom is laid out, and the task's supervisor decided both.
+
+### The Darkroom under an explanation
+
+With the explanation of a stored value outside the limits showing, the selected tool's heading, its value and its slider rested below the fold on both phones, and on the iPhone SE the fade cut the tool row.
+The print's place was sized from the controls alone, so the explanation pushed the controls down by its own height.
+
+The explanation is now measured with the controls (`DarkroomLayout` in `PhotoView.swift`).
+The print's place gives up the explanation's height and the controls stay where they were.
+At the normal text size the tool row, the tool's heading, its value, its slider and Reset to Original rest on one screen, on the iPhone SE and on the iPhone 17 Pro, in light and in dark.
+No word of the explanation changed.
+
+The rule belongs to every Darkroom error, not to this one: a print that could not be rendered and a save that was refused lay out the same way.
+A Darkroom with no error showing is laid out as before.
+Four pictures of it (a Disposable and an Instant print, at the default and the largest text size) taken before and after the change on the iPhone SE in dark are the same outside the clock and the print's own picture, which is developed anew for each run.
+The one exception is 14 pixels in the glass of the Reset to Original button, 2 levels of 255 apart in three of the four.
+
+Three things follow from the rule and are worth knowing:
+
+- Under an error the print can be as small as 80 pt before the screen scrolls, half its ordinary 160 pt.
+  On the iPhone SE this explanation, six lines there, leaves the print's place 102.5 pt, so 160 pt would have left the slider below the fold.
+- While an error shows the print is smaller, and it has its size back when the error goes.
+  A Dodge/Burn stroke is kept as fractions of the picture, so it lands where it was drawn at either size.
+  Rendering still shows over the print and resizes nothing.
+- At the largest text size the explanation alone is taller than the screen, so the controls are scrolled to.
+  The slider comes fully clear of the fade and takes a drag there.
+
+This replaces a rule of PRD 2.1 slice 1 ([`prd-2-slice-1-names-card-copy.md`](prd-2-slice-1-names-card-copy.md)), under which an error left the print's size alone and moved the controls down.
+The hosted test that held that rule, `testADarkroomErrorNeitherResizesNorMovesThePrint`, is now `testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace`.
+
+The picture of the Darkroom under A stored value outside the limits, above, was taken again.
+It showed the tool row as the last thing on screen.
+
+### The crop's Size caption
+
+The caption over the crop's size slider was centered and stood further from its slider than the Horizontal and Vertical captions under it.
+It is now in the same leading stack as they are.
+This is older than this change (2026-10-02).
+
+### What holds it
+
+- `testDarkroomRestsTheSelectedToolOnScreenUnderAnExplanation` (populated harness) opens the Darkroom of a print whose stored exposure is 3.5 stops (`--recipe-outside-limits`), checks that the explanation, the tool row, the heading, the value and the slider rest between the navigation bar and the fade, above Reset to Original, and drags the slider's thumb where it rests, with nothing scrolled.
+  The print is then made again and the explanation goes.
+- `testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize` does the same at the largest text size after scrolling the slider clear of the fade.
+- The hosted test named above shows and clears an error in the layout itself: the controls keep their frame, the print keeps its top edge and gives up the error's height, an error taller than the screen leaves the print 80 pt, and clearing the error restores every frame.
+- `testDarkroomAccessibleControlsReachNonGestureEditingPaths` (populated harness) now also checks that the three crop captions start at their sliders' leading edge.
+
+Run in this round, on an iPhone SE (3rd generation) and an iPhone 17 Pro simulator on iOS 26.5, made for the round and deleted after it:
+
+| Check | Result |
+| --- | --- |
+| `testDarkroomRestsTheSelectedToolOnScreenUnderAnExplanation` on the code before the fix, iPhone SE in dark | Fails: the heading ends at 626 pt where the scroll area's clear part ends at 566 pt, and the slider lies at 682.5 to 713.5 pt on a 667 pt screen |
+| The hosted layout test on the code before the fix | Fails: "An error leaves the controls where they were", 815.0 against 754.7 pt |
+| The crop caption check on the code before the fix | Fails: Size starts at 175.5 pt, its slider at 16 pt |
+| The two explanation tests on the fixed code, on the iPhone SE in dark and in light and on the iPhone 17 Pro in light and in dark | 2 passed, 0 failures, each of the four times |
+| The Darkroom's fit tests at the default and the largest text size for the Disposable, the Instant and both 6×6 Film Stocks, `testDarkroomExposureAndDodgeBurnReachThreeStopsAndSave`, `testInstantPrintShowsItsCardAndTheDarkroomOffersNoCrop`, `testBlackAndWhite6x6PrintTakesChemicalToning`, `testEarlyPhotoDevelopmentDarkroomAndRemoval`, and the retained tests `testDarkroomAccessibleControlsReachNonGestureEditingPaths`, `testSavedDarkroomEditAndExactResetPersistAcrossRelaunch` and `testDrawnDodgeStrokeChangesPrintAndPersistsAcrossRelaunch`, iPhone SE in dark | 15 passed, 0 failures |
+| The Disposable and Instant fit tests at both sizes and `testDarkroomAccessibleControlsReachNonGestureEditingPaths`, iPhone 17 Pro in light | 5 passed, 0 failures |
+| The hosted layout test and `testAPrintOutsideTheDarkroomLimitsExplainsItselfAndTheWayBack` on the fixed code, iPhone 17 Pro | 2 passed, 0 failures |
+
+The repository has no accessibility audit of the Darkroom to run: the fit tests are its text-size checks, and `testDarkroomAccessibleControlsReachNonGestureEditingPaths` is the check of its controls.
+The rest of the screen tests, the package tests and the other hosted tests were not run again in this round; they are the check's to run.
+
+| The Darkroom under the explanation, iPhone SE in dark, before | And after |
+| --- | --- |
+| ![The tool row cut by the fade, the slider below the fold](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom-se-before.png) | ![Everything rests on one screen](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom-se-after.png) |
 
 ## Not shown here
 
