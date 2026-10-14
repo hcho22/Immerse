@@ -226,6 +226,27 @@ The screenshots in this record are from that run, except the iPhone SE and harne
   The harness's audits were then removed, since that harness's tests are functional by its own README, and its tests kept their checks of the words, the order and the commands.
 - The iPhone SE runs failed as described under [On an iPhone SE](#on-an-iphone-se): 2 of 4 tests in light and in dark, and 2 of 14 in the control run, one of them the control itself.
 
+### After the merge with main
+
+On 2026-10-14 the branch took `main` at `80d5e91`, which brought the Darkroom and export change (#28) and the Instant study and toning change (#29), in merge commit `c89b815`.
+The merge needed no hand resolution, and against `main` the branch still changes only this warning's files, the three Film screen fixes and the documents.
+`main` had changed the Film screen (the Instant's question about each new print's original), `JournalModel`, `CaptureView`, the harness and its tests, and the shared documents, so every part that holds a test of this change ran again on the merge commit, on new simulators made for the run and deleted after it: an iPhone 17 Pro on iOS 26.5 and one on iOS 26.2.
+
+| Part | Outcome on `c89b815` |
+| --- | --- |
+| packages | Passed. Script tests 52 of 52; the parts guard; the requirement map (137 intake IDs, 74 acceptance clauses, 9 invariants); every package and probe on the Mac, NativeAdapters 42 with `FreeSpaceTests`; the document package, regenerated in the merge; both unsigned builds; the Release check (set free-space reading present in Debug, absent in Release); RenderCore in the simulator 111 passed, 1 skipped; hosted `ImmerseTests` 54 of 54 on iOS 26.2, the seven `LowStorageTests` among them |
+| harness | Passed, 42 of 42, the five `LowStorageWorkflowTests` among them |
+| ui-flows | Passed, 23 of 23 in light and 20 of 20 in dark: the seven `LowStorageUITests` with their audits at the default and largest text sizes, and the two accepted findings, in both |
+| ui-text | Passed, 72 of 72, the twelve low-storage text-size tests among them |
+
+No screen test needed a rerun.
+
+Carried over without running again, because the merge changed nothing they depend on:
+
+- The contrast measurements and the two accepted findings' measurements at rest: the colors and rows they measure are unchanged by the merge, and the ui-flows run's audits passed in light and dark.
+- The iPhone SE runs and the control run: the warning, the Load Film screen and the Film screen's header and actions are unchanged by the merge.
+- The screenshots: they are of screens the merge did not change.
+
 ## What only a nearly full iPhone can show
 
 No simulator run fills a disk, and the simulator reports its Mac's volume.
