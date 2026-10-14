@@ -282,6 +282,15 @@ The warning below 2 GB free was approved on 2026-10-13 as a target.
 It is not built by the change that carries these decisions, and it is not built anywhere yet: the app has no such warning.
 Building it is tracker task CAP-15, added unchecked.
 
+Later on 2026-10-13 the warning was built, and the captain was shown where it appears, its words and that it stops nothing, with screenshots.
+He answered "low storage - approve".
+It shows above Load Film, and on the Film screen above Open Camera while the Film is open and above Develop Film once it is complete.
+Before captures it reads "This iPhone has less than 2 GB free, so a capture may not save. A capture that does not save uses no exposures or time, and saved captures are unchanged. Free space in iPhone Settings."
+Before Development it reads "This iPhone has less than 2 GB free, so Development may not finish. Saved captures are unchanged, and Development can be resumed. Free space in iPhone Settings."
+It stops nothing, and a save that cannot complete still fails with no capacity used.
+2 GB is 2,000,000,000 bytes, as iPhone Settings counts it.
+No iPhone has run it yet (`../Evidence/NativeApp/low-storage-warning-062.md`).
+
 ### DEC-13 - support and App Store wording (E)
 
 Decided 2026-10-13: the approach.

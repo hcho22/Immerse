@@ -51,7 +51,13 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         let evidence = directory.appendingPathComponent("Evidence")
         try FileManager.default.createDirectory(at: evidence, withIntermediateDirectories: true)
         inspectionCount = try FileManager.default.contentsOfDirectory(atPath: evidence.path).filter { $0.hasSuffix(".json") }.count
+        #if DEBUG
+        // `-ImmerseDebugFreeSpace <bytes>` sets the free-space reading, as in the app's own Debug build.
+        model = try JournalModel(root: directory.appendingPathComponent("App"), trialStore: FixtureTrialStore(),
+                                 freeSpace: DebugFreeSpace(defaults: .standard))
+        #else
         model = try JournalModel(root: directory.appendingPathComponent("App"), trialStore: FixtureTrialStore())
+        #endif
         guard !model.billing.configured else { throw WorkflowError.configuredBilling }
     }
 

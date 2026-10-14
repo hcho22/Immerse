@@ -33,6 +33,16 @@ extension XCTestCase {
         }
     }
 
+    /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
+    /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
+    /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
+    /// navigation bar, where the audit flags them too.
+    func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch.frame
+        scrollUp(app, until: element)
+        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
+    }
+
     /// Taps Back on the pushed screen whose bar is titled `title`, then waits until that bar has left the tree and the
     /// `previous` screen's bar shows. The tap can return before the pop ends: one CI run (37788441803) then found the
     /// Load screen still in the tree and no Cancel button on the catalog. A dropped tap fails here rather than at the

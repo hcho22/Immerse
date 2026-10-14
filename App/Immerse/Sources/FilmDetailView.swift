@@ -54,6 +54,7 @@ struct FilmDetailView: View {
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { filmMenu(film) } }
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
+        .task { await model.storage.refresh() }
         .fullScreenCover(isPresented: $capturing) { CaptureView(filmID: filmID) }
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
@@ -106,13 +107,16 @@ struct FilmDetailView: View {
             film.camera.displayNameText.font(.system(.title2, design: .serif))
             if let stock = film.filmStock { Text("\(stock.label) Film Stock").font(.subheadline) }
             Text(film.journalState).font(.headline)
+            // The system secondary label is 3.44:1 on this screen's white ground in light mode, under the 4.5:1 bar.
             (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText)
-                .font(.subheadline.monospaced()).foregroundStyle(.secondary)
+                .font(.subheadline.monospaced()).foregroundStyle(Color.cardSecondaryText)
             if model.hasPendingSave(filmID) { ProgressView().accessibilityLabel("Finishing save") }
-            else { ProgressView(value: film.progress) }
+            // The bar draws what the line above says in words, so VoiceOver reads the line alone; as its own
+            // element the 4-point bar was reported as a control too small to tap.
+            else { ProgressView(value: film.progress).accessibilityHidden(true) }
             if let range = film.captureDateRange {
                 Text("\(range.lowerBound.formatted(date: .abbreviated, time: .omitted)) - \(range.upperBound.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.caption).foregroundStyle(.secondary)
+                    .font(.caption).foregroundStyle(Color.cardSecondaryText)
             }
         }
     }
@@ -125,14 +129,19 @@ struct FilmDetailView: View {
                 model.perform { try await model.recoverCapture(filmID) }
             }.disabled(model.initialRecoveryPending)
         } else {
+            // Before the step that needs space, Open Camera or Development, and never beside a developed Film.
+            if let step = film.stepNeedingSpace, let warning = model.storage.warning(for: step) {
+                LowStorageNotice(text: warning)
+                    .padding(12).frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(uiColor: .secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12))
+            }
             if film.completionState == .open {
                 Button("Open Camera", systemImage: "camera") { capturing = true }.primaryAction()
             }
             if film.canStartDevelopment {
                 Button("Develop Film", systemImage: "sparkles") { developing = true }.primaryAction()
             }
-            if film.developmentState == .developing ||
-                (film.camera.revealRule == .instantPerExposure && film.captures.contains { $0.revealState == .sealed }) {
+            if film.offersResumeDevelopment {
                 Button("Resume Development", systemImage: "arrow.clockwise") { model.perform { try await model.develop(filmID) } }
             }
             if film.captures.contains(where: { $0.revealState == .revealed }) {
@@ -172,7 +181,7 @@ struct FilmDetailView: View {
             ForEach(film.captures) { capture in
                 HStack {
                     Text(String(format: "%02d", capture.sequenceNumber)).font(.body.monospaced())
-                    if capture.isDiscarded { Text("Discarded").foregroundStyle(.secondary) }
+                    if capture.isDiscarded { Text("Discarded").foregroundStyle(Color.cardSecondaryText) }
                     else if case let .movieClip(seconds, _) = capture.kind {
                         Label(String(format: "%.3f sec", seconds), systemImage: capture.revealState == .sealed ? "lock" : "film")
                     }
@@ -193,7 +202,7 @@ struct FilmDetailView: View {
             VStack {
                 Image(systemName: capture.isDiscarded ? "minus" : "lock")
                 Text(capture.isDiscarded ? "Discarded" : "Sealed").font(.caption)
-            }.foregroundStyle(.secondary)
+            }.foregroundStyle(Color.frameSecondaryText)
         }.accessibilityElement(children: .combine)
     }
 

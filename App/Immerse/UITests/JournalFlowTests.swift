@@ -186,16 +186,6 @@ final class JournalFlowTests: XCTestCase {
     /// element on the audited screens at all twelve sizes.
     static let auditTypes = XCUIAccessibilityAuditType.all.subtracting(.dynamicType)
 
-    /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
-    /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
-    /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
-    /// navigation bar, where the audit flags them too.
-    private func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
-        let window = app.windows.firstMatch.frame
-        scrollUp(app, until: element)
-        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
-    }
-
     private func retainScreenshot(name: String) {
         let attachment = XCTAttachment(image: XCUIScreen.main.uprightScreenshot())
         attachment.name = name
