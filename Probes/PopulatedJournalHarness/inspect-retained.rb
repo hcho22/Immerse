@@ -47,6 +47,13 @@ histories.each do |directory|
     check(states[0].fetch('captures')[0] == states[1].fetch('captures')[0], 'First revealed print changed on second reveal')
     check(states[0].fetch('development').fetch('assignments').fetch('1') == states[1].fetch('development').fetch('assignments').fetch('1'), 'First assignment changed')
     check(states[1].fetch('film').fetch('completionState') == {'open'=>{}}, 'Instant pack completed early')
+    # The print just revealed was asked about and its original removed; the earlier print, not asked about, keeps its
+    # original and has no choice recorded.
+    check(states[1].fetch('captures')[1].fetch('originalDisposition') == {'declined'=>{}}, 'Answer about the revealed print was not recorded')
+    check(states[1].fetch('captures')[1]['sourceSHA256'].nil?, 'Declined original of the revealed print was kept')
+    check(states[1].fetch('captures')[1]['masterSHA256'], 'Revealed print lost its developed master')
+    check(states[1].fetch('captures')[0]['originalDisposition'].nil?, 'Answer reached a print that was not asked about')
+    check(states[1].fetch('captures')[0]['sourceSHA256'], 'Original of a print that was not asked about was removed')
     check(states[1] == states[2], 'Instant reopen changed durable state')
   when 'developed-photo'
     original = states[0].fetch('captures')[0]

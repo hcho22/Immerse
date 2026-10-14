@@ -188,6 +188,20 @@ final class JournalModel {
         }
     }
 
+    /// The revealed prints of an Instant Film; empty for every other Film.
+    func revealedInstantPrints(_ id: UUID) -> Set<Int> {
+        guard let film = film(id), film.camera.revealRule == .instantPerExposure else { return [] }
+        return Set(film.captures.filter { $0.revealState == .revealed && !$0.isDiscarded }.map(\.sequenceNumber))
+    }
+
+    /// The prints among `prints` whose original the Instant still has to ask about: revealed, kept and with no choice
+    /// recorded. A sealed print is never among them, so no choice reaches a frame that is not revealed yet.
+    func printsAwaitingOriginalChoice(_ id: UUID, among prints: Set<Int>) -> [Int] {
+        revealedInstantPrints(id).intersection(prints).sorted().filter {
+            (try? repository.originalDisposition(filmID: id, sequenceNumber: $0) == nil) == true
+        }
+    }
+
     func selectSoundtrack(_ id: UUID, assetID: String?) async throws {
         guard let mediaCatalog, !busyFilms.contains(id), !hiddenFilms.contains(id) else {
             throw JournalError.operationInProgress
@@ -229,6 +243,8 @@ final class JournalModel {
         let coordinator = PhotoExportCoordinator(authorizer: PhotoKitAuthorizer(), writer: PhotoKitWriter(),
                                                 promptPolicy: .requestAtCaptureStart)
         try await processor.export(filmID: id, sequences: sequences, originals: originals, coordinator: coordinator)
+        // The Journal alert cannot appear over the camera, and would otherwise wait until the camera closes.
+        guard !capture.presented else { return }
         alert = JournalAlert(title: "Saved to Photos", message: originals ? "The selected originals were saved." : "The revealed developed result was saved.")
     }
 }

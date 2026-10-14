@@ -30,13 +30,13 @@ struct DevelopedTreatment {
         case .one, .two:
             self.init(look: .legacy(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
                       sceneWhiteBalance: nil)
-        case .three:
-            self.init(FilmLook.treatment(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
-                      sceneWhiteBalance: sceneWhiteBalance)
+        case .three, .four:
+            self.init(FilmLook.treatment(version: version, camera: camera, filmStock: filmStock), seed: seed,
+                      flashFired: flashFired, sceneWhiteBalance: sceneWhiteBalance)
         }
     }
 
-    /// A version 3 treatment as it stands, which tests use to look at one effect at a time.
+    /// A per-Camera treatment as it stands, which tests use to look at one effect at a time.
     init(_ treatment: FilmLook.Treatment, seed: UInt64, flashFired: Bool = false, sceneWhiteBalance: SceneWhiteBalance? = nil) {
         let flash = flashFired ? treatment.flash : nil
         self.init(look: .perCamera(treatment, cube: Self.cube(treatment.emulsion, extraContrast: flash?.contrast ?? 0)),
@@ -61,7 +61,7 @@ struct DevelopedTreatment {
         }
     }
 
-    // MARK: - Version 3
+    // MARK: - Versions 3 and 4
 
     private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) throws -> CIImage {
         // A negative emulsion develops from the scene's light, through passes of its own (`SceneDevelopment.swift`).

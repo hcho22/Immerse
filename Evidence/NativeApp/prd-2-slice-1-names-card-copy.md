@@ -78,6 +78,8 @@ The harness shots are on an iPhone SE (3rd generation), the smallest supported i
   With the scroll view reaching under the bar, they failed 12 times: Dodge point, Undo last stroke and a slider at the default size, and a slider at the largest size, for each Camera.
   Only the tool row, the tool's title and its controls are measured (`DarkroomLayout` in `PhotoView.swift`): rendering shows over the print and an error between the print and the controls, so neither resizes the print or rescales a Dodge/Burn stroke.
   `testADarkroomErrorNeitherResizesNorMovesThePrint` (`JournalIntegrationTests`) hosts the layout, shows and clears an error, and checks that the print keeps its frame while only the controls move; with the error back among the measured controls it fails, the print shrinking from 610.7 to 550.3 pt.
+  Changed on 2026-10-13: an error is measured with the controls again and takes its height from the print, so the selected tool stays on screen under it, and the test is now `testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace` ([`darkroom-export-decisions-060.md`](darkroom-export-decisions-060.md), After testing).
+  Rendering still shows over the print and resizes nothing.
 - **6×6 spelling.**
   The display name and short name use the multiplication sign, and VoiceOver reads "6×6" as "6 by 6" (`SpokenText` in `FilmPresentation.swift`) in both names and in a shown Film title, such as the suggested "6×6 - Roll #01", in the Journal row and the Film screen's title.
   Shown text keeps "6×6" as its accessibility label and carries a "6 by 6" pronunciation: a "6 by 6" label, longer than the "6×6" drawn in the same frame, failed the clipped-text audit of the catalog at the largest size on CI (run 37788441803).

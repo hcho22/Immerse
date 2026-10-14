@@ -29,7 +29,6 @@ public enum PersistenceError: Error, Equatable {
     case notMovieFilm
     case movieNotDeveloped
     case movieNotPlayable
-    case soundtrackSelectionLocked
     case soundtrackChanged
     case soundtrackUnavailable
     case assembledMoviePlanMismatch(expected: [Int], actual: [Int])
@@ -317,17 +316,15 @@ public final class FilmRepository {
         return audio
     }
 
-    public func selectMovieSoundtrack(
-        filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?,
-        reselectionPolicy: SoundtrackReselectionPolicy
-    ) throws {
+    /// Records the Movie's soundtrack choice, which may replace an earlier one (DEC-11), and retires the assembled
+    /// Movie so the next assembly uses it. Developed Clips are not touched.
+    public func selectMovieSoundtrack(filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?) throws {
         let data = try asset?.data()
         try database.withTransaction {
             let film = try film(id: filmID)
             guard film.canPlaybackDevelopedMovie else { throw PersistenceError.movieNotPlayable }
             let current = try movieAudioSelection(filmID: filmID)
             if let current, current.asset == asset?.metadata { return }
-            guard current == nil || reselectionPolicy == .allowed else { throw PersistenceError.soundtrackSelectionLocked }
             if let asset, let data {
                 guard asset.metadata.purpose == .instrumental, asset.metadata.kind == .audio,
                       asset.metadata.cameraIDs.contains(film.camera.id), asset.metadata.rights.permitsMovieExport,

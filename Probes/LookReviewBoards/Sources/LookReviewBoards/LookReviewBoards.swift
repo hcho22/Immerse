@@ -11,7 +11,10 @@ import UniformTypeIdentifiers
 /// develops each photo scene with `NativePhotoRenderer.develop`, and every Movie Camera and Film Stock develops each
 /// scene as a Developed Clip with `NativeMovieRenderer.developClip`. Nothing here sets a look; it only shows one.
 ///
-/// Usage: `LookReviewBoards <scenes.json> <new output directory>`. Scene paths are relative to the JSON file.
+/// Usage: `LookReviewBoards <scenes.json> <new output directory> [--version=<treatment version>] [camera ...]`. Scene
+/// paths are relative to the JSON file. The file may also name packs of Instant prints and the scenes to print with
+/// chemical toning. `--version` develops an earlier treatment version a Film can still carry, in place of today's,
+/// to set beside it on a board.
 @main struct LookReviewBoards {
     struct Scenes: Decodable {
         struct Photo: Decodable {
@@ -30,12 +33,29 @@ import UniformTypeIdentifiers
             let light: String?
         }
 
+        /// One Instant Film's prints: the photo scene each exposure is of, in order. Each print develops with the seed
+        /// Development assigns that exposure of a Film with this identifier, so the pack shows the print-to-print
+        /// variation as a Film in the app gets it.
+        struct InstantPack: Decodable {
+            let id: String
+            let film: UUID
+            let scenes: [String]
+        }
+
+        /// Black-and-white 6×6 prints to make in the Darkroom with each toner at each amount.
+        struct Toning: Decodable {
+            let scenes: [String]
+            let amounts: [Double]
+        }
+
         let photos: [Photo]
         let movies: [Movie]
+        let instantPacks: [InstantPack]?
+        let toning: Toning?
     }
 
     struct Output: Encodable {
-        let treatmentVersion = NativePhotoRenderer.treatmentVersion
+        let treatmentVersion: String
         let comparedVersion = NativePhotoRenderer.lockedBeforeVersionsTreatmentVersion
         var files: [Rendered] = []
     }
@@ -48,6 +68,10 @@ import UniformTypeIdentifiers
         let path: String
         let seed: UInt64?
         let version: String?
+        var pack: String?
+        var exposure: Int?
+        var chemistry: String?
+        var amount: Double?
     }
 
     static let displayEdge: CGFloat = 1600
@@ -56,14 +80,18 @@ import UniformTypeIdentifiers
         let args = CommandLine.arguments
         guard args.count >= 3 else { throw BoardError.usage }
         // Any further arguments name the Cameras to develop, by their identifiers; none develops every Camera.
-        let only = Set(args.dropFirst(3))
+        let flag = "--version="
+        let only = Set(args.dropFirst(3).filter { !$0.hasPrefix(flag) })
+        // The version developed: today's, or an earlier one a Film can still carry.
+        let look = args.dropFirst(3).first { $0.hasPrefix(flag) }.map { String($0.dropFirst(flag.count)) } ?? NativePhotoRenderer.treatmentVersion
+        guard NativePhotoRenderer.renderableTreatmentVersions.contains(look) else { throw BoardError.usage }
         let scenesURL = URL(fileURLWithPath: args[1]), output = URL(fileURLWithPath: args[2])
         guard !FileManager.default.fileExists(atPath: output.path) else { throw BoardError.destinationExists }
         let base = scenesURL.deletingLastPathComponent()
         let scenes = try JSONDecoder().decode(Scenes.self, from: Data(contentsOf: scenesURL))
         let work = output.appendingPathComponent("work")
         try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
-        var manifest = Output()
+        var manifest = Output(treatmentVersion: look)
 
         // The sources as the board shows them.
         let sourceDirectory = output.appendingPathComponent("scenes")
@@ -93,13 +121,13 @@ import UniformTypeIdentifiers
                     let seed = UInt64(2026_1009_00 + index * 100 + sceneIndex)
                     let source = photoSources[scene.id]!
                     if camera.medium == .photo {
-                        for version in [NativePhotoRenderer.treatmentVersion, NativePhotoRenderer.lockedBeforeVersionsTreatmentVersion] {
+                        for version in [look, NativePhotoRenderer.lockedBeforeVersionsTreatmentVersion] {
                             let master = try NativePhotoRenderer.develop(source: source, camera: camera, seed: seed,
                                                                          filmStock: filmStock, treatmentVersion: version)
                             let verify = work.appendingPathComponent("verify.jpg")
                             try master.write(to: verify)
                             _ = try VerifiedMedia.photo(at: verify)
-                            let current = version == NativePhotoRenderer.treatmentVersion
+                            let current = version == look
                             let name = current ? scene.id : "\(scene.id)-v2"
                             let image = CIImage(data: master)!
                             try writeDisplay(image, to: directory.appendingPathComponent("\(name).jpg"))
@@ -115,11 +143,11 @@ import UniformTypeIdentifiers
                         if camera.id == .instant1970s {
                             for print in 1...3 {
                                 let printSeed = seed + UInt64(print) * 7919
-                                let master = try NativePhotoRenderer.develop(source: source, camera: camera, seed: printSeed)
+                                let master = try NativePhotoRenderer.develop(source: source, camera: camera, seed: printSeed,
+                                                                             treatmentVersion: look)
                                 try writeDisplay(CIImage(data: master)!, to: directory.appendingPathComponent("\(scene.id)-print-\(print).jpg"))
                                 manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: nil, scene: scene.id,
-                                    kind: "print", path: "\(folder)/\(scene.id)-print-\(print).jpg", seed: printSeed,
-                                    version: NativePhotoRenderer.treatmentVersion))
+                                    kind: "print", path: "\(folder)/\(scene.id)-print-\(print).jpg", seed: printSeed, version: look))
                             }
                         }
                     } else {
@@ -131,14 +159,14 @@ import UniformTypeIdentifiers
                         }
                         let clip = work.appendingPathComponent("\(folder)-\(scene.id).mov")
                         try await NativeMovieRenderer.developClip(source: still, destination: clip, camera: camera,
-                            filmStock: filmStock, seed: seed, orientation: .landscape)
+                            filmStock: filmStock, seed: seed, orientation: .landscape, treatmentVersion: look)
                         let frame = try await frameImage(clip, index: 9)
                         try writeDisplay(frame, to: directory.appendingPathComponent("\(scene.id).jpg"))
                         try writeCrop(frame, to: directory.appendingPathComponent("\(scene.id)-crop.jpg"))
                         manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: filmStock?.rawValue, scene: scene.id,
-                            kind: "developed", path: "\(folder)/\(scene.id).jpg", seed: seed, version: NativePhotoRenderer.treatmentVersion))
+                            kind: "developed", path: "\(folder)/\(scene.id).jpg", seed: seed, version: look))
                         manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: filmStock?.rawValue, scene: scene.id,
-                            kind: "crop", path: "\(folder)/\(scene.id)-crop.jpg", seed: seed, version: NativePhotoRenderer.treatmentVersion))
+                            kind: "crop", path: "\(folder)/\(scene.id)-crop.jpg", seed: seed, version: look))
                         let earlier = work.appendingPathComponent("\(folder)-\(scene.id)-v2.mov")
                         try await NativeMovieRenderer.developClip(source: still, destination: earlier, camera: camera,
                             filmStock: filmStock, seed: seed, orientation: .landscape,
@@ -160,18 +188,71 @@ import UniformTypeIdentifiers
                         source = tagged
                     }
                     try await NativeMovieRenderer.developClip(source: source, destination: clip,
-                        camera: camera, filmStock: filmStock, seed: seed, orientation: .landscape)
+                        camera: camera, filmStock: filmStock, seed: seed, orientation: .landscape, treatmentVersion: look)
                     _ = try await VerifiedMedia.movie(at: clip)
                     manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: filmStock?.rawValue, scene: scene.id,
-                        kind: "clip", path: "\(folder)/\(scene.id).mov", seed: seed, version: NativePhotoRenderer.treatmentVersion))
+                        kind: "clip", path: "\(folder)/\(scene.id).mov", seed: seed, version: look))
                 }
             }
         }
+        // Instant packs: each exposure of one Film, with the seed and version Development assigns it.
+        for pack in scenes.instantPacks ?? [] where only.isEmpty || only.contains(CameraID.instant1970s.rawValue) {
+            // The Camera package as a Film loaded under that version locked it.
+            let today = CameraCatalog.instant1970s
+            let camera = CameraPackage(id: today.id, displayName: today.displayName, medium: today.medium, capacity: today.capacity,
+                                       revealRule: today.revealRule, supportsBuiltInSoundtrack: today.supportsBuiltInSoundtrack,
+                                       treatmentVersion: look)
+            let directory = output.appendingPathComponent(camera.id.rawValue)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            var film = try Film(id: pack.film, camera: camera, title: "Board pack")
+            for _ in pack.scenes { _ = try film.recordSavedPhoto() }
+            var run = DevelopmentRun(film: film)
+            try run.assignMissingTreatments(for: film)
+            for (index, scene) in pack.scenes.enumerated() {
+                guard let source = photoSources[scene], let assignment = run.assignments[index + 1] else { throw BoardError.invalidSource }
+                let master = try NativePhotoRenderer.develop(source: source, camera: camera, seed: assignment.seed,
+                                                             treatmentVersion: run.treatmentVersion(of: assignment))
+                let name = "pack-\(pack.id)-\(index + 1).jpg"
+                try writeDisplay(CIImage(data: master)!, to: directory.appendingPathComponent(name))
+                manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: nil, scene: scene, kind: "pack",
+                    path: "\(camera.id.rawValue)/\(name)", seed: assignment.seed, version: run.treatmentVersion(of: assignment),
+                    pack: pack.id, exposure: index + 1))
+            }
+        }
+
+        // Chemical toning: the black-and-white 6×6 master printed in the Darkroom with each toner at each amount.
+        if let toning = scenes.toning, only.isEmpty || only.contains(CameraID.mediumFormat6x6.rawValue) {
+            let camera = CameraCatalog.mediumFormat6x6
+            let cameraIndex = CameraCatalog.all.firstIndex(of: camera)!
+            let folder = "\(camera.id.rawValue)-\(FilmStock.blackAndWhite.rawValue)"
+            let directory = output.appendingPathComponent(folder)
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            for scene in toning.scenes {
+                guard let source = photoSources[scene], let sceneIndex = scenes.photos.firstIndex(where: { $0.id == scene }) else {
+                    throw BoardError.invalidSource
+                }
+                let seed = UInt64(2026_1009_00 + cameraIndex * 100 + sceneIndex)
+                let master = try NativePhotoRenderer.develop(source: source, camera: camera, seed: seed, filmStock: .blackAndWhite,
+                                                             treatmentVersion: look)
+                for chemistry in ChemicalToning.Chemistry.allCases {
+                    for amount in toning.amounts {
+                        let recipe = DarkroomRecipe(chemicalToning: ChemicalToning(chemistry: chemistry, amount: amount))
+                        let print = try NativePhotoRenderer.print(master: master, recipe: recipe, camera: camera, process: .silverGelatin)
+                        let name = "\(scene)-\(chemistry.rawValue)-\(Int((amount * 100).rounded())).jpg"
+                        try writeDisplay(CIImage(data: print)!, to: directory.appendingPathComponent(name))
+                        manifest.files.append(Rendered(camera: camera.id.rawValue, filmStock: FilmStock.blackAndWhite.rawValue,
+                            scene: scene, kind: "toned", path: "\(folder)/\(name)", seed: seed, version: look,
+                            chemistry: chemistry.rawValue, amount: amount))
+                    }
+                }
+            }
+        }
+
         try FileManager.default.removeItem(at: work)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(manifest).write(to: output.appendingPathComponent("manifest.json"))
-        print("LOOK_BOARDS files=\(manifest.files.count) treatment=\(NativePhotoRenderer.treatmentVersion) output=\(output.path)")
+        print("LOOK_BOARDS files=\(manifest.files.count) treatment=\(look) output=\(output.path)")
     }
 
     /// A display copy, at most `displayEdge` on its long side.

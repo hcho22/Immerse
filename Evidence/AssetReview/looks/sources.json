@@ -16,7 +16,9 @@
   "local_path": "references/disposable-01.jpg",
   "notes": "Camera identified by the photographer's tags (kodakfunsaver, disposablecamera). The film is not stated; FunSaver cameras sold in the US in 2009 were loaded with Kodak 800-speed colour negative film (Max/Ultramax 800 family), so treat the stock as likely, not confirmed. Largest public Flickr size is the original scan (about 800 x 1200). Flickr title: \"My poor flash-blinded roommate.\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 793,
-  "local_height": 1183
+  "local_height": 1183,
+  "sha256": "5f1eb1d837252587f23540b38da1b49bfdc6d61bb0a8da75a26340d461cb3c79",
+  "bytes": 535436
  },
  {
   "id": "disposable-02",
@@ -35,7 +37,9 @@
   "local_path": "references/disposable-02.jpg",
   "notes": "Same roll and photographer as disposable-01 (Flickr tags camera, disposable, funsaver, kodak). Film assumed to be the FunSaver's 800-speed Kodak colour negative; not stated by the photographer. Flickr title: \"Photo's a bit faily, but whatever.\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1180,
-  "local_height": 795
+  "local_height": 795,
+  "sha256": "d61030f615b20f4f9ccebe50a6d4d4d95a39deaee910986c8d38ba1541961a7a",
+  "bytes": 452494
  },
  {
   "id": "disposable-03",
@@ -54,7 +58,9 @@
   "local_path": "references/disposable-03.jpg",
   "notes": "Same roll as disposable-02 (taken 2009-11-25). Film assumed, not stated. Flickr title: \"Das and the mirror.\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 793,
-  "local_height": 1192
+  "local_height": 1192,
+  "sha256": "2c9ea73c165bf28efc49369f88d1598e52b2d4c7a7e819734911530829dcddb9",
+  "bytes": 479859
  },
  {
   "id": "disposable-04",
@@ -73,7 +79,9 @@
   "local_path": "references/disposable-04.jpg",
   "notes": "Same roll as disposable-02/03. Film assumed, not stated. Flickr title: \"graffiti on the way to temple\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1190,
-  "local_height": 795
+  "local_height": 795,
+  "sha256": "d13060a5149e9d7dd1e985f31e9fac4fd190530999e8c467b74e8f43c7da18e2",
+  "bytes": 452226
  },
  {
   "id": "disposable-05",
@@ -92,7 +100,9 @@
   "local_path": "references/disposable-05.jpg",
   "notes": "Generic Kodak single-use camera, not a FunSaver: the photographer names it 'Kodak Flash Single Use Camera' and tags it kodak800 / 800isofilm (the non-US Kodak single-use model with 800-speed film). Included as a close stand-in because indoor FunSaver flash examples under open licences are scarce. Flickr title: \"Cameras, manga, and Garfield\". Flickr description: \"Just a casual photo taken in my bedroom. Camera used: Kodak Flash Single Use Camera. \". License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.",
   "local_width": 2048,
-  "local_height": 1358
+  "local_height": 1358,
+  "sha256": "f6c836ceee03894c100c5f9b7ffdf638534740cee91958b6b176fb4eef8b1030",
+  "bytes": 1058947
  },
  {
   "id": "disposable-06",
@@ -111,7 +121,9 @@
   "local_path": "references/disposable-06.jpg",
   "notes": "Photographer's caption: 'Kodak Flash Single Use Camera (preloaded with Kodak 800 film)'. Generic Kodak single-use, not a FunSaver. Flickr title: \"1969 Pontiac GTO\". Flickr description: \"Camera used: Kodak Flash Single Use Camera (preloaded with Kodak 800 film) Location: Olinda, Victoria, Australia. Sometimes on the weekend, there are classic cars parked outside the three pubs in my neighbourhood. Not every weekend though. In this case, I was lucky, as this and a couple other clas\". License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.",
   "local_width": 2048,
-  "local_height": 1358
+  "local_height": 1358,
+  "sha256": "478817a4b885335acb6cbcd972193790a78056df83a1ca796ad0a5d8372232af",
+  "bytes": 966748
  },
  {
   "id": "instant-01",
@@ -130,7 +142,19 @@
   "local_path": "references/instant-01.jpg",
   "notes": "Photographer states 'Polaroid SX-70 photograph'. 1976 predates Time-Zero (1980), so this is original SX-70 film. Small scan (about 600 px). Flickr title: \"Dillon's Disco, December 1976\". Flickr description: \"After the premiere of A Star Is Born (Streisand version, 1976) guests partied nearby at Dillon's Disco, 1081 Gayley Avenue, Westwood, Los Angeles CA. Today it is an El Pollo Loco restaurant. Polaroid SX-70 photograph.\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 615,
-  "local_height": 625
+  "local_height": 625,
+  "sha256": "6adf3c2ecdd97a1fa159ab84964dd179665254e1bae32b1b21da5e7a0864489f",
+  "bytes": 56332,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255758209",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "daylight",
+   "date": "1976-12-18"
+  },
+  "study_notes": "One of thirteen prints the photographer made in one evening and states are from this camera."
  },
  {
   "id": "instant-02",
@@ -147,9 +171,11 @@
   "original_width": 605,
   "original_height": 619,
   "local_path": "references/instant-02.jpg",
-  "notes": "Caption: 'Polaroid SX-70 photo'. Depicts identifiable people; internal reference use only. Small scan (about 600 px). Commons file: \"Chuck Jones (228243289).jpg\".",
+  "notes": "Caption: 'Polaroid SX-70 photo'. Depicts identifiable people; internal reference use only. Small scan (about 600 px). Commons file: \"Chuck Jones (228243289).jpg\". Checked again on 2026-10-13: the photographer's own copy of this picture on Flickr (https://www.flickr.com/photos/alan-light/49333638348/) now reads 'Polaroid SX-70 photo' and also 'Scanned from the original 35MM slide', so this file may be a copy of the print on slide film, or not an instant print at all. The study of 2026-10-13 leaves it out, and the board no longer pairs a developed scene with it.",
   "local_width": 605,
-  "local_height": 619
+  "local_height": 619,
+  "sha256": "2e55875744c3b1e3696bd48602f440ba209133afa91a843ecf372ecf2c2cddac",
+  "bytes": 66640
  },
  {
   "id": "instant-03",
@@ -168,7 +194,18 @@
   "local_path": "references/instant-03.jpg",
   "notes": "File is in Commons' Polaroid instant category and dated 1978; the square format matches SX-70 integral film, but the film type is inferred, not stated. Commons file: \"Bagheria (Pa) - Villa Lanza di Trabia.jpg\".",
   "local_width": 1298,
-  "local_height": 1379
+  "local_height": 1379,
+  "sha256": "623f8c78a5705712a2f0964383eb8c6f57e3bab2b2d5fe1e427d8ff049396390",
+  "bytes": 2173832,
+  "study": {
+   "group": "town-1978",
+   "card": false,
+   "picture": null,
+   "source_id": "commons-villa-lanza",
+   "scanned_or_posted": null,
+   "kind": "daylight"
+  },
+  "study_notes": "Dated 1978 and filed among instant photographs; film type inferred from the square picture. The same file as instant-03."
  },
  {
   "id": "instant-04",
@@ -187,7 +224,18 @@
   "local_path": "references/instant-04.jpg",
   "notes": "Uploader states it is a Polaroid photo taken 1978 (time written on the print). Square image suggests SX-70 integral film; inferred. Commons file: \"Clock Radios Room Polaroid Ifrog 1978.jpg\".",
   "local_width": 940,
-  "local_height": 958
+  "local_height": 958,
+  "sha256": "e013b64067d3c7c3a767f0404bf639a312d8e5a44a1d56c125a1f30996ef26e4",
+  "bytes": 406532,
+  "study": {
+   "group": "single",
+   "card": false,
+   "picture": null,
+   "source_id": "3118446154",
+   "scanned_or_posted": "2008-12-18",
+   "kind": "flash or indoors"
+  },
+  "study_notes": "Time and date written on the print. Strongly yellowed. The same picture as instant-04."
  },
  {
   "id": "instant-05",
@@ -206,7 +254,9 @@
   "local_path": "references/instant-05.jpg",
   "notes": "Photographer: 'Polaroid SX-70 / expired Polaroid TZ Artistic'. Use for the card layout, not for colour. Commons file: \"600 - Flickr - hnt6581.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2326
+  "local_height": 2326,
+  "sha256": "cac4b61ba278d30513dc4d189c5adc6742e1c9141789a6148553fb1df22f1960",
+  "bytes": 491768
  },
  {
   "id": "instant-06",
@@ -225,7 +275,9 @@
   "local_path": "references/instant-06.jpg",
   "notes": "Film identified by the photographer's tags (timezero, tzfilm). Time-Zero is not original 1970s SX-70 film; expired. Flickr title: \"soda\". Flickr description: \"'roid week 2015 - day 1\". License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.",
   "local_width": 1666,
-  "local_height": 2048
+  "local_height": 2048,
+  "sha256": "038c4d5b0120769948316425b8ce5e399994f11c64e6a142d6877cf1d667dee6",
+  "bytes": 404801
  },
  {
   "id": "6x6-color-01",
@@ -244,7 +296,9 @@
   "local_path": "references/6x6-color-01.jpg",
   "notes": "500px description: Portra 400, tags hasselblad / portra 400. Hasselblad model not stated. Commons file: \"Hanoi Haircut (229287633).jpeg\".",
   "local_width": 1200,
-  "local_height": 1200
+  "local_height": 1200,
+  "sha256": "ffd332d2ee914bccb910cf145c5e9255eacb75f5836b5c60de472a88595c545a",
+  "bytes": 544531
  },
  {
   "id": "6x6-color-02",
@@ -263,7 +317,9 @@
   "local_path": "references/6x6-color-02.jpg",
   "notes": "Camera Bronica SQ-A, lens Zenzanon-S 50 mm, film Kodak Portra 400 (photographer's description). Bronica is a 6x6 SLR, used because Hasselblad portrait examples are scarce. Commons file: \"What A Long A Funny Chat We Had With Those Ladies (121962271).jpeg\".",
   "local_width": 1800,
-  "local_height": 1800
+  "local_height": 1800,
+  "sha256": "b5d47f0baa8d8762c043c434ac8d9683150e365933d38f532dc37122be112dd1",
+  "bytes": 987689
  },
  {
   "id": "6x6-color-03",
@@ -282,7 +338,9 @@
   "local_path": "references/6x6-color-03.jpg",
   "notes": "Camera Rolleicord V (6x6 TLR), Schneider Xenar 75 mm, Kodak Portra 400 (photographer's description). Commons file: \"A nice and beautifull couple... (19151315240).jpg\".",
   "local_width": 1800,
-  "local_height": 1670
+  "local_height": 1670,
+  "sha256": "22515ef91c97fd78704941d52c6cb1483497cf8d1720cafc910743da9691068c",
+  "bytes": 2850423
  },
  {
   "id": "6x6-color-04",
@@ -301,7 +359,9 @@
   "local_path": "references/6x6-color-04.jpg",
   "notes": "Hasselblad 500C, Planar 80 mm f/2.8, Portra 400, developed by a Tokyo lab (photographer's description). Original is 8200 x 8200; local copy is the 1920 px Commons thumbnail. Commons file: \"White smoke from Oji Paper Tomakomai Mill chimney.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "f536aff8ecdd89f30e59d53841ce6b96dc1a36e071051ed4f559c057b442c04b",
+  "bytes": 573648
  },
  {
   "id": "6x6-color-05",
@@ -320,7 +380,9 @@
   "local_path": "references/6x6-color-05.jpg",
   "notes": "Camera Kiev 88CM (6x6), Arsat C 80 mm, Kodak Portra 400 (photographer's description). Commons file: \"The Giant Bubble Maker (165918291).jpeg\".",
   "local_width": 1800,
-  "local_height": 1800
+  "local_height": 1800,
+  "sha256": "20e771dc0b01e396d252a737cccdb5fcd2c51e4fdeb72c066fe706e0ac134eab",
+  "bytes": 826214
  },
  {
   "id": "6x6-color-06",
@@ -339,7 +401,9 @@
   "local_path": "references/6x6-color-06.jpg",
   "notes": "Rolleiflex 2.8F, Planar 80 mm, Portra 400, developed in CineStill C-41 (photographer's description). Commons file: \"Smokey Sunrise - Flickr - walnerz.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "2b123163ba9da1b49f7aa9cb0763aaa6ce488b2db45a0a2b03485a3d55faa796",
+  "bytes": 945616
  },
  {
   "id": "6x6-bw-01",
@@ -358,7 +422,9 @@
   "local_path": "references/6x6-bw-01.jpg",
   "notes": "Rolleiflex 2.8C Xenotar 80 mm, Kodak Tri-X 400 (photographer's description). 6x6 TLR. Commons file: \"Tokyo - Flickr - osamukaneko (7).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "9d12b8c115fe8e9ee4fa173524d12c6685696b1d337d0cbf7e14e5d5173cf4bc",
+  "bytes": 657626
  },
  {
   "id": "6x6-bw-02",
@@ -377,7 +443,9 @@
   "local_path": "references/6x6-bw-02.jpg",
   "notes": "Hasselblad 500 C/M, Zeiss Planar 80 mm, Tri-X 400, TMax developer (photographer's description). Commons file: \"Snow, ice and rain (50889635622).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "29ed826578e2663f8e110d82992aa8a62e8c8da2bf32a7a30c8470fc2819d9c1",
+  "bytes": 705494
  },
  {
   "id": "6x6-bw-03",
@@ -396,7 +464,9 @@
   "local_path": "references/6x6-bw-03.jpg",
   "notes": "Hasselblad 500 C/M, Zeiss 80 mm, Tri-X 400, TMax developer (photographer's description). Commons file: \"Late afternoon nap (50890661571).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "5c4f52e3e70f9f32c408f01154f6dd560358f54306d20e155a62ade88e5fcb5b",
+  "bytes": 406986
  },
  {
   "id": "6x6-bw-04",
@@ -415,7 +485,9 @@
   "local_path": "references/6x6-bw-04.jpg",
   "notes": "500px description: Tri-X 400; tags hasselblad, monochrome, film photography. Hasselblad model not stated. Commons file: \"Renovator (234127629).jpeg\".",
   "local_width": 1200,
-  "local_height": 1200
+  "local_height": 1200,
+  "sha256": "c7ca454ce857813e3db4b924dd6c96c859e81962097498a9fa91a88e2ce333af",
+  "bytes": 282911
  },
  {
   "id": "6x6-bw-05",
@@ -434,7 +506,9 @@
   "local_path": "references/6x6-bw-05.jpg",
   "notes": "Hasselblad 503CW, CFE 80 mm, Tri-X 400, HC-110 and TMax developer, Epson V600 scan (photographer's description). Commons file: \"Cerveza (6512753205).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1920
+  "local_height": 1920,
+  "sha256": "82f2a7b25b5c3ae062dd7bd64f8382d87135d26c04f90e76a302920e821a3ee1",
+  "bytes": 601853
  },
  {
   "id": "6x6-bw-06",
@@ -453,7 +527,9 @@
   "local_path": "references/6x6-bw-06.jpg",
   "notes": "500px description: Tri-X 400; tags hasselblad. Hasselblad model not stated. Commons file: \"Market Ladies (234008385).jpeg\".",
   "local_width": 1200,
-  "local_height": 1200
+  "local_height": 1200,
+  "sha256": "4bc6a8e1bdb259af6e2ce97b8d27ba7dae21bdb05e85a30edebf865d42bcd378",
+  "bytes": 344740
  },
  {
   "id": "super8-frame-01",
@@ -472,7 +548,9 @@
   "local_path": "references/super8-frame-01.jpg",
   "notes": "The description explicitly states Super 8 mm film, Kodachrome II. Camera model not stated. Depicts an identifiable person. Commons file: \"Rene lambrechts-1476822848.jpg\".",
   "local_width": 939,
-  "local_height": 705
+  "local_height": 705,
+  "sha256": "9d56bf6701b2115c7b2beac6b86ef44649540b45b888051ee035787c9fc65954",
+  "bytes": 438562
  },
  {
   "id": "16mm-color-still-01",
@@ -491,7 +569,9 @@
   "local_path": "references/16mm-color-still-01.jpg",
   "notes": "Third tier: correct emulsion (Kodak 5207, Vision3 250D) but 35 mm still format. Processing route (ECN-2 or C-41) not stated. Commons file: \"Hitchcock 250D (Kodak 5207) - 54536061532.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1300
+  "local_height": 1300,
+  "sha256": "ed8da4fc98fba7002eb765f16588f71c93698ea8f9ce48345ad539511f0913a5",
+  "bytes": 529594
  },
  {
   "id": "16mm-color-still-02",
@@ -510,7 +590,9 @@
   "local_path": "references/16mm-color-still-02.jpg",
   "notes": "Third tier: Vision3 250D shot in a 35 mm still camera (Commons category 'Photographs taken on Kodak Vision3 250D film'). Commons file: \"Ратчинский парк.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1273
+  "local_height": 1273,
+  "sha256": "207022ec67cde9b5d002aa5532d97009df3a364674fafa427ba07a80e7863f81",
+  "bytes": 855760
  },
  {
   "id": "16mm-color-still-03",
@@ -529,7 +611,9 @@
   "local_path": "references/16mm-color-still-03.jpg",
   "notes": "Third tier: Vision3 250D in a 35 mm still camera. Commons file: \"Пруссы 2021-08 продажа молока.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1273
+  "local_height": 1273,
+  "sha256": "ae791032f80000b279817b5ab8cfec623c6cabf339f932cc658d262be484aede",
+  "bytes": 613981
  },
  {
   "id": "16mm-color-still-04",
@@ -548,7 +632,9 @@
   "local_path": "references/16mm-color-still-04.jpg",
   "notes": "Third tier: Vision3 250D in a 35 mm still camera; title states Vision3 250D. Commons file: \"City of London - St Bartholomew-the-Great - At God's Altar - Vision3 250D.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1273
+  "local_height": 1273,
+  "sha256": "bef3c65d6076203731f2ca649a2b66f7b9d6b1923f3478b490f740f38c9389bf",
+  "bytes": 475401
  },
  {
   "id": "16mm-bw-still-01",
@@ -567,7 +653,9 @@
   "local_path": "references/16mm-bw-still-01.jpg",
   "notes": "Third tier: correct emulsion (Kodak Double-X 5222/250) but 35 mm still camera (Minolta 800si), pushed to EI 1600 per the photographer. Flickr title: \"Crossing the dark alley...\". Flickr description: \"Location: Rua da Ponte Nova Porto - Portugal Camera: Minolta 800si Lens: Sigma APO 70-300mm 4 - 5.6 Film: Kodak Double X 250 (Pushed at 1600)\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1200,
-  "local_height": 1800
+  "local_height": 1800,
+  "sha256": "4504fd6df6d3bd63fcb6f459691f705a4b8e3cac04456cea0a8765a427e6dbf6",
+  "bytes": 635825
  },
  {
   "id": "16mm-bw-still-02",
@@ -586,7 +674,9 @@
   "local_path": "references/16mm-bw-still-02.jpg",
   "notes": "Third tier: Double-X 5222 in a 35 mm Zorki 4K rangefinder, pushed to EI 400 per the photographer. Flickr title: \"Double shot...\". Flickr description: \"I've already shared a picture or 2 from this place but everytime I go back there I want to take another one... This one was taken with a Soviet Union era camera, a Zorki 4K, and I can tell you that it was a joy to use it, the film was also a special one, a Kodak Double X pushed at 400... love it... \". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1800,
-  "local_height": 1200
+  "local_height": 1200,
+  "sha256": "c5c9e9c5e18873d848b2421f34094bae1cfe28d9bc986d681d6982c52f427208",
+  "bytes": 961351
  },
  {
   "id": "16mm-bw-still-03",
@@ -605,7 +695,9 @@
   "local_path": "references/16mm-bw-still-03.jpg",
   "notes": "Third tier: Double-X 5222 respooled for 35 mm (Minolta Freedom Dual), per the description. Commons file: \"Former Hatchs, Belks, Burdines Department Store (9556913633).jpg\".",
   "local_width": 1544,
-  "local_height": 1024
+  "local_height": 1024,
+  "sha256": "d391c6c2cc9be90ab3c75aad12593ab6ddd05e30058702b9fd163d8063022de0",
+  "bytes": 623243
  },
  {
   "id": "halation-01",
@@ -624,7 +716,9 @@
   "local_path": "references/halation-01.jpg",
   "notes": "35 mm still, Canon Rebel 2000, CineStill 800 Tungsten. CineStill removes the remjet layer, so halation is much stronger than on normally processed Vision3 motion-picture film; use as an upper bound. Flickr title: \"Chinatown Night, Vancouver\". Flickr description: \"Shot on Canon Rebel 2000 on Canon 50mm f1:1.4 (35mm film) CINESTILL 800 TUNGSTEN\". License confirmed through Flickr oEmbed at download time. Downloaded a Flickr rendition (largest edge up to 2048 px); the original is larger.",
   "local_width": 2048,
-  "local_height": 1339
+  "local_height": 1339,
+  "sha256": "28d7fce22d1163dcddc19a387c95c35b581676349b68f2a58f226b1ad23eb3f3",
+  "bytes": 397059
  },
  {
   "id": "halation-02",
@@ -643,7 +737,9 @@
   "local_path": "references/halation-02.png",
   "notes": "Tags: cinestill800t, kodakvision3, motionpicturefilm. 35 mm still; exaggerated halation versus remjet-backed Vision3. Flickr title: \"King Döner\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1629,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "625a8e4e08033dc62b15511673b7fcf2857eceb4275e576c56ce189bb8932032",
+  "bytes": 3608881
  },
  {
   "id": "halation-03",
@@ -662,7 +758,9 @@
   "local_path": "references/halation-03.png",
   "notes": "Tags: cinestill800t, kodakvision3, doubleexposure. 35 mm still. Flickr title: \"Hampton\". License confirmed through Flickr oEmbed at download time. Downloaded the Flickr original.",
   "local_width": 1629,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "715875e06c1c6744ced1135770b3cf7553750802432de94c50d60b51c0223d78",
+  "bytes": 3674169
  },
  {
   "id": "halation-04",
@@ -681,7 +779,9 @@
   "local_path": "references/halation-04.png",
   "notes": "Diagram, not a photograph. Author: Tobias Deml / Prodigium Pictures. Commons file: \"Halation-Effect.png\".",
   "local_width": 794,
-  "local_height": 1037
+  "local_height": 1037,
+  "sha256": "8d094d5e73bfb3222cccb89e37931f64735413ca1e585ff4d98917fc9f1a4825",
+  "bytes": 34412
  },
  {
   "id": "scene-day-01",
@@ -700,7 +800,9 @@
   "local_path": "scenes/scene-day-01.jpg",
   "notes": "Phone capture; EXIF shows it was edited in Lightroom for iOS. EXIF camera: Apple iPhone 13. EXIF flash: did not fire. Commons file: \"Virginia Beach Oceanfront 2024-08-31.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2560
+  "local_height": 2560,
+  "sha256": "53b4cb032b84daf7820398099c18bd3dc929e057ae01e47cc6ebbf6ee6ad32cc",
+  "bytes": 1348820
  },
  {
   "id": "scene-day-02",
@@ -719,7 +821,9 @@
   "local_path": "scenes/scene-day-02.jpg",
   "notes": "Phone capture. EXIF camera: Apple iPhone 13. EXIF flash: did not fire. Commons file: \"Capoeira at Lake Eola Park (Orlando) May 2023 (1).JPG\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1440
+  "local_height": 1440,
+  "sha256": "2cace2bf8e0f751f28dbba53905581a718034531016ad8bcb0b5d132f3a111b3",
+  "bytes": 1057551
  },
  {
   "id": "scene-flash-01",
@@ -738,7 +842,9 @@
   "local_path": "scenes/scene-flash-01.jpg",
   "notes": "Digital compact camera with built-in flash (Flickr upload, 2008). EXIF camera: Canon PowerShot SD750. EXIF flash: fired. Commons file: \"Graduation Cheers! (2658114583).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1440
+  "local_height": 1440,
+  "sha256": "641ce5b818a97093b4d2dbf44dea44a84b86d24aef6b0ddd5c2e59c5066c624c",
+  "bytes": 526669
  },
  {
   "id": "scene-flash-02",
@@ -757,7 +863,9 @@
   "local_path": "scenes/scene-flash-02.jpg",
   "notes": "Digital compact camera with built-in flash (Flickr upload, 2006). EXIF camera: Canon PowerShot SD800 IS. EXIF flash: fired. Commons file: \"Kate at night (356377859).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2560
+  "local_height": 2560,
+  "sha256": "6764b52c763497efc9c18eead0fc0217029880fa66b42b6c05063959206b8ae6",
+  "bytes": 1211803
  },
  {
   "id": "scene-night-01",
@@ -776,7 +884,9 @@
   "local_path": "scenes/scene-night-01.jpg",
   "notes": "Phone night capture (Flickr upload). EXIF camera: Google Pixel 7. EXIF flash: did not fire. Commons file: \"13th Street Dead End (52460802838).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1919
+  "local_height": 1919,
+  "sha256": "32c6742f96ad255e8b4f9c686698299e3274353129a562269376e5e3c9b75fd8",
+  "bytes": 1048310
  },
  {
   "id": "scene-skin-01",
@@ -795,7 +905,9 @@
   "local_path": "scenes/scene-skin-01.jpg",
   "notes": "Digital camera portrait (Lightroom-processed per EXIF). EXIF camera: NIKON D800. EXIF flash: did not fire. Commons file: \"Smiling senior woman with curly hair portrait.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2877
+  "local_height": 2877,
+  "sha256": "a728d6a6741d29e2aaba59e3349a0bc85420873735346e72c308d51fd7f8de60",
+  "bytes": 755728
  },
  {
   "id": "scene-skin-02",
@@ -814,7 +926,9 @@
   "local_path": "scenes/scene-skin-02.jpg",
   "notes": "Digital camera (2010). EXIF camera: OLYMPUS IMAGING CORP. E-P1. EXIF flash: did not fire. Commons file: \"Gili Islands, Indonesian smiling, Lombok, Indonesia.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1280
+  "local_height": 1280,
+  "sha256": "1b033a930e1aa1c57729e73cf3662a2b5d3338dc5fad9aa31c1357134f0a6ecd",
+  "bytes": 475130
  },
  {
   "id": "scene-skin-03",
@@ -833,7 +947,9 @@
   "local_path": "scenes/scene-skin-03.jpg",
   "notes": "Digital camera. EXIF camera: SAMSUNG ES9/SAMSUNG ES8. EXIF flash: did not fire. Commons file: \"Two Bangladeshi smiling women (01).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1468
+  "local_height": 1468,
+  "sha256": "a87d191c55b5a63d9849c196657e9eabcd8d40b360bb26054aaeb9ed76d4b507",
+  "bytes": 683402
  },
  {
   "id": "scene-skin-04",
@@ -852,7 +968,9 @@
   "local_path": "scenes/scene-skin-04.jpg",
   "notes": "Digital camera (Sony ILCE-7, per EXIF). EXIF camera: SONY ILCE-7. EXIF flash: did not fire. Commons file: \"Yoff Boys (109381545).jpeg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1281
+  "local_height": 1281,
+  "sha256": "1cbf4a223b5aae8f8477f37b6263dbb90cbc801b525f5b794cbddabe4e5a5277",
+  "bytes": 254805
  },
  {
   "id": "scene-skin-05",
@@ -871,7 +989,9 @@
   "local_path": "scenes/scene-skin-05.jpg",
   "notes": "No EXIF on the file; 1242x2208 suggests a phone capture or phone export, not confirmed. Commons file: \"Portrait du visage principale du Dialaw Festival 2026 a Toubab Dialaw au Senegal, portant un costume traditionnel colore et representant l identite artistique et culturelle de l evenement. 02.jpg\".",
   "local_width": 1242,
-  "local_height": 2208
+  "local_height": 2208,
+  "sha256": "58e83ea5375c92e7dea8615320f98a86e7efcff733b2ffac9cc27090fe9d36d5",
+  "bytes": 617066
  },
  {
   "id": "scene-highlights-01",
@@ -890,7 +1010,9 @@
   "local_path": "scenes/scene-highlights-01.jpg",
   "notes": "Taken with iPhone 13 Pro (Commons camera category). Phone HDR has already compressed the window highlights. EXIF camera: Apple iPhone 13 Pro. EXIF flash: did not fire. Commons file: \"Castle Folly Interior, Saltram House, Plymouth.jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 1280
+  "local_height": 1280,
+  "sha256": "3541b332e68c601f903868941df7a1fdc7bfda86e2646801a471031b7c3b41d6",
+  "bytes": 684962
  },
  {
   "id": "scene-highlights-02",
@@ -909,7 +1031,9 @@
   "local_path": "scenes/scene-highlights-02.jpg",
   "notes": "Taken with iPhone 14 Pro (Commons camera category). EXIF camera: Apple iPhone 14 Pro. EXIF flash: did not fire. Commons file: \"Sunset over Kontogialos Beach in Corfu, Greece (53698254280).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2560
+  "local_height": 2560,
+  "sha256": "98ee534058b58c6920b2ae6daebff41803d7f52ec01ddfe4527b20b590f1ebec",
+  "bytes": 545711
  },
  {
   "id": "scene-highlights-03",
@@ -928,7 +1052,9 @@
   "local_path": "scenes/scene-highlights-03.jpg",
   "notes": "Taken with iPhone 15 Pro (Commons camera category). Advertising imagery appears incidentally. EXIF camera: Apple iPhone 15 Pro. EXIF flash: did not fire. Commons file: \"Akihabara Radio Kaikan Shopping Building (53416976349).jpg\". Downloaded the 1920 px Commons thumbnail (Commons now serves fixed thumbnail widths, so 1920 is used instead of 2000).",
   "local_width": 1920,
-  "local_height": 2560
+  "local_height": 2560,
+  "sha256": "7cc8d1de263e0f9fcf839738620e92667307bc7d6d42edd3dc45b5b6045a6e16",
+  "bytes": 1501260
  },
  {
   "id": "super8-phucat-excerpt",
@@ -950,7 +1076,9 @@
   "local_width": 978,
   "local_height": 720,
   "local_duration_s": 10.01,
-  "local_frame_rate": "30000/1001"
+  "local_frame_rate": "30000/1001",
+  "sha256": "e0fb0ddc17b20c70aaca8baaf536265089b258cf05d95ffa26dc072e89871795",
+  "bytes": 6918689
  },
  {
   "id": "super8-phucat-still-01",
@@ -970,7 +1098,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:00:02. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:00:02",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "db3381bc91c6f15489bcbf5fcdd6871812332bbaad5db2365e43a2cba887a279",
+  "bytes": 40549
  },
  {
   "id": "super8-phucat-still-02",
@@ -990,7 +1120,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:01:30. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:01:30",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "db25e3c3f0ad2c86d8590ce9e4e5a882ad6546f6b65a92056cc137e683f1b5b6",
+  "bytes": 78360
  },
  {
   "id": "super8-phucat-still-03",
@@ -1010,7 +1142,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:01:40. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:01:40",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "a206938e151d06800a7fcfd0e7a3f158de0284b41c9ad9da1c6cae2a7eaa946b",
+  "bytes": 55722
  },
  {
   "id": "super8-phucat-still-04",
@@ -1030,7 +1164,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:03:20. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:03:20",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "d494e6074efbb9a5f1fa8f219d5661b7a66689705520b2b58db5a65d16115566",
+  "bytes": 51474
  },
  {
   "id": "super8-phucat-still-05",
@@ -1050,7 +1186,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:04:06. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:04:06",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "46c5a9ddefca77791e10a805faa3865c5a1e0dcf4b1607c1a80cc301f10ac9be",
+  "bytes": 52682
  },
  {
   "id": "super8-phucat-still-06",
@@ -1070,7 +1208,9 @@
   "notes": "Extracted with ffmpeg from the Commons original (1280x720 VP8) and cropped to the 978x720 picture area. Extracted with ffmpeg from the source video at 00:05:45. Source video: \"Super8 Footage of Phu Cat Air Base, Vietnam, 66-67 (Amateur Film).webm\" (1280x720, 381.7 s).",
   "source_timestamp": "00:05:45",
   "local_width": 978,
-  "local_height": 720
+  "local_height": 720,
+  "sha256": "367550346774b43d9286f7c7cb0106a0e740289c8c3cafca3660a6880ac0a80e",
+  "bytes": 44413
  },
  {
   "id": "super8-ternus1977-still-01",
@@ -1090,7 +1230,9 @@
   "notes": "Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:02:20. Source video: \"Reisevideo USA (1977) - im Original auf Super-8.webm\" (640x360, 1506.2 s).",
   "source_timestamp": "00:02:20",
   "local_width": 496,
-  "local_height": 360
+  "local_height": 360,
+  "sha256": "807d1f65658a75cf68f992cec70a12b2d5a6aa38a0375f8e8ad822dfd3e7ad76",
+  "bytes": 24622
  },
  {
   "id": "super8-ternus1977-still-02",
@@ -1110,7 +1252,9 @@
   "notes": "Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:05:40. Source video: \"Reisevideo USA (1977) - im Original auf Super-8.webm\" (640x360, 1506.2 s).",
   "source_timestamp": "00:05:40",
   "local_width": 496,
-  "local_height": 360
+  "local_height": 360,
+  "sha256": "23b06fcdd14138a3eb3371b0e6145f0d7ed7ea4eb56000b4d32a5ed766f551e7",
+  "bytes": 31571
  },
  {
   "id": "super8-ternus1977-still-03",
@@ -1130,7 +1274,9 @@
   "notes": "Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:11:30. Source video: \"Reisevideo USA (1977) - im Original auf Super-8.webm\" (640x360, 1506.2 s).",
   "source_timestamp": "00:11:30",
   "local_width": 496,
-  "local_height": 360
+  "local_height": 360,
+  "sha256": "0c75fa3e2d755bd12a20effe9d2b98f2a635397d2d8621e42f135eac7c2e7379",
+  "bytes": 32362
  },
  {
   "id": "super8-ternus1977-still-04",
@@ -1150,7 +1296,9 @@
   "notes": "Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:14:00. Source video: \"Reisevideo USA (1977) - im Original auf Super-8.webm\" (640x360, 1506.2 s).",
   "source_timestamp": "00:14:00",
   "local_width": 496,
-  "local_height": 360
+  "local_height": 360,
+  "sha256": "a5dc9dbcf8857175f4681b4e132c3c8295377f8b6e62c853060e4bf64f1daa18",
+  "bytes": 18896
  },
  {
   "id": "super8-ternus1977-still-05",
@@ -1170,7 +1318,9 @@
   "notes": "Film stock and camera not stated; Kodachrome 40 was the common US Super 8 stock in 1977 but this is not confirmed (some shots look like Ektachrome). Use as a secondary Super 8 colour reference. Extracted with ffmpeg from the source video at 00:16:30. Source video: \"Reisevideo USA (1977) - im Original auf Super-8.webm\" (640x360, 1506.2 s).",
   "source_timestamp": "00:16:30",
   "local_width": 496,
-  "local_height": 360
+  "local_height": 360,
+  "sha256": "e4526d3975f113a46714bb399b0e9d484b3e1b01d7e0b8480eacbbdff06ee2fd",
+  "bytes": 25773
  },
  {
   "id": "16mm-color-nature-excerpt",
@@ -1192,7 +1342,9 @@
   "local_width": 1920,
   "local_height": 1396,
   "local_duration_s": 10.0,
-  "local_frame_rate": "15075/628"
+  "local_frame_rate": "15075/628",
+  "sha256": "c1a07d7dd03e861332dbd05173d4fc20b2ba8146e66b38a001b0a884777d0b5b",
+  "bytes": 48355979
  },
  {
   "id": "16mm-color-nature-still-01",
@@ -1212,7 +1364,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:00:56. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:00:56",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "a348e628ca55b1da677fb5bf25e8551e3e2df80deb6c0129706dab703609b3f6",
+  "bytes": 774493
  },
  {
   "id": "16mm-color-nature-still-02",
@@ -1232,7 +1386,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:01:04. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:01:04",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "a46070b75f49764597a7ff49d293a0541c68492ad4d3e1185ae86cf40fa32ca9",
+  "bytes": 875385
  },
  {
   "id": "16mm-color-nature-still-03",
@@ -1252,7 +1408,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:01:20. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:01:20",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "56de50a31df4dbb79baa4dfa651bd4d12bd0afa566db8c35c0834ed6490443ca",
+  "bytes": 1524575
  },
  {
   "id": "16mm-color-nature-still-04",
@@ -1272,7 +1430,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:01:36. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:01:36",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "764bc89ad17378b59d14e2a52e5d466cddedb453c522a43799fa6fd72ab6e269",
+  "bytes": 728233
  },
  {
   "id": "16mm-color-nature-still-05",
@@ -1292,7 +1452,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:02:08. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:02:08",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "18c86f247d6822edd862862900534cf3472c9e3d108cd4ec99eb608fc1e256cf",
+  "bytes": 1003727
  },
  {
   "id": "16mm-color-nature-still-06",
@@ -1312,7 +1474,9 @@
   "notes": "Second tier: 16 mm Vision3 200T/500T, not 250D. Extracted with ffmpeg from the source video at 00:02:24. Source video: \"Kodak 16mm film (nature documentary) - Nature of Australia.webm\" (2890x2100, 209.5 s).",
   "source_timestamp": "00:02:24",
   "local_width": 2890,
-  "local_height": 2100
+  "local_height": 2100,
+  "sha256": "08db9844f61a763d4ba8c3924d07fa56caaf1648d178601631986c50ec48c0ef",
+  "bytes": 543373
  },
  {
   "id": "16mm-bw-mattebox-excerpt",
@@ -1334,7 +1498,9 @@
   "local_width": 1536,
   "local_height": 1080,
   "local_duration_s": 10.0,
-  "local_frame_rate": "24/1"
+  "local_frame_rate": "24/1",
+  "sha256": "87eb95c073820cf382f4e97ecdfac61721afd64e12372cb48301adb9c653142b",
+  "bytes": 10892741
  },
  {
   "id": "16mm-bw-mattebox-still-01",
@@ -1354,7 +1520,9 @@
   "notes": "Alternative stock: 16 mm Tri-X reversal (7266-type), not Double-X. Extracted with ffmpeg from the source video at 00:01:15. Source video: \"MONO NO AWARE - Matte Box Techniques.webm\" (2048x1440, 325.4 s). Downloaded the Commons 1080p VP9 transcode rather than the original.",
   "source_timestamp": "00:01:15",
   "local_width": 1536,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "25421185346bdf2ee2b34491cf83c654d957bd6f583fb1264fd9640ada6ee51f",
+  "bytes": 80949
  },
  {
   "id": "16mm-bw-mattebox-still-02",
@@ -1374,7 +1542,9 @@
   "notes": "Alternative stock: 16 mm Tri-X reversal (7266-type), not Double-X. Extracted with ffmpeg from the source video at 00:02:26. Source video: \"MONO NO AWARE - Matte Box Techniques.webm\" (2048x1440, 325.4 s). Downloaded the Commons 1080p VP9 transcode rather than the original.",
   "source_timestamp": "00:02:26",
   "local_width": 1536,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "dc0e38995c271f8ba0181d776790f53ac11621f205cbfe865b820915f4a22a2c",
+  "bytes": 150972
  },
  {
   "id": "16mm-bw-mattebox-still-03",
@@ -1394,7 +1564,9 @@
   "notes": "Alternative stock: 16 mm Tri-X reversal (7266-type), not Double-X. Extracted with ffmpeg from the source video at 00:03:52. Source video: \"MONO NO AWARE - Matte Box Techniques.webm\" (2048x1440, 325.4 s). Downloaded the Commons 1080p VP9 transcode rather than the original.",
   "source_timestamp": "00:03:52",
   "local_width": 1536,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "424fdbfa08558b32fa4ba3c636cabe39de9a9902973c88bf55b5cf169ce93122",
+  "bytes": 123884
  },
  {
   "id": "16mm-bw-mattebox-still-04",
@@ -1414,7 +1586,9 @@
   "notes": "Alternative stock: 16 mm Tri-X reversal (7266-type), not Double-X. Extracted with ffmpeg from the source video at 00:04:05. Source video: \"MONO NO AWARE - Matte Box Techniques.webm\" (2048x1440, 325.4 s). Downloaded the Commons 1080p VP9 transcode rather than the original.",
   "source_timestamp": "00:04:05",
   "local_width": 1536,
-  "local_height": 1080
+  "local_height": 1080,
+  "sha256": "ea27dd0d4b2b3b82abb891de5686617248c7a936af8f95d01ed316543e38b1c5",
+  "bytes": 130395
  },
  {
   "id": "scene-video-01-day-pipes-drums",
@@ -1436,7 +1610,9 @@
   "local_width": 1920,
   "local_height": 1080,
   "local_duration_s": 10.0,
-  "local_frame_rate": "30/1"
+  "local_frame_rate": "30/1",
+  "sha256": "6370bcc7a751e6aabd78f79be16ad5f341415c38a91e7f773301bbaa49a4c6f6",
+  "bytes": 27212775
  },
  {
   "id": "scene-video-02-people-dancers",
@@ -1458,7 +1634,9 @@
   "local_width": 1920,
   "local_height": 1080,
   "local_duration_s": 10.0,
-  "local_frame_rate": "30/1"
+  "local_frame_rate": "30/1",
+  "sha256": "873dd60ac632b9d427a7f85bb548e212dfb8606fbe3dbffddb982a8fd59ac032",
+  "bytes": 26173046
  },
  {
   "id": "scene-video-03-night-fairground",
@@ -1480,7 +1658,9 @@
   "local_width": 1920,
   "local_height": 1080,
   "local_duration_s": 10.0,
-  "local_frame_rate": "30/1"
+  "local_frame_rate": "30/1",
+  "sha256": "b46658b0e4db21fcab9cde13af0b1aeb9fea294a117d8a7b8dea8144aace7e8c",
+  "bytes": 12926213
  },
  {
   "id": "scene-video-04-night-times-square",
@@ -1502,7 +1682,9 @@
   "local_width": 1080,
   "local_height": 1920,
   "local_duration_s": 10.0,
-  "local_frame_rate": "30/1"
+  "local_frame_rate": "30/1",
+  "sha256": "d69db9dfd9d2d2b5589218e1e51a2b42c7182c02fe05da61a0e84078a481973c",
+  "bytes": 12261018
  },
  {
   "id": "scene-meadow-01",
@@ -1519,7 +1701,9 @@
   "original_width": 2048,
   "original_height": 1536,
   "local_path": "scenes/scene-meadow-01.jpg",
-  "notes": "Taken with iPhone 13 (Commons camera category and EXIF). EXIF flash value: 16. Downloaded the 1920 px rendition. Added 2026-10-11 for the 6x6 board."
+  "notes": "Taken with iPhone 13 (Commons camera category and EXIF). EXIF flash value: 16. Downloaded the 1920 px rendition. Added 2026-10-11 for the 6x6 board.",
+  "sha256": "d1735d80be9dd764976fc17b82d0a66250d92e661fef40e2cf8077824759598e",
+  "bytes": 993542
  },
  {
   "id": "scene-harbor-01",
@@ -1536,7 +1720,9 @@
   "original_width": 4032,
   "original_height": 3024,
   "local_path": "scenes/scene-harbor-01.jpg",
-  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board."
+  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board.",
+  "sha256": "8002fc4bc6acb588d7d95191699ea7caf2d38c2156b8563b95adc5cc232954fb",
+  "bytes": 428282
  },
  {
   "id": "scene-harbor-02",
@@ -1553,7 +1739,9 @@
   "original_width": 3954,
   "original_height": 2966,
   "local_path": "scenes/scene-harbor-02.jpg",
-  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board."
+  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board.",
+  "sha256": "7037fdd733ad03113ccff770533cf4b6f769c2f193f407412a817c135fe0987d",
+  "bytes": 554390
  },
  {
   "id": "scene-statue-01",
@@ -1570,7 +1758,9 @@
   "original_width": 3743,
   "original_height": 5629,
   "local_path": "scenes/scene-statue-01.jpg",
-  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board."
+  "notes": "Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board.",
+  "sha256": "d0493101098a8a6e8b1d5d45ccaf44484c6e44097f06d21d970733bc7eedc016",
+  "bytes": 843640
  },
  {
   "id": "scene-alley-01",
@@ -1587,6 +1777,1009 @@
   "original_width": 5211,
   "original_height": 3474,
   "local_path": "scenes/scene-alley-01.jpg",
-  "notes": "Published on Flickr (https://www.flickr.com/photos/199350666@N08/53286127506) and copied to Commons. Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board."
+  "notes": "Published on Flickr (https://www.flickr.com/photos/199350666@N08/53286127506) and copied to Commons. Downloaded the 1920 px rendition. Added 2026-10-12 for the 16mm board.",
+  "sha256": "0fcb8ceb94d92973eef5bf932be059e5cceb8f363ee88be897c82f7a189beba0",
+  "bytes": 584083
+ },
+ {
+  "id": "instant-study-01",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Joe's 4th birthday in 1973",
+  "file_page_url": "https://www.flickr.com/photos/schneertz/2977777679/",
+  "download_url": "https://live.staticflickr.com/3219/2977777679_2258f6e9b1_o.jpg",
+  "author": "Joe Futrelle",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+  "era_or_date": "1973-10-27",
+  "original_width": 1041,
+  "original_height": 1257,
+  "local_path": "references/instant-study-01.jpg",
+  "sha256": "a585c7f6a58b5fb0423ad5468aa229a6f7083d2e1b5ba19e2008ac47fd3032d8",
+  "bytes": 285033,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": null,
+   "source_id": "2977777679",
+   "scanned_or_posted": "2008-10-27",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Date written on the card. Film type inferred from the square picture and the card's shape.",
+  "local_width": 1041,
+  "local_height": 1257
+ },
+ {
+  "id": "instant-study-02",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "1975 MySpace profile photo",
+  "file_page_url": "https://www.flickr.com/photos/lizadaly/3211269790/",
+  "download_url": "https://live.staticflickr.com/3504/3211269790_6f4c3b2277_o.jpg",
+  "author": "Liza",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1975",
+  "original_width": 689,
+  "original_height": 806,
+  "local_path": "references/instant-study-02.jpg",
+  "sha256": "bfe74c2f80f4cf1d14ac96accbe8f4d96e3b41561e1439aa60b107417e9568c9",
+  "bytes": 459440,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": null,
+   "source_id": "3211269790",
+   "scanned_or_posted": "2009-01-19",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner dates it 1975, 'the day we got the Polaroid camera'. Film type inferred from the square picture and the card's shape.",
+  "local_width": 689,
+  "local_height": 806
+ },
+ {
+  "id": "instant-study-03",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Polaroid circa 1976",
+  "file_page_url": "https://www.flickr.com/photos/202086558@N04/54751609346/",
+  "download_url": "https://live.staticflickr.com/65535/54751609346_5c4ec465b4_o.jpg",
+  "author": "Peter Francis",
+  "license": "Public Domain Mark 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "era_or_date": "about 1976",
+  "original_width": 967,
+  "original_height": 967,
+  "local_path": "references/instant-study-03.jpg",
+  "sha256": "82facb5db7fe8ecc817c31b77b941f809ef0593ca2f70ab05a1b1383b87a4deb",
+  "bytes": 201526,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": null,
+   "source_id": "54751609346",
+   "scanned_or_posted": "2025-08-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner dates it about 1976. How it was copied is not stated; the same owner's other print is a camera copy.",
+  "local_width": 967,
+  "local_height": 967
+ },
+ {
+  "id": "instant-study-04",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Red and white",
+  "file_page_url": "https://www.flickr.com/photos/202086558@N04/55100488913/",
+  "download_url": "https://live.staticflickr.com/65535/55100488913_90c7b20508_o.jpg",
+  "author": "Peter Francis",
+  "license": "Public Domain Mark 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "era_or_date": "about 1976",
+  "original_width": 871,
+  "original_height": 871,
+  "local_path": "references/instant-study-04.jpg",
+  "sha256": "90ce3de941c5d91cd68dca8c7436a38b8a6291d53ba84f7a2eda5ba84cd133a2",
+  "bytes": 115860,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": [
+    0.09,
+    0.07,
+    0.93,
+    0.94
+   ],
+   "source_id": "55100488913",
+   "scanned_or_posted": "2026-02-17",
+   "kind": "daylight"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner dates it about 1976 and says it was re-photographed with a digital camera, not scanned.",
+  "local_width": 871,
+  "local_height": 871
+ },
+ {
+  "id": "instant-study-05",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "John doin nuthin",
+  "file_page_url": "https://www.flickr.com/photos/dennisharper/4220334746/",
+  "download_url": "https://live.staticflickr.com/2502/4220334746_1928f86f30_o.jpg",
+  "author": "Dennis Harper",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976 or 1977",
+  "original_width": 1122,
+  "original_height": 1104,
+  "local_path": "references/instant-study-05.jpg",
+  "sha256": "b9b7006d4eb1fe669910fb33e40427277129bbfe59d209f9fab38949301f39c6",
+  "bytes": 313239,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": [
+    0.1,
+    0.08,
+    0.9,
+    0.9
+   ],
+   "source_id": "4220334746",
+   "scanned_or_posted": "2009-12-27",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner states the camera and dates it 1976 or 1977. Fine cracks show in the picture.",
+  "local_width": 1122,
+  "local_height": 1104
+ },
+ {
+  "id": "instant-study-06",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Found Polaroid",
+  "file_page_url": "https://www.flickr.com/photos/southbeachcars/6784001032/",
+  "download_url": "https://live.staticflickr.com/7070/6784001032_96d5c803e4_o.jpg",
+  "author": "Phillip Pessar",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "about 1977",
+  "original_width": 1328,
+  "original_height": 1608,
+  "local_path": "references/instant-study-06.jpg",
+  "sha256": "02d1bbe3dad694fa02fa7be1c942761533b531a534883b2833bc4bfeff81457e",
+  "bytes": 220575,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": null,
+   "source_id": "6784001032",
+   "scanned_or_posted": "2012-02-26",
+   "kind": "daylight"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "A found print; the owner says every dated photograph in its album was from 1977. Film type inferred.",
+  "local_width": 1328,
+  "local_height": 1608
+ },
+ {
+  "id": "instant-study-07",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "A genuine Polaroid of me from 1978-02-07",
+  "file_page_url": "https://www.flickr.com/photos/rjw1/30549651397/",
+  "download_url": "https://live.staticflickr.com/1914/30549651397_c23f9ff557_o.jpg",
+  "author": "bob walker",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+  "era_or_date": "1978-02-07",
+  "original_width": 2004,
+  "original_height": 1882,
+  "local_path": "references/instant-study-07.jpg",
+  "sha256": "3cba224c38bfcf91463f0a84dbf2f79bdb90110e53c75689ed439e9cf8dbdeac",
+  "bytes": 380512,
+  "study": {
+   "group": "card",
+   "card": true,
+   "picture": null,
+   "source_id": "30549651397",
+   "scanned_or_posted": "2018-10-22",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner gives the date. Film type inferred from the square picture.",
+  "local_width": 2004,
+  "local_height": 1882
+ },
+ {
+  "id": "instant-study-08",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Rhine",
+  "file_page_url": "https://www.flickr.com/photos/ste3ve/4606488/",
+  "download_url": "https://live.staticflickr.com/3/4606488_dbb4cf5c25_o.jpg",
+  "author": "Steve",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+  "era_or_date": "1978",
+  "original_width": 1066,
+  "original_height": 1303,
+  "local_path": "references/instant-study-08.jpg",
+  "sha256": "0ba873ebe18a407a43fc7c4ed757c05ca82ced12f20a7744b83ca5e9e40ad96d",
+  "bytes": 1531434,
+  "study": {
+   "group": "single",
+   "card": false,
+   "picture": [
+    0.01,
+    0.01,
+    0.97,
+    0.975
+   ],
+   "source_id": "4606488",
+   "scanned_or_posted": "2005-02-11",
+   "kind": "daylight"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner dates it 1978. The scan is cropped to the picture with a sliver of card.",
+  "local_width": 1066,
+  "local_height": 1303
+ },
+ {
+  "id": "instant-study-09",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Robert T. Kelly",
+  "file_page_url": "https://www.flickr.com/photos/14865808@N00/40011657931/",
+  "download_url": "https://live.staticflickr.com/4611/40011657931_7db4506309_b.jpg",
+  "author": "Aaron Kelly",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "about 1975",
+  "original_width": 915,
+  "original_height": 927,
+  "local_path": "references/instant-study-09.jpg",
+  "sha256": "6b0d5e368544813b58a7d2a0f85a208b79e5e2af607451662fccc22c3ef860d6",
+  "bytes": 298487,
+  "study": {
+   "group": "single",
+   "card": false,
+   "picture": null,
+   "source_id": "40011657931",
+   "scanned_or_posted": "2018-01-31",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "Owner calls it a scan of a 42-year-old print kept in a box in a garage, taken about 1975.",
+  "local_width": 915,
+  "local_height": 927
+ },
+ {
+  "id": "instant-study-10",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "MM00002415x",
+  "file_page_url": "https://www.flickr.com/photos/keyslibraries/10059950275/",
+  "download_url": "https://live.staticflickr.com/2877/10059950275_3123501ca7_o.jpg",
+  "author": "Florida Keys History Center-Monroe County Public L",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976",
+  "original_width": 1797,
+  "original_height": 1872,
+  "local_path": "references/instant-study-10.jpg",
+  "sha256": "05b0b0a3318091751f614554c95f8abf796419eb43994676b23bb0eec128f2d0",
+  "bytes": 2184376,
+  "study": {
+   "group": "single",
+   "card": false,
+   "picture": null,
+   "source_id": "10059950275",
+   "scanned_or_posted": "2013-10-02",
+   "kind": "daylight"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "The library's caption dates it 1976 and calls it a color instant print by Joe Regan.",
+  "local_width": 1797,
+  "local_height": 1872
+ },
+ {
+  "id": "instant-study-11",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Barbra Streisand - Polaroid SX-70",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210266212/",
+  "download_url": "https://live.staticflickr.com/85/210266212_df40c3e066_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 544,
+  "original_height": 540,
+  "local_path": "references/instant-study-11.jpg",
+  "sha256": "1dcc0fa9fa836024ac0de23d3ba6f600e9b72d0ac3af7dfea5c186a636db0243",
+  "bytes": 187910,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210266212",
+   "scanned_or_posted": "2014, saved again by the photographer",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera. The published file was saved again by the photographer in 2014, so it is measured but kept out of the set statistics.",
+  "local_width": 544,
+  "local_height": 540
+ },
+ {
+  "id": "instant-study-12",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Barbra Streisand",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210266216/",
+  "download_url": "https://live.staticflickr.com/95/210266216_6aeb323967_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 521,
+  "original_height": 435,
+  "local_path": "references/instant-study-12.jpg",
+  "sha256": "e333d142e66071185f2c8ad0bcc6a1d746c0f3c274ca91bea2a59556026a23f0",
+  "bytes": 25182,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210266216",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 521,
+  "local_height": 435
+ },
+ {
+  "id": "instant-study-13",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Barbra Streisand",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210266217/",
+  "download_url": "https://live.staticflickr.com/74/210266217_594d727360_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 598,
+  "original_height": 606,
+  "local_path": "references/instant-study-13.jpg",
+  "sha256": "5a0495ac627b930656486edd1e57066e215bdd10f6ea383c0d3c8b7ce463bb56",
+  "bytes": 36953,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210266217",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 598,
+  "local_height": 606
+ },
+ {
+  "id": "instant-study-14",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Chevy Chase",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210269246/",
+  "download_url": "https://live.staticflickr.com/80/210269246_7b7cf20de0_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 625,
+  "original_height": 579,
+  "local_path": "references/instant-study-14.jpg",
+  "sha256": "44802c0eb116a1c76dfb1218b9977be3caead799f4151a30e1983b551794228c",
+  "bytes": 54404,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210269246",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 625,
+  "local_height": 579
+ },
+ {
+  "id": "instant-study-15",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Kris Kristofferson & Rita Coolidge",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210269247/",
+  "download_url": "https://live.staticflickr.com/88/210269247_a636a191fe_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 609,
+  "original_height": 619,
+  "local_path": "references/instant-study-15.jpg",
+  "sha256": "8ed9f1e6a43cd811d6975607dd74c8ccba32af22ff7a469de2c4bab474cbe9da",
+  "bytes": 49158,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210269247",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 609,
+  "local_height": 619
+ },
+ {
+  "id": "instant-study-16",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Gary Busey",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210269248/",
+  "download_url": "https://live.staticflickr.com/79/210269248_8e6107eac6_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 610,
+  "original_height": 614,
+  "local_path": "references/instant-study-16.jpg",
+  "sha256": "ca98d1f454ffb6982f7aec33a4739dc91ba3ba1b2b15cabcfc66dc03f0b734cb",
+  "bytes": 52164,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "210269248",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 610,
+  "local_height": 614
+ },
+ {
+  "id": "instant-study-17",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Lobby",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255761214/",
+  "download_url": "https://live.staticflickr.com/100/255761214_7f9fdb4ddf_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 610,
+  "original_height": 627,
+  "local_path": "references/instant-study-17.jpg",
+  "sha256": "99b4214e428126c5d6ce7beb35063da879ba04c762b117f8ac7948b8b6bc2da3",
+  "bytes": 58929,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255761214",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 610,
+  "local_height": 627
+ },
+ {
+  "id": "instant-study-18",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Tony Orlando",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255761216/",
+  "download_url": "https://live.staticflickr.com/80/255761216_4323f6427f_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 597,
+  "original_height": 622,
+  "local_path": "references/instant-study-18.jpg",
+  "sha256": "479a830d92cb53dcf7c6a3cde251831ac9b75e73cd3cec90c767b34c413bcafd",
+  "bytes": 47877,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255761216",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 597,
+  "local_height": 622
+ },
+ {
+  "id": "instant-study-19",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Bert Convy",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255761218/",
+  "download_url": "https://live.staticflickr.com/50/255761218_03fc98bafb_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 614,
+  "original_height": 622,
+  "local_path": "references/instant-study-19.jpg",
+  "sha256": "be54b7c62a6852b616e01d53ae8a8215e291c331aa3a9d8d04568d37a5923187",
+  "bytes": 56518,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255761218",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 614,
+  "local_height": 622
+ },
+ {
+  "id": "instant-study-20",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "An overexposed Barbra Streisand",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255761220/",
+  "download_url": "https://live.staticflickr.com/94/255761220_702bab53bf_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 603,
+  "original_height": 611,
+  "local_path": "references/instant-study-20.jpg",
+  "sha256": "3a0ba8e304e2708eb727a5d9e3133c81ddfb530be6c23af8ba3ddd293843755d",
+  "bytes": 56502,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255761220",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 603,
+  "local_height": 611
+ },
+ {
+  "id": "instant-study-21",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Barbra Stresiand's mother 1976",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255763558/",
+  "download_url": "https://live.staticflickr.com/87/255763558_b1ba93f1af_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 603,
+  "original_height": 625,
+  "local_path": "references/instant-study-21.jpg",
+  "sha256": "07ca35c9555742d3b9a834acaedcef8bc1c6e159bd5e89151f098cfb18e1ac76",
+  "bytes": 48704,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255763558",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 603,
+  "local_height": 625
+ },
+ {
+  "id": "instant-study-22",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Tony Orlando",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255763559/",
+  "download_url": "https://live.staticflickr.com/90/255763559_ce5e594fde_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1976-12-18",
+  "original_width": 607,
+  "original_height": 619,
+  "local_path": "references/instant-study-22.jpg",
+  "sha256": "834ba44961f0215dc41a3987dd8df7c9aacb8dc055978b87432946c1ae5421c4",
+  "bytes": 52599,
+  "study": {
+   "group": "evening-1976-12-18",
+   "card": false,
+   "picture": null,
+   "source_id": "255763559",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of thirteen prints the photographer made in one evening and states are from this camera.",
+  "local_width": 607,
+  "local_height": 619
+ },
+ {
+  "id": "instant-study-23",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Sylvester Stallone, Helen Reddy",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/2398015575/",
+  "download_url": "https://live.staticflickr.com/2092/2398015575_4c33a4e385_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1978-04-13",
+  "original_width": 916,
+  "original_height": 921,
+  "local_path": "references/instant-study-23.jpg",
+  "sha256": "be176bdbb6429b40ec3c852a28947ca5dc811950fc24230d96c543f27ae73a15",
+  "bytes": 130816,
+  "study": {
+   "group": "evening-1978-04-13",
+   "card": false,
+   "picture": null,
+   "source_id": "2398015575",
+   "scanned_or_posted": "2008-04-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out.",
+  "local_width": 916,
+  "local_height": 921
+ },
+ {
+  "id": "instant-study-24",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Sylvester Stallone",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/2398015747/",
+  "download_url": "https://live.staticflickr.com/2150/2398015747_bd13c4c719_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1978-04-13",
+  "original_width": 891,
+  "original_height": 766,
+  "local_path": "references/instant-study-24.jpg",
+  "sha256": "3cbd21593fea5bf6f70dbb5e01ab50adc38f1ad3d4dbbca569ccd5992f1c7f6e",
+  "bytes": 125926,
+  "study": {
+   "group": "evening-1978-04-13",
+   "card": false,
+   "picture": null,
+   "source_id": "2398015747",
+   "scanned_or_posted": "2008-04-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out.",
+  "local_width": 891,
+  "local_height": 766
+ },
+ {
+  "id": "instant-study-25",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Sylvester Stallone",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/2398015853/",
+  "download_url": "https://live.staticflickr.com/2132/2398015853_711c2690b0_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1978-04-13",
+  "original_width": 901,
+  "original_height": 706,
+  "local_path": "references/instant-study-25.jpg",
+  "sha256": "6f8bcf0342c43861c048e26ee55dfa7c0926f764e88b15e62e7f06a06af91a9f",
+  "bytes": 125386,
+  "study": {
+   "group": "evening-1978-04-13",
+   "card": false,
+   "picture": null,
+   "source_id": "2398015853",
+   "scanned_or_posted": "2008-04-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out.",
+  "local_width": 901,
+  "local_height": 706
+ },
+ {
+  "id": "instant-study-26",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Sylvester Stallone",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/2398845058/",
+  "download_url": "https://live.staticflickr.com/2271/2398845058_6d0a0e939b_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1978-04-13",
+  "original_width": 906,
+  "original_height": 786,
+  "local_path": "references/instant-study-26.jpg",
+  "sha256": "35c10e2148ec6ad74768d178d7b1318f4bbb25cc42022ae4a41687e25474105f",
+  "bytes": 145028,
+  "study": {
+   "group": "evening-1978-04-13",
+   "card": false,
+   "picture": null,
+   "source_id": "2398845058",
+   "scanned_or_posted": "2008-04-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out.",
+  "local_width": 906,
+  "local_height": 786
+ },
+ {
+  "id": "instant-study-27",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Buck Henry",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255836854/",
+  "download_url": "https://live.staticflickr.com/111/255836854_5281e9674b_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1978-04-13",
+  "original_width": 537,
+  "original_height": 510,
+  "local_path": "references/instant-study-27.jpg",
+  "sha256": "3b881a95d9de6129109c7962d29b8ebd4f863f7b806d3411ea8e4de9fb78379b",
+  "bytes": 30571,
+  "study": {
+   "group": "evening-1978-04-13",
+   "card": false,
+   "picture": null,
+   "source_id": "255836854",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of the prints the photographer made in one evening and states are from this camera. Two more from that evening are published only as enlarged, retouched files and are left out.",
+  "local_width": 537,
+  "local_height": 510
+ },
+ {
+  "id": "instant-study-28",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Bette Midler",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210271756/",
+  "download_url": "https://live.staticflickr.com/92/210271756_221e73b530_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 486,
+  "original_height": 494,
+  "local_path": "references/instant-study-28.jpg",
+  "sha256": "573fe41ab865db75eec41ed0d523ce92749ab2b53b28bd4be1a0a4866e550053",
+  "bytes": 21753,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "210271756",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 486,
+  "local_height": 494
+ },
+ {
+  "id": "instant-study-29",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Bette Midler",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/210271758/",
+  "download_url": "https://live.staticflickr.com/65535/210271758_6c479a38d6_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 800,
+  "original_height": 680,
+  "local_path": "references/instant-study-29.jpg",
+  "sha256": "1b20b46e9723bbde621d45bad75638443788937d02952e2d83e83733f4698497",
+  "bytes": 448550,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "210271758",
+   "scanned_or_posted": "2006-08-08",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 800,
+  "local_height": 680
+ },
+ {
+  "id": "instant-study-30",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Joel Grey",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255839821/",
+  "download_url": "https://live.staticflickr.com/112/255839821_a0c4b63a0b_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 580,
+  "original_height": 593,
+  "local_path": "references/instant-study-30.jpg",
+  "sha256": "085fb53014f2440fae317db5f99524cea5be666708ebed5d40fea310273c127b",
+  "bytes": 38574,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "255839821",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 580,
+  "local_height": 593
+ },
+ {
+  "id": "instant-study-31",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Nick Nolte",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255839830/",
+  "download_url": "https://live.staticflickr.com/85/255839830_706be5e4ea_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 580,
+  "original_height": 593,
+  "local_path": "references/instant-study-31.jpg",
+  "sha256": "d1d5f064c21b6980216fe1f961c7b5f8a1171694f54b77914e6da099a62ab3aa",
+  "bytes": 37574,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "255839830",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 580,
+  "local_height": 593
+ },
+ {
+  "id": "instant-study-32",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Raquel Welch",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255841209/",
+  "download_url": "https://live.staticflickr.com/100/255841209_e0cf0557cb_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 609,
+  "original_height": 619,
+  "local_path": "references/instant-study-32.jpg",
+  "sha256": "47dacf082927cd0e1ceda15fea2ad15df713a766a8cf0e5d061ac0ba01fe296f",
+  "bytes": 42614,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "255841209",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 609,
+  "local_height": 619
+ },
+ {
+  "id": "instant-study-33",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Peter Falk",
+  "file_page_url": "https://www.flickr.com/photos/alan-light/255841213/",
+  "download_url": "https://live.staticflickr.com/122/255841213_a9a088fe59_o.jpg",
+  "author": "Alan Light",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0/",
+  "era_or_date": "1979-11-07",
+  "original_width": 599,
+  "original_height": 590,
+  "local_path": "references/instant-study-33.jpg",
+  "sha256": "dd78fc3245a6d1853040560bcbda8801dfc106df59efbaded2cc890a01a632db",
+  "bytes": 56868,
+  "study": {
+   "group": "evening-1979-11-07",
+   "card": false,
+   "picture": null,
+   "source_id": "255841213",
+   "scanned_or_posted": "2006-09-29",
+   "kind": "flash or indoors"
+  },
+  "notes": "License read from the photo page and Flickr oEmbed at download time. Downloaded the original size.",
+  "description": "One of six prints the photographer made in one evening and states are from this camera. The film may be the later type introduced in 1979.",
+  "local_width": 599,
+  "local_height": 590
+ },
+ {
+  "id": "instant-study-34",
+  "role": "reference",
+  "category": "instant-study",
+  "title": "Villa Palagonia (Bagheria) img031",
+  "file_page_url": "https://commons.wikimedia.org/wiki/File:Villa_Palagonia_(Bagheria)_img031.jpg",
+  "download_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Villa_Palagonia_%28Bagheria%29_img031.jpg",
+  "author": "Samuele Piazza",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "era_or_date": "1978",
+  "original_width": 755,
+  "original_height": 782,
+  "local_path": "references/instant-study-34.jpg",
+  "sha256": "13087b2c12342c201b8665c17ba8ae19674e2fff20d22623aaf738f9800f3676",
+  "bytes": 212570,
+  "study": {
+   "group": "town-1978",
+   "card": false,
+   "picture": null,
+   "source_id": "commons-villa-palagonia",
+   "scanned_or_posted": null,
+   "kind": "daylight"
+  },
+  "notes": "License read from the Wikimedia Commons API at download time.",
+  "description": "Dated 1978 and filed among instant photographs; film type inferred from the square picture. Same photographer, town and year as the print before it.",
+  "local_width": 755,
+  "local_height": 782
  }
 ]

@@ -10,6 +10,16 @@ The captain chose it on 2026-10-10.
 The board showed candidate A, a fresh print within ADR 0013 with his contrast, exposure, warmth and softness notes applied, beside candidate B, the faded look his own notes described, and asked which the Instant should use.
 His answer was "faded", and he approved that look the same day.
 
+**The Instant's contrast is the one he chose after the study of preserved prints.**
+When he approved the faded look, its contrast and the size of its print-to-print variation were left provisional until preserved 1970s prints had been studied.
+The study measured 37 openly licensed scans of prints dated 1973 to 1979.
+It found them less flat than the look: their blacks deeper, their tones spread further apart and their color stronger, with the dyes of such prints known to be stable in the dark, so that what age adds to a print kept in an album is mostly a yellow stain in its whites.
+On 2026-10-13 the Instant's board showed the contrast as it was (A) beside the contrast the study supports (B): black a little deeper and, between black and white, the S-shaped curve of a print in place of a curve held flat through the middle tones.
+His answer was "B".
+The print-to-print variation stays as it was: the board showed the wider variation the study supports beside it, and asked whether his "B" also meant that or the contrast only, he answered that B means "contrast only".
+The faded color, the softness, the texture and the white card are as he approved them on 2026-10-10.
+B is a new treatment version, so an Instant Film loaded before it keeps the contrast it started with.
+
 **The 1960s Super 8 Home Movie is muted, with a glow.**
 Its Developed Treatment has lower contrast, slightly desaturated color, darker shadows, lowered whites, teal in the shadows and warmth in the highlights, a softer picture, and a warm reddish-orange glow around bright highlights.
 This is an exception to ADR 0013 and to the Super 8 wording of PRD version 2.1 section 6.2 ("Strong, rich color"), and it gives the Super 8 a highlight glow that the PRD otherwise gives only to the 16mm Cinema.
@@ -46,8 +56,8 @@ A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
-The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
+The alternative considered for the Instant and the Super 8 was each one's candidate A, for the Instant's contrast the contrast its look had before the study, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
 For the 6×6's color Film Stock it was the look tuned on its board to the five reference pictures he gave, which stayed inside ADR 0013 and which the app carried until his files arrived.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
-Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.
+Decided on 2026-10-10 and extended on 2026-10-11, 2026-10-12 and 2026-10-13.

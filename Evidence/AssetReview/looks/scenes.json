@@ -147,5 +147,54 @@
    "category": "video",
    "credit": "scene-video-03-night-fairground"
   }
- ]
+ ],
+ "instantPacks": [
+  {
+   "id": "same",
+   "film": "1F0E7A52-6B1C-4C0E-9A57-2D6C1B7E0A01",
+   "scenes": [
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01",
+    "skin-01"
+   ]
+  },
+  {
+   "id": "mixed",
+   "film": "1F0E7A52-6B1C-4C0E-9A57-2D6C1B7E0A02",
+   "scenes": [
+    "flash-01",
+    "skin-01",
+    "day-02",
+    "flash-02",
+    "highlights-01",
+    "skin-03",
+    "day-01",
+    "night-01",
+    "skin-04",
+    "meadow-01"
+   ]
+  }
+ ],
+ "toning": {
+  "scenes": [
+   "skin-01",
+   "skin-04",
+   "night-01",
+   "day-02",
+   "highlights-01"
+  ],
+  "amounts": [
+   0.25,
+   0.5,
+   0.75,
+   1.0
+  ]
+ }
 }

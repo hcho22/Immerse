@@ -3,13 +3,29 @@ import CoreImage
 import FilmDomain
 import Foundation
 
+/// The format Developed Clips and the Developed Movie are written and saved to Photos in, the captain's of 2026-10-13
+/// (DEC-04): H.264 in a `.mov`, 1920 x 1440, or 1440 x 1920 for a portrait Movie, at the Camera's frame rate, silent
+/// unless a licensed built-in soundtrack is chosen. A clip carries no color tags: shown the question that day, he
+/// chose to leave Movies as they are, so never add tags here without his word.
+public enum DevelopedMovieFormat {
+    public static let longEdge = 1920
+
+    public static func framesPerSecond(_ camera: CameraID) -> Int { camera == .super8HomeMovie ? 18 : 24 }
+
+    /// The frames a Developed Clip of `seconds` has: every whole frame that fits, and at least one.
+    public static func frameCount(seconds: Double, camera: CameraID) -> Int {
+        max(1, Int((seconds * Double(framesPerSecond(camera)) + 0.000_001).rounded(.down)))
+    }
+}
+
 public enum NativeMovieRenderer {
     /// One Developed Clip: every frame of the clip in the Camera's treatment, in the clip's assigned treatment version,
     /// for the Film's Film Stock, at the Camera's frame rate. A nil Film Stock, a Camera without one or a Film loaded
     /// before Film Stock existed, develops as color.
     public static func developClip(
         source: URL, destination: URL, camera: CameraPackage, filmStock: FilmStock? = nil, seed: UInt64,
-        orientation: MovieOrientation, longEdge: Int = 1920, treatmentVersion: String = NativePhotoRenderer.treatmentVersion
+        orientation: MovieOrientation, longEdge: Int = DevelopedMovieFormat.longEdge,
+        treatmentVersion: String = NativePhotoRenderer.treatmentVersion
     ) async throws {
         guard camera.medium == .movie else { throw NativeRenderError.wrongMedium }
         guard longEdge > 0, longEdge % 16 == 0 else { throw NativeRenderError.invalidMovie }
@@ -22,7 +38,10 @@ public enum NativeMovieRenderer {
         let duration = try await asset.load(.duration)
         let transform = try await track.load(.preferredTransform)
         guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie }
-        let fps = camera.id == .super8HomeMovie ? 18 : 24
+        let fps = DevelopedMovieFormat.framesPerSecond(camera.id)
+        // Only whole frames: the clip's last frame is held to where the recording stopped. A frame begun in the sliver
+        // of time left over would last a fraction of a frame and count against the Camera's frame rate.
+        let frameCount = DevelopedMovieFormat.frameCount(seconds: duration.seconds, camera: camera.id)
         let width = orientation == .landscape ? longEdge : longEdge * 3 / 4
         let height = orientation == .landscape ? longEdge * 3 / 4 : longEdge
         let bounds = CGRect(x: 0, y: 0, width: width, height: height)
@@ -98,13 +117,13 @@ public enum NativeMovieRenderer {
                 translationX: (bounds.width - scaled.extent.width) / 2,
                 y: (bounds.height - scaled.extent.height) / 2
             )).composited(over: CIImage(color: .black).cropped(to: bounds)).cropped(to: bounds)
-            while Double(frame) / Double(fps) <= elapsed && Double(frame) / Double(fps) < duration.seconds {
+            while Double(frame) / Double(fps) <= elapsed && frame < frameCount {
                 try await append(lastImage ?? fitted)
             }
             lastImage = fitted
         }
         guard reader.status == .completed, let lastImage else { throw NativeRenderError.invalidMovie }
-        while Double(frame) / Double(fps) < duration.seconds { try await append(lastImage) }
+        while frame < frameCount { try await append(lastImage) }
         writer.endSession(atSourceTime: duration)
         input.markAsFinished()
         await writer.finishWriting()

@@ -9,14 +9,14 @@ trap 'rm -rf "$temporary"' EXIT HUP INT TERM
 awk '
     /^## Deferred to v2/ { exit }
     /^- \[ \] [A-Z]+-[0-9][0-9] / { print $4 }
-    /^- \[x\] DEC-09 / { print $3 }
+    /^- \[x\] DEC-(09|11) / { print $3 }
 ' "$package/$package-task-tracker.md" | sort > "$temporary/tracker"
 awk -F '|' '
     { id=$2; gsub(/^ +| +$/, "", id) }
     id ~ /^[A-Z]+-[0-9][0-9]$/ { print id }
 ' "$package/$package-evidence-map.md" | sort > "$temporary/map"
 diff -u "$temporary/tracker" "$temporary/map"
-test "$(wc -l < "$temporary/map" | tr -d ' ')" = 136
+test "$(wc -l < "$temporary/map" | tr -d ' ')" = 137
 test -z "$(uniq -d "$temporary/map")"
 
 awk -F '|' '
@@ -31,4 +31,4 @@ awk -F '|' '
     inInvariants && /^\| / && $2 !~ /Invariant|---/ { print $2 }
 ' "$package/$package-acceptance-evidence.md" > "$temporary/invariants"
 test "$(wc -l < "$temporary/invariants" | tr -d ' ')" = 9
-printf '%s\n' 'Traceability: 136 intake IDs, 74 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'
+printf '%s\n' 'Traceability: 137 intake IDs, 74 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'

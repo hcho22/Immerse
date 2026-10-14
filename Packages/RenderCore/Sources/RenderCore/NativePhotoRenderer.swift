@@ -20,7 +20,18 @@ public enum NativeRenderError: Error, Equatable {
     case tableReaderUnavailable
 }
 
-/// Develops and prints photographs with each Camera's Developed Treatment. DEC-04/DEC-11 output approval remains open.
+/// The sizes developed photographs are made and saved to Photos at, the captain's of 2026-10-13 (DEC-04). They are
+/// JPEG in sRGB. An Instant print is saved exactly as it was developed, at its card's size (`InstantPrintCard`), with
+/// no resampling.
+public enum DevelopedPhotoSize {
+    /// The most pixels a Disposable's borderless 3:2 picture has.
+    public static let disposableMaximumPixels = 12_000_000
+    /// The side of a 6×6 Medium Format picture, in pixels.
+    public static let mediumFormatSide = 3072
+}
+
+/// Develops and prints photographs with each Camera's Developed Treatment, in the sizes of `DevelopedPhotoSize` and
+/// within the Darkroom's limits, `DarkroomLimits`.
 public enum NativePhotoRenderer {
     /// The treatment version Development assigns to a Film loaded today: each Camera's and Film Stock's own look
     /// (`FilmLook`). A Film records its version in the Camera package it locked at Load Film.
@@ -57,12 +68,18 @@ public enum NativePhotoRenderer {
             image = normalize(image.cropped(to: CGRect(
                 x: (image.extent.width - side) / 2, y: (image.extent.height - side) / 2, width: side, height: side
             )))
-            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : 3072)
+            let target = CGFloat(camera.id == .instant1970s ? InstantPrintCard.pictureSide : DevelopedPhotoSize.mediumFormatSide)
             image = image.transformed(by: CGAffineTransform(scaleX: target / side, y: target / side))
         } else {
             if camera.id == .disposable1990s { image = cropToThreeByTwo(image) }
-            let scale = min(1, sqrt(12_000_000 / (image.extent.width * image.extent.height)))
-            image = image.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+            let width = image.extent.width, height = image.extent.height
+            let scale = sqrt(CGFloat(DevelopedPhotoSize.disposableMaximumPixels) / (width * height))
+            // A larger capture is brought down to whole pixels, so the picture never passes the limit by the pixel a
+            // fractional size rounds out to.
+            if scale < 1 {
+                image = image.transformed(by: CGAffineTransform(scaleX: (width * scale).rounded(.down) / width,
+                                                                y: (height * scale).rounded(.down) / height))
+            }
         }
         image = try treatment.apply(to: image)
         // The card is part of the developed master, so every view and export of the print includes it.
@@ -92,7 +109,7 @@ public enum NativePhotoRenderer {
         // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture.
         let isInstant = camera.id == .instant1970s
         if isInstant { image = InstantPrintCard.picture(of: image) }
-        image = adjust(image, recipe: recipe)
+        image = adjust(image, recipe: recipe, camera: camera)
         if isInstant { image = InstantPrintCard.mount(image) }
         return try jpeg(image)
     }
@@ -108,7 +125,7 @@ public enum NativePhotoRenderer {
         }
     }
 
-    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe) -> CIImage {
+    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe, camera: CameraPackage) -> CIImage {
         var image = source.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: recipe.printExposureStops])
         if let grade = recipe.contrastGrade {
             image = image.applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 0.7 + Double(grade) * 0.15])
@@ -120,6 +137,21 @@ public enum NativePhotoRenderer {
                 "inputBVector": CIVector(x: 0, y: 0, z: 1 - color.yellow / 150, w: 0)
             ])
         }
+        // Strokes add up where they overlap, each working on the print as the last left it, and together they never
+        // take any part of it more than the limit from its print exposure. Unbounded, a few overlapping strokes at the
+        // limit run past what the renderer can hold and print as rings, not as white or black. Dodges only lighten and
+        // burns only darken, so where the dodges together and the burns together stay within the limit nothing can pass
+        // it, and the print is made without the bound, exactly as the build before made it: on Apple silicon the bound's
+        // filters change the printed bytes even where they hold nothing back.
+        let limit = DarkroomLimits.localExposureStops
+        let canPassTheLimit = [LocalMask.Kind.dodge, .burn].contains { kind in
+            recipe.dodgeBurnMasks.filter { $0.kind == kind }.reduce(0) { $0 + abs($1.exposureStops) } > limit
+        }
+        let lightest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: limit])
+        let darkest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -limit])
+        // A value contrast pushed below zero grows more negative as it is lightened, so order the two bounds by value.
+        let ceiling = lightest.applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: darkest])
+        let floor = lightest.applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: darkest])
         for mask in recipe.dodgeBurnMasks {
             let ev = (mask.kind == .dodge ? 1.0 : -1.0) * abs(mask.exposureStops)
             let adjusted = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: ev])
@@ -136,46 +168,39 @@ public enum NativePhotoRenderer {
             image = adjusted.applyingFilter("CIBlendWithMask", parameters: [
                 kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: combined
             ])
-        }
-        if let toning = recipe.chemicalToning {
-            let toned: CIImage
-            switch toning.chemistry {
-            case .sepia:
-                toned = image.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: toning.amount])
-            case .selenium:
-                // Provisional shadow-biased selenium print response, not a stock certification.
-                let tinted = image.applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: 1.04, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: 0.94, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: 1.02, w: 0)
-                ])
-                let shadows = image.applyingFilter("CIColorInvert").applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: toning.amount, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: toning.amount, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: toning.amount, w: 0)
-                ])
-                toned = tinted.applyingFilter("CIBlendWithMask", parameters: [
-                    kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: shadows
-                ])
+            if canPassTheLimit {
+                image = image.applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: ceiling])
+                    .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
             }
-            image = toned
         }
+        if let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
         if let crop = recipe.crop {
             let size = image.extent.size
-            image = normalize(image.cropped(to: CGRect(
+            var area = CGRect(
                 x: crop.x * size.width, y: (1 - crop.y - crop.height) * size.height,
                 width: crop.width * size.width, height: crop.height * size.height
-            ).integral))
+            ).integral
+            // Each side is rounded out to whole pixels on its own, which can leave one a pixel longer than the other.
+            // The 6×6 stays square: its longer side gives that pixel up at the right or the bottom, so the crop keeps
+            // the top left corner it is placed by.
+            if camera.id == .mediumFormat6x6 {
+                area = area.intersection(image.extent)
+                let side = min(area.width, area.height)
+                area = CGRect(x: area.minX, y: area.maxY - side, width: side, height: side)
+            }
+            image = normalize(image.cropped(to: area))
         }
         return image
     }
 
     public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws {
-        guard recipe.printExposureStops.isFinite, (-2...2).contains(recipe.printExposureStops),
-              recipe.contrastGrade.map({ (0...5).contains($0) }) ?? true else { throw NativeRenderError.invalidRecipe }
+        guard recipe.printExposureStops.isFinite, DarkroomLimits.printExposureStops.contains(recipe.printExposureStops),
+              recipe.contrastGrade.map({ DarkroomLimits.contrastGrades.contains($0) }) ?? true else {
+            throw NativeRenderError.invalidRecipe
+        }
         if let color = recipe.colorFiltration {
             guard process == .color,
-                  [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && (-30...30).contains($0) }) else {
+                  [color.cyan, color.magenta, color.yellow].allSatisfy({ $0.isFinite && DarkroomLimits.colorFiltration.contains($0) }) else {
                 throw NativeRenderError.invalidRecipe
             }
         }
@@ -195,7 +220,7 @@ public enum NativePhotoRenderer {
             }
         }
         guard recipe.dodgeBurnMasks.allSatisfy({ mask in
-            mask.exposureStops.isFinite && abs(mask.exposureStops) <= 1 &&
+            mask.exposureStops.isFinite && abs(mask.exposureStops) <= DarkroomLimits.localExposureStops &&
             mask.points.allSatisfy { $0.x.isFinite && $0.y.isFinite && (0...1).contains($0.x) && (0...1).contains($0.y) }
         }) else { throw NativeRenderError.invalidRecipe }
     }
@@ -231,7 +256,8 @@ public enum NativePhotoRenderer {
     }
 }
 
-/// The white card of a developed 1970s Instant print (PRD 2.1 FR-07, ADR 0013).
+/// The white card of a developed 1970s Instant print (PRD 2.1 FR-07, ADR 0013), 2282 x 2774 pixels, which is also the
+/// size the print is saved to Photos at (DEC-04, the captain, 2026-10-13).
 ///
 /// The picture stays exactly 2048 x 2048 pixels and the card is added around it, in the proportions of the Instant's
 /// Format Reference, the original 1970s integral print: a 79 mm square picture on a 88 x 107 mm card, with equal

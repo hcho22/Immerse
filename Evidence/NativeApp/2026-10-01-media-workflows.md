@@ -7,6 +7,9 @@ accessibility, production-rights and hardware gaps are not superseded by that wo
 The toning row and notes describe this checkpoint too: since PRD 2.1 slice 3 the print process
 follows the Film's Film Stock, not a process saved in the Development run, and
 black-and-white 6×6 prints offer toning (`prd-2-slice-3-film-stock.md`).
+The soundtrack row and notes describe this checkpoint as well: since 2026-10-13 a Movie's
+soundtrack can be changed any number of times and the catalog carries no reselection policy
+(`darkroom-export-decisions-060.md`).
 
 This is an unaccepted continuation of `67bf395` on `fm/immerse-v1-implementation`,
 not completion of full v1. The commit containing this report identifies the source;

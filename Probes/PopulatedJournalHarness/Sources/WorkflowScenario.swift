@@ -1,7 +1,7 @@
 import CryptoKit
 import EntitlementCore
 import FilmDomain
-import FilmPersistence
+@testable import FilmPersistence
 import Foundation
 import Observation
 import RenderCore
@@ -119,7 +119,10 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     }
                 } else {
                     let data = try Data(contentsOf: source("--photo-source") ?? fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
-                    for index in 1...2 {
+                    // `--two-sealed`, with `--instant-mixed`, leaves two sealed Instant prints where there is otherwise one,
+                    // so one Development reveals both.
+                    let captures = mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
+                    for index in 1...captures {
                         try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
                     }
@@ -131,9 +134,26 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 }
             }
             try persist(Seed(mode: mode, filmID: film.id), to: seedURL)
+            // `--reveal-at-camera` develops the Film's sealed Instant print once the camera screen is open, as the app does
+            // when a save lands there, so a test can meet the reveal and the question about its original at the camera.
+            // The simulator has no camera, so nothing is captured.
+            if arguments.contains("--reveal-at-camera") {
+                Task {
+                    while !model.capture.presented { try? await Task.sleep(for: .milliseconds(100)) }
+                    try? await Task.sleep(for: .seconds(1))
+                    model.developSavedPrint(film.id) { _ in }
+                }
+            }
         }
         scenario.model.refresh()
         try await scenario.inspect(reason: reopening ? "reopen" : "seeded")
+        // `--recipe-outside-limits` leaves print 1 a stored print exposure of 3.5 stops, which only a build with wider
+        // limits or a damaged store can: the app's own writers refuse it, so it goes to the store beside them. It is
+        // written after the inspection above, which prints every photo, so such a history is never inspected or reopened.
+        if !reopening, arguments.contains("--recipe-outside-limits"), let film = scenario.model.films.first {
+            try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1",
+                data: Data(#"{"printExposureStops":3.5,"dodgeBurnMasks":[]}"#.utf8))
+        }
         return scenario
     }
 

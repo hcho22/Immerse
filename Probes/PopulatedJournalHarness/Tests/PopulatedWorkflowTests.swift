@@ -134,6 +134,240 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "movie-player-observer-after-discard")
     }
 
+    /// DEC-11 (the captain, 2026-10-13): print exposure and Dodge/Burn each run to 3 stops either way. The sliders reach
+    /// both ends, show and speak the stops there, and a recipe at the ends saves, prints and comes back.
+    func testDarkroomExposureAndDodgeBurnReachThreeStopsAndSave() throws {
+        let app = launch(arguments: ["--developed-photo"])
+        openFilm(app)
+        app.buttons["Open photo 1"].tap()
+        app.buttons["Darkroom"].tap()
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.waitForExistence(timeout: 10))
+        XCTAssertEqual(exposure.value as? String, "0 stops")
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 10))
+        let developed = print.screenshot().pngRepresentation
+
+        adjust(exposure, toEnd: 1, showing: app.staticTexts["3.0 stops"])
+        XCTAssertTrue(app.staticTexts["3.0 stops"].waitForExistence(timeout: 5), "The slider ends at plus 3 stops")
+        XCTAssertEqual(exposure.value as? String, "plus 3 stops")
+        XCTAssertTrue(waitForChange(of: print, from: developed), "Plus 3 stops prints a lighter picture")
+        snapshot(app, "Darkroom-exposure-plus-3-stops")
+        let lightest = print.screenshot().pngRepresentation
+        adjust(exposure, toEnd: 0, showing: app.staticTexts["-3.0 stops"])
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "The slider ends at minus 3 stops")
+        XCTAssertEqual(exposure.value as? String, "minus 3 stops")
+        XCTAssertTrue(waitForChange(of: print, from: lightest), "Minus 3 stops prints a darker picture")
+        snapshot(app, "Darkroom-exposure-minus-3-stops")
+
+        app.buttons["Dodge / Burn"].tap()
+        let strength = app.sliders["Local exposure strength"]
+        XCTAssertTrue(strength.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Strength: 0.4 stops"].exists, "A stroke starts at the strength it always had")
+        XCTAssertEqual(strength.value as? String, "0.4 stops")
+        adjust(strength, toEnd: 1, showing: app.staticTexts["Strength: 3.0 stops"])
+        XCTAssertTrue(app.staticTexts["Strength: 3.0 stops"].waitForExistence(timeout: 5), "A stroke reaches 3 stops")
+        XCTAssertEqual(strength.value as? String, "3 stops")
+        let darkest = print.screenshot().pngRepresentation
+        let point = app.buttons["Dodge point"]
+        for _ in 0..<4 where !point.isHittable { app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.1, thenDragTo: app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: -6))) }
+        point.tap()
+        XCTAssertTrue(waitForChange(of: print, from: darkest), "A 3 stop dodge on a print 3 stops down shows in the print")
+        snapshot(app, "Darkroom-minus-3-stops-with-a-3-stop-dodge")
+
+        let save = app.buttons["Save"]
+        expectation(for: NSPredicate(format: "isEnabled == true"), evaluatedWith: save)
+        waitForExpectations(timeout: 20)
+        save.tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10), "A recipe at the limits saves")
+        snapshot(app, "Photo-printed-at-the-limits")
+        app.buttons["Darkroom"].tap()
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 10), "The saved recipe comes back")
+        app.buttons["Dodge / Burn"].tap()
+        XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
+        app.buttons["Cancel"].tap()
+    }
+
+    /// Moves a slider to one of its ends. XCTest's own adjustment can stop a step short of an end (it does on the strength
+    /// slider, and on an iPhone SE it once left the exposure slider at "-2.9 stops"), so where the end's value is not
+    /// showing it finishes as a finger does: it drags the thumb past the end. The drag starts on the thumb's middle,
+    /// wherever it stopped (the thumb is 38 points wide), because a drag begun beside the thumb does not move it.
+    private func adjust(_ slider: XCUIElement, toEnd end: CGFloat, showing value: XCUIElement) {
+        slider.adjust(toNormalizedSliderPosition: end)
+        guard !value.exists else { return }
+        let thumb = (19 + slider.normalizedSliderPosition * (slider.frame.width - 38)) / slider.frame.width
+        slider.coordinate(withNormalizedOffset: CGVector(dx: thumb, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: slider.coordinate(withNormalizedOffset: CGVector(dx: end == 1 ? 1.2 : -0.2, dy: 0.5)))
+    }
+
+    private func waitForChange(of element: XCUIElement, from before: Data, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if element.screenshot().pngRepresentation != before { return true }
+            Thread.sleep(forTimeInterval: 0.25)
+        }
+        return false
+    }
+
+    /// A sheet the app raises on its own, not after a tap of the test's, is still rising when its controls first exist,
+    /// and iOS ignores a tap sent while it rises. Two looks alike a quarter of a second apart mean it has come to rest.
+    private func waitUntilStill(_ app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        var last = app.screenshot().pngRepresentation
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.25)
+            let now = app.screenshot().pngRepresentation
+            if now == last { return true }
+            last = now
+        }
+        return false
+    }
+
+    /// The sheet of a print the camera has revealed, at rest with nothing over it. A simulator that has not been asked
+    /// yet shows the system's Camera request over the print, and XCTest answers it on the test's next touch, so the
+    /// print's title is touched before the screen is waited on.
+    @discardableResult
+    private func printRevealedAtTheCamera(_ sequence: Int, app: XCUIApplication, timeout: TimeInterval = 60) -> XCUIElement {
+        let print = app.navigationBars["Photo \(sequence)"]
+        XCTAssertTrue(print.waitForExistence(timeout: timeout), "Print \(sequence) is shown at the camera")
+        print.tap()
+        XCTAssertTrue(waitUntilStill(app), "The sheet of print \(sequence) has come to rest")
+        return print
+    }
+
+    /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. A print
+    /// revealed at the camera is shown first; closing it brings the question, for that print only, and the camera is
+    /// back afterwards. The earlier print, never asked about here, still waits under Originals on the Film screen.
+    func testInstantAsksAboutTheOriginalOfThePrintRevealedAtTheCamera() throws {
+        let app = launch(arguments: ["--instant-mixed", "--reveal-at-camera"])
+        openFilm(app)
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        app.buttons["Open Camera"].tap()
+        let revealed = printRevealedAtTheCamera(2, app: app)
+        snapshot(app, "Instant-print-revealed-at-the-camera")
+        revealed.buttons["Done"].tap()
+        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(asked.waitForExistence(timeout: 10), "Closing the print brings the question about its original")
+        let keep = app.buttons["Save to Photos, then remove from Immerse"]
+        let remove = app.buttons["Remove from Immerse without saving"]
+        XCTAssertTrue(keep.exists)
+        XCTAssertTrue(remove.exists)
+        let confirm = app.buttons["confirm-original-choice"]
+        XCTAssertFalse(confirm.isEnabled, "Nothing is chosen for the user")
+        snapshot(app, "Instant-original-question-at-the-camera")
+        remove.tap()
+        XCTAssertTrue(confirm.isEnabled)
+        confirm.tap()
+        XCTAssertTrue(app.buttons["capture-shutter"].waitForExistence(timeout: 20), "The camera is back after the answer")
+        XCTAssertFalse(asked.exists)
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 10))
+        // The Film screen does not ask again about a print the camera asked about.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(asked.exists)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        // Print 1 was revealed before this session and never asked about here: its choice still waits under Originals.
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
+        snapshot(app, "Instant-earlier-print-waits-under-Originals")
+        app.buttons["Cancel"].tap()
+    }
+
+    /// A print discarded from the sheet that revealed it at the camera closes with nothing after it: no earlier print is
+    /// shown in its place, and nothing is asked about a print the camera did not just reveal. Print 1, revealed before
+    /// the camera opened, still waits under Originals.
+    func testInstantPrintDiscardedAtTheCameraBringsNoEarlierPrintAndNoQuestion() throws {
+        let app = launch(arguments: ["--instant-mixed", "--reveal-at-camera"])
+        openFilm(app)
+        app.buttons["Open Camera"].tap()
+        let revealed = printRevealedAtTheCamera(2, app: app)
+        app.buttons["Discard"].tap()
+        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
+        discardConfirmation.tap()
+        XCTAssertTrue(revealed.waitForNonExistence(timeout: 20), "The discarded print closes")
+        XCTAssertFalse(app.navigationBars["Photo 1"].waitForExistence(timeout: 5), "No earlier print is shown in its place")
+        XCTAssertFalse(app.navigationBars["Originals"].exists, "No question follows a discarded print")
+        snapshot(app, "Instant-print-discarded-at-the-camera")
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Discarded"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        // The Film screen asks nothing either: print 1 was revealed before the camera opened.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
+        app.buttons["Cancel"].tap()
+    }
+
+    /// Two prints that one Development reveals together at the camera are each shown in the order they were taken, and
+    /// closing each brings the question about that print's original before the next is shown: once each, none skipped.
+    /// The Film screen asks about neither again, and the question left unanswered waits under Originals.
+    func testInstantShowsAndAsksAboutEachOfTwoPrintsRevealedTogetherAtTheCamera() throws {
+        let app = launch(arguments: ["--instant-mixed", "--two-sealed", "--reveal-at-camera"])
+        openFilm(app)
+        XCTAssertTrue(app.buttons["Open photo 1"].exists)
+        XCTAssertFalse(app.buttons["Open photo 2"].exists)
+        XCTAssertFalse(app.buttons["Open photo 3"].exists)
+        app.buttons["Open Camera"].tap()
+        let later = app.navigationBars["Photo 3"]
+        let earlier = printRevealedAtTheCamera(2, app: app)
+        XCTAssertFalse(later.exists, "The earlier print is shown first")
+        earlier.buttons["Done"].tap()
+        let askedEarlier = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(askedEarlier.waitForExistence(timeout: 10), "Closing the earlier print brings the question about its original")
+        XCTAssertFalse(later.exists, "The later print waits for the answer")
+        app.buttons["Remove from Immerse without saving"].tap()
+        app.buttons["confirm-original-choice"].tap()
+        printRevealedAtTheCamera(3, app: app, timeout: 20)
+        XCTAssertFalse(askedEarlier.exists)
+        later.buttons["Done"].tap()
+        let askedLater = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 3")).firstMatch
+        XCTAssertTrue(askedLater.waitForExistence(timeout: 10), "Closing the later print brings the question about its original")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(askedLater.waitForNonExistence(timeout: 10))
+        XCTAssertFalse(earlier.waitForExistence(timeout: 5), "No print is shown a second time")
+        XCTAssertFalse(later.exists, "No print is shown a second time")
+        XCTAssertFalse(app.navigationBars["Originals"].exists, "No print is asked about a second time")
+        app.navigationBars.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Open photo 3"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Open photo 2"].exists)
+        // The Film screen does not ask again about the prints the camera asked about.
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        // The unanswered question, and print 1's, wait under Originals.
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
+        app.buttons["Cancel"].tap()
+    }
+
+    /// A question about an original that is closed without an answer is not an answer: nothing is removed or saved, and
+    /// the choice waits under Originals on the Film screen.
+    func testInstantOriginalQuestionLeftUnansweredWaitsUnderOriginals() throws {
+        let app = launch(arguments: ["--instant-mixed"])
+        openFilm(app)
+        app.buttons["Resume Development"].tap()
+        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(asked.waitForExistence(timeout: 40), "The Film screen asks about the print it revealed")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(asked.exists, "The question is asked once")
+        app.buttons["Originals"].tap()
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original captures")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Save to Photos, then remove from Immerse"].exists)
+        XCTAssertTrue(app.buttons["Remove from Immerse without saving"].exists)
+        app.buttons["Cancel"].tap()
+    }
+
     func testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment() throws {
         let app = launch(arguments: ["--instant"])
         openFilm(app)
@@ -396,6 +630,69 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
         undo.tap()
         XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
+    }
+
+    /// A Darkroom explanation takes its height from the print, so the selected tool stays where a finger finds it. With
+    /// the explanation of a print whose stored recipe is outside the limits showing (`--recipe-outside-limits`), at the
+    /// default text size the tool row, the tool's heading, its value and its slider all rest on screen, above the fade
+    /// and the Reset to Original bar, and the slider takes a drag with nothing scrolled. At the largest size the
+    /// explanation alone is taller than the screen, so the slider is scrolled to: it comes fully clear of the fade and
+    /// takes the same drag.
+    func testDarkroomRestsTheSelectedToolOnScreenUnderAnExplanation() throws { assertDarkroomExplains(largest: false) }
+    func testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize() throws { assertDarkroomExplains(largest: true) }
+
+    private func assertDarkroomExplains(largest: Bool) {
+        var arguments = ["--developed-photo", "--recipe-outside-limits"]
+        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        let app = launch(arguments: arguments)
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        XCTAssertTrue(open.exists, "\(largest)")
+        open.tap()
+        app.buttons["Darkroom"].tap()
+        let name = "Darkroom-explanation-\(largest ? "largest" : "default")"
+        let mark = app.images["Print unavailable"]
+        XCTAssertTrue(mark.waitForExistence(timeout: 20), "\(name): the print is refused")
+        let explanation = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "outside what this version of Immerse can print")).firstMatch
+        XCTAssertTrue(explanation.exists, "\(name): the Darkroom says why")
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.exists, "\(name) slider")
+        // Let the controls' measured height settle before reading frames.
+        Thread.sleep(forTimeInterval: 1.5)
+        let bar = app.navigationBars["Darkroom"]
+        let reset = app.buttons["Reset to Original"]
+        let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Print unavailable")).firstMatch.frame
+        // The scroll area's last 12 pt fade out, so a control in full view ends above them.
+        let clear = area.maxY - 12 + 1
+        snapshot(app, name)
+        if largest {
+            // The held drags in the left margin neither coast nor move a slider.
+            for _ in 0..<16 where exposure.frame.maxY > clear {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -240)), withVelocity: .slow, thenHoldForDuration: 0.3)
+            }
+            snapshot(app, "\(name)-slider")
+        } else {
+            XCTAssertGreaterThanOrEqual(mark.frame.minY, bar.frame.maxY, "\(name): the print's place is below the navigation bar")
+            XCTAssertLessThanOrEqual(mark.frame.maxY, explanation.frame.minY, "\(name): the explanation is under the print's place")
+            let tools = ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn"].map { app.buttons[$0] }
+            for control in [explanation, app.staticTexts["Exposure"], app.staticTexts["3.5 stops"]] + tools {
+                XCTAssertTrue(control.exists, name)
+                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
+                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
+            }
+        }
+        XCTAssertGreaterThanOrEqual(exposure.frame.minY, bar.frame.maxY, "\(name): the slider is in view")
+        XCTAssertLessThanOrEqual(exposure.frame.maxY, clear, "\(name): the slider is in view, above the fade")
+        XCTAssertLessThanOrEqual(area.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
+        XCTAssertTrue(reset.isHittable, "\(name): Reset to Original is on screen")
+        // A drag sent to where the slider's thumb is, which scrolls nothing: 3.5 stops rests at the slider's end.
+        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: exposure.coordinate(withNormalizedOffset: CGVector(dx: -0.2, dy: 0.5)))
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "\(name): the slider takes the drag")
+        XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 20), "\(name): inside the limits the print is made")
+        XCTAssertFalse(explanation.exists, "\(name): the explanation goes once the print can be made")
     }
 
     /// A test whose Film is on the 16mm Cinema's or the 6×6 Medium Format's color Film Stock is skipped where Core

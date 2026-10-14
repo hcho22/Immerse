@@ -12,6 +12,10 @@ struct CaptureView: View {
     @State private var cameraDenied = false
     @State private var instantPrint: CaptureRecord?
     @State private var lastRevealedSequence: Int?
+    /// The Instant prints revealed while this camera is open that are still to be shown and asked about, in the order
+    /// they were taken. The first is the one on screen.
+    @State private var revealedPrints: [CaptureRecord] = []
+    @State private var originalAsk: OriginalAsk?
 
     var body: some View {
         @Bindable var capture = model.capture
@@ -136,15 +140,30 @@ struct CaptureView: View {
             .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in capture.updateOrientation() }
             .onChange(of: model.film(filmID)?.captures) { _, captures in
                 guard model.film(filmID)?.camera.revealRule == .instantPerExposure,
-                      let newest = captures?.last(where: { $0.revealState == .revealed }),
-                      newest.sequenceNumber != lastRevealedSequence else { return }
+                      let revealed = captures?.filter({ $0.revealState == .revealed && $0.sequenceNumber > lastRevealedSequence ?? 0 }),
+                      let newest = revealed.last else { return }
                 lastRevealedSequence = newest.sequenceNumber
                 capture.suspend()
-                instantPrint = newest
+                let showsNow = revealedPrints.isEmpty
+                revealedPrints += revealed
+                if showsNow { instantPrint = revealedPrints.first }
             }
-            .sheet(item: $instantPrint) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
+            // Each print is shown first; closing it brings the question about its original, and then the next print (DEC-11).
+            .sheet(item: $instantPrint, onDismiss: {
+                let prints = model.printsAwaitingOriginalChoice(filmID, among: Set(revealedPrints.prefix(1).map(\.sequenceNumber)))
+                if prints.isEmpty { showNextPrint() } else { originalAsk = OriginalAsk(prints: prints) }
+            }) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
+            .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
+                OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
+            }
         }
     }
+
+    private func showNextPrint() {
+        revealedPrints = Array(revealedPrints.dropFirst())
+        instantPrint = revealedPrints.first
+    }
+
     private func viewfinderLabel(position: CapturePosition, behavior: CaptureBehavior) -> String {
         if position == .front { return "Mirrored front viewfinder" }
         return behavior.reversesRearViewfinder ? "Rear viewfinder, reversed left to right" : "Rear viewfinder"

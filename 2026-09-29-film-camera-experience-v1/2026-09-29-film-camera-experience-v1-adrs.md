@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0016 and its reconciliation note added October 10, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
 **Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
@@ -18,6 +18,7 @@ PRD version 2.0 says, at its document guide, that ADRs 0013 to 0015 "are separat
 ADR 0016 was added in version 2.1 of this collection (2026-10-10).
 It records the captain's choices, made on their look review boards, of a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie (2026-10-10), and his giving the color Film Stocks of the 16mm Cinema and the 6×6 Medium Format the looks in his own files (2026-10-12, the 16mm's with its black kept at the 4 percent he first chose on 2026-10-11), as exceptions to ADR 0013.
 It was written from his answers on the boards at firstmate's instruction.
+On 2026-10-13 it gained his choice of the Instant's contrast, made on that Camera's board after the study of preserved 1970s prints.
 
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
@@ -319,7 +320,11 @@ Decided on 2026-10-05.
 
 ### Reconciliation note for ADR 0015
 
-Interpret the ADR through PRD section 6.3, which lists the five Format References, the two deliberate departures and what is not yet established. The ADR says a Camera departs from its reference only through a rule recorded in CONTEXT.md, and the domain-model snapshot (`sources/CONTEXT.md`) holds those rules. Since PRD 2.0 slice 4 every Camera's and Film Stock's developed look has been judged beside its Format Reference on the QA-16 review boards and approved by the captain, on 2026-10-10 and 2026-10-12, with his exceptions recorded in ADR 0016. The boards are specification review of software renders of digital test scenes, not hardware acceptance, and the Instant's contrast and print-to-print variation stay provisional until the study of preserved 1970s prints.
+Interpret the ADR through PRD section 6.3, which lists the five Format References, the two deliberate departures and what is not yet established.
+The ADR says a Camera departs from its reference only through a rule recorded in CONTEXT.md, and the domain-model snapshot (`sources/CONTEXT.md`) holds those rules.
+Since PRD 2.0 slice 4 every Camera's and Film Stock's developed look has been judged beside its Format Reference on the QA-16 review boards and approved by the captain, on 2026-10-10 and 2026-10-12, with his exceptions recorded in ADR 0016.
+The boards are specification review of software renders of digital test scenes, not hardware acceptance.
+On 2026-10-13, after the study of preserved 1970s prints, the captain chose the Instant's contrast, which develops as treatment version 4, and kept its print-to-print variation as it was (ADR 0016; `Evidence/NativeApp/instant-study-and-toning-061.md`).
 
 ### ADR 0016
 
@@ -336,6 +341,16 @@ This is an exception to ADR 0013 and to the Instant wording of PRD version 2.1 s
 The captain chose it on 2026-10-10.
 The board showed candidate A, a fresh print within ADR 0013 with his contrast, exposure, warmth and softness notes applied, beside candidate B, the faded look his own notes described, and asked which the Instant should use.
 His answer was "faded", and he approved that look the same day.
+
+**The Instant's contrast is the one he chose after the study of preserved prints.**
+When he approved the faded look, its contrast and the size of its print-to-print variation were left provisional until preserved 1970s prints had been studied.
+The study measured 37 openly licensed scans of prints dated 1973 to 1979.
+It found them less flat than the look: their blacks deeper, their tones spread further apart and their color stronger, with the dyes of such prints known to be stable in the dark, so that what age adds to a print kept in an album is mostly a yellow stain in its whites.
+On 2026-10-13 the Instant's board showed the contrast as it was (A) beside the contrast the study supports (B): black a little deeper and, between black and white, the S-shaped curve of a print in place of a curve held flat through the middle tones.
+His answer was "B".
+The print-to-print variation stays as it was: the board showed the wider variation the study supports beside it, and asked whether his "B" also meant that or the contrast only, he answered that B means "contrast only".
+The faded color, the softness, the texture and the white card are as he approved them on 2026-10-10.
+B is a new treatment version, so an Instant Film loaded before it keeps the contrast it started with.
 
 **The 1960s Super 8 Home Movie is muted, with a glow.**
 Its Developed Treatment has lower contrast, slightly desaturated color, darker shadows, lowered whites, teal in the shadows and warmth in the highlights, a softer picture, and a warm reddish-orange glow around bright highlights.
@@ -373,11 +388,11 @@ A Developed Treatment is assigned once and never rerolled.
 Each Instant print keeps its own slight variation in color and density and its white card, and no uneven-chemistry or spread flaws are added.
 The Super 8 keeps its 18 frames per second, fine grain, unsteady frame, brightness flicker, and dust and hair in the gate.
 
-The alternative considered for the Instant and the Super 8 was each one's candidate A, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
+The alternative considered for the Instant and the Super 8 was each one's candidate A, for the Instant's contrast the contrast its look had before the study, and for the 16mm's color Film Stock the look tuned on its board over seven rounds to the four reference pictures he gave, which the app carried until his files arrived; for its black, his files' own 1.3 percent, and the same 4 percent reached by raising his black level alone, which leaves the shadows as deep as his files have them.
 For the 6×6's color Film Stock it was the look tuned on its board to the five reference pictures he gave, which stayed inside ADR 0013 and which the app carried until his files arrived.
 The accepted costs are the ones ADR 0013 named when it rejected choosing among the looks separately for each Camera: results from the Instant and the Super 8 emerge looking decades old, which sits against developing a capture just made, and the catalog no longer follows one rule.
 
-Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.
+Decided on 2026-10-10 and extended on 2026-10-11, 2026-10-12 and 2026-10-13.
 
 ---
 
@@ -386,5 +401,6 @@ Decided on 2026-10-10 and extended on 2026-10-11 and 2026-10-12.
 Interpret the ADR with PRD sections 6.1 and 6.2, whose text is the captain's and stays as written: where this ADR and a row of their catalog tables differ on the color of the 1970s Instant or of the 1960s Super 8 Home Movie, this ADR is the later decision and applies.
 The tracker's "Captain decisions recorded in version 2.0" table records the captain's words in its 2026-10-10 rows.
 Neither Camera's Format Reference changes (ADR 0015): the original 1970s integral print is now judged as surviving prints look rather than as it performed when new, and the Super 8's reference camera and film are judged with the muted look and glow the captain chose.
-PRD section 6.3's "Not yet established" note still applies to the Instant's contrast and to the amount of its print-to-print variation: the faded look the captain chose is its current look and current contrast, and both stay provisional until the study of preserved 1970s prints.
+PRD section 6.3's "Not yet established" note on the Instant's contrast and the amount of its print-to-print variation is closed: the study of preserved 1970s prints was made, and on 2026-10-13 the captain chose the contrast it supports ("B"), while its print-to-print variation stays as it was ("contrast only") (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+The PRD's sentence is his text and stays as written; this note, the ADR and the tracker's decisions table record the choice.
 The values are in `Packages/RenderCore/Sources/RenderCore/FilmLook.swift` (`FilmLook.instant`, `FilmLook.super8` and the black of `FilmLook.cinemaColor`), and `Evidence/NativeApp/prd-2-slice-4-looks.md` records the boards and the choices.

@@ -26,7 +26,7 @@ command also runs the native UI and local StoreKit tests on dedicated simulators
 Do not use a physical-device identifier. Tests never require Apple credentials,
 real purchases, services, or a connected phone. XcodeGen is required only after
 changing project configuration; the generated project is committed for CI.
-The gate also verifies coverage of all 136 intake task IDs, 74 acceptance clauses
+The gate also verifies coverage of all 137 intake task IDs, 74 acceptance clauses
 and nine invariants. Coverage is not acceptance. UI audits include the largest
 Dynamic Type size and scroll to the title and Load Film command, and every Camera's
 Load screen at the smallest size, where the hit-region check once flagged the Film
@@ -90,12 +90,14 @@ fault/native-app gates, historical D3 migration and still-unaccepted hardware li
 ## Provisional Choices and Limits
 
 SwiftUI, raw SQLite and local package boundaries are reversible baseline defaults,
-not a newly approved DEC-03. Catalog sample rights, instrumental licenses, render
-quality/output specs, Darkroom ranges, Instant originals timing, soundtrack
-reselection, support/privacy URLs, budgets and launch approval remain open.
+not a newly approved DEC-03.
+The captain decided the Darkroom's ranges, the export sizes and formats, the Instant's question about each print's original and that a soundtrack can be changed later on 2026-10-13 (`Evidence/NativeApp/darkroom-export-decisions-060.md`).
+The same day, after a study of preserved 1970s prints, he chose the Instant's contrast, which a Film loaded since develops with as treatment version 4 (`film-look-4`), its print-to-print variation unchanged, and each toner's range, from the untoned print to a strength of 1 (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+His own sample shots, instrumental licenses, support/privacy wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
-samples and instrumentals. It is empty and its reselection policy is unresolved,
-so no synthetic sample or unlicensed music is exposed. See `Packages/MediaCatalog`
+samples and instrumentals. It is empty until he supplies his shots and a license
+allows a soundtrack inside exported Movies, so no synthetic sample or unlicensed
+music is exposed. See `Packages/MediaCatalog`
 and `Evidence/NativeApp/2026-10-01-media-workflows.md` for configuration, retained
 audio/license recovery and tests. Chemical toning is offered only on black-and-white
 6×6 prints, whose Film Stock makes their print process silver gelatin

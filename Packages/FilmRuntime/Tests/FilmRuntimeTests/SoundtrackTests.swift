@@ -65,7 +65,7 @@ final class SoundtrackTests: XCTestCase {
         let oldProof = try await VerifiedMedia.movie(at: old.url, allowsAudio: true)
         let revision = try XCTUnwrap(repository.movieAudioSelection(filmID: id)).revision
         let audio = try XCTUnwrap(repository.retainedSoundtrack(filmID: id))
-        try repository.selectMovieSoundtrack(filmID: id, asset: nil, verification: nil, reselectionPolicy: .allowed)
+        try repository.selectMovieSoundtrack(filmID: id, asset: nil, verification: nil)
         XCTAssertFalse(FileManager.default.fileExists(atPath: old.url.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: audio.url.path))
         XCTAssertThrowsError(try repository.writeAssembledMovie(filmID: id, data: oldData,
@@ -81,16 +81,47 @@ final class SoundtrackTests: XCTestCase {
         XCTAssertNil(try repository.retainedSoundtrack(filmID: id))
     }
 
-    func testPolicyAndDecodeFailuresPreserveSelectionAndPlayableMovie() async throws {
+    /// A Movie's soundtrack can be changed later, any number of times, without developing again (DEC-11, the captain,
+    /// 2026-10-13): each change assembles the Movie again from the same Developed Clips, and no clip is rendered.
+    func testASoundtrackCanBeChangedLaterAnyNumberOfTimesWithoutDevelopingAgain() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        let fixture = try await Fixture()
+        defer { fixture.remove() }
+        let repository = fixture.repository
+        let id = fixture.film.id
+        let run = try XCTUnwrap(repository.developmentRun(filmID: id))
+        let clips = try [1, 2].map { try repository.revealedAsset(filmID: id, sequenceNumber: $0, kind: .clip) }
+        let clipBytes = try clips.map { try Data(contentsOf: $0.url) }
+        // A new processor, as after a relaunch, that records every stage Development reports.
+        let stages = StageLog()
+        let later = try FilmProcessor(root: fixture.root, developmentObserver: { _, stage in await stages.record(stage) })
+        var revisions: Set<UUID> = []
+        for (choice, tracks) in [("tone", 1), (nil, 0), ("tone", 1), ("tone", 1), (nil, 0)] as [(String?, Int)] {
+            try await later.selectSoundtrack(filmID: id, assetID: choice, catalog: fixture.catalog())
+            let selection = try XCTUnwrap(repository.movieAudioSelection(filmID: id))
+            XCTAssertEqual(selection.asset?.id, choice)
+            revisions.insert(selection.revision)
+            let movie = try repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
+            let proof = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
+            XCTAssertEqual(proof.audioTrackCount, tracks, "\(choice ?? "silent")")
+            XCTAssertEqual(try XCTUnwrap(proof.durationSeconds), fixture.duration * 2, accuracy: 0.01)
+            XCTAssertEqual(try [1, 2].map { try repository.revealedAsset(filmID: id, sequenceNumber: $0, kind: .clip).record }, clips.map(\.record))
+            XCTAssertEqual(try clips.map { try Data(contentsOf: $0.url) }, clipBytes)
+            XCTAssertEqual(try repository.developmentRun(filmID: id), run)
+            XCTAssertEqual(try repository.film(id: id).developmentState, .developed)
+        }
+        // Choosing the soundtrack the Movie already has changes nothing, so four of the five choices were changes.
+        XCTAssertEqual(revisions.count, 4)
+        let rendered = await stages.rendered
+        XCTAssertEqual(rendered, 0, "No clip was developed again")
+    }
+
+    func testDecodeFailuresPreserveSelectionAndPlayableMovie() async throws {
         try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture()
         defer { fixture.remove() }
         let id = fixture.film.id
         let original = try fixture.repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
-        do {
-            try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: fixture.catalog(policy: nil))
-            XCTFail("An unresolved reselection policy must not be invented")
-        } catch MediaCatalogError.invalidManifest { }
         let corrupt = Data("not audio".utf8)
         try corrupt.write(to: fixture.bundle.appendingPathComponent("tone.wav"))
         do {
@@ -100,14 +131,8 @@ final class SoundtrackTests: XCTestCase {
         XCTAssertNil(try fixture.repository.movieAudioSelection(filmID: id))
         XCTAssertEqual(try fixture.repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie).record, original.record)
         try fixture.audio.write(to: fixture.bundle.appendingPathComponent("tone.wav"))
-        let locked = try fixture.catalog(policy: .initialChoiceOnly)
-        try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: locked)
+        try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: fixture.catalog())
         let selection = try fixture.repository.movieAudioSelection(filmID: id)
-        do {
-            try await fixture.processor.selectSoundtrack(filmID: id, assetID: nil, catalog: locked)
-            XCTFail("A locked choice cannot be changed")
-        } catch PersistenceError.soundtrackSelectionLocked { }
-        XCTAssertEqual(try fixture.repository.movieAudioSelection(filmID: id), selection)
         let retained = try XCTUnwrap(fixture.repository.retainedSoundtrack(filmID: id))
         try Data("damage after selection".utf8).write(to: retained.url)
         do { try await fixture.processor.develop(filmID: id); XCTFail("Damaged retained audio must fail closed") }
@@ -119,6 +144,13 @@ final class SoundtrackTests: XCTestCase {
         let movie = try fixture.repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
         let proof = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
         XCTAssertEqual(proof.audioTrackCount, 1)
+    }
+
+    private actor StageLog {
+        private(set) var rendered = 0
+        func record(_ stage: DevelopmentStage) {
+            if case .afterRendering = stage { rendered += 1 }
+        }
     }
 
     private struct Fixture {
@@ -165,14 +197,14 @@ final class SoundtrackTests: XCTestCase {
             print("SOUNDTRACK_FIXTURE " + String(decoding: try encoder.encode(identity), as: UTF8.self))
         }
 
-        func catalog(policy: SoundtrackReselectionPolicy? = .allowed, audio: Data? = nil) throws -> BundleMediaCatalog {
+        func catalog(audio: Data? = nil) throws -> BundleMediaCatalog {
             let asset = CatalogMediaAsset(id: "tone", title: "Private test tone", cameraIDs: [.cinema16mm], purpose: .instrumental,
                 kind: .audio, resourcePath: "tone.wav", sha256: BundleMediaCatalog.digest(audio ?? self.audio),
                 rights: MediaRights(clearance: .syntheticTestOnly, creator: "Unit test", source: "Generated PCM",
                     acquiredAt: "2026-10-01", approvalReference: "Private fixture only", licensePath: "license.txt",
                     licenseSHA256: BundleMediaCatalog.digest(license), permitsBundling: true, permitsMovieExport: true,
                     attribution: "Test tone, not production soundtrack"))
-            let manifest = MediaCatalogManifest(schemaVersion: 1, soundtrackReselection: policy, assets: [asset])
+            let manifest = MediaCatalogManifest(schemaVersion: 1, assets: [asset])
             return try BundleMediaCatalog(rootURL: bundle, manifestData: JSONEncoder().encode(manifest), allowSyntheticFixtures: true)
         }
 

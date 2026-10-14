@@ -199,6 +199,28 @@ enum MovieDurationText {
     }
 }
 
+/// Stops of exposure as the Darkroom shows and speaks them, in tenths, so a value a slider leaves a hair off a tenth
+/// never reads "-0.0" or is saved a hair outside its limit.
+enum StopsText {
+    /// `stops` at the nearest tenth inside `limits`.
+    static func tenths(_ stops: Double, in limits: ClosedRange<Double>) -> Double {
+        min(limits.upperBound, max(limits.lowerBound, (stops * 10).rounded() / 10 + 0))
+    }
+
+    /// "1.5 stops", "-3.0 stops" or "0.0 stops".
+    static func shown(_ stops: Double) -> String {
+        String(format: "%.1f stops", (stops * 10).rounded() / 10 + 0)
+    }
+
+    /// "plus 1.5 stops", "minus 3 stops" or "0 stops", for VoiceOver; a strength, which has no direction, is "1 stop".
+    static func spoken(_ stops: Double, signed: Bool = true) -> String {
+        let tenths = Int((abs(stops) * 10).rounded())
+        let amount = tenths % 10 == 0 ? "\(tenths / 10)" : "\(tenths / 10).\(tenths % 10)"
+        let sign = !signed || tenths == 0 ? "" : stops < 0 ? "minus " : "plus "
+        return "\(sign)\(amount) stop\(tenths == 10 ? "" : "s")"
+    }
+}
+
 extension Color {
     /// Fill for filled actions. The dark-mode accent is too light under a white label, so filled
     /// actions use a deeper green that keeps both the label and the fill's edge readable.
@@ -267,6 +289,8 @@ enum FailureCopy {
             return "Photos could not finish saving, so this Film is unchanged. Anything already saved stays in Photos. Check available storage, then save again."
         case let error as TrialKeychainError:
             return "Immerse could not read or update this iPhone's secure Trial record (Keychain \(error.status)). Trial eligibility has not been reset, and any capture waiting to save stays private. Try again while your iPhone is unlocked."
+        case NativeRenderError.invalidRecipe:
+            return "A print's Darkroom settings are outside what this version of Immerse can print, so nothing was changed or saved to Photos. The developed photo is unchanged. In that print's Darkroom, choose Reset to Original to print it again."
         case NativeRenderError.instantMasterWithoutCard:
             return "This print is not in the card format every Instant print uses, so it cannot be shown or edited. Nothing was changed."
         case FilmExportError.missingReceipt:
