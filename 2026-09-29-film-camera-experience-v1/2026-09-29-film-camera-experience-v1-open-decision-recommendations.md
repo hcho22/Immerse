@@ -78,6 +78,9 @@ black-and-white 6×6 prints offer chemical toning (`Evidence/NativeApp/prd-2-sli
 The soundtrack catalog requires an explicit `initialChoiceOnly` or `allowed`
 policy before selection is exposed; nil stays unresolved. Native recovery tests
 exercise both possible policies without turning either into the captain's choice.
+**Superseded on 2026-10-13 for the soundtrack: the captain decided it can be changed later,
+so the catalog carries no such policy (the 2026-10-13 addendum below;
+`Evidence/NativeApp/darkroom-export-decisions-060.md`).**
 
 ## DEC-12 - Storage, Device, Accessibility And Reliability Budgets
 

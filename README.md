@@ -217,7 +217,7 @@ Implementation progress is traced in the [evidence map](2026-09-29-film-camera-e
 **Needs a physical iPhone.** Real capture, Keychain Trial behavior across reinstall, Photos writes, power loss, backup and restore, iPhone 11 performance and assistive-technology accessibility have not been validated on hardware.
 The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/manual-validation.md) and the release handoff in [`Evidence/NativeApp/launch-readiness.md`](Evidence/NativeApp/launch-readiness.md); the build is not release-ready.
 
-**Open captain decisions.** Each of these has something still open (DEC-11 was decided on 2026-10-13 and is no longer among them); the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
+**Open captain decisions.** Each of these has something still open; the [open-decision recommendations](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-open-decision-recommendations.md) propose options for several of them.
 
 - DEC-01: final brand, product name and copy.
 - DEC-02: monthly and yearly pricing and offers.
@@ -228,7 +228,7 @@ The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/ma
 - DEC-13: the support and App Store wording (its approach is approved).
 - DEC-14: the learning targets themselves (no analytics, and learning from TestFlight interviews, tester feedback and Apple's reports, is decided).
 
-DEC-09 and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD section 15.
+DEC-09, DEC-11 (since 2026-10-13) and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD section 15.
 
 ## Further reading
 

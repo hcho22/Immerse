@@ -89,6 +89,7 @@ What he was asked, in the words he read, and what each answer settles are in [th
 They close DEC-11, decide the rules of DEC-05, the targets of DEC-12, the approach of DEC-13, DEC-14's way of learning and the export part of DEC-04, with what stays open named in each row of section 15.
 No requirement text, FR, DEC or section number changes.
 FR-05's "Exact codecs, resolutions, and audio channel guarantees are not yet specified" and FR-07's "Exact control ranges and medium-specific applicability require render validation" are left as written and are read with section 15: the formats and the ranges are now decided, apart from the toning strength.
+The notes under the user journeys in section 5.1 and the prototype gap in section 18 that name DEC-04 or DEC-11 as open are left as written too and are read the same way.
 
 **Version 2.1 Darkroom contrast on every Photo Film (2026-10-07).**
 The captain said: "please update the prd so that the contrast can be adjusted in the darkroom as well."
