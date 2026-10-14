@@ -152,13 +152,6 @@ final class LowStorageUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Disposable"].exists)
     }
 
-    /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
-    private func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
-        let window = app.windows.firstMatch.frame
-        scrollUp(app, until: element)
-        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
-    }
-
     /// Keeps the screen as it is. Each audited pose is kept before its audit, whose text-resizing checks leave a
     /// scrolled list somewhere else.
     private func retainScreenshot(_ app: XCUIApplication, name: String) {

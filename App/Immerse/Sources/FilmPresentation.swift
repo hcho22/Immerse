@@ -133,6 +133,11 @@ extension Film {
         return "On the roll"
     }
 
+    /// Whether the Film's screen offers Resume Development: a Development under way, or an Instant print still sealed.
+    var offersResumeDevelopment: Bool {
+        developmentState == .developing || (camera.revealRule == .instantPerExposure && captures.contains { $0.revealState == .sealed })
+    }
+
     var remainingLabel: String { remainingLabel(recordedFor: 0) }
 
     /// What VoiceOver reads for `remainingLabel`, with Movie time in spoken units rather than "2:45".

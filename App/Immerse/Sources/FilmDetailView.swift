@@ -141,8 +141,7 @@ struct FilmDetailView: View {
             if film.canStartDevelopment {
                 Button("Develop Film", systemImage: "sparkles") { developing = true }.primaryAction()
             }
-            if film.developmentState == .developing ||
-                (film.camera.revealRule == .instantPerExposure && film.captures.contains { $0.revealState == .sealed }) {
+            if film.offersResumeDevelopment {
                 Button("Resume Development", systemImage: "arrow.clockwise") { model.perform { try await model.develop(filmID) } }
             }
             if film.captures.contains(where: { $0.revealState == .revealed }) {
@@ -182,7 +181,7 @@ struct FilmDetailView: View {
             ForEach(film.captures) { capture in
                 HStack {
                     Text(String(format: "%02d", capture.sequenceNumber)).font(.body.monospaced())
-                    if capture.isDiscarded { Text("Discarded").foregroundStyle(.secondary) }
+                    if capture.isDiscarded { Text("Discarded").foregroundStyle(Color.cardSecondaryText) }
                     else if case let .movieClip(seconds, _) = capture.kind {
                         Label(String(format: "%.3f sec", seconds), systemImage: capture.revealState == .sealed ? "lock" : "film")
                     }

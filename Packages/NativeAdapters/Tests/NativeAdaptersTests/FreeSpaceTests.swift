@@ -20,6 +20,16 @@ final class FreeSpaceTests: XCTestCase {
         XCTAssertGreaterThan(try VolumeFreeSpaceReader(url: directory).availableBytes(), 0)
     }
 
+    func testVolumeReaderReadsAgainEachTimeRatherThanReturningItsFirstReading() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("FreeSpace-\(UUID())")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let reader = VolumeFreeSpaceReader(url: directory)
+        XCTAssertGreaterThan(try reader.availableBytes(), 0)
+        try FileManager.default.removeItem(at: directory)
+        XCTAssertThrowsError(try reader.availableBytes(), "The reader returned its first reading of a directory that is gone")
+    }
+
     func testVolumeReaderThrowsWhereThereIsNothingToRead() {
         let missing = FileManager.default.temporaryDirectory.appendingPathComponent("FreeSpace-missing-\(UUID())")
         XCTAssertThrowsError(try VolumeFreeSpaceReader(url: missing).availableBytes())

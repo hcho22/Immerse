@@ -50,8 +50,7 @@ extension Film {
     /// it is developed. A developed Film offers neither.
     var stepNeedingSpace: LowStorageStep? {
         if completionState == .open { return .capture }
-        let awaitsPrints = camera.revealRule == .instantPerExposure && captures.contains { $0.revealState == .sealed }
-        return canStartDevelopment || developmentState == .developing || awaitsPrints ? .development : nil
+        return canStartDevelopment || offersResumeDevelopment ? .development : nil
     }
 }
 

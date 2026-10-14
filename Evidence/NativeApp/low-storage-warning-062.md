@@ -48,6 +48,8 @@ The one for important usage is the one it recommends for space an app needs for 
 It counts what iOS can clear to make room, such as purgeable caches.
 The plain `volumeAvailableCapacity` leaves that out and reads lower than a save can use, so it would warn on an iPhone that still has room.
 The opportunistic reading is for data the person did not ask for, which a capture is not.
+Each reading clears the URL's cached resource values first, so it asks the volume again.
+A URL returns a value it has read until the run loop of the thread that read it turns, and the app reads on threads that run none, so without that the warning kept its first reading until the app restarted.
 
 ### 2 GB
 
@@ -107,6 +109,7 @@ No disk was filled.
 | Each step, each reading | Warning with its exact words just under; none at exactly 2 GB or just over | As expected for captures and for Development | Pass | `LowStorageTests.testWarningShowsBeforeEachStepOnlyBelowTwoGigabytes` |
 | Failed reading | No warning, and an earlier warning goes | As expected | Pass | `LowStorageTests.testAReadingThatFailsShowsNoWarningAndClearsAnEarlierOne` |
 | Space freed while the app is away | The next Journal refresh clears the warning | As expected | Pass | `LowStorageTests.testJournalReadsFreeSpaceAgainEachTimeItRefreshes` |
+| The real reading, read again | After its directory is removed, the same reader's next reading fails instead of returning its first one | As expected on macOS | Pass | `FreeSpaceTests.testVolumeReaderReadsAgainEachTimeRatherThanReturningItsFirstReading` |
 | Which step a Film's screen warns before | Captures while open, Development once complete, nothing once developed | As expected for a Disposable Film through its life and an open Instant Film | Pass | `LowStorageTests.testFilmScreenWarnsBeforeCapturesThenBeforeDevelopmentAndNeverOnceDeveloped` |
 | Load Film screen, just under | Warning above Load Film; Load Film enabled | As expected, light and dark | Pass | `LowStorageUITests.testLoadFilmWarnsJustUnderTwoGigabytes` |
 | Load Film screen, exactly at, just over, failed | No warning | As expected, light and dark | Pass | `LowStorageUITests.testLoadFilmShowsNoWarning...` (three tests) |
@@ -139,21 +142,24 @@ At rest, at the top of the Form, each measured 21.00:1 in light and 13.94:1 in d
 `App/Immerse/UITests/AuditExceptions.swift` accepts exactly these two at this one audit point: "Fixed focus, fixed exposure, optional flash and a live low-light cue" and "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges".
 Neither is the warning.
 
-### Three existing Film screen findings, fixed
+### Existing Film screen findings, fixed
 
 The Film screen had no full audit before this change.
 Auditing the warning there reported three items that were already on the screen.
+Review on 2026-10-14 found a fourth, on a Movie Film's screen, which no audit reaches.
 
 | Item | Before | After |
 | --- | --- | --- |
 | Remaining-capacity line and date line, light | System secondary label, 3.44:1 on white | `Color.cardSecondaryText`, 4.58:1 |
 | "Sealed" and "Discarded" captions on a frame's gray ground, light | System secondary label, 3.29:1 | `Color.frameSecondaryText`, 4.82:1 |
 | Progress bar under the capacity line | Its own element, 4 points tall, reported as a control too small to tap | Hidden from accessibility; VoiceOver reads the capacity line above it, which says the same in words |
+| "Discarded" in a Movie Film's clip list, on the screen's white ground, light | System secondary label, 3.44:1 on white | `Color.cardSecondaryText`, the capacity line's color on the same ground |
 
 Dark mode keeps the system colors, which passed.
 No text changed.
 The captain was told on 2026-10-13 that the gray text on the Film screen becomes slightly darker.
 The contrast figures are measured from screenshots of the runs: the text color against the ground's most common color.
+The clip list's "Discarded" was not measured from a screenshot: it takes the color and ground of the capacity line, measured at 4.58:1.
 
 The populated Film screen, with frames on it, still has no full audit.
 The harness's tests are functional, as its README says.
@@ -222,9 +228,13 @@ The screenshots in this record are from that run, except the iPhone SE and harne
 - The first screen-test run audited the Load Film screen with the warning scrolled just into view, which left "Sealed until Development" and the controls line under the navigation bar, and failed on their contrast.
   The audit moved to the end of the Form, the one pose that is the same in every run, which led to the two measured exceptions above.
 - The same run's Film screen audit failed on the capacity line's contrast and the progress bar's size, and the harness's Film screen audit on the "Sealed" captions.
-  These are the three fixes above.
+  These are the first three fixes above.
   The harness's audits were then removed, since that harness's tests are functional by its own README, and its tests kept their checks of the words, the order and the commands.
 - The iPhone SE runs failed as described under [On an iPhone SE](#on-an-iphone-se): 2 of 4 tests in light and in dark, and 2 of 14 in the control run, one of them the control itself.
+- Review on 2026-10-14 found that the real reader returned its first reading on every later read, so on an iPhone the warning would neither go when space was freed nor come when it ran out.
+  A probe outside the repository, on macOS 26, read one URL from a detached task before and after writing 300 MB beside it: without clearing the URL's cache the reading did not drop, and with it cleared it dropped by 301,146,112 bytes.
+  No test had seen it, because every screen test sets the reading.
+  The reader now clears the cache before each reading, and `FreeSpaceTests.testVolumeReaderReadsAgainEachTimeRatherThanReturningItsFirstReading` holds it without depending on how much the disk changes: it fails without the fix and passes with it.
 
 ### After the merge with main
 

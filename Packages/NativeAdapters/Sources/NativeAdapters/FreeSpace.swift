@@ -22,6 +22,8 @@ public struct VolumeFreeSpaceReader: FreeSpaceReading {
     public init(url: URL) { self.url = url }
 
     public func availableBytes() throws -> Int64 {
+        var url = url
+        url.removeAllCachedResourceValues()
         let values = try url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey])
         guard let bytes = values.volumeAvailableCapacityForImportantUsage else { throw FreeSpaceError.noReading }
         return bytes
