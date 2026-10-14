@@ -30,6 +30,11 @@ enum FilmExportWorker {
             guard film.captures.contains(where: { $0.sequenceNumber == sequence && $0.revealState == .revealed }) else {
                 throw PersistenceError.mediaNotRevealed
             }
+            // A print whose saved recipe cannot be printed, one outside the Darkroom's limits, stops the export here.
+            if !originals && film.camera.medium == .photo {
+                try NativePhotoRenderer.validate(repository.darkroomRecipe(filmID: filmID, sequence: sequence), camera: film.camera,
+                    process: repository.photoPrintProcess(filmID: filmID))
+            }
         }
         var work = root.appendingPathComponent("Work/\(filmID)/Export-\(UUID())")
         try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)

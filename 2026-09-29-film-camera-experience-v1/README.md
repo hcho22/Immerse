@@ -28,6 +28,7 @@ The tracker gained fourteen tasks and the evidence map and acceptance companion 
 PRD 2.0's document guide says ADRs 0013 to 0015 are "not yet in this collection"; they are now.
 No FR, DEC or section number and no existing task ID changed.
 The open DEC items stay open; PRD 2.0 settles only the parts of DEC-04 and DEC-11 that it names.
+On 2026-10-13 the captain answered the remaining open v1 decisions that were put to him: DEC-11 is decided, and the tracker's DEC-04, DEC-05, DEC-12, DEC-13 and DEC-14 items say what he decided and what stays open, with his words in the recommendations document's 2026-10-13 addendum.
 
 Version 1.5 (September 30, 2026) records the captain's DEC-09 answer: disable early Development until a Film has a saved capture; offer Delete Film for empty Films; after the last Movie clip is discarded retain an empty Film with numbered discarded placeholders and no playback or export.
 It also adds the repository-owned evidence map used by implementation and validation, plus an open-decision recommendations document for unresolved render, asset, Darkroom, budget, launch and learning choices.
@@ -73,12 +74,12 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 - Clause-level acceptance evidence: 74 personal FR records (the 72 earlier records plus two for PRD 2.0), all nine section 11 invariants, architecture early checks and launch gates; no new product decision.
 - Dated architecture baseline (version 1.1; version 1.0 was added in version 1.3).
 - Dated implementation evidence map (added in version 1.5).
-- Dated open-decision recommendations (added during implementation; not approved decisions).
+- Dated open-decision recommendations (added during implementation; the recommendations are not approved decisions, and the addenda record what the captain then decided).
 - Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADRs 0012 to 0016.
 - Eleven original Markdown ADR files, unchanged, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0, as delivered) and ADR 0016 (added on 2026-10-10 and extended on 2026-10-11 and 2026-10-12 from the captain's answers on the Instant's, the Super 8's, the 16mm's and the 6×6's review boards).
 - Source snapshots: CONTEXT.md (refreshed in version 2.0) and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 
-The tracker contains 252 items: five completed discovery/prototype items, four decided DEC items, 135 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six, version 1.3 added five and version 2.0 added fourteen. The package contains 27 Markdown files, including all sixteen standalone ADRs.
+The tracker contains 253 items: five completed discovery/prototype items, five decided DEC items (DEC-11 since 2026-10-13), 135 unchecked v1 implementation, decision, architecture, and verification tasks, and 108 unchecked tasks deferred to v2 with Groups and Accounts. All 227 IDs from version 1.1 are unchanged; version 1.2 added six, version 1.3 added five, version 2.0 added fourteen, and CAP-15 was added on 2026-10-13. The package contains 27 Markdown files, including all sixteen standalone ADRs.
 
 The ZIP is the easiest way to keep all local documents and links together. No account setup, publishing, or hosted review surface is needed to use these files.

@@ -18,6 +18,23 @@ struct FilmDetailView: View {
     @State private var soundtrack = false
     @State private var selectedPhoto: CaptureRecord?
     @State private var discard: CaptureRecord?
+    /// The Instant prints this screen has seen revealed, so it asks about the original of each new one once.
+    @State private var seenPrints: Set<Int>?
+    @State private var originalAsk: OriginalAsk?
+
+    /// What decides whether a newly revealed Instant print is asked about now: the revealed prints, and whether this
+    /// screen is free to ask. The camera asks about the prints revealed while it is open.
+    private struct RevealWatch: Equatable {
+        let prints: Set<Int>
+        let capturing: Bool
+        let free: Bool
+    }
+
+    private var revealWatch: RevealWatch {
+        RevealWatch(prints: model.revealedInstantPrints(filmID), capturing: capturing,
+                    free: !capturing && !developing && !originals && !soundtrack && selectedPhoto == nil && originalAsk == nil
+                        && !model.busyFilms.contains(filmID) && !model.hiddenFilms.contains(filmID))
+    }
 
     var body: some View {
         Group {
@@ -42,6 +59,16 @@ struct FilmDetailView: View {
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
         .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
         .sheet(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
+        .sheet(item: $originalAsk) { ask in OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints) }
+        .onAppear { if seenPrints == nil { seenPrints = revealWatch.prints } }
+        .onChange(of: revealWatch) { _, watch in
+            guard let seen = seenPrints else { return }
+            if watch.capturing { seenPrints = watch.prints }
+            guard watch.free else { return }
+            seenPrints = watch.prints
+            let prints = model.printsAwaitingOriginalChoice(filmID, among: watch.prints.subtracting(seen))
+            if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints) }
+        }
         .alert("Rename Film", isPresented: $renaming) {
             TextField("Film title", text: $title)
             Button("Cancel", role: .cancel) {}
@@ -117,7 +144,6 @@ struct FilmDetailView: View {
                 }
             }
             if film.canPlaybackDevelopedMovie, let catalog = model.mediaCatalog,
-               catalog.manifest.soundtrackReselection != nil,
                !catalog.assets(for: film.camera.id, purpose: .instrumental).isEmpty {
                 Button("Soundtrack", systemImage: "music.note") { soundtrack = true }
             }
@@ -187,17 +213,27 @@ struct FilmDetailView: View {
     }
 }
 
+/// An Instant asks about the original of each print after it is revealed (DEC-11): the prints one ask covers.
+struct OriginalAsk: Identifiable {
+    let prints: [Int]
+    var id: [Int] { prints }
+}
+
 struct OriginalChoiceView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     let filmID: UUID
     let startsDevelopment: Bool
+    /// The newly revealed Instant prints this choice is asked about; nil for every capture of the Film the choice is open for.
+    var prints: [Int]?
     @State private var choice: Bool?
     @State private var working = false
     @State private var error: String?
 
     private var sequences: [Int] {
-        model.film(filmID)?.captures.filter { !$0.isDiscarded && (startsDevelopment || $0.revealState == .revealed) }.map(\.sequenceNumber) ?? []
+        model.film(filmID)?.captures.filter {
+            !$0.isDiscarded && (startsDevelopment || $0.revealState == .revealed) && (prints?.contains($0.sequenceNumber) ?? true)
+        }.map(\.sequenceNumber) ?? []
     }
     private var undecided: [Int] {
         sequences.filter { (try? model.repository.originalDisposition(filmID: filmID, sequenceNumber: $0)) == nil }
@@ -211,9 +247,10 @@ struct OriginalChoiceView: View {
             Form {
                 Section { Text(PrivacyCopy.sources) }
                 if !undecided.isEmpty {
-                    Section("Original captures") {
-                        choiceRow("Save Originals to Photos after reveal", value: true)
-                        choiceRow("Remove originals after verified Development", value: false)
+                    Section(heading) {
+                        // A revealed print is saved as soon as its choice is confirmed, so its rows say what happens now.
+                        choiceRow(startsDevelopment ? "Save Originals to Photos after reveal" : "Save to Photos, then remove from Immerse", value: true)
+                        choiceRow(startsDevelopment ? "Remove originals after verified Development" : "Remove from Immerse without saving", value: false)
                     }
                 }
                 if let error { Text(error).foregroundStyle(.red) }
@@ -227,6 +264,11 @@ struct OriginalChoiceView: View {
                                 if startsDevelopment {
                                     dismiss()
                                     model.perform { try await model.develop(filmID) }
+                                } else if choice == true {
+                                    // Already revealed, so the save happens now. If it fails, the choice stands and
+                                    // Save Originals to Photos below tries again.
+                                    try await model.export(filmID, originals: true)
+                                    dismiss()
                                 } else { try await model.processor.cleanupSources(filmID: filmID); dismiss() }
                             } catch { self.error = FailureCopy.message(for: error) }
                         }
@@ -249,6 +291,11 @@ struct OriginalChoiceView: View {
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() }.disabled(working) } }
             .interactiveDismissDisabled(working)
         }
+    }
+
+    private var heading: String {
+        guard let prints, !startsDevelopment else { return "Original captures" }
+        return prints.count == 1 ? "Original of photo \(prints[0])" : "Originals of \(prints.count) photos"
     }
 
     private func choiceRow(_ title: String, value: Bool) -> some View {

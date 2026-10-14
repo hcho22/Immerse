@@ -283,9 +283,9 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(SpokenText.of(text), spoken, file: file, line: line)
     }
 
-    /// A Darkroom error shows between the print and its controls without resizing or moving the print, so the print
-    /// and a Dodge/Burn stroke on it keep one scale; only the controls move down while it shows.
-    func testADarkroomErrorNeitherResizesNorMovesThePrint() async throws {
+    /// A Darkroom error shows between the print and its controls in height the print gives up, so the controls keep
+    /// their place and the selected tool stays on screen under it; the print has its size back when the error goes.
+    func testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace() async throws {
         let probe = DarkroomLayoutProbe()
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let window = UIWindow(windowScene: scene)
@@ -297,8 +297,16 @@ final class JournalIntegrationTests: XCTestCase {
 
         probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
         let failed = try await settledFrames(probe)
-        XCTAssertEqual(failed.print, resting.print, "An error leaves the print's size and place alone")
-        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY + 18, "The error shows between the print and the controls")
+        XCTAssertEqual(failed.controls.minY, resting.controls.minY, accuracy: 0.5, "An error leaves the controls where they were")
+        XCTAssertEqual(failed.controls.size, resting.controls.size)
+        XCTAssertEqual(failed.print.minY, resting.print.minY, accuracy: 0.5, "The print keeps its top edge")
+        XCTAssertGreaterThan(failed.controls.minY, failed.print.maxY + 18 + 18, "The error shows between the print and the controls")
+
+        // An error with more to say than the print has room to give leaves a smaller print, never none, and the screen scrolls.
+        probe.error = String(repeating: "The print could not be rendered. ", count: 80)
+        let crowded = try await settledFrames(probe)
+        XCTAssertEqual(crowded.print.height, 80, accuracy: 0.5, "Under an error the print is never smaller than this")
+        XCTAssertEqual(crowded.print.minY, resting.print.minY, accuracy: 0.5)
 
         probe.error = nil
         let cleared = try await settledFrames(probe)
@@ -318,6 +326,90 @@ final class JournalIntegrationTests: XCTestCase {
             last = now
         }
         throw DarkroomLayoutDidNotSettle()
+    }
+
+    /// DEC-11 (the captain, 2026-10-13): the Instant asks about the original after each print is revealed. The question
+    /// reaches only revealed, kept prints with no choice recorded, never a sealed frame, and an answer for one print
+    /// leaves every other print's original as it was.
+    func testTheInstantAsksOnlyAboutRevealedPrintsWithNoRecordedChoice() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalIntegration-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic pack", access: .subscription)
+        let source = try syntheticPhoto()
+        for _ in 0..<2 { try model.repository.savePhotoCapture(filmID: film.id, sourceData: source) }
+        model.refresh()
+        try await model.develop(film.id)
+        try model.repository.savePhotoCapture(filmID: film.id, sourceData: source)
+        model.refresh()
+        XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.revealed, .revealed, .sealed])
+        XCTAssertEqual(model.revealedInstantPrints(film.id), [1, 2])
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [1, 2], "The sealed frame is never asked about")
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [2]), [2], "The question is for the print just revealed")
+
+        // Print 2's original is declined: it alone is removed, and print 1 still waits for its own answer.
+        try model.chooseOriginals(film.id, sequences: model.printsAwaitingOriginalChoice(film.id, among: [2]), export: false)
+        try await model.processor.cleanupSources(filmID: film.id)
+        XCTAssertFalse(try model.repository.assetExists(filmID: film.id, sequenceNumber: 2, kind: .source))
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 3, kind: .source))
+        XCTAssertNil(try model.repository.originalDisposition(filmID: film.id, sequenceNumber: 1))
+        XCTAssertNil(try model.repository.originalDisposition(filmID: film.id, sequenceNumber: 3))
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [1])
+
+        // Print 1's original is to be saved: it is kept until Photos has it, and the answer is not asked for again.
+        try model.chooseOriginals(film.id, sequences: [1], export: true)
+        try await model.processor.cleanupSources(filmID: film.id)
+        XCTAssertTrue(try model.repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [])
+
+        // A discarded print is not asked about, and no other Camera's Film is.
+        try await model.develop(film.id)
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [3]), [3])
+        try await model.remove(film.id, sequence: 3)
+        XCTAssertEqual(model.printsAwaitingOriginalChoice(film.id, among: [1, 2, 3]), [])
+        let roll = try model.repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic roll", access: .subscription)
+        model.refresh()
+        XCTAssertEqual(model.revealedInstantPrints(roll.id), [])
+    }
+
+    /// Stops as the Darkroom shows and speaks them (DEC-11): in tenths, never "-0.0", and inside the limits.
+    func testStopsTextShowsSpeaksAndKeepsTenthsInsideTheLimits() {
+        XCTAssertEqual(StopsText.shown(0), "0.0 stops")
+        XCTAssertEqual(StopsText.shown(-0.0000001), "0.0 stops")
+        XCTAssertEqual(StopsText.shown(3), "3.0 stops")
+        XCTAssertEqual(StopsText.shown(-3), "-3.0 stops")
+        XCTAssertEqual(StopsText.shown(1.4999999), "1.5 stops")
+        XCTAssertEqual(StopsText.spoken(0), "0 stops")
+        XCTAssertEqual(StopsText.spoken(-0.0000001), "0 stops")
+        XCTAssertEqual(StopsText.spoken(3), "plus 3 stops")
+        XCTAssertEqual(StopsText.spoken(-3), "minus 3 stops")
+        XCTAssertEqual(StopsText.spoken(1), "plus 1 stop")
+        XCTAssertEqual(StopsText.spoken(-1.5), "minus 1.5 stops")
+        XCTAssertEqual(StopsText.spoken(0.4, signed: false), "0.4 stops")
+        XCTAssertEqual(StopsText.spoken(1, signed: false), "1 stop")
+        let limits = DarkroomLimits.printExposureStops
+        XCTAssertEqual(StopsText.tenths(3.0000000000000004, in: limits), 3)
+        XCTAssertEqual(StopsText.tenths(-3.0000000000000004, in: limits), -3)
+        XCTAssertEqual(StopsText.tenths(2.9999999999999996, in: limits), 3)
+        XCTAssertEqual(StopsText.tenths(0.30000000000000004, in: limits), 0.3)
+        XCTAssertEqual(StopsText.tenths(-0.04, in: limits).sign, .plus, "Never a negative zero")
+        // Every position of both sliders is a recipe the renderer accepts.
+        for step in -30...30 {
+            let stops = StopsText.tenths(limits.lowerBound + Double(step + 30) * DarkroomLimits.exposureStep, in: limits)
+            XCTAssertNoThrow(try NativePhotoRenderer.validate(DarkroomRecipe(printExposureStops: stops, dodgeBurnMasks: [
+                LocalMask(kind: .dodge, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: abs(stops))
+            ]), camera: CameraCatalog.disposable1990s), "\(step)")
+        }
+    }
+
+    /// A print whose saved recipe is outside the limits says so, and says how to print it again.
+    func testAPrintOutsideTheDarkroomLimitsExplainsItselfAndTheWayBack() throws {
+        let message = try XCTUnwrap(FailureCopy.message(for: NativeRenderError.invalidRecipe))
+        XCTAssertTrue(message.contains("Reset to Original"))
+        XCTAssertTrue(message.contains("developed photo is unchanged"))
+        XCTAssertFalse(message.contains(FailureCopy.retry), "Not the storage guidance, which would mislead")
     }
 
     func testPhotoFilmRowsKeepExposureCounts() throws {

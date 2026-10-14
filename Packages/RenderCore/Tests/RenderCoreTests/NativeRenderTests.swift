@@ -41,7 +41,7 @@ final class NativeRenderTests: XCTestCase {
             (480, 640, (426, 640)),      // portrait develops 2:3
             (1280, 720, (1080, 720)),    // a wider source keeps its short side
             (4032, 3024, (4032, 2688)),  // a real 12 MP capture stays under the master limit uncropped in size
-            (6000, 8000, (2829, 4243))   // a larger source is scaled to about 12 MP after the crop
+            (6000, 8000, (2828, 4242))   // a larger source is scaled to whole pixels within 12 MP after the crop
         ] {
             let root = makeRoot()
             defer { try? FileManager.default.removeItem(at: root) }
@@ -53,7 +53,8 @@ final class NativeRenderTests: XCTestCase {
             let developed = try image(try NativePhotoRenderer.develop(source: source, camera: CameraCatalog.disposable1990s, seed: 5))
             XCTAssertEqual(developed.width, expected.0, "\(width)x\(height)")
             XCTAssertEqual(developed.height, expected.1, "\(width)x\(height)")
-            XCTAssertLessThanOrEqual(developed.width * developed.height, 12_010_000, "The 12 MP master limit, to the scaled extent's rounding")
+            XCTAssertLessThanOrEqual(developed.width * developed.height, DevelopedPhotoSize.disposableMaximumPixels,
+                                     "Never more than 12,000,000 pixels (DEC-04)")
             // Every pixel row and column is picture: the grain tile covers the whole frame and nothing is stamped on it.
             let ratio = Double(max(developed.width, developed.height)) / Double(min(developed.width, developed.height))
             XCTAssertEqual(ratio, 1.5, accuracy: 0.01)

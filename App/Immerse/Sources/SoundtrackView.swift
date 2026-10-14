@@ -12,10 +12,6 @@ struct SoundtrackView: View {
     @State private var working = false
     @State private var error: String?
 
-    private var locked: Bool {
-        current != nil && model.mediaCatalog?.manifest.soundtrackReselection != .allowed
-    }
-
     var body: some View {
         NavigationStack {
             Form {
@@ -23,7 +19,7 @@ struct SoundtrackView: View {
                     Text(current?.asset?.title ?? "Silent")
                     if let credit = current?.asset?.rights.attribution, !credit.isEmpty { Text(credit).font(.caption) }
                 }
-                if !locked, let film = model.film(filmID), let catalog = model.mediaCatalog {
+                if let film = model.film(filmID), let catalog = model.mediaCatalog {
                     Section {
                         choice("Silent", id: nil)
                         ForEach(catalog.assets(for: film.camera.id, purpose: .instrumental)) { asset in

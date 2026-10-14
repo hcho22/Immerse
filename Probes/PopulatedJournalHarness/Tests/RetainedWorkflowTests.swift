@@ -63,6 +63,12 @@ import XCTest
         XCTAssertTrue(app.buttons["Open Camera"].exists)
         snapshot(app, "Instant-first-revealed-second-sealed")
         app.buttons["Resume Development"].tap()
+        // The Instant asks about the original of the print it has just revealed, and of that print only (DEC-11).
+        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
+        XCTAssertTrue(asked.waitForExistence(timeout: 40))
+        snapshot(app, "Instant-asks-about-the-original-of-the-print-just-revealed")
+        app.buttons["Remove from Immerse without saving"].tap()
+        app.buttons["confirm-original-choice"].tap()
         XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 40))
         XCTAssertTrue(app.buttons["Open Camera"].exists)
         XCTAssertFalse(app.buttons["Develop Film"].exists)
@@ -125,6 +131,11 @@ import XCTest
         size.adjust(toNormalizedSliderPosition: 0.6)
         XCTAssertTrue(app.sliders["Crop Horizontal"].exists)
         XCTAssertTrue(app.sliders["Crop Vertical"].exists)
+        // The three crop captions sit alike, at their sliders' leading edge.
+        for caption in ["Size", "Horizontal", "Vertical"] {
+            XCTAssertEqual(app.staticTexts[caption].frame.minX, size.frame.minX, accuracy: 1, caption)
+        }
+        snapshot(app, "darkroom-crop-captions")
         crop.tap()
 
         app.buttons["Dodge / Burn"].tap()
