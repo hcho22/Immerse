@@ -83,8 +83,8 @@ The app's own Instant prints are measured by the same code, so the two can be re
   Each scan is converted to sRGB from its embedded profile where it has one and reduced by area averaging to 480 pixels on its long side, so dust, cracks and JPEG noise set no percentile.
 - **The picture.**
   Where the card shows, the picture is found as the largest block of rows and columns that are mostly not card, or is given by hand where that fails (two scans, recorded in `sources.json`).
-  Otherwise the scan is taken whole.
-  A margin of 2.5 percent inside the picture is left out either way.
+  Where the card does not show and no picture is given by hand, 4 percent of the scan is left out on each side and what remains is taken as the picture.
+  A margin of 2.5 percent inside the picture is then left out on every scan, so a scan without its card loses about 6 percent of each edge in all, and one whose picture is known only the 2.5 percent.
 - **Black and white.**
   The 1st and 99th percentile of the picture's luminance, as display tones from 0 to 1.
   Where the card shows they are also given relative to the card's own white, and as densities below it.
