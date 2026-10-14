@@ -2,7 +2,8 @@ import XCTest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
 /// light or dark appearance: the empty Journal, the Camera catalog, the Super 8, 16mm and 6×6 Load Film screens (the 16mm
-/// with its Film Stock choice, the control the 6×6 shows too, and its look line on either stock) and Settings in
+/// with its Film Stock choice, the control the 6×6 shows too, and its look line on either stock), the low-storage
+/// warning a Load Film screen shows while free space reads under 2 GB, and Settings in
 /// landscape. It stands in for Xcode's
 /// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
 /// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
@@ -133,6 +134,12 @@ final class ContentSizeTests: XCTestCase {
                label: "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"),
     ]
 
+    /// The low-storage warning on the Disposable Load screen, shown only while free space reads under 2 GB. Its
+    /// symbol is tinted and its text is not, so only the text is measured.
+    private static let lowStorage: [Target] = [
+        Target(name: "Low storage warning", type: .staticText, identifier: "low-storage-warning"),
+    ]
+
     /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
     private static let journal: [Target] = [
         Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here", symbol: ("camera", .above)),
@@ -221,6 +228,19 @@ final class ContentSizeTests: XCTestCase {
     func testFilmStockLoadScreenTextAtAccessibilityExtraLarge() throws { checkFilmStockScreens("AccessibilityXL") }
     func testFilmStockLoadScreenTextAtAccessibilityExtraExtraLarge() throws { checkFilmStockScreens("AccessibilityXXL") }
     func testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { checkFilmStockScreens("AccessibilityXXXL") }
+
+    func testLowStorageWarningTextAtExtraSmall() throws { checkLowStorageWarning("XS") }
+    func testLowStorageWarningTextAtSmall() throws { checkLowStorageWarning("S") }
+    func testLowStorageWarningTextAtMedium() throws { checkLowStorageWarning("M") }
+    func testLowStorageWarningTextAtLarge() throws { checkLowStorageWarning("L") }
+    func testLowStorageWarningTextAtExtraLarge() throws { checkLowStorageWarning("XL") }
+    func testLowStorageWarningTextAtExtraExtraLarge() throws { checkLowStorageWarning("XXL") }
+    func testLowStorageWarningTextAtExtraExtraExtraLarge() throws { checkLowStorageWarning("XXXL") }
+    func testLowStorageWarningTextAtAccessibilityMedium() throws { checkLowStorageWarning("AccessibilityM") }
+    func testLowStorageWarningTextAtAccessibilityLarge() throws { checkLowStorageWarning("AccessibilityL") }
+    func testLowStorageWarningTextAtAccessibilityExtraLarge() throws { checkLowStorageWarning("AccessibilityXL") }
+    func testLowStorageWarningTextAtAccessibilityExtraExtraLarge() throws { checkLowStorageWarning("AccessibilityXXL") }
+    func testLowStorageWarningTextAtAccessibilityExtraExtraExtraLarge() throws { checkLowStorageWarning("AccessibilityXXXL") }
 
     func testJournalAndCatalogTextAtExtraSmall() throws { checkJournalAndCatalog("XS") }
     func testJournalAndCatalogTextAtSmall() throws { checkJournalAndCatalog("S") }
@@ -312,6 +332,22 @@ final class ContentSizeTests: XCTestCase {
         finish(category, rows, Self.sixBySix + Self.sixteenMillimeterBlackAndWhite)
     }
 
+    /// The Disposable Load screen with the free-space reading set just under 2 GB, in tests of their own so the other
+    /// Load screen tests measure the screen as it is with room.
+    private func checkLowStorageWarning(_ category: String) {
+        let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
+        app.buttons["start-film"].tap()
+        let row = app.buttons["camera-disposable1990s"]
+        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
+        row.tap()
+        XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
+        // Let the push finish, so the rows are measured where they rest rather than mid-transition.
+        Thread.sleep(forTimeInterval: 1)
+        let rows = record(measure(app, Self.lowStorage, category, below: "Disposable"))
+        app.terminate()
+        finish(category, rows, Self.lowStorage)
+    }
+
     private func checkJournalAndCatalog(_ category: String) {
         var rows: [String] = []
         let app = launch(category)
@@ -360,10 +396,10 @@ final class ContentSizeTests: XCTestCase {
     }
 
     /// Launches at the text size in portrait, whatever orientation an earlier test that ran out of time left.
-    private func launch(_ category: String) -> XCUIApplication {
+    private func launch(_ category: String, arguments: [String] = []) -> XCUIApplication {
         XCUIDevice.shared.orientation = .portrait
         let app = XCUIApplication.shippingGate()
-        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"]
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"] + arguments
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         return app

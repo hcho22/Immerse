@@ -62,7 +62,8 @@ OTHER_SUITES = "-only-testing:ImmerseUITests -skip-testing:ImmerseUITests/Conten
 DARK = [
     "xcodebuild " + SCREEN + " -resultBundlePath DerivedData/ValidationDark-<time>.xcresult"
     " -only-testing:ImmerseUITests/JournalFlowTests -only-testing:ImmerseUITests/MovieCapacityUITests"
-    " -only-testing:ImmerseUITests/FilmStockUITests " + ALLOWANCE + " test-without-building",
+    " -only-testing:ImmerseUITests/FilmStockUITests -only-testing:ImmerseUITests/LowStorageUITests "
+    + ALLOWANCE + " test-without-building",
 ]
 BILLING = [
     "quiet-simulator.sh BILLING-SIM",

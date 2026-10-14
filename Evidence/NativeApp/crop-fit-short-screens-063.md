@@ -1,4 +1,4 @@
-# Crop Fits a Short Screen
+# Crop Fits a Short Screen 063
 
 Captain (2026-10-14): "immerse crop fit".
 He was answering a finding from testing the Darkroom change of 2026-10-13, older than that change: on an iPhone SE with the Crop tool open and a crop smaller than the whole print, the Vertical slider rests wholly below the bottom of the screen under the Reset to Original bar, and nothing shows that more is below.
@@ -68,27 +68,27 @@ The Crop tool with a crop smaller than the whole print, at the default text size
 
 | iPhone SE in light, before | After |
 | --- | --- |
-| ![The Vertical slider is under the Reset button](crop-fit-short-screens/crop-before-se-light.png) | ![All three sliders rest above Reset to Original](crop-fit-short-screens/crop-after-se-light.png) |
+| ![The Vertical slider is under the Reset button](crop-fit-short-screens-063/crop-before-se-light.png) | ![All three sliders rest above Reset to Original](crop-fit-short-screens-063/crop-after-se-light.png) |
 
 | iPhone SE in dark, before | After |
 | --- | --- |
-| ![The Vertical slider is under the Reset button](crop-fit-short-screens/crop-before-se-dark.png) | ![All three sliders rest above Reset to Original](crop-fit-short-screens/crop-after-se-dark.png) |
+| ![The Vertical slider is under the Reset button](crop-fit-short-screens-063/crop-before-se-dark.png) | ![All three sliders rest above Reset to Original](crop-fit-short-screens-063/crop-after-se-dark.png) |
 
 On the iPhone 17 Pro the print is at 162 pt and the Vertical slider at 741 pt before and after, in light and in dark.
 
 | iPhone 17 Pro in light, before | After |
 | --- | --- |
-| ![All three sliders show](crop-fit-short-screens/crop-before-pro-light.png) | ![The same](crop-fit-short-screens/crop-after-pro-light.png) |
+| ![All three sliders show](crop-fit-short-screens-063/crop-before-pro-light.png) | ![The same](crop-fit-short-screens-063/crop-after-pro-light.png) |
 
 | iPhone 17 Pro in dark, before | After |
 | --- | --- |
-| ![All three sliders show](crop-fit-short-screens/crop-before-pro-dark.png) | ![The same](crop-fit-short-screens/crop-after-pro-dark.png) |
+| ![All three sliders show](crop-fit-short-screens-063/crop-before-pro-dark.png) | ![The same](crop-fit-short-screens-063/crop-after-pro-dark.png) |
 
 At the largest text size on the iPhone SE the print keeps 160 pt and the controls scroll, as before.
 
 | iPhone SE, largest text, at rest | Scrolled to the Vertical slider |
 | --- | --- |
-| ![The print at 160 pt over the Crop heading and switch](crop-fit-short-screens/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens/crop-largest-se-light-vertical.png) |
+| ![The print at 160 pt over the Crop heading and switch](crop-fit-short-screens-063/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens-063/crop-largest-se-light-vertical.png) |
 
 ## Not Shown Here
 

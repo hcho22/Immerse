@@ -31,6 +31,8 @@ final class JournalModel {
     let billing: SubscriptionController
     let mediaCatalog: BundleMediaCatalog?
     let catalogError: String?
+    /// Whether this iPhone is low on free space, for the warning before a step that needs space.
+    let storage: LowStorageCheck
     var films: [Film] = []
     var trialState: DeviceTrialState?
     var trialError: String?
@@ -47,8 +49,11 @@ final class JournalModel {
 
     init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
          cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer(),
-         subscriptions: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration()) throws {
+         subscriptions: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration(),
+         freeSpace: (any FreeSpaceReading)? = nil) throws {
         self.cameraAuthorizer = cameraAuthorizer
+        // The volume that holds the Films, unless a test sets the reading.
+        storage = LowStorageCheck(reader: freeSpace ?? VolumeFreeSpaceReader(url: root))
         billing = SubscriptionController(configuration: subscriptions)
         capture = CaptureController(authorizer: cameraAuthorizer)
         do {
@@ -71,6 +76,7 @@ final class JournalModel {
 
     func refresh() {
         reloadFilms()
+        Task { await storage.refresh() }
         Task {
             await billing.refresh()
             do { trialState = try await trial.state(); trialError = nil }
