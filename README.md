@@ -87,8 +87,8 @@ There is no sync or app-managed backup.
 
 These are reversible engineering defaults in the code, not approved decisions:
 
-- **Render output.** The Instant's contrast and print-to-print variation and the toning values are pending DEC-04.
-  Export sizes and formats and the Darkroom's ranges are no longer provisional: the captain approved them on 2026-10-13.
+- **Render output.** Export sizes and formats and the Darkroom's ranges are no longer provisional: the captain approved them on 2026-10-13.
+  Nor are the Instant's contrast and print-to-print variation or the toning range, which he decided the same day ([`Evidence/NativeApp/instant-study-and-toning-061.md`](Evidence/NativeApp/instant-study-and-toning-061.md)).
   The looks themselves are no longer provisional (see Cameras above); the earlier versions, `film-look-1-provisional` and `film-look-2-provisional`, stay renderable unchanged for Films that started with them.
 - **Assets.** [`App/Immerse/Sources/Resources/MediaCatalog.json`](App/Immerse/Sources/Resources/MediaCatalog.json) is empty, so the build shows no Camera samples and no built-in soundtracks (the Soundtrack picker stays hidden).
   By the captain's decision of 2026-10-13 (DEC-05) it stays empty until he supplies his own sample shots, one for each Camera and Film Stock, and until a license allows a soundtrack inside exported Movies.
@@ -223,7 +223,7 @@ The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/ma
 - DEC-01: final brand, product name and copy.
 - DEC-02: monthly and yearly pricing and offers.
 - DEC-03: sign-off of the native stack (minimum iOS 26, iPhone only and no backend are settled).
-- DEC-04: the Instant's contrast and print-to-print variation, and the toning values (decided: each Camera's Format Reference, picture shape, look, imperfections and frame rates in PRD 2.0, each look's tone, contrast and grain on the review boards, all but the Instant's contrast, and the export sizes and formats on 2026-10-13).
+- DEC-04: the Movie capture's native 4:3 format size, still provisional (decided: each Camera's Format Reference, picture shape, look, imperfections and frame rates in PRD 2.0, each look's tone, contrast and grain on the review boards, and on 2026-10-13 the export sizes and formats, the Instant's contrast and print-to-print variation and the toning range).
 - DEC-05: the captain's own sample shots, one for each Camera and Film Stock (the rule is decided: only material he owns or has written rights to, and no built-in soundtrack until a license allows it inside exported Movies).
 - DEC-12: measuring the speed and storage targets approved on 2026-10-13 (iPhone 11 as the oldest phone), and the rows of the recommendation he was not asked about.
 - DEC-13: the support and App Store wording (its approach is approved).

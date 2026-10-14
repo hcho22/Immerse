@@ -337,4 +337,7 @@ Both were decided later on 2026-10-13, on review boards of their own (`Evidence/
   Each toner's slider starts at the untoned print and tops out at the strength the board showed as 1.00, the provisional `0...1` amount.
 
 With these, nothing DEC-04 listed as open after 2026-10-13 is open.
-He saw the looks and the toned prints, not how the app carries them: the new contrast is treatment version 4, so an Instant Film loaded before it keeps the contrast it started with, and the toners' ranges now live in one place, `ToningLook.swift`.
+He saw the looks and the toned prints on their boards.
+Later the same day he confirmed "version 4" on the kept Instant board, which names B as treatment version 4 and shows version 3 as "before the study", and "approved" on the kept toning board.
+Neither board's own text told him that an Instant Film loaded before version 4 keeps version 3's contrast for its whole pack; the Instant board carries it only as a code comment among the values it prints.
+The toners' range now lives in the doc comment of `ToningLook.swift`, in his words.
