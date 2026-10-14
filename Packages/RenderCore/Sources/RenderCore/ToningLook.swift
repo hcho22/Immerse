@@ -57,17 +57,21 @@ enum ToningLook {
             // Core Image's sepia, with its intensity always given and never left to the filter's default.
             return image.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: strength])
         case .selenium:
-            // Each channel's light x becomes x * (1 + strength * (1 - x) * (tint - 1)): the tint in full at black,
-            // none of it at white.
-            func coefficients(_ tint: Double) -> CIVector {
-                let change = strength * (tint - 1)
-                return CIVector(x: 0, y: 1 + change, z: -change, w: 0)
-            }
-            return image.applyingFilter("CIColorPolynomial", parameters: [
-                "inputRedCoefficients": coefficients(seleniumTint.red),
-                "inputGreenCoefficients": coefficients(seleniumTint.green),
-                "inputBlueCoefficients": coefficients(seleniumTint.blue),
-                "inputAlphaCoefficients": CIVector(x: 0, y: 1, z: 0, w: 0)
+            // A tinted copy of the print blended in through the inverted print at the strength, so each channel's
+            // light x becomes x * (1 + strength * (1 - x) * (tint - 1)): the tint in full at black, none of it at
+            // white. It is the earlier build's own filter chain, kept so a recipe it saved prints the same bytes.
+            let tinted = image.applyingFilter("CIColorMatrix", parameters: [
+                "inputRVector": CIVector(x: seleniumTint.red, y: 0, z: 0, w: 0),
+                "inputGVector": CIVector(x: 0, y: seleniumTint.green, z: 0, w: 0),
+                "inputBVector": CIVector(x: 0, y: 0, z: seleniumTint.blue, w: 0)
+            ])
+            let shadows = image.applyingFilter("CIColorInvert").applyingFilter("CIColorMatrix", parameters: [
+                "inputRVector": CIVector(x: strength, y: 0, z: 0, w: 0),
+                "inputGVector": CIVector(x: 0, y: strength, z: 0, w: 0),
+                "inputBVector": CIVector(x: 0, y: 0, z: strength, w: 0)
+            ])
+            return tinted.applyingFilter("CIBlendWithMask", parameters: [
+                kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: shadows
             ])
         }
     }

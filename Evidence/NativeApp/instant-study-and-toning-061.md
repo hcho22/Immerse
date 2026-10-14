@@ -280,20 +280,25 @@ They are now in `Packages/RenderCore/Sources/RenderCore/ToningLook.swift`, the o
 - **A strength.**
   A recipe's `ChemicalToning.amount` is where the Darkroom's slider stands, 0 to 1, and each toner turns it into a strength between its `start` and its `top`.
   A strength of 1 is the toner as the board showed it at the top of the provisional range.
-- **Selenium as one formula.**
-  Selenium was a tinted copy blended in through a mask of the inverted print.
-  It is now one polynomial on each channel, `x * (1 + strength * (1 - x) * (tint - 1))`, which is the same arithmetic and also holds past a strength of 1, where the mask would have saturated.
-  On a neutral ramp at 21 tones and four strengths the two agree to 0.00000006.
+- **Selenium unchanged.**
+  Selenium is still a tinted copy of the print blended in through a mask of the inverted print, the earlier build's own filter chain.
+  On each channel that is `x * (1 + strength * (1 - x) * (tint - 1))`: the tint in full at black and none of it at white.
 - **Sepia unchanged.**
   Sepia is still Core Image's sepia filter with its intensity given, never left to a default.
 - **Unchanged output.**
-  With `start` 0 and `top` 1 the print renderer produces the prints it did.
-  `ChemicalToningTests.testSeleniumIsTheBlendItReplaced` keeps the earlier blend in the test and holds the formula to it on a ramp of tones at four strengths.
-  On the night street and the daylight scene, rendered before and after, the toned prints differ by at most 2 levels in fewer than 1 pixel in 20,000, which is JPEG rounding.
+  With `start` 0 and `top` 1 and both filter chains as they were, a toned recipe prints byte for byte what the build before this work printed.
+  Main's `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` holds both toners at a half-way amount to a copy of that build's printing.
+- **A formula tried and taken back.**
+  While the board was made, selenium was briefly one polynomial on each channel, the same formula, on the belief that the mask would saturate past a strength of 1 and the board's stronger rows needed more.
+  On a neutral ramp the two agreed to 0.00000006, but in a whole print their rounding differs: after main was merged, the byte check above found one selenium print 4 bytes off in its JPEG.
+  The belief was also wrong: on this Mac the blend at strengths 2 and 4 matches the formula to 0.00001 on three tones, so it does not saturate.
+  The captain kept a top of 1 anyway, so the polynomial was taken out and the blend is back, unchanged.
+  The board's selenium prints were made with the polynomial.
+  Rendered again on 2026-10-14 through the same tool from the same masters, with the blend back, 6 of the 20 selenium prints at the app's strengths are the same byte for byte and the other 14 differ by at most 4 levels in at most 4 pixels in 10,000; the other 274 files are the same byte for byte.
 
 ### The board
 
-Served to the captain on 2026-10-13 from `Evidence/AssetReview/looks/toning/index.html`; the copy kept there was rebuilt after his answer at repository size, through the final code, with his words under its title.
+Served to the captain on 2026-10-13 from `Evidence/AssetReview/looks/toning/index.html`; the copy kept there was rebuilt after his answer at repository size, through the code of that day, with his words under its title.
 Five scenes developed as a black-and-white 6×6 Film: two portraits, light skin and dark, a night street for deep shadow, a daylight scene and a bright interior.
 Each has a sepia row and a selenium row at 0.25, 0.50, 0.75 and 1.00 beside the untoned print, and a second selenium row at 2, 3 and 4 times the provisional top.
 Every print is made by `NativePhotoRenderer.print`, the call the Darkroom makes.
@@ -353,7 +358,8 @@ The last two came when the kept boards were opened to him again later that day, 
 | `FilmRuntimeTests.TreatmentVersionDevelopmentTests.testAnInstantPackLoadedUnderVersionThreeKeepsItsContrastForEveryPrint` | Through the production processor and a reopened store: a version 3 pack's prints, one exposed after the update, are byte for byte version 3's and not version 4's; a pack loaded today is version 4's |
 | `ToningLookTests.testEachTonersRangeIsTheOneTheCaptainChose` | Both ranges are 0 to 1, and a recipe at the slider's low end prints the untoned print |
 | `ToningLookTests.testEachTonerAtItsTopIsTheOneTheBoardShowed` | Each toner at the top of its slider on five neutral tones, against values recorded from the build the board was rendered with, within 0.002 |
-| `ToningLookTests.testSeleniumIsTheBlendItReplaced` | The polynomial against the masked blend it replaced, at 21 tones and four strengths, within 0.00001 |
+| `ToningLookTests.testSeleniumIsTheArithmeticItStates` | The selenium blend against its formula at 21 tones and four strengths, within 0.00001 |
+| `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` (main's) | A toned black-and-white 6×6 print, each toner at half-way, prints the same bytes as a copy of the earlier build's printing |
 | `ToningLookTests.testSeleniumTintsTheDarkerTonesPurpleAndLeavesBlackAndWhiteAlone`, `testSepiaIsAWarmBrown`, `testARecipesAmountRunsFromTheTonersStartToItsTop` | Each toner's character, and that a recipe's amount reaches it through the toner's own range |
 
 One test was found too weak and strengthened before it was relied on.
@@ -371,7 +377,8 @@ Through the board tool, version 3's Instant renders made with the new code were 
 ### What is in the app is what he saw
 
 Version 4's renders through the app's code were set against the board's B, which was rendered from the working tree before he answered: 98 of 110 files are the same byte for byte and the other 12 differ by at most 10 levels, the same run-to-run difference.
-The toned prints for the kept board were rendered again through the final code: 16 of 40 are the same byte for byte as the ones he saw and the rest differ by at most 16 levels, because their untoned masters differ between the runs in that same way.
+The toned prints for the kept board were rendered again through the code of 2026-10-13, selenium's polynomial included: 16 of 40 are the same byte for byte as the ones he saw and the rest differ by at most 16 levels, because their untoned masters differ between the runs in that same way.
+Selenium's blend, which came back after that, moves its prints by at most 4 levels in at most 4 pixels in 10,000 ("A formula tried and taken back", above).
 
 ## What ran
 
@@ -390,6 +397,35 @@ They show the looks inside the real views, not a capture: the harness seeds its 
 
 Not run for this work: the whole of `Scripts/validate-local.sh`, the app's own UI suites and audits, the other packages' tests, an iPhone SE simulator, and dark mode.
 No screen's layout or text changed, only the pixels of a developed Instant print.
+
+### After main was merged, 2026-10-14
+
+Main's Darkroom limits and export decisions (9d54ba1) were merged into this work, and they change the code that prints a toned black-and-white print.
+So what the merge can reach was run again on the merged code: the packages part of the check (`IMMERSE_VALIDATE_PART=packages sh Scripts/validate-local.sh`), which holds every test this work adds or changes.
+It ran on this Mac with two simulators created for this work, an iOS 26.5 iPhone 17 Pro for the render tests and an iOS 26.2 one for `ImmerseTests`, deleted after.
+
+The first run stopped at RenderCore on the Mac, its fourth package: 116 tests, 1 failure, main's byte check on a selenium print ("A formula tried and taken back", above).
+The scripts' tests, the two checks and the three packages before it had passed; nothing after it ran.
+The whole part was then run again with selenium's blend back:
+
+| Where | What | Result |
+| --- | --- | --- |
+| Mac | The scripts' own tests, `Scripts/verify-validation-parts.sh` and the requirement map | 52 tests, 0 failures; both checks passed |
+| Mac | RenderCore | 116 tests, 0 failures, the same 1 skipped |
+| Mac | FilmRuntime, FilmDomain and the five other packages, and the two Mac probes | All passed: FilmRuntime 65 tests, FilmDomain 24 |
+| Mac | The documents package, the app's simulator and device builds, and the Release check | Passed: 30 files, matching the tree; the testing unlock absent from Release |
+| iOS simulator | RenderCore without `LegacyLookTests` | 113 tests, 112 passed, the same 1 skipped |
+| iOS 26.2 simulator | `ImmerseTests` | 47 tests, 0 failures |
+
+Carried over from 2026-10-13, not run again here:
+
+- **The three tests in the populated harness and their four screenshots.**
+  They are the harness part of the check, which CI runs on the pull request in full; the merge's own screen changes are main's, held by main's tests.
+  The screenshots show the Darkroom as it was before main's change.
+- **The scratch digests and the board comparisons above.**
+  Instead, the board tool's renders through the merged code were set against the ones made before the merge: all 294 of version 4 (the Instant and the 6×6, toned prints included) and all 146 of version 3's Instant are the same byte for byte.
+  Selenium's blend, which came back after that, was then measured on its own, as above.
+- **The screen-test parts, an iPhone SE simulator and dark mode,** as before: this work changes no screen.
 
 ## What a phone still has to show
 

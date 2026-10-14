@@ -10,29 +10,17 @@ final class ToningLookTests: XCTestCase {
     private static let linear = CGColorSpace(name: CGColorSpace.linearSRGB)!
     private let context = CIContext(options: [.workingColorSpace: ToningLookTests.linear, .cacheIntermediates: false])
 
-    /// Selenium was a tinted copy of the print blended in through a mask of the inverted print. The one polynomial
-    /// that replaced it is the same arithmetic, on every tone, at every strength the mask could carry.
-    func testSeleniumIsTheBlendItReplaced() {
+    /// Selenium's blend through the inverted print is, on every tone and at every strength its range gives, the
+    /// arithmetic its comment states: each channel's light x becomes x * (1 + strength * (1 - x) * (tint - 1)).
+    func testSeleniumIsTheArithmeticItStates() {
         let tint = ToningLook.seleniumTint
         for strength in [0.25, 0.5, 0.75, 1] {
             for step in 0...20 {
-                let gray = Self.gray(Double(step) / 20)
-                let tinted = gray.applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: tint.red, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: tint.green, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: tint.blue, w: 0)
-                ])
-                let shadows = gray.applyingFilter("CIColorInvert").applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: strength, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: strength, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: strength, w: 0)
-                ])
-                let blended = light(tinted.applyingFilter("CIBlendWithMask", parameters: [
-                    kCIInputBackgroundImageKey: gray, kCIInputMaskImageKey: shadows
-                ]))
-                let toned = light(ToningLook.toned(gray, with: .selenium, strength: strength))
-                for channel in 0..<3 {
-                    XCTAssertEqual(toned[channel], blended[channel], accuracy: 0.00001, "strength \(strength), tone \(step)")
+                let x = Double(step) / 20
+                let toned = light(ToningLook.toned(Self.gray(x), with: .selenium, strength: strength))
+                for (channel, tint) in [tint.red, tint.green, tint.blue].enumerated() {
+                    XCTAssertEqual(toned[channel], x * (1 + strength * (1 - x) * (tint - 1)), accuracy: 0.00001,
+                                   "strength \(strength), tone \(step)")
                 }
             }
         }
