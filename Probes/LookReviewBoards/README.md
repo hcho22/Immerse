@@ -9,10 +9,11 @@ The boards and their outcomes are in `Evidence/AssetReview/looks/`, `Evidence/Na
 ## Render the scenes
 
 ```sh
-swift run -c release --package-path Probes/LookReviewBoards LookReviewBoards <scenes.json> <new output directory> [camera ...]
+swift run -c release --package-path Probes/LookReviewBoards LookReviewBoards <scenes.json> <new output directory> [--version=<treatment version>] [camera ...]
 ```
 
 Naming Cameras by identifier (`cinema16mm`, `mediumFormat6x6` and so on) develops only those, for a round that changes one board.
+`--version` develops an earlier treatment version a Film can still carry, such as `film-look-3`, in place of today's, to set beside it on a board; the kept Instant board's version 3 renders were made this way.
 
 `scenes.json` lists photo scenes and Movie scenes with paths relative to the file.
 Each photo is developed by every Photo Camera and Film Stock with `NativePhotoRenderer.develop`, and by both Movie Cameras as a two-second still clip from which one frame is kept; each Movie scene is developed with `NativeMovieRenderer.developClip`.
