@@ -22,8 +22,8 @@ final class LowStorageUITests: XCTestCase {
         XCTAssertTrue(load.isHittable)
         XCTAssertTrue(load.isEnabled, "The warning stops nothing")
         XCTAssertLessThanOrEqual(warning.frame.maxY, load.frame.minY, "The warning comes before Load Film")
-        try audit(app, name: "Load-low-storage", for: JournalFlowTests.auditTypes)
         retainScreenshot(app, name: "Load-low-storage")
+        try audit(app, name: "Load-low-storage", for: JournalFlowTests.auditTypes)
     }
 
     func testLoadFilmShowsNoWarningAtExactlyTwoGigabytes() throws { assertNoWarningOnLoadFilm(freeSpace: "2000000000") }
@@ -38,14 +38,14 @@ final class LowStorageUITests: XCTestCase {
         let warning = app.staticTexts["low-storage-warning"]
         scrollUp(app, until: warning)
         XCTAssertEqual(warning.label, Self.captureWarning)
-        try audit(app, name: "Load-low-storage-accessibility-largest", for: JournalFlowTests.auditTypes)
         retainScreenshot(app, name: "Load-low-storage-accessibility-largest")
+        try audit(app, name: "Load-low-storage-accessibility-largest", for: JournalFlowTests.auditTypes)
         let load = app.buttons["load-film"]
         scrollUp(app, until: load)
         XCTAssertTrue(load.isHittable)
         XCTAssertTrue(load.isEnabled)
-        try audit(app, name: "Load-low-storage-command-accessibility-largest", for: JournalFlowTests.auditTypes)
         retainScreenshot(app, name: "Load-low-storage-command-accessibility-largest")
+        try audit(app, name: "Load-low-storage-command-accessibility-largest", for: JournalFlowTests.auditTypes)
     }
 
     /// Loading while the warning shows still loads the Film, and its screen warns again above Open Camera.
@@ -55,8 +55,8 @@ final class LowStorageUITests: XCTestCase {
             XCTAssertTrue(open.isHittable)
             XCTAssertTrue(open.isEnabled, "The warning stops nothing")
             XCTAssertLessThanOrEqual(warning.frame.maxY, open.frame.minY, "The warning comes before Open Camera")
-            try audit(app, name: "Film-low-storage", for: JournalFlowTests.auditTypes)
             retainScreenshot(app, name: "Film-low-storage")
+            try audit(app, name: "Film-low-storage", for: JournalFlowTests.auditTypes)
         }
     }
 
@@ -65,14 +65,14 @@ final class LowStorageUITests: XCTestCase {
     func testFilmScreenWarningAtTheLargestTextSizeHidesNoControl() throws {
         try withLoadedDisposable(size: "UICTContentSizeCategoryAccessibilityXXXL") { app, open, warning in
             scrollUp(app, until: warning)
-            try audit(app, name: "Film-low-storage-accessibility-largest", for: JournalFlowTests.auditTypes)
             retainScreenshot(app, name: "Film-low-storage-accessibility-largest")
+            try audit(app, name: "Film-low-storage-accessibility-largest", for: JournalFlowTests.auditTypes)
             scrollUp(app, until: open)
             XCTAssertTrue(open.isHittable)
             XCTAssertTrue(open.isEnabled, "The warning stops nothing")
             XCTAssertLessThanOrEqual(warning.frame.maxY, open.frame.minY, "The warning comes before Open Camera")
-            try audit(app, name: "Film-low-storage-command-accessibility-largest", for: JournalFlowTests.auditTypes)
             retainScreenshot(app, name: "Film-low-storage-command-accessibility-largest")
+            try audit(app, name: "Film-low-storage-command-accessibility-largest", for: JournalFlowTests.auditTypes)
         }
     }
 
@@ -159,6 +159,8 @@ final class LowStorageUITests: XCTestCase {
         scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
     }
 
+    /// Keeps the screen as it is. Each audited pose is kept before its audit, whose text-resizing checks leave a
+    /// scrolled list somewhere else.
     private func retainScreenshot(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name
