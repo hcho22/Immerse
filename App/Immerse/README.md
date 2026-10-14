@@ -38,8 +38,9 @@ Text sizing on every audited screen is measured by `ContentSizeTests` at all twe
 sizes instead of the Dynamic Type audit, which is not run
 (`Evidence/NativeApp/qa13-audit-exceptions-052.md`). The script runs the
 `JournalFlowTests` accessibility audits, `MovieCapacityUITests`, with its
-populated Journal card contrast audit, and `FilmStockUITests`, with its Film Stock
-Load Film audit, a second time with the simulator set to dark appearance; for
+populated Journal card contrast audit, `FilmStockUITests`, with its Film Stock
+Load Film audit, and `LowStorageUITests`, with its low-storage warning audits,
+a second time with the simulator set to dark appearance; for
 other dark coverage, including `ContentSizeTests`, set
 `xcrun simctl ui <task-owned-uuid> appearance dark` before the UI run, then restore
 its appearance. Do not infer dark coverage from an `AppleInterfaceStyle` launch
@@ -60,6 +61,10 @@ It starts on, loads every Camera as a subscription Film without touching the Tri
 Settings > Debug testing turns it off for Trial and plan checks; the choice persists on the device.
 It appears only when the scheme's Run action uses Debug.
 `Scripts/verify-release-excludes-testing-unlock.sh`, run by the local validation script, fails if Release contains it.
+
+The app warns before captures and Development while the iPhone has less than 2 GB free (`Sources/LowStorage.swift`), and stops nothing.
+A Debug build launched with `-ImmerseDebugFreeSpace <bytes>` reads that many bytes free instead of the iPhone's own, and any other value, such as `unreadable`, is a reading that fails; screen tests and screenshots use it, and the same script fails if Release contains it.
+`Sources/PrivacyInfo.xcprivacy` declares the free-space reading, as Apple requires.
 
 The test target alone bundles `Tests/Fixtures/LocalSubscriptions.storekit`.
 Its prices and product IDs are synthetic test data, never live recommendations.
