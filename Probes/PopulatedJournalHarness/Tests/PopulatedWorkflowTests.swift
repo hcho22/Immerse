@@ -695,6 +695,97 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertFalse(explanation.exists, "\(name): the explanation goes once the print can be made")
     }
 
+    /// The captain (2026-10-14): on a short screen the print gives up height in the Crop tool, so every Crop control
+    /// shows. With a crop smaller than the whole print, at the default text size the switch and the Size, Horizontal and
+    /// Vertical sliders and their captions all rest between the navigation bar and the fade, above Reset to Original,
+    /// with nothing scrolled, and the Vertical slider takes a drag there. The print is still shown above them, and back
+    /// in Exposure it has the size it had before Crop. At the largest size the controls cannot all fit, so the Vertical
+    /// slider is scrolled to, comes fully clear of the fade and takes the same drag.
+    func testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize() throws { assertDarkroomCropFits(largest: false) }
+    func testDarkroomScrollsTheCropControlsClearAtTheLargestSize() throws { assertDarkroomCropFits(largest: true) }
+
+    private func assertDarkroomCropFits(largest: Bool) {
+        var arguments = ["--developed-photo"]
+        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        let app = launch(arguments: arguments)
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        XCTAssertTrue(open.exists, "\(largest)")
+        open.tap()
+        app.buttons["Darkroom"].tap()
+        let name = "Darkroom-crop-\(largest ? "largest" : "default")"
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name) print")
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10), name)
+        // Let the first render and the controls' measured height settle before reading frames.
+        Thread.sleep(forTimeInterval: 1.5)
+        let exposurePrint = print.frame
+        app.buttons["Crop"].tap()
+        let crop = app.switches["Crop"]
+        XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
+        // At the largest size the switch can start below the fold; held drags in the left margin bring it up.
+        let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch
+        for _ in 0..<12 where !crop.isHittable { dragUp(app, by: 160) }
+        crop.tap()
+        let size = app.sliders["Crop size"]
+        XCTAssertTrue(size.waitForExistence(timeout: 5), name)
+        for _ in 0..<12 where !size.isHittable { dragUp(app, by: 160) }
+        size.adjust(toNormalizedSliderPosition: 0.6)
+        let vertical = app.sliders["Crop Vertical"]
+        XCTAssertTrue(vertical.waitForExistence(timeout: 5), name)
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name): the cropped print is made")
+        Thread.sleep(forTimeInterval: 1.5)
+        let bar = app.navigationBars["Darkroom"]
+        let reset = app.buttons["Reset to Original"]
+        // The scroll area's last 12 pt fade out, so a control in full view ends above them.
+        let clear = area.frame.maxY - 12 + 1
+        XCTAssertLessThanOrEqual(area.frame.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
+        snapshot(app, name)
+        if largest {
+            for _ in 0..<16 where vertical.frame.maxY > clear { dragUp(app, by: 240) }
+            snapshot(app, "\(name)-vertical")
+        } else {
+            let controls = [crop, size, app.sliders["Crop Horizontal"], vertical, app.staticTexts["Crop"].firstMatch]
+                + ["Size", "Horizontal", "Vertical"].map { app.staticTexts[$0] }
+            for control in controls {
+                XCTAssertTrue(control.exists, "\(name): \(control.label)")
+                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
+                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
+            }
+            // The print is still shown, below the bar and above the controls.
+            XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
+            XCTAssertLessThanOrEqual(print.frame.maxY, crop.frame.minY, "\(name): the print is above the controls")
+            XCTAssertGreaterThanOrEqual(print.frame.height, 64, "\(name): the print is not squeezed away")
+        }
+        XCTAssertGreaterThanOrEqual(vertical.frame.minY, bar.frame.maxY, "\(name): the Vertical slider is in view")
+        XCTAssertLessThanOrEqual(vertical.frame.maxY, clear, "\(name): the Vertical slider is in view, above the fade")
+        XCTAssertTrue(vertical.isHittable, "\(name): the Vertical slider can be used")
+        // A drag from the thumb at the start of the slider to past its end moves the crop to the bottom of the print.
+        let before = vertical.value as? String
+        vertical.coordinate(withNormalizedOffset: CGVector(dx: 0.04, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: vertical.coordinate(withNormalizedOffset: CGVector(dx: 1.2, dy: 0.5)))
+        XCTAssertNotEqual(vertical.value as? String, before, "\(name): the Vertical slider takes the drag")
+        // Without the crop, back in Exposure, the print has the size it had before Crop opened.
+        for _ in 0..<16 where !crop.isHittable { dragDown(app, by: 240) }
+        crop.tap()
+        app.buttons["Exposure"].tap()
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 5), name)
+        Thread.sleep(forTimeInterval: 1.5)
+        XCTAssertEqual(print.frame.height, exposurePrint.height, accuracy: 1, "\(name): Exposure keeps the print's size")
+    }
+
+    /// Held drags in the left margin, which neither coast nor move a slider.
+    private func dragUp(_ app: XCUIApplication, by distance: CGFloat) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)), withVelocity: .slow, thenHoldForDuration: 0.3)
+    }
+
+    private func dragDown(_ app: XCUIApplication, by distance: CGFloat) {
+        let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.3))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: .slow, thenHoldForDuration: 0.3)
+    }
+
     /// A test whose Film is on the 16mm Cinema's or the 6×6 Medium Format's color Film Stock is skipped where Core
     /// Image cannot run the tetrahedral reader: there the harness cannot develop that Film.
     private func requireTetrahedralReader() throws {
