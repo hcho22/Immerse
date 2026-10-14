@@ -22,6 +22,8 @@ public struct VolumeFreeSpaceReader: FreeSpaceReading {
     public init(url: URL) { self.url = url }
 
     public func availableBytes() throws -> Int64 {
+        // A URL keeps a value it has read until the reading thread's run loop turns, and the app reads on threads
+        // that run none, so without clearing it every reading after the first would repeat the first.
         var url = url
         url.removeAllCachedResourceValues()
         let values = try url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey])
