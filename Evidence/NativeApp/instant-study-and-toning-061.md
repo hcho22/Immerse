@@ -300,8 +300,9 @@ Every print is made by `NativePhotoRenderer.print`, the call the Darkroom makes.
 
 ## What the captain decided
 
-All on 2026-10-13.
-The first two answers came on the boards themselves, through the review tool, and are quoted whole; the last two came through firstmate, in his words.
+All on 2026-10-13, and all quoted whole.
+The first two and the last two came on the boards themselves, through the review tool; the middle two came through firstmate, in his words.
+The last two came when the kept boards were opened to him again later that day, and each confirms what the app already has; nothing changed for them.
 
 | Asked | His words | What it settles |
 | --- | --- | --- |
@@ -309,6 +310,8 @@ The first two answers came on the boards themselves, through the review tool, an
 | The toning board | "sepia - untoned to 1. selenium - untoned to 1" | Each toner's slider starts at the untoned print and tops out at the strength shown as 1.00. |
 | Whether "B" also meant the wider print-to-print variation, or the contrast only | B means "contrast only" | The variation stays exactly as it was. |
 | Whether to reword the Instant's Load Film line, which says "soft contrast" | "leave it." | No product string changes. |
+| The kept Instant board, opened to him again, with version 4 as the app develops it beside version 3 | "version 4" | Confirms the contrast in the app. |
+| The kept toning board, opened to him again, with his range under its title | "approved" | Confirms the toning range in the app. |
 
 - **The Instant's contrast.**
   B is in the app as treatment version 4 (`FilmLook.instant`).

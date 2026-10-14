@@ -47,7 +47,8 @@ BOARDS = [
         "approved": "Approved by the captain on 2026-10-10 (\"faded\", then \"approved\"): the faded look, his exception to "
                     "ADR 0013 and to the PRD wording below (ADR 0016). On 2026-10-13, with the study of preserved 1970s prints "
                     "on this board, he chose its contrast: \"B\", which he said means \"contrast only\". The contrast is the "
-                    "one the study supports, and the print-to-print variation stays as it was.",
+                    "one the study supports, and the print-to-print variation stays as it was. Shown this board again later that day, he "
+                    "wrote \"version 4\", which is what the app has.",
         "pairs": {("instant1970s", None): [("instant-study-23", "flash-01"), ("instant-study-07", "flash-02"), ("instant-01", "day-02"),
                                            ("instant-03", "day-01")]},
         "name": "1970s Instant",
