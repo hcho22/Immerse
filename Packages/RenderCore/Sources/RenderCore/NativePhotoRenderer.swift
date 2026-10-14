@@ -173,29 +173,7 @@ public enum NativePhotoRenderer {
                     .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
             }
         }
-        if let toning = recipe.chemicalToning {
-            let toned: CIImage
-            switch toning.chemistry {
-            case .sepia:
-                toned = image.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: toning.amount])
-            case .selenium:
-                // Provisional shadow-biased selenium print response, not a stock certification.
-                let tinted = image.applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: 1.04, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: 0.94, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: 1.02, w: 0)
-                ])
-                let shadows = image.applyingFilter("CIColorInvert").applyingFilter("CIColorMatrix", parameters: [
-                    "inputRVector": CIVector(x: toning.amount, y: 0, z: 0, w: 0),
-                    "inputGVector": CIVector(x: 0, y: toning.amount, z: 0, w: 0),
-                    "inputBVector": CIVector(x: 0, y: 0, z: toning.amount, w: 0)
-                ])
-                toned = tinted.applyingFilter("CIBlendWithMask", parameters: [
-                    kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: shadows
-                ])
-            }
-            image = toned
-        }
+        if let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
         if let crop = recipe.crop {
             let size = image.extent.size
             var area = CGRect(

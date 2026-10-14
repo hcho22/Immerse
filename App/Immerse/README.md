@@ -85,12 +85,10 @@ fault/native-app gates, historical D3 migration and still-unaccepted hardware li
 ## Provisional Choices and Limits
 
 SwiftUI, raw SQLite and local package boundaries are reversible baseline defaults,
-not a newly approved DEC-03. The captain decided the Darkroom's ranges, the export
-sizes and formats, the Instant's question about each print's original and that a
-soundtrack can be changed later on 2026-10-13
-(`Evidence/NativeApp/darkroom-export-decisions-060.md`). His own sample shots,
-instrumental licenses, the Instant's contrast, toning strength, support/privacy
-wording, measured budgets and launch approval remain open.
+not a newly approved DEC-03.
+The captain decided the Darkroom's ranges, the export sizes and formats, the Instant's question about each print's original and that a soundtrack can be changed later on 2026-10-13 (`Evidence/NativeApp/darkroom-export-decisions-060.md`).
+The same day, after a study of preserved 1970s prints, he chose the Instant's contrast, which a Film loaded since develops with as treatment version 4 (`film-look-4`), its print-to-print variation unchanged, and each toner's range, from the untoned print to a strength of 1 (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+His own sample shots, instrumental licenses, support/privacy wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
 samples and instrumentals. It is empty until he supplies his shots and a license
 allows a soundtrack inside exported Movies, so no synthetic sample or unlicensed

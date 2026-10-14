@@ -236,7 +236,7 @@ A clip developed before this change is not developed again.
 Photos stay sRGB JPEG, as the approved looks were judged.
 Whether tagging would change anything on a phone is to be looked at during the manual iPhone test.
 
-Still open in DEC-04: the Instant's contrast and print-to-print variation, and the toning strength (A.1 and A.3).
+Still open in DEC-04 after this answer: the Instant's contrast and print-to-print variation, and the toning strength (A.1 and A.3), decided later the same day (the last section of this addendum).
 
 ### DEC-05 - sample photos and music (B)
 
@@ -263,7 +263,7 @@ Still open: the shots themselves, seven in all (the Disposable, the Instant, the
 | Soundtrack | Changing it later reassembles from the existing Developed Clips | As recommended: it can be changed later without developing again. |
 
 DEC-11 is decided.
-The toning strength for black-and-white 6×6 prints is the one Darkroom value still open, and it is tracked under DEC-04 (A.3).
+The toning strength for black-and-white 6×6 prints was the one Darkroom value still open, tracked under DEC-04 (A.3), and was decided later the same day (the last section of this addendum).
 
 ### DEC-12 - speed and storage targets (D)
 
@@ -323,3 +323,21 @@ Eight things in how the app carries his decisions are also his to see, because h
 - A clip developed from now on is its whole frames, with the last one held to where the recording stopped, where each clip used to end on one more frame lasting a fraction of a frame.
 - A Disposable picture developed from now on from a capture larger than 12 megapixels is brought down to whole pixels, 4242 × 2828 from a 27-megapixel capture, where it used to come out a pixel larger each way, 4243 × 2829, which is 3,447 pixels over the 12,000,000-pixel limit.
 - A cropped 6×6 print is square to the pixel, where a crop lying between pixels used to come out a pixel longer one way, 619 × 618 for one, and a print saved that way before now prints without that last column or row.
+
+### A.1 and A.3 - the Instant's contrast and variation, and the toning strength
+
+Both were decided later on 2026-10-13, on review boards of their own (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+
+- A.1, the Instant's contrast and print-to-print variation: the study of preserved 1970s prints was made and put before the captain on the Instant's review board.
+  He chose the contrast it supports: "B".
+  The print-to-print variation stays as it was: the board showed the wider variation the study supports beside it, and asked whether his "B" also meant that or the contrast only, he answered that B means "contrast only".
+  Asked whether the Instant's Load Film line, which says "soft contrast", should be reworded, he said "leave it."
+- A.3, the toning strength: the comparison prints were generated and reviewed on a toning board.
+  The captain said: "sepia - untoned to 1. selenium - untoned to 1".
+  Each toner's slider starts at the untoned print and tops out at the strength the board showed as 1.00, the provisional `0...1` amount.
+
+With these, nothing DEC-04 listed as open after 2026-10-13 is open.
+He saw the looks and the toned prints on their boards.
+Later the same day he confirmed "version 4" on the kept Instant board, which names B as treatment version 4 and shows version 3 as "before the study", and "approved" on the kept toning board.
+The kept Instant board says in its own text, under "The contrast before and after the study", that an Instant Film loaded under version 3 still develops with the earlier contrast, and the copy served to him has the same sentence.
+The toners' range now lives in the doc comment of `ToningLook.swift`, in his words.
