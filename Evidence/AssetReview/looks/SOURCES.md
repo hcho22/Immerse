@@ -305,7 +305,7 @@ Only its numbers were read (contrast, point curve, color mixer and calibration v
 
 ## Added on 2026-10-13: the Instant print study
 
-Thirty-four scans of preserved 1970s integral instant prints, gathered for the study of the Instant's contrast and print-to-print variation (`Evidence/NativeApp/instant-study-and-toning-059.md`).
+Thirty-four scans of preserved 1970s integral instant prints, gathered for the study of the Instant's contrast and print-to-print variation (`Evidence/NativeApp/instant-study-and-toning-061.md`).
 With instant-01, instant-03 and instant-04, which the boards already had, they are the 37 prints the study measures; each of the 37 carries a `study` record in `sources.json`.
 Licences: CC BY 2.0 (28), CC BY-SA 2.0 (3), Public Domain Mark 1.0 (2), CC0 (1).
 Every licence was read from the file's own page and, for Flickr, from Flickr's oEmbed endpoint at download time, and every file is the original size its page offers.

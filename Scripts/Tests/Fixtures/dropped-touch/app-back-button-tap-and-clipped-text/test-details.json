@@ -1,0 +1,18 @@
+{
+ "ContentSizeTests/testLandscapeSettingsTopTextAtLarge()": {
+  "testIdentifier": "ContentSizeTests/testLandscapeSettingsTopTextAtLarge()",
+  "testIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/ContentSizeTests/testLandscapeSettingsTopTextAtLarge",
+  "testName": "testLandscapeSettingsTopTextAtLarge()",
+  "testResult": "Failed",
+  "startTime": 1791471053.632,
+  "durationInSeconds": 16.423870086669922
+ },
+ "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()": {
+  "testIdentifier": "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()",
+  "testIdentifierURL": "test://com.apple.xcode/Immerse/ImmerseUITests/JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings",
+  "testName": "testLargestDynamicTypeCatalogAndLandscapeSettings()",
+  "testResult": "Failed",
+  "startTime": 1791471760.478,
+  "durationInSeconds": 79.4401820898056
+ }
+}

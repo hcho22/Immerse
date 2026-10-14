@@ -6,10 +6,6 @@ public enum MediaCatalogError: Error, Equatable, Sendable {
     case invalidManifest, invalidPath, unapprovedRights, checksumMismatch, assetNotFound, incompatibleAsset
 }
 
-public enum SoundtrackReselectionPolicy: String, Codable, Sendable {
-    case initialChoiceOnly, allowed
-}
-
 public struct MediaRights: Codable, Equatable, Sendable {
     public enum Clearance: String, Codable, Sendable { case productionApproved, syntheticTestOnly }
     public let clearance: Clearance
@@ -39,7 +35,6 @@ public struct CatalogMediaAsset: Codable, Equatable, Identifiable, Sendable {
 
 public struct MediaCatalogManifest: Codable, Sendable {
     public let schemaVersion: Int
-    public let soundtrackReselection: SoundtrackReselectionPolicy?
     public let assets: [CatalogMediaAsset]
 }
 

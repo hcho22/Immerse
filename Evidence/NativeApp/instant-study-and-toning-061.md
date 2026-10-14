@@ -1,4 +1,4 @@
-# 059: the Instant print study and the chemical toning board
+# 061: the Instant print study and the chemical toning board
 
 Tracker items DEC-04, DEC-11 and QA-16, worked from 2026-10-13.
 The captain's words that day, on the remaining open decisions: "looks good".
@@ -382,7 +382,7 @@ All on 2026-10-13, on this Mac (Intel) and in an iOS 26.5 simulator on it (iPhon
 | Mac | `swift test --package-path Packages/FilmDomain` | 24 tests, 0 failures |
 | iOS simulator | `PopulatedWorkflowTests.testInstantLookScreens`, `testInstantPrintShowsItsCardAndTheDarkroomOffersNoCrop` and `testBlackAndWhite6x6PrintTakesChemicalToning` in the populated harness, which develops through the production Development and opens the real views | 3 tests, 0 failures |
 
-The four screenshots in `instant-study-and-toning-059/` are from that last run: the Instant's Film screen and a developed print with version 4's contrast, and a black-and-white 6×6 print in the Darkroom and on its Photo screen with sepia at the slider's half-way start.
+The four screenshots in `instant-study-and-toning-061/` are from that last run: the Instant's Film screen and a developed print with version 4's contrast, and a black-and-white 6×6 print in the Darkroom and on its Photo screen with sepia at the slider's half-way start.
 They show the looks inside the real views, not a capture: the harness seeds its Films and never opens the camera.
 
 Not run for this work: the whole of `Scripts/validate-local.sh`, the app's own UI suites and audits, the other packages' tests, an iPhone SE simulator, and dark mode.

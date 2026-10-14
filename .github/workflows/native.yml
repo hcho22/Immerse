@@ -6,25 +6,105 @@ on:
 permissions:
   contents: read
 jobs:
-  local-native:
-    runs-on: macos-26
-    timeout-minutes: 120
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+  # Which parts this change needs: all four, or the packages part alone for a pull request that changes only
+  # Markdown (Scripts/validation-scope.sh). Every push to main runs all four.
+  scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      parts: ${{ steps.scope.outputs.parts }}
+      note: ${{ steps.scope.outputs.note }}
     steps:
       - uses: actions/checkout@v4
-      - name: Create isolated simulator
+        with:
+          fetch-depth: 2
+      - name: Choose the parts
+        id: scope
         run: |
-          device=$(xcrun simctl create 'Immerse CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)
-          echo "IMMERSE_SIMULATOR_UDID=$device" >> "$GITHUB_ENV"
-          echo "IMMERSE_WORKFLOW_SIMULATOR_UDID=$device" >> "$GITHUB_ENV"
-          billing=$(xcrun simctl create 'Immerse Billing CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-2)
-          echo "IMMERSE_STOREKIT_SIMULATOR_UDID=$billing" >> "$GITHUB_ENV"
-      - name: Package, app and local StoreKit tests
+          # A pull request is checked out as its merge into the base branch, whose first parent is the base.
+          # If the change cannot be listed, the list stays empty and every part runs.
+          : > "$RUNNER_TEMP/changed.txt"
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            git diff --name-only --no-renames HEAD^1 HEAD > "$RUNNER_TEMP/changed.txt" || : > "$RUNNER_TEMP/changed.txt"
+          fi
+          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" | tee -a "$GITHUB_OUTPUT"
+  # Validation in parts side by side, each on its own runner (Scripts/validation-parts.sh says what each holds).
+  # One job ran them in turn for about two hours.
+  part:
+    needs: scope
+    name: ${{ matrix.part }}
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.scope.outputs.parts) }}
+    runs-on: macos-26
+    timeout-minutes: 75
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+      IMMERSE_VALIDATE_PART: ${{ matrix.part }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create isolated simulators
+        run: |
+          create() { xcrun simctl create "$1" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro "com.apple.CoreSimulator.SimRuntime.$2"; }
+          case "$IMMERSE_VALIDATE_PART" in
+            packages)
+              echo "IMMERSE_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV"
+              echo "IMMERSE_STOREKIT_SIMULATOR_UDID=$(create 'Immerse Billing CI' iOS-26-2)" >> "$GITHUB_ENV" ;;
+            harness)
+              echo "IMMERSE_WORKFLOW_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV" ;;
+            *)
+              echo "IMMERSE_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV" ;;
+          esac
+      - name: Validate
         run: sh Scripts/validate-local.sh
+      # A part that passed only because a screen test was run once more, on the simulator's own record that it
+      # dropped that test's touch (Scripts/screen-tests.sh), says so on the run's page and to the summary check.
+      - name: Say whether a screen test was rerun
+        if: always()
+        run: |
+          mkdir -p DerivedData
+          if [ -s DerivedData/validation-notes.txt ]; then
+            { echo "$IMMERSE_VALIDATE_PART: a screen test passed only through a rerun."; cat DerivedData/validation-notes.txt; } > DerivedData/part-notes.txt
+            while IFS= read -r note; do
+              echo "::warning title=$IMMERSE_VALIDATE_PART passed only through a rerun::$note"
+            done < DerivedData/validation-notes.txt
+          else
+            echo "$IMMERSE_VALIDATE_PART: no screen test was rerun." > DerivedData/part-notes.txt
+          fi
+          { echo '```'; cat DerivedData/part-notes.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Retain the part's notes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-notes-${{ matrix.part }}
+          path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: native-test-results
+          name: native-test-results-${{ matrix.part }}
           path: DerivedData/*.xcresult
+  # The one check to read: green only when every part that ran is, and it says which parts did not run and why.
+  local-native:
+    needs: [scope, part]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Collect the parts' notes
+        uses: actions/download-artifact@v4
+        with:
+          pattern: validation-notes-*
+          path: notes
+      - name: Every part passed
+        run: |
+          {
+            echo "$SCOPE_NOTE"
+            echo "Parts: ${{ needs.part.result }}"
+            cat notes/*/part-notes.txt 2> /dev/null || echo "No part left a note."
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          test "${{ needs.scope.result }}" = success
+          test "${{ needs.part.result }}" = success
+        env:
+          SCOPE_NOTE: ${{ needs.scope.outputs.note }}

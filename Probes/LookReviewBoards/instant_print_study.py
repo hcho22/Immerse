@@ -10,7 +10,7 @@ is measured, after its file is checked against the SHA-256 the manifest records.
 --scenes is the scenes.json they were rendered from, which keeps the measure to the scenes the Instant's board shows.
 Writes measurements.json and measurements.md into --output. Needs numpy and Pillow.
 
-What is measured, and why it is measured this way, is in Evidence/NativeApp/instant-study-and-toning-059.md.
+What is measured, and why it is measured this way, is in Evidence/NativeApp/instant-study-and-toning-061.md.
 Nothing here sets a look or ships in the app.
 """
 
@@ -254,7 +254,7 @@ def report(rows, sets, rendered):
     out = ["# Instant print study: measurements", "",
            "Written by `Probes/LookReviewBoards/instant_print_study.py`; do not edit by hand.",
            "Tones are sRGB display tones from 0 to 1, and a density is the base-10 logarithm of how much less light a tone returns than the card.",
-           "The method and its limits are in `Evidence/NativeApp/instant-study-and-toning-059.md`.", "",
+           "The method and its limits are in `Evidence/NativeApp/instant-study-and-toning-061.md`.", "",
            "## Every print", "",
            "Black and white are the 1st and 99th percentile of the picture's luminance.",
            "Where the scan shows the card, they are also given relative to the card's white.", ""]

@@ -61,6 +61,18 @@ histories apart by their inspection reasons. The offline Ruby inspector compares
 UInt64 seeds exactly and normalizes only the order of Swift's completed-sequence
 Set. It is an additional required check, not inferred from a screenshot/test exit.
 
+`--reveal-at-camera`, with `--instant-mixed`, develops the Film's sealed Instant print once the
+camera screen is open, as the app does when a save lands there, so a test can meet the
+reveal and the question about the print's original at the camera. Nothing is captured:
+the simulator has no camera. `--two-sealed` leaves that Film two sealed prints where there is
+otherwise one, so the one Development reveals both.
+
+`--recipe-outside-limits` leaves print 1 a stored print exposure of 3.5 stops, past the Darkroom's
+limits, so a test can meet the print the app refuses and its Darkroom's explanation. The app's own
+writers refuse such a recipe, so the harness writes it to the store beside them, after the seeded
+inspection. The inspection prints every photo, so a history that holds it cannot be inspected or
+reopened: use it only in tests that do neither.
+
 These are functional navigation tests, not replacements for all-category
 accessibility audits or the hardware/manual matrix in
 `Evidence/NativeApp/launch-readiness.md`. Production export/privacy races have

@@ -2,7 +2,7 @@
 
 Written by `Probes/LookReviewBoards/instant_print_study.py`; do not edit by hand.
 Tones are sRGB display tones from 0 to 1, and a density is the base-10 logarithm of how much less light a tone returns than the card.
-The method and its limits are in `Evidence/NativeApp/instant-study-and-toning-059.md`.
+The method and its limits are in `Evidence/NativeApp/instant-study-and-toning-061.md`.
 
 ## Every print
 

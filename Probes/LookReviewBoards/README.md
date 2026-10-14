@@ -4,7 +4,7 @@ This non-shipping probe builds the side-by-side boards on which the captain revi
 It sets no look: every value is in `Packages/RenderCore/Sources/RenderCore/FilmLook.swift`, and the tool only shows what the production renderers develop.
 It also builds the comparison board for the Darkroom's chemical toners (DEC-11) and measures the scans of the Instant print study.
 Nothing here, and no reference image, ships in the app.
-The boards and their outcomes are in `Evidence/AssetReview/looks/`, `Evidence/NativeApp/prd-2-slice-4-looks.md` and `Evidence/NativeApp/instant-study-and-toning-059.md`.
+The boards and their outcomes are in `Evidence/AssetReview/looks/`, `Evidence/NativeApp/prd-2-slice-4-looks.md` and `Evidence/NativeApp/instant-study-and-toning-061.md`.
 
 ## Render the scenes
 
@@ -65,4 +65,4 @@ python3 Probes/LookReviewBoards/instant_print_study.py --sources <sources> --sce
 
 It measures every entry of `<sources>/manifest.json` that carries a `study` record, after checking its file against the recorded SHA-256, and the Instant prints of each named set of renders the same way.
 It writes `measurements.json` and `measurements.md`, and needs numpy and Pillow.
-What is measured and what it can and cannot show is in `Evidence/NativeApp/instant-study-and-toning-059.md`.
+What is measured and what it can and cannot show is in `Evidence/NativeApp/instant-study-and-toning-061.md`.

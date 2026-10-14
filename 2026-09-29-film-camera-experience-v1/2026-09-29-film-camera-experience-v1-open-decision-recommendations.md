@@ -78,6 +78,9 @@ black-and-white 6×6 prints offer chemical toning (`Evidence/NativeApp/prd-2-sli
 The soundtrack catalog requires an explicit `initialChoiceOnly` or `allowed`
 policy before selection is exposed; nil stays unresolved. Native recovery tests
 exercise both possible policies without turning either into the captain's choice.
+**Superseded on 2026-10-13 for the soundtrack: the captain decided it can be changed later,
+so the catalog carries no such policy (the 2026-10-13 addendum below;
+`Evidence/NativeApp/darkroom-export-decisions-060.md`).**
 
 ## DEC-12 - Storage, Device, Accessibility And Reliability Budgets
 
@@ -173,16 +176,165 @@ Contrast grades 0 to 5 apply to every Photo Film, color and black-and-white, and
 Chemical toning stays black-and-white only, and color filtration or balance stays for color work.
 PRD 2.1 FR-07 carries the decision (tracker DRK-02, DRK-03, DRK-10, DEC-11).
 
-### Captain decisions of 2026-10-13: the Instant's contrast and the toning range
+## Addendum, 2026-10-13 - The captain's decisions on the remaining open choices
 
-These close two of the items listed above as still open.
+The sections and addenda above are kept as written.
+This addendum records what the captain decided on 2026-10-13, in his words and in the words he was answering, and what stays open.
+Where a recommendation above differs from this addendum, this addendum governs.
 
-- DEC-04, the Instant's contrast and variation: the study of preserved 1970s prints was made (`Evidence/NativeApp/instant-study-and-toning-059.md`) and put before the captain on the Instant's review board.
+### What he was asked and what he said
+
+The remaining open v1 decisions were put to him in six lettered parts, each with a recommendation, and he was asked to answer by letter.
+All six, as he read them:
+
+> A. Looks and export. The looks themselves are settled by the boards you approved. Three things are left:
+> 1. The Instant's contrast and print-to-print variation. These are still placeholders. I'd have someone study real 1970s prints and bring you one more board. The alternative is to call the current values final.
+> 2. Export sizes and format. I proposed JPEG photos, with the Disposable up to 12 megapixels and the 6×6 at 3072 × 3072. Movies would be H.264 at 1920 × 1440, Super 8 at 18 frames a second and 16mm at 24, silent. The Instant's size is open because the white card is now part of the print.
+> 3. Toning strength for black-and-white 6×6 prints. You'd pick from a comparison board I prepare.
+>
+> B. Sample photos and music. The app shows no samples today, because nothing has cleared rights. My rule would be to use only material you own or have written rights to, and to ship no built-in soundtrack until a license allows it inside exported Movies. That leaves the question of where the samples come from, one per Camera and Film Stock. I'd use your own shots.
+>
+> C. Darkroom limits. Exposure: plus or minus 2 stops. Color filtration: plus or minus 30. Dodge and burn: plus or minus 1 stop. Crop: per photo, with the 6×6 staying square. Reset: returns the exact original. Instant: asks about keeping the original after each print. Soundtrack: can be changed later without developing again. I'd approve these as they are.
+>
+> D. Speed and storage targets. Oldest phone: iPhone 11. A photo saves in under 1 second. A 27-photo roll develops in under 45 seconds. A full Super 8 Movie assembles in under 90 seconds. The app warns below 2 GB free. You don't have an iPhone 11, so none of this can be measured yet. I'd approve them as targets and measure when a phone turns up. The alternative is to make your 13 Pro the oldest supported phone.
+>
+> E. Support and App Store wording. The privacy text would say there is no server, account, analytics or microphone. The delete text would say exports stay and old backups can bring media back. Support would never promise recovery without a backup. I'd approve the approach now and draft the real wording closer to launch.
+>
+> F. Learning without analytics. No analytics in the app. You'd learn from TestFlight interviews, tester feedback and Apple's own reports. I'd approve.
+
+The captain said: "looks good. can we change the exposure, dodge and burn to plus and minus 3 stops?"
+
+So every recommendation stands as it was put to him, with the one change he asked for: print exposure, and Dodge and Burn, each run to plus and minus 3 stops, not 2 and 1.
+His earlier decisions stand: contrast grades 0 to 5 on every Photo Film (2026-10-07), no crop for an Instant print, and chemical toning for black-and-white 6×6 Films only.
+
+A.1, the Instant's contrast and print-to-print variation, and A.3, the toning strength, are decided through review boards of their own and are not recorded here.
+
+### DEC-04 - export sizes and formats (A.2)
+
+| Camera | Decided 2026-10-13 |
+| --- | --- |
+| 1990s Disposable | JPEG, no more than 12,000,000 pixels, in its borderless 3:2 shape. |
+| 6×6 Medium Format | JPEG, 3072 × 3072, on either Film Stock. |
+| 1960s Super 8 Home Movie | H.264 in a `.mov`, 1920 × 1440, or 1440 × 1920 for a portrait Movie, 18 frames a second, silent. |
+| 16mm Cinema | H.264 in a `.mov`, 1920 × 1440, or 1440 × 1920 for a portrait Movie, 24 frames a second, silent. |
+| 1970s Instant | JPEG, 2282 × 2774: the print exactly as it was developed, the 2048 × 2048 picture on its white card, with no resampling (his second answer the same day, below). |
+
+This replaces the "Provisional" in the render matrix's output cells.
+"Silent" is as the matrix has it: silent unless a licensed built-in soundtrack is chosen, and none ships (DEC-05 below).
+
+The Instant's size was left open by his first answer, because the white card is now part of the print.
+He was then shown a proposal with three choices and a rendered example (`Evidence/NativeApp/darkroom-export-decisions-060/instant-export-size-proposal.md`): A, the print as developed, 2282 × 2774; B, enlarged on export; C, new prints developed larger.
+The same proposal asked whether Movies, which carry no color tags, should be tagged.
+
+The captain said, the same day: "instant export size: A,  leave Movies as they are"
+
+So an Instant print is saved to Photos exactly as it was developed, and no color tags are added to Movies, by his decision.
+His answer was to the question about color tags; it does not say that nothing in how a Developed Clip is written changes.
+The change that carries these decisions does change one thing there: a newly developed clip is its whole frames, with the last one held to where the recording stopped, where a clip used to end on one more frame lasting a fraction of a frame.
+That is what makes the 18 and 24 frames a second he approved true of the file.
+A clip developed before this change is not developed again.
+Photos stay sRGB JPEG, as the approved looks were judged.
+Whether tagging would change anything on a phone is to be looked at during the manual iPhone test.
+
+Still open in DEC-04 after this answer: the Instant's contrast and print-to-print variation, and the toning strength (A.1 and A.3), decided later the same day (the last section of this addendum).
+
+### DEC-05 - sample photos and music (B)
+
+Decided 2026-10-13:
+
+- Only material he owns or has written rights to is used.
+- The samples will be his own shots, one for each Camera and Film Stock.
+  The shipped catalog stays empty until he supplies them.
+- No built-in soundtrack ships until a license allows it inside exported Movies.
+
+Still open: the shots themselves, seven in all (the Disposable, the Instant, the 6×6 in color and in black-and-white, the Super 8, and the 16mm in color and in black-and-white).
+
+### DEC-11 - Darkroom limits (C)
+
+| Area | Recommendation above | Decided 2026-10-13 |
+| --- | --- | --- |
+| Print exposure | -2.0 to +2.0 stops in 0.1-stop steps | **-3.0 to +3.0 stops** in 0.1-stop steps (his change). |
+| Contrast | Grades 0 to 5 | Grades 0 to 5 on every Photo Film (his decision of 2026-10-07, unchanged). |
+| Color filtration | Cyan, magenta and yellow, -30 to +30 in whole units | As recommended. |
+| Crop | Per photo; the 6×6 keeps its square | As recommended; an Instant print has no crop (PRD 2.0). |
+| Dodge and Burn | Local exposure change of -1.0 to +1.0 stops | **-3.0 to +3.0 stops** (his change). |
+| Reset | Returns the developed original exactly | As recommended. |
+| Instant originals | Ask after each Instant reveal | As recommended: the Instant asks about keeping the original after each print. |
+| Soundtrack | Changing it later reassembles from the existing Developed Clips | As recommended: it can be changed later without developing again. |
+
+DEC-11 is decided.
+The toning strength for black-and-white 6×6 prints was the one Darkroom value still open, tracked under DEC-04 (A.3), and was decided later the same day (the last section of this addendum).
+
+### DEC-12 - speed and storage targets (D)
+
+Decided 2026-10-13, as targets:
+
+- The oldest supported phone is the iPhone 11.
+- A photo saves in under 1 second.
+- A 27-photo roll develops in under 45 seconds.
+- A full Super 8 Movie assembles in under 90 seconds.
+- The app warns below 2 GB free.
+
+None of this is measured, because no iPhone 11 is available, and it is measured when one is.
+The 16mm Cinema's Movie at its 167 seconds is among what must be timed (the 2026-10-06 addendum above).
+The alternative he was offered, making his iPhone 13 Pro the oldest supported phone, was not taken.
+The warning below 2 GB free was approved on 2026-10-13 as a target.
+It is not built by the change that carries these decisions, and it is not built anywhere yet: the app has no such warning.
+Building it is tracker task CAP-15, added unchecked.
+
+### DEC-13 - support and App Store wording (E)
+
+Decided 2026-10-13: the approach.
+The privacy text says there is no server, account, analytics or microphone.
+The delete text says exports stay and old backups can bring media back.
+Support never promises recovery without a backup.
+
+Still open: the wording itself, which is written closer to launch.
+
+### DEC-14 - learning without analytics (F)
+
+Decided 2026-10-13: no analytics in the app.
+He learns from TestFlight interviews, tester feedback and Apple's own reports.
+
+### What the fuller recommendations say that he was not shown
+
+He read the short forms quoted above.
+The sections above say more in places.
+The details below were not in what he read, so they are not treated as approved and stay recommendations until he is asked.
+
+| Decision | Detail in the fuller text | Standing |
+| --- | --- | --- |
+| DEC-12 | The photo save target is a 95th percentile | Recommendation |
+| DEC-12 | Movie assembly stays under a memory ceiling, provisionally 700 MB | Recommendation |
+| DEC-12 | Development "progress resumes after relaunch", and a clip is debited "only after playable source file exists" | The app already works this way (PRD FR-05 and FR-06); as budget rows they were not shown |
+| DEC-12 | The accessibility row: Dynamic Type through accessibility sizes and VoiceOver labels | Recommendation; the app's audits are in tracker QA-13 |
+| DEC-12 | The backup disclosure row: "on first export/delete/privacy action" | Recommendation; the disclosures themselves are decided (DEC-17) |
+| DEC-13 | Privacy copy also names "imports or automatic Photos export" | Recommendation, with the wording still to be written |
+| DEC-13 | The launch review packet's contents | Recommendation |
+| DEC-14 | "Record qualitative targets", with two examples | Recommendation; no targets are set |
+
+Eight things in how the app carries his decisions are also his to see, because he was shown the limits, sizes and formats and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
+
+- Dodge and Burn has a strength slider, 0.1 to 3.0 stops, where every stroke used to be 0.4 stops.
+- Strokes add up where they overlap, and together they stop at 3 stops.
+- A print whose stored Darkroom settings are outside the limits says it cannot be made and why, Reset to Original prints it again, and Save Developed to Photos stops before anything is saved.
+- The Instant shows the print first and asks about its original when the print is closed.
+- When two prints come out together at the camera, each is shown and asked about in turn.
+- A clip developed from now on is its whole frames, with the last one held to where the recording stopped, where each clip used to end on one more frame lasting a fraction of a frame.
+- A Disposable picture developed from now on from a capture larger than 12 megapixels is brought down to whole pixels, 4242 × 2828 from a 27-megapixel capture, where it used to come out a pixel larger each way, 4243 × 2829, which is 3,447 pixels over the 12,000,000-pixel limit.
+- A cropped 6×6 print is square to the pixel, where a crop lying between pixels used to come out a pixel longer one way, 619 × 618 for one, and a print saved that way before now prints without that last column or row.
+
+### A.1 and A.3 - the Instant's contrast and variation, and the toning strength
+
+Both were decided later on 2026-10-13, on review boards of their own (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+
+- A.1, the Instant's contrast and print-to-print variation: the study of preserved 1970s prints was made and put before the captain on the Instant's review board.
   He chose the contrast it supports: "B".
   The print-to-print variation stays as it was: the board showed the wider variation the study supports beside it, and asked whether his "B" also meant that or the contrast only, he answered that B means "contrast only".
-- DEC-11, chemical toning: the comparison prints were generated and reviewed on a toning board.
+  Asked whether the Instant's Load Film line, which says "soft contrast", should be reworded, he said "leave it."
+- A.3, the toning strength: the comparison prints were generated and reviewed on a toning board.
   The captain said: "sepia - untoned to 1. selenium - untoned to 1".
   Each toner's slider starts at the untoned print and tops out at the strength the board showed as 1.00, the provisional `0...1` amount.
 
-Still open under DEC-04: export codec, resolution and audio guarantees.
-Still open under DEC-11: every control range but toning's, Instant source export timing and soundtrack reselection.
+With these, nothing DEC-04 listed as open after 2026-10-13 is open.
+He saw the looks and the toned prints, not how the app carries them: the new contrast is treatment version 4, so an Instant Film loaded before it keeps the contrast it started with, and the toners' ranges now live in one place, `ToningLook.swift`.
