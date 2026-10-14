@@ -235,6 +235,49 @@ final class DarkroomLimitsTests: XCTestCase {
             dodgeBurnMasks: [LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.25)], exposureStops: 0.4)]))
     }
 
+    /// A cropped 6×6 print is square in whole pixels wherever the crop sits. Each side of a crop is rounded out to whole
+    /// pixels on its own, which printed a crop lying between pixels a pixel longer one way than the other: the first two
+    /// crops are ones the Darkroom stored, saved to Photos at 619 × 618 and 629 × 628. A crop the build before printed
+    /// square prints the same bytes, and one it printed off square prints the same picture without its last column or row.
+    func testACropped6x6PrintIsSquareWhereverTheCropSits() throws {
+        let master = try Chart.mediumFormatPrint()
+        let crops = [
+            Crop(x: 0.4192503206734682, y: 0.417404553250964, width: 0.20087639717385175, height: 0.20087639717385175),
+            Crop(x: 0.424675768215624, y: 0, width: 0.20434599928557873, height: 0.20434599928557873),
+            // A row too many where those two had a column: 618 × 619.
+            Crop(x: 0.3, y: 0.61, width: 0.2009, height: 0.2009),
+            // On whole pixels, and in the corner the sliders end in, where the crop's far edges meet the print's.
+            Crop(x: 0.25, y: 0.25, width: 0.25, height: 0.25),
+            Crop(x: 1 - 0.2009, y: 1 - 0.2009, width: 0.2009, height: 0.2009),
+            Crop(x: 1 - 0.3337, y: 1 - 0.3337, width: 0.3337, height: 0.3337)
+        ]
+        var offSquare = 0
+        for crop in crops {
+            let recipe = DarkroomRecipe(crop: crop)
+            let printed = try NativePhotoRenderer.print(master: master, recipe: recipe, camera: CameraCatalog.mediumFormat6x6)
+            let earlier = try EarlierDarkroom.print(master: master, recipe: recipe)
+            let today = try DecodedPixels(printed), before = try DecodedPixels(earlier)
+            XCTAssertEqual([today.width, today.height], Array(repeating: min(before.width, before.height), count: 2), "\(crop)")
+            if before.width == before.height {
+                XCTAssertEqual(printed, earlier, "\(crop) printed square before and prints the same bytes")
+                continue
+            }
+            offSquare += 1
+            guard today.width <= before.width, today.height <= before.height else { continue }
+            // The same pixels from the top left corner, clear of the JPEG blocks the missing column or row reaches. Two
+            // encodings of one picture differ by a few levels where patches meet (5 in the simulator); a picture moved
+            // by a pixel differs there by the whole step between two patches.
+            var furthest = 0
+            for y in 0..<today.height - 16 {
+                let new = today.bytes[y * today.width * 4..<(y * today.width + today.width - 16) * 4]
+                let old = before.bytes[y * before.width * 4..<(y * before.width + today.width - 16) * 4]
+                furthest = max(furthest, zip(new, old).map { abs(Int($0) - Int($1)) }.max() ?? 0)
+            }
+            XCTAssertLessThanOrEqual(furthest, 16, "\(crop) prints the picture it printed before")
+        }
+        XCTAssertEqual(offSquare, 3, "The first three printed a pixel off square before")
+    }
+
     /// A stored value outside the limits, which only a build with wider limits or a damaged store can leave, is refused:
     /// the print is never quietly made at the nearest limit, and the developed master it would print is untouched.
     func testAValueOutsideTheLimitsIsRefusedAndNeverPrintedAtTheNearestLimit() throws {
@@ -326,6 +369,19 @@ private struct Chart {
             for channel in 0..<3 { bytes[((y + card.sideBorder) * card.width + x + card.sideBorder) * 4 + channel] = color[channel] }
         } }
         return try jpeg(bytes, width: card.width, height: card.height)
+    }
+
+    /// The chart, tiled over a developed 6×6 print.
+    static func mediumFormatPrint() throws -> Data {
+        let edge = DevelopedPhotoSize.mediumFormatSide
+        let tiles = (0..<patches).map { $0 < grays.count ? [UInt8](repeating: grays[$0], count: 3) : colors[$0 - grays.count] }
+        var bytes: [UInt8] = [], row: [UInt8] = []
+        for y in 0..<edge {
+            // Every row of a band of patches is the same.
+            if y % side == 0 { row = (0..<edge).flatMap { tiles[(y / side * columns + $0 / side) % patches] + [255] } }
+            bytes += row
+        }
+        return try jpeg(bytes, width: edge, height: edge)
     }
 
     private static func jpeg(_ source: [UInt8], width: Int, height: Int) throws -> Data {

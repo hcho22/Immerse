@@ -310,7 +310,7 @@ The details below were not in what he read, so they are not treated as approved 
 | DEC-13 | The launch review packet's contents | Recommendation |
 | DEC-14 | "Record qualitative targets", with two examples | Recommendation; no targets are set |
 
-Seven things in how the app carries his decisions are also his to see, because he was shown the limits, sizes and formats and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
+Eight things in how the app carries his decisions are also his to see, because he was shown the limits, sizes and formats and not their workings (`Evidence/NativeApp/darkroom-export-decisions-060.md`):
 
 - Dodge and Burn has a strength slider, 0.1 to 3.0 stops, where every stroke used to be 0.4 stops.
 - Strokes add up where they overlap, and together they stop at 3 stops.
@@ -319,3 +319,4 @@ Seven things in how the app carries his decisions are also his to see, because h
 - When two prints come out together at the camera, each is shown and asked about in turn.
 - A clip developed from now on is its whole frames, with the last one held to where the recording stopped, where each clip used to end on one more frame lasting a fraction of a frame.
 - A Disposable picture developed from now on from a capture larger than 12 megapixels is brought down to whole pixels, 4242 × 2828 from a 27-megapixel capture, where it used to come out a pixel larger each way, 4243 × 2829, which is 3,447 pixels over the 12,000,000-pixel limit.
+- A cropped 6×6 print is square to the pixel, where a crop lying between pixels used to come out a pixel longer one way, 619 × 618 for one, and a print saved that way before now prints without that last column or row.

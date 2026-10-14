@@ -148,13 +148,13 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(print.waitForExistence(timeout: 10))
         let developed = print.screenshot().pngRepresentation
 
-        exposure.adjust(toNormalizedSliderPosition: 1)
+        adjust(exposure, toEnd: 1, showing: app.staticTexts["3.0 stops"])
         XCTAssertTrue(app.staticTexts["3.0 stops"].waitForExistence(timeout: 5), "The slider ends at plus 3 stops")
         XCTAssertEqual(exposure.value as? String, "plus 3 stops")
         XCTAssertTrue(waitForChange(of: print, from: developed), "Plus 3 stops prints a lighter picture")
         snapshot(app, "Darkroom-exposure-plus-3-stops")
         let lightest = print.screenshot().pngRepresentation
-        exposure.adjust(toNormalizedSliderPosition: 0)
+        adjust(exposure, toEnd: 0, showing: app.staticTexts["-3.0 stops"])
         XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "The slider ends at minus 3 stops")
         XCTAssertEqual(exposure.value as? String, "minus 3 stops")
         XCTAssertTrue(waitForChange(of: print, from: lightest), "Minus 3 stops prints a darker picture")
@@ -165,12 +165,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(strength.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Strength: 0.4 stops"].exists, "A stroke starts at the strength it always had")
         XCTAssertEqual(strength.value as? String, "0.4 stops")
-        strength.adjust(toNormalizedSliderPosition: 1)
-        // XCTest's own adjustment stops a step short on this slider, so finish as a finger does: drag the thumb to the end.
-        if !app.staticTexts["Strength: 3.0 stops"].exists {
-            strength.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
-                .press(forDuration: 0.2, thenDragTo: strength.coordinate(withNormalizedOffset: CGVector(dx: 1.2, dy: 0.5)))
-        }
+        adjust(strength, toEnd: 1, showing: app.staticTexts["Strength: 3.0 stops"])
         XCTAssertTrue(app.staticTexts["Strength: 3.0 stops"].waitForExistence(timeout: 5), "A stroke reaches 3 stops")
         XCTAssertEqual(strength.value as? String, "3 stops")
         let darkest = print.screenshot().pngRepresentation
@@ -193,6 +188,18 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
         app.buttons["Cancel"].tap()
+    }
+
+    /// Moves a slider to one of its ends. XCTest's own adjustment can stop a step short of an end (it does on the strength
+    /// slider, and on an iPhone SE it once left the exposure slider at "-2.9 stops"), so where the end's value is not
+    /// showing it finishes as a finger does: it drags the thumb past the end. The drag starts on the thumb's middle,
+    /// wherever it stopped (the thumb is 38 points wide), because a drag begun beside the thumb does not move it.
+    private func adjust(_ slider: XCUIElement, toEnd end: CGFloat, showing value: XCUIElement) {
+        slider.adjust(toNormalizedSliderPosition: end)
+        guard !value.exists else { return }
+        let thumb = (19 + slider.normalizedSliderPosition * (slider.frame.width - 38)) / slider.frame.width
+        slider.coordinate(withNormalizedOffset: CGVector(dx: thumb, dy: 0.5))
+            .press(forDuration: 0.2, thenDragTo: slider.coordinate(withNormalizedOffset: CGVector(dx: end == 1 ? 1.2 : -0.2, dy: 0.5)))
     }
 
     private func waitForChange(of element: XCUIElement, from before: Data, timeout: TimeInterval = 15) -> Bool {

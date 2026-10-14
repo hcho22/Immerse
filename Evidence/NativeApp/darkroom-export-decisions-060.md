@@ -30,7 +30,7 @@ The validator, the renderer and the Darkroom's sliders read them from it.
 ### Three choices made in carrying it
 
 He was shown the limits, not their workings, so these are named in the addendum as his to see.
-The addendum's list also names the Instant's question (below) and the two Development fixes found while reading the exports back (under Exports).
+The addendum's list also names the Instant's question (below), the two Development fixes found while reading the exports back (under Exports) and the cropped 6×6 print's last pixel (under After testing).
 
 1. **A strength slider for Dodge and Burn.**
    Every stroke used to be 0.4 stops, with no control.
@@ -66,9 +66,11 @@ It opens and prints the same bytes.
 `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` keeps the earlier build's printing unchanged in the test (`EarlierDarkroom`) and compares it byte for byte with today's, for 14 recipes at and inside the earlier limits on a Disposable print, each with and without a crop, two toned black-and-white prints and two Instant prints.
 `StoredRecipeLimitsTests` reads the stored form the earlier build wrote through the production repository and prints it.
 
-One difference exists and is deliberate.
+Two differences exist and are deliberate.
 A recipe with eight or more overlapping strokes of the same kind on one spot, more than 3 stops together, now prints that spot at 3 stops.
 Seven overlapping 0.4-stop strokes, 2.8 stops, print as before, and the test holds that.
+A cropped 6×6 print that came out a pixel off square now prints square, without its last column or row (After testing, the second round).
+A 6×6 crop that printed square prints as before, and `testACropped6x6PrintIsSquareWhereverTheCropSits` holds that.
 
 ### A stored value outside the limits
 
@@ -367,6 +369,45 @@ The rest of the screen tests, the package tests and the other hosted tests were 
 | The Darkroom under the explanation, iPhone SE in dark, before | And after |
 | --- | --- |
 | ![The tool row cut by the fade, the slider below the fold](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom-se-before.png) | ![Everything rests on one screen](darkroom-export-decisions-060/stored-recipe-outside-limits-darkroom-se-after.png) |
+
+### The second round
+
+A second round of testing drove everything again on both simulators and found one thing.
+A 6×6 print cropped in the Darkroom was saved to Photos a pixel off square: 619 × 618 on the iPhone 17 Pro and 629 × 628 on the iPhone SE.
+On screen the crop was square, and the Darkroom offers one Size for it.
+
+Each side of a crop was rounded out to whole pixels on its own.
+A crop lying between pixels could take in one more column than it has rows, or one more row than columns, depending on where it sat.
+This is older than this change (2026-10-02), and the crop driven in the first round happened to land square.
+
+A cropped 6×6 print is now square to the pixel (`NativePhotoRenderer`).
+The longer side gives up its last pixel, at the right or at the bottom, so the crop keeps the top left corner it is placed by.
+A crop the build before printed square prints the same bytes.
+One it printed off square prints the same picture without that last column or row, which is the second difference under A recipe saved under the earlier limits.
+The Disposable's crop is unchanged: its picture is 3:2, and nothing holds a crop of it to an exact shape.
+The addendum's list of workings that are his to see gains an eighth entry for it.
+
+`DarkroomLimitsTests.testACropped6x6PrintIsSquareWhereverTheCropSits` prints six crops of a 3072 × 3072 print and compares each with the earlier build's printing (`EarlierDarkroom`): the two crops the Darkroom stored in testing, one that printed a row too tall, one on whole pixels and two in the corner the sliders end in.
+
+Run in this round, on a Mac and on an iPhone 17 Pro and an iPhone SE (3rd generation) simulator on iOS 26.5, made for the round and deleted after it:
+
+| Check | Result |
+| --- | --- |
+| The new test on the code before the fix | Fails: 619 × 618, 629 × 628 and 618 × 619 |
+| `DarkroomLimitsTests` on the fixed code, on the Mac and inside the iPhone 17 Pro simulator | 8 passed, 0 failures, each time |
+| `NativeRenderTests` and `InstantPrintCardTests` (RenderCore) and `ApprovedExportTests` (FilmRuntime) on the fixed code, on the Mac | 15 passed and 5 passed, 0 failures |
+| The scenario that failed, driven again in the populated harness built with a Photos add-only usage key: crop a 6×6 print to its smallest off-center in the Darkroom, save it, Save Developed to Photos, and read the file back from the simulator's Photos library | iPhone SE in dark: 635 × 635, for a stored crop the earlier rounding makes 636 × 635; iPhone 17 Pro in light: 618 × 618, where the sliders stopped on a crop that was square either way |
+| `Scripts/verify-document-package.sh`, after the documents ZIP was made again | Pass |
+
+The new test first held the two pictures of an off-square crop to within 2 levels of 255.
+The Mac met that and the simulator did not: there two encodings of one picture differ by up to 5 levels where patches meet.
+It now allows 16, where a picture moved by one pixel differs by 209.
+
+That round of testing also saw one committed screen test fail once, `testDarkroomExposureAndDodgeBurnReachThreeStopsAndSave` on the iPhone SE while the host was loaded: XCTest's own adjustment left the exposure slider at "-2.9 stops", a step short of its end.
+The slider reaches -3.0; the unchanged test then passed five times out of five.
+The test now finishes each end of the exposure and strength sliders as a finger does, with a drag that starts on the thumb, and testing ran that five times on the iPhone SE and three on the iPhone 17 Pro without a failure.
+
+Nothing else was run again in this round: the other package tests, the hosted tests and the screen tests are the check's to run.
 
 ## Not shown here
 

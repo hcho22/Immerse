@@ -109,7 +109,7 @@ public enum NativePhotoRenderer {
         // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture.
         let isInstant = camera.id == .instant1970s
         if isInstant { image = InstantPrintCard.picture(of: image) }
-        image = adjust(image, recipe: recipe)
+        image = adjust(image, recipe: recipe, camera: camera)
         if isInstant { image = InstantPrintCard.mount(image) }
         return try jpeg(image)
     }
@@ -125,7 +125,7 @@ public enum NativePhotoRenderer {
         }
     }
 
-    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe) -> CIImage {
+    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe, camera: CameraPackage) -> CIImage {
         var image = source.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: recipe.printExposureStops])
         if let grade = recipe.contrastGrade {
             image = image.applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 0.7 + Double(grade) * 0.15])
@@ -189,10 +189,19 @@ public enum NativePhotoRenderer {
         }
         if let crop = recipe.crop {
             let size = image.extent.size
-            image = normalize(image.cropped(to: CGRect(
+            var area = CGRect(
                 x: crop.x * size.width, y: (1 - crop.y - crop.height) * size.height,
                 width: crop.width * size.width, height: crop.height * size.height
-            ).integral))
+            ).integral
+            // Each side is rounded out to whole pixels on its own, which can leave one a pixel longer than the other.
+            // The 6×6 stays square: its longer side gives that pixel up at the right or the bottom, so the crop keeps
+            // the top left corner it is placed by.
+            if camera.id == .mediumFormat6x6 {
+                area = area.intersection(image.extent)
+                let side = min(area.width, area.height)
+                area = CGRect(x: area.minX, y: area.maxY - side, width: side, height: side)
+            }
+            image = normalize(image.cropped(to: area))
         }
         return image
     }
