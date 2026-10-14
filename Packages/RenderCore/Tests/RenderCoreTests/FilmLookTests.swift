@@ -24,7 +24,6 @@ final class FilmLookTests: XCTestCase {
     /// with version 2.
     func testDevelopmentAssignsTheTreatmentVersionTheFilmsPackageRecorded() throws {
         XCTAssertEqual(NativePhotoRenderer.treatmentVersion, "film-look-4")
-        XCTAssertEqual(TreatmentVersion.current.rawValue, CameraCatalog.treatmentVersion)
         XCTAssertEqual(NativePhotoRenderer.renderableTreatmentVersions,
                        ["film-look-1-provisional", "film-look-2-provisional", "film-look-3", "film-look-4"])
         for camera in CameraCatalog.all { XCTAssertEqual(camera.treatmentVersion, "film-look-4", "\(camera.id)") }
@@ -107,7 +106,7 @@ final class FilmLookTests: XCTestCase {
                        ["instant1970s ", "mediumFormat6x6 color", "super8HomeMovie ", "cinema16mm color"],
                        "Only the captain's choice takes a look out of ADR 0013")
         for (camera, filmStock) in Self.treatments where !FilmLook.isCaptainsException(camera: camera, filmStock: filmStock) {
-            let treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
+            let treatment = FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock)
             let name = "\(camera) \(filmStock?.rawValue ?? "")"
             let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, treatment.emulsion) }
             let black = develop(FilmLook.RGB(0.03, 0.03, 0.03))
@@ -135,7 +134,7 @@ final class FilmLookTests: XCTestCase {
     func testThePrintCurveRisesFromBlackToWhiteAndAShoulderLowersOnlyTheUpperTones() {
         for (camera, filmStock) in Self.treatments {
             let tone: FilmLook.ToneCurve
-            switch FilmLook.treatment(camera: camera, filmStock: filmStock).emulsion {
+            switch FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock).emulsion {
             case let .color(film): tone = film.tone
             case let .monochrome(film): tone = film.tone
             // A negative film has no print curve of this kind; `NegativeFilmTests` holds its ramp.
@@ -200,7 +199,7 @@ final class FilmLookTests: XCTestCase {
         ))
         XCTAssertEqual(earlier, FilmLook.instantVersion3)
         XCTAssertNotEqual(earlier, FilmLook.treatment(version: .four, camera: .instant1970s, filmStock: nil))
-        XCTAssertEqual(FilmLook.treatment(camera: .instant1970s, filmStock: nil), FilmLook.instant, "Today's is version 4's")
+        XCTAssertEqual(FilmLook.treatment(version: .four, camera: .instant1970s, filmStock: nil), FilmLook.instant)
         guard case let .color(before) = earlier.emulsion else { return XCTFail("The Instant is a color film") }
         let develop = { (color: FilmLook.RGB) in DevelopedTreatment.develop(color, earlier.emulsion) }
         let quarter = develop(FilmLook.RGB(0.25, 0.25, 0.25)).green, threeQuarter = develop(FilmLook.RGB(0.75, 0.75, 0.75)).green
@@ -333,7 +332,7 @@ final class FilmLookTests: XCTestCase {
         try requireTetrahedralReader()
         var grain: [String: Double] = [:]
         for (camera, filmStock) in Self.treatments {
-            var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
+            var treatment = FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock)
             treatment.lens = FilmLook.Lens()
             treatment.gate = nil
             treatment.halation = nil
@@ -374,7 +373,7 @@ final class FilmLookTests: XCTestCase {
     /// Grain adds texture without moving the tone: an even mid-gray keeps its level.
     func testGrainKeepsTheTone() throws {
         for (camera, filmStock) in Self.treatments {
-            var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
+            var treatment = FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock)
             treatment.lens = FilmLook.Lens()
             treatment.gate = nil
             treatment.halation = nil
@@ -395,7 +394,7 @@ final class FilmLookTests: XCTestCase {
         // `ScenePassesTests` and `MediumFormatPassesTests` hold that.
         for (camera, filmStock, softens) in [(CameraID.disposable1990s, FilmStock?.none, true), (.super8HomeMovie, nil, true),
                                             (.cinema16mm, .blackAndWhite, true), (.mediumFormat6x6, .blackAndWhite, false)] {
-            var treatment = FilmLook.treatment(camera: camera, filmStock: filmStock)
+            var treatment = FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock)
             treatment.emulsion = Self.identity(grain: FilmLook.Grain(amplitude: 0, size: 0))
             treatment.gate = nil
             let pixels = try render(checks, treatment: treatment)
@@ -502,7 +501,7 @@ final class FilmLookTests: XCTestCase {
             "inputColor1": CIColor(red: 0.01, green: 0.01, blue: 0.01, colorSpace: Self.linear)!
         ])!.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: 960, height: 960))
         for filmStock in [FilmStock.color, .blackAndWhite] {
-            var glowing = FilmLook.treatment(camera: .cinema16mm, filmStock: filmStock)
+            var glowing = FilmLook.treatment(version: .four, camera: .cinema16mm, filmStock: filmStock)
             var plain: FilmLook.Treatment
             if let scene = glowing.scene {
                 // The color stock glows in scene light, before its film: its halation alone, and then without it.

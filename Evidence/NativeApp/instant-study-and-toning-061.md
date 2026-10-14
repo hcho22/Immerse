@@ -278,7 +278,7 @@ Before this work the two toners were written inline in `NativePhotoRenderer.adju
 They are now in `Packages/RenderCore/Sources/RenderCore/ToningLook.swift`, the one place their values are kept.
 
 - **A strength.**
-  A recipe's `ChemicalToning.amount` is where the Darkroom's slider stands, 0 to 1, and each toner turns it into a strength between its `start` and its `top`.
+  A recipe's `ChemicalToning.amount` is where the Darkroom's slider stands, 0 to 1, and the print is toned at that strength.
   A strength of 1 is the toner as the board showed it at the top of the provisional range.
 - **Selenium unchanged.**
   Selenium is still a tinted copy of the print blended in through a mask of the inverted print, the earlier build's own filter chain.
@@ -286,7 +286,7 @@ They are now in `Packages/RenderCore/Sources/RenderCore/ToningLook.swift`, the o
 - **Sepia unchanged.**
   Sepia is still Core Image's sepia filter with its intensity given, never left to a default.
 - **Unchanged output.**
-  With `start` 0 and `top` 1 and both filter chains as they were, a toned recipe prints byte for byte what the build before this work printed.
+  With the amount passed as the strength and both filter chains as they were, a toned recipe prints byte for byte what the build before this work printed.
   Main's `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` holds both toners at a half-way amount to a copy of that build's printing.
 - **A formula tried and taken back.**
   While the board was made, selenium was briefly one polynomial on each channel, the same formula, on the belief that the mask would saturate past a strength of 1 and the board's stronger rows needed more.
@@ -339,7 +339,7 @@ The last two came when the kept boards were opened to him again later that day, 
   `FilmLook.instantVersion3` keeps the Instant's values as the version 3 build had them, and `DevelopedTreatment` renders it for a capture assigned "film-look-3".
   An Instant pack loaded under version 3 keeps that contrast for every print, the ones exposed after the update too.
 - **The toners.**
-  `ToningLook.sepia` and `ToningLook.selenium` are each `Toner(start: 0, top: 1)`.
+  `ToningLook.apply` tones a print at the recipe's amount, so each slider runs from the untoned print to a strength of 1, the captain's range in his words in its doc comment.
 - **No product text changed.**
   The Instant's Load Film line still reads "Warm, faded color, soft contrast and soft detail".
   Measured the way its test measures it, B's contrast is 0.47 against the capture's 0.5 and the earlier look's 0.31, so "soft contrast" is still true but less so.
@@ -356,11 +356,11 @@ The last two came when the kept boards were opened to him again later that day, 
 | `InstantVersionTests.testVersionFourInstantPrintsAreNotVersionThrees` | A print develops with the version it was assigned; version 4 spreads its tones further; the card is the same clean white in both |
 | `FilmLookTests.testDevelopmentAssignsTheTreatmentVersionTheFilmsPackageRecorded` | A Film loaded today records version 4; a pack whose package recorded version 3 assigns version 3 to every print |
 | `FilmRuntimeTests.TreatmentVersionDevelopmentTests.testAnInstantPackLoadedUnderVersionThreeKeepsItsContrastForEveryPrint` | Through the production processor and a reopened store: a version 3 pack's prints, one exposed after the update, are byte for byte version 3's and not version 4's; a pack loaded today is version 4's |
-| `ToningLookTests.testEachTonersRangeIsTheOneTheCaptainChose` | Both ranges are 0 to 1, and a recipe at the slider's low end prints the untoned print |
+| `ToningLookTests.testEachSliderStartsAtTheUntonedPrint` | A recipe at the slider's low end prints the untoned print |
 | `ToningLookTests.testEachTonerAtItsTopIsTheOneTheBoardShowed` | Each toner at the top of its slider on five neutral tones, against values recorded from the build the board was rendered with, within 0.002 |
 | `ToningLookTests.testSeleniumIsTheArithmeticItStates` | The selenium blend against its formula at 21 tones and four strengths, within 0.00001 |
 | `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` (main's) | A toned black-and-white 6×6 print, each toner at half-way, prints the same bytes as a copy of the earlier build's printing |
-| `ToningLookTests.testSeleniumTintsTheDarkerTonesPurpleAndLeavesBlackAndWhiteAlone`, `testSepiaIsAWarmBrown`, `testARecipesAmountRunsFromTheTonersStartToItsTop` | Each toner's character, and that a recipe's amount reaches it through the toner's own range |
+| `ToningLookTests.testSeleniumTintsTheDarkerTonesPurpleAndLeavesBlackAndWhiteAlone`, `testSepiaIsAWarmBrown` | Each toner's character |
 
 One test was found too weak and strengthened before it was relied on.
 With version 3's contrast changed from 0.82 to 0.86 on purpose, the block-mean test still passed: means over large blocks barely move for a curve that keeps middle gray where it is.
@@ -428,6 +428,8 @@ Carried over from 2026-10-13, not run again here:
 - **The screen-test parts, an iPhone SE simulator and dark mode,** as before: this work changes no screen.
 
 ## What a phone still has to show
+
+These checks go into the manual iPhone plan when it is re-pinned after this change, the Darkroom change and the low-storage warning have landed.
 
 - The Instant's contrast on an iPhone's own screen, from a capture made by the app, beside a real print if one is to hand.
   The boards were judged on a Mac's display from modern digital photographs.

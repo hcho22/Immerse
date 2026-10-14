@@ -14,9 +14,6 @@ enum TreatmentVersion: String, CaseIterable {
     /// Version 3 with the Instant's contrast as the captain chose it after the study of preserved 1970s prints
     /// (`FilmLook`). Every other Camera and Film Stock develops exactly as in version 3.
     case four = "film-look-4"
-
-    /// The version a Film loaded today develops with, which its Camera package records (`CameraCatalog`).
-    static let current = TreatmentVersion.four
 }
 
 /// Treatment versions 3 and 4: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections
@@ -49,7 +46,7 @@ enum FilmLook {
     /// The treatment a capture develops with in a version: one per Camera, and one per Film Stock on the Cameras that
     /// offer one. A Film loaded before Film Stock existed has none and develops in color. Versions 1 and 2 have no
     /// table here (`LegacyLook` renders them).
-    static func treatment(version: TreatmentVersion = .current, camera: CameraID, filmStock: FilmStock?) -> Treatment {
+    static func treatment(version: TreatmentVersion, camera: CameraID, filmStock: FilmStock?) -> Treatment {
         switch (camera, filmStock) {
         case (.disposable1990s, _): disposable
         case (.instant1970s, _):

@@ -53,7 +53,7 @@ The output directory also gets `SOURCES.md`, `sources.json` (the manifest, with 
 ## The toning board
 
 `--only toning` builds `toning/index.html` from the renders' toned prints: each scene untoned and with each toner at each amount.
-`--stronger-toning <chemistry>=<top>=<renders>` adds a row past the top of the range, from renders made with that toner's `top` in `ToningLook.swift` raised to `<top>` in the working tree; an amount there is `amount * top` in strength.
+`--stronger-toning <chemistry>=<top>=<renders>` adds a row past the top of the range, from renders made with the amount `ToningLook.apply` passes for that toner multiplied by `<top>` in the working tree; an amount there is `amount * top` in strength.
 `--toning-approved <text>` with `--approved` prints what the captain approved.
 
 ## The Instant print study

@@ -4,13 +4,12 @@ import Foundation
 @testable import RenderCore
 import XCTest
 
-/// The Darkroom's chemical toners (`ToningLook`): their arithmetic, and that a recipe's amount reaches it through
-/// each toner's own range.
+/// The Darkroom's chemical toners (`ToningLook`): their arithmetic, and each slider's range as the captain chose it.
 final class ToningLookTests: XCTestCase {
     private static let linear = CGColorSpace(name: CGColorSpace.linearSRGB)!
     private let context = CIContext(options: [.workingColorSpace: ToningLookTests.linear, .cacheIntermediates: false])
 
-    /// Selenium's blend through the inverted print is, on every tone and at every strength its range gives, the
+    /// Selenium's blend through the inverted print is, on every tone and at every strength its slider gives, the
     /// arithmetic its comment states: each channel's light x becomes x * (1 + strength * (1 - x) * (tint - 1)).
     func testSeleniumIsTheArithmeticItStates() {
         let tint = ToningLook.seleniumTint
@@ -28,40 +27,34 @@ final class ToningLookTests: XCTestCase {
 
     /// Selenium is purple, weighted to the darker tones, and leaves both black and the paper's white where they are.
     func testSeleniumTintsTheDarkerTonesPurpleAndLeavesBlackAndWhiteAlone() {
-        for strength in [1.0, ToningLook.selenium.top] {
-            let black = light(ToningLook.toned(Self.gray(0), with: .selenium, strength: strength))
-            let white = light(ToningLook.toned(Self.gray(1), with: .selenium, strength: strength))
-            for channel in 0..<3 {
-                XCTAssertEqual(black[channel], 0, accuracy: 0.0001)
-                XCTAssertEqual(white[channel], 1, accuracy: 0.0001)
-            }
-            let shadow = light(ToningLook.toned(Self.gray(0.1), with: .selenium, strength: strength))
-            let highlight = light(ToningLook.toned(Self.gray(0.9), with: .selenium, strength: strength))
-            XCTAssertGreaterThan(shadow[0], shadow[1], "Red over green in the shadows")
-            XCTAssertGreaterThan(shadow[2], shadow[1], "Blue over green in the shadows")
-            XCTAssertGreaterThan((shadow[0] - shadow[1]) / 0.1, (highlight[0] - highlight[1]) / 0.9, "More of it in the shadows")
+        let black = light(ToningLook.toned(Self.gray(0), with: .selenium, strength: 1))
+        let white = light(ToningLook.toned(Self.gray(1), with: .selenium, strength: 1))
+        for channel in 0..<3 {
+            XCTAssertEqual(black[channel], 0, accuracy: 0.0001)
+            XCTAssertEqual(white[channel], 1, accuracy: 0.0001)
         }
+        let shadow = light(ToningLook.toned(Self.gray(0.1), with: .selenium, strength: 1))
+        let highlight = light(ToningLook.toned(Self.gray(0.9), with: .selenium, strength: 1))
+        XCTAssertGreaterThan(shadow[0], shadow[1], "Red over green in the shadows")
+        XCTAssertGreaterThan(shadow[2], shadow[1], "Blue over green in the shadows")
+        XCTAssertGreaterThan((shadow[0] - shadow[1]) / 0.1, (highlight[0] - highlight[1]) / 0.9, "More of it in the shadows")
     }
 
     /// Sepia is a warm brown: red over green over blue through the middle tones, black left black.
     func testSepiaIsAWarmBrown() {
-        let strength = ToningLook.sepia.top
-        let black = light(ToningLook.toned(Self.gray(0), with: .sepia, strength: strength))
+        let black = light(ToningLook.toned(Self.gray(0), with: .sepia, strength: 1))
         XCTAssertEqual(black.max()!, 0, accuracy: 0.0001)
         for tone in [0.1, 0.3, 0.5, 0.7] {
-            let toned = light(ToningLook.toned(Self.gray(tone), with: .sepia, strength: strength))
+            let toned = light(ToningLook.toned(Self.gray(tone), with: .sepia, strength: 1))
             XCTAssertGreaterThan(toned[0], toned[1], "tone \(tone)")
             XCTAssertGreaterThan(toned[1], toned[2], "tone \(tone)")
         }
     }
 
     /// The captain chose each toner's range on the toning comparison board on 2026-10-13: "sepia - untoned to 1.
-    /// selenium - untoned to 1". Both sliders start at the untoned print and top out at the strength the board showed
-    /// as 1.00.
-    func testEachTonersRangeIsTheOneTheCaptainChose() {
-        XCTAssertEqual(ToningLook.sepia, ToningLook.Toner(start: 0, top: 1))
-        XCTAssertEqual(ToningLook.selenium, ToningLook.Toner(start: 0, top: 1))
-        // At the slider's low end a toned recipe prints the untoned print.
+    /// selenium - untoned to 1". At the slider's low end a toned recipe prints the untoned print; its top is the next
+    /// test's.
+    func testEachSliderStartsAtTheUntonedPrint() {
         for chemistry in ChemicalToning.Chemistry.allCases {
             for tone in [0.05, 0.3, 0.8] {
                 let untoned = light(ToningLook.apply(ChemicalToning(chemistry: chemistry, amount: 0), to: Self.gray(tone)))
@@ -87,25 +80,6 @@ final class ToningLookTests: XCTestCase {
                     XCTAssertEqual(toned[channel], expected[channel], accuracy: 0.002, "\(chemistry) at \(tone), channel \(channel)")
                 }
             }
-        }
-    }
-
-    /// A recipe's amount is where the slider stands: its low end is the toner's start and its top the toner's top,
-    /// evenly between.
-    func testARecipesAmountRunsFromTheTonersStartToItsTop() {
-        for chemistry in ChemicalToning.Chemistry.allCases {
-            let toner = ToningLook.toner(chemistry)
-            XCTAssertLessThan(toner.start, toner.top, "\(chemistry)")
-            XCTAssertGreaterThanOrEqual(toner.start, 0, "\(chemistry)")
-            XCTAssertEqual(ToningLook.strength(ChemicalToning(chemistry: chemistry, amount: 0)), toner.start, accuracy: 1e-12)
-            XCTAssertEqual(ToningLook.strength(ChemicalToning(chemistry: chemistry, amount: 1)), toner.top, accuracy: 1e-12)
-            XCTAssertEqual(ToningLook.strength(ChemicalToning(chemistry: chemistry, amount: 0.5)), (toner.start + toner.top) / 2,
-                           accuracy: 1e-12)
-            // The recipe's print is the toner at that strength.
-            let gray = Self.gray(0.3)
-            let recipe = light(ToningLook.apply(ChemicalToning(chemistry: chemistry, amount: 0.5), to: gray))
-            let direct = light(ToningLook.toned(gray, with: chemistry, strength: (toner.start + toner.top) / 2))
-            XCTAssertEqual(recipe, direct, "\(chemistry)")
         }
     }
 

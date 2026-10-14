@@ -740,8 +740,8 @@ def build_toning(renders, sources, output, round_number):
     body.append("</section>")
 
     body.append('<section><h2>Values in the app</h2><p class="muted">From <code>ToningLook.swift</code>: the one place the toners are '
-                'set. Your choices become each toner\'s <code>start</code> and <code>top</code>.</p><pre><code>%s</code></pre></section>'
-                % esc(open(TONING_SOURCE).read().split("enum ToningLook {", 1)[1].split("    static func toner(", 1)[0].rstrip()))
+                'set. Your choices become each slider\'s range.</p><pre><code>%s</code></pre></section>'
+                % esc(open(TONING_SOURCE).read().split("import Foundation\n", 1)[1].split("    /// The print toned as the recipe asks.", 1)[0].strip()))
     body.append(decision_form("toning", "Chemical toning", renders.get("questions", {}).get("toning", [
         {"id": "decision", "title": "", "options": [("approve", "Approve these values"), ("change", "Request changes")]}])))
     body.append("</main>")
