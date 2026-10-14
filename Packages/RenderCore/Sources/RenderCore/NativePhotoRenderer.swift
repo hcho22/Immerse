@@ -139,8 +139,14 @@ public enum NativePhotoRenderer {
         }
         // Strokes add up where they overlap, each working on the print as the last left it, and together they never
         // take any part of it more than the limit from its print exposure. Unbounded, a few overlapping strokes at the
-        // limit run past what the renderer can hold and print as rings, not as white or black.
+        // limit run past what the renderer can hold and print as rings, not as white or black. Dodges only lighten and
+        // burns only darken, so where the dodges together and the burns together stay within the limit nothing can pass
+        // it, and the print is made without the bound, exactly as the build before made it: on Apple silicon the bound's
+        // filters change the printed bytes even where they hold nothing back.
         let limit = DarkroomLimits.localExposureStops
+        let canPassTheLimit = [LocalMask.Kind.dodge, .burn].contains { kind in
+            recipe.dodgeBurnMasks.filter { $0.kind == kind }.reduce(0) { $0 + abs($1.exposureStops) } > limit
+        }
         let lightest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: limit])
         let darkest = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -limit])
         // A value contrast pushed below zero grows more negative as it is lightened, so order the two bounds by value.
@@ -161,8 +167,11 @@ public enum NativePhotoRenderer {
             }
             image = adjusted.applyingFilter("CIBlendWithMask", parameters: [
                 kCIInputBackgroundImageKey: image, kCIInputMaskImageKey: combined
-            ]).applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: ceiling])
-                .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
+            ])
+            if canPassTheLimit {
+                image = image.applyingFilter("CIMinimumCompositing", parameters: [kCIInputBackgroundImageKey: ceiling])
+                    .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
+            }
         }
         if let toning = recipe.chemicalToning {
             let toned: CIImage

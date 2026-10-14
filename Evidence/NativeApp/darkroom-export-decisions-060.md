@@ -40,6 +40,7 @@ The addendum's list also names the Instant's question (below), the two Developme
    Left unbounded, a few overlapping 3-stop strokes ran past what the renderer can hold, and the print came out as a ring with a dark middle, not as white or black.
    The renderer now keeps every part of the print within 3 stops of its print exposure after each stroke, so "plus and minus 3 stops" is true of the print and the picture stays defined however many strokes there are.
    It was seen with eight overlapping 3-stop dodges followed by eight burns; at the earlier 0.4 stops a stroke the same total would have taken sixty strokes.
+   Dodges only lighten and burns only darken, so the bound is used only when the dodges together, or the burns together, come to more than 3 stops; any other print cannot pass it and is made without it.
 3. **A stored value outside the limits is refused, not clamped.**
    See below.
 
@@ -66,8 +67,12 @@ It opens and prints the same bytes.
 `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` keeps the earlier build's printing unchanged in the test (`EarlierDarkroom`) and compares it byte for byte with today's, for 14 recipes at and inside the earlier limits on a Disposable print, each with and without a crop, two toned black-and-white prints and two Instant prints.
 `StoredRecipeLimitsTests` reads the stored form the earlier build wrote through the production repository and prints it.
 
+The bound on overlapping strokes is left out of every print whose dodges together and burns together stay within 3 stops, which is every recipe the test compares.
+CI's Mac, an Apple silicon virtual machine, showed why: with the bound in every print that had a stroke, 12 of those comparisons printed different bytes there, the seven 0.4-stop burns among them, though the bound held nothing back in any of them.
+On this Intel Mac they printed the same bytes either way, and with Core Image's software renderer, half-float or 8-bit working formats too, so the difference comes from rendering on Apple silicon and was not reproduced here.
+
 Two differences exist and are deliberate.
-A recipe with eight or more overlapping strokes of the same kind on one spot, more than 3 stops together, now prints that spot at 3 stops.
+A recipe whose dodges, or whose burns, come to more than 3 stops together now prints through the bound: where they overlap past 3 stops, as eight or more 0.4-stop strokes of one kind on one spot do, that spot prints at 3 stops, and elsewhere a print made on Apple silicon can come out in different bytes, as on CI's Mac.
 Seven overlapping 0.4-stop strokes, 2.8 stops, print as before, and the test holds that.
 A cropped 6×6 print that came out a pixel off square now prints square, without its last column or row (After testing, the second round).
 A 6×6 crop that printed square prints as before, and `testACropped6x6PrintIsSquareWhereverTheCropSits` holds that.
