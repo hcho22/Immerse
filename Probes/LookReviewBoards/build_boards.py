@@ -800,7 +800,8 @@ def main():
     parser.add_argument("--questions", help="JSON by board: the questions of the decision form, each with id, title and options")
     parser.add_argument("--further-values", help="JSON by board: [label, values] pairs printed after the values in the app")
     parser.add_argument("--stronger-toning", nargs="*", default=[],
-                        help="CHEMISTRY=TOP=DIR: renders made with that toner's top raised to TOP, shown past today's top")
+                        help="CHEMISTRY=TOP=DIR: renders made with the amount ToningLook.apply passes for that toner multiplied "
+                             "by TOP, shown past today's top")
     parser.add_argument("--toning-approved", default="", help="what the captain approved on the toning board, with --approved")
     parser.add_argument("--slim", action="store_true", help="smaller pictures and clips, for the copy kept in the repository")
     parser.add_argument("--no-previous", action="store_true", help="leave out each scene's comparison with treatment version 2")

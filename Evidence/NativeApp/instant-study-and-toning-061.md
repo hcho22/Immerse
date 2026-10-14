@@ -302,6 +302,8 @@ Served to the captain on 2026-10-13 from `Evidence/AssetReview/looks/toning/inde
 Five scenes developed as a black-and-white 6×6 Film: two portraits, light skin and dark, a night street for deep shadow, a daylight scene and a bright interior.
 Each has a sepia row and a selenium row at 0.25, 0.50, 0.75 and 1.00 beside the untoned print, and a second selenium row at 2, 3 and 4 times the provisional top.
 Every print is made by `NativePhotoRenderer.print`, the call the Darkroom makes.
+The kept board's "Values in the app" block shows `ToningLook.swift` as it stood when he approved it, with each toner as `Toner(start: 0, top: 1)`.
+A later simplification removed that range and passes the slider's amount as the strength, which is the same range and prints the same bytes, as main's `DarkroomLimitsTests.testARecipeSavedUnderTheEarlierLimitsPrintsTheSameBytes` and `ToningLookTests` hold.
 
 ## What the captain decided
 
