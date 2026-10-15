@@ -21,10 +21,11 @@ On the iPhone 17 Pro the same test passed before the change, with the Vertical s
 ## The Change
 
 `DarkroomLayout` (`App/Immerse/Sources/PhotoView.swift`) takes `fitsEveryControl`, which the Darkroom sets for the Crop tool only.
-With it, the print gives up height below its ordinary smallest size of 160 pt, down to 64 pt, to rest every control on screen.
+With it, in portrait (a regular vertical size class), the print gives up height below its ordinary smallest size of 160 pt, down to 64 pt, to rest every control on screen.
 Where even a 64 pt print leaves controls below the fold, the print stays 64 pt and the screen scrolls only the points still missing, so a larger text size never gets a larger print.
 The scroll area still ends above Reset to Original, so no control rests under it and none is clipped.
-Where everything already fits, as on the iPhone 17 Pro, the print is the height the controls leave, as before, so nothing changes.
+Where everything already fits, as on the iPhone 17 Pro in portrait, the print is the height the controls leave, as before, so nothing changes.
+In landscape (a compact vertical size class) nothing changes on any iPhone: the Crop tool keeps the ordinary rule, so its print is the 160 pt every other tool shows there and switching tools never moves it.
 Every other tool keeps the rule it had, in which the explanation of an error takes its height from the print down to 80 pt; in the Crop tool the floor is 64 pt with or without an error.
 Nothing in rendering, recipes, saved prints or product text changed.
 
@@ -44,6 +45,12 @@ The first version of this change kept the print at 160 pt wherever a 64 pt print
 Review on 2026-10-14 found the step that left: the iPhone SE's default text size fits with about 16 pt to spare, and one or two sizes larger the heading and the three captions grow past that, so the print would jump back to 160 pt and put the Vertical slider wholly under Reset to Original again, the finding the captain answered.
 The floor now holds: the print shrinks to 64 pt and stays there as the text grows, and the screen scrolls only the points still missing.
 
+### Portrait Only
+
+That floor, applied whenever the Crop tool was open, also reached landscape, where a 64 pt print still leaves the Crop controls below the fold on every iPhone.
+There it gave up the print's height without showing every slider, and switching between Crop and Exposure moved the print between 64 and 160 pt.
+Review on 2026-10-14 kept the floor to portrait: in landscape the Crop tool keeps the ordinary rule, as every other tool does.
+
 ## What Holds It
 
 - `testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize` (populated harness, the check's harness part) opens Crop on a Disposable print, turns the crop on, moves Size to 0.6, and checks with nothing scrolled that the switch, the heading, the three sliders and their captions all rest between the navigation bar and the fade, above Reset to Original, that the print is below the bar, above the controls and at least 64 pt tall, and that the Vertical slider is hittable and takes a drag.
@@ -51,8 +58,11 @@ The floor now holds: the print shrinks to 64 pt and stays there as the text grow
 - `testDarkroomScrollsTheCropControlsClearAtTheLargestSize` does the same at the largest text size, where the controls cannot all fit: the print is 64 pt, and the Vertical slider is scrolled to with held drags, comes fully clear of the fade, and takes the drag.
 - `testTheCropToolsPrintGivesUpHeightForItsControlsDownTo64Points` (hosted, `JournalIntegrationTests`) holds the rule in `DarkroomLayout` itself: controls that leave 120 pt keep the print at 160 pt without `fitsEveryControl` and give it 120 pt with it, the print keeping its top edge; controls that would leave it 63 pt give it 64 pt, with the controls ending 1 pt past the scroll area's clear part; and where everything fits, every frame is as without it.
 - `testTheCropToolsPrintKeeps64PointsPastTheLargestTextSizeThatFits` (hosted) gives the stand-in controls the height that leaves the print 80 pt at the default text size, as the Crop tool's do on an iPhone SE, and steps the text size up to the largest: the print never grows, and at the two sizes past the largest whose controls all fit it is 64 pt, never 160 pt, with the controls running past the clear part by exactly the points they still need.
+- `testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape` (hosted) gives `DarkroomLayout` a compact vertical size class: with controls that would leave the print 120 pt and then 63 pt, every frame with `fitsEveryControl` is the frame without it, the print 160 pt.
+- `testDarkroomCropKeepsThePrintInLandscape` (populated harness) opens Crop on a Disposable print, turns the crop on and moves Size to 0.6 in portrait, turns the simulator to landscape, and checks that the print in Crop has the height and place Exposure then gives it.
+  The crop is set in portrait so nothing is scrolled: in landscape a drag down at the top of the Darkroom pulls its sheet away.
 
-CI creates only iPhone 17 Pro simulators, where everything fits, so the check runs the new screen tests there; the iPhone SE runs below are this record's.
+CI creates only iPhone 17 Pro simulators, where everything fits in portrait, so the check runs the new screen tests there; the iPhone SE runs below are this record's.
 
 ## Runs
 
@@ -108,6 +118,17 @@ The floor of 64 pt that holds as the text grows ("No Step Back to 160 pt", above
 
 Dark was not run again, since the rule reads no color; the largest-text pictures below are from this run.
 
+### Again after the landscape review
+
+The floor kept to portrait ("Portrait Only", above), on new iPhone SE (3rd generation) and iPhone 17 Pro simulators on iOS 26.5, in light:
+
+| Check | Result |
+| --- | --- |
+| `testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape` and `testDarkroomCropKeepsThePrintInLandscape` on the rule before this review, iPhone SE | Both fail: in landscape the Crop tool's print is 120 pt and then 64 pt in the hosted test, and 64 pt against Exposure's 160 pt in the Darkroom |
+| The four hosted Darkroom layout tests, iPhone SE | 4 passed, 0 failures |
+| `testDarkroomCropKeepsThePrintInLandscape` and the two Crop screen tests at the default and the largest text size, iPhone SE and iPhone 17 Pro | 3 passed, 0 failures on each |
+| `Scripts/verify-document-package.sh` | Pass |
+
 The Darkroom has no accessibility audit of its own: the fit tests are its text-size checks and `testDarkroomAccessibleControlsReachNonGestureEditingPaths` is the check of its controls, as `darkroom-export-decisions-060.md` says.
 The text-size suite and the audits of other screens ran on the merged code (above); the package tests were left to the check.
 
@@ -139,8 +160,20 @@ At the largest text size on the iPhone SE the print is 64 pt and the controls sc
 | --- | --- |
 | ![The print at 64 pt over the Crop heading and switch](crop-fit-short-screens-063/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens-063/crop-largest-se-light-vertical.png) |
 
+In landscape the Crop tool shows the print at 160 pt, as Exposure does, and the controls scroll as before.
+On the iPhone SE the tool row then rests half in the scroll area's fade, as it does in every tool; this change leaves landscape as it was.
+
+| iPhone SE in landscape, Crop open |
+| --- |
+| ![The print at 160 pt over the tool row](crop-fit-short-screens-063/crop-landscape-se-light.png) |
+
+| iPhone 17 Pro in landscape, Crop open |
+| --- |
+| ![The print at 160 pt over the tool row](crop-fit-short-screens-063/crop-landscape-pro-light.png) |
+
 ## Not Shown Here
 
 - A real iPhone SE or any physical iPhone.
 - Text sizes between the default and the largest in the real Darkroom, other than through the rule and its hosted test: there the print shrinks as far as 64 pt to show every Crop control, and past that stays 64 pt with the screen scrolling the rest.
+- Landscape at any text size but the default, and the turn between portrait and landscape with the Crop tool open, other than through the rule.
 - VoiceOver on a device.

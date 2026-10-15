@@ -389,6 +389,34 @@ final class JournalIntegrationTests: XCTestCase {
         }
     }
 
+    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape, where the vertical size
+    /// class is compact, the Crop tool keeps the ordinary rule, so its print is the one every other tool shows and
+    /// switching tools never moves it.
+    func testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        let room = resting.print.height - 160
+        XCTAssertGreaterThan(room, 0, "The probe's screen has room for a print over 160 pt")
+
+        // Controls that would leave the print 120 pt, and then 63 pt, as Crop's do in portrait on an iPhone SE.
+        for extra in [room + 40, room + 97] {
+            probe.extraControlsHeight = extra
+            probe.fitsEveryControl = false
+            let ordinary = try await settledFrames(probe)
+            XCTAssertEqual(ordinary.print.height, 160, accuracy: 0.5, "Every other tool keeps its smallest ordinary print")
+            probe.fitsEveryControl = true
+            let crop = try await settledFrames(probe)
+            XCTAssertEqual(crop.print, ordinary.print, "In landscape the Crop tool's print is every other tool's")
+            XCTAssertEqual(crop.controls, ordinary.controls, "In landscape the Crop tool's controls scroll as every other tool's")
+        }
+    }
+
     /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
     private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
         var last: (print: CGRect, controls: CGRect)?
@@ -706,6 +734,8 @@ private final class DarkroomLayoutProbe {
     /// Height added under the stand-in controls.
     var extraControlsHeight: CGFloat = 0
     var dynamicTypeSize = DynamicTypeSize.large
+    /// Whether the layout is told it is in landscape, through a compact vertical size class.
+    var landscape = false
     @ObservationIgnored var printFrame = CGRect.null
     @ObservationIgnored var controlsFrame = CGRect.null
 }
@@ -724,6 +754,7 @@ private struct DarkroomLayoutProbeView: View {
             }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
         }
         .dynamicTypeSize(probe.dynamicTypeSize)
+        .transformEnvironment(\.verticalSizeClass) { if probe.landscape { $0 = .compact } }
     }
 }
 

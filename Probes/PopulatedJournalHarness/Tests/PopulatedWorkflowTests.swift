@@ -776,6 +776,61 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertEqual(print.frame.height, exposurePrint.height, accuracy: 1, "\(name): Exposure keeps the print's size")
     }
 
+    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape the Crop controls cannot all
+    /// show, so with a crop smaller than the whole print the Crop tool keeps the print the size and place Exposure gives
+    /// it, and switching tools never moves it. The crop is set in portrait, where every control rests on screen, so
+    /// nothing is scrolled: a drag down at the top of the Darkroom in landscape pulls its sheet away.
+    func testDarkroomCropKeepsThePrintInLandscape() throws {
+        XCUIDevice.shared.orientation = .portrait
+        addTeardownBlock { XCUIDevice.shared.orientation = .portrait }
+        let app = launch(arguments: ["--developed-photo"])
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        open.tap()
+        app.buttons["Darkroom"].tap()
+        let print = app.images["Photo 1, print preview"]
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "print")
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
+        app.buttons["Crop"].tap()
+        let crop = app.switches["Crop"]
+        XCTAssertTrue(crop.waitForExistence(timeout: 5))
+        XCTAssertTrue(crop.isHittable, "In portrait the Crop switch rests on screen")
+        crop.tap()
+        let size = app.sliders["Crop size"]
+        XCTAssertTrue(size.waitForExistence(timeout: 5))
+        XCTAssertTrue(size.isHittable, "In portrait the Size slider rests on screen")
+        size.adjust(toNormalizedSliderPosition: 0.6)
+        XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5))
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "the cropped print is made")
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        let settled = NSPredicate { _, _ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height }
+        wait(for: [XCTNSPredicateExpectation(predicate: settled, object: nil)], timeout: 10)
+        Thread.sleep(forTimeInterval: 1.5)
+        let cropPrint = print.frame
+        uprightSnapshot(app, "Darkroom-crop-landscape")
+        app.buttons["Exposure"].tap()
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 5))
+        Thread.sleep(forTimeInterval: 1.5)
+        XCTAssertEqual(cropPrint.height, print.frame.height, accuracy: 1, "Crop keeps the print's size in landscape")
+        XCTAssertEqual(cropPrint.minY, print.frame.minY, accuracy: 1, "Crop keeps the print's place in landscape")
+    }
+
+    /// The screen upright in landscape, where `XCUIApplication.screenshot()` turns the image sideways a second time and
+    /// crops it (Evidence/NativeApp/scroll-indicator-drag-053.md).
+    private func uprightSnapshot(_ app: XCUIApplication, _ name: String) {
+        let screen = XCUIScreen.main.screenshot().image
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = screen.scale
+        let upright = UIGraphicsImageRenderer(size: screen.size, format: format).image { _ in screen.draw(at: .zero) }
+        for attachment in [XCTAttachment(image: upright), XCTAttachment(string: app.debugDescription)] {
+            attachment.name = name
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+    }
+
     /// Held drags in the left margin, which neither coast nor move a slider.
     private func dragUp(_ app: XCUIApplication, by distance: CGFloat) {
         let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
