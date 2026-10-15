@@ -1,4 +1,4 @@
-# The Darkroom Side by Side in Landscape 064
+# The Darkroom Side by Side in Landscape 065
 
 Captain (2026-10-14): "landscape - side by side".
 He was answering a finding from the review of the Crop fit (`crop-fit-short-screens-063.md`), older than that change: on a small iPhone held sideways, the Darkroom pushes its tool buttons almost entirely off the bottom of the screen, so only the tops of the icons show and switching tools is hard.
@@ -7,6 +7,7 @@ He chose side by side.
 
 This record is simulator evidence only.
 No real iPhone has run it.
+The branch was brought up to `main` at `beb761b` on 2026-10-15 with one merge commit, which numbered this record 065; that merge brought only documents, the manual iPhone test plan among them, and no app or test change.
 
 ## Reproduction
 
@@ -21,11 +22,11 @@ On the iPhone 17 Pro the scroll area ends at 316 pt, so the tool row shows but f
 
 | iPhone SE in landscape, before | |
 | --- | --- |
-| ![Light: the tool row is hidden behind Reset to Original](darkroom-landscape-side-by-side-064/before-se-light.png) | ![Dark: the same](darkroom-landscape-side-by-side-064/before-se-dark.png) |
+| ![Light: the tool row is hidden behind Reset to Original](darkroom-landscape-side-by-side-065/before-se-light.png) | ![Dark: the same](darkroom-landscape-side-by-side-065/before-se-dark.png) |
 
 | iPhone 17 Pro in landscape, before | |
 | --- | --- |
-| ![Light: the tool row fades out at its foot and no control shows](darkroom-landscape-side-by-side-064/before-pro-light.png) | ![Dark: the same](darkroom-landscape-side-by-side-064/before-pro-dark.png) |
+| ![Light: the tool row fades out at its foot and no control shows](darkroom-landscape-side-by-side-065/before-pro-light.png) | ![Dark: the same](darkroom-landscape-side-by-side-065/before-pro-dark.png) |
 
 ## The Change
 
@@ -131,34 +132,34 @@ On the iPhone 17 Pro, inside its safe areas of 62 pt on either side, it is 292 b
 
 | iPhone SE in landscape, after | |
 | --- | --- |
-| ![Exposure: the print, the tool column and the exposure slider side by side](darkroom-landscape-side-by-side-064/after-se-light-exposure.png) | ![Contrast](darkroom-landscape-side-by-side-064/after-se-light-contrast.png) |
-| ![Filtration: three sliders beside their captions](darkroom-landscape-side-by-side-064/after-se-light-filtration.png) | ![Dodge / Burn: every control on screen](darkroom-landscape-side-by-side-064/after-se-light-dodge-burn.png) |
-| ![Crop: the switch and three sliders](darkroom-landscape-side-by-side-064/after-se-light-crop.png) | ![Chemical toning on the black-and-white 6×6](darkroom-landscape-side-by-side-064/after-se-light-toning.png) |
-| ![Dark: Dodge / Burn](darkroom-landscape-side-by-side-064/after-se-dark-dodge-burn.png) | ![Dark: Crop](darkroom-landscape-side-by-side-064/after-se-dark-crop.png) |
+| ![Exposure: the print, the tool column and the exposure slider side by side](darkroom-landscape-side-by-side-065/after-se-light-exposure.png) | ![Contrast](darkroom-landscape-side-by-side-065/after-se-light-contrast.png) |
+| ![Filtration: three sliders beside their captions](darkroom-landscape-side-by-side-065/after-se-light-filtration.png) | ![Dodge / Burn: every control on screen](darkroom-landscape-side-by-side-065/after-se-light-dodge-burn.png) |
+| ![Crop: the switch and three sliders](darkroom-landscape-side-by-side-065/after-se-light-crop.png) | ![Chemical toning on the black-and-white 6×6](darkroom-landscape-side-by-side-065/after-se-light-toning.png) |
+| ![Dark: Dodge / Burn](darkroom-landscape-side-by-side-065/after-se-dark-dodge-burn.png) | ![Dark: Crop](darkroom-landscape-side-by-side-065/after-se-dark-crop.png) |
 
 | iPhone 17 Pro in landscape, after | |
 | --- | --- |
-| ![Light: Dodge / Burn inside both safe areas](darkroom-landscape-side-by-side-064/after-pro-light-dodge-burn.png) | ![Dark: Dodge / Burn](darkroom-landscape-side-by-side-064/after-pro-dark-dodge-burn.png) |
-| ![Light: Crop](darkroom-landscape-side-by-side-064/after-pro-light-crop.png) | |
+| ![Light: Dodge / Burn inside both safe areas](darkroom-landscape-side-by-side-065/after-pro-light-dodge-burn.png) | ![Dark: Dodge / Burn](darkroom-landscape-side-by-side-065/after-pro-dark-dodge-burn.png) |
+| ![Light: Crop](darkroom-landscape-side-by-side-065/after-pro-light-crop.png) | |
 
 At the largest text size on the iPhone SE, Dodge / Burn's controls scroll in their column; the print, the tools and Reset stay.
 
 | At rest | Scrolled to Undo last stroke |
 | --- | --- |
-| ![The print and tools beside the large heading and Strength caption](darkroom-landscape-side-by-side-064/after-se-light-largest.png) | ![Dodge point and Undo last stroke in view, the print and tools unmoved](darkroom-landscape-side-by-side-064/after-se-light-largest-scrolled.png) |
+| ![The print and tools beside the large heading and Strength caption](darkroom-landscape-side-by-side-065/after-se-light-largest.png) | ![Dodge point and Undo last stroke in view, the print and tools unmoved](darkroom-landscape-side-by-side-065/after-se-light-largest-scrolled.png) |
 
 Turning, on the iPhone SE: a burn drawn in portrait shows in landscape, and a burn drawn in landscape at the lower right shows there on the portrait print.
 
 | Turned to landscape | Turned back to portrait |
 | --- | --- |
-| ![Dodge / Burn kept, with Burn and the strength](darkroom-landscape-side-by-side-064/turned-se-landscape.png) | ![The burn drawn in landscape at the lower right of the print](darkroom-landscape-side-by-side-064/turned-se-back-portrait.png) |
+| ![Dodge / Burn kept, with Burn and the strength](darkroom-landscape-side-by-side-065/turned-se-landscape.png) | ![The burn drawn in landscape at the lower right of the print](darkroom-landscape-side-by-side-065/turned-se-back-portrait.png) |
 
 Portrait on the iPhone SE in light, before and after the change: the same.
 
 | Before | After |
 | --- | --- |
-| ![Exposure in portrait, before](darkroom-landscape-side-by-side-064/portrait-before-se-light.png) | ![Exposure in portrait, after](darkroom-landscape-side-by-side-064/portrait-after-se-light.png) |
-| ![Crop in portrait, before](darkroom-landscape-side-by-side-064/portrait-crop-before-se-light.png) | ![Crop in portrait, after](darkroom-landscape-side-by-side-064/portrait-crop-after-se-light.png) |
+| ![Exposure in portrait, before](darkroom-landscape-side-by-side-065/portrait-before-se-light.png) | ![Exposure in portrait, after](darkroom-landscape-side-by-side-065/portrait-after-se-light.png) |
+| ![Crop in portrait, before](darkroom-landscape-side-by-side-065/portrait-crop-before-se-light.png) | ![Crop in portrait, after](darkroom-landscape-side-by-side-065/portrait-crop-after-se-light.png) |
 
 ## Not Shown Here
 
