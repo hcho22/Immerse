@@ -126,8 +126,9 @@ extension XCTestCase {
         let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: start)
         XCTAssertEqual(XCTWaiter().wait(for: [ready], timeout: 10), .completed, "Start a Film stayed disabled")
         let rows = app.buttons.matching(identifier: "journal-film")
-        for _ in 0..<10 where rows.count > 0 {
+        for _ in 0..<10 {
             let left = rows.count
+            if left == 0 { break }
             let screenshot = XCTAttachment(screenshot: app.screenshot())
             screenshot.name = "Film-left-by-an-earlier-test"
             screenshot.lifetime = .keepAlways
@@ -136,10 +137,12 @@ extension XCTestCase {
             let deleted = XCTNSPredicateExpectation(predicate: NSPredicate(format: "count == %d", left - 1), object: rows)
             XCTAssertEqual(XCTWaiter().wait(for: [deleted], timeout: 10), .completed, "A leftover Film was not deleted")
         }
-        XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists, "The Journal is empty")
+        XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 10), "The Journal is empty")
     }
 
-    /// Opens the Journal row `row` and deletes its Film.
+    /// Opens the Journal row `row` and deletes its Film, returning once the Film screen has closed and the Journal
+    /// shows again. Delete Film closes the Film screen only after the Film is removed, and the Journal's rows are in
+    /// the tree only while the Journal shows, so a row counted or missed before then says nothing about the deletion.
     private func deleteFilm(at row: XCUIElement, _ app: XCUIApplication) {
         for _ in 0..<8 {
             if row.isHittable { break }
@@ -153,6 +156,8 @@ extension XCTestCase {
         let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
+        XCTAssertTrue(app.buttons["Film actions"].waitForNonExistence(timeout: 10), "The Film screen closed")
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10), "The Journal shows")
     }
 
     /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns

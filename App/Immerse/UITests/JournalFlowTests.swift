@@ -136,8 +136,7 @@ final class JournalFlowTests: XCTestCase {
     func testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings() throws {
         let app = XCUIApplication.shippingGate()
         app.resetAuthorizationStatus(for: .camera)
-        app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        launchWithEmptyJournal(app)
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         app.buttons["camera-disposable1990s"].tap()

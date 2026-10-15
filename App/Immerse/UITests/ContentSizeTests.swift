@@ -350,7 +350,7 @@ final class ContentSizeTests: XCTestCase {
 
     private func checkJournalAndCatalog(_ category: String) {
         var rows: [String] = []
-        let app = launch(category)
+        let app = launch(category, onEmptyJournal: true)
         rows += record(measure(app, Self.journal, category, below: "Film Journal"))
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5), "Catalog \(category)")
@@ -395,13 +395,18 @@ final class ContentSizeTests: XCTestCase {
         finish(category, rows, targets)
     }
 
-    /// Launches at the text size in portrait, whatever orientation an earlier test that ran out of time left.
-    private func launch(_ category: String, arguments: [String] = []) -> XCUIApplication {
+    /// Launches at the text size in portrait, whatever orientation an earlier test that ran out of time left, and on
+    /// an empty Journal for a test that measures it, whatever Film an earlier test that ran out of time left.
+    private func launch(_ category: String, arguments: [String] = [], onEmptyJournal: Bool = false) -> XCUIApplication {
         XCUIDevice.shared.orientation = .portrait
         let app = XCUIApplication.shippingGate()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(category)"] + arguments
-        app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        if onEmptyJournal {
+            launchWithEmptyJournal(app)
+        } else {
+            app.launch()
+            XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        }
         return app
     }
 

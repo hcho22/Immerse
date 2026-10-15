@@ -38,8 +38,11 @@ The contrast audit reads that faded title as low contrast.
 ## The Fix
 
 `launchWithEmptyJournal(_:)` in `UITestSupport.swift` launches the app, waits for Start a Film to be enabled (the Journal lists its Films once launch recovery ends), and deletes every Film in the Journal through the Film screen's Delete Film, as `deleteFilm` does.
-Every test that loads a Film or reads the Journal starts with it: the Low Storage tests that load a Disposable, both Movie capacity tests, both Film Stock tests that load a Film, and `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore`, which audits the empty Journal.
+It counts the Journal's Films once a pass and stops when there are none, then waits for the empty Journal's "Your Journal begins here".
+Every test that loads a Film or reads the Journal starts with it: the Low Storage tests that load a Disposable, both Movie capacity tests, both Film Stock tests that load a Film, `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore`, which audits the empty Journal, `JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings`, which returns to it, and the twelve `ContentSizeTests` Journal and catalog tests, which measure its text, each at its own text size.
 Each Film it finds is kept as a screenshot named "Film-left-by-an-earlier-test" before it is deleted, so the earlier test's failure stays visible in the result bundle.
+Delete Film removes the Film before it closes the Film screen, and the Journal's rows are in the tree only while the Journal shows, so a row counted or missed on the Film screen says nothing.
+Each deletion, at the start of a test or at its end, therefore waits for the Film screen to close and for Start a Film to show before the Journal's Films are counted or a row is looked for.
 The tests still delete their own Film at the end, so a test that finishes leaves the Journal as it found it.
 No test was reordered.
 
@@ -97,5 +100,8 @@ Main's check failed on four other pushes in the two days before this record, in 
 | Run | Result |
 | --- | --- |
 | Screen-flows part (`IMMERSE_VALIDATE_PART=ui-flows sh Scripts/validate-local.sh`), twice, before `deleteFilm`'s loop was made to stop | Passed both times: light 23 tests and the expected audit failure, dark rerun 20 and the expected audit failure, no rerun |
-| The same part twice in a row on the final change | Passed both times the same way, no rerun |
+| The same part twice in a row on the change as it stood before review | Passed both times the same way, no rerun |
 | The Crop switch test, 10 times each on `38792bb` and `5c427bc` (above) | All 20 passed |
+| After review, on a new simulator in light with this Mac loaded about eight times past its cores: `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` with a 1-minute allowance | Passed in 59 s, deleting its Film at the end through the waits above |
+| Then `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` with a 1-minute allowance | Stopped at its allowance after loading its 16mm Film |
+| Then `ContentSizeTests.testJournalAndCatalogTextAtLarge` and `JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings` | Both passed; the first kept the leftover 16mm Film as "Film-left-by-an-earlier-test" and deleted it before measuring the empty Journal |
