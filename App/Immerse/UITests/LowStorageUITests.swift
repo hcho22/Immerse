@@ -90,7 +90,7 @@ final class LowStorageUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        app.launch()
+        launchWithEmptyJournal(app)
         openDisposableLoadScreen(app)
         // Loads with the title Load Film suggests, so no keyboard covers the screen on a small iPhone.
         let field = app.textFields["film-title"]

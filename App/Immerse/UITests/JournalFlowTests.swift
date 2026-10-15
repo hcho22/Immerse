@@ -4,8 +4,7 @@ import XCTest
 final class JournalFlowTests: XCTestCase {
     func testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore() throws {
         let app = XCUIApplication.shippingGate()
-        app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        launchWithEmptyJournal(app)
         try app.performAccessibilityAudit(for: Self.auditTypes)
         app.buttons["start-film"].tap()
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))

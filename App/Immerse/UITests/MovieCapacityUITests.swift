@@ -2,9 +2,10 @@ import XCTest
 
 /// Movie time reads as minutes and seconds from the catalog to the Journal: the 16mm catalog row and Load screen,
 /// then the loaded Film's detail header, capture line and Journal row, with VoiceOver speaking the units. Loading
-/// uses the Debug testing unlock and answers a fresh Camera request itself, and each test deletes the Film it
-/// loaded, so it neither depends on nor leaves Camera or Journal state that other tests assume. The populated
-/// Journal card is also audited for contrast, since the suite's other audits only see an empty Journal.
+/// uses the Debug testing unlock and answers a fresh Camera request itself, and each test starts on an empty
+/// Journal and deletes the Film it loaded, so it neither depends on nor leaves Camera or Journal state that other
+/// tests assume. The populated Journal card is also audited for contrast, since the suite's other audits only see an
+/// empty Journal.
 @MainActor
 final class MovieCapacityUITests: XCTestCase {
     func testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal() throws {
@@ -34,8 +35,7 @@ final class MovieCapacityUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        launchWithEmptyJournal(app)
         app.buttons["start-film"].tap()
         let camera = app.buttons["camera-cinema16mm"]
         for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
@@ -75,6 +75,12 @@ final class MovieCapacityUITests: XCTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         scrollUp(app, until: row)
         XCTAssertTrue(row.label.contains("2 minutes 47 seconds left"), row.label)
+        // The contrast audit samples the card at rest. A card passing under the screen's bottom edge fades into the
+        // scroll edge effect behind Start a Film, which the audit reads as low contrast; a person scrolls it up to
+        // read it, so the audited card ends above that edge and no other Film's card is there
+        // (Evidence/NativeApp/ui-test-isolation-064.md).
+        XCTAssertEqual(app.buttons.matching(identifier: "journal-film").count, 1, "The Journal holds only this Film")
+        XCTAssertLessThanOrEqual(row.frame.maxY, app.buttons["start-film"].frame.minY, "The card ends above Start a Film")
         retainScreenshot(app, name: "Journal-movie-row-\(size ?? "default")")
         try app.performAccessibilityAudit(for: .contrast)
     }

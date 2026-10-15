@@ -47,7 +47,7 @@ final class FilmStockUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        app.launch()
+        launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
         scrollUp(app, until: camera)
