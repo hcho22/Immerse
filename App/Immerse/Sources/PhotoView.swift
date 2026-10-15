@@ -15,18 +15,32 @@ private struct ControlsHeightKey: PreferenceKey {
 /// under it, where its taps would reach the bar, and the last row scrolls fully clear of it. Rendering shows over the
 /// print, outside the measured controls, so it does not resize the print on every render or rescale a Dodge/Burn
 /// stroke. An error shows between the print and the controls and is measured with them: the print gives up the
-/// error's height, so the selected tool rests on screen under the error and does not wait below the fold.
+/// error's height, so the selected tool rests on screen under the error and does not wait below the fold. In portrait, a
+/// tool whose controls must all show at once, the Crop's three sliders, has the print go below its smallest ordinary
+/// size, down to a smaller floor, to rest every control on screen; past that floor the screen scrolls the rest.
 struct DarkroomLayout<Preview: View, Controls: View>: View {
     let rendering: Bool
     let error: String?
+    /// Whether the print gives up height below `minimumPrintHeight`, down to `smallestFittedPrintHeight`, to rest every
+    /// control on screen in portrait. Where even that print leaves controls below the fold, the print stays at that size
+    /// and the screen scrolls only the rest, so a larger text size never has a larger print. In landscape, where the
+    /// controls cannot all show, the print keeps the ordinary rule, so switching tools there never moves it.
+    var fitsEveryControl = false
     @ViewBuilder let preview: Preview
     @ViewBuilder let controls: Controls
     /// The height of everything under the print, measured at the current text size.
     @State private var controlsHeight: CGFloat = 260
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     /// The smallest height the print preview is scaled down to before the screen scrolls. Under an error it is half
     /// that: the longest explanation then leaves the Exposure tool on an iPhone SE's screen, with the print still shown.
     private var minimumPrintHeight: CGFloat { error == nil ? 160 : 80 }
+
+    /// The smallest the print is shown in a tool whose controls must all show, two fifths of its ordinary smallest size,
+    /// with or without an error. With a crop smaller than the whole print, the Crop tool's controls leave an iPhone SE's
+    /// print 80 pt at the default text size, a fraction of a point short of the 80 pt an error allows, so the fitted
+    /// print is allowed less.
+    private static var smallestFittedPrintHeight: CGFloat { 64 }
 
     /// The controls' bottom margin, over which controls that run past the scroll area fade out rather than end in a
     /// sliver. The last row, scrolled fully into view, ends above it.
@@ -38,7 +52,8 @@ struct DarkroomLayout<Preview: View, Controls: View>: View {
     private static var bottomBarSpacing: CGFloat { 4 }
 
     private func printHeight(in available: CGFloat) -> CGFloat {
-        max(minimumPrintHeight, available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
+        max(fitsEveryControl && verticalSizeClass == .regular ? Self.smallestFittedPrintHeight : minimumPrintHeight,
+            available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
     }
 
     var body: some View {
@@ -212,7 +227,7 @@ struct DarkroomView: View {
 
     var body: some View {
         NavigationStack {
-            DarkroomLayout(rendering: rendering, error: error) {
+            DarkroomLayout(rendering: rendering, error: error, fitsEveryControl: tool == .crop) {
                 printPreview
             } controls: {
                 toolRow; Text(tool.rawValue).font(.headline); controls

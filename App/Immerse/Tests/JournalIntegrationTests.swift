@@ -314,6 +314,109 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(cleared.controls, resting.controls)
     }
 
+    /// The captain (2026-10-14): a tool whose controls must all show, Crop, has the print give up height below its
+    /// ordinary smallest size to rest every control on screen, down to 64 pt. Where even that print leaves controls
+    /// below the fold, the print stays 64 pt and the screen scrolls only the points the controls still need.
+    func testTheCropToolsPrintGivesUpHeightForItsControlsDownTo64Points() async throws {
+        let probe = DarkroomLayoutProbe()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        let room = resting.print.height - 160
+        XCTAssertGreaterThan(room, 0, "The probe's screen has room for a print over 160 pt")
+
+        // Controls that leave the print 120 pt: the ordinary layout keeps 160 pt and scrolls, the fitting one shrinks it.
+        probe.extraControlsHeight = room + 40
+        let ordinary = try await settledFrames(probe)
+        XCTAssertEqual(ordinary.print.height, 160, accuracy: 0.5, "Without fitting the print keeps its smallest ordinary size")
+        probe.fitsEveryControl = true
+        let fitted = try await settledFrames(probe)
+        XCTAssertEqual(fitted.print.height, 120, accuracy: 0.5, "The print gives up the height the controls need")
+        XCTAssertEqual(fitted.print.minY, resting.print.minY, accuracy: 0.5, "The print keeps its top edge")
+        XCTAssertEqual(fitted.controls.maxY, resting.controls.maxY, accuracy: 0.5, "The controls end where they did")
+
+        // Controls that would leave the print 63 pt cannot all fit: the print stays 64 pt and the screen scrolls 1 pt.
+        probe.extraControlsHeight = room + 97
+        let crowded = try await settledFrames(probe)
+        XCTAssertEqual(crowded.print.height, 64, accuracy: 0.5, "Where they cannot all fit the print keeps its smallest size")
+        XCTAssertEqual(crowded.print.minY, resting.print.minY, accuracy: 0.5, "The print keeps its top edge")
+        XCTAssertEqual(crowded.controls.maxY, resting.controls.maxY + 1, accuracy: 0.5, "Only the missing point scrolls")
+
+        // Where everything fits anyway, fitting changes nothing.
+        probe.extraControlsHeight = 0
+        let roomy = try await settledFrames(probe)
+        XCTAssertEqual(roomy.print, resting.print)
+        XCTAssertEqual(roomy.controls, resting.controls)
+    }
+
+    /// The captain (2026-10-14): a larger text size never gives the Crop tool's print more height. With controls that
+    /// leave the print 80 pt at the default text size, as the Crop tool's do on an iPhone SE, the print shrinks as the
+    /// text grows; the two sizes past the largest whose controls all fit keep a 64 pt print, never 160 pt, and the
+    /// screen scrolls only the points the controls still need.
+    func testTheCropToolsPrintKeeps64PointsPastTheLargestTextSizeThatFits() async throws {
+        let probe = DarkroomLayoutProbe()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        probe.fitsEveryControl = true
+        probe.extraControlsHeight = resting.print.height - 80
+        var sized: [(size: DynamicTypeSize, print: CGRect, controls: CGRect)] = []
+        for size in DynamicTypeSize.allCases where size >= .large {
+            probe.dynamicTypeSize = size
+            let frames = try await settledFrames(probe)
+            sized.append((size, frames.print, frames.controls))
+        }
+        XCTAssertEqual(sized[0].print.height, 80, accuracy: 0.5, "The print gives up the height the controls need")
+        for (smaller, larger) in zip(sized, sized.dropFirst()) {
+            XCTAssertLessThanOrEqual(larger.print.height, smaller.print.height + 0.5, "\(larger.size): the print never grows")
+        }
+
+        let largestThatFits = try XCTUnwrap(sized.lastIndex { $0.controls.maxY <= resting.controls.maxY + 0.5 })
+        XCTAssertGreaterThanOrEqual(sized.count, largestThatFits + 3, "Two text sizes are past the largest that fits")
+        for crowded in sized.dropFirst(largestThatFits + 1).prefix(2) {
+            XCTAssertEqual(crowded.print.height, 64, accuracy: 0.5, "\(crowded.size): the print keeps 64 pt, never 160 pt")
+            XCTAssertEqual(crowded.print.minY, resting.print.minY, accuracy: 0.5, "\(crowded.size): the print keeps its top edge")
+            let fitting = resting.print.height - (crowded.controls.height - resting.controls.height)
+            XCTAssertLessThan(fitting, 64, "\(crowded.size): the controls cannot all fit")
+            XCTAssertEqual(crowded.controls.maxY - resting.controls.maxY, 64 - fitting, accuracy: 0.5,
+                           "\(crowded.size): the screen scrolls only the points the controls still need")
+        }
+    }
+
+    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape, where the vertical size
+    /// class is compact, the Crop tool keeps the ordinary rule, so its print is the one every other tool shows and
+    /// switching tools never moves it.
+    func testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let resting = try await settledFrames(probe)
+        let room = resting.print.height - 160
+        XCTAssertGreaterThan(room, 0, "The probe's screen has room for a print over 160 pt")
+
+        // Controls that would leave the print 120 pt, and then 63 pt, as Crop's do in portrait on an iPhone SE.
+        for extra in [room + 40, room + 97] {
+            probe.extraControlsHeight = extra
+            probe.fitsEveryControl = false
+            let ordinary = try await settledFrames(probe)
+            XCTAssertEqual(ordinary.print.height, 160, accuracy: 0.5, "Every other tool keeps its smallest ordinary print")
+            probe.fitsEveryControl = true
+            let crop = try await settledFrames(probe)
+            XCTAssertEqual(crop.print, ordinary.print, "In landscape the Crop tool's print is every other tool's")
+            XCTAssertEqual(crop.controls, ordinary.controls, "In landscape the Crop tool's controls scroll as every other tool's")
+        }
+    }
+
     /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
     private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
         var last: (print: CGRect, controls: CGRect)?
@@ -627,6 +730,12 @@ private final class JournalReceiptCalls: TrialKeychainCalling, Sendable {
 @MainActor @Observable
 private final class DarkroomLayoutProbe {
     var error: String?
+    var fitsEveryControl = false
+    /// Height added under the stand-in controls.
+    var extraControlsHeight: CGFloat = 0
+    var dynamicTypeSize = DynamicTypeSize.large
+    /// Whether the layout is told it is in landscape, through a compact vertical size class.
+    var landscape = false
     @ObservationIgnored var printFrame = CGRect.null
     @ObservationIgnored var controlsFrame = CGRect.null
 }
@@ -635,14 +744,17 @@ private struct DarkroomLayoutProbeView: View {
     let probe: DarkroomLayoutProbe
 
     var body: some View {
-        DarkroomLayout(rendering: false, error: probe.error) {
+        DarkroomLayout(rendering: false, error: probe.error, fitsEveryControl: probe.fitsEveryControl) {
             Color.gray.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.printFrame = $0 }
         } controls: {
             VStack(spacing: 18) {
                 Text("Exposure").font(.headline)
                 Slider(value: .constant(0.5))
+                Color.clear.frame(height: probe.extraControlsHeight)
             }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
         }
+        .dynamicTypeSize(probe.dynamicTypeSize)
+        .transformEnvironment(\.verticalSizeClass) { if probe.landscape { $0 = .compact } }
     }
 }
 
