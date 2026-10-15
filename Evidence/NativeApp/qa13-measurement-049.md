@@ -2,7 +2,7 @@
 
 **History of the earlier candidate.**
 The "final candidate" this record refers to is `71391e4`, whose gate is [final-candidate-050.md](final-candidate-050.md).
-Since 2026-10-13 the manual iPhone candidate is commit `5c3a217bd7d9b84b629dab912cbcda038aeff62d` on `main`, pinned in [manual-validation.md](manual-validation.md) under "The Candidate".
+Since 2026-10-14 the manual iPhone candidate is commit `38792bb3f76472860e1da8a702c78bee20f2b444` on `main`, pinned in [manual-validation.md](manual-validation.md) under "The Candidate"; from 2026-10-13 to 2026-10-14 it was `5c3a217bd7d9b84b629dab912cbcda038aeff62d`.
 The measurements below are kept as they were recorded; for what the audits accept today see [qa13-audit-exceptions-052.md](qa13-audit-exceptions-052.md).
 
 Continuation from `35a6ae3`, under Firstmate's answer to `qa13-next-check-048`: measure whether the Super 8 Movie Orientation text actually scales, sample rendered contrast of the named elements at the exact audit poses, fix real defects, and report anything that fails only under the iOS 26 scroll-edge band.
