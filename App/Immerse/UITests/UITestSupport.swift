@@ -20,14 +20,19 @@ extension XCTestCase {
     /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs in the left margin, outside the rows' controls
     /// and away from the scroll indicator, which a right-edge drag can grab and scrub the list back toward its start
     /// (Evidence/NativeApp/scroll-indicator-drag-053.md).
+    /// A lazy list has not made a row far below yet, and `isHittable` on a missing element looks for it twice more,
+    /// about 2.3 seconds a drag on this Intel Mac, so `exists` answers first (Evidence/NativeApp/ui-test-isolation-064.md).
     func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
-        scrollUp(app) { element.isHittable }
+        scrollUp(app) { element.exists && element.isHittable }
     }
 
-    /// Scrolls up in the same held drags, `distance` points each, until `done` holds. With a keyboard raised, a drag
-    /// starts just above it instead, since one that starts on the keyboard types.
+    /// Scrolls up in the same held drags, `distance` points each, until `done` holds. It stops asking once `done`
+    /// holds: a `where` clause skips the drag but goes on through every remaining pass, and each pass asked again,
+    /// about 5 seconds a scroll at the largest text size on this Intel Mac (Evidence/NativeApp/ui-test-isolation-064.md).
+    /// With a keyboard raised, a drag starts just above it instead, since one that starts on the keyboard types.
     @nonobjc func scrollUp(_ app: XCUIApplication, by distance: CGFloat = 300, until done: () -> Bool) {
-        for _ in 0..<16 where !done() {
+        for _ in 0..<16 {
+            if done() { return }
             let height = app.frame.height
             let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: min(0.7, (wholeBottom(app) - 24) / height)))
             start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)),
@@ -57,7 +62,7 @@ extension XCTestCase {
     /// Taps `element` once the whole of it is on screen, above the home indicator and any keyboard. `isHittable` holds
     /// while only a sliver of an element shows, and XCTest taps the middle of what shows: one CI run (38483188498) tapped
     /// the 16mm row at y 865.7 of 874, the top 17 points of a 168-point row, inside the home indicator's area, and the
-    /// tap did nothing (Evidence/NativeApp/main-ci-flakes-063.md).
+    /// tap did nothing (Evidence/NativeApp/main-ci-flakes-066.md).
     func tapWhole(_ app: XCUIApplication, _ element: XCUIElement) {
         scrollUpUntilWhole(app, element)
         XCTAssertLessThanOrEqual(element.frame.maxY, wholeBottom(app), "\(element) is whole on screen before the tap")
@@ -124,6 +129,40 @@ extension XCTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         guard row.waitForExistence(timeout: 5) else { return }
+        deleteFilm(at: row, app)
+        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+    }
+
+    /// Launches the app on an empty Journal, deleting every Film an earlier test left. A test deletes the Films it
+    /// loaded in a `defer`, which never runs when the test is stopped at its time allowance: the runner is ended
+    /// mid-test, and on 2026-10-14 the Disposable Film of a Low Storage test stopped that way sat in the Journal of
+    /// the Movie capacity test that ran next and failed its audit (Evidence/NativeApp/ui-test-isolation-064.md). So
+    /// every test that loads a Film or reads the Journal starts here. Each leftover Film is kept as a screenshot
+    /// before it is deleted, so the earlier test's failure stays visible.
+    func launchWithEmptyJournal(_ app: XCUIApplication) {
+        app.launch()
+        let start = app.buttons["start-film"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        // Start a Film stays disabled until launch recovery ends.
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: start)
+        XCTAssertEqual(XCTWaiter().wait(for: [ready], timeout: 10), .completed, "Start a Film stayed disabled")
+        let rows = app.buttons.matching(identifier: "journal-film")
+        for _ in 0..<10 {
+            if rows.count == 0 { break }
+            let screenshot = XCTAttachment(screenshot: app.screenshot())
+            screenshot.name = "Film-left-by-an-earlier-test"
+            screenshot.lifetime = .keepAlways
+            add(screenshot)
+            deleteFilm(at: rows.firstMatch, app)
+        }
+        XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 10), "The Journal is empty")
+    }
+
+    /// Opens the Journal row `row` and deletes its Film, returning once the Film screen has closed and the Journal
+    /// shows again. Delete Film removes the Film, which leaves the Film screen showing "Film removed" without its
+    /// actions, and then closes the screen, which stays in the tree until its pop ends. So the actions leaving shows
+    /// the Film was removed, and "Film removed" leaving shows the Journal is at rest to count, audit or measure.
+    private func deleteFilm(at row: XCUIElement, _ app: XCUIApplication) {
         tapWhole(app, row)
         // The Film screen's actions, rather than its bar, which reads a 6×6 title as "6 by 6".
         XCTAssertTrue(app.buttons["Film actions"].waitForExistence(timeout: 5))
@@ -132,7 +171,9 @@ extension XCTestCase {
         let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
-        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Film actions"].waitForNonExistence(timeout: 10), "The Film was removed")
+        XCTAssertTrue(app.staticTexts["Film removed"].waitForNonExistence(timeout: 10), "The Film screen closed")
+        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10), "The Journal shows")
     }
 
     /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns

@@ -293,7 +293,8 @@ final class JournalIntegrationTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         let resting = try await settledFrames(probe)
-        XCTAssertEqual(resting.controls.minY, resting.print.maxY + 18, accuracy: 0.5, "The controls sit right under the print")
+        XCTAssertEqual(probe.toolsFrame.minY, resting.print.maxY + 18, accuracy: 0.5, "The tool row sits right under the print")
+        XCTAssertEqual(resting.controls.minY, probe.toolsFrame.maxY + 18, accuracy: 0.5, "The controls sit right under the tool row")
 
         probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
         let failed = try await settledFrames(probe)
@@ -389,10 +390,12 @@ final class JournalIntegrationTests: XCTestCase {
         }
     }
 
-    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape, where the vertical size
-    /// class is compact, the Crop tool keeps the ordinary rule, so its print is the one every other tool shows and
-    /// switching tools never moves it.
-    func testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape() async throws {
+    /// The captain (2026-10-14): "landscape - side by side". In landscape, where the vertical size class is compact, the
+    /// print takes the leading side at the full height between the margins, the tool buttons a column after it, and the
+    /// controls the trailing side, their tops level with the print's. Nothing the controls do reaches the print: controls
+    /// far taller than the screen run past its foot to scroll on their own, the Crop tool's fitting, an error and the
+    /// largest text size all leave the print's frame as it was, so switching tools or growing the text never moves it.
+    func testInLandscapeThePrintSitsBesideTheControlsAndNothingInThemMovesIt() async throws {
         let probe = DarkroomLayoutProbe()
         probe.landscape = true
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
@@ -401,20 +404,148 @@ final class JournalIntegrationTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         let resting = try await settledFrames(probe)
-        let room = resting.print.height - 160
-        XCTAssertGreaterThan(room, 0, "The probe's screen has room for a print over 160 pt")
+        let tools = probe.toolsFrame
+        let safe = window.bounds.inset(by: window.safeAreaInsets)
+        XCTAssertEqual(resting.print.minX, safe.minX + 16, accuracy: 0.5, "The print takes the leading side")
+        XCTAssertEqual(tools.minX, resting.print.maxX + 12, accuracy: 0.5, "The tool column comes after the print")
+        XCTAssertEqual(tools.width, 44, accuracy: 0.5, "A tool button keeps the width it takes a tap in")
+        XCTAssertEqual(resting.controls.minX, tools.maxX + 12, accuracy: 0.5, "The controls come after the tool column")
+        XCTAssertEqual(resting.controls.maxX, safe.maxX - 16, accuracy: 0.5, "The controls keep the trailing margin")
+        XCTAssertEqual(resting.print.minY, safe.minY + 16, accuracy: 0.5, "The print is below the top margin")
+        XCTAssertEqual(resting.print.maxY, safe.maxY - 16, accuracy: 0.5, "The print runs to the bottom margin")
+        XCTAssertEqual(tools.minY, safe.minY + 8, accuracy: 0.5, "The tools start 8 pt down, their first icon level with the heading")
+        XCTAssertEqual(resting.controls.minY, resting.print.minY, accuracy: 0.5, "The controls start level with the print")
 
-        // Controls that would leave the print 120 pt, and then 63 pt, as Crop's do in portrait on an iPhone SE.
-        for extra in [room + 40, room + 97] {
-            probe.extraControlsHeight = extra
-            probe.fitsEveryControl = false
-            let ordinary = try await settledFrames(probe)
-            XCTAssertEqual(ordinary.print.height, 160, accuracy: 0.5, "Every other tool keeps its smallest ordinary print")
-            probe.fitsEveryControl = true
-            let crop = try await settledFrames(probe)
-            XCTAssertEqual(crop.print, ordinary.print, "In landscape the Crop tool's print is every other tool's")
-            XCTAssertEqual(crop.controls, ordinary.controls, "In landscape the Crop tool's controls scroll as every other tool's")
+        probe.extraControlsHeight = safe.height * 3
+        let tall = try await settledFrames(probe)
+        XCTAssertEqual(tall.print, resting.print, "Controls taller than the screen leave the print as it was")
+        XCTAssertEqual(tall.controls.minY, resting.controls.minY, accuracy: 0.5, "The controls start where they did")
+        XCTAssertGreaterThan(tall.controls.maxY, safe.maxY, "and run past the foot of the screen, to scroll")
+        probe.fitsEveryControl = true
+        let crop = try await settledFrames(probe)
+        XCTAssertEqual(crop.print, resting.print, "The Crop tool's fitting is for portrait")
+        probe.error = "The print could not be rendered. Your Original and the last saved print are unchanged."
+        let failed = try await settledFrames(probe)
+        XCTAssertEqual(failed.print, resting.print, "An error shows with the controls and leaves the print as it was")
+        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY, "The error is above the controls")
+        probe.dynamicTypeSize = .accessibility5
+        let largest = try await settledFrames(probe)
+        XCTAssertEqual(largest.print, resting.print, "The largest text size leaves the print as it was")
+        XCTAssertEqual(probe.toolsFrame.minX, tools.minX, accuracy: 0.5, "and the tool column where it was")
+    }
+
+    /// In landscape the tool column keeps its 8 pt margins where the screen has room, as an iPhone SE's Darkroom has
+    /// 297 pt under the navigation bar. An iPhone 13 mini's home indicator leaves it 277 pt, too short for five tool
+    /// buttons, Reset to Original and those margins, so there the margins give way: every button rests whole above
+    /// Reset, which keeps its size, and none is cut at the foot of the tools' scroll area.
+    func testInLandscapeTheToolColumnFitsTheShortestScreen() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        probe.toolCount = 5
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        for height: CGFloat in [297, 277] {
+            probe.height = height
+            let resting = try await settledFrames(probe)
+            // The stand-in print fills its side between 16 pt margins.
+            let top = resting.print.minY - 16, bottom = resting.print.maxY + 16
+            XCTAssertEqual(bottom - top, height, accuracy: 0.5, "The Darkroom is \(height) pt tall")
+            let tools = (0..<probe.toolCount).compactMap { probe.toolFrames[$0] }
+            let reset = probe.resetFrame
+            XCTAssertEqual(tools.count, probe.toolCount, "\(height) pt: every tool button is laid out")
+            for (above, below) in zip(tools, tools.dropFirst()) {
+                XCTAssertEqual(below.minY, above.maxY, accuracy: 0.5, "\(height) pt: the tools are one under another")
+            }
+            XCTAssertGreaterThanOrEqual(tools.first?.minY ?? -.infinity, top, "\(height) pt: the first tool is below the bar")
+            XCTAssertLessThanOrEqual(tools.last?.maxY ?? .infinity, reset.minY, "\(height) pt: the last tool rests whole above Reset")
+            XCTAssertLessThanOrEqual(reset.maxY, bottom + 0.5, "\(height) pt: Reset rests above the foot")
+            XCTAssertGreaterThanOrEqual(min(reset.width, reset.height), 44, "\(height) pt: Reset takes a tap across 44 pt")
+            if height == 297 {
+                XCTAssertEqual(tools.first?.minY ?? 0, top + 8, accuracy: 0.5, "With room, the tools start 8 pt down")
+                XCTAssertEqual(reset.maxY, bottom - 8, accuracy: 0.5, "and Reset ends 8 pt up")
+            }
         }
+    }
+
+    /// In landscape a column that cannot show everything flashes its scroll indicator inside it, in the column's
+    /// trailing margin beside a safe area, as on an iPhone 13 mini held sideways: as the Darkroom opens with controls
+    /// that run past the column, never while the controls fit, and again as they grow to run past it, as when a tool
+    /// with more controls is chosen, which a flash asked for in the same update as they grew never showed.
+    func testInLandscapeAColumnThatRunsPastItsHeightFlashesItsIndicatorInsideIt() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        let host = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        // The safe area an iPhone 13 mini held sideways leaves at its trailing edge, which the column's scroll view
+        // reaches into.
+        host.additionalSafeAreaInsets.right = 50
+        window.rootViewController = host
+        probe.extraControlsHeight = window.bounds.height * 3
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let tall = try await settledFrames(probe)
+        let safe = host.view.bounds.inset(by: host.view.safeAreaInsets)
+        // Between the controls and the safe area, above the fade at the foot, where nothing else draws.
+        let margin = CGRect(x: tall.controls.maxX + 2, y: tall.controls.minY,
+                            width: safe.maxX - tall.controls.maxX - 2, height: safe.maxY - 12 - tall.controls.minY)
+        let opened = try await showsIndicator(true, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(opened, "Controls taller than the column flash its indicator inside it")
+
+        probe.extraControlsHeight = 0
+        _ = try await settledFrames(probe)
+        let faded = try await showsIndicator(false, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(faded, "The flash ends")
+        let whileFitting = try await showsIndicator(true, in: margin, of: window, within: .seconds(1.5))
+        XCTAssertFalse(whileFitting, "Controls that fit never flash")
+
+        probe.extraControlsHeight = window.bounds.height * 3
+        let grown = try await showsIndicator(true, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(grown, "Controls grown past the column flash its indicator inside it")
+    }
+
+    /// Whether the window's `region` comes to show a scroll indicator, or to show none, within `limit`. An indicator is
+    /// a run of pixels at least 20 pt tall that differ from the region's background.
+    private func showsIndicator(_ shown: Bool, in region: CGRect, of window: UIWindow,
+                                within limit: Duration) async throws -> Bool {
+        let end = ContinuousClock.now + limit
+        repeat {
+            if indicator(in: region, of: window) == shown { return true }
+            try await Task.sleep(for: .milliseconds(50))
+        } while ContinuousClock.now < end
+        return false
+    }
+
+    private func indicator(in region: CGRect, of window: UIWindow) -> Bool {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let image = UIGraphicsImageRenderer(bounds: region, format: format).image { _ in
+            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: false)
+        }
+        guard let picture = image.cgImage else { return false }
+        let width = picture.width, height = picture.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        pixels.withUnsafeMutableBytes { bytes in
+            CGContext(data: bytes.baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)?
+                .draw(picture, in: CGRect(x: 0, y: 0, width: width, height: height))
+        }
+        let pixel = { (x: Int, y: Int) in pixels[(y * width + x) * 4..<(y * width + x) * 4 + 3] }
+        var counts: [[UInt8]: Int] = [:]
+        for y in 0..<height { for x in 0..<width { counts[Array(pixel(x, y)), default: 0] += 1 } }
+        guard let background = counts.max(by: { $0.value < $1.value })?.key else { return false }
+        for x in 0..<width {
+            var run = 0
+            for y in 0..<height {
+                let differs = zip(pixel(x, y), background).contains { abs(Int($0) - Int($1)) > 24 }
+                run = differs ? run + 1 : 0
+                if run >= 20 { return true }
+            }
+        }
+        return false
     }
 
     /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
@@ -736,8 +867,15 @@ private final class DarkroomLayoutProbe {
     var dynamicTypeSize = DynamicTypeSize.large
     /// Whether the layout is told it is in landscape, through a compact vertical size class.
     var landscape = false
+    /// The number of stand-in tool buttons.
+    var toolCount = 1
+    /// The height the layout is given, or the window's.
+    var height: CGFloat?
     @ObservationIgnored var printFrame = CGRect.null
     @ObservationIgnored var controlsFrame = CGRect.null
+    @ObservationIgnored var toolFrames: [Int: CGRect] = [:]
+    @ObservationIgnored var resetFrame = CGRect.null
+    var toolsFrame: CGRect { toolFrames[0] ?? .null }
 }
 
 private struct DarkroomLayoutProbeView: View {
@@ -746,15 +884,27 @@ private struct DarkroomLayoutProbeView: View {
     var body: some View {
         DarkroomLayout(rendering: false, error: probe.error, fitsEveryControl: probe.fitsEveryControl) {
             Color.gray.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.printFrame = $0 }
+        } tools: {
+            // Stand-in tool buttons, each in portrait the whole row's height. Like the Darkroom's, they stop growing with
+            // the text size at the largest ordinary size.
+            ForEach(0..<probe.toolCount, id: \.self) { index in
+                Button { } label: { Image(systemName: "sun.max").frame(maxWidth: .infinity, minHeight: 44) }
+                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.toolFrames[index] = $0 }
+            }
         } controls: {
             VStack(spacing: 18) {
                 Text("Exposure").font(.headline)
                 Slider(value: .constant(0.5))
                 Color.clear.frame(height: probe.extraControlsHeight)
             }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
+        } reset: {
+            Button("Reset to Original", systemImage: "arrow.counterclockwise") { }
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.resetFrame = $0 }
         }
         .dynamicTypeSize(probe.dynamicTypeSize)
         .transformEnvironment(\.verticalSizeClass) { if probe.landscape { $0 = .compact } }
+        .frame(height: probe.height)
     }
 }
 

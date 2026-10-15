@@ -90,7 +90,7 @@ final class LowStorageUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        app.launch()
+        launchWithEmptyJournal(app)
         openDisposableLoadScreen(app)
         // Loads with the title Load Film suggests, so no keyboard covers the screen on a small iPhone.
         let field = app.textFields["film-title"]
@@ -104,11 +104,13 @@ final class LowStorageUITests: XCTestCase {
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let actions = app.buttons["Film actions"]
-        for _ in 0..<20 where !actions.exists {
+        for _ in 0..<20 {
+            if actions.exists { break }
             app.navigationBars.firstMatch.tap()
             _ = actions.waitForExistence(timeout: 0.5)
         }
         XCTAssertTrue(actions.exists, "The Film loads while the warning shows")
+        XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         let warning = app.staticTexts["low-storage-warning"]
         XCTAssertTrue(warning.waitForExistence(timeout: 5))
         XCTAssertEqual(warning.label, Self.captureWarning)
