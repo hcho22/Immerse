@@ -21,10 +21,11 @@ On the iPhone 17 Pro the same test passed before the change, with the Vertical s
 ## The Change
 
 `DarkroomLayout` (`App/Immerse/Sources/PhotoView.swift`) takes `fitsEveryControl`, which the Darkroom sets for the Crop tool only.
-With it, the print may go below its ordinary smallest size of 160 pt, down to 64 pt, where that rests every control on screen.
-Where even a 64 pt print would leave controls below the fold, the print keeps 160 pt and the screen scrolls exactly as before.
+With it, the print gives up height below its ordinary smallest size of 160 pt, down to 64 pt, to rest every control on screen.
+Where even a 64 pt print leaves controls below the fold, the print stays 64 pt and the screen scrolls only the points still missing, so a larger text size never gets a larger print.
+The scroll area still ends above Reset to Original, so no control rests under it and none is clipped.
 Where everything already fits, as on the iPhone 17 Pro, the print is the height the controls leave, as before, so nothing changes.
-Every other tool keeps the rule it had, and the explanation of an error still takes its height from the print down to 80 pt.
+Every other tool keeps the rule it had, in which the explanation of an error takes its height from the print down to 80 pt; in the Crop tool the floor is 64 pt with or without an error.
 Nothing in rendering, recipes, saved prints or product text changed.
 
 On the iPhone SE at the default text size, the print in the Crop tool with a crop smaller than the whole print is now 80 pt tall, 120 by 80 pt for the Disposable's 3:2 picture.
@@ -37,12 +38,19 @@ The 80 pt an error already allows is therefore just too much: with 80 pt as the 
 64 pt, two fifths of the ordinary 160 pt, leaves the SE's default text size a margin of about 16 pt and still shows the cropped print at a size whose framing can be judged.
 A smaller floor would only let a larger text size fit too, with a print too small to judge the crop by; there the screen scrolls instead.
 
+### No Step Back to 160 pt
+
+The first version of this change kept the print at 160 pt wherever a 64 pt print could not rest every control.
+Review on 2026-10-14 found the step that left: the iPhone SE's default text size fits with about 16 pt to spare, and one or two sizes larger the heading and the three captions grow past that, so the print would jump back to 160 pt and put the Vertical slider wholly under Reset to Original again, the finding the captain answered.
+The floor now holds: the print shrinks to 64 pt and stays there as the text grows, and the screen scrolls only the points still missing.
+
 ## What Holds It
 
 - `testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize` (populated harness, the check's harness part) opens Crop on a Disposable print, turns the crop on, moves Size to 0.6, and checks with nothing scrolled that the switch, the heading, the three sliders and their captions all rest between the navigation bar and the fade, above Reset to Original, that the print is below the bar, above the controls and at least 64 pt tall, and that the Vertical slider is hittable and takes a drag.
   It then turns the crop off, returns to Exposure and checks that the print has the height it had before Crop opened.
-- `testDarkroomScrollsTheCropControlsClearAtTheLargestSize` does the same at the largest text size, where the controls cannot all fit: the Vertical slider is scrolled to with held drags, comes fully clear of the fade, and takes the drag.
-- `testTheCropToolsPrintGivesUpHeightOnlyWhereEveryControlThenFits` (hosted, `JournalIntegrationTests`) holds the rule in `DarkroomLayout` itself: controls that leave 120 pt keep the print at 160 pt without `fitsEveryControl` and give it 120 pt with it, the print keeping its top edge; controls that would leave it under 64 pt keep 160 pt; and where everything fits, every frame is as without it.
+- `testDarkroomScrollsTheCropControlsClearAtTheLargestSize` does the same at the largest text size, where the controls cannot all fit: the print is 64 pt, and the Vertical slider is scrolled to with held drags, comes fully clear of the fade, and takes the drag.
+- `testTheCropToolsPrintGivesUpHeightForItsControlsDownTo64Points` (hosted, `JournalIntegrationTests`) holds the rule in `DarkroomLayout` itself: controls that leave 120 pt keep the print at 160 pt without `fitsEveryControl` and give it 120 pt with it, the print keeping its top edge; controls that would leave it 63 pt give it 64 pt, with the controls ending 1 pt past the scroll area's clear part; and where everything fits, every frame is as without it.
+- `testTheCropToolsPrintKeeps64PointsPastTheLargestTextSizeThatFits` (hosted) gives the stand-in controls the height that leaves the print 80 pt at the default text size, as the Crop tool's do on an iPhone SE, and steps the text size up to the largest: the print never grows, and at the two sizes past the largest whose controls all fit it is 64 pt, never 160 pt, with the controls running past the clear part by exactly the points they still need.
 
 CI creates only iPhone 17 Pro simulators, where everything fits, so the check runs the new screen tests there; the iPhone SE runs below are this record's.
 
@@ -87,6 +95,19 @@ Here that test passed in every run above, before and after the merge, and the Cr
 
 The package tests on a Mac and RenderCore's tests in the simulator were not run again: the change touches no package, and the merge brought no package change that meets it.
 
+### Again after review
+
+The floor of 64 pt that holds as the text grows ("No Step Back to 160 pt", above), on new iPhone SE (3rd generation) and iPhone 17 Pro simulators on iOS 26.5, in light:
+
+| Check | Result |
+| --- | --- |
+| The two hosted Crop layout tests on the rule before review, iPhone 17 Pro | Both fail: the print is 160 pt where 64 pt is expected; with the text growing it is 67 pt at accessibility1, then 160 pt at accessibility2 and accessibility3 |
+| The two hosted Crop layout tests and `testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace`, iPhone SE | 3 passed, 0 failures |
+| The two Crop screen tests, iPhone SE and iPhone 17 Pro | 2 passed, 0 failures on each; at the largest text size the print is 64 pt on both |
+| `Scripts/verify-document-package.sh` | Pass |
+
+Dark was not run again, since the rule reads no color; the largest-text pictures below are from this run.
+
 The Darkroom has no accessibility audit of its own: the fit tests are its text-size checks and `testDarkroomAccessibleControlsReachNonGestureEditingPaths` is the check of its controls, as `darkroom-export-decisions-060.md` says.
 The text-size suite and the audits of other screens ran on the merged code (above); the package tests were left to the check.
 
@@ -112,14 +133,14 @@ On the iPhone 17 Pro the print is at 162 pt and the Vertical slider at 741 pt be
 | --- | --- |
 | ![All three sliders show](crop-fit-short-screens-063/crop-before-pro-dark.png) | ![The same](crop-fit-short-screens-063/crop-after-pro-dark.png) |
 
-At the largest text size on the iPhone SE the print keeps 160 pt and the controls scroll, as before.
+At the largest text size on the iPhone SE the print is 64 pt and the controls scroll.
 
 | iPhone SE, largest text, at rest | Scrolled to the Vertical slider |
 | --- | --- |
-| ![The print at 160 pt over the Crop heading and switch](crop-fit-short-screens-063/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens-063/crop-largest-se-light-vertical.png) |
+| ![The print at 64 pt over the Crop heading and switch](crop-fit-short-screens-063/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens-063/crop-largest-se-light-vertical.png) |
 
 ## Not Shown Here
 
 - A real iPhone SE or any physical iPhone.
-- Text sizes between the default and the largest, other than through the rule: there the print shrinks if a print of 64 pt or more then shows every Crop control, and otherwise stays 160 pt with the screen scrolling.
+- Text sizes between the default and the largest in the real Darkroom, other than through the rule and its hosted test: there the print shrinks as far as 64 pt to show every Crop control, and past that stays 64 pt with the screen scrolling the rest.
 - VoiceOver on a device.

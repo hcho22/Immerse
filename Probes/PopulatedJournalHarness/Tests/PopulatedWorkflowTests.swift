@@ -699,8 +699,8 @@ final class PopulatedWorkflowTests: XCTestCase {
     /// shows. With a crop smaller than the whole print, at the default text size the switch and the Size, Horizontal and
     /// Vertical sliders and their captions all rest between the navigation bar and the fade, above Reset to Original,
     /// with nothing scrolled, and the Vertical slider takes a drag there. The print is still shown above them, and back
-    /// in Exposure it has the size it had before Crop. At the largest size the controls cannot all fit, so the Vertical
-    /// slider is scrolled to, comes fully clear of the fade and takes the same drag.
+    /// in Exposure it has the size it had before Crop. At the largest size the controls cannot all fit, so the print
+    /// keeps 64 pt and the Vertical slider is scrolled to, comes fully clear of the fade and takes the same drag.
     func testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize() throws { assertDarkroomCropFits(largest: false) }
     func testDarkroomScrollsTheCropControlsClearAtTheLargestSize() throws { assertDarkroomCropFits(largest: true) }
 
@@ -743,6 +743,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertLessThanOrEqual(area.frame.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
         snapshot(app, name)
         if largest {
+            XCTAssertEqual(print.frame.height, 64, accuracy: 1, "\(name): the print keeps its smallest Crop size, never 160 pt")
             for _ in 0..<16 where vertical.frame.maxY > clear { dragUp(app, by: 240) }
             snapshot(app, "\(name)-vertical")
         } else {
