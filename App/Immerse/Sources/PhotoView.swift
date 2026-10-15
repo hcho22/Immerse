@@ -26,7 +26,8 @@ private struct ControlsHeightKey: PreferenceKey {
 /// tool buttons in a column with Reset to Original at its foot, then the selected tool's controls. Read in that order,
 /// the screen is the portrait one turned on its side: the print first, then the tools, then the controls that change it.
 /// No bottom bar takes the screen's height, and the controls scroll on their own when they cannot all show, as at the
-/// largest text sizes, while the print, the tools and Reset stay where they are.
+/// largest text sizes, while the print, the tools and Reset stay where they are. A column that cannot show everything at
+/// rest, the controls there or the tools on a Display Zoom screen, shows that it scrolls (`ColumnScrollView`).
 struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: View {
     let rendering: Bool
     let error: String?
@@ -117,7 +118,7 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                 // A button's icon sits 12 pt inside its frame, so at the column's full margin the first icon is level
                 // with the heading beside it.
                 ToolColumn {
-                    ScrollView { VStack(spacing: 0) { tools } }.scrollBounceBehavior(.basedOnSize)
+                    ColumnScrollView { VStack(spacing: 0) { tools } }.scrollBounceBehavior(.basedOnSize)
                     // The glass circle the bottom bar gave it, large enough to take a tap across more than 44 pt, its symbol
                     // the size the bar draws. Like the bar's, it keeps its size as the text grows, so it never crowds the
                     // tools out of the column.
@@ -125,7 +126,7 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                         .controlSize(.large).dynamicTypeSize(.large)
                 }
                 .frame(width: Self.toolColumnWidth)
-                ScrollView {
+                ColumnScrollView {
                     VStack(spacing: spacing) {
                         if let error { Text(error).foregroundStyle(.red) }
                         controls
@@ -150,10 +151,35 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     }
 }
 
+/// A landscape Darkroom column's scroll area. Where its content runs past what it shows, it flashes its scroll indicator,
+/// so a column that cannot show everything at rest shows that it scrolls: once it has rested after the Darkroom opens or
+/// turns into landscape, and whenever a tool's controls or an explanation come to run past it. It rests 0.6 s first,
+/// longer than the sheet takes to rise, since a flash at its first layout, as the sheet rises, is not drawn. A column
+/// that holds everything shows no indicator.
+private struct ColumnScrollView<Content: View>: View {
+    @ViewBuilder let content: Content
+    @State private var overflows = false
+    @State private var rested = false
+
+    var body: some View {
+        ScrollView { content }
+            .onScrollGeometryChange(for: Bool.self) { geometry in
+                geometry.contentSize.height + geometry.contentInsets.top + geometry.contentInsets.bottom
+                    > geometry.containerSize.height
+            } action: { _, now in overflows = now }
+            .scrollIndicatorsFlash(trigger: rested && overflows)
+            .task {
+                try? await Task.sleep(for: .seconds(0.6))
+                rested = true
+            }
+    }
+}
+
 /// The Darkroom's landscape tool column: the tools' scroll area, then Reset to Original at its foot, 8 pt from the
 /// column's ends and 4 pt apart. Where the column is too short for those, the margins and the gap give up what the tools
 /// and Reset need, down to none, so every tool rests whole above Reset at any height that holds them, as on an iPhone 13
-/// mini, whose home indicator leaves the Darkroom 277 pt in landscape. Below that the tools scroll and Reset stays.
+/// mini, whose home indicator leaves the Darkroom 277 pt in landscape. Below that, as on a Display Zoom screen, the tools
+/// scroll and show that they do, and Reset stays.
 private struct ToolColumn: Layout {
     private static let margin: CGFloat = 8
     private static let gap: CGFloat = 4
@@ -296,6 +322,8 @@ struct DarkroomView: View {
     @State private var rendering = false
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
+    /// The recipe last handed to `render()`, so a turn renders only an edit that has not reached the print.
+    @State private var renderedRecipe = DarkroomRecipe.original
     @State private var error: String?
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -361,10 +389,14 @@ struct DarkroomView: View {
             }
             .onDisappear { renderTask?.cancel(); image = nil }
             // Turning the iPhone rebuilds the print and the controls in the other layout, which ends a gesture without
-            // its end: a stroke being drawn never becomes a stroke of its own nor joins the next one, and the current
-            // recipe is rendered again so a slider's edit, which renders only at the end of its drag, still reaches
-            // the print.
-            .onChange(of: verticalSizeClass) { brushPoints = []; render() }
+            // its end: a stroke being drawn never becomes a stroke of its own nor joins the next one, and a recipe that
+            // differs from the one last rendered is rendered, so a slider's edit, which renders only at the end of its
+            // drag, still reaches the print. An unchanged recipe is not rendered again, so a turn leaves a load or
+            // save error, and the print it refers to, as they were.
+            .onChange(of: verticalSizeClass) {
+                brushPoints = []
+                if recipe != renderedRecipe { render() }
+            }
         }
     }
 
@@ -589,6 +621,7 @@ struct DarkroomView: View {
         let id = UUID()
         renderID = id
         let selected = recipe
+        renderedRecipe = selected
         rendering = true
         renderTask = Task {
             do {

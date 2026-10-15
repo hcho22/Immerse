@@ -1070,9 +1070,32 @@ final class PopulatedWorkflowTests: XCTestCase {
         snapshot(app, "Darkroom-crop-turned-back-portrait")
     }
 
-    /// The Darkroom on photo 1, turned to landscape unless `turn` is false. The Darkroom opens in portrait: in landscape
-    /// the Film screen's grid starts below the fold.
-    private func openDarkroomInLandscape(_ arguments: [String], turn shouldTurn: Bool = true) -> XCUIApplication {
+    /// Turning renders only an edit that has not reached the print. Where print 1's stored recipe cannot be read
+    /// (`--recipe-unreadable`), the Darkroom says the load failed and shows no print; turning to landscape and back
+    /// leaves both as they were, never the original print in place of the photo's own.
+    func testDarkroomTurningLeavesALoadErrorInPlace() throws {
+        let app = openDarkroomInLandscape(["--developed-photo", "--recipe-unreadable"], turn: false, loads: false)
+        let unavailable = app.images["Print unavailable"]
+        let failure = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "The operation did not finish.")).firstMatch
+        XCTAssertTrue(unavailable.waitForExistence(timeout: 20), "The print is unavailable")
+        XCTAssertTrue(failure.exists, "The Darkroom says the load failed")
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            turn(app, to: orientation)
+            // Longer than a print of the photo takes, so a render the turn started would have shown it.
+            Thread.sleep(forTimeInterval: 3)
+            let name = orientation.isLandscape ? "landscape" : "portrait"
+            XCTAssertTrue(unavailable.exists, "Turned to \(name), the print is still unavailable")
+            XCTAssertTrue(failure.exists, "Turned to \(name), the load failure still shows")
+            XCTAssertFalse(app.images["Photo 1, print preview"].exists, "Turned to \(name), no print stands in for the photo's")
+            if orientation.isLandscape { uprightSnapshot(app, "Darkroom-load-error-landscape") }
+            else { snapshot(app, "Darkroom-load-error-portrait") }
+        }
+    }
+
+    /// The Darkroom on photo 1, its print made unless `loads` is false and turned to landscape unless `turn` is false.
+    /// The Darkroom opens in portrait: in landscape the Film screen's grid starts below the fold.
+    private func openDarkroomInLandscape(_ arguments: [String], turn shouldTurn: Bool = true,
+                                         loads: Bool = true) -> XCUIApplication {
         XCUIDevice.shared.orientation = .portrait
         addTeardownBlock { XCUIDevice.shared.orientation = .portrait }
         let app = launch(arguments: arguments)
@@ -1081,7 +1104,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
         open.tap()
         app.buttons["Darkroom"].tap()
-        XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 30), "print")
+        if loads { XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 30), "print") }
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
         if shouldTurn { turn(app, to: .landscapeLeft) }
         return app

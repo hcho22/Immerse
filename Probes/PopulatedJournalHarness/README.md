@@ -73,6 +73,10 @@ writers refuse such a recipe, so the harness writes it to the store beside them,
 inspection. The inspection prints every photo, so a history that holds it cannot be inspected or
 reopened: use it only in tests that do neither.
 
+`--recipe-unreadable` leaves print 1 a stored recipe no build can read, as a damaged store might,
+so a test can meet the Darkroom's failure to load it. It is written the same way and has the same
+limits as `--recipe-outside-limits`.
+
 These are functional navigation tests, not replacements for all-category
 accessibility audits or the hardware/manual matrix in
 `Evidence/NativeApp/launch-readiness.md`. Production export/privacy races have

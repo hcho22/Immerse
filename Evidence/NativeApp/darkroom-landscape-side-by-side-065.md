@@ -68,12 +68,12 @@ A tool row above the controls, as in portrait, costs 54 pt of a 297 pt column, a
 A column of five 44 pt buttons fits beside the controls at no height to them, between the print and the controls, as the spine between what is changed and what changes it.
 Reset to Original cannot stay in the bottom bar, which takes 86 pt of the SE's height across the whole width; at the foot of the tool column it is where it was in portrait, at the bottom of the screen, with a 50 pt tap area.
 Five tool buttons, Reset and the margins take 290 pt of the SE's 297 pt.
-On a shorter Darkroom the margins and the gap give way, down to the 270 pt of the buttons and Reset alone; where a column cannot hold even those, the tools scroll and Reset stays.
+On a shorter Darkroom the margins and the gap give way, down to the 270 pt of the buttons and Reset alone; where a column cannot hold even those, the tools scroll, show that they do, and Reset stays.
 
 ### The Shortest Landscape Darkroom
 
 The review of this change found the tool column cut on iPhones whose home indicator takes height in landscape.
-An iPhone 12 mini or 13 mini, which iOS 26 supports, is 375 pt tall in landscape like the SE, but its home indicator takes the bottom 20 pt, so the Darkroom has 277 pt under the navigation bar, the least of any supported iPhone (the SE has 297 pt and the iPhone 17 Pro 304 pt).
+An iPhone 12 mini or 13 mini, which iOS 26 supports, is 375 pt tall in landscape like the SE, but its home indicator takes the bottom 20 pt, so the Darkroom has 277 pt under the navigation bar, the least of any supported iPhone at the standard display setting (the SE has 297 pt and the iPhone 17 Pro 304 pt).
 On an iPhone 13 mini simulator, on the code before the fix, the tools' scroll area was 207 pt for 220 pt of buttons: the fifth button, Dodge / Burn on the Disposable and Chemical toning on the black-and-white 6×6, ran to 306 pt, under Reset at 297 pt, and the selected tool's highlight was cut at the foot of the column.
 All four landscape tool tests failed there.
 The controls column fitted: Dodge / Burn's last row, Undo last stroke, ended 5.7 pt above the fade.
@@ -84,13 +84,30 @@ On the iPhone 13 mini they are about 2.7 and 1.6 pt: the tools rest whole from 8
 No tap target changed: each tool button is still 44 pt and Reset 50 pt.
 The controls column needed no change.
 
+277 pt is the floor at the standard display setting only.
+With Display Zoom set to Larger Text, an iPhone SE or a 12 or 13 mini is 320 pt tall in landscape, which leaves the Darkroom about 242 pt on the SE and 222 pt on a mini, less than the 270 pt of five tool buttons and Reset with no margins at all.
+No margin can reach that, and the review chose no new layout for it: at those heights the tool column falls back to scrolling, with Reset kept whole at its foot, and Dodge / Burn's controls scroll in theirs.
+
+### Showing That a Column Scrolls
+
+A column that cannot show everything at rest says so: each landscape column's scroll area (`ColumnScrollView` in `PhotoView.swift`) flashes its scroll indicator where its content runs past what it shows.
+It flashes once it has rested after the Darkroom opens or turns into landscape, and again whenever a tool's controls or an explanation come to run past it.
+A column that holds everything shows no indicator, so at the standard display setting at the default text size nothing flashes and the screen is as it was.
+It rests 0.6 s first, longer than the sheet takes to rise: a flash at the column's first layout was drawn after a turn, but not when the Darkroom opened in landscape, as the sheet rose, nor in a window just shown.
+Every tap target keeps its size.
+
+In the simulator, screenshots taken from the Mac every quarter second or so showed the controls column's indicator for about 0.8 s at the largest text size on the iPhone SE, both after a turn to landscape with Dodge / Burn selected and after the Darkroom opened in landscape on a print whose explanation runs past the column.
+At the default text size, after the same turn, nothing showed.
+The tool column never overflows at the standard display setting, and the simulator's Settings has no Display Zoom, so its indicator was seen only in a hosted stand-in `DarkroomLayout` 222 pt tall with five tools, as on a zoomed mini.
+
 ### Turning the iPhone
 
 The selected tool, the Dodge or Burn choice, the stroke strength and the recipe are the Darkroom's own state, so turning the iPhone keeps them; only the arrangement changes.
 A Dodge / Burn stroke is recorded as fractions of the print it is drawn on, and a crop as fractions of the photo, so both land the same on the print whatever its size.
 A stroke being drawn when the iPhone turns ends without its end, so its points are dropped rather than joining the next stroke.
-Turning also renders the current recipe again.
-A slider renders the print only when its drag ends, and one being dragged when the iPhone turns is rebuilt in the other arrangement without that end, so without the render its edit would be in the recipe, and saved, but not on the print.
+Turning renders the recipe only when it differs from the one last rendered.
+A slider renders the print only when its drag ends, and one being dragged when the iPhone turns is rebuilt in the other arrangement without that end, so without that render its edit would be in the recipe, and saved, but not on the print.
+An unchanged recipe is not rendered again, so a turn leaves an error showing as it was: where a print's stored recipe cannot be read, the Darkroom says so and shows no print, and a turn never puts the original print in its place as if it were the photo's own; and a failed save's explanation stays until an edit.
 
 ## What Holds It
 
@@ -101,6 +118,9 @@ A slider renders the print only when its drag ends, and one being dragged when t
 - `testDarkroomTurningKeepsTheStrokeAndStrokesLandWhereDrawn` draws a burn at the slider's strongest on the print in portrait, which darkens the print there and nowhere far from it; turned to landscape, Dodge / Burn, Burn, the strength and the stroke are kept, the stroke is undone there and a burn drawn at the opposite corner; turned back, the portrait print has the frame it had and is darkened at that corner only.
 - `testDarkroomTurningKeepsTheCrop` sets a crop in landscape and turns back to portrait: the Crop tool, its three slider values and the cropped print's shape are kept.
 - `testDarkroomCropKeepsThePrintInLandscape` (063) still holds: in landscape the Crop tool's print is Exposure's.
+- `testDarkroomTurningLeavesALoadErrorInPlace` opens the Darkroom on a print whose stored recipe cannot be read (`--recipe-unreadable`, which the harness writes to the store as `--recipe-outside-limits` does): turned to landscape and back, the print stays unavailable, the explanation stays, and no print appears.
+  No seam can make a save fail where a turn would have cleared it: the harness's one failing save, a recipe outside the limits, fails its render too, so a render on a turn would show the same explanation.
+  A save error is left by the same rule, an unchanged recipe is not rendered again, and no test holds it.
 - `testInLandscapeTheToolColumnFitsTheShortestScreen` (hosted) gives `DarkroomLayout` five stand-in tools in landscape at the SE's 297 pt, where the column keeps its 8 pt margins, and at the iPhone 13 mini's 277 pt, where every tool rests whole above Reset, which keeps its size and rests above the foot.
   It failed on the code before the fix, and it holds the shortest Darkroom on any simulator, so CI, which runs only the iPhone 17 Pro, holds it too.
 - `testInLandscapeThePrintSitsBesideTheControlsAndNothingInThemMovesIt` (hosted, `JournalIntegrationTests`, replacing 063's `testTheCropToolsPrintKeepsTheOrdinaryFloorInLandscape`, whose rule no longer applies) gives `DarkroomLayout` a compact vertical size class and holds the arrangement: the print at the leading margin and the full height between the margins, the 44 pt tool column 12 pt after it, the controls 12 pt after that to the trailing margin; controls three screens tall, the Crop fit, an error and the largest text size leave the print's frame as it was.
@@ -110,7 +130,7 @@ CI creates only iPhone 17 Pro simulators, so the check runs these tests there; t
 
 ## Runs
 
-An iPhone SE (3rd generation) and an iPhone 17 Pro simulator on iOS 26.5, made for this task and deleted after it, and for the review fixes another of each and an iPhone 13 mini, made for them and deleted after.
+An iPhone SE (3rd generation) and an iPhone 17 Pro simulator on iOS 26.5, made for this task and deleted after it, and for each round of review fixes another of each and an iPhone 13 mini, made for it and deleted after.
 The first table's runs are of the code before the review fixes: before turning renders the recipe again and before the tool column gives way on a short screen.
 
 | Check | Result |
@@ -135,6 +155,19 @@ The review fixes' runs, with the hosted test before the fix the only one on earl
 | The five hosted Darkroom layout tests, iPhone 13 mini, with the fixes | 5 passed, 0 failures |
 | The four landscape tool tests' element trees on the iPhone SE and the iPhone 17 Pro in light, before the fixes and after them, compared element by element for every tool and the largest text size | The same to the point on both at rest, for every tool and at the largest size. Scrolled at the largest size, the iPhone SE's is the same too; the iPhone 17 Pro's controls are scrolled 4 pt further, as the test now drags Undo last stroke clear of the fade above the arrangement's foot, and its print, tools and Reset are where they were |
 
+The second round of review fixes' runs, the turn rule and the flashing columns, in light, with "before" the code of the first round:
+
+| Check | Result |
+| --- | --- |
+| The four landscape tool tests and `testDarkroomTurningLeavesALoadErrorInPlace`, before, on each of the iPhone SE, iPhone 13 mini and iPhone 17 Pro | 4 passed and 1 failure on each: turned to landscape, the print was no longer unavailable, as the turn rendered the original recipe |
+| The same five tests and the two turning tests and 063's `testDarkroomCropKeepsThePrintInLandscape`, after, on each of the three | 8 passed, 0 failures, on each |
+| The four landscape tool tests' element trees, before and after, compared element by element on each of the three | The same to the point, at rest and scrolled, on each, but for the cropped print: where XCUITest's adjustment set Crop size a little differently (0.600 and 0.599 on the mini, 0.607 and 0.596 on the 17 Pro), its height differs by 1 to 1.3 pt; on the SE, where it set 0.595 both times, it is the same |
+| The five hosted Darkroom layout tests, iPhone SE, after | 5 passed, 0 failures |
+| Screenshots taken from the Mac while the Darkroom turned or opened, tests not kept, iPhone SE, before and after | Before, no indicator after a turn at the largest text size; after, the controls column's indicator for about 0.8 s after the turn and after opening on a print with an explanation, and nothing at the default text size; a flash as the columns appeared (the first try) showed after the turn only |
+| A hosted stand-in `DarkroomLayout` 222 pt tall with five tools, test not kept, iPhone SE, after | The tool column's indicator for about 0.8 s once it rested |
+| Display Zoom in the simulator | Not offered: the iOS 26.5 simulator's Settings shows no Display & Brightness |
+| `Scripts/verify-validation-parts.sh` | Pass |
+
 ### Portrait unchanged
 
 The portrait Darkroom tests attach the screen's element tree.
@@ -155,6 +188,9 @@ The one difference is a value, the Crop size slider at 0.653 before and 0.64 aft
 - On the iPhone 17 Pro, moving the strength slider to its end with XCUITest's adjustment gave 2.7 stops, not 3.0; the turning test now compares the strength it set, whatever it is.
 - The tool tests first held the controls above a fade taken from the foot of the controls' scroll area as XCUITest reports it, which on an iPhone with a home indicator reaches past the arrangement to the bottom of the screen, so on the iPhone 17 Pro they let a control rest up to 20 pt below where the fade starts.
   They now take the arrangement's foot from the print, and the iPhone 13 mini and iPhone 17 Pro runs above hold them to it.
+- Turning first rendered the recipe every time, which cleared a load or save error and could show the original print where the stored recipe could not be read; it now renders only a changed recipe, and `testDarkroomTurningLeavesALoadErrorInPlace` failed on the code before.
+- The columns first flashed their indicators as they appeared (`scrollIndicatorsFlash(onAppear:)`): that showed after a turn, but not when the Darkroom opened in landscape, nor in a window just shown, and not when an explanation arrived after the column appeared.
+  They now flash when their content runs past them, once rested.
 
 The package tests on a Mac and RenderCore's tests in the simulator were not run: the change touches no package.
 The text-size and screen-flow parts were not run: no test of theirs opens the Darkroom.
@@ -191,6 +227,13 @@ On the iPhone 13 mini, the shortest landscape Darkroom, Dodge / Burn before the 
 | ![After: Crop](darkroom-landscape-side-by-side-065/after-mini-light-crop.png) | ![After: Chemical toning on the black-and-white 6×6](darkroom-landscape-side-by-side-065/after-mini-light-toning.png) |
 | ![After, dark: Dodge / Burn](darkroom-landscape-side-by-side-065/after-mini-dark-dodge-burn.png) | |
 
+A column that cannot show everything at rest flashes its scroll indicator, here the controls column at the largest text size on the iPhone SE and a hosted stand-in tool column 222 pt tall, as on a zoomed mini (screenshots taken from the Mac while it showed).
+
+| After a turn to landscape | After opening in landscape on a print with an explanation |
+| --- | --- |
+| ![Dodge / Burn at the largest size, the controls column's indicator at its trailing edge](darkroom-landscape-side-by-side-065/flash-se-largest-turned.png) | ![The explanation running past the column, its indicator at the trailing edge](darkroom-landscape-side-by-side-065/flash-se-largest-opened-explanation.png) |
+| ![Hosted stand-in: five tools in a 222 pt Darkroom, the fifth out of view, the tool column's indicator beside them](darkroom-landscape-side-by-side-065/flash-hosted-tools-222.png) | |
+
 Turning, on the iPhone SE: a burn drawn in portrait shows in landscape, and a burn drawn in landscape at the lower right shows there on the portrait print.
 
 | Turned to landscape | Turned back to portrait |
@@ -208,7 +251,8 @@ Portrait on the iPhone SE in light, before and after the change: the same.
 
 - A real iPhone SE or any physical iPhone, held and turned in the hand.
 - How the print and the controls side by side feel to use on a phone: the slider lengths beside their captions (154 pt for Dodge / Burn's on an iPhone SE), and a thumb reaching the tool column and Reset.
-- Turning the iPhone in the middle of a stroke or of a slider's drag, which no screen test can do; the code drops that stroke's points and renders the recipe again, so a slider's edit the turn cut off still reaches the print.
+- Turning the iPhone in the middle of a stroke or of a slider's drag, which no screen test can do; the code drops that stroke's points and renders the changed recipe, so a slider's edit the turn cut off still reaches the print.
+- Display Zoom, which the simulator's Settings does not offer: the Darkroom at an iPhone SE's or a mini's zoomed 320 pt landscape height, its tool column scrolling and flashing its indicator there, and how the flash reads on a device.
 - Text sizes between the default and the largest in landscape, other than through the layout rule and its hosted test.
 - VoiceOver on a device, in either arrangement.
 - An iPad, which Immerse does not support.
