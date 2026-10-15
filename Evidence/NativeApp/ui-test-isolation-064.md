@@ -71,9 +71,15 @@ So the app is unchanged, and the audit's rule is kept: an audited Journal holds 
 On main the largest-text Film screen test took about 2 minutes of its 3 at normal load, with little room for a loaded Mac.
 Two things in the shared scroll helper wasted about a third of it, and one wait in the test itself wasted more the same way.
 
-- `scrollUp(_:until:)` asked `isHittable` of a row the lazy Form had not made yet. For a missing element XCTest looks twice more before it answers, about 2.3 seconds a drag. It now asks `exists` first.
-- `scrollUp(_:by:until:)` looped `for _ in 0..<16 where !done()`. A `where` clause skips the drag but does not end the loop, so once the row was reached it asked again on every remaining pass, about 15 more queries and 3 to 5 seconds a scroll. It now returns when `done` holds. `deleteFilm` had the same loop and now stops too.
-- The wait for the loaded Film's screen, `for _ in 0..<20 where !actions.exists`, tapping the bar so the Camera request is answered, went on asking the same way after the screen showed, about 18 more queries. It now stops once the screen shows, as do the same waits in the Movie capacity and Film Stock tests.
+- `scrollUp(_:until:)` asked `isHittable` of a row the lazy Form had not made yet.
+  For a missing element XCTest looks twice more before it answers, about 2.3 seconds a drag.
+  It now asks `exists` first.
+- `scrollUp(_:by:until:)` looped `for _ in 0..<16 where !done()`.
+  A `where` clause skips the drag but does not end the loop, so once the row was reached it asked again on every remaining pass, about 15 more queries and 3 to 5 seconds a scroll.
+  It now returns when `done` holds.
+  `deleteFilm` had the same loop and now stops too.
+- The wait for the loaded Film's screen, `for _ in 0..<20 where !actions.exists`, tapping the bar so the Camera request is answered, went on asking the same way after the screen showed, about 18 more queries.
+  It now stops once the screen shows, as do the same waits in the Movie capacity and Film Stock tests.
   Those extra queries had also given the catalog sheet time to leave: the Film screen shows while the sheet that loaded it is still going, and the Load screen there has its own low-storage warning.
   So each of the three then waits for the tapped Load Film button to leave the tree, which it does only with the sheet, before it reads, audits or taps the Film screen (`push-audit-055.md` does the same for a push).
 
