@@ -126,12 +126,49 @@ On this Mac (Intel, Xcode 26.5), with `IMMERSE_VALIDATE_PART` as CI sets it and 
 | 2 | packages | the same, all passed; trustd skipped its update at each of its 3 checks and downloaded nothing | 19 |
 | 1 | ui-flows | 23 of 24 screen tests passed in light and 20 of 21 audits in dark, the one left in each being `testAuditStillReportsContrastFindingsOutsideItsExceptions`, which expects its failure; no rerun | 39 |
 | 1 | harness | 45 of 45 passed | 33 |
+| 3 | ui-text | 72 of 72 passed, no rerun, with every tap through `tapWhole` | 48 |
+| 2 | ui-flows | 23 of 24 passed in light and 20 of 21 in dark, the one left in each expecting its failure; no rerun, with the final `tapWhole` | 48 |
 
 The ui-text part runs in light only, as on CI, and the packages and harness parts have no appearance setting.
 ui-flows and harness ran once because the quiet script, which every part uses, changed.
 
+## The same sliver tap in the other screen tests
+
+`MovieCapacityUITests`, `JournalFlowTests`, `TestingUnlockUITests` and `deleteFilm` in `UITestSupport.swift` also scrolled with free swipes only until `isHittable` and then tapped, so the same tap on a sliver could happen there, though none failed in these runs.
+Every such tap now goes through one helper, `tapWhole` in `UITestSupport.swift`, which scrolls with `scrollUpUntilWhole`, asserts the whole element is on screen and then taps; where a test only checks an element after scrolling to it, it uses `scrollUpUntilWhole` alone.
+`MovieCapacityUITests` taps Load Film just after typing the Film's title, so with a keyboard raised "on screen" means 15 points clear of the keyboard, and a scrolling drag starts above it rather than on it, where it would type.
+On iOS 26.5 the keyboard's panel is drawn 45 points above the frame its accessibility element reports (from y 538, against 583, on an iPhone 17 Pro), which the helper allows for.
+The first version took the reported frame as the keyboard's top: its drags started on the panel, the list never moved and both Movie tests failed, and a second version demanded the home indicator's 40-point margin above the keyboard as well, which the list cannot reach.
+With no keyboard raised the limit is 40 points above the window's bottom edge and the drags start where they did, so the audit poses that use them do not move.
+Screen tests in `Probes/PopulatedJournalHarness` still scroll until `isHittable` before some taps; the harness belongs to the low-storage test cleanup, which owns its Crop switch tap.
+
+## Node.js 20 actions
+
+GitHub warned on every part that `actions/checkout@v4` and `actions/upload-artifact@v4` target Node.js 20 and were being run on Node.js 24.
+`.github/workflows/native.yml` now uses `actions/checkout@v7`, `actions/upload-artifact@v7` and `actions/download-artifact@v8` (the summary job's, also on Node.js 20), whose `action.yml` each declare `node24`.
+Their release notes since v4 hold no change to the inputs this workflow uses.
+checkout v6 keeps persisted credentials in a separate file, and v7 refuses to check out a fork for `pull_request_target` and `workflow_run`, events this workflow does not use.
+upload-artifact v7 adds an `archive` input that defaults to the zipped upload used now.
+download-artifact v5 changed where a single artifact downloaded by ID lands, while this workflow downloads by `pattern` into one folder per artifact, which is unchanged.
+download-artifact v8 fails on a digest mismatch instead of warning, and leaves files that are not zipped as they are.
+
+## Launches that timed out on a fresh harness simulator (run 38724598104, not fixed)
+
+The harness part of a later pull request's check (run 38724598104, on the low-storage cleanup's branch) failed its first two app launches with "Failed to get background assertion for target app ... Timed out while acquiring background assertion"; its other 43 tests passed.
+The simulator's log in its result bundle shows the sequence:
+
+- testmanagerd set the system-wide accessibility messaging timeout to 60 seconds at 11:13:02.312, and its request for the test runner's process assertion was answered at 11:13:02.320.
+- SpringBoard finished loading its accessibility support at 11:13:02.605; the simulator had booted about six minutes earlier, and this was the test session's first launch.
+- At 11:13:02.613 testmanagerd opened a side connection to runningboardd and looked up SpringBoard's process; that thread then logged nothing for exactly 60 seconds.
+- Its requests for the two launched apps' assertions (11:13:24.692 and 11:13:39.671) reached runningboardd only at 11:14:02.526, together, after both launches had given up.
+- runningboardd itself was busy throughout, so it was testmanagerd's requests that waited, most likely behind an accessibility call to SpringBoard that ran out its 60 seconds.
+- apsd logged about 2,000 lines a second for the whole run, before, during and after; the billing simulator of run 38569804164 shows the same, and nothing ties it to this minute.
+
+Here, three fresh iOS 26.5 simulators prepared as validation prepares them ran the same first suites (`CameraPermissionWorkflowTests` and `LowStorageWorkflowTests`, 6 tests) at once after boot.
+Every assertion request was answered within 0.01 seconds, SpringBoard loaded its accessibility support at the first launch 22 to 28 seconds after boot, and every test passed.
+The stall was not reproduced, so no settle step (a longer wait for the boot, switching apsd off, or a warm-up launch before the tests) can be shown to prevent it, and none was added; a launch retry would only hide it.
+If it recurs, the same three lines in the simulator's log (the 60-second accessibility timeout, SpringBoard's accessibility status change and the late assertion requests) will tell it apart.
+
 ## Seen, not changed
 
-- Other screen tests still tap after scrolling only until `isHittable` (`MovieCapacityUITests`, `JournalFlowTests`, `TestingUnlockUITests` and `deleteFilm` in `UITestSupport.swift`), so the same sliver tap can happen there, though none failed in these runs.
 - The hosted app tests log "BUG IN CLIENT OF libsqlite3.dylib: database integrity compromised by API violation: vnode unlinked while in use" many times: tests remove a Journal's temporary directory while its Film store is still open.
-- GitHub warns that `actions/checkout@v4` and `actions/upload-artifact@v4` target Node.js 20 and are being run on Node.js 24.

@@ -45,8 +45,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
         let camera = app.buttons["camera-cinema16mm"]
-        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
-        camera.tap()
+        tapWhole(app, camera)
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
         scrollUpUntilWhole(app, title)
@@ -102,9 +101,7 @@ final class JournalFlowTests: XCTestCase {
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "Catalog-accessibility-largest")
         let camera = app.buttons["camera-cinema16mm"]
-        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
-        XCTAssertTrue(camera.isHittable)
-        camera.tap()
+        tapWhole(app, camera)
         // The tap can return before the push ends, or even starts, while the outgoing camera rows are still in the tree
         // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
         // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
@@ -143,7 +140,7 @@ final class JournalFlowTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         app.buttons["camera-disposable1990s"].tap()
         let load = app.buttons["load-film"]
-        for _ in 0..<8 where !load.isHittable { app.swipeUp() }
+        scrollUpUntilWhole(app, load)
 
         // Answer the actual system Camera request as a person declining it. Without this
         // monitor, XCTest's own alert handling would allow access.

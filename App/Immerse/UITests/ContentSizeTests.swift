@@ -288,8 +288,7 @@ final class ContentSizeTests: XCTestCase {
         for (camera, title, targets) in [("camera-super8HomeMovie", "Super 8", Self.superEight),
                                          ("camera-cinema16mm", "16mm", Self.sixteenMillimeter)] {
             let row = app.buttons[camera]
-            scrollUpUntilWhole(app, row)
-            row.tap()
+            tapWhole(app, row)
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "\(title) \(category)")
             // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
             Thread.sleep(forTimeInterval: 1)
@@ -307,8 +306,7 @@ final class ContentSizeTests: XCTestCase {
         let app = launch(category)
         app.buttons["start-film"].tap()
         let row = app.buttons["camera-mediumFormat6x6"]
-        scrollUpUntilWhole(app, row)
-        row.tap()
+        tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -316,13 +314,11 @@ final class ContentSizeTests: XCTestCase {
         goBack(app, from: "6×6", to: "Choose a Camera")
 
         let reel = app.buttons["camera-cinema16mm"]
-        scrollUpUntilWhole(app, reel)
-        reel.tap()
+        tapWhole(app, reel)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         let blackAndWhite = app.buttons["Black and white"]
-        scrollUpUntilWhole(app, blackAndWhite)
-        blackAndWhite.tap()
+        tapWhole(app, blackAndWhite)
         XCTAssertTrue(blackAndWhite.isSelected, "Black and white \(category)")
         // Back to the top, so the line is measured scrolling down to it as every other line is.
         for _ in 0..<8 where !app.staticTexts["Capacity, 2 minutes 47 seconds of film"].isHittable { drag(app, by: 300) }
@@ -338,8 +334,7 @@ final class ContentSizeTests: XCTestCase {
         let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
         app.buttons["start-film"].tap()
         let row = app.buttons["camera-disposable1990s"]
-        scrollUpUntilWhole(app, row)
-        row.tap()
+        tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
         // Let the push finish, so the rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)

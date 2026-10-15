@@ -38,16 +38,15 @@ final class MovieCapacityUITests: XCTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         app.buttons["start-film"].tap()
         let camera = app.buttons["camera-cinema16mm"]
-        for _ in 0..<5 where !camera.isHittable { app.swipeUp() }
+        scrollUpUntilWhole(app, camera)
         XCTAssertTrue(camera.label.contains("2 minutes 47 seconds of film"), camera.label)
-        camera.tap()
+        tapWhole(app, camera)
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         guard enterFilmTitle(title, app) else { return }
         let load = app.buttons["load-film"]
-        for _ in 0..<8 where !load.isHittable { app.swipeUp() }
         defer { deleteFilm(titled: title, app) }
-        load.tap()
+        tapWhole(app, load)
 
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the
         // request is showing, which can appear late.
@@ -61,8 +60,7 @@ final class MovieCapacityUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Film detail header")
 
         let open = app.buttons["Open Camera"]
-        for _ in 0..<5 where !open.isHittable { app.swipeUp() }
-        open.tap()
+        tapWhole(app, open)
         let done = app.buttons["Done"]
         XCTAssertTrue(done.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Capture line")

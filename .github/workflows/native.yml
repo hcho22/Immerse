@@ -15,7 +15,7 @@ jobs:
       parts: ${{ steps.scope.outputs.parts }}
       note: ${{ steps.scope.outputs.note }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
       - name: Choose the parts
@@ -43,7 +43,7 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IMMERSE_VALIDATE_PART: ${{ matrix.part }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Create isolated simulators
         run: |
           create() { xcrun simctl create "$1" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro "com.apple.CoreSimulator.SimRuntime.$2"; }
@@ -75,13 +75,13 @@ jobs:
           { echo '```'; cat DerivedData/part-notes.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Retain the part's notes
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: validation-notes-${{ matrix.part }}
           path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: native-test-results-${{ matrix.part }}
           path: DerivedData/*.xcresult
@@ -93,7 +93,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Collect the parts' notes
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: validation-notes-*
           path: notes

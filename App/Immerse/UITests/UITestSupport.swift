@@ -19,30 +19,49 @@ extension XCTestCase {
     /// Free swipes coasted a different distance each run, which changed the rows under the bars at each audit
     /// (Evidence/NativeApp/qa13-audit-exceptions-052.md). The drag runs in the left margin, outside the rows' controls
     /// and away from the scroll indicator, which a right-edge drag can grab and scrub the list back toward its start
-    /// (Evidence/NativeApp/scroll-indicator-drag-053.md). It starts low on the screen, where a raised keyboard would take the drag.
+    /// (Evidence/NativeApp/scroll-indicator-drag-053.md).
     func scrollUp(_ app: XCUIApplication, until element: XCUIElement) {
         scrollUp(app) { element.isHittable }
     }
 
-    /// Scrolls up in the same held drags, `distance` points each, until `done` holds.
+    /// Scrolls up in the same held drags, `distance` points each, until `done` holds. With a keyboard raised, a drag
+    /// starts just above it instead, since one that starts on the keyboard types.
     @nonobjc func scrollUp(_ app: XCUIApplication, by distance: CGFloat = 300, until done: () -> Bool) {
         for _ in 0..<16 where !done() {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+            let height = app.frame.height
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: min(0.7, (wholeBottom(app) - 24) / height)))
             start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -distance)),
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
     }
 
+    /// The lowest an element's bottom edge can be and the whole element still be clear on screen: 40 points above the
+    /// window's bottom edge, clear of the home indicator, or with a keyboard raised, 15 points above the keyboard. On
+    /// iOS 26.5 the keyboard's panel is drawn 45 points above the frame its element reports (from y 538, against 583,
+    /// on an iPhone 17 Pro), and a drag that starts on the panel goes to the keyboard.
+    private func wholeBottom(_ app: XCUIApplication) -> CGFloat {
+        let window = app.windows.firstMatch.frame
+        let keyboard = app.keyboards.firstMatch
+        return keyboard.exists ? min(window.maxY - 40, keyboard.frame.minY - 60) : window.maxY - 40
+    }
+
     /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
     /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
     /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
-    /// navigation bar, where the audit flags them too. Scroll a row whole before tapping it as well: `isHittable` holds
-    /// while only a sliver shows, and XCTest taps the middle of what shows. One CI run (38483188498) tapped the 16mm row
-    /// at y 865.7 of 874, the top 17 points of a 168-point row, inside the home indicator's area, and the tap did nothing.
+    /// navigation bar, where the audit flags them too.
     func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
-        let window = app.windows.firstMatch.frame
         scrollUp(app, until: element)
-        scrollUp(app, by: 100) { element.frame.maxY <= window.maxY - 40 }
+        scrollUp(app, by: 100) { element.frame.maxY <= wholeBottom(app) }
+    }
+
+    /// Taps `element` once the whole of it is on screen, above the home indicator and any keyboard. `isHittable` holds
+    /// while only a sliver of an element shows, and XCTest taps the middle of what shows: one CI run (38483188498) tapped
+    /// the 16mm row at y 865.7 of 874, the top 17 points of a 168-point row, inside the home indicator's area, and the
+    /// tap did nothing (Evidence/NativeApp/main-ci-flakes-063.md).
+    func tapWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        scrollUpUntilWhole(app, element)
+        XCTAssertLessThanOrEqual(element.frame.maxY, wholeBottom(app), "\(element) is whole on screen before the tap")
+        element.tap()
     }
 
     /// Taps Back on the pushed screen whose bar is titled `title`, then waits until that bar has left the tree and the
@@ -105,8 +124,7 @@ extension XCTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         guard row.waitForExistence(timeout: 5) else { return }
-        for _ in 0..<8 where !row.isHittable { app.swipeUp() }
-        row.tap()
+        tapWhole(app, row)
         // The Film screen's actions, rather than its bar, which reads a 6×6 title as "6 by 6".
         XCTAssertTrue(app.buttons["Film actions"].waitForExistence(timeout: 5))
         app.buttons["Film actions"].tap()
