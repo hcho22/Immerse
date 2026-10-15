@@ -110,6 +110,7 @@ final class LowStorageUITests: XCTestCase {
             _ = actions.waitForExistence(timeout: 0.5)
         }
         XCTAssertTrue(actions.exists, "The Film loads while the warning shows")
+        XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         let warning = app.staticTexts["low-storage-warning"]
         XCTAssertTrue(warning.waitForExistence(timeout: 5))
         XCTAssertEqual(warning.label, Self.captureWarning)

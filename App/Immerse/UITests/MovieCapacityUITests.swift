@@ -58,6 +58,7 @@ final class MovieCapacityUITests: XCTestCase {
             _ = detail.waitForExistence(timeout: 0.5)
         }
         XCTAssertTrue(detail.exists)
+        XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
         XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Film detail header")
 

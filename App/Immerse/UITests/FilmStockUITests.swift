@@ -84,6 +84,7 @@ final class FilmStockUITests: XCTestCase {
             _ = stock.waitForExistence(timeout: 0.5)
         }
         XCTAssertTrue(stock.exists, "The Film screen names its Film Stock")
+        XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
         retainScreenshot(app, name: "\(name)-film-black-and-white")
     }
