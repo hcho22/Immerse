@@ -1,48 +1,78 @@
 # Physical v1 Validation Handoff
 
-Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, and re-pinned on 2026-10-13 to the build that holds all of PRD 2.1.
+Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, and re-pinned on 2026-10-14 to the build that also holds the four changes merged that day.
 **Plan only; every physical scenario below is deferred and unaccepted. v1 is not ready for manual sign-off.**
 Nothing in this plan has been run on a phone.
 
 ## The Candidate
 
-The software candidate is commit `5c3a217bd7d9b84b629dab912cbcda038aeff62d` on `main`, the squash of https://github.com/hcho22/Immerse/pull/25.
-It is the first commit that holds all four of the task tracker's "PRD 2.0 implementation slices", which is PRD 2.1 in full.
-The captain made that the condition for the manual candidate on 2026-10-06 (task tracker, "PRD 2.0 implementation slices").
-It also holds every review fix the earlier pin lacked ([launch-readiness.md](launch-readiness.md), "Review fixes after candidate `71391e4`").
+The software candidate is commit `38792bb3f76472860e1da8a702c78bee20f2b444` on `main`, the squash of https://github.com/hcho22/Immerse/pull/31.
+It holds all of PRD 2.1, as the pin before it did, and the four changes merged to `main` on 2026-10-14:
+
+| Pull request | What it changed | Record |
+| --- | --- | --- |
+| https://github.com/hcho22/Immerse/pull/28 | The captain's 2026-10-13 Darkroom limits (print exposure and Dodge and Burn to 3 stops, a Strength slider for Dodge and Burn), the export sizes and formats read back from the saved files, the Instant asking about each print's original when it is revealed, and a soundtrack that can always be changed | [060](darkroom-export-decisions-060.md) |
+| https://github.com/hcho22/Immerse/pull/29 | The Instant's contrast B, the one the study of preserved 1970s prints supports, as treatment version 4, and both chemical toners from the untoned print to the strength the board showed as 1.00 | [061](instant-study-and-toning-061.md) |
+| https://github.com/hcho22/Immerse/pull/30 | The warning below 2 GB free, above Load Film and above Open Camera or Develop Film on the Film screen | [062](low-storage-warning-062.md) |
+| https://github.com/hcho22/Immerse/pull/31 | The Crop tool's print gives up height on a short screen in portrait so all three Crop sliders show | [063](crop-fit-short-screens-063.md) |
+
+The captain chose on 2026-10-14 to re-pin once the last of them, the crop fix, had landed ("test plan - after crop").
+The pin is the first commit on `main` that holds all four.
 
 To check it out and confirm it:
 
 ```sh
 git fetch origin
-git checkout --detach 5c3a217bd7d9b84b629dab912cbcda038aeff62d
+git checkout --detach 38792bb3f76472860e1da8a702c78bee20f2b444
 git rev-parse HEAD     # must print the hash above
 git status --short     # must print nothing
 ```
 
 Re-pin before any manual run if the app has changed since this commit.
 The app is built from `App/Immerse` and the local packages under `Packages` and from nothing else (`App/Immerse/project.yml`).
-To tell whether it has changed, run `git diff --stat 5c3a217bd7d9b84b629dab912cbcda038aeff62d origin/main -- App Packages`.
-No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this plan itself arrived in such a commit.
-`main`'s one later commit so far, `d82c6fa9e9e77968b204bb7d62371024e39fe794` (https://github.com/hcho22/Immerse/pull/27), changes only the check, its scripts and their tests, two records, `README.md` and `AGENTS.md`, so the pin stays at `5c3a217`.
+To tell whether it has changed, run `git diff --stat 38792bb3f76472860e1da8a702c78bee20f2b444 origin/main -- App Packages`.
+No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
+When this was written, `38792bb` was the newest commit on `main`.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 Record the exact eventual tested revision and configuration;
 reassess affected scenarios after any production, asset, signing or OS change.
 
-The earlier pins are history.
-They were `71391e483a80f3df38d995f5320c8a77c17cef61` on `fm/immerse-v1-implementation` (app sources last changed at `bd9594a`; its gate is [final-candidate-050.md](final-candidate-050.md)) and, before it, `241dafd`.
-Neither is an ancestor of `main`, which received that branch as a squash, and neither holds PRD 2.0 or 2.1.
-Do not test them.
+The earlier pins are history; do not test any of them as the candidate.
 
-This is the execution companion to the [136-task evidence map](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md),
+- `5c3a217bd7d9b84b629dab912cbcda038aeff62d` on `main` (https://github.com/hcho22/Immerse/pull/25), the pin from 2026-10-13 to 2026-10-14.
+  It holds PRD 2.1 but none of the four changes above.
+- `71391e483a80f3df38d995f5320c8a77c17cef61` on `fm/immerse-v1-implementation` (app sources last changed at `bd9594a`; its gate is [final-candidate-050.md](final-candidate-050.md)) and, before it, `241dafd`.
+  Neither is an ancestor of `main`, which received that branch as a squash, and neither holds PRD 2.0 or 2.1.
+
+Two earlier commits of `main` are still used, each only as the build installed before the candidate in one scenario: `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` in [L07](#l07---a-film-started-before-this-build-keeps-its-look) and `9d54ba166299eea3edfecc2c9fde29331a76dae4` in [I03](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast).
+Neither is a candidate.
+
+This is the execution companion to the [137-task evidence map](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md),
 [74 acceptance clauses and nine invariants](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md),
 and [QA-14 handoff](launch-readiness.md). It does not replace those IDs, change
 original ADRs, include deferred Groups/Accounts, or check any tracker box.
-The counts are the ones `Scripts/verify-requirement-map.sh` checks at this candidate; the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05).
+The counts are the ones `Scripts/verify-requirement-map.sh` checks at this candidate (137 intake IDs since CAP-15, the warning below 2 GB free, was added on 2026-10-13); the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 the count before CAP-15.
 
-### What changed between the earlier pin and this one
+### What changed between `5c3a217` and this pin
 
 Each line names the record to read and the scenarios below that carry its device checks.
+Each record's own list of what only a phone can show is carried by those scenarios.
+
+| Change since `5c3a217` | Record | Scenarios |
+| --- | --- | --- |
+| Darkroom limits: print exposure -3.0 to +3.0 stops, Dodge and Burn strokes of 0.1 to 3.0 stops with a Strength slider, overlapping strokes held to 3 stops together, a stored value outside the limits refused and explained | [060](darkroom-export-decisions-060.md) | M13, [D01](#d01---the-darkrooms-limits-under-a-finger) |
+| Export sizes and formats as approved, a Developed Clip of whole frames, a cropped 6×6 print square to the pixel | [060](darkroom-export-decisions-060.md) | M15, M19, [D02](#d02---export-sizes-and-formats-read-from-photos), L08 |
+| The Instant shows each print, then asks about its original; a revealed print's original is saved to Photos as soon as the choice is confirmed | [060](darkroom-export-decisions-060.md) | M15, [D03](#d03---the-instant-asks-about-each-prints-original) |
+| A soundtrack can always be changed later (no soundtrack ships, so no control shows) | [060](darkroom-export-decisions-060.md) | M20 |
+| The Darkroom under an error explanation takes the explanation's height from the print, and the Crop tool's Size caption sits with the others | [060](darkroom-export-decisions-060.md), "After testing" | M13, [D04](#d04---the-crop-tool-on-a-short-screen) |
+| The Instant's contrast B, treatment version 4; an Instant pack loaded under version 3 keeps version 3 | [061](instant-study-and-toning-061.md) | L05, L07, [I01](#i01---the-instants-contrast-on-the-phone), [I03](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast) |
+| Both chemical toners from the untoned print to the strength shown as 1.00, kept in one place | [061](instant-study-and-toning-061.md) | M13, [I02](#i02---sepia-and-selenium-on-the-phone) |
+| The warning below 2 GB free; the Film screen's gray text slightly darker and its progress bar hidden from VoiceOver | [062](low-storage-warning-062.md) | M08, M28, [S01 to S05](#low-storage-on-a-real-iphone) |
+| The Crop tool's print gives up height in portrait, down to 64 pt, so all three Crop sliders show; landscape unchanged | [063](crop-fit-short-screens-063.md) | [D04](#d04---the-crop-tool-on-a-short-screen) |
+
+### What changed between `71391e4` and `5c3a217`
+
+This table was written for the 2026-10-13 pin and is kept as it was; the scenarios it names still carry those checks.
 
 | Change since `71391e4` | Record | Scenarios |
 | --- | --- | --- |
@@ -66,6 +96,7 @@ prepare this document. Instructions below describe future steps, not authority t
 execute them now. Do not ask the captain to reconnect a phone on this plan's basis.
 The captain's instruction of 2026-10-13, "update the Immerse iPhone test plan now", asked for this document to be brought up to date.
 It did not start the manual phase, and it extends none of the scopes below.
+His answer of 2026-10-14, "test plan - after crop", chose when this plan was re-pinned again; it too starts no manual phase and extends no scope.
 
 The earlier **"Confirm device and approve probe-only test"** approval covers only
 the [pinned marker probe and exact sequence](../../Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md):
@@ -85,6 +116,7 @@ Before future **agent execution**, Firstmate must supply a concrete action scope
 | Photos exports/container inspection | Only named synthetic test media, explicit add-only writes and read-only access to this test app's container. No personal Photos/library/Keychain dump or deletion. |
 | Trial faults and uninstall | Named production-protocol test artifact, exact failpoints, receipt service and synthetic app data; separately approved delete/reinstall of that app. Approval of a marker does not authorize production Trial consumption/reset. |
 | Backup/restore, OS update or erase | Dedicated/resettable source and destination, protected existing data, exact operation and recovery plan. Whole-device overwrite, account changes and erasure are never inferred from device availability. |
+| Filling free space ([S01 to S05](#low-storage-on-a-real-iphone)) | Only test filler files the tester adds for the run and removes after it, never the deletion of personal photos, videos, messages, apps or their data. No filling a personal phone to exhaustion (M08); the one case that comes close, S05, runs only if the captain chooses it himself. |
 | Billing | Approved products/configuration, explicit local StoreKit or sandbox mode and account/action scope. No purchase, sandbox account switch, App Store Connect edit or real charge is authorized now. |
 | Distribution | Separate retained ordinary release task plus concrete TestFlight/App Store authority through Firstmate. This handoff authorizes neither. |
 
@@ -100,13 +132,14 @@ The rows after it were recorded at the earlier candidates they name and keep the
 
 | Observed software gate | Bound evidence and limit |
 | --- | --- |
-| Gates at the pinned candidate `5c3a217` | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796`, which [059](dropped-touch-059.md) records as the same tree as `5c3a217`. The check on the squash commit itself, on `main`, was cancelled at its 120-minute limit with no test failed (run 38403410314, same record), so that commit has no finished check of its own. The check has since been split into four parts (CI row below), and `main`'s run on `d82c6fa`, which builds the same app, was waiting to start when this was written (https://github.com/hcho22/Immerse/actions/runs/38473025368): read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
+| Gates at the pinned candidate `38792bb` | Each of the four changes ran its own tests on a Mac and on simulators, and each record says what it ran: [060](darkroom-export-decisions-060.md) "What was run" and the rounds after it, [061](instant-study-and-toning-061.md) "What ran", [062](low-storage-warning-062.md) "Runs" (all four parts of the check on its merge with `main`), [063](crop-fit-short-screens-063.md) "Runs". The pull request check of each passed; for https://github.com/hcho22/Immerse/pull/31 that was run 38671959157 at its head `495c764`, whose tree is the same as `38792bb`'s. `main`'s own check failed on `9d54ba1` (the packages part) and on `5c427bc` (the harness part, on `RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths`, a test older than those changes, as [063](crop-fit-short-screens-063.md) records), and its run on `38792bb` was still running when this was written (https://github.com/hcho22/Immerse/actions/runs/38684788575): read its result before testing. A Mac and simulators only, an iPhone SE (3rd generation) simulator among them: no iPhone ran anything, and scenarios [D01 to D04, I01 to I03 and S01 to S05](#the-2026-10-14-changes-on-a-real-iphone) carry what that leaves. |
+| Gates at the earlier pin `5c3a217` (history) | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796`, which [059](dropped-touch-059.md) records as the same tree as `5c3a217`. The check on the squash commit itself, on `main`, was cancelled at its 120-minute limit with no test failed (run 38403410314, same record), so that commit has no finished check of its own. The check has since been split into four parts (CI row below), and `main`'s run on `d82c6fa`, which builds the same app, was waiting to start when this was written (https://github.com/hcho22/Immerse/actions/runs/38473025368): read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
 | Full local gate: 140 package tests, 20 study and process-exit tests, unsigned simulator/generic-device builds | `sh Scripts/validate-local.sh` at the 046 source ([capture controller report](capture-controller-quiescence-046.md)): FilmDomain 13, MediaCatalog 4, RenderFixtures 2, RenderCore 11, FilmPersistence 25, NativeAdapters 24, CapturePipeline 6, EntitlementCore 12, FilmRuntime 43, TrialCommitStudy 17, DevelopmentProcessExit 3. Later checkpoints changed app views, tests and validation stages; [056](title-field-hit-area-056.md) records the latest full gate. Covers actual SQLite, native synthetic decoding/rendering, receipt policies and recovery. No camera, physical Keychain, PhotoKit device write or power-loss observation. |
 | Hosted app tests | 12 Journal and CaptureController tests on iOS 26.5 and 26.2, plus 4 local StoreKit tests on 26.2 (046). Actual controller, capture backend, Trial owner, repository and processor on a camera-less simulator with injected Keychain calls. |
 | Actual-view UI tests | Populated harness 12 tests including drawn Dodge, declined Camera on reopen and small-screen shutter layout ([047](darkroom-gesture-tint-047.md), [048](visual-sweep-048.md)); production UI: declined Camera at Load Film ([049](qa13-measurement-049.md)) and every text element on the audited screens at all twelve text sizes ([052](qa13-audit-exceptions-052.md), [053](scroll-indicator-drag-053.md)). Simulator only. |
 | Production receipt integration | [Production report](../TrialKeychainProbe/2026-10-01-production-receipt-integration.md): 25 runtime and 12 entitlement tests; nine production-owner abrupt-exit cases; eight Journal/local StoreKit cases on iOS 26.2; three populated-view cases. Injected receipt stores are memory/ordinary files, not real Security persistence. Read report source inventories; not all runs used this final HEAD. |
 | Export/privacy controller | [Checkpoint 036](../ExportPrivacyHarness/036/README.md) and [executable commands](../../Probes/ExportPrivacyHarness/README.md): real native synthetic masters/Movie renders, repository and FilmProcessor with held writer/reply, observed cancellation, exact failure outcomes, cleanup and private removal/re-entry. All writer/permission results are injected; no PhotoKit, physical storage failure or full M16/M23 acceptance. Completed external test copies remain unrecalled. |
-| Native accessibility | [QA-13 end-user check](qa13-measurement-049.md) and [audit fix and exceptions](qa13-audit-exceptions-052.md): the Movie Orientation choice follows Dynamic Type and keeps its buttons across text sizes. The original audits pass on the simulator with deterministic scroll positions and one exact, measured contrast exception (the 16mm description under the scroll-edge band, 21.00:1 light and 13.94:1 dark at rest); any other finding still fails. No audit runs the Dynamic Type type, which flagged correctly resizing text from run to run ([053](scroll-indicator-drag-053.md)), and `ContentSizeTests` measures every text element on the audited screens at all twelve sizes instead. The Load screen's Film title field keeps a frame at least 44 points tall at every size, and every Camera's Load screen is audited at the smallest size ([056](title-field-hit-area-056.md)). Earlier diagnoses, such as the [observer diagnosis](accessibility-observer-diagnosis.md), keep their records. Device VoiceOver, Switch Control and display checks remain open. |
+| Native accessibility | [QA-13 end-user check](qa13-measurement-049.md) and [audit fix and exceptions](qa13-audit-exceptions-052.md): the Movie Orientation choice follows Dynamic Type and keeps its buttons across text sizes. The original audits pass on the simulator with deterministic scroll positions and one exact, measured contrast exception (the 16mm description under the scroll-edge band, 21.00:1 light and 13.94:1 dark at rest); any other finding still fails. Since [062](low-storage-warning-062.md) two more measured contrast findings are accepted, two Camera rows under the navigation bar at the default-size Load Film audit with the low-storage warning, neither of them the warning. No audit runs the Dynamic Type type, which flagged correctly resizing text from run to run ([053](scroll-indicator-drag-053.md)), and `ContentSizeTests` measures every text element on the audited screens at all twelve sizes instead. The Load screen's Film title field keeps a frame at least 44 points tall at every size, and every Camera's Load screen is audited at the smallest size ([056](title-field-hit-area-056.md)). Earlier diagnoses, such as the [observer diagnosis](accessibility-observer-diagnosis.md), keep their records. Device VoiceOver, Switch Control and display checks remain open. |
 | Draft photo/Movie/music outputs | [Asset review](../AssetReview/README.md) has native decoded outputs and provenance, not production rights or Camera-quality approval. Production catalog is empty. |
 | CI | The Native validation check failed on every v1 run and on main, only on the two original audit tests ([051](ci-qa13-051.md)); [052](qa13-audit-exceptions-052.md) fixes them. Main then failed intermittently in `ContentSizeTests` on `b4d9527`, which [053](scroll-indicator-drag-053.md) addresses, and in `MovieCapacityUITests` on `cd3cbc0`, which [054](title-field-tap-054.md) addresses; [055](push-audit-055.md) fixes an intermittent audit over a push found while validating 054. On `72669c1` the extra-small Load audit ran past its allowance on a slow runner and one Start a Film tap in `TestingUnlockUITests` opened nothing; [057](ci-flakes-057.md) splits both tests and removes the Journal's launch-time bottom toolbar, and the lost tap is still not reproduced. On `491a14f` the Movie time test's title field kept a "1" of the suggestion when the field wrote back an older title from SwiftUI during its typed deletes; [058](title-autocorrection-058.md) stops the field taking the binding's text while it is being edited. On 2026-10-13 the check failed once on a pull request of six Markdown files, on a tap the simulator dropped, and was cancelled at its 120-minute limit on `main` at `5c3a217`; [059](dropped-touch-059.md) records both. Since `d82c6fa` the check runs `Scripts/validate-local.sh` as four parts side by side (packages, harness, ui-text, ui-flows; 75 minutes each) behind the one summary check `local-native`, a pull request that changes only Markdown runs the packages part alone, and a failed screen test is run once more only when the simulator's own log shows it dropped that test's touch. Each change's CI run is reported on its PR. No release claim. |
 
@@ -122,7 +155,8 @@ Keep both records. No evidence of this document's preparation is a rerun.
 | HC_iPhone13 | The captain's own iPhone **13 Pro** on iOS **26.6.2**, as he last gave it on 2026-10-13 ("iphone 13 pro on ios 26.6.2"). His earlier answer in this project said "iphone 13"; Xcode's read-only discovery on 2026-09-30 reported `iPhone14,2`, an iPhone 13 Pro ([probe plan](../../Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md)). Existing Apple development team. Not an iPhone 13 or iPhone 11. | Read the iOS version again at test time (Settings > General > About > iOS Version, tap the version to see the build) and record both; do not assume 26.6.2 still holds. Future manual phase and Immerse-specific authority, reachable/unlocked state, compatible device support, signed artifact. Last probe tunnel failed; do not infer current reachability. |
 | iPhone 11 / iOS 26 | Required by ARC-08 / architecture S1. **Not yet possible:** the captain has said "Only personal iPhones are available", and his is an iPhone 13 Pro. | Suitable authorized hardware. HC_iPhone13 timings cannot replace this early floor check. M29 stays required and unaccepted until an iPhone 11 is in hand. |
 | Second physical iPhone | Required by TRI-11, ARC-11/S12, ARC-12/S13 and QA-15. **Not yet possible:** no second phone is on record. | Dedicated authorized restore target and protected data; destination-unused and destination-consumed Trial histories. Simulator copies do not satisfy this. T11 and B01 to B04 stay required and unaccepted until a second iPhone is in hand. |
-| Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12 device/OS/accessibility matrix and budgets remain open. Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
+| A small iPhone (iPhone SE size, 667 points tall) | The project's small-screen checks ran on an iPhone SE (3rd generation) simulator only ([063](crop-fit-short-screens-063.md), [062](low-storage-warning-062.md)). **Not yet possible:** the captain's iPhone 13 Pro is 844 points tall, and no small iPhone is on record. | A small iPhone for the short-screen part of [D04](#d04---the-crop-tool-on-a-short-screen) and the small-iPhone part of [S04](#s04---voiceover-and-the-largest-text-size). Both stay required and unaccepted until one is in hand; what the iPhone 13 Pro can show is in those scenarios. |
+| Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12's device/OS/accessibility matrix remains open: it was not put to the captain. Its speed and storage targets were approved on 2026-10-13 as targets for the iPhone 11, none yet measured (M29). Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
 | Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. The Debug-only [testing unlock](#debug-testing-unlock) covers loading and capturing with all five Cameras without the Trial; it is not paid-entitlement or Trial evidence. |
 | Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Release UI exposes no test switch; Debug builds expose only the [testing unlock](#debug-testing-unlock). |
 
@@ -131,9 +165,12 @@ Keep both records. No evidence of this document's preparation is a rerun.
 These are future manual-phase instructions. They do **not** ask the captain to
 test now and do not authorize the agent to connect or operate HC_iPhone13.
 
-**Decide about [L07](#l07---a-film-started-before-this-build-keeps-its-look) before the first install.**
-L07 is the only scenario that needs an earlier build, and it needs that build on the phone before this candidate is ever installed there.
-If L07 is to be run, do its part A first, with these same steps on the earlier commit it names, then come back here for the candidate.
+**Decide about [L07](#l07---a-film-started-before-this-build-keeps-its-look) and [I03](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast) before the first install.**
+They are the only scenarios that need an earlier build, and each needs that build on the phone before this candidate is ever installed there.
+If L07 is to be run, do its part A first, with these same steps on the earlier commit it names.
+If I03 is to be run, do its part A next, on its own earlier commit, which is later than L07's.
+Then come back here for the candidate, and do part B of each.
+Install the builds only in that order, oldest first: going back to an older build over newer Films is not a path anything has tested.
 
 1. Identify a clean candidate, retain `git rev-parse HEAD`, `git status --short`,
    `xcodebuild -version`, `xcodebuild -showsdks`, dependency/configuration hashes,
@@ -246,7 +283,7 @@ Release, TestFlight and App Store builds keep the StoreKit subscription and one-
 - The switch is **Settings > Debug testing > Testing unlock - Debug build**, the first Settings section. It is saved on the iPhone, so it holds when Immerse is launched from the Home Screen as well as from Xcode.
 - **Turn the switch off before any Trial, locked-load or plan-screen check** (for example T01...T12 and M27). With it off, the Debug build gates new Films exactly as Release does.
 - Films loaded while the unlock was on are subscription Films. After the switch is turned off they keep their capture rights and stay developable, viewable, editable and exportable (ADR 0006), and they stay on the phone until deleted. The Trial remains unused by them.
-- Scenarios L01 to L08 are run with the switch on. The earlier build that L07 installs first has the same unlock, on by default, so neither build uses the Trial there.
+- Scenarios L01 to L08, D01 to D04, I01 to I03 and S01 to S05 are run with the switch on. The earlier builds that L07 and I03 install first have the same unlock, on by default, so no build uses the Trial there.
 - Hosted tests cover on, off and off-after-on (`App/Immerse/Tests/TestingUnlockTests.swift`) and the indicator and persisted switch across relaunches (`App/Immerse/UITests/TestingUnlockUITests.swift`); outcomes are in [testing-unlock-debug.md](testing-unlock-debug.md). Physical-device behavior is untested until this manual phase.
 
 ## Ordinary App Scenarios
@@ -257,7 +294,7 @@ Cameras and Movie rows for both Movie Cameras, front/rear and the specified
 orientations. Repeat relevant error/retry cases without treating one success as
 coverage of every adapter. Record case-specific observed results, not checkmarks
 against this plan. `M-*` labels are runbook labels, not replacement tracker IDs.
-The rows were written for the earlier pin and corrected on 2026-10-13 against this candidate; where a row could not be confirmed from the code and records, it says so.
+The rows were written for the earlier pin, corrected on 2026-10-13 against the pin of that day, and corrected again on 2026-10-14 against this candidate; where a row could not be confirmed from the code and records, it says so.
 The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium Format, 1960s Super 8 Home Movie and 16mm Cinema.
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
@@ -269,19 +306,19 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M05 / FR-01; CAM-02,03,05; CAP-07 | Check Disposable fixed-focus/optional supported flash; Instant package behavior; 6x6 square waist-level framing, focus/exposure. Change each permitted control and switch lens. Unsupported hardware controls absent/disabled with explanation, never inert pretending to work. | Actual lens capability and observable output/focus/exposure; no requirement that front lens support rear capabilities. PRD 2.1 additions (`capture-behavior-prd2-slice2.md`): Disposable viewfinder 3:2 and developed picture 3:2 with no border or date stamp; dim scene without flash develops dark, bright scene is not blank, flash lights only nearby subjects and keeps the fixed focus; low-light cue appears in a dim scene (once flash is off and supported), disappears in daylight without flicker, also right after each capture, never appears for a moment when switching lens in daylight, still appears after switching lens or closing and reopening the camera, never darkens the viewfinder and is announced by VoiceOver; Super 8 holds focus at one lens position with automatic exposure; 6×6 rear viewfinder is reversed left to right, also after switching to the front lens and back, while the saved and developed asymmetric target is not, and the front viewfinder is mirrored as before; a 6×6 exposure bias does not carry into a Disposable or Super 8 Film opened next, and after a 16mm or Super 8 Film the 6×6 focuses where its Focus control shows. Record the active lens, scene light and the exposure the saved file reports. How those exposures look once developed, the real flash included, is [L05](#l05---each-look-on-real-captures-against-its-approved-board). |
 | M06 / FR-04; CAP-08,09 | Deny/restrict Camera, reopen setup and camera, then grant only within authorized settings scope. On the device, confirm Open iPhone Settings from the capture screen reaches Immerse's settings and the shutter stays on screen (048 simulator layout check). No false load/save/capacity debit; recover without losing prior Films. Test initial offline Trial start and existing entitled offline capture. | Permission state, error, counts, actual offline state. Restricted-state setup may require dedicated device/configuration; don't change personal restrictions. |
 | M07 / FR-04,05; CAP-09; QA-13 | Interrupt photo save and Movie recording by background, lock, camera interruption/call and process termination. Saved captures survive; valid interrupted footage saved once, invalid unsaved footage spends nothing, recording never auto-resumes. Retry/rapid repeated command never duplicates. Open Camera on a Film whose previous save is still finishing and tap Done at once: the camera indicator must turn off and stay off (046 software ordering check). | Native event timeline, decoded valid clips, once-only IDs/duration, pre/post relaunch state. Controlled call/fault authority needed. |
-| M08 / FR-04,08; CAP-09; QA-09,13 | Exercise low-space/camera unavailable/failed durable write and recovery. Preserve all previous media; no false successful-save/capacity/Trial acknowledgment. Free only authorized synthetic test allocations; retry same pending save. | Storage levels, actual failure and recovery, receipt matrix below. No filling a personal phone to exhaustion; DEC-12 thresholds/budgets unresolved. |
+| M08 / FR-04,08; CAP-09; QA-09,13 | Exercise low-space/camera unavailable/failed durable write and recovery. Preserve all previous media; no false successful-save/capacity/Trial acknowledgment. Free only authorized synthetic test allocations; retry same pending save. | Storage levels, actual failure and recovery, receipt matrix below. No filling a personal phone to exhaustion. DEC-12's targets were approved on 2026-10-13 and none is measured; its warning below 2 GB free is built (CAP-15, [062](low-storage-warning-062.md)), and [S01 to S05](#low-storage-on-a-real-iphone) carry its device checks, S05 only by the captain's own choice. |
 | M09 / FR-01,06; DEV-01,05 | Fill Disposable 27, 6x6 12, Instant 10. Refuse extra exposure. Rolls become complete but remain sealed until explicit Development. Each Instant print develops individually including tenth; earlier prints remain revealed, failed print resumes same result. | Native save sequence/count and revealed/sealed state at each boundary, no photos-library additions. One complete run per package. |
 | M10 / FR-06; DEV-02,03; DEC-09 | Zero-save Film: early Development disabled, Delete Film available. At 22/27, cancel five-unused warning (no change), then confirm (exactly five wasted). Repeat 6x6 and fractional Movie remaining time. Cannot reopen/refund; completion remains separate from explicit Development. | Exact persisted remainder, warning text, cancel/confirm/relaunch and absence of fabricated empty result. |
 | M11 / FR-06; DEV-04,06...08 | Start Development; interrupt before assignment, during rendering and after output persistence; reopen/resume. Same treatment/seed/master, once-only completed items, no reroll or partial roll/Movie reveal. Instant prior prints stay available. | Assignment and decoded master/clip hashes, processing journal and visible resume state. Exact phase cases require native harness, not guessed force-quit timing. Since PRD 2.1 slice 4 the treatment version is part of what must not change: a Film keeps the version its Camera package recorded at Load Film ([L07](#l07---a-film-started-before-this-build-keeps-its-look)), and a Develop tapped just before leaving the app is [L02](#l02---develop-tapped-just-before-leaving-the-app). |
 | M12 / FR-04,08; CAP-10; UX-03 | Visit Journal, Film details, archive, search/navigation and export surfaces before reveal and during recovery. No sealed photo/clip review, thumbnail, individual deletion, export or Photos copy. Whole-Film deletion remains possible without reveal. | Screen traversal plus access-path/storage review; no app background preview leaking sealed imagery. Existing UI paths only, no invented search requirement. |
-| M13 / FR-07; DRK; QA-04 | Open each revealed eligible photo: exposure, contrast/grades, crop and Dodge/Burn; filtration/balance on color prints only and Chemical toning on black-and-white prints only. Save/cancel/reopen independently on two photos; try touch and accessible point controls. | Recipe diff and decoded renders, preserved master. DEC-04/11 ranges/crop interactions unresolved. Draw a Dodge stroke with a finger on the print: it must paint without scrolling the Darkroom (047, simulator only). PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): every Photo Film offers contrast grades 0 to 5, and none offered Chemical toning before slice 3; an Instant print shows its white card, offers no Crop, and its card stays white under every adjustment and Dodge/Burn stroke. PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): a black-and-white 6×6 Film develops gray prints with high contrast and visible grain, and its Darkroom offers Chemical toning (sepia, selenium) and no Filtration; a color 6×6 Film keeps Filtration and offers no toning. Since slice 4 the black-and-white look is the one the captain approved on the 6×6 board on 2026-10-12 (`prd-2-slice-4-looks.md`); toning values and Darkroom ranges stay provisional (DEC-04, DEC-11). |
+| M13 / FR-07; DRK; QA-04 | Open each revealed eligible photo: exposure, contrast/grades, crop and Dodge/Burn; filtration/balance on color prints only and Chemical toning on black-and-white prints only. Save/cancel/reopen independently on two photos; try touch and accessible point controls. | Recipe diff and decoded renders, preserved master. The Darkroom's limits were decided on 2026-10-13 (`DarkroomLimits` in `Packages/RenderCore/Sources/RenderCore/DarkroomRecipe.swift`, [060](darkroom-export-decisions-060.md)); [D01](#d01---the-darkrooms-limits-under-a-finger) carries them on the phone and [D04](#d04---the-crop-tool-on-a-short-screen) the Crop tool's layout. Dodge / Burn is unavailable while a crop is on (`PhotoView.swift`). Draw a Dodge stroke with a finger on the print: it must paint without scrolling the Darkroom (047, simulator only). PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): every Photo Film offers contrast grades 0 to 5, and none offered Chemical toning before slice 3; an Instant print shows its white card, offers no Crop, and its card stays white under every adjustment and Dodge/Burn stroke. PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): a black-and-white 6×6 Film develops gray prints with high contrast and visible grain, and its Darkroom offers Chemical toning (sepia, selenium) and no Filtration; a color 6×6 Film keeps Filtration and offers no toning. Since slice 4 the black-and-white look is the one the captain approved on the 6×6 board on 2026-10-12 (`prd-2-slice-4-looks.md`). Since 2026-10-13 the toning range is his too, each toner from the untoned print to the strength the board showed as 1.00 ([061](instant-study-and-toning-061.md)); [I02](#i02---sepia-and-selenium-on-the-phone) looks at it on the phone. |
 | M14 / FR-07 | Edit then Reset; compare original developed master appearance and exported decoded pixels under matching render/export settings. Exact restoration, no accumulated edits, reroll or cross-photo change. No saturation, AI/content removal, stock swap or Movie Darkroom entry. | Original/reset master hash, recipe equality, decoded pixels and export metadata; file-container hash differences alone do not prove pixel differences. |
-| M15 / FR-08; STO; QA-09 | Independently choose developed export and originals export after reveal; also decline both. Originals choice at Development explicit, not preselected; no automatic Photos write. Only individually revealed Instant frames eligible, not future sealed frames. | Selection, permission/write events, actual Photos asset counts/content, source retention; Instant presentation timing DEC-11 still provisional. A developed Instant export is the picture on its white card, as the Journal shows it (PRD 2.1 slice 1). |
+| M15 / FR-08; STO; QA-09 | Independently choose developed export and originals export after reveal; also decline both. Originals choice at Development explicit, not preselected; no automatic Photos write. Only individually revealed Instant frames eligible, not future sealed frames. | Selection, permission/write events, actual Photos asset counts/content, source retention. Since the 2026-10-14 pin an Instant print is shown first and its original is asked about when the print is closed, and choosing to save writes the original to Photos at once ([060](darkroom-export-decisions-060.md), DEC-11 decided 2026-10-13); [D03](#d03---the-instant-asks-about-each-prints-original) carries it. A developed Instant export is the picture on its white card, as the Journal shows it (PRD 2.1 slice 1), 2282 x 2774 ([D02](#d02---export-sizes-and-formats-read-from-photos)). |
 | M16 / FR-08 | Deny/restrict add-only Photos, fail actual write, cancel/retry and recover. No false success; retry cannot remove only usable media. Granting export permission never grants library read or triggers other exports. | Actual PhotoKit completion/error and UI outcome, counts, retained sources/masters. Controlled native write-failure harness may be needed. |
 | M17 / FR-08; STO; ARC-03 | Choose originals export: retain until successful Photos write AND decoded/hash-verified master. Decline: cleanup only after verified master and disclosure. Make master missing/corrupt/hash-matching undecodable; cleanup must stop. | Approved synthetic container fault and raw decode/hash checks, originals/masters/recipes/Developed Clips before/after. No corruption of captain media. |
 | M18 / FR-05; MOV-01,02,04,06,07 | Record separated active clips to exactly 200s Super 8 / 167s 16mm, with long idle/pause periods and interruption. Only successfully saved active duration debits; no over-budget footage; per-clip orientation locks at start. | Decoded track durations vs persisted capacity and wall time; no microphone prompt/input/audio track. Capacity is whole 30 fps frames (6000 Super 8, 5010 16mm; a 16mm Film loaded before PRD 2.1 slice 1 keeps 165 s, 4950): record the persisted remaining frames before the last clip and confirm that clip stops at exactly that duration, saves and completes the Film. Do not invent timing tolerance before DEC-04/12. |
-| M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder is 3:4 in portrait and 4:3 in landscape, same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; sizes and codec provisional pending DEC-04), and it carries no color tags, which [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags) puts in front of the captain. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
-| M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No recorded audio, imported music or voice-over; same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity; DEC-05 cleared export rights and DEC-11 reselection policy absent. Missing production Soundtrack UI is not a pass. |
+| M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder is 3:4 in portrait and 4:3 in landscape, same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; the captain approved these sizes and the codec on 2026-10-13, [060](darkroom-export-decisions-060.md), and [D02](#d02---export-sizes-and-formats-read-from-photos) reads them from Photos), and it carries no color tags, which [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags) puts in front of the captain. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
+| M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No recorded audio, imported music or voice-over; same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity. DEC-11 was decided on 2026-10-13: a soundtrack can be changed later any number of times without developing again ([060](darkroom-export-decisions-060.md)). DEC-05 keeps the catalog empty until a license allows a soundtrack inside exported Movies, so the build offers no soundtrack and shows no Soundtrack control; this row stays unrunnable on the phone until one ships. Missing production Soundtrack UI is not a pass. |
 | M21 / FR-16; PRV; QA-11 | Discard revealed photo/clip while viewing; revisit/force-quit/reopen. Numbered metadata-only placeholder, no source/master/clip/cache or old assembled Movie accessible; no capacity refund. Surviving clips keep byte/treatment identity/order/orientation/music. | Before/after media inventory/hash, stale viewer/export handle attempts, decoded rebuilt Movie; current-store scope only. |
 | M22 / FR-16; DEC-09 | Discard the final Movie clip. Retain Film and numbered discarded placeholders, no player or export, no reopened time budget. Relaunch and try stale handles. | Screens/state and storage, zero playable media. External Photos copies intentionally unchanged. |
 | M23 / FR-16,18; ARC-06 | Race Discard/Delete with in-flight rendering, export and pending save. Interrupt/fail filesystem cleanup and resume. Discarding a revealed Instant print must keep another print's unfinished save for Resume Save (046). Tombstones win; stale jobs cannot resurrect media; no successful privacy completion while stale app viewing/export remains possible. | Ordered request/completion/state and file evidence. Already-completed external Photos copies cannot be recalled. Fault/race harness and native permission scope required. |
@@ -289,8 +326,8 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M25 / FR-08,18; QA-15 | Settings, originals cleanup, Discard and Delete Film copy explain local-only storage, optional flattened exports, backup inclusion/loss and older backup restoration of BOTH discarded media and whole deleted Films. Revealed content usable offline. | Exact current copy/screens and restored behavior B01...B04. Final support/privacy copy DEC-13 remains open. |
 | M26 / FR-20; BIL; ARC-09 | Approved monthly/yearly one-plan product purchase, pending/cancel/error, renewal/expiry, Restore Purchases after one online sync and offline entitlement reads. All five Cameras/unlimited new paid Films, no tiers/per-Film fees/account/server. | Verified StoreKit transactions/events, localized price/product/group, network state; production config/prices absent, sandbox authority needed. Local fixture is a separate software gate. |
 | M27 / FR-20; BIL-05...07 | Expire subscription with unfinished Photo/Movie/Instant Films. Block only new paid loads; finish/capture/develop/view/edit/export old Films offline. Renewal/restore recovers new-Film access. Manage Subscription separate from Archive/Delete Film. | Pre/post transaction and Film rights/state, StoreKit event receipt, actual media. Refund/revocation policy DEC-02 not silently selected. PRD open question 7 is pending the captain: a lapsed subscriber who never used the Trial currently gets the Trial Film as a provisional default; record that outcome as the default, not acceptance. |
-| M28 / QA-13; UX | Real Journal/setup/capture/Film/reveal/Darkroom/archive/settings/paywall/error/confirmation screens: default/largest, light/dark, portrait/landscape; VoiceOver labels/order/focus/actions and Switch Control; no clipped unreachable commands or misleading disabled states. | Full traversal recording, all-category audit issues, assistive interaction evidence. Current accessibility failures retained; simulator screenshots don't prove physical assistive behavior or open DEC-12 matrix. |
-| M29 / ARC-08; QA-13 | On iPhone 11/iOS 26, time full 27-photo Development and full 200s Movie, plus interrupted/resumed runs; record capture-to-save, foreground completion, peak memory, thermal/storage conditions. Repeat equivalent relevant cases on HC_iPhone13 separately. | Actual timing trace/device/thermal/candidate/output verification; no numeric pass until budgets decided. No debugger/observer-induced timing presented as production. Since PRD 2.1 slice 4, also time a full 167 s 16mm Cinema Film on the color Film Stock, whose Development reads the film's color table for every frame, and a 12-exposure 6×6 color Film; and record peak memory across two Movie Developments in one launch, since the grain fields stay in memory after a Development (about 34 MB for one kind of grain and 67 MB for two, from the review of pull request 25). The HC_iPhone13 runs are [L06](#l06---how-long-development-takes-on-the-phone); they do not replace the iPhone 11. **Not yet possible:** no iPhone 11 is in hand. |
+| M28 / QA-13; UX | Real Journal/setup/capture/Film/reveal/Darkroom/archive/settings/paywall/error/confirmation screens: default/largest, light/dark, portrait/landscape; VoiceOver labels/order/focus/actions and Switch Control; no clipped unreachable commands or misleading disabled states. | Full traversal recording, all-category audit issues, assistive interaction evidence. The low-storage warning has its own VoiceOver and largest-text check in [S04](#s04---voiceover-and-the-largest-text-size), and the Crop tool's text sizes are in [D04](#d04---the-crop-tool-on-a-short-screen). Current accessibility failures retained; simulator screenshots don't prove physical assistive behavior or open DEC-12 matrix. |
+| M29 / ARC-08; QA-13 | On iPhone 11/iOS 26, time full 27-photo Development and full 200s Movie, plus interrupted/resumed runs; record capture-to-save, foreground completion, peak memory, thermal/storage conditions. Repeat equivalent relevant cases on HC_iPhone13 separately. | Actual timing trace/device/thermal/candidate/output verification. DEC-12's targets, approved on 2026-10-13 and not yet measured, are for the iPhone 11: a photo saved in under 1 second, a 27-photo roll developed in under 45 seconds, a full Super 8 Movie assembled in under 90 seconds (task tracker, DEC-12). No debugger/observer-induced timing presented as production. Since PRD 2.1 slice 4, also time a full 167 s 16mm Cinema Film on the color Film Stock, whose Development reads the film's color table for every frame, and a 12-exposure 6×6 color Film; and record peak memory across two Movie Developments in one launch, since the grain fields stay in memory after a Development (about 34 MB for one kind of grain and 67 MB for two, from the review of pull request 25). The HC_iPhone13 runs are [L06](#l06---how-long-development-takes-on-the-phone); they do not replace the iPhone 11. **Not yet possible:** no iPhone 11 is in hand. |
 | M30 / QA-14 | Inspect final binary, rights, Camera samples/treatments, icon/name/store materials, support/privacy disclosures and local-only permissions. Review open decisions, all evidence and no-mistakes/CI results before readiness. | Final signed artifact/configuration and owner sign-offs; production assets, price, quality, support, budgets and release remain unapproved. TestFlight learning needs DEC-14 and separate exposure authority, not telemetry. |
 
 ## Looks on a Real iPhone
@@ -311,8 +348,8 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | L03 / FR-01 A11, FR-04, FR-05; CAM-07, CAM-12, CAM-17 | Record 16mm color clips in daylight, under warm household bulbs and in shade. The viewfinder never turns orange; daylight develops neutral, warm light develops orange, shade develops cooler. Recording never closes the app. | Light source per clip, developed frames. [Steps](#l03---the-16mm-color-stock-under-warm-light). |
 | L04 / FR-05, FR-08; MOV-11, QA-13 | Capture a scene with very bright and very dark parts on every Camera, develop and save both copies to Photos. No original clip is HDR, and no developed photo or Movie is blown out or washed. | What Photos reports for each original, developed screenshots. [Steps](#l04---hdr-capture-photos-and-movie-clips). |
 | L05 / FR-01 A11; CAM-02, 03, 05 to 07, CAM-12, CAM-17, CAP-12 | Capture real scenes on every Camera and Film Stock and compare each developed result by eye with its approved board in `Evidence/AssetReview/looks/`, the Disposable's fixed exposure and real flash and the corrected grain among them. | A verdict per look in the captain's words, screenshots. The captain's eye is the instrument. [Steps](#l05---each-look-on-real-captures-against-its-approved-board). |
-| L06 / ARC-08, QA-13 | Time Development for each Camera and Film Stock on HC_iPhone13. Every Development finishes; there is no time to pass or fail until DEC-12 sets budgets. | A time per Film with the phone's state. Does not replace the iPhone 11 in M29. [Steps](#l06---how-long-development-takes-on-the-phone). |
-| L07 / FR-06, section 11 "one treatment"; CAM-01, CAM-17, DEV-06, DEV-07 | Load Films with the build before this one, update to the candidate, and develop them. They develop with the look they started with, and a Film loaded after the update gets the new look. | Needs the earlier build installed first. Screenshots of the same subject from each Film. [Steps](#l07---a-film-started-before-this-build-keeps-its-look). |
+| L06 / ARC-08, QA-13 | Time Development for each Camera and Film Stock on HC_iPhone13. Every Development finishes; no time on this phone is a pass or a fail, since DEC-12's targets are for the iPhone 11. | A time per Film with the phone's state. Does not replace the iPhone 11 in M29. [Steps](#l06---how-long-development-takes-on-the-phone). |
+| L07 / FR-06, section 11 "one treatment"; CAM-01, CAM-17, DEV-06, DEV-07 | Load Films with a build from before treatment versions were recorded, update to the candidate, and develop them. They develop with the look they started with, and a Film loaded after the update gets the new look. | Needs the earlier build installed first. Screenshots of the same subject from each Film. [Steps](#l07---a-film-started-before-this-build-keeps-its-look). |
 | L08 / FR-05, FR-08; MOV-11, DEC-04 | Save a Developed Movie from each Movie Camera to Photos and compare how that one file looks in Immerse, in Photos on the phone and in the other players the captain has, a Mac among them. **A decision scenario, not pass or fail:** no answer is expected of the app, and the outcome is his choice between leaving Movies untagged and having them tagged. | What he saw in each player, in his words, and his choice. [Steps](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags). |
 
 ### Before you start
@@ -346,6 +383,9 @@ The names in bold are the words on the screen.
    The button to its left switches between the rear and front lens, between captures only.
    On the 1990s Disposable the button to its right turns the flash on and off.
    Tap **Done** to leave the camera.
+   On the 1970s Instant each print develops by itself and opens over the camera as **Photo** and its number.
+   Tap **Done** on the print to close it; a sheet titled **Originals** then asks about that print's original (**Original of photo** and its number).
+   Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
 3. **Finish a roll or reel before it is full.**
    On the Film's screen tap the **...** menu at the top right, then **Rewind & Develop Early** (photo roll) or **Stop & Develop Early** (Movie), then **Complete Film**.
    The unused exposures or time are lost for good, which is what the confirmation says.
@@ -360,7 +400,9 @@ The names in bold are the words on the screen.
 6. **Save copies to Photos**, where a scenario asks for it.
    **Save Developed to Photos** saves the developed result.
    If you chose to save originals in step 4, **Originals** and then **Save Originals to Photos** saves the captures as the phone made them.
-   An Instant pack never shows the Development sheet, so there tap **Originals**, make the same choice, tap **Confirm choice**, and tap **Originals** again.
+   An Instant pack never shows the Development sheet.
+   Its question comes when each print is closed (step 2), or under **Originals** on the Film's screen if it was left: choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**, which saves that print's original to Photos at once, or **Remove from Immerse without saving** if the scenario does not need the original.
+   If the save does not finish, the choice stands and the same sheet, or **Originals**, offers **Save Originals to Photos** to try again.
    iOS asks to let Immerse add to Photos; that permission is add-only.
    These copies are test media: keep them out of Git and delete them only when you choose to.
 7. **Force-quit and reopen**, where a scenario asks for a fresh launch.
@@ -545,8 +587,9 @@ Whether this phone adds HDR information to a photo, and whether that changes wha
    Title each "L04" and its Camera.
 3. On each, capture that scene twice with the rear lens and once with the front lens: exposures on the Photo Cameras, clips of about five seconds on the Movie Cameras.
 4. Finish each Film and develop it, choosing **Save Originals to Photos after reveal**.
-   The Instant develops each print by itself; common step 6 says how to make the same choice for it.
+   The Instant develops each print by itself and asks about its original when the print is closed; choose **Save to Photos, then remove from Immerse** (common steps 2 and 6).
 5. For each Film tap **Save Developed to Photos**, then **Originals** and **Save Originals to Photos**.
+   The Instant's originals are already in Photos from step 4.
 6. In the Photos app open each original and each developed copy and swipe up for its details.
    Write down the format line for each, and any HDR or Dolby Vision mark.
 7. Compare each developed result in Immerse with its copy in Photos.
@@ -598,7 +641,7 @@ The expectations are the looks record's and ADR 0016's.
 | Look and board | Capture | Expect |
 | --- | --- | --- |
 | 1990s Disposable, `disposable`, approved 2026-10-10 ("fresh") | (a) Bright daylight outdoors. (b) Overcast or shade. (c) A dim room without flash; the viewfinder should show **Low light - use flash** (M05). (d) The same dim room with flash on, an object within arm's reach or two and a wall several meters behind it. (e) Flash on in daylight on a near object. | A borderless 3:2 picture with no date stamp. Warm, saturated color, never yellowed or faded. Heavy grain, heavier still in the dim scene without flash, which develops dark and grainy. Soft corners a little darker than the center. With flash: a hot center that falls away to the corners, harsher contrast, the near object lit flat and the background dark. No light leaks, red-eye effect, dust or scratches. |
-| 1970s Instant, `instant`, approved 2026-10-10 ("faded", then "approved") | Four prints of one daylight scene from one spot, and one print indoors. | A square picture on a white card. Lifted, milky blacks, softened whites, low contrast, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft detail and a coarse texture. The four prints differ slightly in density and color, and none shows a flaw such as uneven chemistry. A print looks the same when opened again after a force-quit. The card stays white. |
+| 1970s Instant, `instant`, approved 2026-10-10 ("faded", then "approved"), its contrast chosen on 2026-10-13 ("B", then "version 4") | Four prints of one daylight scene from one spot, and one print indoors. | A square picture on a white card. Compare with the board's version 4 pictures, not its version 3 ones. Blacks that are a dark gray and not pure black, deeper than version 3's milky blacks, whites a little under the card's white, contrast a little softer than the phone's own photo and more than version 3's, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft detail and a coarse texture ([061](instant-study-and-toning-061.md); [I01](#i01---the-instants-contrast-on-the-phone) looks at the contrast closely). The four prints differ slightly in density and color, and none shows a flaw such as uneven chemistry. A print looks the same when opened again after a force-quit. The card stays white. |
 | 6×6 Medium Format, Color, `6x6`, approved 2026-10-12 ("everything looks good") | The card and objects in daylight, an outdoor scene with greenery and sky, the page of text, and a scene with deep shadow. | A borderless square. Gentle contrast with lifted blacks, so the deepest shadow is a dark gray and not pure black. Cream-warm grays, quiet reds, pastel blues leaning to cyan, softer greens. Very fine grain, barely visible. Corners slightly darker than the center. Sharp to the corners, with no softening, glow or added background blur. |
 | 6×6 Medium Format, Black and white, `6x6` | The same scenes. | Gray only, with no color cast. High contrast, distinct grain, rich blacks and clean whites. |
 | 1960s Super 8 Home Movie, `super8`, approved 2026-10-10 ("muted with a glow") | At least six clips of five seconds or more, some with a lamp or sun glint in frame and some with blue sky. | Motion at 18 frames per second. Lower contrast, slightly desaturated color, darker shadows, lowered whites, teal in the shadows and warmth in the highlights, a softer picture, and a warm reddish-orange glow around bright highlights. Fine grain. An unsteady frame whose edge never shows. A slight brightness flicker. Dust specks that come and go, a few on a frame at most. On about half of the clips a hair at the gate's edge for the whole clip. No scratches and no frame border. A 4:3 picture. |
@@ -640,7 +683,7 @@ Note also whether the flash pictures are focused differently from the others, si
 A look that the captain judges different from its board is a finding in his own words.
 No look value changes except by his choice, recorded in ADR 0016.
 With six Super 8 clips, a hair on all six or on none is unlikely but possible; record the count and try more clips before calling it a failure.
-If the four Instant prints show no difference you can see, record INCONCLUSIVE: the variation is small and its size is still provisional.
+If the four Instant prints show no difference you can see, record INCONCLUSIVE: the variation is small, and the captain kept it at its earlier size on 2026-10-13 (B means "contrast only", [061](instant-study-and-toning-061.md)).
 
 **Write down.**
 For each of the seven looks: MATCHES THE BOARD, DIFFERS (and how, in the captain's words) or CANNOT JUDGE (and why), the scenes shot, the light, a screenshot of each developed result, and the display settings.
@@ -650,7 +693,8 @@ For each of the seven looks: MATCHES THE BOARD, DIFFERS (and how, in the captain
 **Why.**
 No iPhone has developed a Film, and the pull request that brought the looks names how long Movie Development takes as unproven on a device.
 The iPhone 11 check (M29, ARC-08) is still required and still not possible; these times on HC_iPhone13 do not replace it.
-There are no time budgets yet (DEC-12), so this scenario records times and passes or fails only on whether Development finishes.
+DEC-12's targets, approved on 2026-10-13 and not yet measured, are for the iPhone 11 (M29): a 27-photo roll developed in under 45 seconds and a full Super 8 Movie assembled in under 90 seconds among them.
+They are not a pass or a fail on this phone, so this scenario records times and passes or fails only on whether Development finishes; write the two kinds of time beside those targets for information.
 
 **Steps.**
 
@@ -672,7 +716,7 @@ There are no time budgets yet (DEC-12), so this scenario records times and passe
 
 - Every Development finishes and the Film reads **Developed**.
 - Immerse stays open through the three Movie Developments of step 7.
-- No time is a pass or a fail until DEC-12 sets budgets.
+- No time on this phone is a pass or a fail; DEC-12's targets are measured on an iPhone 11.
 
 **It fails if.**
 
@@ -692,8 +736,8 @@ Instant prints exposed after the update on a pack loaded before it keep the earl
 Software tests hold this (`TreatmentVersionDevelopmentTests`, `LegacyLookTests`); no phone has carried a Film across the update.
 
 **You need.**
-The build before this one: commit `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` on `main`, the squash of https://github.com/hcho22/Immerse/pull/24.
-The two builds store Films the same way, so the candidate opens what the earlier build saved.
+A build from before treatment versions were recorded: commit `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` on `main`, the squash of https://github.com/hcho22/Immerse/pull/24, which was the build before the 2026-10-13 pin.
+The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error (`git diff 5c3a217 38792bb -- Packages/FilmPersistence Packages/FilmDomain`), so the candidate opens what the earlier build saved.
 The app has no way to bring a Film in from outside, so installing the earlier build first is the only way to have a Film that was started before this one.
 For an agent, the earlier build is a second named artifact and needs its own install scope from Firstmate (authority table, first row); for the captain running this by hand it is his own choice.
 
@@ -701,6 +745,7 @@ For an agent, the earlier build is a second named artifact and needs its own ins
 Do part A before the candidate is installed on the phone for the first time.
 If the candidate is already installed, do not install the earlier build over it: going back to an older build over newer Films is not a path anything has tested.
 In that case record L07 as UNTESTED with that reason.
+If I03 is run too, its earlier build goes on after this part A and before the candidate.
 Deleting Immerse to start over removes its Films and is the captain's decision alone, not a step of this plan.
 
 **Part A, on the earlier build.**
@@ -719,7 +764,8 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 
 **Part B, on the candidate.**
 
-1. Check out the candidate, `git checkout --detach 5c3a217bd7d9b84b629dab912cbcda038aeff62d`, and build and run it on the same phone without deleting Immerse.
+1. If you are also running I03, do its part A now, before the candidate.
+   Check out the candidate, `git checkout --detach 38792bb3f76472860e1da8a702c78bee20f2b444`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists every Film from part A with the same title, Camera, Film Stock and remaining capacity.
 3. Open each "OLD done" Film and compare its pictures with the screenshots from part A.
 4. On each "OLD open" Film capture the same subject again, and on the 16mm color one a clip under the warm bulbs as well.
@@ -731,7 +777,7 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 
 - Every "OLD done" picture and Movie is exactly as it was before the update.
 - Every "OLD open" Film develops, with the captures from before and after the update alike, in the look of its "OLD done" twin and not in the look of "NEW".
-- The third and fourth prints of "OLD pack" have the look of its first two, while "NEW pack" has the faded look of L05.
+- The third and fourth prints of "OLD pack" have the look of its first two, while "NEW pack" has the faded look of L05 with version 4's contrast.
 - "NEW" has the look of L05.
 - No clip under warm bulbs on the "OLD open" 16mm color Film develops orange, whichever build recorded it, since the earlier look has no fixed daylight balance, while the "NEW" one does, as in L03.
 - No Film is missing, renamed or changed in capacity, and no Development shows **Could not finish**.
@@ -764,7 +810,8 @@ On 2026-10-13, told that exported Movies carry no color tags today and that this
 - That Movie is the Film's Developed Clips joined end to end without being encoded again (`NativeMovieRenderer.assemble` in `Packages/RenderCore/Sources/RenderCore/NativeMovieRenderer.swift`).
   It has no sound unless a soundtrack was chosen, and the build ships no soundtrack to choose.
 - Each Developed Clip is H.264 at about 8 megabits per second, 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, at 18 frames per second on the 1960s Super 8 Home Movie and 24 on the 16mm Cinema (`NativeMovieRenderer.developClip`, same file).
-  These sizes and the codec are provisional (DEC-04).
+  The captain approved these sizes and the codec on 2026-10-13 ([060](darkroom-export-decisions-060.md)); [D02](#d02---export-sizes-and-formats-read-from-photos) checks them from Photos.
+  Since that change each Developed Clip is its whole frames, with the last held to where recording stopped, so the Movie reads at its Camera's frame rate.
 - A color tag is a note in a video file that tells a player which standard its colors are written in.
   `developClip` asks the writer for no color properties, so the clip carries no such note, and nothing in `assemble` adds one.
   The looks record measured this on a Mac: the file reports its color space, transfer and primaries as unknown (`prd-2-slice-4-looks.md`, "What CI's Mac showed").
@@ -824,6 +871,599 @@ The result of the control in step 5.
 The saved Movie files and photo themselves, kept privately and out of Git, so the same files can be looked at again.
 A photograph of two screens side by side may help memory but does not record color faithfully; the words are the evidence.
 Last, the choice, in the captain's words, with the date.
+
+## The 2026-10-14 Changes on a Real iPhone
+
+Four changes merged on 2026-10-14 (The Candidate, above), and each ran on a Mac and on simulators only.
+These twelve scenarios are what they leave for a phone, taken from each record's own list: [060](darkroom-export-decisions-060.md) "Not shown here", [061](instant-study-and-toning-061.md) "What a phone still has to show", [062](low-storage-warning-062.md) "What only a nearly full iPhone can show" and [063](crop-fit-short-screens-063.md) "Not Shown Here", and from the "What no iPhone has run" sections of https://github.com/hcho22/Immerse/pull/28, https://github.com/hcho22/Immerse/pull/29, https://github.com/hcho22/Immerse/pull/30 and https://github.com/hcho22/Immerse/pull/31.
+All twelve read **UNTESTED: physical execution deferred**.
+Like L01 to L08, they are written to be run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, and they use the common steps and the "What to write down" rule of [Looks on a Real iPhone](#before-you-start).
+The authority and stop conditions at the top of this plan apply to each of them unchanged.
+
+| Case / requirement | Actions and expected result | Evidence / extra prerequisite |
+| --- | --- | --- |
+| D01 / FR-07; DRK-02, DRK-05, DRK-06, DEC-11 | Take the Darkroom's exposure to -3.0 and +3.0 stops, Dodge and Burn strokes to 3.0 stops, and overlap many strokes on one spot. Every end is reached, the print stays a whole, smooth picture, and saving, reopening and Reset to Original behave as before. | Screenshots at each end, the captain's words on how the ranges feel. [Steps](#d01---the-darkrooms-limits-under-a-finger). |
+| D02 / FR-08; STO, DEC-04 | Save each Camera's developed result to Photos and read its format, size and frame rate. Each is the size the captain approved on 2026-10-13. | The details panel for each copy, QuickTime's inspector for Movies. [Steps](#d02---export-sizes-and-formats-read-from-photos). |
+| D03 / FR-08; DEV, DEC-11 | Take Instant prints from real captures. Each print is shown first, its original is asked about when it is closed, a saved original reaches Photos at once, and a discarded print brings no question. | Screen recording, Photos before and after. [Steps](#d03---the-instant-asks-about-each-prints-original). |
+| D04 / FR-07; DRK-04, QA-13 | Open the Crop tool with a crop smaller than the print, at every text size and in landscape. All three Crop sliders show at the default size, the print never grows as text grows, landscape is unchanged. A small iPhone is **not yet possible**. | Screenshots at each text size, the text size setting before and after. [Steps](#d04---the-crop-tool-on-a-short-screen). |
+| I01 / FR-01 A11; CAM-03, CAM-17, QA-16 | Develop Instant prints of real scenes and judge contrast B against the phone's own photo, the board and a real print if one is to hand. | A verdict in the captain's words, screenshots. [Steps](#i01---the-instants-contrast-on-the-phone). |
+| I02 / FR-07; DRK-03, DRK-10, QA-16 | Tone black-and-white 6×6 prints with sepia and selenium from the untoned end of each slider to its top. The low end is the untoned print; whether selenium at its top can be seen at all is recorded. | Screenshots at each strength, the captain's words. [Steps](#i02---sepia-and-selenium-on-the-phone). |
+| I03 / FR-06, section 11 "one treatment"; CAM-17, DEV-06 | Begin an Instant pack on the build before the Instant change, update to the candidate, and finish it. Its prints keep version 3's contrast; a pack loaded after the update has version 4's. | Needs the earlier build installed first. Screenshots of the same subject from each pack. [Steps](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast). |
+| S01 / CAP-15, DEC-12; QA-13 | Bring the phone just under and just over 2 GB free with test filler files. The warning shows under 2 GB as iPhone Storage counts it and not at 2 GB or more. | Settings' figures beside screenshots of the app at each step. [Steps](#s01---the-warning-follows-free-space). |
+| S02 / CAP-15 | Free space while Immerse is in the background and come back without restarting it. The warning goes, and comes back when space runs low again. | Screenshots before and after. [Steps](#s02---freeing-space-clears-the-warning-without-a-restart). |
+| S03 / CAP-15, FR-04, FR-06; CAP-09 | With a little under 2 GB free, take a photo, an Instant print and a Movie clip, and develop a full Film. Each saves; the warning stops nothing. | Counts before and after, screenshots. [Steps](#s03---saves-still-work-just-under-2-gb). |
+| S04 / CAP-15; QA-13 | VoiceOver and the largest text size on the warning in each place. Read as one item, nothing clipped, every command reachable. The small-iPhone part is **not yet possible**. | Screen recording with VoiceOver, screenshots. [Steps](#s04---voiceover-and-the-largest-text-size). |
+| S05 / CAP-15, FR-04; CAP-09, QA-09 | Only if the captain chooses it: fill the phone until a save cannot finish. It fails with its existing message, uses no exposure or time, and finishes once space is freed. | His decision first, then counts and the exact message. [Steps](#s05---a-save-that-cannot-finish-fails-honestly). |
+
+### D01 - The Darkroom's limits under a finger
+
+**Why.**
+On 2026-10-13 the captain asked for print exposure and Dodge and Burn of plus and minus 3 stops ([060](darkroom-export-decisions-060.md)).
+To reach 3 stops, a Dodge or Burn stroke now has a **Strength** slider, from 0.1 to 3.0 stops, starting at 0.4, the fixed strength every stroke had before.
+Strokes add up where they overlap, and the print is held within 3 stops of its print exposure after each stroke, because unbounded a few heavy strokes broke the picture into a ring with a dark middle.
+Every limit is in `DarkroomLimits` (`Packages/RenderCore/Sources/RenderCore/DarkroomRecipe.swift`).
+Tests reached each end in the simulator; how the ranges feel under a finger is for the captain to judge, and that is the main purpose of this scenario.
+
+**You need.**
+A developed Photo Film on a color stock, such as a 1990s Disposable from L05, and a developed 6×6 Medium Format on **Black and white**, each with a picture of the gray card, the colored objects and a lamp.
+
+**Steps.**
+The tools are the row of icons under the print; VoiceOver names them **Exposure**, **Contrast**, **Filtration** (color prints only), **Crop** (not on an Instant), **Dodge / Burn** and **Chemical toning** (black-and-white prints only).
+
+1. Open a developed Disposable photo and tap **Darkroom**.
+2. **Exposure.**
+   Drag the slider fully left, then fully right.
+   The value above it reads **-3.0 stops** and **3.0 stops** at the ends, in steps of 0.1.
+   With VoiceOver on, the slider reads "minus 3 stops" and "plus 3 stops".
+3. **Dodge / Burn with Exposure at -3.0 stops.**
+   Choose **Dodge**, drag **Strength** fully right so it reads **Strength: 3.0 stops**, set **Horizontal** and **Vertical** to a dark part of the print, and tap **Dodge point**.
+   The spot comes back near the brightness of the unedited print.
+   Then draw a stroke with a finger on the print: it paints, and the Darkroom does not scroll.
+4. **Overlapping strokes.**
+   Tap **Reset to Original**.
+   With Exposure at 0.0 and **Dodge** at 3.0 stops, tap **Dodge point** eight times without moving the sliders.
+   Then choose **Burn** at 3.0 stops and tap **Burn point** eight times at the same spot.
+   Take a screenshot after the dodges and after the burns.
+5. **Filtration.**
+   Drag **Cyan**, **Magenta** and **Yellow** each to both ends.
+6. **Contrast.**
+   Choose **Grade 0**, then **Grade 5**, then **Original**.
+7. Set a mix of edits, tap **Save**, close the photo, force-quit and reopen Immerse (common step 7), and open the Darkroom again.
+8. Tap **Reset to Original** and **Save**.
+9. Repeat steps 2 to 4 on a black-and-white 6×6 print.
+
+**Expect.**
+
+- Each slider reaches its ends: exposure -3.0 and 3.0, strength 0.1 and 3.0.
+- After eight overlapping 3-stop dodges the spot is light but still a smooth part of the picture, with soft edges; after eight burns on top it is darker again.
+  Nowhere does a ring, a dark hole, a black patch or scrambled pixels appear.
+- The print at -3.0 stops is very dark and at 3.0 very light, and still shows its picture.
+- What was saved in step 7 is there after the relaunch, and the print looks as it did.
+- Reset to Original brings back the developed print exactly, and nothing else in the Film changes.
+- While **Crop** is on, the Dodge / Burn controls are dimmed (`PhotoView.swift`); that is how the build works and is not a failure.
+
+**It fails if.**
+
+- A slider cannot reach its end, for example exposure stops at -2.9 under a finger.
+  The record saw XCTest's own drag stop there once, and a finger should reach -3.0 ([060](darkroom-export-decisions-060.md), "The second round").
+- Overlapping strokes produce a ring, a dark middle in a dodged spot, or a broken picture.
+- A saved edit is gone or changed after the relaunch, or Reset to Original does not restore the print.
+- A warning mark shows in place of the print, or the Darkroom says its settings are outside what this version of Immerse can print.
+  Nothing in this plan can make such a setting, so it would be a defect to report with the steps that led to it.
+
+**What is a finding and not a failure.**
+Whether 3 stops is too much or too little, and whether the Strength slider is easy to use, is the captain's to judge; write it in his words.
+
+**Write down.**
+The Film and photo, screenshots at each end and after steps 4 and 7, any value that would not reach its end, and the captain's words.
+
+### D02 - Export sizes and formats, read from Photos
+
+**Why.**
+The captain approved the export sizes and formats on 2026-10-13, the Instant's as "A" ([060](darkroom-export-decisions-060.md), "Exports").
+Tests read every export back from the file handed to Photos, on a Mac and in the simulator; no real export to Photos and no Movie played from Photos has been seen.
+That change also made a Developed Clip its whole frames, so a Movie reads at its Camera's frame rate, and made a cropped 6×6 print square to the pixel.
+
+**You need.**
+Developed Films from L05 or new ones: a 1990s Disposable with photos taken with the phone held both ways, a 6×6 Medium Format on each Film Stock, a 1970s Instant pack, a 1960s Super 8 Home Movie and a 16mm Cinema on each Film Stock, with at least one **Portrait** Movie Film.
+The Movies must have been developed with this candidate: a clip developed by an earlier build keeps its sliver frame.
+A Mac with QuickTime Player, for the Movies.
+
+**Steps.**
+
+1. On each Film tap **Save Developed to Photos**.
+2. In the 6×6 Darkroom, crop one print to a small, off-center square (**Crop** on, **Size** near its left end, **Horizontal** and **Vertical** away from both ends), tap **Save**, and save that Film to Photos again.
+3. In Photos, open each copy, swipe up and write down the format line: the file type, the pixel size and, for a Movie, what it says of the frame rate.
+4. Play each Movie in Photos from start to end.
+5. AirDrop one Movie of each Camera to the Mac by a route that keeps the file as it is (L08 step 3), open it in QuickTime Player and choose Window > Show Movie Inspector.
+   Write down the format, the size, the frame rate and whether there is a sound track.
+
+**Expect.**
+
+| Camera | What Photos and the Mac should show |
+| --- | --- |
+| 1990s Disposable | JPEG, 4032 x 2688, or 2688 x 4032 when the phone was held upright, from the phone's 12-megapixel capture; in any case 3:2 and no more than 12,000,000 pixels |
+| 6×6 Medium Format | JPEG, 3072 x 3072 on both Film Stocks; the cropped print square, the same number of pixels each way |
+| 1970s Instant | JPEG, 2282 x 2774: the square picture on its white card, exactly as developed |
+| 1960s Super 8 Home Movie | H.264 `.mov`, 1920 x 1440 landscape or 1440 x 1920 portrait, 18 frames a second, no sound track |
+| 16mm Cinema | The same at 24 frames a second, on both Film Stocks |
+
+- Each Movie plays in Photos from start to end and lasts as long as its clips were recorded.
+- A developed photo's copy looks the same in Photos as in Immerse.
+  How a Movie's color looks in Photos and elsewhere is [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags), not this scenario.
+
+**It fails if.**
+
+- A size, format or frame rate differs from the table, or a Disposable photo has more than 12,000,000 pixels.
+- A Movie reads above its Camera's frame rate, such as 19.9 for a Super 8 Movie developed with this build, or has a sound track.
+- The cropped 6×6 print is a pixel longer one way.
+- A Movie does not play to its end in Photos, or a copy is missing.
+
+**Write down.**
+For each copy: the Film, the details panel's words, a screenshot of it, and for each Movie what QuickTime's inspector shows.
+
+### D03 - The Instant asks about each print's original
+
+**Why.**
+Since the 2026-10-13 decisions the screen a print is revealed on asks about its original, once ([060](darkroom-export-decisions-060.md), "The Instant asks about each print's original").
+At the camera the print is shown first and the question comes when it is closed; prints revealed together are shown and asked about one by one; a print revealed while the Film's screen is open is asked about there; a print discarded where it was revealed brings no question.
+The simulator has no camera, so the save that leads to a reveal was stood in for, and saving an original to Photos was not run.
+
+**You need.**
+The phone's Photos app, to see which originals arrive.
+
+**Steps.**
+
+1. Start a 1970s Instant Film titled "D03" and open the camera.
+2. **Print 1.**
+   Take a print.
+   It develops and opens over the camera.
+   Tap **Done**.
+   A sheet titled **Originals** asks about **Original of photo 1**: choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**.
+   Check in Photos that one new picture, the phone's original capture, has arrived.
+3. **Print 2.**
+   Take a print, tap **Done**, choose **Remove from Immerse without saving** and tap **Confirm choice**.
+4. **Print 3.**
+   Take a print, tap **Done**, and tap **Cancel** on the question.
+5. **Print 4.**
+   Take a print and, on the print itself, tap **Discard** and confirm.
+6. Tap **Done** to leave the camera, then tap **Originals** on the Film's screen.
+7. **A print revealed on the Film's screen.**
+   Open the camera, take a print and at once, within about a second, swipe up to the Home Screen.
+   Wait ten seconds and return to Immerse.
+   If the print is still sealed, the Film's screen offers **Resume Development**: tap it and stay on the Film's screen.
+   If the print had already opened, this try shows nothing; try again, leaving sooner.
+8. **Two prints revealed together.**
+   Repeat the start of step 7, but on return open the camera instead of tapping **Resume Development**, and take one more print.
+
+**Expect.**
+
+- Step 2: the print is shown before any question, the question names only that print, and Photos gains the original at once.
+- Step 3: no original reaches Photos.
+- Step 4: the question goes away.
+  In step 6 **Originals** still offers the two choices, which now cover print 3 alone, the one left unanswered; choosing **Remove from Immerse without saving** and **Confirm choice** there settles it, and opening **Originals** again offers no choice.
+- Step 5: the print closes with no question, and no earlier print is shown in its place.
+- Step 7: when **Resume Development** reveals the print, the Film's screen asks about its original.
+- Step 8: both prints are shown, one after the other in the order they were taken, and each is asked about when it is closed, before the next is shown; none is skipped and none asked twice.
+- An answer about one print never changes another print's choice.
+
+**It fails if.**
+
+- A question comes before its print has been shown, or names a print it should not.
+- A print is never asked about on either screen and its choice is not waiting under **Originals**.
+- Choosing to save leaves Photos without the original and shows nothing to try again.
+- Discarding a print brings an earlier print or a question.
+
+**What is not known.**
+Whether steps 7 and 8 can leave a print sealed on a real phone depends on timing.
+If after five tries the print always opens before you leave, record those two steps as INCONCLUSIVE with the number of tries.
+Saving an original after Photos access was refused is M16's, which needs its own settings scope.
+
+**Write down.**
+For each print: what was shown, in what order, the question's heading, the choice, and whether Photos gained a picture; a screen recording of steps 7 and 8.
+
+### D04 - The Crop tool on a short screen
+
+**Why.**
+On an iPhone SE simulator, with a crop smaller than the whole print, the Crop tool's Vertical slider rested wholly under the **Reset to Original** bar with nothing to show it was there.
+The captain chose on 2026-10-14 that the print gives up height in the Crop tool so all three sliders show ("immerse crop fit"; [063](crop-fit-short-screens-063.md)).
+In portrait the print in the Crop tool now shrinks below its usual smallest size, as far as 64 points, to rest every Crop control on screen; where even that is not enough, as at large text sizes, it stays at 64 points and the rest scrolls, so it never grows back as the text grows.
+In landscape nothing changed.
+
+**Which phone shows what.**
+The iPhone SE is 667 points tall, the iPhone 17 Pro of the records 874, and the captain's iPhone 13 Pro 844.
+On the iPhone 17 Pro all three sliders showed at the default text size before the change, and nothing changes there.
+Whether the iPhone 13 Pro's print shrinks at the default text size cannot be told from the records, since neither of the two simulators is its size; at larger text sizes it must, as on both simulators.
+So on HC_iPhone13 this scenario raises the text size step by step to reach the short-screen case.
+The same check on a small iPhone is **not yet possible**: none is on record.
+
+**You need.**
+A developed Disposable photo and a developed 6×6 photo.
+The text size changes in this scenario are the phone's own setting: write down how it is set before you start and set it back at the end.
+
+**Steps.**
+
+1. Write down the text size setting: Settings > Accessibility > Display & Text Size > **Larger Text**, whether **Larger Accessibility Sizes** is on, and where the slider stands.
+   If it is not the default, the middle mark with **Larger Accessibility Sizes** off, set it to the default for steps 2 and 3.
+2. Open the Disposable photo, tap **Darkroom**, and take a screenshot on **Exposure**.
+3. Tap **Crop**, turn the **Crop** switch on, and drag **Size** to about the middle of its slider.
+   The **Horizontal** and **Vertical** sliders appear under it.
+   Without scrolling, take a screenshot, then drag **Vertical**.
+4. Turn on **Larger Accessibility Sizes** and move the text size up one step at a time to the largest, coming back to the Darkroom each time.
+   You can use the Text Size control in Control Center to stay in Immerse.
+   At each step take a screenshot at rest, and if the **Vertical** slider is not fully in view, drag up in the left margin until it is, then drag it.
+5. Back at the default text size, turn the **Crop** switch off and tap **Exposure**.
+6. **Landscape.**
+   Turn the crop on again with **Size** in the middle, in portrait.
+   Turn the phone to landscape (Portrait Orientation Lock off in Control Center), then switch between **Crop** and **Exposure** a few times.
+   In landscape, scroll only in the lower part of the Darkroom: a drag down near its top pulls the whole Darkroom away.
+7. Repeat steps 2 and 3 on the 6×6 photo.
+8. Set the text size, Larger Accessibility Sizes and Portrait Orientation Lock back as they were in step 1, and write down that you did.
+
+**Expect.**
+
+- At the default text size: the **Crop** switch, the **Size**, **Horizontal** and **Vertical** captions and all three sliders rest above **Reset to Original** with nothing scrolled, and **Vertical** moves the crop.
+- As the text grows the print in the Crop tool gets smaller or stays the same, never larger; at its smallest, 64 points, it is still a picture about a centimeter tall whose framing can be judged.
+  Where the controls no longer fit, a drag up brings **Vertical** fully clear above **Reset to Original**, and it moves the crop.
+- No control ends up under **Reset to Original** after scrolling.
+- After step 5 the print on **Exposure** is the size it was in step 2.
+- In landscape the print in the Crop tool has the size and place it has on **Exposure**, and switching tools never moves it.
+
+**It fails if.**
+
+- At the default text size in portrait a Crop slider rests under **Reset to Original** or in the fade above it with nothing scrolled.
+- The print grows back when the text grows, or a slider cannot be brought into view or does not respond.
+- In landscape switching between **Crop** and **Exposure** changes the print's size or place.
+
+**What is a finding and not a failure.**
+In landscape on the iPhone SE simulator most of the tool row lies hidden under **Reset to Original**; that predates the change ([063](crop-fit-short-screens-063.md), "Pictures").
+If the iPhone 13 Pro shows the same in landscape, record it with a screenshot as a finding for the captain.
+
+**Write down.**
+The text size setting before and after, and for each text size whether every Crop control showed at rest, how many drags reached **Vertical**, and a screenshot; the landscape screenshots.
+
+### I01 - The Instant's contrast on the phone
+
+**Why.**
+On 2026-10-13, after a study of 37 preserved 1970s prints, the captain chose the Instant's contrast "B" and then confirmed it as "version 4" ([061](instant-study-and-toning-061.md)).
+It keeps the faded color, softness, texture and white card he approved on 2026-10-10 and changes only the print curve: black a little deeper and a print's S-shaped curve in place of one held flat through the middle.
+Measured on the board's scenes, developed pictures now reach a black of about 13 percent of the tone scale where version 3 reached about 20, and whites of about 83 percent; contrast is still a little under the phone's own capture.
+The boards were judged on a Mac's display from modern digital photographs, not from captures made by the app.
+
+**You need.**
+The gray card, the colored objects, the page of text, a scene with deep shadow and one with a bright window or lamp.
+A real 1970s instant print, if one is to hand.
+The Instant board on the Mac: `open Evidence/AssetReview/looks/instant/index.html`, which shows version 4 as the app develops it beside version 3.
+
+**Steps.**
+
+1. Start a 1970s Instant Film titled "I01".
+2. Take one print of each scene, and two of the card with the objects from one spot.
+   When each print's question comes, choose **Save to Photos, then remove from Immerse** (common step 6), so the phone's original of each is in Photos.
+3. Open each print full size in Immerse, and its original in Photos.
+4. Compare each print with its original, with the board's version 4 and version 3 pictures of the nearest kind of scene, and, if you have one, with the real print in the same light.
+5. Write down the phone's display settings (brightness, True Tone, Night Shift).
+
+**Expect.**
+
+- The darkest parts of each print are a dark gray, deeper than the milky gray of the board's version 3 pictures, and never pure black.
+- The brightest parts sit a little under the card's white.
+- Middle tones spread further apart than version 3's, and the print is still a little softer in contrast than the phone's original.
+- Color stays muted, with blue in the shadows and yellow in the highlights; the card stays clean white.
+- A real old print beside it may look about twice as colorful and have yellowed whites: the study measured both, the captain kept the faded color, and the yellow is age ([061](instant-study-and-toning-061.md), "What the scans show: contrast").
+
+**It fails if.**
+
+- The prints look like the board's version 3, with milky, lifted blacks and flat middle tones.
+- A print has more contrast than its original: blacks crushed to pure black or whites burned out.
+- The card is tinted, or the color is brilliant and saturated.
+
+**What is a finding and not a failure.**
+How the contrast looks to the captain on his own phone is his verdict, in his words.
+If he wants it changed, that is a new treatment version by his word, recorded in ADR 0016, with version 4 kept for Films that have it.
+
+**Write down.**
+For each print: the scene, the light, screenshots of the print and its original, and the verdict; whether a real print was compared, and what it showed.
+
+### I02 - Sepia and selenium on the phone
+
+**Why.**
+On 2026-10-13 the captain set both toners' sliders from the untoned print to the strength the toning board showed as 1.00 ("sepia - untoned to 1. selenium - untoned to 1"; [061](instant-study-and-toning-061.md)).
+On the board, sepia at its top turned the whole print a deep yellow-brown and the paper faintly cream, while selenium at its top was at the edge of what an eye picks out, and at a quarter of the slider not visible at all.
+He was told that this range leaves selenium that faint.
+The tones recorded for Core Image's sepia are from a Mac and the simulator, not an iPhone.
+
+**You need.**
+A developed 6×6 Medium Format Film on **Black and white** with pictures of the gray card, the even shading of L01, a scene with deep shadow and the colored objects.
+The toning board on the Mac: `open Evidence/AssetReview/looks/toning/index.html`.
+
+**Steps.**
+
+1. Open a print of the shading, tap **Darkroom**, and tap **Chemical toning** (the drop icon).
+2. In the **Chemical toning** menu choose **Sepia**.
+   A slider appears, standing at the middle.
+   Take a screenshot.
+3. Drag it fully left and take a screenshot; choose **None** in the menu and take another.
+4. Choose **Sepia** again, drag the slider fully right, and take a screenshot.
+5. Do steps 2 to 4 with **Selenium**.
+6. Leave **Selenium** at its top, tap **Save**, close the print, force-quit and reopen Immerse, and open the print and its Darkroom again.
+7. Tone a print of the deep-shadow scene with **Sepia** at its top, save it, and tap **Save Developed to Photos**.
+8. Compare the phone's prints with the board's sepia and selenium rows at 0.25 to 1.00.
+
+**Expect.**
+
+- At the left end each toner's print is the same as **None**.
+- Sepia: at the middle plainly brown, at the top a deep yellow-brown over the whole print with the paper's white faintly cream, in the hue of the board's sepia rows.
+- Selenium: at its top at most a faint cool, purple tint in the darker tones, with black and white unchanged; at the middle likely nothing you can see.
+- Neither toner makes the print plainly lighter or darker.
+- After the relaunch the print and the slider are as saved, and the copy in Photos is the toned print.
+- **Chemical toning** is offered only on black-and-white 6×6 prints (M13).
+
+**It fails if.**
+
+- The left end of a slider differs from **None**.
+- Sepia is a plainly different hue from the board's, such as orange, red or green, or a toner plainly changes the print's brightness.
+- A saved toning is gone after the relaunch, or the copy in Photos is untoned.
+
+**What is a finding and not a failure.**
+Whether selenium at its top can be seen at all on the phone's screen, and whether either range suits him, is the captain's to judge; write down what he sees in his words.
+A change to either toner's range is his to decide, kept only in `ToningLook.swift`.
+
+**Write down.**
+Screenshots at each strength of each toner, the display settings, the verdict on selenium's visibility, and the captain's words.
+
+### I03 - An Instant pack begun before the update keeps its contrast
+
+**Why.**
+The Instant's new contrast is treatment version 4.
+An Instant Film records its treatment version when it is loaded, so a pack loaded under version 3 keeps version 3's contrast for every print, the ones exposed after an update too ([061](instant-study-and-toning-061.md), "What changed in the app").
+Here that is a software test with a reopened store and an install-over update in the simulator; no phone has carried a pack across a real update.
+
+**You need.**
+The build just before the Instant change: commit `9d54ba166299eea3edfecc2c9fde29331a76dae4` on `main`, the squash of https://github.com/hcho22/Immerse/pull/28, which records version 3 for a new Film (`CameraCatalog.treatmentVersion` in `Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift` reads "film-look-3" there and "film-look-4" at the candidate).
+From that build to the candidate the Film store's code changed only by dropping a lock on choosing a soundtrack again (`git diff 9d54ba1 38792bb -- Packages/FilmPersistence Packages/FilmDomain`), so the candidate opens what it saved.
+For an agent the earlier build is another named artifact and needs its own install scope (authority table, first row); for the captain it is his own choice.
+
+**Order matters.**
+Do part A before the candidate is installed on the phone for the first time.
+If L07 is run too, its part A comes first, on its still earlier build, then this part A, then the candidate for both parts B; do not capture on or develop L07's Films while this build is installed.
+If the candidate is already on the phone, do not install this build over it; record I03 as UNTESTED with that reason.
+
+**Part A, on the earlier build.**
+
+1. Check out the earlier commit: `git checkout --detach 9d54ba166299eea3edfecc2c9fde29331a76dae4`.
+   Build and run it on the phone with the same steps as the candidate ("Xcode Build and Run"), in Debug, with the testing unlock on.
+2. Set up one fixed subject in light you can return to: the gray card, the colored objects, a lamp and a dark area.
+3. Start a 1970s Instant Film titled "V3 pack" and take two prints of the subject.
+   Take a screenshot of each.
+4. Start a second 1970s Instant Film titled "V3 empty" and take no print.
+
+**Part B, on the candidate.**
+
+1. Check out the candidate, `git checkout --detach 38792bb3f76472860e1da8a702c78bee20f2b444`, and build and run it on the same phone without deleting Immerse.
+2. Confirm that the Journal lists both packs with the same titles and remaining exposures.
+3. Open "V3 pack" and compare its two prints with the screenshots from part A.
+4. Take two more prints of the subject on "V3 pack" and one on "V3 empty".
+5. Start a 1970s Instant Film titled "V4 pack" and take two prints of the subject.
+
+**Expect.**
+
+- The first two prints of "V3 pack" are as they were before the update.
+- The new prints of "V3 pack" and the print of "V3 empty" have the contrast of the first two: lifted, milky blacks and flat middle tones.
+- The prints of "V4 pack" have deeper blacks and more spread middle tones, as in I01.
+- Every print has the same faded color and clean white card.
+
+**It fails if.**
+
+- A print of "V3 pack" or "V3 empty" taken after the update matches "V4 pack" and differs from the first two.
+- A print from before the update has changed, or a pack or print is missing.
+
+**What is not known.**
+How plain the difference between the two contrasts is in the hand is not on record for a real capture.
+If "V3" and "V4" prints cannot be told apart, record INCONCLUSIVE and not PASS.
+
+**Write down.**
+Both commit hashes as built, screenshots of every print of the same subject, the Journal before and after the update, and a verdict.
+
+### Low Storage on a Real iPhone
+
+**What the build does.**
+When the phone has less than 2 GB free, Immerse shows a warning before each step that needs space ([062](low-storage-warning-062.md), `App/Immerse/Sources/LowStorage.swift`): above **Load Film** on the Load Film screen, above **Open Camera** on an open Film's screen, and above **Develop Film** or **Resume Development** from the time a Film is complete until it is developed.
+A developed Film shows none, and the camera screen, the Development sheet and saving to Photos have none.
+It only warns: no button is ever disabled by it.
+Before captures it reads, word for word:
+
+> This iPhone has less than 2 GB free, so a capture may not save. A capture that does not save uses no exposures or time, and saved captures are unchanged. Free space in iPhone Settings.
+
+Before Development:
+
+> This iPhone has less than 2 GB free, so Development may not finish. Saved captures are unchanged, and Development can be resumed. Free space in iPhone Settings.
+
+2 GB is 2,000,000,000 bytes, as Settings counts.
+The app reads the free space iOS gives for space a person asked for, which counts what iOS can clear, such as caches, so it can read a little more than Settings shows near the line.
+It reads when the Load Film screen or a Film's screen opens, when Immerse comes to the front, and after each saved capture and operation.
+A reading that fails shows no warning.
+
+**How to fill the phone without touching anything of his.**
+The phone is brought near 2 GB free only with test filler files, which are added for the run and removed after it.
+No photo, video, message, app or app data of the captain's is deleted, moved or offloaded by any step here.
+
+1. Write down the starting figures: Settings > General > **About** > **Available**, and Settings > General > **iPhone Storage**, the line at the top ("... of ... GB Used").
+2. On the Mac, make filler files of random data, which nothing can compress:
+
+   ```sh
+   mkdir -p ~/ImmerseFiller && cd ~/ImmerseFiller
+   head -c 5000000000 /dev/urandom > filler-5GB-1.bin
+   for i in 1 2 3 4; do head -c 1000000000 /dev/urandom > filler-1GB-$i.bin; done
+   for i in $(seq 1 15); do head -c 100000000 /dev/urandom > filler-100MB-$i.bin; done
+   ```
+
+   Make more 5 GB files (`filler-5GB-2.bin` and so on) until the 5 GB files together come to the phone's **Available** less 3 to 7 GB; the 1 GB files then bring it to between 2.4 and 2.9 GB, and the 100 MB files make the small steps.
+   The Mac needs that much free space too.
+   Filling a phone with a lot of free space takes a while: AirDrop moves a few gigabytes a minute at best.
+3. AirDrop the files to the phone.
+   Where iOS asks what to do with a file, save it to Files, in a folder under **On My iPhone** such as a new one named ImmerseFiller.
+   Then open Files > Browse and check that every filler file is under **On My iPhone**, not in iCloud Drive, and move it there if it is not.
+4. Wait a minute and read **Available** again.
+   It should have fallen by about the size of what arrived.
+   If a copy did not take space, check in Files that it arrived as its own file.
+5. **To remove filler**, delete it in Files, then open Files > Browse > **Recently Deleted** and delete it there too: space is not freed until it is gone from Recently Deleted.
+6. **At the end of S01 to S05**, remove every filler file the same way, read **Available** again, and write down that it is back near the starting figure.
+   Delete `~/ImmerseFiller` on the Mac.
+
+**What iOS itself may do when space is low.**
+iOS clears its own caches as free space falls, so **Available** can move on its own; wait a minute before each reading.
+If **Offload Unused Apps** is on (Settings > App Store) iOS may offload apps it judges unused, keeping their data, and if iCloud Photos is set to **Optimize iPhone Storage** it may keep smaller versions of photos on the phone while the full ones stay in iCloud.
+That is iOS's own housekeeping, not a step of this plan; write down how both are set before you start, and if he does not want that risk, keep **Available** above about 1.5 GB, which S01 to S04 need.
+Outside S05, stop and remove the filler at once if iOS says the phone's storage is almost full, or if any other app misbehaves.
+
+**What to write down for every S scenario.**
+Each time: **Available** and the iPhone Storage line as Settings shows them, the time, which Immerse screen was open, and a screenshot of it.
+
+### S01 - The warning follows free space
+
+**Steps.**
+
+1. With **Available** well over 2 GB, open Immerse, tap the round plus button, choose the 1990s Disposable, and scroll to **Load Film**: no warning.
+   Open an unfinished Film's screen: no warning above **Open Camera**.
+2. Add filler until **Available** reads between 2.2 and 2.4 GB.
+   Return to Immerse and look at both screens again.
+3. Add one 100 MB file, wait a minute, read **Available**, return to Immerse, and look at both screens.
+   Repeat until the warning has shown on both, and then twice more, so **Available** ends near 1.8 GB.
+   If a step would pass 1.5 GB, stop there.
+4. Open a Film that is complete but not developed, and a developed Film.
+5. Note whether either screen is slow to open while it reads free space.
+
+**Expect.**
+
+- No warning while **Available** reads 2 GB or more.
+- The capture sentence above **Load Film** and above **Open Camera**, word for word, once **Available** reads under 2 GB; near the line the two counts may differ, so write down the figure at which it first showed.
+- The Development sentence above **Develop Film** on the complete Film, and nothing on the developed Film.
+- **Load Film**, **Open Camera** and **Develop Film** stay usable with the warning showing.
+- No screen takes noticeably longer to open.
+
+**It fails if.**
+
+- The warning shows while **Available** reads 2.5 GB or more, or never shows with **Available** at 1.5 GB after a return to the app and a reopened screen.
+  These margins are this plan's, not a decided number: between 1.5 and 2.5 GB a difference from Settings is written down for the captain, not failed.
+  A warning that never shows at all can also mean the phone gave no reading, which shows no warning by design; either way it is a defect to report.
+- The words differ from the two sentences above, the warning sits elsewhere, or a developed Film shows it.
+- A button is disabled while the warning shows.
+
+**Write down.**
+A table of each step: **Available**, the iPhone Storage line, and whether each screen warned; the figure at which it first showed.
+
+### S02 - Freeing space clears the warning without a restart
+
+**Steps.**
+
+1. From the end of S01, with the warning showing above **Open Camera** on an open Film's screen, swipe up to the Home Screen without quitting Immerse.
+2. In Files remove filler until **Available** reads about 2.5 GB (removing it from Recently Deleted too).
+3. Return to Immerse from the app switcher, so it is not restarted, and look at the Film's screen; then go back to the Journal, open the Load Film screen, and look again.
+4. Add the filler back until **Available** is under 2 GB, return to Immerse the same way, and look again; then go back to the Journal and reopen the Film.
+
+**Expect.**
+
+- In step 3 the warning has gone, from the Film's screen on return or at the latest when the screen is reopened, without restarting Immerse.
+- In step 4 it is back.
+
+**It fails if.**
+The warning stays after space is freed, or stays away after space runs low again, until Immerse is force-quit.
+That is the stale reading review fixed before merge ([062](low-storage-warning-062.md), "Failures on the way, kept"), seen on a real phone.
+
+**Write down.**
+**Available** at each step, whether Immerse was restarted (it must not be), and screenshots before and after.
+
+### S03 - Saves still work just under 2 GB
+
+**You need.**
+**Available** between about 1.7 and 1.9 GB, with the warning showing, and a 1990s Disposable Film filled to 27 exposures and not yet developed (from M09 or L06), so its Development is a full Film's.
+
+**Steps.**
+
+1. Write down the remaining exposures or time of each Film used.
+2. On an open 1990s Disposable Film take a photo.
+3. On an open 1970s Instant Film take a print; it develops and opens.
+4. On an open 1960s Super 8 Home Movie Film record a clip of about ten seconds.
+5. Open the full Disposable Film, which shows the Development sentence above **Develop Film**, and develop it.
+6. Read **Available** after each step; if it falls under about 1.6 GB, remove a 100 MB filler file before going on.
+
+**Expect.**
+
+- Each capture saves: the count of exposures or the time left drops by exactly one exposure or the clip's length, and **Saved** shows at the camera.
+- The Instant print develops and opens as usual.
+- The full Film develops, its photos open, and it then shows no warning.
+
+**It fails if.**
+A capture or the Development fails with about 1.7 to 1.9 GB free, or the warning stops anything.
+
+**Write down.**
+**Available** before and after each step, the counts before and after, and screenshots of each result.
+
+### S04 - VoiceOver and the largest text size
+
+**Why.**
+The warning is one item for VoiceOver, its symbol hidden, and its text grows with the text size without being clipped ([062](low-storage-warning-062.md), "Accessibility").
+On the iPhone SE simulator, at the largest text size, the audit of the Load Film screen reported a possibly clipped text with no element named, though measurement showed none, so a small iPhone at the largest size is the case the record most wants seen.
+
+**Two ways to make the warning show.**
+Either keep **Available** under 2 GB as in S01, or, with the phone at its ordinary free space, add the Debug-only launch argument `-ImmerseDebugFreeSpace 1999999999` in Xcode (Edit Scheme > Run > Arguments > Arguments Passed On Launch) and run Immerse from Xcode, since the argument applies only to a launch from Xcode.
+Write down which way was used, and remove the argument at the end: while it is there, Immerse does not read the phone's real free space.
+
+**Steps.**
+
+1. Write down the text size setting as in D04 step 1.
+2. Turn on VoiceOver (Settings > Accessibility > VoiceOver).
+   On the Load Film screen, an open Film's screen and a complete Film's screen, swipe right through every item from the top.
+3. Turn VoiceOver off, turn on **Larger Accessibility Sizes** and move the text size to the largest.
+   On the same three screens, scroll from top to bottom.
+4. Set VoiceOver and the text size back as they were, remove the launch argument if it was used, and write down that you did.
+
+**Expect.**
+
+- VoiceOver reads the warning as one item, its whole sentence word for word, with no separate item for its symbol, just before **Load Film**, **Open Camera** or **Develop Film**.
+- At the largest size every word of the warning shows, none cut off at the edge or the end, and **Load Film**, **Open Camera** and **Develop Film** are each reached by scrolling and can be tapped.
+
+**It fails if.**
+VoiceOver splits the warning or reads a symbol name, a word of it is clipped, or a command cannot be reached.
+
+**Not yet possible.**
+The same on a small iPhone at the largest text size, which the record names: no small iPhone is on record.
+The iPhone 13 Pro result is recorded for its own size and does not stand in for it.
+
+**Write down.**
+Which way the warning was made to show, a screen recording with VoiceOver's speech, screenshots at the largest size, and the settings before and after.
+
+### S05 - A save that cannot finish fails honestly
+
+**This scenario is the captain's decision.**
+It needs the phone filled until a capture cannot be saved, which is close to full.
+M08 says no personal phone is filled to exhaustion, and that stands for anyone running this plan on his behalf; this plan does not ask him to run it.
+If he chooses to, on his own phone and by hand, these are the steps; if not, record S05 as UNTESTED with that reason.
+The software tests that hold this behavior are listed in [062](low-storage-warning-062.md), "What did not change".
+
+**Steps.**
+
+1. From S03's state, with the warning showing, write down the remaining exposures of an open 1990s Disposable Film.
+2. Add a 100 MB filler file (make more on the Mac as needed), wait a minute, read **Available**, open the camera and take one photo.
+3. Repeat step 2 until a photo does not save.
+   Stop at once if iOS says storage is almost full in a way that affects other apps, and remove the filler.
+4. Write down the exact words the app shows, at the camera and on the Film's screen.
+5. Remove one 1 GB filler file, then tap **Resume Camera** at the camera, or **Resume Save** on the Film's screen if that is what it shows.
+6. Remove all the filler (How to fill the phone, step 6).
+
+**Expect.**
+
+- The warning was showing before the failed save.
+- The save fails with the app's existing words: at the camera "Capture could not finish saving. Retry before taking another capture." (`CaptureController.swift`), or "The operation did not finish. Saved captures remain private; retry after checking available storage." (`FailureCopy` in `FilmPresentation.swift`), with or without iOS's own reason after it.
+- The remaining exposures do not drop for the failed save, and every earlier capture is still there.
+- Once space is freed, the waiting capture saves once, and the count drops by exactly one.
+
+**It fails if.**
+The app shows the save as done when it was not, the count drops for a save that failed, an earlier capture is lost, or the waiting capture saves twice.
+
+**Write down.**
+The captain's decision, **Available** at each step, the counts before and after, the exact words of each message, and screenshots.
 
 ## Full Receipt Protocol
 
@@ -915,31 +1555,33 @@ nonmigration are both required; one cannot substitute for the other.
 
 | Canonical acceptance rows | Required runbook evidence |
 | --- | --- |
-| FR-01 A01...A11 | M01, M02, M04, M05, M09, M18...M20, M30, and for A11 (each look judged against its Format Reference, no aging added) L01, L03 and L05; quality/rights/range decisions remain open. |
+| FR-01 A01...A11 | M01, M02, M04, M05, M09, M18...M20, M30, and for A11 (each look judged against its Format Reference, no aging added) L01, L03, L05 and I01; quality and rights decisions remain open. |
 | FR-02 A01...A02 | M03, M12, M24. |
 | FR-03 A01...A03 | M01, M02, M06, T01. |
-| FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08; the viewfinder never previewing the developed result is also watched in L03 and L05. |
+| FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05. |
 | FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
-| FR-06 A01...A05 | M09...M11, M24, L01, L02, L07. |
-| FR-07 A01...A05 | M13, M14, M28, with A05 (no crop on an Instant print) in M13; approved ranges/applicability still needed. |
-| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports and L08 for how an exported Movie looks elsewhere. |
+| FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03. |
+| FR-07 A01...A05 | M13, M14, M28, D01, D04, I02, with A05 (no crop on an Instant print) in M13; the ranges were approved on 2026-10-13. |
+| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, D03 for the Instant's question about each original, and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
 | FR-18 A01...A05 | M24, M25, T01, T07, T10, B03. |
 | FR-20 A01...A04 | M26, M27; refund/revocation and pricing remain DEC-02. |
 | FR-21 A01...A09 | M06...M08, T01...T12, B02; real native receipt/restore evidence mandatory. |
 | Section 11: immutable Camera/orientation; bounded once-only capacity | M02, M04, M09, M18, M19, T02...T08. |
 | Section 11: completion separate from Development; sealed access; no spent refunds | M09...M12, M15, M21...M24, T10. |
-| Section 11: one treatment; privacy defeats retries/old Movies | M11, M14, M17, M19...M23, T07, L07. |
+| Section 11: one treatment; privacy defeats retries/old Movies | M11, M14, M17, M19...M23, T07, L07, I03. |
 | Section 11: Archive/Delete/billing separate; first-save-only irreversible Trial | M03, M24, M27, T01...T12, B02. |
 
-All 136 intake tracker records, named implementation artifacts and exact local
+All 137 intake tracker records, named implementation artifacts and exact local
 commands remain in the evidence map; 108 deferred Group/Account tasks remain
 excluded. Traceability coverage is not completion. Native/manual evidence also
 does not approve unresolved native-stack, naming, rendering, asset rights,
 Darkroom/Instant/soundtrack behavior, support, price or budget choices. Current
 controls/recipes are reversible implementation defaults; the media catalog and
 production StoreKit IDs are unconfigured, not accepted omissions.
-Since 2026-10-12 each Camera's and Film Stock's look has the captain's approval on its review board (QA-16); output sizes and codecs, toning values, Darkroom ranges and the Instant's contrast and print-to-print variation remain provisional.
+Since 2026-10-12 each Camera's and Film Stock's look has the captain's approval on its review board (QA-16).
+On 2026-10-13 he also decided the export sizes and formats, the Darkroom's limits, the Instant's contrast (treatment version 4) and print-to-print variation (kept as it was) and the toning range ([060](darkroom-export-decisions-060.md), [061](instant-study-and-toning-061.md)).
+Among what stays provisional are the Movie capture's native 4:3 format size (DEC-04) and the Disposable's fixed exposure and low-light cue threshold (`capture-behavior-prd2-slice2.md`).
 A board approval is specification review, not hardware acceptance, which is what L05 is for.
 
 The candidate is no longer on an isolated branch: it is on `main` of the repository, whose source is public.
@@ -951,7 +1593,7 @@ requires observed usable media plus correct privacy/accounting state, not merely
 a restarted process. Firstmate owns subsequent direction and captain decisions;
 no-mistakes owns its eventual review/fix/test/docs/push/PR/CI pipeline. Evidence
 linkage is reviewed by that owner, not machine-enforced scenario import.
-The 2026-10-13 update of this plan was a documents-only pull request delivered without that pipeline.
+The 2026-10-13 and 2026-10-14 updates of this plan were documents-only pull requests delivered without that pipeline.
 Full-v1
 completion stays withheld until every required check, decision and hardware gate
 is resolved and recorded. Actual publication needs separate release authority.
