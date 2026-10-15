@@ -151,23 +151,27 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     }
 }
 
-/// A landscape Darkroom column's scroll area. Where its content runs past what it shows, it flashes its scroll indicator,
-/// so a column that cannot show everything at rest shows that it scrolls: once it has rested after the Darkroom opens or
-/// turns into landscape, and whenever a tool's controls or an explanation come to run past it. It rests 0.6 s first,
-/// longer than the sheet takes to rise, since a flash at its first layout, as the sheet rises, is not drawn. A column
-/// that holds everything shows no indicator.
+/// A landscape Darkroom column's scroll area. Where its content runs more than a point past what it shows, it flashes
+/// its scroll indicator, so a column that cannot show everything at rest shows that it scrolls: once it has rested after
+/// the Darkroom opens or turns into landscape, and whenever a tool's controls or an explanation come to run past it. It
+/// rests 0.6 s first, longer than the sheet takes to rise, since a flash at its first layout, as the sheet rises, is not
+/// drawn. It flashes only as its content comes to run past it, never as it comes to fit, and a column that holds
+/// everything never flashes, as where the tools exactly fill their column on an iPhone 13 mini. The container is the
+/// column inside the safe area, so the insets that reach under the navigation bar and the home indicator are no part
+/// of what it shows.
 private struct ColumnScrollView<Content: View>: View {
     @ViewBuilder let content: Content
     @State private var overflows = false
     @State private var rested = false
+    @State private var flashes = 0
 
     var body: some View {
         ScrollView { content }
-            .onScrollGeometryChange(for: Bool.self) { geometry in
-                geometry.contentSize.height + geometry.contentInsets.top + geometry.contentInsets.bottom
-                    > geometry.containerSize.height
-            } action: { _, now in overflows = now }
-            .scrollIndicatorsFlash(trigger: rested && overflows)
+            .onScrollGeometryChange(for: Bool.self) { $0.contentSize.height > $0.containerSize.height + 1 } action: {
+                overflows = $1
+            }
+            .onChange(of: rested && overflows) { _, now in if now { flashes += 1 } }
+            .scrollIndicatorsFlash(trigger: flashes)
             .task {
                 try? await Task.sleep(for: .seconds(0.6))
                 rested = true

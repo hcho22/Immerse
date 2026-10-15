@@ -90,14 +90,21 @@ No margin can reach that, and the review chose no new layout for it: at those he
 
 ### Showing That a Column Scrolls
 
-A column that cannot show everything at rest says so: each landscape column's scroll area (`ColumnScrollView` in `PhotoView.swift`) flashes its scroll indicator where its content runs past what it shows.
-It flashes once it has rested after the Darkroom opens or turns into landscape, and again whenever a tool's controls or an explanation come to run past it.
-A column that holds everything shows no indicator, so at the standard display setting at the default text size nothing flashes and the screen is as it was.
+A column that cannot show everything at rest says so: each landscape column's scroll area (`ColumnScrollView` in `PhotoView.swift`) flashes its scroll indicator where its content runs more than a point past what it shows.
+It flashes once it has rested after the Darkroom opens or turns into landscape, and again whenever a tool's controls or an explanation come to run past it, but never as they come to fit.
+A column that holds everything never flashes, so at the standard display setting at the default text size nothing flashes and the screen is as it was.
+The point of tolerance is for the iPhone 13 mini, where the tools fill their column exactly, 220 pt in 220 pt, and a check without it would leave the flash to rounding.
+What the column shows is its container, the column inside the safe area: the content insets that reach under the navigation bar and the home indicator are outside it, so the check compares the content with the container alone.
 It rests 0.6 s first, longer than the sheet takes to rise: a flash at the column's first layout was drawn after a turn, but not when the Darkroom opened in landscape, as the sheet rose, nor in a window just shown.
 Every tap target keeps its size.
 
 In the simulator, screenshots taken from the Mac every quarter second or so showed the controls column's indicator for about 0.8 s at the largest text size on the iPhone SE, both after a turn to landscape with Dodge / Burn selected and after the Darkroom opened in landscape on a print whose explanation runs past the column.
 At the default text size, after the same turn, nothing showed.
+On an iPhone 13 mini, the app's log, with temporary logging not kept, showed what each column decided at a turn.
+At the default text size neither column flashed: the tools measured 220 pt in a 220 pt container and Dodge / Burn's controls 271.3 pt in 277 pt.
+At the largest text size the controls column flashed once, 970 pt in 277 pt, and the tool column never did.
+On the code before this fix the controls column asked to flash at the default text size too, as its check added the insets of 78 and 20 pt to content that fits; nothing showed, since iOS draws no indicator where nothing scrolls.
+In screenshots taken from the Mac on the mini, the controls column's indicator at the largest text size showed during the turn and was gone once the turn had ended, on the code before this fix as after it.
 The tool column never overflows at the standard display setting, and the simulator's Settings has no Display Zoom, so its indicator was seen only in a hosted stand-in `DarkroomLayout` 222 pt tall with five tools, as on a zoomed mini.
 
 ### Turning the iPhone
@@ -167,6 +174,14 @@ The second round of review fixes' runs, the turn rule and the flashing columns, 
 | A hosted stand-in `DarkroomLayout` 222 pt tall with five tools, test not kept, iPhone SE, after | The tool column's indicator for about 0.8 s once it rested |
 | Display Zoom in the simulator | Not offered: the iOS 26.5 simulator's Settings shows no Display & Brightness |
 | `Scripts/verify-validation-parts.sh` | Pass |
+
+The third round, the flash only as a column comes to run more than a point past what it shows, on an iPhone 13 mini in light:
+
+| Check | Result |
+| --- | --- |
+| The app's log of each column's content and container height and of each flash, temporary logging and tests not kept, a turn to landscape with Dodge / Burn at the default text size, before and after | Before, a flash asked of the controls column, whose 271.3 pt of controls fit its 277 pt; after, none, and the tool column's 220 pt of tools in its 220 pt container never flashed |
+| The same at the largest text size, after | One flash, of the controls column, 970 pt in 277 pt |
+| Screenshots taken from the Mac during the same turns, before and after | Nothing at either column's edge once the turn had ended at the default text size; at the largest, the controls column's indicator during the turn only, before and after |
 
 ### Portrait unchanged
 
