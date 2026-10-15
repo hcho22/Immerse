@@ -37,12 +37,14 @@ The contrast audit reads that faded title as low contrast.
 
 ## The Fix
 
-`launchWithEmptyJournal(_:)` in `UITestSupport.swift` launches the app, waits for Start a Film to be enabled (the Journal lists its Films once launch recovery ends), and deletes every Film in the Journal through the Film screen's Delete Film, as `deleteFilm` does.
+`launchWithEmptyJournal(_:)` in `UITestSupport.swift` launches the app, waits for Start a Film to be enabled (it stays disabled until launch recovery ends), and deletes every Film in the Journal through the Film screen's Delete Film, as `deleteFilm` does.
 It counts the Journal's Films once a pass and stops when there are none, then waits for the empty Journal's "Your Journal begins here".
 Every test that loads a Film or reads the Journal starts with it: the Low Storage tests that load a Disposable, both Movie capacity tests, both Film Stock tests that load a Film, `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore`, which audits the empty Journal, `JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings`, which returns to it, and the twelve `ContentSizeTests` Journal and catalog tests, which measure its text, each at its own text size.
 Each Film it finds is kept as a screenshot named "Film-left-by-an-earlier-test" before it is deleted, so the earlier test's failure stays visible in the result bundle.
-Delete Film removes the Film before it closes the Film screen, and the Journal's rows are in the tree only while the Journal shows, so a row counted or missed on the Film screen says nothing.
-Each deletion, at the start of a test or at its end, therefore waits for the Film screen to close and for Start a Film to show before the Journal's Films are counted or a row is looked for.
+Delete Film removes the Film, which leaves the Film screen showing "Film removed" without its actions, and then closes the screen, which stays in the tree until its pop ends.
+The Journal's rows are in the tree only while the Journal shows, so a row counted or missed before then says nothing, and a Journal audited or measured mid-pop is still sliding in (`push-audit-055.md` saw the same for a push).
+So each deletion, at the start of a test or at its end, waits for the Film screen's actions to leave (the Film was removed), then for "Film removed" to leave (the screen has closed) and for Start a Film to show, before the Journal's Films are counted, a row is looked for, or the test goes on.
+It does not count the Journal's rows to prove a deletion: the Journal's list is lazy, so with more Films than fit on the screen, deleting one brings another row into the tree and the count can stay the same.
 The tests still delete their own Film at the end, so a test that finishes leaves the Journal as it found it.
 No test was reordered.
 
@@ -90,10 +92,13 @@ Why that one tap did nothing is still not known, so nothing was changed for it: 
 
 ## Other Failures of Main's Check
 
-Main's check failed on four other pushes in the two days before this record, in parts this change does not touch, and they are left for their own changes:
+Main's check failed on four other pushes in the two days before this record, and they are left for their own changes:
 
+- the whole check once, on `5c3a217`, before it was split into parts, cancelled at its 120-minute limit with no test failed (`dropped-touch-059.md`);
 - the screen-text part twice, `ContentSizeTests.testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge` once and `ContentSizeTests.testLandscapeSettingsTopTextAtAccessibilityExtraExtraExtraLarge` once;
 - the packages part once.
+
+In the screen-text part this change touches only `ContentSizeTests`' Journal and catalog tests, which now start on an empty Journal; the two tests that failed there launch as they did before.
 
 ## Runs of This Change
 
@@ -102,6 +107,8 @@ Main's check failed on four other pushes in the two days before this record, in 
 | Screen-flows part (`IMMERSE_VALIDATE_PART=ui-flows sh Scripts/validate-local.sh`), twice, before `deleteFilm`'s loop was made to stop | Passed both times: light 23 tests and the expected audit failure, dark rerun 20 and the expected audit failure, no rerun |
 | The same part twice in a row on the change as it stood before review | Passed both times the same way, no rerun |
 | The Crop switch test, 10 times each on `38792bb` and `5c427bc` (above) | All 20 passed |
-| After review, on a new simulator in light with this Mac loaded about eight times past its cores: `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` with a 1-minute allowance | Passed in 59 s, deleting its Film at the end through the waits above |
+| After the first review round, whose deletions waited for the Film screen's actions to leave and Start a Film to show but not for the pop to end, on a new simulator in light with this Mac loaded about eight times past its cores: `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` with a 1-minute allowance | Passed in 59 s, deleting its Film at the end |
 | Then `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` with a 1-minute allowance | Stopped at its allowance after loading its 16mm Film |
 | Then `ContentSizeTests.testJournalAndCatalogTextAtLarge` and `JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings` | Both passed; the first kept the leftover 16mm Film as "Film-left-by-an-earlier-test" and deleted it before measuring the empty Journal |
+| After the second review round, with the waits above, on another new simulator in light with this Mac less loaded: `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` with a 1-minute allowance, then `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | The first stopped at its allowance after loading its 16mm Film; the second deleted that Film, its three waits each passing at their first check about a second in, then audited the empty Journal and passed |
+| Then the same stopped test, then `ContentSizeTests.testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge` and `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` | Both passed; the first kept and deleted the leftover Film before measuring, and the second deleted its own Film at the end |
