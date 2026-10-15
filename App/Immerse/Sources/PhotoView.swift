@@ -336,9 +336,11 @@ struct DarkroomView: View {
                 catch { self.error = FailureCopy.message(for: error) }
             }
             .onDisappear { renderTask?.cancel(); image = nil }
-            // Turning the iPhone rebuilds the print in the other layout, which ends a stroke being drawn without its
-            // end, so its points never become a stroke of their own nor join the next one.
-            .onChange(of: verticalSizeClass) { brushPoints = [] }
+            // Turning the iPhone rebuilds the print and the controls in the other layout, which ends a gesture without
+            // its end: a stroke being drawn never becomes a stroke of its own nor joins the next one, and the current
+            // recipe is rendered again so a slider's edit, which renders only at the end of its drag, still reaches
+            // the print.
+            .onChange(of: verticalSizeClass) { brushPoints = []; render() }
         }
     }
 

@@ -776,10 +776,11 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertEqual(print.frame.height, exposurePrint.height, accuracy: 1, "\(name): Exposure keeps the print's size")
     }
 
-    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape the Crop controls cannot all
-    /// show, so with a crop smaller than the whole print the Crop tool keeps the print the size and place Exposure gives
-    /// it, and switching tools never moves it. The crop is set in portrait, where every control rests on screen, so
-    /// nothing is scrolled: a drag down at the top of the Darkroom in landscape pulls its sheet away.
+    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape the print sits beside the
+    /// controls, so no tool's controls reach it, and with a crop smaller than the whole print the Crop tool keeps the
+    /// print the size and place Exposure gives it, and switching tools never moves it. The crop is set in portrait,
+    /// where every control rests on screen, so nothing is scrolled: a drag down at the top of the Darkroom in landscape
+    /// pulls its sheet away.
     func testDarkroomCropKeepsThePrintInLandscape() throws {
         XCUIDevice.shared.orientation = .portrait
         addTeardownBlock { XCUIDevice.shared.orientation = .portrait }
