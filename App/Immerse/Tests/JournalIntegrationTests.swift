@@ -470,6 +470,84 @@ final class JournalIntegrationTests: XCTestCase {
         }
     }
 
+    /// In landscape a column that cannot show everything flashes its scroll indicator inside it, in the column's
+    /// trailing margin beside a safe area, as on an iPhone 13 mini held sideways: as the Darkroom opens with controls
+    /// that run past the column, never while the controls fit, and again as they grow to run past it, as when a tool
+    /// with more controls is chosen, which a flash asked for in the same update as they grew never showed.
+    func testInLandscapeAColumnThatRunsPastItsHeightFlashesItsIndicatorInsideIt() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        let host = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        // The safe area an iPhone 13 mini held sideways leaves at its trailing edge, which the column's scroll view
+        // reaches into.
+        host.additionalSafeAreaInsets.right = 50
+        window.rootViewController = host
+        probe.extraControlsHeight = window.bounds.height * 3
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        let tall = try await settledFrames(probe)
+        let safe = host.view.bounds.inset(by: host.view.safeAreaInsets)
+        // Between the controls and the safe area, above the fade at the foot, where nothing else draws.
+        let margin = CGRect(x: tall.controls.maxX + 2, y: tall.controls.minY,
+                            width: safe.maxX - tall.controls.maxX - 2, height: safe.maxY - 12 - tall.controls.minY)
+        let opened = try await showsIndicator(true, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(opened, "Controls taller than the column flash its indicator inside it")
+
+        probe.extraControlsHeight = 0
+        _ = try await settledFrames(probe)
+        let faded = try await showsIndicator(false, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(faded, "The flash ends")
+        let whileFitting = try await showsIndicator(true, in: margin, of: window, within: .seconds(1.5))
+        XCTAssertFalse(whileFitting, "Controls that fit never flash")
+
+        probe.extraControlsHeight = window.bounds.height * 3
+        let grown = try await showsIndicator(true, in: margin, of: window, within: .seconds(3))
+        XCTAssertTrue(grown, "Controls grown past the column flash its indicator inside it")
+    }
+
+    /// Whether the window's `region` comes to show a scroll indicator, or to show none, within `limit`. An indicator is
+    /// a run of pixels at least 20 pt tall that differ from the region's background.
+    private func showsIndicator(_ shown: Bool, in region: CGRect, of window: UIWindow,
+                                within limit: Duration) async throws -> Bool {
+        let end = ContinuousClock.now + limit
+        repeat {
+            if indicator(in: region, of: window) == shown { return true }
+            try await Task.sleep(for: .milliseconds(50))
+        } while ContinuousClock.now < end
+        return false
+    }
+
+    private func indicator(in region: CGRect, of window: UIWindow) -> Bool {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let image = UIGraphicsImageRenderer(bounds: region, format: format).image { _ in
+            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: false)
+        }
+        guard let picture = image.cgImage else { return false }
+        let width = picture.width, height = picture.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        pixels.withUnsafeMutableBytes { bytes in
+            CGContext(data: bytes.baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                      space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)?
+                .draw(picture, in: CGRect(x: 0, y: 0, width: width, height: height))
+        }
+        let pixel = { (x: Int, y: Int) in pixels[(y * width + x) * 4..<(y * width + x) * 4 + 3] }
+        var counts: [[UInt8]: Int] = [:]
+        for y in 0..<height { for x in 0..<width { counts[Array(pixel(x, y)), default: 0] += 1 } }
+        guard let background = counts.max(by: { $0.value < $1.value })?.key else { return false }
+        for x in 0..<width {
+            var run = 0
+            for y in 0..<height {
+                let differs = zip(pixel(x, y), background).contains { abs(Int($0) - Int($1)) > 24 }
+                run = differs ? run + 1 : 0
+                if run >= 20 { return true }
+            }
+        }
+        return false
+    }
+
     /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
     private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
         var last: (print: CGRect, controls: CGRect)?
