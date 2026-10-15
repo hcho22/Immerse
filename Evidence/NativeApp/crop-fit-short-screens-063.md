@@ -26,7 +26,7 @@ Where even a 64 pt print leaves controls below the fold, the print stays 64 pt a
 The scroll area still ends above Reset to Original, so no control rests under it and none is clipped.
 Where everything already fits, as on the iPhone 17 Pro in portrait, the print is the height the controls leave, as before, so nothing changes.
 In landscape (a compact vertical size class) nothing changes on any iPhone: the Crop tool keeps the ordinary rule, so its print is the 160 pt every other tool shows there and switching tools never moves it.
-Every other tool keeps the rule it had, in which the explanation of an error takes its height from the print down to 80 pt; in the Crop tool the floor is 64 pt with or without an error.
+Every other tool keeps the rule it had, in which the explanation of an error takes its height from the print down to 80 pt; in portrait the Crop tool's floor is 64 pt with or without an error, and in landscape the Crop tool keeps that rule too.
 Nothing in rendering, recipes, saved prints or product text changed.
 
 On the iPhone SE at the default text size, the print in the Crop tool with a crop smaller than the whole print is now 80 pt tall, 120 by 80 pt for the Disposable's 3:2 picture.
@@ -161,7 +161,9 @@ At the largest text size on the iPhone SE the print is 64 pt and the controls sc
 | ![The print at 64 pt over the Crop heading and switch](crop-fit-short-screens-063/crop-largest-se-light.png) | ![The Vertical slider clear of the fade](crop-fit-short-screens-063/crop-largest-se-light-vertical.png) |
 
 In landscape the Crop tool shows the print at 160 pt, as Exposure does, and the controls scroll as before.
-On the iPhone SE the tool row then rests half in the scroll area's fade, as it does in every tool; this change leaves landscape as it was.
+In landscape on the iPhone SE every tool shows a 160 pt print, and in the SE picture below the tool row starts at about 272 pt while the scroll area ends at about 290 pt.
+So only about 6 pt of the 44 pt row is clear, about 12 pt fades out, and the rest, most of each icon, is hidden; only the icons' tops show above Reset to Original.
+This predates the change, which leaves landscape as it was.
 
 | iPhone SE in landscape, Crop open |
 | --- |
@@ -175,5 +177,5 @@ On the iPhone SE the tool row then rests half in the scroll area's fade, as it d
 
 - A real iPhone SE or any physical iPhone.
 - Text sizes between the default and the largest in the real Darkroom, other than through the rule and its hosted test: there the print shrinks as far as 64 pt to show every Crop control, and past that stays 64 pt with the screen scrolling the rest.
-- Landscape at any text size but the default, and the turn between portrait and landscape with the Crop tool open, other than through the rule.
+- Landscape at any text size but the default, and the turn back from landscape to portrait with the Crop tool open, other than through the rule.
 - VoiceOver on a device.
