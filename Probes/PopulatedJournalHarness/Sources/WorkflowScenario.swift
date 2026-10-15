@@ -154,6 +154,11 @@ private struct FixtureTrialStore: DeviceTrialStoring {
             try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1",
                 data: Data(#"{"printExposureStops":3.5,"dodgeBurnMasks":[]}"#.utf8))
         }
+        // `--recipe-unreadable` leaves print 1 a stored recipe no build can read, as a damaged store might, so the
+        // Darkroom fails to load it; it goes to the store the same way, after the inspection.
+        if !reopening, arguments.contains("--recipe-unreadable"), let film = scenario.model.films.first {
+            try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1", data: Data("unreadable".utf8))
+        }
         return scenario
     }
 
