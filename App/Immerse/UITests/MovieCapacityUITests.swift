@@ -70,7 +70,7 @@ final class MovieCapacityUITests: XCTestCase {
         done.tap()
 
         XCTAssertTrue(detail.waitForExistence(timeout: 5))
-        detail.buttons.element(boundBy: 0).tap()
+        goBack(app, from: title, to: "Film Journal")
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         scrollUp(app, until: row)

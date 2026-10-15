@@ -52,6 +52,8 @@ The Journal's Film rows carry the accessibility identifier `journal-film`, so a 
 It is not read aloud and changes nothing a person sees.
 
 The Movie capacity test now also states the pose its contrast audit needs: the Journal holds only its Film, and that card ends above Start a Film.
+It returns from its Film to the Journal through `goBack`, which waits for the Film screen's bar to leave the tree, so the audit never starts while the Journal is still sliding in.
+Before, it tapped Back and went on, and only the extra queries `scrollUp` made after reaching the row (below) gave the pop time to end.
 
 With the leftover Disposable from the stopped run still on the simulator, the next run of the branch deleted it at the start of the first test and all 9 tests passed in dark, then all 9 in light.
 
@@ -112,3 +114,4 @@ In the screen-text part this change touches only `ContentSizeTests`' Journal and
 | Then `ContentSizeTests.testJournalAndCatalogTextAtLarge` and `JournalFlowTests.testDeniedCameraAtLoadFilmLoadsNothingAndPointsToSettings` | Both passed; the first kept the leftover 16mm Film as "Film-left-by-an-earlier-test" and deleted it before measuring the empty Journal |
 | After the second review round, with the waits above, on another new simulator in light with this Mac less loaded: `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` with a 1-minute allowance, then `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | The first stopped at its allowance after loading its 16mm Film; the second deleted that Film, its three waits each passing at their first check about a second in, then audited the empty Journal and passed |
 | Then the same stopped test, then `ContentSizeTests.testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge` and `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` | Both passed; the first kept and deleted the leftover Film before measuring, and the second deleted its own Film at the end |
+| After the third review round, which returns the Movie capacity test to the Journal through `goBack`, on another new simulator in light: both `MovieCapacityUITests` tests | Both passed (1 min 49 s at the largest text size, 1 min 52 s at the default); in each the Film's bar left the tree and "Film Journal" showed at the first check, about a second after Back, before the Journal's audit |
