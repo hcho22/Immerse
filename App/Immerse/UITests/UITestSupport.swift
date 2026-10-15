@@ -36,7 +36,9 @@ extension XCTestCase {
     /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
     /// A heading that stops at the screen's bottom edge is half hidden by the home indicator's edge effect, which the
     /// contrast audit flags in dark; a full-size drag past it would instead push the Camera's description rows under the
-    /// navigation bar, where the audit flags them too.
+    /// navigation bar, where the audit flags them too. Scroll a row whole before tapping it as well: `isHittable` holds
+    /// while only a sliver shows, and XCTest taps the middle of what shows. One CI run (38483188498) tapped the 16mm row
+    /// at y 865.7 of 874, the top 17 points of a 168-point row, inside the home indicator's area, and the tap did nothing.
     func scrollUpUntilWhole(_ app: XCUIApplication, _ element: XCUIElement) {
         let window = app.windows.firstMatch.frame
         scrollUp(app, until: element)

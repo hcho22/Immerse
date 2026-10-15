@@ -29,8 +29,9 @@ suites() {
 # its photo-analysis service switched off first (Scripts/quiet-simulator.sh).
 pinned_simulators=""
 pin_simulator() {
-    xcrun simctl bootstatus "$1" -b > /dev/null
+    # The quiet script boots the simulator itself, after settings that must be in place before the first boot.
     sh Scripts/quiet-simulator.sh "$1"
+    xcrun simctl bootstatus "$1" -b > /dev/null
     case " $pinned_simulators " in
         *" $1:"*) ;;
         *) pinned_simulators="$pinned_simulators $1:$(xcrun simctl ui "$1" appearance):$(xcrun simctl ui "$1" content_size)" ;;
