@@ -68,8 +68,8 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     private static var toolColumnWidth: CGFloat { 44 }
 
     /// The space between the print, the tool column and the controls in landscape, and between the controls there:
-    /// less than portrait's 18 pt, so the longest tool, Dodge / Burn, rests whole on an iPhone SE at the default text
-    /// size.
+    /// less than portrait's 18 pt, so the longest tool, Dodge / Burn, rests whole at the default text size on an iPhone
+    /// SE and on an iPhone 13 mini, the shortest landscape Darkroom.
     private static var sideBySideSpacing: CGFloat { 12 }
 
     /// The share of the landscape width the controls take from the print. It leaves the Dodge / Burn sliders, beside
@@ -114,10 +114,9 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                 preview.frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topTrailing) { progress }
                     .padding(.leading).padding(.vertical)
-                // Five 44 pt tool buttons, Reset's 50 pt and 8 pt margins: 290 pt, inside the 297 pt an iPhone SE has
-                // under the navigation bar. A button's icon sits 12 pt inside its frame, so the first icon is level
-                // with the heading beside it. Where the column cannot hold them, the tools scroll and Reset stays.
-                VStack(spacing: 4) {
+                // A button's icon sits 12 pt inside its frame, so at the column's full margin the first icon is level
+                // with the heading beside it.
+                ToolColumn {
                     ScrollView { VStack(spacing: 0) { tools } }.scrollBounceBehavior(.basedOnSize)
                     // The glass circle the bottom bar gave it, large enough to take a tap across more than 44 pt, its symbol
                     // the size the bar draws. Like the bar's, it keeps its size as the text grows, so it never crowds the
@@ -125,7 +124,7 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                     reset.labelStyle(.iconOnly).imageScale(.large).buttonStyle(.glass).buttonBorderShape(.circle)
                         .controlSize(.large).dynamicTypeSize(.large)
                 }
-                .frame(width: Self.toolColumnWidth).padding(.vertical, 8)
+                .frame(width: Self.toolColumnWidth)
                 ScrollView {
                     VStack(spacing: spacing) {
                         if let error { Text(error).foregroundStyle(.red) }
@@ -148,6 +147,31 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
             Color.black
             LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: Self.bottomMargin)
         }.ignoresSafeArea(edges: .top)
+    }
+}
+
+/// The Darkroom's landscape tool column: the tools' scroll area, then Reset to Original at its foot, 8 pt from the
+/// column's ends and 4 pt apart. Where the column is too short for those, the margins and the gap give up what the tools
+/// and Reset need, down to none, so every tool rests whole above Reset at any height that holds them, as on an iPhone 13
+/// mini, whose home indicator leaves the Darkroom 277 pt in landscape. Below that the tools scroll and Reset stays.
+private struct ToolColumn: Layout {
+    private static let margin: CGFloat = 8
+    private static let gap: CGFloat = 4
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        proposal.replacingUnspecifiedDimensions()
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard let tools = subviews.first, let reset = subviews.last else { return }
+        let resetSize = reset.sizeThatFits(.unspecified)
+        let toolsHeight = tools.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
+        let share = min(1, max(0, (bounds.height - toolsHeight - resetSize.height) / (2 * Self.margin + Self.gap)))
+        let toolsTop = bounds.minY + Self.margin * share
+        let resetTop = bounds.maxY - Self.margin * share - resetSize.height
+        tools.place(at: CGPoint(x: bounds.minX, y: toolsTop),
+                    proposal: ProposedViewSize(width: bounds.width, height: max(0, resetTop - Self.gap * share - toolsTop)))
+        reset.place(at: CGPoint(x: bounds.midX, y: resetTop), anchor: .top, proposal: ProposedViewSize(resetSize))
     }
 }
 

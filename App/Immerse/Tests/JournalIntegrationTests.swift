@@ -434,6 +434,42 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(probe.toolsFrame.minX, tools.minX, accuracy: 0.5, "and the tool column where it was")
     }
 
+    /// In landscape the tool column keeps its 8 pt margins where the screen has room, as an iPhone SE's Darkroom has
+    /// 297 pt under the navigation bar. An iPhone 13 mini's home indicator leaves it 277 pt, too short for five tool
+    /// buttons, Reset to Original and those margins, so there the margins give way: every button rests whole above
+    /// Reset, which keeps its size, and none is cut at the foot of the tools' scroll area.
+    func testInLandscapeTheToolColumnFitsTheShortestScreen() async throws {
+        let probe = DarkroomLayoutProbe()
+        probe.landscape = true
+        probe.toolCount = 5
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        for height: CGFloat in [297, 277] {
+            probe.height = height
+            let resting = try await settledFrames(probe)
+            // The stand-in print fills its side between 16 pt margins.
+            let top = resting.print.minY - 16, bottom = resting.print.maxY + 16
+            XCTAssertEqual(bottom - top, height, accuracy: 0.5, "The Darkroom is \(height) pt tall")
+            let tools = (0..<probe.toolCount).compactMap { probe.toolFrames[$0] }
+            let reset = probe.resetFrame
+            XCTAssertEqual(tools.count, probe.toolCount, "\(height) pt: every tool button is laid out")
+            for (above, below) in zip(tools, tools.dropFirst()) {
+                XCTAssertEqual(below.minY, above.maxY, accuracy: 0.5, "\(height) pt: the tools are one under another")
+            }
+            XCTAssertGreaterThanOrEqual(tools.first?.minY ?? -.infinity, top, "\(height) pt: the first tool is below the bar")
+            XCTAssertLessThanOrEqual(tools.last?.maxY ?? .infinity, reset.minY, "\(height) pt: the last tool rests whole above Reset")
+            XCTAssertLessThanOrEqual(reset.maxY, bottom + 0.5, "\(height) pt: Reset rests above the foot")
+            XCTAssertGreaterThanOrEqual(min(reset.width, reset.height), 44, "\(height) pt: Reset takes a tap across 44 pt")
+            if height == 297 {
+                XCTAssertEqual(tools.first?.minY ?? 0, top + 8, accuracy: 0.5, "With room, the tools start 8 pt down")
+                XCTAssertEqual(reset.maxY, bottom - 8, accuracy: 0.5, "and Reset ends 8 pt up")
+            }
+        }
+    }
+
     /// The frames once two looks 50 ms apart agree: the controls' measured height reaches the print a layout pass later.
     private func settledFrames(_ probe: DarkroomLayoutProbe) async throws -> (print: CGRect, controls: CGRect) {
         var last: (print: CGRect, controls: CGRect)?
@@ -753,9 +789,15 @@ private final class DarkroomLayoutProbe {
     var dynamicTypeSize = DynamicTypeSize.large
     /// Whether the layout is told it is in landscape, through a compact vertical size class.
     var landscape = false
+    /// The number of stand-in tool buttons.
+    var toolCount = 1
+    /// The height the layout is given, or the window's.
+    var height: CGFloat?
     @ObservationIgnored var printFrame = CGRect.null
     @ObservationIgnored var controlsFrame = CGRect.null
-    @ObservationIgnored var toolsFrame = CGRect.null
+    @ObservationIgnored var toolFrames: [Int: CGRect] = [:]
+    @ObservationIgnored var resetFrame = CGRect.null
+    var toolsFrame: CGRect { toolFrames[0] ?? .null }
 }
 
 private struct DarkroomLayoutProbeView: View {
@@ -765,11 +807,13 @@ private struct DarkroomLayoutProbeView: View {
         DarkroomLayout(rendering: false, error: probe.error, fitsEveryControl: probe.fitsEveryControl) {
             Color.gray.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.printFrame = $0 }
         } tools: {
-            // A stand-in tool button, which in portrait is the whole row's height. Like the Darkroom's, it stops growing
-            // with the text size at the largest ordinary size.
-            Button { } label: { Image(systemName: "sun.max").frame(maxWidth: .infinity, minHeight: 44) }
-                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.toolsFrame = $0 }
+            // Stand-in tool buttons, each in portrait the whole row's height. Like the Darkroom's, they stop growing with
+            // the text size at the largest ordinary size.
+            ForEach(0..<probe.toolCount, id: \.self) { index in
+                Button { } label: { Image(systemName: "sun.max").frame(maxWidth: .infinity, minHeight: 44) }
+                    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.toolFrames[index] = $0 }
+            }
         } controls: {
             VStack(spacing: 18) {
                 Text("Exposure").font(.headline)
@@ -778,9 +822,11 @@ private struct DarkroomLayoutProbeView: View {
             }.onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.controlsFrame = $0 }
         } reset: {
             Button("Reset to Original", systemImage: "arrow.counterclockwise") { }
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { probe.resetFrame = $0 }
         }
         .dynamicTypeSize(probe.dynamicTypeSize)
         .transformEnvironment(\.verticalSizeClass) { if probe.landscape { $0 = .compact } }
+        .frame(height: probe.height)
     }
 }
 

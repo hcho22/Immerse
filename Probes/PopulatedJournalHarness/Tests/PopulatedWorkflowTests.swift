@@ -895,8 +895,11 @@ final class PopulatedWorkflowTests: XCTestCase {
             // The controls' own scroll area: the smallest that holds the tool's heading.
             let area = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(heading.frame) }
                 .min { $0.width * $0.height < $1.width * $1.height } ?? window
+            // The arrangement's foot, above a home indicator, which the scroll area's frame reaches past: the print is
+            // centered between it and the navigation bar.
+            let foot = min(area.maxY, window.maxY, 2 * print.frame.midY - bar.frame.maxY)
             // The scroll area's last 12 pt fade out, so a control in full view ends above them.
-            let clear = min(area.maxY - 12 + 1, window.maxY)
+            let clear = foot - 12 + 1
             uprightSnapshot(app, name)
             // The print: below the bar, on screen, on the leading side, and larger than it was over the controls.
             XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
@@ -910,6 +913,7 @@ final class PopulatedWorkflowTests: XCTestCase {
                 XCTAssertTrue(window.contains(element.frame), "\(name): \(element.label) is on screen")
             }
             XCTAssertLessThanOrEqual(buttons.map(\.frame.maxY).max() ?? 0, reset.frame.minY, "\(name): Reset is under the tools")
+            XCTAssertLessThanOrEqual(reset.frame.maxY, foot + 0.5, "\(name): Reset is above the arrangement's foot")
             XCTAssertGreaterThanOrEqual(min(reset.frame.width, reset.frame.height), 44, "\(name): Reset takes a tap across 44 pt")
             // `isHittable` needs only a button's center on screen: each button rests whole inside the tools' own scroll
             // area, so the selected tool's highlight is never cut.
@@ -950,13 +954,14 @@ final class PopulatedWorkflowTests: XCTestCase {
         let heading = app.staticTexts["Dodge / Burn"]
         let area = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(heading.frame) }
             .min { $0.width * $0.height < $1.width * $1.height } ?? .zero
-        let clear = area.maxY - 12 + 1
+        let top = app.navigationBars["Darkroom"].frame.maxY
+        // The scroll area fades out over the last 12 pt above the arrangement's foot, where the print is centered.
+        let clear = min(area.maxY, 2 * print.frame.midY - top) - 12 + 1
         let resting = (print: print.frame, tools: tools.map(\.frame), reset: reset.frame)
         uprightSnapshot(app, "Darkroom-landscape-largest")
         XCTAssertGreaterThan(undo.frame.maxY, clear, "At the largest size the last row starts below the fold")
         // Held drags in the controls column, from a point on none of its sliders or segments, so no drag moves a control;
         // one that starts on a button moves too far to be a tap. The point is found from the frames before each drag.
-        let top = app.navigationBars["Darkroom"].frame.maxY
         let x = area.minX + 8
         let controls = { (app.sliders.allElementsBoundByIndex + app.segmentedControls.allElementsBoundByIndex)
             .filter(\.exists).map { $0.frame.insetBy(dx: -8, dy: -8) } }
