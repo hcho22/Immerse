@@ -78,7 +78,8 @@ final class FilmStockUITests: XCTestCase {
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let stock = app.staticTexts["Black and white Film Stock"]
-        for _ in 0..<20 where !stock.exists {
+        for _ in 0..<20 {
+            if stock.exists { break }
             app.navigationBars.firstMatch.tap()
             _ = stock.waitForExistence(timeout: 0.5)
         }

@@ -52,7 +52,8 @@ final class MovieCapacityUITests: XCTestCase {
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the
         // request is showing, which can appear late.
         let detail = app.navigationBars[title]
-        for _ in 0..<20 where !detail.exists {
+        for _ in 0..<20 {
+            if detail.exists { break }
             app.navigationBars.firstMatch.tap()
             _ = detail.waitForExistence(timeout: 0.5)
         }

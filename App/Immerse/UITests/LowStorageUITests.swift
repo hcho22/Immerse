@@ -104,7 +104,8 @@ final class LowStorageUITests: XCTestCase {
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let actions = app.buttons["Film actions"]
-        for _ in 0..<20 where !actions.exists {
+        for _ in 0..<20 {
+            if actions.exists { break }
             app.navigationBars.firstMatch.tap()
             _ = actions.waitForExistence(timeout: 0.5)
         }

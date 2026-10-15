@@ -69,10 +69,11 @@ So the app is unchanged, and the audit's rule is kept: an audited Journal holds 
 ## The Low Storage Largest-Text Test's Time
 
 On main the largest-text Film screen test took about 2 minutes of its 3 at normal load, with little room for a loaded Mac.
-Two things in the shared scroll helper wasted about a third of it.
+Two things in the shared scroll helper wasted about a third of it, and one wait in the test itself wasted more the same way.
 
 - `scrollUp(_:until:)` asked `isHittable` of a row the lazy Form had not made yet. For a missing element XCTest looks twice more before it answers, about 2.3 seconds a drag. It now asks `exists` first.
 - `scrollUp(_:by:until:)` looped `for _ in 0..<16 where !done()`. A `where` clause skips the drag but does not end the loop, so once the row was reached it asked again on every remaining pass, about 15 more queries and 3 to 5 seconds a scroll. It now returns when `done` holds. `deleteFilm` had the same loop and now stops too.
+- The wait for the loaded Film's screen, `for _ in 0..<20 where !actions.exists`, tapping the bar so the Camera request is answered, went on asking the same way after the screen showed, about 18 more queries. It now stops once the screen shows, as do the same waits in the Movie capacity and Film Stock tests.
 
 What is left is the test's own work at the largest text size: about 11 held drags to reach Load Film, two audits, and deleting the Film from a fresh launch.
 In the four full runs below it took 1 min 20 s to 1 min 27 s in light and 1 min 26 s to 1 min 53 s in dark, while other work shared this Mac.
@@ -115,3 +116,4 @@ In the screen-text part this change touches only `ContentSizeTests`' Journal and
 | After the second review round, with the waits above, on another new simulator in light with this Mac less loaded: `testMovieTimeReadsAsMinutesAndSecondsAtLargestText` with a 1-minute allowance, then `JournalFlowTests.testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore` | The first stopped at its allowance after loading its 16mm Film; the second deleted that Film, its three waits each passing at their first check about a second in, then audited the empty Journal and passed |
 | Then the same stopped test, then `ContentSizeTests.testJournalAndCatalogTextAtAccessibilityExtraExtraExtraLarge` and `testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` | Both passed; the first kept and deleted the leftover Film before measuring, and the second deleted its own Film at the end |
 | After the third review round, which returns the Movie capacity test to the Journal through `goBack`, on another new simulator in light: both `MovieCapacityUITests` tests | Both passed (1 min 49 s at the largest text size, 1 min 52 s at the default); in each the Film's bar left the tree and "Film Journal" showed at the first check, about a second after Back, before the Journal's audit |
+| After the fourth review round, whose waits for a loaded Film's screen stop once it shows, on another new simulator in light: `LowStorageUITests.testFilmScreenWarningAtTheLargestTextSizeHidesNoControl`, `FilmStockUITests.testSixteenMillimeterLoadsOnTheBlackAndWhiteFilmStock` and `MovieCapacityUITests.testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal` | All passed (1 min 25 s, 57 s and 56 s); in the Low Storage test the wait stopped on its second pass, two checks of the Film actions in all |
