@@ -59,8 +59,36 @@ An iPhone SE (3rd generation) and an iPhone 17 Pro simulator on iOS 26.5, made f
 | The new hosted test and `testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace`, iPhone SE | 2 passed, 0 failures |
 | `Scripts/verify-validation-parts.sh` | Pass |
 
+### Again after the merge with main
+
+The branch was brought up to main after the low-storage warning (062) landed, which changed app code and screen tests beside this change but not the Darkroom.
+On the merged code, on new iPhone SE (3rd generation) and iPhone 17 Pro simulators on iOS 26.5:
+
+| Check | Result |
+| --- | --- |
+| The 19 Darkroom screen tests above | 19 passed, 0 failures, on the iPhone SE in light and in dark and on the iPhone 17 Pro in dark |
+| The harness part, `IMMERSE_VALIDATE_PART=harness sh Scripts/validate-local.sh`, iPhone 17 Pro in light | 44 passed, 0 failures, no test rerun |
+| The two hosted Darkroom layout tests, iPhone SE | 2 passed, 0 failures |
+| The text-size part, `IMMERSE_VALIDATE_PART=ui-text`, iPhone 17 Pro | Pass |
+| The screen-flows part, `IMMERSE_VALIDATE_PART=ui-flows`, iPhone 17 Pro | The light pass passed (23 tests and the expected audit failure); the dark rerun of the audits failed two tests, below |
+| `Scripts/verify-validation-parts.sh` | Pass |
+
+The two failures in the dark rerun are outside the Darkroom, which no test of that part opens:
+
+- `LowStorageUITests.testFilmScreenWarningAtTheLargestTextSizeHidesNoControl` ran past its 3-minute allowance while this Mac was loaded far beyond its cores by other work; run again alone in dark it passed.
+- `MovieCapacityUITests.testMovieTimeReadsAsMinutesAndSecondsAtLargestText` failed its contrast audit on the Journal, on the title of a Disposable Film left by `LowStorageUITests`, which runs before it, fading under the screen's bottom edge.
+  It failed the same way when the two ran again together, and passed run alone with the app freshly installed.
+  Main's own check of the low-storage warning passed that part in the same order on GitHub's Apple silicon Macs, so it shows only on this Intel Mac.
+  It is main's to look at, not this change's.
+
+Main's check of the low-storage warning failed its harness part on `RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths`, older than this change: the tap on the Crop switch left it off, and the Crop size slider never appeared.
+The test's own snapshots and recording show the switch resting in its final place, its tool row settled, for more than a second before the tap.
+Here that test passed in every run above, before and after the merge, and the Crop switch was at rest when it first existed; why that one tap did nothing is not known, and nothing was changed for it.
+
+The package tests on a Mac and RenderCore's tests in the simulator were not run again: the change touches no package, and the merge brought no package change that meets it.
+
 The Darkroom has no accessibility audit of its own: the fit tests are its text-size checks and `testDarkroomAccessibleControlsReachNonGestureEditingPaths` is the check of its controls, as `darkroom-export-decisions-060.md` says.
-The text-size suite (`ContentSizeTests`), the audits of other screens, the package tests and the rest of the screen tests were not run here; they are the check's to run.
+The text-size suite and the audits of other screens ran on the merged code (above); the package tests were left to the check.
 
 ## Pictures
 
