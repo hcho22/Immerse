@@ -93,6 +93,7 @@ private struct FilmList: View {
                         ForEach(matching) { film in
                             NavigationLink(value: JournalRoute.film(film.id)) { JournalFilmRow(filmID: film.id) }
                                 .buttonStyle(.plain)
+                                .accessibilityIdentifier("journal-film")
                         }
                     }
                 }

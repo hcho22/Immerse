@@ -47,7 +47,7 @@ final class FilmStockUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        app.launch()
+        launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
         scrollUp(app, until: camera)
@@ -78,11 +78,13 @@ final class FilmStockUITests: XCTestCase {
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let stock = app.staticTexts["Black and white Film Stock"]
-        for _ in 0..<20 where !stock.exists {
+        for _ in 0..<20 {
+            if stock.exists { break }
             app.navigationBars.firstMatch.tap()
             _ = stock.waitForExistence(timeout: 0.5)
         }
         XCTAssertTrue(stock.exists, "The Film screen names its Film Stock")
+        XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
         retainScreenshot(app, name: "\(name)-film-black-and-white")
     }
