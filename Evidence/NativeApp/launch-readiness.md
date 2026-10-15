@@ -32,8 +32,8 @@ limits are in `../AssetReview/README.md`. It is not production asset clearance.
 
 **Not release-ready. No publication is authorized.** This is QA-14 preparation,
 not approval, a checked tracker task, or a substitute for native/hardware evidence.
-The [physical validation handoff](manual-validation.md) pins the manual candidate, since 2026-10-14 commit `38792bb3f76472860e1da8a702c78bee20f2b444` on `main`, which holds all of PRD 2.1 and the four changes merged that day.
-From 2026-10-13 it pinned `5c3a217bd7d9b84b629dab912cbcda038aeff62d`, the first commit that holds all of PRD 2.1, and before that `71391e4` ([final gate](final-candidate-050.md)), which holds neither the review fixes below nor PRD 2.0 or 2.1; both are now history.
+The [physical validation handoff](manual-validation.md) pins the manual candidate, since 2026-10-15 commit `771d5e2514165c04c384f5c7f6d8967af941dace` on `main`, which holds all of PRD 2.1, the four changes merged on 2026-10-14 and the Darkroom side by side in landscape.
+From 2026-10-14 it pinned `38792bb3f76472860e1da8a702c78bee20f2b444`, which holds the four changes but not the sideways Darkroom; from 2026-10-13 `5c3a217bd7d9b84b629dab912cbcda038aeff62d`, the first commit that holds all of PRD 2.1; and before that `71391e4` ([final gate](final-candidate-050.md)), which holds neither the review fixes below nor PRD 2.0 or 2.1; all three are now history.
 The handoff records the exact manual-test deferral and earlier probe-only authority, and gives
 future HC_iPhone13 Xcode steps, per-case outcomes/evidence fields, full receipt
 failpoints and iPhone 11/two-device prerequisites. All physical cases remain
@@ -47,7 +47,7 @@ ask-user findings, reviews this evidence linkage, and must coordinate a separate
 ordinary release task before any future authorized exposure. Never merge here.
 
 **Review fixes after candidate `71391e4`:** the no-mistakes review changed app and package sources, so the manual candidate must be re-pinned to the commit that contains them.
-That re-pin was made on 2026-10-13: `5c3a217bd7d9b84b629dab912cbcda038aeff62d` contains these fixes, as does the pin of 2026-10-14, `38792bb`, which follows it on `main`; the plan says how to tell when a later commit calls for another.
+That re-pin was made on 2026-10-13: `5c3a217bd7d9b84b629dab912cbcda038aeff62d` contains these fixes, as do the pins of 2026-10-14, `38792bb`, and of 2026-10-15, `771d5e2`, which follow it on `main`; the plan says how to tell when a later commit calls for another.
 Movie capacity is now accounted in whole 30 fps frames: clips whose frames total the reel complete the Film, and the final clip is capped at exactly the remaining frames instead of being rejected and blocking the Film.
 Movie capture now uses the largest native 4:3 format no larger than the earlier 1920x1080 `.high` preset (1440x1080 where offered), with a 3:4 portrait or 4:3 landscape viewfinder; the size is provisional pending DEC-04 and the format is a manual device check (M19).
 `TrialCoordinator.load` is now the single new-Film entitlement decision that production executes; the unused `EntitlementPolicy` rules and the unlinked `CapturePipeline` committer were removed, and the local StoreKit tests drive `JournalModel.load` and the production capture commit.
@@ -61,7 +61,11 @@ The physical handoff carries what each leaves for a phone: its "What changed bet
 
 **The four changes of 2026-10-14:** the Darkroom limits and export decisions ([060](darkroom-export-decisions-060.md)), the Instant's contrast and the toning range ([061](instant-study-and-toning-061.md)), the warning below 2 GB free ([062](low-storage-warning-062.md)) and the Crop tool on a short screen ([063](crop-fit-short-screens-063.md)) merged to `main` that day, and the candidate was re-pinned to `38792bb`, the first commit that holds all four.
 None of their evidence is device evidence.
-The physical handoff's "What changed between `5c3a217` and this pin" table names the scenarios that carry each, D01 to D04, I01 to I03 and S01 to S05.
+The physical handoff's "What changed between `5c3a217` and `38792bb`" table names the scenarios that carry each, D01 to D04, I01 to I03 and S01 to S05.
+
+**The Darkroom side by side in landscape (2026-10-15):** the captain's choice of 2026-10-14, "landscape - side by side" ([065](darkroom-landscape-side-by-side-065.md)), merged to `main`, and the candidate was re-pinned to `771d5e2`, its merge.
+Its evidence is simulator evidence only.
+The physical handoff's "What changed between `38792bb` and this pin" table names the scenarios that carry it, W01 to W06.
 The rest of this document predates those slices and describes the build as it stood on 2026-10-02.
 
 ## Candidate Identity and Local Gates
