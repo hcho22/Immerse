@@ -8,7 +8,7 @@
 #   it held every trust check in the simulator for two minutes, in which StoreKit's local test server could not sign
 #   an approved purchase, so the update a test waited for came late (Evidence/NativeApp/main-ci-flakes-066.md). The
 #   preference is written into the simulator's own data before it boots, because trustd reads it before this script
-#   could reach a running simulator, and again through the running simulator, where trustd reads it at its next check.
+#   could reach a running simulator.
 #
 # Idempotent; never fails the caller.
 # Usage: sh Scripts/quiet-simulator.sh <udid>
@@ -33,8 +33,6 @@ if ! xcrun simctl bootstatus "$udid" -b > /dev/null 2>&1; then
     echo "quiet-simulator: $udid did not boot; photo analysis left as is"
     exit 0
 fi
-xcrun simctl spawn "$udid" defaults write com.apple.security ValidUpdateEnabled -bool NO > /dev/null 2>&1 \
-    || echo "quiet-simulator: could not switch off trustd's revocation update on $udid"
 service=user/foreground/com.apple.mediaanalysisd
 xcrun simctl spawn "$udid" launchctl disable "$service" > /dev/null 2>&1 \
     || echo "quiet-simulator: could not disable mediaanalysisd on $udid"

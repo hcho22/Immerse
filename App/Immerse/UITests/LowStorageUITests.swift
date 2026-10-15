@@ -100,7 +100,7 @@ final class LowStorageUITests: XCTestCase {
         scrollUp(app, until: load)
         XCTAssertTrue(app.staticTexts["low-storage-warning"].exists)
         defer { deleteFilm(titled: title, app) }
-        load.tap()
+        tapWhole(app, load)
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let actions = app.buttons["Film actions"]

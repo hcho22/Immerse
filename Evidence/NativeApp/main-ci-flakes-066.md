@@ -47,9 +47,10 @@ Whether that holds on every runner is not established; what the log does establi
 ### Fix: switch the update off on test simulators
 
 trustd reads `ValidUpdateEnabled` in the `com.apple.security` preferences and, when it is false, logs "skipping update" and downloads nothing.
-`Scripts/quiet-simulator.sh` now writes it into the simulator's own preferences file before the simulator boots, since trustd starts the update within seconds of a first boot, and again through the running simulator.
+`Scripts/quiet-simulator.sh` now writes it into the simulator's own preferences file before the simulator boots, since trustd starts the update within seconds of a first boot.
 The Mac's `defaults write` to the file's path left no file there before the boot; `plutil` does.
 On two fresh simulators prepared this way trustd's first launch logged "skipping update", and so did its next check four minutes later; the three prepared by the script on `main` scheduled and ran the download each time.
+The script those two ran also wrote the setting a second time through the running simulator, which is gone: validation runs the script on each simulator while it is still shut down, so the write before the boot always applies, and on a simulator already booted the first-boot update has already started.
 `Scripts/validate-local.sh` now runs the quiet script before it waits for a simulator to boot, so the setting is in place for each part's first boot.
 Tests need no revocation data, and the app is unchanged.
 The test still waits for the same verified update, for the same 10 seconds.
@@ -131,6 +132,8 @@ On this Mac (Intel, Xcode 26.5), with `IMMERSE_VALIDATE_PART` as CI sets it and 
 
 The ui-text part runs in light only, as on CI, and the packages and harness parts have no appearance setting.
 ui-flows and harness ran once because the quiet script, which every part uses, changed.
+Every run in the table predates the last changes: `FilmStockUITests`, `LowStorageUITests` and the extra-small audits in `JournalFlowTests` tapping through `tapWhole` (with the dark Film Stock audit now at the pose `tapWhole` leaves), and the quiet script dropping its second trustd write.
+So no run here covers the final ui-flows tests, and every run used the quiet script with that second write.
 
 ## The same sliver tap in the other screen tests
 
