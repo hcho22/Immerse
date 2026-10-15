@@ -146,8 +146,7 @@ final class LowStorageUITests: XCTestCase {
     private func openDisposableLoadScreen(_ app: XCUIApplication) {
         openCameraCatalog(app)
         let camera = app.buttons["camera-disposable1990s"]
-        scrollUp(app, until: camera)
-        camera.tap()
+        tapWhole(app, camera)
         // The screen is checked only once the tapped row has left the tree, after the push
         // (Evidence/NativeApp/push-audit-055.md).
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))

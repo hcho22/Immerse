@@ -1,4 +1,4 @@
-# Main CI Flakes 063
+# Main CI Flakes 066
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work.
 On 2026-10-14 Native validation on `main` had failed on 5 of its last 8 pushes, mostly on tests unrelated to the change being merged.
@@ -135,6 +135,7 @@ ui-flows and harness ran once because the quiet script, which every part uses, c
 ## The same sliver tap in the other screen tests
 
 `MovieCapacityUITests`, `JournalFlowTests`, `TestingUnlockUITests` and `deleteFilm` in `UITestSupport.swift` also scrolled with free swipes only until `isHittable` and then tapped, so the same tap on a sliver could happen there, though none failed in these runs.
+`FilmStockUITests`, `LowStorageUITests` and the extra-small audits in `JournalFlowTests` scrolled in held drags, but also only until `isHittable`, before their taps.
 Every such tap now goes through one helper, `tapWhole` in `UITestSupport.swift`, which scrolls with `scrollUpUntilWhole`, asserts the whole element is on screen and then taps; where a test only checks an element after scrolling to it, it uses `scrollUpUntilWhole` alone.
 `MovieCapacityUITests` taps Load Film just after typing the Film's title, so with a keyboard raised "on screen" means 15 points clear of the keyboard, and a scrolling drag starts above it rather than on it, where it would type.
 On iOS 26.5 the keyboard's panel is drawn 45 points above the frame its accessibility element reports (from y 538, against 583, on an iPhone 17 Pro), which the helper allows for.

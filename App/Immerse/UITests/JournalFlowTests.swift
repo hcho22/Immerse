@@ -76,8 +76,7 @@ final class JournalFlowTests: XCTestCase {
         app.launch()
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        scrollUp(app, until: camera)
-        camera.tap()
+        tapWhole(app, camera)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.navigationBars[name].exists)
         let field = app.textFields["film-title"]

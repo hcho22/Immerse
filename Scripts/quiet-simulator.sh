@@ -4,12 +4,11 @@
 # - Its photo-analysis service (mediaanalysisd), which otherwise analyzes the photos tests seed at several hundred
 #   percent CPU for hours. Only the user/foreground domain stops it (the system/ form just restarts it), and the
 #   disable lasts until the simulator is erased. photoanalysisd stayed idle on iOS 26.5, so it is left alone.
-# - trustd's update of its certificate revocation database, which starts seconds after a new simulator boots. Every
-#   trust check in the simulator waits until it ends: 160 seconds on an Intel Mac here, and on CI two minutes in
-#   which StoreKit's local test server could not sign an approved purchase, so the update the test waited for came
-#   late (Evidence/NativeApp/main-ci-flakes-063.md). The preference is written into the simulator's own data before
-#   it boots, because trustd reads it before this script could reach a running simulator, and again through the
-#   running simulator, where trustd reads it at its next check.
+# - trustd's update of its certificate revocation database, which starts seconds after a new simulator boots. On CI
+#   it held every trust check in the simulator for two minutes, in which StoreKit's local test server could not sign
+#   an approved purchase, so the update a test waited for came late (Evidence/NativeApp/main-ci-flakes-066.md). The
+#   preference is written into the simulator's own data before it boots, because trustd reads it before this script
+#   could reach a running simulator, and again through the running simulator, where trustd reads it at its next check.
 #
 # Idempotent; never fails the caller.
 # Usage: sh Scripts/quiet-simulator.sh <udid>

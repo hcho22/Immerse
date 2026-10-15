@@ -21,8 +21,7 @@ final class FilmStockUITests: XCTestCase {
         openCameraCatalog(app)
         for (id, name) in [("disposable1990s", "Disposable"), ("instant1970s", "Instant"), ("super8HomeMovie", "Super 8")] {
             let camera = app.buttons["camera-\(id)"]
-            scrollUp(app, until: camera)
-            camera.tap()
+            tapWhole(app, camera)
             XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
             let load = app.buttons["load-film"]
             scrollUp(app, until: load)
@@ -50,8 +49,7 @@ final class FilmStockUITests: XCTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        scrollUp(app, until: camera)
-        camera.tap()
+        tapWhole(app, camera)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts[capacity].exists)
 
@@ -61,7 +59,7 @@ final class FilmStockUITests: XCTestCase {
         XCTAssertTrue(color.isSelected, "Color is chosen until the person chooses")
         XCTAssertFalse(blackAndWhite.isSelected)
         retainScreenshot(app, name: "\(name)-load-film-stock-color")
-        blackAndWhite.tap()
+        tapWhole(app, blackAndWhite)
         XCTAssertTrue(blackAndWhite.isSelected)
         XCTAssertFalse(color.isSelected)
         retainScreenshot(app, name: "\(name)-load-film-stock-black-and-white")
@@ -72,9 +70,8 @@ final class FilmStockUITests: XCTestCase {
         scrollUp(app, until: field)
         let title = try XCTUnwrap(field.value as? String)
         let load = app.buttons["load-film"]
-        scrollUp(app, until: load)
         defer { deleteFilm(titled: title, app) }
-        load.tap()
+        tapWhole(app, load)
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let stock = app.staticTexts["Black and white Film Stock"]
