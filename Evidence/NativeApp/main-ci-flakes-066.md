@@ -29,31 +29,38 @@ The other three StoreKit tests passed right after it.
 - StoreKit's local test server (ASOctaneSupportXPCService) then asked trustd to evaluate a certificate at 13:48:20.050, to sign the approved transaction, and got no answer until 13:50:15.9.
 - storekitd's two follow-up requests to that server, the pending-purchase queue check and the subscription status sync, each waited 60 seconds and failed with a URL timeout.
 - The update the test waited for reached the app at 13:50:15, two minutes after the approval and long after its 10 seconds.
-- trustd had started an update of its certificate revocation ("VALID") database at 13:48:03.
-  It logs a revocation check every few seconds during these tests, and logged none from 13:48:03 to 13:50:15.
-  Other processes' TLS checks (nsurlsessiond) waited through the same span.
-- The update's own download from Apple's revocation server failed with a TLS error at 13:49:55 and was cancelled at 13:50:01; trust checks resumed 14 seconds later.
+- trustd answered no trust check from 13:47:10.1 to 13:50:15.75, from a minute before the test began; cloudd's request from 13:47:22 was answered at 13:50:15.8.
+- At 13:47:10.18, just after the last answered check, trustd logged "Pinning database should update from version 118 to version 119".
+  The new simulator's trustd had downloaded Apple's latest trust data (the PKITrustSupplementals asset, which includes its pinning rules) and was installing it.
+  That thread logged nothing more until 13:50:20, and "updating asset version from 1011 to 1012" at 13:50:42.
+- trustd started an update of its certificate revocation ("VALID") database at 13:48:03, almost a minute after trust checks had stopped.
+  Its download failed with a TLS error at 13:50:01, while trust checks were still held.
 
-So the app and the test were waiting on the simulator: for those two minutes trustd answered no trust check, and StoreKit's test server cannot sign a transaction without one.
+So the app and the test were waiting on the simulator: for three minutes trustd answered no trust check while it installed its new trust data, and StoreKit's test server cannot sign a transaction without one.
 
-### What only CI showed
+### What a new simulator here showed
 
-On this Mac the same update ran on three fresh iOS 26.2 simulators and succeeded each time, in 48 to 231 seconds.
-The pending approval test ran 310 times on a fresh simulator, 250 of them while its update was downloading and rebuilding the database (07:17:24 to 07:21:15), and passed every time in under 2 seconds.
-So here a successful update does not hold trust checks, and the stall was not reproduced.
-CI's update failed instead: its download's TLS check is itself a trust check, which suggests trustd was waiting on its own update until the download timed out.
-Whether that holds on every runner is not established; what the log does establish is that the stall came from this update and ended with it.
+The first version of this fix took the revocation update for the cause, since it was running when the test failed.
+Here that update ran on three fresh iOS 26.2 simulators and succeeded each time, in 48 to 231 seconds, and the pending approval test ran 310 times on a fresh simulator, 250 of them during the update, passing every time in under 2 seconds.
+Then a new billing simulator, prepared with the quiet script so that trustd skipped its revocation update, ran the StoreKit tests soon after its first boot.
+trustd installed the same trust data (pinning database 118 to 119) and answered no trust check from 13:47:38.6 to 13:50:14.8 (this Mac's time on 2026-10-15), 156 seconds.
+StoreKit's test server asked for a check at 13:50:05.95 and got it at 13:50:14.87, so the update the pending approval test waited for arrived about 9 seconds into its 10-second wait, only because the stall ended then.
+A second new billing simulator installed the same trust data in 3.5 seconds, with no stall.
+What makes the install hold trust checks for minutes on one simulator and seconds on another is not established.
 
-### Fix: switch the update off on test simulators
+### Fix: boot the billing simulator first
 
+trustd has no setting for this install.
+Its code in the iOS 26.2 runtime checks only the OS variant and that MobileAsset is present before it asks for new trust data, and skips asking only when its own record shows a request within its update period, which a new simulator does not have.
+So `Scripts/validate-local.sh` now boots and quiets the billing simulator at the start of the packages part, before the Mac tests, instead of just before its own tests, which still run last.
+On CI the billing simulator began booting when the render tests ended, at 13:40:30, and trustd finished installing at 13:50:42, about ten minutes later; here it finished four minutes after trustd first started (13:46:11 to 13:50:19).
+In run 38569804164 the StoreKit tests began 30 minutes after the part's validation step started (13:13:51 to 13:44:27), so with the boot moved to that start they begin nearly half an hour after it.
+The quiet script still switches off the revocation update before the first boot: tests need no revocation data, and it spares each new simulator that download and rebuild.
 trustd reads `ValidUpdateEnabled` in the `com.apple.security` preferences and, when it is false, logs "skipping update" and downloads nothing.
-`Scripts/quiet-simulator.sh` now writes it into the simulator's own preferences file before the simulator boots, since trustd starts the update within seconds of a first boot.
 The Mac's `defaults write` to the file's path left no file there before the boot; `plutil` does.
 On two fresh simulators prepared this way trustd's first launch logged "skipping update", and so did its next check four minutes later; the three prepared by the script on `main` scheduled and ran the download each time.
 The script those two ran also wrote the setting a second time through the running simulator, which is gone: validation runs the script on each simulator while it is still shut down, so the write before the boot always applies, and on a simulator already booted the first-boot update has already started.
-`Scripts/validate-local.sh` now runs the quiet script before it waits for a simulator to boot, so the setting is in place for each part's first boot.
-Tests need no revocation data, and the app is unchanged.
-The test still waits for the same verified update, for the same 10 seconds.
+The app and the test are unchanged: the test still waits for the same verified update, for the same 10 seconds.
 
 ## ContentSizeTests.testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge (run 38483188498)
 
@@ -122,9 +129,9 @@ On this Mac (Intel, Xcode 26.5), with `IMMERSE_VALIDATE_PART` as CI sets it and 
 | Run | Part | Result | Minutes |
 | --- | --- | --- | --- |
 | 1 | ui-text | 72 of 72 `ContentSizeTests` passed, no rerun | 45 |
-| 1 | packages | all Mac package tests, 112 RenderCore tests in the simulator (111 passed, 1 skipped) and 57 app tests with StoreKit passed; trustd skipped its update from the billing simulator's first boot | 21 |
+| 1 | packages | all Mac package tests, 112 RenderCore tests in the simulator (111 passed, 1 skipped) and 57 app tests with StoreKit passed; trustd skipped its revocation update from the billing simulator's first boot | 21 |
 | 2 | ui-text | 72 of 72 passed, no rerun | 47 |
-| 2 | packages | the same, all passed; trustd skipped its update at each of its 3 checks and downloaded nothing | 19 |
+| 2 | packages | the same, all passed; trustd skipped its revocation update at each of its 3 checks and downloaded nothing for it | 19 |
 | 1 | ui-flows | 23 of 24 screen tests passed in light and 20 of 21 audits in dark, the one left in each being `testAuditStillReportsContrastFindingsOutsideItsExceptions`, which expects its failure; no rerun | 39 |
 | 1 | harness | 45 of 45 passed | 33 |
 | 3 | ui-text | 72 of 72 passed, no rerun, with every tap through `tapWhole` | 48 |

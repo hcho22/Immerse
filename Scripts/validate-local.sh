@@ -60,6 +60,13 @@ finish() {
 trap finish EXIT
 xcodebuild -version
 swift --version
+if runs packages && [ -n "${IMMERSE_STOREKIT_SIMULATOR_UDID:-}" ]; then
+    # The billing simulator boots first, though its tests run last. Minutes after a new simulator's first boot,
+    # trustd installs the trust data it has just downloaded; on CI its pinning database update held every trust
+    # check for three minutes, in which StoreKit's local test server could not sign an approved purchase
+    # (Evidence/NativeApp/main-ci-flakes-066.md). Booted here, the simulator does that during the Mac tests.
+    sh Scripts/quiet-simulator.sh "$IMMERSE_STOREKIT_SIMULATOR_UDID"
+fi
 if runs packages; then
     # The scripts' own tests, then the guard that holds every test target to a part.
     python3 -B -m unittest discover -s Scripts/Tests
@@ -130,7 +137,6 @@ if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance light
 fi
 if runs packages && [ -n "${IMMERSE_STOREKIT_SIMULATOR_UDID:-}" ]; then
-    sh Scripts/quiet-simulator.sh "$IMMERSE_STOREKIT_SIMULATOR_UDID"
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
         -destination "platform=iOS Simulator,id=$IMMERSE_STOREKIT_SIMULATOR_UDID" \
         -derivedDataPath DerivedData/ValidationSimulator \
