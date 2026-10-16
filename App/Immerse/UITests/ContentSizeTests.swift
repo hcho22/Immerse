@@ -288,8 +288,7 @@ final class ContentSizeTests: XCTestCase {
         for (camera, title, targets) in [("camera-super8HomeMovie", "Super 8", Self.superEight),
                                          ("camera-cinema16mm", "16mm", Self.sixteenMillimeter)] {
             let row = app.buttons[camera]
-            for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
-            row.tap()
+            tapWhole(app, row)
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "\(title) \(category)")
             // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
             Thread.sleep(forTimeInterval: 1)
@@ -307,8 +306,7 @@ final class ContentSizeTests: XCTestCase {
         let app = launch(category)
         app.buttons["start-film"].tap()
         let row = app.buttons["camera-mediumFormat6x6"]
-        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
-        row.tap()
+        tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -316,13 +314,11 @@ final class ContentSizeTests: XCTestCase {
         goBack(app, from: "6×6", to: "Choose a Camera")
 
         let reel = app.buttons["camera-cinema16mm"]
-        for _ in 0..<8 where !reel.isHittable { drag(app, by: -300) }
-        reel.tap()
+        tapWhole(app, reel)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         let blackAndWhite = app.buttons["Black and white"]
-        for _ in 0..<8 where !blackAndWhite.isHittable { drag(app, by: -300) }
-        blackAndWhite.tap()
+        tapWhole(app, blackAndWhite)
         XCTAssertTrue(blackAndWhite.isSelected, "Black and white \(category)")
         // Back to the top, so the line is measured scrolling down to it as every other line is.
         for _ in 0..<8 where !app.staticTexts["Capacity, 2 minutes 47 seconds of film"].isHittable { drag(app, by: 300) }
@@ -338,8 +334,7 @@ final class ContentSizeTests: XCTestCase {
         let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
         app.buttons["start-film"].tap()
         let row = app.buttons["camera-disposable1990s"]
-        for _ in 0..<8 where !row.isHittable { drag(app, by: -300) }
-        row.tap()
+        tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
         // Let the push finish, so the rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -469,9 +464,10 @@ final class ContentSizeTests: XCTestCase {
     /// Scrolls the screen down, or up from its end, in held drags, between the named navigation bar and the home
     /// indicator. An element's top edge is checked once it is on screen with the text below it, and its bottom edge
     /// once that is on screen with the text above it; an element that fits is checked in one pose. Each drag is
-    /// short enough that every edge reaches such a pose. Each edge keeps the text's distance from the frame's exact
-    /// edge in pixels, so the text height is the frame's height less those two, from one pose or two. Text that comes
-    /// within half a pixel of an edge, or of the line below a Camera name, is clipped.
+    /// short enough that every edge reaches such a pose, and a drag that carries an edge past the window before it is
+    /// checked is undone. Each edge keeps the text's distance from the frame's exact edge in pixels, so the text height
+    /// is the frame's height less those two, from one pose or two. Text that comes within half a pixel of an edge, or of
+    /// the line below a Camera name, is clipped.
     private func measure(_ app: XCUIApplication, _ targets: [Target], _ category: String,
                          below bar: String, upward: Bool = false) -> [((name: String, variant: String), Sample)] {
         let tag = "\(category) \(Self.appearance)"
@@ -480,6 +476,11 @@ final class ContentSizeTests: XCTestCase {
         var navigation: CGFloat = 0
         func pending(_ root: XCUIElementSnapshot) -> Target? {
             targets.first { $0.unsettled != nil && $0.find(in: root)?.label == $0.unsettled }
+        }
+        // The edge the text must stay clear of at the bottom: its frame, or the line below it once that is listed.
+        func bottomEdge(of target: Target, _ frame: CGRect, in root: XCUIElementSnapshot) -> CGFloat? {
+            guard let label = target.clearance else { return frame.maxY }
+            return Target(name: "", type: .staticText, label: label).find(in: root)?.frame.minY
         }
         for _ in 0..<60 {
             guard var root = try? app.snapshot() else { continue }
@@ -503,12 +504,7 @@ final class ContentSizeTests: XCTestCase {
                     XCTAssertGreaterThanOrEqual(element.frame.height, minimum, "\(target.name) \(tag) frame is at least \(Int(minimum)) points tall")
                 }
                 let needed = min(frame.height, context)
-                // The edge the text must stay clear of at the bottom: its frame, or the line below it once that is listed.
-                let floor: CGFloat? = if let label = target.clearance {
-                    Target(name: "", type: .staticText, label: label).find(in: root)?.frame.minY
-                } else {
-                    frame.maxY
-                }
+                let floor = bottomEdge(of: target, frame, in: root)
                 let checkTop = tops[target.name] == nil && frame.minY >= top && min(frame.maxY, bottom) - frame.minY >= needed
                 let checkBottom = bottoms[target.name] == nil && floor.map { $0 <= bottom && $0 - max(frame.minY, top) >= needed } ?? false
                 if checkTop || checkBottom { due.append((target, frame, floor ?? frame.maxY, (checkTop, checkBottom))) }
@@ -552,7 +548,22 @@ final class ContentSizeTests: XCTestCase {
                 results.contains { $0.0.name == target.name } || (target.optional && !seen.contains(target.name))
             }) { break }
             let step = min(380, bottom - top - context)
-            drag(app, by: upward ? step : -step, landscape: window.width > window.height)
+            // A drag can carry the list further than its own length. On a loaded CI runner (run 38473025368) one drag
+            // of 262 points carried landscape Settings about 330, so the top edge of "Trial record" went from the
+            // window's bottom, too little of it shown to check, to under the navigation bar, and every later drag moved
+            // further from it until the test ran out of time. An edge that has passed the window unchecked is dragged
+            // back toward the window's middle, at most a step at a time.
+            let missed = targets.lazy.filter { target in results.allSatisfy { $0.0.name != target.name } }
+                .compactMap { target -> CGFloat? in
+                    guard let frame = target.textFrame(in: root), !frame.isEmpty else { return nil }
+                    let needed = min(frame.height, context)
+                    if tops[target.name] == nil, upward ? frame.minY > bottom - needed : frame.minY < top { return frame.minY }
+                    if bottoms[target.name] == nil, let floor = bottomEdge(of: target, frame, in: root),
+                       upward ? floor > bottom : floor < top + needed { return floor }
+                    return nil
+                }.first
+            let distance = missed.map { max(-step, min(step, (top + bottom) / 2 - $0)) } ?? (upward ? step : -step)
+            drag(app, by: distance, landscape: window.width > window.height)
         }
         for target in targets where !results.contains(where: { $0.0.name == target.name }) {
             if target.optional && !seen.contains(target.name) { continue }

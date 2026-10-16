@@ -65,17 +65,18 @@ DARK = [
     " -only-testing:ImmerseUITests/FilmStockUITests -only-testing:ImmerseUITests/LowStorageUITests "
     + ALLOWANCE + " test-without-building",
 ]
+# The billing simulator boots before the Mac tests, so its first-boot work is over when its tests run last.
+BOOT_BILLING = ["quiet-simulator.sh BILLING-SIM"]
 BILLING = [
-    "quiet-simulator.sh BILLING-SIM",
     "xcodebuild " + APP + " -destination platform=iOS Simulator,id=BILLING-SIM"
     " -derivedDataPath DerivedData/ValidationSimulator -resultBundlePath DerivedData/StoreKit-<time>.xcresult"
     " -only-testing:ImmerseTests -test-timeouts-enabled YES -maximum-test-execution-time-allowance 120"
     " CODE_SIGNING_ALLOWED=NO test",
 ]
 VERSIONS = ["xcodebuild -version", "swift --version"]
-WHOLE = VERSIONS + MAC + HARNESS + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING
+WHOLE = VERSIONS + BOOT_BILLING + MAC + HARNESS + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING
 PARTS = {
-    "packages": VERSIONS + MAC + PIN_APP + RENDER + BILLING,
+    "packages": VERSIONS + BOOT_BILLING + MAC + PIN_APP + RENDER + BILLING,
     "harness": VERSIONS + HARNESS,
     "ui-text": VERSIONS + PIN_APP + light(TEXT_SIZES),
     "ui-flows": VERSIONS + PIN_APP + light(OTHER_SUITES) + DARK,
@@ -111,7 +112,7 @@ class ValidateLocalTests(unittest.TestCase):
         result, commands = self.validate(simulators=shared)
         self.assertEqual(result.returncode, 0, result.stderr)
         harness = [command.replace("HARNESS-SIM", "APP-SIM") for command in HARNESS]
-        self.assertEqual(commands, VERSIONS + MAC + harness + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING)
+        self.assertEqual(commands, VERSIONS + BOOT_BILLING + MAC + harness + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING)
 
     def test_each_part_runs_its_own_share(self):
         for part, expected in PARTS.items():
@@ -164,7 +165,7 @@ class ValidateLocalTests(unittest.TestCase):
         result, commands = self.validate(xcodebuild_exits="0 0 0 65", failures="app-start-a-film-tap-and-a-timeout")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Populated failed, and the simulator's log does not excuse every failed test", result.stderr)
-        self.assertEqual(commands, VERSIONS + MAC + HARNESS)
+        self.assertEqual(commands, VERSIONS + BOOT_BILLING + MAC + HARNESS)
 
     def test_a_run_that_passed_through_a_rerun_says_so_last(self):
         sandbox_result, commands = self.validate("harness", xcodebuild_exits="0 65 0")

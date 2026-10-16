@@ -54,7 +54,7 @@ final class TestingUnlockUITests: XCTestCase {
         openCameraCatalog(app)
         app.buttons["camera-disposable1990s"].tap()
         let load = app.buttons["load-film"]
-        for _ in 0..<8 where !(load.exists && load.isHittable) { app.swipeUp() }
+        scrollUpUntilWhole(app, load)
         XCTAssertTrue(load.isHittable)
         let notice = app.descendants(matching: .any)["testing-unlock-notice"]
         XCTAssertEqual(notice.exists, unlocked, "Load screen indicator")

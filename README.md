@@ -169,7 +169,7 @@ IMMERSE_WORKFLOW_SIMULATOR_UDID=<ios26.5-sim-udid> \
 sh Scripts/validate-local.sh
 ```
 
-- `IMMERSE_SIMULATOR_UDID` reruns the `RenderCore` tests inside the simulator (all but `LegacyLookTests`), since Core Image differs between a Mac and iOS, runs `ImmerseUITests` in light appearance and large text, then reruns the `JournalFlowTests` accessibility audits and `MovieCapacityUITests` in dark appearance.
+- `IMMERSE_SIMULATOR_UDID` reruns the `RenderCore` tests inside the simulator (all but `LegacyLookTests`), since Core Image differs between a Mac and iOS, runs `ImmerseUITests` in light appearance and large text, then reruns the suites with accessibility audits (`dark_suites` in [`Scripts/validation-parts.sh`](Scripts/validation-parts.sh)) in dark appearance.
 - `IMMERSE_STOREKIT_SIMULATOR_UDID` runs the hosted `ImmerseTests`, including local StoreKit tests, on iOS 26.2, because the StoreKit fixture does not activate on iOS 26.5.
 - `IMMERSE_WORKFLOW_SIMULATOR_UDID` runs the populated Journal harness in [`Probes/PopulatedJournalHarness`](Probes/PopulatedJournalHarness/README.md).
 

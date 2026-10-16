@@ -100,7 +100,7 @@ final class LowStorageUITests: XCTestCase {
         scrollUp(app, until: load)
         XCTAssertTrue(app.staticTexts["low-storage-warning"].exists)
         defer { deleteFilm(titled: title, app) }
-        load.tap()
+        tapWhole(app, load)
         // The new Film opens on top of the Journal. The monitor runs only on an interaction made while the request is
         // showing, which can appear late.
         let actions = app.buttons["Film actions"]
@@ -146,8 +146,7 @@ final class LowStorageUITests: XCTestCase {
     private func openDisposableLoadScreen(_ app: XCUIApplication) {
         openCameraCatalog(app)
         let camera = app.buttons["camera-disposable1990s"]
-        scrollUp(app, until: camera)
-        camera.tap()
+        tapWhole(app, camera)
         // The screen is checked only once the tapped row has left the tree, after the push
         // (Evidence/NativeApp/push-audit-055.md).
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
