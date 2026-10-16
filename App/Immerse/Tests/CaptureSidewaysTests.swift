@@ -42,6 +42,30 @@ final class CaptureSidewaysTests: XCTestCase {
                        "Every screen turns unless the shooting screen holds the window")
     }
 
+    /// The hold ends while an Instant print or its question shows over the camera, so they turn with the iPhone, comes back when
+    /// they close, and ends with the screen. The Instant's camera starts again by itself when they close
+    /// (`CaptureController.printsClosed`), and the hold must be back by then.
+    func testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses() async throws {
+        let showing = PrintShowing()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: HoldProbe(showing: showing))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await Task.sleep(for: .milliseconds(300))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The shooting screen holds the window")
+        showing.print = true
+        try await Task.sleep(for: .milliseconds(300))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "A print over the camera turns with the iPhone")
+        showing.print = false
+        try await Task.sleep(for: .milliseconds(300))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The hold is back when the print closes")
+        window.isHidden = true
+        window.rootViewController = nil
+        try await Task.sleep(for: .milliseconds(500))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "The hold ends with the screen")
+    }
+
     /// The header reserves the same height in every hold, so the viewfinder below it never moves.
     func testAHeaderThatReservesItsLengthIsTheSameHeightInEveryHold() {
         let header = TurnedBlock(length: 128, reservesLength: true) {
@@ -285,5 +309,15 @@ final class CaptureSidewaysTests: XCTestCase {
                                      cameraAuthorizer: SyntheticCamera(granted: true))
         await model.recoverAtLaunch()
         return (root, model)
+    }
+}
+
+/// Whether an Instant print is over the camera, for the test of the hold.
+@Observable private final class PrintShowing { var print = false }
+
+private struct HoldProbe: View {
+    let showing: PrintShowing
+    var body: some View {
+        Color.clear.holdsInterfaceOrientation(.portrait, while: !showing.print) { .portrait }
     }
 }

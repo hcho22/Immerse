@@ -31,6 +31,8 @@ The 6×6's reversed rear viewfinder came from PRD version 2.0 (section 6.1, FR-0
 The shooting screen keeps the portrait layout in every hold, for all five Cameras (`App/Immerse/Sources/CaptureView.swift`).
 It holds the window to portrait while it is on screen (`ImmerseAppDelegate` and `InterfaceOrientationLock.swift`), and lets go when it leaves, turning the window to how the iPhone is held then.
 While an Instant print or the question about its original is over the camera, the hold is released, so those turn with the iPhone like every other screen, and the camera is held again when they close.
+The Instant's camera starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md), merged to `main` as 003d8d4); the hold follows the same two states that decide when the print and its question are on screen (`CaptureView` ends it while `instantPrint` or `originalAsk` is set and restores it when both are nil), so it comes back in the update in which `showNextPrint` starts the camera, and the restart does not wait for the window to turn back, since the preview follows how the iPhone is held and not the interface.
+The merge of that change kept both: the Resume Camera condition in the notice is its `CaptureController.offersResume`, which also hides the button on a complete Film and while the camera is paused only for a print, and the print's pause is its `pauseForReveal`.
 Every other screen turns as before, the Darkroom's landscape arrangement of [065](darkroom-landscape-side-by-side-065.md) included.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
@@ -158,6 +160,7 @@ Development center-crops every capture to a square and scales it to 3072 by 3072
 | --- | --- |
 | Behavior per Camera: no Camera reverses its rear viewfinder, every front viewfinder is mirrored, only the 6×6 offers zoom steps | `CaptureBehaviorTests` |
 | Zoom steps derived from injected capabilities (one lens, wide plus ultra wide, three lenses at 3x and at 5x, a dual camera, 2.5x, crops reported or not, duplicates, order, labels), and the zoom decision: only the 6×6's rear camera, refused while saving, recording, saving a clip or interrupted, an unreported step and a Camera without zoom refused | `ZoomStepTests` |
+| The hold ends while a print is over the camera and is back when it closes, and ends with the screen | `CaptureSidewaysTests.testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses` (hosted) |
 | The held turn follows how the iPhone is held; a block reserving its length is the same height in every hold; a turned block takes the room it needs; a block that does not reserve takes its turned footprint | `CaptureSidewaysTests` (hosted) |
 | The column's arithmetic, laid out in a window: with room to spare the viewfinder keeps the screen's full width and the header gets the rest, to 300 pt; short of room the viewfinder keeps its shape and gives up width, with the controls taking theirs first; it is never under 220 pt; and its frame, the header's height and the controls' frame are identical in all three holds, for the shape of every Camera, with and without controls, at four amounts of room | `CaptureSidewaysTests` (hosted) |
 | Every Camera's shooting screen held upright and on each side at the default and the largest text size, with the lens controls and low-light cue a lens would raise, kept as screenshots | `CaptureSidewaysTests.testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText` |
@@ -172,9 +175,9 @@ Only after the camera has closed is the simulator turned to its side, which show
 ### Runs
 
 `swift test --package-path Packages/NativeAdapters` passed (58 tests, 15 of them the new `ZoomStepTests`).
-On an iPhone 17 Pro simulator on iOS 26.5, the whole `ImmerseTests` target passed except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active"; its `CaptureSidewaysTests` are 11 tests, which also passed on the iPhone SE and the iPhone 13 mini.
-The three `CaptureSidewaysUITests` passed on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro, about 4 minutes each, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
-The four Populated Journal Harness tests named above passed.
+On an iPhone 17 Pro simulator on iOS 26.5, the whole `ImmerseTests` target passed except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active"; its `CaptureSidewaysTests` are 12 tests, 11 of which also passed on the iPhone SE and the iPhone 13 mini before the merge of 067.
+The three `CaptureSidewaysUITests` passed on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro, about 4 minutes each, and again on the iPhone 17 Pro after `main`'s Instant change was merged in, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
+The Populated Journal Harness tests named above passed, and after the merge of 067 so did the harness's Instant flows at the camera (print, question, discard, two prints and an unanswered question) with `CameraPermissionWorkflowTests`.
 The Release build, with the Debug-only hooks (`CaptureController.hold(forTesting:)`, `setForTesting(phase:)` and `CaptureView.opensCamera`) compiled out, passed `Scripts/verify-release-excludes-testing-unlock.sh`.
 
 ### Failures on the way, kept

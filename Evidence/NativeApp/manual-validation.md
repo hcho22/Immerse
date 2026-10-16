@@ -1819,7 +1819,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows, and the Exposure slider shows that lens's bias. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
-| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, and the camera is portrait again after it closes. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, and after it closes the camera is portrait again and, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
 
 **What the build does, from the record and the code.**
 
@@ -2088,6 +2088,43 @@ A screen recording of each turn.
 
 **Write down.**
 Screenshots, and a screen recording of the Instant case.
+
+## The Instant Camera Staying On on a Real iPhone
+
+On 2026-10-16 the captain reported that the Instant showed "Camera paused. Saved captures are unchanged." and a Resume Camera button after every exposure; the camera now starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md)).
+This is not part of the pinned candidate yet; a separate re-pin follows once the pending camera changes land.
+Run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
+It reads **UNTESTED: physical execution deferred**.
+
+### C01 - The Instant's camera after each exposure
+
+**Steps.**
+
+1. Load a 1970s Instant Film and open the camera.
+2. Take an exposure.
+   When the print shows, close it; answer the question about its original.
+3. Look at the shooting screen straight away, without touching it.
+4. Take three more exposures in a row the same way.
+5. Take an exposure and, while its print shows, pull down Notification Center and put it away, then pull down Control Center and put it away; close the print and answer the question.
+6. If iOS has not yet asked this install about Photos, take an exposure, close the print, choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**; answer iOS's question about adding to Photos.
+   If it has already asked, record this step as UNTESTED, since asking again needs the app's permissions reset.
+7. Take an exposure and, while its print shows, press the side button to lock the phone, then unlock it and close the print.
+8. Take an exposure, and while its print shows, call the phone from another phone and answer the call; end the call, then close the print.
+9. Take an exposure and close the print; tap **Done** at once, then reopen the camera.
+10. Take the last exposure of a pack.
+
+**Expect.**
+
+- After steps 2, 4, 5 and 6 the live viewfinder is back within about a second of the last question closing, with no **Resume Camera** button and no "Camera paused" text; the shutter works at once.
+- After steps 7 and 8 the screen reads "Camera paused. Saved captures are unchanged." (or "Camera is available. Resume when ready.") with **Resume Camera**, and the camera does not start by itself.
+- After step 9 the camera is off on the Journal (no green camera dot in the status bar) and the reopened camera starts normally.
+- After step 10 the screen reads "Pack complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
+
+**It fails if.**
+**Resume Camera** has to be tapped after an ordinary exposure or after Notification Center, Control Center or the Photos question over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, **Resume Camera** shows on a complete pack, or the green camera dot stays on after leaving the camera.
+
+**Write down.**
+Each step's result, how long the viewfinder took to return, a screen recording of steps 2 to 6, and whether the green dot was on at step 9.
 
 ## Full Receipt Protocol
 

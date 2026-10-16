@@ -26,6 +26,10 @@ final class CaptureController {
     var message: String?
     /// How many captures this controller has saved, so a screen can show "Saved" for a moment after each.
     private(set) var savedCount = 0
+    /// The camera is stopped only to show an Instant print, so it starts again by itself when the last print and its
+    /// question close, and the wait lasts until that restart's `open` ends. The app going inactive meanwhile (a
+    /// permission prompt, Control Center) keeps it; any other stop (`suspend`, a real interruption, a failed save) ends it.
+    private var resumesAfterReveal = false
     var flash = false
     var focus: Double = 0.8
     var exposure: Double = 0
@@ -58,8 +62,12 @@ final class CaptureController {
     func open(film: Film, model: JournalModel) async throws {
         guard !busy else { throw JournalError.operationInProgress }
         busy = true
-        defer { busy = false }
         let request = sessionRequest
+        defer {
+            busy = false
+            // Whatever stopped the camera during this open owns the wait for a print now.
+            if request == sessionRequest { resumesAfterReveal = false }
+        }
         updateOrientation()
         let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
         guard allowed else {
@@ -93,11 +101,15 @@ final class CaptureController {
                             }
                         }
                     case .saveFailed:
+                        resumesAfterReveal = false
                         recordingStarted = nil
                         message = "Capture could not finish saving. Retry before taking another capture."
                         model.refresh()
-                    case .interrupted:
+                    case .interrupted(let reason):
                         recordingStarted = nil
+                        // A camera already stopped for a print is not interrupted by that stop or by the app going inactive.
+                        if resumesAfterReveal && reason == .applicationInactive { break }
+                        resumesAfterReveal = false
                         message = "Camera paused. Saved captures are unchanged."
                     case .interruptionEnded: message = "Camera is available. Resume when ready."
                     }
@@ -190,7 +202,36 @@ final class CaptureController {
     func setFocus() async throws { try await backend?.setManualFocus(Float(focus)) }
     func setExposure() async throws { try await backend?.setExposureBias(Float(exposure)) }
 
+    /// Stops the camera while an Instant print shows. Unlike `suspend`, it is meant to end: `printsClosed`.
+    func pauseForReveal() {
+        suspend()
+        resumesAfterReveal = true
+    }
+
+    /// Whether the camera starts again now that the last print and its question are closed: only if `allowingRestart`
+    /// and nothing else stopped it meanwhile. Otherwise the wait ends here; a restart keeps it until its `open` ends, so
+    /// Resume Camera stays hidden while the camera starts.
+    func printsClosed(allowingRestart: Bool) -> Bool {
+        resumesAfterReveal = allowingRestart && resumesAfterReveal && presented && message?.contains("Retry") != true
+        return resumesAfterReveal
+    }
+
+    /// Whether the capture screen offers Resume Camera: only while the Film is open, and then when the camera stopped
+    /// for anything but an Instant print, the screen shows an error or a save needs a retry.
+    func offersResume(for film: Film, showingError: Bool) -> Bool {
+        film.completionState == .open
+            && ((phase == .interrupted && !resumesAfterReveal) || showingError || message?.contains("Retry") == true)
+    }
+
+    /// The app went inactive (Control Center, a call, a permission prompt). A camera stopped only for an Instant print
+    /// stays stopped and still starts again when the prints close; a running or starting camera is suspended.
+    func pauseForInactiveScene() {
+        if resumesAfterReveal && !busy { return }
+        suspend()
+    }
+
     func suspend() {
+        resumesAfterReveal = false
         sessionRequest += 1
         preview = nil
         stopWatchingSceneLight()

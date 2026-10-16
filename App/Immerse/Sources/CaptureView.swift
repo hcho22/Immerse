@@ -88,7 +88,7 @@ struct CaptureView: View {
                   let revealed = captures?.filter({ $0.revealState == .revealed && $0.sequenceNumber > lastRevealedSequence ?? 0 }),
                   let newest = revealed.last else { return }
             lastRevealedSequence = newest.sequenceNumber
-            capture.suspend()
+            capture.pauseForReveal()
             let showsNow = revealedPrints.isEmpty
             revealedPrints += revealed
             if showsNow { instantPrint = revealedPrints.first }
@@ -148,7 +148,7 @@ struct CaptureView: View {
                 if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
             }.noticeButtonStyle(onDark: onDark)
         }
-        if capture.phase == .interrupted || error != nil || capture.message?.contains("Retry") == true {
+        if capture.offersResume(for: film, showingError: error != nil) {
             Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
                 .noticeButtonStyle(onDark: onDark)
         }
@@ -163,7 +163,7 @@ struct CaptureView: View {
     private func hasStatus(_ film: Film, controller capture: CaptureController) -> Bool {
         let behavior = CaptureBehavior.for(film.camera.id)
         return error != nil || cameraDenied || (capture.message.map { $0 != "Saved" || savedShowing } ?? false)
-            || capture.phase == .interrupted || capture.message?.contains("Retry") == true
+            || capture.offersResume(for: film, showingError: error != nil)
             || (film.completionState == .open && !lensNotes(behavior: behavior, controller: capture).isEmpty)
     }
 
@@ -340,6 +340,12 @@ struct CaptureView: View {
     private func showNextPrint() {
         revealedPrints = Array(revealedPrints.dropFirst())
         instantPrint = revealedPrints.first
+        // The last print and its question are closed: the camera comes back on its own, unless the Film is complete,
+        // the screen is gone or something else stopped it.
+        if revealedPrints.isEmpty, let film = model.film(filmID),
+           model.capture.printsClosed(allowingRestart: film.completionState == .open && error == nil && !model.hasPendingSave(filmID)) {
+            open(film)
+        }
     }
 
     private func viewfinderLabel(position: CapturePosition) -> String {
