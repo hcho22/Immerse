@@ -63,6 +63,33 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.revealed])
     }
 
+    func testInstantPauseForAPrintLeavesNoPausedMessageAndResumesOnlyWhenNothingElseStoppedTheCamera() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s,
+                                                   title: "Synthetic Instant pack", access: .subscription)
+        try await openWithoutSimulatorCamera(film, model)
+        model.capture.presented = true
+
+        // An exposure's print stops the camera for the sheet; its own event is not the camera's trouble.
+        model.capture.pauseForReveal()
+        XCTAssertTrue(model.capture.resumesAfterReveal)
+        try await Task.sleep(for: .milliseconds(500))
+        XCTAssertNil(model.capture.message, "The pause for a print must not read as an interruption")
+        XCTAssertTrue(model.capture.takeResumeAfterReveal(), "With the prints closed the camera starts again by itself")
+        XCTAssertFalse(model.capture.takeResumeAfterReveal(), "Only once")
+
+        // Done, or leaving the screen, ends the wait.
+        model.capture.pauseForReveal()
+        model.capture.suspend()
+        XCTAssertFalse(model.capture.takeResumeAfterReveal())
+
+        // A screen that is gone does not restart the camera.
+        model.capture.pauseForReveal()
+        model.capture.presented = false
+        XCTAssertFalse(model.capture.takeResumeAfterReveal())
+    }
+
     func testDoneDuringCameraOpenFinishesTheSaveWithoutStartingTheSession() async throws {
         let (root, calls, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }

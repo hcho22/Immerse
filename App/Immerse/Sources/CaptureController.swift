@@ -24,6 +24,12 @@ final class CaptureController {
     /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
     private var metersSceneLight = false
     var message: String?
+    /// The camera was stopped only to show an Instant print, so it starts again by itself when the last print and its
+    /// question close. Any other stop (`suspend`, an interruption, a failed save, an error) clears it.
+    private(set) var resumesAfterReveal = false
+    /// `.interrupted` events that this controller's own pauses for a print are still due to deliver; they are not
+    /// the camera's trouble, so they leave no "Camera paused" message.
+    private var ownPauseEvents = 0
     var flash = false
     var focus: Double = 0.8
     var exposure: Double = 0
@@ -87,11 +93,14 @@ final class CaptureController {
                             }
                         }
                     case .saveFailed:
+                        resumesAfterReveal = false
                         recordingStarted = nil
                         message = "Capture could not finish saving. Retry before taking another capture."
                         model.refresh()
                     case .interrupted:
                         recordingStarted = nil
+                        if ownPauseEvents > 0 { ownPauseEvents -= 1; break }
+                        resumesAfterReveal = false
                         message = "Camera paused. Saved captures are unchanged."
                     case .interruptionEnded: message = "Camera is available. Resume when ready."
                     }
@@ -176,7 +185,22 @@ final class CaptureController {
     func setFocus() async throws { try await backend?.setManualFocus(Float(focus)) }
     func setExposure() async throws { try await backend?.setExposureBias(Float(exposure)) }
 
+    /// Stops the camera while an Instant print shows. Unlike `suspend`, it is meant to end: `takeResumeAfterReveal`.
+    func pauseForReveal() {
+        suspend()
+        guard backend != nil else { return }
+        ownPauseEvents += 1
+        resumesAfterReveal = true
+    }
+
+    /// Whether the camera should start again now that the prints are closed, and cancels the wait either way.
+    func takeResumeAfterReveal() -> Bool {
+        defer { resumesAfterReveal = false }
+        return resumesAfterReveal && presented && message?.contains("Retry") != true
+    }
+
     func suspend() {
+        resumesAfterReveal = false
         sessionRequest += 1
         preview = nil
         stopWatchingSceneLight()

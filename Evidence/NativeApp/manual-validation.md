@@ -1794,6 +1794,41 @@ Where VoiceOver's focus goes after a turn is not on record; write it down, and i
 **Write down.**
 The list of what VoiceOver read, each way round, where focus went after each turn, and the recording.
 
+## The Instant Camera Staying On on a Real iPhone
+
+On 2026-10-16 the captain reported that the Instant showed "Camera paused. Saved captures are unchanged." and a Resume Camera button after every exposure; the camera now starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md)).
+This is not part of the pinned candidate yet; a separate re-pin follows once the pending camera changes land.
+Run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
+It reads **UNTESTED: physical execution deferred**.
+
+### C01 - The Instant's camera after each exposure
+
+**Steps.**
+
+1. Load a 1970s Instant Film and open the camera.
+2. Take an exposure.
+   When the print shows, close it; answer the question about its original.
+3. Look at the shooting screen straight away, without touching it.
+4. Take three more exposures in a row the same way, and once take two exposures quickly so that two prints queue.
+5. Take an exposure and, while its print shows, press the side button to lock the phone, then unlock it and close the print.
+6. Take an exposure, and while its print shows, call the phone from another phone; end the call, then close the print.
+7. Take an exposure and close the print; tap **Done** at once, then reopen the camera.
+8. Take the last exposure of a pack.
+
+**Expect.**
+
+- After steps 2 and 4 the live viewfinder is back within about a second of the last question closing, with no **Resume Camera** button and no "Camera paused" text; the shutter works at once.
+  Two queued prints are shown one after the other, and the viewfinder returns only after the second.
+- After steps 5 and 6 the screen reads "Camera paused. Saved captures are unchanged." (or "Camera is available. Resume when ready.") with **Resume Camera**, and the camera does not start by itself.
+- After step 7 the camera is off on the Journal (no green camera dot in the status bar) and the reopened camera starts normally.
+- After step 8 the screen reads "Pack complete", shows no live viewfinder and does not start the camera.
+
+**It fails if.**
+**Resume Camera** has to be tapped after an ordinary exposure, the camera starts by itself after an interruption, after Done or after the pack's last exposure, or the green camera dot stays on after leaving the camera.
+
+**Write down.**
+Each step's result, how long the viewfinder took to return, a screen recording of steps 2 to 4, and whether the green dot was on at step 7.
+
 ## Full Receipt Protocol
 
 These cases supplement M04/M07/M08/M24/M27 and cover FR-04 A05/A06,
