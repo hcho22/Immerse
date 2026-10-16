@@ -51,6 +51,8 @@ final class CaptureSidewaysTests: XCTestCase {
                 Color.clear.frame(height: 22)
             }.frame(maxWidth: .infinity)
         }
+        // A reserving block offered height is laid out that long, so this one is offered none.
+        .fixedSize(horizontal: false, vertical: true)
         let upright = size(header, turn: .upright)
         XCTAssertEqual(size(header, turn: .clockwise).height, upright.height)
         XCTAssertEqual(size(header, turn: .counterClockwise).height, upright.height)
@@ -74,6 +76,100 @@ final class CaptureSidewaysTests: XCTestCase {
         XCTAssertEqual(size(row, turn: .upright), CGSize(width: 132, height: 44))
         let sideways = size(row, turn: .clockwise, width: 400)
         XCTAssertEqual(sideways.height, 132, "A row of buttons becomes a column as long as it was wide")
+    }
+
+    // MARK: The column
+
+    /// Where `CaptureColumn` puts a header, a viewfinder of `aspect` and, with `controls` high, controls, for a screen with
+    /// `available` points of room between its top and the shutter bar, as the screen lays them out in a window.
+    private func column(
+        available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358
+    ) async throws -> (header: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
+        let frames = Frames()
+        func record(_ name: String) -> (GeometryProxy) -> CGRect { { $0.frame(in: .named("column")) } }
+        let view = CaptureColumn(available: available) {
+            TurnedBlock(length: 128, reservesLength: true) {
+                VStack(spacing: 12) {
+                    Color.clear.frame(height: 44)
+                    Color.clear.frame(height: 28)
+                    Color.clear.frame(height: 22)
+                }.frame(maxWidth: .infinity)
+            }
+            .onGeometryChange(for: CGRect.self, of: record("header")) { frames.header = $0 }
+            .captureColumnRole(.header)
+            Color.black
+                .onGeometryChange(for: CGRect.self, of: record("viewfinder")) { frames.viewfinder = $0 }
+                .captureColumnRole(.viewfinder(aspect: aspect))
+            if controls > 0 {
+                Color.clear.frame(height: controls)
+                    .onGeometryChange(for: CGRect.self, of: record("controls")) { frames.controls = $0 }
+                    .captureColumnRole(.controls)
+            }
+        }
+        .environment(\.heldTurn, turn)
+        .coordinateSpace(name: "column")
+        .frame(width: width)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        let host = UIHostingController(rootView: view)
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await Task.sleep(for: .milliseconds(300))
+        return (frames.header, frames.viewfinder, frames.controls, host.sizeThatFits(in: CGSize(width: width, height: 3000)))
+    }
+
+    private final class Frames { var header = CGRect.zero, viewfinder = CGRect.zero, controls = CGRect.zero }
+
+    /// With room to spare, the viewfinder keeps the screen's full width and the header gets what is left over, as far as
+    /// 300 points, so held on its side its lines need not wrap.
+    func testRoomToSpareGoesToTheHeaderAfterTheViewfinderHasItsFullWidth() async throws {
+        let big = try await column(available: 700, aspect: 1)
+        XCTAssertEqual(big.viewfinder.width, 358, accuracy: 0.5)
+        XCTAssertEqual(big.viewfinder.height, 358, accuracy: 0.5)
+        XCTAssertEqual(big.header.height, 300 - 0, accuracy: 0.5, "The header is capped at 300 points")
+        XCTAssertEqual(big.viewfinder.minY, 300 + 12, accuracy: 0.5)
+        let tight = try await column(available: 520, aspect: 1)
+        XCTAssertEqual(tight.viewfinder.height, 358, accuracy: 0.5, "The viewfinder has its full width first")
+        XCTAssertEqual(tight.header.height, 520 - 358 - 12, accuracy: 0.5, "The header has the rest")
+    }
+
+    /// Short of room, the viewfinder keeps its shape and gives up width, so the whole of it shows above the shutter bar.
+    func testShortOfRoomTheViewfinderKeepsItsShapeAndGivesUpWidth() async throws {
+        let tall = try await column(available: 540, aspect: 2.0 / 3)
+        XCTAssertEqual(tall.header.height, 128, accuracy: 0.5)
+        XCTAssertEqual(tall.viewfinder.height, 540 - 128 - 12, accuracy: 0.5)
+        XCTAssertEqual(tall.viewfinder.width, tall.viewfinder.height * 2.0 / 3, accuracy: 0.5)
+        XCTAssertLessThan(tall.viewfinder.width, 358)
+        XCTAssertEqual(tall.viewfinder.midX, 179, accuracy: 0.5, "It sits in the middle")
+        XCTAssertLessThanOrEqual(tall.viewfinder.maxY, 540 + 0.5, "The whole viewfinder is within the room")
+        let controls = try await column(available: 540, aspect: 1, controls: 120)
+        XCTAssertEqual(controls.viewfinder.height, 540 - 128 - 120 - 24, accuracy: 0.5, "The controls take their room first")
+        XCTAssertEqual(controls.controls.minY, controls.viewfinder.maxY + 12, accuracy: 0.5)
+        XCTAssertLessThanOrEqual(controls.controls.maxY, 540 + 0.5)
+    }
+
+    /// Below the smallest viewfinder the column is taller than the room, and the screen scrolls.
+    func testTheViewfinderIsNeverSmallerThanItsMinimum() async throws {
+        let cramped = try await column(available: 300, aspect: 1)
+        XCTAssertEqual(cramped.viewfinder.height, 220, accuracy: 0.5)
+        XCTAssertGreaterThan(cramped.size.height, 300)
+    }
+
+    /// The viewfinder is the same size in the same place however the iPhone is held, with and without controls and at the
+    /// shape of every Camera.
+    func testTheViewfinderIsTheSameInEveryHold() async throws {
+        for (aspect, controls) in [(CGFloat(1), CGFloat(0)), (2.0 / 3, 0), (3.0 / 4, 0), (1, 120)] {
+            for available in [CGFloat(480), 560, 640, 760] {
+                let upright = try await column(available: available, aspect: aspect, controls: controls)
+                for turn in [HeldTurn.clockwise, .counterClockwise] {
+                    let turned = try await column(available: available, aspect: aspect, controls: controls, turn: turn)
+                    XCTAssertEqual(turned.viewfinder, upright.viewfinder, "aspect \(aspect), room \(available), \(turn)")
+                    XCTAssertEqual(turned.header.height, upright.header.height, "aspect \(aspect), room \(available), \(turn)")
+                    XCTAssertEqual(turned.controls, upright.controls)
+                }
+            }
+        }
     }
 
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
@@ -115,7 +211,8 @@ final class CaptureSidewaysTests: XCTestCase {
                     // would report once the screen has settled.
                     try await Task.sleep(for: .seconds(1))
                     model.capture.setForTesting(controls: controls, sceneEV100: cue ? 4 : FixedExposure.referenceEV100)
-                    model.capture.message = nil
+                    // The tallest case: the message and Resume Camera over the viewfinder, in every hold.
+                    model.capture.message = "Camera paused. Saved captures are unchanged."
                     try await Task.sleep(for: .milliseconds(500))
                     let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
                         _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
@@ -132,6 +229,52 @@ final class CaptureSidewaysTests: XCTestCase {
                     attachment.lifetime = .keepAlways
                     add(attachment)
                 }
+            }
+        }
+    }
+
+    /// The 6×6's zoom steps as a person with a camera running sees them: enabled, with the selected step filled. The
+    /// simulator's own screens show them dimmed, since its camera is never idle. No notice shows over the viewfinder.
+    func testTheZoomStepsInTheirEnabledState() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic zoom",
+                                                   filmStock: .color, access: .subscription)
+        model.refresh()
+        var controls = NativeCameraControls()
+        controls.manualFocus = true
+        controls.minimumExposureBias = -2
+        controls.maximumExposureBias = 2
+        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5), .init(.wide, displayFactor: 1),
+                                                  .init(.telephoto, displayFactor: 3)], wideNativeCropFactors: [2]).zoomSteps
+        controls.zoomSteps = steps
+        for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
+            controls.zoomStep = steps[selected]
+            for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
+                let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+                let window = UIWindow(windowScene: scene)
+                window.overrideUserInterfaceStyle = style
+                model.capture.hold(forTesting: held)
+                var screen = CaptureView(filmID: film.id)
+                screen.opensCamera = false
+                window.rootViewController = UIHostingController(rootView: screen.environment(model))
+                window.makeKeyAndVisible()
+                try await Task.sleep(for: .seconds(1))
+                model.capture.setForTesting(controls: controls)
+                model.capture.setForTesting(phase: .idle)
+                model.capture.message = nil
+                try await Task.sleep(for: .milliseconds(500))
+                let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+                    _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+                }
+                model.capture.hold(forTesting: .portrait)
+                window.isHidden = true
+                window.rootViewController = nil
+                try await Task.sleep(for: .milliseconds(500))
+                let attachment = XCTAttachment(image: screenshot)
+                attachment.name = "Zoom-enabled-\(name)-\(styleName)"
+                attachment.lifetime = .keepAlways
+                add(attachment)
             }
         }
     }

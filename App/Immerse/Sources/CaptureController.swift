@@ -24,6 +24,8 @@ final class CaptureController {
     /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
     private var metersSceneLight = false
     var message: String?
+    /// How many captures this controller has saved, so a screen can show "Saved" for a moment after each.
+    private(set) var savedCount = 0
     var flash = false
     var focus: Double = 0.8
     var exposure: Double = 0
@@ -83,6 +85,7 @@ final class CaptureController {
                     case .photoSaved, .movieClipSaved:
                         recordingStarted = nil
                         message = "Saved"
+                        savedCount += 1
                         model.refresh()
                         if film.camera.revealRule == .instantPerExposure {
                             model.developSavedPrint(film.id) { [weak self, weak model] text in
@@ -260,6 +263,9 @@ extension CaptureController {
         heldForTesting = held
         orientation = held
     }
+
+    /// Hosted tests have no backend, so they set the phase it would report.
+    func setForTesting(phase: CapturePhase) { self.phase = phase }
 
     /// Hosted tests have no camera, so they set what a lens would report.
     func setForTesting(controls: NativeCameraControls, sceneEV100: Double? = nil) {

@@ -70,14 +70,16 @@ private struct TurnedWithTheHold: ViewModifier {
 ///
 /// With the iPhone on its side the block is laid out `length` wide (its width as the person reads it, so the length of
 /// its lines), as tall as that makes it, and turned a quarter turn about its centre, so it takes as much of the screen's
-/// width as it is tall and `length` of the screen's height. A block that reserves its length fills the width it is
-/// offered and sits against the edge that is its top as the person holds the iPhone; any other is exactly as wide as it
-/// is tall once turned, and its parent puts it where it belongs. A `length` of nil lays the block out at its natural size instead, as a row of buttons does. A block that
-/// is wider than the screen once turned, as at the largest text sizes, scrolls across the screen, which is up and down
-/// for the person holding the iPhone on its side, starting from its top.
+/// width as it is tall and `length` of the screen's height. A `length` of nil lays the block out at its natural size
+/// instead, as a row of buttons does. A block that is wider than the screen once turned, as at the largest text sizes,
+/// scrolls across the screen, which is up and down for the person holding the iPhone on its side, starting from its top.
 ///
-/// With `reservesLength` the block takes the greater of its two heights in every hold. The Camera's header uses it, so the
-/// viewfinder below it is the same size and in the same place however the iPhone is held.
+/// With `reservesLength` the block takes the greater of its two heights in every hold, fills the width it is offered and
+/// sits against the edge that is its top as the person holds the iPhone. The Camera's header uses it, so the viewfinder
+/// below it is the same size and in the same place however the iPhone is held. A reserving block that is offered more
+/// height than its length is laid out that long (`CaptureColumn` offers the header the room the viewfinder leaves, so a
+/// tall iPhone keeps the Camera's name and its count on one line each). Any other block is exactly as wide as it is tall
+/// once turned, and its parent puts it where it belongs.
 struct TurnedBlock<Content: View>: View {
     @Environment(\.heldTurn) private var turn
     var length: CGFloat?
@@ -91,7 +93,7 @@ struct TurnedBlock<Content: View>: View {
         }
         if turn.isSideways {
             // The one `ViewThatFits`, which swaps the block's view identity where it starts to overflow: only the
-            // header and the notes turn, they hold no state, and no layout of one `Layout` alone can scroll.
+            // header turns this far, it holds no state, and no layout of one `Layout` alone can scroll.
             ViewThatFits(in: .horizontal) {
                 block
                 ScrollView(.horizontal, showsIndicators: false) { block }
@@ -110,16 +112,24 @@ private struct TurnedLayout: Layout {
 
     private func finite(_ value: CGFloat?) -> CGFloat? { value.flatMap { $0.isFinite ? $0 : nil } }
 
+    /// How long the block's lines run when the iPhone is on its side: `length`, or longer for a reserving block that is
+    /// offered more height than that.
+    private func lengthUsed(_ proposal: ProposedViewSize) -> CGFloat? {
+        guard let length else { return nil }
+        guard reservesLength, let offered = finite(proposal.height) else { return length }
+        return max(length, offered)
+    }
+
     /// The block's size when laid out for the iPhone on its side, before it is turned.
-    private func sidewaysSize(_ child: LayoutSubview) -> CGSize {
-        child.sizeThatFits(length.map { ProposedViewSize(width: $0, height: nil) } ?? .unspecified)
+    private func sidewaysSize(_ child: LayoutSubview, _ proposal: ProposedViewSize) -> CGSize {
+        child.sizeThatFits(lengthUsed(proposal).map { ProposedViewSize(width: $0, height: nil) } ?? .unspecified)
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         guard let child = subviews.first else { return .zero }
-        let upright = child.sizeThatFits(proposal)
+        let upright = child.sizeThatFits(ProposedViewSize(width: proposal.width, height: nil))
         // Measured in every hold, so the reserved height never depends on how the iPhone is held.
-        let sideways = sidewaysSize(child)
+        let sideways = sidewaysSize(child, proposal)
         let height = reservesLength ? max(upright.height, sideways.width) : (turn.isSideways ? sideways.width : upright.height)
         if turn.isSideways {
             return CGSize(width: reservesLength ? finite(proposal.width) ?? sideways.height : sideways.height, height: height)
@@ -134,7 +144,7 @@ private struct TurnedLayout: Layout {
             child.place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading, proposal: ProposedViewSize(size))
             return
         }
-        let size = sidewaysSize(child)
+        let size = sidewaysSize(child, proposal)
         let centerX = turn == .clockwise ? bounds.maxX - size.height / 2 : bounds.minX + size.height / 2
         child.place(at: CGPoint(x: centerX, y: bounds.midY), anchor: .center, proposal: ProposedViewSize(size))
     }

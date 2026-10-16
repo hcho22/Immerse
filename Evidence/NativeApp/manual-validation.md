@@ -1825,12 +1825,16 @@ The authority and stop conditions at the top of this plan apply to each of them 
 
 - The shooting screen keeps the portrait layout in every hold.
   The viewfinder box is the Camera's portrait shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm), the same size in the same place whichever way the iPhone is held.
+  The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two sliders), and it never changes size when a message comes or goes.
   Held upright, the screen is as it was except that **Done** is a button at the top of the screen's own content, not in a navigation bar, and the header keeps the room it needs turned, so the viewfinder sits a little lower.
 - Held on its side, the picture in the viewfinder is a landscape window, centered in the box, in the shape the Camera develops to (a square stays square); the box shows black around it where it is wider than tall.
-- Held on its side, the header (**Done**, the Camera's name, what is left, status, messages, **Open iPhone Settings** and **Resume Camera**) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; the focus and exposure captions, the notes ("... unavailable on this lens"), the low-light cue and the zoom steps turn too.
+- Held on its side, the header (**Done**, the Camera's name, what is left and the status of a complete Film) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; where the screen has room to spare, as on a tall iPhone with a square viewfinder, the name and the count each read on one line.
+  The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
+  The focus and exposure captions turn beside their sliders, and the zoom steps turn too.
+  At the largest text sizes the error, the message, the buttons and the notes are part of the header instead, where they scroll.
   The Switch Camera, flash and microphone icons turn in place.
   The shutter does not turn.
-- A header too long to fit turned scrolls across the screen, from its top.
+- A header too long to fit turned scrolls across the screen, from its top, and below the smallest viewfinder (220 points) the screen scrolls up and down, as at the largest text sizes.
 - Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 - A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, neither the screen's words nor the picture turn.
 - The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for a native sensor crop where the camera reports it, and nowhere on the front camera or on another Camera.
@@ -1867,7 +1871,8 @@ Keep every photo and clip as test media, out of Git.
 **Expect.**
 
 - The screen stays in the portrait layout in all three holds: the viewfinder keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words, the icons and the picture turning.
-- Held on its side, every word and icon reads upright, the count and status are legible, and nothing is clipped, hidden behind the shutter bar or overlapping the viewfinder or another control.
+- The whole viewfinder shows above the shutter bar in every hold, on every Camera, with nothing of it behind the bar; a message or Resume Camera showing over it, and then going, does not change its size or place.
+- Held on its side, every word and icon reads upright, the count and status are legible, and nothing is clipped, hidden behind the shutter bar or overlapping the viewfinder or another control: the notes, the captions, the cue, the message and the zoom labels are whole.
 - **Done** is a button of at least the size of a thumb tip, wherever it sits in each hold.
 - The Disposable's cue reads upright on its side, in a dark capsule at the edge of the viewfinder that is its top.
 
@@ -1879,7 +1884,7 @@ Keep every photo and clip as test media, out of Git.
 
 **What is a finding and not a failure.**
 How the turned words feel, whether the header's place against the screen's edge is where the captain expects it, and what the camera does with **Portrait Orientation Lock** on, are his to judge; a change would be his decision.
-The Disposable's and the 4:3 Cameras' boxes are taller than the screen, so the lower part of the viewfinder scrolls under the shutter bar, as before.
+The viewfinder is narrower than the screen on a short iPhone, a smaller picture than the room beside it could frame; that is the cost of showing the whole of it, and the size is his to judge.
 
 **Write down.**
 Each Camera and hold, a screenshot of each, any control that did not respond, and the captain's words on the feel.
@@ -1896,7 +1901,7 @@ Each Camera and hold, a screenshot of each, any control that did not respond, an
 
 **Expect.**
 
-- The header and the controls stay legible and in the same order at every size.
+- The header and the controls stay legible and in the same order at every size; at the largest sizes the error, the message and the notes are in the header, not over the viewfinder.
 - Once the header is too long for the screen turned, it scrolls across the screen, which is up and down for you, from its top; **Done** is in view at the start.
 - The shutter, Switch Camera and the zoom steps stay reachable, and the viewfinder is not hidden behind anything.
 

@@ -39,6 +39,8 @@ The Disposable's fixed exposure and cue, the Super 8's fixed focus, the Cameras'
 A Film already loaded needs nothing changed: no stored data, Camera package or treatment version is affected.
 
 The alternative considered for the 6×6's viewfinder was the waist-level reversal PRD version 2.0 specified, which gave the Camera the feel of the Format Reference's finder; the captain preferred the normal one.
-The accepted costs are that the 6×6 no longer shows that feel while framing, that the viewfinder's picture is letterboxed inside its box when a Camera whose box is portrait is held sideways, and that the screen's header keeps the height of its turned form when the iPhone is upright, so the viewfinder sits a little lower than a header sized to its text alone would put it.
+The viewfinder is the largest box of the Camera's shape that the room between the top of the screen and the shutter bar leaves after the header and the controls, so the whole of it shows in every hold on every supported iPhone, narrower than the screen where the room is short; that is the answer to his first complaint, "viewfinder does not fit the screen".
+Messages, the way to Resume Camera and what a lens cannot do sit over the viewfinder, so none of them moves it.
+The accepted costs are that the 6×6 no longer shows that feel while framing, that the viewfinder's picture is letterboxed inside its box when a Camera whose box is portrait is held sideways, that the screen's header keeps the height of its turned form when the iPhone is upright, so the viewfinder sits a little lower than a header sized to its text alone would put it, and that the viewfinder is smaller than the screen is wide on a short iPhone.
 
 Decided on 2026-10-16.

@@ -10,15 +10,16 @@ import XCTest
 @MainActor
 final class CaptureSidewaysUITests: XCTestCase {
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "mediumFormat6x6", name: "6×6")
+        try check(id: "mediumFormat6x6", name: "6×6", fillsTheRoom: false)
     }
 
+    /// The tallest viewfinder: the 2:3 box, with the error, the message and Resume Camera over it.
     func testDisposableShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "disposable1990s", name: "Disposable")
+        try check(id: "disposable1990s", name: "Disposable", fillsTheRoom: true)
     }
 
     func testSuper8ShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "super8HomeMovie", name: "Super 8")
+        try check(id: "super8HomeMovie", name: "Super 8", fillsTheRoom: true)
     }
 
     /// What the screen shows, measured in the window's own portrait frame.
@@ -30,7 +31,9 @@ final class CaptureSidewaysUITests: XCTestCase {
         var shutter: CGRect
     }
 
-    private func check(id: String, name: String) throws {
+    /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
+    /// width, sets its size, and it ends just above the bar.
+    private func check(id: String, name: String, fillsTheRoom: Bool) throws {
         let app = XCUIApplication()
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
         app.resetAuthorizationStatus(for: .camera)
@@ -72,6 +75,8 @@ final class CaptureSidewaysUITests: XCTestCase {
         let upright = try layout(app)
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
+        try checkFits(upright, app, "upright", fillsTheRoom: fillsTheRoom)
+        retainFrames(upright, name: name, hold: "portrait")
         retainScreenshot(name: "\(name)-capture-portrait")
 
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right")] {
@@ -82,6 +87,8 @@ final class CaptureSidewaysUITests: XCTestCase {
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
+            try checkFits(turned, app, side, fillsTheRoom: fillsTheRoom)
+            retainFrames(turned, name: name, hold: side)
             XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
             XCTAssertGreaterThanOrEqual(turned.done.height, 44, "Done keeps a tap target of 44 points turned")
@@ -108,6 +115,34 @@ final class CaptureSidewaysUITests: XCTestCase {
                        "The Film screen turns with the iPhone once the shooting screen is gone")
         retainScreenshot(name: "\(name)-film-landscape")
         XCUIDevice.shared.orientation = .portrait
+    }
+
+    /// What was measured, kept with the run: the viewfinder's frame and the room above the shutter bar, in each hold.
+    private func retainFrames(_ layout: Layout, name: String, hold: String) {
+        let text = "window \(layout.window.size.debugDescription), viewfinder \(layout.viewfinder), shutter \(layout.shutter)"
+        let attachment = XCTAttachment(string: text)
+        attachment.name = "frames-\(name)-\(hold)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    /// The whole viewfinder shows above the shutter bar, and everything drawn in it, the notices and their buttons, lies
+    /// within it: a frame that reaches past its box is text the box cuts off.
+    private func checkFits(_ layout: Layout, _ app: XCUIApplication, _ hold: String, fillsTheRoom: Bool) throws {
+        XCTAssertLessThanOrEqual(layout.viewfinder.maxY, layout.shutter.minY, "The whole viewfinder is above the shutter bar, \(hold)")
+        XCTAssertGreaterThanOrEqual(layout.viewfinder.minX, layout.window.minX, "The viewfinder is within the screen, \(hold)")
+        XCTAssertLessThanOrEqual(layout.viewfinder.maxX, layout.window.maxX, "The viewfinder is within the screen, \(hold)")
+        if fillsTheRoom {
+            // The shutter bar's top is 8 points above the shutter's frame, and the column leaves 12 above the bar.
+            XCTAssertLessThanOrEqual(layout.shutter.minY - layout.viewfinder.maxY, 40,
+                                     "The viewfinder takes the room above the shutter bar, \(hold)")
+        }
+        let viewfinder = app.otherElements["viewfinder"]
+        let inside = layout.viewfinder.insetBy(dx: -1, dy: -1)
+        for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex {
+            XCTAssertTrue(inside.contains(element.frame), "\(element.label) is not cut off by the viewfinder, \(hold): \(element.frame) in \(layout.viewfinder)")
+        }
+        XCTAssertGreaterThan(viewfinder.buttons["Resume Camera"].frame.height, 0, "Resume Camera is over the viewfinder, \(hold)")
     }
 
     private func layout(_ app: XCUIApplication) throws -> Layout {

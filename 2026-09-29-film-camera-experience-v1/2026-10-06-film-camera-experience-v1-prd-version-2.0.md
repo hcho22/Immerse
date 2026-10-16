@@ -533,6 +533,7 @@ Only expose controls both authentic to the chosen Camera and genuinely supported
 
 The shooting screen keeps its portrait layout whichever way the iPhone is held, as the iPhone's own Camera app does, on all five Cameras.
 The viewfinder keeps the same size and place in every hold, and the picture inside it is the shape the Camera develops to as the iPhone is held, so held on its side it frames a landscape scene.
+The whole viewfinder shows above the shutter bar at the default text size on every supported iPhone, down to the smallest: it is the largest box of the Camera's shape that the room leaves after the header and the controls, narrower than the screen's width where the room is short, and it does not change size when a message appears, because messages and notes sit over it.
 Only the screen's words and icons turn, to read upright when the iPhone is on its side, and they stay legible and unclipped in both holds.
 A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in (FR-05).
 Every other screen keeps turning with the iPhone, and so does the print that opens over the camera after an Instant exposure.

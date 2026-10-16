@@ -21,6 +21,7 @@
 		497F17D0D8217BCF9BDD878E /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 3B6476416256E9ABC968E179 /* FilmRuntime */; };
 		5B497E079395875101B1D61E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */; };
 		659C053BB2A6A00BE88D24C5 /* PopulatedWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */; };
+		677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BF3192B0F536068A133B6A /* CaptureColumn.swift */; };
 		6AFFE8F4C9F144833B546A12 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */; };
 		6CD8EC42521CB218F1B49E00 /* WorkflowHarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A988703796E8A16B38EA1BF /* WorkflowHarnessApp.swift */; };
 		7E10CBB3EF15C17916C9FCA3 /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FFCE9E01DB928F875296A0E /* MediaCatalog.json */; };
@@ -84,6 +85,7 @@
 		9C07737AFFDECE551D6E1CF8 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
 		A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlock.swift; sourceTree = "<group>"; };
 		BACA806F51C52F191067D24F /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
+		C4BF3192B0F536068A133B6A /* CaptureColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureColumn.swift; sourceTree = "<group>"; };
 		C98F98988E7D41895751822D /* PopulatedJournalHarnessTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PopulatedJournalHarnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1C097FF52FC8220B01E1FA9 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
 		D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				00B81FCC70A05084325DA5A1 /* Assets.xcassets */,
 				0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */,
 				9B34F2940DAEFDE2A09B4462 /* CameraSamplesView.swift */,
+				C4BF3192B0F536068A133B6A /* CaptureColumn.swift */,
 				2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */,
 				0353E472543323E10BB6D087 /* CaptureView.swift */,
 				27E8ACB31376AA5F1A9E08D2 /* FilmDetailView.swift */,
@@ -328,6 +331,7 @@
 			files = (
 				F695F91CFCA23E101A79E450 /* CameraCatalogView.swift in Sources */,
 				2ACAFBE266942FBD7B3DCA63 /* CameraSamplesView.swift in Sources */,
+				677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */,
 				F2BB2E934519F5EDDFDD26F2 /* CaptureController.swift in Sources */,
 				3C252AA2E53787F521A71D60 /* CaptureView.swift in Sources */,
 				09D38255E770B7DA3A752A08 /* FilmDetailView.swift in Sources */,

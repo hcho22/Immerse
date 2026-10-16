@@ -15,6 +15,9 @@ This record is simulator evidence only.
 The simulator has no camera, so the live picture, the real lenses, a real zoom and the orientation of a saved photo were not seen.
 No real iPhone has run it.
 
+The first build of this change did not keep the first of the captain's complaints: its own screenshots showed the Disposable's 2:3 and the Super 8's 3:4 viewfinders running behind the shutter bar, and a note cut off by the bar.
+Three corrections followed, and this record describes the build with them: the whole viewfinder fits above the shutter bar in every hold on every iPhone down to the smallest, no turned text is cut off, and where the screen has room the header keeps the Camera's name and its count on one line each.
+
 ## What He Saw, and Why
 
 Before this change `CaptureView` laid itself out for the interface orientation: a compact vertical size class gave a wide viewfinder in the same scroll view, under a navigation bar that held Done and above a shutter bar pinned to the bottom of the screen.
@@ -31,23 +34,29 @@ While an Instant print or the question about its original is over the camera, th
 Every other screen turns as before, the Darkroom's landscape arrangement of [065](darkroom-landscape-side-by-side-065.md) included.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
-**The words and icons.**
-With the iPhone on its side (`HeldTurn.swift`) they turn to read upright, the home-side-right hold (`landscapeLeft`) a quarter turn clockwise and the home-side-left hold (`landscapeRight`) a quarter turn counterclockwise.
-
-- The header (Done, the Camera's name, what is left, the status, messages, **Open iPhone Settings** and **Resume Camera**) is one block.
-  It is laid out as the portrait header it is, `headerLength` wide (128 pt at the default text size, scaled with Dynamic Type) and as tall as that makes it, then turned as a whole and put against the edge of the screen that is the top for the person holding the iPhone.
-- The focus and exposure captions turn beside their sliders, which stay across the screen; the notes ("Manual focus unavailable on this lens", "Flash unavailable on this lens", "Fixed exposure unavailable on this lens"), the Disposable's low-light cue and the zoom steps turn as blocks.
-- The Switch Camera, flash and microphone icons turn in place.
-  The shutter is a circle and stays as it is.
-- Done is a glass button of at least 44 pt, the first row of the header, scrolling with the content.
-  It replaced the navigation bar's Done.
-
 **The viewfinder.**
 Its box is the Camera's portrait shape in every hold: square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm.
+It is the largest box of that shape that the room above the shutter bar leaves after the header and, for the 6×6, the two sliders under it, so the whole of it shows: the Instant's stays as wide as the screen where there is room, and the others are narrower than the screen where there is not (`CaptureColumn.swift`; the sizes measured are below).
 Inside it the live picture is the shape the Camera develops to as the iPhone is held, in the middle of the box: held on its side it is a landscape window (3:2 for the Disposable, 4:3 for the two Movie Cameras), and a square stays square.
 The preview rotates with how the iPhone is held (`CaptureController.orientation`, the same angle a photo is saved with), no longer with the interface.
 A clip keeps the orientation it started in, so neither the words nor the picture turn while a clip records.
 Saved photos and clips are as they were: the orientation the iPhone was held in, never mirrored.
+
+**The words and icons.**
+With the iPhone on its side (`HeldTurn.swift`) they turn to read upright, the home-side-right hold (`landscapeLeft`) a quarter turn clockwise and the home-side-left hold (`landscapeRight`) a quarter turn counterclockwise.
+
+- The header (Done, the Camera's name, what is left and, once a Film is complete, "Film complete" or "Pack complete") is one block above the viewfinder.
+  It is laid out as the portrait header it is, 128 pt wide at least at the default text size (scaled with Dynamic Type) and as tall as that makes it, then turned as a whole and put against the edge of the screen that is the top for the person holding the iPhone.
+  Where the screen has room to spare, up to 300 pt, it is laid out longer, so the Camera's name and its count each read on one line: the Instant on a tall iPhone does; where the room is short, as on the iPhone SE, they wrap.
+- The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("Manual focus unavailable on this lens", "Flash unavailable on this lens", "Fixed exposure unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against the edge that is its top as the iPhone is held, turned as one block that is never longer than the box.
+  Being over the viewfinder, a message coming or going never moves it, and the camera icon the empty frame shows gives way to them.
+  "Saved" shows there for 2.5 seconds after each capture and then goes; every other notice stays while its cause does.
+  At the largest text sizes the same lines are part of the header instead, where they scroll with the screen.
+- The focus and exposure captions turn beside their sliders, which stay across the screen; a slider's row is as tall as its turned caption in every hold, so the room under the viewfinder never depends on the hold.
+  The zoom steps turn as a block along the viewfinder's bottom edge as the iPhone is held.
+- The Switch Camera, flash and microphone icons turn in place.
+  The shutter is a circle and stays as it is.
+- Done is a glass button of at least 44 pt, the first row of the header, replacing the navigation bar's Done.
 
 **The 6×6.**
 `CaptureBehavior.reversesRearViewfinder` is gone and `isViewfinderMirrored` is true for the front camera only.
@@ -64,6 +73,12 @@ No other product string changed.
   The header is turned as one block that reserves the greater of its two heights, so the viewfinder never moves.
 - **Laying the header over the viewfinder.**
   It would have covered the picture, changed the portrait screen the captain had already seen, and at the largest text sizes covered most of it.
+  What sits over the viewfinder instead is only what comes and goes: messages, notes and the cue, which are short, on a dark ground, and over a picture that is not there while they say the camera is unavailable.
+- **A viewfinder of one size, with the screen scrolling to its lower part.**
+  The first build did, and the Disposable's and the 4:3 Cameras' boxes ran behind the shutter bar.
+- **A line kept free above the viewfinder for messages.**
+  An error with its message and Resume Camera is about 130 pt tall, and a line kept free for a short message would cost every Camera height at every moment.
+  Over the viewfinder they cost it nothing and move nothing.
 - **Turning the sliders.**
   A slider turned a quarter turn is only as long as the room under the viewfinder is tall, which is short for a manual focus control.
   The sliders stay across the screen and their captions turn beside them.
@@ -74,14 +89,26 @@ No other product string changed.
   It is how the iPhone's Camera app zooms, but then manual focus, exposure bias and the capabilities the capture screen reads would describe the virtual device and not the lens in use, and the note "Manual focus unavailable on this lens" must stay true for each lens.
   Each step instead runs on its own physical lens as the session's input, swapped as a front and rear switch is.
 
-### The header takes the same height in every hold
+### The column
 
-`TurnedBlock` measures its content both ways, upright at the width it is offered and turned at `headerLength`, and the header takes the greater height in every hold.
-At the default text size the turned header is 128 pt, and where the upright header is shorter than that, as with only a Camera's name and its count under Done, the viewfinder sits a little lower held upright than a header sized to its text alone would put it.
-That is the cost of a viewfinder that never moves.
-The hosted test `testAHeaderThatReservesItsLengthIsTheSameHeightInEveryHold` holds it at 128 pt in all three holds, 358 pt wide.
-`TurnedBlock` uses `ViewThatFits` only to choose between the turned header and a copy of it that scrolls across the screen, which happens when the turned header is wider than the screen.
+`CaptureColumn` is a `Layout` of three parts, the header, the viewfinder and the controls, given the room between the top of the screen's safe area and the shutter bar (the size of the `GeometryReader` in `CaptureView`, which already leaves out the safe areas and the bar, less 12 pt above and below).
+It measures the controls first and then the header at its least, which for the header is its portrait height or 128 pt, whichever is more, and gives the viewfinder what is left, down to 220 pt, below which the screen scrolls, as at the largest text sizes; the box keeps its Camera's shape and is as wide as that makes it, at most the screen's width.
+Where the room is more than the viewfinder at the screen's full width needs, the header gets the rest, up to 300 pt.
+Nothing in this depends on how the iPhone is held, so the viewfinder is the same size in the same place in every hold: the header reserves the greater of its upright and its turned heights, and a slider row is as tall as its turned caption in either hold.
+The hosted tests of the column's arithmetic (below) and the screen tests' frames hold it.
+`TurnedBlock` uses `ViewThatFits` only to choose between the turned header and a copy of it that scrolls across the screen, which happens when the turned header is wider than the screen, at the largest text sizes.
 `AGENTS.md` prefers a custom `Layout` to `ViewThatFits` because `ViewThatFits` swaps view identity as text grows; here the swap happens only when a turned block outgrows the screen, and nothing in the header holds state that the swap would lose.
+
+The viewfinder's box as the screen tests measured it, in points, the same in all three holds in every case (a Film with no controls, since the simulator has no camera to report any, so the 6×6 shows no sliders):
+
+| iPhone (simulator, iOS 26.5) | Screen | 6×6 | Disposable (2:3) | Super 8 (3:4) |
+| --- | --- | --- | --- | --- |
+| iPhone SE (3rd generation) | 375 × 667 | 343 × 343 | 247 × 371 | 278 × 371 |
+| iPhone 13 mini | 375 × 812 | 343 × 343 | 301 × 452 | 339 × 452 |
+| iPhone 17 Pro | 402 × 874 | 370 × 370 | 335 × 502 | 370 × 493 |
+
+With its two sliders raised, as a camera that can focus by hand reports them, the 6×6's box on the SE is 223 × 223 (the hosted screenshot [iphone-se-6x6-with-controls-portrait.png](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png)).
+On every one the box ends above the shutter bar, which the screen tests assert, and the Disposable's and the Super 8's end within 40 pt of it, the room being what sets their size.
 
 ### The 6×6's zoom steps
 
@@ -132,8 +159,11 @@ Development center-crops every capture to a square and scales it to 3072 by 3072
 | Behavior per Camera: no Camera reverses its rear viewfinder, every front viewfinder is mirrored, only the 6×6 offers zoom steps | `CaptureBehaviorTests` |
 | Zoom steps derived from injected capabilities (one lens, wide plus ultra wide, three lenses at 3x and at 5x, a dual camera, 2.5x, crops reported or not, duplicates, order, labels), and the zoom decision: only the 6×6's rear camera, refused while saving, recording, saving a clip or interrupted, an unreported step and a Camera without zoom refused | `ZoomStepTests` |
 | The held turn follows how the iPhone is held; a block reserving its length is the same height in every hold; a turned block takes the room it needs; a block that does not reserve takes its turned footprint | `CaptureSidewaysTests` (hosted) |
+| The column's arithmetic, laid out in a window: with room to spare the viewfinder keeps the screen's full width and the header gets the rest, to 300 pt; short of room the viewfinder keeps its shape and gives up width, with the controls taking theirs first; it is never under 220 pt; and its frame, the header's height and the controls' frame are identical in all three holds, for the shape of every Camera, with and without controls, at four amounts of room | `CaptureSidewaysTests` (hosted) |
 | Every Camera's shooting screen held upright and on each side at the default and the largest text size, with the lens controls and low-light cue a lens would raise, kept as screenshots | `CaptureSidewaysTests.testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText` |
-| On the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the count turns to read upright; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
+| On the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count turns to read upright; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
+| The 6×6's zoom steps enabled, with the selected step filled, light and dark, upright and turned, kept as screenshots | `CaptureSidewaysTests.testTheZoomStepsInTheirEnabledState` |
+| The camera screen's Done, now a plain button and not in a navigation bar, in the Populated Journal Harness's Instant, permission and Original-question flows | `PopulatedJournalHarnessTests` (`CameraPermissionWorkflowTests`, three `PopulatedWorkflowTests`) |
 | The 6×6's Load Film note and its text measured at all 12 sizes | `JournalIntegrationTests`, `ContentSizeTests` |
 
 The screen tests tap Done with the iPhone held upright: XCTest taps in the device's frame, and with the iPhone on its side over a portrait interface a tap on Done did not reach it.
@@ -142,40 +172,76 @@ Only after the camera has closed is the simulator turned to its side, which show
 ### Runs
 
 `swift test --package-path Packages/NativeAdapters` passed (58 tests, 15 of them the new `ZoomStepTests`).
-On an iPhone 17 simulator on iOS 26.5, every `ImmerseTests` test passed (61 tests, 6 of them the new `CaptureSidewaysTests`) except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active".
-The three `CaptureSidewaysUITests` passed on the same simulator, 4 minutes 37 seconds together, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
-`CaptureSidewaysTests` ran on an iPhone SE (3rd generation) simulator too.
-The Release build, with the Debug-only hooks (`CaptureController.hold(forTesting:)`) compiled out, passed `Scripts/verify-release-excludes-testing-unlock.sh`, and the Populated Journal Harness, which compiles the app's sources, builds.
+On an iPhone 17 Pro simulator on iOS 26.5, the whole `ImmerseTests` target passed except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active"; its `CaptureSidewaysTests` are 11 tests, which also passed on the iPhone SE and the iPhone 13 mini.
+The three `CaptureSidewaysUITests` passed on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro, about 4 minutes each, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
+The four Populated Journal Harness tests named above passed.
+The Release build, with the Debug-only hooks (`CaptureController.hold(forTesting:)`, `setForTesting(phase:)` and `CaptureView.opensCamera`) compiled out, passed `Scripts/verify-release-excludes-testing-unlock.sh`.
 
 ### Failures on the way, kept
 
 - A hosted test of a block that outgrows the screen compared a 337.67 pt height with 337.5 and failed by a rounding to the screen's pixels; the widening of a block that outgrows the screen, which it tried to hold, was replaced by the scrolling copy, and the test went with it.
 - The first screen test also asserted that the viewfinder ends above the shutter bar.
-  That is not true of the Disposable's 2:3 box or the 4:3 boxes, which are taller than the screen, so their lower part scrolls under the bar when the header grows, as it did before this change; the assertion was removed.
+  That was not true of the first build, whose Disposable and 4:3 boxes were taller than the screen; the assertion was removed, and then came back when the viewfinder was sized to the room, for every Camera and every hold.
 - The first screen test measured a turned Done as 34 pt wide, under a 44 pt target; its label now has a minimum height of 44 pt.
 - The first screen test tapped Done sideways and the camera stayed open, which is the XCTest frame behavior above.
 - Every turned block first took the full width it was offered and sat against the screen's top edge, so the zoom steps and the low-light cue landed on the wrong edge of the viewfinder.
   Only the header fills the width now; any other block is as wide as it is tall once turned, and its parent puts it where it belongs.
 - The hosted screenshot test turned the test host's own window: closing a hosted shooting screen turns the window to how the iPhone is held, which the test had set, and the later hosted Darkroom tests then ran in a landscape window and failed (four tests, until the test closed each screen with the iPhone upright and waited for SwiftUI to report it gone).
-- The screen tests do not run on an iPhone SE simulator: the shared `tapWhole` helper keeps 40 pt clear of the window's bottom edge for the home indicator, and the SE has none, so Load Film's button never counts as whole on screen there.
-  The SE was checked in the hosted screenshots instead (the header, the viewfinder, the zoom steps and the notes, upright and on each side, at the default size), which showed nothing clipped or overlapping; the viewfinder's frame was not measured on the SE.
+- The first column took its room from the reader's size less the safe areas, which that size already leaves out, so the viewfinder came out about 230 pt too short on the iPhone 17 Pro; a probe of the reader's size (402 × 666, with insets 62 and 146) showed it, and the column now takes the size as it is.
+- The screen tests did not run on an iPhone SE simulator at first: the shared `tapWhole` helper keeps 40 pt clear of the window's bottom edge for the home indicator, and the SE has none, so Load Film's button never counted as whole on screen there.
+  The helper now keeps 4 pt on a window 700 pt high or less, and the same tests run on the SE.
+- In the Populated Journal Harness, three flows tapped the camera screen's Done through `navigationBars`, where it no longer is; they tap the button.
 
 ## Pictures
 
 Simulator screenshots of the shooting screen.
 The simulator has no camera, so each viewfinder shows its empty frame and the screen shows the message for the missing camera; the zoom steps, the sliders and the cue appear only where the hosted test raises what a lens would report.
 
+**Before:** `main` at `ab6aaed`, a 6×6 Film held with its top to the left: the screen turned, the viewfinder is a sliver above the shutter bar.
+
+![The 6×6 held sideways before this change](capture-sideways-zoom-068/before-6x6-held-sideways.png)
+
+**The tallest case on the smallest simulator:** the Disposable, with the error, the message and Resume Camera over its viewfinder, on the iPhone SE (3rd generation), upright, with its top to the left and with its top to the right.
+The whole viewfinder is above the shutter bar in each, the same box in each, and every line is whole.
+These are the screen tests' own screenshots of the app, not a drawing of it.
+
+| Upright | Top to the left | Top to the right |
+| --- | --- | --- |
+| ![Disposable on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-disposable-portrait.png) | ![Disposable on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-disposable-left.png) | ![Disposable on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-disposable-right.png) |
+
+**The iPhone 13 mini**, the Disposable in the same state:
+
+| Upright | Top to the left | Top to the right |
+| --- | --- | --- |
+| ![Disposable on an iPhone 13 mini, upright](capture-sideways-zoom-068/iphone-13-mini-disposable-portrait.png) | ![Disposable on an iPhone 13 mini, top to the left](capture-sideways-zoom-068/iphone-13-mini-disposable-left.png) | ![Disposable on an iPhone 13 mini, top to the right](capture-sideways-zoom-068/iphone-13-mini-disposable-right.png) |
+
+**The 6×6 with its two sliders, zoom steps and the error over the viewfinder, on the iPhone SE**, from the hosted test: the viewfinder is 223 pt square, every caption and note whole.
+Nothing here is the camera's own: the sliders and the steps are what a lens would report.
+
+| Upright | Top to the left | Top to the right |
+| --- | --- | --- |
+| ![6×6 on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png) | ![6×6 on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-6x6-with-controls-left.png) | ![6×6 on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-6x6-with-controls-right.png) |
+
+**The iPhone 17 Pro**, the three Cameras the screen tests load:
+
 | | Upright | Top to the left | Top to the right |
 | --- | --- | --- | --- |
-| 6×6 | ![6×6 held upright](capture-sideways-zoom-068/6x6-portrait.png) | ![6×6 held with its top to the left](capture-sideways-zoom-068/6x6-left.png) | ![6×6 held with its top to the right](capture-sideways-zoom-068/6x6-right.png) |
-| Disposable | ![Disposable held upright](capture-sideways-zoom-068/disposable-portrait.png) | ![Disposable held with its top to the left](capture-sideways-zoom-068/disposable-left.png) | ![Disposable held with its top to the right](capture-sideways-zoom-068/disposable-right.png) |
-| Super 8 | ![Super 8 held upright](capture-sideways-zoom-068/super8-portrait.png) | ![Super 8 held with its top to the left](capture-sideways-zoom-068/super8-left.png) | ![Super 8 held with its top to the right](capture-sideways-zoom-068/super8-right.png) |
+| 6×6 | ![6×6 held upright](capture-sideways-zoom-068/iphone-17-pro-6x6-portrait.png) | ![6×6 held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-6x6-left.png) | ![6×6 held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-6x6-right.png) |
+| Disposable | ![Disposable held upright](capture-sideways-zoom-068/iphone-17-pro-disposable-portrait.png) | ![Disposable held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-disposable-left.png) | ![Disposable held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-disposable-right.png) |
+| Super 8 | ![Super 8 held upright](capture-sideways-zoom-068/iphone-17-pro-super8-portrait.png) | ![Super 8 held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-super8-left.png) | ![Super 8 held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-super8-right.png) |
 
-| The 6×6's zoom steps turned, over the viewfinder | The 6×6 at the largest text size, turned |
+**The 6×6's zoom steps enabled**, as a person with a camera running sees them, light and dark, from the hosted test with its lens controls set and no notice over the viewfinder (the simulator's own screens show the steps dimmed, since its camera is never idle).
+The selected step is a white disc with black text, the others white text on the viewfinder's black ground; the close-up is the upright light screenshot's pill, unscaled.
+
+| Upright, light, 1x selected | Top to the left, dark, 3x selected |
 | --- | --- |
-| ![The zoom steps in a column along the viewfinder's edge](capture-sideways-zoom-068/6x6-zoom-pill-left.png) | ![The header scrolling across the screen at the largest text size](capture-sideways-zoom-068/6x6-largest-left.png) |
+| ![The 6×6's zoom steps enabled, upright](capture-sideways-zoom-068/6x6-zoom-steps-enabled-portrait-light.png) | ![The 6×6's zoom steps enabled, turned](capture-sideways-zoom-068/6x6-zoom-steps-enabled-left-dark.png) |
 
-In each row the viewfinder's box is the same size in the same place in all three holds; the header's block turns to the edge that is the top for the person holding the iPhone, with Done at its top.
+![The zoom steps in their enabled state, close up](capture-sideways-zoom-068/6x6-zoom-steps-enabled-close-up.png)
+
+**The 6×6 at the largest text size, turned:** the screen scrolls, the notices are in the header, and the viewfinder keeps its 220 pt least.
+
+![The 6×6 at the largest text size, turned](capture-sideways-zoom-068/6x6-largest-left.png)
 
 ## Not Proven Without a Phone
 
@@ -192,4 +258,5 @@ All of these are for the manual iPhone test plan ([H01 to H10](manual-validation
 - The turned text in the hand: legibility, where the header lands against the edge, and the zoom pill over a live picture, and the Disposable's cue over a live picture.
 - The 6×6's rear viewfinder not reversed, and the front viewfinder still mirrored, on real lenses.
 - The Darkroom and an Instant print turning with the iPhone after the camera was used.
-- Display Zoom and VoiceOver on the shooting screen held sideways.
+- Display Zoom and VoiceOver on the shooting screen held sideways: the column takes whatever room the screen has, and the simulator has no Display Zoom to show it.
+- The viewfinder's size on a real iPhone: the sizes above are the simulators' screens, and the notices over a live picture, where their dark ground, not the black of the empty frame, is what keeps them legible.

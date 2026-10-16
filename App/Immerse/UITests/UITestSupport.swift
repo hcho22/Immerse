@@ -41,13 +41,17 @@ extension XCTestCase {
     }
 
     /// The lowest an element's bottom edge can be and the whole element still be clear on screen: 40 points above the
-    /// window's bottom edge, clear of the home indicator, or with a keyboard raised, 15 points above the keyboard. On
+    /// window's bottom edge, clear of the home indicator (4 on an iPhone with a home button, which has none), or with a
+    /// keyboard raised, 15 points above the keyboard. On
     /// iOS 26.5 the keyboard's panel is drawn 45 points above the frame its element reports (from y 538, against 583,
     /// on an iPhone 17 Pro), and a drag that starts on the panel goes to the keyboard.
     private func wholeBottom(_ app: XCUIApplication) -> CGFloat {
         let window = app.windows.firstMatch.frame
         let keyboard = app.keyboards.firstMatch
-        return keyboard.exists ? min(window.maxY - 40, keyboard.frame.minY - 60) : window.maxY - 40
+        // An iPhone with a home button has no home indicator to keep clear of, and its Load Film command never rests
+        // 40 points above the bottom edge.
+        let indicator: CGFloat = window.height > 700 ? 40 : 4
+        return keyboard.exists ? min(window.maxY - indicator, keyboard.frame.minY - 60) : window.maxY - indicator
     }
 
     /// Scrolls until the whole element, not just its center, is on screen with room below it, finishing in short drags.
