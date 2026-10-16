@@ -140,8 +140,9 @@ private struct TurnedLayout: Layout {
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         guard let child = subviews.first else { return }
         guard turn.isSideways else {
+            // Against the top: where a reserving block is taller than its upright form, the room is left below it.
             let size = child.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil))
-            child.place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading, proposal: ProposedViewSize(size))
+            child.place(at: CGPoint(x: bounds.minX, y: bounds.minY), anchor: .topLeading, proposal: ProposedViewSize(size))
             return
         }
         let size = sidewaysSize(child, proposal)

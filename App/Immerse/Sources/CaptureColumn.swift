@@ -22,8 +22,10 @@ extension View {
 /// that the room leaves after the header and the controls, narrower than the screen where the room is short, and never
 /// smaller than `minimumViewfinder`, below which the screen scrolls instead, as at the largest text sizes.
 ///
-/// Where the room is more than the viewfinder at the screen's full width needs, the header gets the rest, up to
-/// `maximumHeader`, so that held on its side the Camera's name and its count can each read on one line.
+/// Where the room is more than the viewfinder at the screen's full width needs, the rest is shared: half goes above the
+/// viewfinder, to the header (up to `maximumHeader` in all), so that held on its side the Camera's name and its count can
+/// each read on one line, and half below it. Held upright the header's lines stay against the top, so Done is where it is
+/// on every Camera, with the viewfinder centred in the room under them.
 ///
 /// Nothing here depends on how the iPhone is held, so the viewfinder is the same size in the same place in every hold:
 /// the header and the controls reserve their heights for every hold (`TurnedBlock`, `CaptionedSlider`).
@@ -67,7 +69,8 @@ struct CaptureColumn: Layout {
             let ideal = width / aspect
             var height = ideal
             if room - headerMinimum >= ideal {
-                headerHeight = min(max(headerMinimum, room - ideal), max(maximumHeader, headerMinimum))
+                let spare = room - headerMinimum - ideal
+                headerHeight = headerMinimum + min(spare / 2, max(0, maximumHeader - headerMinimum))
             } else {
                 height = max(minimumViewfinder, room - headerMinimum)
             }

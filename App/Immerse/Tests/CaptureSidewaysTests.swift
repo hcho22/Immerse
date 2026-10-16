@@ -108,13 +108,14 @@ final class CaptureSidewaysTests: XCTestCase {
     /// `available` points of room between its top and the shutter bar, as the screen lays them out in a window.
     private func column(
         available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358
-    ) async throws -> (header: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
+    ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
         let frames = Frames()
         func record(_ name: String) -> (GeometryProxy) -> CGRect { { $0.frame(in: .named("column")) } }
         let view = CaptureColumn(available: available) {
             TurnedBlock(length: 128, reservesLength: true) {
                 VStack(spacing: 12) {
                     Color.clear.frame(height: 44)
+                        .onGeometryChange(for: CGRect.self, of: record("first")) { frames.firstLine = $0 }
                     Color.clear.frame(height: 28)
                     Color.clear.frame(height: 22)
                 }.frame(maxWidth: .infinity)
@@ -140,22 +141,30 @@ final class CaptureSidewaysTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
-        return (frames.header, frames.viewfinder, frames.controls, host.sizeThatFits(in: CGSize(width: width, height: 3000)))
+        return (frames.header, frames.firstLine, frames.viewfinder, frames.controls,
+                host.sizeThatFits(in: CGSize(width: width, height: 3000)))
     }
 
-    private final class Frames { var header = CGRect.zero, viewfinder = CGRect.zero, controls = CGRect.zero }
+    private final class Frames { var header = CGRect.zero, firstLine = CGRect.zero, viewfinder = CGRect.zero, controls = CGRect.zero }
 
-    /// With room to spare, the viewfinder keeps the screen's full width and the header gets what is left over, as far as
-    /// 300 points, so held on its side its lines need not wrap.
-    func testRoomToSpareGoesToTheHeaderAfterTheViewfinderHasItsFullWidth() async throws {
+    /// With room to spare, the viewfinder keeps the screen's full width and the rest is shared: half to the header, as far as
+    /// 300 points in all, so held on its side its lines need not wrap, and half below the viewfinder, which sits centred in the
+    /// room under the header's lines. Held upright, those lines stay against the top.
+    func testRoomToSpareIsSharedAboveAndBelowTheViewfinderAfterItHasItsFullWidth() async throws {
         let big = try await column(available: 700, aspect: 1)
         XCTAssertEqual(big.viewfinder.width, 358, accuracy: 0.5)
         XCTAssertEqual(big.viewfinder.height, 358, accuracy: 0.5)
-        XCTAssertEqual(big.header.height, 300 - 0, accuracy: 0.5, "The header is capped at 300 points")
-        XCTAssertEqual(big.viewfinder.minY, 300 + 12, accuracy: 0.5)
+        let spare = 700 - 12 - 128 - 358.0
+        XCTAssertEqual(big.header.height, 128 + spare / 2, accuracy: 0.5, "Half the spare room is the header's")
+        XCTAssertEqual(big.viewfinder.minY, 128 + spare / 2 + 12, accuracy: 0.5)
+        XCTAssertEqual(700 - big.viewfinder.maxY, spare / 2, accuracy: 0.5, "Half is below the viewfinder")
+        XCTAssertEqual(big.firstLine.minY, 0, accuracy: 0.5, "Held upright, the header's first line is against the top")
         let tight = try await column(available: 520, aspect: 1)
         XCTAssertEqual(tight.viewfinder.height, 358, accuracy: 0.5, "The viewfinder has its full width first")
-        XCTAssertEqual(tight.header.height, 520 - 358 - 12, accuracy: 0.5, "The header has the rest")
+        XCTAssertEqual(tight.header.height, 128 + (520 - 12 - 128 - 358.0) / 2, accuracy: 0.5)
+        XCTAssertEqual(tight.firstLine.minY, 0, accuracy: 0.5)
+        let huge = try await column(available: 1200, aspect: 1)
+        XCTAssertEqual(huge.header.height, 300, accuracy: 0.5, "The header is capped at 300 points")
     }
 
     /// Short of room, the viewfinder keeps its shape and gives up width, so the whole of it shows above the shutter bar.

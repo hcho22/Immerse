@@ -49,7 +49,9 @@ With the iPhone on its side (`HeldTurn.swift`) they turn to read upright, the ho
 
 - The header (Done, the Camera's name, what is left and, once a Film is complete, "Film complete" or "Pack complete") is one block above the viewfinder.
   It is laid out as the portrait header it is, 128 pt wide at least at the default text size (scaled with Dynamic Type) and as tall as that makes it, then turned as a whole and put against the edge of the screen that is the top for the person holding the iPhone.
-  Where the screen has room to spare, up to 300 pt, it is laid out longer, so the Camera's name and its count each read on one line: the Instant on a tall iPhone does; where the room is short, as on the iPhone SE, they wrap.
+  Held upright its lines stay against the top, so Done sits just below the status bar in the same place on every Camera and every iPhone, with the name and the count right under it.
+  Where the screen has room to spare, half of it is laid out into the header's turned length, up to 300 pt in all, so the Camera's name and its count each read on one line: the Instant on a tall iPhone does; where the room is short, as on the iPhone SE, they wrap.
+  The other half is below the viewfinder, which so sits centred in the room under the header's lines and above the shutter bar.
 - The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("Manual focus unavailable on this lens", "Flash unavailable on this lens", "Fixed exposure unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against the edge that is its top as the iPhone is held, turned as one block that is never longer than the box.
   Being over the viewfinder, a message coming or going never moves it, and the camera icon the empty frame shows gives way to them.
   "Saved" shows there for 2.5 seconds after each capture and then goes; every other notice stays while its cause does.
@@ -95,7 +97,8 @@ No other product string changed.
 
 `CaptureColumn` is a `Layout` of three parts, the header, the viewfinder and the controls, given the room between the top of the screen's safe area and the shutter bar (the size of the `GeometryReader` in `CaptureView`, which already leaves out the safe areas and the bar, less 12 pt above and below).
 It measures the controls first and then the header at its least, which for the header is its portrait height or 128 pt, whichever is more, and gives the viewfinder what is left, down to 220 pt, below which the screen scrolls, as at the largest text sizes; the box keeps its Camera's shape and is as wide as that makes it, at most the screen's width.
-Where the room is more than the viewfinder at the screen's full width needs, the header gets the rest, up to 300 pt.
+Where the room is more than the viewfinder at the screen's full width needs, the rest is shared: half goes above the viewfinder, which makes the header's frame that much taller, up to 300 pt in all, and half below it.
+The first version gave all of it to the header and centred the header's lines in it, which left Done floating about 90 pt below the status bar and a gap of about 80 pt under the count on the Instant and the 6×6 on the iPhone 17 Pro; the lines now stay against the top and the viewfinder is centred.
 Nothing in this depends on how the iPhone is held, so the viewfinder is the same size in the same place in every hold: the header reserves the greater of its upright and its turned heights, and a slider row is as tall as its turned caption in either hold.
 The hosted tests of the column's arithmetic (below) and the screen tests' frames hold it.
 `TurnedBlock` uses `ViewThatFits` only to choose between the turned header and a copy of it that scrolls across the screen, which happens when the turned header is wider than the screen, at the largest text sizes.
@@ -103,7 +106,7 @@ The hosted tests of the column's arithmetic (below) and the screen tests' frames
 
 The viewfinder's box as the screen tests measured it, in points, the same in all three holds in every case (a Film with no controls, since the simulator has no camera to report any, so the 6×6 shows no sliders):
 
-| iPhone (simulator, iOS 26.5) | Screen | 6×6 | Disposable (2:3) | Super 8 (3:4) |
+| iPhone (simulator, iOS 26.5) | Screen | Instant and 6×6 | Disposable (2:3) | Super 8 (3:4) |
 | --- | --- | --- | --- | --- |
 | iPhone SE (3rd generation) | 375 × 667 | 343 × 343 | 247 × 371 | 278 × 371 |
 | iPhone 13 mini | 375 × 812 | 343 × 343 | 301 × 452 | 339 × 452 |
@@ -111,6 +114,7 @@ The viewfinder's box as the screen tests measured it, in points, the same in all
 
 With its two sliders raised, as a camera that can focus by hand reports them, the 6×6's box on the SE is 223 × 223 (the hosted screenshot [iphone-se-6x6-with-controls-portrait.png](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png)).
 On every one the box ends above the shutter bar, which the screen tests assert, and the Disposable's and the Super 8's end within 40 pt of it, the room being what sets their size.
+The Instant's and the 6×6's squares are as wide as the screen allows, so the room left over (on the iPhone 17 Pro the box runs from 280 pt to 650 pt, and the shutter's frame starts at 744 pt) is shared above and below them; the screen tests assert that Done is within 90 pt of the top of the screen and the count within 70 pt under Done on every Camera and every iPhone.
 
 ### The 6×6's zoom steps
 
@@ -164,7 +168,7 @@ Development center-crops every capture to a square and scales it to 3072 by 3072
 | The held turn follows how the iPhone is held; a block reserving its length is the same height in every hold; a turned block takes the room it needs; a block that does not reserve takes its turned footprint | `CaptureSidewaysTests` (hosted) |
 | The column's arithmetic, laid out in a window: with room to spare the viewfinder keeps the screen's full width and the header gets the rest, to 300 pt; short of room the viewfinder keeps its shape and gives up width, with the controls taking theirs first; it is never under 220 pt; and its frame, the header's height and the controls' frame are identical in all three holds, for the shape of every Camera, with and without controls, at four amounts of room | `CaptureSidewaysTests` (hosted) |
 | Every Camera's shooting screen held upright and on each side at the default and the largest text size, with the lens controls and low-light cue a lens would raise, kept as screenshots | `CaptureSidewaysTests.testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText` |
-| On the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count turns to read upright; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
+| On the Instant, the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count turns to read upright; held upright, Done is just below the status bar with the name and the count under it; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
 | The 6×6's zoom steps enabled, with the selected step filled, light and dark, upright and turned, kept as screenshots | `CaptureSidewaysTests.testTheZoomStepsInTheirEnabledState` |
 | The camera screen's Done, now a plain button and not in a navigation bar, in the Populated Journal Harness's Instant, permission and Original-question flows | `PopulatedJournalHarnessTests` (`CameraPermissionWorkflowTests`, three `PopulatedWorkflowTests`) |
 | The 6×6's Load Film note and its text measured at all 12 sizes | `JournalIntegrationTests`, `ContentSizeTests` |
@@ -175,8 +179,8 @@ Only after the camera has closed is the simulator turned to its side, which show
 ### Runs
 
 `swift test --package-path Packages/NativeAdapters` passed (58 tests, 15 of them the new `ZoomStepTests`).
-On an iPhone 17 Pro simulator on iOS 26.5, the whole `ImmerseTests` target passed except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active"; its `CaptureSidewaysTests` are 12 tests, 11 of which also passed on the iPhone SE and the iPhone 13 mini before the merge of 067.
-The three `CaptureSidewaysUITests` passed on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro, about 4 minutes each, and again on the iPhone 17 Pro after `main`'s Instant change was merged in, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
+On an iPhone 17 Pro simulator on iOS 26.5, the whole `ImmerseTests` target passed except the four StoreKit tests, which need the iOS 26.2 fixture simulator that validation boots for them and fail on any other simulator with "Local StoreKit fixture is not active"; its `CaptureSidewaysTests` are 12 tests, which also passed on the iPhone SE.
+The four `CaptureSidewaysUITests` passed on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro, about 5 minutes each, and the three of them that existed before the merge passed on the iPhone 17 Pro again after `main`'s Instant change was merged in, and so did the Load Film text tests at the extra small, large and largest sizes and the 6×6's extra-small Load audit, whose copy changed, and the landscape Settings test, which a hold that leaked would break.
 The Populated Journal Harness tests named above passed, and after the merge of 067 so did the harness's Instant flows at the camera (print, question, discard, two prints and an unanswered question) with `CameraPermissionWorkflowTests`.
 The Release build, with the Debug-only hooks (`CaptureController.hold(forTesting:)`, `setForTesting(phase:)` and `CaptureView.opensCamera`) compiled out, passed `Scripts/verify-release-excludes-testing-unlock.sh`.
 
@@ -212,6 +216,13 @@ These are the screen tests' own screenshots of the app, not a drawing of it.
 | --- | --- | --- |
 | ![Disposable on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-disposable-portrait.png) | ![Disposable on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-disposable-left.png) | ![Disposable on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-disposable-right.png) |
 
+**The Instant and the 6×6 on the iPhone SE**, where the square keeps the screen's width and Done, the name and the count are at the top, as on every Camera:
+
+| | Upright | Top to the left | Top to the right |
+| --- | --- | --- | --- |
+| Instant | ![Instant on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-instant-portrait.png) | ![Instant on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-instant-left.png) | ![Instant on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-instant-right.png) |
+| 6×6 | ![6×6 on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-6x6-portrait.png) | ![6×6 on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-6x6-left.png) | ![6×6 on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-6x6-right.png) |
+
 **The iPhone 13 mini**, the Disposable in the same state:
 
 | Upright | Top to the left | Top to the right |
@@ -225,10 +236,11 @@ Nothing here is the camera's own: the sliders and the steps are what a lens woul
 | --- | --- | --- |
 | ![6×6 on an iPhone SE, upright](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png) | ![6×6 on an iPhone SE, top to the left](capture-sideways-zoom-068/iphone-se-6x6-with-controls-left.png) | ![6×6 on an iPhone SE, top to the right](capture-sideways-zoom-068/iphone-se-6x6-with-controls-right.png) |
 
-**The iPhone 17 Pro**, the three Cameras the screen tests load:
+**The iPhone 17 Pro**, the four Cameras the screen tests load; the Instant's and the 6×6's squares keep the screen's width, so the viewfinder sits centred in the room under the name and the count:
 
 | | Upright | Top to the left | Top to the right |
 | --- | --- | --- | --- |
+| Instant | ![Instant held upright](capture-sideways-zoom-068/iphone-17-pro-instant-portrait.png) | ![Instant held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-instant-left.png) | ![Instant held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-instant-right.png) |
 | 6×6 | ![6×6 held upright](capture-sideways-zoom-068/iphone-17-pro-6x6-portrait.png) | ![6×6 held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-6x6-left.png) | ![6×6 held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-6x6-right.png) |
 | Disposable | ![Disposable held upright](capture-sideways-zoom-068/iphone-17-pro-disposable-portrait.png) | ![Disposable held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-disposable-left.png) | ![Disposable held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-disposable-right.png) |
 | Super 8 | ![Super 8 held upright](capture-sideways-zoom-068/iphone-17-pro-super8-portrait.png) | ![Super 8 held with its top to the left](capture-sideways-zoom-068/iphone-17-pro-super8-left.png) | ![Super 8 held with its top to the right](capture-sideways-zoom-068/iphone-17-pro-super8-right.png) |

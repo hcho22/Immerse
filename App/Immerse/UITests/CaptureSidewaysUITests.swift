@@ -13,6 +13,12 @@ final class CaptureSidewaysUITests: XCTestCase {
         try check(id: "mediumFormat6x6", name: "6×6", fillsTheRoom: false)
     }
 
+    /// The Instant's square viewfinder keeps the screen's full width where the room allows, so the room left over is
+    /// shared above and below it.
+    func testInstantShootingScreenKeepsItsLayoutHeldSideways() throws {
+        try check(id: "instant1970s", name: "Instant", fillsTheRoom: false)
+    }
+
     /// The tallest viewfinder: the 2:3 box, with the error, the message and Resume Camera over it.
     func testDisposableShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "disposable1990s", name: "Disposable", fillsTheRoom: true)
@@ -76,6 +82,10 @@ final class CaptureSidewaysUITests: XCTestCase {
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
         try checkFits(upright, app, "upright", fillsTheRoom: fillsTheRoom)
+        // Held upright, Done sits just below the status bar on every Camera and every iPhone, with the name and the count
+        // right under it, whatever room the viewfinder leaves.
+        XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
+        XCTAssertLessThanOrEqual(upright.remaining.minY - upright.done.maxY, 70, "The name and the count follow Done closely")
         retainFrames(upright, name: name, hold: "portrait")
         retainScreenshot(name: "\(name)-capture-portrait")
 
