@@ -30,9 +30,11 @@ It does not restart, and Resume Camera shows as before, when:
 - the app reaches the background (locking the phone, another app, a call that is answered): the handler's `suspend()` clears the mark first, so its event shows "Camera paused";
 - a real capture-session interruption or runtime failure arrives (any reason other than `.applicationInactive`): it clears the mark;
 - a save failed (`.saveFailed`, "Retry before taking another capture") or a Retry message is showing, or the view holds an error, or a save is pending;
-- the pack is complete (`completionState` is not open): "Pack complete" shows and the camera stays off;
 - Done, or leaving the screen, ran `suspend()` (which clears the mark and bumps `sessionRequest`, so an `open` still in flight starts nothing), or the screen is no longer `presented`;
 - the app goes inactive while the restart is still starting the camera: the camera is suspended as any running camera is.
+
+A complete Film does not restart either, and on the captain's word (2026-10-16) it shows no Resume Camera on any Camera, since `open` starts nothing on it: the screen keeps its "Pack complete" or "Film complete" text and the camera stays off.
+`CaptureController.offersResume(for:showingError:)` is the screen's one condition for the button: an open Film, and then a camera stopped for anything but a print, an error on the screen or a save that needs a retry.
 
 ## Other Cameras
 
@@ -44,6 +46,7 @@ Only the Instant's reveal handler (`revealRule == .instantPerExposure`) stops th
 The simulator has no camera, so the real-camera path is **untested here**; it is scenario C01 in `manual-validation.md`.
 The closest path the project has is the hosted controller tests, which attach a real backend that cannot start a session.
 `testInstantPauseForAPrintLeavesNoPausedMessageAndResumesOnlyWhenNothingElseStoppedTheCamera` in `CaptureControllerIntegrationTests` shows: before the change, the pause for a print left "Camera paused. Saved captures are unchanged." and no restart decision existed; after it, the pause leaves no message once its own event has arrived, the restart is decided when the prints close and its mark lasts until its `open` ends, and a complete pack, a screen that is gone or `suspend()` (Done, leaving, the background) cancels it with "Camera paused".
+Its assertions read `offersResume(for:showingError:)`, the condition the screen shows Resume Camera by, and it ends by filling the pack, which then offers no Resume Camera; `testDoneDuringCameraOpenFinishesTheSaveWithoutStartingTheSession` shows the same for a Disposable Film completed early.
 `testInactiveSceneDuringAnInstantPrintKeepsTheRestartButPausesACameraThatIsStarting` shows that going inactive and active again over a print keeps the restart with no message, and that going inactive while the restart's `open` is still running suspends it, shows "Camera paused" and starts no session.
 The hosted tests call `pauseForInactiveScene()` as the scene-phase handler does; the backend's own `willResignActive` observer is not installed there, since no session starts, so its event is covered only by the pause's own event, which takes the same path.
 The view's call to `open` after the last print is not covered by a screen test, since opening needs a camera.

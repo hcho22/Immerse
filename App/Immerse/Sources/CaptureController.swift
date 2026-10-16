@@ -27,7 +27,7 @@ final class CaptureController {
     /// The camera is stopped only to show an Instant print, so it starts again by itself when the last print and its
     /// question close, and the wait lasts until that restart's `open` ends. The app going inactive meanwhile (a
     /// permission prompt, Control Center) keeps it; any other stop (`suspend`, a real interruption, a failed save) ends it.
-    private(set) var resumesAfterReveal = false
+    private var resumesAfterReveal = false
     var flash = false
     var focus: Double = 0.8
     var exposure: Double = 0
@@ -200,6 +200,13 @@ final class CaptureController {
     func printsClosed(allowingRestart: Bool) -> Bool {
         resumesAfterReveal = allowingRestart && resumesAfterReveal && presented && message?.contains("Retry") != true
         return resumesAfterReveal
+    }
+
+    /// Whether the capture screen offers Resume Camera: only while the Film is open, and then when the camera stopped
+    /// for anything but an Instant print, the screen shows an error or a save needs a retry.
+    func offersResume(for film: Film, showingError: Bool) -> Bool {
+        film.completionState == .open
+            && ((phase == .interrupted && !resumesAfterReveal) || showingError || message?.contains("Retry") == true)
     }
 
     /// The app went inactive (Control Center, a call, a permission prompt). A camera stopped only for an Instant print

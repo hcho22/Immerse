@@ -43,7 +43,7 @@ struct CaptureView: View {
                                 if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                             }
                         }
-                        if (capture.phase == .interrupted && !capture.resumesAfterReveal) || error != nil || capture.message?.contains("Retry") == true {
+                        if capture.offersResume(for: film, showingError: error != nil) {
                             Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
                         }
                         let behavior = CaptureBehavior.for(film.camera.id)

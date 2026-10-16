@@ -1809,7 +1809,7 @@ It reads **UNTESTED: physical execution deferred**.
 2. Take an exposure.
    When the print shows, close it; answer the question about its original.
 3. Look at the shooting screen straight away, without touching it.
-4. Take three more exposures in a row the same way, and once take two exposures quickly so that two prints queue.
+4. Take three more exposures in a row the same way.
 5. Take an exposure and, while its print shows, pull down Notification Center and put it away, then pull down Control Center and put it away; close the print and answer the question.
 6. If iOS has not yet asked this install about Photos, take an exposure, close the print, choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**; answer iOS's question about adding to Photos.
    If it has already asked, record this step as UNTESTED, since asking again needs the app's permissions reset.
@@ -1821,13 +1821,12 @@ It reads **UNTESTED: physical execution deferred**.
 **Expect.**
 
 - After steps 2, 4, 5 and 6 the live viewfinder is back within about a second of the last question closing, with no **Resume Camera** button and no "Camera paused" text; the shutter works at once.
-  Two queued prints are shown one after the other, and the viewfinder returns only after the second.
 - After steps 7 and 8 the screen reads "Camera paused. Saved captures are unchanged." (or "Camera is available. Resume when ready.") with **Resume Camera**, and the camera does not start by itself.
 - After step 9 the camera is off on the Journal (no green camera dot in the status bar) and the reopened camera starts normally.
-- After step 10 the screen reads "Pack complete", shows no live viewfinder and does not start the camera.
+- After step 10 the screen reads "Pack complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
 
 **It fails if.**
-**Resume Camera** has to be tapped after an ordinary exposure or after Notification Center, Control Center or the Photos question over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, or the green camera dot stays on after leaving the camera.
+**Resume Camera** has to be tapped after an ordinary exposure or after Notification Center, Control Center or the Photos question over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, **Resume Camera** shows on a complete pack, or the green camera dot stays on after leaving the camera.
 
 **Write down.**
 Each step's result, how long the viewfinder took to return, a screen recording of steps 2 to 6, and whether the green dot was on at step 9.

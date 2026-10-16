@@ -75,14 +75,14 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         try await pauseForReveal(model)
         XCTAssertNil(model.capture.message, "The pause for a print must not read as an interruption")
         XCTAssertTrue(model.capture.printsClosed(allowingRestart: true), "With the prints closed the camera starts again by itself")
-        XCTAssertTrue(model.capture.resumesAfterReveal, "Resume Camera stays hidden while the camera starts")
+        XCTAssertFalse(model.capture.offersResume(for: film, showingError: false), "Resume Camera stays hidden while the camera starts")
         try await openWithoutSimulatorCamera(film, model)
-        XCTAssertFalse(model.capture.resumesAfterReveal, "The restart's open ends the wait, even when it fails")
+        XCTAssertTrue(model.capture.offersResume(for: film, showingError: false), "The restart's open ends the wait, even when it fails")
 
         // A complete pack, an error or a pending save ends the wait without a restart.
         try await pauseForReveal(model)
         XCTAssertFalse(model.capture.printsClosed(allowingRestart: false))
-        XCTAssertFalse(model.capture.resumesAfterReveal)
+        XCTAssertTrue(model.capture.offersResume(for: film, showingError: false))
 
         // A screen that is gone does not restart the camera.
         try await pauseForReveal(model)
@@ -95,6 +95,16 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         model.capture.suspend()
         try await waitUntil { model.capture.message == "Camera paused. Saved captures are unchanged." }
         XCTAssertFalse(model.capture.printsClosed(allowingRestart: true))
+        XCTAssertTrue(model.capture.offersResume(for: film, showingError: false))
+
+        // A complete pack offers no Resume Camera, however the camera stopped: opening it starts nothing.
+        for _ in 0..<(model.film(film.id)?.remainingExposures ?? 0) {
+            try model.repository.savePhotoCapture(filmID: film.id, sourceData: syntheticPhoto())
+        }
+        model.refresh()
+        let complete = try XCTUnwrap(model.film(film.id))
+        XCTAssertEqual(complete.completionState, .capacityFull)
+        XCTAssertFalse(model.capture.offersResume(for: complete, showingError: true), "Pack complete")
     }
 
     func testInactiveSceneDuringAnInstantPrintKeepsTheRestartButPausesACameraThatIsStarting() async throws {
@@ -110,7 +120,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         model.capture.pauseForInactiveScene()
         model.refresh()
         XCTAssertNil(model.capture.message, "Going inactive over a print must not read as an interruption")
-        XCTAssertTrue(model.capture.resumesAfterReveal, "Resume Camera stays hidden")
+        XCTAssertFalse(model.capture.offersResume(for: film, showingError: false), "Resume Camera stays hidden")
         XCTAssertTrue(model.capture.printsClosed(allowingRestart: true))
 
         // Going inactive while that restart is still starting the camera pauses it, as for any running camera.
@@ -119,12 +129,12 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         let restarting = Task { try await model.capture.open(film: film, model: model) }
         try await waitUntil { calls.isHolding }
         model.capture.pauseForInactiveScene()
-        XCTAssertFalse(model.capture.resumesAfterReveal, "Resume Camera shows")
+        XCTAssertTrue(model.capture.offersResume(for: film, showingError: false), "Resume Camera shows")
         try await waitUntil { model.capture.message == "Camera paused. Saved captures are unchanged." }
         calls.release()
         let result = await restarting.result
         XCTAssertNoThrow(try result.get(), "The restart must stop instead of starting the camera session")
-        XCTAssertFalse(model.capture.resumesAfterReveal)
+        XCTAssertTrue(model.capture.offersResume(for: film, showingError: false))
         try await settle(model)
     }
 
@@ -148,6 +158,11 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.sealed])
         XCTAssertFalse(model.hasPendingSave(film.id))
         XCTAssertFalse(FileManager.default.fileExists(atPath: unfinished.path))
+        XCTAssertTrue(model.capture.offersResume(for: try XCTUnwrap(model.film(film.id)), showingError: false))
+        try model.repository.completeEarly(filmID: film.id)
+        model.refresh()
+        XCTAssertFalse(model.capture.offersResume(for: try XCTUnwrap(model.film(film.id)), showingError: false),
+                       "A complete Film offers no Resume Camera")
         guard case .consumed = try await model.trial.state() else { return XCTFail("The saved first capture consumes the Trial") }
     }
 
