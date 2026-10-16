@@ -16,7 +16,7 @@ So the screen he saw is the deliberate suspend; a real system interruption produ
 The camera is stopped while a print shows and started again afterwards, rather than left running behind the sheet.
 Reason: a full-screen print covers the viewfinder, so a running session would only spend battery and keep the camera in use (the green dot) while nobody is looking, and the earlier stop is kept exactly as it was.
 `CaptureController.pauseForReveal()` stops the camera and marks the stop as its own (`resumesAfterReveal`).
-While that mark is set, an `.interrupted` event whose reason is `.applicationInactive` changes nothing: that is the pause's own event, or the app going inactive over a camera that is already stopped.
+While that mark is set, an `.interrupted` event whose reason is `.applicationInactive` sets no message and keeps the mark: that is the pause's own event, or the app going inactive over a camera that is already stopped.
 So no "Camera paused" message appears and Resume Camera is hidden meanwhile.
 The decision is read from the controller's state when each event arrives, not from a count of pauses still to deliver an event, so a pause that delivers none leaves nothing behind to swallow a later interruption.
 When the last print and its question close, `CaptureView.showNextPrint` asks `printsClosed(allowingRestart:)` and opens the camera (the same `open` as Resume Camera).
@@ -39,7 +39,7 @@ A complete Film does not restart either, and on the captain's word (2026-10-16) 
 ## Other Cameras
 
 No other Camera has the defect.
-Only the Instant's reveal handler (`revealRule == .instantPerExposure`) stops the camera; the Disposable, 6x6, Super 8 and 16mm keep their session running after an exposure and were not changed.
+Only the Instant's reveal handler (`revealRule == .instantPerExposure`) stops the camera; the Disposable, 6×6, Super 8 and 16mm keep their session running after an exposure and were not changed.
 
 ## Reproduction and test
 
