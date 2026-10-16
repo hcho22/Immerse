@@ -164,9 +164,9 @@ struct CaptureView: View {
         instantPrint = revealedPrints.first
         // The last print and its question are closed: the camera comes back on its own, unless the Film is complete,
         // the screen is gone or something else stopped it.
-        if revealedPrints.isEmpty, let film = model.film(filmID) {
-            if film.completionState == .open, error == nil, !model.hasPendingSave(filmID), model.capture.takeResumeAfterReveal() { open(film) }
-            else { _ = model.capture.takeResumeAfterReveal() }
+        if revealedPrints.isEmpty, let film = model.film(filmID),
+           model.capture.printsClosed(allowingRestart: film.completionState == .open && error == nil && !model.hasPendingSave(filmID)) {
+            open(film)
         }
     }
 

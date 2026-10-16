@@ -72,22 +72,60 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         model.capture.presented = true
 
         // An exposure's print stops the camera for the sheet; its own event is not the camera's trouble.
-        model.capture.pauseForReveal()
-        XCTAssertTrue(model.capture.resumesAfterReveal)
-        try await Task.sleep(for: .milliseconds(500))
+        try await pauseForReveal(model)
         XCTAssertNil(model.capture.message, "The pause for a print must not read as an interruption")
-        XCTAssertTrue(model.capture.takeResumeAfterReveal(), "With the prints closed the camera starts again by itself")
-        XCTAssertFalse(model.capture.takeResumeAfterReveal(), "Only once")
+        XCTAssertTrue(model.capture.printsClosed(allowingRestart: true), "With the prints closed the camera starts again by itself")
+        XCTAssertTrue(model.capture.resumesAfterReveal, "Resume Camera stays hidden while the camera starts")
+        try await openWithoutSimulatorCamera(film, model)
+        XCTAssertFalse(model.capture.resumesAfterReveal, "The restart's open ends the wait, even when it fails")
 
-        // Done, or leaving the screen, ends the wait.
-        model.capture.pauseForReveal()
-        model.capture.suspend()
-        XCTAssertFalse(model.capture.takeResumeAfterReveal())
+        // A complete pack, an error or a pending save ends the wait without a restart.
+        try await pauseForReveal(model)
+        XCTAssertFalse(model.capture.printsClosed(allowingRestart: false))
+        XCTAssertFalse(model.capture.resumesAfterReveal)
 
         // A screen that is gone does not restart the camera.
-        model.capture.pauseForReveal()
+        try await pauseForReveal(model)
         model.capture.presented = false
-        XCTAssertFalse(model.capture.takeResumeAfterReveal())
+        XCTAssertFalse(model.capture.printsClosed(allowingRestart: true))
+        model.capture.presented = true
+
+        // Done, leaving the screen or the app reaching the background ends the wait, and the camera reads as paused.
+        try await pauseForReveal(model)
+        model.capture.suspend()
+        try await waitUntil { model.capture.message == "Camera paused. Saved captures are unchanged." }
+        XCTAssertFalse(model.capture.printsClosed(allowingRestart: true))
+    }
+
+    func testInactiveSceneDuringAnInstantPrintKeepsTheRestartButPausesACameraThatIsStarting() async throws {
+        let (root, calls, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try await model.trial.start(camera: CameraCatalog.instant1970s, title: "Synthetic Trial pack")
+        try await openWithoutSimulatorCamera(film, model)
+        model.capture.presented = true
+
+        // The Photos permission prompt, Control Center or Notification Center over a print: the scene goes inactive,
+        // then active again, and the camera, already stopped for the print, still starts again when the print closes.
+        try await pauseForReveal(model)
+        model.capture.pauseForInactiveScene()
+        model.refresh()
+        XCTAssertNil(model.capture.message, "Going inactive over a print must not read as an interruption")
+        XCTAssertTrue(model.capture.resumesAfterReveal, "Resume Camera stays hidden")
+        XCTAssertTrue(model.capture.printsClosed(allowingRestart: true))
+
+        // Going inactive while that restart is still starting the camera pauses it, as for any running camera.
+        _ = try stageUnfinishedSave(film, model)
+        calls.holdNextUpdate()
+        let restarting = Task { try await model.capture.open(film: film, model: model) }
+        try await waitUntil { calls.isHolding }
+        model.capture.pauseForInactiveScene()
+        XCTAssertFalse(model.capture.resumesAfterReveal, "Resume Camera shows")
+        try await waitUntil { model.capture.message == "Camera paused. Saved captures are unchanged." }
+        calls.release()
+        let result = await restarting.result
+        XCTAssertNoThrow(try result.get(), "The restart must stop instead of starting the camera session")
+        XCTAssertFalse(model.capture.resumesAfterReveal)
+        try await settle(model)
     }
 
     func testDoneDuringCameraOpenFinishesTheSaveWithoutStartingTheSession() async throws {
@@ -413,6 +451,14 @@ final class CaptureControllerIntegrationTests: XCTestCase {
     private func openWithoutSimulatorCamera(_ film: Film, _ model: JournalModel) async throws {
         do { try await model.capture.open(film: film, model: model); XCTFail("The simulator has no camera to start") }
         catch let error as NativeCaptureError where error == .notRunning || error == .configurationFailed { }
+    }
+
+    /// Stops the camera for a print and waits until the stop's own `.interrupted` event has reached the controller,
+    /// which ends a clip's recording time on every pause.
+    private func pauseForReveal(_ model: JournalModel) async throws {
+        model.capture.recordingStarted = Date()
+        model.capture.pauseForReveal()
+        try await waitUntil { model.capture.recordingStarted == nil }
     }
 
     private func stageUnfinishedSave(_ film: Film, _ model: JournalModel) throws -> URL {

@@ -35,7 +35,7 @@ struct ImmerseApp: App {
                     Task { await launcher.model?.processor.suspendProcessing() }
                 default:
                     // Control Center, a call or a permission prompt only pauses the camera.
-                    launcher.model?.capture.suspend()
+                    launcher.model?.capture.pauseForInactiveScene()
                 }
             }
         }
