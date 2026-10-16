@@ -163,7 +163,7 @@ upload-artifact v7 adds an `archive` input that defaults to the zipped upload us
 download-artifact v5 changed where a single artifact downloaded by ID lands, while this workflow downloads by `pattern` into one folder per artifact, which is unchanged.
 download-artifact v8 fails on a digest mismatch instead of warning, and leaves files that are not zipped as they are.
 
-## Launches that timed out on a fresh harness simulator (run 38724598104, not fixed)
+## Launches that timed out on a fresh harness simulator (runs 38724598104 and 38820481181, not fixed)
 
 The harness part of a later pull request's check (run 38724598104, on the low-storage cleanup's branch) failed its first two app launches with "Failed to get background assertion for target app ... Timed out while acquiring background assertion"; its other 43 tests passed.
 The simulator's log in its result bundle shows the sequence:
@@ -179,6 +179,17 @@ Here, three fresh iOS 26.5 simulators prepared as validation prepares them ran t
 Every assertion request was answered within 0.01 seconds, SpringBoard loaded its accessibility support at the first launch 22 to 28 seconds after boot, and every test passed.
 The stall was not reproduced, so no settle step (a longer wait for the boot, switching apsd off, or a warm-up launch before the tests) can be shown to prevent it, and none was added; a launch retry would only hide it.
 If it recurs, the same three lines in the simulator's log (the 60-second accessibility timeout, SpringBoard's accessibility status change and the late assertion requests) will tell it apart.
+
+This pull request's own check (run 38820481181, at 4f2399a) failed its harness part's second app launch, `LowStorageWorkflowTests.testFilmScreenShowsNoWarningAtExactlyTwoGigabytes`, about eight minutes after the simulator booted; its other 44 tests passed.
+"Failed to get matching snapshots: Timed out while evaluating UI query" came from its first wait, for the Journal's Start a Film button, and `Scripts/screen-tests.sh` found no dropped touch in its window (23:10:12 to 23:11:48 UTC), so it was not rerun.
+None of the three lines above is in that window: the whole simulator ran slowly instead.
+launchd took six seconds to start the app (23:10:14.2 to 23:10:20.4), its ordinary UIKit launch steps came four to sixteen seconds apart, and its window became key only at 23:10:51.
+trustd's scheduled revocation check began at 23:10:20.5, six seconds after the slowdown, and with the quiet script's setting it logged "Recreate VALID db generation 7 from previous 7" and "skipping update" 27 seconds later and exited with status 0, as its first process had at its own first check (23:02:48).
+Its replacement took until 23:11:44 to open its database, and apsd, which asked trustd to check a certificate about ten times a second over the run, logged almost nothing in that minute.
+That later trustd ran two more checks the same way (23:15:28 and 23:23:38) without exiting, and the tests running then passed.
+That exit came inside a slowdown that had already begun, so it does not account for it.
+Nothing in the log starts the slowdown: there is no crash or memory-pressure message, and dasd started its next wave of post-install tasks (Spotlight reindexing, Siri voice retries, Health and Finance post-install work) only at 23:11.
+As with run 38724598104, no settle step can be shown to prevent it, so none was added.
 
 ## Seen, not changed
 
