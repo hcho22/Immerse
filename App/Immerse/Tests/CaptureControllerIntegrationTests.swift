@@ -181,10 +181,9 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertNil(model.alert, "Over the camera the failure shows once, on the camera")
     }
 
-    func testViewfinderFollowsTheInterfaceWhoseLandscapeNamesAreSwapped() {
-        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeRight)?.rotationAngle, 0, "Home side right")
-        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeLeft)?.rotationAngle, 180)
-        XCTAssertEqual(CaptureFrameOrientation(interface: .portrait)?.rotationAngle, 90)
+    /// The viewfinder, like the saved capture, follows how the iPhone is held, not the interface, which the shooting
+    /// screen holds upright.
+    func testViewfinderFollowsHowTheIPhoneIsHeld() {
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeLeft)?.rotationAngle, 0, "Home side right")
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeRight)?.rotationAngle, 180)
         XCTAssertNil(CaptureFrameOrientation(device: .faceUp))

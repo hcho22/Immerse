@@ -10,7 +10,7 @@ final class CaptureBehaviorTests: XCTestCase {
         XCTAssertEqual(disposable.viewfinder, .threeByTwo)
         XCTAssertTrue(disposable.offersFlash)
         XCTAssertTrue(disposable.showsLowLightCue)
-        XCTAssertFalse(disposable.reversesRearViewfinder)
+        XCTAssertFalse(disposable.offersZoomSteps)
 
         let super8 = CaptureBehavior.for(.super8HomeMovie)
         XCTAssertEqual(super8.focus, .fixed, "Fixed-focus lens")
@@ -25,7 +25,7 @@ final class CaptureBehaviorTests: XCTestCase {
         XCTAssertEqual(medium.viewfinder, .square)
         XCTAssertTrue(medium.offersManualFocus)
         XCTAssertTrue(medium.offersExposureBias)
-        XCTAssertTrue(medium.reversesRearViewfinder)
+        XCTAssertTrue(medium.offersZoomSteps, "The 6×6 offers the iPhone's own zoom steps")
         XCTAssertFalse(medium.offersFlash)
     }
 
@@ -38,16 +38,18 @@ final class CaptureBehaviorTests: XCTestCase {
             XCTAssertFalse(CaptureBehavior.for(camera).showsLowLightCue, "\(camera)")
         }
         for camera in CameraID.allCases where camera != .mediumFormat6x6 {
-            XCTAssertFalse(CaptureBehavior.for(camera).reversesRearViewfinder, "\(camera)")
+            XCTAssertFalse(CaptureBehavior.for(camera).offersZoomSteps, "\(camera) keeps its single lens")
             XCTAssertFalse(CaptureBehavior.for(camera).offersManualFocus, "\(camera)")
         }
     }
 
-    func testOnlyTheSixBySixRearViewfinderIsReversedAndEveryFrontViewfinderIsMirrored() {
+    /// The captain, 2026-10-16: the 6×6's viewfinder is the normal one, no longer reversed like a waist-level finder.
+    /// The front viewfinder stays mirrored for every Camera.
+    func testNoRearViewfinderIsReversedAndEveryFrontViewfinderIsMirrored() {
         for camera in CameraID.allCases {
             let behavior = CaptureBehavior.for(camera)
             XCTAssertTrue(behavior.isViewfinderMirrored(position: .front), "\(camera) front keeps its mirrored behavior")
-            XCTAssertEqual(behavior.isViewfinderMirrored(position: .rear), camera == .mediumFormat6x6, "\(camera) rear")
+            XCTAssertFalse(behavior.isViewfinderMirrored(position: .rear), "\(camera) rear shows the scene the normal way")
         }
     }
 

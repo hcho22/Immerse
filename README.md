@@ -17,7 +17,7 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
 | 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; warm, faded color, soft contrast and soft detail |
-| 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a viewfinder that shows the scene reversed left to right, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
+| 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a normal viewfinder, the zoom steps of the iPhone's own lenses on the rear camera, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair |
 | 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |
 
@@ -38,6 +38,8 @@ The Instant develops faded where the PRD has "brilliant, warm, saturated color",
 All four of the tracker's "PRD 2.0 implementation slices" are built, as the table shows, and none is validated on a physical iPhone; developed exposures are never reversed.
 The Disposable's fixed exposure (EV 12), its low-light cue threshold and the fixed lens position are provisional pending DEC-04 and a physical-phone check ([`Evidence/NativeApp/capture-behavior-prd2-slice2.md`](Evidence/NativeApp/capture-behavior-prd2-slice2.md)).
 Flash, manual focus and exposure appear only when the lens supports them, and the capture screen says when a lens cannot hold the Disposable's fixed exposure.
+The shooting screen keeps its portrait layout whichever way the iPhone is held: the viewfinder keeps its size and place, and only the words and icons turn to read upright.
+The 6×6's rear camera offers one zoom step for each lens the iPhone has, labeled as its Camera app labels it, and a sensor-crop step only where the camera reports one ([`Evidence/NativeApp/capture-sideways-zoom-068.md`](Evidence/NativeApp/capture-sideways-zoom-068.md)).
 Movie capacity is counted in whole 30 fps frames, and Movie clips are always silent: the app never requests the microphone.
 Movie capture uses a 4:3 native format that is provisional pending DEC-04.
 

@@ -31,6 +31,9 @@ final class CaptureController {
     var recordingStarted: Date?
     /// Whether the capture screen is on screen; the Journal alert cannot appear over it.
     var presented = false
+    #if DEBUG
+    fileprivate var heldForTesting: CaptureFrameOrientation?
+    #endif
 
     init(authorizer: any CapturePermissionAuthorizing) { self.authorizer = authorizer }
 
@@ -148,6 +151,14 @@ final class CaptureController {
         exposure = Double(controls.exposureBias)
     }
 
+    /// Takes a zoom step of the iPhone's own lenses (the 6×6's rear camera). Only between exposures, like a lens switch.
+    func selectZoomStep(_ step: ZoomStep) async throws {
+        guard let backend else { return }
+        try await backend.selectZoomStep(step)
+        controls = await backend.controls()
+        exposure = Double(controls.exposureBias)
+    }
+
     /// The one reader of a backend's scene light. Readings reach the cue only while `metersSceneLight`.
     private func read(sceneLight readings: AsyncStream<Double>) {
         lightTask?.cancel()
@@ -209,10 +220,18 @@ final class CaptureController {
         recordingStarted = nil
     }
 
-    /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now.
+    /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now. The shooting
+    /// screen turns its words and icons and its preview with this, not with the interface, which it holds upright.
     func updateOrientation() {
-        guard phase != .recordingMovie, let held = CaptureFrameOrientation(device: UIDevice.current.orientation) else { return }
+        guard phase != .recordingMovie, let held = heldOrientation else { return }
         orientation = held
+    }
+
+    private var heldOrientation: CaptureFrameOrientation? {
+        #if DEBUG
+        if let heldForTesting { return heldForTesting }
+        #endif
+        return CaptureFrameOrientation(device: UIDevice.current.orientation)
     }
 
     private func updatePhase(_ backend: AVFoundationCaptureBackend?) async {
@@ -232,21 +251,16 @@ extension CaptureFrameOrientation {
         default: return nil
         }
     }
-
-    /// The held orientation an interface orientation shows; their landscape names are swapped.
-    init?(interface: UIInterfaceOrientation) {
-        switch interface {
-        case .portrait: self = .portrait
-        case .portraitUpsideDown: self = .portraitUpsideDown
-        case .landscapeLeft: self = .landscapeRight
-        case .landscapeRight: self = .landscapeLeft
-        default: return nil
-        }
-    }
 }
 
 #if DEBUG
 extension CaptureController {
+    /// Hosted tests cannot turn the iPhone, so they set how it is held.
+    func hold(forTesting held: CaptureFrameOrientation) {
+        heldForTesting = held
+        orientation = held
+    }
+
     /// Hosted tests have no camera, so they set what a lens would report.
     func setForTesting(controls: NativeCameraControls, sceneEV100: Double? = nil) {
         self.controls = controls

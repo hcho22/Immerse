@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct ImmerseApp: App {
+    @UIApplicationDelegateAdaptor(ImmerseAppDelegate.self) private var appDelegate
     @State private var launcher = JournalLauncher()
     @Environment(\.scenePhase) private var scenePhase
 

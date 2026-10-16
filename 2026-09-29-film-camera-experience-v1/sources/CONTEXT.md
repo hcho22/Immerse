@@ -43,6 +43,12 @@
 > The same day the 6×6 Medium Format's color Film Stock took the look in his own files for it: the negative scanned as a modern lab scans it, with gentle contrast, blacks lifted to about 7.5 percent, cream-warm grays, a mild lens vignette and very fine grain.
 > The terms and rules below were not rewritten; read those looks through [ADR 0016](../adr/0016-the-captains-exceptions-to-fresh-not-aged.md).
 >
+> **2026-10-16 note (ADR 0017).**
+> After trying the build on his iPhone the captain withdrew the 6×6 Medium Format's reversed **Viewfinder** ("normal viewfinder. No reverse"), so the Relationships rule of 2026-10-06 that it shows the scene reversed left to right no longer holds and was replaced below; **Selfie Capture** keeps its mirrored Viewfinder, and developed Exposures were never reversed.
+> He chose that the shooting screen never turns ("Like iPhone Camera"): a **Viewfinder** keeps its size and place whichever way the phone is held, the picture in it is the shape the Camera develops to as the phone is held, and only the screen's words and icons turn to read upright.
+> He asked that the 6×6 Medium Format zoom "as allowed by camera native", which added the term Zoom Step.
+> The 6×6 entry in the catalog and the Flagged ambiguities were updated; read these decisions through [ADR 0017](../adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md).
+>
 > **2026-10-07 note (PRD version 2.1).**
 > The Darkroom rule on contrast changed: every Photo Film, color or black-and-white, may use contrast grades, while chemical toning stays black-and-white only.
 > This reverses the contrast half of the 2026-10-06 decision.
@@ -84,8 +90,12 @@ The color or black-and-white film chosen for a 6×6 Medium Format or 16mm Cinema
 _Avoid_: Film type, filter, look, second Camera
 
 **Viewfinder**:
-The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment.
+The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the picture in it is the shape the Camera develops to as the phone is held.
 _Avoid_: Filter preview, developed-image preview
+
+**Zoom Step**:
+One of the fixed focal lengths the 6×6 Medium Format's rear camera offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of its wide lens that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
+_Avoid_: Digital zoom, pinch zoom, lens picker
 
 **Selfie Capture**:
 Front-facing capture within a **Film** that retains its selected **Camera**, capacity, **Developed Treatment**, and **Reveal Rule**.
@@ -451,6 +461,7 @@ _Avoid_: Draft, incomplete album
 - Capture controls must belong to the selected **Camera** and be genuinely supported by the active phone lens; unsupported controls are hidden with a brief explanation rather than presented as nonfunctional controls.
 - Hardware-aware control availability does not change the **Film**'s framing, capacity, **Developed Treatment**, or **Reveal Rule**.
 - Each **Camera** provides a **Viewfinder** appropriate to its Historical Format.
+- The shooting screen keeps its portrait layout in every hold, so a **Viewfinder** keeps its size and place; held on its side the phone shows a landscape picture in it, and only the screen's words and icons turn to read upright. The photo is saved, and a **Recorded Clip** keeps, the orientation the phone was held in.
 - A **Viewfinder** may show framing, aspect ratio, focus behavior, flash state, exposure guidance, or period-appropriate overlays, but not the developed result: final grain, color variation, halation, flicker, frame unsteadiness, dust, or edge softening.
 - Each **Camera** is identified by a descriptive **Historical Format** rather than an invented brand or exact manufacturer model.
 - The Camera catalog prioritizes nostalgic and behaviorally distinct **Historical Formats**, not literal historical sales rank or cosmetically different treatments.
@@ -672,7 +683,8 @@ _Avoid_: Draft, incomplete album
 - The 16mm Cinema shows highlight halation on both **Film Stocks**: a neutral glow in black-and-white and a red glow in color; the red glow is a deliberate departure from its color **Format Reference**, whose anti-halation backing prevents it.
 - A 16mm Cinema **Recorded Clip** has no per-clip limit and may run for the whole **Duration Limit**; the spring-wound run time of its **Format Reference** is deliberately not reproduced.
 - The 16mm Cinema's color **Film Stock** keeps a fixed daylight color balance: daylight develops neutral, warm indoor light develops orange, and Development does not correct it.
-- The 6×6 Medium Format's **Viewfinder** shows the scene reversed left to right, as a waist-level finder does; its developed Exposures are not reversed, and **Selfie Capture** keeps its existing mirrored Viewfinder.
+- The 6×6 Medium Format's **Viewfinder** shows the scene the normal way, not reversed; its developed Exposures are never reversed, and **Selfie Capture** keeps its mirrored Viewfinder.
+- The 6×6 Medium Format's rear camera offers a **Zoom Step** for each lens the phone has, and a native sensor-crop **Zoom Step** only where the phone's camera reports one; it offers no step between them, no pinch or digital zoom and no control on a phone with one rear lens and no reported crop. A **Zoom Step** is taken only between **Exposures**, as a lens switch is, and the other Cameras and the front camera keep their single lens.
 - The 6×6 Medium Format's focus is optical only: its **Developed Treatment** never synthesizes background blur, so depth of field is whatever the device lens produced at capture.
 - The 1990s Disposable's **Viewfinder** shows a live low-light cue advising flash when the scene is too dim for its fixed exposure; the cue is exposure guidance and never previews the developed result.
 - The **Darkroom** may adjust a Developed Treatment within analog constraints but cannot replace it.
@@ -793,7 +805,7 @@ _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 
 - **1990s Disposable**: 27 borderless 3:2 Exposures with no date stamp, showing warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges; fixed focus, fixed exposure, optional flash, and roll-level Development.
 - **1970s Instant**: a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.
-- **6×6 Medium Format**: 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a waist-level **Viewfinder** that shows the scene reversed left to right, deliberate focus and exposure controls, and roll-level Development; it carries no decade because its color film is a present-day one.
+- **6×6 Medium Format**: 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a normal **Viewfinder**, **Zoom Steps** on the rear camera, deliberate focus and exposure controls, and roll-level Development; it carries no decade because its color film is a present-day one.
 
 ### Movie Cameras
 
@@ -850,6 +862,8 @@ Each v1 Movie capacity is one real load of its **Format Reference**: a 50-foot S
 - A permanent removal block could be mistaken for a guaranteed ban on a physical person — resolved: v1 blocks known identities and retains account-free Guest entry despite the possibility of a new, unlinked identity on another device; leaked-code revocation limits entry through that code, not person-level identity evasion.
 - "The original look" of a Camera could mean the medium when new, the same medium as it survives today, or the faded look that retro camera apps have made familiar — resolved: a **Developed Treatment** shows the Historical Format as freshly processed in its era, and aging is not an **Authentic Imperfection**.
 - "Matching the original camera" was first resolved as evoking a composite era feel with no named original, then reversed — resolved: each **Camera** has one internal **Format Reference**, a named original camera and film, and its **Developed Treatment** is judged against it; the name never reaches users.
+- The 6×6 Medium Format's **Viewfinder** was first specified as a waist-level one that shows the scene reversed left to right, then withdrawn on 2026-10-16 - resolved: it shows the scene the normal way, and only **Selfie Capture**'s Viewfinder is mirrored.
+- "Shooting sideways" could mean the shooting screen turns with the phone or that only its contents do - resolved (2026-10-16): the screen never turns, its **Viewfinder** keeps its size and place, and only its words and icons turn to read upright, as in the phone's own Camera app.
 - "1960s 6×6 Medium Format" and "1960s 16mm Cinema" each paired a 1960s name with a film first made decades later — resolved: the Cameras are **6×6 Medium Format** and **16mm Cinema** with no decade, so a present-day film contradicts nothing.
 - "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead.
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.

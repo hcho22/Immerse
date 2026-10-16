@@ -228,7 +228,7 @@ final class JournalIntegrationTests: XCTestCase {
         }
         XCTAssertEqual(FilmStock.allCases.map(\.label), ["Color", "Black and white"])
         XCTAssertNotNil(CameraCatalog.mediumFormat6x6.viewfinderNote)
-        XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("reversed left to right"))
+        XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("Zoom steps follow your iPhone's own lenses"))
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 { XCTAssertNil(camera.viewfinderNote, camera.displayName) }
         let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
                          "Vision3", "Double-X", "Eastman", "500C"]

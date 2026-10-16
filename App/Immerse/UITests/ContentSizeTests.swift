@@ -125,7 +125,7 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "6×6 Color look", type: .staticText, label: "Color: natural, warm color, very fine grain and gentle contrast"),
         Target(name: "6×6 Black and white look", type: .staticText, label: "Black and white: high contrast and distinct grain"),
         Target(name: "6×6 Viewfinder note", type: .staticText,
-               label: "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."),
+               label: "Zoom steps follow your iPhone's own lenses, as in its Camera app."),
     ]
 
     /// The 16mm look line once Black and white is chosen, which names the glow that stock develops.

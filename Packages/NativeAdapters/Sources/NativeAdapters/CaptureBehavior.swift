@@ -17,8 +17,8 @@ public enum ExposureBehavior: Equatable, Sendable {
 public enum ViewfinderShape: Equatable, Sendable {
     case square, threeByTwo, fourByThree
 
-    /// Width over height of the viewfinder box. Photos follow how the iPhone is held and Movies the
-    /// interface, so a portrait interface frames the short side across.
+    /// Width over height of the viewfinder box. Photos and Movies follow how the iPhone is held, so a portrait hold
+    /// frames the short side across and a sideways hold the long side.
     public func aspectRatio(landscape: Bool) -> Double {
         let wide: Double
         switch self {
@@ -39,9 +39,8 @@ public struct CaptureBehavior: Equatable, Sendable {
     public let focus: FocusBehavior
     public let exposure: ExposureBehavior
     public let viewfinder: ViewfinderShape
-    /// A waist-level finder shows the scene reversed left to right. Applies to the rear viewfinder only
-    /// and never to the saved capture; the front viewfinder is mirrored for every Camera.
-    public let reversesRearViewfinder: Bool
+    /// The rear camera offers the zoom steps the iPhone's own lenses have (the 6×6), never a digital zoom between them.
+    public let offersZoomSteps: Bool
     public let offersFlash: Bool
     /// The viewfinder shows a cue advising flash when the scene is too dim for the fixed exposure.
     public let showsLowLightCue: Bool
@@ -51,13 +50,13 @@ public struct CaptureBehavior: Equatable, Sendable {
 
     public init(
         focus: FocusBehavior = .deviceDefault, exposure: ExposureBehavior = .automatic,
-        viewfinder: ViewfinderShape = .fourByThree, reversesRearViewfinder: Bool = false,
+        viewfinder: ViewfinderShape = .fourByThree, offersZoomSteps: Bool = false,
         offersFlash: Bool = false, showsLowLightCue: Bool = false
     ) {
         self.focus = focus
         self.exposure = exposure
         self.viewfinder = viewfinder
-        self.reversesRearViewfinder = reversesRearViewfinder
+        self.offersZoomSteps = offersZoomSteps
         self.offersFlash = offersFlash
         self.showsLowLightCue = showsLowLightCue
     }
@@ -72,7 +71,7 @@ public struct CaptureBehavior: Equatable, Sendable {
         case .instant1970s:
             CaptureBehavior(viewfinder: .square)
         case .mediumFormat6x6:
-            CaptureBehavior(focus: .manual, exposure: .manualBias, viewfinder: .square, reversesRearViewfinder: true)
+            CaptureBehavior(focus: .manual, exposure: .manualBias, viewfinder: .square, offersZoomSteps: true)
         case .super8HomeMovie:
             CaptureBehavior(focus: .fixed)
         case .cinema16mm:
@@ -80,9 +79,10 @@ public struct CaptureBehavior: Equatable, Sendable {
         }
     }
 
-    /// Only the viewfinder is reversed or mirrored. Saved captures are never mirrored.
+    /// Only the front viewfinder is mirrored, for every Camera; the rear viewfinder shows the scene the normal way
+    /// (the captain, 2026-10-16: the 6×6's waist-level reversal is gone). Saved captures are never mirrored.
     public func isViewfinderMirrored(position: CapturePosition) -> Bool {
-        position == .front || reversesRearViewfinder
+        position == .front
     }
 }
 

@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
 **Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
@@ -19,6 +19,10 @@ ADR 0016 was added in version 2.1 of this collection (2026-10-10).
 It records the captain's choices, made on their look review boards, of a faded look for the 1970s Instant and a muted look with a highlight glow for the 1960s Super 8 Home Movie (2026-10-10), and his giving the color Film Stocks of the 16mm Cinema and the 6×6 Medium Format the looks in his own files (2026-10-12, the 16mm's with its black kept at the 4 percent he first chose on 2026-10-11), as exceptions to ADR 0013.
 It was written from his answers on the boards at firstmate's instruction.
 On 2026-10-13 it gained his choice of the Instant's contrast, made on that Camera's board after the study of preserved 1970s prints.
+
+ADR 0017 was added on 2026-10-16.
+It records three decisions the captain made after trying the build on his iPhone: the shooting screen keeps its portrait layout whichever way the iPhone is held ("Like iPhone Camera"), the 6×6 Medium Format's viewfinder is the normal one and no longer reversed, and the 6×6 zooms in the iPhone's own steps.
+The second reverses a rule of PRD version 2.0, whose sentences in sections 6.1, FR-03 and FR-04 were amended in the same file at his request, with the original wording kept in the PRD's note of that date.
 
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
@@ -42,6 +46,7 @@ The PRD supplies the later detailed rules and explicitly labels open engineering
 - [ADR 0014 - Two Cameras offer a color or black-and-white Film Stock at Load Film](adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md) - applies to v1; added in version 2.0
 - [ADR 0015 - Each Camera is judged against one named Format Reference](adr/0015-each-camera-is-judged-against-one-named-format-reference.md) - applies to v1; added in version 2.0
 - [ADR 0016 - The captain's exceptions to ADR 0013, chosen on the look review boards](adr/0016-the-captains-exceptions-to-fresh-not-aged.md) - applies to v1; added in version 2.1
+- [ADR 0017 - The shooting screen never turns, the 6×6 has a normal viewfinder, and the 6×6 zooms in the iPhone's own steps](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) - applies to v1; added on 2026-10-16
 
 ## Reconciliation with later requirements
 
@@ -79,6 +84,7 @@ Group statements in these notes still describe the deferred v2 design.
 | 0014 | Applies to v1 personal Films: the 6×6 Medium Format and the 16mm Cinema offer a Film Stock at Load Film. It says nothing about who chooses a Group Film's Film Stock, which stays a v2 question. Added in version 2.0. |
 | 0015 | Applies to v1 personal Films and to every Camera. The Format Reference names are internal and never reach the product. Added in version 2.0. |
 | 0016 | Applies to v1 personal Films and to four places only: the 1970s Instant, whose Developed Treatment is the faded look; the 1960s Super 8 Home Movie, whose is muted with a highlight glow; the 16mm Cinema's color Film Stock, whose look is the one in the captain's own files with its black at 4 percent; and the 6×6 Medium Format's color Film Stock, whose look is the one in his own files, a lab scan with lifted blacks. The captain chose each, as exceptions to ADR 0013. Added in version 2.1. |
+| 0017 | Applies to v1 personal Films and to every Camera's shooting screen, and to the 6×6 Medium Format alone for its viewfinder and its zoom. The shooting screen keeps its portrait layout whichever way the iPhone is held, and only its words and icons turn; the 6×6's rear viewfinder is the normal one, not reversed; the 6×6 zooms in the steps of the iPhone's own lenses. The 6×6 reversal of PRD version 2.0 is withdrawn. Added on 2026-10-16. |
 
 The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
@@ -92,6 +98,7 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0014 (v1):** It narrows PRD FR-01's "no separate stock picker" to "no stock picker except on these two Cameras" and replaces the task CAM-11 wording that excluded separate stock selection (the old wording is preserved in the tracker). A Film Stock is fixed at Load Film with the Camera package, never after Development, so it does not reroll a Developed Treatment and does not conflict with ADR 0001. Chemical toning and contrast grades in the Darkroom apply only to the black-and-white Film Stock (PRD FR-07 and the captain's 2026-10-06 decision recorded in the tracker).
 - **0015 (v1):** It makes each Camera's look checkable against one named original. The captain decided on 2026-10-06 that the check is side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera (recorded in the tracker as QA-16). The manufacturer and film names appear in internal documents only, and no product string, store listing or Film Stock label may use them.
 - **0016 (v1; exceptions to 0013):** The 1970s Instant develops with a faded look: lifted, milky blacks, muted color and age-style tints, replacing "Brilliant, warm, saturated color" in PRD section 6.1 for that Camera. The 1960s Super 8 Home Movie develops muted, with a glow: lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights, replacing "Strong, rich color" in PRD section 6.2 for that Camera. PRD sections 6.1 and 6.2 are the captain's text and stay as written; this note, ADR 0016 and the tracker's "Captain decisions recorded in version 2.0" table record how the two exceptions change the way those rows apply. The 16mm Cinema's color Film Stock keeps everything PRD section 6.2 gives it, with its color and per-frame passes taken from the captain's own files, and its black at the 4 percent he asked for again once they were applied, by the shorter print density range he chose, which opens the shadows as well. The 6×6 Medium Format's color Film Stock keeps what PRD section 6.1 gives it, with its color, lens vignette and grain taken from the captain's own files; its lifted blacks are his look, and the vignette is one the PRD's row does not list. ADR 0013 still governs everything else, and a later exception needs the captain's choice on that Camera's review board, recorded in ADR 0016. The app's not-aged tests cover every Camera and Film Stock except those `FilmLook.isCaptainsException` names, with a separate test holding the Instant and the Super 8 each to its chosen look, and `NegativeFilmTests`, `ScenePassesTests` and `MediumFormatPassesTests` holding the two color stocks to the captain's files.
+- **0017 (v1; reverses part of PRD 2.0 FR-04):** PRD version 2.0 gave the 6×6 Medium Format "a waist-level viewfinder that shows the scene reversed left to right" (section 6.1, FR-03 and FR-04). The captain withdrew it on 2026-10-16: the 6×6's rear viewfinder is the normal one, the front viewfinder stays mirrored for every Camera, and developed pictures were never reversed. The PRD's three sentences were amended in the same file, with the original wording kept in the note of that date ("Decisions of 2026-10-16"). The same day he chose that the shooting screen holds the portrait layout whichever way the iPhone is held, with its words and icons turning to read upright, and that the 6×6 zooms in the steps of the iPhone's own lenses; PRD FR-04 now says both. No ADR 0001 to 0016 is superseded, and Movie orientation (FR-05) is unchanged: a clip still keeps the orientation it started in, and the Movie Orientation fixed at Load Film is untouched.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -404,3 +411,64 @@ Neither Camera's Format Reference changes (ADR 0015): the original 1970s integra
 PRD section 6.3's "Not yet established" note on the Instant's contrast and the amount of its print-to-print variation is closed: the study of preserved 1970s prints was made, and on 2026-10-13 the captain chose the contrast it supports ("B"), while its print-to-print variation stays as it was ("contrast only") (`Evidence/NativeApp/instant-study-and-toning-061.md`).
 The PRD's sentence is his text and stays as written; this note, the ADR and the tracker's decisions table record the choice.
 The values are in `Packages/RenderCore/Sources/RenderCore/FilmLook.swift` (`FilmLook.instant`, `FilmLook.super8` and the black of `FilmLook.cinemaColor`), and `Evidence/NativeApp/prd-2-slice-4-looks.md` records the boards and the choices.
+
+### ADR 0017
+
+Standalone source: [0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md)
+
+# The shooting screen never turns, the 6×6 has a normal viewfinder, and the 6×6 zooms in the iPhone's own steps
+
+After trying the build on his iPhone, the captain made three decisions on 2026-10-16 about how a Camera is held and framed.
+They change one rule of PRD version 2.1 (the 6×6 Medium Format's reversed viewfinder) and add two behaviors it did not state (the shooting screen held sideways, and the 6×6's zoom).
+
+**What he saw.**
+He sent a screenshot of a Camera held sideways.
+The whole shooting screen had turned with the iPhone, the viewfinder ran off the bottom of the screen behind the shutter bar, the Done button sat on top of the viewfinder, and the line that says how many exposures are left was faint at the very top.
+He wrote: "All cameras landscape shooting. viewfinder does not fit the screen. viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles".
+
+**The shooting screen never turns.**
+Asked how sideways shooting should work, he chose "Like iPhone Camera".
+The screen keeps its portrait layout whichever way the iPhone is held.
+The viewfinder keeps the same size and place, and only the words and icons turn, so that they read upright; the picture inside the viewfinder is the shape the Camera develops to as the iPhone is held, so it frames a landscape scene when the iPhone is on its side.
+The photo is still saved the way the iPhone was held, and a clip keeps the orientation it started in, as before.
+This holds on all five Cameras.
+Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included, and so does the print that opens over the camera after an Instant exposure.
+Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
+The alternative considered was the shooting screen as it was, which turned with the iPhone and laid out a second, landscape arrangement of the same controls; it is the arrangement his screenshot showed.
+
+**The 6×6 Medium Format's viewfinder is the normal one.**
+He wrote: "6x6 Viewfinder - normal viewfinder. No reverse".
+This reverses the waist-level finder of PRD version 2.0 (section 6.1 and FR-03 and FR-04), which showed the scene reversed left to right.
+The 6×6's rear viewfinder now shows the scene as every other Camera's does.
+The front viewfinder stays mirrored for every Camera, and every saved and developed picture is unmirrored, as before.
+Nothing changes in how a 6×6 exposure is developed.
+
+**The 6×6 zooms in the iPhone's own steps.**
+He wrote: "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)".
+The 6×6's rear camera offers one zoom step for each lens the iPhone has, labeled as the iPhone's own Camera app labels it (0.5x for an ultra wide lens, 1x, and the telephoto lens at its factor, such as 2x, 2.5x, 3x or 5x), so an iPhone with one rear lens shows no zoom control.
+It adds a sensor-crop step, such as 2x, only where the camera's own interface reports that crop as a native step of the wide lens, and never where a real lens already gives that factor.
+No step between these is offered, and neither is a pinch or any digital zoom.
+Zoom is on the 6×6 only and on the rear camera only; the front camera and every other Camera keep their single lens.
+A step can be taken only between exposures, as a lens switch can.
+The 6×6's focus and exposure controls and its square picture at the existing output size are kept at every step, and where a lens cannot focus by hand the existing note "Manual focus unavailable on this lens" applies to it.
+
+The rest of what is decided for these Cameras stands.
+The Disposable's fixed exposure and cue, the Super 8's fixed focus, the Cameras' frame shapes and the front viewfinder's mirroring are as PRD version 2.1 and ADR 0016 have them.
+A Film already loaded needs nothing changed: no stored data, Camera package or treatment version is affected.
+
+The alternative considered for the 6×6's viewfinder was the waist-level reversal PRD version 2.0 specified, which gave the Camera the feel of the Format Reference's finder; the captain preferred the normal one.
+The accepted costs are that the 6×6 no longer shows that feel while framing, that the viewfinder's picture is letterboxed inside its box when a Camera whose box is portrait is held sideways, and that the screen's header keeps the height of its turned form when the iPhone is upright, so the viewfinder sits a little lower than a header sized to its text alone would put it.
+
+Decided on 2026-10-16.
+
+---
+
+### Reconciliation note for ADR 0017
+
+Interpret the ADR with PRD section 6.1 (the 6×6 Medium Format's row), FR-03 and FR-04, which were amended on 2026-10-16 in the same file as version 2.1, at the captain's request, so that no sentence promises the reversed viewfinder.
+Their earlier wording is kept in the PRD's note "Decisions of 2026-10-16" and in the tracker's table of superseded wording.
+The reversal was the captain's own version 2.0 text and was never an ADR, so no earlier ADR changes; the Format Reference of the 6×6 (ADR 0015) is unchanged, and only the feel of its finder is no longer reproduced.
+The tracker's "Captain decisions recorded in version 2.0" table records his words and where each decision lands in the tasks (CAP-14, CAM-05, CAM-15, CAP-05, CAP-07, MOV-04 and QA-13).
+FR-05 is untouched: a clip keeps the orientation it started in, the Movie Orientation is chosen at Load Film, and the shooting screen's layout is independent of both.
+The code is `App/Immerse/Sources/CaptureView.swift`, `HeldTurn.swift` and `InterfaceOrientationLock.swift` for the screen, and `Packages/NativeAdapters/Sources/NativeAdapters/ZoomSteps.swift`, `CaptureBehavior.swift` and `CapturePlanning.swift` for the 6×6.
+`Evidence/NativeApp/capture-sideways-zoom-068.md` records the build, its tests and what only an iPhone can show.

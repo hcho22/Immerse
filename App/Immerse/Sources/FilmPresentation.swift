@@ -84,7 +84,7 @@ extension CameraPackage {
     /// An explanation the Load Film screen gives for this Camera alone (PRD FR-03).
     var viewfinderNote: String? {
         id == .mediumFormat6x6
-            ? "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."
+            ? "Zoom steps follow your iPhone's own lenses, as in its Camera app."
             : nil
     }
 }
