@@ -1,7 +1,7 @@
 # Final Software Candidate Gate 050
 
 **History of the earlier candidate.**
-Since 2026-10-15 the manual iPhone candidate is commit `771d5e2514165c04c384f5c7f6d8967af941dace` on `main`, pinned in [manual-validation.md](manual-validation.md) under "The Candidate"; from 2026-10-14 to 2026-10-15 it was `38792bb3f76472860e1da8a702c78bee20f2b444`, and from 2026-10-13 to 2026-10-14 `5c3a217bd7d9b84b629dab912cbcda038aeff62d`.
+Since 2026-10-17 the manual iPhone candidate is commit `79a1b1c629e9158c475057513280d097c6512acc` on `main`, pinned in [manual-validation.md](manual-validation.md) under "The Candidate"; from 2026-10-15 to 2026-10-17 it was `771d5e2514165c04c384f5c7f6d8967af941dace`, from 2026-10-14 to 2026-10-15 it was `38792bb3f76472860e1da8a702c78bee20f2b444`, and from 2026-10-13 to 2026-10-14 `5c3a217bd7d9b84b629dab912cbcda038aeff62d`.
 This file is the record of the gate as it ran on `71391e4` on 2026-10-02 and is kept as it was written; nothing below describes the current candidate.
 
 Candidate: `71391e483a80f3df38d995f5320c8a77c17cef61` on `fm/immerse-v1-implementation`.

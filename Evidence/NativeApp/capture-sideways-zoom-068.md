@@ -364,7 +364,7 @@ The turned header reads from Done on either side, with its lines no longer than 
 
 ## Not Proven Without a Phone
 
-All of these are for the manual iPhone test plan ([H01 to H10](manual-validation.md#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone)), which belong to the build that follows the pending camera changes:
+All of these are for the manual iPhone test plan ([H01 to H10](manual-validation.md#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone)), which belong to the pinned candidate `79a1b1c` (the merge of this change):
 
 - The live picture: that it is upright and fills the viewfinder in each hold and on each Camera, and that what the viewfinder frames is what saves.
 - The saved photo's and clip's orientation when taken sideways, and a clip keeping the orientation it started in when the iPhone turns while it records.
