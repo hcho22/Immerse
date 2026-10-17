@@ -6,7 +6,7 @@ import XCTest
 /// show none. The warning stops nothing: the Film still loads. The Film screen's other readings, its warning before
 /// Development and its largest text size are covered on synthetic Films by the populated Journal harness.
 @MainActor
-final class LowStorageUITests: XCTestCase {
+final class LowStorageUITests: ScreenTestCase {
     static let captureWarning = "This iPhone has less than 2 GB free, so a capture may not save. A capture that does not save uses no exposures or time, and saved captures are unchanged. Free space in iPhone Settings."
 
     func testLoadFilmWarnsJustUnderTwoGigabytes() throws {

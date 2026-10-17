@@ -1,7 +1,7 @@
 import XCTest
 
 @MainActor
-final class JournalFlowTests: XCTestCase {
+final class JournalFlowTests: ScreenTestCase {
     func testCatalogBrowsingDoesNotLoadFilmAndSettingsDiscloseRestore() throws {
         let app = XCUIApplication.shippingGate()
         launchWithEmptyJournal(app)

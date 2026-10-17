@@ -1,6 +1,6 @@
 import XCTest
 
-@MainActor final class RetainedWorkflowTests: XCTestCase {
+@MainActor final class RetainedWorkflowTests: HarnessTestCase {
     func testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation() throws {
         let app = launch(["--empty"])
         openFilm(app)
@@ -125,7 +125,7 @@ import XCTest
         app.buttons["Crop"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
-        crop.tap()
+        crop.flipSwitch()
         let size = app.sliders["Crop size"]
         XCTAssertTrue(size.waitForExistence(timeout: 5))
         size.adjust(toNormalizedSliderPosition: 0.6)
@@ -136,7 +136,7 @@ import XCTest
             XCTAssertEqual(app.staticTexts[caption].frame.minX, size.frame.minX, accuracy: 1, caption)
         }
         snapshot(app, "darkroom-crop-captions")
-        crop.tap()
+        crop.flipSwitch()
 
         app.buttons["Dodge / Burn"].tap()
         let horizontal = app.sliders["Local exposure horizontal position"]

@@ -5,7 +5,7 @@ import XCTest
 /// screen names it. Loading uses the Debug testing unlock and answers a fresh Camera request itself, and each test
 /// deletes the Film it loaded. One test per Camera, to stay inside the per-test time allowance.
 @MainActor
-final class FilmStockUITests: XCTestCase {
+final class FilmStockUITests: ScreenTestCase {
     func testSixBySixLoadsOnTheBlackAndWhiteFilmStock() throws {
         try loadBlackAndWhite(id: "mediumFormat6x6", name: "6×6", capacity: "Capacity, 12 exposures")
     }

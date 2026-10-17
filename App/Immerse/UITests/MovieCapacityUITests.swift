@@ -7,7 +7,7 @@ import XCTest
 /// tests assume. The populated Journal card is also audited for contrast, since the suite's other audits only see an
 /// empty Journal.
 @MainActor
-final class MovieCapacityUITests: XCTestCase {
+final class MovieCapacityUITests: ScreenTestCase {
     func testMovieTimeReadsAsMinutesAndSecondsFromCatalogToJournal() throws {
         try check(size: nil)
     }

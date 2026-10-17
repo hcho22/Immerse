@@ -2,7 +2,7 @@ import XCTest
 
 /// The harness declares a Camera usage key only so this test can answer the actual system
 /// Camera request. Nothing is captured: the simulator has no camera.
-@MainActor final class CameraPermissionWorkflowTests: XCTestCase {
+@MainActor final class CameraPermissionWorkflowTests: HarnessTestCase {
     func testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged() throws {
         let app = XCUIApplication()
         app.resetAuthorizationStatus(for: .camera)

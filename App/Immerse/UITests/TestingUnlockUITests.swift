@@ -14,7 +14,7 @@ extension XCUIApplication {
 /// screens and the Settings switch, which holds across launches. Ends with the unlock on, the
 /// Debug default.
 @MainActor
-final class TestingUnlockUITests: XCTestCase {
+final class TestingUnlockUITests: ScreenTestCase {
     /// One test per switch value: both together took 1 minute 26 seconds to 1 minute 35 seconds on CI, which a runner at
     /// about half speed would push past the 3-minute allowance (Evidence/NativeApp/ci-flakes-057.md). The on test turns
     /// the switch off and then on, and the off test turns it off from on, the state both tests end in, so each makes
@@ -40,7 +40,7 @@ final class TestingUnlockUITests: XCTestCase {
         app.buttons["Settings"].tap()
         let toggle = app.switches["testing-unlock-switch"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
-        if (toggle.value as? String == "1") != on { toggle.switches.firstMatch.tap() }
+        if (toggle.value as? String == "1") != on { toggle.switches.firstMatch.flipSwitch() }
         XCTAssertEqual(toggle.value as? String, on ? "1" : "0")
         retainScreenshot(app, name: "Settings-testing-unlock-\(on ? "on" : "off")")
         app.buttons["Done"].tap()
