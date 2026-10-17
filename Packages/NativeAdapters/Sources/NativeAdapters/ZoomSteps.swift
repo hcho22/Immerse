@@ -7,14 +7,15 @@ public enum RearLens: Int, Codable, Equatable, Comparable, Sendable {
     public static func < (lhs: RearLens, rhs: RearLens) -> Bool { lhs.rawValue < rhs.rawValue }
 }
 
-/// One zoom step the 6×6 offers on the rear camera. A step is a whole lens, or a native crop of the wide lens that the
-/// camera API reports as a step (the sensor crop some iPhones offer as 2x), and it is labeled the way the iPhone's own
-/// Camera app labels it. The app never offers a step the iPhone does not report, and never a digital zoom between steps.
+/// One zoom step the 6×6 offers on the rear camera. A step is a whole lens, or a native crop of a lens that the camera API
+/// reports as a step (the sensor crops some iPhones offer, such as 2x of the wide lens), and it is labeled the way the
+/// iPhone's own Camera app labels it. The app never offers a step the iPhone does not report, and never a digital zoom
+/// between steps.
 public struct ZoomStep: Codable, Equatable, Hashable, Sendable, Identifiable {
     public let lens: RearLens
     /// The zoom factor of `lens` itself: 1 where the step is the whole lens, above 1 where it is a native sensor crop.
     public let lensZoomFactor: Double
-    /// The factor as the iPhone's Camera app labels it, where its wide lens is 1: 0.5, 1, 2, 2.5, 3, 5.
+    /// The factor as the iPhone's Camera app labels it, where its wide lens is 1: 0.5, 1, 2, 2.5, 3, 5, 8.
     public let displayFactor: Double
 
     public var id: Double { displayFactor }
@@ -39,7 +40,7 @@ public struct ZoomStep: Codable, Equatable, Hashable, Sendable, Identifiable {
     }
 }
 
-/// The rear lenses an iPhone reports and the native crops of its wide lens: the facts the zoom steps derive from.
+/// The rear lenses an iPhone reports and their native crops: the facts the zoom steps derive from.
 /// The camera API fills this in at run time (`AVFoundationCaptureDeviceDiscoverer`); a test injects it.
 public struct RearLensCapabilities: Codable, Equatable, Sendable {
     public struct Lens: Codable, Equatable, Sendable {
@@ -47,22 +48,22 @@ public struct RearLensCapabilities: Codable, Equatable, Sendable {
         /// The factor the iPhone's Camera app labels this lens with, where its wide lens is 1: 0.5 for an ultra wide
         /// lens, 3 or 5 for a telephoto lens.
         public let displayFactor: Double
+        /// The zoom factors of this lens, above 1, at which the camera API reports native resolution: the sensor crops
+        /// some iPhones offer (2x of the wide lens). Empty where the API reports none.
+        public let nativeCropFactors: [Double]
 
-        public init(_ lens: RearLens, displayFactor: Double) {
+        public init(_ lens: RearLens, displayFactor: Double, nativeCropFactors: [Double] = []) {
             self.lens = lens
             self.displayFactor = displayFactor
+            self.nativeCropFactors = nativeCropFactors
         }
     }
 
     /// The phone's rear lenses, widest first.
     public let lenses: [Lens]
-    /// The zoom factors of the wide lens, above 1, at which the camera API reports native resolution: the sensor crops
-    /// some iPhones offer (2x). Empty where the API reports none.
-    public let wideNativeCropFactors: [Double]
 
-    public init(lenses: [Lens], wideNativeCropFactors: [Double] = []) {
+    public init(lenses: [Lens]) {
         self.lenses = lenses
-        self.wideNativeCropFactors = wideNativeCropFactors
     }
 
     /// One wide lens, as every iPhone has at least.
@@ -71,16 +72,17 @@ public struct RearLensCapabilities: Codable, Equatable, Sendable {
     /// Two steps within a tenth of each other are one step.
     private static let sameStep = 0.05
 
-    /// The zoom steps this iPhone offers, narrowest field of view last: each lens, and each native crop of the wide lens
-    /// that is not already a lens's step (a 2x telephoto lens and a 2x crop are one step, the lens). Empty unless there
-    /// are at least two, so an iPhone with one rear lens and no reported crop shows no zoom control.
+    /// The zoom steps this iPhone offers, narrowest field of view last: each lens, and each native crop of a lens, labeled
+    /// by the factor it shows, that is not already a lens's step (a 2x telephoto lens and a 2x crop of the wide lens are
+    /// one step, the lens). Empty unless there are at least two, so an iPhone with one rear lens and no reported crop shows
+    /// no zoom control.
     public var zoomSteps: [ZoomStep] {
         var steps = lenses.map { ZoomStep(lens: $0.lens, displayFactor: $0.displayFactor) }
-        if let wide = lenses.first(where: { $0.lens == .wide }) {
-            for factor in wideNativeCropFactors where factor > 1 {
-                let display = (wide.displayFactor * factor * 10).rounded() / 10
+        for lens in lenses {
+            for factor in lens.nativeCropFactors where factor > 1 {
+                let display = (lens.displayFactor * factor * 10).rounded() / 10
                 guard !steps.contains(where: { abs($0.displayFactor - display) < Self.sameStep }) else { continue }
-                steps.append(ZoomStep(lens: .wide, lensZoomFactor: factor, displayFactor: display))
+                steps.append(ZoomStep(lens: lens.lens, lensZoomFactor: factor, displayFactor: display))
             }
         }
         steps.sort { $0.displayFactor < $1.displayFactor }

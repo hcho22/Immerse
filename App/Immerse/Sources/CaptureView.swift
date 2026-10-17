@@ -5,8 +5,8 @@ import SwiftUI
 
 /// The shooting screen. It keeps the portrait layout whichever way the iPhone is held, as the iPhone's own Camera app
 /// does (the captain, 2026-10-16): the viewfinder stays the same size in the same place, and with the iPhone on its side
-/// only the words and icons turn to read upright (`HeldTurn`). The picture inside the viewfinder follows how the iPhone is
-/// held, so a photo taken on its side saves on its side, as before.
+/// only the words and icons turn to read upright (`HeldTurn`). The live picture fills the viewfinder in every hold, as in
+/// that app, and a photo taken on its side still saves on its side, as before.
 struct CaptureView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -51,7 +51,7 @@ struct CaptureView: View {
                     if let film = model.film(filmID) {
                         let behavior = CaptureBehavior.for(film.camera.id)
                         viewfinder(film, behavior: behavior, held: held)
-                            .captureColumnRole(.viewfinder(aspect: CGFloat(behavior.viewfinder.aspectRatio(landscape: false))))
+                            .captureColumnRole(.viewfinder(aspect: CGFloat(behavior.viewfinder.aspectRatio)))
                         if film.completionState == .open { controls(behavior: behavior, controller: capture).captureColumnRole(.controls) }
                     }
                 }
@@ -64,9 +64,9 @@ struct CaptureView: View {
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
         // The shutter stays on screen on small iPhones, at large text sizes and below messages.
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
-        // The screen holds the portrait layout; the print and the question about its original that follow an Instant
-        // exposure turn with the iPhone, like every other screen.
-        .holdsInterfaceOrientation(.portrait, while: instantPrint == nil && originalAsk == nil) {
+        // The screen holds the portrait layout; the prints that follow an Instant exposure and the questions about their
+        // originals turn with the iPhone, like every other screen, from the first print until `showNextPrint` drops the last.
+        .holdsInterfaceOrientation(.portrait, while: revealedPrints.isEmpty && originalAsk == nil) {
             InterfaceOrientationLock.mask(held: capture.orientation)
         }
         .task {
@@ -168,9 +168,9 @@ struct CaptureView: View {
     }
 
     /// The viewfinder: a box of the Camera's portrait shape, the same size and place in every hold, as large as the room
-    /// above the shutter bar leaves (`CaptureColumn`). The live picture inside it is the shape the Camera develops to as the
-    /// iPhone is held, so held on its side it frames a landscape scene, centred in the box. The notices sit over it, so a
-    /// message coming or going never moves it.
+    /// above the shutter bar leaves (`CaptureColumn`). The live picture fills it in every hold: held on its side, the box is
+    /// the landscape shape the photo saves, as in the iPhone's Camera app. The notices sit over it, so a message coming or
+    /// going never moves it.
     private func viewfinder(_ film: Film, behavior: CaptureBehavior, held: HeldTurn) -> some View {
         let capture = model.capture
         let showsLowLightCue = behavior.showsLowLightCue && capture.showsLowLightCue
@@ -178,8 +178,7 @@ struct CaptureView: View {
         return ZStack {
             Color.black
             if let preview = capture.preview {
-                CameraPreview(source: preview, position: capture.position, behavior: behavior, orientation: capture.orientation)
-                    .aspectRatio(behavior.viewfinder.aspectRatio(landscape: held.isSideways), contentMode: .fit)
+                CameraPreview(source: preview, position: capture.position, behavior: behavior)
             } else if !showsStatus {
                 // Without a picture the frame shows a camera, unless a notice says what is wrong in its place.
                 Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
@@ -195,7 +194,7 @@ struct CaptureView: View {
         .overlay(alignment: held.bottomEdge) {
             if film.completionState == .open { zoomSteps(behavior: behavior, capture: capture) }
         }
-        .aspectRatio(behavior.viewfinder.aspectRatio(landscape: false), contentMode: .fit)
+        .aspectRatio(behavior.viewfinder.aspectRatio, contentMode: .fit)
         .clipped()
         .accessibilityElement(children: .contain)
         .accessibilityLabel(viewfinderLabel(position: capture.position))
@@ -411,7 +410,6 @@ private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
     let position: CapturePosition
     let behavior: CaptureBehavior
-    let orientation: CaptureFrameOrientation
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
         surface.source = source
@@ -421,17 +419,16 @@ private struct CameraPreview: UIViewRepresentable {
     func updateUIView(_ uiView: PreviewSurface, context: Context) {
         uiView.preview?.videoGravity = behavior.viewfinder.cropsCapture ? .resizeAspectFill : .resizeAspect
         uiView.mirrored = behavior.isViewfinderMirrored(position: position)
-        uiView.orientation = orientation
         uiView.setNeedsLayout()
     }
 }
 
-/// The picture follows how the iPhone is held, not the interface, which the shooting screen holds upright: the same
-/// orientation a photo is saved in, and the one a clip keeps while it records.
+/// The picture is upright in the portrait window the shooting screen holds, whichever way the iPhone is held, as in the
+/// iPhone's Camera app: the screen and the camera turn together, so the scene reads upright in every hold. Only a saved
+/// photo or clip follows the hold.
 private final class PreviewSurface: UIView {
     var source: CapturePreviewSource?
     var mirrored = false
-    var orientation = CaptureFrameOrientation.portrait
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
     }
@@ -443,7 +440,7 @@ private final class PreviewSurface: UIView {
     }
     private func rotatePreview() {
         guard let preview, let source else { return }
-        try? source.update(preview, mirrored: mirrored, orientation: orientation)
+        try? source.update(preview, mirrored: mirrored, orientation: .portrait)
     }
 }
 

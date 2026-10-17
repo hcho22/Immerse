@@ -98,7 +98,7 @@ After trying the build on his iPhone, the captain made three decisions, recorded
 2. **Shooting sideways.** "All cameras landscape shooting. viewfinder does not fit the screen. viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles". Asked how sideways shooting should work, he chose "Like iPhone Camera": the screen never turns, the viewfinder keeps its size and place, and only the words and icons turn to read upright.
 3. **The 6×6's zoom.** "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)".
 
-Three sentences were amended, in the same file and at his request, as version 2.1 amended FR-07, and FR-04 gained two paragraphs.
+Three sentences were amended, in the same file and at his request, as version 2.1 amended FR-07: two were reworded and FR-03's was removed, since the viewfinder it explained is gone; FR-04 gained two paragraphs.
 No FR, DEC or section number changes, no acceptance clause is added or removed, and FR-05's rules for clip and Movie orientation are untouched.
 The wording replaced is kept here:
 
@@ -515,7 +515,7 @@ Archive is an explicit, optional, reversible hide from that user's main library.
 
 **Tasks SET-01, SET-03–SET-06, SET-08** (SET-02 and SET-07 are deferred to v2)
 
-Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before subscribing or starting the Trial. Show capacity, authentic controls, Reveal Rule, and audio behavior. For the 6×6 Medium Format, explain that its zoom steps follow the iPhone's own lenses. Do not show a live filtered feed or the user's sealed media.
+Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before subscribing or starting the Trial. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
 
 Browsing does not create a Trial Film, consume eligibility, or lock a Camera. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. On the 6×6 Medium Format and the 16mm Cinema it also confirms the Film Stock, color or black-and-white, which is fixed for that Film and never changes mid-Film or after Development (ADR 0014). Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Load Film.
 
@@ -532,7 +532,7 @@ Rear and front-camera capture are supported for personal Photos and Movies. The 
 Only expose controls both authentic to the chosen Camera and genuinely supported by the active phone lens. Hide unsupported controls with a brief explanation; do not offer nonfunctional controls or fabricate unsupported flash/focus behavior.
 
 The shooting screen keeps its portrait layout whichever way the iPhone is held, as the iPhone's own Camera app does, on all five Cameras.
-The viewfinder keeps the same size and place in every hold, and the picture inside it is the shape the Camera develops to as the iPhone is held, so held on its side it frames a landscape scene.
+The viewfinder keeps the same size and place in every hold, and the live picture fills it in every hold, as in the iPhone's Camera app, so held on its side the viewfinder is the landscape shape the photo saves in.
 The whole viewfinder shows above the shutter bar at the default text size on every supported iPhone, down to the smallest: it is the largest box of the Camera's shape that the room leaves after the header and the controls, narrower than the screen's width where the room is short, and it does not change size when a message appears, because messages and notes sit over it.
 Only the screen's words and icons turn, to read upright when the iPhone is on its side, and they stay legible and unclipped in both holds.
 A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in (FR-05).
@@ -540,7 +540,7 @@ Every other screen keeps turning with the iPhone, and so does the print that ope
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
 The 6×6 Medium Format's rear camera offers one zoom step for each lens the iPhone has, labeled as the iPhone's own Camera app labels it: 0.5x for an ultra wide lens, 1x, and the telephoto lens at its factor, such as 2x, 2.5x, 3x or 5x.
-It adds a sensor-crop step, such as 2x, only where the camera's own interface reports that crop as a native step of the wide lens, and never where a real lens already gives that factor.
+It adds a sensor-crop step, such as 2x, only where the camera's own interface reports that crop as a native step of one of those lenses, labeled by the factor it shows, and never where a real lens already gives that factor.
 It offers no step between these and no pinch or digital zoom, and no zoom control at all on an iPhone with one rear lens and no reported crop.
 A step is taken only between exposures, like a lens switch.
 The 6×6's focus, exposure and square framing remain at every step, and where a lens cannot focus by hand the note "Manual focus unavailable on this lens" applies.

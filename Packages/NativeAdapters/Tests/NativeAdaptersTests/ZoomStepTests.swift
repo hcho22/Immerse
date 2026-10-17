@@ -5,8 +5,12 @@ import XCTest
 /// The 6×6's zoom steps follow the lenses the iPhone reports (the captain, 2026-10-16: "allow zoom as allowed by
 /// camera native"). Each case injects what an iPhone's camera API would report.
 final class ZoomStepTests: XCTestCase {
-    private func lenses(_ lenses: [(RearLens, Double)], crops: [Double] = []) -> RearLensCapabilities {
-        RearLensCapabilities(lenses: lenses.map { .init($0.0, displayFactor: $0.1) }, wideNativeCropFactors: crops)
+    /// `crops` are the native crops the API reports for the wide lens, and the others those of the other two lenses.
+    private func lenses(
+        _ lenses: [(RearLens, Double)], crops: [Double] = [], telephotoCrops: [Double] = [], ultraWideCrops: [Double] = []
+    ) -> RearLensCapabilities {
+        let reported: [RearLens: [Double]] = [.wide: crops, .telephoto: telephotoCrops, .ultraWide: ultraWideCrops]
+        return RearLensCapabilities(lenses: lenses.map { .init($0.0, displayFactor: $0.1, nativeCropFactors: reported[$0.0]!) })
     }
 
     private func labels(_ capabilities: RearLensCapabilities) -> [String] { capabilities.zoomSteps.map(\.label) }
@@ -60,11 +64,31 @@ final class ZoomStepTests: XCTestCase {
                        "One lens with a reported crop still has two steps")
     }
 
+    /// A native crop of the telephoto lens is a step at the factor it shows, as the iPhone's Camera app labels it: a 2x crop
+    /// of a 4x telephoto lens is 8x.
+    func testANativeCropOfTheTelephotoLensIsOfferedAtTheFactorItShows() {
+        let steps = lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 4)], crops: [2], telephotoCrops: [2]).zoomSteps
+        XCTAssertEqual(steps.map(\.label), ["0.5x", "1x", "2x", "4x", "8x"])
+        let eight = steps[4]
+        XCTAssertEqual(eight.lens, .telephoto, "The crop is of the telephoto lens")
+        XCTAssertEqual(eight.lensZoomFactor, 2)
+        XCTAssertTrue(eight.isSensorCrop)
+        XCTAssertEqual(steps[2].lens, .wide, "The 2x is still the wide lens's crop")
+        XCTAssertEqual(labels(lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 4)], telephotoCrops: [2])),
+                       ["0.5x", "1x", "4x", "8x"], "Only the telephoto lens reports a crop")
+        XCTAssertEqual(labels(lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 4)])), ["0.5x", "1x", "4x"],
+                       "No crop reported, no 8x step")
+    }
+
     func testACropThatARealLensAlreadyCoversIsNotOfferedTwice() {
         let steps = lenses([(.wide, 1), (.telephoto, 2)], crops: [2]).zoomSteps
         XCTAssertEqual(steps.map(\.label), ["1x", "2x"])
         XCTAssertEqual(steps.last?.lens, .telephoto, "The telephoto lens keeps its 2x")
         XCTAssertFalse(steps.last?.isSensorCrop ?? true)
+        let ultraWide = lenses([(.ultraWide, 0.5), (.wide, 1)], ultraWideCrops: [2]).zoomSteps
+        XCTAssertEqual(ultraWide.map(\.label), ["0.5x", "1x"], "A 2x crop of the ultra wide lens is the wide lens's 1x")
+        XCTAssertEqual(ultraWide.last?.lens, .wide)
+        XCTAssertFalse(ultraWide.last?.isSensorCrop ?? true)
     }
 
     func testFactorsThatAreNotACropAreNeverOffered() {
@@ -129,6 +153,12 @@ final class ZoomStepTests: XCTestCase {
         let crop = ZoomStep(lens: .wide, lensZoomFactor: 2, displayFactor: 2)
         XCTAssertEqual(plan.zoomDecision(to: crop, during: .idle), .unavailable(crop),
                        "No crop was reported, so none is accepted")
+        let telephotoCrop = ZoomStep(lens: .telephoto, lensZoomFactor: 2, displayFactor: 6)
+        XCTAssertEqual(plan.zoomDecision(to: telephotoCrop, during: .idle), .unavailable(telephotoCrop))
+        let reporting = self.plan(.mediumFormat6x6, rear: lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 3)],
+                                                                 telephotoCrops: [2]))
+        XCTAssertEqual(reporting.zoomDecision(to: telephotoCrop, during: .idle), .allowed,
+                       "A crop the telephoto lens reports is accepted")
     }
 
     func testAZoomStepIsRefusedWhereTheCameraOffersNone() {
@@ -146,9 +176,7 @@ final class ZoomStepTests: XCTestCase {
             capabilities: CaptureCapabilities(availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true)
         )
         XCTAssertEqual(original.zoomSteps, [])
-        let updated = original.updatingRearLenses(
-            RearLensCapabilities(lenses: threeLenses.lenses, wideNativeCropFactors: [2])
-        )
+        let updated = original.updatingRearLenses(lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 3)], crops: [2]))
         XCTAssertEqual(updated.zoomSteps.map(\.label), ["0.5x", "1x", "2x", "3x"])
         XCTAssertEqual(updated.behavior, original.behavior)
         XCTAssertEqual(updated.manualLensPosition, 0.3)

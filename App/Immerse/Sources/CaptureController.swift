@@ -265,7 +265,7 @@ final class CaptureController {
     }
 
     /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now. The shooting
-    /// screen turns its words and icons and its preview with this, not with the interface, which it holds upright.
+    /// screen turns its words and icons with this; its preview stays upright in the portrait interface it holds.
     func updateOrientation() {
         guard phase != .recordingMovie, let held = heldOrientation else { return }
         orientation = held

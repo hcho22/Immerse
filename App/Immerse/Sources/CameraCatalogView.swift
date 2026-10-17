@@ -103,9 +103,6 @@ private struct LoadFilmView: View {
                 ForEach(camera.lookLines(filmStock: camera.filmStocks.isEmpty ? nil : filmStock), id: \.self) { line in
                     Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
-                if let note = camera.viewfinderNote {
-                    Text(note).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                }
                 if camera.medium == .movie {
                     HStack {
                         Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)

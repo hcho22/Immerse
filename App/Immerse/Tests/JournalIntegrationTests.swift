@@ -227,13 +227,10 @@ final class JournalIntegrationTests: XCTestCase {
             XCTAssertFalse(copy[camera.id]!.localizedCaseInsensitiveContains("black and white"), camera.displayName)
         }
         XCTAssertEqual(FilmStock.allCases.map(\.label), ["Color", "Black and white"])
-        XCTAssertNotNil(CameraCatalog.mediumFormat6x6.viewfinderNote)
-        XCTAssertTrue(CameraCatalog.mediumFormat6x6.viewfinderNote!.contains("Zoom steps follow your iPhone's own lenses"))
-        for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 { XCTAssertNil(camera.viewfinderNote, camera.displayName) }
         let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
                          "Vision3", "Double-X", "Eastman", "500C"]
         for camera in CameraCatalog.all {
-            let shown = [camera.displayName, camera.shortName, camera.controlsLabel, camera.viewfinderNote ?? ""]
+            let shown = [camera.displayName, camera.shortName, camera.controlsLabel]
                 + ([nil] + FilmStock.allCases.map(Optional.some)).flatMap { camera.lookLines(filmStock: $0) }
                 + camera.filmStocks.map(\.label)
             for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }

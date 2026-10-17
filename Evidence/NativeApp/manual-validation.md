@@ -1812,14 +1812,14 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | --- | --- | --- |
 | H01 / FR-04; CAP-03, QA-13 | Open the camera of each of the five Cameras and hold the iPhone upright, with its top to your left and with its top to your right. The screen never turns: the viewfinder is the same size in the same place in all three holds, and Done, what is left, the status, Switch Camera, the flash and the zoom steps turn to read upright when the iPhone is on its side. Nothing is clipped or overlapping, and every control can be reached with the thumbs. | A screenshot of each Camera in each hold, the viewfinder's edges compared between the three, the captain's words on how it feels. [Steps](#h01---the-shooting-screen-held-upright-and-on-each-side). |
 | H02 / FR-04; QA-13 | Step the text size from the default to the largest on the 6×6 and the Disposable, held upright and on each side. The header stays in view and legible; once it is too long for the screen turned, it scrolls across the screen, which is up and down for you, and every control stays reachable. | Screenshots at each size, the text size setting before and after. [Steps](#h02---text-sizes-on-the-shooting-screen-held-sideways). |
-| H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture is the shape the Camera develops to, in the middle of the same viewfinder: square for the Instant and the 6×6, a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
-| H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, and the words and the picture do not turn while it records. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
+| H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture reads upright and fills the same viewfinder, as in the iPhone's Camera app, which held so is the Camera's landscape shape: a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm, square for the Instant and the 6×6. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
+| H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, and the words do not turn while it records. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
 | H05 / FR-04; CAP-05, CAP-14 | The 6×6's rear viewfinder shows a page of text the normal way, not reversed, also after switching to the front lens and back; the front viewfinder is mirrored; the saved and developed pictures of both are not. Every other Camera is as before. | A paired viewfinder screenshot and developed picture of an asymmetric target, rear and front. [Steps](#h05---the-6x6-viewfinder-is-not-reversed). |
-| H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step only where the Camera app also shows it, no zoom control on the front camera or on any other Camera, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
+| H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step, of any lens, only where the Camera app also shows it, no zoom control on the front camera or on any other Camera, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
 | H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows, and the Exposure slider shows that lens's bias. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
-| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, and after it closes the camera is portrait again and, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, the screen does not turn to portrait and back between the print and its question, and after they close the camera is portrait again and, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
 
 **What the build does, from the record and the code.**
 
@@ -1827,7 +1827,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
   The viewfinder box is the Camera's portrait shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm), the same size in the same place whichever way the iPhone is held.
   The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two sliders), and it never changes size when a message comes or goes.
   Held upright, the screen is as it was except that **Done** is a button at the top of the screen's own content, not in a navigation bar, and the header keeps the room it needs turned, so the viewfinder sits a little lower.
-- Held on its side, the picture in the viewfinder is a landscape window, centered in the box, in the shape the Camera develops to (a square stays square); the box shows black around it where it is wider than tall.
+- Held on its side, the live picture fills the viewfinder and reads upright, as in the iPhone's Camera app: the box, portrait on the screen, is then the landscape shape the Camera develops to (a square stays square), with no black band around the picture.
 - Held on its side, the header (**Done**, the Camera's name, what is left and the status of a complete Film) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; where the screen has room to spare, as on a tall iPhone with a square viewfinder, the name and the count each read on one line, and the viewfinder sits centred in the room under the header's lines, with Done in the same place just below the status bar on every Camera.
   The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
   The focus and exposure captions turn beside their sliders, and the zoom steps turn too.
@@ -1836,16 +1836,17 @@ The authority and stop conditions at the top of this plan apply to each of them 
   The shutter does not turn.
 - A header too long to fit turned scrolls across the screen, from its top, and below the smallest viewfinder (220 points) the screen scrolls up and down, as at the largest text sizes.
 - Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
-- A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, neither the screen's words nor the picture turn.
-- The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for a native sensor crop where the camera reports it, and nowhere on the front camera or on another Camera.
-  Taking a step changes the camera to that lens, or crops the wide lens, only between exposures; the buttons are dimmed while the camera is busy.
+- A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words do not turn.
+- The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera or on another Camera.
+  Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures; the buttons are dimmed while the camera is busy.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
-- A print that opens over the camera after an Instant exposure, and the question about its original, turn with the iPhone like every other screen; the camera returns to the portrait layout when they close.
+- A print that opens over the camera after an Instant exposure, and the question about its original, turn with the iPhone like every other screen, and the screen stays as the iPhone is held from the print to its question; the camera returns to the portrait layout when the last of them closes.
 
 **What this iPhone should show, and what it cannot.**
 The iPhone 13 Pro has an ultra wide, a wide and a telephoto lens, so its Camera app should list 0.5x, 1x and 3x; the 6×6 should list the same labels.
 That is worked out from Apple's published lenses, not observed: write down what the Camera app shows first, on this phone and this iOS, and judge the 6×6 against that.
 No one-lens iPhone, no 5x telephoto and no iPhone with a native 2x crop is on record ([Device and Matrix Prerequisites](#device-and-matrix-prerequisites)), so the zoom-step derivation for those rests on the unit tests with injected lenses, not on a phone.
+Nor is an iPhone 17 Pro, whose Camera app shows 0.5x, 1x, 2x, 4x and 8x: whether its camera reports the 8x as a native crop of its 4x telephoto lens, which the 6×6 would then offer, is unconfirmed until the captain checks it on that phone.
 The 13 Pro's result stands for its own lenses only.
 
 **You need, for all ten.**
@@ -1870,7 +1871,7 @@ Keep every photo and clip as test media, out of Git.
 
 **Expect.**
 
-- The screen stays in the portrait layout in all three holds: the viewfinder keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words, the icons and the picture turning.
+- The screen stays in the portrait layout in all three holds: the viewfinder keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words and the icons turning; the picture keeps reading upright and filling the viewfinder.
 - The whole viewfinder shows above the shutter bar in every hold, on every Camera, with nothing of it behind the bar; a message or Resume Camera showing over it, and then going, does not change its size or place.
 - Held on its side, every word and icon reads upright, the count and status are legible, and nothing is clipped, hidden behind the shutter bar or overlapping the viewfinder or another control: the notes, the captions, the cue, the message and the zoom labels are whole.
 - **Done** is a button of at least the size of a thumb tip, wherever it sits in each hold.
@@ -1922,15 +1923,15 @@ The size, the hold, a screenshot, whether the header scrolled, and the settings 
 
 **Expect.**
 
-- Held on its side, the viewfinder shows the page upright, in a window of the Camera's shape (square, 3:2 or 4:3) in the middle of the same box.
-- What the window frames is what is saved: the developed picture's edges are where the window's were.
+- Held on its side, the viewfinder shows the page upright and the picture fills the whole box, which held so is the Camera's landscape shape (3:2 or 4:3; square for the Instant and the 6×6), with no black band around the picture.
+- What the viewfinder frames is what is saved: the developed picture's edges are where the viewfinder's were.
 
 **It fails if.**
 
-- The picture in the viewfinder is turned, stretched or cropped differently from the saved result, or is the portrait shape held on its side.
+- The picture in the viewfinder is turned, stretched, smaller than the box or cropped differently from the saved result.
 
 **Write down.**
-For each Camera, the screenshots, the developed result and where its edge differs from the window, if it does.
+For each Camera, the screenshots, the developed result and where its edge differs from the viewfinder's, if it does.
 
 ### H04 - Photos and clips taken sideways
 
@@ -1944,7 +1945,7 @@ For each Camera, the screenshots, the developed result and where its edge differ
 
 - Each photo is upright in its picture and is the shape its hold gives (the Disposable wide when held on its side, the 6×6 square).
 - Each clip stays in the orientation it started in, and plays as such, whichever way the iPhone was turned while it recorded.
-- While a clip records, the words and the picture do not turn.
+- While a clip records, the words do not turn.
 
 **It fails if.**
 
@@ -1986,7 +1987,7 @@ The screenshots and developed pictures, rear and front.
 **Expect.**
 
 - The 6×6 lists the same steps as the Camera app, each labeled the same, and each shows that lens's view: 0.5x the widest, 1x the middle, the telephoto step the narrowest.
-- No step the iPhone lacks; a native crop step, such as 2x, only where the Camera app also lists it.
+- No step the iPhone lacks; a native crop step of any lens, such as 2x, only where the Camera app also lists it.
 - The front camera and every other Camera show no zoom steps.
 - The 6×6 is on 1x each time it opens, and the other Cameras opened after it are not zoomed.
 
@@ -2079,11 +2080,12 @@ A screen recording of each turn.
 **Expect.**
 
 - The Darkroom is side by side held sideways, as in W01, including after the camera was used.
-- The print turns with the iPhone and takes the landscape arrangement; when its sheets close, the camera is in the portrait layout.
+- The print turns with the iPhone and takes the landscape arrangement, and so does the question; between the print and the question the screen does not turn to portrait and back.
+- When its sheets close, the camera is in the portrait layout.
 
 **It fails if.**
 
-- The Darkroom or the print stays in the portrait layout with the iPhone on its side.
+- The Darkroom or the print stays in the portrait layout with the iPhone on its side, or the screen turns to portrait between the print and its question.
 - The camera is left in a landscape layout.
 
 **Write down.**

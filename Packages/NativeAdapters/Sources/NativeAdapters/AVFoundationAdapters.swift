@@ -42,15 +42,16 @@ extension AVFoundationCaptureDeviceDiscoverer {
     /// The rear lenses as the iPhone reports them, labeled the way its Camera app labels them. The lens list and each
     /// lens's factor come from the rear virtual device (triple, dual wide or dual camera), which is only read: the
     /// switch-over zoom factors say where each lens takes over, and `displayVideoZoomFactorMultiplier` converts the
-    /// virtual device's zoom factor to the Camera app's (0.5 where an ultra wide lens starts at 1). The wide lens's
-    /// native crops are the zoom factors its active format reports (`secondaryNativeResolutionZoomFactors`), which
-    /// depend on the format the session's preset chose, so the backend reads this again once its session runs.
+    /// virtual device's zoom factor to the Camera app's (0.5 where an ultra wide lens starts at 1). Each lens's native
+    /// crops are the zoom factors its active format reports (`secondaryNativeResolutionZoomFactors`), which depend on the
+    /// format a session's preset chose for it, so the backend reads this again once its session runs.
     static func rearLenses() -> RearLensCapabilities {
         guard let wide = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
             return .wideOnly
         }
-        let crops = wide.activeFormat.secondaryNativeResolutionZoomFactors.map { Double($0) }.filter { $0 > 1 }
-        let wideOnly = RearLensCapabilities(lenses: [.init(.wide, displayFactor: 1)], wideNativeCropFactors: crops)
+        let wideOnly = RearLensCapabilities(
+            lenses: [.init(.wide, displayFactor: 1, nativeCropFactors: nativeCrops(of: wide))]
+        )
         guard let virtual = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInTripleCamera, .builtInDualWideCamera, .builtInDualCamera],
             mediaType: .video, position: .back
@@ -68,9 +69,15 @@ extension AVFoundationCaptureDeviceDiscoverer {
             case .builtInTelephotoCamera: lens = .telephoto
             default: return wideOnly
             }
-            lenses.append(.init(lens, displayFactor: (factor * multiplier * 10).rounded() / 10))
+            lenses.append(.init(
+                lens, displayFactor: (factor * multiplier * 10).rounded() / 10, nativeCropFactors: nativeCrops(of: device)
+            ))
         }
-        return RearLensCapabilities(lenses: lenses, wideNativeCropFactors: crops)
+        return RearLensCapabilities(lenses: lenses)
+    }
+
+    private static func nativeCrops(of lens: AVCaptureDevice) -> [Double] {
+        lens.activeFormat.secondaryNativeResolutionZoomFactors.map { Double($0) }
     }
 }
 #endif

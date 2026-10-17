@@ -42,9 +42,9 @@ final class CaptureSidewaysTests: XCTestCase {
                        "Every screen turns unless the shooting screen holds the window")
     }
 
-    /// The hold ends while an Instant print or its question shows over the camera, so they turn with the iPhone, comes back when
-    /// they close, and ends with the screen. The Instant's camera starts again by itself when they close
-    /// (`CaptureController.printsClosed`), and the hold must be back by then.
+    /// The hold ends while an Instant print or its question shows over the camera, so they turn with the iPhone, stays ended
+    /// from a print to its question, comes back when the last of them closes, and ends with the screen. The Instant's camera
+    /// starts again by itself when they close (`CaptureController.printsClosed`), and the hold must be back by then.
     func testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses() async throws {
         let showing = PrintShowing()
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
@@ -54,12 +54,17 @@ final class CaptureSidewaysTests: XCTestCase {
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The shooting screen holds the window")
-        showing.print = true
+        showing.prints = 1
         try await Task.sleep(for: .milliseconds(300))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "A print over the camera turns with the iPhone")
-        showing.print = false
+        showing.asking = true
         try await Task.sleep(for: .milliseconds(300))
-        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The hold is back when the print closes")
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown,
+                       "Its question turns with the iPhone too, while the print waits to be dropped")
+        showing.asking = false
+        showing.prints = 0
+        try await Task.sleep(for: .milliseconds(300))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The hold is back when the last print is dropped")
         window.isHidden = true
         window.rootViewController = nil
         try await Task.sleep(for: .milliseconds(500))
@@ -110,24 +115,24 @@ final class CaptureSidewaysTests: XCTestCase {
         available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358
     ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
         let frames = Frames()
-        func record(_ name: String) -> (GeometryProxy) -> CGRect { { $0.frame(in: .named("column")) } }
+        let inColumn: @Sendable (GeometryProxy) -> CGRect = { $0.frame(in: .named("column")) }
         let view = CaptureColumn(available: available) {
             TurnedBlock(length: 128, reservesLength: true) {
                 VStack(spacing: 12) {
                     Color.clear.frame(height: 44)
-                        .onGeometryChange(for: CGRect.self, of: record("first")) { frames.firstLine = $0 }
+                        .onGeometryChange(for: CGRect.self, of: inColumn) { frames.firstLine = $0 }
                     Color.clear.frame(height: 28)
                     Color.clear.frame(height: 22)
                 }.frame(maxWidth: .infinity)
             }
-            .onGeometryChange(for: CGRect.self, of: record("header")) { frames.header = $0 }
+            .onGeometryChange(for: CGRect.self, of: inColumn) { frames.header = $0 }
             .captureColumnRole(.header)
             Color.black
-                .onGeometryChange(for: CGRect.self, of: record("viewfinder")) { frames.viewfinder = $0 }
+                .onGeometryChange(for: CGRect.self, of: inColumn) { frames.viewfinder = $0 }
                 .captureColumnRole(.viewfinder(aspect: aspect))
             if controls > 0 {
                 Color.clear.frame(height: controls)
-                    .onGeometryChange(for: CGRect.self, of: record("controls")) { frames.controls = $0 }
+                    .onGeometryChange(for: CGRect.self, of: inColumn) { frames.controls = $0 }
                     .captureColumnRole(.controls)
             }
         }
@@ -206,9 +211,9 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
-    /// largest, kept as screenshots. The viewfinder is a black box that keeps its size and place, with the live picture's
-    /// shape, a landscape one on the side holds, inside it. The 6×6's zoom pill, sliders and the Disposable's cue are
-    /// raised from what a lens would report, since the simulator has no lens.
+    /// largest, kept as screenshots. The viewfinder is a black box that keeps its size and place, which the live picture
+    /// fills in every hold. The 6×6's zoom pill, sliders and the Disposable's cue are raised from what a lens would report,
+    /// since the simulator has no lens.
     func testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -217,8 +222,9 @@ final class CaptureSidewaysTests: XCTestCase {
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
-        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5), .init(.wide, displayFactor: 1),
-                                                  .init(.telephoto, displayFactor: 3)], wideNativeCropFactors: [2]).zoomSteps
+        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                  .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                  .init(.telephoto, displayFactor: 3)]).zoomSteps
         controls.zoomSteps = steps
         controls.zoomStep = steps[1]
         let cases: [(CameraPackage, Bool, [DynamicTypeSize])] = [
@@ -278,8 +284,9 @@ final class CaptureSidewaysTests: XCTestCase {
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
-        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5), .init(.wide, displayFactor: 1),
-                                                  .init(.telephoto, displayFactor: 3)], wideNativeCropFactors: [2]).zoomSteps
+        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                  .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                  .init(.telephoto, displayFactor: 3)]).zoomSteps
         controls.zoomSteps = steps
         for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
             controls.zoomStep = steps[selected]
@@ -321,12 +328,17 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 }
 
-/// Whether an Instant print is over the camera, for the test of the hold.
-@Observable private final class PrintShowing { var print = false }
+/// The Instant prints revealed and not yet dropped by `showNextPrint`, and whether a question about an original is up, for
+/// the test of the hold.
+@Observable private final class PrintShowing {
+    var prints = 0
+    var asking = false
+}
 
+/// Holds the window as `CaptureView` does.
 private struct HoldProbe: View {
     let showing: PrintShowing
     var body: some View {
-        Color.clear.holdsInterfaceOrientation(.portrait, while: !showing.print) { .portrait }
+        Color.clear.holdsInterfaceOrientation(.portrait, while: showing.prints == 0 && !showing.asking) { .portrait }
     }
 }

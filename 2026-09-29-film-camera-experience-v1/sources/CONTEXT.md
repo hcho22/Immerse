@@ -45,7 +45,7 @@
 >
 > **2026-10-16 note (ADR 0017).**
 > After trying the build on his iPhone the captain withdrew the 6×6 Medium Format's reversed **Viewfinder** ("normal viewfinder. No reverse"), so the Relationships rule of 2026-10-06 that it shows the scene reversed left to right no longer holds and was replaced below; **Selfie Capture** keeps its mirrored Viewfinder, and developed Exposures were never reversed.
-> He chose that the shooting screen never turns ("Like iPhone Camera"): a **Viewfinder** keeps its size and place whichever way the phone is held, the picture in it is the shape the Camera develops to as the phone is held, and only the screen's words and icons turn to read upright.
+> He chose that the shooting screen never turns ("Like iPhone Camera"): a **Viewfinder** keeps its size and place whichever way the phone is held, the live picture fills it in every hold, and only the screen's words and icons turn to read upright.
 > He asked that the 6×6 Medium Format zoom "as allowed by camera native", which added the term Zoom Step.
 > The 6×6 entry in the catalog and the Flagged ambiguities were updated; read these decisions through [ADR 0017](../adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md).
 >
@@ -90,11 +90,11 @@ The color or black-and-white film chosen for a 6×6 Medium Format or 16mm Cinema
 _Avoid_: Film type, filter, look, second Camera
 
 **Viewfinder**:
-The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the picture in it is the shape the Camera develops to as the phone is held.
+The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the live picture fills it in every hold.
 _Avoid_: Filter preview, developed-image preview
 
 **Zoom Step**:
-One of the fixed focal lengths the 6×6 Medium Format's rear camera offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of its wide lens that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
+One of the fixed focal lengths the 6×6 Medium Format's rear camera offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of one of those lenses that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
 _Avoid_: Digital zoom, pinch zoom, lens picker
 
 **Selfie Capture**:

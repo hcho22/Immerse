@@ -80,13 +80,6 @@ extension CameraPackage {
                 : ["Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"]
         }
     }
-
-    /// An explanation the Load Film screen gives for this Camera alone (PRD FR-03).
-    var viewfinderNote: String? {
-        id == .mediumFormat6x6
-            ? "Zoom steps follow your iPhone's own lenses, as in its Camera app."
-            : nil
-    }
 }
 
 extension FilmStock {

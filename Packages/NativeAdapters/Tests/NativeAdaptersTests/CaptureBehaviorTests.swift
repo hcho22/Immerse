@@ -54,12 +54,9 @@ final class CaptureBehaviorTests: XCTestCase {
     }
 
     func testViewfinderShapesFrameWhatTheCameraDevelops() {
-        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio(landscape: false), 2.0 / 3, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio(landscape: true), 3.0 / 2, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio(landscape: false), 3.0 / 4, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio(landscape: true), 4.0 / 3, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.square.aspectRatio(landscape: true), 1)
-        XCTAssertEqual(ViewfinderShape.square.aspectRatio(landscape: false), 1)
+        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio, 2.0 / 3, accuracy: 1e-9, "The Disposable's 3:2, upright")
+        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio, 3.0 / 4, accuracy: 1e-9)
+        XCTAssertEqual(ViewfinderShape.square.aspectRatio, 1)
         XCTAssertTrue(ViewfinderShape.threeByTwo.cropsCapture)
         XCTAssertTrue(ViewfinderShape.square.cropsCapture)
         XCTAssertFalse(ViewfinderShape.fourByThree.cropsCapture, "The 4:3 viewfinder shows the whole capture")

@@ -17,16 +17,14 @@ public enum ExposureBehavior: Equatable, Sendable {
 public enum ViewfinderShape: Equatable, Sendable {
     case square, threeByTwo, fourByThree
 
-    /// Width over height of the viewfinder box. Photos and Movies follow how the iPhone is held, so a portrait hold
-    /// frames the short side across and a sideways hold the long side.
-    public func aspectRatio(landscape: Bool) -> Double {
-        let wide: Double
+    /// Width over height of the viewfinder box: its portrait shape, in every hold, since the shooting screen never turns.
+    /// Held on its side, the box is the landscape shape a photo taken that way saves in.
+    public var aspectRatio: Double {
         switch self {
-        case .square: return 1
-        case .threeByTwo: wide = 3.0 / 2
-        case .fourByThree: wide = 4.0 / 3
+        case .square: 1
+        case .threeByTwo: 2.0 / 3
+        case .fourByThree: 3.0 / 4
         }
-        return landscape ? wide : 1 / wide
     }
 
     /// Whether the phone's 4:3 capture is cropped to this shape on screen. The 4:3 viewfinder shows it whole.

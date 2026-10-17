@@ -177,8 +177,8 @@ public actor AVFoundationCaptureBackend {
         restartMeter()
     }
 
-    /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, or crops the wide lens
-    /// where the step is a native sensor crop. Only between exposures, the rule of a lens switch. The Camera's focus and
+    /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, and crops it where the
+    /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The Camera's focus and
     /// exposure behavior is held on the new lens, so manual focus is as far as that lens can go.
     public func selectZoomStep(_ step: ZoomStep) throws {
         try operations.requireIdle()
@@ -215,8 +215,8 @@ public actor AVFoundationCaptureBackend {
     }
 
     /// Reads the rear lenses again once the session runs on its preset's format, and returns the zoom to 1x: the rear wide
-    /// lens is the only camera a session starts or switches to. Needs a running session, since the wide lens's native
-    /// crops depend on its active format.
+    /// lens is the only camera a session starts or switches to. Needs a running session, since a lens's native crops
+    /// depend on its active format.
     private func refreshRearLenses() {
         guard let current = plan else { return }
         plan = current.updatingRearLenses(AVFoundationCaptureDeviceDiscoverer.rearLenses())
