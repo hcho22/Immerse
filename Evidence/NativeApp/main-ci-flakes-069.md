@@ -67,6 +67,7 @@ A short press that is not late is not enough to lose the tap: presses of 0 to 66
 The 480 presses of the table above were made with a press held 0.3 s, whose finger-up is scheduled 300 ms after the finger-down, and their 25 late registrations (136 to 179 ms) kept a finger-up 154 to 350 ms after their finger-down, 23 of them 300 ms or more.
 The hold was then raised to 1 s, because the same CI run logged one registration 628 ms late (above), a lag no experiment here produced and longer than a 0.3 s hold covers.
 That a 1 s hold covers such a lag is argued from when its finger-up is scheduled, 1,000 ms after the finger-down, and was not measured against such a lag.
+A 1 s press turned the Settings switch and the Crop switch in every test of the harness and ui-flows parts run with it (see "Repeated runs"), the only measurement of the 1 s hold, and none was made against a lag of 628 ms.
 It is one press, never a second tap, and it is used where the tests flip a switch: the Settings switch in `TestingUnlockUITests` and the Crop switch in the harness's seven places.
 Buttons keep `tap()`.
 
@@ -126,7 +127,8 @@ It is a decision for him and is left open.
 ## Repeated runs
 
 On this Mac (Intel, Xcode 26.5, iOS 26.5 simulators made and quieted as validation makes them), with the changes in this record.
-Every run after the change was made with `flipSwitch()` holding its press 0.3 s, before the hold was raised to 1 s (see "Fix" above).
+The first six rows' runs after the change were made with `flipSwitch()` holding its press 0.3 s, before the hold was raised to 1 s (see "Fix" above).
+The last two rows were run with the 1 s hold.
 
 | What | Before the change | After the change |
 | --- | --- | --- |
@@ -136,6 +138,8 @@ Every run after the change was made with `flipSwitch()` holding its press 0.3 s,
 | The two unlock tests together, no freeze | 15 rounds passed | the same tests, now in the validation below |
 | Harness part of `Scripts/validate-local.sh` | not run before the change | 52 of 52 tests passed, no rerun (34 minutes) |
 | ui-flows part, light, then the audits again in dark | not run before the change | 28 of 29 passed and the 1 expected failure (`testAuditStillReportsContrastFindingsOutsideItsExceptions`), then 20 of 21 and the same 1, no rerun |
+| Harness part, ui-flows part and its dark audits, with the 1 s hold | not run before the change | harness 52 of 52 passed, no rerun (33 minutes); ui-flows 28 of 29 passed and the 1 expected failure (`testAuditStillReportsContrastFindingsOutsideItsExceptions`), no rerun (24 minutes); dark audits 20 of 21 and the same 1, no rerun (13 minutes) |
+| `python3 -B -m unittest discover -s Scripts/Tests` | 5 of 52 failed at this branch's first commit, whose tests still copied the UI test classes by their `XCTestCase` superclass | 53 of 53 passed |
 
 The 8-round row shows only that the change breaks nothing there: the freezes of that row lost no switch tap before the change either, so the 480-press row is what shows the cause and the fix.
 The stall of the second failure is not in this table, since it did not recur (see "Not reproduced").
