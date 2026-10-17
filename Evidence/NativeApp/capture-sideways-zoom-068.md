@@ -20,6 +20,7 @@ Three corrections followed, and this record describes the build with them: the w
 A review of the code then found four more, which this record also describes (see "Corrected after review" under Runs): the live picture followed the hold inside the portrait window, the hold let go between an Instant print and its question, only the wide lens's native crops were offered, and the 6×6 had gained a Load Film note nobody asked for.
 A second review found eight more, also described here (see "Corrected after the second review"), among them that the shutter bar's icons never turned and that the 6×6's sliders moved the viewfinder as they came and went.
 A third review found five more (see "Corrected after the third review"), among them that the camera showed through in a turned window as an Instant print came and went.
+A fourth review found that the hold also keeps upright the Darkroom opened from an Instant print over the camera, which nothing recorded; the captain chose that ("Instant - 1"), the code was kept, and the documents now record it.
 
 ## What He Saw, and Why
 
@@ -33,12 +34,13 @@ The 6×6's reversed rear viewfinder came from PRD version 2.0 (section 6.1, FR-0
 **The screen.**
 The shooting screen keeps the portrait layout in every hold, for all five Cameras (`App/Immerse/Sources/CaptureView.swift`).
 It holds the window to portrait while it is on screen (`ImmerseAppDelegate` and `InterfaceOrientationLock.swift`), and lets go when it leaves, turning the window to how the iPhone is held then.
-The hold lasts for as long as the screen is up, through the print and the question about its original that follow an Instant exposure, which are sheets over it: they keep the camera's portrait layout, so the camera beneath them is never seen in a turned window as they rise, give way to each other and close.
-That is a trade-off: held on its side, the iPhone shows the print and the question sideways, until it is turned upright, where the same print opened from the Journal or the Film screen turns with it.
+The hold lasts for as long as the screen is up, through everything opened from it: the print and the question about its original that follow an Instant exposure, and the Darkroom opened from that print, which are sheets over it, keep the camera's portrait layout, so the camera beneath them is never seen in a turned window as they rise, give way to each other and close.
+The captain chose this on 2026-10-16 ("Instant - 1"): everything opened from the camera stays upright.
+Its cost is that, held on its side, the iPhone shows the print, the question and that Darkroom sideways, the Darkroom in its portrait arrangement, until it is turned upright; the same print and its Darkroom opened from the Journal or the Film screen turn with the iPhone, the Darkroom side by side as in [065](darkroom-landscape-side-by-side-065.md).
 Turning only the sheets was tried in two ways and neither keeps the camera unseen: letting go of the hold while a print or its question is up turned the window, and with it the camera showing through as each sheet rose and closed and between a print and its question; letting go only once a sheet covers the camera and holding again before it closes cannot be timed to a sheet that the person can swipe away, and would turn the window back and forth between a print and its question.
 The Instant's camera starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md), merged to `main` as 003d8d4), in the portrait window it never left.
 The merge of that change kept both: the Resume Camera condition in the notice is its `CaptureController.offersResume`, which also hides the button on a complete Film and while the camera is paused only for a print, and the print's pause is its `pauseForReveal`.
-Every other screen turns as before, the Darkroom's landscape arrangement of [065](darkroom-landscape-side-by-side-065.md) included.
+Every other screen turns as before, the Darkroom's landscape arrangement of [065](darkroom-landscape-side-by-side-065.md) included when the Darkroom is opened from the Journal or the Film screen.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
 **The viewfinder.**
@@ -347,6 +349,6 @@ All of these are for the manual iPhone test plan ([H01 to H10](manual-validation
 - The orientation hold on a physical iPhone, including tapping Done while the iPhone is on its side, opening the camera on its side, and what it does with Portrait Orientation Lock on.
 - The turned text in the hand: legibility, where the header lands against the edge, and the zoom pill over a live picture, and the Disposable's cue over a live picture.
 - The 6×6's rear viewfinder not reversed, and the front viewfinder still mirrored, on real lenses.
-- The Darkroom turning with the iPhone after the camera was used, and, as an Instant print and its question rise, give way to each other and close over the camera, the camera beneath them always in its portrait layout.
+- The Darkroom turning with the iPhone when opened from the Journal after the camera was used, and staying upright when opened from an Instant print over the camera; and, as an Instant print and its question rise, give way to each other and close over the camera, the camera beneath them always in its portrait layout.
 - Display Zoom and VoiceOver on the shooting screen held sideways: the column takes whatever room the screen has, and the simulator has no Display Zoom to show it.
 - The viewfinder's size on a real iPhone: the sizes above are the simulators' screens, and the notices over a live picture, where their dark ground, not the black of the empty frame, is what keeps them legible.

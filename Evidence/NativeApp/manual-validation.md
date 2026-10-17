@@ -1819,7 +1819,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
-| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera, and its question, keep the camera's portrait layout with the iPhone on its side; as each rises, gives way to the next and closes, the camera beneath is always in its portrait layout, never turned; and after they close the camera, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera, its question and the Darkroom opened from that print keep the camera's portrait layout with the iPhone on its side, as the captain chose ("Instant - 1"); as each rises, gives way to the next and closes, the camera beneath is always in its portrait layout, never turned; and after they close the camera, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
 
 **What the build does, from the record and the code.**
 
@@ -1843,8 +1843,8 @@ The authority and stop conditions at the top of this plan apply to each of them 
   Your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
   Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
-- A print that opens over the camera after an Instant exposure, and the question about its original, keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
-  Opened from the Journal or the Film screen, the same print turns with the iPhone.
+- Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
+  Opened from the Journal or the Film screen, the same print and its Darkroom turn with the iPhone, the Darkroom side by side as in W01.
 - While no lens is running (the camera starting, asking for access, refused or unavailable) the 6×6's rows are empty and no "... unavailable on this lens" note shows.
 
 **What this iPhone should show, and what it cannot.**
@@ -2086,20 +2086,22 @@ A screen recording of each turn.
 
 1. After H01 to H09, open a developed Disposable photo's Darkroom from the Journal, hold the iPhone on its side, and compare with W01.
 2. On the Instant, with the iPhone on its side, start a screen recording and take a photo.
-3. When the print opens over the camera, keep the iPhone on its side, tap **Done** on it, answer the question about its original (**Cancel** leaves it) and look at the camera.
-4. Step through the recording frame by frame where the print rises, where the print gives way to the question, and where the question closes.
+3. When the print opens over the camera, keep the iPhone on its side, tap **Darkroom** on it, look at the Darkroom's arrangement, and close the Darkroom.
+4. Tap **Done** on the print, answer the question about its original (**Cancel** leaves it) and look at the camera.
+5. Step through the recording frame by frame where the print rises, where the Darkroom opens and closes over it, where the print gives way to the question, and where the question closes.
 
 **Expect.**
 
-- The Darkroom is side by side held sideways, as in W01, including after the camera was used.
-- The print and the question keep the camera's portrait layout and read sideways with the iPhone on its side, which is the accepted trade-off (ADR 0017).
+- The Darkroom opened from the Journal is side by side held sideways, as in W01, including after the camera was used.
+- The print, the Darkroom opened from it and the question keep the camera's portrait layout and read sideways with the iPhone on its side, the Darkroom in its portrait arrangement, as the captain chose ("Instant - 1", ADR 0017).
 - In every frame, the camera beneath the sheets is in its portrait layout, with its words turned to read upright as you hold the iPhone; it is never laid out in a landscape window, never with a short viewfinder, and never with words that read sideways.
 - When the sheets close, the camera is in the portrait layout and starts again by itself.
 
 **It fails if.**
 
-- The Darkroom stays in the portrait layout with the iPhone on its side.
-- Any frame shows the camera in a landscape window or with its words reading sideways, or the window turns at all while the print and its question come and go.
+- The Darkroom opened from the Journal stays in the portrait layout with the iPhone on its side.
+- The Darkroom opened from the print over the camera turns to its side-by-side arrangement.
+- Any frame shows the camera in a landscape window or with its words reading sideways, or the window turns at all while the print, its Darkroom and its question come and go.
 - The camera is left in a landscape layout.
 
 **Write down.**

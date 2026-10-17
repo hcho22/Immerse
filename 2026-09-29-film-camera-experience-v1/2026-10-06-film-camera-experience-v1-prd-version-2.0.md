@@ -95,7 +95,7 @@ The notes under the user journeys in section 5.1 and the prototype gap in sectio
 After trying the build on his iPhone, the captain made three decisions, recorded in [ADR 0017](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and in the tracker's decisions table:
 
 1. **The 6×6's viewfinder.** "6x6 Viewfinder - normal viewfinder. No reverse". This withdraws the waist-level viewfinder of version 2.0.
-2. **Shooting sideways.** "All cameras landscape shooting. viewfinder does not fit the screen. viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles". Asked how sideways shooting should work, he chose "Like iPhone Camera": the screen never turns, the viewfinder keeps its size and place, and only the words and icons turn to read upright.
+2. **Shooting sideways.** "All cameras landscape shooting. viewfinder does not fit the screen. viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles". Asked how sideways shooting should work, he chose "Like iPhone Camera": the screen never turns, the viewfinder keeps its size and place, and only the words and icons turn to read upright. Asked about what opens from the camera, he chose "Instant - 1": the Instant's print, its original question and the Darkroom opened from that print stay upright while the shooting screen is up.
 3. **The 6×6's zoom.** "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)".
 
 Three sentences were amended, in the same file and at his request, as version 2.1 amended FR-07: two were reworded and FR-03's was removed, since the viewfinder it explained is gone; FR-04 gained two paragraphs.
@@ -536,7 +536,8 @@ The viewfinder keeps the same size and place in every hold, and the live picture
 The whole viewfinder shows above the shutter bar at the default text size on every supported iPhone, down to the smallest: it is the largest box of the Camera's shape that the room leaves after the header and the controls, narrower than the screen's width where the room is short, and it does not change size when a message appears, because messages and notes sit over it, or when a lens cannot focus by hand or bias its exposure, because the 6×6's Focus and Exposure rows are there whatever the lens and say so in place of the slider.
 Only the screen's words and icons turn, to read upright when the iPhone is on its side, and they stay legible and unclipped in both holds.
 A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in (FR-05).
-Every other screen keeps turning with the iPhone; the print that opens over the camera after an Instant exposure, and the question about its original, keep the camera's portrait layout, so the camera is never seen turned beneath them.
+Every other screen keeps turning with the iPhone, the Darkroom included when it is opened from the Journal or the Film screen.
+Everything opened from the camera stays upright while the shooting screen is up (the captain, 2026-10-16, "Instant - 1"): the print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so the camera is never seen turned beneath them.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
 The 6×6 Medium Format's rear camera offers one zoom step for each lens the iPhone has, labeled as the iPhone's own Camera app labels it: 0.5x for an ultra wide lens, 1x, and the telephoto lens at its factor, such as 2x, 2.5x, 3x or 5x.
