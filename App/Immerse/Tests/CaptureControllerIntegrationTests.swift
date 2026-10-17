@@ -417,6 +417,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         var withFlash = NativeCameraControls()
         withFlash.flash = true
+        withFlash.fixedExposure = true
         for (camera, cue) in [(CameraCatalog.disposable1990s, true), (CameraCatalog.mediumFormat6x6, false),
                               (CameraCatalog.super8HomeMovie, false)] {
             let film = try model.repository.createFilm(

@@ -42,9 +42,18 @@ final class CaptureController {
     var presented = false
     #if DEBUG
     fileprivate var heldForTesting: CaptureFrameOrientation?
+    fileprivate var lensSetForTesting = false
     #endif
 
     init(authorizer: any CapturePermissionAuthorizing) { self.authorizer = authorizer }
+
+    /// Whether a lens is running, so `controls` are what it reports: the viewfinder is live.
+    var lensIsLive: Bool {
+        #if DEBUG
+        if lensSetForTesting { return true }
+        #endif
+        return preview != nil
+    }
 
     /// The Disposable's viewfinder advises flash in low light, only when flash is available and still off:
     /// a cue for a control the active lens lacks would advise something it cannot do.
@@ -313,9 +322,10 @@ extension CaptureController {
     /// Hosted tests have no backend, so they set the phase it would report.
     func setForTesting(phase: CapturePhase) { self.phase = phase }
 
-    /// Hosted tests have no camera, so they set what a lens would report.
+    /// Hosted tests have no camera, so they set what a running lens would report.
     func setForTesting(controls: NativeCameraControls, sceneEV100: Double? = nil) {
         self.controls = controls
+        lensSetForTesting = true
         if let sceneEV100 {
             lowLightCue.update(sceneEV100: sceneEV100)
             isLowLight = lowLightCue.isShowing

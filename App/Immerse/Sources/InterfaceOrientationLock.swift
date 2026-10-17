@@ -55,28 +55,13 @@ enum InterfaceOrientationLock {
 }
 
 extension View {
-    /// Holds the window to `mask` while `active` and this view is on screen. Every other screen is unaffected, since the
-    /// hold ends when this view leaves or `active` ends, and the window then turns to `release`, the orientation the iPhone
-    /// is held in.
+    /// Holds the window to `mask` while this view is on screen, and over anything it presents as a sheet. Every other
+    /// screen is unaffected, since the hold ends when this view leaves, and the window then turns to `release`, the
+    /// orientation the iPhone is held in.
     func holdsInterfaceOrientation(
-        _ mask: UIInterfaceOrientationMask, while active: Bool = true,
-        thenTurnTo release: @escaping @MainActor () -> UIInterfaceOrientationMask
+        _ mask: UIInterfaceOrientationMask, thenTurnTo release: @escaping @MainActor () -> UIInterfaceOrientationMask
     ) -> some View {
-        modifier(InterfaceOrientationHold(mask: mask, active: active, release: release))
-    }
-}
-
-private struct InterfaceOrientationHold: ViewModifier {
-    let mask: UIInterfaceOrientationMask
-    let active: Bool
-    let release: @MainActor () -> UIInterfaceOrientationMask
-
-    func body(content: Content) -> some View {
-        content
-            .onAppear { if active { InterfaceOrientationLock.hold(mask) } }
-            .onChange(of: active) { _, holds in
-                if holds { InterfaceOrientationLock.hold(mask) } else { InterfaceOrientationLock.release(turningTo: release()) }
-            }
+        onAppear { InterfaceOrientationLock.hold(mask) }
             .onDisappear { InterfaceOrientationLock.release(turningTo: release()) }
     }
 }

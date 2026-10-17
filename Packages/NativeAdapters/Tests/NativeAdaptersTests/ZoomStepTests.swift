@@ -169,21 +169,18 @@ final class ZoomStepTests: XCTestCase {
     }
 
     /// A lens's native crops depend on the format it runs on, which it has only once it is the session's input, so the
-    /// lenses are read again then. A crop that format does not report is never taken, since it would be a digital
-    /// enlargement: the step taken is the whole lens.
-    func testACropTheLensDoesNotReportOnceItRunsIsTakenAsTheWholeLens() throws {
+    /// lenses are read again then. A crop that format does not report would be a digital enlargement: it is refused, the
+    /// read no longer offers it, and the step the camera was on is still there to return to.
+    func testACropTheLensDoesNotReportOnceItRunsIsRefused() throws {
         let before = plan(.mediumFormat6x6, rear: lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 4)], telephotoCrops: [2]))
         let eight = try XCTUnwrap(before.zoomSteps.last)
         XCTAssertEqual(eight.label, "8x")
-        XCTAssertEqual(before.zoomStep(taking: eight), eight, "Reported, the crop is taken")
+        XCTAssertEqual(before.zoomDecision(to: eight, during: .idle), .allowed, "Offered from the format the lens had")
         let running = before.updatingRearLenses(lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 4)]))
-        let taken = try XCTUnwrap(running.zoomStep(taking: eight))
-        XCTAssertEqual(taken.label, "4x")
-        XCTAssertEqual(taken.lens, .telephoto)
-        XCTAssertFalse(taken.isSensorCrop, "The whole telephoto lens, never a digital 2x of it")
+        XCTAssertEqual(running.zoomDecision(to: eight, during: .idle), .unavailable(eight), "Refused once its lens runs")
         XCTAssertEqual(running.zoomSteps.map(\.label), ["0.5x", "1x", "4x"], "The 8x step is no longer offered")
-        let wide = try XCTUnwrap(running.zoomSteps.first { $0.label == "1x" })
-        XCTAssertEqual(running.zoomStep(taking: wide), wide, "A whole lens is always taken as it is")
+        let resting = try XCTUnwrap(before.restingZoomStep)
+        XCTAssertEqual(running.zoomDecision(to: resting, during: .idle), .allowed, "The step the camera was on is still offered")
     }
 
     func testReadingTheRearLensesAgainKeepsTheRestOfThePlan() throws {

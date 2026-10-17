@@ -536,7 +536,7 @@ The viewfinder keeps the same size and place in every hold, and the live picture
 The whole viewfinder shows above the shutter bar at the default text size on every supported iPhone, down to the smallest: it is the largest box of the Camera's shape that the room leaves after the header and the controls, narrower than the screen's width where the room is short, and it does not change size when a message appears, because messages and notes sit over it, or when a lens cannot focus by hand or bias its exposure, because the 6×6's Focus and Exposure rows are there whatever the lens and say so in place of the slider.
 Only the screen's words and icons turn, to read upright when the iPhone is on its side, and they stay legible and unclipped in both holds.
 A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in (FR-05).
-Every other screen keeps turning with the iPhone, and so does the print that opens over the camera after an Instant exposure.
+Every other screen keeps turning with the iPhone; the print that opens over the camera after an Instant exposure, and the question about its original, keep the camera's portrait layout, so the camera is never seen turned beneath them.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 
 The 6×6 Medium Format's rear camera offers one zoom step for each lens the iPhone has, labeled as the iPhone's own Camera app labels it: 0.5x for an ultra wide lens, 1x, and the telephoto lens at its factor, such as 2x, 2.5x, 3x or 5x.

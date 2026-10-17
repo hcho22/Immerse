@@ -64,11 +64,9 @@ struct CaptureView: View {
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
         .environment(\.heldTurn, held)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
-        .holdsInterfaceOrientation(
-            .portrait, while: Self.holdsWindowUpright(revealedPrints: revealedPrints, originalAsk: originalAsk)
-        ) {
-            InterfaceOrientationLock.mask(held: capture.held)
-        }
+        // Held for as long as the screen is up, the print and the question that follow an Instant exposure included, so
+        // the camera is never seen turned beneath them as they come and go.
+        .holdsInterfaceOrientation(.portrait) { InterfaceOrientationLock.mask(held: capture.held) }
         .task {
             #if DEBUG
             if !opensCamera { return }
@@ -101,13 +99,6 @@ struct CaptureView: View {
         .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
-    }
-
-    /// Whether the screen holds the window to the portrait layout. It does not from the moment an Instant print is revealed
-    /// until `showNextPrint` drops the last (`revealedPrints`), nor while a question about an original is up, so the prints
-    /// and their questions turn with the iPhone like every other screen, also as one gives way to the next.
-    static func holdsWindowUpright(revealedPrints: some Collection, originalAsk: OriginalAsk?) -> Bool {
-        revealedPrints.isEmpty && originalAsk == nil
     }
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
@@ -282,7 +273,7 @@ struct CaptureView: View {
             if behavior.offersManualFocus {
                 CaptionedSlider(
                     captionLength: captionLength, caption: Text("Focus").font(.caption),
-                    unavailable: "Manual focus unavailable on this lens",
+                    unavailable: "Manual focus unavailable on this lens", lensIsLive: capture.lensIsLive,
                     slider: capture.controls.manualFocus
                         ? Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
                             if !editing { model.perform { try await capture.setFocus() } failure: { error = $0 } }
@@ -295,7 +286,7 @@ struct CaptureView: View {
                     captionLength: captionLength,
                     caption: (bias == nil ? Text("Exposure") : Text("Exposure \(capture.exposure, specifier: "%.1f") EV"))
                         .font(.caption.monospaced()),
-                    unavailable: "Exposure unavailable on this lens",
+                    unavailable: "Exposure unavailable on this lens", lensIsLive: capture.lensIsLive,
                     slider: bias.map { range in
                         Slider(value: $capture.exposure, in: range, onEditingChanged: { editing in
                             if !editing { model.perform { try await capture.setExposure() } failure: { error = $0 } }
@@ -306,13 +297,13 @@ struct CaptureView: View {
         }
     }
 
-    /// What the active lens cannot do that this Camera asks of it, apart from the controls whose rows say so.
+    /// What the running lens cannot do that this Camera asks of it, apart from the controls whose rows say so. Nothing is
+    /// said while no lens is running, since then there is none to say it of.
     private func lensNotes(behavior: CaptureBehavior, controller capture: CaptureController) -> [String] {
+        guard capture.lensIsLive else { return [] }
         var notes: [String] = []
         if behavior.offersFlash && !capture.controls.flash { notes.append("Flash unavailable on this lens") }
-        if behavior.exposure == .fixed && capture.preview != nil && !capture.controls.fixedExposure {
-            notes.append("Fixed exposure unavailable on this lens")
-        }
+        if behavior.exposure == .fixed && !capture.controls.fixedExposure { notes.append("Fixed exposure unavailable on this lens") }
         return notes
     }
 
@@ -403,13 +394,15 @@ private struct LowLightCueView: View {
 /// A slider and its caption. The slider stays across the screen in every hold; with the iPhone on its side the caption
 /// turns to read upright and moves beside it, since a turned caption above it would need as much height as it is long.
 /// One layout holds both in every hold, so the slider is the same view as the iPhone turns and a drag is not cut off.
-/// Where the active lens cannot do the control, `slider` is nil and the row says `unavailable` in its place; the slider's
-/// place and the note are laid out either way, one of them hidden, so the row is as tall whichever shows.
+/// Where the running lens cannot do the control, `slider` is nil and the row says `unavailable` in its place; the
+/// slider's place and the note are laid out either way, one of them hidden, so the row is as tall whichever shows. While
+/// no lens is running the row is kept, empty.
 struct CaptionedSlider<Control: View>: View {
     @Environment(\.heldTurn) private var turn
     let captionLength: CGFloat
     let caption: Text
     let unavailable: String
+    let lensIsLive: Bool
     let slider: Control?
 
     var body: some View {
@@ -422,6 +415,7 @@ struct CaptionedSlider<Control: View>: View {
                 .opacity(slider == nil ? 1 : 0).accessibilityHidden(slider != nil)
             }
         }
+        .opacity(lensIsLive ? 1 : 0).accessibilityHidden(!lensIsLive).allowsHitTesting(lensIsLive)
         // As tall as the turned caption makes it, in every hold, so the room under the viewfinder never depends on the hold.
         .frame(minHeight: captionLength)
     }

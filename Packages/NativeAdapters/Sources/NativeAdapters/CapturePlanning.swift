@@ -135,13 +135,6 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         )
     }
 
-    /// The step a request for `requested` takes once its lens is the session's input and this plan has read the lenses
-    /// again: the step itself where the plan still offers it, or else the whole of its lens, since a crop the lens's
-    /// active format does not report would be a digital enlargement. Nil where the plan offers neither.
-    public func zoomStep(taking requested: ZoomStep) -> ZoomStep? {
-        zoomSteps.contains(requested) ? requested : zoomSteps.first { $0.lens == requested.lens && !$0.isSensorCrop }
-    }
-
     public func zoomDecision(to step: ZoomStep, during phase: CapturePhase) -> ZoomDecision {
         guard !zoomSteps.isEmpty else { return .notOffered }
         guard zoomSteps.contains(step) else { return .unavailable(step) }

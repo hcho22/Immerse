@@ -180,32 +180,37 @@ public actor AVFoundationCaptureBackend {
     /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, and crops it where the
     /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The person's Focus position and
     /// exposure bias go with them to the new lens, the bias within that lens's range. A lens runs on the format the session
-    /// gives it only once it is the input, and that format decides its native crops, so they are read again then: a crop
-    /// it does not report would be a digital enlargement, so it is never set, and the step taken is the whole lens.
+    /// gives it only once it is the input, and that format decides its native crops, so they are read again then. A crop
+    /// that format does not report would be a digital enlargement, so it is refused: the camera returns to the step it was
+    /// on, and the read leaves the crop out of the steps offered.
     public func selectZoomStep(_ step: ZoomStep) throws {
         try operations.requireIdle()
-        guard session.isRunning, var plan else { throw NativeCaptureError.notRunning }
+        guard session.isRunning, var plan, let active = input?.device else { throw NativeCaptureError.notRunning }
         guard plan.zoomDecision(to: step, during: operations.phase) == .allowed else {
             throw NativeCaptureError.configurationFailed
         }
         guard step != zoomStep else { return }
         let device = try camera(for: step.lens)
-        if device !== input?.device {
+        let bias = active.exposureTargetBias
+        if device !== active {
             try replaceInput(with: device, plan: plan)
             plan = plan.updatingRearLenses(AVFoundationCaptureDeviceDiscoverer.rearLenses())
             self.plan = plan
+            guard plan.zoomDecision(to: step, during: operations.phase) == .allowed else {
+                try replaceInput(with: active, plan: plan)
+                try applyLensBehavior(plan.behavior, to: active, zoomFactor: zoomStep?.lensZoomFactor ?? 1)
+                restartMeter()
+                return
+            }
         }
-        zoomStep = plan.zoomStep(taking: step)
-        guard let taken = zoomStep else { throw NativeCaptureError.configurationFailed }
-        try applyLensBehavior(plan.behavior, to: device, zoomFactor: taken.lensZoomFactor)
+        try applyLensBehavior(plan.behavior, to: device, zoomFactor: step.lensZoomFactor, carryingExposureBias: bias)
+        zoomStep = step
         restartMeter()
     }
 
-    /// Replaces the session's camera with `device`, keeping its outputs, and holds the Camera's behavior on it, with the
-    /// exposure bias of the lens it replaces. The movie session runs at `.inputPriority`, so the added lens keeps the
-    /// format chosen here.
+    /// Replaces the session's camera with `device`, keeping its outputs, and holds the Camera's behavior on it. The movie
+    /// session runs at `.inputPriority`, so the added lens keeps the format chosen here.
     private func replaceInput(with device: AVCaptureDevice, plan: CaptureSessionPlan) throws {
-        let carriedBias = input?.device.exposureTargetBias
         if plan.mediaKind == .movie { try selectMovieFormat(device) }
         let replacement = try AVCaptureDeviceInput(device: device)
         session.beginConfiguration()
@@ -218,7 +223,7 @@ public actor AVFoundationCaptureBackend {
         session.addInput(replacement)
         input = replacement
         ensureUnmirroredOutput()
-        try applyLensBehavior(plan.behavior, to: device, carryingExposureBias: carriedBias)
+        try applyLensBehavior(plan.behavior, to: device)
     }
 
     /// Reads the rear lenses again once the session runs on its preset's format, and returns the zoom to 1x: the rear wide

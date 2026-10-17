@@ -1819,7 +1819,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
-| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, the screen does not turn to portrait and back between the print and its question, and after they close the camera is portrait again and, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera, and its question, keep the camera's portrait layout with the iPhone on its side; as each rises, gives way to the next and closes, the camera beneath is always in its portrait layout, never turned; and after they close the camera, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
 
 **What the build does, from the record and the code.**
 
@@ -1840,10 +1840,12 @@ The authority and stop conditions at the top of this plan apply to each of them 
 - A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words and icons still turn with the iPhone.
 - The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera or on another Camera.
   Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures; the buttons are dimmed while the camera is busy.
-  Your exposure bias goes with you to the new lens, within its range.
-  Once a lens is the camera's, its crops are read again: a crop step its format does not report is taken as the whole lens, and leaves the pill.
+  Your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
+  Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
-- A print that opens over the camera after an Instant exposure, and the question about its original, turn with the iPhone like every other screen, and the screen stays as the iPhone is held from the print to its question; the camera returns to the portrait layout when the last of them closes.
+- A print that opens over the camera after an Instant exposure, and the question about its original, keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
+  Opened from the Journal or the Film screen, the same print turns with the iPhone.
+- While no lens is running (the camera starting, asking for access, refused or unavailable) the 6×6's rows are empty and no "... unavailable on this lens" note shows.
 
 **What this iPhone should show, and what it cannot.**
 The iPhone 13 Pro has an ultra wide, a wide and a telephoto lens, so its Camera app should list 0.5x, 1x and 3x; the 6×6 should list the same labels.
@@ -1992,6 +1994,7 @@ The screenshots and developed pictures, rear and front.
 
 - The 6×6 lists the same steps as the Camera app, each labeled the same, and each shows that lens's view: 0.5x the widest, 1x the middle, the telephoto step the narrowest.
 - No step the iPhone lacks; a native crop step of any lens, such as 2x, only where the Camera app also lists it.
+- A tap never lands on a step other than the one tapped: a step is taken, or the camera stays where it was.
 - The front camera and every other Camera show no zoom steps.
 - The 6×6 is on 1x each time it opens, and the other Cameras opened after it are not zoomed.
 
@@ -2002,7 +2005,7 @@ The screenshots and developed pictures, rear and front.
 
 **What is a finding and not a failure.**
 Whether a native crop step appears, and where, is the iPhone's own to say; the 13 Pro has no high-resolution wide sensor, so none is expected.
-A crop step that, tapped, lands on its whole lens and leaves the pill is the app refusing a crop the lens's format does not report once it runs, rather than enlarging digitally; write down which step did it.
+A crop step that, tapped, leaves the pill while the camera stays on the step it was on is the app refusing a crop the lens's format does not report once it runs, rather than enlarging digitally; write down which step did it.
 
 **Write down.**
 The Camera app's labels, the 6×6's labels, each step's screenshot and which Cameras show steps.
@@ -2082,22 +2085,25 @@ A screen recording of each turn.
 **Steps.**
 
 1. After H01 to H09, open a developed Disposable photo's Darkroom from the Journal, hold the iPhone on its side, and compare with W01.
-2. On the Instant, with the iPhone on its side, take a photo.
+2. On the Instant, with the iPhone on its side, start a screen recording and take a photo.
 3. When the print opens over the camera, keep the iPhone on its side, tap **Done** on it, answer the question about its original (**Cancel** leaves it) and look at the camera.
+4. Step through the recording frame by frame where the print rises, where the print gives way to the question, and where the question closes.
 
 **Expect.**
 
 - The Darkroom is side by side held sideways, as in W01, including after the camera was used.
-- The print turns with the iPhone and takes the landscape arrangement, and so does the question; between the print and the question the screen does not turn to portrait and back.
-- When its sheets close, the camera is in the portrait layout.
+- The print and the question keep the camera's portrait layout and read sideways with the iPhone on its side, which is the accepted trade-off (ADR 0017).
+- In every frame, the camera beneath the sheets is in its portrait layout, with its words turned to read upright as you hold the iPhone; it is never laid out in a landscape window, never with a short viewfinder, and never with words that read sideways.
+- When the sheets close, the camera is in the portrait layout and starts again by itself.
 
 **It fails if.**
 
-- The Darkroom or the print stays in the portrait layout with the iPhone on its side, or the screen turns to portrait between the print and its question.
+- The Darkroom stays in the portrait layout with the iPhone on its side.
+- Any frame shows the camera in a landscape window or with its words reading sideways, or the window turns at all while the print and its question come and go.
 - The camera is left in a landscape layout.
 
 **Write down.**
-Screenshots, and a screen recording of the Instant case.
+Screenshots, and the screen recording of the Instant case with the frames of each transition.
 
 ## The Instant Camera Staying On on a Real iPhone
 

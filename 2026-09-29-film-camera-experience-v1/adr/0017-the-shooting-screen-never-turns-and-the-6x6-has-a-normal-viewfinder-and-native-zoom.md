@@ -14,7 +14,7 @@ The screen keeps its portrait layout whichever way the iPhone is held.
 The viewfinder keeps the same size and place, and only the words and icons turn, so that they read upright; the live picture fills the viewfinder in every hold, as in the iPhone's Camera app, so held on its side the viewfinder is the landscape shape the photo saves in.
 The photo is still saved the way the iPhone was held, and a clip keeps the orientation it started in, as before.
 This holds on all five Cameras.
-Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included, and so does the print that opens over the camera after an Instant exposure.
+Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included; the print that opens over the camera after an Instant exposure, and the question about its original, keep the camera's portrait layout, so the camera is never seen turned beneath them as they come and go.
 Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 The alternative considered was the shooting screen as it was, which turned with the iPhone and laid out a second, landscape arrangement of the same controls; it is the arrangement his screenshot showed.
 
@@ -41,6 +41,6 @@ A Film already loaded needs nothing changed: no stored data, Camera package or t
 The alternative considered for the 6×6's viewfinder was the waist-level reversal PRD version 2.0 specified, which gave the Camera the feel of the Format Reference's finder; the captain preferred the normal one.
 The viewfinder is the largest box of the Camera's shape that the room between the top of the screen and the shutter bar leaves after the header and the controls, so the whole of it shows in every hold on every supported iPhone, narrower than the screen where the room is short; that is the answer to his first complaint, "viewfinder does not fit the screen".
 Messages, the way to Resume Camera and what a lens cannot do sit over the viewfinder, or, for the 6×6's focus and exposure, in rows the 6×6 always has, so none of them moves it.
-The accepted costs are that the 6×6 no longer shows that feel while framing, that the screen's header keeps the height of its turned form when the iPhone is upright, so the viewfinder sits a little lower than a header sized to its text alone would put it, and that the viewfinder is smaller than the screen is wide on a short iPhone.
+The accepted costs are that the 6×6 no longer shows that feel while framing, that the screen's header keeps the height of its turned form when the iPhone is upright, so the viewfinder sits a little lower than a header sized to its text alone would put it, that the viewfinder is smaller than the screen is wide on a short iPhone, and that the print and the question that follow an Instant exposure read sideways while the iPhone is held on its side, until it is turned upright.
 
 Decided on 2026-10-16.

@@ -42,21 +42,10 @@ final class CaptureSidewaysTests: XCTestCase {
                        "Every screen turns unless the shooting screen holds the window")
     }
 
-    /// The screen's own rule for the hold. A print's sheet lets go of its print as it starts to close, before its question
-    /// comes up, so the rule keys on the prints still to be dropped (`revealedPrints`), which keep the hold off between them.
-    func testTheHoldStaysOffFromAPrintToItsQuestionUntilTheLastPrintIsDropped() {
-        let ask = OriginalAsk(prints: [1])
-        XCTAssertTrue(CaptureView.holdsWindowUpright(revealedPrints: [CaptureRecord](), originalAsk: nil), "No print: held")
-        XCTAssertFalse(CaptureView.holdsWindowUpright(revealedPrints: [1], originalAsk: nil),
-                       "A print revealed, shown or closing before its question comes up: not held")
-        XCTAssertFalse(CaptureView.holdsWindowUpright(revealedPrints: [1], originalAsk: ask), "Its question is up: not held")
-        XCTAssertFalse(CaptureView.holdsWindowUpright(revealedPrints: [Int](), originalAsk: ask), "A question alone: not held")
-    }
-
-    /// The hold ends while an Instant print or its question shows over the camera, so they turn with the iPhone, stays ended
-    /// from a print to its question, comes back when the last of them closes, and ends with the screen. The Instant's camera
-    /// starts again by itself when they close (`CaptureController.printsClosed`), and the hold must be back by then.
-    func testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses() async throws {
+    /// The shooting screen holds the window for as long as it is up, the print and the question that follow an Instant
+    /// exposure included, so the camera is never seen in a turned window beneath them as they come and go; the hold ends
+    /// with the screen.
+    func testTheHoldLastsWhileAPrintIsOverTheScreenAndEndsWithIt() async throws {
         let showing = PrintShowing()
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let window = UIWindow(windowScene: scene)
@@ -65,17 +54,12 @@ final class CaptureSidewaysTests: XCTestCase {
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The shooting screen holds the window")
-        showing.revealedPrints = [1]
-        try await Task.sleep(for: .milliseconds(300))
-        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "A print over the camera turns with the iPhone")
-        showing.originalAsk = OriginalAsk(prints: [1])
-        try await Task.sleep(for: .milliseconds(300))
-        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown,
-                       "Its question turns with the iPhone too, while the print waits to be dropped")
-        showing.originalAsk = nil
-        showing.revealedPrints = []
-        try await Task.sleep(for: .milliseconds(300))
-        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The hold is back when the last print is dropped")
+        showing.print = true
+        try await Task.sleep(for: .milliseconds(800))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "A print over the camera keeps the hold")
+        showing.print = false
+        try await Task.sleep(for: .milliseconds(800))
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "So does the print closing")
         window.isHidden = true
         window.rootViewController = nil
         try await Task.sleep(for: .milliseconds(500))
@@ -100,16 +84,18 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 
     /// A Focus or Exposure row is there whenever the Camera offers the control, and it is as tall with the lens's note in
-    /// the slider's place as with the slider, in every hold, so the viewfinder never moves when a lens cannot do it.
-    func testARowIsAsTallWithTheLensNoteAsWithItsSlider() {
-        func row(slider: Bool) -> CaptionedSlider<Slider<EmptyView, EmptyView>> {
+    /// the slider's place as with the slider, and kept empty while no lens is running, in every hold, so the viewfinder
+    /// never moves when a lens cannot do the control or the camera starts or stops.
+    func testARowIsAsTallWithTheLensNoteAsWithItsSliderAndWithNoLens() {
+        func row(slider: Bool, live: Bool = true) -> CaptionedSlider<Slider<EmptyView, EmptyView>> {
             CaptionedSlider(captionLength: 64, caption: Text("Focus").font(.caption),
-                            unavailable: "Manual focus unavailable on this lens",
+                            unavailable: "Manual focus unavailable on this lens", lensIsLive: live,
                             slider: slider ? Slider(value: .constant(0.5)) : nil)
         }
         let upright = size(row(slider: true), turn: .upright)
         for turn in [HeldTurn.upright, .clockwise, .counterClockwise] {
             XCTAssertEqual(size(row(slider: false), turn: turn).height, size(row(slider: true), turn: turn).height, "\(turn)")
+            XCTAssertEqual(size(row(slider: false, live: false), turn: turn).height, upright.height, "No lens, \(turn)")
             XCTAssertEqual(size(row(slider: true), turn: turn).height, upright.height, "\(turn)")
         }
     }
@@ -280,6 +266,7 @@ final class CaptureSidewaysTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         var controls = NativeCameraControls()
         controls.flash = true
+        controls.fixedExposure = true
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
@@ -389,21 +376,15 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 }
 
-/// The Instant prints revealed and not yet dropped by `showNextPrint`, and the question about an original that is up, for
-/// the test of the hold.
-@Observable private final class PrintShowing {
-    var revealedPrints: [Int] = []
-    var originalAsk: OriginalAsk?
-}
+/// Whether an Instant print is over the camera, for the test of the hold.
+@Observable private final class PrintShowing { var print = false }
 
-/// Holds the window by `CaptureView`'s own rule.
+/// Holds the window as `CaptureView` does, with a sheet over it as the print is.
 private struct HoldProbe: View {
-    let showing: PrintShowing
+    @Bindable var showing: PrintShowing
     var body: some View {
-        Color.clear.holdsInterfaceOrientation(
-            .portrait,
-            while: CaptureView.holdsWindowUpright(revealedPrints: showing.revealedPrints, originalAsk: showing.originalAsk)
-        ) { .portrait }
+        Color.clear.holdsInterfaceOrientation(.portrait) { .portrait }
+            .sheet(isPresented: $showing.print) { Text("Print") }
     }
 }
 
@@ -417,7 +398,7 @@ private struct SliderProbeView: View {
     let probe: SliderProbe
     var body: some View {
         CaptionedSlider(captionLength: 64, caption: Text("Focus").font(.caption), unavailable: "Manual focus unavailable",
-                        slider: Color.gray.frame(height: 30).onAppear { probe.appearances += 1 })
+                        lensIsLive: true, slider: Color.gray.frame(height: 30).onAppear { probe.appearances += 1 })
             .environment(\.heldTurn, probe.turn)
             .padding()
     }
