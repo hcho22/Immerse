@@ -12,11 +12,12 @@ class HarnessTestCase: XCTestCase {
 }
 
 extension XCUIElement {
-    /// Flips a switch with a press held for 0.3 s, where `tap()` holds for 66 ms. When the simulator's touch service is
+    /// Flips a switch with a press held for 1 s, where `tap()` holds for 66 ms. When the simulator's touch service is
     /// late to register the touchscreen XCTest attaches for a tap, the finger-down and the finger-up reach the app a few
-    /// milliseconds apart, and a switch ignores that touch (the same helper is `flipSwitch` in the app's screen tests,
+    /// milliseconds apart, and a switch ignores that touch; a press held longer than the lag, which reached 628 ms once
+    /// on CI, still has its finger-up after its finger-down (the same helper is `flipSwitch` in the app's screen tests,
     /// `Evidence/NativeApp/main-ci-flakes-069.md`). This is one press, never a second tap.
     func flipSwitch() {
-        press(forDuration: 0.3)
+        press(forDuration: 1)
     }
 }

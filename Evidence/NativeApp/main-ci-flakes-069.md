@@ -63,8 +63,10 @@ A short press that is not late is not enough to lose the tap: presses of 0 to 66
 
 ### Fix
 
-`flipSwitch()` (`UITestSupport.swift`, and `HarnessTestSupport.swift` for the harness) presses a switch for 0.3 s where `tap()` presses for 66 ms.
-The finger-up is scheduled 300 ms after the finger-down, so a touchscreen registered up to about 300 ms late still delivers its finger-up that long after its finger-down, and the 25 late registrations of the table above (136 to 179 ms) kept a finger-up 154 to 350 ms after their finger-down, 23 of them 300 ms or more.
+`flipSwitch()` (`UITestSupport.swift`, and `HarnessTestSupport.swift` for the harness) presses a switch for 1 s where `tap()` presses for 66 ms.
+The 480 presses of the table above were made with a press held 0.3 s, whose finger-up is scheduled 300 ms after the finger-down, and their 25 late registrations (136 to 179 ms) kept a finger-up 154 to 350 ms after their finger-down, 23 of them 300 ms or more.
+The hold was then raised to 1 s, because the same CI run logged one registration 628 ms late (above), a lag no experiment here produced and longer than a 0.3 s hold covers.
+That a 1 s hold covers such a lag is argued from when its finger-up is scheduled, 1,000 ms after the finger-down, and was not measured against such a lag.
 It is one press, never a second tap, and it is used where the tests flip a switch: the Settings switch in `TestingUnlockUITests` and the Crop switch in the harness's seven places.
 Buttons keep `tap()`.
 
@@ -112,7 +114,7 @@ Turning off UIView animations in the harness app, which would stop the counter b
 Every screen test class now derives from `ScreenTestCase` (the app's) or `HarnessTestCase` (the harness's), whose `setUp` holds the simulator portrait.
 A test stopped at its allowance still leaves it sideways, but the next test no longer starts that way, so a stall costs its own test and not the ones after it.
 The same setUp covers run 39004998658's cascade.
-`Scripts/verify-validation-parts.sh` finds a part's suites by their `XCTestCase` superclass, so it now also reads the two base classes, and leaves them out as suites with no tests of their own.
+`Scripts/verify-validation-parts.sh` finds the screen tests' suites by their `XCTestCase` superclass, so it now also reads `ScreenTestCase`'s subclasses, and leaves `ScreenTestCase` out as a suite with no tests of its own.
 
 ### What still fails
 
@@ -124,11 +126,12 @@ It is a decision for him and is left open.
 ## Repeated runs
 
 On this Mac (Intel, Xcode 26.5, iOS 26.5 simulators made and quieted as validation makes them), with the changes in this record.
+Every run after the change was made with `flipSwitch()` holding its press 0.3 s, before the hold was raised to 1 s (see "Fix" above).
 
 | What | Before the change | After the change |
 | --- | --- | --- |
 | The test after one that was stopped sideways: the harness runner is killed once the simulator turns landscape in `testDarkroomRestsDodgeBurnAndCropBesideADisposablePrintInLandscape`, then `testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize` runs alone | failed in 59 s with the three failures of run 38980604148 (`PopulatedWorkflowTests.swift` lines 1219, 714 and 715: the Film screen did not open, "Open photo 1" was not found) | passed in 46 s |
-| The Settings switch, 480 presses under the 130 ms freezes of the touch service | 3 lost, each a touch with a finger-up 6 ms after its finger-down | 0 lost, 25 late registrations (table above) |
+| The Settings switch, 480 presses under the 130 ms freezes of the touch service | 3 lost, each a touch with a finger-up 6 ms after its finger-down | 0 lost with a press held 0.3 s, 25 late registrations (table above) |
 | The two unlock tests together, 8 rounds, with the touch service frozen 100 ms of every 160 ms | 8 of 8 passed (2 of the rounds' touches were compressed, none on a switch) | 8 of 8 passed |
 | The two unlock tests together, no freeze | 15 rounds passed | the same tests, now in the validation below |
 | Harness part of `Scripts/validate-local.sh` | not run before the change | 52 of 52 tests passed, no rerun (34 minutes) |
