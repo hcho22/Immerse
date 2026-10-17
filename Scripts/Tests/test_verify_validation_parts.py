@@ -29,7 +29,7 @@ class VerifyValidationPartsTests(unittest.TestCase):
         self.copy("Probes/PopulatedJournalHarness/project.yml")
         for source in glob.glob(os.path.join(ROOT, "App/Immerse/UITests/*.swift")):
             with open(source) as file:
-                classes = re.findall(r"^.*class \w+ *: *XCTestCase.*$", file.read(), re.M)
+                classes = re.findall(r"^.*class \w+ *: *(?:XCTestCase|ScreenTestCase).*$", file.read(), re.M)
             self.write(os.path.relpath(source, ROOT), "\n".join(classes) + "\n")
 
     def copy(self, path):
@@ -109,6 +109,13 @@ class VerifyValidationPartsTests(unittest.TestCase):
         result = self.verify()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertRegex(result.stdout, r"ui-flows runs.* ArchiveFlowTests")
+
+    def test_a_new_screen_test_case_suite_lands_in_ui_flows_without_its_base_class(self):
+        self.write("App/Immerse/UITests/ArchiveFlowTests.swift", "final class ArchiveFlowTests: ScreenTestCase {\n")
+        result = self.verify()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertRegex(result.stdout, r"ui-flows runs.* ArchiveFlowTests")
+        self.assertNotIn("ScreenTestCase", result.stdout)
 
 
 if __name__ == "__main__":
