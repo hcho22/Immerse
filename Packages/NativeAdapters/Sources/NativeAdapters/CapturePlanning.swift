@@ -39,6 +39,16 @@ public enum LensSwitchDecision: Equatable, Sendable {
     case disabledByConfiguration
 }
 
+/// Whether a zoom step can be taken now. A zoom change follows the lens switch's rule: only between exposures.
+public enum ZoomDecision: Equatable, Sendable {
+    case allowed
+    /// The Camera has no zoom steps, or the active camera is the front one.
+    case notOffered
+    /// The iPhone does not have this step.
+    case unavailable(ZoomStep)
+    case blockedDuring(CapturePhase)
+}
+
 public struct CaptureSessionRequest: Equatable, Sendable {
     public let preferredPosition: CapturePosition
     public let mediaKind: CaptureMediaKind
@@ -92,6 +102,42 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         guard capabilities.isAvailable(target) else {
             return .unavailable(target)
         }
+        switch phase {
+        case .idle:
+            return .allowed
+        case .savingPhoto, .recordingMovie, .savingMovieClip, .interrupted:
+            return .blockedDuring(phase)
+        }
+    }
+
+    /// The zoom steps this plan offers: the iPhone's own, on the rear camera of a Camera that zooms.
+    public var zoomSteps: [ZoomStep] {
+        behavior.offersZoomSteps && activePosition == .rear ? capabilities.rearLenses.zoomSteps : []
+    }
+
+    /// The step a session starts on and returns to: the wide lens as a whole, 1x.
+    public var restingZoomStep: ZoomStep? {
+        behavior.offersZoomSteps && activePosition == .rear ? capabilities.rearLenses.restingStep : nil
+    }
+
+    /// The same plan once the camera API has been read again for the rear lenses, which depend on the format the
+    /// session's preset gave the wide lens.
+    public func updatingRearLenses(_ lenses: RearLensCapabilities) -> CaptureSessionPlan {
+        CaptureSessionPlan(
+            request: CaptureSessionRequest(
+                preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                behavior: behavior, manualLensPosition: manualLensPosition
+            ),
+            capabilities: CaptureCapabilities(
+                availablePositions: capabilities.availablePositions,
+                supportsLensSwitchDuringSession: capabilities.supportsLensSwitchDuringSession, rearLenses: lenses
+            )
+        )
+    }
+
+    public func zoomDecision(to step: ZoomStep, during phase: CapturePhase) -> ZoomDecision {
+        guard !zoomSteps.isEmpty else { return .notOffered }
+        guard zoomSteps.contains(step) else { return .unavailable(step) }
         switch phase {
         case .idle:
             return .allowed

@@ -3,6 +3,10 @@
 Tracker tasks CAM-13, CAM-14, DRK-09, DRK-10 and CAM-15, implemented on 2026-10-07 for the captain's "please implement prd 2.1".
 This is simulator and software evidence only; physical-iPhone behavior stays deferred to the manual candidate.
 
+> **Superseded in part on 2026-10-16.**
+> The captain withdrew the 6×6 Medium Format's reversed viewfinder ("normal viewfinder. No reverse"), so the Load Film note about a reversed viewfinder described here, and the screenshot named after it, are history: the 6×6's Load Film screen has no such note now.
+> This record is kept as it was written; read it with `capture-sideways-zoom-068.md`.
+
 ## What changed
 
 - **Names and capacity.**

@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Product Requirements Document
 
-**Document date:** October 7, 2026 (version 2.1; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026; original consolidation September 29, 2026) · **Filename date:** 2026-10-06 · **Version:** 2.1\
+**Document date:** October 7, 2026 (version 2.1, amended October 16, 2026 for the captain's viewfinder, sideways-shooting and zoom decisions; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026; original consolidation September 29, 2026) · **Filename date:** 2026-10-06 · **Version:** 2.1\
 **Platform:** iOS 26, iPhone only · **Working product title:** Film Camera Experience (final brand not selected)\
 **Status:** Consolidated product requirements; native implementation not yet built.  
 **Selected design direction:** A — Film Journal, selected September 29, 2026.  
@@ -90,6 +90,21 @@ They close DEC-11, decide the rules of DEC-05, the targets of DEC-12, the approa
 No requirement text, FR, DEC or section number changes.
 FR-05's "Exact codecs, resolutions, and audio channel guarantees are not yet specified" and FR-07's "Exact control ranges and medium-specific applicability require render validation" are left as written and are read with section 15: the formats and the ranges are now decided, the toning strength later the same day on a board of its own.
 The notes under the user journeys in section 5.1 and the prototype gap in section 18 that name DEC-04 or DEC-11 as open are left as written too and are read the same way.
+
+**Decisions of 2026-10-16 (amended in version 2.1, no version change).**
+After trying the build on his iPhone, the captain made three decisions, recorded in [ADR 0017](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and in the tracker's decisions table:
+
+1. **The 6×6's viewfinder.** "6x6 Viewfinder - normal viewfinder. No reverse". This withdraws the waist-level viewfinder of version 2.0.
+2. **Shooting sideways.** "All cameras landscape shooting. viewfinder does not fit the screen. viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles". Asked how sideways shooting should work, he chose "Like iPhone Camera": the screen never turns, the viewfinder keeps its size and place, and only the words and icons turn to read upright. Asked about what opens from the camera, he chose "Instant - 1": the Instant's print, its original question and the Darkroom opened from that print stay upright while the shooting screen is up.
+3. **The 6×6's zoom.** "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)".
+
+Three sentences were amended, in the same file and at his request, as version 2.1 amended FR-07: two were reworded and FR-03's was removed, since the viewfinder it explained is gone; FR-04 gained two paragraphs.
+No FR, DEC or section number changes, no acceptance clause is added or removed, and FR-05's rules for clip and Movie orientation are untouched.
+The wording replaced is kept here:
+
+- Section 6.1, the 6×6 Medium Format's capture character: "Square framing; a waist-level viewfinder that shows the scene reversed left to right; deliberate focus/exposure; Film Stock chosen at Load Film".
+- FR-03: "For the 6×6 Medium Format, explain that its viewfinder shows the scene reversed left to right."
+- FR-04: "The 6×6 Medium Format's viewfinder shows the scene reversed left to right, as a waist-level finder does; its developed exposures are not reversed, and the front viewfinder keeps its mirrored behavior."
 
 **Version 2.1 Darkroom contrast on every Photo Film (2026-10-07).**
 The captain said: "please update the prd so that the contrast can be adjusted in the darkroom as well."
@@ -439,7 +454,7 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | 27 exposures | Fixed focus, fixed exposure, optional flash; a live low-light cue in the viewfinder | Borderless 3:2 picture with no date stamp. Warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges. No light leaks, red-eye, or dust and scratches | Roll-level Development |
 | 1970s Instant | 10 exposures | Individual instant-print experience | Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws | Each exposure develops individually |
-| 6×6 Medium Format | 12 exposures | Square framing; a waist-level viewfinder that shows the scene reversed left to right; deliberate focus/exposure; Film Stock chosen at Load Film | Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur | Roll-level Development |
+| 6×6 Medium Format | 12 exposures | Square framing; a normal viewfinder; zoom in the steps of the iPhone's own lenses on the rear camera; deliberate focus/exposure; Film Stock chosen at Load Film | Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur | Roll-level Development |
 
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas. The 6×6 Medium Format and the 16mm Cinema carry no decade, because their color reference films are present-day ones (version 2.0).
 
@@ -500,7 +515,7 @@ Archive is an explicit, optional, reversible hide from that user's main library.
 
 **Tasks SET-01, SET-03–SET-06, SET-08** (SET-02 and SET-07 are deferred to v2)
 
-Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before subscribing or starting the Trial. Show capacity, authentic controls, Reveal Rule, and audio behavior. For the 6×6 Medium Format, explain that its viewfinder shows the scene reversed left to right. Do not show a live filtered feed or the user's sealed media.
+Start a Film begins with Camera selection. Anyone may browse curated sample photos or a short sample movie before subscribing or starting the Trial. Show capacity, authentic controls, Reveal Rule, and audio behavior. Do not show a live filtered feed or the user's sealed media.
 
 Browsing does not create a Trial Film, consume eligibility, or lock a Camera. Load Film is the explicit final confirmation of the Camera package, capacity, and Reveal Rule before capture. On the 6×6 Medium Format and the 16mm Cinema it also confirms the Film Stock, color or black-and-white, which is fixed for that Film and never changes mid-Film or after Development (ADR 0014). Once loaded, the Camera cannot be replaced even before the first capture. Supported focus, flash, and exposure controls remain adjustable; they are not frozen by Load Film.
 
@@ -516,7 +531,23 @@ Rear and front-camera capture are supported for personal Photos and Movies. The 
 
 Only expose controls both authentic to the chosen Camera and genuinely supported by the active phone lens. Hide unsupported controls with a brief explanation; do not offer nonfunctional controls or fabricate unsupported flash/focus behavior.
 
-The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects. Its viewfinder shows a live low-light cue advising flash; the cue is exposure guidance and never previews the developed result. The 6×6 Medium Format's viewfinder shows the scene reversed left to right, as a waist-level finder does; its developed exposures are not reversed, and the front viewfinder keeps its mirrored behavior. Its focus is optical only: Development never synthesizes background blur, so depth of field is whatever the phone lens produced at capture. The 1960s Super 8 Home Movie has a fixed-focus lens and sets exposure automatically.
+The shooting screen keeps its portrait layout whichever way the iPhone is held, as the iPhone's own Camera app does, on all five Cameras.
+The viewfinder keeps the same size and place in every hold, and the live picture fills it in every hold, as in the iPhone's Camera app, so held on its side the viewfinder is the landscape shape the photo saves in.
+The whole viewfinder shows above the shutter bar at the default text size on every supported iPhone, down to the smallest: it is the largest box of the Camera's shape that the room leaves after the header and the controls, narrower than the screen's width where the room is short, and it does not change size when a message appears, because messages and notes sit over it, or when a lens cannot focus by hand or bias its exposure, because the 6×6's Focus and Exposure rows are there whatever the lens and say so in place of the slider.
+Only the screen's words and icons turn, to read upright when the iPhone is on its side, and they stay legible and unclipped in both holds.
+A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in (FR-05).
+Every other screen keeps turning with the iPhone, the Darkroom included when it is opened from the Journal or the Film screen.
+Everything opened from the camera stays upright while the shooting screen is up (the captain, 2026-10-16, "Instant - 1"): the print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so the camera is never seen turned beneath them.
+Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
+
+The 6×6 Medium Format's rear camera offers one zoom step for each lens the iPhone has, labeled as the iPhone's own Camera app labels it: 0.5x for an ultra wide lens, 1x, and the telephoto lens at its factor, such as 2x, 2.5x, 3x or 5x.
+It adds a sensor-crop step, such as 2x, only where the camera's own interface reports that crop as a native step of one of those lenses, labeled by the factor it shows, and never where a real lens already gives that factor.
+It offers no step between these and no pinch or digital zoom, and no zoom control at all on an iPhone with one rear lens and no reported crop.
+A step is taken only between exposures, like a lens switch.
+The 6×6's focus, exposure and square framing remain at every step, and where a lens cannot focus by hand the note "Manual focus unavailable on this lens" applies.
+Zoom belongs to the 6×6 and its rear camera alone: the front camera and every other Camera keep their single lens.
+
+The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects. Its viewfinder shows a live low-light cue advising flash; the cue is exposure guidance and never previews the developed result. The 6×6 Medium Format's viewfinder shows the scene the normal way, not reversed, and the front viewfinder keeps its mirrored behavior; no developed exposure is ever reversed or mirrored. Its focus is optical only: Development never synthesizes background blur, so depth of field is whatever the phone lens produced at capture. The 1960s Super 8 Home Movie has a fixed-focus lens and sets exposure automatically.
 
 Personal capture works offline once entitled and needs no server. Starting the Trial Film never needs connectivity (DEC-15). Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
 
@@ -1285,6 +1316,9 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | Device floor and performance budgets undefined (DEC-12) | Captain decision, 2026-10-13, as targets not yet measured: the iPhone 11 is the oldest supported phone; a photo saves in under 1 second; a 27-photo roll develops in under 45 seconds; a full Super 8 Movie assembles in under 90 seconds; the app warns below 2 GB free. The warning is built (tracker CAP-15), as the captain approved it on 2026-10-13. |
 | Support and store wording undefined (DEC-13) | Captain decision, 2026-10-13: the approach is approved (no server, account, analytics or microphone; exports stay and old backups can bring media back; no promise of recovery without a backup). The wording is written closer to launch. |
 | How v1 learns without analytics (DEC-14) | Captain decision, 2026-10-13: no analytics in the app; TestFlight interviews, tester feedback and Apple's own reports. |
+| A 6×6 Medium Format waist-level viewfinder that shows the scene reversed left to right | Captain decision, 2026-10-16 (ADR 0017): "6x6 Viewfinder - normal viewfinder. No reverse". The rear viewfinder shows the scene the normal way; the front viewfinder stays mirrored for every Camera, and no developed exposure is reversed. |
+| A shooting screen that turns with the iPhone | Captain decision, 2026-10-16 (ADR 0017), after he saw a Camera held sideways with its viewfinder running off the screen: "viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles", and "Like iPhone Camera" when asked how it should work. The screen keeps its portrait layout in every hold, the viewfinder keeps its size and place, and only the words and icons turn to read upright. Photos still save the way the iPhone was held. |
+| A single lens on every Camera | Captain decision, 2026-10-16 (ADR 0017): "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)". The 6×6's rear camera offers the steps of the iPhone's own lenses, and a sensor-crop step only where the camera reports one; the front camera and every other Camera keep their single lens. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 

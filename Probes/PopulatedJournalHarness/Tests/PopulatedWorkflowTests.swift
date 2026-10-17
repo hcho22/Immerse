@@ -263,7 +263,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         confirm.tap()
         XCTAssertTrue(app.buttons["capture-shutter"].waitForExistence(timeout: 20), "The camera is back after the answer")
         XCTAssertFalse(asked.exists)
-        app.navigationBars.buttons["Done"].firstMatch.tap()
+        app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 10))
         // The Film screen does not ask again about a print the camera asked about.
         Thread.sleep(forTimeInterval: 2)
@@ -293,7 +293,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertFalse(app.navigationBars["Photo 1"].waitForExistence(timeout: 5), "No earlier print is shown in its place")
         XCTAssertFalse(app.navigationBars["Originals"].exists, "No question follows a discarded print")
         snapshot(app, "Instant-print-discarded-at-the-camera")
-        app.navigationBars.buttons["Done"].firstMatch.tap()
+        app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Discarded"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Open photo 1"].exists)
         XCTAssertFalse(app.buttons["Open photo 2"].exists)
@@ -335,7 +335,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertFalse(earlier.waitForExistence(timeout: 5), "No print is shown a second time")
         XCTAssertFalse(later.exists, "No print is shown a second time")
         XCTAssertFalse(app.navigationBars["Originals"].exists, "No print is asked about a second time")
-        app.navigationBars.buttons["Done"].firstMatch.tap()
+        app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.buttons["Open photo 3"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Open photo 2"].exists)
         // The Film screen does not ask again about the prints the camera asked about.

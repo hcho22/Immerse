@@ -117,15 +117,13 @@ final class ContentSizeTests: XCTestCase {
         Target(name: "Black and white", type: .button, label: "Black and white"),
     ]
 
-    /// The 6×6 Load screen's own text: its controls line, its look lines, one per Film Stock, and its viewfinder note. The
-    /// Film Stock choice is the control the 16mm screen shows and is measured there.
+    /// The 6×6 Load screen's own text: its controls line and its look lines, one per Film Stock. The Film Stock choice is
+    /// the control the 16mm screen shows and is measured there.
     private static let sixBySix: [Target] = [
         Target(name: "6×6 Controls", type: .staticText, label: "Square framing, deliberate focus and exposure, optical focus only"),
         Target(name: "6×6 Picture", type: .staticText, label: "Borderless square picture"),
         Target(name: "6×6 Color look", type: .staticText, label: "Color: natural, warm color, very fine grain and gentle contrast"),
         Target(name: "6×6 Black and white look", type: .staticText, label: "Black and white: high contrast and distinct grain"),
-        Target(name: "6×6 Viewfinder note", type: .staticText,
-               label: "Its viewfinder shows the scene reversed left to right, as a waist-level finder does. Your photos are not reversed."),
     ]
 
     /// The 16mm look line once Black and white is chosen, which names the glow that stock develops.

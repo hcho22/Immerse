@@ -10,7 +10,7 @@ final class CaptureBehaviorTests: XCTestCase {
         XCTAssertEqual(disposable.viewfinder, .threeByTwo)
         XCTAssertTrue(disposable.offersFlash)
         XCTAssertTrue(disposable.showsLowLightCue)
-        XCTAssertFalse(disposable.reversesRearViewfinder)
+        XCTAssertFalse(disposable.offersZoomSteps)
 
         let super8 = CaptureBehavior.for(.super8HomeMovie)
         XCTAssertEqual(super8.focus, .fixed, "Fixed-focus lens")
@@ -25,7 +25,7 @@ final class CaptureBehaviorTests: XCTestCase {
         XCTAssertEqual(medium.viewfinder, .square)
         XCTAssertTrue(medium.offersManualFocus)
         XCTAssertTrue(medium.offersExposureBias)
-        XCTAssertTrue(medium.reversesRearViewfinder)
+        XCTAssertTrue(medium.offersZoomSteps, "The 6×6 offers the iPhone's own zoom steps")
         XCTAssertFalse(medium.offersFlash)
     }
 
@@ -38,26 +38,39 @@ final class CaptureBehaviorTests: XCTestCase {
             XCTAssertFalse(CaptureBehavior.for(camera).showsLowLightCue, "\(camera)")
         }
         for camera in CameraID.allCases where camera != .mediumFormat6x6 {
-            XCTAssertFalse(CaptureBehavior.for(camera).reversesRearViewfinder, "\(camera)")
+            XCTAssertFalse(CaptureBehavior.for(camera).offersZoomSteps, "\(camera) keeps its single lens")
             XCTAssertFalse(CaptureBehavior.for(camera).offersManualFocus, "\(camera)")
         }
     }
 
-    func testOnlyTheSixBySixRearViewfinderIsReversedAndEveryFrontViewfinderIsMirrored() {
+    /// The captain, 2026-10-16: the 6×6's viewfinder is the normal one, no longer reversed like a waist-level finder.
+    /// The front viewfinder stays mirrored for every Camera.
+    func testNoRearViewfinderIsReversedAndEveryFrontViewfinderIsMirrored() {
         for camera in CameraID.allCases {
             let behavior = CaptureBehavior.for(camera)
             XCTAssertTrue(behavior.isViewfinderMirrored(position: .front), "\(camera) front keeps its mirrored behavior")
-            XCTAssertEqual(behavior.isViewfinderMirrored(position: .rear), camera == .mediumFormat6x6, "\(camera) rear")
+            XCTAssertFalse(behavior.isViewfinderMirrored(position: .rear), "\(camera) rear shows the scene the normal way")
+        }
+    }
+
+    /// The 6×6's exposure bias goes with the person to each lens, within that lens's range, as their Focus position does;
+    /// every other Camera's lens returns to the unbiased automatic default.
+    func testOnlyTheSixBySixCarriesTheExposureBiasToTheNextLensWithinItsRange() {
+        let medium = CaptureBehavior.for(.mediumFormat6x6)
+        XCTAssertEqual(medium.lensExposureBias(carrying: 1, within: -2...2), 1)
+        XCTAssertEqual(medium.lensExposureBias(carrying: 3, within: -2...2), 2, "Within the new lens's range")
+        XCTAssertEqual(medium.lensExposureBias(carrying: -3, within: -2...2), -2)
+        XCTAssertNil(medium.lensExposureBias(carrying: nil, within: -2...2), "With none carried, the lens keeps its own")
+        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
+            XCTAssertEqual(CaptureBehavior.for(camera).lensExposureBias(carrying: 1, within: -2...2), 0, "\(camera)")
+            XCTAssertEqual(CaptureBehavior.for(camera).lensExposureBias(carrying: nil, within: -2...2), 0, "\(camera)")
         }
     }
 
     func testViewfinderShapesFrameWhatTheCameraDevelops() {
-        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio(landscape: false), 2.0 / 3, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio(landscape: true), 3.0 / 2, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio(landscape: false), 3.0 / 4, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio(landscape: true), 4.0 / 3, accuracy: 1e-9)
-        XCTAssertEqual(ViewfinderShape.square.aspectRatio(landscape: true), 1)
-        XCTAssertEqual(ViewfinderShape.square.aspectRatio(landscape: false), 1)
+        XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio, 2.0 / 3, accuracy: 1e-9, "The Disposable's 3:2, upright")
+        XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio, 3.0 / 4, accuracy: 1e-9)
+        XCTAssertEqual(ViewfinderShape.square.aspectRatio, 1)
         XCTAssertTrue(ViewfinderShape.threeByTwo.cropsCapture)
         XCTAssertTrue(ViewfinderShape.square.cropsCapture)
         XCTAssertFalse(ViewfinderShape.fourByThree.cropsCapture, "The 4:3 viewfinder shows the whole capture")

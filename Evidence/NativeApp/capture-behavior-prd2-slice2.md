@@ -3,6 +3,10 @@
 Software evidence only.
 It is not physical-phone acceptance: the simulator has no camera, so nothing here exercised a real lens, flash or sensor.
 
+> **Superseded in part on 2026-10-16.**
+> The captain withdrew the 6×6 Medium Format's reversed rear viewfinder ("normal viewfinder. No reverse"), so every statement below about it (the table row, "6×6 rear viewfinder (CAP-14)", the label "Rear viewfinder, reversed left to right", the behavior test and the item under "Not Proven Here") describes the code before that date. The rear viewfinder of every Camera is now unreversed and only front viewfinders are mirrored. Its viewfinder shapes written for a portrait or a landscape interface now describe the picture in the viewfinder as the iPhone is held: the shooting screen no longer turns, and the viewfinder's box is the Camera's portrait shape in every hold.
+> This record is kept as it was written; read it with `capture-sideways-zoom-068.md`.
+
 ## What Changed
 
 `CaptureBehavior` (`Packages/NativeAdapters/Sources/NativeAdapters/CaptureBehavior.swift`) is the one place that says how each Camera frames, focuses and exposes.

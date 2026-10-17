@@ -105,7 +105,7 @@ This table was written for the 2026-10-13 pin and is kept as it was; the scenari
 | A development team committed for the app target | `App/Immerse/project.yml`, commit `d9fe760` | Xcode Build and Run, step 5 |
 | Movie time shown as minutes and seconds | `AGENTS.md`, `MovieDurationText` | M18 |
 | The Movie Orientation choice follows the text size, the Film title field is at least 44 points tall and no longer restores a deleted character, and Start a Film is a round button above the Journal's bottom edge, not a toolbar item | [052](qa13-audit-exceptions-052.md), [056](title-field-hit-area-056.md), [057](ci-flakes-057.md), [058](title-autocorrection-058.md) | M02, M28 |
-| PRD 2.1 slice 2: Disposable 3:2 and fixed exposure with its low-light cue, Super 8 fixed focus, 6×6 reversed rear viewfinder | [capture-behavior-prd2-slice2.md](capture-behavior-prd2-slice2.md) | M05 |
+| PRD 2.1 slice 2: Disposable 3:2 and fixed exposure with its low-light cue, Super 8 fixed focus, 6×6 reversed rear viewfinder (withdrawn on 2026-10-16, see [H05](#h05---the-6x6-viewfinder-is-not-reversed)) | [capture-behavior-prd2-slice2.md](capture-behavior-prd2-slice2.md) | M05 |
 | PRD 2.1 slice 1: decade-free 6×6 and 16mm names, 16mm capacity 2:47, the Instant's white card, contrast grades on every Photo Film | [prd-2-slice-1-names-card-copy.md](prd-2-slice-1-names-card-copy.md) | M01, M13, M15, M18 |
 | PRD 2.1 slice 3: Film Stock, color or black-and-white, on the 6×6 and the 16mm | [prd-2-slice-3-film-stock.md](prd-2-slice-3-film-stock.md) | M01, M13, M19 |
 | PRD 2.1 slice 4: a look for each Camera and Film Stock, treatment versions that follow the Film, the color tables of the 16mm and 6×6 color stocks, the 16mm color stock's fixed daylight balance | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md) | M01, M11, M13, M19, M29 and [L01 to L07](#looks-on-a-real-iphone) |
@@ -141,7 +141,7 @@ Before future **agent execution**, Firstmate must supply a concrete action scope
 | Photos exports/container inspection | Only named synthetic test media, explicit add-only writes and read-only access to this test app's container. No personal Photos/library/Keychain dump or deletion. |
 | Trial faults and uninstall | Named production-protocol test artifact, exact failpoints, receipt service and synthetic app data; separately approved delete/reinstall of that app. Approval of a marker does not authorize production Trial consumption/reset. |
 | Backup/restore, OS update or erase | Dedicated/resettable source and destination, protected existing data, exact operation and recovery plan. Whole-device overwrite, account changes and erasure are never inferred from device availability. |
-| Display Zoom, text size, VoiceOver and orientation lock ([W01 to W06](#the-sideways-darkroom-on-a-real-iphone), [D04](#d04---the-crop-tool-on-a-short-screen), [S04](#s04---voiceover-and-the-largest-text-size)) | Only the settings the scenario names, each written down before it is changed and set back after, as the scenario's last step says. For the captain on his own phone these are his own settings; for an agent the row above applies. |
+| Display Zoom, text size, VoiceOver and orientation lock ([W01 to W06](#the-sideways-darkroom-on-a-real-iphone), [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone), [D04](#d04---the-crop-tool-on-a-short-screen), [S04](#s04---voiceover-and-the-largest-text-size)) | Only the settings the scenario names, each written down before it is changed and set back after, as the scenario's last step says. For the captain on his own phone these are his own settings; for an agent the row above applies. |
 | Filling free space ([S01 to S05](#low-storage-on-a-real-iphone)) | Only test filler files the tester adds for the run and removes after it, never the deletion of personal photos, videos, messages, apps or their data. No filling a personal phone to exhaustion (M08); the one case that comes close, S05, runs only if the captain chooses it himself. |
 | Billing | Approved products/configuration, explicit local StoreKit or sandbox mode and account/action scope. No purchase, sandbox account switch, App Store Connect edit or real charge is authorized now. |
 | Distribution | Separate retained ordinary release task plus concrete TestFlight/App Store authority through Firstmate. This handoff authorizes neither. |
@@ -310,7 +310,7 @@ Release, TestFlight and App Store builds keep the StoreKit subscription and one-
 - The switch is **Settings > Debug testing > Testing unlock - Debug build**, the first Settings section. It is saved on the iPhone, so it holds when Immerse is launched from the Home Screen as well as from Xcode.
 - **Turn the switch off before any Trial, locked-load or plan-screen check** (for example T01...T12 and M27). With it off, the Debug build gates new Films exactly as Release does.
 - Films loaded while the unlock was on are subscription Films. After the switch is turned off they keep their capture rights and stay developable, viewable, editable and exportable (ADR 0006), and they stay on the phone until deleted. The Trial remains unused by them.
-- Scenarios L01 to L08, D01 to D04, I01 to I03, S01 to S05 and W01 to W06 are run with the switch on. The earlier builds that L07 and I03 install first have the same unlock, on by default, so no build uses the Trial there.
+- Scenarios L01 to L08, D01 to D04, I01 to I03, S01 to S05, W01 to W06 and H01 to H10 are run with the switch on. The earlier builds that L07 and I03 install first have the same unlock, on by default, so no build uses the Trial there.
 - Hosted tests cover on, off and off-after-on (`App/Immerse/Tests/TestingUnlockTests.swift`) and the indicator and persisted switch across relaunches (`App/Immerse/UITests/TestingUnlockUITests.swift`); outcomes are in [testing-unlock-debug.md](testing-unlock-debug.md). Physical-device behavior is untested until this manual phase.
 
 ## Ordinary App Scenarios
@@ -329,8 +329,8 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M01 / FR-01,03; CAM, SET | Browse all five Cameras; preview approved samples; cancel setup. No Film, capacity debit, Trial consumption, camera/Photos prompt or live filter preview. Descriptive historical names, no capacity chooser, a Film Stock choice only on the 6×6 and 16mm, and no unsupported emulation claim. | Before/after Journal and entitlement; production samples/rights DEC-05 absent, so preview acceptance remains blocked. PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): the 6×6 Medium Format and 16mm Cinema carry no decade in the catalog, Load Film, capture and Film detail, and VoiceOver reads "6×6" as "6 by 6"; each Load Film screen shows its controls and look lines, the 6×6 also its reversed-viewfinder note, and no maker or film is named. PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): only the 6×6 and 16mm Load Film screens offer "Film Stock", Color (selected first) or Black and white; load one Film on each stock and confirm the Film screen names it, and that nothing later changes it. PRD 2.1 slice 4 additions (`prd-2-slice-4-looks.md`, "Load Film copy"): the 16mm look line follows the chosen Film Stock and changes each time the stock is switched, "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white; the Instant's reads "Warm, faded color, soft contrast and soft detail" and the Super 8's "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair". |
 | M02 / FR-03; SET-05,06,08 | Load explicit Camera/capacity/reveal choice; lock final Movie orientation before recording. Load alone saves no capture or developed result. Rename/lens change cannot change package/version/capacity/orientation. Cancel confirmation creates nothing. | Screens and persisted package/state comparison. Valid entitlement and Camera permission required. On the device, change Text Size in Control Center while the load screen is open and confirm the Movie Orientation choice grows with it (049). |
 | M03 / FR-02; UX-01...08 | Maintain several unfinished Films, suggested roll titles, custom rename before/after Development; switch/resume and Archive/restore. Only revealed thumbnails; dates derive from first/last captures; archive changes no capture/reveal/billing state. | Capture timestamps and visible date/title/state before/after. Multiple Films need approved paid test entitlement. |
-| M04 / FR-04; CAP-01...07 | Capture asymmetric text/grid targets rear/front in portrait and both landscape directions. Front preview mirrored; saved originals, developed photos and Movie clips unmirrored and upright. Switch only between saves/clips; no imports, preview treatment or budget reset. | Paired preview recording and decoded output target orientation, hashes and counters. Native camera only. Turn straight from one landscape side to the other with the viewfinder open, and again while a clip records: the viewfinder must stay upright each time. |
-| M05 / FR-01; CAM-02,03,05; CAP-07 | Check Disposable fixed-focus/optional supported flash; Instant package behavior; 6x6 square waist-level framing, focus/exposure. Change each permitted control and switch lens. Unsupported hardware controls absent/disabled with explanation, never inert pretending to work. | Actual lens capability and observable output/focus/exposure; no requirement that front lens support rear capabilities. PRD 2.1 additions (`capture-behavior-prd2-slice2.md`): Disposable viewfinder 3:2 and developed picture 3:2 with no border or date stamp; dim scene without flash develops dark, bright scene is not blank, flash lights only nearby subjects and keeps the fixed focus; low-light cue appears in a dim scene (once flash is off and supported), disappears in daylight without flicker, also right after each capture, never appears for a moment when switching lens in daylight, still appears after switching lens or closing and reopening the camera, never darkens the viewfinder and is announced by VoiceOver; Super 8 holds focus at one lens position with automatic exposure; 6×6 rear viewfinder is reversed left to right, also after switching to the front lens and back, while the saved and developed asymmetric target is not, and the front viewfinder is mirrored as before; a 6×6 exposure bias does not carry into a Disposable or Super 8 Film opened next, and after a 16mm or Super 8 Film the 6×6 focuses where its Focus control shows. Record the active lens, scene light and the exposure the saved file reports. How those exposures look once developed, the real flash included, is [L05](#l05---each-look-on-real-captures-against-its-approved-board). |
+| M04 / FR-04; CAP-01...07 | Capture asymmetric text/grid targets rear/front in portrait and both landscape directions. Front preview mirrored; saved originals, developed photos and Movie clips unmirrored and upright. Switch only between saves/clips; no imports, preview treatment or budget reset. | Paired preview recording and decoded output target orientation, hashes and counters. Native camera only. Turn straight from one landscape side to the other with the viewfinder open, and again while a clip records: the viewfinder must stay upright each time. On the build that follows the pending camera changes the screen itself does not turn, so this is [H01](#h01---the-shooting-screen-held-upright-and-on-each-side) and [H04](#h04---photos-and-clips-taken-sideways). |
+| M05 / FR-01; CAM-02,03,05; CAP-07 | Check Disposable fixed-focus/optional supported flash; Instant package behavior; 6x6 square framing, focus/exposure (the pinned candidate's rear viewfinder is still reversed left to right; the build that follows the pending camera changes shows it the normal way, [H05](#h05---the-6x6-viewfinder-is-not-reversed)). Change each permitted control and switch lens. Unsupported hardware controls absent/disabled with explanation, never inert pretending to work. | Actual lens capability and observable output/focus/exposure; no requirement that front lens support rear capabilities. PRD 2.1 additions (`capture-behavior-prd2-slice2.md`): Disposable viewfinder 3:2 and developed picture 3:2 with no border or date stamp; dim scene without flash develops dark, bright scene is not blank, flash lights only nearby subjects and keeps the fixed focus; low-light cue appears in a dim scene (once flash is off and supported), disappears in daylight without flicker, also right after each capture, never appears for a moment when switching lens in daylight, still appears after switching lens or closing and reopening the camera, never darkens the viewfinder and is announced by VoiceOver; Super 8 holds focus at one lens position with automatic exposure; on the pinned candidate the 6×6 rear viewfinder is reversed left to right (not on the build that follows, [H05](#h05---the-6x6-viewfinder-is-not-reversed)), also after switching to the front lens and back, while the saved and developed asymmetric target is not, and the front viewfinder is mirrored as before; a 6×6 exposure bias does not carry into a Disposable or Super 8 Film opened next, and after a 16mm or Super 8 Film the 6×6 focuses where its Focus control shows. Record the active lens, scene light and the exposure the saved file reports. How those exposures look once developed, the real flash included, is [L05](#l05---each-look-on-real-captures-against-its-approved-board). |
 | M06 / FR-04; CAP-08,09 | Deny/restrict Camera, reopen setup and camera, then grant only within authorized settings scope. On the device, confirm Open iPhone Settings from the capture screen reaches Immerse's settings and the shutter stays on screen (048 simulator layout check). No false load/save/capacity debit; recover without losing prior Films. Test initial offline Trial start and existing entitled offline capture. | Permission state, error, counts, actual offline state. Restricted-state setup may require dedicated device/configuration; don't change personal restrictions. |
 | M07 / FR-04,05; CAP-09; QA-13 | Interrupt photo save and Movie recording by background, lock, camera interruption/call and process termination. Saved captures survive; valid interrupted footage saved once, invalid unsaved footage spends nothing, recording never auto-resumes. Retry/rapid repeated command never duplicates. Open Camera on a Film whose previous save is still finishing and tap Done at once: the camera indicator must turn off and stay off (046 software ordering check). | Native event timeline, decoded valid clips, once-only IDs/duration, pre/post relaunch state. Controlled call/fault authority needed. |
 | M08 / FR-04,08; CAP-09; QA-09,13 | Exercise low-space/camera unavailable/failed durable write and recovery. Preserve all previous media; no false successful-save/capacity/Trial acknowledgment. Free only authorized synthetic test allocations; retry same pending save. | Storage levels, actual failure and recovery, receipt matrix below. No filling a personal phone to exhaustion. DEC-12's targets were approved on 2026-10-13 and none is measured; its warning below 2 GB free is built (CAP-15, [062](low-storage-warning-062.md)), and [S01 to S05](#low-storage-on-a-real-iphone) carry its device checks, S05 only by the captain's own choice. |
@@ -1794,6 +1794,319 @@ Where VoiceOver's focus goes after a turn is not on record; write it down, and i
 **Write down.**
 The list of what VoiceOver read, each way round, where focus went after each turn, and the recording.
 
+## The Sideways Shooting Screen and the Zoom Steps on a Real iPhone
+
+On 2026-10-16 the captain withdrew the 6×6 Medium Format's reversed viewfinder ("normal viewfinder. No reverse"), chose that the shooting screen never turns ("Like iPhone Camera") and asked that the 6×6 zoom in the iPhone's own steps ("as allowed by camera native"); [ADR 0017](../../2026-09-29-film-camera-experience-v1/adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and [capture-sideways-zoom-068.md](capture-sideways-zoom-068.md) record them.
+It ran on simulators only, and the simulator has no camera.
+These ten scenarios are what it leaves for a phone, taken from "Not Proven Without a Phone" in that record: the live picture and its turn, real lenses and their labels, the saved photo's and clip's orientation, and the turned words in the hand.
+All ten read **UNTESTED: physical execution deferred**.
+
+**They belong to the build that follows the pending camera changes, not to the candidate pinned at the top of this plan.**
+The pinned candidate still shows the 6×6's rear viewfinder reversed, still turns the shooting screen with the iPhone and has no zoom steps, so none of H01 to H10 can pass on it, and M05's reversed-viewfinder check stands for it alone.
+This plan was not re-pinned for them: a separate re-pin will name the build that holds them, and until it does these scenarios are not run.
+
+Like L01 to L08 and W01 to W06, they are written to be run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, and they use the common steps and the "What to write down" rule of [Looks on a Real iPhone](#before-you-start).
+The authority and stop conditions at the top of this plan apply to each of them unchanged.
+
+| Case / requirement | Actions and expected result | Evidence / extra prerequisite |
+| --- | --- | --- |
+| H01 / FR-04; CAP-03, QA-13 | Open the camera of each of the five Cameras and hold the iPhone upright, with its top to your left and with its top to your right. The screen never turns: the viewfinder is the same size in the same place in all three holds, and Done, what is left, the status, Switch Camera, the flash and the zoom steps turn to read upright when the iPhone is on its side. Nothing is clipped or overlapping, and every control can be reached with the thumbs. | A screenshot of each Camera in each hold, the viewfinder's edges compared between the three, the captain's words on how it feels. [Steps](#h01---the-shooting-screen-held-upright-and-on-each-side). |
+| H02 / FR-04; QA-13 | Step the text size from the default to the largest on the 6×6 and the Disposable, held upright and on each side. The header stays in view and legible; once it is too long for the screen turned, it scrolls across the screen, which is up and down for you, and every control stays reachable. | Screenshots at each size, the text size setting before and after. [Steps](#h02---text-sizes-on-the-shooting-screen-held-sideways). |
+| H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture reads upright and fills the same viewfinder, as in the iPhone's Camera app, which held so is the Camera's landscape shape: a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm, square for the Instant and the 6×6. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
+| H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, while the words and icons turn with the iPhone to read upright. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
+| H05 / FR-04; CAP-05, CAP-14 | The 6×6's rear viewfinder shows a page of text the normal way, not reversed, also after switching to the front lens and back; the front viewfinder is mirrored; the saved and developed pictures of both are not. Every other Camera is as before. | A paired viewfinder screenshot and developed picture of an asymmetric target, rear and front. [Steps](#h05---the-6x6-viewfinder-is-not-reversed). |
+| H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step, of any lens, only where the Camera app also shows it, no zoom control on the front camera or on any other Camera, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
+| H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
+| H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
+| H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
+| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera, its question and the Darkroom opened from that print keep the camera's portrait layout with the iPhone on its side, as the captain chose ("Instant - 1"); as each rises, gives way to the next and closes, the camera beneath is always in its portrait layout, never turned; and after they close the camera, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+
+**What the build does, from the record and the code.**
+
+- The shooting screen keeps the portrait layout in every hold.
+  The viewfinder box is the Camera's portrait shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm), the same size in the same place whichever way the iPhone is held.
+  The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two rows), and it never changes size when a message comes or goes.
+  The 6×6's Focus and Exposure rows are always there, so the viewfinder does not move when the camera opens, switches or takes a zoom step; where the lens cannot do one, its row says so in the slider's place ("Manual focus unavailable on this lens", "Exposure unavailable on this lens").
+  Held upright, the screen is as it was except that **Done** is a button at the top of the screen's own content, not in a navigation bar, and the header keeps the room it needs turned, so the viewfinder sits a little lower.
+- Held on its side, the live picture fills the viewfinder and reads upright, as in the iPhone's Camera app: the box, portrait on the screen, is then the landscape shape the Camera develops to (a square stays square), with no black band around the picture.
+- Held on its side, the header (**Done**, the Camera's name, what is left and the status of a complete Film) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; where the screen has room to spare, as on a tall iPhone with a square viewfinder, the name and the count each read on one line, and the viewfinder sits centred in the room under the header's lines, with Done in the same place just below the status bar on every Camera.
+  The error, the message, **Open iPhone Settings**, **Resume Camera**, the flash and fixed exposure notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
+  The focus and exposure captions turn beside their sliders, and the zoom steps turn too.
+  At the largest text sizes the error, the message, the buttons and the notes are part of the header instead, where they scroll.
+  The Switch Camera, flash and microphone icons in the shutter bar turn in place.
+  The shutter does not turn.
+- A header too long to fit turned scrolls across the screen, from its top, and below the smallest viewfinder (220 points) the screen scrolls up and down, as at the largest text sizes.
+- Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
+- A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words and icons still turn with the iPhone.
+- The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera or on another Camera.
+  Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures; the buttons are dimmed while the camera is busy.
+  Your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
+  Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
+  Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
+- Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
+  Opened from the Journal or the Film screen, the same print and its Darkroom turn with the iPhone, the Darkroom side by side as in W01.
+- While no lens is running (the camera starting, asking for access, refused or unavailable) the 6×6's rows are empty and no "... unavailable on this lens" note shows.
+
+**What this iPhone should show, and what it cannot.**
+The iPhone 13 Pro has an ultra wide, a wide and a telephoto lens, so its Camera app should list 0.5x, 1x and 3x; the 6×6 should list the same labels.
+That is worked out from Apple's published lenses, not observed: write down what the Camera app shows first, on this phone and this iOS, and judge the 6×6 against that.
+No one-lens iPhone, no 5x telephoto and no iPhone with a native 2x crop is on record ([Device and Matrix Prerequisites](#device-and-matrix-prerequisites)), so the zoom-step derivation for those rests on the unit tests with injected lenses, not on a phone.
+Nor is an iPhone 17 Pro, whose Camera app shows 0.5x, 1x, 2x, 4x and 8x: whether its camera reports the 8x as a native crop of its 4x telephoto lens, which the 6×6 would then offer, is unconfirmed until the captain checks it on that phone.
+The 13 Pro's result stands for its own lenses only.
+
+**You need, for all ten.**
+All five Cameras loaded as Films with the Debug testing unlock on, a Disposable, an Instant, a 6×6 Medium Format (either Film Stock), a Super 8 and a 16mm.
+A printed page of text with something asymmetric and large on it, such as a big letter R, and the gray card and colored objects of the earlier scenarios.
+A room you can make dim, for the Disposable's cue.
+**Portrait Orientation Lock** off in Control Center, so the phone reports how it is held; write down how it was and set it back at the end.
+Before H01, write down the text size and have it at the default (the middle mark of **Larger Text** with **Larger Accessibility Sizes** off), and write down the zoom labels the iPhone's own Camera app shows for the rear camera in photo mode.
+Keep every photo and clip as test media, out of Git.
+
+### H01 - The shooting screen held upright and on each side
+
+**Steps.**
+
+1. On each of the five Cameras, tap **Open Camera** with the iPhone upright and take a screenshot.
+2. Turn the iPhone onto its side, its top to your left, and hold it in both hands as you would to take a photo.
+   Take a screenshot, reach **Done**, Switch Camera, the shutter and, on the Disposable, the flash with a thumb, and read what is left and the status aloud.
+3. Turn it to its other side, its top to your right, and do the same.
+4. Turn it upright again, and tap **Done**.
+5. On the Disposable, in a dim room with the flash off, repeat steps 1 to 3 while the low-light cue shows.
+6. Repeat the Disposable's steps 1 to 3 once with **Portrait Orientation Lock** on in Control Center, and write down what the camera does, and what the iPhone's own Camera app does.
+
+**Expect.**
+
+- The screen stays in the portrait layout in all three holds: the viewfinder keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words and the icons turning; the picture keeps reading upright and filling the viewfinder.
+- The whole viewfinder shows above the shutter bar in every hold, on every Camera, with nothing of it behind the bar; a message or Resume Camera showing over it, and then going, does not change its size or place.
+- Held on its side, every word and icon reads upright, the count and status are legible, and nothing is clipped, hidden behind the shutter bar or overlapping the viewfinder or another control: the notes, the captions, the cue, the message and the zoom labels are whole.
+- **Done** is a button of at least the size of a thumb tip, wherever it sits in each hold.
+- The Disposable's cue reads upright on its side, in a dark capsule at the edge of the viewfinder that is its top.
+
+**It fails if.**
+
+- The screen turns, the viewfinder changes size or place, or its edge moves by more than a point.
+- A word or icon reads sideways or upside down for the way the iPhone is held (upside-down portrait is the one hold not handled), or is clipped or overlapped.
+- A control cannot be reached or tapped in a hold.
+
+**What is a finding and not a failure.**
+How the turned words feel, whether the header's place against the screen's edge is where the captain expects it, and what the camera does with **Portrait Orientation Lock** on, are his to judge; a change would be his decision.
+The viewfinder is narrower than the screen on a short iPhone, a smaller picture than the room beside it could frame; that is the cost of showing the whole of it, and the size is his to judge.
+
+**Write down.**
+Each Camera and hold, a screenshot of each, any control that did not respond, and the captain's words on the feel.
+
+### H02 - Text sizes on the shooting screen held sideways
+
+**Steps.**
+
+1. On the 6×6 and on the Disposable, open the camera upright at the default text size and turn the iPhone onto its side, its top to your left.
+2. Move the text size up one step at a time with the Text Size control in Control Center, using the **Larger Accessibility Sizes** switch after the last mark, to the largest.
+3. At each step take a screenshot held on this side, tap **Done** once at the largest size to confirm it is reachable, and open the camera again.
+4. Repeat at the largest size with its top to your right and upright.
+5. Set the text size back, and write down that you did.
+
+**Expect.**
+
+- The header and the controls stay legible and in the same order at every size; at the largest sizes the error, the message and the notes are in the header, not over the viewfinder.
+- Once the header is too long for the screen turned, it scrolls across the screen, which is up and down for you, from its top; **Done** is in view at the start.
+- The shutter, Switch Camera and the zoom steps stay reachable, and the viewfinder is not hidden behind anything.
+
+**It fails if.**
+
+- Any control cannot be reached or tapped at a size, or the header runs off the screen with no way to scroll it.
+
+**Write down.**
+The size, the hold, a screenshot, whether the header scrolled, and the settings before and after.
+
+### H03 - The shape of the live picture held sideways
+
+**Steps.**
+
+1. On each Camera, frame the printed page held upright, with an edge and a corner of the page just inside the viewfinder, and take a screenshot.
+2. Turn the iPhone onto its side and frame the same corners again, so the same part of the page is in the viewfinder, and take a screenshot.
+3. Take the photo (a clip for the Movie Cameras), then develop it or, for the Instant, open the print, and compare the edge and corner with the screenshot.
+
+**Expect.**
+
+- Held on its side, the viewfinder shows the page upright and the picture fills the whole box, which held so is the Camera's landscape shape (3:2 or 4:3; square for the Instant and the 6×6), with no black band around the picture.
+- What the viewfinder frames is what is saved: the developed picture's edges are where the viewfinder's were.
+
+**It fails if.**
+
+- The picture in the viewfinder is turned, stretched, smaller than the box or cropped differently from the saved result.
+
+**Write down.**
+For each Camera, the screenshots, the developed result and where its edge differs from the viewfinder's, if it does.
+
+### H04 - Photos and clips taken sideways
+
+**Steps.**
+
+1. On a Disposable and a 6×6, take a photo of the printed page upright, one on each side, and develop.
+2. On the Super 8, start a clip with the iPhone upright, turn it onto its side while it records, and stop; start another on its side and turn it upright while it records, and stop.
+3. Develop, and open the Movie.
+
+**Expect.**
+
+- Each photo is upright in its picture and is the shape its hold gives (the Disposable wide when held on its side, the 6×6 square).
+- Each clip stays in the orientation it started in, and plays as such, whichever way the iPhone was turned while it recorded.
+- While a clip records, the words and icons, the red countdown among them, turn with the iPhone to read upright.
+
+**It fails if.**
+
+- A photo develops turned or mirrored, or a clip changes orientation partway.
+- The countdown or another word reads sideways while a clip records with the iPhone turned.
+
+**Write down.**
+Each photo and clip, the hold, and how it appears once developed.
+
+### H05 - The 6x6 viewfinder is not reversed
+
+**Steps.**
+
+1. On the 6×6, frame the page of text so the big letter R is in the viewfinder, and take a screenshot.
+2. Switch to the front lens and back, and take a screenshot again.
+3. Take a photo with each lens, develop, and compare each viewfinder screenshot with its developed picture.
+4. Open the Disposable and the Super 8 and compare their viewfinders the same way.
+
+**Expect.**
+
+- The 6×6's rear viewfinder shows the page and the letter as you see them, not reversed, before and after switching.
+- The front viewfinder is mirrored, as before, and every saved and developed picture is not.
+
+**It fails if.**
+
+- The rear viewfinder of any Camera is reversed, or any developed picture is reversed or mirrored.
+
+**Write down.**
+The screenshots and developed pictures, rear and front.
+
+### H06 - The zoom steps on this iPhone
+
+**Steps.**
+
+1. Open the 6×6 and compare its zoom steps with the labels written down from the iPhone's Camera app.
+2. Tap each step in turn and take a screenshot, noting the view each shows.
+3. Switch to the front lens and open each of the other Cameras in turn.
+4. Zoom the 6×6 to its narrowest step, tap **Done**, open the 6×6 again, then open a Disposable, an Instant and a Super 8.
+
+**Expect.**
+
+- The 6×6 lists the same steps as the Camera app, each labeled the same, and each shows that lens's view: 0.5x the widest, 1x the middle, the telephoto step the narrowest.
+- No step the iPhone lacks; a native crop step of any lens, such as 2x, only where the Camera app also lists it.
+- A tap never lands on a step other than the one tapped: a step is taken, or the camera stays where it was.
+- The front camera and every other Camera show no zoom steps.
+- The 6×6 is on 1x each time it opens, and the other Cameras opened after it are not zoomed.
+
+**It fails if.**
+
+- A step is missing, extra or labeled differently from the Camera app, or a step does not change the view.
+- A zoom step shows on another Camera or the front camera, the 6×6 does not open on 1x, or another Camera opens zoomed.
+
+**What is a finding and not a failure.**
+Whether a native crop step appears, and where, is the iPhone's own to say; the 13 Pro has no high-resolution wide sensor, so none is expected.
+A crop step that, tapped, leaves the pill while the camera stays on the step it was on is the app refusing a crop the lens's format does not report once it runs, rather than enlarging digitally; write down which step did it.
+
+**Write down.**
+The Camera app's labels, the 6×6's labels, each step's screenshot and which Cameras show steps.
+
+### H07 - Focus, exposure and a zoom while a photo saves
+
+**Steps.**
+
+1. At each step, drag the Focus slider across its range on a near and a far object, and drag the Exposure slider.
+2. Write down any step on which the note "Manual focus unavailable on this lens" shows in place of the Focus slider.
+3. At 1x, set the Exposure to +1.0 EV, then tap each other step and back to 1x, watching the Exposure value and the viewfinder's edges.
+4. Tap the shutter and, at once, tap another zoom step; repeat a few times, and then develop the Film.
+
+**Expect.**
+
+- The Focus slider changes focus at each step whose lens can focus by hand, and the note shows in its place at a step whose lens cannot.
+- The Exposure value stays +1.0 EV at every step, or the nearest a lens allows, and the picture's brightness with it; the viewfinder does not move as a slider gives way to a note or back.
+- A zoom step tapped while a photo saves does nothing, and the photo is from the lens that was active at the shutter.
+
+**It fails if.**
+
+- A control shows that does nothing, or the note shows where the lens focuses by hand.
+- The Exposure value falls back to 0.0 EV, or the viewfinder moves, on a zoom step.
+- A zoom step changes the lens while a photo saves, or the app fails.
+
+**Write down.**
+Per step: focus, the note, the exposure value shown; and the lens each saved photo reports.
+
+### H08 - The 6x6 picture at every zoom step
+
+**Steps.**
+
+1. Take one exposure of the same scene at each zoom step.
+2. Develop the Film, and save the developed copies to Photos.
+3. In Photos, read the size of each and compare each with the 1x picture.
+
+**Expect.**
+
+- Each is a borderless square of 3072 by 3072 pixels.
+- The telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera app gives at that step.
+
+**It fails if.**
+
+- A picture is not square or not 3072 by 3072, or has a border.
+
+**What is a finding and not a failure.**
+How much detail a telephoto or crop step keeps is the captain's eye to judge; the software has not measured it.
+
+**Write down.**
+The size of each, a screenshot of each, and his words on detail.
+
+### H09 - Done while the iPhone is sideways
+
+**Steps.**
+
+1. Open the camera, hold the iPhone on its side and tap **Done**.
+2. On the Film screen and then the Journal and Settings, keep it on its side and note whether each is in landscape.
+3. With the iPhone still on its side, open the camera again.
+4. Leave the camera with the iPhone on its side by swiping to the Home Screen and return.
+
+**Expect.**
+
+- The Film screen turns with the iPhone as soon as the camera has closed, and so do the Journal and Settings.
+- The camera opens in the portrait layout, with no flash of a landscape layout.
+- Returning from the Home Screen leaves the shooting screen in the portrait layout.
+
+**It fails if.**
+
+- A screen stays portrait with the iPhone on its side after the camera has closed.
+- The camera opens in a landscape layout.
+
+**Write down.**
+A screen recording of each turn.
+
+### H10 - The Darkroom and an Instant print after the camera
+
+**Steps.**
+
+1. After H01 to H09, open a developed Disposable photo's Darkroom from the Journal, hold the iPhone on its side, and compare with W01.
+2. On the Instant, with the iPhone on its side, start a screen recording and take a photo.
+3. When the print opens over the camera, keep the iPhone on its side, tap **Darkroom** on it, look at the Darkroom's arrangement, and close the Darkroom.
+4. Tap **Done** on the print, answer the question about its original (**Cancel** leaves it) and look at the camera.
+5. Step through the recording frame by frame where the print rises, where the Darkroom opens and closes over it, where the print gives way to the question, and where the question closes.
+
+**Expect.**
+
+- The Darkroom opened from the Journal is side by side held sideways, as in W01, including after the camera was used.
+- The print, the Darkroom opened from it and the question keep the camera's portrait layout and read sideways with the iPhone on its side, the Darkroom in its portrait arrangement, as the captain chose ("Instant - 1", ADR 0017).
+- In every frame, the camera beneath the sheets is in its portrait layout, with its words turned to read upright as you hold the iPhone; it is never laid out in a landscape window, never with a short viewfinder, and never with words that read sideways.
+- When the sheets close, the camera is in the portrait layout and starts again by itself.
+
+**It fails if.**
+
+- The Darkroom opened from the Journal stays in the portrait layout with the iPhone on its side.
+- The Darkroom opened from the print over the camera turns to its side-by-side arrangement.
+- Any frame shows the camera in a landscape window or with its words reading sideways, or the window turns at all while the print, its Darkroom and its question come and go.
+- The camera is left in a landscape layout.
+
+**Write down.**
+Screenshots, and the screen recording of the Instant case with the frames of each transition.
+
 ## The Instant Camera Staying On on a Real iPhone
 
 On 2026-10-16 the captain reported that the Instant showed "Camera paused. Saved captures are unchanged." and a Resume Camera button after every exposure; the camera now starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md)).
@@ -1921,11 +2234,11 @@ nonmigration are both required; one cannot substitute for the other.
 
 | Canonical acceptance rows | Required runbook evidence |
 | --- | --- |
-| FR-01 A01...A11 | M01, M02, M04, M05, M09, M18...M20, M30, and for A11 (each look judged against its Format Reference, no aging added) L01, L03, L05 and I01; quality and rights decisions remain open. |
+| FR-01 A01...A11 | M01, M02, M04, M05, H03, H08, M09, M18...M20, M30, and for A11 (each look judged against its Format Reference, no aging added) L01, L03, L05 and I01; quality and rights decisions remain open. |
 | FR-02 A01...A02 | M03, M12, M24. |
 | FR-03 A01...A03 | M01, M02, M06, T01. |
-| FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05. |
-| FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
+| FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05; the shooting screen held sideways, the 6×6's viewfinder and its zoom steps are H01 to H10, which belong to the build after the pinned candidate. |
+| FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06, and H04 for a clip's orientation; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
 | FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03. |
 | FR-07 A01...A05 | M13, M14, M28, D01, D04, I02, W01 to W06 (the Darkroom held sideways), with A05 (no crop on an Instant print) in M13; the ranges were approved on 2026-10-13. |
 | FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, D03 for the Instant's question about each original, and L08 for how an exported Movie looks elsewhere. |

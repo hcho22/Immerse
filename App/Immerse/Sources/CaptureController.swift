@@ -24,6 +24,8 @@ final class CaptureController {
     /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
     private var metersSceneLight = false
     var message: String?
+    /// How many captures this controller has saved, so a screen can show "Saved" for a moment after each.
+    private(set) var savedCount = 0
     /// The camera is stopped only to show an Instant print, so it starts again by itself when the last print and its
     /// question close, and the wait lasts until that restart's `open` ends. The app going inactive meanwhile (a
     /// permission prompt, Control Center) keeps it; any other stop (`suspend`, a real interruption, a failed save) ends it.
@@ -32,11 +34,26 @@ final class CaptureController {
     var focus: Double = 0.8
     var exposure: Double = 0
     var orientation = CaptureFrameOrientation.portrait
+    /// How the iPhone is held, which the shooting screen turns its words and icons to. Unlike `orientation`, it keeps
+    /// following the iPhone while a clip records.
+    private(set) var held = CaptureFrameOrientation.portrait
     var recordingStarted: Date?
     /// Whether the capture screen is on screen; the Journal alert cannot appear over it.
     var presented = false
+    #if DEBUG
+    fileprivate var heldForTesting: CaptureFrameOrientation?
+    fileprivate var lensSetForTesting = false
+    #endif
 
     init(authorizer: any CapturePermissionAuthorizing) { self.authorizer = authorizer }
+
+    /// Whether a lens is running, so `controls` are what it reports: the viewfinder is live.
+    var lensIsLive: Bool {
+        #if DEBUG
+        if lensSetForTesting { return true }
+        #endif
+        return preview != nil
+    }
 
     /// The Disposable's viewfinder advises flash in low light, only when flash is available and still off:
     /// a cue for a control the active lens lacks would advise something it cannot do.
@@ -88,6 +105,7 @@ final class CaptureController {
                     case .photoSaved, .movieClipSaved:
                         recordingStarted = nil
                         message = "Saved"
+                        savedCount += 1
                         model.refresh()
                         if film.camera.revealRule == .instantPerExposure {
                             model.developSavedPrint(film.id) { [weak self, weak model] text in
@@ -156,6 +174,14 @@ final class CaptureController {
         position = next
         flash = false
         if request == sessionRequest { watchSceneLight(behavior: .for(camera.id)) }
+        controls = await backend.controls()
+        exposure = Double(controls.exposureBias)
+    }
+
+    /// Takes a zoom step of the iPhone's own lenses (the 6×6's rear camera). Only between exposures, like a lens switch.
+    func selectZoomStep(_ step: ZoomStep) async throws {
+        guard let backend else { return }
+        try await backend.selectZoomStep(step)
         controls = await backend.controls()
         exposure = Double(controls.exposureBias)
     }
@@ -250,10 +276,20 @@ final class CaptureController {
         recordingStarted = nil
     }
 
-    /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now.
+    /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now. The shooting
+    /// screen's words and icons follow `held`, also while a clip records; its preview stays upright in the portrait
+    /// interface it holds.
     func updateOrientation() {
-        guard phase != .recordingMovie, let held = CaptureFrameOrientation(device: UIDevice.current.orientation) else { return }
-        orientation = held
+        guard let reading = heldReading else { return }
+        held = reading
+        if phase != .recordingMovie { orientation = reading }
+    }
+
+    private var heldReading: CaptureFrameOrientation? {
+        #if DEBUG
+        if let heldForTesting { return heldForTesting }
+        #endif
+        return CaptureFrameOrientation(device: UIDevice.current.orientation)
     }
 
     private func updatePhase(_ backend: AVFoundationCaptureBackend?) async {
@@ -273,24 +309,23 @@ extension CaptureFrameOrientation {
         default: return nil
         }
     }
-
-    /// The held orientation an interface orientation shows; their landscape names are swapped.
-    init?(interface: UIInterfaceOrientation) {
-        switch interface {
-        case .portrait: self = .portrait
-        case .portraitUpsideDown: self = .portraitUpsideDown
-        case .landscapeLeft: self = .landscapeRight
-        case .landscapeRight: self = .landscapeLeft
-        default: return nil
-        }
-    }
 }
 
 #if DEBUG
 extension CaptureController {
-    /// Hosted tests have no camera, so they set what a lens would report.
+    /// Hosted tests cannot turn the iPhone, so they set how it is held.
+    func hold(forTesting held: CaptureFrameOrientation) {
+        heldForTesting = held
+        updateOrientation()
+    }
+
+    /// Hosted tests have no backend, so they set the phase it would report.
+    func setForTesting(phase: CapturePhase) { self.phase = phase }
+
+    /// Hosted tests have no camera, so they set what a running lens would report.
     func setForTesting(controls: NativeCameraControls, sceneEV100: Double? = nil) {
         self.controls = controls
+        lensSetForTesting = true
         if let sceneEV100 {
             lowLightCue.update(sceneEV100: sceneEV100)
             isLowLight = lowLightCue.isShowing

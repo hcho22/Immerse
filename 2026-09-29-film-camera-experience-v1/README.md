@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 2.1 (updated October 7, 2026; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
+**Prepared:** September 29, 2026 · **Version:** 2.1 (updated October 7, 2026, and amended October 16, 2026 by ADR 0017; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 
@@ -8,7 +8,7 @@
 
 1. Read the [detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) for the product scope, users, user stories, user journeys, Camera catalog, rules, acceptance criteria, state model, proposed engineering modules, and unresolved decisions. Group and Account requirements are preserved in its "Deferred to v2" section 8. Version 1.5 stays unchanged in [its own file](2026-09-29-film-camera-experience-v1-prd.md) as history; PRD 2.0 supersedes it. "Version 2.1" is the version of this document set, and "v2" still means the later release with Groups and Accounts.
 2. Use the [task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) to record implementation progress. Task IDs map to the PRD; completed discovery is separated from unfinished native work, and Group-only and Account-only tasks are listed under Deferred to v2.
-3. Read the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md) for all eleven original decisions, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0), ADR 0016 (added on 2026-10-10) and reconciliation notes, including which ADRs now apply only to v2. Individual ADRs are also included in `adr/`.
+3. Read the [ADR collection](2026-09-29-film-camera-experience-v1-adrs.md) for all eleven original decisions, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0), ADR 0016 (added on 2026-10-10), ADR 0017 (added on 2026-10-16) and reconciliation notes, including which ADRs now apply only to v2. Individual ADRs are also included in `adr/`.
 4. Read the [architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md) for the approved v1 system shape, component mapping, on-device data model rules, Apple interface responsibilities, cost floor, ranked risks with early checks, and baseline defaults (added in version 1.3).
 5. Consult the [domain-model snapshot](sources/CONTEXT.md), the project's glossary and domain rules (refreshed in version 2.0), and [prototype notes](sources/PROTOTYPE-NOTES.md) for detailed provenance and limitations.
 6. Read the [requirement evidence map](2026-09-29-film-camera-experience-v1-evidence-map.md) and [clause-level acceptance companion](2026-09-29-film-camera-experience-v1-acceptance-evidence.md) for implementation locations, observed local checks, remaining native/hardware gates and the unresolved Trial first-save conflict.
@@ -24,7 +24,8 @@ The captain's answers of 2026-10-06 are recorded in the tracker: looks are check
 On 2026-10-07 the captain decided that Darkroom contrast grades apply to every Photo Film, color included (this reversed his 2026-10-06 answer that color Films get no contrast control), with chemical toning staying black-and-white only; the PRD was amended to version 2.1 in its same file.
 On 2026-10-10, on their look review boards, the captain chose a faded look for the 1970s Instant ("faded") and a muted look with a highlight glow for the 1960s Super 8 Home Movie ("muted with a glow"), exceptions to ADR 0013 and to the wording of PRD sections 6.1 and 6.2 for those two Cameras, and on 2026-10-11 a black point lifted to about 4 percent for the 16mm Cinema's color Film Stock, which he kept on 2026-10-12 when that Film Stock and the 6×6 Medium Format's color Film Stock took the looks in his own files; ADR 0016 records them, the ADR collection's reconciliation notes say how they change the way ADR 0013 and PRD sections 6.1 and 6.2 apply, and the tracker records his words.
 On 2026-10-13, after a study of preserved 1970s prints, he chose the Instant's contrast on its board ("B"), recorded in ADR 0016 as a new treatment version, and on a comparison board of toned black-and-white 6×6 prints he set the toning range ("sepia - untoned to 1. selenium - untoned to 1"); the tracker's decisions table has both.
-PRD 2.0 (apart from the 2026-10-07 contrast amendment above) and ADRs 0013 to 0015 are the captain's text and are copied unchanged; PRD version 1.5 and ADRs 0001 to 0012 stay byte for byte as they were.
+On 2026-10-16, after trying the build on his iPhone, he withdrew the 6×6 Medium Format's reversed viewfinder ("normal viewfinder. No reverse"), chose that the shooting screen never turns and only its words and icons do ("Like iPhone Camera"), and asked that the 6×6 zoom in the iPhone's own steps ("as allowed by camera native"); ADR 0017 records the three, and PRD section 6.1, FR-03 and FR-04 were amended in the same file at his request, with the earlier wording kept in the PRD's note of that date and in the tracker.
+PRD 2.0 (apart from the 2026-10-07 contrast amendment and the 2026-10-16 viewfinder amendment above) and ADRs 0013 to 0015 are the captain's text and are copied unchanged; PRD version 1.5 and ADRs 0001 to 0012 stay byte for byte as they were.
 The tracker gained fourteen tasks and the evidence map and acceptance companion gained matching rows, all untested, because no app code changed.
 PRD 2.0's document guide says ADRs 0013 to 0015 are "not yet in this collection"; they are now.
 No FR, DEC or section number and no existing task ID changed.
@@ -76,8 +77,8 @@ Production implementation tasks remain unchecked. No final pricing, delivery cal
 - Dated architecture baseline (version 1.1; version 1.0 was added in version 1.3).
 - Dated implementation evidence map (added in version 1.5).
 - Dated open-decision recommendations (added during implementation; the recommendations are not approved decisions, and the addenda record what the captain then decided).
-- Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADRs 0012 to 0016.
-- Eleven original Markdown ADR files, unchanged, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0, as delivered) and ADR 0016 (added on 2026-10-10 and extended on 2026-10-11, 2026-10-12 and 2026-10-13 from the captain's answers on the Instant's, the Super 8's, the 16mm's and the 6×6's review boards).
+- Dated consolidated ADR Markdown document, with v1/v2 applicability notes and ADRs 0012 to 0017.
+- Eleven original Markdown ADR files, unchanged, ADR 0012 (added in version 1.2), ADRs 0013 to 0015 (added in version 2.0, as delivered), ADR 0016 (added on 2026-10-10 and extended on 2026-10-11, 2026-10-12 and 2026-10-13 from the captain's answers on the Instant's, the Super 8's, the 16mm's and the 6×6's review boards) and ADR 0017 (added on 2026-10-16: the shooting screen never turns, the 6×6's viewfinder is the normal one and the 6×6 zooms in the iPhone's own steps).
 - Source snapshots: CONTEXT.md (refreshed in version 2.0) and PROTOTYPE-NOTES.md, each with a v1 scope note at the top.
 - This README.
 

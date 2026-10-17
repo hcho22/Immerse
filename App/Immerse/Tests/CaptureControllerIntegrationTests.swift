@@ -261,10 +261,9 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertNil(model.alert, "Over the camera the failure shows once, on the camera")
     }
 
-    func testViewfinderFollowsTheInterfaceWhoseLandscapeNamesAreSwapped() {
-        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeRight)?.rotationAngle, 0, "Home side right")
-        XCTAssertEqual(CaptureFrameOrientation(interface: .landscapeLeft)?.rotationAngle, 180)
-        XCTAssertEqual(CaptureFrameOrientation(interface: .portrait)?.rotationAngle, 90)
+    /// A saved capture follows how the iPhone is held; the viewfinder stays upright in the portrait interface the shooting
+    /// screen holds.
+    func testCaptureFollowsHowTheIPhoneIsHeld() {
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeLeft)?.rotationAngle, 0, "Home side right")
         XCTAssertEqual(CaptureFrameOrientation(device: .landscapeRight)?.rotationAngle, 180)
         XCTAssertNil(CaptureFrameOrientation(device: .faceUp))
@@ -418,6 +417,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: root) }
         var withFlash = NativeCameraControls()
         withFlash.flash = true
+        withFlash.fixedExposure = true
         for (camera, cue) in [(CameraCatalog.disposable1990s, true), (CameraCatalog.mediumFormat6x6, false),
                               (CameraCatalog.super8HomeMovie, false)] {
             let film = try model.repository.createFilm(
