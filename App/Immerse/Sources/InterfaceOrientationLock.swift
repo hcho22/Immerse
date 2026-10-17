@@ -49,7 +49,9 @@ enum InterfaceOrientationLock {
                 current.setNeedsUpdateOfSupportedInterfaceOrientations()
                 controller = current.presentedViewController
             }
-            scene.requestGeometryUpdate(.iOS(interfaceOrientations: mask)) { _ in }
+            // No error handler: UIKit calls it from a background queue when the request times out, and a closure written
+            // here is main-actor isolated, so it traps there.
+            scene.requestGeometryUpdate(.iOS(interfaceOrientations: mask), errorHandler: nil)
         }
     }
 }
