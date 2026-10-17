@@ -21,6 +21,7 @@ A review of the code then found four more, which this record also describes (see
 A second review found eight more, also described here (see "Corrected after the second review"), among them that the shutter bar's icons never turned and that the 6×6's sliders moved the viewfinder as they came and went.
 A third review found five more (see "Corrected after the third review"), among them that the camera showed through in a turned window as an Instant print came and went.
 A fourth review found that the hold also keeps upright the Darkroom opened from an Instant print over the camera, which nothing recorded; the captain chose that ("Instant - 1"), the code was kept, and the documents now record it.
+Testing at the largest text size then found four more (see "Corrected after testing at the largest text size"), among them that, held on its side, the 6×6's viewfinder sat higher than upright and Done could end up off the screen or under the shutter bar.
 
 ## What He Saw, and Why
 
@@ -299,7 +300,7 @@ The two pictures of the 6×6 at the largest text size below were taken again fro
 
 ## Pictures
 
-Simulator screenshots of the shooting screen, taken from this build after the third review, apart from the iPhone 13 mini's, which are marked.
+Simulator screenshots of the shooting screen, taken after the third review, apart from the iPhone 13 mini's, which are marked, and the two of the 6×6 at the largest text size, taken again after testing at that size, which left the default-size frames unchanged.
 The simulator has no camera, so each viewfinder shows its empty frame and the screen says the camera is unavailable, with no lens running: no note says what a lens cannot do, and the 6×6's rows are kept empty.
 The zoom steps, the sliders and the cue appear only where the hosted test raises what a running lens would report.
 
