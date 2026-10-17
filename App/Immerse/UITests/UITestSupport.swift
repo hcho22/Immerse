@@ -49,8 +49,8 @@ extension XCTestCase {
         let window = app.windows.firstMatch.frame
         let keyboard = app.keyboards.firstMatch
         // An iPhone with a home button has no home indicator to keep clear of, and its Load Film command never rests
-        // 40 points above the bottom edge.
-        let indicator: CGFloat = window.height > 700 ? 40 : 4
+        // 40 points above the bottom edge. Its screen is at most 667 points long, in either orientation.
+        let indicator: CGFloat = max(window.width, window.height) > 700 ? 40 : 4
         return keyboard.exists ? min(window.maxY - indicator, keyboard.frame.minY - 60) : window.maxY - indicator
     }
 

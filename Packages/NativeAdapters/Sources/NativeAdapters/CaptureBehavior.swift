@@ -77,6 +77,15 @@ public struct CaptureBehavior: Equatable, Sendable {
         }
     }
 
+    /// The exposure bias a lens takes when it becomes the session's camera, or nil where it keeps its own. Only the 6×6
+    /// biases its exposure: its lens takes the person's bias from the lens it replaces, within its own range, as their
+    /// Focus position goes with them, and keeps its own where none is carried. Every other Camera's lens returns to the
+    /// unbiased automatic default.
+    public func lensExposureBias(carrying bias: Float?, within range: ClosedRange<Float>) -> Float? {
+        guard exposure == .manualBias else { return 0 }
+        return bias.map { min(max($0, range.lowerBound), range.upperBound) }
+    }
+
     /// Only the front viewfinder is mirrored, for every Camera; the rear viewfinder shows the scene the normal way
     /// (the captain, 2026-10-16: the 6×6's waist-level reversal is gone). Saved captures are never mirrored.
     public func isViewfinderMirrored(position: CapturePosition) -> Bool {

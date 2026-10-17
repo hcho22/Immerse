@@ -53,6 +53,20 @@ final class CaptureBehaviorTests: XCTestCase {
         }
     }
 
+    /// The 6×6's exposure bias goes with the person to each lens, within that lens's range, as their Focus position does;
+    /// every other Camera's lens returns to the unbiased automatic default.
+    func testOnlyTheSixBySixCarriesTheExposureBiasToTheNextLensWithinItsRange() {
+        let medium = CaptureBehavior.for(.mediumFormat6x6)
+        XCTAssertEqual(medium.lensExposureBias(carrying: 1, within: -2...2), 1)
+        XCTAssertEqual(medium.lensExposureBias(carrying: 3, within: -2...2), 2, "Within the new lens's range")
+        XCTAssertEqual(medium.lensExposureBias(carrying: -3, within: -2...2), -2)
+        XCTAssertNil(medium.lensExposureBias(carrying: nil, within: -2...2), "With none carried, the lens keeps its own")
+        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
+            XCTAssertEqual(CaptureBehavior.for(camera).lensExposureBias(carrying: 1, within: -2...2), 0, "\(camera)")
+            XCTAssertEqual(CaptureBehavior.for(camera).lensExposureBias(carrying: nil, within: -2...2), 0, "\(camera)")
+        }
+    }
+
     func testViewfinderShapesFrameWhatTheCameraDevelops() {
         XCTAssertEqual(ViewfinderShape.threeByTwo.aspectRatio, 2.0 / 3, accuracy: 1e-9, "The Disposable's 3:2, upright")
         XCTAssertEqual(ViewfinderShape.fourByThree.aspectRatio, 3.0 / 4, accuracy: 1e-9)

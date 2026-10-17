@@ -18,6 +18,7 @@ No real iPhone has run it.
 The first build of this change did not keep the first of the captain's complaints: its own screenshots showed the Disposable's 2:3 and the Super 8's 3:4 viewfinders running behind the shutter bar, and a note cut off by the bar.
 Three corrections followed, and this record describes the build with them: the whole viewfinder fits above the shutter bar in every hold on every iPhone down to the smallest, no turned text is cut off, and where the screen has room the header keeps the Camera's name and its count on one line each.
 A review of the code then found four more, which this record also describes (see "Corrected after review" under Runs): the live picture followed the hold inside the portrait window, the hold let go between an Instant print and its question, only the wide lens's native crops were offered, and the 6×6 had gained a Load Film note nobody asked for.
+A second review found eight more, also described here (see "Corrected after the second review"), among them that the shutter bar's icons never turned and that the 6×6's sliders moved the viewfinder as they came and went.
 
 ## What He Saw, and Why
 
@@ -43,7 +44,7 @@ Its box is the Camera's portrait shape in every hold: square for the Instant and
 It is the largest box of that shape that the room above the shutter bar leaves after the header and, for the 6×6, the two sliders under it, so the whole of it shows: the Instant's stays as wide as the screen where there is room, and the others are narrower than the screen where there is not (`CaptureColumn.swift`; the sizes measured are below).
 The live picture fills the box in every hold, as in the iPhone's Camera app: the preview keeps the portrait window's angle, and since the screen and the camera turn together the scene reads upright whichever way the iPhone is held; held on its side the box is the landscape shape the photo saves in (3:2 for the Disposable, 4:3 for the two Movie Cameras), and a square stays square.
 Only a saved photo or clip takes the angle of the hold (`CaptureController.orientation`).
-A clip keeps the orientation it started in, so the words do not turn while a clip records.
+A clip keeps the orientation it started in, while the words and icons keep turning with the iPhone (`CaptureController.held`, apart from the clip's `orientation`), so the countdown stays readable if the iPhone turns mid-clip.
 Saved photos and clips are as they were: the orientation the iPhone was held in, never mirrored.
 
 **The words and icons.**
@@ -54,11 +55,14 @@ With the iPhone on its side (`HeldTurn.swift`) they turn to read upright, the ho
   Held upright its lines stay against the top, so Done sits just below the status bar in the same place on every Camera and every iPhone, with the name and the count right under it.
   Where the screen has room to spare, half of it is laid out into the header's turned length, up to 300 pt in all, so the Camera's name and its count each read on one line: the Instant on a tall iPhone does; where the room is short, as on the iPhone SE, they wrap.
   The other half is below the viewfinder, which so sits centred in the room under the header's lines and above the shutter bar.
-- The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("Manual focus unavailable on this lens", "Flash unavailable on this lens", "Fixed exposure unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against the edge that is its top as the iPhone is held, turned as one block that is never longer than the box.
+- The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("Flash unavailable on this lens", "Fixed exposure unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against the edge that is its top as the iPhone is held, turned as one block that is never longer than the box.
   Being over the viewfinder, a message coming or going never moves it, and the camera icon the empty frame shows gives way to them.
   "Saved" shows there for 2.5 seconds after each capture and then goes; every other notice stays while its cause does.
   At the largest text sizes the same lines are part of the header instead, where they scroll with the screen.
 - The focus and exposure captions turn beside their sliders, which stay across the screen; a slider's row is as tall as its turned caption in every hold, so the room under the viewfinder never depends on the hold.
+  One layout holds a row's caption and slider in every hold (`CaptionedSlider`), so the slider stays the same view as the iPhone turns and a drag is not cut off.
+  The 6×6's Focus and Exposure rows are there whenever the Camera offers the control (`CaptureBehavior`), whatever the active lens reports, so the viewfinder never moves when the camera opens, switches or takes a zoom step.
+  Where the lens cannot do one, its row says "Manual focus unavailable on this lens" or "Exposure unavailable on this lens" in the slider's place, turned with the hold, and the row is as tall either way.
   The zoom steps turn as a block along the viewfinder's bottom edge as the iPhone is held.
 - The Switch Camera, flash and microphone icons turn in place.
   The shutter is a circle and stays as it is.
@@ -68,7 +72,7 @@ With the iPhone on its side (`HeldTurn.swift`) they turn to read upright, the ho
 `CaptureBehavior.reversesRearViewfinder` is gone and `isViewfinderMirrored` is true for the front camera only.
 `CaptureBehavior.offersZoomSteps` is true for the 6×6.
 Its Load Film note about the reversed viewfinder is gone, with no note in its place, and the rear viewfinder's accessibility label is "Rear viewfinder" for every Camera; each zoom step is "Zoom" and its label spoken as "0.5 times", "1 times" and so on, with an identifier such as `zoom-0.5x`.
-No other product string changed, and the 6×6's Load Film screen lost that one line.
+No other product string changed, the 6×6's Load Film screen lost that one line, and its shooting screen gained "Exposure unavailable on this lens", in its Exposure row where a lens cannot bias its exposure.
 
 ### What was rejected
 
@@ -106,7 +110,7 @@ The hosted tests of the column's arithmetic (below) and the screen tests' frames
 `TurnedBlock` uses `ViewThatFits` only to choose between the turned header and a copy of it that scrolls across the screen, which happens when the turned header is wider than the screen, at the largest text sizes.
 `AGENTS.md` prefers a custom `Layout` to `ViewThatFits` because `ViewThatFits` swaps view identity as text grows; here the swap happens only when a turned block outgrows the screen, and nothing in the header holds state that the swap would lose.
 
-The viewfinder's box as the screen tests measured it, in points, the same in all three holds in every case (a Film with no controls, since the simulator has no camera to report any, so the 6×6 shows no sliders):
+The viewfinder's box as the screen tests measured it before the second review, in points, the same in all three holds in every case (the simulator has no camera to report controls, and the 6×6 then showed no rows without them; it now always has its two, so its box is the one with them, below):
 
 | iPhone (simulator, iOS 26.5) | Screen | Instant and 6×6 | Disposable (2:3) | Super 8 (3:4) |
 | --- | --- | --- | --- | --- |
@@ -114,7 +118,7 @@ The viewfinder's box as the screen tests measured it, in points, the same in all
 | iPhone 13 mini | 375 × 812 | 343 × 343 | 301 × 452 | 339 × 452 |
 | iPhone 17 Pro | 402 × 874 | 370 × 370 | 335 × 502 | 370 × 493 |
 
-With its two sliders raised, as a camera that can focus by hand reports them, the 6×6's box on the SE is 223 × 223 (the hosted screenshot [iphone-se-6x6-with-controls-portrait.png](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png)).
+With its two rows, which it now always has, the 6×6's box on the SE is 223 × 223 (the hosted screenshot [iphone-se-6x6-with-controls-portrait.png](capture-sideways-zoom-068/iphone-se-6x6-with-controls-portrait.png)), and on the iPhone 17 Pro 354 × 354 in all three holds (the screen test after the second review).
 On every one the box ends above the shutter bar, which the screen tests assert, and the Disposable's and the Super 8's end within 40 pt of it, the room being what sets their size.
 The Instant's and the 6×6's squares are as wide as the screen allows, so the room left over (on the iPhone 17 Pro the box runs from 280 pt to 650 pt, and the shutter's frame starts at 744 pt) is shared above and below them; the screen tests assert that Done is within 90 pt of the top of the screen and the count within 70 pt under Done on every Camera and every iPhone.
 
@@ -154,7 +158,10 @@ So the app never offers a step between steps, never a pinch, and no crop the cam
 **How a step is taken.**
 `AVFoundationCaptureBackend.selectZoomStep` is allowed only by `CaptureSessionPlan.zoomDecision`: the 6×6 only, the rear camera only, a step the iPhone reports, and only when the backend is idle (refused while a photo saves, a clip records or saves, or the camera is interrupted).
 A step on another lens swaps the session's input; a native crop sets that lens's `videoZoomFactor`.
-The focus behavior and the person's Focus position are held on the new lens, so the Focus slider is there where the lens can focus by hand and the note is there where it cannot.
+The focus behavior and the person's Focus position are held on the new lens, so the Focus slider is there where the lens can focus by hand and the note is in its place where it cannot.
+The person's exposure bias goes with them to the new lens too, within that lens's range (`CaptureBehavior.lensExposureBias`), on a zoom step and on a switch between the front and rear cameras, as the iPhone's Camera app keeps exposure compensation across its zoom steps; the first build left each lens on the bias it last held.
+A lens runs on the format the session gives it only once it is the session's input, and that format decides its native crops, so the lenses are read again then, and a crop the format does not report is never set: the step taken is the whole lens (`CaptureSessionPlan.zoomStep(taking:)`), and the crop leaves the zoom pill.
+What the formats of real lenses report, and so whether that ever happens, is for the captain's phone check ([H06](manual-validation.md#h06---the-zoom-steps-on-this-iphone)).
 Every lens is returned to its own zoom factor when a session starts or switches, because a lens keeps its zoom between sessions and Cameras, and every start and every switch back to the rear begins on 1x.
 The control is dimmed while the camera is busy.
 
@@ -170,13 +177,14 @@ Development center-crops every capture to a square and scales it to 3072 by 3072
 
 | Check | Where |
 | --- | --- |
-| Behavior per Camera: no Camera reverses its rear viewfinder, every front viewfinder is mirrored, only the 6×6 offers zoom steps | `CaptureBehaviorTests` |
-| Zoom steps derived from injected capabilities (one lens, wide plus ultra wide, three lenses at 3x and at 5x, a dual camera, 2.5x, crops of the wide, the telephoto and the ultra wide lens reported or not, duplicates, order, labels), and the zoom decision: only the 6×6's rear camera, refused while saving, recording, saving a clip or interrupted, an unreported step and a Camera without zoom refused | `ZoomStepTests` |
-| The hold ends while a print is over the camera, stays ended from a print to its question, is back when the last print is dropped, and ends with the screen | `CaptureSidewaysTests.testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses` (hosted) |
+| Behavior per Camera: no Camera reverses its rear viewfinder, every front viewfinder is mirrored, only the 6×6 offers zoom steps, and only the 6×6 carries the exposure bias to the next lens, within its range | `CaptureBehaviorTests` |
+| Zoom steps derived from injected capabilities (one lens, wide plus ultra wide, three lenses at 3x and at 5x, a dual camera, 2.5x, crops of the wide, the telephoto and the ultra wide lens reported or not, duplicates, order, labels), and the zoom decision: only the 6×6's rear camera, refused while saving, recording, saving a clip or interrupted, an unreported step and a Camera without zoom refused, and a crop the lens no longer reports once it runs taken as the whole lens | `ZoomStepTests` |
+| The hold ends while a print is over the camera, stays ended from a print to its question, is back when the last print is dropped, and ends with the screen, by the screen's own rule (`CaptureView.holdsWindowUpright`) | `CaptureSidewaysTests.testTheHoldStaysOffFromAPrintToItsQuestionUntilTheLastPrintIsDropped`, `testTheHoldEndsWhileAPrintShowsAndComesBackWhenItCloses` (hosted) |
+| While a clip records the words follow the hold and the clip keeps its orientation; a Focus or Exposure row is as tall with the lens's note as with its slider, in every hold; a row's slider stays the same view as the iPhone turns | `CaptureSidewaysTests` (hosted) |
 | The held turn follows how the iPhone is held; a block reserving its length is the same height in every hold; a turned block takes the room it needs; a block that does not reserve takes its turned footprint | `CaptureSidewaysTests` (hosted) |
 | The column's arithmetic, laid out in a window: with room to spare the viewfinder keeps the screen's full width and the header gets the rest, to 300 pt; short of room the viewfinder keeps its shape and gives up width, with the controls taking theirs first; it is never under 220 pt; and its frame, the header's height and the controls' frame are identical in all three holds, for the shape of every Camera, with and without controls, at four amounts of room | `CaptureSidewaysTests` (hosted) |
 | Every Camera's shooting screen held upright and on each side at the default and the largest text size, with the lens controls and low-light cue a lens would raise, kept as screenshots | `CaptureSidewaysTests.testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText` |
-| On the Instant, the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count turns to read upright; held upright, Done is just below the status bar with the name and the count under it; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
+| On the Instant, the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count and the Switch Camera icon in the shutter bar turn to read upright; held upright, Done is just below the status bar with the name and the count under it; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
 | The 6×6's zoom steps enabled, with the selected step filled, light and dark, upright and turned, kept as screenshots | `CaptureSidewaysTests.testTheZoomStepsInTheirEnabledState` |
 | The camera screen's Done, now a plain button and not in a navigation bar, in the Populated Journal Harness's Instant, permission and Original-question flows | `PopulatedJournalHarnessTests` (`CameraPermissionWorkflowTests`, three `PopulatedWorkflowTests`) |
 | The 6×6's Load Film text, without a viewfinder note, measured at all 12 sizes | `ContentSizeTests` |
@@ -206,7 +214,28 @@ The runs above predate these corrections.
 After them, `swift test --package-path Packages/NativeAdapters` passed (59 tests, 16 of them `ZoomStepTests`); on an iPhone 17 Pro simulator on iOS 26.5 the hosted `CaptureSidewaysTests` (12 tests), `CaptureControllerIntegrationTests.testCaptureFollowsHowTheIPhoneIsHeld` and `JournalIntegrationTests.testLoadFilmCopyFollowsPRD21AndNeverNamesAFormatReference` passed; and the Populated Journal Harness built for testing.
 The screen tests were not run again after the corrections.
 
+### Corrected after the second review
+
+A second review of the code found eight more defects, and the code, the tests and this record were corrected:
+
+- The shutter bar was added outside the environment that carries the hold, so its Switch Camera, flash and microphone icons never turned, as the first build's own screenshots show; the hold now reaches the bar, and the screen tests check that Switch Camera turns.
+- The 6×6's Focus and Exposure rows came and went with what the active lens reported, so the viewfinder shrank when the camera first reported them and grew on a switch or a zoom step to a lens without manual focus; the rows now follow the Camera, with the lens's note in a slider's place.
+- A row's slider was a different view in each hold, so turning the iPhone in the middle of a drag could cut it off before its end reached the lens; one layout now holds it in every hold.
+- A crop of a lens that was not yet the session's input was checked against the format it had before, so it could have been set as a digital enlargement; the lenses are read again once it is the input.
+- The words and icons froze with the clip's orientation while it recorded; they now follow the iPhone throughout, and the clip keeps its orientation.
+- A zoom step left the new lens on the bias it last held; the person's bias now goes with them, within the lens's range.
+- The test of the hold drove a copy of the screen's rule; it now drives the screen's own, which is tested on its own too.
+- A shared screen-test helper took any window shorter than 700 pt for an iPhone with a home button, which a Face ID iPhone in landscape is not; it now looks at the window's longer side.
+
+After these corrections, `swift test --package-path Packages/NativeAdapters` passed (61 tests, 17 of them `ZoomStepTests`); on an iPhone 17 Pro simulator on iOS 26.5 the 16 hosted `CaptureSidewaysTests` passed, and so did the 6×6's and the Disposable's `CaptureSidewaysUITests`, with the check that Switch Camera turns; and the Populated Journal Harness built for testing.
+`testASliderStaysTheSameViewAsTheIPhoneTurns` failed against the earlier `CaptionedSlider`, which branched on the hold (its slider came on screen again at each turn), and passes against the one layout.
+The Instant's and the Super 8's screen tests and the iPhone SE and 13 mini runs were not repeated.
+
 ### Failures on the way, kept
+
+- After the second review's rows, a turned note in the 6×6's rows ("Manual focus unavailable on this lens", sometimes the Exposure one) showed one line short, its last line cut to "on this le…", in the screen test held sideways, and in hosted probes only after the screen had turned from upright, on different rows from run to run.
+  Placing the turned block at its length and with no height cap did not change it, nor did a wording without a word wider than the row; nine rows turned three times stayed whole once the text could shrink a little to fit (`minimumScaleFactor(0.9)`), which is what the rows now do.
+  The likeliest cause, a block centred on a half pixel losing a pixel of its height, was not proven.
 
 - A hosted test of a block that outgrows the screen compared a 337.67 pt height with 337.5 and failed by a rounding to the screen's pixels; the widening of a block that outgrows the screen, which it tried to hold, was replaced by the scrolling copy, and the test went with it.
 - The first screen test also asserted that the viewfinder ends above the shutter bar.
@@ -289,7 +318,8 @@ All of these are for the manual iPhone test plan ([H01 to H10](manual-validation
 - Real lens switching and real zoom steps, and the labels on each iPhone model: the lens list and factors are read from the camera interface and were exercised only with injected capabilities.
 - Whether a native crop step is reported, on which iPhones, of which lens and at which factors, and its detail; and the detail of the telephoto lens in the 6×6's square.
   That the iPhone 17 Pro's 8x is a crop its camera reports for the telephoto lens is unconfirmed until the captain's phone check.
-- Manual focus and exposure bias on each lens, and which lenses show the note "Manual focus unavailable on this lens".
+- Manual focus and exposure bias on each lens, the bias carried to each lens within its range, and which lenses show the notes "Manual focus unavailable on this lens" and "Exposure unavailable on this lens".
+- Which crops each lens reports once it is the session's input, and so whether a crop step is ever taken as its whole lens.
 - That a zoom step tapped while a photo saves is refused and the photo is from the lens that took it.
 - That the 6×6 opens on 1x each time and that no other Camera opens zoomed after it.
 - The orientation hold on a physical iPhone, including tapping Done while the iPhone is on its side, opening the camera on its side, and what it does with Portrait Orientation Lock on.

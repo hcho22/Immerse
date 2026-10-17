@@ -42,7 +42,7 @@ struct CaptureView: View {
 
     var body: some View {
         @Bindable var capture = model.capture
-        let held = HeldTurn(capture.orientation)
+        let held = HeldTurn(capture.held)
         GeometryReader { screen in
             ScrollView {
                 // The reader's size is the screen's safe area less the shutter bar: the room the column has.
@@ -60,14 +60,14 @@ struct CaptureView: View {
             // The column is as tall as the screen has room for, so it scrolls only where it cannot be (large text).
             .scrollBounceBehavior(.basedOnSize)
         }
-        .environment(\.heldTurn, held)
-        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
         // The shutter stays on screen on small iPhones, at large text sizes and below messages.
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
-        // The screen holds the portrait layout; the prints that follow an Instant exposure and the questions about their
-        // originals turn with the iPhone, like every other screen, from the first print until `showNextPrint` drops the last.
-        .holdsInterfaceOrientation(.portrait, while: revealedPrints.isEmpty && originalAsk == nil) {
-            InterfaceOrientationLock.mask(held: capture.orientation)
+        .environment(\.heldTurn, held)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
+        .holdsInterfaceOrientation(
+            .portrait, while: Self.holdsWindowUpright(revealedPrints: revealedPrints, originalAsk: originalAsk)
+        ) {
+            InterfaceOrientationLock.mask(held: capture.held)
         }
         .task {
             #if DEBUG
@@ -101,6 +101,13 @@ struct CaptureView: View {
         .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
+    }
+
+    /// Whether the screen holds the window to the portrait layout. It does not from the moment an Instant print is revealed
+    /// until `showNextPrint` drops the last (`revealedPrints`), nor while a question about an original is up, so the prints
+    /// and their questions turn with the iPhone like every other screen, also as one gives way to the next.
+    static func holdsWindowUpright(revealedPrints: some Collection, originalAsk: OriginalAsk?) -> Bool {
+        revealedPrints.isEmpty && originalAsk == nil
     }
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
@@ -261,36 +268,47 @@ struct CaptureView: View {
         }
     }
 
-    /// Focus and exposure. A caption turns beside its slider, which stays across the screen.
+    /// Focus and exposure, in rows the Camera always has (`CaptureBehavior`), whatever the active lens reports, so the
+    /// viewfinder never moves when the camera opens, switches or takes a zoom step: where the lens cannot do one, its row
+    /// says so in the slider's place. A caption turns beside its slider, which stays across the screen.
     private func controls(behavior: CaptureBehavior, controller: CaptureController) -> some View {
         @Bindable var capture = controller
+        let bias: ClosedRange<Double>? = {
+            guard let minimum = capture.controls.minimumExposureBias, let maximum = capture.controls.maximumExposureBias,
+                  minimum < maximum else { return nil }
+            return Double(minimum)...Double(maximum)
+        }()
         return VStack(spacing: 8) {
-            if behavior.offersManualFocus, capture.controls.manualFocus {
-                CaptionedSlider(captionLength: captionLength) {
-                    Text("Focus").font(.caption)
-                } slider: {
-                    Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
-                        if !editing { model.perform { try await capture.setFocus() } failure: { error = $0 } }
-                    }).accessibilityLabel("Focus")
-                }
+            if behavior.offersManualFocus {
+                CaptionedSlider(
+                    captionLength: captionLength, caption: Text("Focus").font(.caption),
+                    unavailable: "Manual focus unavailable on this lens",
+                    slider: capture.controls.manualFocus
+                        ? Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
+                            if !editing { model.perform { try await capture.setFocus() } failure: { error = $0 } }
+                        }).accessibilityLabel("Focus")
+                        : nil
+                )
             }
-            if behavior.offersExposureBias,
-               let minimum = capture.controls.minimumExposureBias, let maximum = capture.controls.maximumExposureBias, minimum < maximum {
-                CaptionedSlider(captionLength: captionLength) {
-                    Text("Exposure \(capture.exposure, specifier: "%.1f") EV").font(.caption.monospaced())
-                } slider: {
-                    Slider(value: $capture.exposure, in: Double(minimum)...Double(maximum), onEditingChanged: { editing in
-                        if !editing { model.perform { try await capture.setExposure() } failure: { error = $0 } }
-                    }).accessibilityLabel("Exposure")
-                }
+            if behavior.offersExposureBias {
+                CaptionedSlider(
+                    captionLength: captionLength,
+                    caption: (bias == nil ? Text("Exposure") : Text("Exposure \(capture.exposure, specifier: "%.1f") EV"))
+                        .font(.caption.monospaced()),
+                    unavailable: "Exposure unavailable on this lens",
+                    slider: bias.map { range in
+                        Slider(value: $capture.exposure, in: range, onEditingChanged: { editing in
+                            if !editing { model.perform { try await capture.setExposure() } failure: { error = $0 } }
+                        }).accessibilityLabel("Exposure")
+                    }
+                )
             }
         }
     }
 
-    /// What the active lens cannot do that this Camera asks of it.
+    /// What the active lens cannot do that this Camera asks of it, apart from the controls whose rows say so.
     private func lensNotes(behavior: CaptureBehavior, controller capture: CaptureController) -> [String] {
         var notes: [String] = []
-        if behavior.offersManualFocus && !capture.controls.manualFocus { notes.append("Manual focus unavailable on this lens") }
         if behavior.offersFlash && !capture.controls.flash { notes.append("Flash unavailable on this lens") }
         if behavior.exposure == .fixed && capture.preview != nil && !capture.controls.fixedExposure {
             notes.append("Fixed exposure unavailable on this lens")
@@ -384,25 +402,34 @@ private struct LowLightCueView: View {
 
 /// A slider and its caption. The slider stays across the screen in every hold; with the iPhone on its side the caption
 /// turns to read upright and moves beside it, since a turned caption above it would need as much height as it is long.
-private struct CaptionedSlider<Caption: View, Control: View>: View {
+/// One layout holds both in every hold, so the slider is the same view as the iPhone turns and a drag is not cut off.
+/// Where the active lens cannot do the control, `slider` is nil and the row says `unavailable` in its place; the slider's
+/// place and the note are laid out either way, one of them hidden, so the row is as tall whichever shows.
+struct CaptionedSlider<Control: View>: View {
     @Environment(\.heldTurn) private var turn
     let captionLength: CGFloat
-    @ViewBuilder let caption: Caption
-    @ViewBuilder let slider: Control
+    let caption: Text
+    let unavailable: String
+    let slider: Control?
 
     var body: some View {
-        Group {
-            if turn.isSideways {
-                HStack(spacing: 12) {
-                    TurnedBlock(length: captionLength) { caption.multilineTextAlignment(.center) }
-                    slider
-                }
-            } else {
-                VStack(alignment: .leading) { caption; slider }
+        let layout = turn.isSideways ? AnyLayout(HStackLayout(spacing: 12)) : AnyLayout(VStackLayout(alignment: .leading))
+        layout {
+            TurnedBlock(length: captionLength) { lines(caption) }
+            ZStack {
+                if let slider { slider } else { Slider(value: .constant(0)).hidden().accessibilityHidden(true) }
+                TurnedBlock(length: captionLength) { lines(Text(unavailable).font(.caption).foregroundStyle(.secondary)) }
+                .opacity(slider == nil ? 1 : 0).accessibilityHidden(slider != nil)
             }
         }
         // As tall as the turned caption makes it, in every hold, so the room under the viewfinder never depends on the hold.
         .frame(minHeight: captionLength)
+    }
+
+    /// Text across the width it is given, against the leading edge upright and centred turned, as the header's is.
+    private func lines(_ text: Text) -> some View {
+        text.multilineTextAlignment(turn.isSideways ? .center : .leading).minimumScaleFactor(0.9)
+            .frame(maxWidth: .infinity, alignment: turn.isSideways ? .center : .leading)
     }
 }
 

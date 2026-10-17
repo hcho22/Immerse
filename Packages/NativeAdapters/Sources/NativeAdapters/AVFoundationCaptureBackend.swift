@@ -178,27 +178,34 @@ public actor AVFoundationCaptureBackend {
     }
 
     /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, and crops it where the
-    /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The Camera's focus and
-    /// exposure behavior is held on the new lens, so manual focus is as far as that lens can go.
+    /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The person's Focus position and
+    /// exposure bias go with them to the new lens, the bias within that lens's range. A lens runs on the format the session
+    /// gives it only once it is the input, and that format decides its native crops, so they are read again then: a crop
+    /// it does not report would be a digital enlargement, so it is never set, and the step taken is the whole lens.
     public func selectZoomStep(_ step: ZoomStep) throws {
         try operations.requireIdle()
-        guard session.isRunning, let plan else { throw NativeCaptureError.notRunning }
+        guard session.isRunning, var plan else { throw NativeCaptureError.notRunning }
         guard plan.zoomDecision(to: step, during: operations.phase) == .allowed else {
             throw NativeCaptureError.configurationFailed
         }
         guard step != zoomStep else { return }
         let device = try camera(for: step.lens)
-        if device !== input?.device { try replaceInput(with: device, plan: plan, zoomFactor: step.lensZoomFactor) }
-        else { try applyLensBehavior(plan.behavior, to: device, zoomFactor: step.lensZoomFactor) }
-        zoomStep = step
+        if device !== input?.device {
+            try replaceInput(with: device, plan: plan)
+            plan = plan.updatingRearLenses(AVFoundationCaptureDeviceDiscoverer.rearLenses())
+            self.plan = plan
+        }
+        zoomStep = plan.zoomStep(taking: step)
+        guard let taken = zoomStep else { throw NativeCaptureError.configurationFailed }
+        try applyLensBehavior(plan.behavior, to: device, zoomFactor: taken.lensZoomFactor)
         restartMeter()
     }
 
-    /// Replaces the session's camera with `device`, keeping its outputs, and holds the Camera's behavior on it. The
-    /// movie session runs at `.inputPriority`, so the added lens keeps the format chosen here.
-    private func replaceInput(
-        with device: AVCaptureDevice, plan: CaptureSessionPlan, zoomFactor: Double = 1
-    ) throws {
+    /// Replaces the session's camera with `device`, keeping its outputs, and holds the Camera's behavior on it, with the
+    /// exposure bias of the lens it replaces. The movie session runs at `.inputPriority`, so the added lens keeps the
+    /// format chosen here.
+    private func replaceInput(with device: AVCaptureDevice, plan: CaptureSessionPlan) throws {
+        let carriedBias = input?.device.exposureTargetBias
         if plan.mediaKind == .movie { try selectMovieFormat(device) }
         let replacement = try AVCaptureDeviceInput(device: device)
         session.beginConfiguration()
@@ -211,7 +218,7 @@ public actor AVFoundationCaptureBackend {
         session.addInput(replacement)
         input = replacement
         ensureUnmirroredOutput()
-        try applyLensBehavior(plan.behavior, to: device, zoomFactor: zoomFactor)
+        try applyLensBehavior(plan.behavior, to: device, carryingExposureBias: carriedBias)
     }
 
     /// Reads the rear lenses again once the session runs on its preset's format, and returns the zoom to 1x: the rear wide
@@ -428,18 +435,23 @@ public actor AVFoundationCaptureBackend {
 
     /// Holds the lens in the Camera's focus and exposure behavior. `.fixed` focus locks the fixed lens position and
     /// `.manual` focus the person's (`manualLensPosition`), wherever the lens supports it; every other mode returns to
-    /// the continuous, unbiased automatic default, except `.manualBias`, which keeps the bias the lens holds.
-    private func applyLensBehavior(_ behavior: CaptureBehavior, to device: AVCaptureDevice, zoomFactor: Double = 1) throws {
+    /// the continuous, unbiased automatic default, except `.manualBias`, whose lens takes `carryingExposureBias`
+    /// (`CaptureBehavior.lensExposureBias`) or, with none, keeps the bias it holds.
+    private func applyLensBehavior(
+        _ behavior: CaptureBehavior, to device: AVCaptureDevice, zoomFactor: Double = 1, carryingExposureBias: Float? = nil
+    ) throws {
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
         // A lens keeps its zoom between sessions and Cameras, so every lens starts at its own zoom factor, 1 unless the
         // 6×6's step is a native crop.
         let zoom = min(max(CGFloat(zoomFactor), device.minAvailableVideoZoomFactor), device.maxAvailableVideoZoomFactor)
         if device.videoZoomFactor != zoom { device.videoZoomFactor = zoom }
-        if behavior.exposure != .manualBias, device.isExposureModeSupported(.continuousAutoExposure) {
+        if device.isExposureModeSupported(.continuousAutoExposure), let bias = behavior.lensExposureBias(
+            carrying: carryingExposureBias, within: device.minExposureTargetBias...device.maxExposureTargetBias
+        ) {
             // A fixed exposure is held per capture, so the viewfinder always meters automatically.
             if device.exposureMode != .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
-            if device.exposureTargetBias != 0 { device.setExposureTargetBias(0) }
+            if device.exposureTargetBias != bias { device.setExposureTargetBias(bias) }
         }
         switch behavior.focus {
         case .fixed:

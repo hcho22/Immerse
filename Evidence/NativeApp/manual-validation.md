@@ -1813,10 +1813,10 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | H01 / FR-04; CAP-03, QA-13 | Open the camera of each of the five Cameras and hold the iPhone upright, with its top to your left and with its top to your right. The screen never turns: the viewfinder is the same size in the same place in all three holds, and Done, what is left, the status, Switch Camera, the flash and the zoom steps turn to read upright when the iPhone is on its side. Nothing is clipped or overlapping, and every control can be reached with the thumbs. | A screenshot of each Camera in each hold, the viewfinder's edges compared between the three, the captain's words on how it feels. [Steps](#h01---the-shooting-screen-held-upright-and-on-each-side). |
 | H02 / FR-04; QA-13 | Step the text size from the default to the largest on the 6×6 and the Disposable, held upright and on each side. The header stays in view and legible; once it is too long for the screen turned, it scrolls across the screen, which is up and down for you, and every control stays reachable. | Screenshots at each size, the text size setting before and after. [Steps](#h02---text-sizes-on-the-shooting-screen-held-sideways). |
 | H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture reads upright and fills the same viewfinder, as in the iPhone's Camera app, which held so is the Camera's landscape shape: a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm, square for the Instant and the 6×6. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
-| H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, and the words do not turn while it records. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
+| H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, while the words and icons turn with the iPhone to read upright. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
 | H05 / FR-04; CAP-05, CAP-14 | The 6×6's rear viewfinder shows a page of text the normal way, not reversed, also after switching to the front lens and back; the front viewfinder is mirrored; the saved and developed pictures of both are not. Every other Camera is as before. | A paired viewfinder screenshot and developed picture of an asymmetric target, rear and front. [Steps](#h05---the-6x6-viewfinder-is-not-reversed). |
 | H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step, of any lens, only where the Camera app also shows it, no zoom control on the front camera or on any other Camera, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
-| H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows, and the Exposure slider shows that lens's bias. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
+| H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
 | H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera turns with the iPhone, the screen does not turn to portrait and back between the print and its question, and after they close the camera is portrait again and, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
@@ -1825,20 +1825,23 @@ The authority and stop conditions at the top of this plan apply to each of them 
 
 - The shooting screen keeps the portrait layout in every hold.
   The viewfinder box is the Camera's portrait shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm), the same size in the same place whichever way the iPhone is held.
-  The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two sliders), and it never changes size when a message comes or goes.
+  The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two rows), and it never changes size when a message comes or goes.
+  The 6×6's Focus and Exposure rows are always there, so the viewfinder does not move when the camera opens, switches or takes a zoom step; where the lens cannot do one, its row says so in the slider's place ("Manual focus unavailable on this lens", "Exposure unavailable on this lens").
   Held upright, the screen is as it was except that **Done** is a button at the top of the screen's own content, not in a navigation bar, and the header keeps the room it needs turned, so the viewfinder sits a little lower.
 - Held on its side, the live picture fills the viewfinder and reads upright, as in the iPhone's Camera app: the box, portrait on the screen, is then the landscape shape the Camera develops to (a square stays square), with no black band around the picture.
 - Held on its side, the header (**Done**, the Camera's name, what is left and the status of a complete Film) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; where the screen has room to spare, as on a tall iPhone with a square viewfinder, the name and the count each read on one line, and the viewfinder sits centred in the room under the header's lines, with Done in the same place just below the status bar on every Camera.
-  The error, the message, **Open iPhone Settings**, **Resume Camera**, the notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
+  The error, the message, **Open iPhone Settings**, **Resume Camera**, the flash and fixed exposure notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
   The focus and exposure captions turn beside their sliders, and the zoom steps turn too.
   At the largest text sizes the error, the message, the buttons and the notes are part of the header instead, where they scroll.
-  The Switch Camera, flash and microphone icons turn in place.
+  The Switch Camera, flash and microphone icons in the shutter bar turn in place.
   The shutter does not turn.
 - A header too long to fit turned scrolls across the screen, from its top, and below the smallest viewfinder (220 points) the screen scrolls up and down, as at the largest text sizes.
 - Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
-- A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words do not turn.
+- A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words and icons still turn with the iPhone.
 - The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera or on another Camera.
   Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures; the buttons are dimmed while the camera is busy.
+  Your exposure bias goes with you to the new lens, within its range.
+  Once a lens is the camera's, its crops are read again: a crop step its format does not report is taken as the whole lens, and leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
 - A print that opens over the camera after an Instant exposure, and the question about its original, turn with the iPhone like every other screen, and the screen stays as the iPhone is held from the print to its question; the camera returns to the portrait layout when the last of them closes.
 
@@ -1945,11 +1948,12 @@ For each Camera, the screenshots, the developed result and where its edge differ
 
 - Each photo is upright in its picture and is the shape its hold gives (the Disposable wide when held on its side, the 6×6 square).
 - Each clip stays in the orientation it started in, and plays as such, whichever way the iPhone was turned while it recorded.
-- While a clip records, the words do not turn.
+- While a clip records, the words and icons, the red countdown among them, turn with the iPhone to read upright.
 
 **It fails if.**
 
 - A photo develops turned or mirrored, or a clip changes orientation partway.
+- The countdown or another word reads sideways while a clip records with the iPhone turned.
 
 **Write down.**
 Each photo and clip, the hold, and how it appears once developed.
@@ -1998,6 +2002,7 @@ The screenshots and developed pictures, rear and front.
 
 **What is a finding and not a failure.**
 Whether a native crop step appears, and where, is the iPhone's own to say; the 13 Pro has no high-resolution wide sensor, so none is expected.
+A crop step that, tapped, lands on its whole lens and leaves the pill is the app refusing a crop the lens's format does not report once it runs, rather than enlarging digitally; write down which step did it.
 
 **Write down.**
 The Camera app's labels, the 6×6's labels, each step's screenshot and which Cameras show steps.
@@ -2008,16 +2013,19 @@ The Camera app's labels, the 6×6's labels, each step's screenshot and which Cam
 
 1. At each step, drag the Focus slider across its range on a near and a far object, and drag the Exposure slider.
 2. Write down any step on which the note "Manual focus unavailable on this lens" shows in place of the Focus slider.
-3. Tap the shutter and, at once, tap another zoom step; repeat a few times, and then develop the Film.
+3. At 1x, set the Exposure to +1.0 EV, then tap each other step and back to 1x, watching the Exposure value and the viewfinder's edges.
+4. Tap the shutter and, at once, tap another zoom step; repeat a few times, and then develop the Film.
 
 **Expect.**
 
-- The Focus slider changes focus at each step whose lens can focus by hand, and the note shows in its place at a step whose lens cannot; the Exposure slider shows the active lens's bias.
+- The Focus slider changes focus at each step whose lens can focus by hand, and the note shows in its place at a step whose lens cannot.
+- The Exposure value stays +1.0 EV at every step, or the nearest a lens allows, and the picture's brightness with it; the viewfinder does not move as a slider gives way to a note or back.
 - A zoom step tapped while a photo saves does nothing, and the photo is from the lens that was active at the shutter.
 
 **It fails if.**
 
 - A control shows that does nothing, or the note shows where the lens focuses by hand.
+- The Exposure value falls back to 0.0 EV, or the viewfinder moves, on a zoom step.
 - A zoom step changes the lens while a photo saves, or the app fails.
 
 **Write down.**

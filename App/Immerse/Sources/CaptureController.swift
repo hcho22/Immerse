@@ -34,6 +34,9 @@ final class CaptureController {
     var focus: Double = 0.8
     var exposure: Double = 0
     var orientation = CaptureFrameOrientation.portrait
+    /// How the iPhone is held, which the shooting screen turns its words and icons to. Unlike `orientation`, it keeps
+    /// following the iPhone while a clip records.
+    private(set) var held = CaptureFrameOrientation.portrait
     var recordingStarted: Date?
     /// Whether the capture screen is on screen; the Journal alert cannot appear over it.
     var presented = false
@@ -265,13 +268,15 @@ final class CaptureController {
     }
 
     /// A clip keeps the orientation it started in; every other capture uses how the iPhone is held now. The shooting
-    /// screen turns its words and icons with this; its preview stays upright in the portrait interface it holds.
+    /// screen's words and icons follow `held`, also while a clip records; its preview stays upright in the portrait
+    /// interface it holds.
     func updateOrientation() {
-        guard phase != .recordingMovie, let held = heldOrientation else { return }
-        orientation = held
+        guard let reading = heldReading else { return }
+        held = reading
+        if phase != .recordingMovie { orientation = reading }
     }
 
-    private var heldOrientation: CaptureFrameOrientation? {
+    private var heldReading: CaptureFrameOrientation? {
         #if DEBUG
         if let heldForTesting { return heldForTesting }
         #endif
@@ -302,7 +307,7 @@ extension CaptureController {
     /// Hosted tests cannot turn the iPhone, so they set how it is held.
     func hold(forTesting held: CaptureFrameOrientation) {
         heldForTesting = held
-        orientation = held
+        updateOrientation()
     }
 
     /// Hosted tests have no backend, so they set the phase it would report.

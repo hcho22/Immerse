@@ -35,6 +35,8 @@ final class CaptureSidewaysUITests: XCTestCase {
         var done: CGRect
         var remaining: CGRect
         var shutter: CGRect
+        /// The Switch Camera icon in the shutter bar, which is wider than it is tall.
+        var switchCamera: CGRect
     }
 
     /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
@@ -81,6 +83,7 @@ final class CaptureSidewaysUITests: XCTestCase {
         let upright = try layout(app)
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
+        XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
         try checkFits(upright, app, "upright", fillsTheRoom: fillsTheRoom)
         // Held upright, Done sits just below the status bar on every Camera and every iPhone, with the name and the count
         // right under it, whatever room the viewfinder leaves.
@@ -100,6 +103,8 @@ final class CaptureSidewaysUITests: XCTestCase {
             try checkFits(turned, app, side, fillsTheRoom: fillsTheRoom)
             retainFrames(turned, name: name, hold: side)
             XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
+            XCTAssertGreaterThan(turned.switchCamera.height, turned.switchCamera.width,
+                                 "Switch Camera, in the shutter bar, turns to read upright held on its \(side)")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
             XCTAssertGreaterThanOrEqual(turned.done.height, 44, "Done keeps a tap target of 44 points turned")
             XCTAssertGreaterThanOrEqual(turned.done.width, 44, "Done keeps a tap target of 44 points turned")
@@ -163,7 +168,7 @@ final class CaptureSidewaysUITests: XCTestCase {
         let shutter = app.buttons["capture-shutter"]
         XCTAssertTrue(shutter.waitForExistence(timeout: 5))
         return Layout(window: app.windows.firstMatch.frame, viewfinder: viewfinder.frame, done: app.buttons["Done"].frame,
-                      remaining: remaining.frame, shutter: shutter.frame)
+                      remaining: remaining.frame, shutter: shutter.frame, switchCamera: app.buttons["Switch Camera"].frame)
     }
 
     /// The layout once `settled` holds, read until the turn's animation ends.
