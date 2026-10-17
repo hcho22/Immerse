@@ -158,18 +158,21 @@ final class CaptureSidewaysTests: XCTestCase {
 
     /// Where `CaptureColumn` puts a header, a viewfinder of `aspect` and, with `controls` high, controls, for a screen with
     /// `available` points of room between its top and the shutter bar, as the screen lays them out in a window.
+    /// With a `notice`, the header ends with it, as at the largest text sizes.
     private func column(
-        available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358
+        available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358,
+        notice: String? = nil
     ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
         let frames = Frames()
         let inColumn: @Sendable (GeometryProxy) -> CGRect = { $0.frame(in: .named("column")) }
         let view = CaptureColumn(available: available) {
-            TurnedBlock(length: 128, reservesLength: true) {
+            TurnedBlock(length: 128, reservesLength: true, maximumLength: available) {
                 VStack(spacing: 12) {
                     Color.clear.frame(height: 44)
                         .onGeometryChange(for: CGRect.self, of: inColumn) { frames.firstLine = $0 }
                     Color.clear.frame(height: 28)
                     Color.clear.frame(height: 22)
+                    if let notice { Text(notice) }
                 }.frame(maxWidth: .infinity)
             }
             .onGeometryChange(for: CGRect.self, of: inColumn) { frames.header = $0 }
@@ -254,6 +257,43 @@ final class CaptureSidewaysTests: XCTestCase {
                     XCTAssertEqual(turned.controls, upright.controls)
                 }
             }
+        }
+    }
+
+    /// At the largest text sizes the header, with the notices in it, is taller than the room above the shutter bar, and
+    /// wider than the screen once turned, where it scrolls across it. It still reserves the height it has in the portrait
+    /// hold, so the viewfinder keeps its place, and its lines run no longer than the room, so their first line, Done's,
+    /// shows at rest at whichever end of the screen it starts.
+    func testAHeaderTallerThanTheRoomKeepsItsPortraitHeightAndItsFirstLineInView() async throws {
+        let notice = String(repeating: "Camera unavailable. ", count: 40)
+        let upright = try await column(available: 480, aspect: 1, notice: notice)
+        XCTAssertGreaterThan(upright.header.height, 480, "The header is taller than the room")
+        for turn in [HeldTurn.clockwise, .counterClockwise] {
+            let turned = try await column(available: 480, aspect: 1, turn: turn, notice: notice)
+            XCTAssertEqual(turned.header.height, upright.header.height, "\(turn)")
+            XCTAssertEqual(turned.viewfinder, upright.viewfinder, "\(turn)")
+            XCTAssertLessThanOrEqual(turned.firstLine.maxY, 480 + 0.5, "The first line is within the room, \(turn)")
+            XCTAssertGreaterThanOrEqual(turned.firstLine.minY, -0.5, "The first line is within the room, \(turn)")
+        }
+    }
+
+    /// A header that scrolls across the screen once turned starts from its top in either hold, also turned straight from
+    /// one side to the other, where its top is at the other end.
+    func testAHeaderThatScrollsStartsFromItsTopTurnedFromSideToSide() async throws {
+        let probe = ScrollProbe()
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: ScrollProbeView(probe: probe))
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await Task.sleep(for: .milliseconds(300))
+        for turn in [HeldTurn.clockwise, .counterClockwise, .clockwise] {
+            probe.turn = turn
+            try await Task.sleep(for: .milliseconds(500))
+            XCTAssertTrue(probe.block.contains(CGPoint(x: probe.firstLine.midX, y: probe.firstLine.midY)),
+                          "The first line \(probe.firstLine) shows in the block \(probe.block) turned \(turn)")
+            XCTAssertEqual(probe.firstLine.midX > probe.block.midX, turn == .clockwise,
+                           "The first line is at the edge that is the top turned \(turn)")
         }
     }
 
@@ -385,6 +425,29 @@ private struct HoldProbe: View {
     var body: some View {
         Color.clear.holdsInterfaceOrientation(.portrait) { .portrait }
             .sheet(isPresented: $showing.print) { Text("Print") }
+    }
+}
+
+/// How the iPhone is held, and where a header that scrolls once turned and its first line are, for the test of where it
+/// starts.
+@Observable private final class ScrollProbe {
+    var turn = HeldTurn.upright
+    var block = CGRect.zero
+    var firstLine = CGRect.zero
+}
+
+private struct ScrollProbeView: View {
+    let probe: ScrollProbe
+    var body: some View {
+        TurnedBlock(length: 128, reservesLength: true) {
+            VStack(spacing: 0) {
+                Color.clear.frame(height: 44).onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe.firstLine = $0 }
+                Color.clear.frame(height: 900)
+            }.frame(maxWidth: .infinity)
+        }
+        .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe.block = $0 }
+        .environment(\.heldTurn, probe.turn)
+        .frame(width: 358)
     }
 }
 

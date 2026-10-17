@@ -5,8 +5,8 @@ import XCTest
 /// screen keeps turning with the iPhone. The simulator has no camera, so the screen shows its message for the missing one,
 /// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
 /// raises, are in `CaptureSidewaysTests`. Loading uses the Debug testing unlock and answers a fresh Camera request
-/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, to stay
-/// inside the per-test time allowance.
+/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, and the 6×6
+/// again at the largest text size, to stay inside the per-test time allowance.
 @MainActor
 final class CaptureSidewaysUITests: XCTestCase {
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
@@ -39,10 +39,48 @@ final class CaptureSidewaysUITests: XCTestCase {
         var switchCamera: CGRect
     }
 
-    /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
-    /// width, sets its size, and it ends just above the bar.
-    private func check(id: String, name: String, fillsTheRoom: Bool) throws {
+    /// At the largest text size the header and the notices in it take more room than the screen has, so the screen
+    /// scrolls, and held on its side the turned header is wider than the screen and scrolls across it. The viewfinder still
+    /// keeps its size and place in every hold, and turned straight from one side to the other the header starts from Done.
+    func testSixBySixShootingScreenKeepsItsViewfinderAtTheLargestTextSize() throws {
         let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let title = try openShootingScreen(app, id: "mediumFormat6x6")
+        defer { deleteFilm(titled: title, app) }
+        let done = app.buttons["Done"]
+        let upright = try layout(app)
+        XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
+        retainFrames(upright, name: "6×6-largest", hold: "portrait")
+        retainScreenshot(name: "6×6-largest-capture-portrait")
+        // Each side twice, so the header turns straight from one side to the other both ways.
+        for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right"), (.landscapeLeft, "left again")] {
+            XCUIDevice.shared.orientation = orientation
+            // Turned straight from one side to the other Done stays turned, so the turn has ended once Done is on the side
+            // that is the header's top: the screen's right held on its left, its left held on its right.
+            let turned = try wait(app) {
+                $0.done.height > $0.done.width && (orientation == .landscapeLeft) == ($0.done.midX > $0.window.midX)
+            }
+            retainScreenshot(name: "6×6-largest-capture-\(side)")
+            retainFrames(turned, name: "6×6-largest", hold: side)
+            XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
+            XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
+            XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
+            XCTAssertTrue(turned.window.contains(turned.done), "The turned header starts from Done held on its \(side): \(turned.done)")
+            // The shutter bar's top is 8 points above the shutter's frame.
+            XCTAssertLessThanOrEqual(turned.done.maxY, turned.shutter.minY - 8, "Done is clear of the shutter bar held on its \(side)")
+            XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
+        }
+        XCUIDevice.shared.orientation = .portrait
+        let upAgain = try wait(app) { $0.done.width > $0.done.height }
+        XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
+        done.tap()
+        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "The shooting screen closed")
+    }
+
+    /// Loads a Film in the Camera `id` with the title Load Film suggests, opens its shooting screen and returns the
+    /// Film's title, for the caller to delete it.
+    private func openShootingScreen(_ app: XCUIApplication, id: String) throws -> String {
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
         app.resetAuthorizationStatus(for: .camera)
         var allowed = false
@@ -54,7 +92,6 @@ final class CaptureSidewaysUITests: XCTestCase {
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
-        defer { XCUIDevice.shared.orientation = .portrait }
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
@@ -65,7 +102,6 @@ final class CaptureSidewaysUITests: XCTestCase {
         scrollUp(app, until: field)
         let title = try XCTUnwrap(field.value as? String)
         let load = app.buttons["load-film"]
-        defer { deleteFilm(titled: title, app) }
         tapWhole(app, load)
         let detail = app.navigationBars[title]
         for _ in 0..<20 {
@@ -78,8 +114,19 @@ final class CaptureSidewaysUITests: XCTestCase {
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
 
         tapWhole(app, app.buttons["Open Camera"])
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 5))
+        return title
+    }
+
+    /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
+    /// width, sets its size, and it ends just above the bar.
+    private func check(id: String, name: String, fillsTheRoom: Bool) throws {
+        let app = XCUIApplication()
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let title = try openShootingScreen(app, id: id)
+        defer { deleteFilm(titled: title, app) }
+        let detail = app.navigationBars[title]
         let done = app.buttons["Done"]
-        XCTAssertTrue(done.waitForExistence(timeout: 5))
         let upright = try layout(app)
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")

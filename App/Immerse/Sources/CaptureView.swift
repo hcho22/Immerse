@@ -46,8 +46,9 @@ struct CaptureView: View {
         GeometryReader { screen in
             ScrollView {
                 // The reader's size is the screen's safe area less the shutter bar: the room the column has.
-                CaptureColumn(available: screen.size.height - 2 * Self.verticalPadding) {
-                    header(capture).captureColumnRole(.header)
+                let room = screen.size.height - 2 * Self.verticalPadding
+                CaptureColumn(available: room) {
+                    header(capture, room: room).captureColumnRole(.header)
                     if let film = model.film(filmID) {
                         let behavior = CaptureBehavior.for(film.camera.id)
                         viewfinder(film, behavior: behavior, held: held)
@@ -103,9 +104,10 @@ struct CaptureView: View {
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
     /// its side the whole block turns, as the portrait header it is, taking at least `headerLength` of the screen's height in
-    /// either hold. At the largest text sizes the notices that sit over the viewfinder come here, where they scroll.
-    private func header(_ capture: CaptureController) -> some View {
-        TurnedBlock(length: headerLength, reservesLength: true) {
+    /// either hold. At the largest text sizes the notices that sit over the viewfinder come here, where they scroll; held on
+    /// its side its lines then run no longer than the `room` the screen shows above the shutter bar, so each starts in view.
+    private func header(_ capture: CaptureController, room: CGFloat) -> some View {
+        TurnedBlock(length: headerLength, reservesLength: true, maximumLength: room) {
             VStack(spacing: 12) {
                 HStack {
                     Button { capture.suspend(); dismiss() } label: { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)

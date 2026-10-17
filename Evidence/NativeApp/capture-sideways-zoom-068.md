@@ -190,6 +190,8 @@ Development center-crops every capture to a square and scales it to 3072 by 3072
 | The held turn follows how the iPhone is held; a block reserving its length is the same height in every hold; a turned block takes the room it needs; a block that does not reserve takes its turned footprint | `CaptureSidewaysTests` (hosted) |
 | The column's arithmetic, laid out in a window: with room to spare the viewfinder keeps the screen's full width and the header gets the rest, to 300 pt; short of room the viewfinder keeps its shape and gives up width, with the controls taking theirs first; it is never under 220 pt; and its frame, the header's height and the controls' frame are identical in all three holds, for the shape of every Camera, with and without controls, at four amounts of room | `CaptureSidewaysTests` (hosted) |
 | Every Camera's shooting screen held upright and on each side at the default and the largest text size, with the lens controls and low-light cue a lens would raise, kept as screenshots | `CaptureSidewaysTests.testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText` |
+| The 6×6 at the largest text size, in a simulator turned to its left, its right and its left again: the viewfinder's and the shutter's frames are those it has upright, and Done is on screen, clear of the shutter bar | `CaptureSidewaysUITests.testSixBySixShootingScreenKeepsItsViewfinderAtTheLargestTextSize` |
+| A header that scrolls across the screen once turned keeps its portrait height, so the viewfinder does not move, keeps its lines to the room, and starts from its top on either side, also turned straight from one side to the other | `CaptureSidewaysTests.testAHeaderTallerThanTheRoomKeepsItsPortraitHeightAndItsFirstLineInView`, `testAHeaderThatScrollsStartsFromItsTopTurnedFromSideToSide` (hosted) |
 | On the Instant, the 6×6, the Disposable and the Super 8, in a simulator turned upright, to its left and to its right, on the iPhone SE, the iPhone 13 mini and the iPhone 17 Pro: the window stays portrait; the viewfinder's and the shutter's frames are identical in all three holds; the whole viewfinder is above the shutter bar and inside the screen, and for the Disposable and the Super 8 within 40 pt of the bar; every notice, button and note drawn in the viewfinder lies within its frame, so none is cut off; Resume Camera is over it; the count and the Switch Camera icon in the shutter bar turn to read upright; held upright, Done is just below the status bar with the name and the count under it; Done keeps a 44 pt target, stays on screen, clear of the viewfinder and of the count; and after Done the Film screen turns with the iPhone | `CaptureSidewaysUITests` |
 | The 6×6's zoom steps enabled, with the selected step filled, light and dark, upright and turned, kept as screenshots | `CaptureSidewaysTests.testTheZoomStepsInTheirEnabledState` |
 | The camera screen's Done, now a plain button and not in a navigation bar, in the Populated Journal Harness's Instant, permission and Original-question flows | `PopulatedJournalHarnessTests` (`CameraPermissionWorkflowTests`, three `PopulatedWorkflowTests`) |
@@ -253,6 +255,26 @@ On an iPhone SE (3rd generation) simulator on iOS 26.5, made for this run and de
 The pictures below are those runs' own screenshots, and the Populated Journal Harness built for testing.
 The hold's test drives a sheet over a probe that holds the window as the screen does; a real Instant print rising and closing over the camera on a phone is H10's.
 
+### Corrected after testing at the largest text size
+
+Driving the app at the largest text size (AX-XXXL) found two defects that the default size hides, and fixing them showed two more:
+
+- Held on its side, the 6×6's viewfinder sat 311 pt higher than upright (at y 467.7 against 778.7 on the iPhone 17 Pro).
+  The turned header outgrew the screen and moved into its scrolling copy, a scroll view offers its content no width, and so the header measured its portrait form unwrapped and reserved far less than its portrait height.
+  A reserving `TurnedBlock` now measures its portrait form at the width it is offered, which is the screen's in every hold.
+- Turned straight from one side to the other, the scrolling header kept its offset, which put Done 307 pt past the screen's left edge.
+  The anchor that starts it from its top applies only as a scroll view appears, so the turned header is now a new view for each side.
+- Once the header kept its portrait height, its turned lines ran that whole height, and held with its top to the left, where they start at the screen's bottom, Done sat partly under the shutter bar.
+  The header's lines now run no longer than the room above the bar (`maximumLength`), against its top.
+- With those shorter lines the iPhone SE's turned count read "12 exposures l…" in every turned hold, a line that should have wrapped; the iPhone 17 Pro's screenshots from before the fix show the same, a wrapped count's last line cut to a sliver.
+  A turned block was placed at exactly the height it had measured, and a wrapped text in it lost its last line; it is now placed with no height, so each text takes the height it measured, and the count wraps.
+  This is likely the cause of the cut row notes under "Failures on the way", whose shrinking text was left as it is.
+
+The new screen test failed on the build before (the viewfinder in every turned hold, and Done held with its top to the left) and passes now; both new hosted tests failed against the code before and pass now.
+On an iPhone 17 Pro simulator on iOS 26.5, the 17 hosted `CaptureSidewaysTests`, the 17 `CaptureControllerIntegrationTests` and all five `CaptureSidewaysUITests` passed, the default-size frames unchanged from the run before.
+On an iPhone SE (3rd generation) simulator on iOS 26.5, made for this run and deleted after it, all five `CaptureSidewaysUITests` passed, the 6×6 at the largest text size with its viewfinder at y 737.5 in every hold.
+The two pictures of the 6×6 at the largest text size below were taken again from this build.
+
 ### Failures on the way, kept
 
 - After the second review's rows, a turned note in the 6×6's rows ("Manual focus unavailable on this lens", sometimes the Exposure one) showed one line short, its last line cut to "on this le…", in the screen test held sideways, and in hosted probes only after the screen had turned from upright, on different rows from run to run.
@@ -271,6 +293,9 @@ The hold's test drives a sheet over a probe that holds the window as the screen 
 - The screen tests did not run on an iPhone SE simulator at first: the shared `tapWhole` helper keeps 40 pt clear of the window's bottom edge for the home indicator, and the SE has none, so Load Film's button never counted as whole on screen there.
   The helper now keeps 4 pt on a window 700 pt high or less, and the same tests run on the SE.
 - In the Populated Journal Harness, three flows tapped the camera screen's Done through `navigationBars`, where it no longer is; they tap the button.
+- The first fix for the header's offset after a side-to-side turn gave its scroll view, inside the `ViewThatFits`, a new identity for each side; turned from one side straight to the other, the screen test's screenshots then showed both sides' headers at once, still there 2 seconds later.
+  Resetting a `ScrollPosition` on each turn left the offset where it was in the hosted test; the identity is now on the whole `ViewThatFits`, and the screenshots show one header.
+- Capping the height `CaptureColumn` offered the header did not shorten its turned lines: the `ViewThatFits` places its choice at the height it measured, not at the height it was offered, so the cap is the block's own `maximumLength`.
 
 ## Pictures
 
@@ -329,9 +354,12 @@ The selected step is a white disc with black text, the others white text on the 
 
 ![The zoom steps in their enabled state, close up](capture-sideways-zoom-068/6x6-zoom-steps-enabled-close-up.png)
 
-**The 6×6 at the largest text size, turned, on the iPhone 17 Pro:** the screen scrolls, the notices are in the header, the viewfinder keeps its 220 pt least, and its lower part, with the zoom steps, is below the shutter bar until the screen is scrolled.
+**The 6×6 at the largest text size, turned, on the iPhone 17 Pro, in the simulator with no camera:** the screen scrolls, the notices are in the header, which keeps its portrait height in every hold, so the viewfinder, at its 220 pt least, is where it is upright, below the shutter bar until the screen is scrolled.
+The turned header reads from Done on either side, with its lines no longer than the room above the bar.
 
-![The 6×6 at the largest text size, turned](capture-sideways-zoom-068/6x6-largest-left.png)
+| Top to the right | Top to the left |
+| --- | --- |
+| ![The 6×6 at the largest text size, top to the right](capture-sideways-zoom-068/6x6-largest-left.png) | ![The 6×6 at the largest text size, top to the left](capture-sideways-zoom-068/6x6-largest-right.png) |
 
 ## Not Proven Without a Phone
 
