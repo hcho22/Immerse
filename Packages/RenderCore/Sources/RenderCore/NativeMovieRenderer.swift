@@ -28,16 +28,16 @@ public enum NativeMovieRenderer {
         treatmentVersion: String = NativePhotoRenderer.treatmentVersion
     ) async throws {
         guard camera.medium == .movie else { throw NativeRenderError.wrongMedium }
-        guard longEdge > 0, longEdge % 16 == 0 else { throw NativeRenderError.invalidMovie }
+        guard longEdge > 0, longEdge % 16 == 0 else { throw NativeRenderError.invalidMovie() }
         let asset = AVURLAsset(url: source)
         let treatment = try DevelopedTreatment(version: treatmentVersion, camera: camera.id, filmStock: filmStock, seed: seed,
                                                sceneWhiteBalance: try await sceneWhiteBalance(of: asset))
         let tracks = try await asset.loadTracks(withMediaType: .video)
         guard tracks.count == 1, let track = tracks.first,
-              try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie }
+              try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie() }
         let duration = try await asset.load(.duration)
         let transform = try await track.load(.preferredTransform)
-        guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie }
+        guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie() }
         let fps = DevelopedMovieFormat.framesPerSecond(camera.id)
         // Only whole frames: the clip's last frame is held to where the recording stopped. A frame begun in the sliver
         // of time left over would last a fraction of a frame and count against the Camera's frame rate.
@@ -50,7 +50,7 @@ public enum NativeMovieRenderer {
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ])
         output.alwaysCopiesSampleData = false
-        guard reader.canAdd(output) else { throw NativeRenderError.invalidMovie }
+        guard reader.canAdd(output) else { throw NativeRenderError.invalidMovie() }
         reader.add(output)
         let writer = try AVAssetWriter(outputURL: destination, fileType: .mov)
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
@@ -70,7 +70,8 @@ public enum NativeMovieRenderer {
         ])
         guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
         writer.add(input)
-        guard reader.startReading(), writer.startWriting() else { throw NativeRenderError.writerFailed }
+        guard reader.startReading() else { throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?) }
+        guard writer.startWriting() else { throw NativeRenderError.writerFailed }
         writer.startSession(atSourceTime: .zero)
         defer {
             if reader.status == .reading { reader.cancelReading() }
@@ -105,7 +106,7 @@ public enum NativeMovieRenderer {
 
         while let sample = output.copyNextSampleBuffer() {
             try Task.checkCancellation()
-            guard let buffer = CMSampleBufferGetImageBuffer(sample) else { throw NativeRenderError.invalidMovie }
+            guard let buffer = CMSampleBufferGetImageBuffer(sample) else { throw NativeRenderError.invalidMovie() }
             let time = CMSampleBufferGetPresentationTimeStamp(sample)
             if firstTime == nil { firstTime = time }
             let elapsed = (time - firstTime!).seconds
@@ -122,7 +123,9 @@ public enum NativeMovieRenderer {
             }
             lastImage = fitted
         }
-        guard reader.status == .completed, let lastImage else { throw NativeRenderError.invalidMovie }
+        guard reader.status == .completed, let lastImage else {
+            throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?)
+        }
         while frame < frameCount { try await append(lastImage) }
         writer.endSession(atSourceTime: duration)
         input.markAsFinished()
@@ -148,10 +151,10 @@ public enum NativeMovieRenderer {
     }
 
     public static func assemble(clips: [URL], destination: URL, soundtrack: URL? = nil) async throws {
-        guard !clips.isEmpty else { throw NativeRenderError.invalidMovie }
+        guard !clips.isEmpty else { throw NativeRenderError.invalidMovie() }
         let composition = AVMutableComposition()
         guard let video = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-            throw NativeRenderError.invalidMovie
+            throw NativeRenderError.invalidMovie()
         }
         var cursor = CMTime.zero
         var dimensions: CGSize?
@@ -160,13 +163,13 @@ public enum NativeMovieRenderer {
             let asset = AVURLAsset(url: url)
             let tracks = try await asset.loadTracks(withMediaType: .video)
             guard tracks.count == 1, let track = tracks.first,
-                  try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie }
+                  try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie() }
             let size = try await track.load(.naturalSize)
             let transform = try await track.load(.preferredTransform)
-            guard transform == .identity, dimensions == nil || dimensions == size else { throw NativeRenderError.invalidMovie }
+            guard transform == .identity, dimensions == nil || dimensions == size else { throw NativeRenderError.invalidMovie() }
             dimensions = size
             let duration = try await asset.load(.duration)
-            guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie }
+            guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie() }
             try video.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: track, at: cursor)
             cursor = cursor + duration
         }
@@ -174,10 +177,10 @@ public enum NativeMovieRenderer {
             let audioAsset = AVURLAsset(url: soundtrack)
             guard let source = try await audioAsset.loadTracks(withMediaType: .audio).first,
                   let audio = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-                throw NativeRenderError.invalidMovie
+                throw NativeRenderError.invalidMovie()
             }
             let length = try await audioAsset.load(.duration)
-            guard length.seconds.isFinite, length.seconds > 0 else { throw NativeRenderError.invalidMovie }
+            guard length.seconds.isFinite, length.seconds > 0 else { throw NativeRenderError.invalidMovie() }
             var offset = CMTime.zero
             while offset < cursor {
                 try audio.insertTimeRange(CMTimeRange(start: .zero, duration: min(length, cursor - offset)), of: source, at: offset)

@@ -1,41 +1,52 @@
 @preconcurrency import AVFoundation
 import CoreImage
+import FilmDomain
 import Foundation
+import RenderCore
 import XCTest
 
 /// `decodedFrames` once finished a developed clip's read with status failed and nothing else, so the cause was never
-/// known. These tests hold the failure message to naming the error AVFoundation gave.
+/// known. These tests hold a failed read, in the tests' helper and in Development, to naming the error AVFoundation gave.
 final class ReaderFailureTests: XCTestCase {
+    /// On the main thread, so the expected failure matches the assertion `decodedFrames` makes on another.
+    @MainActor
     func testAFailedReadNamesTheErrorAVFoundationGave() async throws {
-        let (url, cleanUp) = try await clip(cutShort: true)
+        let (url, cleanUp) = try await Self.clip(cutShort: true)
         defer { cleanUp() }
-        let asset = AVURLAsset(url: url)
-        let tracks = try await asset.loadTracks(withMediaType: .video)
-        let track = try XCTUnwrap(tracks.first)
-        let reader = try AVAssetReader(asset: asset)
-        let output = AVAssetReaderTrackOutput(track: track, outputSettings: [
-            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
-        ])
-        reader.add(output)
-        XCTAssertTrue(reader.startReading())
-        var frames = 0
-        while output.copyNextSampleBuffer() != nil { frames += 1 }
-        XCTAssertEqual(reader.status, .failed)
-        let message = reader.failureDescription(framesRead: frames)
-        XCTAssertTrue(message.contains("reader status failed (3) after \(frames) frames"), message)
-        XCTAssertTrue(message.contains("error: AVFoundationErrorDomain"), message)
-        XCTAssertTrue(message.contains("underlying error: "), message)
+        let options = XCTExpectedFailure.Options()
+        options.issueMatcher = { issue in
+            let message = issue.compactDescription
+            return issue.type == .assertionFailure && message.contains("reader status failed (3) after ")
+                && message.contains("; error: AVFoundationErrorDomain ") && message.contains("; underlying error: ")
+        }
+        XCTExpectFailure("A clip cut off halfway cannot be read to its end", options: options)
+        _ = try await decodedFrames(url)
+    }
+
+    func testDevelopingAClipThatCannotBeReadCarriesTheErrorAVFoundationGave() async throws {
+        let (url, cleanUp) = try await Self.clip(cutShort: true)
+        defer { cleanUp() }
+        do {
+            try await NativeMovieRenderer.developClip(source: url, destination: url.deletingLastPathComponent()
+                .appendingPathComponent("developed.mov"), camera: CameraCatalog.super8HomeMovie, seed: 1,
+                orientation: .landscape, longEdge: 320)
+            XCTFail("A clip cut off halfway developed")
+        } catch NativeRenderError.invalidMovie(let underlying) {
+            let error = try XCTUnwrap(underlying, "The reader's error")
+            XCTAssertEqual(error.domain, AVFoundationErrorDomain, "\(error)")
+            XCTAssertNotNil(error.userInfo[NSUnderlyingErrorKey] as? NSError, "\(error)")
+        }
     }
 
     func testAWholeClipReadsToTheEndWithNoError() async throws {
-        let (url, cleanUp) = try await clip(cutShort: false)
+        let (url, cleanUp) = try await Self.clip(cutShort: false)
         defer { cleanUp() }
         let frames = try await decodedFrames(url)
         XCTAssertEqual(frames.count, 30)
     }
 
     /// A clip, whole or with its pictures cut off halfway. Its index leads the file, so a cut one opens and then fails to read.
-    private func clip(cutShort: Bool) async throws -> (URL, () -> Void) {
+    private static func clip(cutShort: Bool) async throws -> (URL, () -> Void) {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("ReaderFailureTests-\(UUID())")
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         let url = root.appendingPathComponent("clip.mov")
@@ -49,7 +60,7 @@ final class ReaderFailureTests: XCTestCase {
         return (url, { try? FileManager.default.removeItem(at: root) })
     }
 
-    private func writeClip(to url: URL) async throws {
+    private static func writeClip(to url: URL) async throws {
         let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
         writer.shouldOptimizeForNetworkUse = true
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [AVVideoCodecKey: AVVideoCodecType.h264,

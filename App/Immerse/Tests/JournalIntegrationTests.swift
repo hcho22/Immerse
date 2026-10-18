@@ -101,6 +101,13 @@ final class JournalIntegrationTests: XCTestCase {
         let storage = try XCTUnwrap(FailureCopy.message(for: CocoaError(.fileWriteOutOfSpace)))
         XCTAssertTrue(storage.hasPrefix(FailureCopy.retry), storage)
         XCTAssertTrue(storage.contains("enough space"), storage)
+        let unreadClip = NSError(domain: "AVFoundationErrorDomain", code: -11880, userInfo: [
+            NSLocalizedDescriptionKey: "Invalid sample cursor",
+            NSUnderlyingErrorKey: NSError(domain: NSOSStatusErrorDomain, code: -12551)
+        ])
+        XCTAssertEqual(FailureCopy.message(for: NativeRenderError.invalidMovie(underlying: unreadClip)),
+                       FailureCopy.message(for: NativeRenderError.invalidMovie()))
+        XCTAssertEqual(FailureCopy.message(for: NativeRenderError.invalidMovie()), FailureCopy.retry)
         let failures: [Error] = [JournalError.cameraDenied, FilmExportError.permissionDenied, FilmExportError.needsPermission,
                                  FilmExportError.writeFailed("synthetic"), FilmExportError.missingReceipt,
                                  PersistenceError.invalidMedia, NativeCaptureError.invalidMedia, CocoaError(.fileReadNoPermission),

@@ -2,7 +2,7 @@
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work, and start a bug fix from the failure as a person would meet it.
 On 2026-10-17 RenderCore's `FilmLookTests.testADevelopedClipReadsTheLightItWasRecordedIn` failed once, in the packages part of run 39085816736 (pull request 40, commit 38cb644), and passed in the rerun of the same job.
-This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: the failure now names its error, and nothing else.
+This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip, in the tests' helpers and in Development, now names its error, and nothing else.
 GitHub's Macs are Apple silicon virtual machines and this Mac is an Intel i9; every number from CI is read from the job's own log.
 
 ## The failure
@@ -25,9 +25,9 @@ That is not slow for this test on CI: it is the first test of `FilmLookTests`, i
 
 - Symptom: the reader ended with status `failed` partway through a clip the writer had reported complete.
 - Trigger: not known. An error from the decoder partway through the stream is what the symptom looks like. A cause in the environment of a virtual machine (the decoder, memory or CPU of a shared host) is a candidate, and so is a cause in the clip the writer produced. Neither is shown.
-- Masking condition: the helper threw the error away, which is why a recurrence could not have been told from this one, and why a second look at the log could not name a cause. That is the part fixed here.
+- Masking condition: the helper threw the error away, and so did `developClip` for its own read of the source clip, which is why a recurrence could not have been told from this one, and why a second look at the log could not name a cause. That is the part fixed here.
 - What would disprove an environment explanation: the same error on a recurrence in a run whose other tests ran at normal speed, or a reproduction on the same bytes. The error's domain, code and underlying error are what separate a decoder or system failure (a VideoToolbox or `NSOSStatusErrorDomain` code) from a defect in the clip (a sample or format error such as -11880 or -11829).
-- What would disprove a defect in `NativeMovieRenderer.developClip`: a recurrence with a VideoToolbox decoder error on a clip that reads whole on every other run. Nothing read here suggests a defect in it, and it was not changed.
+- What would disprove a defect in `NativeMovieRenderer.developClip`: a recurrence with a VideoToolbox decoder error on a clip that reads whole on every other run. Nothing read here suggests a defect in it, and it was changed only to carry the reader's error (below).
 
 ## What was tried
 
@@ -48,13 +48,19 @@ The throwaway stress test used for the second and third rows is not committed.
 ## What changed
 
 - `AVAssetReader.failureDescription(framesRead:)` in `RenderTestSupport.swift` builds the message: the reader's status, how many frames it had read, and the error's domain, code, description and failure reason, then each underlying error the same way, or "no error recorded".
-- `decodedFrames` in `RenderTestSupport.swift` and in `NativeRenderTests.swift` (the two helpers that read a clip with `AVAssetReader` in RenderCore's tests) put it in the message of both of their assertions, the `startReading()` one and the final status one. They still assert exactly what they asserted before.
-- `ReaderFailureTests` holds the message to its content: it cuts a clip off halfway and checks that the failed read names `AVFoundationErrorDomain` and an underlying error and the frame count, and that a whole clip reads to its end.
-  Forced on a cut-off clip, `decodedFrames` now fails with: "reader status failed (3) after 0 frames; error: AVFoundationErrorDomain -11880, "Invalid sample cursor", reason "Sample cursor was invalid, or samples were out of range."; underlying error: NSOSStatusErrorDomain -12551".
+  FilmRuntime's tests keep the same helper in `AssetReaderFailure.swift`, since one package's test target cannot use another's.
+- Every test helper that reads a clip with `AVAssetReader` puts it in the message of both of its assertions, the `startReading()` one and the final status one: `decodedFrames` in RenderCore's `RenderTestSupport.swift` and `NativeRenderTests.swift`, and in FilmRuntime's tests `frameTimes` (`ApprovedExportTests`), `assertEveryFrameIsGray` (`FilmStockDevelopmentTests`) and `frameHashes` (`TreatmentVersionDevelopmentTests`).
+  They still assert exactly what they asserted before.
+- `NativeMovieRenderer.developClip` carries AVFoundation's error: when its read of the source clip does not start, or ends with a status other than completed, it throws `NativeRenderError.invalidMovie(underlying:)` with the reader's error, so a test that develops such a clip fails with that error in its "caught error" line.
+  A read that did not start threw `writerFailed` before and now throws `invalidMovie` like the rest of the read; every other `invalidMovie` carries no error.
+  The failure text a person sees is the same: `FailureCopy` gives its general retry text for `invalidMovie` with or without an error (held by `JournalIntegrationTests`), as it does for `writerFailed`, and no caller tells the cases apart.
+- `ReaderFailureTests` cuts a clip off halfway.
+  It runs the shared `decodedFrames` on it under a strict expected failure that accepts only an assertion naming the failed status, `AVFoundationErrorDomain` and an underlying error; it develops the cut clip and checks that `invalidMovie` carries an `AVFoundationErrorDomain` error with an underlying error; and it checks that a whole clip reads to its end.
+  Forced on a cut-off clip on this Mac, `decodedFrames` now fails with (in the iOS 26.5 simulator it reads one frame first): "reader status failed (3) after 0 frames; error: AVFoundationErrorDomain -11880, "Invalid sample cursor", reason "Sample cursor was invalid, or samples were out of range."; underlying error: NSOSStatusErrorDomain -12551, "The operation couldn’t be completed. (OSStatus error -12551.)"".
 - No retry, no longer timeout and no looser assertion was added.
 
 ## What stays open
 
 - The cause is not known. The next occurrence will name the error in the job log; read it against the table above before changing anything.
-- Three more test helpers in `Packages/FilmRuntime/Tests/FilmRuntimeTests` (`ApprovedExportTests`, `FilmStockDevelopmentTests`, `TreatmentVersionDevelopmentTests`) read developed clips the same way and assert the reader's status the same way. They have not failed and were left alone, as outside this failure's package; they would need the same one-line change if one does.
-- `NativeMovieRenderer.developClip` turns a failed read of a source clip into `NativeRenderError.invalidMovie` and does not carry AVFoundation's error with it. A change to what the app throws is a decision of its own and was not made here.
+- Only the shared `decodedFrames` and `developClip` are forced to fail by a test.
+  `NativeRenderTests`' own `decodedFrames` and FilmRuntime's three helpers pass the same message the same way, but no test makes one of them fail.

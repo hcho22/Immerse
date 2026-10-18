@@ -163,7 +163,7 @@ final class TreatmentVersionDevelopmentTests: XCTestCase {
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ])
         reader.add(output)
-        XCTAssertTrue(reader.startReading())
+        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
         var hashes: [Int] = []
         while let sample = output.copyNextSampleBuffer() {
             let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))
@@ -173,7 +173,7 @@ final class TreatmentVersionDevelopmentTests: XCTestCase {
                              count: CVPixelBufferGetBytesPerRow(buffer) * CVPixelBufferGetHeight(buffer))
             hashes.append(bytes.hashValue)
         }
-        XCTAssertEqual(reader.status, .completed)
+        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: hashes.count))
         XCTAssertFalse(hashes.isEmpty)
         return hashes
     }
