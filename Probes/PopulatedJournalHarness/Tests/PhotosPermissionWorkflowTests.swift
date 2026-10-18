@@ -4,7 +4,7 @@ import XCTest
 /// `xcrun simctl privacy $SIM revoke photos-add com.immerse.PopulatedJournalHarness`.
 /// The harness has no Photos usage key, so each test confirms the denied status in
 /// Settings before touching an export control and can never reach a system prompt.
-@MainActor final class PhotosPermissionWorkflowTests: XCTestCase {
+@MainActor final class PhotosPermissionWorkflowTests: HarnessTestCase {
     func testDeniedAddOnlyPhotosExportIsNeverSuccessAndPointsToSettings() throws {
         let app = XCUIApplication()
         app.launchArguments = ["--hide-inspection-bar"]

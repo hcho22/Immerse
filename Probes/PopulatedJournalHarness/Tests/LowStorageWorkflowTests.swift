@@ -6,7 +6,7 @@ import XCTest
 /// shows the warning, and exactly 2 GB, just over, and a reading that fails show none. No disk is filled, so this is
 /// not evidence of what a nearly full iPhone does. Like the harness's other tests these are functional; the
 /// warning's accessibility audits run in the app's own `LowStorageUITests`.
-@MainActor final class LowStorageWorkflowTests: XCTestCase {
+@MainActor final class LowStorageWorkflowTests: HarnessTestCase {
     private static let captureWarning = "This iPhone has less than 2 GB free, so a capture may not save. A capture that does not save uses no exposures or time, and saved captures are unchanged. Free space in iPhone Settings."
     private static let developmentWarning = "This iPhone has less than 2 GB free, so Development may not finish. Saved captures are unchanged, and Development can be resumed. Free space in iPhone Settings."
 

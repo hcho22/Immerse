@@ -10,7 +10,7 @@ import XCTest
 /// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
 /// its frame or the screen. Navigation titles are system text and are not included.
 @MainActor
-final class ContentSizeTests: XCTestCase {
+final class ContentSizeTests: ScreenTestCase {
     /// A text element to measure, found in an accessibility snapshot by type and identifier, exact label or label prefix.
     private struct Target {
         let name: String

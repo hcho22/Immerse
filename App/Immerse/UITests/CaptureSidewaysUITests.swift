@@ -8,7 +8,7 @@ import XCTest
 /// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, and the 6×6
 /// again at the largest text size, to stay inside the per-test time allowance.
 @MainActor
-final class CaptureSidewaysUITests: XCTestCase {
+final class CaptureSidewaysUITests: ScreenTestCase {
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "mediumFormat6x6", name: "6×6", fillsTheRoom: false)
     }

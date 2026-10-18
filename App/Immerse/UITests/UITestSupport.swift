@@ -13,6 +13,30 @@ extension XCUIScreen {
     }
 }
 
+/// The base of every screen test class. Each test starts with the simulator held upright. A test stopped at its time
+/// allowance runs no `defer` or teardown, so a turn it made stays, and the tests after it launched sideways: one run
+/// (39004998658) launched `JournalFlowTests` in landscape for that reason, another harness run (38980604148) failed the
+/// test after a timed-out one (Evidence/NativeApp/main-ci-flakes-069.md).
+@MainActor
+class ScreenTestCase: XCTestCase {
+    override func setUp() async throws {
+        try await super.setUp()
+        XCUIDevice.shared.orientation = .portrait
+    }
+}
+
+extension XCUIElement {
+    /// Flips a switch with a press held for 1 s, where `tap()` holds for 66 ms. When the simulator's touch service is
+    /// late to register the touchscreen XCTest attaches for a tap, as on a slow runner, the finger-down and the finger-up
+    /// reach the app a few milliseconds apart, and a switch ignores that touch while a button still fires:
+    /// `Evidence/NativeApp/main-ci-flakes-069.md` has the log of the lost tap and its reproduction. A press held longer
+    /// than the lag, which reached 628 ms once on CI, still has its finger-up after its finger-down. This is one press,
+    /// never a second tap.
+    func flipSwitch() {
+        press(forDuration: 1)
+    }
+}
+
 @MainActor
 extension XCTestCase {
     /// Scrolls up in equal, slow drags that end held, so the list never coasts, until `element` can be tapped.

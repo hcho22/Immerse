@@ -18,9 +18,12 @@ test_targets() {
         inside && /^    type: bundle\.(unit-test|ui-testing)/ { print name }
     ' "$1"
 }
-# The XCTestCase classes in a directory of test sources.
+# The test classes in a directory of test sources: the XCTestCase subclasses and the subclasses of ScreenTestCase,
+# the screen tests' base class, an XCTestCase whose setUp holds the simulator portrait. ScreenTestCase itself, which
+# holds no tests, is left out.
 suites() {
-    sed -n 's/^.*class \([A-Za-z0-9_]*\) *: *XCTestCase.*$/\1/p' "$1"/*.swift | sort
+    sed -nE 's/^.*class ([A-Za-z0-9_]*) *: *(XCTestCase|ScreenTestCase).*$/\1/p' "$1"/*.swift \
+        | awk '$1 != "ScreenTestCase"' | sort
 }
 
 for manifest in Packages/*/Package.swift; do

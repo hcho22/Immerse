@@ -2,7 +2,7 @@ import RenderCore
 import XCTest
 
 @MainActor
-final class PopulatedWorkflowTests: XCTestCase {
+final class PopulatedWorkflowTests: HarnessTestCase {
     func testEarlyPhotoDevelopmentDarkroomAndRemoval() throws {
         // Rename types deletes into the pre-filled title. With autocorrection off the field receives only the typed
         // keys; otherwise the tap that focuses a pre-filled field makes UIKit accept an autocorrection
@@ -727,7 +727,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         // At the largest size the switch can start below the fold; held drags in the left margin bring it up.
         let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch
         for _ in 0..<12 where !crop.isHittable { dragUp(app, by: 160) }
-        crop.tap()
+        crop.flipSwitch()
         let size = app.sliders["Crop size"]
         XCTAssertTrue(size.waitForExistence(timeout: 5), name)
         for _ in 0..<12 where !size.isHittable { dragUp(app, by: 160) }
@@ -769,7 +769,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         XCTAssertNotEqual(vertical.value as? String, before, "\(name): the Vertical slider takes the drag")
         // Without the crop, back in Exposure, the print has the size it had before Crop opened.
         for _ in 0..<16 where !crop.isHittable { dragDown(app, by: 240) }
-        crop.tap()
+        crop.flipSwitch()
         app.buttons["Exposure"].tap()
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 5), name)
         Thread.sleep(forTimeInterval: 1.5)
@@ -797,7 +797,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
         XCTAssertTrue(crop.isHittable, "In portrait the Crop switch rests on screen")
-        crop.tap()
+        crop.flipSwitch()
         let size = app.sliders["Crop size"]
         XCTAssertTrue(size.waitForExistence(timeout: 5))
         XCTAssertTrue(size.isHittable, "In portrait the Size slider rests on screen")
@@ -879,7 +879,7 @@ final class PopulatedWorkflowTests: XCTestCase {
                 let crop = app.switches["Crop"]
                 XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
                 XCTAssertTrue(crop.isHittable, "\(name): the Crop switch takes a tap")
-                crop.tap()
+                crop.flipSwitch()
                 let size = app.sliders["Crop size"]
                 XCTAssertTrue(size.waitForExistence(timeout: 5), name)
                 XCTAssertTrue(size.isHittable, "\(name): the Size slider takes a drag")
@@ -1051,7 +1051,7 @@ final class PopulatedWorkflowTests: XCTestCase {
         app.buttons["Crop"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
-        crop.tap()
+        crop.flipSwitch()
         let size = app.sliders["Crop size"]
         XCTAssertTrue(size.waitForExistence(timeout: 5))
         size.adjust(toNormalizedSliderPosition: 0.6)
