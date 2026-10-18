@@ -65,6 +65,6 @@ The throwaway stress test used for the second and third rows is not committed.
 - Only the shared `decodedFrames` and `developClip` are forced to fail by a test.
   `NativeRenderTests`' own `decodedFrames` and FilmRuntime's three helpers pass the same message the same way, but no test makes one of them fail.
 - `VerifiedMedia.movie(at:)` in FilmPersistence's `MediaVerification.swift` still ends a failed read in a bare `PersistenceError.invalidMedia`, both when `startReading()` fails and when the read ends with a status other than completed, and its read of a Movie's soundtrack (`decodeAudio`) does the same.
-  `FilmProcessor` runs it on each clip `developClip` writes, on the stored clip and on the assembled Movie, and again on the clip and the Movie before a source is cleaned up.
-  A recurrence in one of those reads fails with `invalidMedia` and no AVFoundation error, before any of the test helpers above reads the clip.
+  Its checks of developed media are `FilmProcessor`'s, of each clip `developClip` writes, the stored clip and the assembled Movie and again of the clip and the Movie before a source is cleaned up, and `FilmExportWorker`'s two checks, of the developed clip or Movie before it is saved and of the copied file handed to Photos.
+  A recurrence in any of those reads fails with `invalidMedia` and no AVFoundation error, before any of the test helpers above reads the clip, the Movie or the file handed to Photos.
   Carrying the error there would mean a payload on `PersistenceError.invalidMedia`, which tests in several packages compare for equality, and that was not done here.
