@@ -177,7 +177,7 @@ final class FilmStockDevelopmentTests: XCTestCase {
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ])
         reader.add(output)
-        XCTAssertTrue(reader.startReading(), file: file, line: line)
+        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0), file: file, line: line)
         var frames = 0
         while let sample = output.copyNextSampleBuffer() {
             let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample), file: file, line: line)
@@ -193,7 +193,7 @@ final class FilmStockDevelopmentTests: XCTestCase {
             XCTAssertLessThanOrEqual(spread(bytes, red: 2, blue: 0), 4, "\(name) frame \(frames) is gray", file: file, line: line)
             frames += 1
         }
-        XCTAssertEqual(reader.status, .completed, file: file, line: line)
+        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: frames), file: file, line: line)
         XCTAssertGreaterThan(frames, 1, "\(name) has frames", file: file, line: line)
     }
 }

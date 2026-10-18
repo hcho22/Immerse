@@ -8,7 +8,9 @@ public enum NativeRenderError: Error, Equatable {
     case wrongMedium
     case invalidRecipe
     case renderFailed
-    case invalidMovie
+    /// A movie that cannot be developed or assembled. Where AVFoundation could not read a clip, `underlying` is the error
+    /// it gave, for diagnosis: the failure text a person sees is the same either way.
+    case invalidMovie(underlying: NSError? = nil)
     case writerFailed
     case writerTimedOut
     /// An Instant master that is not the card-sized print every developed Instant exposure is.

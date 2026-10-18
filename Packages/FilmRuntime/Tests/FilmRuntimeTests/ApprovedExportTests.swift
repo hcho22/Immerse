@@ -222,13 +222,13 @@ final class ApprovedExportTests: XCTestCase {
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ])
         reader.add(output)
-        XCTAssertTrue(reader.startReading())
+        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
         var times: [CMTime] = []
         while let sample = output.copyNextSampleBuffer() {
             guard CMSampleBufferGetImageBuffer(sample) != nil else { continue }
             times.append(CMSampleBufferGetPresentationTimeStamp(sample))
         }
-        XCTAssertEqual(reader.status, .completed)
+        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: times.count))
         return times.sorted()
     }
 }
