@@ -100,6 +100,38 @@ extension DecodedPixels {
     }
 }
 
+extension AVAssetReader {
+    /// What a reader that did not finish says, for a failure message: its status and the error AVFoundation gave, with
+    /// the domain, code, reason and every error underneath it, since the status alone names no cause.
+    func failureDescription(framesRead: Int) -> String {
+        var lines = ["reader status \(status.name) (\(status.rawValue)) after \(framesRead) frames"]
+        var error = self.error as NSError?
+        var depth = 0
+        while let current = error {
+            lines.append("\(depth == 0 ? "error" : "underlying error"): \(current.domain) \(current.code), "
+                + "\"\(current.localizedDescription)\""
+                + (current.localizedFailureReason.map { ", reason \"\($0)\"" } ?? ""))
+            error = current.userInfo[NSUnderlyingErrorKey] as? NSError
+            depth += 1
+        }
+        if depth == 0 { lines.append("no error recorded") }
+        return lines.joined(separator: "; ")
+    }
+}
+
+private extension AVAssetReader.Status {
+    var name: String {
+        switch self {
+        case .unknown: "unknown"
+        case .reading: "reading"
+        case .completed: "completed"
+        case .failed: "failed"
+        case .cancelled: "cancelled"
+        @unknown default: "new"
+        }
+    }
+}
+
 /// Every frame of a movie's video track, as RGBA.
 func decodedFrames(_ url: URL) async throws -> [DecodedPixels] {
     let asset = AVURLAsset(url: url)
@@ -110,7 +142,7 @@ func decodedFrames(_ url: URL) async throws -> [DecodedPixels] {
         kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
     ])
     reader.add(output)
-    XCTAssertTrue(reader.startReading())
+    XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
     var result: [DecodedPixels] = []
     while let sample = output.copyNextSampleBuffer() {
         let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))
@@ -129,6 +161,6 @@ func decodedFrames(_ url: URL) async throws -> [DecodedPixels] {
         }
         result.append(DecodedPixels(width: width, height: height, bytes: bytes))
     }
-    XCTAssertEqual(reader.status, .completed)
+    XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: result.count))
     return result
 }

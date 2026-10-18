@@ -185,7 +185,7 @@ final class NativeRenderTests: XCTestCase {
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ])
         reader.add(output)
-        XCTAssertTrue(reader.startReading())
+        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
         var result: [Data] = []
         while let sample = output.copyNextSampleBuffer() {
             let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))
@@ -198,7 +198,7 @@ final class NativeRenderTests: XCTestCase {
             CVPixelBufferUnlockBaseAddress(buffer, .readOnly)
             result.append(pixels)
         }
-        XCTAssertEqual(reader.status, .completed)
+        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: result.count))
         return result
     }
 
