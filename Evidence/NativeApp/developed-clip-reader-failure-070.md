@@ -2,7 +2,7 @@
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work, and start a bug fix from the failure as a person would meet it.
 On 2026-10-17 RenderCore's `FilmLookTests.testADevelopedClipReadsTheLightItWasRecordedIn` failed once, in the packages part of run 39085816736 (pull request 40, commit 38cb644), and passed in the rerun of the same job.
-This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error, and nothing else; Development's verification read still does not (What stays open).
+This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error, and nothing else; Development's and export's verification reads still do not (What stays open).
 GitHub's Macs are Apple silicon virtual machines and this Mac is an Intel i9; every number from CI is read from the job's own log.
 
 ## The failure
@@ -65,6 +65,6 @@ The throwaway stress test used for the second and third rows is not committed.
 - Only the shared `decodedFrames` and `developClip` are forced to fail by a test.
   `NativeRenderTests`' own `decodedFrames` and FilmRuntime's three helpers pass the same message the same way, but no test makes one of them fail.
 - `VerifiedMedia.movie(at:)` in FilmPersistence's `MediaVerification.swift` still ends a failed read in a bare `PersistenceError.invalidMedia`, both when `startReading()` fails and when the read ends with a status other than completed, and its read of a Movie's soundtrack (`decodeAudio`) does the same.
-  Its checks of developed media are `FilmProcessor`'s, of each clip `developClip` writes, the stored clip and the assembled Movie and again of the clip and the Movie before a source is cleaned up, and `FilmExportWorker`'s two checks, of the developed clip or Movie before it is saved and of the copied file handed to Photos.
+  Its reads of a Film's clips and Movie are `FilmProcessor`'s, of each clip `developClip` writes, the stored clip and the assembled Movie and again of the clip and the Movie before a source is cleaned up, `FilmExportWorker`'s two checks, of the assembled Movie or an original clip before it is saved and of the copy handed to Photos, and `CaptureCommitJournal.verify`'s, of each Movie clip a capture commits.
   A recurrence in any of those reads fails with `invalidMedia` and no AVFoundation error, before any of the test helpers above reads the clip, the Movie or the file handed to Photos.
   Carrying the error there would mean a payload on `PersistenceError.invalidMedia`, which tests in several packages compare for equality, and that was not done here.
