@@ -15,19 +15,30 @@ That is not slow for this test on CI: it is the first test of `FilmLookTests`, i
 
 ## What the log shows
 
-- The failure is in the Mac `swift test` run of RenderCore, not the simulator run. The runner image was macos-26-arm64 20261013.0424.1, macOS 26.6.2, the same image as the passing runs before and after it.
-- Nothing in the job's log coincides with the failure. The only unusual line near it, `IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver`, is printed at the first test of every package's run in every passing run too, and several dozen times later in the whole run.
-- Only one error line was logged for the test. After a failed `XCTAssertEqual` the test goes on, and `XCTUnwrap(frames.first)` would have raised a second error had the reader returned no frame at all. So the reader decoded at least one frame, and the colour check on that frame passed.
-  This is an inference from the log, not something the log states. It puts the failure partway through the clip, not at its start: a clip with a damaged index or one that cannot be opened fails earlier, at `loadTracks` or `startReading`.
+- The failure is in the Mac `swift test` run of RenderCore, not the simulator run.
+  The runner image was macos-26-arm64 20261013.0424.1, macOS 26.6.2, the same image as the passing runs before and after it.
+- Nothing in the job's log coincides with the failure.
+  The only unusual line near it, `IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver`, is printed at the first test of every package's run in every passing run too, and several dozen times later in the whole run.
+- Only one error line was logged for the test.
+  After a failed `XCTAssertEqual` the test goes on, and `XCTUnwrap(frames.first)` would have raised a second error had the reader returned no frame at all.
+  So the reader decoded at least one frame, and the colour check on that frame passed.
+  This is an inference from the log, not something the log states.
+  It puts the failure partway through the clip, not at its start: a clip with a damaged index or one that cannot be opened fails earlier, at `loadTracks` or `startReading`.
 - The clip was written without error: `developClip` returned (it throws `writerFailed` unless the writer's status is `completed`) and the test's own source clips were read by `developClip` just before.
 
 ## Trigger, masking condition and symptom
 
 - Symptom: the reader ended with status `failed` partway through a clip the writer had reported complete.
-- Trigger: not known. An error from the decoder partway through the stream is what the symptom looks like. A cause in the environment of a virtual machine (the decoder, memory or CPU of a shared host) is a candidate, and so is a cause in the clip the writer produced. Neither is shown.
-- Masking condition: the helper threw the error away, and so did `developClip` for its own read of the source clip, which is why a recurrence could not have been told from this one, and why a second look at the log could not name a cause. That is the part fixed here.
-- What would disprove an environment explanation: the same error on a recurrence in a run whose other tests ran at normal speed, or a reproduction on the same bytes. The error's domain, code and underlying error are what separate a decoder or system failure (a VideoToolbox or `NSOSStatusErrorDomain` code) from a defect in the clip (a sample or format error such as -11880 or -11829).
-- What would disprove a defect in `NativeMovieRenderer.developClip`: a recurrence with a VideoToolbox decoder error on a clip that reads whole on every other run. Nothing read here suggests a defect in it, and it was changed only to carry the reader's error (below).
+- Trigger: not known.
+  An error from the decoder partway through the stream is what the symptom looks like.
+  A cause in the environment of a virtual machine (the decoder, memory or CPU of a shared host) is a candidate, and so is a cause in the clip the writer produced.
+  Neither is shown.
+- Masking condition: the helper threw the error away, and so did `developClip` for its own read of the source clip, which is why a recurrence could not have been told from this one, and why a second look at the log could not name a cause.
+  That is the part fixed here.
+- What would disprove an environment explanation: the same error on a recurrence in a run whose other tests ran at normal speed, or a reproduction on the same bytes.
+  The error's domain, code and underlying error are what separate a decoder or system failure (a VideoToolbox or `NSOSStatusErrorDomain` code) from a defect in the clip (a sample or format error such as -11880 or -11829).
+- What would disprove a defect in `NativeMovieRenderer.developClip`: a recurrence with a VideoToolbox decoder error on a clip that reads whole on every other run.
+  Nothing read here suggests a defect in it, and it was changed only to carry the reader's error (below).
 
 ## What was tried
 
@@ -61,7 +72,8 @@ The throwaway stress test used for the second and third rows is not committed.
 
 ## What stays open
 
-- The cause is not known. The next occurrence will name the error in the job log; read it against the table above before changing anything.
+- The cause is not known.
+  The next occurrence will name the error in the job log; read it against the table above before changing anything.
 - Only the shared `decodedFrames` and `developClip` are forced to fail by a test.
   `NativeRenderTests`' own `decodedFrames` and FilmRuntime's three helpers pass the same message the same way, but no test makes one of them fail.
 - `VerifiedMedia.movie(at:)` in FilmPersistence's `MediaVerification.swift` still ends a failed read in a bare `PersistenceError.invalidMedia`, both when `startReading()` fails and when the read ends with a status other than completed, and its read of a Movie's soundtrack (`decodeAudio`) does the same.
