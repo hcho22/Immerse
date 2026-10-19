@@ -291,7 +291,7 @@ final class JournalIntegrationTests: XCTestCase {
     /// their place and the selected tool stays on screen under it; the print has its size back when the error goes.
     func testADarkroomErrorTakesItsHeightFromThePrintAndLeavesTheControlsInPlace() async throws {
         let probe = DarkroomLayoutProbe()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -324,7 +324,7 @@ final class JournalIntegrationTests: XCTestCase {
     /// below the fold, the print stays 64 pt and the screen scrolls only the points the controls still need.
     func testTheCropToolsPrintGivesUpHeightForItsControlsDownTo64Points() async throws {
         let probe = DarkroomLayoutProbe()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -363,7 +363,7 @@ final class JournalIntegrationTests: XCTestCase {
     /// screen scrolls only the points the controls still need.
     func testTheCropToolsPrintKeeps64PointsPastTheLargestTextSizeThatFits() async throws {
         let probe = DarkroomLayoutProbe()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -402,7 +402,7 @@ final class JournalIntegrationTests: XCTestCase {
     func testInLandscapeThePrintSitsBesideTheControlsAndNothingInThemMovesIt() async throws {
         let probe = DarkroomLayoutProbe()
         probe.landscape = true
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -446,7 +446,7 @@ final class JournalIntegrationTests: XCTestCase {
         let probe = DarkroomLayoutProbe()
         probe.landscape = true
         probe.toolCount = 5
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -481,7 +481,7 @@ final class JournalIntegrationTests: XCTestCase {
     func testInLandscapeAColumnThatRunsPastItsHeightFlashesItsIndicatorInsideIt() async throws {
         let probe = DarkroomLayoutProbe()
         probe.landscape = true
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         let host = UIHostingController(rootView: DarkroomLayoutProbeView(probe: probe))
         // The safe area an iPhone 13 mini held sideways leaves at its trailing edge, which the column's scroll view
