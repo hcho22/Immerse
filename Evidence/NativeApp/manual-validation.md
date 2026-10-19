@@ -72,7 +72,7 @@ The earlier pins are history; do not test any of them as the candidate.
 - `3a008ba3f6701dd2130e6d1219f724a58670f1b9` on `main` (https://github.com/hcho22/Immerse/pull/41), the pin from 2026-10-18 to 2026-10-19.
   It holds everything the candidate does except the hosted tests' wait for the app's window scene, which touches tests only.
 - `79a1b1c629e9158c475057513280d097c6512acc` on `main` (https://github.com/hcho22/Immerse/pull/38), the pin from 2026-10-17 to 2026-10-18.
-  It holds everything the candidate does except the two changes above, which touch tests and the clip reader's error only.
+  It holds everything the candidate does except the three changes above, which touch tests and the clip reader's error only.
 - `771d5e2514165c04c384f5c7f6d8967af941dace` on `main` (https://github.com/hcho22/Immerse/pull/34), the pin from 2026-10-15 to 2026-10-17.
   It holds PRD 2.1, the four changes of 2026-10-14 and the sideways Darkroom but not the two camera changes: it shows the 6×6's rear viewfinder reversed, turns the shooting screen with the iPhone, has no zoom steps and asks for **Resume Camera** after each Instant exposure.
 - `38792bb3f76472860e1da8a702c78bee20f2b444` on `main` (https://github.com/hcho22/Immerse/pull/31), the pin from 2026-10-14 to 2026-10-15.
