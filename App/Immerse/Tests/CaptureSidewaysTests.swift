@@ -47,7 +47,7 @@ final class CaptureSidewaysTests: XCTestCase {
     /// with the screen.
     func testTheHoldLastsWhileAPrintIsOverTheScreenAndEndsWithIt() async throws {
         let showing = PrintShowing()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: HoldProbe(showing: showing))
         window.makeKeyAndVisible()
@@ -104,7 +104,7 @@ final class CaptureSidewaysTests: XCTestCase {
     /// the lens.
     func testASliderStaysTheSameViewAsTheIPhoneTurns() async throws {
         let probe = SliderProbe()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: SliderProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -189,7 +189,7 @@ final class CaptureSidewaysTests: XCTestCase {
         .environment(\.heldTurn, turn)
         .coordinateSpace(name: "column")
         .frame(width: width)
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         let host = UIHostingController(rootView: view)
         window.rootViewController = host
@@ -281,7 +281,7 @@ final class CaptureSidewaysTests: XCTestCase {
     /// one side to the other, where its top is at the other end.
     func testAHeaderThatScrollsStartsFromItsTopTurnedFromSideToSide() async throws {
         let probe = ScrollProbe()
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: ScrollProbeView(probe: probe))
         window.makeKeyAndVisible()
@@ -328,7 +328,7 @@ final class CaptureSidewaysTests: XCTestCase {
             model.refresh()
             for size in sizes {
                 for (held, name) in [(CaptureFrameOrientation.portrait, "portrait"), (.landscapeLeft, "left"), (.landscapeRight, "right")] {
-                    let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+                    let scene = try await hostWindowScene()
                     let window = UIWindow(windowScene: scene)
                     model.capture.hold(forTesting: held)
                     window.rootViewController = UIHostingController(
@@ -379,7 +379,7 @@ final class CaptureSidewaysTests: XCTestCase {
         for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
             controls.zoomStep = steps[selected]
             for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
-                let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+                let scene = try await hostWindowScene()
                 let window = UIWindow(windowScene: scene)
                 window.overrideUserInterfaceStyle = style
                 model.capture.hold(forTesting: held)

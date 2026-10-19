@@ -279,7 +279,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
                                                    movieOrientation: .landscape, filmStock: .color, access: .subscription)
         model.refresh()
         XCTAssertEqual(film.remainingLabel(recordedFor: 12.5), "2:35 left")
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: CaptureView(filmID: film.id).environment(model))
         let start = Date(timeIntervalSinceNow: -12.5)
@@ -426,7 +426,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
             model.refresh()
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
                 for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
-                    let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+                    let scene = try await hostWindowScene()
                     let window = UIWindow(windowScene: scene)
                     // Taller than the screen, so the whole viewfinder shows instead of scrolling under the shutter bar.
                     window.frame = CGRect(x: 0, y: 0, width: scene.screen.bounds.width, height: scene.screen.bounds.height * 2.2)
