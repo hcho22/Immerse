@@ -1,13 +1,22 @@
 # Physical v1 Validation Handoff
 
-Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright.
+Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright, and re-pinned on 2026-10-18 to the build that also holds two changes that touch no screen: the screen tests' fixes and the clip reader's error.
 **Plan only; every physical scenario below is deferred and unaccepted. v1 is not ready for manual sign-off.**
 Nothing in this plan has been run on a phone.
 
 ## The Candidate
 
-The software candidate is commit `79a1b1c629e9158c475057513280d097c6512acc` on `main`, the squash of https://github.com/hcho22/Immerse/pull/38.
-It holds all of PRD 2.1, the four changes of 2026-10-14 and the sideways Darkroom, as the pin before it did, and the two camera changes merged to `main` since that pin:
+The software candidate is commit `3a008ba3f6701dd2130e6d1219f724a58670f1b9` on `main`, the squash of https://github.com/hcho22/Immerse/pull/41.
+It holds everything the pin before it did (PRD 2.1, the four changes of 2026-10-14, the sideways Darkroom and the two camera changes below), and two changes merged to `main` since that pin, which change nothing a person sees:
+
+| Pull request | What it changed | Record |
+| --- | --- | --- |
+| https://github.com/hcho22/Immerse/pull/40 | Tests only: screen tests flip a switch with a held press and start with the simulator upright | [main-ci-flakes-069](main-ci-flakes-069.md) |
+| https://github.com/hcho22/Immerse/pull/41 | When Development cannot read a clip it has recorded, the error now carries AVFoundation's own error (`NativeRenderError.invalidMovie(underlying:)`), and a clip reader that fails to start throws `invalidMovie` where it threw `writerFailed`. Nothing in the app tells the two apart: both show `FailureCopy.retry`, "The operation did not finish. Saved captures remain private; retry after checking available storage.", which a hosted test now holds | [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) |
+
+No scenario changes for either.
+The scenarios that fail or interrupt Development, or end in a failure message, expect the same text and the same behavior as at the pin before: the app maps both errors to the same message, so a failed Movie Development shows what it showed, and the scenarios stand as written.
+The two camera changes, which the pin before this one was made for, are these:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
@@ -15,7 +24,7 @@ It holds all of PRD 2.1, the four changes of 2026-10-14 and the sideways Darkroo
 | https://github.com/hcho22/Immerse/pull/38 | Every Camera's shooting screen keeps the portrait layout in every hold, with only its words and icons turning upright, and its viewfinder the same size in the same place; the 6×6's rear viewfinder is no longer reversed; the 6×6's rear camera offers the iPhone's own zoom steps; and, by the captain's choice ("Instant - 1"), the Instant's print, its question and the Darkroom opened from that print stay in the camera's portrait layout while the camera is up | [068](capture-sideways-zoom-068.md), [ADR 0017](../../2026-09-29-film-camera-experience-v1/adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) |
 
 The captain asked for both on 2026-10-16 and for the plan to be updated on 2026-10-17 ("please update the iphone test plan"), following his standing practice from 2026-10-14 ("test plan - after crop") of re-pinning the plan once the changes it waits for have landed.
-The pin is the first commit on `main` that holds both.
+The pin of 2026-10-17 was the first commit on `main` that held both.
 
 The sideways Darkroom of the pin before this one, and the four changes of 2026-10-14 before it, are still in the candidate and their scenarios are unchanged but where this plan says so:
 
@@ -37,16 +46,16 @@ To check it out and confirm it:
 
 ```sh
 git fetch origin
-git checkout --detach 79a1b1c629e9158c475057513280d097c6512acc
+git checkout --detach 3a008ba3f6701dd2130e6d1219f724a58670f1b9
 git rev-parse HEAD     # must print the hash above
 git status --short     # must print nothing
 ```
 
 Re-pin before any manual run if the app has changed since this commit.
 The app is built from `App/Immerse` and the local packages under `Packages` and from nothing else (`App/Immerse/project.yml`).
-To tell whether it has changed, run `git diff --stat 79a1b1c629e9158c475057513280d097c6512acc origin/main -- App Packages`.
+To tell whether it has changed, run `git diff --stat 3a008ba3f6701dd2130e6d1219f724a58670f1b9 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
-When this was written, `79a1b1c` was the newest commit on `main`.
+When this was written, `3a008ba` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -54,6 +63,8 @@ reassess affected scenarios after any production, asset, signing or OS change.
 
 The earlier pins are history; do not test any of them as the candidate.
 
+- `79a1b1c629e9158c475057513280d097c6512acc` on `main` (https://github.com/hcho22/Immerse/pull/38), the pin from 2026-10-17 to 2026-10-18.
+  It holds everything the candidate does except the two changes above, which touch tests and the clip reader's error only.
 - `771d5e2514165c04c384f5c7f6d8967af941dace` on `main` (https://github.com/hcho22/Immerse/pull/34), the pin from 2026-10-15 to 2026-10-17.
   It holds PRD 2.1, the four changes of 2026-10-14 and the sideways Darkroom but not the two camera changes: it shows the 6×6's rear viewfinder reversed, turns the shooting screen with the iPhone, has no zoom steps and asks for **Resume Camera** after each Instant exposure.
 - `38792bb3f76472860e1da8a702c78bee20f2b444` on `main` (https://github.com/hcho22/Immerse/pull/31), the pin from 2026-10-14 to 2026-10-15.
@@ -184,7 +195,8 @@ The rows after it were recorded at the earlier candidates they name and keep the
 
 | Observed software gate | Bound evidence and limit |
 | --- | --- |
-| Gates at the pinned candidate `79a1b1c` | Each of the two camera changes since `771d5e2` ran its own tests on simulators, and each record says what it ran: [067](instant-camera-stays-on-067.md) and [068](capture-sideways-zoom-068.md), the latter noting that its screen tests were not run again after its last corrections. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/37 run 38975556396 at its head `197d790`, and for https://github.com/hcho22/Immerse/pull/38 run 39010839301 at its head `fd28a9f` (its run 39004998658 at `2eda3b4` had failed before the last fixes). `main`'s own checks failed on both: on `003d8d4`, the merge of https://github.com/hcho22/Immerse/pull/37, in the harness part (run 38980604148, the Darkroom landscape and crop tests of `PopulatedWorkflowTests`), and on `79a1b1c` in the ui-flows part (run 39041986761, `TestingUnlockUITests.testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn`). Both trees passed the same checks on their own pull requests, so they look like flaky screen tests; no cause is claimed here, and a separate task is looking into them. A Mac and simulators only, and the simulator has no camera: no iPhone ran anything, and scenarios [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone) and [C01](#c01---the-instants-camera-after-each-exposure) carry what that leaves. |
+| Gates at the pinned candidate `3a008ba` | The pull request check of each change passed: for https://github.com/hcho22/Immerse/pull/40 run 39085816736 and for https://github.com/hcho22/Immerse/pull/41 run 39141419393, and `main`'s own check on `3a008ba` passed (run 39165281093). `main`'s check on `7447153`, the merge of https://github.com/hcho22/Immerse/pull/40, failed (run 39098085159); it was not looked into here. A Mac and simulators only: no iPhone ran anything. |
+| Gates at the earlier pin `79a1b1c` (history) | Each of the two camera changes since `771d5e2` ran its own tests on simulators, and each record says what it ran: [067](instant-camera-stays-on-067.md) and [068](capture-sideways-zoom-068.md), the latter noting that its screen tests were not run again after its last corrections. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/37 run 38975556396 at its head `197d790`, and for https://github.com/hcho22/Immerse/pull/38 run 39010839301 at its head `fd28a9f` (its run 39004998658 at `2eda3b4` had failed before the last fixes). `main`'s own checks failed on both: on `003d8d4`, the merge of https://github.com/hcho22/Immerse/pull/37, in the harness part (run 38980604148, the Darkroom landscape and crop tests of `PopulatedWorkflowTests`), and on `79a1b1c` in the ui-flows part (run 39041986761, `TestingUnlockUITests.testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn`). Both trees passed the same checks on their own pull requests, so they look like flaky screen tests; no cause is claimed here, and a separate task is looking into them. A Mac and simulators only, and the simulator has no camera: no iPhone ran anything, and scenarios [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone) and [C01](#c01---the-instants-camera-after-each-exposure) carry what that leaves. |
 | Gates at the earlier pin `771d5e2` (history) | Each of the two app changes since `38792bb` ran its own tests on simulators, and each record says what it ran: [064](ui-test-isolation-064.md) and [065](darkroom-landscape-side-by-side-065.md) "Runs", the latter on iPhone SE (3rd generation), iPhone 13 mini and iPhone 17 Pro simulators on iOS 26.5, in light and in dark. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/33 run 38724598104 at its head `ae29314`, and for https://github.com/hcho22/Immerse/pull/34 run 38790053549 at its head `4f1bb47`. That head was not brought up to https://github.com/hcho22/Immerse/pull/33 before it merged, so no pull request check ran the tree of `771d5e2` itself; `main`'s check on `a12e360`, the merge of https://github.com/hcho22/Immerse/pull/33, passed (run 38740399174), and its run on `771d5e2` was still running when this was written (https://github.com/hcho22/Immerse/actions/runs/38800044550): read its result before testing. A Mac and simulators only: no iPhone ran anything, the simulator offers no Display Zoom, and scenarios [W01 to W06](#the-sideways-darkroom-on-a-real-iphone) carry what that leaves. |
 | Gates at the earlier pin `38792bb` (history) | Each of the four changes ran its own tests on a Mac and on simulators, and each record says what it ran: [060](darkroom-export-decisions-060.md) "What was run" and the rounds after it, [061](instant-study-and-toning-061.md) "What ran", [062](low-storage-warning-062.md) "Runs" (all four parts of the check on its merge with `main`), [063](crop-fit-short-screens-063.md) "Runs". The pull request check of each passed; for https://github.com/hcho22/Immerse/pull/31 that was run 38671959157 at its head `495c764`, whose tree is the same as `38792bb`'s. `main`'s own check failed on `9d54ba1` (the packages part) and on `5c427bc` (the harness part, on `RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths`, a test older than those changes, as [063](crop-fit-short-screens-063.md) records), and its run on `38792bb` was still running when that row was written (https://github.com/hcho22/Immerse/actions/runs/38684788575); it has since passed. A Mac and simulators only, an iPhone SE (3rd generation) simulator among them: no iPhone ran anything, and scenarios [D01 to D04, I01 to I03 and S01 to S05](#the-2026-10-14-changes-on-a-real-iphone) carry what that leaves. |
 | Gates at the earlier pin `5c3a217` (history) | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796`, which [059](dropped-touch-059.md) records as the same tree as `5c3a217`. The check on the squash commit itself, on `main`, was cancelled at its 120-minute limit with no test failed (run 38403410314, same record), so that commit has no finished check of its own. The check has since been split into four parts (CI row below), and `main`'s run on `d82c6fa`, which builds the same app, was waiting to start when this was written (https://github.com/hcho22/Immerse/actions/runs/38473025368): read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
@@ -791,7 +803,7 @@ Software tests hold this (`TreatmentVersionDevelopmentTests`, `LegacyLookTests`)
 
 **You need.**
 A build from before treatment versions were recorded: commit `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` on `main`, the squash of https://github.com/hcho22/Immerse/pull/24, which was the build before the 2026-10-13 pin.
-The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, and by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3" (`git diff 5c3a217 79a1b1c -- Packages/FilmPersistence Packages/FilmDomain`), so the candidate opens what the earlier build saved.
+The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, and by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3" (`git diff 5c3a217 3a008ba -- Packages/FilmPersistence Packages/FilmDomain`), so the candidate opens what the earlier build saved.
 The app has no way to bring a Film in from outside, so installing the earlier build first is the only way to have a Film that was started before this one.
 For an agent, the earlier build is a second named artifact and needs its own install scope from Firstmate (authority table, first row); for the captain running this by hand it is his own choice.
 
@@ -819,7 +831,7 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 **Part B, on the candidate.**
 
 1. If you are also running I03, do its part A now, before the candidate.
-   Check out the candidate, `git checkout --detach 79a1b1c629e9158c475057513280d097c6512acc`, and build and run it on the same phone without deleting Immerse.
+   Check out the candidate, `git checkout --detach 3a008ba3f6701dd2130e6d1219f724a58670f1b9`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists every Film from part A with the same title, Camera, Film Stock and remaining capacity.
 3. Open each "OLD done" Film and compare its pictures with the screenshots from part A.
 4. On each "OLD open" Film capture the same subject again, and on the 16mm color one a clip under the warm bulbs as well.
@@ -1277,7 +1289,7 @@ Here that is a software test with a reopened store and an install-over update in
 
 **You need.**
 The build just before the Instant change: commit `9d54ba166299eea3edfecc2c9fde29331a76dae4` on `main`, the squash of https://github.com/hcho22/Immerse/pull/28, which records version 3 for a new Film (`CameraCatalog.treatmentVersion` in `Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift` reads "film-look-3" there and "film-look-4" at the candidate).
-From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4" (`git diff 9d54ba1 79a1b1c -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
+From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4" (`git diff 9d54ba1 3a008ba -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
 For an agent the earlier build is another named artifact and needs its own install scope (authority table, first row); for the captain it is his own choice.
 
 **Order matters.**
@@ -1296,7 +1308,7 @@ If the candidate is already on the phone, do not install this build over it; rec
 
 **Part B, on the candidate.**
 
-1. Check out the candidate, `git checkout --detach 79a1b1c629e9158c475057513280d097c6512acc`, and build and run it on the same phone without deleting Immerse.
+1. Check out the candidate, `git checkout --detach 3a008ba3f6701dd2130e6d1219f724a58670f1b9`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists both packs with the same titles and remaining exposures.
 3. Open "V3 pack" and compare its two prints with the screenshots from part A.
 4. Take two more prints of the subject on "V3 pack" and one on "V3 empty".
