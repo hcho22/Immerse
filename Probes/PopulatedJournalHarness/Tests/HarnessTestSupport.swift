@@ -11,6 +11,20 @@ class HarnessTestCase: XCTestCase {
     }
 }
 
+extension XCUICoordinate {
+    /// Presses a slider's thumb and drags it to `end`, then keeps the finger down for 1.5 s before lifting it, where a
+    /// bare `press(forDuration:thenDragTo:)` lifts it while it is still moving. The finger's whole path reaches the app
+    /// on time, but when the app's main thread stops for about a second in the middle of the drag, as it did once on
+    /// CI, a finger lifted inside that time is handled together with the moves before it: iOS 26's slider then springs
+    /// back towards the value it had before the stop and comes to rest on the way, at 2.0 stops where the drag was to
+    /// end at -3.0 (`Evidence/NativeApp/main-ci-flakes-072.md`). A finger still down when the app catches up is handled
+    /// in order, so the slider ends under it; the hold covers a stop that ends up to about 2.5 s after the finger went
+    /// down. A longer stop still fails the test. This is one drag, never a second.
+    func dragThumb(to end: XCUICoordinate) {
+        press(forDuration: 0.2, thenDragTo: end, withVelocity: .default, thenHoldForDuration: 1.5)
+    }
+}
+
 extension XCUIElement {
     /// Flips a switch with a press held for 1 s, where `tap()` holds for 66 ms. When the simulator's touch service is
     /// late to register the touchscreen XCTest attaches for a tap, the finger-down and the finger-up reach the app a few

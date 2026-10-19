@@ -199,7 +199,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         guard !value.exists else { return }
         let thumb = (19 + slider.normalizedSliderPosition * (slider.frame.width - 38)) / slider.frame.width
         slider.coordinate(withNormalizedOffset: CGVector(dx: thumb, dy: 0.5))
-            .press(forDuration: 0.2, thenDragTo: slider.coordinate(withNormalizedOffset: CGVector(dx: end == 1 ? 1.2 : -0.2, dy: 0.5)))
+            .dragThumb(to: slider.coordinate(withNormalizedOffset: CGVector(dx: end == 1 ? 1.2 : -0.2, dy: 0.5)))
     }
 
     private func waitForChange(of element: XCUIElement, from before: Data, timeout: TimeInterval = 15) -> Bool {
@@ -689,8 +689,9 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(reset.isHittable, "\(name): Reset to Original is on screen")
         // A drag sent to where the slider's thumb is, which scrolls nothing: 3.5 stops rests at the slider's end.
         exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
-            .press(forDuration: 0.2, thenDragTo: exposure.coordinate(withNormalizedOffset: CGVector(dx: -0.2, dy: 0.5)))
-        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5), "\(name): the slider takes the drag")
+            .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: -0.2, dy: 0.5)))
+        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5),
+                      "\(name): the slider takes the drag, and it reads \(exposure.value as? String ?? "no value")")
         XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 20), "\(name): inside the limits the print is made")
         XCTAssertFalse(explanation.exists, "\(name): the explanation goes once the print can be made")
     }
