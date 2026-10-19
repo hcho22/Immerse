@@ -8,7 +8,8 @@ import UIKit
 /// (Evidence/NativeApp/main-ci-flakes-071.md). A test that needs a window waits here for the scene to connect,
 /// never reads `connectedScenes` once at its first line.
 @MainActor
-func hostWindowScene(within timeout: Duration = .seconds(60)) async throws -> UIWindowScene {
+func hostWindowScene() async throws -> UIWindowScene {
+    let timeout: Duration = .seconds(60)
     func connected() -> UIWindowScene? {
         UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
     }
