@@ -5,6 +5,17 @@ import XCTest
 /// and the next test launched the app sideways and failed on a tap (Evidence/NativeApp/main-ci-flakes-069.md).
 @MainActor
 class HarnessTestCase: XCTestCase {
+    /// Launches the harness once before the class's first test, outside every test's time allowance: a session's first
+    /// launch, where XCTest installs the app, is the slowest on CI (Evidence/NativeApp/main-ci-flakes-072.md).
+    override class func setUp() {
+        super.setUp()
+        MainActor.assumeIsolated {
+            let app = XCUIApplication()
+            app.launch()
+            app.terminate()
+        }
+    }
+
     override func setUp() async throws {
         try await super.setUp()
         XCUIDevice.shared.orientation = .portrait

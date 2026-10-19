@@ -19,6 +19,19 @@ extension XCUIScreen {
 /// test after a timed-out one (Evidence/NativeApp/main-ci-flakes-069.md).
 @MainActor
 class ScreenTestCase: XCTestCase {
+    /// Launches the app once before the class's first test, outside every test's time allowance. XCTest installs the
+    /// app at a session's first launch, and on CI that launch took 11 to 48 seconds where later ones took about 5; inside
+    /// the session's first test it took the Disposable shooting screen's test past its 3 minutes in run 39292846150
+    /// (Evidence/NativeApp/main-ci-flakes-072.md).
+    override class func setUp() {
+        super.setUp()
+        MainActor.assumeIsolated {
+            let app = XCUIApplication()
+            app.launch()
+            app.terminate()
+        }
+    }
+
     override func setUp() async throws {
         try await super.setUp()
         XCUIDevice.shared.orientation = .portrait

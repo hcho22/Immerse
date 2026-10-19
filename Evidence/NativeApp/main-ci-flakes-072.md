@@ -143,6 +143,72 @@ The stop rows were made with the temporary instrumentation above, which is not i
   How often the app stops while a finger is held still on CI is not known.
 - The runner's `apsd` retry loop (above) is a lead for a source of load, as `mediaanalysisd` and `trustd` were (`Scripts/quiet-simulator.sh`); it is as busy in a passing run, and nothing was measured against it.
 
+## The shooting screen's test that ran out of time on this pull request's check (run 39292846150)
+
+This pull request's own check, at 135c9a1, failed its ui-flows part, and `local-native` then failed because that part had.
+The harness part, which holds this change, passed; the ui-text part was cancelled at the job's 75-minute limit with its text-size tests still running, which this record does not cover.
+
+| Test | Message | Ran |
+| --- | --- | --- |
+| `CaptureSidewaysUITests.testDisposableShootingScreenKeepsItsLayoutHeldSideways` | Test exceeded execution time allowance of 3 minutes | 17:27:53 to 17:30:53 |
+
+Nothing in the test got stuck.
+It had loaded its Film, measured the shooting screen in all three holds, turned the Film screen and deleted the Film, and the allowance stopped it in its last wait, for the deleted Film's Journal row to go.
+It is not the Darkroom animation stall of record 069: all 31 of its waits for the app to idle returned, and its activity log has no "App animations complete notification not received".
+It is not a dropped touch either: the check's own log found none, so the rerun did not apply.
+
+### Where the time went
+
+The Super 8's test after it runs the same steps, and took 89.7 s in the same run.
+
+| Steps | The Disposable's test (first to launch the app) | The Super 8's test |
+| --- | --- | --- |
+| launch to the Journal at rest | 62.6 s | 9.9 s |
+| Start a Film, a Camera, Load Film, Open Camera | 41.8 s | 25.9 s |
+| the three holds on the shooting screen | 27.6 s | 25.2 s |
+| Done, the Film screen turned | 13.0 s | 7.2 s |
+| the relaunch, then Delete Film | 33.9 s, cut off | 21.2 s |
+
+The difference is the session's first launch and the first showing of each screen; the turns on the shooting screen took about as long in both.
+
+- XCTest installs the app at a session's first launch, inside the test that makes it: the simulator's log has the install request at 17:27:57, 4 s into that launch.
+- That launch took 48.2 s.
+  In the app's log its scene was set up at 17:28:04.99, its window's orientation preferences came 9.7 s later, its first frame at 17:28:33.21 and its main run loop's idle at 17:28:40.52: 36 s from scene to idle.
+  The relaunch in the same test took 7.7 s from scene to idle, and every launch after it 1.3 to 2.6 s.
+- The runner was a `VirtualMac2,1` with 3 CPUs and 7 GB, booted 12.5 minutes before the timeout (the spindump XCTest took at 17:30:53).
+
+The Disposable's test is the first in ui-flows to launch the app (`AuditExceptionTests`, before it, launches none), and in every ui-flows bundle read it is the slowest of the four tests that run these steps:
+
+| Run | The Disposable's test | its first launch | The Super 8's test | its first launch |
+| --- | --- | --- | --- | --- |
+| 39073238912 (`main`, 0738226) | 168 s | 10.7 s | 97 s | 6.3 s |
+| 39098085159 (`main`, 7447153) | 113 s | 13.0 s | 95 s | 6.7 s |
+| 39165281093 (`main`, 3a008ba) | 134 s | 21.2 s | 91 s | 5.6 s |
+| 39196559304 (`main`, 433490b) | 110 s | 18.2 s | 84 s | 4.8 s |
+| 39202888924 (pull request 43) | 103 s | 13.2 s | 84 s | 4.7 s |
+| 39252986897 (`main`, d348d99) | 149 s | 23.2 s | 84 s | 5.6 s |
+| 39292846150 (this pull request) | 180 s, stopped | 48.2 s | 90 s | 5.5 s |
+
+The dark pass, a second session on the same simulator that installs the app again, made its first launch in 6.9 to 10.1 s (runs 39252986897, 39196559304 and 39202888924), so the cost is the app's first run on a new simulator more than the install.
+The harness part's first launch in this run took 10.3 s, and its first test, 27 s long, had room for it.
+In run 39073238912 the turns were slow too (29 and 25 s against the Super 8's 9) and the Instant's test took 121 s, so the runner can be slow through a whole test as well, which no change here addresses.
+
+So the cause is that XCTest counts the app's install and its first, cold launch in whichever test launches the app first, and in ui-flows that is a 90-second test; this run's first launch, 43 s over the Super 8's, took it past 3 minutes.
+On `main` at d348d99 (run 39252986897, which failed for the harness test above) the same test took 149 s.
+
+### Fix
+
+`ScreenTestCase` and `HarnessTestCase` launch the app once in their class `setUp`, then end it, before the class's first test.
+XCTest starts a test's 3 minutes only when the test starts, which was checked here: with a 75-second sleep added to that class `setUp` (not committed) and a 60-second allowance, `LowStorageUITests.testLoadFilmShowsNoWarningWhenTheReadingFails` passed in 10.8 s, and the runner's log has "Resetting test case timeout timer with an effective execution time allowance of 60" as the test started, 75 s after the class's launch ended.
+On a new simulator here the class's launch made the install and took 5.3 s, and the Disposable's test then launched in 3.2 s and passed in 78 s.
+So a session's install and first launch come before any test's allowance.
+Had the class launched first in the failing run, the test's own launch would have been the session's second, which took 15.4 s there, and its relaunch the third, about 5 s, against 48.2 and 15.4 s: about 137 s for the test, inside its 3 minutes.
+
+Each class now launches the app once more: six classes in ui-flows (and four in its dark pass), one in ui-text and five in the harness, about 5 s each on CI.
+The harness launched with no arguments makes one more synthetic Film history in its own documents, as each of its tests does.
+The first showing of each screen still costs the first test that shows it, and a runner slow through a whole test, as in run 39073238912, still eats into the allowance.
+How XCTest reports a launch that fails in a class `setUp` was not tried.
+
 ## Everything left as it was
 
 The app's sources are unchanged: the slider is SwiftUI's own with the binding it had, and the failure is the same with the binding written plainly.
