@@ -1,8 +1,8 @@
-"""Scripts/screen-tests.sh: a failed screen test is run once more only on the simulator's proof of a dropped touch."""
+"""Scripts/screen-tests.sh: a failed screen test is run once more only on a dropped touch or an animation stall."""
 import os
 import unittest
 
-from support import Sandbox, fixture
+from support import Sandbox, fixture, stall_fixture
 
 HARNESS = ["sh", "Scripts/screen-tests.sh", "FAKE-UDID", "Populated", "test", "",
            "-project", "Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj",
@@ -12,6 +12,11 @@ FLOWS = ["sh", "Scripts/screen-tests.sh", "FAKE-UDID", "Validation", "test",
          "-project", "App/Immerse/Immerse.xcodeproj", "-scheme", "Immerse",
          "-derivedDataPath", "DerivedData/ValidationSimulator"]
 FILM_CARD = "-only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens"
+STALL_AND_TOUCH = stall_fixture("darkroom-stall-and-instant-dropped-touch")
+DARKROOM = "PopulatedWorkflowTests/testDarkroomTurningLeavesALoadErrorInPlace()"
+INSTANT = "PopulatedWorkflowTests/testInstantLookScreens()"
+DARKROOM_FLAG = "-only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testDarkroomTurningLeavesALoadErrorInPlace"
+INSTANT_FLAG = "-only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testInstantLookScreens"
 
 
 class ScreenTestsTests(unittest.TestCase):
@@ -58,6 +63,44 @@ class ScreenTestsTests(unittest.TestCase):
             self.assertIn("dropped touch: PopulatedWorkflowTests/testSixBySixBlackAndWhiteLookScreens(). "
                           "The simulator discarded 7 touch events at 14:59:08 UTC", said)
 
+    def test_a_stalled_test_beside_a_dropped_touch_are_run_again_together_and_the_notes_name_each_record(self):
+        result = self.sandbox.run(HARNESS, STALL_AND_TOUCH, xcodebuild_exits="65 0")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        first, rerun = self.sandbox.calls("xcodebuild-calls")
+        self.assertNotIn("-only-testing", first)
+        self.assertEqual(rerun.count("-only-testing:"), 2, "one pass for both")
+        self.assertIn(DARKROOM_FLAG + " " + INSTANT_FLAG + " ", rerun)
+        self.assertRegex(rerun, r"-resultBundlePath DerivedData/Populated-rerun-\d{8}T\d{6}Z.xcresult ")
+        self.assertNotIn("retry-tests-on-failure", first + rerun)
+        for said in (result.stderr, self.notes()):
+            self.assertIn("Populated passed only after a rerun", said)
+            self.assertIn("animation stall: " + DARKROOM + ". The test ended at its time allowance.", said)
+            self.assertIn("dropped touch: " + INSTANT + ". The simulator discarded 7 touch events at 13:25:48 UTC", said)
+
+    def test_a_stalled_test_alone_is_run_again_alone(self):
+        result = self.sandbox.run(HARNESS, self.sandbox.fixture_without(STALL_AND_TOUCH, INSTANT), xcodebuild_exits="65 0")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        rerun = self.sandbox.calls("xcodebuild-calls")[1]
+        self.assertEqual(rerun.count("-only-testing:"), 1)
+        self.assertIn(DARKROOM_FLAG + " ", rerun)
+        self.assertIn("animation stall: " + DARKROOM, self.notes())
+        self.assertNotIn("dropped touch", self.notes())
+
+    def test_a_stall_that_happens_again_in_the_rerun_fails_the_run(self):
+        result = self.sandbox.run(HARNESS, STALL_AND_TOUCH, xcodebuild_exits="65 65")
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(len(self.sandbox.calls("xcodebuild-calls")), 2, "one rerun, never a second")
+        self.assertIn("the rerun failed too, so Populated fails", result.stderr)
+        self.assertEqual(self.notes(), "")
+
+    def test_a_stall_beside_a_failure_nothing_excuses_fails_without_a_rerun(self):
+        unexcused = self.sandbox.edited(STALL_AND_TOUCH, "simulator-log.ndjson", lambda text: "")
+        result = self.sandbox.run(HARNESS, unexcused, xcodebuild_exits="65 0")
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(len(self.sandbox.calls("xcodebuild-calls")), 1)
+        self.assertIn("do not excuse every failed test", result.stderr)
+        self.assertEqual(self.notes(), "")
+
     def test_the_rerun_replaces_the_first_selection_with_the_one_test(self):
         tap = self.sandbox.fixture_without(fixture("app-back-button-tap-and-clipped-text"),
                                            "JournalFlowTests/testLargestDynamicTypeCatalogAndLandscapeSettings()")
@@ -80,7 +123,7 @@ class ScreenTestsTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertEqual(len(self.sandbox.calls("xcodebuild-calls")), 1)
         self.assertIn("no dropped touch: JournalFlowTests/testExtraSmallLoadScreensAudit()", result.stderr)
-        self.assertIn("does not excuse every failed test", result.stderr)
+        self.assertIn("do not excuse every failed test", result.stderr)
         self.assertEqual(self.notes(), "")
 
     def test_a_clipped_text_finding_beside_a_dropped_touch_fails_without_a_rerun(self):
@@ -103,7 +146,7 @@ class ScreenTestsTests(unittest.TestCase):
         self.assertEqual(len(self.sandbox.calls("xcodebuild-calls")), 1)
 
     def test_a_check_that_names_no_test_never_reruns_everything(self):
-        self.sandbox.install(self.sandbox.path("Scripts", "dropped-touch-tests.py"), "import sys\nsys.exit(0)\n")
+        self.sandbox.install(self.sandbox.path("Scripts", "rerun-tests.py"), "import sys\nsys.exit(0)\n")
         result = self.sandbox.run(HARNESS, fixture("harness-film-card-tap"), xcodebuild_exits="65 0")
         self.assertEqual(result.returncode, 1)
         self.assertEqual(len(self.sandbox.calls("xcodebuild-calls")), 1)

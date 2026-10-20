@@ -59,7 +59,8 @@ jobs:
       - name: Validate
         run: sh Scripts/validate-local.sh
       # A part that passed only because a screen test was run once more, on the simulator's own record that it
-      # dropped that test's touch (Scripts/screen-tests.sh), says so on the run's page and to the summary check.
+      # dropped that test's touch or the result bundle's record of an animation stall (Scripts/screen-tests.sh),
+      # says so, naming each test and the record, on the run's page and to the summary check.
       - name: Say whether a screen test was rerun
         if: always()
         run: |
