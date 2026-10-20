@@ -29,6 +29,19 @@ if [ -n "$data" ]; then
         && plutil -replace ValidUpdateEnabled -bool NO "$preferences"; } > /dev/null 2>&1 \
         || echo "quiet-simulator: could not switch off trustd's revocation update before booting $udid"
 fi
+# EXPERIMENT B: the simulator's launchd keeps its disabled services in this file, read at boot; apsd's retry loop
+# (3.1 million of 5.8 million log lines on CI) never starts if it is disabled before the first boot.
+if [ -n "$data" ]; then
+    python3 - "$udid" << 'PY' > /dev/null 2>&1 || echo "quiet-simulator: could not disable apsd before booting $udid"
+import os, plistlib, sys
+directory = "/var/tmp/com.apple.CoreSimulator.SimDevice." + sys.argv[1]
+os.makedirs(directory, mode=0o700, exist_ok=True)
+path = directory + "/disabled.plist"
+disabled = plistlib.load(open(path, "rb")) if os.path.exists(path) else {}
+disabled["com.apple.apsd"] = True
+plistlib.dump(disabled, open(path, "wb"))
+PY
+fi
 if ! xcrun simctl bootstatus "$udid" -b > /dev/null 2>&1; then
     echo "quiet-simulator: $udid did not boot; photo analysis left as is"
     exit 0
