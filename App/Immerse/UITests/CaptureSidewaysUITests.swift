@@ -29,7 +29,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     }
 
     /// What the screen shows, measured in the window's own portrait frame.
-    private struct Layout {
+    private struct Layout: Equatable {
         var window: CGRect
         var viewfinder: CGRect
         var done: CGRect
@@ -49,7 +49,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let title = try openShootingScreen(app, id: "mediumFormat6x6")
         defer { deleteFilm(titled: title, app) }
         let done = app.buttons["Done"]
-        let upright = try layout(app)
+        let upright = try wait(app)
         XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
@@ -75,7 +75,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let upAgain = try wait(app) { $0.done.width > $0.done.height }
         XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
         done.tap()
-        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "The shooting screen closed")
+        XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
     }
 
     /// Loads a Film in the Camera `id` with the title Load Film suggests, opens its shooting screen and returns the
@@ -114,7 +114,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
 
         tapWhole(app, app.buttons["Open Camera"])
-        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Done"].exists(within: 5))
         return title
     }
 
@@ -127,7 +127,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         defer { deleteFilm(titled: title, app) }
         let detail = app.navigationBars[title]
         let done = app.buttons["Done"]
-        let upright = try layout(app)
+        let upright = try wait(app)
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
         XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
@@ -168,8 +168,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let upAgain = try wait(app) { $0.remaining.width > $0.remaining.height }
         XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
         done.tap()
-        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "The shooting screen closed")
-        XCTAssertTrue(detail.waitForExistence(timeout: 5))
+        XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
+        XCTAssertTrue(detail.exists(within: 5))
         XCUIDevice.shared.orientation = .landscapeLeft
         let window = app.windows.firstMatch
         let turns = NSPredicate { _, _ in window.frame.width > window.frame.height }
@@ -209,24 +209,29 @@ final class CaptureSidewaysUITests: ScreenTestCase {
 
     private func layout(_ app: XCUIApplication) throws -> Layout {
         let viewfinder = app.otherElements["viewfinder"]
-        XCTAssertTrue(viewfinder.waitForExistence(timeout: 5), "The viewfinder is on screen")
+        XCTAssertTrue(viewfinder.exists(within: 5), "The viewfinder is on screen")
         let remaining = app.staticTexts.matching(NSPredicate(format: "label ENDSWITH %@", " left")).firstMatch
-        XCTAssertTrue(remaining.waitForExistence(timeout: 5), "What is left shows")
+        XCTAssertTrue(remaining.exists(within: 5), "What is left shows")
         let shutter = app.buttons["capture-shutter"]
-        XCTAssertTrue(shutter.waitForExistence(timeout: 5))
+        XCTAssertTrue(shutter.exists(within: 5))
         return Layout(window: app.windows.firstMatch.frame, viewfinder: viewfinder.frame, done: app.buttons["Done"].frame,
                       remaining: remaining.frame, shutter: shutter.frame, switchCamera: app.buttons["Switch Camera"].frame)
     }
 
-    /// The layout once `settled` holds, read until the turn's animation ends.
-    private func wait(_ app: XCUIApplication, until settled: (Layout) -> Bool) throws -> Layout {
+    /// The layout once `settled` holds and two reads half a second apart agree, so a turn's animation, or the screen's
+    /// own coming up, has ended. Each read used to wait a second for each of three elements that were already there, which
+    /// let the screen settle by accident; the settling is asked for here instead. It gives up after 30 s and returns what it
+    /// last read, for the caller's assertions to fail on.
+    private func wait(_ app: XCUIApplication, until settled: (Layout) -> Bool = { _ in true }) throws -> Layout {
         var latest = try layout(app)
-        for _ in 0..<20 where !settled(latest) {
-            Thread.sleep(forTimeInterval: 0.25)
-            latest = try layout(app)
+        let deadline = Date().addingTimeInterval(30)
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.5)
+            let next = try layout(app)
+            if settled(next) && next == latest { return next }
+            latest = next
         }
-        Thread.sleep(forTimeInterval: 0.5)
-        return try layout(app)
+        return latest
     }
 
     private func retainScreenshot(name: String) {

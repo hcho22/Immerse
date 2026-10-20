@@ -22,12 +22,18 @@ class ScreenTestCase: XCTestCase {
     /// Launches the app once before the class's first test, outside every test's time allowance. XCTest installs the
     /// app at a session's first launch, and on CI that launch took 11 to 48 seconds where later ones took about 5; inside
     /// the session's first test it took the Disposable shooting screen's test past its 3 minutes in run 39292846150
-    /// (Evidence/NativeApp/main-ci-flakes-072.md).
+    /// (Evidence/NativeApp/main-ci-flakes-072.md). The session's first tap and first screenshot are slow the same way
+    /// (4 to 7 s for XCTest's check for interrupting elements before the tap, 5 to 25 s for the screenshot, in three runs each, against
+    /// under a second for every later one), so they are made here too, and the first test of the session meets neither
+    /// (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that finds nothing to tap costs nothing.
     override class func setUp() {
         super.setUp()
         MainActor.assumeIsolated {
             let app = XCUIApplication()
             app.launch()
+            let start = app.buttons["start-film"]
+            if start.waitForExistence(timeout: 10) { start.tap() }
+            _ = XCUIScreen.main.screenshot()
             app.terminate()
         }
     }
@@ -47,6 +53,22 @@ extension XCUIElement {
     /// never a second tap.
     func flipSwitch() {
         press(forDuration: 1)
+    }
+
+    /// Whether the element exists within `timeout`. One that is already there answers at once, where
+    /// `waitForExistence(timeout:)` returns no sooner than about a second after it is called even then (1.04 s at the
+    /// median over the 387 calls of one CI run, 1.1 s here). The shooting screen's tests make 40 such calls each, which
+    /// were 45 of the Disposable test's 89 seconds here and 50 of its 127 on CI (Evidence/NativeApp/main-ci-flakes-073.md).
+    /// One that is not there yet is waited for as before, for the same `timeout`. That second also let a screen finish
+    /// coming up, so use this only where the next step is a tap, which waits for the app to be idle by itself, or a read
+    /// that settles by itself (`wait(_:until:)` in `CaptureSidewaysUITests`), and not where it reads a frame at once.
+    func exists(within timeout: TimeInterval) -> Bool {
+        exists || waitForExistence(timeout: timeout)
+    }
+
+    /// Whether the element is gone within `timeout`, with the same quick answer and the same caution as `exists(within:)`.
+    func isGone(within timeout: TimeInterval) -> Bool {
+        !exists || waitForNonExistence(timeout: timeout)
     }
 }
 
@@ -124,18 +146,21 @@ extension XCTestCase {
     /// Taps Start a Film once and waits for the Camera catalog sheet. One CI run (main, run 37627486582) delivered a tap
     /// at the button's centre, (201, 822), where every passing launch did, and the Journal stayed on screen for the
     /// next six seconds with no sheet; no repeat reproduced it (Evidence/NativeApp/ci-flakes-057.md). A second tap
-    /// would hide that, so a miss fails here, with a screenshot of what was showing.
+    /// would hide that, so a miss fails here, with a screenshot of what was showing. The wait is 30 seconds, not 5: on a
+    /// runner that stalled, the simulator handed the app the finger 15.7 s after XCTest played it, and the sheet came right
+    /// after (run 39307626086, Evidence/NativeApp/main-ci-flakes-073.md); 30 s covers the longest single stall read on CI.
+    /// A tap that never arrives still fails, 25 s later.
     func openCameraCatalog(_ app: XCUIApplication) {
         let start = app.buttons["start-film"]
         let catalog = app.navigationBars["Choose a Camera"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertTrue(start.exists(within: 10))
         start.tap()
-        if catalog.waitForExistence(timeout: 5) { return }
+        if catalog.waitForExistence(timeout: 30) { return }
         let miss = XCTAttachment(screenshot: app.screenshot())
         miss.name = "Start-a-Film-tap-did-not-open-the-catalog"
         miss.lifetime = .keepAlways
         add(miss)
-        XCTFail("The Camera catalog did not open within 5 seconds of the tap on Start a Film")
+        XCTFail("The Camera catalog did not open within 30 seconds of the tap on Start a Film")
     }
 
     /// Replaces the Load screen's suggested Film title with `title`, failing the test and returning false if the typed
@@ -167,11 +192,11 @@ extension XCTestCase {
     func deleteFilm(titled title: String, _ app: XCUIApplication) {
         app.terminate()
         app.launch()
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["start-film"].exists(within: 10))
         let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
         guard row.waitForExistence(timeout: 5) else { return }
         deleteFilm(at: row, app)
-        XCTAssertTrue(row.waitForNonExistence(timeout: 10))
+        XCTAssertTrue(row.isGone(within: 10))
     }
 
     /// Launches the app on an empty Journal, deleting every Film an earlier test left. A test deletes the Films it
@@ -183,7 +208,7 @@ extension XCTestCase {
     func launchWithEmptyJournal(_ app: XCUIApplication) {
         app.launch()
         let start = app.buttons["start-film"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertTrue(start.exists(within: 10))
         // Start a Film stays disabled until launch recovery ends.
         let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: start)
         XCTAssertEqual(XCTWaiter().wait(for: [ready], timeout: 10), .completed, "Start a Film stayed disabled")
@@ -196,7 +221,7 @@ extension XCTestCase {
             add(screenshot)
             deleteFilm(at: rows.firstMatch, app)
         }
-        XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 10), "The Journal is empty")
+        XCTAssertTrue(app.staticTexts["Your Journal begins here"].exists(within: 10), "The Journal is empty")
     }
 
     /// Opens the Journal row `row` and deletes its Film, returning once the Film screen has closed and the Journal
@@ -206,15 +231,15 @@ extension XCTestCase {
     private func deleteFilm(at row: XCUIElement, _ app: XCUIApplication) {
         tapWhole(app, row)
         // The Film screen's actions, rather than its bar, which reads a 6×6 title as "6 by 6".
-        XCTAssertTrue(app.buttons["Film actions"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Film actions"].exists(within: 5))
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
         let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        XCTAssertTrue(confirm.exists(within: 5))
         confirm.tap()
-        XCTAssertTrue(app.buttons["Film actions"].waitForNonExistence(timeout: 10), "The Film was removed")
-        XCTAssertTrue(app.staticTexts["Film removed"].waitForNonExistence(timeout: 10), "The Film screen closed")
-        XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10), "The Journal shows")
+        XCTAssertTrue(app.buttons["Film actions"].isGone(within: 10), "The Film was removed")
+        XCTAssertTrue(app.staticTexts["Film removed"].isGone(within: 10), "The Film screen closed")
+        XCTAssertTrue(app.buttons["start-film"].exists(within: 10), "The Journal shows")
     }
 
     /// Audits the screen, failing on every finding except the exact entries in `exceptions`, and returns
