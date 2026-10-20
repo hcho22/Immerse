@@ -113,6 +113,14 @@ if runs packages && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
         CODE_SIGNING_ALLOWED=NO test)
 fi
 if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
+    if [ -n "${IMMERSE_EXP_BUILD_FIRST:-}" ]; then
+        # EXPERIMENT: build before the simulator boots
+        xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator \
+            -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO build-for-testing
+        screen_action=test-without-building
+    else
+        screen_action=test
+    fi
     # Run whole, the render tests above have pinned this simulator.
     runs packages || pin_simulator "$IMMERSE_SIMULATOR_UDID"
     # Run whole, the app's screen tests are one run. As parts, ui-text takes the text-size suites, which are most
@@ -120,13 +128,15 @@ if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; t
     # shellcheck disable=SC2086 # the suite lists are words
     case "$part" in
         ui-text) selection=$(suites -only-testing $text_size_suites) ;;
-        ui-flows) selection="-only-testing:$app_screen_test_target$(suites -skip-testing $text_size_suites)" ;;
+        ui-flows) selection="-only-testing:$app_screen_test_target$(suites -skip-testing $text_size_suites)"
+            # EXPERIMENT: only the session's first minutes
+            [ -z "${IMMERSE_EXP_PREFIX:-}" ] || selection="$(suites -only-testing AuditExceptionTests CaptureSidewaysUITests)" ;;
         *) selection="-only-testing:$app_screen_test_target" ;;
     esac
-    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation test "$selection" \
+    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation "$screen_action" "$selection" \
         -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
 fi
-if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
+if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ] && [ -z "${IMMERSE_EXP_PREFIX:-}" ]; then
     # The accessibility audits, including the populated Journal card and Film Stock audits, again in dark
     # appearance, from the same build; a test cannot switch the app's appearance itself (Evidence/NativeApp/qa13-audit-exceptions-052.md).
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance dark

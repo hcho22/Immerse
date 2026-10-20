@@ -31,7 +31,7 @@ if [ -n "$data" ]; then
 fi
 # EXPERIMENT E: the simulator's launchd keeps its disabled services in this file, read at boot. Switch off, before the
 # first boot, the consumer services that tests never need.
-if [ -n "$data" ]; then
+if [ -n "$data" ] && [ -n "${IMMERSE_EXP_SLIM:-}" ]; then
     python3 - "$udid" << 'PY' > /dev/null 2>&1 || echo "quiet-simulator: could not disable services before booting $udid"
 import os, plistlib, sys
 labels = """

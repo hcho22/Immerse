@@ -34,16 +34,21 @@ jobs:
   # One job ran them in turn for about two hours.
   part:
     needs: scope
-    name: ${{ matrix.part }}
+    name: ${{ matrix.part }}-${{ matrix.arm }}-${{ matrix.rep }}
     strategy:
       fail-fast: false
       matrix:
-        part: ${{ fromJSON(needs.scope.outputs.parts) }}
+        part: [ui-flows]
+        arm: [control, buildfirst, slim, both]
+        rep: [1, 2]
     runs-on: macos-26
     timeout-minutes: 75
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IMMERSE_VALIDATE_PART: ${{ matrix.part }}
+      IMMERSE_EXP_PREFIX: "1"
+      IMMERSE_EXP_BUILD_FIRST: ${{ (matrix.arm == 'buildfirst' || matrix.arm == 'both') && '1' || '' }}
+      IMMERSE_EXP_SLIM: ${{ (matrix.arm == 'slim' || matrix.arm == 'both') && '1' || '' }}
     steps:
       - uses: actions/checkout@v7
       - name: Create isolated simulators
@@ -72,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: probe-${{ matrix.part }}
+          name: probe-${{ matrix.part }}-${{ matrix.arm }}-${{ matrix.rep }}
           path: DerivedData/probe
       # A part that passed only because a screen test was run once more, on the simulator's own record that it
       # dropped that test's touch (Scripts/screen-tests.sh), says so on the run's page and to the summary check.
@@ -93,13 +98,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: validation-notes-${{ matrix.part }}
+          name: validation-notes-${{ matrix.part }}-${{ matrix.arm }}-${{ matrix.rep }}
           path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: native-test-results-${{ matrix.part }}
+          name: native-test-results-${{ matrix.part }}-${{ matrix.arm }}-${{ matrix.rep }}
           path: DerivedData/*.xcresult
   # The one check to read: green only when every part that ran is, and it says which parts did not run and why.
   local-native:
