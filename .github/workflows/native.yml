@@ -27,16 +27,19 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
             git diff --name-only --no-renames HEAD^1 HEAD > "$RUNNER_TEMP/changed.txt" || : > "$RUNNER_TEMP/changed.txt"
           fi
-          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" | tee -a "$GITHUB_OUTPUT"
+          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" > /dev/null
+          # EXPERIMENT: the three screen-test parts only
+          { echo 'parts=["harness","ui-text","ui-flows"]'; echo 'note=experiment: screen-test parts only'; } | tee -a "$GITHUB_OUTPUT"
   # Validation in parts side by side, each on its own runner (Scripts/validation-parts.sh says what each holds).
   # One job ran them in turn for about two hours.
   part:
     needs: scope
-    name: ${{ matrix.part }}
+    name: ${{ matrix.part }}-${{ matrix.rep }}
     strategy:
       fail-fast: false
       matrix:
         part: ${{ fromJSON(needs.scope.outputs.parts) }}
+        rep: [1, 2, 3]
     runs-on: macos-26
     timeout-minutes: 75
     env:
@@ -78,13 +81,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: validation-notes-${{ matrix.part }}
+          name: validation-notes-${{ matrix.part }}-${{ matrix.rep }}
           path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: native-test-results-${{ matrix.part }}
+          name: native-test-results-${{ matrix.part }}-${{ matrix.rep }}
           path: DerivedData/*.xcresult
   # The one check to read: green only when every part that ran is, and it says which parts did not run and why.
   local-native:
