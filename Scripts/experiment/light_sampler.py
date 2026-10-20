@@ -38,7 +38,13 @@ def ps():
                     f.write(l[:200] + "\n")
             f.flush()
 
-for fn in (top, vm, ps):
+def rss():
+    with open(f"{out}/rss.log", "w") as f:
+        while not stop.wait(30):
+            r = subprocess.run(["ps", "-Ao", "rss,comm", "-m"], capture_output=True, text=True, errors="replace").stdout
+            f.write("== %.2f\n%s\n" % (time.time(), "\n".join(r.splitlines()[:26]))); f.flush()
+
+for fn in (top, vm, ps, rss):
     threading.Thread(target=fn, daemon=True).start()
 while not stop.wait(1): pass
 for p in topproc: p.kill()
