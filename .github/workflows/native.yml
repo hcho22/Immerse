@@ -39,14 +39,15 @@ jobs:
       fail-fast: false
       matrix:
         part: [ui-flows]
-        arm: [control, buildfirst, slim, both]
-        rep: [1, 2]
+        arm: [warm]
+        rep: [1, 2, 3, 4]
     runs-on: macos-26
     timeout-minutes: 75
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IMMERSE_VALIDATE_PART: ${{ matrix.part }}
       IMMERSE_EXP_PREFIX: "1"
+      IMMERSE_EXP_WARM: "1"
       IMMERSE_EXP_BUILD_FIRST: ${{ (matrix.arm == 'buildfirst' || matrix.arm == 'both') && '1' || '' }}
       IMMERSE_EXP_SLIM: ${{ (matrix.arm == 'slim' || matrix.arm == 'both') && '1' || '' }}
     steps:

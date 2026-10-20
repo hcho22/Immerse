@@ -133,6 +133,13 @@ if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; t
             [ -z "${IMMERSE_EXP_PREFIX:-}" ] || selection="$(suites -only-testing AuditExceptionTests CaptureSidewaysUITests)" ;;
         *) selection="-only-testing:$app_screen_test_target" ;;
     esac
+    if [ -n "${IMMERSE_EXP_WARM:-}" ]; then
+        # EXPERIMENT W: the same tests twice in a row on the one simulator; the first pass is the warm-up
+        sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation "$screen_action" "$selection" \
+            -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator || true
+        screen_action=test-without-building
+        sleep 1
+    fi
     sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation "$screen_action" "$selection" \
         -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
 fi
