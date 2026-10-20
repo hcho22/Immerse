@@ -12,8 +12,9 @@ usage: dropped-touch-tests.py <result.xcresult> (--simulator <udid> | --archive 
 
 Says on standard error what it found for each failed test. When every failed test has one of backboardd's
 discards inside its own time window, prints an -only-testing flag for each on standard output and exits 0, which
-is Scripts/screen-tests.sh's leave to run those tests once more. Exits 1 when a failed test has no discard, when
-nothing failed, or when the bundle or the log cannot be read: without proof there is no rerun.
+is this record's part of Scripts/screen-tests.sh's leave to run those tests once more. The leave itself is given by
+Scripts/rerun-tests.py, which takes this record and the animation stall's, test by test. Exits 1 when a failed test
+has no discard, when nothing failed, or when the bundle or the log cannot be read: without proof there is no rerun.
 """
 import datetime
 import json
@@ -82,6 +83,21 @@ def clock(moment):
     return datetime.datetime.fromtimestamp(moment, datetime.timezone.utc).strftime("%H:%M:%S UTC")
 
 
+def excuse(test, discarded):
+    """What to say of a failed test with one of backboardd's discards inside its own time window, else None."""
+    inside = [moment for moment in discarded if test["start"] - CLOCK_SLACK <= moment <= test["end"] + CLOCK_SLACK]
+    if not inside:
+        return None
+    return ("dropped touch: %s. The simulator discarded %d touch event%s at %s, inside the test's run from %s to %s."
+            % (test["identifier"], len(inside), "" if len(inside) == 1 else "s", clock(inside[0]),
+               clock(test["start"]), clock(test["end"])))
+
+
+def refusal(test):
+    return ("no dropped touch: %s. The simulator's log holds no discarded touch event in the test's run from %s to %s, so its failure stands."
+            % (test["identifier"], clock(test["start"]), clock(test["end"])))
+
+
 def main(arguments):
     if len(arguments) != 3 or arguments[1] not in ("--simulator", "--archive"):
         sys.exit(__doc__)
@@ -97,15 +113,12 @@ def main(arguments):
         return 1
     proven = True
     for test in failed:
-        inside = [moment for moment in discarded if test["start"] - CLOCK_SLACK <= moment <= test["end"] + CLOCK_SLACK]
-        if inside:
-            print("dropped touch: %s. The simulator discarded %d touch event%s at %s, inside the test's run from %s to %s."
-                  % (test["identifier"], len(inside), "" if len(inside) == 1 else "s", clock(inside[0]),
-                     clock(test["start"]), clock(test["end"])), file=sys.stderr)
+        message = excuse(test, discarded)
+        if message:
+            print(message, file=sys.stderr)
         else:
             proven = False
-            print("no dropped touch: %s. The simulator's log holds no discarded touch event in the test's run from %s to %s, so its failure stands."
-                  % (test["identifier"], clock(test["start"]), clock(test["end"])), file=sys.stderr)
+            print(refusal(test), file=sys.stderr)
     if not proven:
         return 1
     for test in failed:

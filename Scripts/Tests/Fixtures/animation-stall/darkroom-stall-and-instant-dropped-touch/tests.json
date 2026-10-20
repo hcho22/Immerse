@@ -1,0 +1,132 @@
+{
+ "testNodes": [
+  {
+   "nodeType": "Test Plan",
+   "name": "PopulatedJournalHarness",
+   "result": "Failed",
+   "children": [
+    {
+     "nodeType": "UI test bundle",
+     "name": "PopulatedJournalHarnessTests",
+     "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests",
+     "result": "Failed",
+     "children": [
+      {
+       "nodeType": "Test Suite",
+       "name": "CameraPermissionWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/CameraPermissionWorkflowTests",
+       "result": "Passed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged()",
+         "nodeIdentifier": "CameraPermissionWorkflowTests/testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/CameraPermissionWorkflowTests/testDeniedCameraOnReopenShowsGuidanceAndLeavesFilmUnchanged",
+         "result": "Passed"
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "LowStorageWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/LowStorageWorkflowTests",
+       "result": "Passed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testFilmScreenShowsNoWarningAtExactlyTwoGigabytes()",
+         "nodeIdentifier": "LowStorageWorkflowTests/testFilmScreenShowsNoWarningAtExactlyTwoGigabytes()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/LowStorageWorkflowTests/testFilmScreenShowsNoWarningAtExactlyTwoGigabytes",
+         "result": "Passed"
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "RetainedWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests",
+       "result": "Passed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testDarkroomAccessibleControlsReachNonGestureEditingPaths()",
+         "nodeIdentifier": "RetainedWorkflowTests/testDarkroomAccessibleControlsReachNonGestureEditingPaths()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/RetainedWorkflowTests/testDarkroomAccessibleControlsReachNonGestureEditingPaths",
+         "result": "Passed"
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "PhotosPermissionWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PhotosPermissionWorkflowTests",
+       "result": "Passed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testDeniedAddOnlyPhotosExportIsNeverSuccessAndPointsToSettings()",
+         "nodeIdentifier": "PhotosPermissionWorkflowTests/testDeniedAddOnlyPhotosExportIsNeverSuccessAndPointsToSettings()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PhotosPermissionWorkflowTests/testDeniedAddOnlyPhotosExportIsNeverSuccessAndPointsToSettings",
+         "result": "Passed",
+         "children": [
+          {
+           "nodeType": "Runtime Warning",
+           "name": "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "nodeType": "Test Suite",
+       "name": "PopulatedWorkflowTests",
+       "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests",
+       "result": "Failed",
+       "children": [
+        {
+         "nodeType": "Test Case",
+         "name": "testBlackAndWhite16mmFilmShowsItsDevelopedMovie()",
+         "nodeIdentifier": "PopulatedWorkflowTests/testBlackAndWhite16mmFilmShowsItsDevelopedMovie()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testBlackAndWhite16mmFilmShowsItsDevelopedMovie",
+         "result": "Passed",
+         "children": [
+          {
+           "nodeType": "Runtime Warning",
+           "name": "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions"
+          }
+         ]
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testDarkroomTurningLeavesALoadErrorInPlace()",
+         "nodeIdentifier": "PopulatedWorkflowTests/testDarkroomTurningLeavesALoadErrorInPlace()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testDarkroomTurningLeavesALoadErrorInPlace",
+         "result": "Failed",
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "Test exceeded execution time allowance of 3 minutes"
+          }
+         ]
+        },
+        {
+         "nodeType": "Test Case",
+         "name": "testInstantLookScreens()",
+         "nodeIdentifier": "PopulatedWorkflowTests/testInstantLookScreens()",
+         "nodeIdentifierURL": "test://com.apple.xcode/PopulatedJournalHarness/PopulatedJournalHarnessTests/PopulatedWorkflowTests/testInstantLookScreens",
+         "result": "Failed",
+         "children": [
+          {
+           "nodeType": "Failure Message",
+           "name": "PopulatedWorkflowTests.swift:502: XCTAssertTrue failed - Look-instant"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

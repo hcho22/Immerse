@@ -1,0 +1,70 @@
+{
+ "PopulatedWorkflowTests/testDarkroomTurningLeavesALoadErrorInPlace()": {
+  "testRuns": [
+   {
+    "activities": [
+     {
+      "title": "Setting device orientation to Landscape Left",
+      "startTime": 1792502275.225,
+      "childActivities": [
+       {
+        "title": "Wait for com.immerse.PopulatedJournalHarness to idle",
+        "startTime": 1792502275.411,
+        "childActivities": [
+         {
+          "title": "App animations complete notification not received, will attempt to continue.",
+          "startTime": 1792502335.497
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "title": "Setting device orientation to Portrait",
+      "startTime": 1792502343.272,
+      "childActivities": [
+       {
+        "title": "Wait for com.immerse.PopulatedJournalHarness to idle",
+        "startTime": 1792502343.837,
+        "childActivities": [
+         {
+          "title": "App animations complete notification not received, will attempt to continue.",
+          "startTime": 1792502403.87
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "title": "Tear Down",
+      "startTime": 1792502411.983,
+      "childActivities": [
+       {
+        "title": "Setting device orientation to Portrait",
+        "startTime": 1792502411.984,
+        "childActivities": [
+         {
+          "title": "Wait for com.immerse.PopulatedJournalHarness to idle",
+          "startTime": 1792502412.018
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "PopulatedWorkflowTests/testInstantLookScreens()": {
+  "testRuns": [
+   {
+    "activities": [
+     {
+      "title": "Start Test at 2026-10-20 13:25:35.627",
+      "startTime": 1792502735.627
+     }
+    ]
+   }
+  ]
+ }
+}

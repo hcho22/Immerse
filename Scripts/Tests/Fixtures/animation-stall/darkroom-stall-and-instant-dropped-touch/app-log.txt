@@ -1,0 +1,29 @@
+Standard output and standard error from com.immerse.PopulatedJournalHarness with process ID 63575 beginning at 2026-10-20 13:16:01 +0000
+2026-10-20 13:16:03.658421+0000 PopulatedJournalHarness[63575:174281] [Default] Received request to notify when animations are idle
+2026-10-20 13:16:03.658536+0000 PopulatedJournalHarness[63575:174281] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:16:06.399038+0000 PopulatedJournalHarness[63575:174285] [Default] Received request to notify when animations are idle
+2026-10-20 13:16:06.744037+0000 PopulatedJournalHarness[63575:174224] [Default] Sending animations idle reply with error: (null)
+Standard output and standard error from com.immerse.PopulatedJournalHarness with process ID 67204 beginning at 2026-10-20 13:17:38 +0000
+2026-10-20 13:17:41.185414+0000 PopulatedJournalHarness[67204:182965] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:41.185495+0000 PopulatedJournalHarness[67204:182965] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:45.297818+0000 PopulatedJournalHarness[67204:182985] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:45.298041+0000 PopulatedJournalHarness[67204:182985] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:46.301005+0000 PopulatedJournalHarness[67204:182985] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:46.301075+0000 PopulatedJournalHarness[67204:182985] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:49.379206+0000 PopulatedJournalHarness[67204:182986] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:49.379435+0000 PopulatedJournalHarness[67204:182986] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:49.991962+0000 PopulatedJournalHarness[67204:182986] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:49.992111+0000 PopulatedJournalHarness[67204:182986] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:50.240985+0000 PopulatedJournalHarness[67204:182981] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:50.714553+0000 PopulatedJournalHarness[67204:182876] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:51.512289+0000 PopulatedJournalHarness[67204:182986] [Default] Received request to notify when animations are idle
+2026-10-20 13:17:52.381687+0000 PopulatedJournalHarness[67204:182876] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:17:55.413533+0000 PopulatedJournalHarness[67204:182983] [Default] Received request to notify when animations are idle
+2026-10-20 13:19:03.838752+0000 PopulatedJournalHarness[67204:182965] [Default] Received request to notify when animations are idle
+2026-10-20 13:20:12.021732+0000 PopulatedJournalHarness[67204:192115] [Default] Received request to notify when animations are idle
+2026-10-20 13:21:14.460401+0000 PopulatedJournalHarness[67204:198696] [Default] Received request to notify when animations are idle
+Standard output and standard error from com.immerse.PopulatedJournalHarness with process ID 78680 beginning at 2026-10-20 13:22:16 +0000
+2026-10-20 13:22:19.327129+0000 PopulatedJournalHarness[78680:210902] [Default] Received request to notify when animations are idle
+2026-10-20 13:22:19.327240+0000 PopulatedJournalHarness[78680:210902] [Default] Sending animations idle reply with error: (null)
+2026-10-20 13:22:25.335536+0000 PopulatedJournalHarness[78680:211206] [Default] Received request to notify when animations are idle
+2026-10-20 13:22:25.335588+0000 PopulatedJournalHarness[78680:211206] [Default] Sending animations idle reply with error: (null)

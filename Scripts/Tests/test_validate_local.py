@@ -88,7 +88,7 @@ class ValidateLocalTests(unittest.TestCase):
         sandbox = Sandbox(self)
         sandbox.record_instead("verify-validation-parts.sh", "verify-requirement-map.sh", "verify-document-package.sh",
                                "verify-release-excludes-testing-unlock.sh", "quiet-simulator.sh")
-        # The scripts' own tests are only recorded; the dropped-touch check still runs for real.
+        # The scripts' own tests are only recorded; the rerun check still runs for real.
         sandbox.install(os.path.join(sandbox.tools, "python3"), "#!/bin/sh\ncase \"$*\" in\n"
                         "    *unittest*) echo \"python3 $*\" >> \"$STUB_STATE/commands\" ;;\n"
                         "    *) exec \"%s\" \"$@\" ;;\nesac\n" % sys.executable)
@@ -160,11 +160,11 @@ class ValidateLocalTests(unittest.TestCase):
         self.assertIn('unknown IMMERSE_VALIDATE_PART "ui"', result.stderr)
         self.assertEqual(commands, [])
 
-    def test_a_failure_the_simulator_does_not_excuse_stops_validation_there(self):
+    def test_a_failure_no_record_excuses_stops_validation_there(self):
         # Run whole, the harness run is the fourth xcodebuild call, after the version and the two app builds.
         result, commands = self.validate(xcodebuild_exits="0 0 0 65", failures="app-start-a-film-tap-and-a-timeout")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Populated failed, and the simulator's log does not excuse every failed test", result.stderr)
+        self.assertIn("Populated failed, and the simulator's log and the result bundle do not excuse every failed test", result.stderr)
         self.assertEqual(commands, VERSIONS + BOOT_BILLING + MAC + HARNESS)
 
     def test_a_run_that_passed_through_a_rerun_says_so_last(self):

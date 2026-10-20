@@ -47,7 +47,8 @@ restore_simulators() {
     done
 }
 # Scripts/screen-tests.sh notes each set of screen tests that passed only through its one rerun, which it is
-# allowed when the simulator's own log shows it dropped a failed test's touch. They are said again here, last.
+# allowed when the simulator's own log shows it dropped a failed test's touch or the result bundle shows an animation
+# stall (Scripts/rerun-tests.py). The notes name each test and the record. They are said again here, last.
 mkdir -p DerivedData
 rm -f DerivedData/validation-notes.txt
 finish() {
