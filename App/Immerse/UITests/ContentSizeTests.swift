@@ -282,7 +282,7 @@ final class ContentSizeTests: ScreenTestCase {
     private func check(_ category: String) {
         var rows: [String] = []
         let app = launch(category)
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         for (camera, title, targets) in [("camera-super8HomeMovie", "Super 8", Self.superEight),
                                          ("camera-cinema16mm", "16mm", Self.sixteenMillimeter)] {
             let row = app.buttons[camera]
@@ -302,7 +302,7 @@ final class ContentSizeTests: ScreenTestCase {
     private func checkFilmStockScreens(_ category: String) {
         var rows: [String] = []
         let app = launch(category)
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         let row = app.buttons["camera-mediumFormat6x6"]
         tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
@@ -330,7 +330,7 @@ final class ContentSizeTests: ScreenTestCase {
     /// Load screen tests measure the screen as it is with room.
     private func checkLowStorageWarning(_ category: String) {
         let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         let row = app.buttons["camera-disposable1990s"]
         tapWhole(app, row)
         XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
@@ -345,7 +345,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category, onEmptyJournal: true)
         rows += record(measure(app, Self.journal, category, below: "Film Journal"))
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5), "Catalog \(category)")
         // Let the sheet finish rising, so the first rows are measured where they rest.
         Thread.sleep(forTimeInterval: 1)
@@ -362,7 +362,7 @@ final class ContentSizeTests: ScreenTestCase {
         let targets = fromEnd ? Self.settingsBottom : Self.settingsTop
         let app = launch(category)
         defer { XCUIDevice.shared.orientation = .portrait }
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         app.buttons["camera-disposable1990s"].tap()
         waitForTrialStatus(app)
         goBack(app, from: "Disposable", to: "Choose a Camera")
