@@ -27,7 +27,9 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
             git diff --name-only --no-renames HEAD^1 HEAD > "$RUNNER_TEMP/changed.txt" || : > "$RUNNER_TEMP/changed.txt"
           fi
-          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" | tee -a "$GITHUB_OUTPUT"
+          sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" > /dev/null
+          # EXPERIMENT: the three screen-test parts only
+          { echo 'parts=["harness","ui-text","ui-flows"]'; echo 'note=experiment: screen-test parts only'; } | tee -a "$GITHUB_OUTPUT"
   # Validation in parts side by side, each on its own runner (Scripts/validation-parts.sh says what each holds).
   # One job ran them in turn for about two hours.
   part:
@@ -57,7 +59,21 @@ jobs:
               echo "IMMERSE_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV" ;;
           esac
       - name: Validate
-        run: sh Scripts/validate-local.sh
+        run: |
+          # EXPERIMENT: light sampling of the host and the simulator while the part runs
+          mkdir -p DerivedData/probe
+          python3 Scripts/experiment/light_sampler.py DerivedData/probe > /dev/null 2>&1 &
+          sampler=$!
+          status=0
+          sh Scripts/validate-local.sh || status=$?
+          kill $sampler 2> /dev/null || true
+          exit $status
+      - name: Retain the probe
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: probe-${{ matrix.part }}
+          path: DerivedData/probe
       # A part that passed only because a screen test was run once more, on the simulator's own record that it
       # dropped that test's touch (Scripts/screen-tests.sh), says so on the run's page and to the summary check.
       - name: Say whether a screen test was rerun
