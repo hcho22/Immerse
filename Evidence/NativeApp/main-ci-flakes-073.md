@@ -139,14 +139,17 @@ No failure of another kind came with the change: no assertion about the layout, 
 Four changes, in `UITestSupport.swift` and `CaptureSidewaysUITests.swift`.
 
 - `exists(within:)` and `isGone(within:)` on `XCUIElement` answer at once for an element that is already there or already gone and wait as `waitForExistence` and `waitForNonExistence` did, for the same timeout, for one that is not.
-  They are used for the elements that are there in a steady state and for the final states a test asserts: the Journal's Start a Film button and empty-state text in `launchWithEmptyJournal` and `openCameraCatalog`, the Journal and the Film's row in `deleteFilm(titled:)` and `deleteFilm(at:)`, Done, Resume Camera and the Film screen in the shooting screen's tests, and the three elements `layout(_:)` reads.
+  They are used for the elements that are there in a steady state and for the final states a test asserts: the Journal's Start a Film button and empty-state text in `launchWithEmptyJournal` and `openCameraCatalog`, the Journal and the Film's row in `deleteFilm(titled:)` and `deleteFilm(at:)`, Done, the camera's error and the Film screen in the shooting screen's tests, and the three elements `layout(_:)` reads.
   They are not used where a screen is coming up and the next step reads its geometry: the catalog sheet after the tap on Start a Film, the Load screen after a Camera's row and the Film screen after Load Film, which keep `waitForExistence` and `waitForNonExistence`, as does the Film's row after a relaunch.
-  The tests make 6 such calls where they made 40, and a seventh for Resume Camera while the camera's open has not ended (next item).
+  The tests make 6 such calls where they made 40, and a seventh for the camera's error while the camera's open has not ended (next item).
 - `wait(_:until:)` in `CaptureSidewaysUITests` took its settling from `layout(_:)`'s three waits of a second each, so it now asks for it: it reads the layout every half second until the predicate holds and two reads in a row are equal, for up to 30 s, and returns what it last read, for the caller's assertions to fail on.
   The first read of each test, upright, goes through it, which the second of waiting did before without saying so.
   Those seconds also gave the camera's open 3 to 4 s before the first read.
-  The open runs the pending-save recovery, a Trial reconcile and the search for a camera before the simulator's missing camera ends it in an error and Resume Camera, and those notices move none of the frames `wait` compares, so two equal reads cannot tell they have yet to come.
-  `openShootingScreen` therefore returns only once Resume Camera shows, for up to 30 s; a review found this after the runs below, and the Repeated runs section says which runs have it.
+  The open runs the pending-save recovery, a Trial reconcile and the search for a camera before the simulator's missing camera ends it in an error, "Camera unavailable." and the system's detail, which `CaptureView.open` sets as the open returns.
+  Resume Camera does not mark that end: the camera's phase starts as interrupted, so the button shows from the screen's first frame.
+  Over the viewfinder the error moves none of the frames `wait` compares, and at the largest text size, where the notices are in the header, it lengthens the header and moves the viewfinder down, so in both two equal reads can come before it.
+  `openShootingScreen` therefore returns only once the error shows, for up to 30 s.
+  A review found this after the runs below; a first try waited for Resume Camera, which answered at once because the button was already there, and the Repeated runs section says which runs have the wait for the error.
   Every assertion of the tests is as it was.
 - `ScreenTestCase.setUp` makes the session's first tap (Start a Film, if it is there) and first screenshot, with the launch it already made, before the class's first test.
   The first tap's check for interrupting elements took 3.9, 4.7 and 7.2 s in three of the bundles, and the first screenshot 4.7, 9.5 and 25.3 s in three, where every later one took under a second.
@@ -164,7 +167,7 @@ This is arithmetic from the runs above, not a CI result, which the pull request'
 
 ## Repeated runs
 
-On this Mac, as above, with the changes in this record; every row but the last was run before the wait for Resume Camera.
+On this Mac, as above, with the changes in this record; every row but the last was run before the wait for the camera's error.
 
 | What | Result |
 | --- | --- |
@@ -173,7 +176,7 @@ On this Mac, as above, with the changes in this record; every row but the last w
 | the whole ui-flows selection of light appearance (29 tests, in order, as validation runs it) | passed; the Disposable's test 44.8 s, the Instant's 50.6, the 6×6's 58.8, the largest text 91.7, the Super 8's 55.9; the longest test, 16mm Film Stock, 116.8 s with a 60 s wait described below |
 | the four suites validation runs again in dark (21 tests) | passed |
 | `FilmStockUITests` in turn, 4 times each | 12 of 12 passed with the change (40.4 to 43.1 s a Camera's test), 12 of 12 as on `main` (49.7 to 52.2 s) |
-| the class with the wait for Resume Camera, on a fresh simulator, no load | 5 of 5 passed: 43.9, 43.9, 46.4, 73.0 (largest text), 44.3 s; the camera's open had ended in every test by the time Done was found, so the check answered in 0.05 s and made no wait |
+| the class with the wait for the camera's error, on a fresh simulator (a load average of 27 as it started) | 5 of 5 passed: 44.6, 43.1, 46.6, 74.7 (largest text), 43.6 s; the error was there in every test, the largest text size's header included, by the time Done was found, so the check answered in 0.03 to 0.05 s; how long the open takes on a runner that stalls is not shown |
 
 An earlier full run overlapped another job's load on the Mac (a load average near 1,000) and four tests stopped at the allowance; it is not counted, and no result of it is used here.
 
@@ -207,6 +210,6 @@ It is given to him with this record as a possible second sighting and is not tre
 
 The app's sources are unchanged.
 No assertion was loosened or removed in the tests, no audit exception was added, the per-test allowance is still 3 minutes, the dropped-touch rerun and its record are as they were, no test was skipped, and the simulator's setup in `Scripts/quiet-simulator.sh` is as it was.
-The only wait made longer is the catalog's, from 5 to 30 s, for a stall read on CI, and it returns at once when the sheet shows; the one wait added is the shooting screen's for Resume Camera, for up to 30 s, which returns once the camera's open ends.
+The only wait made longer is the catalog's, from 5 to 30 s, for a stall read on CI, and it returns at once when the sheet shows; the one wait added is the shooting screen's for the camera's error, for up to 30 s, which returns once the camera's open ends.
 The Darkroom animation stall of record 069 stays with the captain.
 After this merges, the manual iPhone test plan's pin in `Evidence/NativeApp/manual-validation.md` is re-pinned as after the earlier tests-only changes.
