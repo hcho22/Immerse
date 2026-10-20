@@ -29,6 +29,29 @@ if [ -n "$data" ]; then
         && plutil -replace ValidUpdateEnabled -bool NO "$preferences"; } > /dev/null 2>&1 \
         || echo "quiet-simulator: could not switch off trustd's revocation update before booting $udid"
 fi
+# EXPERIMENT E: the simulator's launchd keeps its disabled services in this file, read at boot. Switch off, before the
+# first boot, the consumer services that tests never need.
+if [ -n "$data" ]; then
+    python3 - "$udid" << 'PY' > /dev/null 2>&1 || echo "quiet-simulator: could not disable services before booting $udid"
+import os, plistlib, sys
+labels = """
+apsd chronod healthd fitnesscoachingd fitnessintelligenced finhealthd financed activitysharingd amsaccountsd
+amsengagementd managedappdistributiond mlhostd assistantd assistant_cdmd siriknowledged suggestd identityservicesd
+StatusKitAgent telephonyutilities.callservicesd familycircled ScreenTimeAgent ScreenTimeSettingsAgent
+findmy.findmylocated itunescloudd appleaccountd akd icloudmailagent SafariBookmarksSyncAgent safarifetcherd
+Safari.passwordbreachd Safari.History Safari.SafeBrowsing.Service gamed homed nanobackupd nanoprefsyncd.2
+nanotimekitcompaniond nanoregistrylaunchd companiond devicesharingd coreidvd remindd routined
+spotlightknowledged spotlightknowledged.updater ap.adprivacyd syncdefaultsd wcd triald cloudd sharingd
+""".split()
+directory = "/var/tmp/com.apple.CoreSimulator.SimDevice." + sys.argv[1]
+os.makedirs(directory, mode=0o700, exist_ok=True)
+path = directory + "/disabled.plist"
+disabled = plistlib.load(open(path, "rb")) if os.path.exists(path) else {}
+for label in labels:
+    disabled["com.apple." + label] = True
+plistlib.dump(disabled, open(path, "wb"))
+PY
+fi
 if ! xcrun simctl bootstatus "$udid" -b > /dev/null 2>&1; then
     echo "quiet-simulator: $udid did not boot; photo analysis left as is"
     exit 0
