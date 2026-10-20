@@ -62,12 +62,14 @@ jobs:
         run: |
           # EXPERIMENT: sample the host and the simulators while the part runs
           mkdir -p DerivedData/probe
-          python3 Scripts/experiment/iobench.py > DerivedData/probe/iobench.out 2>&1
+          python3 Scripts/experiment/iobench.py 2>&1 | tee DerivedData/probe/iobench.out
           python3 Scripts/experiment/sampler.py DerivedData/probe $IMMERSE_SIMULATOR_UDID $IMMERSE_WORKFLOW_SIMULATOR_UDID > DerivedData/probe/sampler.out 2>&1 &
           sampler=$!
+          tail -f DerivedData/probe/sampler.out &
+          tailer=$!
           status=0
           sh Scripts/validate-local.sh || status=$?
-          kill $sampler 2> /dev/null || true
+          kill $sampler $tailer 2> /dev/null || true
           wait $sampler 2> /dev/null || true
           exit $status
       - name: Collect the simulator's log

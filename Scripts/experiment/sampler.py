@@ -97,7 +97,24 @@ def fsusage():
                 slow.write("%.2f %s" % (time.time(), line)); slow.flush()
         p.terminate()
 
-threads = [threading.Thread(target=top), threading.Thread(target=vm), threading.Thread(target=ps),
+def heartbeat():
+    last = None
+    while not stop.wait(30):
+        try:
+            load = os.getloadavg()[0]
+            vmline = subprocess.run(["vm_stat"], capture_output=True, text=True).stdout
+            pin = [int(l.split(":")[1].strip().rstrip(".")) for l in vmline.splitlines() if l.startswith("Pageins")][0]
+            lat = ""
+            for f in sorted(os.listdir(out)):
+                if f.startswith("probe-"):
+                    ls = open(f"{out}/{f}").read().splitlines()
+                    if ls: lat += " probe=%ss" % ls[-1].split()[1]
+            print("%s load=%.1f pageins/s=%s%s" % (time.strftime("%H:%M:%S"), load, "?" if last is None else int((pin - last) / 30), lat), flush=True)
+            last = pin
+        except Exception as e:
+            print("heartbeat failed", e, flush=True)
+
+threads = [threading.Thread(target=heartbeat), threading.Thread(target=top), threading.Thread(target=vm), threading.Thread(target=ps),
            threading.Thread(target=iostat), threading.Thread(target=fsusage)]
 threads += [threading.Thread(target=probe, args=(u,)) for u in udids]
 for t in threads: t.start()
