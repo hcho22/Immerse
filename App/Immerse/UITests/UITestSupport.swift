@@ -59,7 +59,7 @@ extension XCUIElement {
     /// Whether the element exists within `timeout`. One that is already there answers at once, where
     /// `waitForExistence(timeout:)` returns no sooner than about a second after it is called even then (1.04 s at the
     /// median over the 387 calls of one CI run, 1.1 s here). The shooting screen's tests make 40 such calls each, which
-    /// were 45 of the Disposable test's 89 seconds here and 50 of its 127 on CI (Evidence/NativeApp/main-ci-flakes-073.md).
+    /// were 44 of the Disposable test's 89 seconds here and 50 of its 127 on CI (Evidence/NativeApp/main-ci-flakes-073.md).
     /// One that is not there yet is waited for as before, for the same `timeout`. That second also let a screen finish
     /// coming up, so use this only where the next step is a tap, which waits for the app to be idle by itself, or a read
     /// that settles by itself (`wait(_:until:)` in `CaptureSidewaysUITests`), and not where it reads a frame at once.
