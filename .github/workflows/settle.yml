@@ -1,0 +1,33 @@
+name: Settle experiment
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  settle:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: apsd-on-idle, flags: "" }
+          - { name: apsd-off-idle, flags: "--apsd-off" }
+          - { name: apsd-on-build, flags: "--build" }
+          - { name: apsd-off-build, flags: "--apsd-off --build" }
+    name: ${{ matrix.name }}
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create the simulator
+        run: |
+          echo "UDID=$(xcrun simctl create 'Immerse CI' com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5)" >> "$GITHUB_ENV"
+      - name: Settle
+        run: python3 Scripts/experiment/settle.py "$UDID" --minutes 20 ${{ matrix.flags }}
+      - name: Retain the probe
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: settle-${{ matrix.name }}
+          path: DerivedData/probe
