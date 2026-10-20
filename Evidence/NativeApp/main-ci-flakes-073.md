@@ -8,8 +8,10 @@ GitHub's Macs are Apple silicon with 3 CPUs and 7 GB, and this Mac is Intel with
 Every number from CI below is read from the run's own result bundle (`xcresulttool`, `log show --archive` on its `system.logarchive`, and the spindump XCTest took at the allowance).
 Times are UTC, on 2026-10-19.
 
-The stalls that carry the test past its limit come at the start of the session, in four of the seven runs read, and what makes them is not shown.
-What is shown is that the test spent half of its own time in waits that cost a second each when the element was already there, and that is what changed.
+The stalls that carry the test past its limit come at the start of the session, in four of the seven runs read, and their cause is not found here.
+This change does not remove them.
+It makes the first test affordable on a runner that stalls: the test spent half of its own time in waits that cost a second each when the element was already there, and that is what changed.
+A separate follow-up investigates the reading that the simulator is still settling after its first boot (the last section).
 
 ## What failed
 
@@ -137,14 +139,18 @@ No failure of another kind came with the change: no assertion about the layout, 
 Four changes, in `UITestSupport.swift` and `CaptureSidewaysUITests.swift`.
 
 - `exists(within:)` and `isGone(within:)` on `XCUIElement` answer at once for an element that is already there or already gone and wait as `waitForExistence` and `waitForNonExistence` did, for the same timeout, for one that is not.
-  They are used for the elements that are there in a steady state and for the final states a test asserts: the Journal's Start a Film button and empty-state text in `launchWithEmptyJournal` and `openCameraCatalog`, the Journal and the Film's row in `deleteFilm(titled:)` and `deleteFilm(at:)`, Done and the Film screen in the shooting screen's tests, and the three elements `layout(_:)` reads.
+  They are used for the elements that are there in a steady state and for the final states a test asserts: the Journal's Start a Film button and empty-state text in `launchWithEmptyJournal` and `openCameraCatalog`, the Journal and the Film's row in `deleteFilm(titled:)` and `deleteFilm(at:)`, Done, Resume Camera and the Film screen in the shooting screen's tests, and the three elements `layout(_:)` reads.
   They are not used where a screen is coming up and the next step reads its geometry: the catalog sheet after the tap on Start a Film, the Load screen after a Camera's row and the Film screen after Load Film, which keep `waitForExistence` and `waitForNonExistence`, as does the Film's row after a relaunch.
-  The tests make 6 such calls where they made 40.
+  The tests make 6 such calls where they made 40, and a seventh for Resume Camera while the camera's open has not ended (next item).
 - `wait(_:until:)` in `CaptureSidewaysUITests` took its settling from `layout(_:)`'s three waits of a second each, so it now asks for it: it reads the layout every half second until the predicate holds and two reads in a row are equal, for up to 30 s, and returns what it last read, for the caller's assertions to fail on.
   The first read of each test, upright, goes through it, which the second of waiting did before without saying so.
+  Those seconds also gave the camera's open 3 to 4 s before the first read.
+  The open runs the pending-save recovery, a Trial reconcile and the search for a camera before the simulator's missing camera ends it in an error and Resume Camera, and those notices move none of the frames `wait` compares, so two equal reads cannot tell they have yet to come.
+  `openShootingScreen` therefore returns only once Resume Camera shows, for up to 30 s; a review found this after the runs below, and the Repeated runs section says which runs have it.
   Every assertion of the tests is as it was.
 - `ScreenTestCase.setUp` makes the session's first tap (Start a Film, if it is there) and first screenshot, with the launch it already made, before the class's first test.
   The first tap's check for interrupting elements took 3.9, 4.7 and 7.2 s in three of the bundles, and the first screenshot 4.7, 9.5 and 25.3 s in three, where every later one took under a second.
+  What moves to the class's `setUp` is what of each is a first use, for the tap XCTest's check before it; attempt 1's 25.3 s screenshot and most of its 17.8 s tap came inside a stall of the whole simulator, which is not shown to move with them.
   Nothing is asserted there, and it runs before any test's allowance, as record 072's launch does.
   What this saves on CI is not measured: a fresh simulator here showed no first-use cost at all (above).
 - `openCameraCatalog` waits 30 s for the sheet, not 5.
@@ -152,12 +158,13 @@ Four changes, in `UITestSupport.swift` and `CaptureSidewaysUITests.swift`.
   A tap that never arrives still fails, 25 s later, with the same screenshot.
 
 On CI the test should take about 65 s of its own where it took 95, so that 3 minutes holds up to about 120 s of stalls where it held 85, and the stalls that stopped it (84.6 and 92.5 s) leave it at 150 to 158 s.
-The first tap and the first screenshot were 43 s of attempt 1's 92.5 s of stalls and are no longer in the test.
+Those 150 to 158 s keep every stall in.
+Of attempt 1's, the 25.3 s screenshot was the miss path's, which the 30 s catalog wait takes out, since the sheet came 15.7 s after the tap; of its 17.8 s first tap, only XCTest's check for interrupting elements before it moves to the class's `setUp`, and the 15.7 s for which `backboardd` held the finger is not shown to move with it.
 This is arithmetic from the runs above, not a CI result, which the pull request's checks are.
 
 ## Repeated runs
 
-On this Mac, as above, with the changes in this record.
+On this Mac, as above, with the changes in this record; every row but the last was run before the wait for Resume Camera.
 
 | What | Result |
 | --- | --- |
@@ -166,6 +173,7 @@ On this Mac, as above, with the changes in this record.
 | the whole ui-flows selection of light appearance (29 tests, in order, as validation runs it) | passed; the Disposable's test 44.8 s, the Instant's 50.6, the 6×6's 58.8, the largest text 91.7, the Super 8's 55.9; the longest test, 16mm Film Stock, 116.8 s with a 60 s wait described below |
 | the four suites validation runs again in dark (21 tests) | passed |
 | `FilmStockUITests` in turn, 4 times each | 12 of 12 passed with the change (40.4 to 43.1 s a Camera's test), 12 of 12 as on `main` (49.7 to 52.2 s) |
+| the class with the wait for Resume Camera, on a fresh simulator, no load | 5 of 5 passed: 43.9, 43.9, 46.4, 73.0 (largest text), 44.3 s; the camera's open had ended in every test by the time Done was found, so the check answered in 0.05 s and made no wait |
 
 An earlier full run overlapped another job's load on the Mac (a load average near 1,000) and four tests stopped at the allowance; it is not counted, and no result of it is used here.
 
@@ -181,15 +189,15 @@ It is given to him with this record as a possible second sighting and is not tre
 
 ## What is not shown, and what is left
 
-- What stalls the simulator at the start of a session is not shown.
+- What stalls the simulator at the start of a session is not found here.
   The reads that bear on it: SpringBoard took 19.2 s to list its apps at the start of the test, the watchdog ended an extension SpringBoard had asked to launch 15.6 s earlier, `backboardd` held a finger for 15.7 s, and the host was not out of CPU outside the spindump's own use.
   The first test of the session met 66 to 93 s of stalls in four of the seven runs, the second 0 to 20 s, and the rest 0 to 22 s.
-  One reading is the simulator settling after its first boot while the build before the tests had the machine; no run has measured that.
+  One reading is the simulator still settling after its first boot while the build before the tests had the machine; no run here has measured that, and a separate follow-up investigates it.
   The next sighting is read from the result bundle as here: the gaps between a test's activities of 3 s or more, taken per test in order, and the first test's against the others'.
 - `apsd` is left running.
   If the captain wants it quieted, the CI comparison named above is what shows whether it matters, and the mechanism is `launchctl disable` and `bootout` of `user/foreground/com.apple.apsd` after the boot, as `Scripts/quiet-simulator.sh` does for `mediaanalysisd`.
-- The stalls that remain on CI are not removed, only made affordable.
-  A first test with more than about 120 s of stalls still fails its allowance.
+- This change makes the first test affordable and does not remove the stalls.
+  A first test with more than about 120 s of stalls still fails its allowance, so the ui-flows part stays green only while CI's stalls stay under that, until the follow-up finds what makes them.
 - The 6×6 at the largest text size is the class's longest test, at 74.5 s here and 100 to 150 s on CI, and the one that stopped at the allowance in the harsher runs here.
   Its time is held drags, which the polls did not make and this change does not shorten.
 - The other suites keep their `waitForExistence` calls apart from the helpers above.
@@ -199,6 +207,6 @@ It is given to him with this record as a possible second sighting and is not tre
 
 The app's sources are unchanged.
 No assertion was loosened or removed in the tests, no audit exception was added, the per-test allowance is still 3 minutes, the dropped-touch rerun and its record are as they were, no test was skipped, and the simulator's setup in `Scripts/quiet-simulator.sh` is as it was.
-The only wait made longer is the catalog's, from 5 to 30 s, for a stall read on CI, and it returns at once when the sheet shows.
+The only wait made longer is the catalog's, from 5 to 30 s, for a stall read on CI, and it returns at once when the sheet shows; the one wait added is the shooting screen's for Resume Camera, for up to 30 s, which returns once the camera's open ends.
 The Darkroom animation stall of record 069 stays with the captain.
 After this merges, the manual iPhone test plan's pin in `Evidence/NativeApp/manual-validation.md` is re-pinned as after the earlier tests-only changes.

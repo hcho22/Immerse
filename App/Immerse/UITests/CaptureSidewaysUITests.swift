@@ -78,8 +78,9 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
     }
 
-    /// Loads a Film in the Camera `id` with the title Load Film suggests, opens its shooting screen and returns the
-    /// Film's title, for the caller to delete it.
+    /// Loads a Film in the Camera `id` with the title Load Film suggests, opens its shooting screen, waits for the camera's
+    /// open to end in the missing camera's error and Resume Camera, and returns the Film's title, for the caller to delete
+    /// it. The notices come in their own time and never move a frame `wait(_:until:)` reads, so its settling cannot see them.
     private func openShootingScreen(_ app: XCUIApplication, id: String) throws -> String {
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
         app.resetAuthorizationStatus(for: .camera)
@@ -115,6 +116,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
 
         tapWhole(app, app.buttons["Open Camera"])
         XCTAssertTrue(app.buttons["Done"].exists(within: 5))
+        XCTAssertTrue(app.buttons["Resume Camera"].exists(within: 30), "The camera's open ended")
         return title
     }
 
@@ -220,8 +222,9 @@ final class CaptureSidewaysUITests: ScreenTestCase {
 
     /// The layout once `settled` holds and two reads half a second apart agree, so a turn's animation, or the screen's
     /// own coming up, has ended. Each read used to wait a second for each of three elements that were already there, which
-    /// let the screen settle by accident; the settling is asked for here instead. It gives up after 30 s and returns what it
-    /// last read, for the caller's assertions to fail on.
+    /// let the screen settle by accident; the settling is asked for here instead, and the camera's open, which moves none of
+    /// these frames, in `openShootingScreen`. It gives up after 30 s and returns what it last read, for the caller's
+    /// assertions to fail on.
     private func wait(_ app: XCUIApplication, until settled: (Layout) -> Bool = { _ in true }) throws -> Layout {
         var latest = try layout(app)
         let deadline = Date().addingTimeInterval(30)

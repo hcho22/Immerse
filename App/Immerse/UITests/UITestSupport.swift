@@ -22,9 +22,10 @@ class ScreenTestCase: XCTestCase {
     /// Launches the app once before the class's first test, outside every test's time allowance. XCTest installs the
     /// app at a session's first launch, and on CI that launch took 11 to 48 seconds where later ones took about 5; inside
     /// the session's first test it took the Disposable shooting screen's test past its 3 minutes in run 39292846150
-    /// (Evidence/NativeApp/main-ci-flakes-072.md). The session's first tap and first screenshot are slow the same way
-    /// (4 to 7 s for XCTest's check for interrupting elements before the tap, 5 to 25 s for the screenshot, in three runs each, against
-    /// under a second for every later one), so they are made here too, and the first test of the session meets neither
+    /// (Evidence/NativeApp/main-ci-flakes-072.md). The session's first tap and first screenshot were slow too (4 to 7 s for
+    /// XCTest's check for interrupting elements before the tap, 5 to 25 s for the screenshot, in three runs each, against
+    /// under a second for every later one), so they are made here, and what of that is a first use falls outside every
+    /// test; a stall of the whole simulator in the same seconds is not shown to move with it
     /// (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that finds nothing to tap costs nothing.
     override class func setUp() {
         super.setUp()
