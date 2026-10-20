@@ -91,10 +91,14 @@ if runs packages; then
     sh Scripts/verify-release-excludes-testing-unlock.sh
 fi
 if runs harness && [ -n "${IMMERSE_WORKFLOW_SIMULATOR_UDID:-}" ]; then
+    # EXPERIMENT C: build before the simulator boots
+    xcodebuild -quiet -project "Probes/$harness_probe/$harness_probe.xcodeproj" -scheme "$harness_probe" \
+        -derivedDataPath DerivedData/PopulatedJournalHarness \
+        -destination "platform=iOS Simulator,id=$IMMERSE_WORKFLOW_SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO build-for-testing
     pin_simulator "$IMMERSE_WORKFLOW_SIMULATOR_UDID"
     # The Photos permission workflow needs a denied add-only status; the harness has no usage key to prompt.
     xcrun simctl privacy "$IMMERSE_WORKFLOW_SIMULATOR_UDID" revoke photos-add com.immerse.PopulatedJournalHarness
-    sh Scripts/screen-tests.sh "$IMMERSE_WORKFLOW_SIMULATOR_UDID" Populated test "" \
+    sh Scripts/screen-tests.sh "$IMMERSE_WORKFLOW_SIMULATOR_UDID" Populated test-without-building "" \
         -project "Probes/$harness_probe/$harness_probe.xcodeproj" -scheme "$harness_probe" \
         -derivedDataPath DerivedData/PopulatedJournalHarness
 fi
@@ -113,6 +117,9 @@ if runs packages && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
         CODE_SIGNING_ALLOWED=NO test)
 fi
 if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
+    # EXPERIMENT C: build before the simulator boots
+    xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator \
+        -destination "platform=iOS Simulator,id=$IMMERSE_SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO build-for-testing
     # Run whole, the render tests above have pinned this simulator.
     runs packages || pin_simulator "$IMMERSE_SIMULATOR_UDID"
     # Run whole, the app's screen tests are one run. As parts, ui-text takes the text-size suites, which are most
@@ -123,7 +130,7 @@ if { runs ui-text || runs ui-flows; } && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; t
         ui-flows) selection="-only-testing:$app_screen_test_target$(suites -skip-testing $text_size_suites)" ;;
         *) selection="-only-testing:$app_screen_test_target" ;;
     esac
-    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation test "$selection" \
+    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" Validation test-without-building "$selection" \
         -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
 fi
 if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
