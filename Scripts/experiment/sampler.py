@@ -63,7 +63,42 @@ def ps():
             f.flush()
             stop.wait(5)
 
-threads = [threading.Thread(target=top), threading.Thread(target=vm), threading.Thread(target=ps)]
+def iostat():
+    with open(f"{out}/iostat.log", "w") as f:
+        p = subprocess.Popen(["iostat", "-d", "-w", "2"], stdout=subprocess.PIPE, text=True, errors="replace")
+        for line in p.stdout:
+            f.write("%.2f %s" % (time.time(), line)); f.flush()
+            if stop.is_set(): break
+        p.terminate()
+
+def fsusage():
+    """Disk I/O with its latency, per second by process, and the slow ones (50 ms and more) in full. Needs sudo."""
+    if subprocess.run(["sudo", "-n", "true"], capture_output=True).returncode != 0:
+        return
+    import re, collections
+    p = subprocess.Popen(["sudo", "-n", "fs_usage", "-w", "-f", "diskio"], stdout=subprocess.PIPE, text=True, errors="replace")
+    agg = collections.defaultdict(lambda: [0, 0, 0.0, 0.0]); sec = None
+    with open(f"{out}/io-slow.log", "w") as slow, open(f"{out}/io-agg.log", "w") as aggf:
+        def flush(s):
+            for (proc, op), (n, b, lat, mx) in sorted(agg.items(), key=lambda kv: -kv[1][2])[:8]:
+                aggf.write("%d %s %s n=%d MB=%.2f lat_sum=%.3f lat_max=%.3f\n" % (s, proc, op, n, b / 2**20, lat, mx))
+            aggf.flush(); agg.clear()
+        for line in p.stdout:
+            now = int(time.time())
+            if sec is None: sec = now
+            if now != sec: flush(sec); sec = now
+            m = re.search(r"(\d+\.\d+)\s+W\s+(\S+)\s*$", line)
+            if not m: continue
+            lat = float(m[1]); proc = re.sub(r"\.\d+$", "", m[2])
+            op = (line.split() + ["?", "?"])[1][:12]
+            bm = re.search(r"B=0x([0-9a-f]+)", line)
+            e = agg[(proc, op)]; e[0] += 1; e[1] += int(bm[1], 16) if bm else 0; e[2] += lat; e[3] = max(e[3], lat)
+            if lat >= 0.05:
+                slow.write("%.2f %s" % (time.time(), line)); slow.flush()
+        p.terminate()
+
+threads = [threading.Thread(target=top), threading.Thread(target=vm), threading.Thread(target=ps),
+           threading.Thread(target=iostat), threading.Thread(target=fsusage)]
 threads += [threading.Thread(target=probe, args=(u,)) for u in udids]
 for t in threads: t.start()
 while not stop.is_set(): stop.wait(1)

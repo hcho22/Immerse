@@ -62,6 +62,7 @@ jobs:
         run: |
           # EXPERIMENT: sample the host and the simulators while the part runs
           mkdir -p DerivedData/probe
+          python3 Scripts/experiment/iobench.py > DerivedData/probe/iobench.out 2>&1
           python3 Scripts/experiment/sampler.py DerivedData/probe $IMMERSE_SIMULATOR_UDID $IMMERSE_WORKFLOW_SIMULATOR_UDID > DerivedData/probe/sampler.out 2>&1 &
           sampler=$!
           status=0
