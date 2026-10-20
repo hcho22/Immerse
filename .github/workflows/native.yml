@@ -32,16 +32,18 @@ jobs:
   # One job ran them in turn for about two hours.
   part:
     needs: scope
-    name: ${{ matrix.part }}
+    name: ${{ matrix.part }}-gate-${{ matrix.rep }}
     strategy:
       fail-fast: false
       matrix:
-        part: ${{ fromJSON(needs.scope.outputs.parts) }}
+        part: [ui-flows]
+        rep: [1, 2, 3, 4, 5, 6]
     runs-on: macos-26
     timeout-minutes: 75
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IMMERSE_VALIDATE_PART: ${{ matrix.part }}
+      IMMERSE_EXP_PREFIX: "1"
     steps:
       - uses: actions/checkout@v7
       - name: Create isolated simulators
@@ -57,7 +59,21 @@ jobs:
               echo "IMMERSE_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV" ;;
           esac
       - name: Validate
-        run: sh Scripts/validate-local.sh
+        run: |
+          # EXPERIMENT: light sampling of the host and the simulator while the part runs
+          mkdir -p DerivedData/probe
+          python3 Scripts/experiment/light_sampler.py DerivedData/probe > /dev/null 2>&1 &
+          sampler=$!
+          status=0
+          sh Scripts/validate-local.sh || status=$?
+          kill $sampler 2> /dev/null || true
+          exit $status
+      - name: Retain the probe
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: probe-${{ matrix.part }}-gate-${{ matrix.rep }}
+          path: DerivedData/probe
       # A part that passed only because a screen test was run once more, on the simulator's own record that it
       # dropped that test's touch or the result bundle's record of an animation stall (Scripts/screen-tests.sh),
       # says so, naming each test and the record, on the run's page and to the summary check.
@@ -78,13 +94,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: validation-notes-${{ matrix.part }}
+          name: validation-notes-${{ matrix.part }}-gate-${{ matrix.rep }}
           path: DerivedData/part-notes.txt
       - name: Retain native test reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: native-test-results-${{ matrix.part }}
+          name: native-test-results-${{ matrix.part }}-gate-${{ matrix.rep }}
           path: DerivedData/*.xcresult
   # The one check to read: green only when every part that ran is, and it says which parts did not run and why.
   local-native:
