@@ -149,8 +149,8 @@ extension XCTestCase {
     /// next six seconds with no sheet; no repeat reproduced it (Evidence/NativeApp/ci-flakes-057.md). A second tap
     /// would hide that, so a miss fails here, with a screenshot of what was showing. The wait is 30 seconds, not 5: on a
     /// runner that stalled, the simulator handed the app the finger 15.7 s after XCTest played it, and the sheet came right
-    /// after (run 39307626086, Evidence/NativeApp/main-ci-flakes-073.md); 30 s covers the longest single stall read on CI.
-    /// A tap that never arrives still fails, 25 s later.
+    /// after (run 39307626086, Evidence/NativeApp/main-ci-flakes-073.md). 30 s is a margin over that 15.7 s, not a bound:
+    /// it is just under the longest single stall read on CI, 32.1 s. A tap that never arrives still fails, 25 s later.
     func openCameraCatalog(_ app: XCUIApplication) {
         let start = app.buttons["start-film"]
         let catalog = app.navigationBars["Choose a Camera"]

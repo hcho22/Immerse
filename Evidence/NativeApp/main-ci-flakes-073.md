@@ -157,7 +157,7 @@ Four changes, in `UITestSupport.swift` and `CaptureSidewaysUITests.swift`.
   Nothing is asserted there, and it runs before any test's allowance, as record 072's launch does.
   What this saves on CI is not measured: a fresh simulator here showed no first-use cost at all (above).
 - `openCameraCatalog` waits 30 s for the sheet, not 5.
-  The finger reached the app 15.7 s after it was played in attempt 1, and the longest single stall read on CI is 32 s.
+  The finger reached the app 15.7 s after it was played in attempt 1, and 30 s is a margin over that, not a bound: it is just under the longest single stall read on CI, 32.1 s.
   A tap that never arrives still fails, 25 s later, with the same screenshot.
 
 On CI the test should take about 65 s of its own where it took 95, so that 3 minutes holds up to about 120 s of stalls where it held 85, and the stalls that stopped it (84.6 and 92.5 s) leave it at 150 to 158 s.
@@ -210,6 +210,6 @@ It is given to him with this record as a possible second sighting and is not tre
 
 The app's sources are unchanged.
 No assertion was loosened or removed in the tests, no audit exception was added, the per-test allowance is still 3 minutes, the dropped-touch rerun and its record are as they were, no test was skipped, and the simulator's setup in `Scripts/quiet-simulator.sh` is as it was.
-The only wait made longer is the catalog's, from 5 to 30 s, for a stall read on CI, and it returns at once when the sheet shows; the one wait added is the shooting screen's for the camera's error, for up to 30 s, which returns once the camera's open ends.
+The only wait made longer is the catalog's, from 5 to 30 s, a margin over the 15.7 s late finger read on CI and just under its longest single stall (32.1 s), and it returns at once when the sheet shows; the one wait added is the shooting screen's for the camera's error, for up to 30 s, which returns once the camera's open ends.
 The Darkroom animation stall of record 069 stays with the captain.
 After this merges, the manual iPhone test plan's pin in `Evidence/NativeApp/manual-validation.md` is re-pinned as after the earlier tests-only changes.
