@@ -160,20 +160,14 @@ struct CaptureView: View {
         }
     }
 
-    /// Done, against the leading edge, and in a Debug build the notice that Develop at once is on for this Camera, which
-    /// sits in the header with it, never over the viewfinder (`DoneRowLayout`).
-    @ViewBuilder private func doneRow(_ capture: CaptureController) -> some View {
-        let done = Button { capture.suspend(); dismiss() } label: { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
+    /// The header's first line, which in a Debug build says whether Develop at once is on for this Film's Camera.
+    private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
+        let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
         #if DEBUG
-        DoneRowLayout {
-            done
-            if let film = model.film(filmID), model.developedPreviews.applies(to: film) { DevelopAtOnceNotice() }
-        }
+        return CaptureDoneRow(done: done,
+                              developsAtOnce: model.film(filmID).map { model.developedPreviews.applies(to: $0) } ?? false)
         #else
-        HStack {
-            done
-            Spacer(minLength: 0)
-        }
+        return CaptureDoneRow(done: done)
         #endif
     }
 
@@ -424,6 +418,31 @@ struct CaptureView: View {
             }
             catch { self.error = ["Camera unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
         }
+    }
+}
+
+/// The header's first line: Done, against the leading edge, and in a Debug build the notice that Develop at once is on
+/// for the Camera, which sits there with it, never over the viewfinder (`DoneRowLayout`).
+struct CaptureDoneRow: View {
+    let done: @MainActor () -> Void
+    #if DEBUG
+    /// Whether Develop at once is on for the Camera (`DevelopedPreviews.applies(to:)`).
+    var developsAtOnce = false
+    #endif
+
+    var body: some View {
+        let button = Button(action: done) { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
+        #if DEBUG
+        DoneRowLayout {
+            button
+            if developsAtOnce { DevelopAtOnceNotice() }
+        }
+        #else
+        HStack {
+            button
+            Spacer(minLength: 0)
+        }
+        #endif
     }
 }
 

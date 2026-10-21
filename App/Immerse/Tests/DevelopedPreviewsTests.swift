@@ -186,6 +186,28 @@ final class DevelopedPreviewsTests: XCTestCase {
         XCTAssertFalse(model.hasPendingSave(roll.id))
     }
 
+    /// Held upright, Develop at once's notice fits beside Done at every text size, so the header's first line, the only
+    /// part of the header the switch changes, is as tall with it on as off, and the viewfinder under the header stays
+    /// where it is. Measured in the row of the narrowest iPhones, the 375-point iPhone SE (3rd generation) and iPhone 13
+    /// mini, and of this simulator's screen, each less the screen's 16-point margins. In a row too short for both, as the
+    /// header's lines can be held on its side, the notice goes under Done.
+    func testTheNoticeLeavesTheHeaderAsTallAsWithTheSwitchOffAtEveryTextSize() async throws {
+        func height(developsAtOnce: Bool, _ size: DynamicTypeSize, row: CGFloat) -> CGFloat {
+            UIHostingController(rootView: CaptureDoneRow(done: {}, developsAtOnce: developsAtOnce).dynamicTypeSize(size))
+                .sizeThatFits(in: CGSize(width: row, height: 2000)).height
+        }
+        let scene = try await hostWindowScene()
+        for screenWidth in [CGFloat(375), scene.screen.bounds.width] {
+            for size in DynamicTypeSize.allCases {
+                XCTAssertEqual(height(developsAtOnce: true, size, row: screenWidth - 32),
+                               height(developsAtOnce: false, size, row: screenWidth - 32), accuracy: 0.5,
+                               "\(size) on a \(screenWidth)-point screen")
+            }
+        }
+        XCTAssertGreaterThan(height(developsAtOnce: true, .large, row: 100), height(developsAtOnce: false, .large, row: 100),
+                             "The notice goes under Done where the two do not fit on one line")
+    }
+
     /// The preview on the actual shooting screen and opened full size, kept as screenshots: each Camera, upright and
     /// held on its side, at the default and the largest text size, in light and dark.
     func testTheDisposablePreviewShowsOverTheViewfinderAndFullSize() async throws {

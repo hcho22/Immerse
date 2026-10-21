@@ -340,7 +340,7 @@ struct DevelopedPreviewNotice: View {
 }
 
 /// Says on the shooting screen that Develop at once is on, whenever it is on for that Camera, so a screenshot of a Camera
-/// that previews its captures is never taken for the real thing. It sits beside Done, in the header (`DoneRowLayout`).
+/// that previews its captures is never taken for the real thing. It sits beside Done, in the header (`CaptureDoneRow`).
 struct DevelopAtOnceNotice: View {
     var body: some View {
         // Short enough for one line in the header's shortest lines, held on its side at the default size.
@@ -351,8 +351,9 @@ struct DevelopAtOnceNotice: View {
         .font(.caption2.weight(.semibold))
         .padding(.horizontal, 6).padding(.vertical, 4)
         .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 8))
-        // Capped as the zoom steps and the preview card are, so it fits beside Done at most text sizes.
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        // Done grows at every text size and this does not past xxLarge, so held upright the two fit on one line at the
+        // largest size even in the 343-point row of a 375-point iPhone, and the header is as tall as with the switch off.
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Develop at once is on. Debug build.")
         .accessibilityIdentifier("develop-at-once-notice")
@@ -360,8 +361,9 @@ struct DevelopAtOnceNotice: View {
 }
 
 /// The header's first line: Done against the leading edge and, where a second view is given, Develop at once's notice
-/// at the far end where the two fit on one line, or under Done where they do not, as in the header's shorter lines with
-/// the iPhone on its side. Beside Done the notice is shorter than it, so the header, and the viewfinder under it, keep
+/// at the far end where the two fit on one line, as they always do held upright, or under Done where they do not, as in
+/// the header's shorter lines with the iPhone on its side, which lengthens the turned header across the screen but not
+/// the height it reserves. Beside Done the notice is shorter than it, so the header, and the viewfinder under it, keep
 /// their heights whether the switch is on or off. One layout for both, so Done keeps its view.
 struct DoneRowLayout: Layout {
     var spacing: CGFloat = 8

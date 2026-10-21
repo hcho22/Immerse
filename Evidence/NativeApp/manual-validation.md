@@ -2228,7 +2228,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 **Steps.**
 
 1. Check **Settings > Develop at once - Debug build** is on.
-2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** beside **Done** before the first photo, upright and held on its side, and take a photo with the flash off, then one with the flash on.
+2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** next to **Done** before the first photo, beside it upright and under it held on its side, and take a photo with the flash off, then one with the flash on.
 3. Load a 6×6 Medium Format Film with **Color**, take a photo, then load one with **Black and white** and take a photo.
 4. Load a 16mm Cinema Film with each Film Stock and record a clip of about 5 seconds on each.
 5. Load a 1960s Super 8 Home Movie Film and record a clip of about 5 seconds.
@@ -2236,7 +2236,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 **Expect.**
 
-- Each of the four Cameras' shooting screens shows **Develop at once** beside **Done** in every hold, readable and clear of the viewfinder and the shutter, before and after the card is closed.
+- Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold (beside it upright, under it held on its side), readable and clear of the viewfinder and the shutter, at every text size, before and after the card is closed.
 - A card marked **Debug preview** shows within a moment of each save, says the photo or clip is developing, and then shows its picture.
 - The full-size view shows that Camera's look and, on the 6×6 and the 16mm, the chosen Film Stock, with the notice **Develop at once - Debug build** under it.
 - A clip plays silently on a loop: the soundtrack is chosen and heard only on the developed Movie.
