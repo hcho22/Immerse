@@ -1,4 +1,3 @@
-@preconcurrency import AVFoundation
 import FilmDomain
 @testable import FilmPersistence
 import FilmRuntime
@@ -147,34 +146,10 @@ final class TreatmentVersionDevelopmentTests: XCTestCase {
         let expected = root.appendingPathComponent("expected.mov")
         try await NativeMovieRenderer.developClip(source: clip, destination: expected, camera: reel.camera, filmStock: .blackAndWhite,
             seed: assignment.seed, orientation: .landscape, treatmentVersion: "film-look-2-provisional")
-        let expectedFrames = try await frameHashes(expected)
+        let expectedFrames = try await frameDigests(expected)
         let developedURL = root.appendingPathComponent("developed.mov")
         try developed.write(to: developedURL)
-        let developedFrames = try await frameHashes(developedURL)
+        let developedFrames = try await frameDigests(developedURL)
         XCTAssertEqual(developedFrames, expectedFrames, "Every frame as version 2 develops it")
-    }
-
-    /// A hash of each decoded frame's pixels, so two encodes of the same frames compare equal.
-    private func frameHashes(_ url: URL) async throws -> [Int] {
-        let asset = AVURLAsset(url: url)
-        let tracks = try await asset.loadTracks(withMediaType: .video)
-        let reader = try AVAssetReader(asset: asset)
-        let output = AVAssetReaderTrackOutput(track: try XCTUnwrap(tracks.first), outputSettings: [
-            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
-        ])
-        reader.add(output)
-        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
-        var hashes: [Int] = []
-        while let sample = output.copyNextSampleBuffer() {
-            let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))
-            CVPixelBufferLockBaseAddress(buffer, .readOnly)
-            defer { CVPixelBufferUnlockBaseAddress(buffer, .readOnly) }
-            let bytes = Data(bytes: try XCTUnwrap(CVPixelBufferGetBaseAddress(buffer)),
-                             count: CVPixelBufferGetBytesPerRow(buffer) * CVPixelBufferGetHeight(buffer))
-            hashes.append(bytes.hashValue)
-        }
-        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: hashes.count))
-        XCTAssertFalse(hashes.isEmpty)
-        return hashes
     }
 }

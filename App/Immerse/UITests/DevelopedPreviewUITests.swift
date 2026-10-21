@@ -3,7 +3,8 @@ import XCTest
 /// The Debug-only switch for previewing each saved capture, as the captain meets it in Settings: on in a Debug build,
 /// holding across launches, and off for one launch with `-ImmerseDebugDevelopedPreview NO`, the argument a screen test
 /// passes where a preview would change its screen. The simulator has no camera, so a preview itself is shown by the
-/// hosted `DevelopedPreviewsTests`. Ends with the switch on, the Debug default.
+/// hosted `DevelopedPreviewsTests`, and the shooting screen's notice that the switch is on by `CaptureSidewaysUITests`.
+/// Ends with the switch on, the Debug default.
 @MainActor
 final class DevelopedPreviewUITests: ScreenTestCase {
     func testTheSettingsSwitchHoldsAcrossLaunchesAndTheLaunchArgumentTurnsItOffForOneLaunch() throws {

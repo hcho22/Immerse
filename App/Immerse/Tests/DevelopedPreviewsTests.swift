@@ -97,6 +97,29 @@ final class DevelopedPreviewsTests: XCTestCase {
         }
     }
 
+    /// Delete Film while the camera is still finishing a save, as when Done is tapped during "Finishing save" and the Film
+    /// is deleted at once: the save reports itself while the deletion waits for it to end, and its preview goes with the
+    /// Film. On the Trial the save writes the receipt, which is held here until the deletion waits.
+    func testDeletingAFilmWhileItsSaveFinishesLeavesNoPreview() async throws {
+        let calls = HeldReceiptCalls()
+        let model = try await makeModel(previewing: true, calls: calls)
+        model.testingUnlock.enabled = false
+        let roll = try await model.load(camera: CameraCatalog.disposable1990s, title: "Roll", orientation: .portrait)
+        try await stage(roll, model)
+        calls.holdNextUpdate()
+        let opening = Task { try await model.capture.open(film: roll, model: model) }
+        try await waitUntil { calls.isHolding }
+        model.capture.suspend()
+        let removal = Task { try await model.remove(roll.id) }
+        try await waitUntil { model.hiddenFilms.contains(roll.id) }
+        calls.release()
+        try await removal.value
+        _ = await opening.result
+        XCTAssertNil(model.film(roll.id))
+        XCTAssertNil(model.developedPreviews.current, "No preview of a deleted Film")
+        try await waitUntil { (try? previewFiles()) == [] }
+    }
+
     func testAnInstantPrintDevelopsAsBeforeAndHasNoPreview() async throws {
         let model = try await makeModel(previewing: true)
         let pack = try await model.load(camera: CameraCatalog.instant1970s, title: "Pack", orientation: .portrait)
@@ -206,10 +229,10 @@ final class DevelopedPreviewsTests: XCTestCase {
         try await model.remove(film.id)
     }
 
-    private func makeModel(previewing: Bool) async throws -> JournalModel {
+    private func makeModel(previewing: Bool, calls: HeldReceiptCalls = HeldReceiptCalls()) async throws -> JournalModel {
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defaults.set(previewing, forKey: DevelopedPreviews.defaultsKey)
-        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: calls),
                                      cameraAuthorizer: SyntheticCamera(granted: true))
         model.testingUnlock.enabled = true
         model.developedPreviews = DevelopedPreviews(root: root, defaults: defaults, directory: previews)
@@ -220,6 +243,14 @@ final class DevelopedPreviewsTests: XCTestCase {
     /// Stages a photo or a clip as the backend does and opens the camera, which finishes its save and reports it.
     private func saveThroughTheCamera(_ film: Film, _ model: JournalModel) async throws {
         let before = model.film(film.id)?.savedCaptureCount ?? 0
+        try await stage(film, model)
+        do { try await model.capture.open(film: film, model: model); XCTFail("The simulator has no camera to start") }
+        catch let error as NativeCaptureError where error == .notRunning || error == .configurationFailed { }
+        try await waitUntil { model.film(film.id)?.savedCaptureCount == before + 1 }
+    }
+
+    /// Leaves a photo or a clip in the Film's staging directory, exactly as the backend leaves one for its save.
+    private func stage(_ film: Film, _ model: JournalModel) async throws {
         let staging = try model.repository.captureStagingDirectory(filmID: film.id)
         let files = try CapturedMediaFiles(directory: staging)
         if film.camera.medium == .photo {
@@ -231,9 +262,6 @@ final class DevelopedPreviewsTests: XCTestCase {
             try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie, orientation: orientation,
                                                    remainingFrames: film.remainingMovieFrames ?? 0))
         }
-        do { try await model.capture.open(film: film, model: model); XCTFail("The simulator has no camera to start") }
-        catch let error as NativeCaptureError where error == .notRunning || error == .configurationFailed { }
-        try await waitUntil { model.film(film.id)?.savedCaptureCount == before + 1 }
     }
 
     private func readyPreview(_ model: JournalModel, film: Film, sequence: Int) async throws -> DevelopedPreviews.Preview {

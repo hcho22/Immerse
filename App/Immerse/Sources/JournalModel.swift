@@ -233,6 +233,7 @@ final class JournalModel {
         } else {
             #if DEBUG
             developedPreviews.clear(filmID: id)
+            defer { developedPreviews.clear(filmID: id) }
             #endif
             try await capture.cancelForPrivacy(filmID: id)
             try await trial.deleteFilm(filmID: id, processor: processor)

@@ -1,5 +1,4 @@
 #if DEBUG
-@preconcurrency import AVFoundation
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
@@ -93,10 +92,10 @@ final class PreviewDevelopmentTests: XCTestCase {
                                    "\(label): develops as the roll never previewed")
                 } else {
                     let developed = try repository.revealedAsset(filmID: film.id, sequenceNumber: sequence, kind: .clip).url
-                    let expected = try await frameHashes(developed)
-                    let previewFrames = try await frameHashes(preview)
+                    let expected = try await frameDigests(developed)
+                    let previewFrames = try await frameDigests(preview)
                     XCTAssertEqual(previewFrames, expected, "\(label): the preview is the Developed Clip")
-                    let unpreviewedFrames = try await frameHashes(unpreviewed.revealedAsset(
+                    let unpreviewedFrames = try await frameDigests(unpreviewed.revealedAsset(
                         filmID: film.id, sequenceNumber: sequence, kind: .clip).url)
                     XCTAssertEqual(unpreviewedFrames, expected, "\(label): develops as the roll never previewed")
                 }
@@ -104,8 +103,8 @@ final class PreviewDevelopmentTests: XCTestCase {
             if film.camera.medium == .movie {
                 let movie = try repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie).url
                 let unpreviewedMovie = try unpreviewed.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie).url
-                let movieFrames = try await frameHashes(movie)
-                let unpreviewedMovieFrames = try await frameHashes(unpreviewedMovie)
+                let movieFrames = try await frameDigests(movie)
+                let unpreviewedMovieFrames = try await frameDigests(unpreviewedMovie)
                 XCTAssertEqual(movieFrames, unpreviewedMovieFrames, "\(film.title): the Developed Movie is the never-previewed roll's")
             }
         }
@@ -139,7 +138,7 @@ final class PreviewDevelopmentTests: XCTestCase {
                 + "run \(try repository.developmentRun(filmID: film.id) == nil ? "none" : "present")")
         }
         for path in try storeFiles(root) where !path.hasPrefix("film-store.sqlite") {
-            lines.append("\(path) \(try Data(contentsOf: root.appendingPathComponent(path)).hashValue)")
+            lines.append("\(path) \(sha256Hex(try Data(contentsOf: root.appendingPathComponent(path))))")
         }
         return lines
     }
@@ -151,31 +150,6 @@ final class PreviewDevelopmentTests: XCTestCase {
             paths.append(String(url.standardizedFileURL.path.dropFirst(directory.standardizedFileURL.path.count + 1)))
         }
         return paths.sorted()
-    }
-
-    /// A hash of each decoded frame's pixels, so two encodes of the same frames compare equal. Only frames read back in
-    /// the same run are compared (AGENTS.md: a Developed Clip has no color tags).
-    private func frameHashes(_ url: URL) async throws -> [Int] {
-        let asset = AVURLAsset(url: url)
-        let tracks = try await asset.loadTracks(withMediaType: .video)
-        let reader = try AVAssetReader(asset: asset)
-        let output = AVAssetReaderTrackOutput(track: try XCTUnwrap(tracks.first), outputSettings: [
-            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
-        ])
-        reader.add(output)
-        XCTAssertTrue(reader.startReading(), reader.failureDescription(framesRead: 0))
-        var hashes: [Int] = []
-        while let sample = output.copyNextSampleBuffer() {
-            let buffer = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample))
-            CVPixelBufferLockBaseAddress(buffer, .readOnly)
-            defer { CVPixelBufferUnlockBaseAddress(buffer, .readOnly) }
-            let bytes = Data(bytes: try XCTUnwrap(CVPixelBufferGetBaseAddress(buffer)),
-                             count: CVPixelBufferGetBytesPerRow(buffer) * CVPixelBufferGetHeight(buffer))
-            hashes.append(bytes.hashValue)
-        }
-        XCTAssertEqual(reader.status, .completed, reader.failureDescription(framesRead: hashes.count))
-        XCTAssertFalse(hashes.isEmpty)
-        return hashes
     }
 }
 #endif

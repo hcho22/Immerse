@@ -11,8 +11,9 @@ import SwiftUI
 /// Debug-only preview of each saved capture, for the captain's feedback on a Camera's look without finishing its roll
 /// (the captain, 2026-10-21). While on, every photo of the 6×6 and the Disposable and every clip of the 16mm and the
 /// Super 8 shows developed on the shooting screen as soon as it is saved, rendered by Development's own code with the
-/// treatment Development will give it (`PreviewDevelopment`). The roll stays sealed and develops as before; an Instant
-/// print develops by itself and is left as it is. Previews live only in a disposable cache outside the Film store and
+/// treatment Development will give it (`PreviewDevelopment`), and those Cameras' shooting screens say beside Done that the
+/// switch is on (`DevelopAtOnceNotice`). The roll stays sealed and develops as before; an Instant print develops by itself
+/// and is left as it is. Previews live only in a disposable cache outside the Film store and
 /// are removed when they are closed or replaced, when the roll develops, when its Film is deleted, when the switch is
 /// turned off and at launch; the latest stays while the camera is closed and shows again when it opens. The whole type is compiled out of Release, which therefore has no preview path or copy;
 /// `Scripts/verify-release-excludes-testing-unlock.sh` checks the Release binary.
@@ -66,12 +67,14 @@ final class DevelopedPreviews {
         enabled = defaults.map { $0.object(forKey: Self.defaultsKey) == nil || $0.bool(forKey: Self.defaultsKey) } ?? false
     }
 
+    /// Whether the switch changes `film`'s shooting screen: it is on, and the Film is not an Instant's, whose prints
+    /// develop as they are saved.
+    func applies(to film: Film) -> Bool { enabled && film.camera.revealRule != .instantPerExposure }
+
     /// A capture of `film` was saved: its newest capture develops now, replacing the preview before it. Nothing happens
-    /// while the switch is off or for an Instant, whose prints develop as they are saved. A failed preview shows a note
-    /// and never touches the save.
+    /// where the switch does not apply. A failed preview shows a note and never touches the save.
     func captureSaved(_ film: Film) {
-        guard enabled, film.camera.revealRule != .instantPerExposure,
-              let newest = film.captures.last(where: { !$0.isDiscarded }) else { return }
+        guard applies(to: film), let newest = film.captures.last(where: { !$0.isDiscarded }) else { return }
         // Recovery reports each staged save it finishes; the newest is developed once.
         if let current, current.filmID == film.id, current.sequenceNumber == newest.sequenceNumber { return }
         clearCurrent()
@@ -333,6 +336,75 @@ struct DevelopedPreviewNotice: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("developed-preview-notice")
+    }
+}
+
+/// Says on the shooting screen that Develop at once is on, whenever it is on for that Camera, so a screenshot of a Camera
+/// that previews its captures is never taken for the real thing. It sits beside Done, in the header (`DoneRowLayout`).
+struct DevelopAtOnceNotice: View {
+    var body: some View {
+        // Short enough for one line in the header's shortest lines, held on its side at the default size.
+        HStack(spacing: 4) {
+            Image(systemName: "hammer")
+            Text("Develop at once")
+        }
+        .font(.caption2.weight(.semibold))
+        .padding(.horizontal, 6).padding(.vertical, 4)
+        .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 8))
+        // Capped as the zoom steps and the preview card are, so it fits beside Done at most text sizes.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Develop at once is on. Debug build.")
+        .accessibilityIdentifier("develop-at-once-notice")
+    }
+}
+
+/// The header's first line: Done against the leading edge and, where a second view is given, Develop at once's notice
+/// at the far end where the two fit on one line, or under Done where they do not, as in the header's shorter lines with
+/// the iPhone on its side. Beside Done the notice is shorter than it, so the header, and the viewfinder under it, keep
+/// their heights whether the switch is on or off. One layout for both, so Done keeps its view.
+struct DoneRowLayout: Layout {
+    var spacing: CGFloat = 8
+
+    private struct Plan {
+        var done: CGSize
+        var notice: CGSize?
+        var beside: Bool
+        var width: CGFloat
+    }
+
+    private func plan(_ proposal: ProposedViewSize, _ subviews: Subviews) -> Plan? {
+        guard let first = subviews.first else { return nil }
+        let offered = proposal.width.flatMap { $0.isFinite ? $0 : nil }
+        let done = first.sizeThatFits(ProposedViewSize(width: offered, height: nil))
+        guard subviews.count > 1 else { return Plan(done: done, notice: nil, beside: true, width: offered ?? done.width) }
+        let line = subviews[1].sizeThatFits(.unspecified)
+        let width = offered ?? done.width + spacing + line.width
+        if done.width + spacing + line.width <= width { return Plan(done: done, notice: line, beside: true, width: width) }
+        return Plan(done: done, notice: subviews[1].sizeThatFits(ProposedViewSize(width: width, height: nil)), beside: false,
+                    width: width)
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard let plan = plan(proposal, subviews) else { return .zero }
+        guard let notice = plan.notice else { return CGSize(width: plan.width, height: plan.done.height) }
+        let height = plan.beside ? max(plan.done.height, notice.height) : plan.done.height + spacing + notice.height
+        return CGSize(width: plan.width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard let plan = plan(ProposedViewSize(width: bounds.width, height: nil), subviews) else { return }
+        guard plan.beside else {
+            subviews[0].place(at: bounds.origin, anchor: .topLeading, proposal: ProposedViewSize(plan.done))
+            // Offered no height, so the text takes the height it measured (as `TurnedLayout` does).
+            subviews[1].place(at: CGPoint(x: bounds.minX, y: bounds.minY + plan.done.height + spacing), anchor: .topLeading,
+                              proposal: ProposedViewSize(width: plan.width, height: nil))
+            return
+        }
+        subviews[0].place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading, proposal: ProposedViewSize(plan.done))
+        if let notice = plan.notice {
+            subviews[1].place(at: CGPoint(x: bounds.maxX, y: bounds.midY), anchor: .trailing, proposal: ProposedViewSize(notice))
+        }
     }
 }
 

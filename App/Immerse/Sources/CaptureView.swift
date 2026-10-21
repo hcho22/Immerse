@@ -139,10 +139,7 @@ struct CaptureView: View {
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
         TurnedBlock(length: headerLength, reservesLength: true, maximumLength: room) {
             VStack(spacing: 12) {
-                HStack {
-                    Button { capture.suspend(); dismiss() } label: { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
-                    Spacer(minLength: 0)
-                }
+                doneRow(capture)
                 if let film = model.film(filmID) {
                     film.camera.displayNameText.font(.system(.title3, design: .serif)).multilineTextAlignment(.center)
                     TimelineView(.periodic(from: .now, by: 0.1)) { context in
@@ -161,6 +158,23 @@ struct CaptureView: View {
             }
             .frame(maxWidth: .infinity)
         }
+    }
+
+    /// Done, against the leading edge, and in a Debug build the notice that Develop at once is on for this Camera, which
+    /// sits in the header with it, never over the viewfinder (`DoneRowLayout`).
+    @ViewBuilder private func doneRow(_ capture: CaptureController) -> some View {
+        let done = Button { capture.suspend(); dismiss() } label: { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
+        #if DEBUG
+        DoneRowLayout {
+            done
+            if let film = model.film(filmID), model.developedPreviews.applies(to: film) { DevelopAtOnceNotice() }
+        }
+        #else
+        HStack {
+            done
+            Spacer(minLength: 0)
+        }
+        #endif
     }
 
     /// What is wrong or worth knowing: the error, the message, the way to iPhone Settings and to Resume Camera, and what

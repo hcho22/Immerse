@@ -2215,10 +2215,11 @@ Each step's result, how long the viewfinder took to return, a screen recording o
 On 2026-10-21 the captain asked to see every capture of the 6×6 Medium Format, the 1990s Disposable, the 16mm Cinema and the 1960s Super 8 Home Movie developed as soon as it is taken, so he can give feedback on each look without finishing a roll ([076](develop-at-once-076.md)).
 Debug builds therefore have **Settings > Develop at once - Debug build**, on by default, under the testing unlock's switch.
 While it is on, each saved photo or clip of those four Cameras shows on the shooting screen as a card marked **Debug preview**: "developing" first, then the developed picture, which opens full size when tapped; the **x** closes it.
+That is how to tell the switch's state without opening Settings: while it is on, those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done**, from before the first capture, and with it off, as on the Instant at any time, nothing shows there.
 The roll itself stays sealed and develops exactly as before, and the 1970s Instant is unchanged.
 Release, TestFlight and App Store builds have none of it (`sh Scripts/verify-release-excludes-testing-unlock.sh`).
 It is not in the pinned candidate until the plan is re-pinned to a build that holds it.
-A card over the viewfinder is a developed result shown before Development, which FR-04 rules out for the product, so **turn the switch off for every scenario outside P01 to P05**, and above all for L03 and L05, which watch that the viewfinder never previews the developed result.
+A card over the viewfinder is a developed result shown before Development, which FR-04 rules out for the product, so **turn the switch off for every scenario outside P01 to P05**, and above all for L03 and L05, which watch that the viewfinder never previews the developed result; no **Develop at once** beside **Done** shows it is off.
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
 Each scenario reads **UNTESTED: physical execution deferred**.
 
@@ -2227,7 +2228,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 **Steps.**
 
 1. Check **Settings > Develop at once - Debug build** is on.
-2. Load a 1990s Disposable Film and take a photo with the flash off, then one with the flash on.
+2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** beside **Done** before the first photo, upright and held on its side, and take a photo with the flash off, then one with the flash on.
 3. Load a 6×6 Medium Format Film with **Color**, take a photo, then load one with **Black and white** and take a photo.
 4. Load a 16mm Cinema Film with each Film Stock and record a clip of about 5 seconds on each.
 5. Load a 1960s Super 8 Home Movie Film and record a clip of about 5 seconds.
@@ -2235,13 +2236,14 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 **Expect.**
 
+- Each of the four Cameras' shooting screens shows **Develop at once** beside **Done** in every hold, readable and clear of the viewfinder and the shutter, before and after the card is closed.
 - A card marked **Debug preview** shows within a moment of each save, says the photo or clip is developing, and then shows its picture.
 - The full-size view shows that Camera's look and, on the 6×6 and the 16mm, the chosen Film Stock, with the notice **Develop at once - Debug build** under it.
 - A clip plays silently on a loop: the soundtrack is chosen and heard only on the developed Movie.
 - The shutter, the lens switch and the controls keep working while a preview develops, and the remaining exposures or time count down as usual.
 
 **It fails if.**
-A capture of one of the four Cameras shows no card, a card never finishes developing, the picture is not that Camera's or Film Stock's look, the camera stalls or a capture fails while a preview develops, or the card covers anything that cannot be reached another way.
+A shooting screen of one of the four Cameras lacks **Develop at once** beside **Done**, the notice covers the viewfinder or the shutter, a capture of one of them shows no card, a card never finishes developing, the picture is not that Camera's or Film Stock's look, the camera stalls or a capture fails while a preview develops, or the card covers anything that cannot be reached another way.
 
 **Write down.**
 For each capture, the seconds from the shutter to the developed card, a screenshot of the card and of the full-size view, and whether the phone grew warm.
@@ -2271,10 +2273,10 @@ The preview and developed screenshots side by side for each capture.
 Load a 1970s Instant Film with the switch on and take two exposures.
 
 **Expect.**
-Each print develops and opens over the camera as before, the camera comes back as in C01, and no **Debug preview** card ever shows.
+Each print develops and opens over the camera as before, the camera comes back as in C01, and no **Debug preview** card or **Develop at once** notice ever shows.
 
 **It fails if.**
-A card shows on the Instant, or a print develops, opens or asks about its original differently from C01.
+A card or the notice shows on the Instant, or a print develops, opens or asks about its original differently from C01.
 
 **Write down.**
 A screenshot after each print closes.
@@ -2290,10 +2292,10 @@ A screenshot after each print closes.
 5. Turn the switch on again, take a photo and check its card shows.
 
 **Expect.**
-After step 2 the earlier card is gone; with the switch off no card shows and the screen is the shooting screen of a Release build; the switch holds across the relaunch; on again, previews return.
+After step 2 the earlier card is gone; with the switch off no card and no **Develop at once** beside **Done** show and the screen is the shooting screen of a Release build, with the viewfinder where it was; the switch holds across the relaunch; on again, the notice and previews return.
 
 **It fails if.**
-A card shows while the switch is off, the old card comes back, or the switch does not hold after a relaunch.
+A card or the notice shows while the switch is off, the viewfinder moves when the switch changes, the old card comes back, or the switch does not hold after a relaunch.
 
 **Write down.**
 A screenshot of steps 3 and 5 and the switch after the relaunch.
