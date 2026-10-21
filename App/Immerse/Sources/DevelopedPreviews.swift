@@ -72,8 +72,8 @@ final class DevelopedPreviews {
     /// Saved captures still to develop, in the order they were saved; the first is developing.
     private(set) var waiting: [Capture] = []
     @ObservationIgnored private var render: Task<URL, Error>?
-    /// While the app is in the background nothing develops: iOS refuses an app's GPU work there, as the roll's
-    /// Development is suspended for too.
+    /// While the app is in the background nothing develops: iOS refuses an app's GPU work there, which is why the roll's
+    /// Development is suspended there too.
     @ObservationIgnored private var suspended = false
     /// The newest capture of the Film the camera saves to that is already taken up or was there before it attached, so
     /// each capture saved after it develops once.
