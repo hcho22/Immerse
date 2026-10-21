@@ -13,6 +13,37 @@ extension XCUIScreen {
     }
 }
 
+/// A freshly booted simulator answers slowly for its first minutes on CI: in the first session after the boot a launch, a
+/// turn or a wait for the app to idle took 4 to 25 s where the same step took under 3 s in a second session on the same
+/// simulator (Evidence/NativeApp/main-ci-flakes-075.md). That cost fell inside the session's first test, whose 3 minutes
+/// it took, and it ended on its own, by the time of the third test. So before the first test the app's own first steps
+/// are made again and timed, a pass at a time, until a pass is no longer a fifth quicker than the one before it, which
+/// is the simulator answering as fast as it will. A quick simulator is through it in two passes and a slow one takes
+/// the passes it needs, at most six, within 6 minutes. It runs once for the session, in a class `setUp`, outside every
+/// test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
+@MainActor
+enum SimulatorWarmUp {
+    private static var settled = false
+
+    /// Runs the passes and returns true the first time; returns false, doing nothing, every time after.
+    static func settle(pass: () -> Void) -> Bool {
+        guard !settled else { return false }
+        settled = true
+        let began = Date()
+        var previous: TimeInterval?
+        for number in 1...6 {
+            let start = Date()
+            pass()
+            let took = Date().timeIntervalSince(start)
+            print("Simulator warm-up pass \(number): \(String(format: "%.1f", took)) s")
+            if let previous, took >= previous * 0.8 { break }
+            if Date().timeIntervalSince(began) > 360 { break }
+            previous = took
+        }
+        return true
+    }
+}
+
 /// The base of every screen test class. Each test starts with the simulator held upright. A test stopped at its time
 /// allowance runs no `defer` or teardown, so a turn it made stays, and the tests after it launched sideways: one run
 /// (39004998658) launched `JournalFlowTests` in landscape for that reason, another harness run (38980604148) failed the
@@ -30,13 +61,38 @@ class ScreenTestCase: XCTestCase {
     override class func setUp() {
         super.setUp()
         MainActor.assumeIsolated {
-            let app = XCUIApplication()
-            app.launch()
-            let start = app.buttons["start-film"]
-            if start.waitForExistence(timeout: 10) { start.tap() }
-            _ = XCUIScreen.main.screenshot()
-            app.terminate()
+            // The first class of a session settles the simulator; every other class makes the plain first launch.
+            if !SimulatorWarmUp.settle(pass: { warmUpPass() }) { launchOnce() }
         }
+    }
+
+    /// The first launch, tap and screenshot of a class: launch, open the Camera catalog if the Journal offers it, capture
+    /// the screen and quit.
+    private static func launchOnce() {
+        let app = XCUIApplication()
+        app.launch()
+        let start = app.buttons["start-film"]
+        if start.waitForExistence(timeout: 10) { start.tap() }
+        _ = XCUIScreen.main.screenshot()
+        app.terminate()
+    }
+
+    /// What every screen test does first, once: the launch, the catalog, a turn to each side held and back, a capture,
+    /// and a second launch, which is where a session's first test met 12 to 18 s of "Setting up automation session" and
+    /// of waits for the app to idle.
+    private static func warmUpPass() {
+        let app = XCUIApplication()
+        app.launch()
+        let start = app.buttons["start-film"]
+        if start.waitForExistence(timeout: 10) { start.tap() }
+        _ = app.navigationBars["Choose a Camera"].waitForExistence(timeout: 30)
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            _ = XCUIScreen.main.screenshot()
+        }
+        app.terminate()
+        app.launch()
+        app.terminate()
     }
 
     override func setUp() async throws {

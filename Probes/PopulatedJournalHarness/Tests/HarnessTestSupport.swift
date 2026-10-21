@@ -1,5 +1,34 @@
 import XCTest
 
+/// A freshly booted simulator answers slowly for its first minutes on CI, which fell inside the session's first test
+/// (Evidence/NativeApp/main-ci-flakes-075.md). So before the first test the app's own first steps are made again and
+/// timed, a pass at a time, until a pass is no longer a fifth quicker than the one before it: a quick simulator is through
+/// in two passes and a slow one takes the passes it needs, at most six, within 6 minutes. It runs once for the session,
+/// in a class `setUp`, outside every test's allowance, asserts nothing, and writes each pass's time to the test runner's
+/// output (the same type is in the app's `UITestSupport.swift`).
+@MainActor
+enum SimulatorWarmUp {
+    private static var settled = false
+
+    /// Runs the passes and returns true the first time; returns false, doing nothing, every time after.
+    static func settle(pass: () -> Void) -> Bool {
+        guard !settled else { return false }
+        settled = true
+        let began = Date()
+        var previous: TimeInterval?
+        for number in 1...6 {
+            let start = Date()
+            pass()
+            let took = Date().timeIntervalSince(start)
+            print("Simulator warm-up pass \(number): \(String(format: "%.1f", took)) s")
+            if let previous, took >= previous * 0.8 { break }
+            if Date().timeIntervalSince(began) > 360 { break }
+            previous = took
+        }
+        return true
+    }
+}
+
 /// The base of every workflow test class. Each test starts with the simulator held upright. A test stopped at its time
 /// allowance runs no `defer` or teardown, so a turn it made stays: run 38980604148 stopped a landscape Darkroom test,
 /// and the next test launched the app sideways and failed on a tap (Evidence/NativeApp/main-ci-flakes-069.md).
@@ -10,10 +39,30 @@ class HarnessTestCase: XCTestCase {
     override class func setUp() {
         super.setUp()
         MainActor.assumeIsolated {
-            let app = XCUIApplication()
-            app.launch()
-            app.terminate()
+            // The first class of a session settles the simulator; every other class makes the plain first launch.
+            if !SimulatorWarmUp.settle(pass: { warmUpPass() }) { launchOnce() }
         }
+    }
+
+    private static func launchOnce() {
+        let app = XCUIApplication()
+        app.launch()
+        app.terminate()
+    }
+
+    /// What every workflow test does first, once: the launch, a turn to one side and back with a capture each, and a
+    /// second launch (the same pass as the app's screen tests make in `ScreenTestCase`).
+    private static func warmUpPass() {
+        let app = XCUIApplication()
+        app.launch()
+        _ = app.buttons["start-film"].waitForExistence(timeout: 10)
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            _ = XCUIScreen.main.screenshot()
+        }
+        app.terminate()
+        app.launch()
+        app.terminate()
     }
 
     override func setUp() async throws {

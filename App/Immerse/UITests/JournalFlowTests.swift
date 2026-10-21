@@ -6,7 +6,7 @@ final class JournalFlowTests: ScreenTestCase {
         let app = XCUIApplication.shippingGate()
         launchWithEmptyJournal(app)
         try app.performAccessibilityAudit(for: Self.auditTypes)
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
             XCTAssertTrue(app.buttons["camera-\(id)"].exists)
@@ -42,7 +42,7 @@ final class JournalFlowTests: ScreenTestCase {
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         let camera = app.buttons["camera-cinema16mm"]
         tapWhole(app, camera)
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
@@ -94,7 +94,7 @@ final class JournalFlowTests: ScreenTestCase {
         app.launch()
         defer { XCUIDevice.shared.orientation = .portrait }
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "Catalog-accessibility-largest")
@@ -133,7 +133,7 @@ final class JournalFlowTests: ScreenTestCase {
         let app = XCUIApplication.shippingGate()
         app.resetAuthorizationStatus(for: .camera)
         launchWithEmptyJournal(app)
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
         app.buttons["camera-disposable1990s"].tap()
         let load = app.buttons["load-film"]
