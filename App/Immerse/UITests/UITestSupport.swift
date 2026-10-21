@@ -79,8 +79,8 @@ class ScreenTestCase: XCTestCase {
     }
 
     /// What every screen test does first, once: the launch, the catalog, a turn to one side and back with a capture each,
-    /// and a second launch, which is where a session's first test met 12 to 18 s of "Setting up automation session" and
-    /// of waits for the app to idle.
+    /// and a second launch, since in one stalled first test a launch made after the class's first one still took 5.4 s and
+    /// setting up its automation session 12.2 s (Evidence/NativeApp/main-ci-flakes-075.md).
     private static func warmUpPass() {
         let app = XCUIApplication()
         app.launch()
