@@ -158,7 +158,6 @@ The failed session's output holds a second session that started two minutes afte
 Three passing tests in experiment runs carried the 60 s wait and the note "App animations complete notification not received, will attempt to continue.": the Disposable test of one first pass and the Super 8 test of the second pass of the same job (the two-pass experiment), and the Disposable test of run 2 above.
 None failed, and nothing was changed for them; the rerun `main` now has is for a test that fails with it.
 
-
 ## What is not shown, and what is left
 
 - Why a freshly booted simulator answers slowly for its first minutes is not found.
