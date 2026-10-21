@@ -38,6 +38,8 @@ struct CaptureView: View {
     #if DEBUG
     /// Hosted tests that show a running camera's screen leave the camera closed, so no failure to open it shows.
     var opensCamera = true
+    /// The Debug preview opened full size.
+    @State private var inspectedPreview: DevelopedPreviews.Preview?
     #endif
 
     var body: some View {
@@ -100,7 +102,35 @@ struct CaptureView: View {
         .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
+        #if DEBUG
+        .sheet(item: $inspectedPreview) { DevelopedPreviewSheet(preview: $0) }
+        #endif
     }
+
+    /// How long the notices read when the iPhone is on its side, at most: longer while a Debug build's preview shows.
+    private func noticeBlockLength(showsPreview: Bool) -> CGFloat {
+        #if DEBUG
+        if showsPreview { return max(noticeLength, DevelopedPreviewCard.sidewaysLength) }
+        #endif
+        return noticeLength
+    }
+
+    /// Whether a Debug build shows the preview of this Film's latest capture; never in Release.
+    private var showsDevelopedPreview: Bool {
+        #if DEBUG
+        developedPreview != nil
+        #else
+        false
+        #endif
+    }
+
+    #if DEBUG
+    /// The Debug preview of this Film's latest capture, while there is one (`DevelopedPreviews`).
+    private var developedPreview: DevelopedPreviews.Preview? {
+        guard let preview = model.developedPreviews.current, preview.filmID == filmID else { return nil }
+        return preview
+    }
+    #endif
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
     /// its side the whole block turns, as the portrait header it is, taking at least `headerLength` of the screen's height in
@@ -179,7 +209,7 @@ struct CaptureView: View {
             Color.black
             if let preview = capture.preview {
                 CameraPreview(source: preview, position: capture.position, behavior: behavior)
-            } else if !showsStatus {
+            } else if !showsStatus && !showsDevelopedPreview {
                 // Without a picture the frame shows a camera, unless a notice says what is wrong in its place.
                 Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
             }
@@ -187,7 +217,7 @@ struct CaptureView: View {
         .overlay {
             GeometryReader { box in
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
-                        boxHeight: box.size.height)
+                        showsPreview: showsDevelopedPreview, boxHeight: box.size.height)
                     .frame(width: box.size.width, height: box.size.height, alignment: held.topEdge)
             }
         }
@@ -210,13 +240,15 @@ struct CaptureView: View {
         }
     }
 
-    /// The low-light cue and the status lines, against the edge of the viewfinder that is its top as the iPhone is held,
-    /// turned as one block. The block is as long as the box lets it be, so it is never cut off.
+    /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, against the edge of
+    /// the viewfinder that is its top as the iPhone is held, turned as one block. The block is as long as the box lets it
+    /// be, so it is never cut off.
     @ViewBuilder private func notices(
-        _ film: Film, controller capture: CaptureController, showsLowLightCue: Bool, showsStatus: Bool, boxHeight: CGFloat
+        _ film: Film, controller capture: CaptureController, showsLowLightCue: Bool, showsStatus: Bool, showsPreview: Bool,
+        boxHeight: CGFloat
     ) -> some View {
-        if showsLowLightCue || showsStatus {
-            TurnedBlock(length: min(noticeLength, max(boxHeight - 16, 80))) {
+        if showsLowLightCue || showsStatus || showsPreview {
+            TurnedBlock(length: min(noticeBlockLength(showsPreview: showsPreview), max(boxHeight - 16, 80))) {
                 VStack(spacing: 6) {
                     if showsLowLightCue { LowLightCueView() }
                     if showsStatus {
@@ -224,6 +256,12 @@ struct CaptureView: View {
                             .padding(10).frame(maxWidth: .infinity)
                             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
                     }
+                    #if DEBUG
+                    if let preview = developedPreview {
+                        DevelopedPreviewCard(preview: preview, open: { inspectedPreview = preview },
+                                             close: { model.developedPreviews.dismiss() })
+                    }
+                    #endif
                 }
             }
             .padding(8)

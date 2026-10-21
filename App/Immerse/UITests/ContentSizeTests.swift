@@ -164,6 +164,8 @@ final class ContentSizeTests: ScreenTestCase {
         Target(name: "Debug testing header", type: .staticText, label: "Debug testing", header: true),
         Target(name: "Testing unlock", type: .staticText, label: "Testing unlock - Debug build"),
         Target(name: "Testing unlock note", type: .staticText, labelPrefix: "Debug builds only."),
+        Target(name: "Develop at once", type: .staticText, label: "Develop at once - Debug build"),
+        Target(name: "Develop at once note", type: .staticText, labelPrefix: "While on, each capture"),
         Target(name: "Storage header", type: .staticText, label: "Storage and backup", header: true),
         Target(name: "Backup", type: .staticText, labelPrefix: "Films, sealed captures"),
         Target(name: "Trial header", type: .staticText, label: "Trial", header: true),

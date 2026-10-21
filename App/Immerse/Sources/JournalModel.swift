@@ -45,6 +45,8 @@ final class JournalModel {
     #if DEBUG
     /// Off for directly constructed Journals; the app's Journal reads the persisted switch.
     @ObservationIgnored var testingUnlock = TestingUnlock(defaults: nil)
+    /// Off for directly constructed Journals; the app's Journal reads the persisted switch.
+    @ObservationIgnored var developedPreviews: DevelopedPreviews
     #endif
 
     init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
@@ -52,6 +54,9 @@ final class JournalModel {
          subscriptions: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration(),
          freeSpace: (any FreeSpaceReading)? = nil) throws {
         self.cameraAuthorizer = cameraAuthorizer
+        #if DEBUG
+        developedPreviews = DevelopedPreviews(root: root, defaults: nil)
+        #endif
         // The volume that holds the Films, unless a test sets the reading.
         storage = LowStorageCheck(reader: freeSpace ?? VolumeFreeSpaceReader(url: root))
         billing = SubscriptionController(configuration: subscriptions)
@@ -170,6 +175,9 @@ final class JournalModel {
         guard !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { throw JournalError.operationInProgress }
         busyFilms.insert(id)
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
+        #if DEBUG
+        developedPreviews.clear(filmID: id)
+        #endif
         try await processor.develop(filmID: id)
     }
 
@@ -223,6 +231,9 @@ final class JournalModel {
             // Another capture's unfinished save stays staged for its retry.
             try await processor.discard(filmID: id, sequence: sequence)
         } else {
+            #if DEBUG
+            developedPreviews.clear(filmID: id)
+            #endif
             try await capture.cancelForPrivacy(filmID: id)
             try await trial.deleteFilm(filmID: id, processor: processor)
         }

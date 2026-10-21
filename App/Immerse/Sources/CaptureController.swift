@@ -107,6 +107,9 @@ final class CaptureController {
                         message = "Saved"
                         savedCount += 1
                         model.refresh()
+                        #if DEBUG
+                        if let saved = model.film(film.id) { model.developedPreviews.captureSaved(saved) }
+                        #endif
                         if film.camera.revealRule == .instantPerExposure {
                             model.developSavedPrint(film.id) { [weak self, weak model] text in
                                 if self?.presented == true { self?.message = text } else { model?.alert = .failure(text) }
