@@ -2,10 +2,10 @@ import XCTest
 
 /// A freshly booted simulator answers slowly for its first minutes on CI, which fell inside the session's first test
 /// (Evidence/NativeApp/main-ci-flakes-075.md). So before the first test the app's own first steps are made again and
-/// timed, a pass at a time, until a pass is no longer a fifth quicker than the one before it: a quick simulator is through
-/// in two passes and a slow one takes the passes it needs, at most six, and none begins after 6 minutes. It runs once for
-/// the session, in a class `setUp`, outside every test's allowance, asserts nothing, and writes each pass's time to the
-/// test runner's output (the same type is in the app's `UITestSupport.swift`).
+/// timed, a pass at a time, until a pass is not more than a fifth quicker than the one before it: a quick simulator is
+/// through in two passes and a slow one takes the passes it needs, at most six, and none begins after 6 minutes. It runs
+/// once for the session, in a class `setUp`, outside every test's allowance, asserts nothing, and writes each pass's time
+/// to the test runner's output (the same type is in the app's `UITestSupport.swift`).
 @MainActor
 enum SimulatorWarmUp {
     private static var settled = false

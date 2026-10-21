@@ -10,7 +10,7 @@ Times are UTC, on 2026-10-19 and 2026-10-20.
 
 ## What the stall is
 
-It belongs to the first session on a freshly booted simulator, and it is gone from the second.
+It belongs to the first session on a freshly booted simulator, and the second session on the same simulator has little of it.
 `Scripts/validate-local.sh` runs the ui-flows part's screen tests in light appearance and then runs four suites again in dark appearance, from the same build on the same simulator, 25 to 60 minutes later.
 The first test of that second session had at most 4.4 s of stalls in all seven runs that have both, where the first test of the first session had 3.9, 15.9, 21.6, 25.0, 47.7, 65.8, 79.8 and 170.4 s in the eight runs read (run 39292846150's 170.4 s was stopped by the allowance).
 
@@ -45,7 +45,7 @@ Read from the samplers of experiment runs (a `top` and a `vm_stat` every few sec
 ## What was tried, and what each showed
 
 Each arm ran as its own draft pull request, since closed, on the same workflow with the part's session cut down to `AuditExceptionTests` and `CaptureSidewaysUITests` (6 tests, the session's first minutes) where it says so.
-A run's own luck is large (a first test of 0 s and one of 170 s on the same code), so a result is only counted from several runs, and none of the first three arms below was run enough times to be more than a lead.
+A run's own luck is large (without the warm-up, a first test had 0 s in one run and 170 s in another), so a result is only counted from several runs, and none of the arms below was run enough times (one to three runs each) to be more than a lead.
 
 | Arm | What it did | First test, stall seconds | What else it changed |
 | --- | --- | --- | --- |
@@ -64,13 +64,14 @@ Run on the same simulator twice in a row, the six tests of the session's first m
 `SimulatorWarmUp` (in `UITestSupport.swift` for the app's screen tests and in `HarnessTestSupport.swift` for the harness, the same code) runs in the first class's `setUp` of a session, which is outside every test's allowance as record 072 found.
 It makes the steps every first test starts with, in the app: launch, open the Camera catalog, turn to landscape and back with a capture each, quit, launch and quit again (the harness's pass leaves out the catalog, which none of its tests opens).
 The harness's launches before its tests, the warm-up's and every later class's, seed with `--scratch-history`, in the harness's temporary directory, so they add no history to the six that `run-retained.sh` collects for `inspect-retained.rb`.
-It times each pass and stops when a pass is not at least a fifth quicker than the one before, with at most six passes and none begun after 6 minutes, and prints each pass's time to the test runner's output.
-Every later class of the session makes the plain first launch of record 073 and nothing more.
+It times each pass and stops when a pass is not more than a fifth quicker than the one before, with at most six passes and none begun after 6 minutes, and prints each pass's time to the test runner's output.
+Every later class of the session makes the plain first launch of records 072 and 073 and nothing more.
 Nothing is asserted, no step is retried, and no wait or allowance is longer.
 The second change is one the first set of whole-part runs called for: the ten places that tapped Start a Film inline now use `openCameraCatalog`, which waits 30 s for the sheet (below).
 
 On CI the first pass took 15 to 95 s, and the later ones 14 to 37 s, two to four passes in all and 31 to 140 s of passes before the first test (the tables below).
-That first pass is the stall: it is two to three times a settled pass, and it is paid before the test starts.
+In the 24 first sessions on a freshly booted simulator in the tables and notes below, the first pass was 0.9 to 5.7 times the session's last (a median of 2.5), and in the dark sessions and the restarts 0.9 to 1.8 times.
+Where the first pass is slow, that is the stall, and it is paid before the test starts.
 
 ## Repeated runs
 
@@ -85,12 +86,13 @@ That first pass is the stall: it is two to three times a settled pass, and it is
 | 5 | 7.3 | 13 | 1m 5s | 60.5, 21.1, 23.0 | 106 s |
 | 6 | 6.9 | 7 | 1m 3s | 47.6, 20.8, 19.4 | 93 s |
 
-The Disposable test, which took 77 to 180 s on CI before (56 s in the best run), took 46 to 79 s in five of the six.
+The Disposable test, which had run to its 3-minute allowance on CI before (record 073), took 46 to 79 s in five of the six, and 2m 7s in run 2, where it carried record 069's 60 s wait (below).
 
 ### The whole parts, three runs each, twice
 
 The three screen-test parts ran to the end three times each, in two sets, as experiment branches' pull-request runs (the `packages` part does not use the screen-test base classes and was not run).
-The first set is the warm-up alone (run 39502687874); the second is the final code, the warm-up and the catalog change below (run 39515205332).
+The first set is the warm-up alone (run 39502687874); the second is the warm-up and the catalog change below (run 39515205332).
+Two corrections came after the second set and are not measured by it: the harness's launches before its tests seed with `--scratch-history`, and a warm-up pass waits for the catalog only after it has tapped Start a Film.
 
 First set:
 
@@ -112,7 +114,7 @@ First set:
 The longest test of a run was 85 to 125 s, the 6×6 at the largest text size in ui-text and a held-drag or Darkroom test elsewhere; none came near the 3 minutes.
 The light ui-flows session took 24 to 29 minutes with its build, where the run of 39377185262 took 28.
 
-Second set, the final code:
+Second set, the warm-up and the catalog change:
 
 | Run | Result | First test | First three | All stalls | Longest test | Session | Warm-up passes (s) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -135,8 +137,9 @@ It was the slowest run of the set (290 s of stalls, a 153 s longest test) and ne
 That is a stall of the whole simulator in the middle of a session, which the warm-up does not touch.
 Each session that had a failure was started again by XCTest for the tests after it, and the new start wrote its own warm-up, which is why those two sessions' output holds two sets (harness 3: 79.3, 23.7 and 36.9 s, then 15.1 and 15.7 s at the restart; ui-flows 3: 38.1, 21.2 and 30.8 s, then 24.3 and 21.1 s).
 
-Taken over the 12 first tests of the ui-flows part with the warm-up (the six runs above, with run 2 counted at 3.2 s, without record 069's 60.1 s wait, and the six of both sets) and the 15 without it (the first column of the table at the top, `main` after record 073 and the experiment runs that changed nothing), the first test had a median of 5.1 s of stalls instead of 21.6 s and a mean of 8.5 s instead of 36.8 s, and 20 s or more in 2 of 12 against 8 of 15.
-A permutation test on the 27 values, run 2 at 3.2 s, gives one-sided p = 0.02 for that fall, and Fisher's exact test on the counts of 20 s or more gives p = 0.06, so it is a fall that the runs support and not one they prove.
+Taken over the 12 first tests of the ui-flows part with the warm-up (the six runs above, with run 2 counted at 3.2 s, without record 069's 60.1 s wait, and the six light rows of both sets), the first test had a median of 5.1 s of stalls and a mean of 8.5 s, and 20 s or more in 2 of 12.
+Without it, the eight first tests at the top of this record had 3.9 to 170.4 s, 20 s or more in six, and the control arm's two runs had 0 and 25 s.
+It is a fall that these runs support and do not prove: they are few, and a first test without the warm-up had 0 s too.
 The two that remain at 20 s or more were 22 and 27 s, one wait for the app to idle each, in tests of about 100 s.
 
 ### The first set's failure: a tap that missed the sheet
@@ -145,7 +148,7 @@ The two that remain at 20 s or more were 22 and 27 s, one wait for the app to id
 The test taps Start a Film and, with nothing between, taps the Disposable row.
 The first tap's event took 5.3 s to be synthesized, and the next tap, made as it returned, looked for the row for two seconds; the hierarchy it kept shows the Journal with no sheet over it.
 The simulator's log holds no discarded touch in the test's window and the result bundle holds none of record 069's signature, so the rerun excused nothing and the part failed.
-It is the race record `ci-flakes-057.md` found (a sheet that has not come up when the next tap is made) in the one place the catalog was still opened with a bare tap: ten tests, in `ContentSizeTests`, `JournalFlowTests` and `MovieCapacityUITests`, tapped Start a Film inline and went on at once, and `openCameraCatalog` waits for the sheet for 30 s.
+It is the race record `ci-flakes-057.md` found (a sheet that has not come up when the next tap is made) in the one place the catalog was still opened with a bare tap: ten places, tests and their helpers in `ContentSizeTests`, `JournalFlowTests` and `MovieCapacityUITests`, tapped Start a Film inline and went on at once, and `openCameraCatalog` waits for the sheet for 30 s.
 All ten now use it; no assertion was changed or removed.
 It is not caused by the warm-up, which ended 26 minutes before the test began.
 The failed session's output holds a second session that started two minutes after the failure, with its own two warm-up passes (18.1 and 20.3 s), so XCTest started the test runner again for the tests after the failed one.
@@ -161,7 +164,7 @@ None failed, and nothing was changed for them; the rerun `main` now has is for a
 - Why a freshly booted simulator answers slowly for its first minutes is not found.
   Memory pressure, `apsd`'s loop, the disk image's userspace server and the consumer services are each present and each was ruled out as the thing that, removed, ends the stalls; what ends them is the simulator doing the steps once.
   The warm-up pays for the stall and does not remove it.
-- The warm-up's stopping rule is an engineering choice (a pass a fifth quicker than the last), not a measured threshold; the runs stopped at their second to fourth pass.
+- The warm-up's stopping rule is an engineering choice (another pass while each is more than a fifth quicker than the last), not a measured threshold; the runs stopped at their second to fourth pass.
 - A stall of the whole simulator in the middle of a session is not addressed: one job of the 18 whole-part jobs failed on one (a 60 s screenshot timeout) and the residual 22 and 27 s first-test waits look like the same thing at a smaller size.
   Nothing in this record shows what causes them or that the warm-up shortens them.
 

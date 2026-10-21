@@ -13,14 +13,14 @@ extension XCUIScreen {
     }
 }
 
-/// A freshly booted simulator answers slowly for its first minutes on CI: in the first session after the boot a launch, a
-/// turn or a wait for the app to idle took 4 to 25 s where the same step took under 3 s in a second session on the same
-/// simulator (Evidence/NativeApp/main-ci-flakes-075.md). That cost fell inside the session's first test, whose 3 minutes
-/// it took, and it ended on its own, by the time of the third test. So before the first test the app's own first steps
-/// are made again and timed, a pass at a time, until a pass is no longer a fifth quicker than the one before it, which
-/// is the simulator answering as fast as it will. A quick simulator is through it in two passes and a slow one takes
-/// the passes it needs, at most six, and none begins after 6 minutes. It runs once for the session, in a class `setUp`,
-/// outside every test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
+/// A freshly booted simulator answers slowly for its first minutes on CI: the first test of its first session met up to
+/// 170 s of stalls, where the first test of a second session on the same simulator met at most 4.4 s
+/// (Evidence/NativeApp/main-ci-flakes-075.md). That cost fell inside the session's first test, whose 3 minutes it once
+/// took, and it faded on its own over the next few tests. So before the first test the app's own first steps are made
+/// again and timed, a pass at a time, until a pass is not more than a fifth quicker than the one before it, which is
+/// taken as the simulator having settled. A quick simulator is through it in two passes and a slow one takes the passes
+/// it needs, at most six, and none begins after 6 minutes. It runs once for the session, in a class `setUp`, outside
+/// every test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
 @MainActor
 enum SimulatorWarmUp {
     private static var settled = false
