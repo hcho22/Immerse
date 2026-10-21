@@ -159,35 +159,35 @@ private struct PreviewCardContent: View {
     let preview: DevelopedPreviews.Preview
     let open: () -> Void
     let close: () -> Void
-    @ScaledMetric(relativeTo: .caption) private var side: CGFloat = 56
+    @ScaledMetric(relativeTo: .caption) private var side: CGFloat = 48
+    /// The room the close button's glyph takes at the card's top corner, beside the text.
+    @ScaledMetric(relativeTo: .footnote) private var closeRoom: CGFloat = 24
 
     var body: some View {
-        HStack(spacing: 8) {
-            Button(action: open) {
-                HStack(spacing: 10) {
-                    picture.frame(width: side, height: side).clipShape(RoundedRectangle(cornerRadius: 6))
-                    VStack(alignment: .leading, spacing: 2) {
-                        Label("Debug preview", systemImage: "hammer").font(.caption.weight(.semibold))
-                        Text(status).font(.caption).foregroundStyle(.white.opacity(0.85))
-                    }
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                }
-                .contentShape(Rectangle())
+        // The close button sits over the card's top corner, so the text keeps the card's width.
+        Button(action: open) {
+            PreviewCardLayout(closeRoom: closeRoom) {
+                picture.frame(width: side, height: side).clipShape(RoundedRectangle(cornerRadius: 6))
+                Text("Debug preview").font(.caption.weight(.semibold))
+                Text(status).font(.caption).foregroundStyle(.white.opacity(0.85))
             }
-            .buttonStyle(.plain)
-            .disabled(preview.url == nil)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Debug preview. \(status)")
-            .accessibilityIdentifier("developed-preview")
+            .multilineTextAlignment(.leading)
+            .padding(8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(preview.url == nil)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Debug preview. \(status)")
+        .accessibilityIdentifier("developed-preview")
+        .overlay(alignment: .topTrailing) {
             Button("Close debug preview", systemImage: "xmark", action: close)
-                .labelStyle(.iconOnly).font(.body.weight(.semibold))
-                .frame(minWidth: 44, minHeight: 44)
+                .labelStyle(.iconOnly).font(.footnote.weight(.semibold))
+                .frame(width: 44, height: 44).contentShape(Rectangle())
                 .accessibilityIdentifier("developed-preview-close")
         }
         .foregroundStyle(.white)
-        .padding(.leading, 8).padding(.vertical, 4)
         .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
     }
 
@@ -208,6 +208,55 @@ private struct PreviewCardContent: View {
             Image(systemName: preview.state == .failed ? "exclamationmark.triangle" : "photo")
                 .frame(maxWidth: .infinity, maxHeight: .infinity).background(.white.opacity(0.15))
         }
+    }
+}
+
+/// The card's picture, heading and line: the two lines beside the picture, clear of the close button, where the heading
+/// fits there on one line, and below the picture across the card's width where it does not, as in the 6×6's viewfinder
+/// at the largest text sizes on a small iPhone. One layout for both, so the card keeps its views as the text grows.
+private struct PreviewCardLayout: Layout {
+    var closeRoom: CGFloat
+    var spacing: CGFloat = 10
+    var lineSpacing: CGFloat = 2
+
+    /// The width the lines take beside the picture, or nil where they go below it.
+    private func besideWidth(_ subviews: Subviews, width: CGFloat) -> CGFloat? {
+        let room = width - subviews[0].sizeThatFits(.unspecified).width - spacing - closeRoom
+        return room >= subviews[1].sizeThatFits(.unspecified).width ? room : nil
+    }
+
+    private func linesHeight(_ subviews: Subviews, width: CGFloat) -> CGFloat {
+        let proposal = ProposedViewSize(width: width, height: nil)
+        return subviews[1].sizeThatFits(proposal).height + lineSpacing + subviews[2].sizeThatFits(proposal).height
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard subviews.count == 3 else { return .zero }
+        let picture = subviews[0].sizeThatFits(.unspecified)
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? 320
+        if let lines = besideWidth(subviews, width: width) {
+            return CGSize(width: width, height: max(picture.height, linesHeight(subviews, width: lines)))
+        }
+        return CGSize(width: width, height: picture.height + spacing + linesHeight(subviews, width: width))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard subviews.count == 3 else { return }
+        let picture = subviews[0].sizeThatFits(.unspecified)
+        let x: CGFloat, width: CGFloat, top: CGFloat
+        if let lines = besideWidth(subviews, width: bounds.width) {
+            subviews[0].place(at: CGPoint(x: bounds.minX, y: bounds.midY), anchor: .leading, proposal: ProposedViewSize(picture))
+            (x, width) = (bounds.minX + picture.width + spacing, lines)
+            top = bounds.midY - linesHeight(subviews, width: lines) / 2
+        } else {
+            subviews[0].place(at: bounds.origin, anchor: .topLeading, proposal: ProposedViewSize(picture))
+            (x, width, top) = (bounds.minX, bounds.width, bounds.minY + picture.height + spacing)
+        }
+        let proposal = ProposedViewSize(width: width, height: nil)
+        let heading = subviews[1].sizeThatFits(proposal)
+        // Offered no height, so each text takes the height it measured (as `TurnedLayout` does).
+        subviews[1].place(at: CGPoint(x: x, y: top), anchor: .topLeading, proposal: proposal)
+        subviews[2].place(at: CGPoint(x: x, y: top + heading.height + lineSpacing), anchor: .topLeading, proposal: proposal)
     }
 }
 

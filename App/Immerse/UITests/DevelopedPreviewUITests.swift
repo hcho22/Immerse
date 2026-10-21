@@ -15,7 +15,7 @@ final class DevelopedPreviewUITests: ScreenTestCase {
         app.terminate()
         setSwitch(app, on: true)
         XCTAssertEqual(switchValue(app), "1", "On holds on the next launch")
-        retainScreenshot(app, name: "Settings-develop-each-capture-on")
+        retainScreenshot(app, name: "Settings-develop-at-once-on")
         app.terminate()
 
         let turnedOff = XCUIApplication()
