@@ -31,9 +31,15 @@ struct ImmerseApp: App {
                 switch phase {
                 case .active:
                     launcher.model?.refresh()
+                    #if DEBUG
+                    launcher.model?.developedPreviews.resume()
+                    #endif
                 case .background:
                     launcher.model?.capture.suspend()
                     Task { await launcher.model?.processor.suspendProcessing() }
+                    #if DEBUG
+                    launcher.model?.developedPreviews.suspend()
+                    #endif
                 default:
                     // Control Center, a call or a permission prompt only pauses the camera.
                     launcher.model?.capture.pauseForInactiveScene()

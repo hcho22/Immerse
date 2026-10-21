@@ -14,7 +14,8 @@ import SwiftUI
 /// (`PreviewDevelopment`), and shows on the shooting screen, and those Cameras' shooting screens say beside Done that the
 /// switch is on (`DevelopAtOnceNotice`). Every capture develops, one at a time in the order they were saved (the captain,
 /// 2026-10-21: "preview - every shot"): each preview takes the card from the one before as it finishes, and in a quick
-/// burst the newest waits behind the ones before it. The roll stays sealed and develops as before; an Instant print
+/// burst the newest waits behind the ones before it. Nothing develops while the app is in the background; the capture
+/// it stopped develops again on return. The roll stays sealed and develops as before; an Instant print
 /// develops by itself and is left as it is. Previews live only in a disposable cache outside the Film store, which holds
 /// no more than the preview shown and the one developing: a preview goes once nothing shows it, and every preview and
 /// every capture still to develop goes when the roll develops, when its Film is deleted, when the switch is turned off
@@ -71,6 +72,9 @@ final class DevelopedPreviews {
     /// Saved captures still to develop, in the order they were saved; the first is developing.
     private(set) var waiting: [Capture] = []
     @ObservationIgnored private var render: Task<URL, Error>?
+    /// While the app is in the background nothing develops: iOS refuses an app's GPU work there, as the roll's
+    /// Development is suspended for too.
+    @ObservationIgnored private var suspended = false
     /// The newest capture of the Film the camera saves to that is already taken up or was there before it attached, so
     /// each capture saved after it develops once.
     @ObservationIgnored private var newestSeen: (filmID: UUID, sequenceNumber: Int)?
@@ -129,6 +133,18 @@ final class DevelopedPreviews {
         removeIfUnshown(shown)
     }
 
+    /// The app went to the background: the capture developing stops and stays first, to develop again from the start.
+    func suspend() {
+        suspended = true
+        render?.cancel()
+    }
+
+    /// The app is active again: the captures still to develop go on in the order they were saved.
+    func resume() {
+        suspended = false
+        developNext()
+    }
+
     /// The roll develops or its Film is deleted: its previews go, with every capture of it still to develop.
     func clear(filmID: UUID) {
         if waiting.first?.filmID == filmID { stopRender() }
@@ -150,9 +166,9 @@ final class DevelopedPreviews {
         try? FileManager.default.removeItemIfPresent(at: directory)
     }
 
-    /// Develops the first capture waiting, unless one is developing.
+    /// Develops the first capture waiting, unless one is developing or the app is in the background.
     private func developNext() {
-        guard render == nil, let next = waiting.first else { return }
+        guard !suspended, render == nil, let next = waiting.first else { return }
         let (root, directory, filmID, sequence) = (self.root, self.directory, next.filmID, next.sequenceNumber)
         let render = Task.detached(priority: .utility) {
             try await PreviewDevelopment.render(root: root, filmID: filmID, sequenceNumber: sequence, directory: directory)
@@ -167,6 +183,12 @@ final class DevelopedPreviews {
                 return
             }
             self.render = nil
+            guard !render.isCancelled else {
+                // Stopped by the background: the capture develops again.
+                if let url = try? result.get() { try? FileManager.default.removeItemIfPresent(at: url) }
+                self.developNext()
+                return
+            }
             self.waiting.removeFirst()
             let state: Preview.State = switch result {
             case let .success(url): .ready(url, thumbnail: thumbnail)

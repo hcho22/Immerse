@@ -2308,13 +2308,15 @@ A screenshot of steps 3 and 5 and the switch after the relaunch.
 1. On a 16mm Cinema Film with **Color** record one clip of about 60 seconds.
 2. While its card says it is developing, record two short clips straight away.
 3. On a 6×6 Medium Format Film with **Color** take five photos as quickly as the shutter allows.
+4. Take one more photo and, while its card says it is developing, lock the iPhone for about ten seconds; unlock it and go back to the camera.
 
 **Expect.**
 Every capture develops, one after another in the order it was saved: while the 60-second clip develops the card says the newest short clip is waiting to develop, then each clip's preview takes the card in turn, the long clip's first; the five photos' previews follow the same way, the fifth last.
 The camera never pauses, and every capture is counted and saved.
+After step 4 the card says the photo is developing again and then shows it developed; nothing develops while the iPhone is locked.
 
 **It fails if.**
-A capture's preview never shows, previews show out of the order they were taken, a capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
+A capture's preview never shows, previews show out of the order they were taken, the photo locked away in step 4 shows "could not develop here" or a wrong or partly drawn picture, a capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
 
 **Write down.**
 How long the 60-second clip's preview took, how long the last of the five photos took to show after its shutter, whether the camera stayed smooth, and the phone's warmth.

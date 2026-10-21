@@ -134,6 +134,35 @@ final class DevelopedPreviewsTests: XCTestCase {
         try await model.remove(roll.id)
     }
 
+    /// Sent to the background while a clip develops, as when the iPhone is locked: the clip stops and stays first, neither
+    /// developed nor failed, nothing else develops and no file is left; back in the foreground it develops again from the
+    /// start, and the clip after it follows, in the order they were saved.
+    func testInTheBackgroundNothingDevelopsAndOnReturnTheStoppedCaptureDevelopsFirst() async throws {
+        let model = try await makeModel(previewing: true)
+        let roll = try await model.load(camera: CameraCatalog.super8HomeMovie, title: "Roll", orientation: .landscape)
+        try await stage(roll, model)
+        try await stage(roll, model)
+        try await openTheCamera(roll, model)
+        try await waitUntil { model.developedPreviews.waiting.map(\.sequenceNumber) == [1, 2] }
+        model.developedPreviews.suspend()
+        try await Task.sleep(for: .seconds(4))
+        XCTAssertEqual(model.developedPreviews.waiting.map(\.sequenceNumber), [1, 2], "The stopped clip stays first")
+        XCTAssertNil(model.developedPreviews.current, "The stopped clip is neither developed nor failed")
+        XCTAssertEqual(try previewFiles(), [], "Nothing is left of the stopped clip, and nothing else develops")
+
+        model.developedPreviews.resume()
+        var shown: [Int] = []
+        try await waitUntil(every: .milliseconds(2)) {
+            if let current = model.developedPreviews.current, current.url != nil, current.sequenceNumber != shown.last {
+                shown.append(current.sequenceNumber)
+            }
+            return shown.last == 2 && model.developedPreviews.waiting.isEmpty
+        }
+        XCTAssertEqual(shown, [1, 2], "Back in the foreground the stopped clip develops first, then the next")
+        XCTAssertEqual(model.film(roll.id)?.captures.map(\.revealState), [.sealed, .sealed])
+        try await model.remove(roll.id)
+    }
+
     /// Turned off while captures wait to develop, the one developing stops, none of the others develops, and no preview
     /// is left; the captures stay saved.
     func testTurningItOffWithCapturesWaitingStopsThemAllAndLeavesNoPreview() async throws {
