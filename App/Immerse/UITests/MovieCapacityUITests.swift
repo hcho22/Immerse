@@ -36,7 +36,7 @@ final class MovieCapacityUITests: ScreenTestCase {
         }
         defer { removeUIInterruptionMonitor(monitor) }
         launchWithEmptyJournal(app)
-        app.buttons["start-film"].tap()
+        openCameraCatalog(app)
         let camera = app.buttons["camera-cinema16mm"]
         scrollUpUntilWhole(app, camera)
         XCTAssertTrue(camera.label.contains("2 minutes 47 seconds of film"), camera.label)

@@ -61,6 +61,9 @@ histories apart by their inspection reasons. The offline Ruby inspector compares
 UInt64 seeds exactly and normalizes only the order of Swift's completed-sequence
 Set. It is an additional required check, not inferred from a screenshot/test exit.
 
+`--scratch-history` seeds the launch's history in the harness's temporary directory instead of `Documents/WorkflowHistories`.
+`HarnessTestCase` launches with it before a class's tests (the class's plain first launch, or the passes of `SimulatorWarmUp` in a session's first class), so the runner collects only the retained tests' six histories.
+
 `--reveal-at-camera`, with `--instant-mixed`, develops the Film's sealed Instant print once the
 camera screen is open, as the app does when a save lands there, so a test can meet the
 reveal and the question about the print's original at the camera. Nothing is captured:

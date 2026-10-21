@@ -13,30 +13,89 @@ extension XCUIScreen {
     }
 }
 
+/// A freshly booted simulator answers slowly for its first minutes on CI: the first test of its first session met up to
+/// 170 s of stalls, where the first test of a second session on the same simulator met at most 4.4 s
+/// (Evidence/NativeApp/main-ci-flakes-075.md). That cost fell inside the session's first test, whose 3 minutes it once
+/// took, and it faded on its own over the next few tests. So before the first test the app's own first steps are made
+/// again and timed, a pass at a time, until a pass is not more than a fifth quicker than the one before it, which is
+/// taken as the simulator having settled. A quick simulator is through it in two passes and a slow one takes the passes
+/// it needs, at most six, and none begins after 6 minutes. It runs once for the session, in a class `setUp`, outside
+/// every test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
+@MainActor
+enum SimulatorWarmUp {
+    private static var settled = false
+
+    /// Runs the passes and returns true the first time; returns false, doing nothing, every time after.
+    static func settle(pass: () -> Void) -> Bool {
+        guard !settled else { return false }
+        settled = true
+        let began = Date()
+        var previous: TimeInterval?
+        for number in 1...6 {
+            let start = Date()
+            pass()
+            let took = Date().timeIntervalSince(start)
+            print("Simulator warm-up pass \(number): \(String(format: "%.1f", took)) s")
+            if let previous, took >= previous * 0.8 { break }
+            if Date().timeIntervalSince(began) > 360 { break }
+            previous = took
+        }
+        return true
+    }
+}
+
 /// The base of every screen test class. Each test starts with the simulator held upright. A test stopped at its time
 /// allowance runs no `defer` or teardown, so a turn it made stays, and the tests after it launched sideways: one run
 /// (39004998658) launched `JournalFlowTests` in landscape for that reason, another harness run (38980604148) failed the
 /// test after a timed-out one (Evidence/NativeApp/main-ci-flakes-069.md).
 @MainActor
 class ScreenTestCase: XCTestCase {
-    /// Launches the app once before the class's first test, outside every test's time allowance. XCTest installs the
-    /// app at a session's first launch, and on CI that launch took 11 to 48 seconds where later ones took about 5; inside
-    /// the session's first test it took the Disposable shooting screen's test past its 3 minutes in run 39292846150
-    /// (Evidence/NativeApp/main-ci-flakes-072.md). The session's first tap and first screenshot were slow too (4 to 7 s for
-    /// XCTest's check for interrupting elements before the tap, 5 to 25 s for the screenshot, in three runs each, against
-    /// under a second for every later one), so they are made here, and what of that is a first use falls outside every
-    /// test; a stall of the whole simulator in the same seconds is not shown to move with it
-    /// (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that finds nothing to tap costs nothing.
+    /// Launches the app before the class's first test, outside every test's time allowance: once, or in each pass of
+    /// `SimulatorWarmUp` in a session's first class. XCTest installs the app at a session's first launch, and on CI that
+    /// launch took 11 to 48 seconds where later ones took about 5; inside the session's first test it took the Disposable
+    /// shooting screen's test past its 3 minutes in run 39292846150 (Evidence/NativeApp/main-ci-flakes-072.md). The
+    /// session's first tap and first screenshot were slow too (4 to 7 s for XCTest's check for interrupting elements before
+    /// the tap, 5 to 25 s for the screenshot, in three runs each, against under a second for every later one), so they are
+    /// made here, and what of that is a first use falls outside every test; a stall of the whole simulator in the same
+    /// seconds is not shown to move with it (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that
+    /// finds nothing to tap costs nothing.
     override class func setUp() {
         super.setUp()
         MainActor.assumeIsolated {
-            let app = XCUIApplication()
-            app.launch()
-            let start = app.buttons["start-film"]
-            if start.waitForExistence(timeout: 10) { start.tap() }
-            _ = XCUIScreen.main.screenshot()
-            app.terminate()
+            // The first class of a session settles the simulator; every other class makes the plain first launch.
+            if !SimulatorWarmUp.settle(pass: { warmUpPass() }) { launchOnce() }
         }
+    }
+
+    /// The first launch, tap and screenshot of a class: launch, open the Camera catalog if the Journal offers it, capture
+    /// the screen and quit.
+    private static func launchOnce() {
+        let app = XCUIApplication()
+        app.launch()
+        let start = app.buttons["start-film"]
+        if start.waitForExistence(timeout: 10) { start.tap() }
+        _ = XCUIScreen.main.screenshot()
+        app.terminate()
+    }
+
+    /// What every screen test does first, once: the launch, the catalog, a turn to one side and back with a capture each,
+    /// and a second launch, since in one stalled first test a launch made after the class's first one still took 5.4 s and
+    /// setting up its automation session 12.2 s (Evidence/NativeApp/main-ci-flakes-075.md).
+    private static func warmUpPass() {
+        let app = XCUIApplication()
+        app.launch()
+        let start = app.buttons["start-film"]
+        if start.waitForExistence(timeout: 10) {
+            start.tap()
+            _ = app.navigationBars["Choose a Camera"].waitForExistence(timeout: 30)
+        }
+        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
+            XCUIDevice.shared.orientation = orientation
+            _ = XCUIScreen.main.screenshot()
+        }
+        app.terminate()
+        app.launch()
+        app.terminate()
     }
 
     override func setUp() async throws {

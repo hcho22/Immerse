@@ -69,7 +69,11 @@ private struct FixtureTrialStore: DeviceTrialStoring {
             }
             run = id
         } else { run = UUID() }
-        let directory = URL.documentsDirectory.appendingPathComponent("WorkflowHistories/\(run)")
+        // `--scratch-history` seeds in the temporary directory instead, outside the histories `run-retained.sh` collects,
+        // for the launches a test class makes before its tests.
+        let histories = arguments.contains("--scratch-history") ? URL.temporaryDirectory.appendingPathComponent("ScratchHistories")
+            : URL.documentsDirectory.appendingPathComponent("WorkflowHistories")
+        let directory = histories.appendingPathComponent("\(run)")
         let seedURL = directory.appendingPathComponent("seed.json")
         let reopening = arguments.contains("--reopen")
         guard FileManager.default.fileExists(atPath: seedURL.path) == reopening else {
