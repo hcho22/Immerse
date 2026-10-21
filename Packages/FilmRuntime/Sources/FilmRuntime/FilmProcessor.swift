@@ -130,6 +130,24 @@ public actor FilmProcessor {
     }
 }
 
+/// One capture developed from its source, as Development renders it: the Film's Camera, Film Stock and Movie orientation,
+/// and the capture's assigned seed in its treatment version. Development is its one caller in Release; a Debug build's
+/// preview of a saved capture calls it too (`PreviewDevelopment`), so the preview is what Development will make.
+enum CaptureDevelopment {
+    static func master(source: URL, film: Film, treatment: TreatmentAssignment, run: DevelopmentRun) throws -> Data {
+        try NativePhotoRenderer.develop(source: source, camera: film.camera, seed: treatment.seed, filmStock: film.filmStock,
+                                        treatmentVersion: run.treatmentVersion(of: treatment))
+    }
+
+    static func clip(source: URL, destination: URL, film: Film, treatment: TreatmentAssignment,
+                     run: DevelopmentRun) async throws {
+        guard let orientation = film.movieOrientation else { throw FilmDomainError.wrongCameraMedium }
+        try await NativeMovieRenderer.developClip(source: source, destination: destination, camera: film.camera,
+            filmStock: film.filmStock, seed: treatment.seed, orientation: orientation,
+            treatmentVersion: run.treatmentVersion(of: treatment))
+    }
+}
+
 enum DevelopmentWorker {
     static func run(root: URL, filmID: UUID, observer: DevelopmentObserver? = nil) async throws {
         let repository = try FilmRepository(rootURL: root)
@@ -162,8 +180,7 @@ enum DevelopmentWorker {
                     throw PersistenceError.captureNotFound
                 }
                 if kind == .master {
-                    let data = try NativePhotoRenderer.develop(source: source.url, camera: film.camera, seed: treatment.seed,
-                        filmStock: film.filmStock, treatmentVersion: run.treatmentVersion(of: treatment))
+                    let data = try CaptureDevelopment.master(source: source.url, film: film, treatment: treatment, run: run)
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()
@@ -172,9 +189,8 @@ enum DevelopmentWorker {
                     try repository.writeDevelopedMaster(filmID: filmID, sequenceNumber: capture.sequenceNumber, data: data)
                 } else {
                     let output = work.appendingPathComponent("\(capture.sequenceNumber).mov")
-                    try await NativeMovieRenderer.developClip(source: source.url, destination: output,
-                        camera: film.camera, filmStock: film.filmStock, seed: treatment.seed, orientation: film.movieOrientation!,
-                        treatmentVersion: run.treatmentVersion(of: treatment))
+                    try await CaptureDevelopment.clip(source: source.url, destination: output, film: film, treatment: treatment,
+                                                      run: run)
                     if let observer {
                         try await observer(filmID, .afterRendering(sequence: capture.sequenceNumber))
                         try Task.checkCancellation()
