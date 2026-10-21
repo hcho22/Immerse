@@ -69,7 +69,7 @@ Every later class of the session makes the plain first launch of record 073 and 
 Nothing is asserted, no step is retried, and no wait or allowance is longer.
 The second change is one the first set of whole-part runs called for: the ten places that tapped Start a Film inline now use `openCameraCatalog`, which waits 30 s for the sheet (below).
 
-On CI the first pass took 15 to 95 s (usually 35 to 70 s), and the later ones 14 to 37 s, two to four passes in all and 31 to 140 s of passes before the first test.
+On CI the first pass took 15 to 95 s, and the later ones 14 to 37 s, two to four passes in all and 31 to 140 s of passes before the first test (the tables below).
 That first pass is the stall: it is two to three times a settled pass, and it is paid before the test starts.
 
 ## Repeated runs
@@ -135,8 +135,8 @@ It was the slowest run of the set (290 s of stalls, a 153 s longest test) and ne
 That is a stall of the whole simulator in the middle of a session, which the warm-up does not touch.
 Each session that had a failure was started again by XCTest for the tests after it, and the new start wrote its own warm-up, which is why those two sessions' output holds two sets (harness 3: 79.3, 23.7 and 36.9 s, then 15.1 and 15.7 s at the restart; ui-flows 3: 38.1, 21.2 and 30.8 s, then 24.3 and 21.1 s).
 
-Taken over the 12 first tests of the ui-flows part with the warm-up (the six runs above and the six of both sets) and the 15 without it (the first column of the table at the top, `main` after record 073 and the experiment runs that changed nothing), the first test had a median of 6.9 s of stalls instead of 21.6 s and a mean of 8.5 s instead of 36.8 s, and 20 s or more in 2 of 12 against 8 of 15.
-A permutation test on the 27 values gives one-sided p = 0.02 for that fall, and Fisher's exact test on the counts of 20 s or more gives p = 0.06, so it is a fall that the runs support and not one they prove.
+Taken over the 12 first tests of the ui-flows part with the warm-up (the six runs above, with run 2 counted at 3.2 s, without record 069's 60.1 s wait, and the six of both sets) and the 15 without it (the first column of the table at the top, `main` after record 073 and the experiment runs that changed nothing), the first test had a median of 5.1 s of stalls instead of 21.6 s and a mean of 8.5 s instead of 36.8 s, and 20 s or more in 2 of 12 against 8 of 15.
+A permutation test on the 27 values, run 2 at 3.2 s, gives one-sided p = 0.02 for that fall, and Fisher's exact test on the counts of 20 s or more gives p = 0.06, so it is a fall that the runs support and not one they prove.
 The two that remain at 20 s or more were 22 and 27 s, one wait for the app to idle each, in tests of about 100 s.
 
 ### The first set's failure: a tap that missed the sheet
