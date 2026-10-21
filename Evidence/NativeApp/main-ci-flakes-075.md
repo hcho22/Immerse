@@ -62,13 +62,14 @@ Run on the same simulator twice in a row, the six tests of the session's first m
 ## Fix
 
 `SimulatorWarmUp` (in `UITestSupport.swift` for the app's screen tests and in `HarnessTestSupport.swift` for the harness, the same code) runs in the first class's `setUp` of a session, which is outside every test's allowance as record 072 found.
-It makes the steps every first test starts with, in the app: launch, open the Camera catalog, turn to landscape and back with a capture each, quit, launch and quit again (the harness has no catalog to open).
-It times each pass and stops when a pass is not at least a fifth quicker than the one before, with at most six passes and a 6 minutes cap, and prints each pass's time to the test runner's output.
+It makes the steps every first test starts with, in the app: launch, open the Camera catalog, turn to landscape and back with a capture each, quit, launch and quit again (the harness's pass leaves out the catalog, which none of its tests opens).
+The harness's launches before its tests, the warm-up's and every later class's, seed with `--scratch-history`, in the harness's temporary directory, so they add no history to the six that `run-retained.sh` collects for `inspect-retained.rb`.
+It times each pass and stops when a pass is not at least a fifth quicker than the one before, with at most six passes and none begun after 6 minutes, and prints each pass's time to the test runner's output.
 Every later class of the session makes the plain first launch of record 073 and nothing more.
 Nothing is asserted, no step is retried, and no wait or allowance is longer.
 The second change is one the first set of whole-part runs called for: the ten places that tapped Start a Film inline now use `openCameraCatalog`, which waits 30 s for the sheet (below).
 
-On CI the first pass took 15 to 95 s (usually 35 to 70 s), and the settled ones 14 to 34 s, two to four passes in all and 43 to 133 s of waiting before the first test.
+On CI the first pass took 15 to 95 s (usually 35 to 70 s), and the later ones 14 to 37 s, two to four passes in all and 31 to 140 s of passes before the first test.
 That first pass is the stall: it is two to three times a settled pass, and it is paid before the test starts.
 
 ## Repeated runs
@@ -105,7 +106,7 @@ First set:
 | ui-flows 3, light | passed 28 | 22 s | 22 | 154 s | 125 s | 29 min | 51.2, 28.7, 21.3, 19.3 |
 | ui-flows 3, dark | passed 20 | 0 s | 8 | 76 s | 106 s | 16 min | 31.4, 18.0, 17.0 |
 | ui-text 1 | passed 72 | 5 s | 13 | 39 s | 96 s | 45 min | 35.7, 19.5, 19.4 |
-| ui-text 2 | 71 of 72 passed, one failed (below) | 0 s | 0 | 28 s | 85 s | 45 min | 18.1, 20.3, 18.3 |
+| ui-text 2 | 71 of 72 passed, one failed (below) | 0 s | 0 | 28 s | 85 s | 45 min | 70.1, 20.7, 18.3 |
 | ui-text 3 | passed 72 | 17 s | 39 | 58 s | 102 s | 46 min | 71.6, 21.3, 28.9 |
 
 The longest test of a run was 85 to 125 s, the 6×6 at the largest text size in ui-text and a held-drag or Darkroom test elsewhere; none came near the 3 minutes.
@@ -166,7 +167,7 @@ None failed, and nothing was changed for them; the rerun `main` now has is for a
 
 ## Everything left as it was
 
-The app's sources are unchanged.
+The app's sources are unchanged, and the harness's only source change is `--scratch-history`.
 No assertion was loosened or removed in the tests, no audit exception was added, the per-test allowance is still 3 minutes, the screen-test rerun and its two records are as record 074 left them, no test was skipped, and `Scripts/quiet-simulator.sh` and `Scripts/validate-local.sh` are as they were: every experiment that changed them (`apsd` off, the 51 services, the build before the boot, the two-pass run, the sampler) ran on a branch that was closed and is not in `main`.
 The 60 s waits of record 069 stay with the captain.
 After this merges, the manual iPhone test plan's pin in `Evidence/NativeApp/manual-validation.md` is re-pinned as after the earlier tests-only changes.

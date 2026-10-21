@@ -19,8 +19,8 @@ extension XCUIScreen {
 /// it took, and it ended on its own, by the time of the third test. So before the first test the app's own first steps
 /// are made again and timed, a pass at a time, until a pass is no longer a fifth quicker than the one before it, which
 /// is the simulator answering as fast as it will. A quick simulator is through it in two passes and a slow one takes
-/// the passes it needs, at most six, within 6 minutes. It runs once for the session, in a class `setUp`, outside every
-/// test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
+/// the passes it needs, at most six, and none begins after 6 minutes. It runs once for the session, in a class `setUp`,
+/// outside every test's allowance, asserts nothing, and writes each pass's time to the test runner's output.
 @MainActor
 enum SimulatorWarmUp {
     private static var settled = false
@@ -50,14 +50,15 @@ enum SimulatorWarmUp {
 /// test after a timed-out one (Evidence/NativeApp/main-ci-flakes-069.md).
 @MainActor
 class ScreenTestCase: XCTestCase {
-    /// Launches the app once before the class's first test, outside every test's time allowance. XCTest installs the
-    /// app at a session's first launch, and on CI that launch took 11 to 48 seconds where later ones took about 5; inside
-    /// the session's first test it took the Disposable shooting screen's test past its 3 minutes in run 39292846150
-    /// (Evidence/NativeApp/main-ci-flakes-072.md). The session's first tap and first screenshot were slow too (4 to 7 s for
-    /// XCTest's check for interrupting elements before the tap, 5 to 25 s for the screenshot, in three runs each, against
-    /// under a second for every later one), so they are made here, and what of that is a first use falls outside every
-    /// test; a stall of the whole simulator in the same seconds is not shown to move with it
-    /// (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that finds nothing to tap costs nothing.
+    /// Launches the app before the class's first test, outside every test's time allowance: once, or in each pass of
+    /// `SimulatorWarmUp` in a session's first class. XCTest installs the app at a session's first launch, and on CI that
+    /// launch took 11 to 48 seconds where later ones took about 5; inside the session's first test it took the Disposable
+    /// shooting screen's test past its 3 minutes in run 39292846150 (Evidence/NativeApp/main-ci-flakes-072.md). The
+    /// session's first tap and first screenshot were slow too (4 to 7 s for XCTest's check for interrupting elements before
+    /// the tap, 5 to 25 s for the screenshot, in three runs each, against under a second for every later one), so they are
+    /// made here, and what of that is a first use falls outside every test; a stall of the whole simulator in the same
+    /// seconds is not shown to move with it (Evidence/NativeApp/main-ci-flakes-073.md). Nothing is asserted: a warm-up that
+    /// finds nothing to tap costs nothing.
     override class func setUp() {
         super.setUp()
         MainActor.assumeIsolated {
@@ -77,15 +78,17 @@ class ScreenTestCase: XCTestCase {
         app.terminate()
     }
 
-    /// What every screen test does first, once: the launch, the catalog, a turn to each side held and back, a capture,
+    /// What every screen test does first, once: the launch, the catalog, a turn to one side and back with a capture each,
     /// and a second launch, which is where a session's first test met 12 to 18 s of "Setting up automation session" and
     /// of waits for the app to idle.
     private static func warmUpPass() {
         let app = XCUIApplication()
         app.launch()
         let start = app.buttons["start-film"]
-        if start.waitForExistence(timeout: 10) { start.tap() }
-        _ = app.navigationBars["Choose a Camera"].waitForExistence(timeout: 30)
+        if start.waitForExistence(timeout: 10) {
+            start.tap()
+            _ = app.navigationBars["Choose a Camera"].waitForExistence(timeout: 30)
+        }
         for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
             XCUIDevice.shared.orientation = orientation
             _ = XCUIScreen.main.screenshot()
