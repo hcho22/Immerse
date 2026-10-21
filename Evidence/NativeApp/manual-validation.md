@@ -2215,6 +2215,7 @@ Each step's result, how long the viewfinder took to return, a screen recording o
 On 2026-10-21 the captain asked to see every capture of the 6×6 Medium Format, the 1990s Disposable, the 16mm Cinema and the 1960s Super 8 Home Movie developed as soon as it is taken, so he can give feedback on each look without finishing a roll ([076](develop-at-once-076.md)).
 Debug builds therefore have **Settings > Develop at once - Debug build**, on by default, under the testing unlock's switch.
 While it is on, each saved photo or clip of those four Cameras shows on the shooting screen as a card marked **Debug preview**: "developing" first, then the developed picture, which opens full size when tapped; the **x** closes it.
+Every capture develops, one after another in the order it was saved, and none is skipped: in a quick burst the card keeps the latest developed picture and says which newer capture is developing or waiting to develop, and each newer preview takes the card as it is ready.
 That is how to tell the switch's state without opening Settings: while it is on, those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done**, from before the first capture, and with it off, as on the Instant at any time, nothing shows there.
 The roll itself stays sealed and develops exactly as before, and the 1970s Instant is unchanged.
 Release, TestFlight and App Store builds have none of it (`sh Scripts/verify-release-excludes-testing-unlock.sh`).
@@ -2228,7 +2229,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 **Steps.**
 
 1. Check **Settings > Develop at once - Debug build** is on.
-2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** next to **Done** before the first photo, beside it upright and under it held on its side, and take a photo with the flash off, then one with the flash on.
+2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** next to **Done** before the first photo, upright and held on its side, and take a photo with the flash off, then one with the flash on.
 3. Load a 6×6 Medium Format Film with **Color**, take a photo, then load one with **Black and white** and take a photo.
 4. Load a 16mm Cinema Film with each Film Stock and record a clip of about 5 seconds on each.
 5. Load a 1960s Super 8 Home Movie Film and record a clip of about 5 seconds.
@@ -2236,7 +2237,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 **Expect.**
 
-- Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold (beside it upright, under it held on its side), readable and clear of the viewfinder and the shutter, at every text size, before and after the card is closed.
+- Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold, readable and clear of the viewfinder and the shutter, at every text size, before and after the card is closed: beside Done, or under it where the header's line is too short, as held on its side at the default size.
 - A card marked **Debug preview** shows within a moment of each save, says the photo or clip is developing, and then shows its picture.
 - The full-size view shows that Camera's look and, on the 6×6 and the 16mm, the chosen Film Stock, with the notice **Develop at once - Debug build** under it.
 - A clip plays silently on a loop: the soundtrack is chosen and heard only on the developed Movie.
@@ -2309,14 +2310,14 @@ A screenshot of steps 3 and 5 and the switch after the relaunch.
 3. On a 6×6 Medium Format Film with **Color** take five photos as quickly as the shutter allows.
 
 **Expect.**
-Each new save replaces the card with the newest capture's; the camera never pauses, and every capture is counted and saved.
-The newest capture's preview arrives; earlier ones may be skipped.
+Every capture develops, one after another in the order it was saved: while the 60-second clip develops the card says the newest short clip is waiting to develop, then each clip's preview takes the card in turn, the long clip's first; the five photos' previews follow the same way, the fifth last.
+The camera never pauses, and every capture is counted and saved.
 
 **It fails if.**
-A capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
+A capture's preview never shows, previews show out of the order they were taken, a capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
 
 **Write down.**
-How long the 60-second clip's preview took, whether the camera stayed smooth, and the phone's warmth.
+How long the 60-second clip's preview took, how long the last of the five photos took to show after its shutter, whether the camera stayed smooth, and the phone's warmth.
 
 ## Full Receipt Protocol
 

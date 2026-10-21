@@ -66,7 +66,8 @@ Debug builds alone also preview each saved capture (`Sources/DevelopedPreviews.s
 While **Develop at once - Debug build** is on in Settings (on by default; `-ImmerseDebugDevelopedPreview NO` turns it off for one launch), every photo of the 6×6 and the Disposable and every clip of the 16mm and the Super 8 shows developed on the shooting screen, marked **Debug preview**, as soon as it is saved.
 Those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done** for as long as the switch is on, so its state shows without opening Settings.
 It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a clip has no soundtrack, which only the developed Movie gets.
-The roll stays sealed and develops as before, the Instant is unchanged, and previews live only in the app's Caches folder, removed when closed or replaced, when the roll develops, when the Film is deleted, when the switch is turned off and at launch.
+Every capture develops, one at a time in the order it was saved, and each preview takes the card from the one before as it is ready.
+The roll stays sealed and develops as before, the Instant is unchanged, and previews live only in the app's Caches folder, removed once nothing shows them, when the roll develops, when the Film is deleted, when the switch is turned off and at launch.
 The same Release check fails if Release contains any of it.
 
 The app warns before captures and Development while the iPhone has less than 2 GB free (`Sources/LowStorage.swift`), and stops nothing.

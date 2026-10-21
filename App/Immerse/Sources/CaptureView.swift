@@ -38,8 +38,6 @@ struct CaptureView: View {
     #if DEBUG
     /// Hosted tests that show a running camera's screen leave the camera closed, so no failure to open it shows.
     var opensCamera = true
-    /// The Debug preview opened full size.
-    @State private var inspectedPreview: DevelopedPreviews.Preview?
     #endif
 
     var body: some View {
@@ -103,7 +101,9 @@ struct CaptureView: View {
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
         #if DEBUG
-        .sheet(item: $inspectedPreview) { DevelopedPreviewSheet(preview: $0) }
+        .sheet(item: Binding(get: { model.developedPreviews.inspected }, set: { model.developedPreviews.inspected = $0 })) {
+            DevelopedPreviewSheet(preview: $0)
+        }
         #endif
     }
 
@@ -115,21 +115,24 @@ struct CaptureView: View {
         return noticeLength
     }
 
-    /// Whether a Debug build shows the preview of this Film's latest capture; never in Release.
+    /// Whether a Debug build shows the card of this Film's previews; never in Release.
     private var showsDevelopedPreview: Bool {
         #if DEBUG
-        developedPreview != nil
+        developedPreview != nil || pendingPreview != nil
         #else
         false
         #endif
     }
 
     #if DEBUG
-    /// The Debug preview of this Film's latest capture, while there is one (`DevelopedPreviews`).
+    /// The Debug preview of this Film's latest developed capture, while there is one (`DevelopedPreviews`).
     private var developedPreview: DevelopedPreviews.Preview? {
         guard let preview = model.developedPreviews.current, preview.filmID == filmID else { return nil }
         return preview
     }
+
+    /// This Film's newest capture still to develop for a Debug preview.
+    private var pendingPreview: DevelopedPreviews.Pending? { model.developedPreviews.pending(for: filmID) }
     #endif
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
@@ -265,8 +268,9 @@ struct CaptureView: View {
                             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
                     }
                     #if DEBUG
-                    if let preview = developedPreview {
-                        DevelopedPreviewCard(preview: preview, open: { inspectedPreview = preview },
+                    if showsPreview {
+                        DevelopedPreviewCard(preview: developedPreview, pending: pendingPreview,
+                                             open: { model.developedPreviews.inspected = developedPreview },
                                              close: { model.developedPreviews.dismiss() })
                     }
                     #endif

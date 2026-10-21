@@ -97,6 +97,62 @@ final class DevelopedPreviewsTests: XCTestCase {
         }
     }
 
+    /// Every capture develops, one after another in the order it was saved, and none is skipped (the captain,
+    /// 2026-10-21: "preview - every shot"): two saves the camera finishes together, as when it opens with both still to
+    /// finish, each show developed, the second taking the card from the first, and the cache never holds more than the
+    /// preview shown and the one developing. On a photo Camera and on a Movie Camera.
+    func testTwoDisposablePhotosSavedTogetherEachShowDevelopedInTurn() async throws {
+        try await assertSavedTogetherEachShowsInTurn(CameraCatalog.disposable1990s)
+    }
+
+    func testTwoSuperEightClipsSavedTogetherEachShowDevelopedInTurn() async throws {
+        try await assertSavedTogetherEachShowsInTurn(CameraCatalog.super8HomeMovie)
+    }
+
+    private func assertSavedTogetherEachShowsInTurn(_ camera: CameraPackage) async throws {
+        let model = try await makeModel(previewing: true)
+        let roll = try await model.load(camera: camera, title: "Burst \(camera.shortName)", orientation: .landscape)
+        try await stage(roll, model)
+        try await stage(roll, model)
+        try await openTheCamera(roll, model)
+        var shown: [Int] = []
+        var mostFiles = 0
+        try await waitUntil(every: .milliseconds(2)) {
+            if let current = model.developedPreviews.current, current.url != nil, current.sequenceNumber != shown.last {
+                shown.append(current.sequenceNumber)
+            }
+            mostFiles = max(mostFiles, (try? previewFiles().count) ?? 0)
+            return shown.last == 2 && model.developedPreviews.pending(for: roll.id) == nil
+        }
+        XCTAssertEqual(shown, [1, 2], "\(camera.shortName): each capture shows developed, in the order it was saved")
+        XCTAssertLessThanOrEqual(mostFiles, 2, "The cache holds the preview shown and the one developing")
+        XCTAssertEqual(try previewFiles().count, 1, "Only the preview shown is left")
+        let saved = try XCTUnwrap(model.film(roll.id))
+        XCTAssertEqual(saved.captures.map(\.revealState), [.sealed, .sealed], "The roll stays sealed")
+        XCTAssertEqual(saved.savedCaptureCount, 2)
+        XCTAssertNil(try model.repository.developmentRun(filmID: roll.id))
+        try await model.remove(roll.id)
+    }
+
+    /// Turned off while captures wait to develop, the one developing stops, none of the others develops, and no preview
+    /// is left; the captures stay saved.
+    func testTurningItOffWithCapturesWaitingStopsThemAllAndLeavesNoPreview() async throws {
+        let model = try await makeModel(previewing: true)
+        let roll = try await model.load(camera: CameraCatalog.super8HomeMovie, title: "Roll", orientation: .landscape)
+        for _ in 0..<3 { try await stage(roll, model) }
+        try await openTheCamera(roll, model)
+        try await waitUntil { model.developedPreviews.pending(for: roll.id)?.capture.sequenceNumber == 3 }
+        model.developedPreviews.enabled = false
+        XCTAssertNil(model.developedPreviews.pending(for: roll.id))
+        XCTAssertNil(model.developedPreviews.current)
+        try await settle(model)
+        try await waitUntil { (try? previewFiles()) == [] }
+        try await Task.sleep(for: .seconds(2))
+        XCTAssertNil(model.developedPreviews.current, "Nothing more develops")
+        XCTAssertEqual(try previewFiles(), [], "No preview is left")
+        XCTAssertEqual(model.film(roll.id)?.savedCaptureCount, 3)
+    }
+
     /// Delete Film while the camera is still finishing a save, as when Done is tapped during "Finishing save" and the Film
     /// is deleted at once: the save reports itself while the deletion waits for it to end, and its preview goes with the
     /// Film. On the Trial the save writes the receipt, which is held here until the deletion waits.
@@ -248,6 +304,21 @@ final class DevelopedPreviewsTests: XCTestCase {
             try await keepScreenshot(of: DevelopedPreviewSheet(preview: preview), style: style, tall: false, held: .portrait,
                                      model: model, name: "Preview-\(camera.id.rawValue)-full-size-\(styleName)")
         }
+        // What the card says while captures are still to develop: the first developing, the shown preview with the next
+        // developing or waiting behind another, and a failed preview with the next developing.
+        func capture(_ sequence: Int) -> DevelopedPreviews.Capture {
+            DevelopedPreviews.Capture(filmID: film.id, sequenceNumber: sequence, medium: camera.medium)
+        }
+        let failed = DevelopedPreviews.Preview(filmID: film.id, sequenceNumber: 1, medium: camera.medium, state: .failed)
+        let cards = VStack(spacing: 12) {
+            DevelopedPreviewCard(preview: nil, pending: .init(capture: capture(1), developing: true), open: {}, close: {})
+            DevelopedPreviewCard(preview: preview, pending: .init(capture: capture(2), developing: true), open: {}, close: {})
+            DevelopedPreviewCard(preview: preview, pending: .init(capture: capture(3), developing: false), open: {}, close: {})
+            DevelopedPreviewCard(preview: failed, pending: .init(capture: capture(2), developing: true), open: {}, close: {})
+        }
+        .padding().frame(maxWidth: .infinity, maxHeight: .infinity).background(.black)
+        try await keepScreenshot(of: cards, style: .light, tall: false, held: .portrait, model: model,
+                                 name: "Preview-\(camera.id.rawValue)-card-while-developing")
         try await model.remove(film.id)
     }
 
@@ -266,9 +337,14 @@ final class DevelopedPreviewsTests: XCTestCase {
     private func saveThroughTheCamera(_ film: Film, _ model: JournalModel) async throws {
         let before = model.film(film.id)?.savedCaptureCount ?? 0
         try await stage(film, model)
+        try await openTheCamera(film, model)
+        try await waitUntil { model.film(film.id)?.savedCaptureCount == before + 1 }
+    }
+
+    /// Opens the camera, which finishes every save staged for the Film and reports each, and then fails to start.
+    private func openTheCamera(_ film: Film, _ model: JournalModel) async throws {
         do { try await model.capture.open(film: film, model: model); XCTFail("The simulator has no camera to start") }
         catch let error as NativeCaptureError where error == .notRunning || error == .configurationFailed { }
-        try await waitUntil { model.film(film.id)?.savedCaptureCount == before + 1 }
     }
 
     /// Leaves a photo or a clip in the Film's staging directory, exactly as the backend leaves one for its save.
@@ -367,14 +443,14 @@ final class DevelopedPreviewsTests: XCTestCase {
         add(attachment)
     }
 
-    private func waitUntil(_ condition: () -> Bool) async throws {
+    private func waitUntil(every interval: Duration = .milliseconds(10), _ condition: () -> Bool) async throws {
         let deadline = ContinuousClock.now + .seconds(60)
         while !condition() {
             guard ContinuousClock.now < deadline else {
                 XCTFail("Timed out waiting for the preview")
                 throw CancellationError()
             }
-            try await Task.sleep(for: .milliseconds(10))
+            try await Task.sleep(for: interval)
         }
     }
 

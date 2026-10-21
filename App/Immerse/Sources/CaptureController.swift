@@ -95,6 +95,9 @@ final class CaptureController {
             eventsTask?.cancel()
             backend = next
             filmID = film.id
+            #if DEBUG
+            model.developedPreviews.cameraAttached(to: film)
+            #endif
             read(sceneLight: next.sceneLight)
             eventsTask = Task { [weak self, weak model] in
                 for await event in next.events {

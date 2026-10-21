@@ -10,13 +10,17 @@ import SwiftUI
 
 /// Debug-only preview of each saved capture, for the captain's feedback on a Camera's look without finishing its roll
 /// (the captain, 2026-10-21). While on, every photo of the 6×6 and the Disposable and every clip of the 16mm and the
-/// Super 8 shows developed on the shooting screen as soon as it is saved, rendered by Development's own code with the
-/// treatment Development will give it (`PreviewDevelopment`), and those Cameras' shooting screens say beside Done that the
-/// switch is on (`DevelopAtOnceNotice`). The roll stays sealed and develops as before; an Instant print develops by itself
-/// and is left as it is. Previews live only in a disposable cache outside the Film store and
-/// are removed when they are closed or replaced, when the roll develops, when its Film is deleted, when the switch is
-/// turned off and at launch; the latest stays while the camera is closed and shows again when it opens. The whole type is compiled out of Release, which therefore has no preview path or copy;
-/// `Scripts/verify-release-excludes-testing-unlock.sh` checks the Release binary.
+/// Super 8 develops as soon as it is saved, rendered by Development's own code with the treatment Development will give it
+/// (`PreviewDevelopment`), and shows on the shooting screen, and those Cameras' shooting screens say beside Done that the
+/// switch is on (`DevelopAtOnceNotice`). Every capture develops, one at a time in the order they were saved (the captain,
+/// 2026-10-21: "preview - every shot"): each preview takes the card from the one before as it finishes, and in a quick
+/// burst the newest waits behind the ones before it. The roll stays sealed and develops as before; an Instant print
+/// develops by itself and is left as it is. Previews live only in a disposable cache outside the Film store, which holds
+/// no more than the preview shown and the one developing: a preview goes once nothing shows it, and every preview and
+/// every capture still to develop goes when the roll develops, when its Film is deleted, when the switch is turned off
+/// and at launch. The latest stays while the camera is closed and shows again when it opens. The whole type is compiled
+/// out of Release, which therefore has no preview path or copy; `Scripts/verify-release-excludes-testing-unlock.sh`
+/// checks the Release binary.
 @MainActor @Observable
 final class DevelopedPreviews {
     static let defaultsKey = "ImmerseDebugDevelopedPreview"
@@ -27,28 +31,49 @@ final class DevelopedPreviews {
             .appendingPathComponent("DebugDevelopedPreviews", isDirectory: true)
     }
 
-    /// One saved capture's preview, from its save until it is closed.
+    /// A saved capture to develop.
+    struct Capture: Equatable {
+        let filmID: UUID
+        let sequenceNumber: Int
+        let medium: CameraMedium
+    }
+
+    /// One capture's finished preview, on the card until a newer one finishes or it is closed.
     struct Preview: Identifiable, Equatable {
         enum State: Equatable {
-            case developing
             case ready(URL, thumbnail: UIImage?)
             case failed
         }
         let filmID: UUID
         let sequenceNumber: Int
         let medium: CameraMedium
-        var state: State
+        let state: State
         var id: String { "\(filmID)-\(sequenceNumber)" }
 
         var url: URL? { if case let .ready(url, _) = state { url } else { nil } }
     }
 
+    /// The newest capture of a Film still to develop, and whether it is developing or waits behind earlier ones.
+    struct Pending: Equatable {
+        let capture: Capture
+        let developing: Bool
+    }
+
     private let root: URL
     private let defaults: UserDefaults?
     let directory: URL
-    /// The latest saved capture's preview, shown on its Film's shooting screen.
+    /// The latest finished preview, shown on its Film's shooting screen.
     private(set) var current: Preview?
-    @ObservationIgnored private var job: Task<URL, Error>?
+    /// The preview open full size. Its file stays while it is open, though a newer preview takes the card.
+    var inspected: Preview? {
+        didSet { if oldValue?.id != inspected?.id { removeIfUnshown(oldValue) } }
+    }
+    /// Saved captures still to develop, in the order they were saved; the first is developing.
+    private(set) var waiting: [Capture] = []
+    @ObservationIgnored private var render: Task<URL, Error>?
+    /// The newest capture of the Film the camera saves to that is already taken up or was there before it attached, so
+    /// each capture saved after it develops once.
+    @ObservationIgnored private var newestSeen: (filmID: UUID, sequenceNumber: Int)?
 
     var enabled: Bool {
         didSet {
@@ -71,57 +96,98 @@ final class DevelopedPreviews {
     /// develop as they are saved.
     func applies(to film: Film) -> Bool { enabled && film.camera.revealRule != .instantPerExposure }
 
-    /// A capture of `film` was saved: its newest capture develops now, replacing the preview before it. Nothing happens
+    /// The camera now saves to `film`: each capture it saves from here on develops, and none from before.
+    func cameraAttached(to film: Film) {
+        newestSeen = (film.id, film.captures.map(\.sequenceNumber).max() ?? 0)
+    }
+
+    /// Captures of `film` were saved: each saved since the newest seen develops, after every capture saved before it, so a
+    /// save event that finds two new captures, as a camera finishing two saves at once can, develops both. Nothing develops
     /// where the switch does not apply. A failed preview shows a note and never touches the save.
     func captureSaved(_ film: Film) {
-        guard applies(to: film), let newest = film.captures.last(where: { !$0.isDiscarded }) else { return }
-        // Recovery reports each staged save it finishes; the newest is developed once.
-        if let current, current.filmID == film.id, current.sequenceNumber == newest.sequenceNumber { return }
-        clearCurrent()
-        let preview = Preview(filmID: film.id, sequenceNumber: newest.sequenceNumber, medium: film.camera.medium,
-                              state: .developing)
-        current = preview
-        let (root, directory, filmID, sequence) = (self.root, self.directory, film.id, newest.sequenceNumber)
-        let job = Task.detached(priority: .utility) {
-            try await PreviewDevelopment.render(root: root, filmID: filmID, sequenceNumber: sequence, directory: directory)
-        }
-        self.job = job
-        Task { [weak self] in
-            let result = await job.result
-            let thumbnail = try? await Self.thumbnail(of: result.get(), medium: preview.medium)
-            guard let self, self.current?.id == preview.id, self.job == job else {
-                // Closed or replaced while it developed.
-                if let url = try? result.get() { try? FileManager.default.removeItemIfPresent(at: url) }
-                return
-            }
-            self.job = nil
-            switch result {
-            case let .success(url): self.current?.state = .ready(url, thumbnail: thumbnail)
-            case .failure: self.current?.state = .failed
-            }
-        }
+        let newest = film.captures.map(\.sequenceNumber).max() ?? 0
+        // A Film the camera did not attach to here has only its newest capture to develop.
+        let after = newestSeen.flatMap { $0.filmID == film.id ? $0.sequenceNumber : nil } ?? newest - 1
+        newestSeen = (film.id, max(newest, after))
+        guard applies(to: film) else { return }
+        waiting += film.captures.filter { !$0.isDiscarded && $0.sequenceNumber > after }
+            .sorted { $0.sequenceNumber < $1.sequenceNumber }
+            .map { Capture(filmID: film.id, sequenceNumber: $0.sequenceNumber, medium: film.camera.medium) }
+        developNext()
     }
 
-    /// Closes the preview and removes its file.
-    func dismiss() { clearCurrent() }
+    /// The newest capture of `filmID` still to develop, if any.
+    func pending(for filmID: UUID) -> Pending? {
+        guard let newest = waiting.last(where: { $0.filmID == filmID }) else { return nil }
+        return Pending(capture: newest, developing: newest == waiting.first)
+    }
 
-    /// The roll develops or its Film is deleted: its preview goes.
+    /// Closes the card's preview; the captures still to develop go on.
+    func dismiss() {
+        let shown = current
+        current = nil
+        removeIfUnshown(shown)
+    }
+
+    /// The roll develops or its Film is deleted: its previews go, with every capture of it still to develop.
     func clear(filmID: UUID) {
-        guard current?.filmID == filmID else { return }
-        clearCurrent()
+        if waiting.first?.filmID == filmID { stopRender() }
+        waiting.removeAll { $0.filmID == filmID }
+        let shown = current
+        if current?.filmID == filmID { current = nil }
+        if inspected?.filmID == filmID { inspected = nil }
+        removeIfUnshown(shown)
+        developNext()
     }
 
-    /// The switch is off, or the app has launched: every preview goes, with anything an earlier run left.
+    /// The switch is off, or the app has launched: every preview and every capture still to develop goes, with anything
+    /// an earlier run left.
     func clearAll() {
-        clearCurrent()
+        stopRender()
+        waiting = []
+        current = nil
+        inspected = nil
         try? FileManager.default.removeItemIfPresent(at: directory)
     }
 
-    private func clearCurrent() {
-        job?.cancel()
-        job = nil
-        if let url = current?.url { try? FileManager.default.removeItemIfPresent(at: url) }
-        current = nil
+    /// Develops the first capture waiting, unless one is developing.
+    private func developNext() {
+        guard render == nil, let next = waiting.first else { return }
+        let (root, directory, filmID, sequence) = (self.root, self.directory, next.filmID, next.sequenceNumber)
+        let render = Task.detached(priority: .utility) {
+            try await PreviewDevelopment.render(root: root, filmID: filmID, sequenceNumber: sequence, directory: directory)
+        }
+        self.render = render
+        Task { [weak self] in
+            let result = await render.result
+            let thumbnail = try? await Self.thumbnail(of: result.get(), medium: next.medium)
+            guard let self, self.render == render else {
+                // Cleared while it developed.
+                if let url = try? result.get() { try? FileManager.default.removeItemIfPresent(at: url) }
+                return
+            }
+            self.render = nil
+            self.waiting.removeFirst()
+            let state: Preview.State = switch result {
+            case let .success(url): .ready(url, thumbnail: thumbnail)
+            case .failure: .failed
+            }
+            let shown = self.current
+            self.current = Preview(filmID: filmID, sequenceNumber: sequence, medium: next.medium, state: state)
+            self.removeIfUnshown(shown)
+            self.developNext()
+        }
+    }
+
+    private func stopRender() {
+        render?.cancel()
+        render = nil
+    }
+
+    /// Removes a preview's file once neither the card nor the full-size view shows it.
+    private func removeIfUnshown(_ preview: Preview?) {
+        guard let preview, let url = preview.url, preview.id != current?.id, preview.id != inspected?.id else { return }
+        try? FileManager.default.removeItemIfPresent(at: url)
     }
 
     /// A small picture for the card: the photo's own thumbnail, or a clip's first frame.
@@ -143,23 +209,27 @@ final class DevelopedPreviews {
     }
 }
 
-/// The preview on the shooting screen, over the viewfinder with its other notices: the developed picture, marked as a
-/// Debug preview so a screenshot is never taken for the real thing, opening full size, with a button to close it.
+/// The preview on the shooting screen, over the viewfinder with its other notices: the latest developed picture and the
+/// newest capture still to develop, marked as a Debug preview so a screenshot is never taken for the real thing. The
+/// picture opens full size, and a button closes it.
 struct DevelopedPreviewCard: View {
     /// How long the card reads when the iPhone is on its side, at least, so its lines do not wrap word by word.
     static let sidewaysLength: CGFloat = 300
-    let preview: DevelopedPreviews.Preview
+    let preview: DevelopedPreviews.Preview?
+    let pending: DevelopedPreviews.Pending?
     let open: () -> Void
     let close: () -> Void
 
     var body: some View {
         // Within the viewfinder at every text size, as the zoom steps are; the picture's size follows the same cap.
-        PreviewCardContent(preview: preview, open: open, close: close).dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        PreviewCardContent(preview: preview, pending: pending, open: open, close: close)
+            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
 
 private struct PreviewCardContent: View {
-    let preview: DevelopedPreviews.Preview
+    let preview: DevelopedPreviews.Preview?
+    let pending: DevelopedPreviews.Pending?
     let open: () -> Void
     let close: () -> Void
     @ScaledMetric(relativeTo: .caption) private var side: CGFloat = 48
@@ -168,49 +238,80 @@ private struct PreviewCardContent: View {
 
     var body: some View {
         // The close button sits over the card's top corner, so the text keeps the card's width.
-        Button(action: open) {
-            PreviewCardLayout(closeRoom: closeRoom) {
-                picture.frame(width: side, height: side).clipShape(RoundedRectangle(cornerRadius: 6))
-                Text("Debug preview").font(.caption.weight(.semibold))
-                Text(status).font(.caption).foregroundStyle(.white.opacity(0.85))
+        tappableContent
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Debug preview. \(status)")
+            .accessibilityIdentifier("developed-preview")
+            .overlay(alignment: .topTrailing) {
+                if preview != nil {
+                    Button("Close debug preview", systemImage: "xmark", action: close)
+                        .labelStyle(.iconOnly).font(.footnote.weight(.semibold))
+                        .frame(width: 44, height: 44).contentShape(Rectangle())
+                        .accessibilityIdentifier("developed-preview-close")
+                }
             }
-            .multilineTextAlignment(.leading)
-            .padding(8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .disabled(preview.url == nil)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Debug preview. \(status)")
-        .accessibilityIdentifier("developed-preview")
-        .overlay(alignment: .topTrailing) {
-            Button("Close debug preview", systemImage: "xmark", action: close)
-                .labelStyle(.iconOnly).font(.footnote.weight(.semibold))
-                .frame(width: 44, height: 44).contentShape(Rectangle())
-                .accessibilityIdentifier("developed-preview-close")
-        }
-        .foregroundStyle(.white)
-        .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
+            .foregroundStyle(.white)
+            .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
     }
 
+    /// The picture and the lines, which open the preview full size once there is one to open; a disabled button would
+    /// dim them.
+    @ViewBuilder private var tappableContent: some View {
+        if preview?.url != nil {
+            Button(action: open) { content }.buttonStyle(.plain)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        PreviewCardLayout(closeRoom: closeRoom) {
+            picture.frame(width: side, height: side).clipShape(RoundedRectangle(cornerRadius: 6))
+            Text("Debug preview").font(.caption.weight(.semibold))
+            Text(status).font(.caption).foregroundStyle(.white.opacity(0.85))
+        }
+        .multilineTextAlignment(.leading)
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+    }
+
+    /// What the finished preview is, then, on a line of its own, what the newest capture still to develop is doing.
     private var status: String {
-        let capture = preview.medium == .photo ? "Photo \(preview.sequenceNumber)" : "Clip \(preview.sequenceNumber)"
-        switch preview.state {
-        case .developing: return "\(capture) developing"
-        case .ready: return "\(capture) developed. Tap to view."
-        case .failed: return "\(capture) could not develop here. It is saved and develops with the roll."
+        var lines: [String] = []
+        if let preview {
+            let capture = name(preview.medium, preview.sequenceNumber)
+            switch preview.state {
+            case .ready: lines.append("\(capture) developed. Tap to view.")
+            case .failed: lines.append("\(capture) could not develop here. It is saved and develops with the roll.")
+            }
+        }
+        if let pending {
+            let capture = name(pending.capture.medium, pending.capture.sequenceNumber)
+            lines.append(pending.developing ? "\(capture) developing." : "\(capture) waiting to develop.")
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    private func name(_ medium: CameraMedium, _ sequenceNumber: Int) -> String {
+        medium == .photo ? "Photo \(sequenceNumber)" : "Clip \(sequenceNumber)"
+    }
+
+    /// The developed picture, or while there is none the progress of the capture developing, or the failed one's mark.
+    @ViewBuilder private var picture: some View {
+        if case let .ready(_, thumbnail?) = preview?.state {
+            Image(uiImage: thumbnail).resizable().scaledToFill()
+        } else if preview?.url != nil {
+            glyph("photo")
+        } else if pending != nil {
+            ProgressView().tint(.white).frame(maxWidth: .infinity, maxHeight: .infinity).background(.white.opacity(0.15))
+        } else {
+            glyph("exclamationmark.triangle")
         }
     }
 
-    @ViewBuilder private var picture: some View {
-        switch preview.state {
-        case .developing: ProgressView().tint(.white).frame(maxWidth: .infinity, maxHeight: .infinity).background(.white.opacity(0.15))
-        case let .ready(_, thumbnail?): Image(uiImage: thumbnail).resizable().scaledToFill()
-        case .ready, .failed:
-            Image(systemName: preview.state == .failed ? "exclamationmark.triangle" : "photo")
-                .frame(maxWidth: .infinity, maxHeight: .infinity).background(.white.opacity(0.15))
-        }
+    private func glyph(_ name: String) -> some View {
+        Image(systemName: name).frame(maxWidth: .infinity, maxHeight: .infinity).background(.white.opacity(0.15))
     }
 }
 
