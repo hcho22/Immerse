@@ -62,6 +62,14 @@ Settings > Debug testing turns it off for Trial and plan checks; the choice pers
 It appears only when the scheme's Run action uses Debug.
 `Scripts/verify-release-excludes-testing-unlock.sh`, run by the local validation script, fails if Release contains it.
 
+Debug builds alone also preview each saved capture (`Sources/DevelopedPreviews.swift` and FilmRuntime's `PreviewDevelopment`, both under `#if DEBUG`), at the captain's request of 2026-10-21.
+While **Develop at once - Debug build** is on in Settings (on by default; `-ImmerseDebugDevelopedPreview NO` turns it off for one launch), every photo of the 6×6 and the Disposable and every clip of the 16mm and the Super 8 shows developed on the shooting screen, marked **Debug preview**, as soon as it is saved.
+Those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done** for as long as the switch is on, so its state shows without opening Settings.
+It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a clip has no soundtrack, which only the developed Movie gets.
+Every capture develops, one at a time in the order it was saved, and each preview takes the card from the one before as it is ready.
+The roll stays sealed and develops as before, the Instant is unchanged, and previews live only in the app's Caches folder, removed once nothing shows them, when the roll develops, when the Film is deleted, when the switch is turned off and at launch.
+The same Release check fails if Release contains any of it.
+
 The app warns before captures and Development while the iPhone has less than 2 GB free (`Sources/LowStorage.swift`), and stops nothing.
 A Debug build launched with `-ImmerseDebugFreeSpace <bytes>` reads that many bytes free instead of the iPhone's own, and any other value, such as `unreadable`, is a reading that fails; screen tests and screenshots use it, and the same script fails if Release contains it.
 `Sources/PrivacyInfo.xcprivacy` declares the free-space reading, as Apple requires.

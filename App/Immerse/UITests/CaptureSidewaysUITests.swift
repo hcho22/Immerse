@@ -4,9 +4,10 @@ import XCTest
 /// never turns, so the viewfinder keeps its size and place, and only the words and icons turn to read upright. Every other
 /// screen keeps turning with the iPhone. The simulator has no camera, so the screen shows its message for the missing one,
 /// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
-/// raises, are in `CaptureSidewaysTests`. Loading uses the Debug testing unlock and answers a fresh Camera request
-/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, and the 6×6
-/// again at the largest text size, to stay inside the per-test time allowance.
+/// raises, are in `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
+/// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock and answers a fresh Camera request
+/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, the 6×6
+/// again at the largest text size and the Disposable with Develop at once off, to stay inside the per-test time allowance.
 @MainActor
 final class CaptureSidewaysUITests: ScreenTestCase {
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
@@ -16,7 +17,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     /// The Instant's square viewfinder keeps the screen's full width where the room allows, so the room left over is
     /// shared above and below it.
     func testInstantShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "instant1970s", name: "Instant", fillsTheRoom: false)
+        try check(id: "instant1970s", name: "Instant", fillsTheRoom: false, showsNotice: false)
     }
 
     /// The tallest viewfinder: the 2:3 box, with the error, the message and Resume Camera over it.
@@ -37,6 +38,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         var shutter: CGRect
         /// The Switch Camera icon in the shutter bar, which is wider than it is tall.
         var switchCamera: CGRect
+        /// Develop at once's notice, where it shows.
+        var notice: CGRect?
     }
 
     /// At the largest text size the header and the notices in it take more room than the screen has, so the screen
@@ -51,6 +54,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let done = app.buttons["Done"]
         let upright = try wait(app)
         XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
+        checkNotice(upright, shows: true, "upright at the largest text size")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
         // Each side twice, so the header turns straight from one side to the other both ways.
@@ -78,13 +82,42 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
     }
 
-    /// Loads a Film in the Camera `id` with the title Load Film suggests, opens its shooting screen, waits for the camera's
-    /// open to end in the missing camera's "Camera unavailable." error, and returns the Film's title, for the caller to
-    /// delete it. Resume Camera shows from the screen's first frame, before the open ends, so only the error marks that end.
+    /// With Develop at once off, as the captain turns it off in Settings to test the real experience, the shooting screen
+    /// has no notice, as in a Release build; turned on again it shows the notice, and the viewfinder is where it was.
+    func testTheDevelopAtOnceNoticeShowsOnlyWhileTheSwitchIsOnAndLeavesTheViewfinderInPlace() throws {
+        let app = XCUIApplication()
+        let title = try openShootingScreen(app, id: "disposable1990s", developsAtOnce: false)
+        defer { deleteFilm(titled: title, app) }
+        let off = try wait(app)
+        checkNotice(off, shows: false, "with the switch off")
+        retainScreenshot(name: "Disposable-develop-at-once-off")
+
+        app.terminate()
+        let flag = try XCTUnwrap(app.launchArguments.firstIndex(of: "-ImmerseDebugDevelopedPreview"))
+        app.launchArguments[flag + 1] = "YES"
+        app.launch()
+        let row = app.buttons.containing(NSPredicate(format: "label CONTAINS %@", title)).firstMatch
+        XCTAssertTrue(row.exists(within: 10), "The Film is in the Journal")
+        tapWhole(app, row)
+        XCTAssertTrue(row.isGone(within: 10), "The Film's screen opened")
+        openCamera(app)
+        let on = try wait(app)
+        checkNotice(on, shows: true, "with the switch on")
+        retainScreenshot(name: "Disposable-develop-at-once-on")
+        XCTAssertEqual(on.viewfinder, off.viewfinder, "The notice leaves the viewfinder where it is")
+        XCTAssertEqual(on.done, off.done, "The notice leaves Done where it is")
+        XCTAssertEqual(on.remaining, off.remaining, "The notice leaves the count where it is")
+    }
+
+    /// Loads a Film in the Camera `id` with the title Load Film suggests, with Develop at once on or off for the launch as
+    /// `developsAtOnce` says, whatever Settings holds, opens its shooting screen, waits for the camera's open to end in the
+    /// missing camera's "Camera unavailable." error, and returns the Film's title, for the caller to delete it. Resume
+    /// Camera shows from the screen's first frame, before the open ends, so only the error marks that end.
     /// Over the viewfinder the error moves no frame `wait(_:until:)` reads, and at the largest text sizes it lengthens the
     /// header and moves the viewfinder, so in both the screen is read only after it.
-    private func openShootingScreen(_ app: XCUIApplication, id: String) throws -> String {
-        app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES"]
+    private func openShootingScreen(_ app: XCUIApplication, id: String, developsAtOnce: Bool = true) throws -> String {
+        app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES",
+                                "-ImmerseDebugDevelopedPreview", developsAtOnce ? "YES" : "NO"]
         app.resetAuthorizationStatus(for: .camera)
         var allowed = false
         let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
@@ -115,17 +148,24 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
+        openCamera(app)
+        return title
+    }
 
-        tapWhole(app, app.buttons["Open Camera"])
+    /// Opens the shooting screen from the Film's screen and waits for the camera's open to end in the missing camera's
+    /// "Camera unavailable." error.
+    private func openCamera(_ app: XCUIApplication) {
+        let open = app.buttons["Open Camera"]
+        XCTAssertTrue(open.exists(within: 10), "The Film's screen offers Open Camera")
+        tapWhole(app, open)
         XCTAssertTrue(app.buttons["Done"].exists(within: 5))
         let unavailable = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera unavailable.")).firstMatch
         XCTAssertTrue(unavailable.exists(within: 30), "The camera's open ended")
-        return title
     }
 
     /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
     /// width, sets its size, and it ends just above the bar.
-    private func check(id: String, name: String, fillsTheRoom: Bool) throws {
+    private func check(id: String, name: String, fillsTheRoom: Bool, showsNotice: Bool = true) throws {
         let app = XCUIApplication()
         defer { XCUIDevice.shared.orientation = .portrait }
         let title = try openShootingScreen(app, id: id)
@@ -137,6 +177,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
         XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
         try checkFits(upright, app, "upright", fillsTheRoom: fillsTheRoom)
+        checkNotice(upright, shows: showsNotice, "upright")
         // Held upright, Done sits just below the status bar on every Camera and every iPhone, with the name and the count
         // right under it, whatever room the viewfinder leaves.
         XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
@@ -153,6 +194,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
             try checkFits(turned, app, side, fillsTheRoom: fillsTheRoom)
+            checkNotice(turned, shows: showsNotice, "held on its \(side)")
             retainFrames(turned, name: name, hold: side)
             XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
             XCTAssertGreaterThan(turned.switchCamera.height, turned.switchCamera.width,
@@ -212,6 +254,18 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertGreaterThan(viewfinder.buttons["Resume Camera"].frame.height, 0, "Resume Camera is over the viewfinder, \(hold)")
     }
 
+    /// Develop at once's notice shows on the Cameras it changes, in the header with Done: on screen and clear of the
+    /// viewfinder, the shutter bar's buttons, Done and the count.
+    private func checkNotice(_ layout: Layout, shows: Bool, _ hold: String) {
+        guard shows else { return XCTAssertNil(layout.notice, "No Develop at once notice, \(hold)") }
+        guard let notice = layout.notice else { return XCTFail("The Develop at once notice shows, \(hold)") }
+        XCTAssertTrue(layout.window.contains(notice), "The notice is on screen, \(hold): \(notice)")
+        for (label, frame) in [("viewfinder", layout.viewfinder), ("shutter", layout.shutter),
+                               ("Switch Camera", layout.switchCamera), ("Done", layout.done), ("count", layout.remaining)] {
+            XCTAssertFalse(notice.intersects(frame), "The notice is clear of the \(label), \(hold): \(notice) and \(frame)")
+        }
+    }
+
     private func layout(_ app: XCUIApplication) throws -> Layout {
         let viewfinder = app.otherElements["viewfinder"]
         XCTAssertTrue(viewfinder.exists(within: 5), "The viewfinder is on screen")
@@ -219,8 +273,10 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(remaining.exists(within: 5), "What is left shows")
         let shutter = app.buttons["capture-shutter"]
         XCTAssertTrue(shutter.exists(within: 5))
+        let notice = app.descendants(matching: .any)["develop-at-once-notice"]
         return Layout(window: app.windows.firstMatch.frame, viewfinder: viewfinder.frame, done: app.buttons["Done"].frame,
-                      remaining: remaining.frame, shutter: shutter.frame, switchCamera: app.buttons["Switch Camera"].frame)
+                      remaining: remaining.frame, shutter: shutter.frame, switchCamera: app.buttons["Switch Camera"].frame,
+                      notice: notice.exists ? notice.frame : nil)
     }
 
     /// The layout once `settled` holds and two reads half a second apart agree, so a turn's animation, or the screen's

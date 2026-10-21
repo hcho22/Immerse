@@ -45,6 +45,7 @@
 		F695F91CFCA23E101A79E450 /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */; };
 		F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3000C80787BFE05052237403 /* JournalView.swift */; };
 		FB1EC98DDBE88D13838E1468 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */; };
+		FF8B8E375E5DDF29A604A63B /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
 		27E8ACB31376AA5F1A9E08D2 /* FilmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailView.swift; sourceTree = "<group>"; };
 		2A988703796E8A16B38EA1BF /* WorkflowHarnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowHarnessApp.swift; sourceTree = "<group>"; };
+		2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopedPreviews.swift; sourceTree = "<group>"; };
 		2FFCE9E01DB928F875296A0E /* MediaCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MediaCatalog.json; sourceTree = "<group>"; };
 		3000C80787BFE05052237403 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
 		35D73EB8EC912C8421A93511 /* InterfaceOrientationLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOrientationLock.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				C4BF3192B0F536068A133B6A /* CaptureColumn.swift */,
 				2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */,
 				0353E472543323E10BB6D087 /* CaptureView.swift */,
+				2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */,
 				27E8ACB31376AA5F1A9E08D2 /* FilmDetailView.swift */,
 				DAAB2B694752974D58F54C7B /* FilmPresentation.swift */,
 				DAEB21EE5FE36EB4A2838392 /* HeldTurn.swift */,
@@ -337,6 +340,7 @@
 				677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */,
 				F2BB2E934519F5EDDFDD26F2 /* CaptureController.swift in Sources */,
 				3C252AA2E53787F521A71D60 /* CaptureView.swift in Sources */,
+				FF8B8E375E5DDF29A604A63B /* DevelopedPreviews.swift in Sources */,
 				09D38255E770B7DA3A752A08 /* FilmDetailView.swift in Sources */,
 				0D3A143D2C068D14C86A7A1E /* FilmPresentation.swift in Sources */,
 				A32284BF32746C94A6862C07 /* HeldTurn.swift in Sources */,

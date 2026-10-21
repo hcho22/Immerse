@@ -10,6 +10,7 @@ struct SettingsView: View {
             Form {
                 #if DEBUG
                 TestingUnlockSection(unlock: model.testingUnlock)
+                DevelopedPreviewSection(previews: model.developedPreviews)
                 #endif
                 Section("Storage and backup") { Text(PrivacyCopy.backup) }
                 Section("Trial") {

@@ -95,6 +95,9 @@ final class CaptureController {
             eventsTask?.cancel()
             backend = next
             filmID = film.id
+            #if DEBUG
+            model.developedPreviews.cameraAttached(to: film)
+            #endif
             read(sceneLight: next.sceneLight)
             eventsTask = Task { [weak self, weak model] in
                 for await event in next.events {
@@ -107,6 +110,9 @@ final class CaptureController {
                         message = "Saved"
                         savedCount += 1
                         model.refresh()
+                        #if DEBUG
+                        if let saved = model.film(film.id) { model.developedPreviews.captureSaved(saved) }
+                        #endif
                         if film.camera.revealRule == .instantPerExposure {
                             model.developSavedPrint(film.id) { [weak self, weak model] text in
                                 if self?.presented == true { self?.message = text } else { model?.alert = .failure(text) }

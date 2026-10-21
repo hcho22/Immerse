@@ -71,11 +71,7 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
         isComplete = false
 
         for capture in film.captures where assignments[capture.sequenceNumber] == nil {
-            assignments[capture.sequenceNumber] = TreatmentAssignment(
-                sequenceNumber: capture.sequenceNumber,
-                seed: Self.seed(filmID: film.id, sequenceNumber: capture.sequenceNumber),
-                treatmentVersion: film.treatmentVersion
-            )
+            assignments[capture.sequenceNumber] = Self.plannedAssignment(film: film, sequenceNumber: capture.sequenceNumber)
         }
     }
 
@@ -84,11 +80,7 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
             throw DevelopmentRunError.captureNotFound(sequenceNumber)
         }
         if assignments[sequenceNumber] == nil {
-            assignments[sequenceNumber] = TreatmentAssignment(
-                sequenceNumber: sequenceNumber,
-                seed: Self.seed(filmID: film.id, sequenceNumber: sequenceNumber),
-                treatmentVersion: film.treatmentVersion
-            )
+            assignments[sequenceNumber] = Self.plannedAssignment(film: film, sequenceNumber: sequenceNumber)
         }
         completedSequences.insert(sequenceNumber)
         isComplete = film.captures.allSatisfy { completedSequences.contains($0.sequenceNumber) }
@@ -96,6 +88,13 @@ public struct DevelopmentRun: Codable, Equatable, Sendable {
 
     public func resumed() -> DevelopmentRun {
         self
+    }
+
+    /// The treatment a capture of the Film is assigned when Development reaches it without one: a seed of its own from
+    /// the Film and the capture's number, in the Film's treatment version. The same capture is always given the same one.
+    public static func plannedAssignment(film: Film, sequenceNumber: Int) -> TreatmentAssignment {
+        TreatmentAssignment(sequenceNumber: sequenceNumber, seed: seed(filmID: film.id, sequenceNumber: sequenceNumber),
+                            treatmentVersion: film.treatmentVersion)
     }
 
     private static func seed(filmID: UUID, sequenceNumber: Int) -> UInt64 {

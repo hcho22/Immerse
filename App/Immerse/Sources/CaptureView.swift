@@ -100,7 +100,40 @@ struct CaptureView: View {
         .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
+        #if DEBUG
+        .sheet(item: Binding(get: { model.developedPreviews.inspected }, set: { model.developedPreviews.inspected = $0 })) {
+            DevelopedPreviewSheet(preview: $0)
+        }
+        #endif
     }
+
+    /// How long the notices read when the iPhone is on its side, at most: longer while a Debug build's preview shows.
+    private func noticeBlockLength(showsPreview: Bool) -> CGFloat {
+        #if DEBUG
+        if showsPreview { return max(noticeLength, DevelopedPreviewCard.sidewaysLength) }
+        #endif
+        return noticeLength
+    }
+
+    /// Whether a Debug build shows the card of this Film's previews; never in Release.
+    private var showsDevelopedPreview: Bool {
+        #if DEBUG
+        developedPreview != nil || pendingPreview != nil
+        #else
+        false
+        #endif
+    }
+
+    #if DEBUG
+    /// The Debug preview of this Film's latest developed capture, while there is one (`DevelopedPreviews`).
+    private var developedPreview: DevelopedPreviews.Preview? {
+        guard let preview = model.developedPreviews.current, preview.filmID == filmID else { return nil }
+        return preview
+    }
+
+    /// This Film's newest capture still to develop for a Debug preview.
+    private var pendingPreview: DevelopedPreviews.Pending? { model.developedPreviews.pending(for: filmID) }
+    #endif
 
     /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
     /// its side the whole block turns, as the portrait header it is, taking at least `headerLength` of the screen's height in
@@ -109,10 +142,7 @@ struct CaptureView: View {
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
         TurnedBlock(length: headerLength, reservesLength: true, maximumLength: room) {
             VStack(spacing: 12) {
-                HStack {
-                    Button { capture.suspend(); dismiss() } label: { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
-                    Spacer(minLength: 0)
-                }
+                doneRow(capture)
                 if let film = model.film(filmID) {
                     film.camera.displayNameText.font(.system(.title3, design: .serif)).multilineTextAlignment(.center)
                     TimelineView(.periodic(from: .now, by: 0.1)) { context in
@@ -131,6 +161,17 @@ struct CaptureView: View {
             }
             .frame(maxWidth: .infinity)
         }
+    }
+
+    /// The header's first line, which in a Debug build says whether Develop at once is on for this Film's Camera.
+    private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
+        let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
+        #if DEBUG
+        return CaptureDoneRow(done: done,
+                              developsAtOnce: model.film(filmID).map { model.developedPreviews.applies(to: $0) } ?? false)
+        #else
+        return CaptureDoneRow(done: done)
+        #endif
     }
 
     /// What is wrong or worth knowing: the error, the message, the way to iPhone Settings and to Resume Camera, and what
@@ -179,7 +220,7 @@ struct CaptureView: View {
             Color.black
             if let preview = capture.preview {
                 CameraPreview(source: preview, position: capture.position, behavior: behavior)
-            } else if !showsStatus {
+            } else if !showsStatus && !showsDevelopedPreview {
                 // Without a picture the frame shows a camera, unless a notice says what is wrong in its place.
                 Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
             }
@@ -187,7 +228,7 @@ struct CaptureView: View {
         .overlay {
             GeometryReader { box in
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
-                        boxHeight: box.size.height)
+                        showsPreview: showsDevelopedPreview, boxHeight: box.size.height)
                     .frame(width: box.size.width, height: box.size.height, alignment: held.topEdge)
             }
         }
@@ -210,13 +251,15 @@ struct CaptureView: View {
         }
     }
 
-    /// The low-light cue and the status lines, against the edge of the viewfinder that is its top as the iPhone is held,
-    /// turned as one block. The block is as long as the box lets it be, so it is never cut off.
+    /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, against the edge of
+    /// the viewfinder that is its top as the iPhone is held, turned as one block. The block is as long as the box lets it
+    /// be, so it is never cut off.
     @ViewBuilder private func notices(
-        _ film: Film, controller capture: CaptureController, showsLowLightCue: Bool, showsStatus: Bool, boxHeight: CGFloat
+        _ film: Film, controller capture: CaptureController, showsLowLightCue: Bool, showsStatus: Bool, showsPreview: Bool,
+        boxHeight: CGFloat
     ) -> some View {
-        if showsLowLightCue || showsStatus {
-            TurnedBlock(length: min(noticeLength, max(boxHeight - 16, 80))) {
+        if showsLowLightCue || showsStatus || showsPreview {
+            TurnedBlock(length: min(noticeBlockLength(showsPreview: showsPreview), max(boxHeight - 16, 80))) {
                 VStack(spacing: 6) {
                     if showsLowLightCue { LowLightCueView() }
                     if showsStatus {
@@ -224,6 +267,13 @@ struct CaptureView: View {
                             .padding(10).frame(maxWidth: .infinity)
                             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
                     }
+                    #if DEBUG
+                    if showsPreview {
+                        DevelopedPreviewCard(preview: developedPreview, pending: pendingPreview,
+                                             open: { model.developedPreviews.inspected = developedPreview },
+                                             close: { model.developedPreviews.dismiss() })
+                    }
+                    #endif
                 }
             }
             .padding(8)
@@ -372,6 +422,31 @@ struct CaptureView: View {
             }
             catch { self.error = ["Camera unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ") }
         }
+    }
+}
+
+/// The header's first line: Done, against the leading edge, and in a Debug build the notice that Develop at once is on
+/// for the Camera, which sits there with it, never over the viewfinder (`DoneRowLayout`).
+struct CaptureDoneRow: View {
+    let done: @MainActor () -> Void
+    #if DEBUG
+    /// Whether Develop at once is on for the Camera (`DevelopedPreviews.applies(to:)`).
+    var developsAtOnce = false
+    #endif
+
+    var body: some View {
+        let button = Button(action: done) { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
+        #if DEBUG
+        DoneRowLayout {
+            button
+            if developsAtOnce { DevelopAtOnceNotice() }
+        }
+        #else
+        HStack {
+            button
+            Spacer(minLength: 0)
+        }
+        #endif
     }
 }
 

@@ -31,9 +31,15 @@ struct ImmerseApp: App {
                 switch phase {
                 case .active:
                     launcher.model?.refresh()
+                    #if DEBUG
+                    launcher.model?.developedPreviews.resume()
+                    #endif
                 case .background:
                     launcher.model?.capture.suspend()
                     Task { await launcher.model?.processor.suspendProcessing() }
+                    #if DEBUG
+                    launcher.model?.developedPreviews.suspend()
+                    #endif
                 default:
                     // Control Center, a call or a permission prompt only pauses the camera.
                     launcher.model?.capture.pauseForInactiveScene()
@@ -77,6 +83,9 @@ final class JournalLauncher {
         #if DEBUG
         let model = try JournalModel(root: root, freeSpace: DebugFreeSpace(defaults: .standard))
         model.testingUnlock = TestingUnlock(defaults: .standard)
+        model.developedPreviews = DevelopedPreviews(root: root, defaults: .standard)
+        // A preview lasts no longer than the run that made it.
+        model.developedPreviews.clearAll()
         #else
         let model = try JournalModel(root: root)
         #endif
