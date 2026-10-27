@@ -101,7 +101,7 @@ No other ADR is superseded or contradicted.
 | 0015 | Applies to v1 personal Films and to every Camera. The Format Reference names are internal and never reach the product. Added in version 2.0. |
 | 0016 | Applies to v1 personal Films and to four places only: the 1970s Instant, whose Developed Treatment is the faded look; the 1960s Super 8 Home Movie, whose is muted with a highlight glow; the 16mm Cinema's color Film Stock, whose look is the one in the captain's own files with its black at 4 percent; and the 6×6 Medium Format's color Film Stock, whose look is the one in his own files, a lab scan with lifted blacks. The captain chose each, as exceptions to ADR 0013. Added in version 2.1. |
 | 0017 | Applies to v1 personal Films and to every Camera's shooting screen, and to the 6×6 Medium Format alone for its viewfinder and its zoom. The shooting screen keeps its portrait layout whichever way the iPhone is held, and only its words and icons turn; the 6×6's rear viewfinder is the normal one, not reversed; the 6×6 zooms in the steps of the iPhone's own lenses. The 6×6 reversal of PRD version 2.0 is withdrawn. Added on 2026-10-16. Superseded in part on 2026-10-26 by ADRs 0019, 0020 and 0021. |
-| 0018 | Applies to v1 personal Films: every Super 8 and 16mm Film loaded after 2026-10-26 records live sound, the microphone is asked for the first time a movie Camera opens, a declined microphone records silent clips, a Film loaded before stays silent, the recorded sound is kept as captured, and a Soundtrack replaces it. Added on 2026-10-26. |
+| 0018 | Applies to v1 personal Films: every Super 8 and 16mm Film loaded with the build that adds live sound or a later one records it, the microphone is asked for the first time a movie Camera opens, a declined microphone records silent clips, a Film loaded with an earlier build stays silent, the recorded sound is kept as captured, and a Soundtrack replaces it. Added on 2026-10-26. |
 | 0019 | Applies to v1 personal Films and every Camera's shooting screen: the Viewfinder area is the iPhone Camera's 4:3 photo frame under a one-line header, and the Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm. Supersedes ADR 0017's viewfinder sizing. Added on 2026-10-26. |
 | 0020 | Applies to v1 personal Films: the Super 8 and the 16mm offer the iPhone's own Zoom Steps, and every Camera focuses on Auto unless its Film is set to Fixed (Disposable, Super 8) or Manual (6×6). Supersedes ADR 0017's 6×6-only zoom and the Super 8's fixed focus. Added on 2026-10-26. |
 | 0021 | Applies to v1 personal Films: a full-screen photo view swipes between a Film's developed prints, the Darkroom keeps its portrait layout in every hold and its print one size. Supersedes ADR 0017's turning Darkroom and the captain's decisions of 2026-10-14. Added on 2026-10-26. |
@@ -512,14 +512,14 @@ Until then neither Movie Camera recorded sound, no v1 Camera asked for the micro
 
 **Every movie clip records sound.**
 Offered a choice of sound or silence at Load Film, a microphone switch for each clip, or sound on every clip, he chose sound on every clip ("B").
-Every Recorded Clip of a Super 8 or 16mm Film loaded after this change records Live Audio.
+Every Recorded Clip of a Super 8 or 16mm Film loaded with the build that adds Live Audio (MOV-12) or a later one records it.
 The app asks for the microphone the first time a movie Camera's shooting screen opens.
 If the microphone is declined, clips still record, silent, and the shooting screen says so briefly; nothing is blocked, and the Movie Camera works as it did before this change.
 Asked about a microphone allowed or turned off partway through a Film, he chose "A": once it is allowed after being declined, the next clips record sound, and once it is turned off, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked.
 He was told that a real Super 8 of the 1960s had no sound, and that sound-on-film cartridges came only in 1973; he accepted that.
 
-**A Film loaded before this change stays silent.**
-A Film keeps the Camera package it locked at Load Film, so a Super 8 or 16mm Film loaded before this change records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
+**A Film loaded with an earlier build stays silent.**
+A Film keeps the Camera package it locked at Load Film, and only a package locked with that build or a later one records that its Film has sound, so a Super 8 or 16mm Film loaded with an earlier build, whatever the date, records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
 This was firstmate's stated default, and the captain did not object to it.
 The rule that a Developed Movie never mixes sound and silent clips applies only to these Films, which stay silent throughout.
 

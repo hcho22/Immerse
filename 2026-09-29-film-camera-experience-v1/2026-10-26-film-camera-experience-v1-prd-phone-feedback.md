@@ -15,6 +15,7 @@ New requirements are numbered FR-22 to FR-35, after PRD 2.1's FR-01 to FR-21.
 The decisions are recorded in six new ADRs, [0018](adr/0018-the-movie-cameras-record-live-sound.md) to [0023](adr/0023-dodge-and-burn-are-deferred-to-v2.md), in the [domain-model snapshot](sources/CONTEXT.md) (its 2026-10-26 note) and in the [task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) (its decisions table, DEC-11 and the 2026-10-26 slices).
 Requirements below are the captain's decisions unless labeled **Firstmate's stated default** (a default stated to the captain that he did not object to), **Builder's reading** (what follows from a decision but was not put to him) or **Open** (section 8).
 "Today" means the app on `main` at commit `8eb6f50`, read for this document.
+Where a requirement says what happens to a Film, a recipe or a pack from "before this change", the change is the build that implements that requirement, never the date of this document: a Film loaded on or after 2026-10-26 with an earlier build is from before it.
 
 ### The captain's asks
 
@@ -275,6 +276,7 @@ Format Reference names stay internal and never appear in the product.
 The Disposable and the Super 8 could not focus close, and the 6×6 could only be focused by hand.
 
 **Today.** `CaptureBehavior.for` sets focus per Camera with no choice: the Disposable and the Super 8 hold one fixed lens position (`FixedFocus`, provisional), the 6×6 is manual with a Focus slider, and the Instant and the 16mm use the phone's continuous autofocus; nothing focuses where the Viewfinder is tapped.
+Load Film's controls line (`controlsLabel`) says "Fixed focus" for the Disposable, "fixed focus" for the Super 8 and "deliberate focus and exposure" for the 6×6.
 
 **Required.**
 
@@ -287,6 +289,7 @@ The Disposable and the Super 8 could not focus close, and the 6×6 could only be
 6. Where a lens cannot hold a fixed position or be focused by hand, that side of the switch is unavailable on that lens with a brief note, as "Manual focus unavailable on this lens" works today (FR-04: hide unsupported controls with a brief explanation).
 7. The switch sits over the bottom of the Viewfinder area or in the shutter bar (FR-23).
    **Approval stop:** its placement is shown to the captain in screenshots and is final only after he approves it.
+8. Load Film's controls line names each Camera's focus as the switch it has, Auto or Fixed on the Disposable and the Super 8 and Auto or Manual on the 6×6, in place of a fixed or deliberate focus; the 6×6's exposure stays deliberate, and the words go to the captain with the other copy (section 8).
 
 **Acceptance.**
 
@@ -294,6 +297,7 @@ The Disposable and the Super 8 could not focus close, and the 6×6 could only be
 - On Auto, a tap on the Viewfinder focuses there (on a phone) and shows where it focused, as the iPhone's Camera app does.
 - On the 6×6 the Focus slider is hidden on Auto and shown on Manual.
 - The Instant and the 16mm show no switch and focus where tapped.
+- Load Film's controls line for the Disposable, the Super 8 and the 6×6 names the focus switch, not a fixed or deliberate focus.
 
 **Limits.** Whether a tap also sets exposure, and whether a tap works while a clip records, are **Open** (section 8); the Disposable's exposure stays fixed whatever is tapped.
 
@@ -339,25 +343,27 @@ Tap-to-focus adds to continuous autofocus, so a VoiceOver user who does not tap 
 No v1 Camera records sound or asks for the microphone.
 The capture backend adds only a video input and no audio session (`AVFoundationCaptureBackend`), and the save check refuses a clip file that carries an audio track (`CapturedMediaFiles`: `audio.isEmpty`).
 The camera purpose string says "Capture new photos and silent movie clips for your Films."; there is no `NSMicrophoneUsageDescription`.
-Settings shows "Microphone: Not used", the catalog shows "Silent capture" with a crossed-out microphone, and the movie shooting screen shows a crossed-out microphone.
+Settings shows "Microphone: Not used".
+For both movie Cameras, Load Film shows "One silent Movie after Development" (`revealLabel`) and "Silent capture" with a crossed-out microphone, and the movie shooting screen shows a crossed-out microphone.
 
 **Required.**
 
-1. Every Recorded Clip of a Super 8 or 16mm Film loaded after this change records sound with its picture (Live Audio).
-2. The app asks for the microphone the first time a movie Camera's shooting screen opens; it never asks on a photo Camera or on a movie Film loaded before this change.
+1. Every Recorded Clip of a Super 8 or 16mm Film loaded with the build that adds Live Audio (MOV-12) or a later one records sound with its picture (Live Audio): that Film's locked Camera package records that it has sound (Data and compatibility).
+2. The app asks for the microphone the first time a movie Camera's shooting screen opens; it never asks on a photo Camera or on a movie Film loaded with an earlier build.
 3. If the microphone is declined, clips still record, silent, and the shooting screen shows a brief note saying so, in the notice block over the Viewfinder (FR-23); nothing is blocked (**Firstmate's stated default**, which the captain did not object to).
    Once the person allows the microphone in iOS Settings partway through a Film, the next clips record sound, and once they turn it off, the next clips record silent, so that Film's Developed Movie can mix silent clips and clips with sound, and nothing stops either change (the captain, "A").
    Under Recorded sound (FR-28), each clip plays as it was recorded, a silent clip silent.
-4. A Super 8 or 16mm Film loaded before this change stays silent throughout: it records no sound and never asks, so its Developed Movie never mixes silent clips and clips with sound (**Firstmate's stated default**).
-   That rule holds only for these Films; a Film loaded after this change mixes them as item 3 says.
+4. A Super 8 or 16mm Film loaded with an earlier build stays silent throughout, whatever the date it was loaded: it records no sound and never asks, so its Developed Movie never mixes silent clips and clips with sound (**Firstmate's stated default**).
+   That rule holds only for these Films; a Film loaded with the MOV-12 build or a later one mixes them as item 3 says.
 5. The recorded sound is kept exactly as the iPhone captured it: Development adds no hiss, band-limiting, pitch wobble or other period treatment, and no sound review board is needed (decision 3c).
 6. An interruption that takes the microphone (a call, another app recording) ends the clip as interruptions do today (FR-05), keeping the saved footage and its sound.
-7. The catalog and Load Film say that the movie Cameras record sound; the "Silent capture" line and the crossed-out microphone on the catalog and on the shooting screen go.
+7. Load Film says that the movie Cameras record sound: "One silent Movie after Development" (`revealLabel`) is reworded without "silent", and the "Silent capture" line with its crossed-out microphone goes, as does the crossed-out microphone on the shooting screen.
 
 **Acceptance.**
 
 - On a new Super 8 Film, the first opening of the shooting screen asks for the microphone; a clip recorded after allowing it has a sound track; a clip recorded after declining it has none, the note shows, and recording works.
-- A Super 8 Film loaded before this change opens without the question and records silent clips.
+- A Super 8 Film loaded with an earlier build, including one loaded on or after 2026-10-26, opens without the question and records silent clips.
+- For both movie Cameras, Load Film shows no "silent" and no crossed-out microphone.
 - On a new Super 8 Film whose microphone is declined for its first clips and then allowed, the Developed Movie under Recorded sound plays the first clips silent and the later ones with their sound.
 - Both movie Cameras operate with the microphone denied (PRD 2.1 FR-05 acceptance, which stands).
 - The developed sound of a clip is the recorded sound, unchanged apart from being cut to the clip's whole frames.
@@ -365,7 +371,7 @@ Settings shows "Microphone: Not used", the catalog shows "Silent capture" with a
 **Limits.** Sound is recorded only while a clip records, from the phone's built-in or connected microphone as iOS routes it; no sound is recorded on photo Cameras.
 
 **Data and compatibility.**
-A Camera package locked after this change records that its Film has sound; a package stored before reads as silent.
+A Camera package locked with the MOV-12 build or a later one records that its Film has sound, and that record, never the date a Film was loaded, decides whether it records sound; a package stored before reads as silent.
 The save check accepts one sound track or none on a clip of a Film with sound, and keeps refusing any sound track on every other clip.
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
@@ -641,7 +647,7 @@ No Developed Treatment, treatment version, capacity, Reveal Rule or Format Refer
 
 The only new permission is the microphone, for movie clips only (FR-27).
 Everything recorded stays on the iPhone under the existing sealed-capture and storage rules (FR-04, FR-08); nothing is sent anywhere, and no analytics are added.
-Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "silent movie clips" reworded; Settings' "Microphone: Not used" reworded; the catalog's "Silent capture" removed; `PrivacyInfo.xcprivacy` checked and expected unchanged; the DEC-13 privacy approach updated.
+Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "silent movie clips" reworded; Settings' "Microphone: Not used" reworded; Load Film's "Silent capture" removed and its "One silent Movie after Development" reworded; `PrivacyInfo.xcprivacy` checked and expected unchanged; the DEC-13 privacy approach updated.
 
 ### 5.3 Accessibility
 
@@ -809,7 +815,7 @@ They are proposed by the builder and shown in the approval stops of section 5.5.
 The draft of this document also left DEC-19 and DEC-20 open; the captain decided both the same day ("1A, 2 Same format as iphone's own camera"), and FR-22 and FR-28 carry his answers.
 
 1. The words of the header in states other than a count, such as "Finishing save", a complete Film and a Film ended early, on one line (FR-23).
-2. The words of the microphone purpose string, the declined note, the Settings line and the catalog's sound line (FR-27).
+2. The words of the microphone purpose string, the declined note, the Settings line and Load Film's sound and reveal lines (FR-27), and of Load Film's controls line for the focus switch (FR-25).
 3. Whether another app's audio pauses while a clip records, as in the iPhone's Camera app, or keeps playing.
 4. Whether a tap on the Viewfinder also sets exposure on the Cameras with automatic exposure (the Instant, the Super 8, the 16mm), as in the iPhone's Camera app, and whether a tap focuses while a clip records (FR-25).
 5. Which Darkroom tool holds Saturation (its own, or beside Filtration) and Vignette (its own, or in Adjust) (FR-32, FR-33).
@@ -836,4 +842,4 @@ These rows extend PRD 2.1 section 17.
 | The Instant's reveal at the camera, open in the draft (DEC-20) | Captain, 2026-10-26 ("1A"): it stays upright while the shooting screen is up; the photo view turns only when opened from the Film screen (FR-22, ADR 0021). |
 | Movie sound format, open in the draft (DEC-19) | Captain, 2026-10-26 ("2 Same format as iphone's own camera"): the format the iPhone's own Camera app records (FR-28, ADR 0018). |
 | The Instant asks about keeping the original after each print (2026-10-13, DEC-11) | Captain, 2026-10-26 ("for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."): one question after the pack's last print, covering every print still undecided (FR-35). |
-| One Developed Movie never mixes sound and silent clips (decision 3, 2026-10-26) | Captain, 2026-10-26 ("A"): once the microphone is allowed partway through a Film after being declined, the next clips record sound, and once it is turned off partway, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked; the rule that a Developed Movie never mixes them holds only for a Film loaded before this change, which stays silent throughout (FR-27, ADR 0018). |
+| One Developed Movie never mixes sound and silent clips (decision 3, 2026-10-26) | Captain, 2026-10-26 ("A"): once the microphone is allowed partway through a Film after being declined, the next clips record sound, and once it is turned off partway, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked; the rule that a Developed Movie never mixes them holds only for a Film loaded before the build that adds Live Audio (MOV-12), which stays silent throughout (FR-27, ADR 0018). |

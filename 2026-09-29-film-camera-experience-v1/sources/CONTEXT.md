@@ -166,7 +166,7 @@ The preserved, one-time developed result of one Recorded Clip used to assemble a
 _Avoid_: Original source clip, rerolled treatment, editable timeline item
 
 **Live Audio**:
-Sound the phone records alongside each Recorded Clip of a Super 8 or 16mm Movie Film loaded since 2026-10-26 while the microphone is allowed, kept as recorded: Development adds no sound treatment to it.
+Sound the phone records, while the microphone is allowed, alongside each Recorded Clip of a Super 8 or 16mm Movie Film whose locked Camera package records sound, kept as recorded: Development adds no sound treatment to it.
 _Avoid_: Added soundtrack, voice-over, period sound effect
 
 **Soundtrack**:
@@ -508,8 +508,8 @@ _Avoid_: Draft, incomplete album
 - Each Recorded Clip produces one **Developed Clip**, retained independently of the assembled Developed Movie after original source cleanup.
 - A **Developed Movie** orders every **Recorded Clip** chronologically and preserves each start/stop boundary as a cut.
 - A **Movie Film** is not a reorderable editing timeline.
-- Both v1 Movie Cameras capture **Live Audio** on a Film loaded since 2026-10-26 and ask for microphone permission the first time a movie Camera opens; while the microphone is declined or turned off they record silent **Recorded Clips**, and once it is allowed the next clips record sound, so such a Film's **Developed Movie** can mix silent clips and clips with sound and nothing is blocked.
-- A Movie Film loaded before 2026-10-26 stays silent throughout, and the rule that a **Developed Movie** never mixes sound and silent clips holds only for such a Film.
+- Both v1 Movie Cameras capture **Live Audio** on a Film loaded with the app build that adds it or a later one, whose locked Camera package records that the Film has sound, and ask for microphone permission the first time a movie Camera opens; while the microphone is declined or turned off they record silent **Recorded Clips**, and once it is allowed the next clips record sound, so such a Film's **Developed Movie** can mix silent clips and clips with sound and nothing is blocked.
+- A Movie Film loaded with an earlier build stays silent throughout, whatever the date it was loaded, because its locked Camera package records no sound, and the rule that a **Developed Movie** never mixes sound and silent clips holds only for such a Film.
 - A **Developed Movie**'s sound is its **Live Audio**, one built-in **Soundtrack** in its place, or silence; choosing a Soundtrack or silence never discards the Live Audio, and the choice can be changed back without repeating Development.
 - For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
 - Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
@@ -820,7 +820,7 @@ _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 > **Deferred to v2 (2026-10-26).**
 > By captain decision, the v1 **Darkroom** has no Dodge/Burn tool ([ADR 0023](../adr/0023-dodge-and-burn-are-deferred-to-v2.md)).
 > The term and rule below are kept as they stood so v2 can take them up; they are not v1 rules.
-> A v1 print saved with Dodge/Burn strokes before that date keeps printing as saved, and Reset to Original clears them.
+> A v1 print saved with Dodge/Burn strokes before the app build that removes the tool keeps printing as saved, and Reset to Original clears them.
 
 **Dodge/Burn**:
 A local Darkroom adjustment that selectively withholds or adds print exposure to part of one developed **Exposure**.
@@ -897,7 +897,7 @@ No Camera's name carries a decade; each description says its era.
 - "1960s 6×6 Medium Format" and "1960s 16mm Cinema" each paired a 1960s name with a film first made decades later — resolved: the Cameras are **6×6 Medium Format** and **16mm Cinema** with no decade, so a present-day film contradicts nothing.
 - The Cameras were named "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" and "16mm Cinema" - resolved (2026-10-26, "we don't need the year of the camera"): they are **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm** on every screen, and each catalog description carries the era; a Film loaded under an old name keeps its stored Camera package and is shown with the new one. Code identifiers such as `disposable1990s` and `super8HomeMovie` keep the old names.
 - "Adjust" could mean a Darkroom edit in general, or light and color as the phone's Photos app uses the word - resolved (2026-10-26): **Adjust** is the Darkroom tool that crops, turns and straightens a print, and a Darkroom edit in general is a **Basic Edit**, never an "adjustment".
-- The Super 8's **Format Reference** had no sound, so "Live Audio when the Historical Format supports in-camera audio" kept both movie Cameras silent - resolved (2026-10-26, ADR 0018): both record **Live Audio** on Films loaded since then, as the captain chose knowing the original was silent.
+- The Super 8's **Format Reference** had no sound, so "Live Audio when the Historical Format supports in-camera audio" kept both movie Cameras silent - resolved (2026-10-26, ADR 0018): both record **Live Audio** on Films loaded with the app build that adds it or a later one, as the captain chose knowing the original was silent.
 - "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead. Reversed on 2026-10-26 by captain decision ([ADR 0022](../adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md)): the **Darkroom** offers Saturation on color prints only, as a stated exception to the physical-technique test, from half the developed color to half again, never reaching gray.
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.
 - A universal no-preview rule conflicted with historically instant formats — resolved: each **Camera** owns a **Reveal Rule**, and Camera authenticity takes precedence over uniform behavior.

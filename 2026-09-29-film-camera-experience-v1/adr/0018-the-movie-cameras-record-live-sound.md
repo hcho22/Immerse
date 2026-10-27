@@ -5,14 +5,14 @@ Until then neither Movie Camera recorded sound, no v1 Camera asked for the micro
 
 **Every movie clip records sound.**
 Offered a choice of sound or silence at Load Film, a microphone switch for each clip, or sound on every clip, he chose sound on every clip ("B").
-Every Recorded Clip of a Super 8 or 16mm Film loaded after this change records Live Audio.
+Every Recorded Clip of a Super 8 or 16mm Film loaded with the build that adds Live Audio (MOV-12) or a later one records it.
 The app asks for the microphone the first time a movie Camera's shooting screen opens.
 If the microphone is declined, clips still record, silent, and the shooting screen says so briefly; nothing is blocked, and the Movie Camera works as it did before this change.
 Asked about a microphone allowed or turned off partway through a Film, he chose "A": once it is allowed after being declined, the next clips record sound, and once it is turned off, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked.
 He was told that a real Super 8 of the 1960s had no sound, and that sound-on-film cartridges came only in 1973; he accepted that.
 
-**A Film loaded before this change stays silent.**
-A Film keeps the Camera package it locked at Load Film, so a Super 8 or 16mm Film loaded before this change records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
+**A Film loaded with an earlier build stays silent.**
+A Film keeps the Camera package it locked at Load Film, and only a package locked with that build or a later one records that its Film has sound, so a Super 8 or 16mm Film loaded with an earlier build, whatever the date, records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
 This was firstmate's stated default, and the captain did not object to it.
 The rule that a Developed Movie never mixes sound and silent clips applies only to these Films, which stay silent throughout.
 

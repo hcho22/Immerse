@@ -386,7 +386,7 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 - Render quality and export codecs are open under DEC-04; frame rates are set in section 6.2.
 - The built-in soundtrack rights are open under DEC-05.
 
-> **2026-10-26:** Steps 1, 3 and 8 are superseded for a movie Film loaded after this date: it records sound and asks for the microphone, and its Developed Movie plays its recorded sound, a Soundtrack in its place, or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28). Every journey's Camera names are now Disposable, Instant, 6×6, Super 8 and 16mm (FR-24).
+> **2026-10-26:** Steps 1, 3 and 8 are superseded for a movie Film loaded with the build that adds Live Audio (MOV-12) or a later one: it records sound and asks for the microphone, and its Developed Movie plays its recorded sound, a Soundtrack in its place, or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28). Every journey's Camera names are now Disposable, Instant, 6×6, Super 8 and 16mm (FR-24).
 
 #### Journey 3 - Trial to subscription, and a subscriber who lets it lapse
 
@@ -484,7 +484,7 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 
 Both Movie Cameras support personal Films. Each capacity is one real load of the Camera's Format Reference: a 50-foot Super 8 cartridge at 18 frames per second and a 100-foot 16mm spool at 24 frames per second. There is no capacity selector.
 
-> **2026-10-26:** Both Audio cells and the Super 8's "fixed-focus lens" are superseded: a Film loaded after this date records sound, both Cameras offer Zoom Steps, and the Super 8 focuses on Auto or Fixed ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-25 to FR-28).
+> **2026-10-26:** Both Audio cells and the Super 8's "fixed-focus lens" are superseded: a Film loaded with the build that adds Live Audio (MOV-12) or a later one records sound, both Cameras offer Zoom Steps, and the Super 8 focuses on Auto or Fixed ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-25 to FR-28).
 
 ### 6.3 Format References and developed look (version 2.0)
 
@@ -591,7 +591,7 @@ Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie ma
 
 **Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, resolutions, and audio channel guarantees are not yet specified.
 
-> **2026-10-26:** The fourth paragraph's "Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio." is superseded for Films loaded after this date ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28); the sound is in the iPhone Camera app's own format (DEC-19).
+> **2026-10-26:** The fourth paragraph's "Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio." is superseded for Films loaded with the build that adds Live Audio (MOV-12) or a later one ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28); the sound is in the iPhone Camera app's own format (DEC-19).
 
 ### FR-06 — Completion, early Development, Instant reveal, and recovery
 
