@@ -237,6 +237,29 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertEqual(MovieFrames.count(seconds: seconds), 17)
     }
 
+    /// A clip's sound can end a packet after its last picture frame. The clip that records exactly the remaining frames is
+    /// still saved, at its picture's length: capacity is whole picture frames (S7).
+    func testClipWhoseSoundEndsAfterItsLastFrameIsMeasuredByItsPicture() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root, frameRate: MovieFrames.perSecond, seconds: MovieFrames.seconds(17))
+        let video = root.appendingPathComponent(manifest.movie.relativePath)
+        let wave = root.appendingPathComponent("longer-sound.wav")
+        try Self.wave(seconds: 1).write(to: wave)
+        let captured = root.appendingPathComponent("sound-past-the-picture.mov")
+        try await Self.addAudio(wave, to: video, destination: captured, overrunning: CMTime(value: 25, timescale: 1_000))
+        let asset = AVURLAsset(url: captured)
+        let whole = try await asset.load(.duration).seconds
+        XCTAssertEqual(MovieFrames.count(seconds: whole), 18, "The file as a whole runs into an 18th frame")
+
+        let files = try CapturedMediaFiles(directory: root.appendingPathComponent("staging"))
+        let id = UUID()
+        try FileManager.default.copyItem(at: captured, to: files.movieDestination(id: id))
+        let event = try await files.movieSavedEvent(id: id, orientation: .landscape, remainingFrames: 17, allowsAudio: true)
+        guard case let .movieClipSaved(_, seconds, _) = event else { return XCTFail("Expected validated Movie file") }
+        XCTAssertEqual(MovieFrames.count(seconds: seconds), 17, "The clip is as long as its picture")
+    }
+
     func testUnfinishedMovieIsRetainedWithoutReportingSaveSuccess() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -252,7 +275,9 @@ final class CapturedMediaFileTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: url), partial)
     }
 
-    private static func addAudio(_ audioURL: URL, to videoURL: URL, destination: URL) async throws {
+    /// Writes `videoURL`'s picture with `audioURL`'s sound to `destination`, the sound as long as the picture plus
+    /// `overrunning`.
+    private static func addAudio(_ audioURL: URL, to videoURL: URL, destination: URL, overrunning: CMTime = .zero) async throws {
         let videoAsset = AVURLAsset(url: videoURL)
         let audioAsset = AVURLAsset(url: audioURL)
         let composition = AVMutableComposition()
@@ -267,15 +292,15 @@ final class CapturedMediaFileTests: XCTestCase {
             preferredTrackID: kCMPersistentTrackID_Invalid))
         try videoTarget.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: video, at: .zero)
         let audioDuration = try await audioAsset.load(.duration)
-        try audioTarget.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration, audioDuration)),
+        try audioTarget.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration + overrunning, audioDuration)),
                                         of: audio, at: .zero)
         let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
         try await exporter.export(to: destination, as: .mov)
     }
 
-    private static func wave() -> Data {
+    private static func wave(seconds: Double = 0.5) -> Data {
         let rate: UInt32 = 22_050
-        let samples = Int(rate / 2)
+        let samples = Int(Double(rate) * seconds)
         var bytes = Data()
         func text(_ value: String) { bytes.append(contentsOf: value.utf8) }
         func integer<T: FixedWidthInteger>(_ value: T) {

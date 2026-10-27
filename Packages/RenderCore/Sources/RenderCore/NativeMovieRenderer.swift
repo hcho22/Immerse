@@ -36,7 +36,8 @@ public enum NativeMovieRenderer {
         let audioTracks = try await asset.loadTracks(withMediaType: .audio)
         guard tracks.count == 1, let track = tracks.first, audioTracks.count <= 1,
               camera.recordsLiveSound == true || audioTracks.isEmpty else { throw NativeRenderError.invalidMovie() }
-        let duration = try await asset.load(.duration)
+        // A clip is as long as its picture, as its capture was counted: its sound can end a packet later.
+        let duration = try await track.load(.timeRange).duration
         let transform = try await track.load(.preferredTransform)
         guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie() }
         let fps = DevelopedMovieFormat.framesPerSecond(camera.id)

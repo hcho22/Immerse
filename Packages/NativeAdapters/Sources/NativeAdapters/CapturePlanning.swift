@@ -204,6 +204,35 @@ public enum MovieCaptureFormat {
                 && size.height <= maximumHeight && recordsMovieFrameRate(format)
         }.max { dimensions($0).width < dimensions($1).width }
     }
+
+    /// A format of exactly `size` that records `MovieFrames.perSecond`: what a zoom step's lens records at, so every step
+    /// of a movie Camera records the size its wide lens does (FR-26 item 4).
+    public static func matching<Format>(
+        _ size: (width: Int, height: Int),
+        among formats: [Format],
+        dimensions: (Format) -> (width: Int, height: Int),
+        recordsMovieFrameRate: (Format) -> Bool
+    ) -> Format? {
+        formats.first { dimensions($0) == size && recordsMovieFrameRate($0) }
+    }
+
+    /// The rear lenses a movie Camera offers zoom steps on (FR-26 item 4): the wide lens, and each other lens with a format
+    /// of the size the wide lens records (`preferred`) at `MovieFrames.perSecond`. A lens without one is not offered on
+    /// this iPhone, its native crops with it, so no step records a different size or fails to open mid-shoot.
+    public static func lensesRecordingTheWideLensFormat<Format>(
+        _ capabilities: RearLensCapabilities,
+        formats: (RearLens) -> [Format],
+        dimensions: (Format) -> (width: Int, height: Int),
+        recordsMovieFrameRate: (Format) -> Bool
+    ) -> RearLensCapabilities {
+        guard let wide = preferred(among: formats(.wide), dimensions: dimensions, recordsMovieFrameRate: recordsMovieFrameRate)
+        else { return RearLensCapabilities(lenses: capabilities.lenses.filter { $0.lens == .wide }) }
+        let size = dimensions(wide)
+        return RearLensCapabilities(lenses: capabilities.lenses.filter { lens in
+            lens.lens == .wide
+                || matching(size, among: formats(lens.lens), dimensions: dimensions, recordsMovieFrameRate: recordsMovieFrameRate) != nil
+        })
+    }
 }
 
 public enum NativeCaptureInterruptionReason: Equatable, Sendable {

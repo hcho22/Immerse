@@ -150,13 +150,9 @@ final class NativeRenderTests: XCTestCase {
         settings.movieHeight = 120
         settings.movieDurationSeconds = 0.4
         let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root, settings: settings)
-        let video = root.appendingPathComponent("synthetic-developed-movie.mov")
-        let wave = root.appendingPathComponent("capture.wav")
-        try Self.wave().write(to: wave)
-        let encodedAudio = root.appendingPathComponent("capture.m4a")
-        try await Self.encodeAAC(wave, destination: encodedAudio)
+        // A source shaped like a capture: picture and AAC sound written together by AVAssetWriter from time zero.
         let source = root.appendingPathComponent("captured-with-sound.mov")
-        try await Self.addAudio(encodedAudio, to: video, destination: source)
+        try await Self.capturedMovie(at: source, seconds: manifest.movie.durationSeconds)
 
         let developed = root.appendingPathComponent("developed.mov")
         try await NativeMovieRenderer.developClip(source: source, destination: developed,
@@ -169,12 +165,21 @@ final class NativeRenderTests: XCTestCase {
         XCTAssertEqual(developedAudio.count, 1)
         let sourceFormat = try await Self.audioFormat(source)
         let developedFormat = try await Self.audioFormat(developed)
-        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(sourceFormat), kAudioFormatMPEG4AAC)
-        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(developedFormat), kAudioFormatMPEG4AAC)
-        XCTAssertEqual(try Self.streamDescription(developedFormat).mSampleRate, 48_000)
-        XCTAssertEqual(try Self.streamDescription(developedFormat).mChannelsPerFrame, 2)
-        XCTAssertLessThanOrEqual(developedSamples.count, sourceSamples.count,
-                                 "Development trims the captured sound to the clip's whole frames")
+        // The developed sound keeps the format it was captured in, whatever the iPhone recorded (DEC-19).
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(developedFormat), CMFormatDescriptionGetMediaSubType(sourceFormat))
+        XCTAssertEqual(try Self.streamDescription(developedFormat).mSampleRate,
+                       try Self.streamDescription(sourceFormat).mSampleRate)
+        XCTAssertEqual(try Self.streamDescription(developedFormat).mChannelsPerFrame,
+                       try Self.streamDescription(sourceFormat).mChannelsPerFrame)
+        // The sound is cut to the clip's whole frames: it runs from 0 to the last frame's end, shorter than the capture's.
+        let sourceVideo = try await AVURLAsset(url: source).loadTracks(withMediaType: .video)
+        let pictureSeconds = try await XCTUnwrap(sourceVideo.first).load(.timeRange).duration.seconds
+        let wholeFrames = DevelopedMovieFormat.frameCount(seconds: pictureSeconds, camera: .super8HomeMovie)
+        let developedRange = try await XCTUnwrap(developedAudio.first).load(.timeRange)
+        XCTAssertEqual(developedRange.start.seconds, 0, accuracy: 1.0 / 600)
+        XCTAssertEqual(developedRange.duration.seconds, Double(wholeFrames) / 18, accuracy: 1.0 / 600,
+                       "Development cuts the captured sound to the clip's \(wholeFrames) whole frames")
+        XCTAssertLessThan(developedSamples.count, sourceSamples.count, "The sound past the last whole frame is cut")
         XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),
                        "Development keeps the original sound samples without treatment")
 
@@ -185,13 +190,12 @@ final class NativeRenderTests: XCTestCase {
         let assembledDuration = try await assembledAsset.load(.duration).seconds
         XCTAssertEqual(assembledAudio.count, 1)
         let assembledFormat = try await Self.audioFormat(assembled)
-        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(assembledFormat), kAudioFormatMPEG4AAC)
-        XCTAssertEqual(try Self.streamDescription(assembledFormat).mSampleRate, 48_000)
-        XCTAssertEqual(try Self.streamDescription(assembledFormat).mChannelsPerFrame, 2)
         XCTAssertEqual(CMFormatDescriptionGetMediaSubType(assembledFormat), CMFormatDescriptionGetMediaSubType(developedFormat))
-        let expectedDuration = Double(DevelopedMovieFormat.frameCount(seconds: manifest.movie.durationSeconds,
-            camera: .super8HomeMovie)) / Double(DevelopedMovieFormat.framesPerSecond(.super8HomeMovie))
-        XCTAssertEqual(assembledDuration, expectedDuration, accuracy: 0.02)
+        XCTAssertEqual(try Self.streamDescription(assembledFormat).mSampleRate,
+                       try Self.streamDescription(developedFormat).mSampleRate)
+        XCTAssertEqual(try Self.streamDescription(assembledFormat).mChannelsPerFrame,
+                       try Self.streamDescription(developedFormat).mChannelsPerFrame)
+        XCTAssertEqual(assembledDuration, Double(wholeFrames) / 18, accuracy: 0.02)
 
         let oldPackage = CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie,
                                        capacity: .seconds(165), revealRule: .movieDevelopment,
@@ -256,6 +260,92 @@ final class NativeRenderTests: XCTestCase {
                                         of: audio, at: .zero)
         let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
         try await exporter.export(to: destination, as: .mov)
+    }
+
+    /// A movie shaped like a capture, as `AVCaptureMovieFileOutput` writes one: an H.264 picture at 30 frames per second
+    /// and AAC sound at 48 kHz in stereo, written together by `AVAssetWriter` from time zero, the sound a 440 Hz tone
+    /// that runs a frame past the last picture frame, as a capture's sound can.
+    static func capturedMovie(at url: URL, seconds: Double, width: Int = 160, height: Int = 120) async throws {
+        let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
+        let video = AVAssetWriterInput(mediaType: .video, outputSettings: [
+            AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height
+        ])
+        video.expectsMediaDataInRealTime = false
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: video, sourcePixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height
+        ])
+        var layout = AudioChannelLayout()
+        layout.mChannelLayoutTag = kAudioChannelLayoutTag_Stereo
+        let audio = AVAssetWriterInput(mediaType: .audio, outputSettings: [
+            AVFormatIDKey: kAudioFormatMPEG4AAC, AVSampleRateKey: 48_000, AVNumberOfChannelsKey: 2,
+            AVChannelLayoutKey: Data(bytes: &layout, count: MemoryLayout<AudioChannelLayout>.size)
+        ])
+        audio.expectsMediaDataInRealTime = false
+        writer.add(video)
+        writer.add(audio)
+        XCTAssertTrue(writer.startWriting())
+        writer.startSession(atSourceTime: .zero)
+
+        var pcm = AudioStreamBasicDescription(
+            mSampleRate: 48_000, mFormatID: kAudioFormatLinearPCM,
+            mFormatFlags: kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked,
+            mBytesPerPacket: 4, mFramesPerPacket: 1, mBytesPerFrame: 4, mChannelsPerFrame: 2, mBitsPerChannel: 16,
+            mReserved: 0)
+        var soundFormat: CMAudioFormatDescription?
+        CMAudioFormatDescriptionCreate(allocator: nil, asbd: &pcm, layoutSize: 0, layout: nil, magicCookieSize: 0,
+                                       magicCookie: nil, extensions: nil, formatDescriptionOut: &soundFormat)
+        let frames = Int((seconds * 30).rounded())
+        let samples = (frames + 1) * 1_600
+        var written = 0
+        func waitFor(_ input: AVAssetWriterInput) async throws {
+            while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(1)) }
+        }
+        for frame in 0..<frames {
+            var buffer: CVPixelBuffer?
+            CVPixelBufferPoolCreatePixelBuffer(nil, try XCTUnwrap(adaptor.pixelBufferPool), &buffer)
+            let pixels = try XCTUnwrap(buffer)
+            CVPixelBufferLockBaseAddress(pixels, [])
+            let shade = Int32(40 + frame * 7 % 180)
+            memset(CVPixelBufferGetBaseAddress(pixels), shade, CVPixelBufferGetDataSize(pixels))
+            CVPixelBufferUnlockBaseAddress(pixels, [])
+            try await waitFor(video)
+            XCTAssertTrue(adaptor.append(pixels, withPresentationTime: CMTime(value: Int64(frame), timescale: 30)))
+            // The sound is written alongside the picture, so the writer can interleave them.
+            let soundUntil: Int = min(samples, (frame + 2) * 1_600)
+            while written < soundUntil {
+                let count = min(1_024, soundUntil - written)
+                var bytes = Data(count: count * 4)
+                bytes.withUnsafeMutableBytes { raw in
+                    let values = raw.bindMemory(to: Int16.self)
+                    for index in 0..<count {
+                        let phase: Double = Double(written + index) * 2 * Double.pi * 440 / 48_000
+                        let value = Int16(sin(phase) * 4_000)
+                        values[index * 2] = value
+                        values[index * 2 + 1] = value
+                    }
+                }
+                var block: CMBlockBuffer?
+                CMBlockBufferCreateWithMemoryBlock(allocator: nil, memoryBlock: nil, blockLength: bytes.count,
+                                                   blockAllocator: nil, customBlockSource: nil, offsetToData: 0,
+                                                   dataLength: bytes.count, flags: 0, blockBufferOut: &block)
+                let blockBuffer = try XCTUnwrap(block)
+                _ = bytes.withUnsafeBytes { CMBlockBufferReplaceDataBytes(with: $0.baseAddress!, blockBuffer: blockBuffer,
+                                                                          offsetIntoDestination: 0, dataLength: bytes.count) }
+                var sample: CMSampleBuffer?
+                CMAudioSampleBufferCreateReadyWithPacketDescriptions(
+                    allocator: nil, dataBuffer: blockBuffer, formatDescription: try XCTUnwrap(soundFormat),
+                    sampleCount: count, presentationTimeStamp: CMTime(value: Int64(written), timescale: 48_000),
+                    packetDescriptions: nil, sampleBufferOut: &sample)
+                try await waitFor(audio)
+                XCTAssertTrue(audio.append(try XCTUnwrap(sample)))
+                written += count
+            }
+        }
+        video.markAsFinished()
+        audio.markAsFinished()
+        await writer.finishWriting()
+        XCTAssertEqual(writer.status, .completed, "\(String(describing: writer.error))")
     }
 
     private static func encodeAAC(_ audioURL: URL, destination: URL) async throws {

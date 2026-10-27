@@ -216,4 +216,52 @@ final class ZoomStepTests: XCTestCase {
         XCTAssertEqual(updated.activePosition, .rear)
         XCTAssertEqual(updated.lensSwitchDecision(to: .front, during: .idle), .allowed)
     }
+
+    /// A stand-in for a lens's format: its landscape size and whether it records 30 frames per second.
+    private struct Format { let width: Int; let height: Int; var thirty = true }
+
+    private func movieLenses(_ formats: [RearLens: [Format]]) -> RearLensCapabilities {
+        MovieCaptureFormat.lensesRecordingTheWideLensFormat(
+            lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 3)], crops: [2], telephotoCrops: [2]),
+            formats: { formats[$0] ?? [] },
+            dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty }
+        )
+    }
+
+    /// FR-26 item 4: a movie Camera offers a lens's steps only where the lens records the wide lens's 4:3 movie size at the
+    /// movie frame rate, so every step records the same size and none fails to open mid-shoot.
+    func testAMovieStepIsOfferedOnlyOnALensThatRecordsTheWideLensMovieSize() {
+        let wide = [Format(width: 1920, height: 1080), Format(width: 1440, height: 1080), Format(width: 640, height: 480)]
+        let every = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080)],
+                                 .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(every), ["0.5x", "1x", "2x", "3x", "6x"], "Every lens records 1440 by 1080")
+
+        let noFourByThree = movieLenses([.wide: wide, .ultraWide: [Format(width: 1920, height: 1080)],
+                                         .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(noFourByThree), ["1x", "2x", "3x", "6x"], "An ultra wide lens with no 4:3 format drops out")
+
+        let otherSize = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080)],
+                                     .telephoto: [Format(width: 1280, height: 960), Format(width: 640, height: 480)]])
+        XCTAssertEqual(labels(otherSize), ["0.5x", "1x", "2x"],
+                       "A telephoto lens with only other 4:3 sizes drops out, its own crop with it")
+
+        let tooSlow = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080, thirty: false)],
+                                   .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(tooSlow), ["1x", "2x", "3x", "6x"], "A lens that cannot record 30 frames per second drops out")
+
+        let wideOnly = movieLenses([.wide: wide])
+        XCTAssertEqual(labels(wideOnly), ["1x", "2x"], "The wide lens keeps its own native crop")
+    }
+
+    func testAZoomStepLensRecordsExactlyTheWideLensMovieSize() {
+        let formats = [Format(width: 1920, height: 1440), Format(width: 1440, height: 1080, thirty: false),
+                       Format(width: 1440, height: 1080)]
+        let wide = MovieCaptureFormat.preferred(among: [Format(width: 1440, height: 1080)],
+                                                dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty })
+        let matched = MovieCaptureFormat.matching((1440, 1080), among: formats,
+                                                  dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty })
+        XCTAssertEqual(wide.map { [$0.width, $0.height] }, [1440, 1080])
+        XCTAssertEqual(matched.map { [$0.width, $0.height, $0.thirty ? 30 : 0] }, [1440, 1080, 30],
+                       "The lens records the wide lens's size at 30 frames per second, never its own larger format")
+    }
 }

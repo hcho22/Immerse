@@ -32,11 +32,13 @@ public struct VerifiedMedia: Sendable {
         let asset = AVURLAsset(url: url)
         let video = try await asset.loadTracks(withMediaType: .video)
         let audio = try await asset.loadTracks(withMediaType: .audio)
-        let duration = try await asset.load(.duration).seconds
-        guard video.count == 1, let track = video.first,
-              audio.count <= 1, allowsAudio || audio.isEmpty, duration.isFinite, duration > 0 else {
+        guard video.count == 1, let track = video.first, audio.count <= 1, allowsAudio || audio.isEmpty else {
             throw PersistenceError.invalidMedia
         }
+        // A movie is as long as its picture, as the capture check measures it (`CapturedMediaFiles`): its sound can end a
+        // packet later.
+        let duration = try await track.load(.timeRange).duration.seconds
+        guard duration.isFinite, duration > 0 else { throw PersistenceError.invalidMedia }
         let reader = try AVAssetReader(asset: asset)
         let output = AVAssetReaderTrackOutput(track: track, outputSettings: [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA

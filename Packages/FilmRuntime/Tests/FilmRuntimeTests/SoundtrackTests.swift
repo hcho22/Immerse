@@ -30,8 +30,15 @@ final class SoundtrackTests: XCTestCase {
             coordinator: PhotoExportCoordinator(authorizer: Authorization(), writer: writer))
         let exportedTracks = await writer.audioTracks
         XCTAssertEqual(exportedTracks, [1], "The file handed to Photos carries the chosen recorded sound")
+        // The export carries the sound in the format it was developed in, which is the format it was captured in
+        // (DEC-19): what the iPhone records, compared, not a constant the fixture was made with.
         let exportedFormats = await writer.audioFormats
-        XCTAssertEqual(exportedFormats, [AudioFormat(codec: kAudioFormatMPEG4AAC, sampleRate: 48_000, channels: 2)])
+        let developedFormats = try await [1, 2].asyncMap { sequence in
+            try await AudioFormat(of: fixture.repository.revealedAsset(filmID: fixture.film.id, sequenceNumber: sequence,
+                                                                       kind: .clip).url)
+        }
+        XCTAssertEqual(Set(developedFormats).count, 1, "Both clips were developed in one sound format")
+        XCTAssertEqual(exportedFormats, [developedFormats[0]], "The export keeps the developed sound's format")
     }
 
     func testRecordedSoundAndSilentCanChangeWithoutCatalogOrRedevelopment() async throws {
@@ -337,20 +344,32 @@ private actor DecodingWriter: PhotoLibraryWriting {
         audioTracks.append(proof.audioTrackCount)
         let asset = AVURLAsset(url: request.fileURL)
         let tracks = try await asset.loadTracks(withMediaType: .audio)
-        if let track = tracks.first {
-            let descriptions = try await track.load(.formatDescriptions)
-            if let format = descriptions.first,
-               let basic = CMAudioFormatDescriptionGetStreamBasicDescription(format)?.pointee {
-                audioFormats.append(AudioFormat(codec: CMFormatDescriptionGetMediaSubType(format),
-                    sampleRate: basic.mSampleRate, channels: basic.mChannelsPerFrame))
-            }
-        }
+        if !tracks.isEmpty { audioFormats.append(try await AudioFormat(of: request.fileURL)) }
         return PhotoExportReceipt(localIdentifier: "private-test-\(audioTracks.count)")
     }
 }
 
-private struct AudioFormat: Equatable, Sendable {
+private struct AudioFormat: Hashable, Sendable {
     let codec: UInt32
     let sampleRate: Double
     let channels: UInt32
+
+    /// The format of the first sound track of the movie at `url`.
+    init(of url: URL) async throws {
+        let tracks = try await AVURLAsset(url: url).loadTracks(withMediaType: .audio)
+        let descriptions = try await XCTUnwrap(tracks.first).load(.formatDescriptions)
+        let format = try XCTUnwrap(descriptions.first)
+        let basic = try XCTUnwrap(CMAudioFormatDescriptionGetStreamBasicDescription(format)?.pointee)
+        codec = CMFormatDescriptionGetMediaSubType(format)
+        sampleRate = basic.mSampleRate
+        channels = basic.mChannelsPerFrame
+    }
+}
+
+private extension Array {
+    func asyncMap<T>(_ transform: (Element) async throws -> T) async rethrows -> [T] {
+        var result: [T] = []
+        for element in self { result.append(try await transform(element)) }
+        return result
+    }
 }
