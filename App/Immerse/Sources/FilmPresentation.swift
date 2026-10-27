@@ -54,12 +54,18 @@ extension CameraPackage {
     /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Auto or fixed focus, fixed exposure, optional flash and a live low-light cue"
-        case .instant1970s: "Square picture on a white card"
-        case .mediumFormat6x6: "Square framing, auto or manual focus and exposure, optical focus only"
-        case .super8HomeMovie: "Handheld, auto or fixed focus, automatic exposure, 18 frames per second"
-        case .cinema16mm: "Deliberate framing, 24 frames per second"
+        case .disposable1990s: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"
+        case .instant1970s: "Auto focus with tap to focus; square picture on a white card"
+        case .mediumFormat6x6: "Square framing; Focus switch: Auto / Manual; tap to focus in Auto; Focus slider in Manual; deliberate exposure; optical focus only"
+        case .super8HomeMovie: "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second"
+        case .cinema16mm: "Auto focus with tap to focus; deliberate framing, 24 frames per second"
         }
+    }
+
+    /// The Load Film sound line for a new movie Camera. The system asks only when its shooting screen first opens.
+    var loadSoundLabel: String? {
+        guard recordsLiveSound == true else { return nil }
+        return "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."
     }
 
     /// How a Film from this Camera develops on the chosen Film Stock, one Load Film row per line; the 6×6 gives each

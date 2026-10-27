@@ -38,7 +38,9 @@ struct FilmDetailView: View {
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
         .task { await model.storage.refresh() }
-        .fullScreenCover(isPresented: $capturing) { CaptureView(filmID: filmID) }
+        .fullScreenCover(isPresented: $capturing, onDismiss: { model.capture.endShootingSession() }) {
+            CaptureView(filmID: filmID)
+        }
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
         .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
@@ -125,11 +127,18 @@ struct FilmDetailView: View {
                     Button("Originals", systemImage: "photo.stack") { originals = true }
                 }
             }
-            if film.canPlaybackDevelopedMovie {
+            if film.canPlaybackDevelopedMovie && offersSoundChoice(film) {
                 Button(movieSoundTitle(film), systemImage: "waveform") { soundtrack = true }
                     .accessibilityIdentifier("movie-sound-choice")
             }
         }
+    }
+
+    /// Whether the Movie has a sound to choose: its recorded sound, or a Soundtrack in the catalog for its Camera. A Film
+    /// loaded before live sound with no Soundtrack to offer stays silent and shows no choice.
+    private func offersSoundChoice(_ film: Film) -> Bool {
+        film.camera.recordsLiveSound == true
+            || model.mediaCatalog?.assets(for: film.camera.id, purpose: .instrumental).isEmpty == false
     }
 
     private func movieSoundTitle(_ film: Film) -> String {
@@ -323,6 +332,7 @@ private struct DevelopedMovieView: View {
         .task {
             do {
                 let asset = try model.repository.revealedAsset(filmID: filmID, sequenceNumber: 0, kind: .movie)
+                MoviePlaybackAudio.prepare()
                 player = AVPlayer(url: asset.url)
             } catch { self.error = "Movie is unavailable until reassembly finishes." }
         }
@@ -330,5 +340,8 @@ private struct DevelopedMovieView: View {
         .onChange(of: model.busyFilms.contains(filmID)) { _, busy in if busy { clear() } }
         .onDisappear { clear() }
     }
-    private func clear() { player?.pause(); player?.replaceCurrentItem(with: nil); player = nil }
+    private func clear() {
+        player?.pause(); player?.replaceCurrentItem(with: nil); player = nil
+        MoviePlaybackAudio.finish()
+    }
 }

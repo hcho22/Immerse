@@ -1,14 +1,14 @@
 import XCTest
 
 /// The shooting screen as a person holds the iPhone sideways (the captain, 2026-10-16: "Like iPhone Camera"): the screen
-/// never turns, so the viewfinder keeps its size and place, and only the words and icons turn to read upright. Every other
-/// screen keeps turning with the iPhone. The simulator has no camera, so the screen shows its message for the missing one,
+/// never turns, so the viewfinder keeps its size and place, and only the words and icons turn to read upright. The photo
+/// view turns with the iPhone; Darkroom stays portrait. The simulator has no camera, so the screen shows its message for the missing one,
 /// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
 /// raises, are in `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
 /// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock; opening
 /// the shooting screen answers fresh Camera and microphone requests, and each test starts on an empty Journal and deletes
-/// the Film it loaded. One test per Camera, the 6×6 again at the largest text size, the Disposable with Develop at once
-/// off and the Super 8 with microphone access denied, to stay inside the per-test time allowance.
+/// the Film it loaded. Each Camera is checked at the default text size, and again at the largest size for the approval
+/// screenshots; the Disposable also runs with Develop at once off and the Super 8 with microphone access denied.
 @MainActor
 final class CaptureSidewaysUITests: ScreenTestCase {
     private var microphonePromptWasDeclined = false
@@ -22,20 +22,23 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let title = try openShootingScreen(app, id: "disposable1990s", developsAtOnce: false)
         defer { deleteFilm(titled: title, app) }
 
-        let focusMode = app.segmentedControls["capture-focus-mode"]
+        let focusMode = app.descendants(matching: .any)["capture-focus-mode"]
         XCTAssertTrue(focusMode.exists(within: 10), "The Disposable offers its per-Film focus switch")
         let layout = try wait(app)
         XCTAssertTrue(layout.viewfinder.contains(focusMode.frame), "The focus switch stays in the floating control band")
-        let automatic = focusMode.buttons["Auto"]
-        let fixed = focusMode.buttons["Fixed"]
-        XCTAssertTrue(automatic.exists)
-        XCTAssertTrue(fixed.exists)
+        // VoiceOver reads it as one control, "Focus, Auto" (FR-25).
+        XCTAssertEqual(focusMode.label, "Focus")
         XCTAssertEqual(focusMode.value as? String, "Auto", "A new Film starts on Auto")
+        retainScreenshot(name: "focus-switch-placement-Disposable-Auto")
 
-        tapWhole(app, fixed)
+        // A touch on each half chooses its setting.
+        focusMode.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
         let selectedFixed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "Fixed"), object: focusMode)
         XCTAssertEqual(XCTWaiter().wait(for: [selectedFixed], timeout: 5), .completed,
                        "The Film keeps the selected Fixed mode")
+        focusMode.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.5)).tap()
+        let selectedAuto = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "Auto"), object: focusMode)
+        XCTAssertEqual(XCTWaiter().wait(for: [selectedAuto], timeout: 5), .completed, "Auto can be chosen again")
     }
 
     func testInstantShootingScreenKeepsItsLayoutHeldSideways() throws {
@@ -52,6 +55,22 @@ final class CaptureSidewaysUITests: ScreenTestCase {
 
     func testSixteenMillimeterShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "cinema16mm", name: "16mm")
+    }
+
+    func testDisposableShootingScreenKeepsItsLayoutAtTheLargestTextSize() throws {
+        try check(id: "disposable1990s", name: "Disposable", largest: true)
+    }
+
+    func testInstantShootingScreenKeepsItsLayoutAtTheLargestTextSize() throws {
+        try check(id: "instant1970s", name: "Instant", showsNotice: false, largest: true)
+    }
+
+    func testSuper8ShootingScreenKeepsItsLayoutAtTheLargestTextSize() throws {
+        try check(id: "super8HomeMovie", name: "Super 8", largest: true)
+    }
+
+    func testSixteenMillimeterShootingScreenKeepsItsLayoutAtTheLargestTextSize() throws {
+        try check(id: "cinema16mm", name: "16mm", largest: true)
     }
 
     func testNewSuper8AsksForMicrophoneAndDecliningShowsThatClipsWillBeSilent() throws {
@@ -77,6 +96,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         var switchCamera: CGRect
         /// Develop at once's notice, where it shows.
         var notice: CGRect?
+        /// The focus switch, on the Cameras that have one.
+        var focusSwitch: CGRect?
     }
 
     /// At the largest text size the one-line header stays fixed while the full Viewfinder area keeps its size and place.
@@ -86,14 +107,14 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let app = XCUIApplication()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         defer { XCUIDevice.shared.orientation = .portrait }
-        let title = try openShootingScreen(app, id: "mediumFormat6x6", developsAtOnce: false)
+        let title = try openShootingScreen(app, id: "mediumFormat6x6")
         defer { deleteFilm(titled: title, app) }
         let done = app.buttons["Done"]
         let upright = try wait(app)
         XCTAssertEqual(app.descendants(matching: .any)["capture-header-status"].label, "6 by 6, 12 exposures left")
         XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
         XCTAssertTrue(upright.window.contains(upright.remaining), "The Camera name and count are on screen upright")
-        checkNotice(upright, shows: false, "upright at the largest text size")
+        checkNotice(upright, shows: true, "upright at the largest text size")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
         // Each side twice, so the header turns straight from one side to the other both ways.
@@ -151,9 +172,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     }
 
     /// Loads a Film in the Camera `id` with the title Load Film suggests, with Develop at once on or off for the launch as
-    /// `developsAtOnce` says, whatever Settings holds, opens its shooting screen, waits for the camera's open to end in the
-    /// missing camera's "Camera unavailable." error, and returns the Film's title, for the caller to delete it. Resume
-    /// Camera shows from the screen's first frame, before the open ends, so only the error marks that end.
+    /// `developsAtOnce` says, whatever Settings holds, opens its shooting screen, and waits for startup to finish in either
+    /// the simulator's unavailable-camera error or an enabled shutter. It returns the Film's title for the caller to delete it.
     /// Over the viewfinder the error moves no frame `wait(_:until:)` reads, and the one-line header never moves the area,
     /// so in both the screen is read only after the camera's open ends.
     private func openShootingScreen(_ app: XCUIApplication, id: String, developsAtOnce: Bool = true,
@@ -203,38 +223,58 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
-        openCamera(app, resolveMicrophonePrompt: declineMicrophone)
+        let movieCameraRequestsMicrophone = id == "super8HomeMovie" || id == "cinema16mm"
+        openCamera(app, resolveMicrophonePrompt: declineMicrophone,
+                   expectsMicrophonePrompt: movieCameraRequestsMicrophone)
         XCTAssertTrue(cameraAllowed, "Opening the shooting screen asks for Camera access")
         return title
     }
 
-    /// Opens the shooting screen from the Film's screen and waits for the camera's open to end in the missing camera's
-    /// "Camera unavailable." error.
-    private func openCamera(_ app: XCUIApplication, resolveMicrophonePrompt: Bool = false) {
+    /// Opens the shooting screen, handles its microphone prompt, resumes if the permission sheet paused the Camera, and
+    /// waits for startup to finish in either the simulator's unavailable-camera error or an enabled shutter.
+    private func openCamera(_ app: XCUIApplication, resolveMicrophonePrompt: Bool = false,
+                            expectsMicrophonePrompt: Bool = false) {
         let open = app.buttons["Open Camera"]
         XCTAssertTrue(open.exists(within: 10), "The Film's screen offers Open Camera")
         tapWhole(app, open)
-        if resolveMicrophonePrompt {
+        if expectsMicrophonePrompt {
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
             let alert = springboard.alerts.firstMatch
             XCTAssertTrue(alert.exists(within: 30), "The first shooting-screen open asks for microphone access")
             XCTAssertTrue(alert.label.localizedCaseInsensitiveContains("Microphone"), alert.label)
-            let deny = alert.buttons.matching(NSPredicate(
-                format: "label CONTAINS[c] %@ OR label CONTAINS[c] %@", "Don't Allow", "Don’t Allow"
-            )).firstMatch
-            XCTAssertTrue(deny.exists, "The microphone prompt offers Don't Allow")
-            deny.tap()
-            microphonePromptWasDeclined = true
+            if resolveMicrophonePrompt {
+                let deny = alert.buttons.matching(NSPredicate(
+                    format: "label CONTAINS[c] %@ OR label CONTAINS[c] %@", "Don't Allow", "Don’t Allow"
+                )).firstMatch
+                XCTAssertTrue(deny.exists, "The microphone prompt offers Don't Allow")
+                deny.tap()
+                microphonePromptWasDeclined = true
+            } else {
+                let allow = alert.buttons["Allow"]
+                XCTAssertTrue(allow.exists, "The microphone prompt offers Allow")
+                allow.tap()
+            }
         }
         XCTAssertTrue(app.buttons["Done"].exists(within: 5))
         let unavailable = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera unavailable.")).firstMatch
-        if !resolveMicrophonePrompt {
-            XCTAssertTrue(unavailable.exists(within: 30), "The camera's open ended")
+        let shutter = app.buttons["capture-shutter"]
+        let openEnded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            unavailable.exists || (shutter.exists && shutter.isEnabled)
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter().wait(for: [openEnded], timeout: 30), .completed,
+                       "The camera's open ended in an error or a usable shutter")
+        if expectsMicrophonePrompt {
+            // iOS makes the app inactive while it asks, which pauses the camera; the open that asked goes on to start
+            // the camera after the answer (S1), so it ends on the simulator's missing camera, never on a paused one.
+            XCTAssertTrue(unavailable.exists, "The open went on to start the camera after the microphone question")
+            let paused = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera paused")).firstMatch
+            XCTAssertFalse(paused.exists, "The microphone question does not leave the camera paused")
         }
     }
 
-    private func check(id: String, name: String, showsNotice: Bool = true) throws {
+    private func check(id: String, name: String, showsNotice: Bool = true, largest: Bool = false) throws {
         let app = XCUIApplication()
+        if largest { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         defer { XCUIDevice.shared.orientation = .portrait }
         let title = try openShootingScreen(app, id: id)
         defer { deleteFilm(titled: title, app) }
@@ -257,23 +297,28 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
         try checkFits(upright, app, "upright")
         checkNotice(upright, shows: showsNotice, "upright")
+        checkFocusSwitch(upright, app, "upright")
         // Held upright, Done, the Camera name and its count share one line below the status bar.
         XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
+        XCTAssertLessThanOrEqual(upright.done.maxY, upright.viewfinder.minY + 0.5, "Done stays in the top bar, above the area")
         XCTAssertEqual(upright.remaining.midY, upright.done.midY, accuracy: 12, "The count shares Done's header line")
-        retainFrames(upright, name: name, hold: "portrait")
-        retainScreenshot(name: "\(name)-capture-portrait")
+        XCTAssertGreaterThanOrEqual(upright.remaining.width, 40,
+                                    "The Camera name and count remain visible on one line at every text size")
+        let screenshotName = "\(name)-\(largest ? "largest" : "default")"
+        retainFrames(upright, name: screenshotName, hold: "portrait")
+        retainScreenshot(name: "\(screenshotName)-capture-portrait")
 
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right")] {
             XCUIDevice.shared.orientation = orientation
             // The words turn with an animation, and the screen must not turn at all.
             let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
-            retainScreenshot(name: "\(name)-capture-\(side)")
+            retainScreenshot(name: "\(screenshotName)-capture-\(side)")
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
             try checkFits(turned, app, side)
             checkNotice(turned, shows: showsNotice, "held on its \(side)")
-            retainFrames(turned, name: name, hold: side)
+            retainFrames(turned, name: screenshotName, hold: side)
             XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
             XCTAssertTrue(turned.remaining.intersects(turned.viewfinder),
                           "The one-line header extends along the fixed Viewfinder area, held on its \(side)")
@@ -286,6 +331,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                 XCTAssertTrue(turned.window.contains(frame), "\(label) is on screen held on its \(side): \(frame)")
             }
             XCTAssertFalse(turned.done.intersects(turned.remaining), "Done and the count do not overlap held on its \(side)")
+            checkFocusSwitch(turned, app, "held on its \(side)")
         }
 
         // The hold ends with the screen: Film's screen turns with the iPhone again. XCTest taps in the device's own frame, so
@@ -301,7 +347,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let turns = NSPredicate { _, _ in window.frame.width > window.frame.height }
         XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: turns, object: nil)], timeout: 10), .completed,
                        "The Film screen turns with the iPhone once the shooting screen is gone")
-        retainScreenshot(name: "\(name)-film-landscape")
+        retainScreenshot(name: "\(screenshotName)-film-landscape")
         XCUIDevice.shared.orientation = .portrait
     }
 
@@ -333,6 +379,28 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertGreaterThan(viewfinder.buttons["Resume Camera"].frame.height, 0, "Resume Camera is over the viewfinder, \(hold)")
     }
 
+    /// The focus switch stays across the bottom of the Viewfinder area in every hold, as the screen's layout does, clear
+    /// of the header that runs down the area's side when the iPhone is on its side.
+    private func checkFocusSwitch(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
+        guard let focusSwitch = layout.focusSwitch else { return }
+        // The notices over the area (the camera's error, Resume Camera) stay clear of it at every text size.
+        let viewfinder = app.otherElements["viewfinder"]
+        for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex
+        where !focusSwitch.insetBy(dx: -1, dy: -1).contains(element.frame) {
+            XCTAssertFalse(focusSwitch.intersects(element.frame),
+                           "\(element.label) is clear of the focus switch, \(hold): \(element.frame) and \(focusSwitch)")
+        }
+        XCTAssertTrue(layout.viewfinder.contains(focusSwitch), "The focus switch is over the area, \(hold): \(focusSwitch)")
+        XCTAssertGreaterThan(focusSwitch.minY, layout.viewfinder.midY, "The focus switch is over the area's bottom, \(hold)")
+        XCTAssertEqual(focusSwitch.width, layout.viewfinder.width - 24, accuracy: 2, "The switch runs across the area, \(hold)")
+        for (label, frame) in [("Done", layout.done), ("Camera name and count", layout.remaining)] {
+            XCTAssertFalse(focusSwitch.intersects(frame), "The focus switch is clear of \(label), \(hold)")
+        }
+        if let notice = layout.notice {
+            XCTAssertFalse(focusSwitch.intersects(notice), "The focus switch is clear of the notice, \(hold)")
+        }
+    }
+
     /// Develop at once's notice stays beside Done in the one-line header, clear of the shutter bar's buttons and the
     /// Camera name and count.
     private func checkNotice(_ layout: Layout, shows: Bool, _ hold: String) {
@@ -353,9 +421,10 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let shutter = app.buttons["capture-shutter"]
         XCTAssertTrue(shutter.exists(within: 5))
         let notice = app.descendants(matching: .any)["develop-at-once-notice"]
+        let focusSwitch = app.descendants(matching: .any)["capture-focus-mode"]
         return Layout(window: app.windows.firstMatch.frame, viewfinder: viewfinder.frame, done: app.buttons["Done"].frame,
                       remaining: remaining.frame, shutter: shutter.frame, switchCamera: app.buttons["Switch Camera"].frame,
-                      notice: notice.exists ? notice.frame : nil)
+                      notice: notice.exists ? notice.frame : nil, focusSwitch: focusSwitch.exists ? focusSwitch.frame : nil)
     }
 
     private func expectedSpokenHeader(for id: String) -> String {

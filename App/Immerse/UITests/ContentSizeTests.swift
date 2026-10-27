@@ -92,11 +92,18 @@ final class ContentSizeTests: ScreenTestCase {
     private static let superEight: [Target] = [
         Target(name: "Capacity", type: .staticText, label: "Capacity, 3 minutes 20 seconds of film"),
         Target(name: "Reveal", type: .staticText, label: "One Movie after Development"),
-        Target(name: "Controls", type: .staticText, label: "Handheld, auto or fixed focus, automatic exposure, 18 frames per second"),
-        Target(name: "Look", type: .staticText, label: "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"),
+        Target(name: "Sound", type: .staticText,
+               label: "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."),
+        Target(name: "Controls", type: .staticText,
+               label: "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second"),
+        Target(name: "Look", type: .staticText,
+               label: "1960s home-movie camera: muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"),
         Target(name: "Movie Orientation", type: .staticText, label: "Movie Orientation"),
         Target(name: "Portrait", type: .button, label: "Portrait"),
         Target(name: "Landscape", type: .button, label: "Landscape"),
+    ]
+
+    private static let superEightTitleAndLoad: [Target] = [
         Target(name: "Film title", type: .staticText, identifier: "film-title-heading"),
         // The field's frame is at least 44 points tall, centered on its text, so at the smaller sizes it reaches over
         // the heading's line box (Evidence/NativeApp/title-field-hit-area-056.md).
@@ -107,9 +114,18 @@ final class ContentSizeTests: ScreenTestCase {
         Target(name: "Load Film", type: .button, identifier: "load-film", tinted: true),
     ]
 
+    /// At accessibility XXXL on the SE, the Super 8 form is too tall to measure all its title, access and action rows
+    /// in one three-minute screen test. Keep the same measurement for every row, split into the three visible groups.
+    private static let superEightTitle: [Target] = Array(superEightTitleAndLoad.prefix(2))
+    private static let superEightAccess: [Target] = Array(superEightTitleAndLoad[2..<4])
+    private static let superEightActions: [Target] = Array(superEightTitleAndLoad.suffix(2))
+
     private static let sixteenMillimeter: [Target] = [
         Target(name: "16mm Capacity", type: .staticText, label: "Capacity, 2 minutes 47 seconds of film"),
-        Target(name: "16mm Controls", type: .staticText, label: "Deliberate framing, 24 frames per second"),
+        Target(name: "16mm Sound", type: .staticText,
+               label: "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."),
+        Target(name: "16mm Controls", type: .staticText,
+               label: "Auto focus with tap to focus; deliberate framing, 24 frames per second"),
         Target(name: "16mm Look", type: .staticText, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
         Target(name: "Film Stock", type: .staticText, label: "Film Stock"),
         Target(name: "Color", type: .button, label: "Color"),
@@ -119,7 +135,8 @@ final class ContentSizeTests: ScreenTestCase {
     /// The 6×6 Load screen's own text: its controls line and its look lines, one per Film Stock. The Film Stock choice is
     /// the control the 16mm screen shows and is measured there.
     private static let sixBySix: [Target] = [
-        Target(name: "6×6 Controls", type: .staticText, label: "Square framing, auto or manual focus and exposure, optical focus only"),
+        Target(name: "6×6 Controls", type: .staticText,
+               label: "Square framing; Focus switch: Auto / Manual; tap to focus in Auto; Focus slider in Manual; deliberate exposure; optical focus only"),
         Target(name: "6×6 Picture", type: .staticText, label: "Borderless square picture"),
         Target(name: "6×6 Color look", type: .staticText, label: "Color: natural, warm color, very fine grain and gentle contrast"),
         Target(name: "6×6 Black and white look", type: .staticText, label: "Black and white: high contrast and distinct grain"),
@@ -202,18 +219,52 @@ final class ContentSizeTests: ScreenTestCase {
     /// `XCUIDevice.shared.appearance` from the test did not change the app's rendering on iOS 26.5.
     private static var appearance: String { XCUIDevice.shared.appearance == .dark ? "dark" : "light" }
 
-    func testLoadScreenTextAtExtraSmall() throws { check("XS") }
-    func testLoadScreenTextAtSmall() throws { check("S") }
-    func testLoadScreenTextAtMedium() throws { check("M") }
-    func testLoadScreenTextAtLarge() throws { check("L") }
-    func testLoadScreenTextAtExtraLarge() throws { check("XL") }
-    func testLoadScreenTextAtExtraExtraLarge() throws { check("XXL") }
-    func testLoadScreenTextAtExtraExtraExtraLarge() throws { check("XXXL") }
-    func testLoadScreenTextAtAccessibilityMedium() throws { check("AccessibilityM") }
-    func testLoadScreenTextAtAccessibilityLarge() throws { check("AccessibilityL") }
-    func testLoadScreenTextAtAccessibilityExtraLarge() throws { check("AccessibilityXL") }
-    func testLoadScreenTextAtAccessibilityExtraExtraLarge() throws { check("AccessibilityXXL") }
-    func testLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { check("AccessibilityXXXL") }
+    func testSuperEightLoadScreenInfoTextAtExtraSmall() throws { check("XS") }
+    func testSuperEightLoadScreenInfoTextAtSmall() throws { check("S") }
+    func testSuperEightLoadScreenInfoTextAtMedium() throws { check("M") }
+    func testSuperEightLoadScreenInfoTextAtLarge() throws { check("L") }
+    func testSuperEightLoadScreenInfoTextAtExtraLarge() throws { check("XL") }
+    func testSuperEightLoadScreenInfoTextAtExtraExtraLarge() throws { check("XXL") }
+    func testSuperEightLoadScreenInfoTextAtExtraExtraExtraLarge() throws { check("XXXL") }
+    func testSuperEightLoadScreenInfoTextAtAccessibilityMedium() throws { check("AccessibilityM") }
+    func testSuperEightLoadScreenInfoTextAtAccessibilityLarge() throws { check("AccessibilityL") }
+    func testSuperEightLoadScreenInfoTextAtAccessibilityExtraLarge() throws { check("AccessibilityXL") }
+    func testSuperEightLoadScreenInfoTextAtAccessibilityExtraExtraLarge() throws { check("AccessibilityXXL") }
+    func testSuperEightLoadScreenInfoTextAtAccessibilityExtraExtraExtraLarge() throws { check("AccessibilityXXXL") }
+
+    func testSuperEightLoadScreenTitleAndLoadTextAtExtraSmall() throws { checkSuperEightTitleAndLoad("XS") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtSmall() throws { checkSuperEightTitleAndLoad("S") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtMedium() throws { checkSuperEightTitleAndLoad("M") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtLarge() throws { checkSuperEightTitleAndLoad("L") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtExtraLarge() throws { checkSuperEightTitleAndLoad("XL") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtExtraExtraLarge() throws { checkSuperEightTitleAndLoad("XXL") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtExtraExtraExtraLarge() throws { checkSuperEightTitleAndLoad("XXXL") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtAccessibilityMedium() throws { checkSuperEightTitleAndLoad("AccessibilityM") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtAccessibilityLarge() throws { checkSuperEightTitleAndLoad("AccessibilityL") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtAccessibilityExtraLarge() throws { checkSuperEightTitleAndLoad("AccessibilityXL") }
+    func testSuperEightLoadScreenTitleAndLoadTextAtAccessibilityExtraExtraLarge() throws { checkSuperEightTitleAndLoad("AccessibilityXXL") }
+    func testSuperEightLoadScreenTitleTextAtAccessibilityExtraExtraExtraLarge() throws {
+        checkSuperEightTitleAndLoad("AccessibilityXXXL", targets: Self.superEightTitle)
+    }
+    func testSuperEightLoadScreenAccessTextAtAccessibilityExtraExtraExtraLarge() throws {
+        checkSuperEightTitleAndLoad("AccessibilityXXXL", targets: Self.superEightAccess)
+    }
+    func testSuperEightLoadScreenActionsTextAtAccessibilityExtraExtraExtraLarge() throws {
+        checkSuperEightTitleAndLoad("AccessibilityXXXL", targets: Self.superEightActions)
+    }
+
+    func testSixteenMillimeterLoadScreenTextAtExtraSmall() throws { checkSixteenMillimeter("XS") }
+    func testSixteenMillimeterLoadScreenTextAtSmall() throws { checkSixteenMillimeter("S") }
+    func testSixteenMillimeterLoadScreenTextAtMedium() throws { checkSixteenMillimeter("M") }
+    func testSixteenMillimeterLoadScreenTextAtLarge() throws { checkSixteenMillimeter("L") }
+    func testSixteenMillimeterLoadScreenTextAtExtraLarge() throws { checkSixteenMillimeter("XL") }
+    func testSixteenMillimeterLoadScreenTextAtExtraExtraLarge() throws { checkSixteenMillimeter("XXL") }
+    func testSixteenMillimeterLoadScreenTextAtExtraExtraExtraLarge() throws { checkSixteenMillimeter("XXXL") }
+    func testSixteenMillimeterLoadScreenTextAtAccessibilityMedium() throws { checkSixteenMillimeter("AccessibilityM") }
+    func testSixteenMillimeterLoadScreenTextAtAccessibilityLarge() throws { checkSixteenMillimeter("AccessibilityL") }
+    func testSixteenMillimeterLoadScreenTextAtAccessibilityExtraLarge() throws { checkSixteenMillimeter("AccessibilityXL") }
+    func testSixteenMillimeterLoadScreenTextAtAccessibilityExtraExtraLarge() throws { checkSixteenMillimeter("AccessibilityXXL") }
+    func testSixteenMillimeterLoadScreenTextAtAccessibilityExtraExtraExtraLarge() throws { checkSixteenMillimeter("AccessibilityXXXL") }
 
     func testFilmStockLoadScreenTextAtExtraSmall() throws { checkFilmStockScreens("XS") }
     func testFilmStockLoadScreenTextAtSmall() throws { checkFilmStockScreens("S") }
@@ -280,22 +331,50 @@ final class ContentSizeTests: ScreenTestCase {
     func testLandscapeSettingsBottomTextAtAccessibilityExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXL", fromEnd: true) }
     func testLandscapeSettingsBottomTextAtAccessibilityExtraExtraExtraLarge() throws { checkLandscapeSettings("AccessibilityXXXL", fromEnd: true) }
 
+    /// Super 8's description and orientation rows are measured in one case; its title and access rows are separate so
+    /// the longest copy at accessibility sizes stays inside the three-minute per-test allowance.
     private func check(_ category: String) {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        for (camera, title, targets) in [("camera-super8HomeMovie", "Super 8", Self.superEight),
-                                         ("camera-cinema16mm", "16mm", Self.sixteenMillimeter)] {
-            let row = app.buttons[camera]
-            tapWhole(app, row)
-            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "\(title) \(category)")
-            // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
-            Thread.sleep(forTimeInterval: 1)
-            rows += record(measure(app, targets, category, below: title))
-            goBack(app, from: title, to: "Choose a Camera")
-        }
+        let row = app.buttons["camera-super8HomeMovie"]
+        tapWhole(app, row)
+        XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
+        // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
+        Thread.sleep(forTimeInterval: 1)
+        rows += record(measure(app, Self.superEight, category, below: "Super 8"))
         app.terminate()
-        finish(category, rows, Self.superEight + Self.sixteenMillimeter)
+        finish(category, rows, Self.superEight)
+    }
+
+    private func checkSuperEightTitleAndLoad(_ category: String) {
+        checkSuperEightTitleAndLoad(category, targets: Self.superEightTitleAndLoad)
+    }
+
+    private func checkSuperEightTitleAndLoad(_ category: String, targets: [Target]) {
+        var rows: [String] = []
+        let app = launch(category)
+        openCameraCatalog(app)
+        let row = app.buttons["camera-super8HomeMovie"]
+        tapWhole(app, row)
+        XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
+        Thread.sleep(forTimeInterval: 1)
+        rows += record(measure(app, targets, category, below: "Super 8"))
+        app.terminate()
+        finish(category, rows, targets)
+    }
+
+    private func checkSixteenMillimeter(_ category: String) {
+        var rows: [String] = []
+        let app = launch(category)
+        openCameraCatalog(app)
+        let row = app.buttons["camera-cinema16mm"]
+        tapWhole(app, row)
+        XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
+        Thread.sleep(forTimeInterval: 1)
+        rows += record(measure(app, Self.sixteenMillimeter, category, below: "16mm"))
+        app.terminate()
+        finish(category, rows, Self.sixteenMillimeter)
     }
 
     /// The 6×6 Load screen, and the 16mm Load screen's look line with Black and white chosen, in tests of their own so

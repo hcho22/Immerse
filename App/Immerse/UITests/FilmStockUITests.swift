@@ -19,11 +19,26 @@ final class FilmStockUITests: ScreenTestCase {
         let app = XCUIApplication.shippingGate()
         app.launch()
         openCameraCatalog(app)
+        let expectedControls = [
+            "disposable1990s": "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue",
+            "instant1970s": "Auto focus with tap to focus; square picture on a white card",
+            "super8HomeMovie": "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second",
+        ]
+        let expectedSound = "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."
         for (id, name) in [("disposable1990s", "Disposable"), ("instant1970s", "Instant"), ("super8HomeMovie", "Super 8")] {
             let camera = app.buttons["camera-\(id)"]
             tapWhole(app, camera)
             XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
             let load = app.buttons["load-film"]
+            let controls = try XCTUnwrap(expectedControls[id])
+            XCTAssertTrue(app.staticTexts[controls].exists, "\(name) Load Film describes its focus controls")
+            let sound = app.staticTexts.matching(identifier: "load-film-sound").firstMatch
+            if id == "super8HomeMovie" {
+                XCTAssertEqual(sound.label, expectedSound, "Super 8 Load Film explains when sound is captured and requested")
+                retainScreenshot(app, name: "Super-8-load-film-sound-reveal-controls")
+            } else {
+                XCTAssertFalse(sound.exists, "\(name) does not offer movie sound")
+            }
             scrollUp(app, until: load)
             XCTAssertTrue(load.isHittable, name)
             XCTAssertFalse(app.staticTexts["Film Stock"].exists, "\(name) offers no Film Stock")
@@ -52,6 +67,18 @@ final class FilmStockUITests: ScreenTestCase {
         tapWhole(app, camera)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts[capacity].exists)
+        if id == "cinema16mm" {
+            XCTAssertTrue(app.staticTexts["One Movie after Development"].exists)
+            XCTAssertTrue(app.staticTexts["Auto focus with tap to focus; deliberate framing, 24 frames per second"].exists)
+            XCTAssertEqual(app.staticTexts.matching(identifier: "load-film-sound").firstMatch.label,
+                           "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera.")
+            retainScreenshot(app, name: "16mm-load-film-sound-reveal-controls")
+        } else {
+            XCTAssertTrue(app.staticTexts["Sealed until Development"].exists)
+            XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label == %@",
+            "Square framing; Focus switch: Auto / Manual; tap to focus in Auto; Focus slider in Manual; deliberate exposure; optical focus only"
+        )).firstMatch.exists, "A subscript query is limited to 128 characters, so the long line is matched by its label")
+        }
 
         let color = app.buttons["Color"], blackAndWhite = app.buttons["Black and white"]
         scrollUp(app, until: blackAndWhite)

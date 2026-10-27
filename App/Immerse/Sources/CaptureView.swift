@@ -11,6 +11,8 @@ struct CaptureView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// The screen's ground, under the top bar and the shutter bar alike, which hides a column scrolled beneath the bar.
+    private static let ground = Color(uiColor: .secondarySystemBackground)
     /// How long the one-line header reads when the iPhone is on its side. It reserves the same space in every hold, so
     /// the Viewfinder area below it never moves.
     private let headerLineLength: CGFloat = 300
@@ -30,6 +32,11 @@ struct CaptureView: View {
     /// Whether the "Saved" notice is still showing. It lasts a moment over the picture; every other notice stays until
     /// its cause is gone.
     @State private var savedShowing = false
+    /// The height of the controls over the Viewfinder area's bottom, which the notices above them leave free.
+    @State private var floatingControlsHeight: CGFloat = 0
+    /// Whether this screen has started its shooting session. A full-screen print or question over it makes it disappear
+    /// and appear again, which must not start the session, or open the camera, a second time.
+    @State private var started = false
     #if DEBUG
     /// Hosted tests that show a running camera's screen leave the camera closed, so no failure to open it shows.
     var opensCamera = true
@@ -57,29 +64,29 @@ struct CaptureView: View {
         }
         // The shutter stays on screen on small iPhones, at large text sizes and below messages.
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
+        // One ground around the black Viewfinder area, from the top bar to the shutter bar, however much room a taller
+        // iPhone leaves between them.
+        .background(Self.ground)
         .environment(\.heldTurn, held)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
-        .task {
+        .onAppear {
+            // Once per presentation: a print or question closing brings this screen back without a second start. After a
+            // print the camera starts again only from `showNextPrint`.
+            guard !started else { return }
+            started = true
+            capture.beginShootingSession()
+            lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
             #if DEBUG
             if !opensCamera { return }
             #endif
             if let film = model.film(filmID) { open(film) }
         }
-        .onAppear {
-            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-            capture.updateOrientation()
-            capture.presented = true
-            InterfaceOrientationLock.hold(.portrait)
-            lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
-        }
         .onDisappear {
             // A full-screen Instant print or pack-end Originals question covers this screen without ending its camera
-            // session or portrait lock. The covers dismiss back here; only leaving the shooting flow stops it.
+            // session or portrait lock. The covers dismiss back here; leaving the shooting flow ends it, here or, if a
+            // print was still to show as the screen left, in the Film screen's dismissal of it.
             guard instantPrint == nil, originalAsk == nil else { return }
-            UIDevice.current.endGeneratingDeviceOrientationNotifications()
-            capture.presented = false
-            capture.suspend()
-            InterfaceOrientationLock.release(turningTo: InterfaceOrientationLock.mask(held: capture.held))
+            capture.endShootingSession()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in capture.updateOrientation() }
         .onChange(of: model.film(filmID)?.captures) { _, captures in
@@ -138,9 +145,13 @@ struct CaptureView: View {
     /// Done, Develop at once when enabled, and the Camera name and count share one line above the Viewfinder area. With
     /// the iPhone on its side the whole line turns and reserves the same length in either hold.
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
-        TurnedBlock(length: headerLineLength, reservesLength: true, maximumLength: room) {
+        let sideways = HeldTurn(capture.held).isSideways
+        return TurnedBlock(length: headerLineLength, reservesLength: true, maximumLength: room) {
             HStack(spacing: 8) {
-                doneRow(capture).fixedSize(horizontal: true, vertical: true)
+                // The action and Debug notice use a compact control size so the Camera name and count keep room at
+                // accessibility text sizes. The row can accept the space the header gives it instead of demanding
+                // its unbounded text width.
+                doneRow(capture).dynamicTypeSize(...DynamicTypeSize.large)
                 Spacer(minLength: 0)
                 if let film = model.film(filmID) {
                     TimelineView(.periodic(from: .now, by: 0.1)) { context in
@@ -151,10 +162,16 @@ struct CaptureView: View {
                         CaptureHeaderLabel(film: film, status: status,
                                            recording: capture.recordingStarted != nil)
                     }
+                    .layoutPriority(1)
                 }
             }
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-            .background(.background)
+            // Upright the line sits in the top bar; turned, it runs down the Viewfinder area's side, where a material
+            // keeps it legible over the picture without hiding it.
+            .padding(.horizontal, sideways ? 8 : 0)
+            .background {
+                if sideways { RoundedRectangle(cornerRadius: 14).fill(.regularMaterial) }
+            }
         }
         // The reserved top bar stays 44 points tall. Turned text and icons continue along the physical top edge while
         // held sideways, over the Viewfinder area as Camera controls do, without changing that area's position.
@@ -220,46 +237,51 @@ struct CaptureView: View {
         let showsLowLightCue = behavior.showsLowLightCue && capture.showsLowLightCue
         let showsStatus = hasStatus(film, controller: capture)
         return GeometryReader { area in
-            let cameraFrame = CaptureAreaGeometry.cameraFrame(
-                aspectRatio: CGFloat(behavior.viewfinder.aspectRatio), in: area.size
-            )
-            ZStack {
-                Color.black
-                ZStack {
-                    Color.black
+            CameraShapeArea(aspectRatio: CGFloat(behavior.viewfinder.aspectRatio)) {
                     if let preview = capture.preview {
                         CameraPreview(source: preview, position: capture.position, behavior: behavior) { point in
-                            guard film.effectiveFocusSetting == .auto else { return }
-                            Task {
-                                do { _ = try await capture.focus(at: point, for: film) }
-                                catch { self.error = FailureCopy.message(for: error) }
-                            }
+                            guard film.effectiveFocusSetting == .auto else { return false }
+                            do { return try await capture.focus(at: point, for: film) == .allowed }
+                            catch { self.error = FailureCopy.message(for: error); return false }
                         }
                     } else if !showsStatus && !showsDevelopedPreview {
                         // Without a picture the Camera icon is inside the Camera's shape, never in its bars.
                         Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
                     }
-                }
-                .frame(width: cameraFrame.width, height: cameraFrame.height)
-                .position(x: cameraFrame.midX, y: cameraFrame.midY)
-                .clipped()
             }
-            .overlay {
+            .overlay(alignment: .top) {
+                // The notices take the area above the controls at its bottom, so a long notice, as at the largest text
+                // sizes held sideways, never runs over the focus switch.
+                let room = max(area.size.height - (floatingControlsHeight > 0 ? floatingControlsHeight + 8 : 0), 80)
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
-                        showsPreview: showsDevelopedPreview, boxHeight: area.size.height)
-                    .frame(width: area.size.width, height: area.size.height,
-                           alignment: held.isSideways ? .center : held.topEdge)
+                        showsPreview: showsDevelopedPreview, boxHeight: room)
+                    .frame(width: area.size.width, height: room, alignment: held.isSideways ? .center : held.topEdge)
             }
-            .overlay(alignment: held.bottomEdge) {
-                if film.completionState == .open && hasFloatingControls(behavior, film: film, capture: capture) {
-                    VStack(spacing: 4) {
-                        controls(film: film, behavior: behavior, controller: capture).padding(.horizontal, 12)
-                        zoomSteps(behavior: behavior, capture: capture)
+            // The focus switch and the 6×6's sliders stay across the area's bottom in every hold, as the screen's layout
+            // does; only their captions turn. The zoom steps sit over its bottom edge as the iPhone is held, as in the
+            // iPhone's Camera app: under the switch upright, and turned with the hold at the side that is then the bottom.
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 4) {
+                    if film.completionState == .open {
+                        if !held.isSideways { zoomSteps(behavior: behavior, capture: capture) }
+                        if hasCaptureControls(behavior, film: film, capture: capture) {
+                            controls(film: film, behavior: behavior, controller: capture)
+                                .padding(.horizontal, 12).padding(.vertical, 8)
+                                .background(.black.opacity(0.58), in: RoundedRectangle(cornerRadius: 14))
+                        }
                     }
-                    .padding(.bottom, 8)
-                    .background(.black.opacity(0.58), in: RoundedRectangle(cornerRadius: 14))
-                    .environment(\.colorScheme, .dark)
-                    .tint(.white)
+                }
+                .environment(\.colorScheme, .dark)
+                .tint(.white)
+                .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { floatingControlsHeight = $0 }
+            }
+            .overlay(alignment: .top) {
+                // Held sideways, the zoom steps stand at the side that is then the bottom, in the room above the controls
+                // at the area's bottom, so they never cover the focus switch.
+                if film.completionState == .open && held.isSideways {
+                    let room = max(area.size.height - (floatingControlsHeight > 0 ? floatingControlsHeight + 8 : 0), 80)
+                    zoomSteps(behavior: behavior, capture: capture)
+                        .frame(width: area.size.width, height: room, alignment: held.bottomEdge)
                 }
             }
         }
@@ -278,11 +300,10 @@ struct CaptureView: View {
         }
     }
 
-    private func hasFloatingControls(_ behavior: CaptureBehavior, film: Film, capture: CaptureController) -> Bool {
+    /// Whether the Camera shows its focus switch or a focus or exposure row over the area's bottom.
+    private func hasCaptureControls(_ behavior: CaptureBehavior, film: Film, capture: CaptureController) -> Bool {
         if film.camera.focusSettings.count > 1 { return true }
-        guard capture.lensIsLive else { return false }
-        return behavior.offersManualFocus || behavior.offersExposureBias
-            || (behavior.offersZoomSteps && capture.position == .rear && capture.controls.zoomSteps.count > 1)
+        return capture.lensIsLive && (behavior.offersManualFocus || behavior.offersExposureBias)
     }
 
     /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, turned as one block.
@@ -356,24 +377,13 @@ struct CaptureView: View {
         }()
         return VStack(spacing: 8) {
             if film.camera.focusSettings.count > 1 {
-                Picker("Focus", selection: Binding(
-                    get: { film.effectiveFocusSetting },
-                    set: { setting in
-                        guard setting != film.effectiveFocusSetting else { return }
-                        model.perform({
-                            let updated = try model.setFocusSetting(setting, filmID: filmID)
-                            try await capture.updateFocusSetting(for: updated)
-                        }, failure: { error = $0 })
-                    }
-                )) {
-                    ForEach(film.camera.focusSettings, id: \.self) { setting in
-                        Text(setting.title).tag(setting)
-                    }
+                FocusModeSwitch(settings: film.camera.focusSettings, selected: film.effectiveFocusSetting) { setting in
+                    guard setting != film.effectiveFocusSetting else { return }
+                    model.perform({
+                        let updated = try model.setFocusSetting(setting, filmID: filmID)
+                        try await capture.updateFocusSetting(for: updated)
+                    }, failure: { error = $0 })
                 }
-                .pickerStyle(.segmented)
-                .accessibilityLabel("Focus mode")
-                .accessibilityValue(film.effectiveFocusSetting.title)
-                .accessibilityIdentifier("capture-focus-mode")
                 .disabled(capture.busy || capture.phase == .savingPhoto || capture.phase == .savingMovieClip)
             }
             if behavior.offersManualFocus {
@@ -453,7 +463,7 @@ struct CaptureView: View {
                     Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
                 }
             }
-            .padding(.vertical, 8).frame(maxWidth: .infinity).background(.bar)
+            .padding(.vertical, 8).frame(maxWidth: .infinity).background(Self.ground)
         }
     }
 
@@ -495,6 +505,74 @@ struct CaptureView: View {
 
 /// The leading part of the one-line header: Done and, in a Debug build, the notice that Develop at once is on for this
 /// Camera. `CaptureView` places the Camera name and count beside this row.
+/// The focus switch, "Auto / Fixed" or "Auto / Manual" (FR-25): one segment per setting across the area's bottom, whose
+/// words turn with the hold as the screen's other words do, so held sideways they read upright. VoiceOver reads it as
+/// one control, "Focus, Auto", changed with a double tap or the adjustable action.
+struct FocusModeSwitch: View {
+    let settings: [FilmFocusSetting]
+    let selected: FilmFocusSetting
+    let select: (FilmFocusSetting) -> Void
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(settings, id: \.self) { setting in
+                Button { select(setting) } label: {
+                    TurnedBlock { Text(setting.title).font(.subheadline.weight(.semibold)).lineLimit(1) }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background { if setting == selected { Capsule().fill(Color.white.opacity(0.24)).padding(3) } }
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white.opacity(isEnabled ? 1 : 0.45))
+            }
+        }
+        .background(Color.white.opacity(0.1), in: Capsule())
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Focus")
+        .accessibilityValue(selected.title)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { step(by: 1) }
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment: step(by: 1)
+            case .decrement: step(by: -1)
+            @unknown default: break
+            }
+        }
+        .accessibilityIdentifier("capture-focus-mode")
+    }
+
+    /// The setting `offset` places along the switch, wrapping round, as a double tap moves to the other side.
+    private func step(by offset: Int) {
+        guard isEnabled, let index = settings.firstIndex(of: selected), !settings.isEmpty else { return }
+        select(settings[(index + offset + settings.count) % settings.count])
+    }
+}
+
+/// The Viewfinder area, black, with a Camera's picture shape centered in it (FR-23 item 2). Only the shape shows its
+/// content: the content is clipped to the shape before it is placed, so a preview drawn past its bounds, as an
+/// aspect-fill camera preview is, never reaches the bars around it.
+struct CameraShapeArea<Content: View>: View {
+    let aspectRatio: CGFloat
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        GeometryReader { area in
+            let shape = CaptureAreaGeometry.cameraFrame(aspectRatio: aspectRatio, in: area.size)
+            ZStack {
+                Color.black
+                content
+            }
+            .frame(width: shape.width, height: shape.height)
+            .clipped()
+            .position(x: shape.midX, y: shape.midY)
+        }
+        .background(Color.black)
+    }
+}
+
 struct CaptureDoneRow: View {
     let done: @MainActor () -> Void
     #if DEBUG
@@ -503,7 +581,10 @@ struct CaptureDoneRow: View {
     #endif
 
     var body: some View {
-        let button = Button(action: done) { Text("Done").frame(minHeight: 44) }.buttonStyle(.glass)
+        // The glass adds 7 points above and below its label, so the button is the 44-point top bar's height and stays
+        // inside it.
+        let button = Button(action: done) { Text("Done").frame(minHeight: 30) }.buttonStyle(.glass)
+            .accessibilityShowsLargeContentViewer()
         #if DEBUG
         DoneRowLayout {
             button
@@ -535,6 +616,9 @@ private struct CaptureHeaderLabel: View {
                 .foregroundStyle(recording ? .red : .primary)
                 .lineLimit(1).minimumScaleFactor(0.6)
         }
+        // Like the iOS Camera bar, the visible header stays at a standard control size at every text size; the full
+        // label remains available to VoiceOver and the Large Content Viewer.
+        .dynamicTypeSize(...DynamicTypeSize.large)
         .fixedSize(horizontal: false, vertical: true)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(status.spoken)
@@ -601,7 +685,8 @@ private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
     let position: CapturePosition
     let behavior: CaptureBehavior
-    let onFocusPoint: (CGPoint) -> Void
+    /// Focuses at a point of the capture device's picture and answers whether the lens focused there.
+    let onFocusPoint: @MainActor (CGPoint) async -> Bool
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
         surface.source = source
@@ -621,10 +706,20 @@ private struct CameraPreview: UIViewRepresentable {
 /// The picture is upright in the portrait window the shooting screen holds, whichever way the iPhone is held, as in the
 /// iPhone's Camera app: the screen and the camera turn together, so the scene reads upright in every hold. Only a saved
 /// photo or clip follows the hold.
-private final class PreviewSurface: UIView {
+final class PreviewSurface: UIView {
     var source: CapturePreviewSource?
-    var onFocusPoint: ((CGPoint) -> Void)?
+    var onFocusPoint: (@MainActor (CGPoint) async -> Bool)?
     var mirrored = false
+    /// The square that shows where a tap focused, as in the iPhone's Camera app.
+    let focusMark = FocusMark()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // A second guard behind `CameraShapeArea`'s clip: the aspect-fill preview layer never draws past the shape.
+        clipsToBounds = true
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
     }
@@ -639,9 +734,55 @@ private final class PreviewSurface: UIView {
         try? source.update(preview, mirrored: mirrored, orientation: .portrait)
     }
 
+    /// A tap focuses there, and the mark shows only once the lens has: a lens that cannot focus on a point shows none.
     @objc func focusTapped(_ recognizer: UITapGestureRecognizer) {
-        guard recognizer.state == .ended, let preview else { return }
-        onFocusPoint?(preview.captureDevicePointConverted(fromLayerPoint: recognizer.location(in: self)))
+        guard recognizer.state == .ended else { return }
+        focus(at: recognizer.location(in: self))
+    }
+
+    /// Focuses where the view was touched, then shows the mark there if the lens focused.
+    @discardableResult func focus(at location: CGPoint) -> Task<Void, Never>? {
+        guard let preview, let onFocusPoint else { return nil }
+        let point = preview.captureDevicePointConverted(fromLayerPoint: location)
+        return Task { [weak self] in
+            guard await onFocusPoint(point), let self else { return }
+            if focusMark.superview == nil { addSubview(focusMark) }
+            focusMark.show(at: location)
+        }
+    }
+}
+
+/// A yellow square at the point a tap focused, which settles and then fades, as in the iPhone's Camera app. It draws on
+/// the picture only and takes no touches; VoiceOver users focus with continuous autofocus, which a tap only adds to.
+final class FocusMark: UIView {
+    private static let side: CGFloat = 72
+
+    init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: Self.side, height: Self.side))
+        layer.borderColor = UIColor.systemYellow.cgColor
+        layer.borderWidth = 1.5
+        isUserInteractionEnabled = false
+        isAccessibilityElement = false
+        alpha = 0
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }
+
+    func show(at location: CGPoint) {
+        layer.removeAllAnimations()
+        center = location
+        alpha = 1
+        let moves = !UIAccessibility.isReduceMotionEnabled
+        transform = moves ? CGAffineTransform(scaleX: 1.4, y: 1.4) : .identity
+        UIView.animate(withDuration: moves ? 0.2 : 0, delay: 0, options: [.beginFromCurrentState]) {
+            self.transform = .identity
+        } completion: { finished in
+            // A newer tap's mark replaces this one and fades on its own.
+            guard finished else { return }
+            UIView.animate(withDuration: 0.3, delay: 1.2, options: [.beginFromCurrentState, .allowUserInteraction]) {
+                self.alpha = 0
+            }
+        }
     }
 }
 

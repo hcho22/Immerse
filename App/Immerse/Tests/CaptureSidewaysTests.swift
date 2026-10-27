@@ -1,3 +1,4 @@
+import AVFoundation
 import EntitlementCore
 import FilmDomain
 import NativeAdapters
@@ -40,6 +41,45 @@ final class CaptureSidewaysTests: XCTestCase {
                        "The app has no upside-down portrait, so that hold leaves the window as it is")
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown,
                        "Every screen turns unless the shooting screen holds the window")
+    }
+
+    /// FR-25: a tap shows the focus mark only once the lens has focused there; a lens that cannot focus on a point shows
+    /// none (C3).
+    func testATapShowsTheFocusMarkOnlyWhereTheLensFocused() async throws {
+        for focused in [true, false] {
+            let surface = PreviewSurface(frame: CGRect(x: 0, y: 0, width: 300, height: 400))
+            surface.preview = AVCaptureVideoPreviewLayer()
+            surface.onFocusPoint = { _ in focused }
+            await surface.focus(at: CGPoint(x: 120, y: 80))?.value
+            XCTAssertEqual(surface.focusMark.superview === surface && surface.focusMark.alpha > 0, focused,
+                           focused ? "A focused tap shows the mark" : "An unfocused tap shows none")
+            if focused { XCTAssertEqual(surface.focusMark.center, CGPoint(x: 120, y: 80), "The mark is where it was tapped") }
+        }
+    }
+
+    /// The focus switch's words turn with the hold, as the screen's other words do (C2): held sideways, "Manual" stands
+    /// on end, so the switch is taller than its upright 44 points.
+    func testTheFocusSwitchWordsTurnHeldSideways() {
+        func height(_ turn: HeldTurn) -> CGFloat {
+            UIHostingController(rootView: FocusModeSwitch(settings: [.auto, .manual], selected: .auto) { _ in }
+                .environment(\.heldTurn, turn))
+                .sizeThatFits(in: CGSize(width: 351, height: 400)).height
+        }
+        XCTAssertEqual(height(.upright), 44, accuracy: 0.5)
+        XCTAssertGreaterThan(height(.clockwise), 50, "Turned, the longer word stands taller than the upright switch")
+        XCTAssertEqual(height(.clockwise), height(.counterClockwise), accuracy: 0.5)
+    }
+
+    func testDarkroomLockRestoresTheInterfaceOrientationItCovered() {
+        XCTAssertEqual(InterfaceOrientationLock.mask(interfaceOrientation: .portrait), .portrait)
+        XCTAssertEqual(InterfaceOrientationLock.mask(interfaceOrientation: .landscapeLeft), .landscapeLeft)
+        XCTAssertEqual(InterfaceOrientationLock.mask(interfaceOrientation: .landscapeRight), .landscapeRight)
+        XCTAssertEqual(InterfaceOrientationLock.mask(interfaceOrientation: .portraitUpsideDown), .allButUpsideDown)
+        XCTAssertEqual(InterfaceOrientationLock.mask(interfaceOrientation: .unknown), .allButUpsideDown)
+        XCTAssertEqual(InterfaceOrientationLock.mask(deviceOrientation: .portrait, fallback: .landscapeRight), .portrait)
+        XCTAssertEqual(InterfaceOrientationLock.mask(deviceOrientation: .landscapeLeft, fallback: .portrait), .landscapeRight)
+        XCTAssertEqual(InterfaceOrientationLock.mask(deviceOrientation: .landscapeRight, fallback: .portrait), .landscapeLeft)
+        XCTAssertEqual(InterfaceOrientationLock.mask(deviceOrientation: .faceUp, fallback: .landscapeLeft), .landscapeLeft)
     }
 
     /// The shooting screen holds the window for as long as it is up, the print and the question that follow an Instant
@@ -344,6 +384,49 @@ final class CaptureSidewaysTests: XCTestCase {
         let film = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic zoom",
                                                    filmStock: .color, access: .subscription)
         model.refresh()
+        for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
+            for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
+                let screenshot = try await screenWithALiveLens(model, film: film, zoomStep: selected, held: held, style: style)
+                let attachment = XCTAttachment(image: screenshot)
+                attachment.name = "Zoom-enabled-\(name)-\(styleName)"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+            }
+        }
+    }
+
+    /// The focus switch where it sits with a lens running (FR-25), kept for the captain's approval of its placement: the
+    /// 6×6 on Auto and on Manual, with its Focus slider, the Super 8 with its zoom steps and the Disposable on Fixed,
+    /// upright and held on its side. The switch and the sliders stay across the Viewfinder area's bottom in every hold.
+    func testTheFocusSwitchWithALiveLens() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let cases: [(CameraPackage, FilmFocusSetting, String)] = [
+            (CameraCatalog.mediumFormat6x6, .auto, "6x6-Auto"),
+            (CameraCatalog.mediumFormat6x6, .manual, "6x6-Manual"),
+            (CameraCatalog.super8HomeMovie, .auto, "Super8-Auto"),
+            (CameraCatalog.disposable1990s, .fixed, "Disposable-Fixed")
+        ]
+        for (camera, setting, name) in cases {
+            var film = try model.repository.createFilm(
+                camera: camera, title: "Synthetic \(name)", movieOrientation: camera.medium == .movie ? .portrait : nil,
+                filmStock: camera.defaultFilmStock, access: .subscription)
+            model.refresh()
+            film = try model.setFocusSetting(setting, filmID: film.id)
+            for (held, holdName) in [(CaptureFrameOrientation.portrait, "portrait"), (.landscapeLeft, "left")] {
+                let screenshot = try await screenWithALiveLens(model, film: film, zoomStep: 1, held: held, style: .light)
+                let attachment = XCTAttachment(image: screenshot)
+                attachment.name = "Focus-\(name)-\(holdName)"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+            }
+        }
+    }
+
+    /// The shooting screen of `film` as it shows with a three-lens rear camera running, `zoomStep` selected, held as
+    /// `held`, drawn from its window.
+    private func screenWithALiveLens(_ model: JournalModel, film: Film, zoomStep: Int, held: CaptureFrameOrientation,
+                                     style: UIUserInterfaceStyle) async throws -> UIImage {
         var controls = NativeCameraControls()
         controls.manualFocus = true
         controls.minimumExposureBias = -2
@@ -352,35 +435,28 @@ final class CaptureSidewaysTests: XCTestCase {
                                                   .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
                                                   .init(.telephoto, displayFactor: 3)]).zoomSteps
         controls.zoomSteps = steps
-        for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
-            controls.zoomStep = steps[selected]
-            for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
-                let scene = try await hostWindowScene()
-                let window = UIWindow(windowScene: scene)
-                window.overrideUserInterfaceStyle = style
-                model.capture.hold(forTesting: held)
-                var screen = CaptureView(filmID: film.id)
-                screen.opensCamera = false
-                window.rootViewController = UIHostingController(rootView: screen.environment(model))
-                window.makeKeyAndVisible()
-                try await Task.sleep(for: .seconds(1))
-                model.capture.setForTesting(controls: controls)
-                model.capture.setForTesting(phase: .idle)
-                model.capture.message = nil
-                try await Task.sleep(for: .milliseconds(500))
-                let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
-                    _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
-                }
-                model.capture.hold(forTesting: .portrait)
-                window.isHidden = true
-                window.rootViewController = nil
-                try await Task.sleep(for: .milliseconds(500))
-                let attachment = XCTAttachment(image: screenshot)
-                attachment.name = "Zoom-enabled-\(name)-\(styleName)"
-                attachment.lifetime = .keepAlways
-                add(attachment)
-            }
+        controls.zoomStep = steps[zoomStep]
+        let scene = try await hostWindowScene()
+        let window = UIWindow(windowScene: scene)
+        window.overrideUserInterfaceStyle = style
+        model.capture.hold(forTesting: held)
+        var screen = CaptureView(filmID: film.id)
+        screen.opensCamera = false
+        window.rootViewController = UIHostingController(rootView: screen.environment(model))
+        window.makeKeyAndVisible()
+        try await Task.sleep(for: .seconds(1))
+        model.capture.setForTesting(controls: controls)
+        model.capture.setForTesting(phase: .idle)
+        model.capture.message = nil
+        try await Task.sleep(for: .milliseconds(500))
+        let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
         }
+        model.capture.hold(forTesting: .portrait)
+        window.isHidden = true
+        window.rootViewController = nil
+        try await Task.sleep(for: .milliseconds(500))
+        return screenshot
     }
 
     private func makeModel() async throws -> (URL, JournalModel) {

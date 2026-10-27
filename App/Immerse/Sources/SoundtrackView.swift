@@ -1,3 +1,4 @@
+import AVFoundation
 import FilmDomain
 import FilmPersistence
 import MediaCatalog
@@ -99,5 +100,19 @@ struct SoundtrackView: View {
         let currentChoice = current?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
             ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
         return selectedChoice == currentChoice && selectedAssetID == current?.asset?.id
+    }
+}
+
+/// The sound of a developed Movie or a sample movie plays as a video in Photos does: through the speaker, whatever the
+/// Ring/Silent switch, and not through the earpiece a movie Camera's microphone left the app routed to. The category is
+/// set as a player is made; the player makes it active as it starts, so other audio stops only once a movie plays.
+enum MoviePlaybackAudio {
+    static func prepare() {
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+    }
+
+    /// Lets other audio resume once the player is gone.
+    static func finish() {
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 }

@@ -92,6 +92,10 @@ private struct LoadFilmView: View {
             Section {
                 LabeledContent("Capacity") { camera.capacityText }
                 Text(camera.revealLabel)
+                if let sound = camera.loadSoundLabel {
+                    Text(sound).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("load-film-sound")
+                }
                 Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 // The choice comes before the look lines, which on the 6×6 say what each Film Stock develops like.
                 if !camera.filmStocks.isEmpty {
@@ -152,6 +156,7 @@ private struct LoadFilmView: View {
                 }.disabled(loading).accessibilityIdentifier("load-film")
             }
         }
+        .contentMargins(.bottom, 34, for: .scrollContent)
     }
 
     private var suggestedTitle: String {

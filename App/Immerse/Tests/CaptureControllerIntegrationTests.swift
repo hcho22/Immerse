@@ -301,6 +301,45 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertTrue(model.capture.microphoneUnavailable, "Declining access leaves an independent silent-recording note")
     }
 
+    /// P2: the shooting screen's session starts once and ends once, however often the screen disappears behind a print
+    /// and appears again, so the hold's notifications are balanced and nothing stays held when it leaves.
+    func testTheShootingSessionStartsAndEndsExactlyOnce() {
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
+        let generating = UIDevice.current.isGeneratingDeviceOrientationNotifications
+        capture.beginShootingSession()
+        capture.beginShootingSession()
+        XCTAssertTrue(capture.presented)
+        XCTAssertTrue(UIDevice.current.isGeneratingDeviceOrientationNotifications)
+        capture.endShootingSession()
+        capture.endShootingSession()
+        XCTAssertFalse(capture.presented)
+        XCTAssertFalse(capture.shootingSessionActive)
+        XCTAssertEqual(UIDevice.current.isGeneratingDeviceOrientationNotifications, generating,
+                       "The session's notifications end as often as they began")
+    }
+
+    /// S1: iOS makes the app inactive while it asks for the microphone, which pauses the camera. The question is asked
+    /// before the open takes its session, so answering it leads on to starting the camera (which throws on the
+    /// simulator, which has none) instead of ending the open quietly on a paused camera.
+    func testTheMicrophoneQuestionDoesNotStopTheOpenThatAskedIt() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureMicrophoneOpen-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let scene = InactiveDuringQuestion()
+        let authorizer = SyntheticCamera(granted: true, microphoneStatus: .notDetermined, microphoneResult: true,
+                                         whileAskingForTheMicrophone: { await scene.goInactive() })
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     cameraAuthorizer: authorizer)
+        scene.model = model
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "New Movie",
+                                                   movieOrientation: .portrait, access: .subscription)
+        var reachedTheCamera = false
+        do { try await model.capture.open(film: film, model: model) } catch { reachedTheCamera = error is NativeCaptureError }
+        XCTAssertTrue(scene.wentInactive, "The question made the app inactive, as iOS does")
+        XCTAssertTrue(reachedTheCamera, "After the answer the open starts the camera instead of ending on a paused one")
+        XCTAssertFalse(model.capture.microphoneUnavailable)
+    }
+
     /// The actual capture screen while a 16mm clip records, retained as a screenshot. The simulator has no camera,
     /// so a recording start stands in for a clip: the line counts down in red in the resting line's minutes and
     /// seconds, while the shutter and the missing-camera message still show the simulator's idle camera.
@@ -553,11 +592,23 @@ final class MicrophonePromptCounter: Sendable {
     func increment() { count.withLock { $0 += 1 } }
 }
 
+/// Stands in for the scene going inactive while iOS shows a permission question.
+@MainActor final class InactiveDuringQuestion: Sendable {
+    weak var model: JournalModel?
+    private(set) var wentInactive = false
+    func goInactive() {
+        wentInactive = true
+        model?.capture.pauseForInactiveScene()
+    }
+}
+
 struct SyntheticCamera: CapturePermissionAuthorizing {
     let granted: Bool
     var microphoneStatus: CaptureAuthorizationStatus = .authorized
     var microphoneResult = true
     var microphoneCalls: MicrophonePromptCounter?
+    /// What happens while the microphone question shows, as the app going inactive.
+    var whileAskingForTheMicrophone: (@Sendable () async -> Void)?
     func authorizationStatus() -> CaptureAuthorizationStatus { granted ? .authorized : .denied }
     func requestAccess() async -> Bool { granted }
     func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus {
@@ -565,6 +616,7 @@ struct SyntheticCamera: CapturePermissionAuthorizing {
     }
     func requestMicrophoneAccess() async -> Bool {
         microphoneCalls?.increment()
+        await whileAskingForTheMicrophone?()
         return microphoneResult
     }
 }

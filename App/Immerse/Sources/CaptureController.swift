@@ -78,26 +78,27 @@ final class CaptureController {
     func open(film: Film, model: JournalModel) async throws {
         guard !busy else { throw JournalError.operationInProgress }
         busy = true
+        updateOrientation()
+        microphoneUnavailable = false
+        // iOS makes the app inactive while it asks for the camera or the microphone, which pauses the camera
+        // (`pauseForInactiveScene`) and so ends any open that has already taken its session request. The questions come
+        // first, so the answer leads straight on to the camera starting.
+        let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
+        if allowed, film.camera.recordsLiveSound == true {
+            let status = authorizer.microphoneAuthorizationStatus()
+            let hasMicrophone: Bool
+            if status == .notDetermined { hasMicrophone = await authorizer.requestMicrophoneAccess() }
+            else { hasMicrophone = status == .authorized }
+            microphoneUnavailable = !hasMicrophone
+        }
         let request = sessionRequest
         defer {
             busy = false
             // Whatever stopped the camera during this open owns the wait for a print now.
             if request == sessionRequest { resumesAfterReveal = false }
         }
-        updateOrientation()
-        microphoneUnavailable = false
-        let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
         guard allowed else {
             throw JournalError.cameraDenied
-        }
-        if film.camera.recordsLiveSound == true {
-            let status = authorizer.microphoneAuthorizationStatus()
-            let hasMicrophone: Bool
-            if status == .notDetermined { hasMicrophone = await authorizer.requestMicrophoneAccess() }
-            else { hasMicrophone = status == .authorized }
-            microphoneUnavailable = !hasMicrophone
-        } else {
-            microphoneUnavailable = false
         }
         if filmID != film.id {
             let receiver = try await model.trial.receiver(filmID: film.id)
@@ -168,6 +169,8 @@ final class CaptureController {
         exposure = Double(controls.exposureBias)
         preview = await backend.previewSource()
         await updatePhase(backend)
+        // The camera runs again, so a note that it was paused, left by the last close or an interruption, is over.
+        message = nil
         if film.camera.recordsLiveSound == true,
            authorizer.microphoneAuthorizationStatus() != .authorized {
             microphoneUnavailable = true
@@ -253,6 +256,31 @@ final class CaptureController {
 
     func setFocus() async throws { try await backend?.setManualFocus(Float(focus)) }
     func setExposure() async throws { try await backend?.setExposureBias(Float(exposure)) }
+
+    /// Whether a shooting screen's session is under way: between `beginShootingSession` and `endShootingSession`.
+    private(set) var shootingSessionActive = false
+
+    /// Starts a shooting screen's session: the iPhone's hold is read and followed, and the window held portrait. Only
+    /// once, however often the screen appears behind the prints and questions it shows.
+    func beginShootingSession() {
+        guard !shootingSessionActive else { return }
+        shootingSessionActive = true
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        updateOrientation()
+        presented = true
+        InterfaceOrientationLock.hold(.portrait)
+    }
+
+    /// Ends the shooting screen's session exactly once, however the screen left: the camera stops, the hold is no longer
+    /// read, and the window turns back to how the iPhone is held.
+    func endShootingSession() {
+        guard shootingSessionActive else { return }
+        shootingSessionActive = false
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        presented = false
+        suspend()
+        InterfaceOrientationLock.release(turningTo: InterfaceOrientationLock.mask(held: held))
+    }
 
     /// Stops the camera while an Instant print shows. Unlike `suspend`, it is meant to end: `printsClosed`.
     func pauseForReveal() {

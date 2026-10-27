@@ -70,10 +70,14 @@ private struct CatalogSampleView: View {
                     let displayed = CGRect(origin: .zero, size: size).applying(transform).standardized
                     guard displayed.width > 0, displayed.height > 0, !Task.isCancelled else { return }
                     aspect = displayed.width / displayed.height
+                    MoviePlaybackAudio.prepare()
                     player = AVPlayer(url: verified.url)
                 } else { throw MediaCatalogError.incompatibleAsset }
             } catch { if !Task.isCancelled { failed = true } }
         }
-        .onDisappear { player?.pause(); player?.replaceCurrentItem(with: nil); player = nil; image = nil }
+        .onDisappear {
+            player?.pause(); player?.replaceCurrentItem(with: nil); player = nil; image = nil
+            MoviePlaybackAudio.finish()
+        }
     }
 }
