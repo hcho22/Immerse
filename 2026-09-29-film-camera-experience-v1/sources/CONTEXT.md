@@ -59,6 +59,7 @@
 > **Zoom Step** widened from "the 6×6 Medium Format's rear camera" to the rear cameras of the 6×6, the Super 8 and the 16mm, replacing "the other Cameras and the front camera keep their single lens"; every Camera focuses on Auto unless set to Fixed (Disposable, Super 8) or Manual (6×6), replacing the catalog's "fixed focus" and "a fixed-focus lens" (ADR 0020).
 > The **Viewfinder** sits in one area on every Camera, the phone's Camera app's 4:3 photo frame (ADR 0019); a developed photo opens in a full-screen view that swipes between prints, and the **Darkroom** never turns (ADR 0021).
 > In the **Darkroom**, **Adjust** (crop, quarter turns, straightening) and **Vignette** are new terms; "The **Darkroom** does not offer a saturation control." was replaced by a Saturation control on color prints as a stated exception (ADR 0022); the Instant's rules gained quarter turns; **Basic Edit** is the general word for a Darkroom edit and no longer lists "saturation slider" under _Avoid_; "Darkroom adjustments" became "Basic Edits"; and **Dodge/Burn** with its rule moved, unchanged, to "Deferred to v2 - Darkroom Dodge/Burn" (ADR 0023).
+> Reading the draft of that amendment the same day, he chose that an Instant asks about keeping its prints' originals once, after the pack's last print, instead of after each print ("Originals option appears AFTER all 10 exposures are used"), which added a Relationships rule.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -461,6 +462,7 @@ _Avoid_: Draft, incomplete album
 - When original export is chosen, source copies are removed only after saving to Photos succeeds.
 - When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
 - The original-export choice is presented at personal Development or Group Film Release.
+- An **Instant Film** presents the original-export choice once, after its last Exposure's print is revealed, for every print still undecided; until then its owner may make the choice at any time from the Film (2026-10-26).
 - For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
 - Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
 - Participants are told the export deadline and that unexported originals will be permanently deleted; the developed master and reversible edits remain available after expiry.

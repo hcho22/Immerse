@@ -23,6 +23,11 @@ Asked how a built-in Soundtrack and recorded sound go together, he chose "A".
 A Developed Movie's sound is one of three: its recorded sound (the default for a Film that records sound), one built-in Soundtrack in its place, or silence.
 A Soundtrack never mixes with the recorded sound, choosing one never discards the recorded sound, and the choice can be changed back at any time without developing again.
 
+**The sound is in the iPhone Camera app's own format.**
+Shown the draft requirements, which left the sound's format open, he answered: "2 Same format as iphone's own camera".
+A Developed Movie's recorded sound, and the sound of its export, use the format the iPhone's own Camera app records; on current iPhones that is expected to be AAC at 48 kHz, in stereo where the phone records stereo and mono otherwise, which the build verifies on current iOS rather than taking from this record.
+The picture's export format of 2026-10-13 is unchanged.
+
 **Privacy.**
 The app records sound only while a movie clip records, on the iPhone, into the Film's private storage, and sends it nowhere.
 The microphone is the second iOS permission the capture screen asks for, after the camera.

@@ -93,7 +93,8 @@ The notes under the user journeys in section 5.1 and the prototype gap in sectio
 
 **Amendment of 2026-10-26 (a separate file, no version change).**
 After using the app on his iPhone, the captain asked for eleven changes and settled each the same day: a photo view that swipes between prints, Zoom Steps and live sound on the movie Cameras, a focus switch starting on Auto, the iPhone Camera's 4:3 Viewfinder area under a one-line header, Camera names without a decade, a Darkroom that never turns and keeps its print one size, Adjust with quarter turns and straightening, Saturation, Vignette, and Dodge/Burn deferred to v2.
-The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-22 to FR-34, and ADRs 0018 to 0023 record them.
+Reading its draft the same day, he set the open sound format and the Instant reveal's hold, and asked that the Instant ask about originals once, after the pack.
+The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-22 to FR-35, and ADRs 0018 to 0023 record them.
 Where it supersedes text in this file, a short note marked "2026-10-26" says so and points there; this file's text, FR, DEC and section numbers are otherwise unchanged.
 
 **Decisions of 2026-10-16 (amended in version 2.1, no version change).**
@@ -584,7 +585,7 @@ Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie ma
 
 **Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, resolutions, and audio channel guarantees are not yet specified.
 
-> **2026-10-26:** The fourth paragraph's "Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio." is superseded for Films loaded after this date ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28); the sound format is open as DEC-19.
+> **2026-10-26:** The fourth paragraph's "Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio." is superseded for Films loaded after this date ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28); the sound is in the iPhone Camera app's own format (DEC-19).
 
 ### FR-06 — Completion, early Development, Instant reveal, and recovery
 
@@ -630,6 +631,8 @@ Unrevealed original captures stay in private app storage and are never written t
 Present the original-export choice at personal Development. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals are removed from current app-controlled storage; originals present in an earlier iOS device backup can return when that backup is restored (DEC-17). Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
 
 **Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup. The privacy copy says that restoring an older backup can bring back app data removed after it, including discarded media or a deleted whole Film (DEC-17).
+
+> **2026-10-26:** The Instant's originals choice is presented once, after the pack's last print, for every print still undecided, and the Film screen can decide it at any time before that ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-35).
 
 ## 8. Deferred to v2 - Group Film and Account requirements
 
@@ -1274,7 +1277,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 
 Do not resolve these by silently shipping assumptions that change the product's reveal, billing, privacy, or capacity promises. Implementation estimates and calendar release dates are not agreed.
 
-> **2026-10-26:** DEC-04's "silent" Movie export, DEC-11's Dodge and Burn limit and DEC-13's "no ... microphone" are superseded, and DEC-11 gains the straightening, saturation and vignette limits ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), sections 2 and 4); DEC-19 and DEC-20 are new open decisions in the tracker.
+> **2026-10-26:** DEC-04's "silent" Movie export, DEC-11's Dodge and Burn limit and DEC-13's "no ... microphone" are superseded, DEC-11 gains the straightening, saturation and vignette limits, and DEC-11's "the Instant asks about keeping the original after each print" now reads once, after the pack ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), sections 2 and 4, FR-35).
 
 ## 16. Out of scope and possible later work
 
@@ -1349,7 +1352,7 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
-> **2026-10-26:** The rows "Saturation/basic modern editor" and "A single lens on every Camera" are superseded; the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) adds the decisions of that day in its section 9.
+> **2026-10-26:** The rows "Saturation/basic modern editor" and "A single lens on every Camera" are superseded, and so is the Darkroom-ranges row's "the Instant asks about keeping the original after each print"; the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) adds the decisions of that day in its section 9.
 
 ## 18. Current evidence and definition of done
 

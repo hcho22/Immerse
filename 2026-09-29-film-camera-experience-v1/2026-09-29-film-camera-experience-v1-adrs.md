@@ -121,7 +121,7 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0015 (v1):** It makes each Camera's look checkable against one named original. The captain decided on 2026-10-06 that the check is side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera (recorded in the tracker as QA-16). The manufacturer and film names appear in internal documents only, and no product string, store listing or Film Stock label may use them.
 - **0016 (v1; exceptions to 0013):** The 1970s Instant develops with a faded look: lifted, milky blacks, muted color and age-style tints, replacing "Brilliant, warm, saturated color" in PRD section 6.1 for that Camera. The 1960s Super 8 Home Movie develops muted, with a glow: lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights, replacing "Strong, rich color" in PRD section 6.2 for that Camera. PRD sections 6.1 and 6.2 are the captain's text and stay as written; this note, ADR 0016 and the tracker's "Captain decisions recorded in version 2.0" table record how the two exceptions change the way those rows apply. The 16mm Cinema's color Film Stock keeps everything PRD section 6.2 gives it, with its color and per-frame passes taken from the captain's own files, and its black at the 4 percent he asked for again once they were applied, by the shorter print density range he chose, which opens the shadows as well. The 6×6 Medium Format's color Film Stock keeps what PRD section 6.1 gives it, with its color, lens vignette and grain taken from the captain's own files; its lifted blacks are his look, and the vignette is one the PRD's row does not list. ADR 0013 still governs everything else, and a later exception needs the captain's choice on that Camera's review board, recorded in ADR 0016. The app's not-aged tests cover every Camera and Film Stock except those `FilmLook.isCaptainsException` names, with a separate test holding the Instant and the Super 8 each to its chosen look, and `NegativeFilmTests`, `ScenePassesTests` and `MediumFormatPassesTests` holding the two color stocks to the captain's files.
 - **0017 (v1; reverses part of PRD 2.0 FR-04):** PRD version 2.0 gave the 6×6 Medium Format "a waist-level viewfinder that shows the scene reversed left to right" (section 6.1, FR-03 and FR-04). The captain withdrew it on 2026-10-16: the 6×6's rear viewfinder is the normal one, the front viewfinder stays mirrored for every Camera, and developed pictures were never reversed. The PRD's three sentences were amended in the same file, FR-03's by its removal, with the original wording kept in the note of that date ("Decisions of 2026-10-16"). The same day he chose that the shooting screen holds the portrait layout whichever way the iPhone is held, with its words and icons turning to read upright, and that the 6×6 zooms in the steps of the iPhone's own lenses; PRD FR-04 now says both. No ADR 0001 to 0016 is superseded, and Movie orientation (FR-05) is unchanged: a clip still keeps the orientation it started in, and the Movie Orientation fixed at Load Film is untouched.
-- **0018 to 0023 (v1, 2026-10-26):** They amend PRD version 2.1 through the PRD amendment of 2026-10-26, whose section 2 names every superseded sentence; PRD 2.1 carries short notes at each, and its text is otherwise unchanged. ADR 0017's text stays as written: its 6×6-only zoom and the Super 8's fixed focus are superseded by ADR 0020, its viewfinder sizing and taller header by ADR 0019, and the Darkroom's turning by ADR 0021; its rule that the shooting screen never turns stands, and its "Instant - 1" rule for what opens from the camera stands until the open question DEC-20 is answered. ADR 0015's Format References are unchanged, and the Super 8's sound and Zoom Steps are recorded departures from its reference camera, as the 16mm's red glow is from its film.
+- **0018 to 0023 (v1, 2026-10-26):** They amend PRD version 2.1 through the PRD amendment of 2026-10-26, whose section 2 names every superseded sentence; PRD 2.1 carries short notes at each, and its text is otherwise unchanged. ADR 0017's text stays as written: its 6×6-only zoom and the Super 8's fixed focus are superseded by ADR 0020, its viewfinder sizing and taller header by ADR 0019, and the Darkroom's turning by ADR 0021; its rule that the shooting screen never turns stands, and so does its "Instant - 1" rule for what opens from the camera, which the captain kept when he answered DEC-20 ("1A"). ADR 0015's Format References are unchanged, and the Super 8's sound and Zoom Steps are recorded departures from its reference camera, as the 16mm's red glow is from its film.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -530,6 +530,11 @@ Asked how a built-in Soundtrack and recorded sound go together, he chose "A".
 A Developed Movie's sound is one of three: its recorded sound (the default for a Film that records sound), one built-in Soundtrack in its place, or silence.
 A Soundtrack never mixes with the recorded sound, choosing one never discards the recorded sound, and the choice can be changed back at any time without developing again.
 
+**The sound is in the iPhone Camera app's own format.**
+Shown the draft requirements, which left the sound's format open, he answered: "2 Same format as iphone's own camera".
+A Developed Movie's recorded sound, and the sound of its export, use the format the iPhone's own Camera app records; on current iPhones that is expected to be AAC at 48 kHz, in stereo where the phone records stereo and mono otherwise, which the build verifies on current iOS rather than taking from this record.
+The picture's export format of 2026-10-13 is unchanged.
+
 **Privacy.**
 The app records sound only while a movie clip records, on the iPhone, into the Film's private storage, and sends it nowhere.
 The microphone is the second iOS permission the capture screen asks for, after the camera.
@@ -546,7 +551,7 @@ Decided on 2026-10-26.
 
 Interpret the ADR with the PRD amendment of 2026-10-26, FR-27 and FR-28, which replace PRD 2.1 FR-05's fourth paragraph ("Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio."); PRD 2.1's acceptance that both Movie Cameras operate with the microphone denied stands.
 It also changes how three 2026-10-13 decisions apply: Movies were to export "silent" (DEC-04), the privacy text was to say there is no microphone (DEC-13), and Settings says "Microphone: Not used".
-The sound format of exported Movies is open as DEC-19 in the tracker.
+The captain set the sound format on reading the PRD draft, "2 Same format as iphone's own camera" (DEC-19 in the tracker): the format the iPhone's own Camera app records, which the ADR now records.
 The architecture baseline's "no microphone" rows are superseded for the movie Cameras by this ADR; the baseline document is not edited.
 
 ### ADR 0019
@@ -641,14 +646,15 @@ After using the app on his iPhone, the captain asked three things on 2026-10-26:
 He chose "A, all cameras" for swiping, and "A" for where it happens.
 Tapping a developed print on the Film screen opens a full-screen photo view, as in the iPhone's Photos app, and a swipe left or right there moves to the previous or next developed print of that Film, on every photo Camera.
 A Darkroom button in the photo view edits the print shown, and Save or Cancel in the Darkroom returns to the photo view.
-The print shown at the camera right after an Instant exposure opens in the photo view too, showing only that new print with no swiping, and the question about keeping its original follows as before.
+The print shown at the camera right after an Instant exposure opens in the photo view too, showing only that new print with no swiping; by his later decision the same day, the question about keeping an Instant print's original no longer follows each print but comes once, after the pack's last print (PRD amendment of 2026-10-26, FR-35).
 The Darkroom stays one print at a time.
+Shown the draft requirements, which left open whether the photo view showing a new Instant print at the camera turns, he chose that it stays upright while the shooting screen is up ("1A"), as ADR 0017's "Instant - 1" holds everything opened from the camera; the photo view turns only when opened from the Film screen.
 
 **The Darkroom keeps its portrait layout in every hold.**
 He chose "A".
 The Darkroom keeps its portrait layout whichever way the iPhone is held, opened from anywhere, on every Camera, as the shooting screen does under ADR 0017.
 The side-by-side landscape arrangement he chose on 2026-10-14 ("landscape - side by side") is removed.
-The photo view turns with the iPhone, as the Photos app does, so a sideways print can fill the screen; the Journal, the Film screen and Settings turn as before.
+The photo view opened from the Film screen turns with the iPhone, as the Photos app does, so a sideways print can fill the screen; the Journal, the Film screen and Settings turn as before.
 
 **The print keeps one size.**
 He chose "A".
@@ -672,7 +678,8 @@ Decided on 2026-10-26.
 Interpret the ADR with the PRD amendment of 2026-10-26, FR-22, FR-29 and FR-30.
 It supersedes ADR 0017's "Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included" for the Darkroom, and the captain's decisions of 2026-10-14 recorded in the tracker ("immerse crop fit" and "landscape - side by side").
 `PhotoView` on `main` already showed one developed print with Darkroom and Discard buttons before the Darkroom; the photo view decided here is that view made full-screen, swiping and turning.
-Whether the photo view that shows the Instant's reveal at the camera turns, or stays upright under ADR 0017's "Instant - 1", is open as DEC-20 in the tracker.
+The photo view that shows the Instant's reveal at the camera stays upright under ADR 0017's "Instant - 1", as the captain chose on reading the PRD draft ("1A", DEC-20 in the tracker), which the ADR now records.
+The same day he moved the Instant's question about keeping each print's original from after each print to once after the pack's last print ("Originals option appears AFTER all 10 exposures are used"), reversing that part of the 2026-10-13 decision under DEC-11; it changes when a question is asked, is easily reversed and is no real trade-off, so it has no ADR of its own, and the PRD amendment's FR-35 and the tracker's DEV-12 record it, with this note and the ADR's reveal sentence pointing there.
 
 ### ADR 0022
 

@@ -16,7 +16,7 @@ awk -F '|' '
     id ~ /^[A-Z]+-[0-9][0-9]$/ { print id }
 ' "$package/$package-evidence-map.md" | sort > "$temporary/map"
 diff -u "$temporary/tracker" "$temporary/map"
-test "$(wc -l < "$temporary/map" | tr -d ' ')" = 155
+test "$(wc -l < "$temporary/map" | tr -d ' ')" = 154
 test -z "$(uniq -d "$temporary/map")"
 
 awk -F '|' '
@@ -31,4 +31,4 @@ awk -F '|' '
     inInvariants && /^\| / && $2 !~ /Invariant|---/ { print $2 }
 ' "$package/$package-acceptance-evidence.md" > "$temporary/invariants"
 test "$(wc -l < "$temporary/invariants" | tr -d ' ')" = 9
-printf '%s\n' 'Traceability: 155 intake IDs, 74 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'
+printf '%s\n' 'Traceability: 154 intake IDs, 74 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'

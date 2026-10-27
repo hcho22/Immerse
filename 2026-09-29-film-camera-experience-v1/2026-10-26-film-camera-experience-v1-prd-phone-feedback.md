@@ -10,7 +10,7 @@ The build plan in section 7 is proposed and not yet approved by the captain.\
 This document amends PRD version 2.1 with the decisions the captain made on 2026-10-26, after using the app on his iPhone.
 It does not replace PRD version 2.1: every requirement there stands except where section 2 below names it as superseded, and where the two differ, this document applies.
 The PRD 2.1 file carries short notes at each superseded place that point here; no FR, DEC, section or task number changes, and nothing is renumbered.
-New requirements are numbered FR-22 to FR-34, after PRD 2.1's FR-01 to FR-21.
+New requirements are numbered FR-22 to FR-35, after PRD 2.1's FR-01 to FR-21.
 
 The decisions are recorded in six new ADRs, [0018](adr/0018-the-movie-cameras-record-live-sound.md) to [0023](adr/0023-dodge-and-burn-are-deferred-to-v2.md), in the [domain-model snapshot](sources/CONTEXT.md) (its 2026-10-26 note) and in the [task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md) (its decisions table, DEC-11 and the 2026-10-26 slices).
 Requirements below are the captain's decisions unless labeled **Firstmate's stated default** (a default stated to the captain that he did not object to), **Builder's reading** (what follows from a decision but was not put to him) or **Open** (section 8).
@@ -33,6 +33,8 @@ He wrote them as asks for the app on 2026-10-26:
 11. "remove dodge and burn from current darkroom. lets save it for v2"
 
 Then: "please generate a detailed prd for the new implementation with each task including today's date as part of the title."
+
+After reading the draft of this document the same day, he answered its two open decisions and added one more change: "1A, 2 Same format as iphone's own camera. additionally, implement one more feature: for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."
 Each ask was settled the same day by choosing among lettered options; the reply that chose each is quoted in section 1.
 
 ## 1. Summary of the decisions
@@ -51,6 +53,9 @@ Each ask was settled the same day by choosing among lettered options; the reply 
 | 10 | Saturation | "A", "A" | A Saturation slider on color prints only, -50 to +50 in whole steps, as a stated exception to the physical-technique test. | FR-32 | 0022 |
 | 11 | Vignette | "A" | One Vignette slider, -2.0 to +2.0 stops at the corners in 0.1 steps, on every photo print, the Instant's picture only. | FR-33 | none needed (passes the physical-technique test) |
 | 12 | Dodge/Burn | "remove dodge and burn from current darkroom. lets save it for v2" | No Dodge/Burn tool in v1; its requirement and limit move to v2; a print saved with strokes keeps printing as saved, and Reset clears them. | FR-34 | 0023 |
+| 13 | The Instant's reveal at the camera (DEC-20) | "1A" | The photo view showing a new Instant print over the camera stays upright while the shooting screen is up; it turns only when opened from the Film screen. | FR-22 | 0021 |
+| 14 | The sound format (DEC-19) | "2 Same format as iphone's own camera" | A Developed Movie's recorded sound and its export use the format the iPhone's own Camera app records. | FR-28 | 0018 |
+| 15 | The Instant's originals | "for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure." | The question about keeping an Instant print's original comes once, after the pack's last print is revealed, and covers every print still undecided. | FR-35 | none needed (a reversible flow change) |
 
 ## 2. What this amendment supersedes
 
@@ -74,14 +79,16 @@ The superseded text stays where it is, with a note pointing here; nothing is del
 | FR-04, "Zoom belongs to the 6×6 and its rear camera alone: the front camera and every other Camera keep their single lens." | Zoom on the 6×6 only | FR-26 |
 | FR-04, "The 1960s Super 8 Home Movie has a fixed-focus lens and sets exposure automatically." | The Super 8's fixed focus (its automatic exposure stands) | FR-25 |
 | FR-05, fourth paragraph | "Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. No v1 Camera requires microphone permission or records audio." | FR-27 and FR-28 (the rest of the paragraph, "Additional sound-editing tools are out of scope", stands) |
-| FR-05, acceptance | "Exact codecs, resolutions, and audio channel guarantees are not yet specified" now covers a recorded sound track | Open: DEC-19 (section 8) |
+| FR-05, acceptance | "Exact codecs, resolutions, and audio channel guarantees are not yet specified" now covers a recorded sound track | FR-28: the sound is in the iPhone Camera app's own format (DEC-19, decided) |
 | FR-07, first paragraph | "crop" (now Adjust), "and local Dodge/Burn", "no universal modern saturation slider" | FR-31, FR-34, FR-32 |
 | FR-07, second paragraph | "Instant prints are the one exception to the analog-equivalent test: they receive the same adjustments as other color exposures except crop" | FR-31 (quarter turns only on the Instant) and FR-32 (Saturation is the second exception) |
 | FR-07, acceptance | "No saturation control" | FR-32 ("No crop control appears for an Instant print" stands, and the Instant's Adjust shows only the two turn buttons) |
 | FR-16, Movie paragraph | "Preserve orientation and any selected soundtrack." | FR-28: preserve orientation and the Movie's sound choice |
 | Section 13, test group 4 | "no microphone permission prompt" | FR-27: the microphone question on the first movie Camera opening, and silent recording when it is declined |
-| Section 15, DEC-04 row | Movies export "silent" (2026-10-13) | FR-28: a Developed Movie exports with its sound choice; the sound format is DEC-19 |
+| Section 15, DEC-04 row | Movies export "silent" (2026-10-13) | FR-28: a Developed Movie exports with its sound choice, in the iPhone Camera app's own sound format (DEC-19) |
 | Section 15, DEC-11 row | "Dodge and Burn -3.0 to +3.0 stops"; "crop per photo" | FR-34 (the Dodge and Burn limit moves to v2, section 6); FR-31 (Adjust); the new limits in section 4 |
+| Section 15, DEC-11 row, and section 17's Darkroom-ranges row | "the Instant asks about keeping the original after each print" (2026-10-13) | FR-35: once, after the pack's last print |
+| FR-08, third paragraph | "The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames." | FR-35 decides when the Instant asks; the rule against exporting future sealed frames stands |
 | Section 15, DEC-13 row | The privacy text "says there is no ... microphone" | FR-27, Privacy |
 | Section 16 | "saturation/AI retouching" | FR-32 (AI retouching stays out) |
 | Section 17 | Row "Saturation/basic modern editor": "Analog-constrained per-photo Darkroom without saturation; reversible Dodge/Burn included."; row "A single lens on every Camera": "every other Camera keep their single lens" | FR-32, FR-34, FR-26; section 9 adds rows |
@@ -98,6 +105,7 @@ The superseded text stays where it is, with a note pointing here; nothing is del
 | Tracker, captain's decision of 2026-10-14, "landscape - side by side" | The side-by-side landscape Darkroom | ADR 0021, FR-29 |
 | Tracker, 2026-10-13 decision C (DEC-11) | Dodge and Burn of -3.0 to +3.0 stops in v1 | ADR 0023, FR-34 |
 | Tracker, 2026-10-13 decision A.2 (DEC-04) | Movies exported "silent" | ADR 0018, FR-28 |
+| Tracker, 2026-10-13 decision C (DEC-11), the Instant's part | "the Instant asking about the original after each print" | FR-35 |
 | Tracker, 2026-10-13 decision E (DEC-13) | Privacy text saying there is no microphone | ADR 0018, FR-27 |
 
 The original ADR files and the original ADR text in the collected ADR document are not edited; the collection's reconciliation notes record these changes.
@@ -156,9 +164,10 @@ When the captain decided, the choice was put as adding a viewer before the Darkr
    The swipe stops at the first and last developed prints.
 3. The view shows the print whole, the Instant's with its white card, and keeps the Darkroom button and Discard that `PhotoView` has today, acting on the print shown.
 4. The Darkroom button opens the Darkroom on the print shown; Save or Cancel returns to the photo view on that same print, showing its saved edits after Save.
-5. The photo view turns with the iPhone, as the Photos app does, so a sideways print can fill the screen (decision 8).
-6. The print shown at the camera right after an Instant exposure (the reveal) opens in the photo view, showing only that new print with no swiping, with the same Darkroom button; the question about keeping the print's original follows as it does today.
-   Whether that view turns with the iPhone while the shooting screen is up is **Open** (DEC-20, section 8).
+5. Opened from the Film screen, the photo view turns with the iPhone, as the Photos app does, so a sideways print can fill the screen (decision 8).
+6. The print shown at the camera right after an Instant exposure (the reveal) opens in the photo view, showing only that new print with no swiping, with the same Darkroom button.
+   No question about the print's original follows a single print; it comes once, after the pack's last print (FR-35).
+   This view stays upright while the shooting screen is up, as ADR 0017's "Instant - 1" holds everything opened from the camera (the captain, "1A", DEC-20); the photo view turns with the iPhone only when opened from the Film screen.
 7. Discarding a print from the photo view removes it as today (FR-16) and shows the next developed print, or closes the view when none is left.
    This is the **Builder's reading** of keeping Discard in a swiping view.
 
@@ -166,8 +175,8 @@ When the captain decided, the choice was put as adding a viewer before the Darkr
 
 - On a developed Disposable, Instant and 6×6 Film with at least three developed prints, a tester taps the second print and swipes left and right to reach the first and third; no sealed or discarded frame appears.
 - The Darkroom button edits the print shown; after Save, swiping away and back shows the edit; after Cancel, nothing changed.
-- Held sideways, the photo view turns and shows a landscape print larger than it does upright.
-- After an Instant exposure the new print shows in the photo view with no swipe to any other print, and the original question still follows.
+- Opened from the Film screen and held sideways, the photo view turns and shows a landscape print larger than it does upright.
+- After an Instant exposure the new print shows in the photo view with no swipe to any other print, upright in every hold, and no question about its original follows unless it was the pack's last print (FR-35).
 - No sealed capture is reachable from the photo view by any gesture or VoiceOver action.
 
 **Limits.** No zoom into the print, no sharing sheet and no editing in the photo view itself are added; those are not asked for.
@@ -382,11 +391,13 @@ Movies export as H.264 in a `.mov` with no sound track unless a Soundtrack is ch
 4. The Movie plays, and Save Developed to Photos exports it, with the sound chosen.
 5. Discard and the Movie's rebuild keep the sound choice (FR-16).
 
-**Acceptance.** A developed Super 8 Movie with sound plays with it; choosing Silent and then Recorded sound brings the sound back without Development running again; an exported Movie read back from the file handed to Photos carries the sound chosen (`ApprovedExportTests` style).
+**Acceptance.** A developed Super 8 Movie with sound plays with it, and its sound track has the codec, sample rate and channel count of a video the same iPhone's Camera app records; choosing Silent and then Recorded sound brings the sound back without Development running again; an exported Movie read back from the file handed to Photos carries the sound chosen (`ApprovedExportTests` style).
 
 **Limits.** No mixing, volume, trimming, voice-over or music import (PRD 2.1 FR-05 stands).
 Until a licensed Soundtrack ships (DEC-05), the choice is Recorded sound or Silent.
-The exported sound's format (codec, sample rate, channels) is an export format, which changes only on the captain's word, and is **Open** (DEC-19); the picture's export format of 2026-10-13 is unchanged.
+The sound's format, in the app and in the export, is the format the iPhone's own Camera app records (the captain, "2 Same format as iphone's own camera", DEC-19).
+On current iPhones that is expected to be AAC at 48 kHz, in stereo where the phone records stereo and mono otherwise; these are values the builder verifies against the iPhone Camera app on current iOS, not a fixed specification here.
+The picture's export format of 2026-10-13 is unchanged.
 
 **Data and compatibility.** The stored sound choice (`MovieAudioSelection`) gains Recorded sound; a selection stored before reads as it does today.
 
@@ -406,7 +417,7 @@ The exported sound's format (codec, sample rate, channels) is an export format, 
 
 1. The Darkroom keeps its portrait layout in every hold, opened from anywhere (the photo view, the Film screen, the camera), on every Camera.
 2. The side-by-side landscape arrangement is removed.
-3. The photo view turns with the iPhone (FR-22); the Journal, the Film screen and Settings turn as today.
+3. The photo view turns with the iPhone when opened from the Film screen, and stays upright over the shooting screen (FR-22); the Journal, the Film screen and Settings turn as today.
 4. Accepted cost: opening the Darkroom while holding the iPhone sideways shows it upright, reading sideways until the iPhone is turned back.
 
 **Acceptance.** In every hold, opened from each entry point, the Darkroom shows the print over the controls; closing it returns the photo view or Film screen to the hold the iPhone is in.
@@ -556,6 +567,49 @@ Immerse's `AGENTS.md` says Darkroom edits reach the Instant's picture only, with
 
 **Simulator and iPhone.** Provable in render tests and on simulators.
 
+### FR-35 - The Instant asks about originals once, after the pack
+
+**Task DEV-12 · Decision 15 · No ADR (a reversible change of when a question is asked; the tracker and the ADR collection's note for ADR 0021 record it)**
+
+**Problem.** "for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."
+After each Instant print, a sheet titled "Originals" asks about that one print's original ("Original of photo 10": save to Photos then remove from Immerse, or remove from Immerse without saving, and Confirm choice), so a pack of ten asks ten times.
+
+**Today.**
+At the camera, closing each revealed print's view raises `OriginalChoiceView` for that print when its original is undecided (`CaptureView`, `OriginalAsk`), the captain's decision of 2026-10-13 under DEC-11 ("the Instant asks about keeping the original after each print").
+The Film screen asks the same for prints revealed while it was away (its reveal watch), and keeps an Originals button that decides any undecided prints at any time.
+`OriginalChoiceView` already takes several prints at once ("Originals of N photos"), as the roll Cameras decide once at Develop Film.
+
+**Required.**
+
+1. No question about an Instant print's original follows its reveal while the pack has exposures left.
+2. Once the pack's last exposure is used and its print revealed, the question appears once, at the camera, after that print's view closes.
+3. One choice covers every print of the pack still undecided (**Firstmate's stated default**).
+4. Discarded prints, and prints already decided through the Film screen's Originals button, are not asked about again (**Firstmate's stated default**).
+5. The Film screen's Originals button stays, so a pack that is never finished can still be decided at any time (**Firstmate's stated default**).
+6. If the app closes or leaves the camera before the question is answered, the Film screen asks on the next visit (**Firstmate's stated default**: today's reveal-watch path, moved to the pack's completion).
+7. The choice and its effects are unchanged: originals are removed from Immerse only after a usable developed master is safely stored, and only after a successful Photos save where saving was chosen (FR-08); no future sealed frame is ever exported.
+
+**Acceptance.**
+
+- Exposures 1 to 9 of a pack each reveal a print with no originals question after it.
+- After the tenth print's view closes, one sheet titled "Originals of 10 photos" (fewer if some were discarded or decided) asks once; confirming applies to all of them.
+- A print decided earlier from the Film screen's Originals button is not in that count.
+- Quitting the app before answering, then opening the Film, brings the question there.
+- A pack left at 6 of 10 can have its six originals decided from the Originals button, and is then not asked about them again.
+
+**Limits.** Only the Instant changes; the roll Cameras keep their choice at Develop Film, and the movie Cameras theirs.
+
+**Data and compatibility.** No stored data changes: undecided prints stay undecided in the Film's records until the choice.
+A pack loaded before this change, partly shot, asks once when it is finished, covering every print still undecided.
+Originals of undecided prints stay in the Film's private storage until the choice, sealed from Photos as today, so a pack holds up to ten originals instead of one at a time; the low-storage warning (CAP-15) is unchanged.
+Immerse's `AGENTS.md` says an Instant asks about each print's original on the screen that reveals it (`OriginalAsk`); the build that lands this corrects that sentence.
+
+**Privacy.** Unchanged in kind: originals stay private until the person chooses, and nothing is exported without the choice.
+
+**Accessibility.** The sheet is today's `OriginalChoiceView`, with its title read as the number of photos it covers.
+
+**Simulator and iPhone.** Provable with screen tests and the populated-Journal harness; checked once on a phone with a real pack (QA-17).
+
 ## 5. Cross-cutting requirements
 
 ### 5.1 Data and compatibility
@@ -569,6 +623,7 @@ Immerse's `AGENTS.md` says Darkroom edits reach the Instant's picture only, with
 | Sound choice (FR-28) | A stored Silent or Soundtrack choice stays as it was. |
 | Adjust, Saturation, Vignette (FR-31 to FR-33) | New recipe values default to none; a saved recipe prints byte for byte as today. |
 | Dodge/Burn (FR-34) | Saved strokes keep printing as saved until Reset to Original. |
+| Instant originals (FR-35) | A partly shot pack asks once when it is finished, about every print still undecided. |
 
 No Developed Treatment, treatment version, capacity, Reveal Rule or Format Reference changes.
 
@@ -598,6 +653,7 @@ Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "sile
 | Live sound (FR-27) | Question, declined path, note, save check, stored package | Real sound, sync with picture, calls, Bluetooth and wired microphones |
 | Sound choice and export (FR-28) | Assembly, choice, exported file read back | Playback through the speaker and in Photos |
 | Darkroom (FR-29 to FR-34) | Everything, including render bytes | One pass on a phone for feel |
+| Instant originals (FR-35) | The single question after the pack, the count, the Film screen fallback | One real pack on a phone |
 
 No simulator result is a physical-iPhone result; QA-17 holds the phone checks, and the manual test plan gains a section for them with its own letter.
 
@@ -606,7 +662,7 @@ No simulator result is a physical-iPhone result; QA-17 holds the phone checks, a
 1. The shooting screen: screenshots of every Camera, upright and sideways, at the default and the largest text size, on the smallest and largest supported iPhone (FR-23), with the header's words for its other states and the microphone strings (section 8).
 2. The focus switch's placement (FR-25).
 3. The Darkroom's band: screenshots of every tool on the smallest and largest supported iPhone at the default and the largest text size (FR-30), with the Vignette's falloff and the place of Saturation.
-4. The decisions still open in section 8 that are his: DEC-19 (the sound format of exported Movies) before MOV-14 ships, and DEC-20 (whether the Instant's reveal turns at the camera) before UX-11 ships.
+4. The sound of an exported Movie against the same iPhone's Camera app recording, shown with MOV-14 (DEC-19, decided).
 
 The smallest supported iPhone screen is the iPhone SE (3rd generation); the largest is the largest current Pro Max the simulator offers.
 
@@ -634,7 +690,7 @@ Each task's title carries today's date, its stable ID is in the tracker's group 
 | 0 | This documents change | DEC-18 | First |
 | 1 | The shooting screen: Viewfinder area, one-line header, focus switch and tap-to-focus, movie Zoom Steps | CAP-16, CAP-17, CAP-18, CAP-19 | After slice 0, beside 2 to 5 |
 | 2 | Movie sound: microphone, Live Audio, sound choice, exports with sound | MOV-12, MOV-13, MOV-14 | After slice 0, beside 1, 3 to 5 |
-| 3 | The photo view with swiping | UX-10, UX-11 | After slice 0, beside 1, 2, 4, 5 |
+| 3 | The photo view with swiping, and the Instant's reveal flow | UX-10, UX-11, DEV-12 | After slice 0, beside 1, 2, 4, 5 |
 | 4 | The Darkroom: upright only, fixed band, Adjust, Saturation, Vignette, Dodge/Burn removed | DRK-11 to DRK-16 | After slice 0, beside 1 to 3 and 5 |
 | 5 | Camera names everywhere | CAM-18 | After slice 0, beside 1 to 4 |
 | After all | Physical-iPhone acceptance | QA-17 | After slices 1 to 5 |
@@ -647,9 +703,8 @@ Each task's title carries today's date, its stable ID is in the tracker's group 
 - **Movie sound and names.** MOV-12's sound flag and CAM-18's name source both touch `CameraPackage.swift`; a small rebase.
 - **The photo view and the Darkroom.** UX-10 and DRK-11 both change how the Darkroom is presented (`PhotoView.swift`, `InterfaceOrientationLock.swift`): the photo view turns and the Darkroom opened from it must not.
   Whichever lands second makes the other's entry point hold: DRK-11's "opened from anywhere" includes the photo view once it exists.
-- **The Instant's reveal.** UX-11 changes the reveal at the camera (`CaptureView.swift`), which slice 1 also changes, and needs DEC-20.
+- **The Instant's reveal flow.** UX-11 (the reveal in the photo view, upright at the camera) and DEV-12 (the originals question after the pack) both change what follows an Instant exposure at the camera (`CaptureView.swift`'s print and `OriginalAsk` sheets, and `FilmDetailView`'s reveal watch), so they belong in one slice and DEV-12 follows UX-11; slice 1 also changes `CaptureView.swift`.
 - **The Darkroom band.** DRK-12 is sized for the tallest tool, so it is built after DRK-13 to DRK-16 settle the tool set, and after DRK-11 removes the landscape arrangement.
-- **Sound export.** MOV-14 needs DEC-19.
 - **Phone acceptance.** QA-17 needs every slice; the manual test candidate is re-pinned when they land.
 
 ### 7.3 Tasks
@@ -658,15 +713,13 @@ Each task's title carries today's date, its stable ID is in the tracker's group 
 Dependencies: none.
 Acceptance: this amendment, ADRs 0018 to 0023, the domain model's 2026-10-26 note, the tracker's 2026-10-26 rows and the PRD 2.1 notes agree; the documents ZIP matches the tree; the requirement-map gate passes.
 
-**DEC-19 - 2026-10-26 - Decide the sound format of Developed Movies and their exports** (open, the captain's)
+**DEC-19 - 2026-10-26 - Decide the sound format of Developed Movies and their exports** (decided the same day)
 Dependencies: none.
-Blocks MOV-14.
-Acceptance: the captain's word on the codec, sample rate and channels of a Developed Movie's sound in the app and in exports, recorded in the tracker's decisions table and DEC-04.
+Decided: "2 Same format as iphone's own camera", the format the iPhone's own Camera app records (FR-28), recorded in the tracker's decisions table and DEC-04.
 
-**DEC-20 - 2026-10-26 - Decide whether the Instant's reveal at the camera turns with the iPhone** (open, the captain's)
+**DEC-20 - 2026-10-26 - Decide whether the Instant's reveal at the camera turns with the iPhone** (decided the same day)
 Dependencies: none.
-Blocks UX-11.
-Acceptance: the captain's choice between the photo view turning there too (decision 8) and staying upright over the shooting screen (ADR 0017's "Instant - 1"), recorded in the tracker's decisions table.
+Decided: "1A", the photo view stays upright while the shooting screen is up, as ADR 0017's "Instant - 1" has it (FR-22), recorded in the tracker's decisions table.
 
 **CAP-16 - 2026-10-26 - Viewfinder area as the iPhone Camera's 4:3 photo frame** (FR-23 items 1, 2, 4 to 6)
 Dependencies: DEC-18.
@@ -693,16 +746,20 @@ Dependencies: MOV-12.
 Acceptance: FR-28's choice acceptance; changing back needs no Development.
 
 **MOV-14 - 2026-10-26 - Developed Movies and their exports carry the chosen sound** (FR-28 item 4)
-Dependencies: MOV-12, MOV-13, DEC-19.
-Acceptance: an exported Movie read back carries the sound chosen, in the format DEC-19 decides; the picture's export format is unchanged.
+Dependencies: MOV-12, MOV-13.
+Acceptance: an exported Movie read back carries the sound chosen, in the iPhone Camera app's own sound format (DEC-19); the picture's export format is unchanged.
 
 **UX-10 - 2026-10-26 - Full-screen photo view with swipe between prints** (FR-22 items 1 to 5 and 7)
 Dependencies: DEC-18; coordinate with DRK-11.
 Acceptance: FR-22's acceptance from the Film screen.
 
 **UX-11 - 2026-10-26 - The Instant's reveal in the photo view** (FR-22 item 6)
-Dependencies: UX-10, DEC-20.
-Acceptance: the new print alone, no swiping, the Darkroom button, the original question after it, turning as DEC-20 decides.
+Dependencies: UX-10.
+Acceptance: the new print alone, no swiping, the Darkroom button, upright in every hold while the shooting screen is up (DEC-20), and no originals question after it unless DEV-12's pack-end question is due.
+
+**DEV-12 - 2026-10-26 - The Instant asks about originals once, after the pack** (FR-35)
+Dependencies: UX-11 (same reveal flow at the camera).
+Acceptance: FR-35; the reveal-watch fallback on the Film screen; `AGENTS.md`'s sentence on `OriginalAsk` corrected.
 
 **DRK-11 - 2026-10-26 - The Darkroom upright in every hold** (FR-29)
 Dependencies: DEC-18; coordinate with UX-10.
@@ -733,24 +790,21 @@ Dependencies: DEC-18.
 Acceptance: FR-24.
 
 **QA-17 - 2026-10-26 - Physical-iPhone acceptance of the 2026-10-26 changes**
-Dependencies: slices 1 to 5.
+Dependencies: slices 1 to 5, DEV-12 included.
 Acceptance: the manual test plan gains a section with its own letter for every row of section 5.4's last column, the candidate is re-pinned to a commit that holds all of them, and each scenario's result is recorded.
 
 ## 8. Open questions
 
 These are not decided by this document, and none blocks it.
-The ones marked as the captain's need his word before the task named ships; the others are proposed by the builder and shown in the approval stops of section 5.5.
+They are proposed by the builder and shown in the approval stops of section 5.5.
+The draft of this document also left DEC-19 and DEC-20 open; the captain decided both the same day ("1A, 2 Same format as iphone's own camera"), and FR-22 and FR-28 carry his answers.
 
-1. **DEC-20, the captain's.** Does the photo view that shows the Instant's reveal at the camera turn with the iPhone, as decision 8 says of the photo view, or stay upright over the shooting screen, as ADR 0017's "Instant - 1" holds everything opened from the camera?
-   Until he answers, ADR 0017's rule is the one recorded.
-2. **DEC-19, the captain's.** The sound format of a Developed Movie and its export: codec, sample rate and channels.
-   The export decisions of 2026-10-13 covered the picture and said "silent".
-3. The words of the header in states other than a count, such as "Finishing save", a complete Film and a Film ended early, on one line (FR-23).
-4. The words of the microphone purpose string, the declined note, the Settings line and the catalog's sound line (FR-27).
-5. Whether another app's audio pauses while a clip records, as in the iPhone's Camera app, or keeps playing.
-6. Whether a tap on the Viewfinder also sets exposure on the Cameras with automatic exposure (the Instant, the Super 8, the 16mm), as in the iPhone's Camera app, and whether a tap focuses while a clip records (FR-25).
-7. Which Darkroom tool holds Saturation (its own, or beside Filtration) and Vignette (its own, or in Adjust) (FR-32, FR-33).
-8. Whether the Darkroom says that a print carries Dodge/Burn strokes from before (FR-34).
+1. The words of the header in states other than a count, such as "Finishing save", a complete Film and a Film ended early, on one line (FR-23).
+2. The words of the microphone purpose string, the declined note, the Settings line and the catalog's sound line (FR-27).
+3. Whether another app's audio pauses while a clip records, as in the iPhone's Camera app, or keeps playing.
+4. Whether a tap on the Viewfinder also sets exposure on the Cameras with automatic exposure (the Instant, the Super 8, the 16mm), as in the iPhone's Camera app, and whether a tap focuses while a clip records (FR-25).
+5. Which Darkroom tool holds Saturation (its own, or beside Filtration) and Vignette (its own, or in Adjust) (FR-32, FR-33).
+6. Whether the Darkroom says that a print carries Dodge/Burn strokes from before (FR-34).
 
 ## 9. Decision evolution
 
@@ -770,3 +824,6 @@ These rows extend PRD 2.1 section 17.
 | No saturation control | Captain, 2026-10-26 ("A", "A"): Saturation from -50 to +50 on color prints, a stated exception (FR-32, ADR 0022). |
 | No edge control | Captain, 2026-10-26 ("A"): Vignette from -2.0 to +2.0 stops (FR-33). |
 | Dodge and Burn in the v1 Darkroom | Captain, 2026-10-26 ("remove dodge and burn from current darkroom. lets save it for v2"): deferred to v2 (FR-34, ADR 0023). |
+| The Instant's reveal at the camera, open in the draft (DEC-20) | Captain, 2026-10-26 ("1A"): it stays upright while the shooting screen is up; the photo view turns only when opened from the Film screen (FR-22, ADR 0021). |
+| Movie sound format, open in the draft (DEC-19) | Captain, 2026-10-26 ("2 Same format as iphone's own camera"): the format the iPhone's own Camera app records (FR-28, ADR 0018). |
+| The Instant asks about keeping the original after each print (2026-10-13, DEC-11) | Captain, 2026-10-26 ("for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."): one question after the pack's last print, covering every print still undecided (FR-35). |
