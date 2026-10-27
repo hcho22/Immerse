@@ -343,12 +343,13 @@ Tap-to-focus adds to continuous autofocus, so a VoiceOver user who does not tap 
 **Today.**
 No v1 Camera records sound or asks for the microphone.
 The capture backend adds only a video input and no audio session (`AVFoundationCaptureBackend`).
-Every later step refuses a movie clip that carries an audio track:
+Every later step refuses an audio track other than a Soundtrack's:
 
 - the save check (`CapturedMediaFiles`: `audio.isEmpty`);
 - the capture commit journal, for a new save and in recovery (`CaptureCommitJournal.verify`, through `VerifiedMedia.movie(at:)`, whose `allowsAudio` defaults to false);
 - Development, which refuses a source clip with audio and writes each Developed Clip with a video track only (`NativeMovieRenderer.developClip`), then checks it with no audio allowed (`FilmProcessor`);
 - assembly, which builds a video-only composition, refuses clips with audio and adds only a Soundtrack (`NativeMovieRenderer.assemble`), and the assembled Movie's check, which allows audio only with a Soundtrack (`FilmProcessor`: `allowsAudio: soundtrack != nil`);
+- storing the assembled Movie, which expects a sound track only when the stored sound choice holds a Soundtrack (`FilmRepository.writeAssembledMovie`: `audioTrackCount == (audio?.asset == nil ? 0 : 1)`);
 - source cleanup after Development, which checks each Developed Clip with no audio allowed (`FilmProcessor`: `allowsAudio: kind == .movie`);
 - Save Originals to Photos, which checks each original clip with no audio allowed (`FilmExportWorker`: `allowsAudio: !originals`).
 
@@ -383,7 +384,7 @@ For both movie Cameras, Load Film shows "One silent Movie after Development" (`r
 
 **Data and compatibility.**
 A Camera package locked with the MOV-12 build or a later one records that its Film has sound, and that record, never the date a Film was loaded, decides whether it records sound; a package stored before reads as silent.
-Every check listed in Today accepts one sound track or none on a clip of a Film with sound, on its Developed Clip and on its original, and keeps refusing any sound track on a clip of a Film without sound; the assembled Movie's check accepts the sound its choice gives it (FR-28).
+Every check listed in Today accepts one sound track or none on a clip of a Film with sound, on its Developed Clip and on its original, and keeps refusing any sound track on a clip of a Film without sound; the assembled Movie's checks, in `FilmProcessor` and in `FilmRepository.writeAssembledMovie`, accept the sound its choice gives it, the recorded sound track under Recorded sound included (FR-28).
 An original clip saved to Photos keeps its recorded sound, as captured, and its source is then removed from Immerse as FR-08 has it (**Builder's reading** of "kept exactly as the iPhone captured it" and "never discarded").
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
