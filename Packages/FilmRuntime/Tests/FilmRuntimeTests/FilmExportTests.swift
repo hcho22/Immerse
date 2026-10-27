@@ -63,6 +63,30 @@ final class FilmExportTests: XCTestCase {
         }
     }
 
+    func testQuarterTurnedInstantExportKeepsTheWholeCardAtTheTurnedSize() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let (_, film, processor, _) = try await setup(root: root, count: 1)
+        let turned = try await processor.saveRecipe(filmID: film.id, sequence: 1,
+            recipe: DarkroomRecipe(rotationQuarterTurns: 1))
+        let writer = RecordingWriter()
+        let coordinator = PhotoExportCoordinator(authorizer: Authorization(status: .authorized), writer: writer)
+        try await processor.export(filmID: film.id, sequences: [1], originals: false, coordinator: coordinator)
+
+        let saved = await writer.saved
+        XCTAssertEqual(saved, [turned])
+        let source = try XCTUnwrap(CGImageSourceCreateWithData(try XCTUnwrap(saved.first) as CFData, nil))
+        let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+        XCTAssertEqual([image.width, image.height], [InstantPrintCard.height, InstantPrintCard.width])
+        for (x, y) in [(10, 10), (image.width - 11, 10), (10, image.height - 11),
+                       (image.width - 11, image.height - 11)] {
+            let pixel = try sample(image, x: x, y: y)
+            XCTAssertGreaterThanOrEqual(Int(pixel[0]), 245)
+            XCTAssertGreaterThanOrEqual(Int(pixel[1]), 245)
+            XCTAssertGreaterThanOrEqual(Int(pixel[2]), 245)
+        }
+    }
+
     func testDeniedAndSealedSelectionsNeverCallWriterOrCleanSources() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -148,6 +172,15 @@ final class FilmExportTests: XCTestCase {
         let processor = try FilmProcessor(root: root)
         try await processor.develop(filmID: film.id)
         return (repository, film, processor, data)
+    }
+
+    private func sample(_ image: CGImage, x: Int, y: Int) throws -> [UInt8] {
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+            space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.translateBy(x: -CGFloat(x), y: -CGFloat(y))
+        context.draw(image, in: CGRect(x: 0, y: 0, width: image.width, height: image.height))
+        return pixel
     }
 
     private func makeRoot() -> URL {

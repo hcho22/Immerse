@@ -119,7 +119,7 @@ import XCTest
         XCTAssertTrue(app.sliders["Magenta"].exists)
         XCTAssertTrue(app.sliders["Yellow"].exists)
 
-        app.buttons["Crop"].tap()
+        app.buttons["Adjust"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
         crop.flipSwitch()
@@ -161,6 +161,60 @@ import XCTest
 
         saveDarkroom(app)
         inspect(app, "darkroom-accessible-controls")
+    }
+
+    func testDarkroomShowsAdjustSaturationAndVignetteControlsOnColorPrints() throws {
+        let app = launch(["--developed-photo"], id: UUID())
+        openFilm(app)
+        openDarkroom(app)
+
+        app.buttons["Adjust"].tap()
+        XCTAssertTrue(app.buttons["darkroom-rotate-left"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["darkroom-rotate-right"].exists)
+        let straighten = app.sliders["Straighten"]
+        XCTAssertTrue(straighten.exists)
+        XCTAssertEqual(straighten.value as? String, "0.0 degrees")
+        tapWhole(app, straighten)
+        straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .dragThumb(to: straighten.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5)))
+        XCTAssertEqual(straighten.value as? String, "-45.0 degrees")
+        straighten.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5))
+            .dragThumb(to: straighten.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5)))
+        XCTAssertEqual(straighten.value as? String, "45.0 degrees")
+
+        app.buttons["Saturation"].tap()
+        let saturation = app.sliders["Saturation"]
+        XCTAssertTrue(saturation.waitForExistence(timeout: 5))
+        XCTAssertEqual(saturation.value as? String, "0")
+        tapWhole(app, saturation)
+        saturation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .dragThumb(to: saturation.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5)))
+        XCTAssertEqual(saturation.value as? String, "-50")
+        saturation.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5))
+            .dragThumb(to: saturation.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5)))
+        XCTAssertEqual(saturation.value as? String, "50")
+
+        app.buttons["Vignette"].tap()
+        let vignette = app.sliders["Vignette"]
+        XCTAssertTrue(vignette.waitForExistence(timeout: 5))
+        XCTAssertEqual(vignette.value as? String, "0 stops")
+        tapWhole(app, vignette)
+        vignette.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .dragThumb(to: vignette.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5)))
+        XCTAssertEqual(vignette.value as? String, "minus 2 stops")
+        vignette.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5))
+            .dragThumb(to: vignette.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5)))
+        XCTAssertEqual(vignette.value as? String, "plus 2 stops")
+        snapshot(app, "darkroom-vignette-control")
+    }
+
+    func testBlackAndWhiteDarkroomHidesColorControlsButKeepsVignette() throws {
+        let app = launch(["--medium-format", "--black-and-white"], id: UUID())
+        openFilm(app)
+        openDarkroom(app)
+        XCTAssertFalse(app.buttons["Filtration"].exists)
+        XCTAssertFalse(app.buttons["Saturation"].exists)
+        XCTAssertTrue(app.buttons["Vignette"].exists)
     }
 
     func testDrawnDodgeStrokeChangesPrintAndPersistsAcrossRelaunch() throws {

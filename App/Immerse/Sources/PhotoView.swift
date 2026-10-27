@@ -399,14 +399,17 @@ struct DarkroomView: View {
     private static let strokeStops = DarkroomLimits.exposureStep...DarkroomLimits.localExposureStops
 
     enum PrintTool: String, CaseIterable, Identifiable {
-        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn", toning = "Chemical toning"
+        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", adjust = "Adjust"
+        case saturation = "Saturation", vignette = "Vignette", brush = "Dodge / Burn", toning = "Chemical toning"
         var id: Self { self }
         var symbol: String {
             switch self {
             case .exposure: "sun.max"
             case .contrast: "circle.lefthalf.filled"
             case .filtration: "camera.filters"
-            case .crop: "crop"
+            case .adjust: "crop.rotate"
+            case .saturation: "slider.horizontal.3"
+            case .vignette: "circle.dashed"
             case .brush: "paintbrush.pointed"
             case .toning: "drop"
             }
@@ -415,7 +418,7 @@ struct DarkroomView: View {
 
     var body: some View {
         NavigationStack {
-            DarkroomLayout(rendering: rendering, error: error, fitsEveryControl: tool == .crop) {
+            DarkroomLayout(rendering: rendering, error: error, fitsEveryControl: tool == .adjust) {
                 printPreview
             } tools: {
                 tools
@@ -479,8 +482,7 @@ struct DarkroomView: View {
         ForEach(PrintTool.allCases.filter { choice in
             choice != .toning || process.supportsChemicalToning
         }.filter { choice in choice != .filtration || process == .color }
-            // An Instant print keeps its square picture and white card whole, so it has no crop.
-            .filter { choice in choice != .crop || !isInstant }) { choice in
+            .filter { choice in choice != .saturation || process == .color }) { choice in
             Button { tool = choice } label: {
                 Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
                     .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
@@ -509,6 +511,25 @@ struct DarkroomView: View {
                 filtrationSlider("Magenta", path: \.magenta)
                 filtrationSlider("Yellow", path: \.yellow)
             }
+        case .saturation:
+            Text("\(recipe.saturation ?? 0)").monospacedDigit()
+            Slider(value: Binding(get: { Double(recipe.saturation ?? 0) }, set: {
+                let value = Int($0.rounded())
+                recipe.saturation = value == 0 ? nil : value
+            }), in: Double(DarkroomLimits.saturation.lowerBound)...Double(DarkroomLimits.saturation.upperBound),
+                step: Double(DarkroomLimits.saturationStep),
+                onEditingChanged: { if !$0 { render() } })
+                .accessibilityLabel("Saturation")
+                .accessibilityValue("\(recipe.saturation ?? 0)")
+        case .vignette:
+            Text(StopsText.shown(recipe.vignetteStops ?? 0)).monospacedDigit()
+            Slider(value: Binding(get: { recipe.vignetteStops ?? 0 }, set: {
+                let value = StopsText.tenths($0, in: DarkroomLimits.vignetteStops)
+                recipe.vignetteStops = value == 0 ? nil : value
+            }), in: DarkroomLimits.vignetteStops, step: DarkroomLimits.vignetteStep,
+                onEditingChanged: { if !$0 { render() } })
+                .accessibilityLabel("Vignette")
+                .accessibilityValue(StopsText.spoken(recipe.vignetteStops ?? 0))
         case .toning:
             Picker("Chemical toning", selection: Binding(get: { recipe.chemicalToning?.chemistry }, set: {
                 recipe.chemicalToning = $0.map { ChemicalToning(chemistry: $0, amount: 0.5) }; render()
@@ -523,21 +544,47 @@ struct DarkroomView: View {
                     recipe.chemicalToning?.amount = $0
                 }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
             }
-        case .crop:
-            Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
-                recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
-            }))
-            if let crop = recipe.crop {
-                captionedSliders {
-                    captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
-                        let size = $0
-                        recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
-                    }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size"))
-                    if crop.width < 1 {
-                        cropPosition("Horizontal", x: true)
-                        cropPosition("Vertical", x: false)
+        case .adjust:
+            let straightening = StopsText.tenths(
+                recipe.straighteningDegrees ?? 0,
+                in: DarkroomLimits.straighteningDegrees
+            )
+            HStack {
+                Button("Rotate left", systemImage: "rotate.left") {
+                    recipe.rotateLeft()
+                    render()
+                }
+                .accessibilityIdentifier("darkroom-rotate-left")
+                Button("Rotate right", systemImage: "rotate.right") {
+                    recipe.rotateRight()
+                    render()
+                }
+                .accessibilityIdentifier("darkroom-rotate-right")
+            }
+            if !isInstant {
+                Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
+                    recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
+                }))
+                if let crop = recipe.crop {
+                    captionedSliders {
+                        captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
+                            let size = $0
+                            recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
+                        }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size"))
+                        if crop.width < 1 {
+                            cropPosition("Horizontal", x: true)
+                            cropPosition("Vertical", x: false)
+                        }
                     }
                 }
+                Text("Straighten \(String(format: "%.1f", straightening))°").monospacedDigit()
+                Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
+                    let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
+                    recipe.straighteningDegrees = value == 0 ? nil : value
+                }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
+                    onEditingChanged: { if !$0 { render() } })
+                    .accessibilityLabel("Straighten")
+                    .accessibilityValue("\(String(format: "%.1f", straightening)) degrees")
             }
         case .brush:
             Picker("Local exposure", selection: $brushKind) {

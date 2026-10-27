@@ -107,12 +107,17 @@ public enum NativePhotoRenderer {
             throw NativeRenderError.unreadableSource
         }
         var image = normalize(decoded)
-        // Adjustments reach the picture only. The card is unexposed paper, so print exposure, contrast, filtration
-        // and Dodge/Burn leave it white, and Dodge/Burn points are fractions of the picture.
+        // Adjustments reach the picture only. The card is unexposed paper, so print exposure, contrast, filtration,
+        // saturation, vignette and saved Dodge/Burn strokes leave it white, and stroke points are fractions of the picture.
         let isInstant = camera.id == .instant1970s
         if isInstant { image = InstantPrintCard.picture(of: image) }
-        image = adjust(image, recipe: recipe, camera: camera)
-        if isInstant { image = InstantPrintCard.mount(image) }
+        image = try adjust(image, recipe: recipe, camera: camera)
+        if isInstant {
+            image = InstantPrintCard.mount(image)
+            if let turns = recipe.rotationQuarterTurns, turns != 0 {
+                image = rotateQuarterTurns(image, turns: turns)
+            }
+        }
         return try jpeg(image)
     }
 
@@ -127,7 +132,7 @@ public enum NativePhotoRenderer {
         }
     }
 
-    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe, camera: CameraPackage) -> CIImage {
+    private static func adjust(_ source: CIImage, recipe: DarkroomRecipe, camera: CameraPackage) throws -> CIImage {
         var image = source.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: recipe.printExposureStops])
         if let grade = recipe.contrastGrade {
             image = image.applyingFilter("CIColorControls", parameters: [kCIInputContrastKey: 0.7 + Double(grade) * 0.15])
@@ -137,6 +142,11 @@ public enum NativePhotoRenderer {
                 "inputRVector": CIVector(x: 1 - color.cyan / 150, y: 0, z: 0, w: 0),
                 "inputGVector": CIVector(x: 0, y: 1 - color.magenta / 150, z: 0, w: 0),
                 "inputBVector": CIVector(x: 0, y: 0, z: 1 - color.yellow / 150, w: 0)
+            ])
+        }
+        if let saturation = recipe.saturation {
+            image = image.applyingFilter("CIColorControls", parameters: [
+                kCIInputSaturationKey: 1 + Double(saturation) / 100
             ])
         }
         // Strokes add up where they overlap, each working on the print as the last left it, and together they never
@@ -192,7 +202,78 @@ public enum NativePhotoRenderer {
             }
             image = normalize(image.cropped(to: area))
         }
+        if camera.id != .instant1970s, let turns = recipe.rotationQuarterTurns, turns != 0 {
+            image = rotateQuarterTurns(image, turns: turns)
+        }
+        if camera.id != .instant1970s, let degrees = recipe.straighteningDegrees, degrees != 0 {
+            image = try straighten(image, degrees: degrees)
+        }
+        if let vignette = recipe.vignetteStops, vignette != 0 {
+            image = applyVignette(vignette, to: image)
+        }
         return image
+    }
+
+    private static func rotateQuarterTurns(_ image: CIImage, turns: Int) -> CIImage {
+        let quarter = ((turns % DarkroomLimits.rotationQuarterTurnCount) + DarkroomLimits.rotationQuarterTurnCount)
+            % DarkroomLimits.rotationQuarterTurnCount
+        guard quarter != 0 else { return image }
+        let cosine: CGFloat = quarter == 2 ? -1 : 0
+        let sine: CGFloat = quarter == 1 ? 1 : (quarter == 3 ? -1 : 0)
+        let center = CGPoint(x: image.extent.midX, y: image.extent.midY)
+        let transform = CGAffineTransform(
+            a: cosine, b: sine, c: -sine, d: cosine,
+            tx: center.x - cosine * center.x + sine * center.y,
+            ty: center.y - sine * center.x - cosine * center.y
+        )
+        return normalize(image.transformed(by: transform))
+    }
+
+    /// Rotates a print and crops the largest centered rectangle at its existing aspect ratio, keeping every corner
+    /// inside the rotated source. The same-ratio rectangle keeps a 6×6 print square.
+    private static func straighten(_ image: CIImage, degrees: Double) throws -> CIImage {
+        let radians = CGFloat(degrees * .pi / 180)
+        let source = CIContext(options: [.cacheIntermediates: false]).createCGImage(image, from: image.extent)
+        guard let source else { throw NativeRenderError.renderFailed }
+        let sourceWidth = CGFloat(source.width), sourceHeight = CGFloat(source.height)
+        let sourceRatio = sourceWidth / sourceHeight
+        let cosine = abs(cos(radians)), sine = abs(sin(radians))
+        let maximumWidth = min(sourceWidth / (cosine + sine / sourceRatio),
+                               sourceHeight / (sine + cosine / sourceRatio))
+        // Leave a two pixel sampling margin at each side so every output corner samples inside the rotated source.
+        let outputWidth = max(1, Int((maximumWidth - 4).rounded(.down)))
+        let outputHeight = max(1, Int((CGFloat(outputWidth) / sourceRatio).rounded(.down)))
+        guard let context = CGContext(data: nil, width: outputWidth, height: outputHeight, bitsPerComponent: 8,
+                                      bytesPerRow: outputWidth * 4, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+            throw NativeRenderError.renderFailed
+        }
+        context.interpolationQuality = .high
+        context.translateBy(x: CGFloat(outputWidth) / 2, y: CGFloat(outputHeight) / 2)
+        context.rotate(by: radians)
+        context.translateBy(x: -sourceWidth / 2, y: -sourceHeight / 2)
+        context.draw(source, in: CGRect(x: 0, y: 0, width: sourceWidth, height: sourceHeight))
+        guard let straightened = context.makeImage() else { throw NativeRenderError.renderFailed }
+        return CIImage(cgImage: straightened)
+    }
+
+    /// Applies a smooth radial exposure change that reaches the requested stop value at each print corner.
+    private static func applyVignette(_ stops: Double, to image: CIImage) -> CIImage {
+        let extent = image.extent
+        let cornerRadius = hypot(extent.width / 2, extent.height / 2)
+        let transitionStart = cornerRadius * 0.2
+        let mask = CIFilter(name: "CIRadialGradient", parameters: [
+            "inputCenter": CIVector(x: extent.midX, y: extent.midY),
+            "inputRadius0": transitionStart,
+            "inputRadius1": cornerRadius,
+            "inputColor0": CIColor.black,
+            "inputColor1": CIColor.white
+        ])!.outputImage!.cropped(to: extent)
+        let adjusted = image.applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: -stops])
+        return adjusted.applyingFilter("CIBlendWithMask", parameters: [
+            kCIInputBackgroundImageKey: image,
+            kCIInputMaskImageKey: mask
+        ]).cropped(to: extent)
     }
 
     public static func validate(_ recipe: DarkroomRecipe, camera: CameraPackage, process: PhotoPrintProcess = .color) throws {
@@ -221,10 +302,36 @@ public enum NativePhotoRenderer {
                 throw NativeRenderError.invalidRecipe
             }
         }
+        if let turns = recipe.rotationQuarterTurns {
+            guard DarkroomLimits.rotationQuarterTurns.contains(turns) else { throw NativeRenderError.invalidRecipe }
+        }
+        if let degrees = recipe.straighteningDegrees {
+            guard camera.id != .instant1970s, degrees.isFinite,
+                  DarkroomLimits.straighteningDegrees.contains(degrees),
+                  isOnStep(degrees, step: DarkroomLimits.straighteningStep) else {
+                throw NativeRenderError.invalidRecipe
+            }
+        }
+        if let saturation = recipe.saturation {
+            guard process == .color, DarkroomLimits.saturation.contains(saturation) else {
+                throw NativeRenderError.invalidRecipe
+            }
+        }
+        if let vignette = recipe.vignetteStops {
+            guard vignette.isFinite, DarkroomLimits.vignetteStops.contains(vignette),
+                  isOnStep(vignette, step: DarkroomLimits.vignetteStep) else {
+                throw NativeRenderError.invalidRecipe
+            }
+        }
         guard recipe.dodgeBurnMasks.allSatisfy({ mask in
             mask.exposureStops.isFinite && abs(mask.exposureStops) <= DarkroomLimits.localExposureStops &&
             mask.points.allSatisfy { $0.x.isFinite && $0.y.isFinite && (0...1).contains($0.x) && (0...1).contains($0.y) }
         }) else { throw NativeRenderError.invalidRecipe }
+    }
+
+    private static func isOnStep(_ value: Double, step: Double) -> Bool {
+        let steps = value / step
+        return abs(steps - steps.rounded()) < 0.000001
     }
 
     /// The Disposable's borderless 3:2 picture: the phone's 4:3 capture cropped about its center, with the long

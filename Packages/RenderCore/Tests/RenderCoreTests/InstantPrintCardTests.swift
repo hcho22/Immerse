@@ -48,6 +48,8 @@ final class InstantPrintCardTests: XCTestCase {
             DarkroomRecipe(printExposureStops: 1.5),
             DarkroomRecipe(contrastGrade: 5),
             DarkroomRecipe(colorFiltration: ColorFiltration(cyan: 30, magenta: -30, yellow: 30)),
+            DarkroomRecipe(saturation: -50),
+            DarkroomRecipe(vignetteStops: 2),
             DarkroomRecipe(dodgeBurnMasks: [LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.5), MaskPoint(x: 0.02, y: 0.98)],
                                                       exposureStops: 1)])
         ]
@@ -57,8 +59,9 @@ final class InstantPrintCardTests: XCTestCase {
             XCTAssertEqual(after.width, card.width, "\(recipe)")
             XCTAssertEqual(after.height, card.height, "\(recipe)")
             assertWhiteCard(after)
-            XCTAssertNotEqual(after.channels(x: card.width / 2, y: side + picture / 2), before.channels(x: card.width / 2, y: side + picture / 2),
-                              "\(recipe)")
+            let sample = recipe.vignetteStops == nil ? (x: card.width / 2, y: side + picture / 2)
+                : (x: side + 12, y: side + 12)
+            XCTAssertNotEqual(after.channels(x: sample.x, y: sample.y), before.channels(x: sample.x, y: sample.y), "\(recipe)")
         }
         XCTAssertEqual(try NativePhotoRenderer.print(master: master, recipe: .original, camera: CameraCatalog.instant1970s), master)
     }

@@ -6,6 +6,10 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
     public var contrastGrade: Int?
     public var colorFiltration: ColorFiltration?
     public var crop: Crop?
+    public var rotationQuarterTurns: Int?
+    public var straighteningDegrees: Double?
+    public var saturation: Int?
+    public var vignetteStops: Double?
     public var dodgeBurnMasks: [LocalMask]
     public var chemicalToning: ChemicalToning?
 
@@ -14,6 +18,10 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
         contrastGrade: Int? = nil,
         colorFiltration: ColorFiltration? = nil,
         crop: Crop? = nil,
+        rotationQuarterTurns: Int? = nil,
+        straighteningDegrees: Double? = nil,
+        saturation: Int? = nil,
+        vignetteStops: Double? = nil,
         dodgeBurnMasks: [LocalMask] = [],
         chemicalToning: ChemicalToning? = nil
     ) {
@@ -21,6 +29,10 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
         self.contrastGrade = contrastGrade
         self.colorFiltration = colorFiltration
         self.crop = crop
+        self.rotationQuarterTurns = rotationQuarterTurns
+        self.straighteningDegrees = straighteningDegrees
+        self.saturation = saturation
+        self.vignetteStops = vignetteStops
         self.dodgeBurnMasks = dodgeBurnMasks
         self.chemicalToning = chemicalToning
     }
@@ -29,6 +41,17 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
 
     public mutating func resetToOriginal() {
         self = .original
+    }
+
+    public mutating func rotateLeft() {
+        let turns = ((rotationQuarterTurns ?? 0) + 1) % DarkroomLimits.rotationQuarterTurnCount
+        rotationQuarterTurns = turns == 0 ? nil : turns
+    }
+
+    public mutating func rotateRight() {
+        let turns = ((rotationQuarterTurns ?? 0) + DarkroomLimits.rotationQuarterTurnCount - 1)
+            % DarkroomLimits.rotationQuarterTurnCount
+        rotationQuarterTurns = turns == 0 ? nil : turns
     }
 }
 
@@ -42,6 +65,19 @@ public enum DarkroomLimits {
     public static let contrastGrades = 0...5
     /// Cyan, magenta and yellow filtration, set in whole units.
     public static let colorFiltration = -30.0...30.0
+    /// User crop rotation, counterclockwise quarter turns from the developed print's original orientation.
+    public static let rotationQuarterTurns = 0...3
+    /// Number of quarter turns available to a print.
+    public static let rotationQuarterTurnCount = rotationQuarterTurns.upperBound + 1
+    /// Straightening rotation in degrees, in tenths. Instant prints turn only as a whole card.
+    public static let straighteningDegrees = -45.0...45.0
+    public static let straighteningStep = 0.1
+    /// Color saturation as a percentage from the developed print's neutral value.
+    public static let saturation = -50...50
+    public static let saturationStep = 1
+    /// Vignette exposure adjustment at the corners, in stops, in tenths.
+    public static let vignetteStops = -2.0...2.0
+    public static let vignetteStep = 0.1
     /// The most Dodge/Burn lightens or darkens any part of a print, in stops: the limit of one stroke's
     /// `LocalMask.exposureStops`, and of every stroke together where they overlap.
     public static let localExposureStops = 3.0

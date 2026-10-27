@@ -23,9 +23,11 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.buttons["Open photo 1"].tap()
         app.buttons["Darkroom"].tap()
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 5))
-        // A color Photo Film gets contrast grades and crop; the print process hides toning.
+        // A color Photo Film gets contrast grades and Adjust; the print process hides toning.
         XCTAssertTrue(app.buttons["Contrast"].exists)
-        XCTAssertTrue(app.buttons["Crop"].exists)
+        XCTAssertTrue(app.buttons["Adjust"].exists)
+        XCTAssertTrue(app.buttons["Saturation"].exists)
+        XCTAssertTrue(app.buttons["Vignette"].exists)
         XCTAssertFalse(app.buttons["Chemical toning"].exists)
         let exposure = app.sliders["Print exposure"]
         XCTAssertTrue(exposure.waitForExistence(timeout: 10))
@@ -494,9 +496,9 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         snapshot(app, "Instant-revealed-pack-open")
     }
 
-    /// PRD 2.1 slice 1 (CAM-14, DRK-09, DRK-10): the white card is part of the print in the Film screen, the Photo
-    /// screen and the Darkroom; the Darkroom has no Crop for an Instant print but keeps every other control.
-    func testInstantPrintShowsItsCardAndTheDarkroomOffersNoCrop() throws {
+    /// The Instant keeps its white card in the Film screen, the Photo screen and the Darkroom; Adjust turns the whole
+    /// card without offering crop or straightening, and Saturation and Vignette reach only its picture.
+    func testInstantPrintShowsItsCardAndTheDarkroomOffersWholeCardAdjustments() throws {
         let app = launch(arguments: ["--instant"])
         openFilm(app)
         XCTAssertTrue(app.buttons["Open photo 1"].waitForExistence(timeout: 10))
@@ -508,9 +510,17 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
         snapshot(app, "Instant-card-darkroom-exposure")
-        for tool in ["Exposure", "Contrast", "Filtration", "Dodge / Burn"] { XCTAssertTrue(app.buttons[tool].exists, tool) }
-        XCTAssertFalse(app.buttons["Crop"].exists)
+        for tool in ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette", "Dodge / Burn"] {
+            XCTAssertTrue(app.buttons[tool].exists, tool)
+        }
         XCTAssertFalse(app.buttons["Chemical toning"].exists)
+        app.buttons["Adjust"].tap()
+        XCTAssertTrue(app.buttons["darkroom-rotate-left"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["darkroom-rotate-right"].exists)
+        XCTAssertFalse(app.switches["Crop"].exists)
+        XCTAssertFalse(app.sliders["Straighten"].exists)
+        app.buttons["Vignette"].tap()
+        XCTAssertTrue(app.sliders["Vignette"].waitForExistence(timeout: 5))
         app.buttons["Contrast"].tap()
         let grade = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Contrast grade")).firstMatch
         for _ in 0..<3 where !grade.exists { app.swipeUp() }
@@ -835,7 +845,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         // Let the first render and the controls' measured height settle before reading frames.
         Thread.sleep(forTimeInterval: 1.5)
         let exposurePrint = print.frame
-        app.buttons["Crop"].tap()
+        app.buttons["Adjust"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
         // At the largest size the switch can start below the fold; held drags in the left margin bring it up.
@@ -907,7 +917,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let print = app.images["Photo 1, print preview"]
         XCTAssertTrue(print.waitForExistence(timeout: 20), "print")
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
-        app.buttons["Crop"].tap()
+        app.buttons["Adjust"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
         XCTAssertTrue(crop.isHittable, "In portrait the Crop switch rests on screen")
@@ -1159,10 +1169,10 @@ final class PopulatedWorkflowTests: HarnessTestCase {
 
     /// A crop set in landscape keeps its slider values and the cropped print's proportions turned back to portrait, with
     /// the Crop tool still selected.
-    func testDarkroomTurningKeepsTheCrop() throws {
+    func testDarkroomTurningKeepsTheAdjustCrop() throws {
         let app = openDarkroomInLandscape(["--developed-photo"])
         let print = app.images["Photo 1, print preview"]
-        app.buttons["Crop"].tap()
+        app.buttons["Adjust"].tap()
         let crop = app.switches["Crop"]
         XCTAssertTrue(crop.waitForExistence(timeout: 5))
         crop.flipSwitch()
@@ -1178,7 +1188,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         uprightSnapshot(app, "Darkroom-crop-set-in-landscape")
 
         turn(app, to: .portrait)
-        XCTAssertTrue(app.buttons["Crop"].isSelected, "Portrait keeps the Crop tool")
+        XCTAssertTrue(app.buttons["Adjust"].isSelected, "Portrait keeps the Adjust tool")
         XCTAssertEqual([size, horizontal, app.sliders["Crop Vertical"]].map { $0.value as? String }, values, "and the crop")
         XCTAssertEqual(print.frame.width / print.frame.height, landscapeShape, accuracy: 0.02, "and the cropped print's shape")
         snapshot(app, "Darkroom-crop-turned-back-portrait")

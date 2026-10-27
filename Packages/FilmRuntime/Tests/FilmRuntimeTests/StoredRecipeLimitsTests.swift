@@ -2,6 +2,7 @@
 import FilmDomain
 import FilmRuntime
 import Foundation
+import ImageIO
 import NativeAdapters
 import RenderCore
 import RenderFixtures
@@ -65,6 +66,28 @@ final class StoredRecipeLimitsTests: XCTestCase {
                                    coordinator: PhotoExportCoordinator(authorizer: Authorized(), writer: writer))
         let exported = await writer.saved
         XCTAssertEqual(exported, [printed])
+    }
+
+    func testQuarterTurnRecipeExportsThePrintInItsTurnedShape() async throws {
+        let master = try Data(contentsOf: repository.revealedAsset(filmID: film.id, sequenceNumber: 1, kind: .master).url)
+        let masterSize = try imageSize(master)
+        let turned = try await processor.saveRecipe(
+            filmID: film.id, sequence: 1, recipe: DarkroomRecipe(rotationQuarterTurns: 1)
+        )
+        XCTAssertEqual(try imageSize(turned), [masterSize[1], masterSize[0]])
+
+        let writer = RecordingWriter()
+        try await processor.export(filmID: film.id, sequences: [1], originals: false,
+                                   coordinator: PhotoExportCoordinator(authorizer: Authorized(), writer: writer))
+        let exported = await writer.saved
+        XCTAssertEqual(exported, [turned])
+        XCTAssertEqual(try imageSize(try XCTUnwrap(exported.first)), [masterSize[1], masterSize[0]])
+    }
+
+    private func imageSize(_ data: Data) throws -> [Int] {
+        let source = try XCTUnwrap(CGImageSourceCreateWithData(data as CFData, nil))
+        let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+        return [image.width, image.height]
     }
 
     func testAStoredValueOutsideTheLimitsIsRefusedNotClampedAndResetPrintsTheMasterAgain() async throws {
