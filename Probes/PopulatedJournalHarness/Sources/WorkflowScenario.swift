@@ -176,6 +176,14 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         if !reopening, arguments.contains("--recipe-unreadable"), let film = scenario.model.films.first {
             try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1", data: Data("unreadable".utf8))
         }
+        // A pre-change Film can still have a Dodge/Burn recipe. Seed one after the initial inspection so the harness UI
+        // opens that exact stored recipe, while the retained-history check can compare it with the reset result.
+        if !reopening, arguments.contains("--recipe-with-strokes"), let film = scenario.model.films.first {
+            let stroke = LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: 1)
+            let recipe = DarkroomRecipe(dodgeBurnMasks: [stroke])
+            try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1",
+                data: JSONEncoder().encode(recipe))
+        }
         return scenario
     }
 

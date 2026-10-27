@@ -4,8 +4,24 @@ cd "$(dirname "$0")/../.."
 label=${1:?unique evidence label required}
 mode=${2:-retained}
 case "$mode" in
-  retained) selection=PopulatedJournalHarnessTests/RetainedWorkflowTests ;;
-  legacy) selection=PopulatedJournalHarnessTests/PopulatedWorkflowTests ;;
+  retained)
+    selection='RetainedWorkflowTests: empty, early/originals, Instant mixed, saved edit/reset, adjustment controls, legacy stroke/reset'
+    set -- \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testEmptyFilmDisablesEarlyDevelopmentAndDeleteRequiresConfirmation \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testEarlyWasteCancelAndOriginalExportChoiceSurviveRelaunchWithoutExport \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testInstantRevealsOnePrintWhileNextIsSealedAndPreservesFirstOnResume \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testSavedDarkroomEditAndExactResetPersistAcrossRelaunch \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testDarkroomAccessibleControlsReachAdjustmentPaths \
+      -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testLegacyDodgeStrokeStillPrintsAndResetClearsItAcrossRelaunch
+    ;;
+  legacy)
+    selection='PopulatedWorkflowTests: three original functional workflows and movie player observer'
+    set -- \
+      -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testEarlyPhotoDevelopmentDarkroomAndRemoval \
+      -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testInstantRevealedPrintsRemainOpenAndHaveNoRollDevelopment \
+      -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testMovieDiscardKeepsNumberedEmptyFilmWithoutPlaybackExportOrDarkroom \
+      -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback
+    ;;
   *) exit 64 ;;
 esac
 SIM=${SIMULATOR_ID:?explicit authorized simulator UUID required}
@@ -43,7 +59,7 @@ status=0
 xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj \
   -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" \
   -derivedDataPath DerivedData/PopulatedJournal037 -resultBundlePath "$RESULT" \
-  "-only-testing:$selection" -parallel-testing-enabled NO \
+  "$@" -parallel-testing-enabled NO \
   -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 \
   CODE_SIGNING_ALLOWED=NO test > "$OUT/execution.log" 2>&1 || status=$?
 printf '%s\n' "$status" > "$OUT/exit.txt"

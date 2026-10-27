@@ -243,9 +243,9 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.staticTexts["Discarded"].exists)
     }
 
-    /// DEC-11 (the captain, 2026-10-13): print exposure and Dodge/Burn each run to 3 stops either way. The sliders reach
-    /// both ends, show and speak the stops there, and a recipe at the ends saves, prints and comes back.
-    func testDarkroomExposureAndDodgeBurnReachThreeStopsAndSave() throws {
+    /// Print exposure reaches both three-stop limits, prints each edit, and saves the result. Dodge/Burn is not an
+    /// available Darkroom tool in this build.
+    func testDarkroomExposureReachesThreeStopsAndSavesWithoutDodgeBurn() throws {
         let app = launch(arguments: ["--developed-photo"])
         openFilm(app)
         app.buttons["Open photo 1"].tap()
@@ -269,21 +269,9 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(waitForChange(of: print, from: lightest), "Minus 3 stops prints a darker picture")
         snapshot(app, "Darkroom-exposure-minus-3-stops")
 
-        app.buttons["Dodge / Burn"].tap()
-        let strength = app.sliders["Local exposure strength"]
-        XCTAssertTrue(strength.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Strength: 0.4 stops"].exists, "A stroke starts at the strength it always had")
-        XCTAssertEqual(strength.value as? String, "0.4 stops")
-        adjust(strength, toEnd: 1, showing: app.staticTexts["Strength: 3.0 stops"])
-        XCTAssertTrue(app.staticTexts["Strength: 3.0 stops"].waitForExistence(timeout: 5), "A stroke reaches 3 stops")
-        XCTAssertEqual(strength.value as? String, "3 stops")
-        let darkest = print.screenshot().pngRepresentation
-        let point = app.buttons["Dodge point"]
-        for _ in 0..<4 where !point.isHittable { app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            .press(forDuration: 0.1, thenDragTo: app.staticTexts["Dodge / Burn"].coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: -6))) }
-        point.tap()
-        XCTAssertTrue(waitForChange(of: print, from: darkest), "A 3 stop dodge on a print 3 stops down shows in the print")
-        snapshot(app, "Darkroom-minus-3-stops-with-a-3-stop-dodge")
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
+        XCTAssertFalse(app.buttons["Dodge point"].exists)
+        XCTAssertFalse(app.buttons["Undo last stroke"].exists)
 
         let save = app.buttons["Save"]
         expectation(for: NSPredicate(format: "isEnabled == true"), evaluatedWith: save)
@@ -293,9 +281,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         snapshot(app, "Photo-printed-at-the-limits")
         app.buttons["Darkroom"].tap()
         XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 10), "The saved recipe comes back")
-        app.buttons["Dodge / Burn"].tap()
-        XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled)
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         app.buttons["Cancel"].tap()
     }
 
@@ -510,9 +496,10 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
         snapshot(app, "Instant-card-darkroom-exposure")
-        for tool in ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette", "Dodge / Burn"] {
+        for tool in ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"] {
             XCTAssertTrue(app.buttons[tool].exists, tool)
         }
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         XCTAssertFalse(app.buttons["Chemical toning"].exists)
         app.buttons["Adjust"].tap()
         XCTAssertTrue(app.buttons["darkroom-rotate-left"].waitForExistence(timeout: 5))
@@ -526,15 +513,10 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         for _ in 0..<3 where !grade.exists { app.swipeUp() }
         XCTAssertTrue(grade.exists, "Contrast grades are offered on an Instant print")
         snapshot(app, "Instant-card-darkroom-contrast")
-        app.buttons["Dodge / Burn"].tap()
-        let dodge = app.buttons["Dodge point"]
-        for _ in 0..<3 where !dodge.exists { app.swipeUp() }
-        XCTAssertTrue(dodge.exists, "Dodge and Burn stay available on an Instant print")
-        snapshot(app, "Instant-card-darkroom-dodge-burn")
     }
 
     /// PRD 2.1 slice 3 (CAM-16, DEV-11, DRK-10): a 6×6 Film on the black-and-white Film Stock names it on the Film
-    /// screen and develops gray prints, and its Darkroom offers chemical toning beside contrast, crop and Dodge/Burn, with
+    /// screen and develops gray prints, and its Darkroom offers chemical toning beside contrast and Adjust, with
     /// no color filtration. A sepia-toned print is saved and shown on the Photo and Film screens and in the Journal.
     func testBlackAndWhite6x6PrintTakesChemicalToning() throws {
         let app = launch(arguments: ["--medium-format", "--black-and-white", "--hide-inspection-bar"] + Self.sourceArguments)
@@ -547,7 +529,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
         app.buttons["Darkroom"].tap()
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
-        for tool in ["Exposure", "Contrast", "Crop", "Dodge / Burn", "Chemical toning"] { XCTAssertTrue(app.buttons[tool].exists, tool) }
+        for tool in ["Exposure", "Contrast", "Adjust", "Chemical toning"] { XCTAssertTrue(app.buttons[tool].exists, tool) }
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         XCTAssertFalse(app.buttons["Filtration"].exists, "Filtration is for color prints")
         app.buttons["Chemical toning"].tap()
         let toner = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Chemical toning,")).firstMatch
@@ -640,8 +623,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
     /// iPhone, at the default and the largest text size. At rest the whole print, an Instant card included, sits below the
     /// navigation bar and inside the screen, scaled to the space the controls leave; the controls clear the reset button;
     /// and the tool row and slider keep the same side margins. At the largest size the slider can also be scrolled to.
-    /// With Dodge/Burn's longer controls nothing tappable rests under the reset button's bar, and the last row scrolls
-    /// clear of it and takes taps.
+    /// At the largest text size the controls can scroll within their area while the print and Reset button stay fixed.
     func testDarkroomFitsAnInstantPrintAtTheDefaultSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: false) }
     func testDarkroomFitsAnInstantPrintAtTheLargestSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: true) }
     func testDarkroomFitsADisposablePrintAtTheDefaultSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: false) }
@@ -689,7 +671,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertGreaterThanOrEqual(print.frame.height, 100, "\(name): the print is not squeezed away")
         // The controls, at rest: full size, in the side margins, clear of the reset button.
         let margin: CGFloat = 16
-        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn", "Chemical toning"].map({ app.buttons[$0] })
+        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette", "Chemical toning"].map({ app.buttons[$0] })
         where control.exists {
             XCTAssertGreaterThanOrEqual(control.frame.minX, margin - 2, "\(name): \(control.label) keeps its left margin")
             XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX - margin + 2, "\(name): \(control.label) keeps its right margin")
@@ -724,35 +706,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.swipeUp()
         XCTAssertEqual(print.frame.minY, restingTop, accuracy: 1, "\(name): the print stays below the bar after a swipe")
         XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): still below the bar after a swipe")
-        // Dodge/Burn has the most controls, which overflow the screen once the print is at its smallest. The floating
-        // Reset to Original bar takes every tap across the screen's width from 15 pt above its button, so at rest no
-        // control may show there. XCUITest reports a control's whole frame, so only the part the scroll area shows counts.
-        app.buttons["Dodge / Burn"].tap()
-        let point = app.buttons["Dodge point"]
-        let undo = app.buttons["Undo last stroke"]
-        XCTAssertTrue(undo.waitForExistence(timeout: 5), "\(name) Dodge / Burn")
-        Thread.sleep(forTimeInterval: 1.5)
-        let resetBar = CGRect(x: window.minX, y: reset.frame.minY - 15, width: window.width, height: window.maxY - reset.frame.minY + 15)
-        let controlsArea = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch.frame
-        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): Dodge / Burn keeps the print below the bar")
-        for control in app.buttons.allElementsBoundByIndex + app.sliders.allElementsBoundByIndex
-        where control.isHittable && control.label != "Reset to Original" {
-            XCTAssertFalse(control.frame.intersection(controlsArea).intersects(resetBar), "\(name): \(control.label) rests under the Reset bar")
-        }
-        snapshot(app, "\(name)-dodge-burn")
-        // The last row scrolls fully clear of the bar, and its controls then take a tap. The held drags in the left
-        // margin neither coast nor move a slider or paint on the print.
-        let clear = min(controlsArea.maxY + 1, resetBar.minY)
-        for _ in 0..<12 where undo.frame.maxY > clear {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.6))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -120)), withVelocity: .slow, thenHoldForDuration: 0.3)
-        }
-        XCTAssertLessThanOrEqual(undo.frame.maxY, clear, "\(name): the last row scrolls fully into view, clear of the Reset bar")
-        XCTAssertFalse(undo.isEnabled, "\(name): no stroke yet")
-        point.tap()
-        XCTAssertTrue(undo.isEnabled, "\(name): Dodge point takes the tap")
-        undo.tap()
-        XCTAssertFalse(undo.isEnabled, "\(name): Undo last stroke takes the tap")
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists, "\(name): Dodge/Burn is not a Darkroom tool")
     }
 
     /// A Darkroom explanation takes its height from the print, so the selected tool stays where a finger finds it. With
@@ -799,7 +753,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         } else {
             XCTAssertGreaterThanOrEqual(mark.frame.minY, bar.frame.maxY, "\(name): the print's place is below the navigation bar")
             XCTAssertLessThanOrEqual(mark.frame.maxY, explanation.frame.minY, "\(name): the explanation is under the print's place")
-            let tools = ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn"].map { app.buttons[$0] }
+            let tools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"].map { app.buttons[$0] }
             for control in [explanation, app.staticTexts["Exposure"], app.staticTexts["3.5 stops"]] + tools {
                 XCTAssertTrue(control.exists, name)
                 XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
@@ -946,22 +900,18 @@ final class PopulatedWorkflowTests: HarnessTestCase {
     /// buttons, Reset to Original and the selected tool's controls the other, so at the default text size every tool
     /// button and every control of every tool rests on screen, clear of the print and of each other, and takes a tap with
     /// nothing scrolled. The print is larger than the 160 pt the layout before gave it over the controls. The Disposable
-    /// has every tool but toning, which the black-and-white 6×6 has instead of filtration. Crop comes after Dodge / Burn,
-    /// since a crop sets Dodge / Burn aside, and each test visits a few tools, inside the 3-minute allowance.
+    /// has every tool but toning, which the black-and-white 6×6 has instead of filtration. Each test visits a few tools,
+    /// inside the 3-minute allowance.
     func testDarkroomRestsExposureContrastAndFiltrationBesideADisposablePrintInLandscape() throws {
         assertDarkroomSideBySide(["--developed-photo"], label: "Disposable", tools: Self.disposableTools,
                                  visiting: ["Exposure", "Contrast", "Filtration"])
     }
-    func testDarkroomRestsDodgeBurnAndCropBesideADisposablePrintInLandscape() throws {
-        assertDarkroomSideBySide(["--developed-photo"], label: "Disposable", tools: Self.disposableTools,
-                                 visiting: ["Dodge / Burn", "Crop"])
-    }
     func testDarkroomRestsChemicalToningBesideABlackAndWhite6x6PrintInLandscape() throws {
         assertDarkroomSideBySide(["--medium-format", "--black-and-white"], label: "6x6-black-and-white",
-                                 tools: ["Exposure", "Contrast", "Crop", "Dodge / Burn", "Chemical toning"], visiting: ["Chemical toning"])
+                                 tools: ["Exposure", "Contrast", "Adjust", "Chemical toning"], visiting: ["Chemical toning"])
     }
 
-    private static let disposableTools = ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn"]
+    private static let disposableTools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"]
 
     private func assertDarkroomSideBySide(_ arguments: [String], label: String, tools: [String], visiting: [String]) {
         let app = openDarkroomInLandscape(arguments)
@@ -984,6 +934,10 @@ final class PopulatedWorkflowTests: HarnessTestCase {
                 controls = [app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Contrast grade")).firstMatch]
             case "Filtration":
                 controls = ["Cyan", "Magenta", "Yellow"].flatMap { [app.sliders[$0], app.staticTexts[$0]] }
+            case "Saturation":
+                controls = [app.sliders["Saturation"], app.staticTexts["0"]]
+            case "Vignette":
+                controls = [app.sliders["Vignette"], app.staticTexts["0.0 stops"]]
             case "Chemical toning":
                 let toner = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Chemical toning,")).firstMatch
                 XCTAssertTrue(toner.waitForExistence(timeout: 5), name)
@@ -993,12 +947,6 @@ final class PopulatedWorkflowTests: HarnessTestCase {
                 app.buttons["Sepia"].tap()
                 XCTAssertTrue(app.sliders["Toning amount"].waitForExistence(timeout: 5), name)
                 controls = [toner, app.sliders["Toning amount"]]
-            case "Dodge / Burn":
-                controls = [app.buttons["Dodge"], app.buttons["Burn"], app.buttons["Dodge point"], app.buttons["Undo last stroke"]]
-                    + ["strength", "horizontal position", "vertical position"].map { app.sliders["Local exposure \($0)"] }
-                    + ["Strength: ", "Horizontal: ", "Vertical: "].map {
-                        app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", $0)).firstMatch
-                    }
             default:
                 let crop = app.switches["Crop"]
                 XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
@@ -1058,113 +1006,6 @@ final class PopulatedWorkflowTests: HarnessTestCase {
                 }
             }
         }
-    }
-
-    /// In landscape at the largest text size Dodge / Burn's controls cannot all show, so its column scrolls on its own:
-    /// held drags on its text bring Undo last stroke fully clear of the fade, where it takes a tap, while the print, the
-    /// tool buttons and Reset to Original stay where they were and keep taking taps.
-    func testDarkroomScrollsOnlyItsControlsInLandscapeAtTheLargestSize() throws {
-        let app = openDarkroomInLandscape(["--developed-photo", "-UIPreferredContentSizeCategoryName",
-                                           "UICTContentSizeCategoryAccessibilityXXXL"])
-        let print = app.images["Photo 1, print preview"]
-        let reset = app.buttons["Reset to Original"]
-        let tools = ["Exposure", "Contrast", "Filtration", "Crop", "Dodge / Burn"].map { app.buttons[$0] }
-        XCTAssertTrue(app.buttons["Dodge / Burn"].isHittable)
-        app.buttons["Dodge / Burn"].tap()
-        let undo = app.buttons["Undo last stroke"]
-        let point = app.buttons["Dodge point"]
-        XCTAssertTrue(undo.waitForExistence(timeout: 5))
-        Thread.sleep(forTimeInterval: 1.5)
-        let heading = app.staticTexts["Dodge / Burn"]
-        let area = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(heading.frame) }
-            .min { $0.width * $0.height < $1.width * $1.height } ?? .zero
-        let top = app.navigationBars["Darkroom"].frame.maxY
-        // The scroll area fades out over the last 12 pt above the arrangement's foot, where the print is centered.
-        let clear = min(area.maxY, 2 * print.frame.midY - top) - 12 + 1
-        let resting = (print: print.frame, tools: tools.map(\.frame), reset: reset.frame)
-        uprightSnapshot(app, "Darkroom-landscape-largest")
-        XCTAssertGreaterThan(undo.frame.maxY, clear, "At the largest size the last row starts below the fold")
-        // Held drags in the controls column, from a point on none of its sliders or segments, so no drag moves a control;
-        // one that starts on a button moves too far to be a tap. The point is found from the frames before each drag.
-        let x = area.minX + 8
-        let controls = { (app.sliders.allElementsBoundByIndex + app.segmentedControls.allElementsBoundByIndex)
-            .filter(\.exists).map { $0.frame.insetBy(dx: -8, dy: -8) } }
-        for _ in 0..<24 where undo.frame.maxY > clear {
-            let taken = controls()
-            guard let y = stride(from: clear - 24, through: top + 60, by: -8).first(where: { y in
-                !taken.contains { $0.contains(CGPoint(x: x, y: y)) }
-            }) else { break }
-            let start = app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: x, dy: y))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -min(160, y - top - 20))),
-                        withVelocity: .slow, thenHoldForDuration: 0.3)
-        }
-        uprightSnapshot(app, "Darkroom-landscape-largest-scrolled")
-        XCTAssertLessThanOrEqual(undo.frame.maxY, clear, "The last row scrolls fully clear of the fade")
-        XCTAssertEqual(print.frame, resting.print, "The print stays where it was")
-        XCTAssertEqual(tools.map(\.frame), resting.tools, "and the tools")
-        XCTAssertEqual(reset.frame, resting.reset, "and Reset to Original")
-        for element in tools + [reset] { XCTAssertTrue(element.isHittable, "\(element.label) still takes a tap") }
-        // The tools rest whole in their column, and Reset keeps its circle, whatever the text size.
-        let toolsArea = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(tools[0].frame) }
-            .min { $0.width * $0.height < $1.width * $1.height } ?? .zero
-        for tool in tools { XCTAssertTrue(toolsArea.insetBy(dx: -0.5, dy: -0.5).contains(tool.frame), "\(tool.label) rests whole") }
-        XCTAssertLessThanOrEqual(reset.frame.width, 56, "Reset keeps its size at the largest text size")
-        XCTAssertFalse(undo.isEnabled, "no stroke yet")
-        XCTAssertTrue(point.isHittable)
-        point.tap()
-        XCTAssertTrue(undo.isEnabled, "Dodge point takes the tap")
-        undo.tap()
-        XCTAssertFalse(undo.isEnabled, "Undo last stroke takes the tap")
-    }
-
-    /// The captain (2026-10-14): turning the iPhone keeps the Darkroom's tool and edit, and a stroke lands where it is
-    /// drawn in either layout. A burn drawn on the print in portrait darkens the print there and nowhere far from it;
-    /// turned to landscape, Dodge / Burn is still selected with Burn and the strength kept, and the stroke can be undone.
-    /// A burn drawn there at the opposite corner, turned back to portrait, darkens the portrait print at that corner only.
-    func testDarkroomTurningKeepsTheStrokeAndStrokesLandWhereDrawn() throws {
-        let app = openDarkroomInLandscape(["--developed-photo"], turn: false)
-        let print = app.images["Photo 1, print preview"]
-        app.buttons["Dodge / Burn"].tap()
-        app.buttons["Burn"].tap()
-        let strength = app.sliders["Local exposure strength"]
-        XCTAssertTrue(strength.waitForExistence(timeout: 5))
-        // The strongest burn the slider reaches; XCUITest's adjustment stops short of the end on some iPhones.
-        strength.adjust(toNormalizedSliderPosition: 1)
-        let caption = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Strength: ")).firstMatch
-        XCTAssertTrue(caption.waitForExistence(timeout: 5))
-        let setStrength = caption.label
-        let undo = app.buttons["Undo last stroke"]
-        let original = settledPrint(print)
-        print.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.3)).tap()
-        XCTAssertTrue(undo.isEnabled, "The burn is recorded")
-        let burned = changedPrint(print, from: original)
-        assertBurned(burned, from: original, at: CGPoint(x: 0.25, y: 0.3), farFrom: CGPoint(x: 0.75, y: 0.7), "In portrait")
-        snapshot(app, "Darkroom-burn-drawn-in-portrait")
-        let portraitPrint = print.frame
-
-        turn(app, to: .landscapeLeft)
-        XCTAssertTrue(app.buttons["Dodge / Burn"].isSelected, "Landscape keeps the tool")
-        XCTAssertTrue(app.buttons["Burn"].isSelected, "and Burn")
-        XCTAssertTrue(app.staticTexts[setStrength].exists, "and the strength, \(setStrength)")
-        XCTAssertTrue(undo.isEnabled, "and the stroke")
-        XCTAssertGreaterThan(print.frame.height, 160, "The print is beside the controls")
-        uprightSnapshot(app, "Darkroom-turned-landscape")
-        undo.tap()
-        XCTAssertFalse(undo.isEnabled, "The stroke drawn in portrait is undone in landscape")
-        print.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.7)).tap()
-        XCTAssertTrue(undo.isEnabled, "A burn drawn in landscape is recorded")
-        Thread.sleep(forTimeInterval: 1.5)
-
-        turn(app, to: .portrait)
-        for (now, then) in [(print.frame.minX, portraitPrint.minX), (print.frame.minY, portraitPrint.minY),
-                            (print.frame.width, portraitPrint.width), (print.frame.height, portraitPrint.height)] {
-            XCTAssertEqual(now, then, accuracy: 1, "Portrait gives the print the frame it had")
-        }
-        XCTAssertTrue(app.buttons["Dodge / Burn"].isSelected, "Portrait keeps the tool")
-        let landscapeBurn = changedPrint(print, from: original)
-        assertBurned(landscapeBurn, from: original, at: CGPoint(x: 0.75, y: 0.7), farFrom: CGPoint(x: 0.25, y: 0.3),
-                     "Drawn in landscape")
-        snapshot(app, "Darkroom-turned-back-portrait")
     }
 
     /// A crop set in landscape keeps its slider values and the cropped print's proportions turned back to portrait, with
@@ -1244,59 +1085,6 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         }
         wait(for: [XCTNSPredicateExpectation(predicate: settled, object: nil)], timeout: 10)
         Thread.sleep(forTimeInterval: 1.5)
-    }
-
-    /// The print's picture once two looks a moment apart agree.
-    private func settledPrint(_ print: XCUIElement) -> Data {
-        var last = print.screenshot().pngRepresentation
-        for _ in 0..<40 {
-            Thread.sleep(forTimeInterval: 0.25)
-            let now = print.screenshot().pngRepresentation
-            if now == last { break }
-            last = now
-        }
-        return last
-    }
-
-    /// The print's picture once it differs from `before` and has settled.
-    private func changedPrint(_ print: XCUIElement, from before: Data) -> Data {
-        for _ in 0..<80 where print.screenshot().pngRepresentation == before { Thread.sleep(forTimeInterval: 0.25) }
-        return settledPrint(print)
-    }
-
-    /// A burn darkened `after` against `before` around `point` and left it as it was around `far`, both given as
-    /// fractions of the print.
-    private func assertBurned(_ after: Data, from before: Data, at point: CGPoint, farFrom far: CGPoint, _ name: String) {
-        let darkened = luminance(before, around: point) - luminance(after, around: point)
-        let elsewhere = abs(luminance(before, around: far) - luminance(after, around: far))
-        XCTAssertGreaterThan(darkened, 0.1, "\(name): the burn darkens the print where it is drawn")
-        XCTAssertLessThan(elsewhere, 0.03, "\(name): and leaves the print far from it as it was")
-    }
-
-    /// The mean luminance, 0 to 1, of the square 4% of the picture's width on a side centered on `point`, a fraction of it.
-    private func luminance(_ picture: Data, around point: CGPoint) -> Double {
-        guard let cgImage = UIImage(data: picture)?.cgImage else { return .nan }
-        let width = cgImage.width, height = cgImage.height
-        var pixels = [UInt8](repeating: 0, count: width * height * 4)
-        let drawn = pixels.withUnsafeMutableBytes { buffer -> Bool in
-            guard let context = CGContext(data: buffer.baseAddress, width: width, height: height, bitsPerComponent: 8,
-                                          bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
-                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
-            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-            return true
-        }
-        guard drawn else { return .nan }
-        let half = max(1, Int(Double(width) * 0.02))
-        let centerX = Int(point.x * Double(width)), centerY = Int(point.y * Double(height))
-        var total = 0.0, count = 0.0
-        for y in max(0, centerY - half)..<min(height, centerY + half) {
-            for x in max(0, centerX - half)..<min(width, centerX + half) {
-                let index = (y * width + x) * 4
-                total += 0.2126 * Double(pixels[index]) + 0.7152 * Double(pixels[index + 1]) + 0.0722 * Double(pixels[index + 2])
-                count += 1
-            }
-        }
-        return total / count / 255
     }
 
     /// The screen upright in landscape, where `XCUIApplication.screenshot()` turns the image sideways a second time and

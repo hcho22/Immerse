@@ -51,10 +51,11 @@ SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/PopulatedJournalHarn
 The runner requires the explicitly selected owned simulator to be Shutdown,
 preserves appearance/content size, records source/artifact/runtime and xcresult
 attachments, copies only newly created histories and shuts down after execution.
-The six retained tests cover empty-Film Delete confirmation, early cancellation
+The six retained histories cover empty-Film Delete confirmation, early cancellation
 and separate Development/original choice, one Instant revealed while the next is
 sealed, saved per-photo edit/exact Reset across relaunch, Darkroom control
-reachability (044) and a drawn dodge stroke saved across relaunch (047). They never
+reachability, and a pre-change Dodge/Burn recipe that still prints until Reset
+clears it across relaunch. They never
 tap Open Camera, execute Photos export or purchase. Runs before 044 produced four
 histories; the inspector now requires all six and tells the three developed-photo
 histories apart by their inspection reasons. The offline Ruby inspector compares

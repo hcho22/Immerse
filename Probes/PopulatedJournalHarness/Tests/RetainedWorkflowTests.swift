@@ -103,7 +103,7 @@ import XCTest
         app.buttons["Done"].tap()
     }
 
-    func testDarkroomAccessibleControlsReachNonGestureEditingPaths() throws {
+    func testDarkroomAccessibleControlsReachAdjustmentPaths() throws {
         let id = UUID()
         let app = launch(["--developed-photo"], id: id)
         openFilm(app)
@@ -135,29 +135,9 @@ import XCTest
         snapshot(app, "darkroom-crop-captions")
         crop.flipSwitch()
 
-        app.buttons["Dodge / Burn"].tap()
-        let horizontal = app.sliders["Local exposure horizontal position"]
-        XCTAssertTrue(horizontal.waitForExistence(timeout: 5))
-        horizontal.adjust(toNormalizedSliderPosition: 0.7)
-        let vertical = app.sliders["Local exposure vertical position"]
-        XCTAssertTrue(vertical.waitForExistence(timeout: 5))
-        vertical.adjust(toNormalizedSliderPosition: 0.35)
-        XCTAssertTrue(app.buttons["Dodge point"].waitForExistence(timeout: 5))
-        app.buttons["Dodge point"].tap()
-        let undo = app.buttons["Undo last stroke"]
-        XCTAssertTrue(undo.isEnabled)
-        // At the default text size the last row rests below the scroll area, which stops above the
-        // bottom bar. Scroll it clear as a person would, starting on the plain heading so the drag
-        // cannot move a slider or paint on the print.
-        let bar = app.buttons["Reset to Original"]
-        let heading = app.staticTexts["Dodge / Burn"]
-        for _ in 0..<4 where undo.frame.maxY > bar.frame.minY - 12 {
-            heading.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-                .press(forDuration: 0.1, thenDragTo: heading.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: -10)))
-        }
-        XCTAssertLessThan(undo.frame.maxY, bar.frame.minY - 12)
-        undo.tap()
-        XCTAssertFalse(app.buttons["Undo last stroke"].isEnabled)
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
+        XCTAssertFalse(app.buttons["Dodge point"].exists)
+        XCTAssertFalse(app.buttons["Undo last stroke"].exists)
 
         saveDarkroom(app)
         inspect(app, "darkroom-accessible-controls")
@@ -217,44 +197,53 @@ import XCTest
         XCTAssertTrue(app.buttons["Vignette"].exists)
     }
 
-    func testDrawnDodgeStrokeChangesPrintAndPersistsAcrossRelaunch() throws {
+    func testLegacyDodgeStrokeStillPrintsAndResetClearsItAcrossRelaunch() throws {
         let id = UUID()
-        let app = launch(["--developed-photo"], id: id)
+        let app = launch(["--developed-photo", "--recipe-with-strokes"], id: id)
         openFilm(app)
         openDarkroom(app)
-        app.buttons["Dodge / Burn"].tap()
-        let undo = app.buttons["Undo last stroke"]
-        XCTAssertTrue(undo.waitForExistence(timeout: 5))
-        XCTAssertFalse(undo.isEnabled)
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
+        XCTAssertFalse(app.buttons["Dodge point"].exists)
+        XCTAssertFalse(app.buttons["Burn point"].exists)
+        XCTAssertFalse(app.buttons["Undo last stroke"].exists)
         let print = app.images["Photo 1, print preview"]
         XCTAssertTrue(print.waitForExistence(timeout: 10))
-        let frame = print.frame
-        let before = print.screenshot().pngRepresentation
+        let legacyStrokePrint = print.screenshot().pngRepresentation
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 5))
+        app.buttons["Done"].tap()
+        XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 5))
+        inspect(app, "legacy-stroke-still-prints")
 
-        // Draw across the print with a finger, as a person paints a dodge.
-        print.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.3))
-            .press(forDuration: 0.1, thenDragTo: print.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.6)))
-        XCTAssertEqual(print.frame, frame, "Drawing on the print must not scroll the Darkroom")
-        XCTAssertTrue(undo.isEnabled, "The drawn stroke is recorded")
-        var changed = false
-        for _ in 0..<40 where !changed {
-            changed = print.screenshot().pngRepresentation != before
-            if !changed { Thread.sleep(forTimeInterval: 0.25) }
+        openDarkroom(app)
+        let printAfterReopeningDarkroom = app.images["Photo 1, print preview"]
+        XCTAssertTrue(printAfterReopeningDarkroom.waitForExistence(timeout: 10))
+        app.buttons["Reset to Original"].tap()
+        var resetPrint: Data?
+        for _ in 0..<60 where resetPrint == nil {
+            let current = printAfterReopeningDarkroom.screenshot().pngRepresentation
+            if current != legacyStrokePrint { resetPrint = current }
+            else { Thread.sleep(forTimeInterval: 0.25) }
         }
-        XCTAssertTrue(changed, "The drawn dodge renders into the print preview")
-        snapshot(app, "drawn-dodge-stroke")
+        let clearedPrint = try XCTUnwrap(resetPrint, "Reset to Original removes the saved stroke from the rendered print")
+        snapshot(app, "legacy-stroke-reset")
         saveDarkroom(app)
-        inspect(app, "drawn-dodge-saved")
+        inspect(app, "legacy-stroke-reset-saved")
 
         reopen(app, id: id)
         openFilm(app)
         openDarkroom(app)
-        app.buttons["Dodge / Burn"].tap()
-        XCTAssertTrue(app.buttons["Undo last stroke"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Undo last stroke"].isEnabled, "The saved stroke returns after relaunch")
-        snapshot(app, "drawn-dodge-reopened")
+        XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
+        XCTAssertFalse(app.buttons["Undo last stroke"].exists)
+        let reopenedPrint = app.images["Photo 1, print preview"]
+        XCTAssertTrue(reopenedPrint.waitForExistence(timeout: 10))
+        XCTAssertEqual(reopenedPrint.screenshot().pngRepresentation, clearedPrint,
+                       "The reset print remains cleared after reopening")
         app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 5))
         app.buttons["Done"].tap()
+        XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 5))
+        inspect(app, "legacy-stroke-reset-reopened")
     }
 
     private func launch(_ arguments: [String], id: UUID = UUID()) -> XCUIApplication {

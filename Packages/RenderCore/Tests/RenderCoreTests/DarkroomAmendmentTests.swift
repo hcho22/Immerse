@@ -131,8 +131,10 @@ final class DarkroomAmendmentTests: XCTestCase {
         XCTAssertGreaterThan(lowSpread, 0, "Minus 50 still leaves color")
         XCTAssertEqual(Double(lowSpread) / Double(developedSpread), 0.5, accuracy: 0.06)
         XCTAssertEqual(Double(highSpread) / Double(developedSpread), 1.5, accuracy: 0.09)
-        var reset = DarkroomRecipe(saturation: -50, vignetteStops: 2)
+        var reset = DarkroomRecipe(saturation: -50, vignetteStops: 2,
+            dodgeBurnMasks: [LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: 1)])
         reset.resetToOriginal()
+        XCTAssertTrue(reset.dodgeBurnMasks.isEmpty, "Reset clears saved legacy strokes")
         XCTAssertEqual(try NativePhotoRenderer.print(master: colorMaster, recipe: reset,
                                                      camera: CameraCatalog.disposable1990s), colorMaster)
 
