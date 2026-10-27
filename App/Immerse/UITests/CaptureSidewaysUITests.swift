@@ -331,6 +331,15 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                 XCTAssertTrue(turned.window.contains(frame), "\(label) is on screen held on its \(side): \(frame)")
             }
             XCTAssertFalse(turned.done.intersects(turned.remaining), "Done and the count do not overlap held on its \(side)")
+            // The notices over the area (the camera's error, Resume Camera) keep clear of the turned header.
+            let viewfinder = app.otherElements["viewfinder"]
+            for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex
+            where element.label == "Resume Camera" || element.label.hasPrefix("Camera unavailable") {
+                for (label, frame) in [("Done", turned.done), ("Camera name and count", turned.remaining)] {
+                    XCTAssertFalse(element.frame.intersects(frame),
+                                   "\(element.label) is clear of \(label) held on its \(side): \(element.frame) and \(frame)")
+                }
+            }
             checkFocusSwitch(turned, app, "held on its \(side)")
         }
 

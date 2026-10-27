@@ -34,6 +34,9 @@ struct CaptureView: View {
     @State private var savedShowing = false
     /// The height of the controls over the Viewfinder area's bottom, which the notices above them leave free.
     @State private var floatingControlsHeight: CGFloat = 0
+    /// How thick the header's line is, which held sideways runs down the Viewfinder area's side, so the notices keep
+    /// clear of it.
+    @State private var headerThickness: CGFloat = 44
     /// Whether this screen has started its shooting session. A full-screen print or question over it makes it disappear
     /// and appear again, which must not start the session, or open the camera, a second time.
     @State private var started = false
@@ -146,7 +149,7 @@ struct CaptureView: View {
     /// the iPhone on its side the whole line turns and reserves the same length in either hold.
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
         let sideways = HeldTurn(capture.held).isSideways
-        return TurnedBlock(length: headerLineLength, reservesLength: true, maximumLength: room) {
+        return TurnedBlock(length: headerLineLength + developAtOnceLength, reservesLength: true, maximumLength: room) {
             HStack(spacing: 8) {
                 // The action and Debug notice use a compact control size so the Camera name and count keep room at
                 // accessibility text sizes. The row can accept the space the header gives it instead of demanding
@@ -166,6 +169,7 @@ struct CaptureView: View {
                 }
             }
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { headerThickness = $0 }
             // Upright the line sits in the top bar; turned, it runs down the Viewfinder area's side, where a material
             // keeps it legible over the picture without hiding it.
             .padding(.horizontal, sideways ? 8 : 0)
@@ -180,6 +184,15 @@ struct CaptureView: View {
     }
 
     /// The leading part of the one-line header, which in a Debug build includes Develop at once when it is on.
+    /// The turned header's extra length for a Debug build's Develop at once notice, which then stays on the line beside
+    /// Done instead of dropping under it, so the turned header stays one line thick and clear of the notices.
+    private var developAtOnceLength: CGFloat {
+        #if DEBUG
+        if let film = model.film(filmID), model.developedPreviews.applies(to: film) { return 80 }
+        #endif
+        return 0
+    }
+
     private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
         let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
         #if DEBUG
@@ -252,9 +265,13 @@ struct CaptureView: View {
             .overlay(alignment: .top) {
                 // The notices take the area above the controls at its bottom, so a long notice, as at the largest text
                 // sizes held sideways, never runs over the focus switch.
+                // Held sideways they also keep clear of the header running down the side that is then the top: its
+                // thickness, its 16-point margin and 8 more.
                 let room = max(area.size.height - (floatingControlsHeight > 0 ? floatingControlsHeight + 8 : 0), 80)
+                let headerSide: Edge.Set = held == .clockwise ? .trailing : held == .counterClockwise ? .leading : []
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
                         showsPreview: showsDevelopedPreview, boxHeight: room)
+                    .padding(headerSide, headerThickness + 24)
                     .frame(width: area.size.width, height: room, alignment: held.isSideways ? .center : held.topEdge)
             }
             // The focus switch and the 6×6's sliders stay across the area's bottom in every hold, as the screen's layout
