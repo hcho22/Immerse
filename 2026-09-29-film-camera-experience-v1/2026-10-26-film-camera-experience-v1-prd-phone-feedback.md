@@ -289,6 +289,7 @@ Load Film's controls line (`controlsLabel`) says "Fixed focus" for the Disposabl
 4. Every new Film starts on Auto, and each Film remembers its setting across leaving the screen, quitting the app and relaunching.
 5. A Film loaded before this change also gets the switch and starts on Auto (**Firstmate's stated default**: the switch is a capture control, not part of the locked Camera package, per "Locking the Camera package does not freeze supported Camera-authentic capture controls").
 6. Where a lens cannot hold a fixed position or be focused by hand, that side of the switch is unavailable on that lens with a brief note, as "Manual focus unavailable on this lens" works today (FR-04: hide unsupported controls with a brief explanation).
+   On a lens without autofocus, such as the ultra wide or the front camera of some supported iPhones, Auto keeps that lens's fixed focus and a tap on the Viewfinder shows no focus mark (**Builder's reading** of the same FR-04 rule).
 7. The switch sits over the bottom of the Viewfinder area or in the shutter bar (FR-23).
    **Approval stop:** its placement is shown to the captain in screenshots and is final only after he approves it.
 8. Load Film's controls line names each Camera's focus as the switch it has, Auto or Fixed on the Disposable and the Super 8 and Auto or Manual on the 6×6, in place of a fixed or deliberate focus; the 6×6's exposure stays deliberate, and the words go to the captain with the other copy (section 8).
@@ -296,9 +297,10 @@ Load Film's controls line (`controlsLabel`) says "Fixed focus" for the Disposabl
 **Acceptance.**
 
 - A new Disposable, Super 8 and 6×6 Film opens on Auto; switching to Fixed or Manual, leaving and coming back keeps it.
-- On Auto, a tap on the Viewfinder focuses there (on a phone) and shows where it focused, as the iPhone's Camera app does.
+- On Auto, on a lens that autofocuses, a tap on the Viewfinder focuses there (on a phone) and shows where it focused, as the iPhone's Camera app does.
 - On the 6×6 the Focus slider is hidden on Auto and shown on Manual.
-- The Instant and the 16mm show no switch and focus where tapped.
+- The Instant and the 16mm show no switch and, on a lens that autofocuses, focus where tapped.
+- On a lens without autofocus, a tap on the Viewfinder shows no focus mark.
 - Load Film's controls line for the Disposable, the Super 8 and the 6×6 names the focus switch, not a fixed or deliberate focus.
 
 **Limits.** Whether a tap also sets exposure, and whether a tap works while a clip records, are **Open** (section 8); the Disposable's exposure stays fixed whatever is tapped.
@@ -327,7 +329,7 @@ Tap-to-focus adds to continuous autofocus, so a VoiceOver user who does not tap 
 4. Each step records in the movie Camera's 4:3 shape at the same output size, frame rate and Developed Treatment as at 1x; where a lens offers no suitable 4:3 movie format, that step is not offered on that phone.
    The last sentence is the **Builder's reading** of "exactly as the 6×6 does", which keeps the 6×6's square and output size at every step.
 
-**Acceptance.** On a phone with more than one rear lens, the Super 8 and the 16mm show the same steps the 6×6 shows; a step cannot be changed while recording; a clip recorded at each step plays in the Developed Movie at the Movie's frame rate and shape.
+**Acceptance.** On a phone with more than one rear lens, the Super 8 and the 16mm show the same steps the 6×6 shows, less any step item 4 leaves out on that phone; a step cannot be changed while recording; a clip recorded at each step plays in the Developed Movie at the Movie's frame rate and shape.
 
 **Data and compatibility.** No stored data changes; clips already recorded are unaffected.
 
@@ -411,7 +413,10 @@ The Debug build's Develop at once preview stays byte for byte the master Develop
 
 **Problem.** With sound recorded, a built-in Soundtrack needs a rule for how the two meet.
 
-**Today.** The Film screen's Soundtrack sheet offers "Silent" and each built-in Soundtrack the media catalog holds for the Camera; under DEC-05 no Soundtrack ships until a license allows it in exported Movies, so today it offers only Silent.
+**Today.**
+The Film screen shows its Soundtrack button only when the media catalog holds an instrumental for the Camera (`FilmDetailView`), and its sheet lists "Silent" and each such Soundtrack only when a catalog is loaded (`SoundtrackView`).
+Choosing needs the catalog too (`JournalModel.selectSoundtrack` guards it, and `FilmProcessor.selectSoundtrack` takes it).
+Under DEC-05 no Soundtrack ships until a license allows it in exported Movies, and the shipped catalog (`MediaCatalog.json`) holds none, so today no sound choice can be reached at all.
 Movies export as H.264 in a `.mov` with no sound track unless a Soundtrack is chosen.
 
 **Required.**
@@ -422,8 +427,10 @@ Movies export as H.264 in a `.mov` with no sound track unless a Soundtrack is ch
 3. The recorded sound is never discarded by choosing a Soundtrack or Silent, and the choice can be changed back at any time without developing again (the soundtrack rule of 2026-10-13 stands).
 4. The Movie plays, and Save Developed to Photos exports it, with the sound chosen.
 5. Discard and the Movie's rebuild keep the sound choice (FR-16).
+6. The developed Movie of a Film with sound shows the sound choice on the Film screen even when the media catalog holds no Soundtrack; Recorded sound and Silent need no catalog entry.
 
 **Acceptance.** A developed Super 8 Movie with sound plays with it, and its sound track has the codec, sample rate and channel count of a video the same iPhone's Camera app records; choosing Silent and then Recorded sound brings the sound back without Development running again; an exported Movie read back from the file handed to Photos carries the sound chosen (`ApprovedExportTests` style).
+With the shipped catalog holding no Soundtrack, a developed Super 8 Movie with sound shows the sound choice with Recorded sound and Silent, and changing between them works.
 
 **Limits.** No mixing, volume, trimming, voice-over or music import (PRD 2.1 FR-05 stands).
 Until a licensed Soundtrack ships (DEC-05), the choice is Recorded sound or Silent.
@@ -774,9 +781,9 @@ Acceptance: FR-26; `ZoomStepTests` cover the movie Cameras; no step change while
 Dependencies: DEC-18; rebase on slice 1 where both change the shooting screen.
 Acceptance: FR-27, including the privacy changes and the silent path for old Films; `AGENTS.md`'s "microphone prompt absence" among what `Probes/NativeAdaptersCompileProbe` does not prove corrected.
 
-**MOV-13 - 2026-10-26 - Recorded sound, a Soundtrack or Silent for a Developed Movie** (FR-28 items 1 to 3 and 5)
+**MOV-13 - 2026-10-26 - Recorded sound, a Soundtrack or Silent for a Developed Movie** (FR-28 items 1 to 3, 5 and 6)
 Dependencies: MOV-12.
-Acceptance: FR-28's choice acceptance; changing back needs no Development.
+Acceptance: FR-28's choice acceptance; changing back needs no Development; the choice shows and works with the shipped catalog holding no Soundtrack, which `FilmDetailView`'s Soundtrack button and `JournalModel.selectSoundtrack`'s catalog guard prevent today.
 
 **MOV-14 - 2026-10-26 - Developed Movies and their exports carry the chosen sound** (FR-28 item 4)
 Dependencies: MOV-12, MOV-13.
