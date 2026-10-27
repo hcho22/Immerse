@@ -8,8 +8,20 @@ final class JournalFlowTests: ScreenTestCase {
         try app.performAccessibilityAudit(for: Self.auditTypes)
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
-        for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
-            XCTAssertTrue(app.buttons["camera-\(id)"].exists)
+        let cameraNames = [
+            "disposable1990s": "Disposable",
+            "instant1970s": "Instant",
+            "mediumFormat6x6": "6×6",
+            "super8HomeMovie": "Super 8",
+            "cinema16mm": "16mm"
+        ]
+        for (id, name) in cameraNames {
+            let row = app.buttons["camera-\(id)"]
+            XCTAssertTrue(row.exists)
+            XCTAssertTrue(row.label.contains(name), row.label)
+            for oldName in ["1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie", "16mm Cinema"] {
+                XCTAssertFalse(row.label.contains(oldName), row.label)
+            }
         }
         let camera = app.buttons["camera-super8HomeMovie"]
         camera.tap()
@@ -19,6 +31,7 @@ final class JournalFlowTests: ScreenTestCase {
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "1960s home-movie camera")).firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
         // The Form is lazy and its Camera description is long enough that the command is below the first screen.

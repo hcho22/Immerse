@@ -144,7 +144,7 @@ struct CaptureView: View {
             VStack(spacing: 12) {
                 doneRow(capture)
                 if let film = model.film(filmID) {
-                    film.camera.displayNameText.font(.system(.title3, design: .serif)).multilineTextAlignment(.center)
+                    film.camera.shortNameText.font(.system(.title3, design: .serif)).multilineTextAlignment(.center)
                     TimelineView(.periodic(from: .now, by: 0.1)) { context in
                         if let start = capture.recordingStarted {
                             film.remainingText(recordedFor: context.date.timeIntervalSince(start))

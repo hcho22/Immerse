@@ -173,6 +173,15 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let detail = app.navigationBars[title]
         let done = app.buttons["Done"]
         let upright = try wait(app)
+        let oldName = switch id {
+        case "disposable1990s": "1990s Disposable"
+        case "instant1970s": "1970s Instant"
+        case "mediumFormat6x6": "6×6 Medium Format"
+        case "super8HomeMovie": "1960s Super 8 Home Movie"
+        default: "16mm Cinema"
+        }
+        XCTAssertTrue(app.staticTexts[name].exists, "The shooting screen shows its short Camera name")
+        XCTAssertFalse(app.staticTexts[oldName].exists, "The shooting screen does not show its stored package name")
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
         XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")

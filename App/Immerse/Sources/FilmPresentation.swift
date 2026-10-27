@@ -21,8 +21,6 @@ extension CameraPackage {
     /// The Camera's names as text that VoiceOver reads naturally. Every view that shows a name uses these; a navigation
     /// title uses `SpokenText.title`.
     var shortNameText: Text { Text(SpokenText.shown(shortName)) }
-    var displayNameText: Text { Text(SpokenText.shown(displayName)) }
-
     /// The title Load Film suggests for this Camera's `roll`th Film, such as "6×6 - Roll #01".
     func suggestedTitle(roll: Int) -> String { "\(shortName) - Roll #\(String(format: "%02d", roll))" }
 
@@ -69,11 +67,11 @@ extension CameraPackage {
     /// Names a look only in descriptive terms, never a maker or a film.
     func lookLines(filmStock: FilmStock?) -> [String] {
         switch id {
-        case .disposable1990s: ["Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
-        case .instant1970s: ["Warm, faded color, soft contrast and soft detail"]
+        case .disposable1990s: ["1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
+        case .instant1970s: ["1970s instant camera: warm, faded color, soft contrast and soft detail"]
         case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
                                 "Black and white: high contrast and distinct grain"]
-        case .super8HomeMovie: ["Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
+        case .super8HomeMovie: ["1960s home-movie camera: muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
         case .cinema16mm:
             filmStock == .blackAndWhite
                 ? ["Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"]

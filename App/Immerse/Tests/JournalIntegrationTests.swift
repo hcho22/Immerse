@@ -212,13 +212,21 @@ final class JournalIntegrationTests: XCTestCase {
         let copy = Dictionary(uniqueKeysWithValues: CameraCatalog.all.map {
             ($0.id, "\($0.controlsLabel). \($0.lookLines(filmStock: $0.defaultFilmStock).joined(separator: ". "))")
         })
+        XCTAssertTrue(copy[.disposable1990s]!.contains("1990s"), "The Disposable description carries its era")
+        XCTAssertTrue(copy[.instant1970s]!.contains("1970s"), "The Instant description carries its era")
+        XCTAssertTrue(copy[.super8HomeMovie]!.contains("1960s"), "The Super 8 description carries its era")
+        for id in [CameraID.mediumFormat6x6, .cinema16mm] {
+            for era in ["1990s", "1970s", "1960s"] {
+                XCTAssertFalse(copy[id]!.contains(era), "The 6×6 and 16mm descriptions carry no decade")
+            }
+        }
         XCTAssertTrue(copy[.disposable1990s]!.contains("low-light cue"))
         XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
         // The Instant's faded look is the captain's exception to PRD 2.1 section 6.1's wording (ADR 0016).
         XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("faded color"))
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
         // The Super 8's muted color and glow are the captain's exception to PRD 2.1 section 6.2's wording (ADR 0016).
-        XCTAssertTrue(copy[.super8HomeMovie]!.contains("Muted color, a warm glow") && copy[.super8HomeMovie]!.contains("18 frames"))
+        XCTAssertTrue(copy[.super8HomeMovie]!.contains("muted color, a warm glow") && copy[.super8HomeMovie]!.contains("18 frames"))
         XCTAssertTrue(copy[.cinema16mm]!.contains("24 frames"))
         // The two Cameras with a Film Stock describe both looks (PRD 2.1 sections 6.1 and 6.2).
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("Color: natural, warm color")
@@ -237,25 +245,26 @@ final class JournalIntegrationTests: XCTestCase {
         let forbidden = ["Kodak", "Polaroid", "Hasselblad", "Bolex", "Fun Saver", "Portra", "Tri-X", "Kodachrome", "Instamatic",
                          "Vision3", "Double-X", "Eastman", "500C"]
         for camera in CameraCatalog.all {
-            let shown = [camera.displayName, camera.shortName, camera.controlsLabel]
+            let shown = [camera.shortName, camera.controlsLabel]
                 + ([nil] + FilmStock.allCases.map(Optional.some)).flatMap { camera.lookLines(filmStock: $0) }
                 + camera.filmStocks.map(\.label)
             for text in shown { for name in forbidden { XCTAssertFalse(text.contains(name), "\(camera.displayName): \(text)") } }
         }
     }
 
-    /// The 6×6 is drawn as "6×6" and spoken as "6 by 6" wherever its name is shown. No other Camera's name changes.
+    /// The 6×6 is drawn as "6×6" and spoken as "6 by 6"; stored package labels stay intact but are not shown.
     func testSixBySixIsSpokenAsSixBySixWhereverItsNameIsShown() {
         let medium = CameraCatalog.mediumFormat6x6
         XCTAssertEqual(medium.shortName, "6×6")
         XCTAssertEqual(medium.displayName, "6×6 Medium Format")
         assertShown(medium.shortName, spokenAs: "6 by 6")
-        assertShown(medium.displayName, spokenAs: "6 by 6 Medium Format")
         for camera in CameraCatalog.all where camera.id != .mediumFormat6x6 {
             assertShown(camera.shortName, spokenAs: camera.shortName)
-            assertShown(camera.displayName, spokenAs: camera.displayName)
         }
-        for camera in CameraCatalog.all { XCTAssertFalse(SpokenText.of(camera.displayName).contains("×"), camera.displayName) }
+        let oldSixteen = CameraPackage(id: .cinema16mm, displayName: "1960s 16mm Cinema", medium: .movie,
+                                       capacity: .seconds(165), revealRule: .movieDevelopment)
+        XCTAssertEqual(oldSixteen.displayName, "1960s 16mm Cinema", "The Film's stored package is not rewritten")
+        XCTAssertEqual(oldSixteen.shortName, "16mm", "The UI name comes from the Camera ID")
     }
 
     /// A Film keeps its title as given, and VoiceOver reads any "6×6" in it as "6 by 6": the title Load Film suggests

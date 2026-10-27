@@ -58,6 +58,8 @@ final class MovieCapacityUITests: ScreenTestCase {
         }
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
+        XCTAssertTrue(app.staticTexts["16mm"].exists, "The Film screen shows the Camera's short name")
+        XCTAssertFalse(app.staticTexts["16mm Cinema"].exists, "The Film screen does not show the stored package name")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
         XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Film detail header")
 

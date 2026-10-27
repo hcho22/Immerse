@@ -104,7 +104,7 @@ struct FilmDetailView: View {
 
     private func header(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            film.camera.displayNameText.font(.system(.title2, design: .serif))
+            film.camera.shortNameText.font(.system(.title2, design: .serif))
             if let stock = film.filmStock { Text("\(stock.label) Film Stock").font(.subheadline) }
             Text(film.journalState).font(.headline)
             // The system secondary label is 3.44:1 on this screen's white ground in light mode, under the 4.5:1 bar.
