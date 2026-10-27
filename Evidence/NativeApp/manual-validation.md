@@ -2229,9 +2229,9 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Prepare.** Use a static, non-private scene with clear edges. Open the built-in iPhone Camera app and select its 4:3 photo framing as the comparison.
 
-**Steps.** For Disposable, Instant, 6×6, Super 8 and 16mm, open the shooting screen and compare its live picture to the same scene in the iPhone Camera app. Check upright and both sideways holds. Observe the Viewfinder area while controls and any notice appear.
+**Steps.** For Disposable, Instant, 6×6, Super 8 and 16mm, open the shooting screen and compare its live picture to the same scene in the iPhone Camera app. Check upright and both sideways holds. Observe the Viewfinder area while controls and any notice appear. On the Disposable, the Instant and the 6×6, look at the black bars beside or above the Camera's shape. Then tap Done, open the same Camera again, and look for a "Camera paused" note over the running picture.
 
-**Expect.** The live picture sits in the centered Camera shape inside the full-width 4:3 portrait Viewfinder area. The area remains in the same place in each hold and for every Camera; controls and notices do not move it. Record any framing difference from the iPhone Camera app without adjusting either image after capture.
+**Expect.** The live picture sits in the centered Camera shape inside the full-width 4:3 portrait Viewfinder area, and the bars around the shape stay black: no live picture reaches them. The area remains in the same place in each hold and for every Camera; controls and notices do not move it. A Camera opened again after Done shows its picture with no "Camera paused" note. Record any framing difference from the iPhone Camera app without adjusting either image after capture.
 
 **Write down.** Camera, hold, the visible shape, any frame or placement difference, and screenshots that contain no private scene.
 
@@ -2249,9 +2249,9 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Prepare.** Use a well-lit test scene with near and far edges. List the physical rear lenses the iPhone Camera app exposes before testing.
 
-**Steps.** On each Camera, keep Auto selected and tap a near object then a distant object in the Viewfinder. On the Disposable and Super 8, test Fixed on each available lens. On the 6×6, compare Auto with Manual and move the Focus slider in Manual. Check the Instant and 16mm in Auto.
+**Steps.** On each Camera, keep Auto selected and tap a near object then a distant object in the Viewfinder. On the Disposable and Super 8, test Fixed on each available lens. On the 6×6, compare Auto with Manual and move the Focus slider in Manual. Check the Instant and 16mm in Auto. With VoiceOver on, move to the focus switch on the Disposable, swipe up and down on it, then double-tap it.
 
-**Expect.** Auto continuously refocuses where the lens supports it, and a tap focuses the tapped area and shows a yellow square where it focused; a tap on a lens without autofocus shows no square. Fixed holds focus on each supported Disposable and Super 8 lens. Manual focus responds on the 6×6 where available. Record a lens that cannot perform an offered mode; do not infer hardware support from a simulator.
+**Expect.** Auto continuously refocuses where the lens supports it, and a tap focuses the tapped area and shows a yellow square where it focused; a tap on a lens without autofocus shows no square. Fixed holds focus on each supported Disposable and Super 8 lens. Manual focus responds on the 6×6 where available. VoiceOver reads the switch as "Focus, Auto" or "Focus, Fixed", and a swipe up or down or a double tap changes it. Tap a corner, then move the iPhone to a new scene: focus and metering return to the middle. Record a lens that cannot perform an offered mode; do not infer hardware support from a simulator.
 
 **Write down.** Lens identity, mode, approximate target distance, and whether focus followed the tap or stayed fixed. Do not retain a picture of a person or private scene.
 
@@ -2269,19 +2269,19 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Prepare.** Use a test Super 8 Film and a quiet spoken clap or tone, with permission and route state changed only under the captain's approved device procedure. Record the microphone permission state before the test so it can be restored. Include a wired or Bluetooth microphone only if separately authorized.
 
-**Steps.** Start music in another app, open the Super 8's shooting screen and note whether the music pauses as the screen opens, as a clip starts, or not at all, and whether the iPhone's own Camera app does the same when it records video. Record one short clip with the built-in microphone, then test the declined-permission path if the approved procedure allows changing it. If authorized, repeat with each connected microphone route and use a controlled incoming call or another recording app to test interruption behavior.
+**Steps.** Load a new Super 8 Film and open its shooting screen for the first time: answer the microphone question and watch whether the camera starts or stops on "Camera paused" and Resume Camera. Start music in another app, open the Super 8's shooting screen and note whether the music pauses as the screen opens, as a clip starts, or not at all, whether the orange microphone dot shows before a clip starts, and whether the iPhone's own Camera app does the same when it records video. Record one short clip with the built-in microphone and listen to its first second. Record a clip with sound until the Film is full, and check that it saves. Then test the declined-permission path if the approved procedure allows changing it. If authorized, repeat with each connected microphone route and use a controlled incoming call or another recording app to test interruption behavior.
 
-**Expect.** Sound follows the picture without a perceptible offset. Declining permission leaves video capture available, shows the note, and produces a silent clip. A call or competing recording ends the clip safely and retains its saved picture and sound. Each connected route behaves as iOS routes it.
+**Expect.** The first open goes straight on to a running camera after the microphone question. The microphone is in use, and other audio pauses, only while a clip records; each clip has sound from its first moment. A clip recorded to the end of the Film saves. Sound follows the picture without a perceptible offset. Declining permission leaves video capture available, shows the note, and produces a silent clip. A call or competing recording ends the clip safely and retains its saved picture and sound. Each connected route behaves as iOS routes it.
 
-**Write down.** Permission state before and after, when the other app's music paused in Immerse and in the iPhone's Camera app, microphone route, clip duration, whether the note appeared, sync result, and interruption behavior. Keep only the metadata and a pass/fail note; delete test audio after review.
+**Write down.** Permission state before and after, whether the first open started the camera, when the other app's music paused in Immerse and in the iPhone's Camera app, whether the first second of a clip has sound, whether the clip that filled the Film saved, microphone route, clip duration, whether the note appeared, sync result, and interruption behavior. Keep only the metadata and a pass/fail note; delete test audio after review.
 
 ### Q07 - Playback and sound format
 
 **Prepare.** Record one short test video in the iPhone Camera app and one short Super 8 clip of the same non-private scene and sound. Use the app's Recorded sound choice.
 
-**Steps.** Play the Developed Movie through the iPhone speaker and from Photos. Save Developed to Photos. Read the exported file's codec, sample rate and channel count and compare them with the iPhone Camera reference. Change the app's choice to Silent and back to Recorded sound; verify playback each time.
+**Steps.** Play the Developed Movie through the iPhone speaker and from Photos, once with the Ring/Silent switch on silent, and once straight after closing a movie Camera's shooting screen. Save Developed to Photos. Read the exported file's codec, sample rate and channel count and compare them with the iPhone Camera reference, on a phone that records stereo. Change the app's choice to Silent and back to Recorded sound; verify playback each time.
 
-**Expect.** The speaker and Photos play the selected sound. Silent removes it from playback and export; selecting Recorded sound restores it without another Development. The recorded and exported sound format matches the iPhone Camera reference.
+**Expect.** The speaker and Photos play the selected sound, on silent too, and through the speaker, not the earpiece, after a shooting screen. Silent removes it from playback and export; selecting Recorded sound restores it without another Development. The recorded and exported sound format matches the iPhone Camera reference.
 
 **Write down.** The two files' audio metadata and playback results. Keep no voice content in the evidence; retain only metadata and non-private screenshots.
 
