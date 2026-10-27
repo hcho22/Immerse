@@ -53,7 +53,7 @@ final class ContentSizeTests: ScreenTestCase {
                 element.children.forEach(visit)
             }
             visit(root)
-            // "Silent capture" combines its icon and text; the inner text element is the narrower match.
+            // A symbol and text can combine in a label; the inner text element is the narrower match.
             return header ? matches.max { $0.frame.width < $1.frame.width } : matches.min { $0.frame.width < $1.frame.width }
         }
 
@@ -91,10 +91,9 @@ final class ContentSizeTests: ScreenTestCase {
 
     private static let superEight: [Target] = [
         Target(name: "Capacity", type: .staticText, label: "Capacity, 3 minutes 20 seconds of film"),
-        Target(name: "Reveal", type: .staticText, label: "One silent Movie after Development"),
-        Target(name: "Controls", type: .staticText, label: "Handheld, fixed focus, automatic exposure, 18 frames per second"),
+        Target(name: "Reveal", type: .staticText, label: "One Movie after Development"),
+        Target(name: "Controls", type: .staticText, label: "Handheld, auto or fixed focus, automatic exposure, 18 frames per second"),
         Target(name: "Look", type: .staticText, label: "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"),
-        Target(name: "Silent capture", type: .staticText, label: "Silent capture"),
         Target(name: "Movie Orientation", type: .staticText, label: "Movie Orientation"),
         Target(name: "Portrait", type: .button, label: "Portrait"),
         Target(name: "Landscape", type: .button, label: "Landscape"),
@@ -120,7 +119,7 @@ final class ContentSizeTests: ScreenTestCase {
     /// The 6×6 Load screen's own text: its controls line and its look lines, one per Film Stock. The Film Stock choice is
     /// the control the 16mm screen shows and is measured there.
     private static let sixBySix: [Target] = [
-        Target(name: "6×6 Controls", type: .staticText, label: "Square framing, deliberate focus and exposure, optical focus only"),
+        Target(name: "6×6 Controls", type: .staticText, label: "Square framing, auto or manual focus and exposure, optical focus only"),
         Target(name: "6×6 Picture", type: .staticText, label: "Borderless square picture"),
         Target(name: "6×6 Color look", type: .staticText, label: "Color: natural, warm color, very fine grain and gentle contrast"),
         Target(name: "6×6 Black and white look", type: .staticText, label: "Black and white: high contrast and distinct grain"),

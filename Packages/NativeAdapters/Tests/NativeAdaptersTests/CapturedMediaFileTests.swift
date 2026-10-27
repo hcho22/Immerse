@@ -1,3 +1,4 @@
+@preconcurrency import AVFoundation
 import FilmDomain
 import Foundation
 import NativeAdapters
@@ -5,6 +6,37 @@ import RenderFixtures
 import XCTest
 
 final class CapturedMediaFileTests: XCTestCase {
+    func testRecoveryAcceptsOneRecordedSoundTrackOnlyForANewMovieFilm() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let manifest = try await fixtures(at: root)
+        let video = root.appendingPathComponent(manifest.movie.relativePath)
+        let wave = root.appendingPathComponent("captured-sound.wav")
+        try Self.wave().write(to: wave)
+        let captured = root.appendingPathComponent("captured-with-sound.mov")
+        try await Self.addAudio(wave, to: video, destination: captured)
+
+        let soundFiles = try CapturedMediaFiles(directory: root.appendingPathComponent("new-film-staging"))
+        let soundID = UUID()
+        try soundFiles.prepare(PendingCaptureRecord(id: soundID, mediaKind: .movie,
+            orientation: .portrait, remainingFrames: 6_000, allowsAudio: true))
+        try FileManager.default.copyItem(at: captured, to: soundFiles.movieDestination(id: soundID))
+        let recovered = try await soundFiles.recoveryEvents()
+        XCTAssertEqual(recovered.count, 1,
+                       "A new sound-capable Film recovers its one captured sound track")
+
+        let silentFiles = try CapturedMediaFiles(directory: root.appendingPathComponent("earlier-film-staging"))
+        let silentID = UUID()
+        try silentFiles.prepare(PendingCaptureRecord(id: silentID, mediaKind: .movie,
+            orientation: .portrait, remainingFrames: 6_000, allowsAudio: false))
+        try FileManager.default.copyItem(at: captured, to: silentFiles.movieDestination(id: silentID))
+        do {
+            _ = try await silentFiles.recoveryEvents()
+            XCTFail("An earlier Film's staging record must refuse newly added sound")
+        } catch { }
+        XCTAssertEqual(try silentFiles.pendingRecords().map(\.id), [silentID], "Rejected media remains pending")
+    }
+
     func testReopenedJournalRecoversPhotoAndMovieInCaptureOrderUntilAcknowledged() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -218,6 +250,45 @@ final class CapturedMediaFileTests: XCTestCase {
             XCTFail("Incomplete file must not become a save event")
         } catch { }
         XCTAssertEqual(try Data(contentsOf: url), partial)
+    }
+
+    private static func addAudio(_ audioURL: URL, to videoURL: URL, destination: URL) async throws {
+        let videoAsset = AVURLAsset(url: videoURL)
+        let audioAsset = AVURLAsset(url: audioURL)
+        let composition = AVMutableComposition()
+        let videoTracks = try await videoAsset.loadTracks(withMediaType: .video)
+        let audioTracks = try await audioAsset.loadTracks(withMediaType: .audio)
+        let video = try XCTUnwrap(videoTracks.first)
+        let audio = try XCTUnwrap(audioTracks.first)
+        let duration = try await videoAsset.load(.duration)
+        let videoTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .video,
+            preferredTrackID: kCMPersistentTrackID_Invalid))
+        let audioTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid))
+        try videoTarget.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: video, at: .zero)
+        let audioDuration = try await audioAsset.load(.duration)
+        try audioTarget.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration, audioDuration)),
+                                        of: audio, at: .zero)
+        let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
+        try await exporter.export(to: destination, as: .mov)
+    }
+
+    private static func wave() -> Data {
+        let rate: UInt32 = 22_050
+        let samples = Int(rate / 2)
+        var bytes = Data()
+        func text(_ value: String) { bytes.append(contentsOf: value.utf8) }
+        func integer<T: FixedWidthInteger>(_ value: T) {
+            var little = value.littleEndian
+            withUnsafeBytes(of: &little) { bytes.append(contentsOf: $0) }
+        }
+        text("RIFF"); integer(UInt32(36 + samples * 2)); text("WAVEfmt ")
+        integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(1)); integer(rate)
+        integer(rate * 2); integer(UInt16(2)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 2))
+        for sample in 0..<samples {
+            integer(Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000))
+        }
+        return bytes
     }
 
     private func makeRoot() -> URL {

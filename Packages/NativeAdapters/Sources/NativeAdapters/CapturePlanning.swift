@@ -62,6 +62,8 @@ public struct CaptureSessionRequest: Equatable, Sendable {
     public let mediaKind: CaptureMediaKind
     public let permissionPromptPolicy: PermissionPromptPolicy
     public let lockedMovieOrientation: MovieOrientation?
+    /// Live sound is an immutable capability of the Film's locked package; old movie Films remain silent.
+    public let recordsLiveSound: Bool
     public let behavior: CaptureBehavior
     /// Where `.manual` focus holds the lens (0 is closest, 1 furthest): the person's Focus control.
     public let manualLensPosition: Float
@@ -71,6 +73,7 @@ public struct CaptureSessionRequest: Equatable, Sendable {
         mediaKind: CaptureMediaKind,
         permissionPromptPolicy: PermissionPromptPolicy = .deferToFlowCoordinator,
         lockedMovieOrientation: MovieOrientation? = nil,
+        recordsLiveSound: Bool = false,
         behavior: CaptureBehavior = .deviceDefault,
         manualLensPosition: Float = FixedFocus.lensPosition
     ) {
@@ -78,6 +81,7 @@ public struct CaptureSessionRequest: Equatable, Sendable {
         self.mediaKind = mediaKind
         self.permissionPromptPolicy = permissionPromptPolicy
         self.lockedMovieOrientation = lockedMovieOrientation
+        self.recordsLiveSound = recordsLiveSound
         self.behavior = behavior
         self.manualLensPosition = manualLensPosition
     }
@@ -87,6 +91,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
     public let activePosition: CapturePosition
     public let mediaKind: CaptureMediaKind
     public let lockedMovieOrientation: MovieOrientation?
+    public let recordsLiveSound: Bool
     public let behavior: CaptureBehavior
     public let manualLensPosition: Float
     private let capabilities: CaptureCapabilities
@@ -95,6 +100,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         self.activePosition = request.preferredPosition
         self.mediaKind = request.mediaKind
         self.lockedMovieOrientation = request.lockedMovieOrientation
+        self.recordsLiveSound = request.recordsLiveSound
         self.behavior = request.behavior
         self.manualLensPosition = request.manualLensPosition
         self.capabilities = capabilities
@@ -134,6 +140,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                recordsLiveSound: recordsLiveSound,
                 behavior: behavior, manualLensPosition: manualLensPosition
             ),
             capabilities: CaptureCapabilities(
@@ -147,6 +154,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                recordsLiveSound: recordsLiveSound,
                 behavior: behavior, manualLensPosition: manualLensPosition
             ),
             capabilities: capabilities

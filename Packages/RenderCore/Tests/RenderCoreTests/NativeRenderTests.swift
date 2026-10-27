@@ -142,6 +142,54 @@ final class NativeRenderTests: XCTestCase {
         XCTAssertEqual(survivingFrames, secondFrames)
     }
 
+    func testLiveSoundPassesThroughDevelopmentAndAssemblyAndOldPackagesRejectIt() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.movieWidth = 160
+        settings.movieHeight = 120
+        settings.movieDurationSeconds = 0.4
+        let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: root, settings: settings)
+        let video = root.appendingPathComponent("synthetic-developed-movie.mov")
+        let wave = root.appendingPathComponent("capture.wav")
+        try Self.wave().write(to: wave)
+        let source = root.appendingPathComponent("captured-with-sound.mov")
+        try await Self.addAudio(wave, to: video, destination: source)
+
+        let developed = root.appendingPathComponent("developed.mov")
+        try await NativeMovieRenderer.developClip(source: source, destination: developed,
+            camera: CameraCatalog.super8HomeMovie, seed: 17, orientation: .landscape, longEdge: 320)
+        let sourceSamples = try await decodedAudioSamples(source)
+        let developedSamples = try await decodedAudioSamples(developed)
+        let developedAsset = AVURLAsset(url: developed)
+        let developedAudio = try await developedAsset.loadTracks(withMediaType: .audio)
+        XCTAssertFalse(sourceSamples.isEmpty)
+        XCTAssertEqual(developedAudio.count, 1)
+        XCTAssertLessThanOrEqual(developedSamples.count, sourceSamples.count,
+                                 "Development trims the captured sound to the clip's whole frames")
+        XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),
+                       "Development keeps the original sound samples without treatment")
+
+        let assembled = root.appendingPathComponent("assembled.mov")
+        try await NativeMovieRenderer.assemble(clips: [developed], destination: assembled, includeRecordedSound: true)
+        let assembledAsset = AVURLAsset(url: assembled)
+        let assembledAudio = try await assembledAsset.loadTracks(withMediaType: .audio)
+        let assembledDuration = try await assembledAsset.load(.duration).seconds
+        XCTAssertEqual(assembledAudio.count, 1)
+        let expectedDuration = Double(DevelopedMovieFormat.frameCount(seconds: manifest.movie.durationSeconds,
+            camera: .super8HomeMovie)) / Double(DevelopedMovieFormat.framesPerSecond(.super8HomeMovie))
+        XCTAssertEqual(assembledDuration, expectedDuration, accuracy: 0.02)
+
+        let oldPackage = CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie,
+                                       capacity: .seconds(165), revealRule: .movieDevelopment,
+                                       supportsBuiltInSoundtrack: true)
+        do {
+            try await NativeMovieRenderer.developClip(source: source, destination: root.appendingPathComponent("old.mov"),
+                camera: oldPackage, seed: 17, orientation: .landscape, longEdge: 320)
+            XCTFail("An earlier stored Camera package must refuse source sound")
+        } catch { }
+    }
+
     func testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape() async throws {
         try requireTetrahedralReader()
         let root = makeRoot()
@@ -174,6 +222,69 @@ final class NativeRenderTests: XCTestCase {
     private func image(_ data: Data) throws -> CGImage {
         let source = try XCTUnwrap(CGImageSourceCreateWithData(data as CFData, nil))
         return try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, [kCGImageSourceShouldCacheImmediately: true] as CFDictionary))
+    }
+
+    private static func addAudio(_ audioURL: URL, to videoURL: URL, destination: URL) async throws {
+        let videoAsset = AVURLAsset(url: videoURL)
+        let audioAsset = AVURLAsset(url: audioURL)
+        let composition = AVMutableComposition()
+        let videoTracks = try await videoAsset.loadTracks(withMediaType: .video)
+        let audioTracks = try await audioAsset.loadTracks(withMediaType: .audio)
+        let video = try XCTUnwrap(videoTracks.first)
+        let audio = try XCTUnwrap(audioTracks.first)
+        let duration = try await videoAsset.load(.duration)
+        let videoTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .video,
+            preferredTrackID: kCMPersistentTrackID_Invalid))
+        let audioTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid))
+        try videoTarget.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: video, at: .zero)
+        let audioDuration = try await audioAsset.load(.duration)
+        try audioTarget.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration, audioDuration)),
+                                        of: audio, at: .zero)
+        let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
+        try await exporter.export(to: destination, as: .mov)
+    }
+
+    private func decodedAudioSamples(_ url: URL) async throws -> Data {
+        let asset = AVURLAsset(url: url)
+        let tracks = try await asset.loadTracks(withMediaType: .audio)
+        let track = try XCTUnwrap(tracks.first)
+        let reader = try AVAssetReader(asset: asset)
+        let output = AVAssetReaderTrackOutput(track: track, outputSettings: [AVFormatIDKey: kAudioFormatLinearPCM])
+        guard reader.canAdd(output) else { throw NativeRenderError.invalidMovie() }
+        reader.add(output)
+        guard reader.startReading() else { throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?) }
+        var result = Data()
+        while let sample = output.copyNextSampleBuffer() {
+            guard let block = CMSampleBufferGetDataBuffer(sample) else { throw NativeRenderError.invalidMovie() }
+            let length = CMBlockBufferGetDataLength(block)
+            var bytes = Data(count: length)
+            let status = bytes.withUnsafeMutableBytes { buffer in
+                CMBlockBufferCopyDataBytes(block, atOffset: 0, dataLength: length, destination: buffer.baseAddress!)
+            }
+            guard status == kCMBlockBufferNoErr else { throw NativeRenderError.invalidMovie() }
+            result.append(bytes)
+        }
+        guard reader.status == .completed else { throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?) }
+        return result
+    }
+
+    private static func wave() -> Data {
+        let rate: UInt32 = 22_050
+        let samples = Int(rate / 2)
+        var bytes = Data()
+        func text(_ value: String) { bytes.append(contentsOf: value.utf8) }
+        func integer<T: FixedWidthInteger>(_ value: T) {
+            var little = value.littleEndian
+            withUnsafeBytes(of: &little) { bytes.append(contentsOf: $0) }
+        }
+        text("RIFF"); integer(UInt32(36 + samples * 2)); text("WAVEfmt ")
+        integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(1)); integer(rate)
+        integer(rate * 2); integer(UInt16(2)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 2))
+        for sample in 0..<samples {
+            integer(Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000))
+        }
+        return bytes
     }
 
     private func decodedFrames(_ url: URL) async throws -> [Data] {

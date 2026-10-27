@@ -20,7 +20,7 @@ struct AuditException: Equatable {
         // Load Film are on screen together. The Form stops there in every run with the Camera's controls line and
         // look line under the navigation bar's scroll-edge blur; at rest each measured 21.00:1 light and 13.94:1
         // dark (Evidence/NativeApp/low-storage-warning-062.md).
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "Fixed focus, fixed exposure, optional flash and a live low-light cue"),
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "Auto or fixed focus, fixed exposure, optional flash and a live low-light cue"),
         AuditException(audit: "Load-low-storage", type: .contrast, label: "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"),
     ]
 

@@ -3,10 +3,10 @@ import CoreImage
 import FilmDomain
 import Foundation
 
-/// The format Developed Clips and the Developed Movie are written and saved to Photos in, the captain's of 2026-10-13
-/// (DEC-04): H.264 in a `.mov`, 1920 x 1440, or 1440 x 1920 for a portrait Movie, at the Camera's frame rate, silent
-/// unless a licensed built-in soundtrack is chosen. A clip carries no color tags: shown the question that day, he
-/// chose to leave Movies as they are, so never add tags here without his word.
+/// The picture format Developed Clips and the Developed Movie are written and saved to Photos in, the captain's of
+/// 2026-10-13 (DEC-04): H.264 in a `.mov`, 1920 x 1440, or 1440 x 1920 for a portrait Movie, at the Camera's frame
+/// rate. Sound is copied without treatment from a Film that records it, unless a Soundtrack or silence is chosen. Clips
+/// carry no color tags: shown the question that day, he chose to leave Movies as they are, so never add tags here.
 public enum DevelopedMovieFormat {
     public static let longEdge = 1920
 
@@ -33,8 +33,9 @@ public enum NativeMovieRenderer {
         let treatment = try DevelopedTreatment(version: treatmentVersion, camera: camera.id, filmStock: filmStock, seed: seed,
                                                sceneWhiteBalance: try await sceneWhiteBalance(of: asset))
         let tracks = try await asset.loadTracks(withMediaType: .video)
-        guard tracks.count == 1, let track = tracks.first,
-              try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie() }
+        let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+        guard tracks.count == 1, let track = tracks.first, audioTracks.count <= 1,
+              camera.recordsLiveSound == true || audioTracks.isEmpty else { throw NativeRenderError.invalidMovie() }
         let duration = try await asset.load(.duration)
         let transform = try await track.load(.preferredTransform)
         guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie() }
@@ -42,6 +43,7 @@ public enum NativeMovieRenderer {
         // Only whole frames: the clip's last frame is held to where the recording stopped. A frame begun in the sliver
         // of time left over would last a fraction of a frame and count against the Camera's frame rate.
         let frameCount = DevelopedMovieFormat.frameCount(seconds: duration.seconds, camera: camera.id)
+        let developedDuration = CMTime(value: Int64(frameCount), timescale: Int32(fps))
         let width = orientation == .landscape ? longEdge : longEdge * 3 / 4
         let height = orientation == .landscape ? longEdge * 3 / 4 : longEdge
         let bounds = CGRect(x: 0, y: 0, width: width, height: height)
@@ -70,6 +72,16 @@ public enum NativeMovieRenderer {
         ])
         guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
         writer.add(input)
+        var audioInput: AVAssetWriterInput?
+        if let audioTrack = audioTracks.first {
+            let formats = try await audioTrack.load(.formatDescriptions)
+            guard let format = formats.first else { throw NativeRenderError.invalidMovie() }
+            let input = AVAssetWriterInput(mediaType: .audio, outputSettings: nil, sourceFormatHint: format)
+            input.expectsMediaDataInRealTime = false
+            guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
+            writer.add(input)
+            audioInput = input
+        }
         guard reader.startReading() else { throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?) }
         guard writer.startWriting() else { throw NativeRenderError.writerFailed }
         writer.startSession(atSourceTime: .zero)
@@ -127,6 +139,30 @@ public enum NativeMovieRenderer {
             throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?)
         }
         while frame < frameCount { try await append(lastImage) }
+        if let audioTrack = audioTracks.first, let audioInput {
+            let audioReader = try AVAssetReader(asset: asset)
+            audioReader.timeRange = CMTimeRange(start: .zero, duration: developedDuration)
+            let audioOutput = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: nil)
+            guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed }
+            audioReader.add(audioOutput)
+            guard audioReader.startReading() else {
+                throw NativeRenderError.invalidMovie(underlying: audioReader.error as NSError?)
+            }
+            let deadline = ContinuousClock.now + .seconds(15)
+            while let sample = audioOutput.copyNextSampleBuffer() {
+                try Task.checkCancellation()
+                while !audioInput.isReadyForMoreMediaData {
+                    guard writer.status == .writing else { throw NativeRenderError.writerFailed }
+                    guard ContinuousClock.now < deadline else { throw NativeRenderError.writerTimedOut }
+                    try await Task.sleep(for: .milliseconds(2))
+                }
+                guard writer.status == .writing, audioInput.append(sample) else { throw NativeRenderError.writerFailed }
+            }
+            guard audioReader.status == .completed else {
+                throw NativeRenderError.invalidMovie(underlying: audioReader.error as NSError?)
+            }
+            audioInput.markAsFinished()
+        }
         writer.endSession(atSourceTime: duration)
         input.markAsFinished()
         await writer.finishWriting()
@@ -150,20 +186,26 @@ public enum NativeMovieRenderer {
         return flipSource.concatenating(transform).concatenating(flipFrame)
     }
 
-    public static func assemble(clips: [URL], destination: URL, soundtrack: URL? = nil) async throws {
+    public static func assemble(
+        clips: [URL], destination: URL, soundtrack: URL? = nil, includeRecordedSound: Bool = false
+    ) async throws {
         guard !clips.isEmpty else { throw NativeRenderError.invalidMovie() }
+        guard soundtrack == nil || !includeRecordedSound else { throw NativeRenderError.invalidMovie() }
         let composition = AVMutableComposition()
         guard let video = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid) else {
             throw NativeRenderError.invalidMovie()
         }
         var cursor = CMTime.zero
         var dimensions: CGSize?
+        var recordedAudio: AVMutableCompositionTrack?
         for url in clips {
             try Task.checkCancellation()
             let asset = AVURLAsset(url: url)
             let tracks = try await asset.loadTracks(withMediaType: .video)
-            guard tracks.count == 1, let track = tracks.first,
-                  try await asset.loadTracks(withMediaType: .audio).isEmpty else { throw NativeRenderError.invalidMovie() }
+            let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+            guard tracks.count == 1, let track = tracks.first, audioTracks.count <= 1 else {
+                throw NativeRenderError.invalidMovie()
+            }
             let size = try await track.load(.naturalSize)
             let transform = try await track.load(.preferredTransform)
             guard transform == .identity, dimensions == nil || dimensions == size else { throw NativeRenderError.invalidMovie() }
@@ -171,6 +213,19 @@ public enum NativeMovieRenderer {
             let duration = try await asset.load(.duration)
             guard duration.seconds.isFinite, duration.seconds > 0 else { throw NativeRenderError.invalidMovie() }
             try video.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: track, at: cursor)
+            if includeRecordedSound, let source = audioTracks.first {
+                if recordedAudio == nil {
+                    recordedAudio = composition.addMutableTrack(withMediaType: .audio,
+                                                               preferredTrackID: kCMPersistentTrackID_Invalid)
+                }
+                let audioRange = try await source.load(.timeRange)
+                let start = max(audioRange.start, .zero)
+                let end = min(audioRange.end, duration)
+                if end > start {
+                    try recordedAudio?.insertTimeRange(CMTimeRange(start: start, duration: end - start),
+                                                       of: source, at: cursor + start)
+                }
+            }
             cursor = cursor + duration
         }
         if let soundtrack {

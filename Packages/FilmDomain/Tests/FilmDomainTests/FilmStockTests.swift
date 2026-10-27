@@ -88,5 +88,6 @@ final class FilmStockTests: XCTestCase {
         XCTAssertNil(movie.filmStock)
         XCTAssertEqual(movie.camera.capacity, .seconds(165))
         XCTAssertEqual(movie.movieOrientation, .landscape)
+        XCTAssertNil(movie.camera.recordsLiveSound, "An earlier stored movie package remains silent")
     }
 }

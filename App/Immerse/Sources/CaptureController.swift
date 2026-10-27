@@ -19,6 +19,8 @@ final class CaptureController {
     private(set) var controls = NativeCameraControls()
     /// The scene is dim enough that the Disposable's fixed exposure would develop dark (`LowLightCue`).
     private(set) var isLowLight = false
+    /// A permission note independent of transient camera errors, so an unavailable or interrupted camera cannot hide it.
+    private(set) var microphoneUnavailable = false
     private var lowLightCue = LowLightCue()
     private var lightTask: Task<Void, Never>?
     /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
@@ -67,6 +69,7 @@ final class CaptureController {
         CaptureSessionPlan(request: CaptureSessionRequest(
             preferredPosition: position, mediaKind: film.camera.medium == .photo ? .photo : .movie,
             lockedMovieOrientation: film.movieOrientation,
+            recordsLiveSound: film.camera.recordsLiveSound == true,
             behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting),
             manualLensPosition: Float(focus)
         ), capabilities: capabilities)
@@ -82,9 +85,19 @@ final class CaptureController {
             if request == sessionRequest { resumesAfterReveal = false }
         }
         updateOrientation()
+        microphoneUnavailable = false
         let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
         guard allowed else {
             throw JournalError.cameraDenied
+        }
+        if film.camera.recordsLiveSound == true {
+            let status = authorizer.microphoneAuthorizationStatus()
+            let hasMicrophone: Bool
+            if status == .notDetermined { hasMicrophone = await authorizer.requestMicrophoneAccess() }
+            else { hasMicrophone = status == .authorized }
+            microphoneUnavailable = !hasMicrophone
+        } else {
+            microphoneUnavailable = false
         }
         if filmID != film.id {
             let receiver = try await model.trial.receiver(filmID: film.id)
@@ -155,7 +168,10 @@ final class CaptureController {
         exposure = Double(controls.exposureBias)
         preview = await backend.previewSource()
         await updatePhase(backend)
-        message = nil
+        if film.camera.recordsLiveSound == true,
+           authorizer.microphoneAuthorizationStatus() != .authorized {
+            microphoneUnavailable = true
+        }
     }
 
     func shutter(film: Film) async throws {
@@ -167,6 +183,9 @@ final class CaptureController {
         } else if film.camera.medium == .photo {
             try await backend.capturePhoto(orientation: orientation, flash: flash && controls.flash)
         } else {
+            if film.camera.recordsLiveSound == true {
+                microphoneUnavailable = authorizer.microphoneAuthorizationStatus() != .authorized
+            }
             try await backend.startMovie(orientation: orientation, remainingFrames: film.remainingMovieFrames ?? 0)
             recordingStarted = Date()
         }
@@ -294,6 +313,7 @@ final class CaptureController {
         self.filmID = nil
         phase = .interrupted
         message = nil
+        microphoneUnavailable = false
         recordingStarted = nil
     }
 

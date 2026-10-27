@@ -177,6 +177,11 @@ struct CaptureView: View {
         if let message = capture.message, message != "Saved" || savedShowing {
             Text(message).font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
         }
+        if capture.microphoneUnavailable {
+            Text("Microphone access is off. Movie clips will be silent.")
+                .font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
+                .accessibilityIdentifier("microphone-permission-note")
+        }
         if cameraDenied {
             Button("Open iPhone Settings", systemImage: "gearshape") {
                 if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
@@ -197,6 +202,7 @@ struct CaptureView: View {
     private func hasStatus(_ film: Film, controller capture: CaptureController) -> Bool {
         let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
         return error != nil || cameraDenied || (capture.message.map { $0 != "Saved" || savedShowing } ?? false)
+            || capture.microphoneUnavailable
             || capture.offersResume(for: film, showingError: error != nil)
             || (film.completionState == .open && !lensNotes(behavior: behavior, controller: capture).isEmpty)
     }
@@ -435,9 +441,10 @@ struct CaptureView: View {
                     Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
                         .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
                         .turnedWithTheHold().disabled(capture.phase != .idle)
+                } else if film.camera.medium == .photo {
+                    Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
                 } else {
-                    Image(systemName: film.camera.medium == .movie ? "mic.slash" : "bolt.slash").foregroundStyle(.secondary)
-                        .frame(width: 44).turnedWithTheHold()
+                    Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
                 }
             }
             .padding(.vertical, 8).frame(maxWidth: .infinity).background(.bar)

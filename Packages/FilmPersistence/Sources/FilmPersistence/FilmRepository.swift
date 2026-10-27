@@ -289,8 +289,13 @@ public final class FilmRepository {
             let audio = try movieAudioSelection(filmID: filmID)
             guard audio?.revision == soundtrackRevision else { throw PersistenceError.soundtrackChanged }
             try verifyDevelopedClipsExist(filmID: filmID, sequenceNumbers: expected)
+            let audioTracksMatchChoice = audio?.asset != nil
+                ? verification?.audioTrackCount == 1
+                : film.camera.recordsLiveSound == true
+                    ? (verification?.audioTrackCount ?? Int.max) <= 1
+                    : verification?.audioTrackCount == 0
             guard let verification, verification.kind == .movie, verification.sha256 == Checksum.sha256Hex(data),
-                  verification.audioTrackCount == (audio?.asset == nil ? 0 : 1) else {
+                  audioTracksMatchChoice else {
                 throw PersistenceError.invalidMedia
             }
             let destination = movieURL(filmID: filmID, clipSequenceNumbers: expected)

@@ -107,4 +107,22 @@ public struct AVFoundationCaptureAuthorizer: CapturePermissionAuthorizing {
             }
         }
     }
+
+    public func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus {
+        switch AVCaptureDevice.authorizationStatus(for: .audio) {
+        case .notDetermined: .notDetermined
+        case .authorized: .authorized
+        case .denied: .denied
+        case .restricted: .restricted
+        @unknown default: .restricted
+        }
+    }
+
+    public func requestMicrophoneAccess() async -> Bool {
+        await withCheckedContinuation { continuation in
+            AVCaptureDevice.requestAccess(for: .audio) { granted in
+                continuation.resume(returning: granted)
+            }
+        }
+    }
 }

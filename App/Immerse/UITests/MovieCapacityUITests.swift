@@ -26,12 +26,15 @@ final class MovieCapacityUITests: ScreenTestCase {
         if let size { app.launchArguments += ["-UIPreferredContentSizeCategoryName", size] }
         // An earlier test can leave Camera declined, so Load Film asks afresh and a person allows it.
         app.resetAuthorizationStatus(for: .camera)
+        app.resetAuthorizationStatus(for: .microphone)
         var allowed = false
-        let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
+        let monitor = addUIInterruptionMonitor(withDescription: "Camera and microphone requests") { alert in
             let allow = alert.buttons["Allow"]
-            guard alert.label.localizedCaseInsensitiveContains("Camera"), allow.exists else { return false }
+            guard allow.exists,
+                  alert.label.localizedCaseInsensitiveContains("Camera")
+                    || alert.label.localizedCaseInsensitiveContains("Microphone") else { return false }
             allow.tap()
-            allowed = true
+            if alert.label.localizedCaseInsensitiveContains("Camera") { allowed = true }
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }

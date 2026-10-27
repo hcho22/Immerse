@@ -78,6 +78,7 @@ public actor AVFoundationCaptureBackend {
     private var plan: CaptureSessionPlan?
     private var zoomStep: ZoomStep?
     private var input: AVCaptureDeviceInput?
+    private var audioInput: AVCaptureDeviceInput?
     private var photoOutput: AVCapturePhotoOutput?
     private var movieOutput: AVCaptureMovieFileOutput?
     private var photoDelegate: PhotoSaveDelegate?
@@ -223,7 +224,8 @@ public actor AVFoundationCaptureBackend {
         self.plan = CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: position, mediaKind: plan.mediaKind,
-                lockedMovieOrientation: plan.lockedMovieOrientation, behavior: plan.behavior,
+                lockedMovieOrientation: plan.lockedMovieOrientation, recordsLiveSound: plan.recordsLiveSound,
+                behavior: plan.behavior,
                 manualLensPosition: manualLensPosition
             ),
             capabilities: AVFoundationCaptureDeviceDiscoverer().capabilities()
@@ -339,24 +341,53 @@ public actor AVFoundationCaptureBackend {
         }
         try operations.requireIdle()
         guard !isRecovering, try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
+        refreshMovieAudioInput()
         try configureConnection(movieOutput.connection(with: .video), orientation: orientation)
         let id = try operations.begin(.movie)
         do {
             try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie,
-                orientation: orientation.clipOrientation, remainingFrames: remainingFrames))
+                orientation: orientation.clipOrientation, remainingFrames: remainingFrames,
+                allowsAudio: plan?.recordsLiveSound == true))
         } catch { operations.finish(id: id); throw error }
         movieOutput.maxRecordedDuration = CMTime(value: CMTimeValue(remainingFrames), timescale: CMTimeScale(MovieFrames.perSecond))
         movieOutput.metadata = input.flatMap { Self.sceneWhiteBalanceItem($0.device) }.map { [$0] }
+        let allowsAudio = plan?.recordsLiveSound == true
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
                 await self?.movieFinished(
                     id: id, orientation: orientation.clipOrientation,
-                    remainingFrames: remainingFrames, successfullyFinished: successfullyFinished
+                    remainingFrames: remainingFrames, allowsAudio: allowsAudio,
+                    successfullyFinished: successfullyFinished
                 )
             }
         }
         movieDelegate = delegate
         movieOutput.startRecording(to: files.movieDestination(id: id), recordingDelegate: delegate)
+    }
+
+    /// Rechecks the system grant for each clip, so returning from Settings changes the next clip without changing the
+    /// Film's immutable audio capability or asking again. A missing grant or route records video silently.
+    private func refreshMovieAudioInput() {
+        guard let plan, plan.mediaKind == .movie else { return }
+        let shouldCapture = plan.recordsLiveSound && AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
+        let device = shouldCapture ? AVCaptureDevice.default(for: .audio) : nil
+        if let device, audioInput?.device.uniqueID == device.uniqueID { return }
+        if !shouldCapture, audioInput == nil { return }
+        let replacement: AVCaptureDeviceInput?
+        if let device {
+            guard let newInput = try? AVCaptureDeviceInput(device: device) else { return }
+            replacement = newInput
+        } else {
+            replacement = nil
+        }
+        session.beginConfiguration()
+        defer { session.commitConfiguration() }
+        if let audioInput { session.removeInput(audioInput) }
+        self.audioInput = nil
+        if let replacement, session.canAddInput(replacement) {
+            session.addInput(replacement)
+            audioInput = replacement
+        }
     }
 
     /// The light the clip starts in, as the lens's white balance judges it, for a Film Stock with a fixed color
@@ -465,15 +496,17 @@ public actor AVFoundationCaptureBackend {
         defer { session.commitConfiguration() }
         for old in session.inputs { session.removeInput(old) }
         for old in session.outputs { session.removeOutput(old) }
-        session.automaticallyConfiguresApplicationAudioSession = false
+        session.automaticallyConfiguresApplicationAudioSession = next.mediaKind == .movie && next.recordsLiveSound
         photoOutput = nil
         movieOutput = nil
         input = nil
+        audioInput = nil
         plan = nil
         guard session.canAddInput(newInput) else { throw NativeCaptureError.configurationFailed }
-        // Only a .video device is ever discovered or added. No microphone input or audio session.
+        // The Camera remains the only video input. New movie Films may also add the currently authorized microphone.
         session.addInput(newInput)
         input = newInput
+        plan = next
         if next.mediaKind == .photo {
             let output = AVCapturePhotoOutput()
             guard session.canAddOutput(output) else { throw NativeCaptureError.configurationFailed }
@@ -489,8 +522,13 @@ public actor AVFoundationCaptureBackend {
             try selectMovieFormat(newInput.device)
             session.addOutput(output)
             movieOutput = output
+            if next.recordsLiveSound, AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
+               let audioDevice = AVCaptureDevice.default(for: .audio),
+               let audio = try? AVCaptureDeviceInput(device: audioDevice), session.canAddInput(audio) {
+                session.addInput(audio)
+                audioInput = audio
+            }
         }
-        plan = next
         ensureUnmirroredOutput()
         try applyLensBehavior(next.behavior, to: newInput.device)
     }
@@ -651,7 +689,8 @@ public actor AVFoundationCaptureBackend {
     }
 
     private func movieFinished(
-        id: UUID, orientation: ClipOrientation, remainingFrames: Int, successfullyFinished: Bool
+        id: UUID, orientation: ClipOrientation, remainingFrames: Int, allowsAudio: Bool,
+        successfullyFinished: Bool
     ) async {
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         movieDelegate = nil
@@ -661,7 +700,7 @@ public actor AVFoundationCaptureBackend {
         // Even an unsuccessful callback may have salvageable footage: validate the actual file.
         do {
             let event = try await files.movieSavedEvent(
-                id: id, orientation: orientation, remainingFrames: remainingFrames
+                id: id, orientation: orientation, remainingFrames: remainingFrames, allowsAudio: allowsAudio
             )
             if privacyCancelled { operations.finish(id: id); return }
             guard operations.stage(event, id: id) else { return }

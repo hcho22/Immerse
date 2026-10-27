@@ -104,10 +104,6 @@ private struct LoadFilmView: View {
                     Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
                 if camera.medium == .movie {
-                    HStack {
-                        Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
-                        Text("Silent capture").fixedSize(horizontal: false, vertical: true)
-                    }.accessibilityElement(children: .combine)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
                         SegmentedChoice(label: "Movie Orientation",

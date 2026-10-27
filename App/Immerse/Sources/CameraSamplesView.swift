@@ -15,7 +15,7 @@ struct CameraSamplesView: View {
                 LazyVStack(alignment: .leading, spacing: 24) {
                     if let catalog = model.mediaCatalog {
                         ForEach(catalog.assets(for: camera.id, purpose: .cameraSample)) { sample in
-                            CatalogSampleView(catalog: catalog, sample: sample)
+                            CatalogSampleView(catalog: catalog, sample: sample, allowsAudio: camera.recordsLiveSound == true)
                         }
                     }
                 }.padding()
@@ -34,6 +34,7 @@ struct CameraSamplesView: View {
 private struct CatalogSampleView: View {
     let catalog: BundleMediaCatalog
     let sample: CatalogMediaAsset
+    let allowsAudio: Bool
     @State private var image: UIImage?
     @State private var player: AVPlayer?
     @State private var aspect = 4.0 / 3
@@ -59,7 +60,7 @@ private struct CatalogSampleView: View {
                     guard !Task.isCancelled else { return }
                     image = decoded
                 } else if sample.kind == .movie {
-                    _ = try await VerifiedMedia.movie(at: verified.url)
+                    _ = try await VerifiedMedia.movie(at: verified.url, allowsAudio: allowsAudio)
                     let asset = AVURLAsset(url: verified.url)
                     guard let track = try await asset.loadTracks(withMediaType: .video).first else {
                         throw MediaCatalogError.incompatibleAsset

@@ -1,3 +1,4 @@
+@preconcurrency import AVFoundation
 import FilmDomain
 import FilmPersistence
 import FilmRuntime
@@ -9,6 +10,28 @@ import XCTest
 @testable import MediaCatalog
 
 final class SoundtrackTests: XCTestCase {
+    func testNewLiveSoundFilmDefaultsToRecordedSoundThroughDevelopmentAndExport() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        let fixture = try await Fixture(withRecordedSound: true)
+        defer { fixture.remove() }
+
+        let movie = try fixture.repository.revealedAsset(filmID: fixture.film.id, sequenceNumber: 0, kind: .movie)
+        let assembled = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
+        XCTAssertEqual(assembled.audioTrackCount, 1, "A new movie Film defaults to its recorded sound")
+        for sequence in [1, 2] {
+            let clip = try fixture.repository.revealedAsset(filmID: fixture.film.id, sequenceNumber: sequence, kind: .clip)
+            let proof = try await VerifiedMedia.movie(at: clip.url, allowsAudio: true)
+            XCTAssertEqual(proof.audioTrackCount, 1,
+                           "Developed Clip \(sequence) keeps its captured sound")
+        }
+
+        let writer = DecodingWriter()
+        try await fixture.processor.export(filmID: fixture.film.id, sequences: [1, 2], originals: false,
+            coordinator: PhotoExportCoordinator(authorizer: Authorization(), writer: writer))
+        let exportedTracks = await writer.audioTracks
+        XCTAssertEqual(exportedTracks, [1], "The file handed to Photos carries the chosen recorded sound")
+    }
+
     func testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment() async throws {
         try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
         let fixture = try await Fixture()
@@ -163,7 +186,7 @@ final class SoundtrackTests: XCTestCase {
         let film: Film
         let duration: Double
 
-        init() async throws {
+        init(withRecordedSound: Bool = false) async throws {
             root = FileManager.default.temporaryDirectory.appendingPathComponent("SoundtrackTests-\(UUID())")
             bundle = root.appendingPathComponent("TestBundle")
             try FileManager.default.createDirectory(at: bundle, withIntermediateDirectories: true)
@@ -175,7 +198,10 @@ final class SoundtrackTests: XCTestCase {
             let fixtures = root.appendingPathComponent("Fixtures")
             let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
             duration = manifest.movie.durationSeconds
-            let source = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-movie.mov"))
+            let sourceURL = fixtures.appendingPathComponent("synthetic-developed-movie.mov")
+            let capturedURL = fixtures.appendingPathComponent("captured-with-sound.mov")
+            if withRecordedSound { try await Self.addAudio(bundle.appendingPathComponent("tone.wav"), to: sourceURL, destination: capturedURL) }
+            let source = try Data(contentsOf: withRecordedSound ? capturedURL : sourceURL)
             repository = try FilmRepository(rootURL: root)
             film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Private audio test", movieOrientation: .portrait, filmStock: .color)
             for _ in 0..<2 {
@@ -226,6 +252,27 @@ final class SoundtrackTests: XCTestCase {
                 integer(Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000))
             }
             return bytes
+        }
+
+        static func addAudio(_ audioURL: URL, to videoURL: URL, destination: URL) async throws {
+            let videoAsset = AVURLAsset(url: videoURL)
+            let audioAsset = AVURLAsset(url: audioURL)
+            let composition = AVMutableComposition()
+            let videoTracks = try await videoAsset.loadTracks(withMediaType: .video)
+            let audioTracks = try await audioAsset.loadTracks(withMediaType: .audio)
+            let video = try XCTUnwrap(videoTracks.first)
+            let audio = try XCTUnwrap(audioTracks.first)
+            let duration = try await videoAsset.load(.duration)
+            let videoTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .video,
+                preferredTrackID: kCMPersistentTrackID_Invalid))
+            let audioTarget = try XCTUnwrap(composition.addMutableTrack(withMediaType: .audio,
+                preferredTrackID: kCMPersistentTrackID_Invalid))
+            try videoTarget.insertTimeRange(CMTimeRange(start: .zero, duration: duration), of: video, at: .zero)
+            let audioDuration = try await audioAsset.load(.duration)
+            try audioTarget.insertTimeRange(CMTimeRange(start: .zero, duration: min(duration, audioDuration)),
+                                            of: audio, at: .zero)
+            let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
+            try await exporter.export(to: destination, as: .mov)
         }
     }
 }

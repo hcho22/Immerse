@@ -196,7 +196,7 @@ enum DevelopmentWorker {
                         try Task.checkCancellation()
                     }
                     try Task.checkCancellation()
-                    _ = try await VerifiedMedia.movie(at: output)
+                    _ = try await VerifiedMedia.movie(at: output, allowsAudio: film.camera.recordsLiveSound == true)
                     try repository.writeDevelopedClip(filmID: filmID, sequenceNumber: capture.sequenceNumber, data: Data(contentsOf: output))
                 }
                 if let observer {
@@ -209,7 +209,10 @@ enum DevelopmentWorker {
             }
             let verification: VerifiedMedia
             if kind == .master { verification = try VerifiedMedia.photo(at: asset.url) }
-            else { verification = try await VerifiedMedia.movie(at: asset.url); clips.append(asset.url) }
+            else {
+                verification = try await VerifiedMedia.movie(at: asset.url, allowsAudio: film.camera.recordsLiveSound == true)
+                clips.append(asset.url)
+            }
             evidence.append(verification)
             if film.camera.revealRule == .instantPerExposure {
                 if let observer {
@@ -224,8 +227,11 @@ enum DevelopmentWorker {
             let output = work.appendingPathComponent("assembled.mov")
             let soundtrack = try repository.retainedSoundtrack(filmID: filmID)
             if let soundtrack { _ = try await VerifiedMedia.audio(at: soundtrack.url) }
-            try await NativeMovieRenderer.assemble(clips: clips, destination: output, soundtrack: soundtrack?.url)
-            let verification = try await VerifiedMedia.movie(at: output, allowsAudio: soundtrack != nil)
+            let includeRecordedSound = soundtrack == nil && film.camera.recordsLiveSound == true
+            try await NativeMovieRenderer.assemble(clips: clips, destination: output, soundtrack: soundtrack?.url,
+                                                   includeRecordedSound: includeRecordedSound)
+            let verification = try await VerifiedMedia.movie(at: output,
+                allowsAudio: soundtrack != nil || film.camera.recordsLiveSound == true)
             try Task.checkCancellation()
             try repository.writeAssembledMovie(filmID: filmID, data: Data(contentsOf: output),
                 clipSequenceNumbers: film.captures.filter { !$0.isDiscarded }.map(\.sequenceNumber), verification: verification,
@@ -260,7 +266,13 @@ enum DevelopmentWorker {
             for (sequence, kind) in kinds {
                 let asset = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: kind)
                 if kind == .master { evidence.append(try VerifiedMedia.photo(at: asset.url)) }
-                else { evidence.append(try await VerifiedMedia.movie(at: asset.url, allowsAudio: kind == .movie)) }
+                else {
+                    let soundtrackSelected = try repository.movieAudioSelection(filmID: filmID)?.asset != nil
+                    let allowsAudio = kind == .movie
+                        ? film.camera.recordsLiveSound == true || soundtrackSelected
+                        : film.camera.recordsLiveSound == true
+                    evidence.append(try await VerifiedMedia.movie(at: asset.url, allowsAudio: allowsAudio))
+                }
             }
             try repository.cleanupSourceAfterVerifiedMaster(filmID: filmID, sequenceNumber: capture.sequenceNumber, verifiedMedia: evidence)
         }

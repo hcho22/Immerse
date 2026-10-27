@@ -269,6 +269,38 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertNil(CaptureFrameOrientation(device: .faceUp))
     }
 
+    func testMicrophoneIsAskedOnlyForNewMoviePackagesAndDecliningDoesNotBlockTheScreen() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureMicrophone-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let calls = HeldReceiptCalls()
+        let microphoneCalls = MicrophonePromptCounter()
+        let authorizer = SyntheticCamera(granted: true, microphoneStatus: .notDetermined,
+                                         microphoneResult: false, microphoneCalls: microphoneCalls)
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: calls),
+                                     cameraAuthorizer: authorizer)
+        await model.recoverAtLaunch()
+
+        let photo = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                    title: "Synthetic photo", access: .subscription)
+        do { try await model.capture.open(film: photo, model: model) } catch { }
+        XCTAssertEqual(microphoneCalls.value, 0, "Photo Cameras never ask for microphone access")
+
+        let oldPackage = CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie,
+                                       capacity: .seconds(165), revealRule: .movieDevelopment,
+                                       supportsBuiltInSoundtrack: true)
+        let oldFilm = try model.repository.createFilm(camera: oldPackage, title: "Earlier Movie",
+                                                      movieOrientation: .portrait, filmStock: .color, access: .subscription)
+        do { try await model.capture.open(film: oldFilm, model: model) } catch { }
+        XCTAssertEqual(microphoneCalls.value, 0, "A package stored before live sound stays silent and never asks")
+        XCTAssertFalse(model.capture.microphoneUnavailable)
+
+        let newFilm = try model.repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "New Movie",
+                                                      movieOrientation: .portrait, access: .subscription)
+        do { try await model.capture.open(film: newFilm, model: model) } catch { }
+        XCTAssertEqual(microphoneCalls.value, 1, "The new movie package asks on its first shooting-screen open")
+        XCTAssertTrue(model.capture.microphoneUnavailable, "Declining access leaves an independent silent-recording note")
+    }
+
     /// The actual capture screen while a 16mm clip records, retained as a screenshot. The simulator has no camera,
     /// so a recording start stands in for a clip: the line counts down in red in the resting line's minutes and
     /// seconds, while the shutter and the missing-camera message still show the simulator's idle camera.
@@ -515,10 +547,26 @@ extension XCTestCase {
     }
 }
 
+final class MicrophonePromptCounter: Sendable {
+    private let count = Mutex(0)
+    var value: Int { count.withLock { $0 } }
+    func increment() { count.withLock { $0 += 1 } }
+}
+
 struct SyntheticCamera: CapturePermissionAuthorizing {
     let granted: Bool
+    var microphoneStatus: CaptureAuthorizationStatus = .authorized
+    var microphoneResult = true
+    var microphoneCalls: MicrophonePromptCounter?
     func authorizationStatus() -> CaptureAuthorizationStatus { granted ? .authorized : .denied }
     func requestAccess() async -> Bool { granted }
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus {
+        microphoneStatus
+    }
+    func requestMicrophoneAccess() async -> Bool {
+        microphoneCalls?.increment()
+        return microphoneResult
+    }
 }
 
 /// In-memory receipt calls. A held update blocks its caller, which is always the Trial owner

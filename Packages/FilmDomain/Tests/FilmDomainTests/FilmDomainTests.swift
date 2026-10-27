@@ -14,6 +14,9 @@ final class FilmDomainTests: XCTestCase {
         XCTAssertEqual(CameraCatalog.cinema16mm.capacity, .seconds(167))
         XCTAssertTrue(CameraCatalog.super8HomeMovie.supportsBuiltInSoundtrack)
         XCTAssertTrue(CameraCatalog.cinema16mm.supportsBuiltInSoundtrack)
+        XCTAssertTrue(CameraCatalog.super8HomeMovie.recordsLiveSound == true)
+        XCTAssertTrue(CameraCatalog.cinema16mm.recordsLiveSound == true)
+        XCTAssertNil(CameraCatalog.disposable1990s.recordsLiveSound)
     }
 
     func testTitlesAreTrimmedAndABlankTitleIsRejectedWithoutRenaming() throws {

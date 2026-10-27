@@ -15,6 +15,14 @@ public enum PermissionPromptPolicy: Equatable, Sendable {
 public protocol CapturePermissionAuthorizing: Sendable {
     func authorizationStatus() -> CaptureAuthorizationStatus
     func requestAccess() async -> Bool
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus
+    func requestMicrophoneAccess() async -> Bool
+}
+
+public extension CapturePermissionAuthorizing {
+    /// Existing injected camera-only authorizers keep their prior behavior unless a test opts into microphone policy.
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus { .authorized }
+    func requestMicrophoneAccess() async -> Bool { true }
 }
 
 public enum CaptureStartupOutcome: Equatable, Sendable {

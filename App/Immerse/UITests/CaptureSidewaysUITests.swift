@@ -5,11 +5,14 @@ import XCTest
 /// screen keeps turning with the iPhone. The simulator has no camera, so the screen shows its message for the missing one,
 /// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
 /// raises, are in `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
-/// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock and answers a fresh Camera request
-/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera, the 6×6
-/// again at the largest text size and the Disposable with Develop at once off, to stay inside the per-test time allowance.
+/// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock; opening
+/// the shooting screen answers fresh Camera and microphone requests, and each test starts on an empty Journal and deletes
+/// the Film it loaded. One test per Camera, the 6×6 again at the largest text size, the Disposable with Develop at once
+/// off and the Super 8 with microphone access denied, to stay inside the per-test time allowance.
 @MainActor
 final class CaptureSidewaysUITests: ScreenTestCase {
+    private var microphonePromptWasDeclined = false
+
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "mediumFormat6x6", name: "6×6")
     }
@@ -49,6 +52,18 @@ final class CaptureSidewaysUITests: ScreenTestCase {
 
     func testSixteenMillimeterShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "cinema16mm", name: "16mm")
+    }
+
+    func testNewSuper8AsksForMicrophoneAndDecliningShowsThatClipsWillBeSilent() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        let title = try openShootingScreen(app, id: "super8HomeMovie", developsAtOnce: false, declineMicrophone: true)
+        defer { deleteFilm(titled: title, app) }
+        XCTAssertTrue(microphonePromptWasDeclined, "Opening the new Movie Camera asks for microphone access")
+        let note = app.descendants(matching: .any)["microphone-permission-note"]
+        XCTAssertTrue(note.exists(within: 10), "The microphone denial is a notice over the fixed Viewfinder area")
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(note.frame), "The silent-recording notice fits at the largest text size")
+        retainScreenshot(name: "Super8-microphone-declined")
     }
 
     /// What the screen shows, measured in the window's own portrait frame.
@@ -141,16 +156,31 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     /// Camera shows from the screen's first frame, before the open ends, so only the error marks that end.
     /// Over the viewfinder the error moves no frame `wait(_:until:)` reads, and the one-line header never moves the area,
     /// so in both the screen is read only after the camera's open ends.
-    private func openShootingScreen(_ app: XCUIApplication, id: String, developsAtOnce: Bool = true) throws -> String {
+    private func openShootingScreen(_ app: XCUIApplication, id: String, developsAtOnce: Bool = true,
+                                   declineMicrophone: Bool = false) throws -> String {
         app.launchArguments += ["-ImmerseDebugTestingUnlock", "YES",
                                 "-ImmerseDebugDevelopedPreview", developsAtOnce ? "YES" : "NO"]
         app.resetAuthorizationStatus(for: .camera)
-        var allowed = false
-        let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
+        app.resetAuthorizationStatus(for: .microphone)
+        var cameraAllowed = false
+        microphonePromptWasDeclined = false
+        let monitor = addUIInterruptionMonitor(withDescription: "Camera and microphone requests") { [weak self] alert in
             let allow = alert.buttons["Allow"]
-            guard alert.label.localizedCaseInsensitiveContains("Camera"), allow.exists else { return false }
-            allow.tap()
-            allowed = true
+            if alert.label.localizedCaseInsensitiveContains("Camera"), allow.exists {
+                allow.tap()
+                cameraAllowed = true
+                return true
+            }
+            guard alert.label.localizedCaseInsensitiveContains("Microphone") else { return false }
+            if declineMicrophone {
+                let deny = alert.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Don't Allow")).firstMatch
+                guard deny.exists else { return false }
+                deny.tap()
+                self?.microphonePromptWasDeclined = true
+            } else {
+                guard allow.exists else { return false }
+                allow.tap()
+            }
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
@@ -173,20 +203,34 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
-        XCTAssertTrue(allowed, "Load Film asks for Camera access")
-        openCamera(app)
+        openCamera(app, resolveMicrophonePrompt: declineMicrophone)
+        XCTAssertTrue(cameraAllowed, "Opening the shooting screen asks for Camera access")
         return title
     }
 
     /// Opens the shooting screen from the Film's screen and waits for the camera's open to end in the missing camera's
     /// "Camera unavailable." error.
-    private func openCamera(_ app: XCUIApplication) {
+    private func openCamera(_ app: XCUIApplication, resolveMicrophonePrompt: Bool = false) {
         let open = app.buttons["Open Camera"]
         XCTAssertTrue(open.exists(within: 10), "The Film's screen offers Open Camera")
         tapWhole(app, open)
+        if resolveMicrophonePrompt {
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            let alert = springboard.alerts.firstMatch
+            XCTAssertTrue(alert.exists(within: 30), "The first shooting-screen open asks for microphone access")
+            XCTAssertTrue(alert.label.localizedCaseInsensitiveContains("Microphone"), alert.label)
+            let deny = alert.buttons.matching(NSPredicate(
+                format: "label CONTAINS[c] %@ OR label CONTAINS[c] %@", "Don't Allow", "Don’t Allow"
+            )).firstMatch
+            XCTAssertTrue(deny.exists, "The microphone prompt offers Don't Allow")
+            deny.tap()
+            microphonePromptWasDeclined = true
+        }
         XCTAssertTrue(app.buttons["Done"].exists(within: 5))
         let unavailable = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Camera unavailable.")).firstMatch
-        XCTAssertTrue(unavailable.exists(within: 30), "The camera's open ended")
+        if !resolveMicrophonePrompt {
+            XCTAssertTrue(unavailable.exists(within: 30), "The camera's open ended")
+        }
     }
 
     private func check(id: String, name: String, showsNotice: Bool = true) throws {

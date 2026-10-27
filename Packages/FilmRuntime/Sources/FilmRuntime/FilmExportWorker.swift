@@ -23,6 +23,8 @@ enum FilmExportWorker {
     ) async throws {
         let repository = try FilmRepository(rootURL: root)
         let film = try repository.film(id: filmID)
+        let selectedSoundtrack = try repository.movieAudioSelection(filmID: filmID)?.asset != nil
+        let developedMovieAllowsAudio = film.camera.recordsLiveSound == true || selectedSoundtrack
         let selected = Array(Set(sequences)).sorted()
         guard !selected.isEmpty else { throw FilmExportError.nothingToExport }
         // Validate the entire requested selection before creating any external copy.
@@ -53,7 +55,10 @@ enum FilmExportWorker {
                 let asset = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: kind)
                 let verification: VerifiedMedia
                 if film.camera.medium == .photo { verification = try VerifiedMedia.photo(at: asset.url) }
-                else { verification = try await VerifiedMedia.movie(at: asset.url, allowsAudio: !originals) }
+                else {
+                    verification = try await VerifiedMedia.movie(at: asset.url,
+                        allowsAudio: originals ? film.camera.recordsLiveSound == true : developedMovieAllowsAudio)
+                }
                 guard verification.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
                 let extensionName: String
                 if film.camera.medium == .movie { extensionName = "mov" }
@@ -75,7 +80,10 @@ enum FilmExportWorker {
                     try FileManager.default.copyItem(at: asset.url, to: file)
                     let copied: VerifiedMedia
                     if film.camera.medium == .photo { copied = try VerifiedMedia.photo(at: file) }
-                    else { copied = try await VerifiedMedia.movie(at: file, allowsAudio: !originals) }
+                    else {
+                        copied = try await VerifiedMedia.movie(at: file,
+                            allowsAudio: originals ? film.camera.recordsLiveSound == true : developedMovieAllowsAudio)
+                    }
                     guard copied.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
                 }
                 if originals { try repository.chooseOriginalExport(filmID: filmID, sequenceNumber: sequence, export: true) }

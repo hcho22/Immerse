@@ -65,7 +65,7 @@ It appears only when the scheme's Run action uses Debug.
 Debug builds alone also preview each saved capture (`Sources/DevelopedPreviews.swift` and FilmRuntime's `PreviewDevelopment`, both under `#if DEBUG`), at the captain's request of 2026-10-21.
 While **Develop at once - Debug build** is on in Settings (on by default; `-ImmerseDebugDevelopedPreview NO` turns it off for one launch), every photo of the 6×6 and the Disposable and every clip of the 16mm and the Super 8 shows developed on the shooting screen, marked **Debug preview**, as soon as it is saved.
 Those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done** for as long as the switch is on, so its state shows without opening Settings.
-It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a clip has no soundtrack, which only the developed Movie gets.
+It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a movie clip keeps its captured sound, while the Developed Movie can replace it with a Soundtrack.
 Every capture develops, one at a time in the order it was saved, and each preview takes the card from the one before as it is ready.
 The roll stays sealed and develops as before, the Instant is unchanged, and previews live only in the app's Caches folder, removed once nothing shows them, when the roll develops, when the Film is deleted, when the switch is turned off and at launch.
 The same Release check fails if Release contains any of it.
@@ -113,8 +113,11 @@ audio/license recovery and tests. Chemical toning is offered only on black-and-w
 Camera sample. Remaining acceptance gaps and manual procedures live under
 `Evidence/` and the canonical requirement map.
 
-The app requests Camera at explicit Load Film/Open Camera and Photos add-only at
-explicit export. It never requests microphone, location or photo-library reading.
+The app requests Camera at explicit Load Film/Open Camera, microphone access the
+first time a new Super 8 or 16mm Film opens its shooting screen, and Photos
+add-only at explicit export. The microphone records sound only during movie
+clips on new movie Films; older stored movie Films stay silent and never prompt.
+It never requests location or photo-library reading.
 PhotoKit exports cannot be recalled. Older iOS backups can restore removed media.
 The historical SQL-before-Keychain Trial window has a software correction in the
 production receipt report above. Cross-store power-loss, device retention and

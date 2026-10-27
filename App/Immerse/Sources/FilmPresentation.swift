@@ -48,16 +48,16 @@ extension CameraPackage {
         switch revealRule {
         case .rollLevelDevelopment: "Sealed until Development"
         case .instantPerExposure: "An individual print with every exposure"
-        case .movieDevelopment: "One silent Movie after Development"
+        case .movieDevelopment: "One Movie after Development"
         }
     }
     /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Fixed focus, fixed exposure, optional flash and a live low-light cue"
+        case .disposable1990s: "Auto or fixed focus, fixed exposure, optional flash and a live low-light cue"
         case .instant1970s: "Square picture on a white card"
-        case .mediumFormat6x6: "Square framing, deliberate focus and exposure, optical focus only"
-        case .super8HomeMovie: "Handheld, fixed focus, automatic exposure, 18 frames per second"
+        case .mediumFormat6x6: "Square framing, auto or manual focus and exposure, optical focus only"
+        case .super8HomeMovie: "Handheld, auto or fixed focus, automatic exposure, 18 frames per second"
         case .cinema16mm: "Deliberate framing, 24 frames per second"
         }
     }
