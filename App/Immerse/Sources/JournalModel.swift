@@ -217,14 +217,15 @@ final class JournalModel {
         }
     }
 
-    func selectSoundtrack(_ id: UUID, assetID: String?) async throws {
-        guard let mediaCatalog, !busyFilms.contains(id), !hiddenFilms.contains(id) else {
+    func selectMovieSound(_ id: UUID, choice: MovieSoundChoice, assetID: String?) async throws {
+        guard (choice == .soundtrack) == (assetID != nil), !busyFilms.contains(id), !hiddenFilms.contains(id) else {
             throw JournalError.operationInProgress
         }
+        guard assetID == nil || mediaCatalog != nil else { throw PersistenceError.invalidMedia }
         busyFilms.insert(id)
         mediaRevision = UUID()
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
-        try await processor.selectSoundtrack(filmID: id, assetID: assetID, catalog: mediaCatalog)
+        try await processor.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: mediaCatalog)
     }
 
     func remove(_ id: UUID, sequence: Int? = nil) async throws {

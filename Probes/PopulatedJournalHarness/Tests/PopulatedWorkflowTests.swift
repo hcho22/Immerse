@@ -110,6 +110,34 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         snapshot(app, "empty-Movie-placeholders")
     }
 
+    func testSuper8SoundChoiceWorksWithoutCatalogSoundtracks() throws {
+        try requireTetrahedralReader()
+        let app = launch(arguments: ["--movie", "--super8", "--hide-inspection-bar"])
+        openFilm(app)
+        let soundChoice = app.buttons["movie-sound-choice"]
+        XCTAssertTrue(soundChoice.waitForExistence(timeout: 20))
+        XCTAssertTrue(soundChoice.label.contains("Recorded sound"), soundChoice.label)
+        tapWhole(app, soundChoice)
+        XCTAssertTrue(app.navigationBars["Movie sound"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Recorded sound"].exists)
+        let silent = app.buttons["Silent"]
+        XCTAssertTrue(silent.exists, "Recorded sound and Silent are shown with the empty catalog")
+        snapshot(app, "Super8-movie-sound-choices")
+        tapWhole(app, silent)
+        tapWhole(app, app.buttons["Apply sound choice"])
+        XCTAssertTrue(soundChoice.waitForExistence(timeout: 20))
+        XCTAssertTrue(soundChoice.label.contains("Silent"), soundChoice.label)
+
+        tapWhole(app, soundChoice)
+        XCTAssertTrue(app.navigationBars["Movie sound"].waitForExistence(timeout: 10))
+        tapWhole(app, app.buttons["Recorded sound"])
+        tapWhole(app, app.buttons["Apply sound choice"])
+        XCTAssertTrue(soundChoice.waitForExistence(timeout: 20))
+        XCTAssertTrue(soundChoice.label.contains("Recorded sound"), soundChoice.label)
+        XCTAssertTrue(app.descendants(matching: .any)["developed-movie-player"].waitForExistence(timeout: 20))
+        snapshot(app, "Super8-movie-sound-recorded-again")
+    }
+
     func testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback() throws {
         try requireTetrahedralReader()
         let app = launch(arguments: ["--movie", "--hide-inspection-bar", "--movie-player-observer"])

@@ -289,11 +289,17 @@ public final class FilmRepository {
             let audio = try movieAudioSelection(filmID: filmID)
             guard audio?.revision == soundtrackRevision else { throw PersistenceError.soundtrackChanged }
             try verifyDevelopedClipsExist(filmID: filmID, sequenceNumbers: expected)
-            let audioTracksMatchChoice = audio?.asset != nil
-                ? verification?.audioTrackCount == 1
-                : film.camera.recordsLiveSound == true
-                    ? (verification?.audioTrackCount ?? Int.max) <= 1
-                    : verification?.audioTrackCount == 0
+            let choice = audio?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
+                ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
+            let audioTracksMatchChoice: Bool
+            switch choice {
+            case .recordedSound:
+                audioTracksMatchChoice = film.camera.recordsLiveSound == true && (verification?.audioTrackCount ?? Int.max) <= 1
+            case .soundtrack:
+                audioTracksMatchChoice = verification?.audioTrackCount == 1
+            case .silent:
+                audioTracksMatchChoice = verification?.audioTrackCount == 0
+            }
             guard let verification, verification.kind == .movie, verification.sha256 == Checksum.sha256Hex(data),
                   audioTracksMatchChoice else {
                 throw PersistenceError.invalidMedia
@@ -315,13 +321,26 @@ public final class FilmRepository {
     }
 
     public func movieAudioSelection(filmID: UUID) throws -> MovieAudioSelection? {
-        _ = try film(id: filmID)
+        let film = try film(id: filmID)
         guard let data = try database.value(filmID: filmID, key: "movie-audio") else { return nil }
-        return try decoder.decode(MovieAudioSelection.self, from: data)
+        let selection = try decoder.decode(MovieAudioSelection.self, from: data)
+        if let choice = selection.choice {
+            guard (choice == .soundtrack) == (selection.asset != nil),
+                  choice != .recordedSound || film.camera.recordsLiveSound == true else { throw PersistenceError.invalidMedia }
+        }
+        return selection
+    }
+
+    /// A missing choice is the pre-MOV-13 default: recorded sound for a new sound-capable Film, otherwise Silent.
+    public func movieSoundChoice(filmID: UUID) throws -> MovieSoundChoice {
+        let film = try film(id: filmID)
+        return try movieAudioSelection(filmID: filmID)?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
+            ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
     }
 
     public func retainedSoundtrack(filmID: UUID) throws -> StoredMediaAsset? {
-        guard let selected = try movieAudioSelection(filmID: filmID)?.asset else { return nil }
+        guard try movieSoundChoice(filmID: filmID) == .soundtrack else { return nil }
+        guard let selected = try movieAudioSelection(filmID: filmID)?.asset else { throw PersistenceError.soundtrackUnavailable }
         guard let audio = try mediaAsset(filmID: filmID, sequenceNumber: 0, kind: .soundtrack),
               let license = try mediaAsset(filmID: filmID, sequenceNumber: 0, kind: .soundtrackLicense),
               audio.record.sha256 == selected.sha256,
@@ -332,15 +351,22 @@ public final class FilmRepository {
         return audio
     }
 
-    /// Records the Movie's soundtrack choice, which may replace an earlier one (DEC-11), and retires the assembled
-    /// Movie so the next assembly uses it. Developed Clips are not touched.
-    public func selectMovieSoundtrack(filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?) throws {
+    /// Records the Movie's sound choice and retires the assembled Movie so the next assembly uses it. Developed Clips
+    /// and their captured sound are never touched.
+    public func selectMovieSoundChoice(
+        filmID: UUID, choice: MovieSoundChoice, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?
+    ) throws {
         let data = try asset?.data()
         try database.withTransaction {
             let film = try film(id: filmID)
             guard film.canPlaybackDevelopedMovie else { throw PersistenceError.movieNotPlayable }
+            guard (choice == .soundtrack) == (asset != nil),
+                  choice != .recordedSound || film.camera.recordsLiveSound == true else { throw PersistenceError.invalidMedia }
             let current = try movieAudioSelection(filmID: filmID)
-            if let current, current.asset == asset?.metadata { return }
+            if let current,
+               current.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true) == choice,
+               current.asset == asset?.metadata { return }
+            if current == nil, choice == (film.camera.recordsLiveSound == true ? .recordedSound : .silent), asset == nil { return }
             if let asset, let data {
                 guard asset.metadata.purpose == .instrumental, asset.metadata.kind == .audio,
                       asset.metadata.cameraIDs.contains(film.camera.id), asset.metadata.rights.permitsMovieExport,
@@ -349,7 +375,7 @@ public final class FilmRepository {
                 }
             } else if asset != nil || verification != nil { throw PersistenceError.invalidMedia }
 
-            let selection = MovieAudioSelection(revision: UUID(), asset: asset?.metadata)
+            let selection = MovieAudioSelection(revision: UUID(), choice: choice, asset: asset?.metadata)
             for kind in [StoredAsset.Kind.soundtrack, .soundtrackLicense] {
                 if let old = try database.asset(filmID: filmID, sequenceNumber: 0, kind: kind) {
                     try database.enqueueDeletion(filmID: filmID, relativePath: old.relativePath)
@@ -370,6 +396,12 @@ public final class FilmRepository {
             try retireAssembledMovies(filmID: filmID)
         }
         try finishPendingDeletions(filmID: filmID)
+    }
+
+    /// Compatibility for callers that still describe a nil selection as Silent.
+    public func selectMovieSoundtrack(filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?) throws {
+        try selectMovieSoundChoice(filmID: filmID, choice: asset == nil ? .silent : .soundtrack,
+                                   asset: asset, verification: verification)
     }
 
     @discardableResult

@@ -153,8 +153,10 @@ final class NativeRenderTests: XCTestCase {
         let video = root.appendingPathComponent("synthetic-developed-movie.mov")
         let wave = root.appendingPathComponent("capture.wav")
         try Self.wave().write(to: wave)
+        let encodedAudio = root.appendingPathComponent("capture.m4a")
+        try await Self.encodeAAC(wave, destination: encodedAudio)
         let source = root.appendingPathComponent("captured-with-sound.mov")
-        try await Self.addAudio(wave, to: video, destination: source)
+        try await Self.addAudio(encodedAudio, to: video, destination: source)
 
         let developed = root.appendingPathComponent("developed.mov")
         try await NativeMovieRenderer.developClip(source: source, destination: developed,
@@ -165,6 +167,12 @@ final class NativeRenderTests: XCTestCase {
         let developedAudio = try await developedAsset.loadTracks(withMediaType: .audio)
         XCTAssertFalse(sourceSamples.isEmpty)
         XCTAssertEqual(developedAudio.count, 1)
+        let sourceFormat = try await Self.audioFormat(source)
+        let developedFormat = try await Self.audioFormat(developed)
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(sourceFormat), kAudioFormatMPEG4AAC)
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(developedFormat), kAudioFormatMPEG4AAC)
+        XCTAssertEqual(try Self.streamDescription(developedFormat).mSampleRate, 48_000)
+        XCTAssertEqual(try Self.streamDescription(developedFormat).mChannelsPerFrame, 2)
         XCTAssertLessThanOrEqual(developedSamples.count, sourceSamples.count,
                                  "Development trims the captured sound to the clip's whole frames")
         XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),
@@ -176,6 +184,11 @@ final class NativeRenderTests: XCTestCase {
         let assembledAudio = try await assembledAsset.loadTracks(withMediaType: .audio)
         let assembledDuration = try await assembledAsset.load(.duration).seconds
         XCTAssertEqual(assembledAudio.count, 1)
+        let assembledFormat = try await Self.audioFormat(assembled)
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(assembledFormat), kAudioFormatMPEG4AAC)
+        XCTAssertEqual(try Self.streamDescription(assembledFormat).mSampleRate, 48_000)
+        XCTAssertEqual(try Self.streamDescription(assembledFormat).mChannelsPerFrame, 2)
+        XCTAssertEqual(CMFormatDescriptionGetMediaSubType(assembledFormat), CMFormatDescriptionGetMediaSubType(developedFormat))
         let expectedDuration = Double(DevelopedMovieFormat.frameCount(seconds: manifest.movie.durationSeconds,
             camera: .super8HomeMovie)) / Double(DevelopedMovieFormat.framesPerSecond(.super8HomeMovie))
         XCTAssertEqual(assembledDuration, expectedDuration, accuracy: 0.02)
@@ -245,6 +258,24 @@ final class NativeRenderTests: XCTestCase {
         try await exporter.export(to: destination, as: .mov)
     }
 
+    private static func encodeAAC(_ audioURL: URL, destination: URL) async throws {
+        let asset = AVURLAsset(url: audioURL)
+        let exporter = try XCTUnwrap(AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetAppleM4A))
+        try await exporter.export(to: destination, as: .m4a)
+    }
+
+    private static func audioFormat(_ url: URL) async throws -> CMFormatDescription {
+        let asset = AVURLAsset(url: url)
+        let tracks = try await asset.loadTracks(withMediaType: .audio)
+        let track = try XCTUnwrap(tracks.first)
+        let formats = try await track.load(.formatDescriptions)
+        return try XCTUnwrap(formats.first)
+    }
+
+    private static func streamDescription(_ format: CMFormatDescription) throws -> AudioStreamBasicDescription {
+        try XCTUnwrap(CMAudioFormatDescriptionGetStreamBasicDescription(format)?.pointee)
+    }
+
     private func decodedAudioSamples(_ url: URL) async throws -> Data {
         let asset = AVURLAsset(url: url)
         let tracks = try await asset.loadTracks(withMediaType: .audio)
@@ -270,7 +301,7 @@ final class NativeRenderTests: XCTestCase {
     }
 
     private static func wave() -> Data {
-        let rate: UInt32 = 22_050
+        let rate: UInt32 = 48_000
         let samples = Int(rate / 2)
         var bytes = Data()
         func text(_ value: String) { bytes.append(contentsOf: value.utf8) }
@@ -278,11 +309,12 @@ final class NativeRenderTests: XCTestCase {
             var little = value.littleEndian
             withUnsafeBytes(of: &little) { bytes.append(contentsOf: $0) }
         }
-        text("RIFF"); integer(UInt32(36 + samples * 2)); text("WAVEfmt ")
-        integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(1)); integer(rate)
-        integer(rate * 2); integer(UInt16(2)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 2))
+        text("RIFF"); integer(UInt32(36 + samples * 4)); text("WAVEfmt ")
+        integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(2)); integer(rate)
+        integer(rate * 4); integer(UInt16(4)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 4))
         for sample in 0..<samples {
-            integer(Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000))
+            let value = Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000)
+            integer(value); integer(value)
         }
         return bytes
     }

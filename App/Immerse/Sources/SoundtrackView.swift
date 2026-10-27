@@ -1,3 +1,4 @@
+import FilmDomain
 import FilmPersistence
 import MediaCatalog
 import SwiftUI
@@ -7,7 +8,7 @@ struct SoundtrackView: View {
     @Environment(\.dismiss) private var dismiss
     let filmID: UUID
     @State private var current: MovieAudioSelection?
-    @State private var selected: String?
+    @State private var selected = MovieSoundChoice.silent.rawValue
     @State private var loaded = false
     @State private var working = false
     @State private var error: String?
@@ -15,31 +16,41 @@ struct SoundtrackView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Current soundtrack") {
-                    Text(current?.asset?.title ?? "Silent")
+                Section("Current sound") {
+                    Text(currentTitle)
                     if let credit = current?.asset?.rights.attribution, !credit.isEmpty { Text(credit).font(.caption) }
                 }
-                if let film = model.film(filmID), let catalog = model.mediaCatalog {
-                    Section {
-                        choice("Silent", id: nil)
-                        ForEach(catalog.assets(for: film.camera.id, purpose: .instrumental)) { asset in
-                            choice(asset.title, id: asset.id)
-                            if !asset.rights.attribution.isEmpty { Text(asset.rights.attribution).font(.caption) }
-                        }
+                if let film = model.film(filmID) {
+                    Section("Movie sound") {
+                        Picker("Sound", selection: $selected) {
+                            if film.camera.recordsLiveSound == true {
+                                Text("Recorded sound").tag(MovieSoundChoice.recordedSound.rawValue)
+                            }
+                            if let catalog = model.mediaCatalog {
+                                ForEach(catalog.assets(for: film.camera.id, purpose: .instrumental)) { asset in
+                                    Text(asset.title).tag("soundtrack:\(asset.id)")
+                                }
+                            }
+                            Text("Silent").tag(MovieSoundChoice.silent.rawValue)
+                        }.pickerStyle(.inline)
                     }
-                    Button("Apply soundtrack", systemImage: "checkmark") {
+                    Button("Apply sound choice", systemImage: "checkmark") {
                         working = true
                         Task {
                             defer { working = false }
-                            do { try await model.selectSoundtrack(filmID, assetID: selected); dismiss() }
+                            do {
+                                guard let choice = selectedChoice else { throw PersistenceError.invalidMedia }
+                                try await model.selectMovieSound(filmID, choice: choice, assetID: selectedAssetID)
+                                dismiss()
+                            }
                             catch { self.error = FailureCopy.message(for: error) }
                         }
-                    }.disabled(!loaded || working || (current != nil && selected == current?.asset?.id))
+                    }.disabled(!loaded || working || selectionIsUnchanged)
                 }
                 if working { ProgressView("Preparing Movie") }
                 if let error { Text(error).foregroundStyle(.red) }
             }
-            .navigationTitle("Soundtrack")
+            .navigationTitle("Movie sound")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done", systemImage: "checkmark") { dismiss() }.labelStyle(.iconOnly).disabled(working)
@@ -48,7 +59,12 @@ struct SoundtrackView: View {
             .task {
                 do {
                     current = try model.repository.movieAudioSelection(filmID: filmID)
-                    selected = current?.asset?.id
+                    if let film = model.film(filmID) {
+                        let choice = current?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
+                            ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
+                        selected = choice == .soundtrack
+                            ? "soundtrack:\(current?.asset?.id ?? "")" : choice.rawValue
+                    }
                     loaded = true
                 } catch { self.error = FailureCopy.message(for: error) }
             }
@@ -56,9 +72,32 @@ struct SoundtrackView: View {
         }
     }
 
-    private func choice(_ title: String, id: String?) -> some View {
-        Button { selected = id } label: {
-            HStack { Text(title); Spacer(); Image(systemName: selected == id ? "checkmark.circle.fill" : "circle") }
-        }.accessibilityAddTraits(selected == id ? .isSelected : []).disabled(working)
+    private var selectedChoice: MovieSoundChoice? {
+        if selected == MovieSoundChoice.recordedSound.rawValue { return .recordedSound }
+        if selected == MovieSoundChoice.silent.rawValue { return .silent }
+        return selected.hasPrefix("soundtrack:") ? .soundtrack : nil
+    }
+
+    private var selectedAssetID: String? {
+        guard selectedChoice == .soundtrack else { return nil }
+        return String(selected.dropFirst("soundtrack:".count))
+    }
+
+    private var currentTitle: String {
+        guard let film = model.film(filmID) else { return "Silent" }
+        let choice = current?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
+            ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
+        switch choice {
+        case .recordedSound: return "Recorded sound"
+        case .soundtrack: return current?.asset?.title ?? "Soundtrack"
+        case .silent: return "Silent"
+        }
+    }
+
+    private var selectionIsUnchanged: Bool {
+        guard let film = model.film(filmID), let selectedChoice else { return false }
+        let currentChoice = current?.effectiveChoice(recordsLiveSound: film.camera.recordsLiveSound == true)
+            ?? (film.camera.recordsLiveSound == true ? .recordedSound : .silent)
+        return selectedChoice == currentChoice && selectedAssetID == current?.asset?.id
     }
 }

@@ -23,8 +23,8 @@ enum FilmExportWorker {
     ) async throws {
         let repository = try FilmRepository(rootURL: root)
         let film = try repository.film(id: filmID)
-        let selectedSoundtrack = try repository.movieAudioSelection(filmID: filmID)?.asset != nil
-        let developedMovieAllowsAudio = film.camera.recordsLiveSound == true || selectedSoundtrack
+        let soundChoice = try repository.movieSoundChoice(filmID: filmID)
+        let developedMovieAllowsAudio = soundChoice != .silent
         let selected = Array(Set(sequences)).sorted()
         guard !selected.isEmpty else { throw FilmExportError.nothingToExport }
         // Validate the entire requested selection before creating any external copy.

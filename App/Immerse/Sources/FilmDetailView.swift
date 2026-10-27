@@ -152,10 +152,21 @@ struct FilmDetailView: View {
                     Button("Originals", systemImage: "photo.stack") { originals = true }
                 }
             }
-            if film.canPlaybackDevelopedMovie, let catalog = model.mediaCatalog,
-               !catalog.assets(for: film.camera.id, purpose: .instrumental).isEmpty {
-                Button("Soundtrack", systemImage: "music.note") { soundtrack = true }
+            if film.canPlaybackDevelopedMovie {
+                Button(movieSoundTitle(film), systemImage: "waveform") { soundtrack = true }
+                    .accessibilityIdentifier("movie-sound-choice")
             }
+        }
+    }
+
+    private func movieSoundTitle(_ film: Film) -> String {
+        guard let choice = try? model.repository.movieSoundChoice(filmID: filmID) else { return "Movie sound" }
+        switch choice {
+        case .recordedSound: return "Movie sound: Recorded sound"
+        case .soundtrack:
+            let title = (try? model.repository.movieAudioSelection(filmID: filmID))?.asset?.title ?? "Soundtrack"
+            return "Movie sound: \(title)"
+        case .silent: return "Movie sound: Silent"
         }
     }
 

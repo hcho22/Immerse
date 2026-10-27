@@ -70,6 +70,24 @@ class HarnessTestCase: XCTestCase {
         app.terminate()
     }
 
+    /// Keeps taps clear of the home indicator and scroll edge effect, using the app screen suite's short held drag when
+    /// a row is clipped. `UITestSupport.swift` has the same helper for the native app target.
+    func tapWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch
+        for _ in 0..<16 {
+            let indicator: CGFloat = max(window.frame.width, window.frame.height) > 700 ? 40 : 4
+            let bottom = window.frame.maxY - indicator
+            if element.exists, element.frame.minY >= window.frame.minY, element.frame.maxY <= bottom { break }
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -100)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        let indicator: CGFloat = max(window.frame.width, window.frame.height) > 700 ? 40 : 4
+        XCTAssertLessThanOrEqual(element.frame.maxY, window.frame.maxY - indicator,
+                                 "\(element) is whole on screen before the tap")
+        element.tap()
+    }
+
     override func setUp() async throws {
         try await super.setUp()
         XCUIDevice.shared.orientation = .portrait

@@ -82,26 +82,38 @@ public actor FilmProcessor {
         try await DevelopmentWorker.cleanup(root: root, filmID: filmID)
     }
 
-    /// Chooses silence or one built-in soundtrack for a developed Movie, any number of times (DEC-11): the Movie is
-    /// assembled again from its unchanged Developed Clips, and nothing is developed again.
-    public func selectSoundtrack(filmID: UUID, assetID: String?, catalog: BundleMediaCatalog) async throws {
+    /// Changes a developed Movie's sound choice without changing its Developed Clips or their captured audio.
+    public func selectMovieSound(
+        filmID: UUID, choice: MovieSoundChoice, assetID: String?, catalog: BundleMediaCatalog?
+    ) async throws {
+        guard (choice == .soundtrack) == (assetID != nil) else { throw PersistenceError.invalidMedia }
         guard !removing.contains(filmID), jobs[filmID] == nil else { throw PersistenceError.operationInProgress }
         let root = self.root
         let observer = developmentObserver
         let job = Task.detached {
-            let asset = try assetID.map { try catalog.resolve(id: $0) }
+            let asset: VerifiedCatalogAsset?
+            if let assetID {
+                guard let catalog else { throw PersistenceError.invalidMedia }
+                asset = try catalog.resolve(id: assetID)
+            } else { asset = nil }
             let verification: VerifiedMedia?
             if let asset { verification = try await VerifiedMedia.audio(at: asset.url) }
             else { verification = nil }
             try Task.checkCancellation()
             let repository = try FilmRepository(rootURL: root)
-            try repository.selectMovieSoundtrack(filmID: filmID, asset: asset, verification: verification)
+            try repository.selectMovieSoundChoice(filmID: filmID, choice: choice, asset: asset, verification: verification)
             try Task.checkCancellation()
             try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer)
         }
         jobs[filmID] = Job(task: job, suspendable: true)
         defer { jobs[filmID] = nil }
         try await job.value
+    }
+
+    /// Compatibility entry point: the earlier picker offered Silent or a Soundtrack.
+    public func selectSoundtrack(filmID: UUID, assetID: String?, catalog: BundleMediaCatalog) async throws {
+        try await selectMovieSound(filmID: filmID, choice: assetID == nil ? .silent : .soundtrack,
+                                   assetID: assetID, catalog: catalog)
     }
 
     /// Photos permission is settled before the export starts, so its prompt never interrupts a write.
@@ -227,11 +239,14 @@ enum DevelopmentWorker {
             let output = work.appendingPathComponent("assembled.mov")
             let soundtrack = try repository.retainedSoundtrack(filmID: filmID)
             if let soundtrack { _ = try await VerifiedMedia.audio(at: soundtrack.url) }
-            let includeRecordedSound = soundtrack == nil && film.camera.recordsLiveSound == true
+            let soundChoice = try repository.movieSoundChoice(filmID: filmID)
+            guard soundChoice != .recordedSound || film.camera.recordsLiveSound == true else { throw PersistenceError.invalidMedia }
+            let includeRecordedSound = soundChoice == .recordedSound
+            let selectedSoundtrack = soundChoice == .soundtrack
             try await NativeMovieRenderer.assemble(clips: clips, destination: output, soundtrack: soundtrack?.url,
                                                    includeRecordedSound: includeRecordedSound)
             let verification = try await VerifiedMedia.movie(at: output,
-                allowsAudio: soundtrack != nil || film.camera.recordsLiveSound == true)
+                allowsAudio: selectedSoundtrack || includeRecordedSound)
             try Task.checkCancellation()
             try repository.writeAssembledMovie(filmID: filmID, data: Data(contentsOf: output),
                 clipSequenceNumbers: film.captures.filter { !$0.isDiscarded }.map(\.sequenceNumber), verification: verification,
@@ -267,9 +282,9 @@ enum DevelopmentWorker {
                 let asset = try repository.revealedAsset(filmID: filmID, sequenceNumber: sequence, kind: kind)
                 if kind == .master { evidence.append(try VerifiedMedia.photo(at: asset.url)) }
                 else {
-                    let soundtrackSelected = try repository.movieAudioSelection(filmID: filmID)?.asset != nil
+                    let soundChoice = try repository.movieSoundChoice(filmID: filmID)
                     let allowsAudio = kind == .movie
-                        ? film.camera.recordsLiveSound == true || soundtrackSelected
+                        ? soundChoice != .silent
                         : film.camera.recordsLiveSound == true
                     evidence.append(try await VerifiedMedia.movie(at: asset.url, allowsAudio: allowsAudio))
                 }

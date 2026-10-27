@@ -30,6 +30,44 @@ final class SoundtrackTests: XCTestCase {
             coordinator: PhotoExportCoordinator(authorizer: Authorization(), writer: writer))
         let exportedTracks = await writer.audioTracks
         XCTAssertEqual(exportedTracks, [1], "The file handed to Photos carries the chosen recorded sound")
+        let exportedFormats = await writer.audioFormats
+        XCTAssertEqual(exportedFormats, [AudioFormat(codec: kAudioFormatMPEG4AAC, sampleRate: 48_000, channels: 2)])
+    }
+
+    func testRecordedSoundAndSilentCanChangeWithoutCatalogOrRedevelopment() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        let fixture = try await Fixture(withRecordedSound: true)
+        defer { fixture.remove() }
+        let repository = fixture.repository
+        let id = fixture.film.id
+        let run = try repository.developmentRun(filmID: id)
+        let clips = try [1, 2].map { try repository.revealedAsset(filmID: id, sequenceNumber: $0, kind: .clip) }
+        let clipBytes = try clips.map { try Data(contentsOf: $0.url) }
+        let stages = StageLog()
+        let processor = try FilmProcessor(root: fixture.root, developmentObserver: { _, stage in await stages.record(stage) })
+
+        try await processor.selectMovieSound(filmID: id, choice: .silent, assetID: nil, catalog: nil)
+        XCTAssertEqual(try repository.movieSoundChoice(filmID: id), .silent)
+        var movie = try repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
+        var proof = try await VerifiedMedia.movie(at: movie.url)
+        XCTAssertEqual(proof.audioTrackCount, 0)
+
+        try await processor.selectMovieSound(filmID: id, choice: .recordedSound, assetID: nil, catalog: nil)
+        XCTAssertEqual(try repository.movieSoundChoice(filmID: id), .recordedSound)
+        movie = try repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
+        proof = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
+        XCTAssertEqual(proof.audioTrackCount, 1, "Recorded sound returns without another Development")
+        XCTAssertEqual(try repository.developmentRun(filmID: id), run)
+        XCTAssertEqual(try clips.map { try Data(contentsOf: $0.url) }, clipBytes)
+        let rendered = await stages.rendered
+        XCTAssertEqual(rendered, 0, "Switching sound choices reassembles unchanged Developed Clips")
+    }
+
+    func testLegacyMovieAudioSelectionStillReadsAsBefore() throws {
+        let data = Data(#"{"revision":"0F6D1E2A-6C1B-4B8E-9C11-5A0E7E2B9D41","asset":null}"#.utf8)
+        let legacy = try JSONDecoder().decode(MovieAudioSelection.self, from: data)
+        XCTAssertNil(legacy.choice)
+        XCTAssertEqual(legacy.effectiveChoice(recordsLiveSound: false), .silent)
     }
 
     func testSoundtrackSurvivesBundleRemovalAndDiscardWithoutRedevelopment() async throws {
@@ -192,6 +230,8 @@ final class SoundtrackTests: XCTestCase {
             try FileManager.default.createDirectory(at: bundle, withIntermediateDirectories: true)
             audio = Self.wave()
             try audio.write(to: bundle.appendingPathComponent("tone.wav"))
+            let capturedAudio = bundle.appendingPathComponent("tone.m4a")
+            try await Self.encodeAAC(bundle.appendingPathComponent("tone.wav"), destination: capturedAudio)
             try license.write(to: bundle.appendingPathComponent("license.txt"))
             var settings = RenderFixtureSettings.defaultExperimental
             settings.movieWidth = 160; settings.movieHeight = 96; settings.movieDurationSeconds = 0.16
@@ -200,7 +240,7 @@ final class SoundtrackTests: XCTestCase {
             duration = manifest.movie.durationSeconds
             let sourceURL = fixtures.appendingPathComponent("synthetic-developed-movie.mov")
             let capturedURL = fixtures.appendingPathComponent("captured-with-sound.mov")
-            if withRecordedSound { try await Self.addAudio(bundle.appendingPathComponent("tone.wav"), to: sourceURL, destination: capturedURL) }
+            if withRecordedSound { try await Self.addAudio(capturedAudio, to: sourceURL, destination: capturedURL) }
             let source = try Data(contentsOf: withRecordedSound ? capturedURL : sourceURL)
             repository = try FilmRepository(rootURL: root)
             film = try repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Private audio test", movieOrientation: .portrait, filmStock: .color)
@@ -237,7 +277,7 @@ final class SoundtrackTests: XCTestCase {
         func remove() { try? FileManager.default.removeItem(at: root) }
 
         static func wave() -> Data {
-            let rate: UInt32 = 22_050
+            let rate: UInt32 = 48_000
             let samples = Int(rate / 10)
             var bytes = Data()
             func text(_ value: String) { bytes.append(contentsOf: value.utf8) }
@@ -245,11 +285,12 @@ final class SoundtrackTests: XCTestCase {
                 var little = value.littleEndian
                 withUnsafeBytes(of: &little) { bytes.append(contentsOf: $0) }
             }
-            text("RIFF"); integer(UInt32(36 + samples * 2)); text("WAVEfmt ")
-            integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(1)); integer(rate)
-            integer(rate * 2); integer(UInt16(2)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 2))
+            text("RIFF"); integer(UInt32(36 + samples * 4)); text("WAVEfmt ")
+            integer(UInt32(16)); integer(UInt16(1)); integer(UInt16(2)); integer(rate)
+            integer(rate * 4); integer(UInt16(4)); integer(UInt16(16)); text("data"); integer(UInt32(samples * 4))
             for sample in 0..<samples {
-                integer(Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000))
+                let value = Int16(sin(Double(sample) * 2 * .pi * 440 / Double(rate)) * 4_000)
+                integer(value); integer(value)
             }
             return bytes
         }
@@ -274,6 +315,12 @@ final class SoundtrackTests: XCTestCase {
             let exporter = try XCTUnwrap(AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough))
             try await exporter.export(to: destination, as: .mov)
         }
+
+        static func encodeAAC(_ audioURL: URL, destination: URL) async throws {
+            let asset = AVURLAsset(url: audioURL)
+            let exporter = try XCTUnwrap(AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetAppleM4A))
+            try await exporter.export(to: destination, as: .m4a)
+        }
     }
 }
 
@@ -284,9 +331,26 @@ private struct Authorization: PhotoLibraryAuthorizing {
 
 private actor DecodingWriter: PhotoLibraryWriting {
     var audioTracks: [Int] = []
+    var audioFormats: [AudioFormat] = []
     func write(_ request: PhotoExportRequest) async throws -> PhotoExportReceipt {
         let proof = try await VerifiedMedia.movie(at: request.fileURL, allowsAudio: true)
         audioTracks.append(proof.audioTrackCount)
+        let asset = AVURLAsset(url: request.fileURL)
+        let tracks = try await asset.loadTracks(withMediaType: .audio)
+        if let track = tracks.first {
+            let descriptions = try await track.load(.formatDescriptions)
+            if let format = descriptions.first,
+               let basic = CMAudioFormatDescriptionGetStreamBasicDescription(format)?.pointee {
+                audioFormats.append(AudioFormat(codec: CMFormatDescriptionGetMediaSubType(format),
+                    sampleRate: basic.mSampleRate, channels: basic.mChannelsPerFrame))
+            }
+        }
         return PhotoExportReceipt(localIdentifier: "private-test-\(audioTracks.count)")
     }
+}
+
+private struct AudioFormat: Equatable, Sendable {
+    let codec: UInt32
+    let sampleRate: Double
+    let channels: UInt32
 }
