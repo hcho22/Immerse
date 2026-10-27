@@ -2,8 +2,8 @@ import FilmDomain
 @testable import NativeAdapters
 import XCTest
 
-/// The 6×6's zoom steps follow the lenses the iPhone reports (the captain, 2026-10-16: "allow zoom as allowed by
-/// camera native"). Each case injects what an iPhone's camera API would report.
+/// The 6×6, Super 8 and 16mm zoom steps follow the lenses the iPhone reports (the captain, 2026-10-16: "allow zoom as
+/// allowed by camera native"). Each case injects what an iPhone's camera API would report.
 final class ZoomStepTests: XCTestCase {
     /// `crops` are the native crops the API reports for the wide lens, and the others those of the other two lenses.
     private func lenses(
@@ -115,9 +115,14 @@ final class ZoomStepTests: XCTestCase {
     private func plan(
         _ camera: CameraID, position: CapturePosition = .rear, rear: RearLensCapabilities
     ) -> CaptureSessionPlan {
-        CaptureSessionPlan(
+        let mediaKind: CaptureMediaKind = switch camera {
+        case .super8HomeMovie, .cinema16mm: .movie
+        default: .photo
+        }
+        return CaptureSessionPlan(
             request: CaptureSessionRequest(
-                preferredPosition: position, mediaKind: .photo, behavior: .for(camera)
+                preferredPosition: position, mediaKind: mediaKind,
+                lockedMovieOrientation: mediaKind == .movie ? .portrait : nil, behavior: .for(camera)
             ),
             capabilities: CaptureCapabilities(
                 availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true, rearLenses: rear
@@ -125,13 +130,26 @@ final class ZoomStepTests: XCTestCase {
         )
     }
 
-    func testOnlyTheSixBySixRearCameraOffersZoomSteps() {
+    func testThe6x6AndMovieCamerasOfferOnlyTheirRearZoomSteps() throws {
         XCTAssertEqual(plan(.mediumFormat6x6, rear: threeLenses).zoomSteps.map(\.label), ["0.5x", "1x", "3x"])
         XCTAssertEqual(plan(.mediumFormat6x6, rear: threeLenses).restingZoomStep?.label, "1x")
         XCTAssertEqual(plan(.mediumFormat6x6, position: .front, rear: threeLenses).zoomSteps, [],
                        "The front camera has no zoom steps")
         XCTAssertNil(plan(.mediumFormat6x6, position: .front, rear: threeLenses).restingZoomStep)
-        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
+        for camera in [CameraID.super8HomeMovie, .cinema16mm] {
+            let movie = plan(camera, rear: threeLenses)
+            XCTAssertEqual(movie.mediaKind, .movie)
+            XCTAssertEqual(movie.lockedMovieOrientation, .portrait)
+            XCTAssertEqual(movie.behavior.viewfinder, .fourByThree)
+            XCTAssertEqual(movie.zoomSteps.map(\.label), ["0.5x", "1x", "3x"], "\(camera) follows the phone's reported lenses")
+            XCTAssertEqual(movie.restingZoomStep?.label, "1x")
+            XCTAssertEqual(plan(camera, position: .front, rear: threeLenses).zoomSteps, [], "\(camera) front has no zoom steps")
+            let telephoto = try XCTUnwrap(movie.zoomSteps.last)
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .idle), .allowed)
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .recordingMovie), .blockedDuring(.recordingMovie))
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .savingMovieClip), .blockedDuring(.savingMovieClip))
+        }
+        for camera in [CameraID.disposable1990s, .instant1970s] {
             XCTAssertEqual(plan(camera, rear: threeLenses).zoomSteps, [], "\(camera) keeps its single lens")
         }
         XCTAssertEqual(plan(.mediumFormat6x6, rear: .wideOnly).zoomSteps, [], "One lens, no zoom control")

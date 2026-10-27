@@ -17,6 +17,7 @@ final class CaptureBehaviorTests: XCTestCase {
         XCTAssertEqual(super8.focus, .deviceDefault, "Auto starts on continuous autofocus")
         XCTAssertEqual(super8.exposure, .automatic, "Automatic exposure")
         XCTAssertEqual(super8.viewfinder, .fourByThree)
+        XCTAssertTrue(super8.offersZoomSteps, "The Super 8 rear camera offers the iPhone's own zoom steps")
         XCTAssertFalse(super8.offersFlash)
         XCTAssertFalse(super8.showsLowLightCue)
         XCTAssertEqual(CaptureBehavior.for(.super8HomeMovie, focusSetting: .fixed).focus, .fixed)
@@ -37,13 +38,15 @@ final class CaptureBehaviorTests: XCTestCase {
     func testCamerasOtherThanThoseThatChangedKeepTheirCaptureConfiguration() {
         XCTAssertEqual(CaptureBehavior.for(.instant1970s),
                        CaptureBehavior(focus: .deviceDefault, exposure: .automatic, viewfinder: .square))
-        XCTAssertEqual(CaptureBehavior.for(.cinema16mm), .deviceDefault)
+        XCTAssertEqual(CaptureBehavior.for(.cinema16mm), CaptureBehavior(offersZoomSteps: true))
         for camera in CameraID.allCases where camera != .disposable1990s {
             XCTAssertNotEqual(CaptureBehavior.for(camera).exposure, .fixed, "\(camera)")
             XCTAssertFalse(CaptureBehavior.for(camera).showsLowLightCue, "\(camera)")
         }
-        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
+        for camera in CameraID.allCases where ![.mediumFormat6x6, .super8HomeMovie, .cinema16mm].contains(camera) {
             XCTAssertFalse(CaptureBehavior.for(camera).offersZoomSteps, "\(camera) keeps its single lens")
+        }
+        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
             XCTAssertFalse(CaptureBehavior.for(camera).offersManualFocus, "\(camera)")
         }
     }

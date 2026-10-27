@@ -16,7 +16,7 @@ public struct NativeCameraControls: Sendable {
     public var exposureBias: Float = 0
     /// Whether the active lens can hold the Disposable's custom exposure.
     public var fixedExposure = false
-    /// The zoom steps the iPhone's own lenses give the 6×6's rear camera, empty where the Camera has none, the front
+    /// The zoom steps the iPhone's own lenses give the 6×6, Super 8 or 16mm rear camera, empty where the Camera has none, the front
     /// camera is active or the iPhone has one rear lens, and the step the camera is on.
     public var zoomSteps: [ZoomStep] = []
     public var zoomStep: ZoomStep?
@@ -234,7 +234,7 @@ public actor AVFoundationCaptureBackend {
         restartMeter()
     }
 
-    /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, and crops it where the
+    /// Takes a zoom step of the iPhone's own lenses (the 6×6, Super 8 or 16mm rear camera): changes to that lens, and crops it where the
     /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The person's Focus position and
     /// exposure bias go with them to the new lens, the bias within that lens's range. A lens runs on the format the session
     /// gives it only once it is the input, and that format decides its native crops, so they are read again then. A crop

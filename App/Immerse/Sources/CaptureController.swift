@@ -199,7 +199,7 @@ final class CaptureController {
         return try await backend?.focus(at: point, alsoExpose: behavior.exposure == .automatic) ?? .unsupported
     }
 
-    /// Takes a zoom step of the iPhone's own lenses (the 6×6's rear camera). Only between exposures, like a lens switch.
+    /// Takes a zoom step on the 6×6, Super 8 or 16mm rear camera. Only between photo exposures or Recorded Clips.
     func selectZoomStep(_ step: ZoomStep) async throws {
         guard let backend else { return }
         try await backend.selectZoomStep(step)

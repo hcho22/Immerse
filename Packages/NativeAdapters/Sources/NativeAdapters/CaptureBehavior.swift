@@ -37,7 +37,7 @@ public struct CaptureBehavior: Equatable, Sendable {
     public let focus: FocusBehavior
     public let exposure: ExposureBehavior
     public let viewfinder: ViewfinderShape
-    /// The rear camera offers the zoom steps the iPhone's own lenses have (the 6×6), never a digital zoom between them.
+    /// The rear camera offers the iPhone's reported lens steps on the 6×6, Super 8 and 16mm, never digital steps between them.
     public let offersZoomSteps: Bool
     public let offersFlash: Bool
     /// The viewfinder shows a cue advising flash when the scene is too dim for the fixed exposure.
@@ -76,9 +76,9 @@ public struct CaptureBehavior: Equatable, Sendable {
         case .mediumFormat6x6:
             CaptureBehavior(focus: focus, exposure: .manualBias, viewfinder: .square, offersZoomSteps: true)
         case .super8HomeMovie:
-            CaptureBehavior(focus: focus)
+            CaptureBehavior(focus: focus, offersZoomSteps: true)
         case .cinema16mm:
-            CaptureBehavior(focus: focus)
+            CaptureBehavior(focus: focus, offersZoomSteps: true)
         }
     }
 

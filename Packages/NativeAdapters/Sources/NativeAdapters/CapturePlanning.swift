@@ -39,7 +39,7 @@ public enum LensSwitchDecision: Equatable, Sendable {
     case disabledByConfiguration
 }
 
-/// Whether a zoom step can be taken now. A zoom change follows the lens switch's rule: only between exposures.
+/// Whether a zoom step can be taken now: only between photo exposures or Recorded Clips.
 public enum ZoomDecision: Equatable, Sendable {
     case allowed
     /// The Camera has no zoom steps, or the active camera is the front one.

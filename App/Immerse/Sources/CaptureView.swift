@@ -301,9 +301,9 @@ struct CaptureView: View {
         }
     }
 
-    /// The 6×6's zoom steps, the iPhone's own lenses labeled as its Camera app labels them, in a pill over the viewfinder's
-    /// bottom edge as that app has them. There is no pill where the Camera has none, on the front camera and on an iPhone
-    /// with one rear lens. A step can be taken only between exposures, like a lens switch.
+    /// The 6×6, Super 8 and 16mm zoom steps, the iPhone's own lenses labeled as its Camera app labels them, in a pill
+    /// over the viewfinder's bottom edge as that app has them. There is no pill where the Camera has none, on the front
+    /// camera and on an iPhone with one rear lens. A step can be taken only between photo exposures or Recorded Clips.
     @ViewBuilder private func zoomSteps(behavior: CaptureBehavior, capture: CaptureController) -> some View {
         let steps = capture.controls.zoomSteps
         if behavior.offersZoomSteps, capture.position == .rear, steps.count > 1 {
