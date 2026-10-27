@@ -244,6 +244,7 @@ Never collect sealed media, and add no telemetry of any kind without a new decis
 “Personal-only” applies to Instant support and whole-Film deletion; “device-local” applies to personal Film storage. In v1 every Film is personal; shared Group workflows are deferred to v2 (section 8).
 
 > **2026-10-26:** The Editing row's excluded "Saturation slider" is superseded: color prints get Saturation as a stated exception ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-32).
+> The Formats row's excluded "(including live-audio Movie capture with microphone permission)" is superseded too: the Super 8 and the 16mm record live sound with microphone permission (FR-27), and the excluded formats themselves stand.
 
 ## 4. Roles and vocabulary
 

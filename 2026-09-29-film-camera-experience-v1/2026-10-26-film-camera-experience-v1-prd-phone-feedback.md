@@ -68,6 +68,7 @@ The superseded text stays where it is, with a note pointing here; nothing is del
 | Where | Superseded text, quoted or summarized | Replaced by |
 | --- | --- | --- |
 | Section 3, scope table, Editing row | "Saturation slider" in the excluded column | FR-32: a Saturation slider on color prints, as a stated exception |
+| Section 3, scope table, Formats row | "(including live-audio Movie capture with microphone permission)" in the excluded column | FR-27: the Super 8 and the 16mm record live sound with microphone permission (the excluded formats themselves stand) |
 | Section 1.1, Users table, home-movie row | "silence or a built-in soundtrack" | FR-28: recorded sound, a built-in Soundtrack in its place, or silence |
 | Section 5.1, Journey 2 | Step 1 "its silent audio behavior"; step 3 "No microphone permission is needed."; step 8 "The Movie stays silent or takes one built-in instrumental soundtrack." | FR-27 and FR-28 |
 | Section 5.1, every journey | The Camera names "1990s Disposable", "1960s Super 8 Home Movie" and "1970s Instant" | FR-24 |
@@ -351,7 +352,8 @@ Every later step refuses an audio track other than a Soundtrack's:
 - assembly, which builds a video-only composition, refuses clips with audio and adds only a Soundtrack (`NativeMovieRenderer.assemble`), and the assembled Movie's check, which allows audio only with a Soundtrack (`FilmProcessor`: `allowsAudio: soundtrack != nil`);
 - storing the assembled Movie, which expects a sound track only when the stored sound choice holds a Soundtrack (`FilmRepository.writeAssembledMovie`: `audioTrackCount == (audio?.asset == nil ? 0 : 1)`);
 - source cleanup after Development, which checks each Developed Clip with no audio allowed (`FilmProcessor`: `allowsAudio: kind == .movie`);
-- Save Originals to Photos, which checks each original clip with no audio allowed (`FilmExportWorker`: `allowsAudio: !originals`).
+- Save Originals to Photos, which checks each original clip with no audio allowed (`FilmExportWorker`: `allowsAudio: !originals`);
+- the catalog's sample sheet, which checks every sample movie with no audio allowed and shows "Sample unavailable" when the check fails (`CameraSamplesView`, through `VerifiedMedia.movie(at:)`).
 
 The camera purpose string says "Capture new photos and silent movie clips for your Films."; there is no `NSMicrophoneUsageDescription`.
 Settings shows "Microphone: Not used".
@@ -385,6 +387,7 @@ For both movie Cameras, Load Film shows "One silent Movie after Development" (`r
 **Data and compatibility.**
 A Camera package locked with the MOV-12 build or a later one records that its Film has sound, and that record, never the date a Film was loaded, decides whether it records sound; a package stored before reads as silent.
 Every check listed in Today accepts one sound track or none on a clip of a Film with sound, on its Developed Clip and on its original, and keeps refusing any sound track on a clip of a Film without sound; the assembled Movie's checks, in `FilmProcessor` and in `FilmRepository.writeAssembledMovie`, accept the sound its choice gives it, the recorded sound track under Recorded sound included (FR-28).
+A movie Camera's sample movie may carry one sound track, so a sample shot and exported with the app under Recorded sound shows in the catalog with its sound.
 An original clip saved to Photos keeps its recorded sound, as captured, and its source is then removed from Immerse as FR-08 has it (**Builder's reading** of "kept exactly as the iPhone captured it" and "never discarded").
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
@@ -693,7 +696,6 @@ No simulator result is a physical-iPhone result; QA-17 holds the phone checks, a
 1. The shooting screen: screenshots of every Camera, upright and sideways, at the default and the largest text size, on the smallest and largest supported iPhone (FR-23), with the header's words for its other states and the microphone strings (section 8).
 2. The focus switch's placement (FR-25).
 3. The Darkroom's band: screenshots of every tool on the smallest and largest supported iPhone at the default and the largest text size (FR-30), with the Vignette's falloff and the place of Saturation.
-4. The sound of an exported Movie against the same iPhone's Camera app recording, shown with MOV-14 (DEC-19, decided).
 
 The smallest supported iPhone screen is the iPhone SE (3rd generation); the largest is the largest current Pro Max the simulator offers.
 
