@@ -84,7 +84,8 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         if reopening {
             _ = try JSONDecoder().decode(Seed.self, from: Data(contentsOf: seedURL))
         } else {
-            let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-mixed") ? "instant-mixed"
+            let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-final") ? "instant-final"
+                : arguments.contains("--instant-mixed") ? "instant-mixed"
                 : arguments.contains("--instant") ? "instant" : arguments.contains("--empty") ? "empty"
                 : arguments.contains("--developed-photo") ? "developed-photo"
                 : arguments.contains("--medium-format") ? "medium-format" : "early-photo"
@@ -123,12 +124,18 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     }
                 } else {
                     let data = try Data(contentsOf: source("--photo-source") ?? fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
+                    if mode == "instant-final" {
+                        for _ in 0..<9 { try model.repository.savePhotoCapture(filmID: film.id, sourceData: data) }
+                        model.refresh()
+                        try await model.develop(film.id)
+                    } else {
                     // `--two-sealed`, with `--instant-mixed`, leaves two sealed Instant prints where there is otherwise one,
                     // so one Development reveals both.
                     let captures = mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
                     for index in 1...captures {
                         try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
+                    }
                     }
                 }
                 let developsEarly = mode == "developed-photo" || mode == "medium-format"
@@ -138,13 +145,19 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 }
             }
             try persist(Seed(mode: mode, filmID: film.id), to: seedURL)
-            // `--reveal-at-camera` develops the Film's sealed Instant print once the camera screen is open, as the app does
-            // when a save lands there, so a test can meet the reveal and the question about its original at the camera.
+            // `--reveal-at-camera` saves and develops an Instant print once the shooting screen is open, as the app does
+            // when a save lands there. `--instant-final` leaves its tenth exposure for this moment to test the one pack-end
+            // Originals question.
             // The simulator has no camera, so nothing is captured.
             if arguments.contains("--reveal-at-camera") {
                 Task {
                     while !model.capture.presented { try? await Task.sleep(for: .milliseconds(100)) }
                     try? await Task.sleep(for: .seconds(1))
+                    if mode == "instant-final",
+                       let source = try? Data(contentsOf: directory.appendingPathComponent("Fixtures/synthetic-developed-photo.jpg")) {
+                        _ = try? model.repository.savePhotoCapture(filmID: film.id, sourceData: source)
+                        model.refresh()
+                    }
                     model.developSavedPrint(film.id) { _ in }
                 }
             }

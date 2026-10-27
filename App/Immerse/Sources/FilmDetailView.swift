@@ -18,23 +18,6 @@ struct FilmDetailView: View {
     @State private var soundtrack = false
     @State private var selectedPhoto: CaptureRecord?
     @State private var discard: CaptureRecord?
-    /// The Instant prints this screen has seen revealed, so it asks about the original of each new one once.
-    @State private var seenPrints: Set<Int>?
-    @State private var originalAsk: OriginalAsk?
-
-    /// What decides whether a newly revealed Instant print is asked about now: the revealed prints, and whether this
-    /// screen is free to ask. The camera asks about the prints revealed while it is open.
-    private struct RevealWatch: Equatable {
-        let prints: Set<Int>
-        let capturing: Bool
-        let free: Bool
-    }
-
-    private var revealWatch: RevealWatch {
-        RevealWatch(prints: model.revealedInstantPrints(filmID), capturing: capturing,
-                    free: !capturing && !developing && !originals && !soundtrack && selectedPhoto == nil && originalAsk == nil
-                        && !model.busyFilms.contains(filmID) && !model.hiddenFilms.contains(filmID))
-    }
 
     var body: some View {
         Group {
@@ -59,17 +42,7 @@ struct FilmDetailView: View {
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
         .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
-        .sheet(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
-        .sheet(item: $originalAsk) { ask in OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints) }
-        .onAppear { if seenPrints == nil { seenPrints = revealWatch.prints } }
-        .onChange(of: revealWatch) { _, watch in
-            guard let seen = seenPrints else { return }
-            if watch.capturing { seenPrints = watch.prints }
-            guard watch.free else { return }
-            seenPrints = watch.prints
-            let prints = model.printsAwaitingOriginalChoice(filmID, among: watch.prints.subtracting(seen))
-            if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints) }
-        }
+        .fullScreenCover(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
         .alert("Rename Film", isPresented: $renaming) {
             TextField("Film title", text: $title)
             Button("Cancel", role: .cancel) {}

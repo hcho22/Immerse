@@ -63,13 +63,10 @@ import XCTest
         XCTAssertTrue(app.buttons["Open Camera"].exists)
         snapshot(app, "Instant-first-revealed-second-sealed")
         app.buttons["Resume Development"].tap()
-        // The Instant asks about the original of the print it has just revealed, and of that print only (DEC-11).
-        let asked = app.staticTexts.matching(NSPredicate(format: "label ==[c] %@", "Original of photo 2")).firstMatch
-        XCTAssertTrue(asked.waitForExistence(timeout: 40))
-        snapshot(app, "Instant-asks-about-the-original-of-the-print-just-revealed")
-        app.buttons["Remove from Immerse without saving"].tap()
-        app.buttons["confirm-original-choice"].tap()
+        // DEV-12: the pack is not full, so development reveals the print without asking about its original.
         XCTAssertTrue(app.buttons["Open photo 2"].waitForExistence(timeout: 40))
+        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        XCTAssertTrue(app.buttons["Originals"].exists, "Originals can still be decided from the Film screen")
         XCTAssertTrue(app.buttons["Open Camera"].exists)
         XCTAssertFalse(app.buttons["Develop Film"].exists)
         inspect(app, "Instant-both-revealed-still-open")

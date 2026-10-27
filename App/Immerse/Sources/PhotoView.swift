@@ -276,18 +276,53 @@ struct PhotoView: View {
     @Environment(\.dismiss) private var dismiss
     let filmID: UUID
     let sequence: Int
+    let isInstantReveal: Bool
+    @State private var shownSequence: Int
     @State private var editing = false
     @State private var discarding = false
     @State private var error: String?
 
+    init(filmID: UUID, sequence: Int, isInstantReveal: Bool = false) {
+        self.filmID = filmID
+        self.sequence = sequence
+        self.isInstantReveal = isInstantReveal
+        _shownSequence = State(initialValue: sequence)
+    }
+
+    private var developedSequences: [Int] {
+        guard !isInstantReveal else { return [shownSequence] }
+        return model.film(filmID)?.captures
+            .filter { $0.revealState == .revealed && !$0.isDiscarded }
+            .map(\.sequenceNumber).sorted() ?? []
+    }
+
+    private var position: Int? { developedSequences.firstIndex(of: shownSequence).map { $0 + 1 } }
+    private var count: Int { developedSequences.count }
+    private var photoLabel: String { "Photo \(shownSequence), \(position ?? 1) of \(count)" }
+
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
-                else { RevealedPhoto(filmID: filmID, sequence: sequence, showsCardEdge: true) }
+                else {
+                    RevealedPhoto(filmID: filmID, sequence: shownSequence, showsCardEdge: true)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(photoLabel)
+                        .accessibilityIdentifier("photo-view-image")
+                        .accessibilityAction(named: Text("Previous photo")) { move(by: -1) }
+                        .accessibilityAction(named: Text("Next photo")) { move(by: 1) }
+                        .gesture(DragGesture(minimumDistance: 32).onEnded { value in
+                            guard !isInstantReveal, abs(value.translation.width) > abs(value.translation.height),
+                                  abs(value.translation.width) >= 48 else { return }
+                            move(by: value.translation.width < 0 ? 1 : -1)
+                        }, including: isInstantReveal ? .none : .all)
+                }
                 if let error { Text(error).foregroundStyle(.red).padding() }
             }
-            .navigationTitle("Photo \(sequence)").navigationBarTitleDisplayMode(.inline)
+            .background(Color.black.ignoresSafeArea())
+            .navigationTitle("Photo \(shownSequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
                 ToolbarItemGroup(placement: .bottomBar) {
@@ -298,17 +333,34 @@ struct PhotoView: View {
                         .disabled(model.hiddenFilms.contains(filmID))
                 }
             }
-            .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: sequence) }
-            .confirmationDialog("Discard photo \(sequence)?", isPresented: $discarding, titleVisibility: .visible) {
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(.black, for: .bottomBar)
+            .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
+            .confirmationDialog("Discard photo \(shownSequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
                     error = nil
+                    let discardedSequence = shownSequence
                     model.perform {
-                        try await model.remove(filmID, sequence: sequence)
-                        dismiss()
+                        try await model.remove(filmID, sequence: discardedSequence)
+                        if !isInstantReveal,
+                           let next = model.film(filmID)?.captures
+                            .filter({ $0.revealState == .revealed && !$0.isDiscarded && $0.sequenceNumber > discardedSequence })
+                            .map(\.sequenceNumber).min() {
+                            shownSequence = next
+                        } else { dismiss() }
                     } failure: { error = $0 }
                 }.accessibilityIdentifier("confirm-discard-photo")
             } message: { Text(PrivacyCopy.discard) }
         }
+    }
+
+    private func move(by offset: Int) {
+        guard !isInstantReveal, let current = developedSequences.firstIndex(of: shownSequence) else { return }
+        let target = current + offset
+        guard developedSequences.indices.contains(target) else { return }
+        error = nil
+        shownSequence = developedSequences[target]
     }
 }
 

@@ -23,8 +23,8 @@ struct CaptureView: View {
     @State private var cameraDenied = false
     @State private var instantPrint: CaptureRecord?
     @State private var lastRevealedSequence: Int?
-    /// The Instant prints revealed while this camera is open that are still to be shown and asked about, in the order
-    /// they were taken. The first is the one on screen.
+    /// The Instant prints revealed while this camera is open that are still to be shown, in capture order. The first is
+    /// the one on screen; the Originals question comes once, after the last print of the full pack closes.
     @State private var revealedPrints: [CaptureRecord] = []
     @State private var originalAsk: OriginalAsk?
     /// Whether the "Saved" notice is still showing. It lasts a moment over the picture; every other notice stays until
@@ -59,9 +59,6 @@ struct CaptureView: View {
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
         .environment(\.heldTurn, held)
         .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: held)
-        // Held for as long as the screen is up, the print and the question that follow an Instant exposure included, so
-        // the camera is never seen turned beneath them as they come and go.
-        .holdsInterfaceOrientation(.portrait) { InterfaceOrientationLock.mask(held: capture.held) }
         .task {
             #if DEBUG
             if !opensCamera { return }
@@ -72,9 +69,18 @@ struct CaptureView: View {
             UIDevice.current.beginGeneratingDeviceOrientationNotifications()
             capture.updateOrientation()
             capture.presented = true
+            InterfaceOrientationLock.hold(.portrait)
             lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
         }
-        .onDisappear { UIDevice.current.endGeneratingDeviceOrientationNotifications(); capture.presented = false; capture.suspend() }
+        .onDisappear {
+            // A full-screen Instant print or pack-end Originals question covers this screen without ending its camera
+            // session or portrait lock. The covers dismiss back here; only leaving the shooting flow stops it.
+            guard instantPrint == nil, originalAsk == nil else { return }
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+            capture.presented = false
+            capture.suspend()
+            InterfaceOrientationLock.release(turningTo: InterfaceOrientationLock.mask(held: capture.held))
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in capture.updateOrientation() }
         .onChange(of: model.film(filmID)?.captures) { _, captures in
             guard model.film(filmID)?.camera.revealRule == .instantPerExposure,
@@ -86,12 +92,12 @@ struct CaptureView: View {
             revealedPrints += revealed
             if showsNow { instantPrint = revealedPrints.first }
         }
-        // Each print is shown first; closing it brings the question about its original, and then the next print (DEC-11).
-        .sheet(item: $instantPrint, onDismiss: {
-            let prints = model.printsAwaitingOriginalChoice(filmID, among: Set(revealedPrints.prefix(1).map(\.sequenceNumber)))
-            if prints.isEmpty { showNextPrint() } else { originalAsk = OriginalAsk(prints: prints) }
-        }) { print in PhotoView(filmID: filmID, sequence: print.sequenceNumber) }
-        .sheet(item: $originalAsk, onDismiss: showNextPrint) { ask in
+        // The Instant shows each newly developed print by itself and upright; only the last print in a full pack is
+        // followed by the one question covering every revealed print whose original is still undecided (DEV-12).
+        .fullScreenCover(item: $instantPrint, onDismiss: showNextPrint) { print in
+            PhotoView(filmID: filmID, sequence: print.sequenceNumber, isInstantReveal: true)
+        }
+        .fullScreenCover(item: $originalAsk, onDismiss: { finishOriginalQuestion(capture) }) { ask in
             OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints)
         }
         #if DEBUG
@@ -454,12 +460,20 @@ struct CaptureView: View {
     private func showNextPrint() {
         revealedPrints = Array(revealedPrints.dropFirst())
         instantPrint = revealedPrints.first
-        // The last print and its question are closed: the camera comes back on its own, unless the Film is complete,
-        // the screen is gone or something else stopped it.
-        if revealedPrints.isEmpty, let film = model.film(filmID),
-           model.capture.printsClosed(allowingRestart: film.completionState == .open && error == nil && !model.hasPendingSave(filmID)) {
+        guard revealedPrints.isEmpty, let film = model.film(filmID) else { return }
+        if film.camera.id == .instant1970s, film.remainingExposures == 0 {
+            let prints = model.printsAwaitingOriginalChoice(filmID, among: model.revealedInstantPrints(filmID))
+            if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints); return }
+        }
+        // The camera starts again only after its print views close, while the pack is still open and no save needs retry.
+        if model.capture.printsClosed(allowingRestart: film.completionState == .open && error == nil && !model.hasPendingSave(filmID)) {
             open(film)
         }
+    }
+
+    private func finishOriginalQuestion(_ capture: CaptureController) {
+        // Cancelled or missed, the question does not return by itself. Originals on the Film screen remains available.
+        _ = capture.printsClosed(allowingRestart: false)
     }
 
     private func viewfinderLabel(position: CapturePosition) -> String {
