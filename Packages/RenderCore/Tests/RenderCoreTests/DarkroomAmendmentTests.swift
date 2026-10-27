@@ -154,6 +154,150 @@ final class DarkroomAmendmentTests: XCTestCase {
         XCTAssertEqual(linearSRGB(lightened.channel(0, x: 2, y: 2)) / baselineLinear, 4, accuracy: 0.45)
     }
 
+    /// Rotate left turns the whole Instant card counterclockwise, so its deep bottom border comes to the right; Rotate
+    /// right turns it clockwise, the border to the left (D4).
+    func testInstantQuarterTurnsMoveTheDeepBorderToTheSideTheyTurnTo() throws {
+        let master = try instantCardWithItsDeepBorderAtTheBottom()
+        for (turns, deepBorderRight) in [(1, true), (3, false)] {
+            let turned = try DecodedPixels(NativePhotoRenderer.print(
+                master: master, recipe: DarkroomRecipe(rotationQuarterTurns: turns), camera: CameraCatalog.instant1970s
+            ))
+            let middle = turned.height / 2
+            let border = deepBorderRight ? turned.width - 300 : 300
+            let picture = deepBorderRight ? 300 : turned.width - 300
+            XCTAssertGreaterThan(turned.channel(0, x: border, y: middle), 245, "Turn \(turns): the deep border is white")
+            XCTAssertLessThan(turned.channel(0, x: picture, y: middle), 80, "Turn \(turns): the picture is opposite it")
+        }
+    }
+
+    /// A marked top-left quadrant lands where each turn takes it: bottom left after Rotate left, top right after Rotate
+    /// right, bottom right after two turns (D4).
+    func testDisposableQuarterTurnsCarryTheTopLeftCornerTheWayTheyTurn() throws {
+        let master = try quadrantJPEG(width: 240, height: 160)
+        let cases: [(Int, (Bool, Bool))] = [(1, (false, true)), (3, (true, false)), (2, (true, true))]
+        for (turns, (right, bottom)) in cases {
+            let turned = try DecodedPixels(NativePhotoRenderer.print(
+                master: master, recipe: DarkroomRecipe(rotationQuarterTurns: turns), camera: CameraCatalog.disposable1990s
+            ))
+            let x = right ? turned.width * 3 / 4 : turned.width / 4
+            let y = bottom ? turned.height * 3 / 4 : turned.height / 4
+            XCTAssertGreaterThan(turned.channel(0, x: x, y: y), 180, "Turn \(turns): the marked corner is where it turned to")
+            XCTAssertLessThan(turned.channel(0, x: turned.width - 1 - x, y: turned.height - 1 - y), 80,
+                              "Turn \(turns): the opposite corner is unmarked")
+        }
+    }
+
+    /// A horizontal edge straightened by 7.3° tilts across the print by about tan(7.3°) of its width, and the print is the
+    /// largest same-shape rectangle less its sampling margin, upright and sideways (D4, D1).
+    func testStraighteningTiltsThePictureAndKeepsTheLargestRectangle() throws {
+        for (width, height) in [(240, 160), (160, 240)] {
+            let master = try twoToneJPEG(width: width, height: height)
+            let degrees = 7.3
+            let straightened = try DecodedPixels(NativePhotoRenderer.print(
+                master: master, recipe: DarkroomRecipe(straighteningDegrees: degrees), camera: CameraCatalog.disposable1990s
+            ))
+            let radians = degrees * .pi / 180, ratio = Double(width) / Double(height)
+            let largest = min(Double(width) / (cos(radians) + sin(radians) / ratio),
+                              Double(height) / (sin(radians) + cos(radians) / ratio))
+            XCTAssertEqual(straightened.width, Int((largest - 4).rounded(.down)), "\(width)x\(height): the largest rectangle")
+            let expected = StraighteningGeometry.croppedSize(width: Double(width), height: Double(height), degrees: degrees)
+            XCTAssertEqual([straightened.width, straightened.height], [expected.width, expected.height],
+                           "The Darkroom's live crop-in uses the size the print is cut to")
+            func edgeRow(_ column: Int) -> Int {
+                (0..<straightened.height).first { straightened.channel(0, x: column, y: $0) > 128 } ?? straightened.height
+            }
+            let left = edgeRow(2), right = edgeRow(straightened.width - 3)
+            let rise = Double(abs(left - right))
+            XCTAssertEqual(rise, tan(radians) * Double(straightened.width - 5), accuracy: 4,
+                           "\(width)x\(height): the edge tilts end to end (rows \(left) and \(right))")
+        }
+    }
+
+    /// Straightening keeps light above white, as every other step does: a bright corner printed +2 stops with a Vignette
+    /// of +2 prints the same with 0.1° of straightening as without (D3).
+    func testStraighteningKeepsLightAboveWhiteForTheVignette() throws {
+        let master = try solidJPEG(width: 240, height: 160, color: (200, 200, 200))
+        let flat = try DecodedPixels(NativePhotoRenderer.print(
+            master: master, recipe: DarkroomRecipe(printExposureStops: 2, vignetteStops: 2),
+            camera: CameraCatalog.disposable1990s))
+        let tilted = try DecodedPixels(NativePhotoRenderer.print(
+            master: master, recipe: DarkroomRecipe(printExposureStops: 2, straighteningDegrees: 0.1, vignetteStops: 2),
+            camera: CameraCatalog.disposable1990s))
+        XCTAssertEqual(tilted.channel(0, x: 2, y: 2), flat.channel(0, x: 2, y: 2), accuracy: 2)
+    }
+
+    /// After a quarter turn the crop sliders move the crop across the turned print as it shows: a larger Horizontal
+    /// value after Rotate left moves the crop right, and four turns give the crop back (D2).
+    func testACropTurnsWithThePrint() throws {
+        var recipe = DarkroomRecipe(crop: Crop(x: 0.1, y: 0.2, width: 0.5, height: 0.5))
+        let original = recipe.crop
+        for _ in 0..<4 { recipe.rotateLeft() }
+        XCTAssertEqual(recipe.crop, original, "Four turns give the crop back")
+        for _ in 0..<4 { recipe.rotateRight() }
+        XCTAssertEqual(recipe.crop, original)
+
+        let master = try quadrantJPEG(width: 200, height: 200)
+        func markedShare(_ crop: Crop) throws -> Double {
+            var turned = DarkroomRecipe(crop: crop)
+            turned.rotationQuarterTurns = 1
+            let print = try DecodedPixels(NativePhotoRenderer.print(master: master, recipe: turned,
+                                                                    camera: CameraCatalog.disposable1990s))
+            let marked = (0..<print.width).filter { print.channel(0, x: $0, y: print.height / 2) > 180 }.count
+            return Double(marked) / Double(print.width)
+        }
+        // Turned left, the marked top-left quadrant is at the bottom left: a crop of the bottom half sees it on its left,
+        // and moving the crop right leaves less of it.
+        let atLeft = try markedShare(Crop(x: 0, y: 0.5, width: 0.5, height: 0.5))
+        let movedRight = try markedShare(Crop(x: 0.25, y: 0.5, width: 0.5, height: 0.5))
+        XCTAssertGreaterThan(atLeft, 0.9)
+        XCTAssertLessThan(movedRight, atLeft - 0.3, "A larger Horizontal moves the crop right on the turned print")
+    }
+
+    private func instantCardWithItsDeepBorderAtTheBottom() throws -> Data {
+        let width = InstantPrintCard.width, height = InstantPrintCard.height
+        let side = (width - InstantPrintCard.pictureSide) / 2
+        var bytes = [UInt8](repeating: 255, count: width * height * 4)
+        for y in side..<(side + InstantPrintCard.pictureSide) {
+            for x in side..<(side + InstantPrintCard.pictureSide) {
+                let index = (y * width + x) * 4
+                bytes[index] = 35
+                bytes[index + 1] = 95
+                bytes[index + 2] = 175
+            }
+        }
+        return try jpeg(bytes, width: width, height: height)
+    }
+
+    /// Red in the top-left quadrant, dark blue elsewhere.
+    private func quadrantJPEG(width: Int, height: Int) throws -> Data {
+        var bytes = [UInt8](repeating: 255, count: width * height * 4)
+        for y in 0..<height {
+            for x in 0..<width {
+                let index = (y * width + x) * 4
+                let marked = x < width / 2 && y < height / 2
+                bytes[index] = marked ? 230 : 20
+                bytes[index + 1] = marked ? 40 : 30
+                bytes[index + 2] = marked ? 40 : 120
+            }
+        }
+        return try jpeg(bytes, width: width, height: height)
+    }
+
+    /// Dark above a horizontal edge across the middle, light below it.
+    private func twoToneJPEG(width: Int, height: Int) throws -> Data {
+        var bytes = [UInt8](repeating: 255, count: width * height * 4)
+        for y in 0..<height {
+            let value: UInt8 = y < height / 2 ? 30 : 220
+            for x in 0..<width {
+                let index = (y * width + x) * 4
+                bytes[index] = value
+                bytes[index + 1] = value
+                bytes[index + 2] = value
+            }
+        }
+        return try jpeg(bytes, width: width, height: height)
+    }
+
     private func linearSRGB(_ encoded: Int) -> Double {
         let value = Double(encoded) / 255
         return value <= 0.04045 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)

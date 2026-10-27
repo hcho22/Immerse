@@ -43,15 +43,44 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
         self = .original
     }
 
+    /// Turns the print a quarter turn counterclockwise. A crop, placed on the print as it was turned, turns with it, so
+    /// it frames the same part of the picture: its top edge becomes its left edge.
     public mutating func rotateLeft() {
         let turns = ((rotationQuarterTurns ?? 0) + 1) % DarkroomLimits.rotationQuarterTurnCount
         rotationQuarterTurns = turns == 0 ? nil : turns
+        crop = crop.map { Crop(x: $0.y, y: Self.turned(1 - $0.x - $0.width), width: $0.height, height: $0.width) }
     }
 
+    /// Turns the print a quarter turn clockwise, its crop with it: the crop's top edge becomes its right edge.
     public mutating func rotateRight() {
         let turns = ((rotationQuarterTurns ?? 0) + DarkroomLimits.rotationQuarterTurnCount - 1)
             % DarkroomLimits.rotationQuarterTurnCount
         rotationQuarterTurns = turns == 0 ? nil : turns
+        crop = crop.map { Crop(x: Self.turned(1 - $0.y - $0.height), y: $0.x, width: $0.height, height: $0.width) }
+    }
+
+    /// A crop edge after a turn, rid of the floating-point remainder of `1 - x - width`, so four turns give back the
+    /// recipe they began with.
+    private static func turned(_ value: Double) -> Double { (value * 1e12).rounded() / 1e12 }
+}
+
+/// The print a straightening leaves (FR-31 item 3): the largest rectangle of the print's own shape, centered, whose
+/// corners all stay inside the print turned by the straightening angle, less a two pixel sampling margin at each side.
+/// The renderer crops to it, and the Darkroom shows the same crop-in on its preview while the slider moves.
+public enum StraighteningGeometry {
+    /// How much of the print's width the largest same-shape rectangle keeps at `degrees`: 1 at 0°.
+    public static func keptFraction(width: Double, height: Double, degrees: Double) -> Double {
+        let radians = degrees * .pi / 180
+        let ratio = width / height
+        let cosine = abs(cos(radians)), sine = abs(sin(radians))
+        return min(1 / (cosine + sine / ratio), (height / width) / (sine + cosine / ratio))
+    }
+
+    /// The straightened print's size in whole pixels, in the print's own shape.
+    public static func croppedSize(width: Double, height: Double, degrees: Double) -> (width: Int, height: Int) {
+        let largest = width * keptFraction(width: width, height: height, degrees: degrees)
+        let outputWidth = max(1, Int((largest - 4).rounded(.down)))
+        return (outputWidth, max(1, Int((Double(outputWidth) / (width / height)).rounded(.down))))
     }
 }
 

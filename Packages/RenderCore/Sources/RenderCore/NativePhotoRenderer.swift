@@ -107,8 +107,9 @@ public enum NativePhotoRenderer {
             throw NativeRenderError.unreadableSource
         }
         var image = normalize(decoded)
-        // Adjustments reach the picture only. The card is unexposed paper, so print exposure, contrast, filtration,
-        // saturation, vignette and saved Dodge/Burn strokes leave it white, and stroke points are fractions of the picture.
+        // Every Basic Edit reaches the picture only, except Adjust's quarter turns, which turn the whole card. The card is
+        // unexposed paper, so print exposure, contrast, filtration, saturation, vignette and saved Dodge/Burn strokes leave
+        // it white, and stroke points are fractions of the picture.
         let isInstant = camera.id == .instant1970s
         if isInstant { image = InstantPrintCard.picture(of: image) }
         image = try adjust(image, recipe: recipe, camera: camera)
@@ -186,6 +187,11 @@ public enum NativePhotoRenderer {
             }
         }
         if let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
+        // The crop is placed on the print as it is turned, so Horizontal moves it across the turned print as it shows.
+        // A recipe saved before quarter turns has none, so its crop prints as it did.
+        if camera.id != .instant1970s, let turns = recipe.rotationQuarterTurns, turns != 0 {
+            image = rotateQuarterTurns(image, turns: turns)
+        }
         if let crop = recipe.crop {
             let size = image.extent.size
             var area = CGRect(
@@ -201,9 +207,6 @@ public enum NativePhotoRenderer {
                 area = CGRect(x: area.minX, y: area.maxY - side, width: side, height: side)
             }
             image = normalize(image.cropped(to: area))
-        }
-        if camera.id != .instant1970s, let turns = recipe.rotationQuarterTurns, turns != 0 {
-            image = rotateQuarterTurns(image, turns: turns)
         }
         if camera.id != .instant1970s, let degrees = recipe.straighteningDegrees, degrees != 0 {
             image = try straighten(image, degrees: degrees)
@@ -230,22 +233,22 @@ public enum NativePhotoRenderer {
     }
 
     /// Rotates a print and crops the largest centered rectangle at its existing aspect ratio, keeping every corner
-    /// inside the rotated source. The same-ratio rectangle keeps a 6×6 print square.
+    /// inside the rotated source (`StraighteningGeometry`). The same-ratio rectangle keeps a 6×6 print square. The print
+    /// stays in extended linear floating point, as in every other step, so light above white survives to the vignette
+    /// and the final encode.
     private static func straighten(_ image: CIImage, degrees: Double) throws -> CIImage {
         let radians = CGFloat(degrees * .pi / 180)
-        let source = CIContext(options: [.cacheIntermediates: false]).createCGImage(image, from: image.extent)
-        guard let source else { throw NativeRenderError.renderFailed }
+        guard let space = CGColorSpace(name: CGColorSpace.extendedLinearSRGB),
+              let source = straighteningContext.createCGImage(image, from: image.extent, format: .RGBAf, colorSpace: space)
+        else { throw NativeRenderError.renderFailed }
         let sourceWidth = CGFloat(source.width), sourceHeight = CGFloat(source.height)
-        let sourceRatio = sourceWidth / sourceHeight
-        let cosine = abs(cos(radians)), sine = abs(sin(radians))
-        let maximumWidth = min(sourceWidth / (cosine + sine / sourceRatio),
-                               sourceHeight / (sine + cosine / sourceRatio))
-        // Leave a two pixel sampling margin at each side so every output corner samples inside the rotated source.
-        let outputWidth = max(1, Int((maximumWidth - 4).rounded(.down)))
-        let outputHeight = max(1, Int((CGFloat(outputWidth) / sourceRatio).rounded(.down)))
-        guard let context = CGContext(data: nil, width: outputWidth, height: outputHeight, bitsPerComponent: 8,
-                                      bytesPerRow: outputWidth * 4, space: CGColorSpace(name: CGColorSpace.sRGB)!,
-                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+        let output = StraighteningGeometry.croppedSize(width: Double(source.width), height: Double(source.height),
+                                                       degrees: degrees)
+        let outputWidth = output.width, outputHeight = output.height
+        let floats = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.floatComponents.rawValue
+            | CGBitmapInfo.byteOrder32Little.rawValue
+        guard let context = CGContext(data: nil, width: outputWidth, height: outputHeight, bitsPerComponent: 32,
+                                      bytesPerRow: outputWidth * 16, space: space, bitmapInfo: floats) else {
             throw NativeRenderError.renderFailed
         }
         context.interpolationQuality = .high
@@ -256,6 +259,9 @@ public enum NativePhotoRenderer {
         guard let straightened = context.makeImage() else { throw NativeRenderError.renderFailed }
         return CIImage(cgImage: straightened)
     }
+
+    /// Core Image's context for straightening, made once: a context is safe to share.
+    nonisolated(unsafe) private static let straighteningContext = CIContext(options: [.cacheIntermediates: false])
 
     /// Applies a smooth radial exposure change that reaches the requested stop value at each print corner.
     private static func applyVignette(_ stops: Double, to image: CIImage) -> CIImage {
