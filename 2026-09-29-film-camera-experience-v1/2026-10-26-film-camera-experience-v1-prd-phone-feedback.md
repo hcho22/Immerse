@@ -342,7 +342,16 @@ Tap-to-focus adds to continuous autofocus, so a VoiceOver user who does not tap 
 
 **Today.**
 No v1 Camera records sound or asks for the microphone.
-The capture backend adds only a video input and no audio session (`AVFoundationCaptureBackend`), and the save check refuses a clip file that carries an audio track (`CapturedMediaFiles`: `audio.isEmpty`).
+The capture backend adds only a video input and no audio session (`AVFoundationCaptureBackend`).
+Every later step refuses a movie clip that carries an audio track:
+
+- the save check (`CapturedMediaFiles`: `audio.isEmpty`);
+- the capture commit journal, for a new save and in recovery (`CaptureCommitJournal.verify`, through `VerifiedMedia.movie(at:)`, whose `allowsAudio` defaults to false);
+- Development, which refuses a source clip with audio and writes each Developed Clip with a video track only (`NativeMovieRenderer.developClip`), then checks it with no audio allowed (`FilmProcessor`);
+- assembly, which builds a video-only composition, refuses clips with audio and adds only a Soundtrack (`NativeMovieRenderer.assemble`), and the assembled Movie's check, which allows audio only with a Soundtrack (`FilmProcessor`: `allowsAudio: soundtrack != nil`);
+- source cleanup after Development, which checks each Developed Clip with no audio allowed (`FilmProcessor`: `allowsAudio: kind == .movie`);
+- Save Originals to Photos, which checks each original clip with no audio allowed (`FilmExportWorker`: `allowsAudio: !originals`).
+
 The camera purpose string says "Capture new photos and silent movie clips for your Films."; there is no `NSMicrophoneUsageDescription`.
 Settings shows "Microphone: Not used".
 For both movie Cameras, Load Film shows "One silent Movie after Development" (`revealLabel`) and "Silent capture" with a crossed-out microphone, and the movie shooting screen shows a crossed-out microphone.
@@ -368,12 +377,14 @@ For both movie Cameras, Load Film shows "One silent Movie after Development" (`r
 - On a new Super 8 Film whose microphone is declined for its first clips and then allowed, the Developed Movie under Recorded sound plays the first clips silent and the later ones with their sound.
 - Both movie Cameras operate with the microphone denied (PRD 2.1 FR-05 acceptance, which stands).
 - The developed sound of a clip is the recorded sound, unchanged apart from being cut to the clip's whole frames.
+- Save Originals to Photos on a developed Super 8 Film with sound saves each original clip with its recorded sound, as captured, and the originals are then removed from Immerse as FR-08 has it.
 
 **Limits.** Sound is recorded only while a clip records, from the phone's built-in or connected microphone as iOS routes it; no sound is recorded on photo Cameras.
 
 **Data and compatibility.**
 A Camera package locked with the MOV-12 build or a later one records that its Film has sound, and that record, never the date a Film was loaded, decides whether it records sound; a package stored before reads as silent.
-The save check accepts one sound track or none on a clip of a Film with sound, and keeps refusing any sound track on every other clip.
+Every check listed in Today accepts one sound track or none on a clip of a Film with sound, on its Developed Clip and on its original, and keeps refusing any sound track on a clip of a Film without sound; the assembled Movie's check accepts the sound its choice gives it (FR-28).
+An original clip saved to Photos keeps its recorded sound, as captured, and its source is then removed from Immerse as FR-08 has it (**Builder's reading** of "kept exactly as the iPhone captured it" and "never discarded").
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
 
@@ -437,7 +448,9 @@ The picture's export format of 2026-10-13 is unchanged.
 3. The photo view turns with the iPhone when opened from the Film screen, and stays upright over the shooting screen (FR-22); the Journal, the Film screen and Settings turn as today.
 4. Accepted cost: opening the Darkroom while holding the iPhone sideways shows it upright, reading sideways until the iPhone is turned back.
 
-**Acceptance.** In every hold, opened from each entry point, the Darkroom shows the print over the controls; closing it returns the photo view or Film screen to the hold the iPhone is in.
+**Acceptance.** In every hold, opened from each entry point, the Darkroom shows the print over the controls.
+Closing it returns the photo view opened from the Film screen, or the Film screen, to the hold the iPhone is in.
+Opened from the Instant's reveal at the camera, closing it returns to that photo view upright, which stays upright while the shooting screen is up (DEC-20).
 
 **Data and compatibility.** None.
 The manual test plan's sideways-Darkroom scenarios W01 to W06 are removed or rewritten for an upright Darkroom (QA-17).
@@ -667,7 +680,7 @@ Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "sile
 | Names (FR-24) | Everything | Nothing beyond a look |
 | Focus (FR-25) | Switch, storage, placement | Autofocus, Fixed on each lens, tap-to-focus |
 | Zoom Steps (FR-26) | Step derivation from injected lenses, refusal while recording | Real lenses, their 4:3 movie formats, the recorded clips |
-| Live sound (FR-27) | Question, declined path, note, save check, stored package | Real sound, sync with picture, calls, Bluetooth and wired microphones |
+| Live sound (FR-27) | Question, declined path, note, every check that refused sound, originals saved with sound, stored package | Real sound, sync with picture, calls, Bluetooth and wired microphones |
 | Sound choice and export (FR-28) | Assembly, choice, exported file read back | Playback through the speaker and in Photos |
 | Darkroom (FR-29 to FR-34) | Everything, including render bytes | One pass on a phone for feel |
 | Instant originals (FR-35) | The single question after the pack, the count, no question after a missed or cancelled one, the Originals button | One real pack on a phone |
@@ -699,6 +712,7 @@ The smallest supported iPhone screen is the iPhone SE (3rd generation); the larg
 
 **Proposed, not approved.** Firstmate put this split to the captain as its recommendation; he has not yet approved the build plan.
 Each task's title carries today's date, its stable ID is in the tracker's group for its area, and it inherits the acceptance of the FR it names.
+Where a task's acceptance names an `AGENTS.md` sentence the task makes false, the build that lands it corrects that sentence; this documents change does not edit `AGENTS.md`.
 
 ### 7.1 Slices
 
@@ -739,23 +753,23 @@ Decided: "1A", the photo view stays upright while the shooting screen is up, as 
 
 **CAP-16 - 2026-10-26 - Viewfinder area as the iPhone Camera's 4:3 photo frame** (FR-23 items 1, 2, 4 to 6)
 Dependencies: DEC-18.
-Acceptance: FR-23's acceptance for the area; the approval stop's screenshots approved.
+Acceptance: FR-23's acceptance for the area; the approval stop's screenshots approved; `AGENTS.md`'s sentence on how `CaptureColumn.swift` sizes the viewfinder ("the largest box of its Camera's shape that the room above the shutter bar leaves") corrected.
 
 **CAP-17 - 2026-10-26 - One-line header beside Done with the count as a number** (FR-23 items 3 and 5)
 Dependencies: DEC-18; it shows the existing `CameraPackage.shortName`, and rebases on CAM-18 if that lands first, since both change the header's name line.
-Acceptance: FR-23's header acceptance and VoiceOver labels; the header's other states shown in the same approval.
+Acceptance: FR-23's header acceptance and VoiceOver labels; the header's other states shown in the same approval; `AGENTS.md`'s sentences on the header whose `reservesLength` keeps its height in every hold and on `DevelopAtOnceNotice` as "the header's first line" corrected.
 
 **CAP-18 - 2026-10-26 - Focus switch and tap-to-focus on every Camera** (FR-25)
 Dependencies: DEC-18, CAP-16 for placement.
-Acceptance: FR-25; the placement approved; the stored setting survives relaunch.
+Acceptance: FR-25; the placement approved; the stored setting survives relaunch; `AGENTS.md`'s sentence that the 6×6's Focus and Exposure rows are there whenever the Camera offers the control corrected, since the Focus slider shows only in Manual.
 
 **CAP-19 - 2026-10-26 - Zoom Steps on the Super 8 and the 16mm** (FR-26)
 Dependencies: DEC-18, CAP-16 for placement.
-Acceptance: FR-26; `ZoomStepTests` cover the movie Cameras; no step change while recording.
+Acceptance: FR-26; `ZoomStepTests` cover the movie Cameras; no step change while recording; `AGENTS.md`'s sentence on the 6×6's zoom steps (`ZoomSteps.swift`) corrected to cover the movie Cameras.
 
 **MOV-12 - 2026-10-26 - Live sound on Super 8 and 16mm clips, with the microphone question** (FR-27)
 Dependencies: DEC-18; rebase on slice 1 where both change the shooting screen.
-Acceptance: FR-27, including the privacy changes and the silent path for old Films.
+Acceptance: FR-27, including the privacy changes and the silent path for old Films; `AGENTS.md`'s "microphone prompt absence" among what `Probes/NativeAdaptersCompileProbe` does not prove corrected.
 
 **MOV-13 - 2026-10-26 - Recorded sound, a Soundtrack or Silent for a Developed Movie** (FR-28 items 1 to 3 and 5)
 Dependencies: MOV-12.
@@ -779,15 +793,15 @@ Acceptance: FR-35; no question on the Film screen after a missed or cancelled on
 
 **DRK-11 - 2026-10-26 - The Darkroom upright in every hold** (FR-29)
 Dependencies: DEC-18; coordinate with UX-10.
-Acceptance: FR-29; the side-by-side arrangement and its tests removed; W01 to W06 retired or rewritten.
+Acceptance: FR-29; the side-by-side arrangement and its tests removed; W01 to W06 retired or rewritten; `AGENTS.md`'s landscape arrangement in its `DarkroomLayout` entry, its "the Darkroom turns from the Journal and the Film screen" and its "W01 to W06 are the sideways Darkroom's" corrected.
 
 **DRK-12 - 2026-10-26 - One print size and a fixed control band** (FR-30)
 Dependencies: DRK-11, DRK-13 to DRK-16.
-Acceptance: FR-30; the screenshots approved.
+Acceptance: FR-30; the screenshots approved; `AGENTS.md`'s portrait arrangement with "the Crop fit (063)" in its `DarkroomLayout` entry corrected.
 
 **DRK-13 - 2026-10-26 - Adjust: crop, quarter turns and straightening** (FR-31)
 Dependencies: DEC-18.
-Acceptance: FR-31; limits in `DarkroomLimits`; earlier recipes byte for byte.
+Acceptance: FR-31; limits in `DarkroomLimits`; earlier recipes byte for byte; `AGENTS.md`'s "Darkroom adjustments reach the picture only" and "an Instant print is saved exactly as developed" corrected for a quarter turn, which turns the whole card and exports turned.
 
 **DRK-14 - 2026-10-26 - Saturation on color prints** (FR-32)
 Dependencies: DEC-18.
@@ -803,11 +817,11 @@ Acceptance: FR-34; `AGENTS.md`'s sentence on Darkroom edits and the Instant's pi
 
 **CAM-18 - 2026-10-26 - Camera names without a decade on every screen** (FR-24)
 Dependencies: DEC-18.
-Acceptance: FR-24.
+Acceptance: FR-24; `AGENTS.md`'s sentence that "the 6×6 Medium Format and 16mm Cinema names carry no decade", with a 16mm Film loaded before PRD 2.1 slice 1 keeping "1960s 16mm Cinema", corrected for names shown from `CameraPackage.shortName`.
 
 **QA-17 - 2026-10-26 - Physical-iPhone acceptance of the 2026-10-26 changes**
 Dependencies: slices 1 to 5, DEV-12 included.
-Acceptance: the manual test plan gains a section with its own letter for every row of section 5.4's last column, the candidate is re-pinned to a commit that holds all of them, and each scenario's result is recorded.
+Acceptance: the manual test plan gains a section with its own letter for every row of section 5.4's last column, the candidate is re-pinned to a commit that holds all of them, and each scenario's result is recorded; `AGENTS.md`'s list of the manual test plan's section letters gains the new section's.
 
 ## 8. Open questions
 
