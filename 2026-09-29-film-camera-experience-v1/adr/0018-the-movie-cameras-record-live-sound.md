@@ -8,11 +8,13 @@ Offered a choice of sound or silence at Load Film, a microphone switch for each 
 Every Recorded Clip of a Super 8 or 16mm Film loaded after this change records Live Audio.
 The app asks for the microphone the first time a movie Camera's shooting screen opens.
 If the microphone is declined, clips still record, silent, and the shooting screen says so briefly; nothing is blocked, and the Movie Camera works as it did before this change.
+Asked about a microphone allowed or turned off partway through a Film, he chose "A": once it is allowed after being declined, the next clips record sound, and once it is turned off, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked.
 He was told that a real Super 8 of the 1960s had no sound, and that sound-on-film cartridges came only in 1973; he accepted that.
 
 **A Film loaded before this change stays silent.**
-A Film keeps the Camera package it locked at Load Film, so a Super 8 or 16mm Film loaded before this change records no sound and never asks for the microphone, and one Developed Movie never mixes Films with and without sound.
+A Film keeps the Camera package it locked at Load Film, so a Super 8 or 16mm Film loaded before this change records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
 This was firstmate's stated default, and the captain did not object to it.
+The rule that a Developed Movie never mixes sound and silent clips applies only to these Films, which stay silent throughout.
 
 **The recorded sound is kept as recorded.**
 Offered a period sound treatment for each Camera (hiss, a narrow band, a wobble in pitch), he chose to keep the sound clean ("b").
@@ -34,6 +36,6 @@ The microphone is the second iOS permission the capture screen asks for, after t
 The privacy approach the captain approved on 2026-10-13 said there is no microphone (DEC-13); for movie Cameras it now says that the microphone records the sound of movie clips and nothing else.
 
 The alternatives considered were a Sound or Silent choice at Load Film, which firstmate recommended because it keeps the 1960s Super 8 silent unless a person asks for sound, and a microphone switch on the shooting screen for each clip.
-The accepted costs are that the Super 8 departs from its Format Reference, which had no sound, that the first movie Film asks for a permission no v1 Camera asked for before, and that a person who declines it has silent movies until they allow it in iOS Settings.
+The accepted costs are that the Super 8 departs from its Format Reference, which had no sound, that the first movie Film asks for a permission no v1 Camera asked for before, that a person who declines it has silent movies until they allow it in iOS Settings, and that the Developed Movie of a Film whose microphone was allowed or turned off partway mixes silent clips and clips with sound.
 
 Decided on 2026-10-26.

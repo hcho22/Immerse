@@ -57,7 +57,7 @@
 > After using the app on his iPhone the captain renamed the Cameras **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm**, with each catalog description carrying the era; the Language, Relationships and catalog below use the new names, the dated notes above and the Flagged ambiguities keep the names of their day, and the old names are a resolved ambiguity.
 > The Super 8 and the 16mm now record **Live Audio** and ask for the microphone, so "Neither v1 Movie Camera captures **Live Audio** or requires microphone permission." and "A silent **Developed Movie** may remain silent or use one built-in **Soundtrack**." were replaced, **Live Audio** was redefined (it was "Sound captured alongside a Recorded Clip when the selected Camera's Historical Format supports in-camera audio"), a **Soundtrack** now replaces a Developed Movie's sound instead of being "added after Development to a silent Developed Movie", and the Super 8's catalog line lost "silent" (ADR 0018).
 > **Zoom Step** widened from "the 6×6 Medium Format's rear camera" to the rear cameras of the 6×6, the Super 8 and the 16mm, replacing "the other Cameras and the front camera keep their single lens"; every Camera focuses on Auto unless set to Fixed (Disposable, Super 8) or Manual (6×6), replacing the catalog's "fixed focus" and "a fixed-focus lens" (ADR 0020).
-> The **Viewfinder** sits in one area on every Camera, the phone's Camera app's 4:3 photo frame (ADR 0019); a developed photo opens in a full-screen view that swipes between prints, and the **Darkroom** never turns (ADR 0021).
+> The **Viewfinder** sits in one area on every Camera, the phone's Camera app's 4:3 photo frame (ADR 0019); a developed photo opened from its Film opens in a full-screen view that swipes between prints and turns with the phone, an Instant print revealed at the camera shows alone in that view and stays upright while the shooting screen is up, and the **Darkroom** never turns (ADR 0021).
 > In the **Darkroom**, **Adjust** (crop, quarter turns, straightening) and **Vignette** are new terms; "The **Darkroom** does not offer a saturation control." was replaced by a Saturation control on color prints as a stated exception (ADR 0022); the Instant's rules gained quarter turns; **Basic Edit** is the general word for a Darkroom edit and no longer lists "saturation slider" under _Avoid_; "Darkroom adjustments" became "Basic Edits"; and **Dodge/Burn** with its rule moved, unchanged, to "Deferred to v2 - Darkroom Dodge/Burn" (ADR 0023).
 > Reading the draft of that amendment the same day, he chose that an Instant asks about keeping its prints' originals once, after the pack's last print, instead of after each print ("Originals option appears AFTER all 10 exposures are used"), which added a Relationships rule.
 
@@ -166,7 +166,7 @@ The preserved, one-time developed result of one Recorded Clip used to assemble a
 _Avoid_: Original source clip, rerolled treatment, editable timeline item
 
 **Live Audio**:
-Sound the phone records alongside each Recorded Clip of a Super 8 or 16mm Movie Film loaded since 2026-10-26, kept as recorded: Development adds no sound treatment to it.
+Sound the phone records alongside each Recorded Clip of a Super 8 or 16mm Movie Film loaded since 2026-10-26 while the microphone is allowed, kept as recorded: Development adds no sound treatment to it.
 _Avoid_: Added soundtrack, voice-over, period sound effect
 
 **Soundtrack**:
@@ -437,7 +437,7 @@ _Avoid_: Draft, incomplete album
 - Locking the Camera package does not freeze supported Camera-authentic capture controls; focus, flash, and exposure remain adjustable where the selected Camera and active phone lens support them.
 - Every Camera focuses on Auto, the phone's continuous autofocus with tap-to-focus on the **Viewfinder**, unless its Film is set otherwise: the Disposable and the Super 8 switch between Auto and Fixed, and the 6×6 between Auto and Manual; every new Film starts on Auto, and each Film keeps its setting.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
-- A developed photo opens in a full-screen view of its Film's developed photos, which swipes between them in capture order, skips sealed and Discarded frames, and turns with the phone; the **Darkroom** opens from it on the photo shown, and keeps its portrait layout whichever way the phone is held.
+- A developed photo opened from its Film opens in a full-screen view of the Film's developed photos, which swipes between them in capture order, skips sealed and Discarded frames, and turns with the phone; an Instant print revealed at the camera opens in the same view alone, with no swiping, and stays upright while the shooting screen is up; the **Darkroom** opens from either on the photo shown, and keeps its portrait layout whichever way the phone is held.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
 - Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
@@ -508,7 +508,8 @@ _Avoid_: Draft, incomplete album
 - Each Recorded Clip produces one **Developed Clip**, retained independently of the assembled Developed Movie after original source cleanup.
 - A **Developed Movie** orders every **Recorded Clip** chronologically and preserves each start/stop boundary as a cut.
 - A **Movie Film** is not a reorderable editing timeline.
-- Both v1 Movie Cameras capture **Live Audio** on a Film loaded since 2026-10-26 and ask for microphone permission the first time a movie Camera opens; with the microphone declined they record silent **Recorded Clips**, and a Movie Film loaded before that date stays silent.
+- Both v1 Movie Cameras capture **Live Audio** on a Film loaded since 2026-10-26 and ask for microphone permission the first time a movie Camera opens; while the microphone is declined or turned off they record silent **Recorded Clips**, and once it is allowed the next clips record sound, so such a Film's **Developed Movie** can mix silent clips and clips with sound and nothing is blocked.
+- A Movie Film loaded before 2026-10-26 stays silent throughout, and the rule that a **Developed Movie** never mixes sound and silent clips holds only for such a Film.
 - A **Developed Movie**'s sound is its **Live Audio**, one built-in **Soundtrack** in its place, or silence; choosing a Soundtrack or silence never discards the Live Audio, and the choice can be changed back without repeating Development.
 - For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
 - Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.

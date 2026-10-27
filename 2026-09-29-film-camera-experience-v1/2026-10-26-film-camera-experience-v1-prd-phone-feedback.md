@@ -43,7 +43,7 @@ Each ask was settled the same day by choosing among lettered options; the reply 
 | --- | --- | --- | --- | --- | --- |
 | 1 | Swiping between prints | "A, all cameras"; then "A" | A tapped developed print opens a full-screen photo view, as in the Photos app; a swipe moves to the previous or next developed print of that Film on every photo Camera; a Darkroom button edits the print shown; the Instant's reveal opens in the same view with no swiping. | FR-22 | 0021 |
 | 2 | Lens steps on the movie Cameras | "A" | The Super 8's and the 16mm's rear camera offer the iPhone's own Zoom Steps, as the 6×6's does, only between Recorded Clips. | FR-26 | 0020 |
-| 3 | Live sound on the movie Cameras | "B", "A", "b" | Every Super 8 and 16mm Recorded Clip records sound; the microphone is asked for the first time a movie Camera opens; declined means silent clips with a note; a Developed Movie's sound is its recorded sound, a Soundtrack in its place, or silence; the recorded sound is kept as captured. | FR-27, FR-28 | 0018 |
+| 3 | Live sound on the movie Cameras | "B", "A", "b"; then "A" | Every Super 8 and 16mm Recorded Clip records sound; the microphone is asked for the first time a movie Camera opens; declined means silent clips with a note, and a Film whose microphone is allowed or turned off partway can mix silent clips and clips with sound; a Developed Movie's sound is its recorded sound, a Soundtrack in its place, or silence; the recorded sound is kept as captured. | FR-27, FR-28 | 0018 |
 | 4 | Focus switch | "A" | "Auto / Fixed" on the Disposable and the Super 8, "Auto / Manual" on the 6×6; every new Film starts on Auto; Auto is continuous autofocus plus tap-to-focus on all five Cameras. | FR-25 | 0020 |
 | 5 | Viewfinder | "A, change the Camera's name to Super 8, 16mm, Instant, Disposable, 6x6, and the count should be just a number." | Every Viewfinder area is the iPhone Camera app's 4:3 photo frame, full width, the same on every Camera and iPhone and in every hold; a one-line header beside Done with the short name and the count as a number. | FR-23 | 0019 |
 | 6 | Camera names | "B, we don't need the year of the camera" | Disposable, Instant, 6×6, Super 8 and 16mm on every screen; the catalog description carries the era. | FR-24 | 0019 |
@@ -84,6 +84,7 @@ The superseded text stays where it is, with a note pointing here; nothing is del
 | FR-07, second paragraph | "Instant prints are the one exception to the analog-equivalent test: they receive the same adjustments as other color exposures except crop" | FR-31 (quarter turns only on the Instant) and FR-32 (Saturation is the second exception) |
 | FR-07, acceptance | "No saturation control" | FR-32 ("No crop control appears for an Instant print" stands, and the Instant's Adjust shows only the two turn buttons) |
 | FR-16, Movie paragraph | "Preserve orientation and any selected soundtrack." | FR-28: preserve orientation and the Movie's sound choice |
+| Section 12, module table, Photo Darkroom row | "local masks" | FR-34 (Dodge/Burn's masks move to v2, section 6) |
 | Section 13, test group 4 | "no microphone permission prompt" | FR-27: the microphone question on the first movie Camera opening, and silent recording when it is declined |
 | Section 15, DEC-04 row | Movies export "silent" (2026-10-13) | FR-28: a Developed Movie exports with its sound choice, in the iPhone Camera app's own sound format (DEC-19) |
 | Section 15, DEC-11 row | "Dodge and Burn -3.0 to +3.0 stops"; "crop per photo" | FR-34 (the Dodge and Burn limit moves to v2, section 6); FR-31 (Adjust); the new limits in section 4 |
@@ -178,6 +179,7 @@ When the captain decided, the choice was put as adding a viewer before the Darkr
 - Opened from the Film screen and held sideways, the photo view turns and shows a landscape print larger than it does upright.
 - After an Instant exposure the new print shows in the photo view with no swipe to any other print, upright in every hold, and no question about its original follows unless it was the pack's last print (FR-35).
 - No sealed capture is reachable from the photo view by any gesture or VoiceOver action.
+- On a 12-exposure 6×6 Film whose photo 4 is discarded, VoiceOver reads the last print as "Photo 12, 11 of 11", and its visible title is "Photo 12".
 
 **Limits.** No zoom into the print, no sharing sheet and no editing in the photo view itself are added; those are not asked for.
 
@@ -185,7 +187,9 @@ When the captain decided, the choice was put as adding a viewer before the Darkr
 Movie Films keep their clip list; the photo view is for photo Films only.
 
 **Accessibility.**
-VoiceOver reads "Photo 3 of 12" (the print's number and the Film's developed count), and offers the previous and next prints as actions, since a VoiceOver user cannot swipe the same way.
+VoiceOver reads each print as `Photo <frame number>, <position> of <developed count>`: the print's frame number, then its position among the Film's developed prints and how many there are, for example "Photo 12, 11 of 11" on a 12-exposure 6×6 whose photo 4 is discarded.
+The visible title stays `Photo <frame number>`.
+VoiceOver offers the previous and next prints as actions, since a VoiceOver user cannot swipe the same way.
 The Darkroom and Discard buttons keep their labels.
 
 **Simulator and iPhone.** Screen tests on the simulator can prove the order, the skipping, the Darkroom round trip, the reveal and the VoiceOver actions.
@@ -240,19 +244,23 @@ How the live picture fills the shape, and whether it matches the iPhone Camera a
 
 **Problem.** The captain read the long names, such as "1960s Super 8 Home Movie", in the shooting screen's header and asked for short ones; he then asked for them everywhere: "B, we don't need the year of the camera".
 
-**Today.** The names are "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" and "16mm Cinema", stored in each Film's locked `CameraPackage.displayName` and shown from it.
+**Today.**
+Each Film's locked `CameraPackage.displayName` stores the long name: "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" or "16mm Cinema".
+The catalog, Load Film, the Journal, the samples sheet and suggested titles already show the short names Disposable, Instant, 6×6, Super 8 and 16mm, from `CameraPackage.shortName` (`FilmPresentation.swift`), which follows the Camera's id, not the stored package.
+Only the Film screen's header (`FilmDetailView`) and the shooting screen's header (`CaptureView`) show `displayName`.
+The catalog descriptions, which Load Film shows (`controlsLabel` and `lookLines`), name no era.
 
 **Required.**
 
-1. The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen: the catalog, Load Film, the Journal, the Film screen, the shooting screen and anywhere else a Camera is named.
+1. The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, from `CameraPackage.shortName`: the Film screen's and the shooting screen's headers change to it, and the catalog, Load Film, the Journal and every other place a Camera is named keep it.
 2. Each catalog description carries the era and the look, for example that the Super 8 is a 1960s home-movie camera.
 3. Product text keeps "6×6" with the multiplication sign, spoken "6 by 6" (**Firstmate's stated default**, the existing rule).
-4. A Film already loaded keeps its stored Camera package, displayName included, and is shown with the new name (**Firstmate's stated default**): the shown name follows the Camera, not the stored package, as `filmStocks` already does.
-5. Suggested titles of new Films use the new names; a Film's title, once kept or chosen, is the person's and never changes with this.
+4. A Film already loaded keeps its stored Camera package, displayName included, and is shown with the new name (**Firstmate's stated default**): the shown name follows the Camera, not the stored package, as `shortName` already does.
+5. Suggested titles of new Films keep the short names they use today (`suggestedTitle`); a Film's title, once kept or chosen, is the person's and never changes with this.
 
 **Acceptance.** No screen of the app shows "1990s", "1970s", "1960s", "Medium Format", "Home Movie" or "Cinema" in a Camera's name, for a new Film or for a Film loaded before this change; the catalog descriptions name each Camera's era.
 
-**Data and compatibility.** No stored record is rewritten; code identifiers (`disposable1990s`, `instant1970s`, `mediumFormat6x6`, `super8HomeMovie`, `cinema16mm`) may stay.
+**Data and compatibility.** No stored record is rewritten, and `CameraPackage.displayName` stays stored but is no longer shown; code identifiers (`disposable1990s`, `instant1970s`, `mediumFormat6x6`, `super8HomeMovie`, `cinema16mm`) may stay.
 Format Reference names stay internal and never appear in the product.
 
 **Accessibility.** VoiceOver speaks the names, "6 by 6" for the 6×6; text measurements at all 12 sizes are rerun for the catalog and Load Film (`ContentSizeTests`).
@@ -338,9 +346,10 @@ Settings shows "Microphone: Not used", the catalog shows "Silent capture" with a
 1. Every Recorded Clip of a Super 8 or 16mm Film loaded after this change records sound with its picture (Live Audio).
 2. The app asks for the microphone the first time a movie Camera's shooting screen opens; it never asks on a photo Camera or on a movie Film loaded before this change.
 3. If the microphone is declined, clips still record, silent, and the shooting screen shows a brief note saying so, in the notice block over the Viewfinder (FR-23); nothing is blocked (**Firstmate's stated default**, which the captain did not object to).
-   A clip recorded while the microphone is declined plays silent within that Film's Developed Movie (**Builder's reading**).
-   Once the person allows the microphone in iOS Settings, the next clip records sound.
-4. A Super 8 or 16mm Film loaded before this change stays silent: it records no sound and never asks, so one Developed Movie never mixes Films with and without sound (**Firstmate's stated default**).
+   Once the person allows the microphone in iOS Settings partway through a Film, the next clips record sound, and once they turn it off, the next clips record silent, so that Film's Developed Movie can mix silent clips and clips with sound, and nothing stops either change (the captain, "A").
+   Under Recorded sound (FR-28), each clip plays as it was recorded, a silent clip silent.
+4. A Super 8 or 16mm Film loaded before this change stays silent throughout: it records no sound and never asks, so its Developed Movie never mixes silent clips and clips with sound (**Firstmate's stated default**).
+   That rule holds only for these Films; a Film loaded after this change mixes them as item 3 says.
 5. The recorded sound is kept exactly as the iPhone captured it: Development adds no hiss, band-limiting, pitch wobble or other period treatment, and no sound review board is needed (decision 3c).
 6. An interruption that takes the microphone (a call, another app recording) ends the clip as interruptions do today (FR-05), keeping the saved footage and its sound.
 7. The catalog and Load Film say that the movie Cameras record sound; the "Silent capture" line and the crossed-out microphone on the catalog and on the shooting screen go.
@@ -349,6 +358,7 @@ Settings shows "Microphone: Not used", the catalog shows "Silent capture" with a
 
 - On a new Super 8 Film, the first opening of the shooting screen asks for the microphone; a clip recorded after allowing it has a sound track; a clip recorded after declining it has none, the note shows, and recording works.
 - A Super 8 Film loaded before this change opens without the question and records silent clips.
+- On a new Super 8 Film whose microphone is declined for its first clips and then allowed, the Developed Movie under Recorded sound plays the first clips silent and the later ones with their sound.
 - Both movie Cameras operate with the microphone denied (PRD 2.1 FR-05 acceptance, which stands).
 - The developed sound of a clip is the recorded sound, unchanged apart from being cut to the clip's whole frames.
 
@@ -356,7 +366,7 @@ Settings shows "Microphone: Not used", the catalog shows "Silent capture" with a
 
 **Data and compatibility.**
 A Camera package locked after this change records that its Film has sound; a package stored before reads as silent.
-The save check accepts one sound track on a clip of a Film with sound and keeps refusing any sound track on every other clip.
+The save check accepts one sound track or none on a clip of a Film with sound, and keeps refusing any sound track on every other clip.
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
 
@@ -636,7 +646,7 @@ Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "sile
 ### 5.3 Accessibility
 
 - The one-line header reads the spoken name and the full count (FR-23).
-- The photo view offers previous and next actions to VoiceOver (FR-22).
+- The photo view reads each print's frame number and its place among the developed prints, and offers previous and next actions to VoiceOver (FR-22).
 - The Darkroom's fixed band scrolls inside itself at large text sizes, and its text is measured at all 12 sizes (FR-30).
 - Every new control has a label and an adjustable action (FR-25, FR-26, FR-31 to FR-33).
 - Screens are checked in light and dark and on the smallest supported iPhone, as the project's audits do.
@@ -697,10 +707,9 @@ Each task's title carries today's date, its stable ID is in the tracker's group 
 
 ### 7.2 Real dependencies between the slices
 
-- **Names and the header.** CAP-17's header shows CAM-18's short names; if both run together, CAM-18 provides the name source and CAP-17 uses it, and whichever lands second rebases on the other.
+- **Names and the header.** The short names already exist as `CameraPackage.shortName`; CAP-17's one-line header shows it, and CAM-18 moves the shooting screen's and the Film screen's headers to it, so both change the shooting screen's name line in `CaptureView.swift` and whichever lands second rebases on the other.
 - **The shooting screen and movie sound.** CAP-16 to CAP-19 and MOV-12 both change `CaptureView.swift` and the capture backend (`AVFoundationCaptureBackend.swift`, `CapturePlanning.swift`): MOV-12 adds the microphone input, the declined note and drops the crossed-out microphone, CAP-19 adds movie lenses.
   Landing slice 1 first and rebasing slice 2 on it is the simpler order; the microphone note must sit in FR-23's notice block.
-- **Movie sound and names.** MOV-12's sound flag and CAM-18's name source both touch `CameraPackage.swift`; a small rebase.
 - **The photo view and the Darkroom.** UX-10 and DRK-11 both change how the Darkroom is presented (`PhotoView.swift`, `InterfaceOrientationLock.swift`): the photo view turns and the Darkroom opened from it must not.
   Whichever lands second makes the other's entry point hold: DRK-11's "opened from anywhere" includes the photo view once it exists.
 - **The Instant's reveal flow.** UX-11 (the reveal in the photo view, upright at the camera) and DEV-12 (the originals question after the pack) both change what follows an Instant exposure at the camera (`CaptureView.swift`'s print and `OriginalAsk` sheets, and `FilmDetailView`'s reveal watch), so they belong in one slice and DEV-12 follows UX-11; slice 1 also changes `CaptureView.swift`.
@@ -726,7 +735,7 @@ Dependencies: DEC-18.
 Acceptance: FR-23's acceptance for the area; the approval stop's screenshots approved.
 
 **CAP-17 - 2026-10-26 - One-line header beside Done with the count as a number** (FR-23 items 3 and 5)
-Dependencies: DEC-18, CAM-18's name source.
+Dependencies: DEC-18; it shows the existing `CameraPackage.shortName`, and rebases on CAM-18 if that lands first, since both change the header's name line.
 Acceptance: FR-23's header acceptance and VoiceOver labels; the header's other states shown in the same approval.
 
 **CAP-18 - 2026-10-26 - Focus switch and tap-to-focus on every Camera** (FR-25)
@@ -827,3 +836,4 @@ These rows extend PRD 2.1 section 17.
 | The Instant's reveal at the camera, open in the draft (DEC-20) | Captain, 2026-10-26 ("1A"): it stays upright while the shooting screen is up; the photo view turns only when opened from the Film screen (FR-22, ADR 0021). |
 | Movie sound format, open in the draft (DEC-19) | Captain, 2026-10-26 ("2 Same format as iphone's own camera"): the format the iPhone's own Camera app records (FR-28, ADR 0018). |
 | The Instant asks about keeping the original after each print (2026-10-13, DEC-11) | Captain, 2026-10-26 ("for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."): one question after the pack's last print, covering every print still undecided (FR-35). |
+| One Developed Movie never mixes sound and silent clips (decision 3, 2026-10-26) | Captain, 2026-10-26 ("A"): once the microphone is allowed partway through a Film after being declined, the next clips record sound, and once it is turned off partway, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked; the rule that a Developed Movie never mixes them holds only for a Film loaded before this change, which stays silent throughout (FR-27, ADR 0018). |

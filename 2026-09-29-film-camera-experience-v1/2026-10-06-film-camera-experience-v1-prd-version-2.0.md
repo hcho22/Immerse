@@ -175,6 +175,8 @@ People who want a phone camera to behave like a chosen, bounded camera instead o
 | People whose subscription lapses | Former subscribers. | To finish, develop, view, edit and export existing Films without renewing. | Story 45; principle 7; FR-20; ADR 0006 |
 | People who replace or restore an iPhone | Users who move to a new or restored iPhone. | Their Films back from the iOS device backup, with honest disclosure of what a backup does and does not protect. | Stories 40 and 52; principle 8; FR-08; FR-21; acceptability of device-local loss risk is an open research question (research 12) |
 
+> **2026-10-26:** The home-movie row's "silence or a built-in soundtrack" now reads as recorded sound, a built-in Soundtrack in its place, or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-28).
+
 **Not v1 users.**
 Hosts, Participants and Guests of shared Films, and anyone who needs an Account, are not v1 users.
 Group and Account requirements are deferred to v2 (section 8).
@@ -258,6 +260,8 @@ In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identit
 | Personal owner | User controlling a device-local personal Film. All v1 use is account-free. |
 | Trial Film | A free personal Photo OR Movie Film for a non-subscriber; entitlement and restored-Film rules are defined in FR-21. |
 | Discarded Frame | Numbered metadata-only chronology placeholder after permanent media removal. |
+
+> **2026-10-26:** The Film Stock row's "6×6 Medium Format or 16mm Cinema Film" now reads as a 6×6 or 16mm Film; the rule stands ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24).
 
 ### 4.1 Permission summary
 
@@ -495,6 +499,8 @@ Developed results show each format as freshly processed, not aged: no fading, ye
 | 6×6 Medium Format | Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 (color Film Stock) or Kodak Tri-X 400 (black-and-white Film Stock) |
 | 1960s Super 8 Home Movie | Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second |
 | 16mm Cinema | Bolex H16 Reflex, loaded with Kodak Vision3 250D (color Film Stock) or Eastman Double-X (black-and-white Film Stock) |
+
+> **2026-10-26:** The Camera column's names, and the Camera names in the rest of this section, are now Disposable, Instant, 6×6, Super 8 and 16mm; the Format References are unchanged and stay internal ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24).
 
 **Film Stock.** The 6×6 Medium Format and the 16mm Cinema each offer a color or black-and-white Film Stock.
 It is chosen at Load Film, fixed for that Film, and never changes mid-Film or after Development (ADR 0014).
@@ -1183,6 +1189,8 @@ No native codebase exists in the supplied workspace, and v1 needs no production 
 | Photos Export | Optional original/developed writes, errors, source cleanup eligibility | Permissions, verified master |
 | Entitlements | StoreKit purchases, restore and expiry; per-iPhone Trial record in the Keychain | StoreKit, Keychain, local persistence |
 | Privacy Removal | Tombstones, media deletion, movie-version retirement/reassembly | Storage, development |
+
+> **2026-10-26:** The Photo Darkroom row's "local masks" are deferred to v2 with Dodge/Burn, their text kept in the amendment's section 6 ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-34).
 
 ### 12.1 Proposed data responsibilities
 
