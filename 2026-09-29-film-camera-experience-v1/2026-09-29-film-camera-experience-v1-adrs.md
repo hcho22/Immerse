@@ -1,8 +1,8 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 2.1 (ADRs 0018 to 0023 and their reconciliation notes added October 26, 2026; ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
-**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
 ## Reading this collection
 
@@ -23,6 +23,11 @@ On 2026-10-13 it gained his choice of the Instant's contrast, made on that Camer
 ADR 0017 was added on 2026-10-16.
 It records three decisions the captain made after trying the build on his iPhone: the shooting screen keeps its portrait layout whichever way the iPhone is held ("Like iPhone Camera"), the 6×6 Medium Format's viewfinder is the normal one and no longer reversed, and the 6×6 zooms in the iPhone's own steps.
 The second reverses a rule of PRD version 2.0, whose sentences in sections 6.1, FR-03 and FR-04 were amended in the same file at his request, with the original wording kept in the PRD's note of that date.
+
+ADRs 0018 to 0023 were added on 2026-10-26.
+They record the decisions the captain made after using the app on his iPhone, which the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies: the Super 8 and the 16mm record live sound (0018); every Viewfinder is the iPhone Camera's 4:3 photo frame under a one-line header, and the Cameras carry no decade (0019); the movie Cameras zoom in the iPhone's own steps and every Camera starts on autofocus (0020); the Darkroom never turns, its print keeps one size, and a photo view comes before it (0021); Saturation is a stated exception to the Darkroom's physical-technique test (0022); and Dodge and Burn are deferred to v2 (0023).
+They were written from his answers at firstmate's instruction.
+ADRs 0019 to 0021 supersede parts of ADR 0017, whose text stays as written; its reconciliation note says which.
 
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
@@ -47,6 +52,12 @@ The PRD supplies the later detailed rules and explicitly labels open engineering
 - [ADR 0015 - Each Camera is judged against one named Format Reference](adr/0015-each-camera-is-judged-against-one-named-format-reference.md) - applies to v1; added in version 2.0
 - [ADR 0016 - The captain's exceptions to ADR 0013, chosen on the look review boards](adr/0016-the-captains-exceptions-to-fresh-not-aged.md) - applies to v1; added in version 2.1
 - [ADR 0017 - The shooting screen never turns, the 6×6 has a normal viewfinder, and the 6×6 zooms in the iPhone's own steps](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) - applies to v1; added on 2026-10-16
+- [ADR 0018 - The Super 8 and the 16mm record live sound, and the app asks for the microphone](adr/0018-the-movie-cameras-record-live-sound.md) - applies to v1; added on 2026-10-26
+- [ADR 0019 - Every Viewfinder is the iPhone Camera's 4:3 photo frame, under a one-line header, and the Cameras carry no decade](adr/0019-every-viewfinder-is-the-iphone-cameras-4-3-frame-and-cameras-carry-no-decade.md) - applies to v1; added on 2026-10-26
+- [ADR 0020 - The movie Cameras zoom in the iPhone's own steps, and every Camera starts on autofocus](adr/0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md) - applies to v1; added on 2026-10-26
+- [ADR 0021 - The Darkroom never turns, its print keeps one size, and a photo view comes before it](adr/0021-the-darkroom-never-turns-and-its-print-keeps-one-size.md) - applies to v1; added on 2026-10-26
+- [ADR 0022 - Saturation is a stated exception to the Darkroom's physical-technique test](adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md) - applies to v1; added on 2026-10-26
+- [ADR 0023 - Dodge and Burn are deferred to v2](adr/0023-dodge-and-burn-are-deferred-to-v2.md) - applies to v1; added on 2026-10-26
 
 ## Reconciliation with later requirements
 
@@ -66,6 +77,11 @@ None of ADRs 0001 to 0012 is superseded or contradicted.
 ADR 0014 narrows a PRD rule (FR-01: no separate stock picker) and a tracker task (CAM-11), and the notes below say so; no ADR stated that rule.
 Group statements in these notes still describe the deferred v2 design.
 
+**2026-10-26 status.**
+After using the app on his iPhone the captain made the decisions recorded in ADRs 0018 to 0023, specified in the PRD amendment of 2026-10-26.
+ADRs 0019, 0020 and 0021 supersede parts of ADR 0017; ADR 0022 reverses the domain model's resolution that the Darkroom has no saturation control; ADR 0023 moves Dodge/Burn, a PRD 2.1 FR-07 requirement and a DEC-11 limit, to v2.
+No other ADR is superseded or contradicted.
+
 | ADR | Applicability after PRD version 1.2 |
 | --- | --- |
 | 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. |
@@ -84,7 +100,13 @@ Group statements in these notes still describe the deferred v2 design.
 | 0014 | Applies to v1 personal Films: the 6×6 Medium Format and the 16mm Cinema offer a Film Stock at Load Film. It says nothing about who chooses a Group Film's Film Stock, which stays a v2 question. Added in version 2.0. |
 | 0015 | Applies to v1 personal Films and to every Camera. The Format Reference names are internal and never reach the product. Added in version 2.0. |
 | 0016 | Applies to v1 personal Films and to four places only: the 1970s Instant, whose Developed Treatment is the faded look; the 1960s Super 8 Home Movie, whose is muted with a highlight glow; the 16mm Cinema's color Film Stock, whose look is the one in the captain's own files with its black at 4 percent; and the 6×6 Medium Format's color Film Stock, whose look is the one in his own files, a lab scan with lifted blacks. The captain chose each, as exceptions to ADR 0013. Added in version 2.1. |
-| 0017 | Applies to v1 personal Films and to every Camera's shooting screen, and to the 6×6 Medium Format alone for its viewfinder and its zoom. The shooting screen keeps its portrait layout whichever way the iPhone is held, and only its words and icons turn; the 6×6's rear viewfinder is the normal one, not reversed; the 6×6 zooms in the steps of the iPhone's own lenses. The 6×6 reversal of PRD version 2.0 is withdrawn. Added on 2026-10-16. |
+| 0017 | Applies to v1 personal Films and to every Camera's shooting screen, and to the 6×6 Medium Format alone for its viewfinder and its zoom. The shooting screen keeps its portrait layout whichever way the iPhone is held, and only its words and icons turn; the 6×6's rear viewfinder is the normal one, not reversed; the 6×6 zooms in the steps of the iPhone's own lenses. The 6×6 reversal of PRD version 2.0 is withdrawn. Added on 2026-10-16. Superseded in part on 2026-10-26 by ADRs 0019, 0020 and 0021. |
+| 0018 | Applies to v1 personal Films: every Super 8 and 16mm Film loaded with the build that adds live sound or a later one records it, the microphone is asked for the first time a movie Camera opens, a declined microphone records silent clips, a Film loaded with an earlier build stays silent, the recorded sound is kept as captured, and a Soundtrack replaces it. Added on 2026-10-26. |
+| 0019 | Applies to v1 personal Films and every Camera's shooting screen: the Viewfinder area is the iPhone Camera's 4:3 photo frame under a one-line header, and the Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm. Supersedes ADR 0017's viewfinder sizing. Added on 2026-10-26. |
+| 0020 | Applies to v1 personal Films: the Super 8 and the 16mm offer the iPhone's own Zoom Steps, and every Camera focuses on Auto unless its Film is set to Fixed (Disposable, Super 8) or Manual (6×6). Supersedes ADR 0017's 6×6-only zoom and the Super 8's fixed focus. Added on 2026-10-26. |
+| 0021 | Applies to v1 personal Films: a full-screen photo view swipes between a Film's developed prints, the Darkroom keeps its portrait layout in every hold and its print one size. Supersedes ADR 0017's turning Darkroom and the captain's decisions of 2026-10-14. Added on 2026-10-26. |
+| 0022 | Applies to v1 personal Films: a Saturation slider on color prints, -50 to +50, as the second stated exception to the physical-technique test. Added on 2026-10-26. |
+| 0023 | Applies to v1 by removing Dodge/Burn from it, and to v2 as the place it now waits; saved strokes keep printing as saved. Added on 2026-10-26. |
 
 The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
@@ -99,6 +121,7 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0015 (v1):** It makes each Camera's look checkable against one named original. The captain decided on 2026-10-06 that the check is side-by-side review boards built from public or licensed reference imagery, with the captain approving each Camera (recorded in the tracker as QA-16). The manufacturer and film names appear in internal documents only, and no product string, store listing or Film Stock label may use them.
 - **0016 (v1; exceptions to 0013):** The 1970s Instant develops with a faded look: lifted, milky blacks, muted color and age-style tints, replacing "Brilliant, warm, saturated color" in PRD section 6.1 for that Camera. The 1960s Super 8 Home Movie develops muted, with a glow: lower contrast, slightly desaturated color and a warm reddish-orange glow around bright highlights, replacing "Strong, rich color" in PRD section 6.2 for that Camera. PRD sections 6.1 and 6.2 are the captain's text and stay as written; this note, ADR 0016 and the tracker's "Captain decisions recorded in version 2.0" table record how the two exceptions change the way those rows apply. The 16mm Cinema's color Film Stock keeps everything PRD section 6.2 gives it, with its color and per-frame passes taken from the captain's own files, and its black at the 4 percent he asked for again once they were applied, by the shorter print density range he chose, which opens the shadows as well. The 6×6 Medium Format's color Film Stock keeps what PRD section 6.1 gives it, with its color, lens vignette and grain taken from the captain's own files; its lifted blacks are his look, and the vignette is one the PRD's row does not list. ADR 0013 still governs everything else, and a later exception needs the captain's choice on that Camera's review board, recorded in ADR 0016. The app's not-aged tests cover every Camera and Film Stock except those `FilmLook.isCaptainsException` names, with a separate test holding the Instant and the Super 8 each to its chosen look, and `NegativeFilmTests`, `ScenePassesTests` and `MediumFormatPassesTests` holding the two color stocks to the captain's files.
 - **0017 (v1; reverses part of PRD 2.0 FR-04):** PRD version 2.0 gave the 6×6 Medium Format "a waist-level viewfinder that shows the scene reversed left to right" (section 6.1, FR-03 and FR-04). The captain withdrew it on 2026-10-16: the 6×6's rear viewfinder is the normal one, the front viewfinder stays mirrored for every Camera, and developed pictures were never reversed. The PRD's three sentences were amended in the same file, FR-03's by its removal, with the original wording kept in the note of that date ("Decisions of 2026-10-16"). The same day he chose that the shooting screen holds the portrait layout whichever way the iPhone is held, with its words and icons turning to read upright, and that the 6×6 zooms in the steps of the iPhone's own lenses; PRD FR-04 now says both. No ADR 0001 to 0016 is superseded, and Movie orientation (FR-05) is unchanged: a clip still keeps the orientation it started in, and the Movie Orientation fixed at Load Film is untouched.
+- **0018 to 0023 (v1, 2026-10-26):** They amend PRD version 2.1 through the PRD amendment of 2026-10-26, whose section 2 names every superseded sentence; PRD 2.1 carries short notes at each, and its text is otherwise unchanged. ADR 0017's text stays as written: its 6×6-only zoom and the Super 8's fixed focus are superseded by ADR 0020, its viewfinder sizing and taller header by ADR 0019, and the Darkroom's turning by ADR 0021; its rule that the shooting screen never turns stands, and so does its "Instant - 1" rule for what opens from the camera, which the captain kept when he answered DEC-20 ("1A"). ADR 0015's Format References are unchanged, and the Super 8's sound and Zoom Steps are recorded departures from its reference camera, as the 16mm's red glow is from its film.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -475,3 +498,254 @@ The tracker's "Captain decisions recorded in version 2.0" table records his word
 FR-05 is untouched: a clip keeps the orientation it started in, the Movie Orientation is chosen at Load Film, and the shooting screen's layout is independent of both.
 The code is `App/Immerse/Sources/CaptureView.swift`, `HeldTurn.swift` and `InterfaceOrientationLock.swift` for the screen, and `Packages/NativeAdapters/Sources/NativeAdapters/ZoomSteps.swift`, `CaptureBehavior.swift` and `CapturePlanning.swift` for the 6×6.
 `Evidence/NativeApp/capture-sideways-zoom-068.md` records the build, its tests and what only an iPhone can show.
+On 2026-10-26 the captain superseded three parts of this ADR, recorded in ADRs 0019 to 0021 below: the viewfinder's sizing and the taller header (ADR 0019), zoom on the 6×6 alone and the Super 8's fixed focus (ADR 0020), and the Darkroom turning with the iPhone (ADR 0021).
+The ADR's text above stays as written.
+
+### ADR 0018
+
+Standalone source: [0018-the-movie-cameras-record-live-sound.md](adr/0018-the-movie-cameras-record-live-sound.md)
+
+# The Super 8 and the 16mm record live sound, and the app asks for the microphone
+
+After using the app on his iPhone, the captain asked on 2026-10-26: "Super 8/ 16mm - allow sound capture".
+Until then neither Movie Camera recorded sound, no v1 Camera asked for the microphone, and a Developed Movie was silent unless a built-in Soundtrack was chosen for it (PRD version 2.1 FR-05).
+
+**Every movie clip records sound.**
+Offered a choice of sound or silence at Load Film, a microphone switch for each clip, or sound on every clip, he chose sound on every clip ("B").
+Every Recorded Clip of a Super 8 or 16mm Film loaded with the build that adds Live Audio (MOV-12) or a later one records it.
+The app asks for the microphone the first time a movie Camera's shooting screen opens.
+If the microphone is declined, clips still record, silent, and the shooting screen says so briefly; nothing is blocked, and the Movie Camera works as it did before this change.
+Asked about a microphone allowed or turned off partway through a Film, he chose "A": once it is allowed after being declined, the next clips record sound, and once it is turned off, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked.
+He was told that a real Super 8 of the 1960s had no sound, and that sound-on-film cartridges came only in 1973; he accepted that.
+
+**A Film loaded with an earlier build stays silent.**
+A Film keeps the Camera package it locked at Load Film, and only a package locked with that build or a later one records that its Film has sound, so a Super 8 or 16mm Film loaded with an earlier build, whatever the date, records no sound and never asks for the microphone, and its Developed Movie never mixes sound and silent clips.
+This was firstmate's stated default, and the captain did not object to it.
+The rule that a Developed Movie never mixes sound and silent clips applies only to these Films, which stay silent throughout.
+
+**The recorded sound is kept as recorded.**
+Offered a period sound treatment for each Camera (hiss, a narrow band, a wobble in pitch), he chose to keep the sound clean ("b").
+Development keeps the iPhone's recorded sound under the developed picture as it was captured, and adds no sound treatment; no review board is needed for sound.
+
+**A Soundtrack replaces the recorded sound.**
+Asked how a built-in Soundtrack and recorded sound go together, he chose "A".
+A Developed Movie's sound is one of three: its recorded sound (the default for a Film that records sound), one built-in Soundtrack in its place, or silence.
+A Soundtrack never mixes with the recorded sound, choosing one never discards the recorded sound, and the choice can be changed back at any time without developing again.
+
+**The sound is in the iPhone Camera app's own format.**
+Shown the draft requirements, which left the sound's format open, he answered: "2 Same format as iphone's own camera".
+A Developed Movie's recorded sound, and the sound of its export, use the format the iPhone's own Camera app records; on current iPhones that is expected to be AAC at 48 kHz, in stereo where the phone records stereo and mono otherwise, which the build verifies on current iOS rather than taking from this record.
+The picture's export format of 2026-10-13 is unchanged.
+
+**Privacy.**
+The app records sound only while a movie clip records, on the iPhone, into the Film's private storage, and sends it nowhere.
+The microphone is the second iOS permission the capture screen asks for, after the camera.
+The privacy approach the captain approved on 2026-10-13 said there is no microphone (DEC-13); for movie Cameras it now says that the microphone records the sound of movie clips and nothing else.
+
+The alternatives considered were a Sound or Silent choice at Load Film, which firstmate recommended because it keeps the 1960s Super 8 silent unless a person asks for sound, and a microphone switch on the shooting screen for each clip.
+The accepted costs are that the Super 8 departs from its Format Reference, which had no sound, that the first movie Film asks for a permission no v1 Camera asked for before, that a person who declines it has silent movies until they allow it in iOS Settings, and that the Developed Movie of a Film whose microphone was allowed or turned off partway mixes silent clips and clips with sound.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0018
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-27 and FR-28, which replace PRD 2.1 FR-05's fourth paragraph ("Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio."); PRD 2.1's acceptance that both Movie Cameras operate with the microphone denied stands.
+It also changes how three 2026-10-13 decisions apply: Movies were to export "silent" (DEC-04), the privacy text was to say there is no microphone (DEC-13), and Settings says "Microphone: Not used".
+The captain set the sound format on reading the PRD draft, "2 Same format as iphone's own camera" (DEC-19 in the tracker): the format the iPhone's own Camera app records, which the ADR now records.
+The architecture baseline's "no microphone" rows are superseded for the movie Cameras by this ADR; the baseline document is not edited.
+
+### ADR 0019
+
+Standalone source: [0019-every-viewfinder-is-the-iphone-cameras-4-3-frame-and-cameras-carry-no-decade.md](adr/0019-every-viewfinder-is-the-iphone-cameras-4-3-frame-and-cameras-carry-no-decade.md)
+
+# Every Viewfinder is the iPhone Camera's 4:3 photo frame, under a one-line header, and the Cameras carry no decade
+
+After using the app on his iPhone, the captain asked on 2026-10-26: "Viewfinder screen size same is native iOS camera app".
+Under ADR 0017 each Camera's viewfinder was the largest box of its own shape that the room above the shutter bar left after a header of two or three lines and the Camera's controls, so it differed from Camera to Camera and was narrower than the screen on a short iPhone.
+
+**One Viewfinder area on every Camera.**
+He chose "A, change the Camera's name to Super 8, 16mm, Instant, Disposable, 6x6, and the count should be just a number."
+Every Camera's Viewfinder area is the iPhone Camera app's 4:3 photo frame: the full width of the screen, edge to edge, in the same place on every Camera and every iPhone, and the same in every hold.
+Each Camera's shape sits inside that area as the iPhone Camera app's square mode does: the Instant's and the 6×6's squares fill its width, the movie Cameras' 4:3 fills it exactly, and the Disposable's taller 3:2 picture fills its height, with bars at the sides.
+The header becomes one line in the top bar beside Done: the Camera's short name and the count as just a number, such as "27" for a photo Film and "3:20" for a movie Film, while VoiceOver still says the whole count.
+The 6×6's Zoom Steps and sliders, the focus switch and the movie Cameras' Zoom Steps float over the bottom of the Viewfinder area or move into the shutter bar, so no control changes where the Viewfinder area is.
+The rest of ADR 0017 stands: the screen never turns, only its words and icons do, and the live picture fills the Camera's shape in every hold.
+Screenshots on the smallest and largest supported iPhones go to the captain for approval before this ships.
+
+**The Cameras are named without a decade.**
+Asked whether the short names belonged on the shooting screen only, as firstmate recommended, or everywhere, he chose everywhere: "B, we don't need the year of the camera".
+The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, and each catalog description carries the look.
+The Disposable's, the Instant's and the Super 8's descriptions also carry their era; the 6×6's and the 16mm's name no decade, because their color films are present-day ones, as decided on 2026-10-06.
+Product text keeps "6×6" with the multiplication sign, spoken "6 by 6", as before.
+A Film already loaded keeps its stored Camera package unchanged and is shown with the new name.
+The Format References (ADR 0015) are unchanged and stay internal.
+
+The alternatives considered were keeping the viewfinder sized to the room under a taller header, as ADR 0017 had it, and short names on the shooting screen only, with the full names everywhere else.
+The accepted costs are that the controls now sit over the bottom of the live picture or in the shutter bar instead of beside it, that the Disposable's picture has bars at its sides, as a square has in the iPhone Camera app, and that the era no longer shows in a Camera's name, only in the Disposable's, the Instant's and the Super 8's descriptions.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0019
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-23 and FR-24.
+It supersedes ADR 0017's viewfinder as "the largest box of the Camera's shape that the room ... leaves", the header that kept the height of its turned form, and the accepted cost that "the viewfinder is smaller than the screen is wide on a short iPhone"; ADR 0017's rule that the screen never turns and only its words and icons do stands.
+The renaming continues the version 2.0 decision that dropped the decade from the 6×6 and the 16mm, and leaves each Film's stored Camera package unchanged.
+
+### ADR 0020
+
+Standalone source: [0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md](adr/0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md)
+
+# The movie Cameras zoom in the iPhone's own steps, and every Camera starts on autofocus
+
+After using the app on his iPhone, the captain asked two things about lenses on 2026-10-26: "Super 8/ 16mm - change focal length to native iOS lens" and "implement autofocus option to all camera".
+Under ADR 0017 only the 6×6's rear camera offered Zoom Steps, and the Super 8 and the 16mm recorded on the rear wide lens at 1x.
+Focus was set for each Camera with no choice: the Disposable and the Super 8 held one fixed lens position, the 6×6 was focused by hand, and the Instant and the 16mm used the phone's continuous autofocus.
+
+**The Super 8 and the 16mm offer the iPhone's own Zoom Steps.**
+He chose "A": the movie Cameras' rear camera offers the same Zoom Steps as the 6×6's, under the same rules.
+There is one step for each lens the iPhone has, and a sensor-crop step only where the phone's camera reports one; there is nothing between them and no pinch or digital zoom, and the front camera keeps its single lens.
+A step is taken only between Recorded Clips, never while one records.
+The alternative was to keep one lens and match the iPhone Camera app's 1x framing.
+
+**A focus switch that starts on Auto.**
+He chose "A".
+The Disposable and the Super 8 get a focus switch, "Auto / Fixed", and the 6×6 gets "Auto / Manual", with its Focus slider shown only in Manual.
+Every new Film starts on Auto, and each Film remembers its setting.
+Auto is the phone's continuous autofocus plus tap-to-focus on the Viewfinder, as in the iPhone's Camera app, on all five Cameras.
+The Instant and the 16mm have no switch, since they have nothing to switch to, and gain tap-to-focus.
+The switch's place on the shooting screen is shown to the captain for approval before it is final.
+The switch is a capture control, not part of the Camera package locked at Load Film, so a Film loaded before this change gets it too and starts on Auto; this is firstmate's stated default.
+
+**What this supersedes.**
+ADR 0017's "Zoom is on the 6×6 only ...; the front camera and every other Camera keep their single lens" now reads: the 6×6, the Super 8 and the 16mm offer Zoom Steps on the rear camera, and the Disposable, the Instant and every front camera keep their single lens.
+ADR 0017's "the Super 8's fixed focus ... stand" now reads: the Super 8's fixed focus is the Fixed side of its switch.
+The 6×6's focus and exposure controls, its square framing at every step and the note "Manual focus unavailable on this lens" stand as ADR 0017 has them.
+
+The accepted costs are that the Super 8, whose Format Reference had one fixed-focus lens and one focal length, now focuses and zooms as a phone does unless set to Fixed, and that the Disposable's fixed focus, the character the catalog promised, is now a choice its person can leave off.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0020
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-25 and FR-26.
+It supersedes ADR 0017's "the front camera and every other Camera keep their single lens" for the Super 8 and the 16mm, and the Super 8's fixed focus in ADR 0017 and in PRD 2.1 sections 6.2 and FR-04, which becomes the Fixed side of its switch.
+Whether a tap on the Viewfinder also sets exposure, and whether it works while a clip records, are open questions in the amendment's section 8.
+
+### ADR 0021
+
+Standalone source: [0021-the-darkroom-never-turns-and-its-print-keeps-one-size.md](adr/0021-the-darkroom-never-turns-and-its-print-keeps-one-size.md)
+
+# The Darkroom never turns, its print keeps one size, and a photo view comes before it
+
+After using the app on his iPhone, the captain asked three things on 2026-10-26: "Instant - can't scroll developed images in the roll.", "Darkroom - keep the screen size consistent." and "No darkroom on landscape across all cameras".
+
+**A photo view with swiping between prints.**
+He chose "A, all cameras" for swiping, and "A" for where it happens.
+Tapping a developed print on the Film screen opens a full-screen photo view, as in the iPhone's Photos app, and a swipe left or right there moves to the previous or next developed print of that Film, on every photo Camera.
+A Darkroom button in the photo view edits the print shown, and Save or Cancel in the Darkroom returns to the photo view.
+The print shown at the camera right after an Instant exposure opens in the photo view too, showing only that new print with no swiping; by his later decision the same day, the question about keeping an Instant print's original no longer follows each print but comes once, after the pack's last print (PRD amendment of 2026-10-26, FR-35).
+The Darkroom stays one print at a time.
+Shown the draft requirements, which left open whether the photo view showing a new Instant print at the camera turns, he chose that it stays upright while the shooting screen is up ("1A"), as ADR 0017's "Instant - 1" holds everything opened from the camera; the photo view turns only when opened from the Film screen.
+
+**The Darkroom keeps its portrait layout in every hold.**
+He chose "A".
+The Darkroom keeps its portrait layout whichever way the iPhone is held, opened from anywhere, on every Camera, as the shooting screen does under ADR 0017.
+The side-by-side landscape arrangement he chose on 2026-10-14 ("landscape - side by side") is removed.
+The photo view opened from the Film screen turns with the iPhone, as the Photos app does, so a sideways print can fill the screen; the Journal, the Film screen and Settings turn as before.
+
+**The print keeps one size.**
+He chose "A".
+In portrait the Darkroom's print took the height the selected tool's controls left, down to 64 points for Crop on an iPhone SE (his choice of 2026-10-14, "immerse crop fit"), so it changed size from tool to tool.
+Now the print takes the same area whatever tool is selected, and the controls sit in one band of fixed height below it, sized for the tallest tool at the default text size; at larger text sizes the band scrolls inside itself, and the print never shrinks.
+Screenshots on the smallest and largest supported iPhones go to the captain for approval before this ships.
+
+**What this supersedes.**
+ADR 0017's "Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included when the Darkroom is opened from the Journal or the Film screen" no longer holds for the Darkroom.
+The captain's decisions of 2026-10-14, the Crop tool's fitted print and the side-by-side landscape Darkroom, are superseded.
+
+The alternatives considered were keeping the side-by-side arrangement, and a smaller print for every tool so the controls fit.
+The accepted cost, as for the Instant's print on 2026-10-16, is that opening the Darkroom while holding the iPhone sideways shows it upright, reading sideways until the iPhone is turned back.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0021
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-22, FR-29 and FR-30.
+It supersedes ADR 0017's "Every other screen keeps turning with the iPhone, the Darkroom's landscape arrangement included" for the Darkroom, and the captain's decisions of 2026-10-14 recorded in the tracker ("immerse crop fit" and "landscape - side by side").
+`PhotoView` on `main` already showed one developed print with Darkroom and Discard buttons before the Darkroom; the photo view decided here is that view made full-screen, swiping and turning.
+The photo view that shows the Instant's reveal at the camera stays upright under ADR 0017's "Instant - 1", as the captain chose on reading the PRD draft ("1A", DEC-20 in the tracker), which the ADR now records.
+The same day he moved the Instant's question about keeping each print's original from after each print to once after the pack's last print ("Originals option appears AFTER all 10 exposures are used"), reversing that part of the 2026-10-13 decision under DEC-11; it changes when a question is asked, is easily reversed and is no real trade-off, so it has no ADR of its own, and the PRD amendment's FR-35 and the tracker's DEV-12 record it, with this note and the ADR's reveal sentence pointing there.
+Asked the same day what happens when that question is missed or cancelled, he chose "C": it is asked only at the camera, does not come back by itself, and the Film screen's Originals button decides later.
+
+### ADR 0022
+
+Standalone source: [0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md](adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md)
+
+# Saturation is a stated exception to the Darkroom's physical-technique test
+
+The Darkroom offers only Basic Edits that a photographer could make in an analog darkroom while printing or processing, and the domain model had resolved, when "Saturation" was first named as a Basic Edit, to leave it out, because a modern saturation slider has no direct universal darkroom equivalent.
+The Instant print was the one stated exception: it has no printing stage, and gets the Basic Edits of the other color prints.
+After using the app on his iPhone, the captain asked on 2026-10-26: "Add saturation to darkroom".
+
+**A Saturation slider on color prints.**
+He chose "A": the Darkroom gains a Saturation slider on color prints only, the Disposable's, the Instant's and the 6×6's on the color Film Stock, and it is hidden on black-and-white prints.
+He then chose its range, "A": -50 to +50 in whole steps, where 0 is the print as developed, -50 keeps half the developed color and +50 adds half again.
+It never reaches gray, so it cannot stand in for the black-and-white Film Stock, and a Basic Edit still cannot replace the Developed Treatment.
+The range is a Darkroom limit, kept with the limits of 2026-10-13: a recipe outside it is refused, never clamped.
+
+**Written down as an exception.**
+Saturation fails the physical-technique test, and it is the second stated exception to it, beside the Instant print's.
+It is recorded as an exception so the test itself stands for every other control: a further control that fails the test needs the captain's own decision, recorded the same way.
+Adjust's quarter turns and straightening (turning the paper and tilting the easel) and Vignette (burning in or dodging a print's edges), which he asked for the same day, pass the test and need no exception.
+
+The alternatives were leaving saturation out, as before, and a saturation control on every print, black-and-white included, which would let a color print reach gray.
+The accepted cost is that the Darkroom is no longer a strictly analog one, so its rule now has two exceptions to keep track of.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0022
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-32.
+It replaces PRD 2.1 FR-07's "no universal modern saturation slider" and its acceptance "No saturation control", the scope table's excluded "Saturation slider", and the domain model's rule "The Darkroom does not offer a saturation control", whose earlier resolution the domain model keeps beside the new one.
+The range is recorded beside the 2026-10-13 Darkroom limits under DEC-11.
+
+### ADR 0023
+
+Standalone source: [0023-dodge-and-burn-are-deferred-to-v2.md](adr/0023-dodge-and-burn-are-deferred-to-v2.md)
+
+# Dodge and Burn are deferred to v2
+
+The v1 Darkroom offered Dodge/Burn: strokes of local print exposure on part of one developed photo, each from 0.1 to 3.0 stops, with overlapping strokes stopping at 3 stops (DEC-11, the captain's limits of 2026-10-13).
+After using the app on his iPhone, the captain added on 2026-10-26: "remove dodge and burn from current darkroom. lets save it for v2".
+
+**The v1 Darkroom has no Dodge/Burn tool.**
+Dodge/Burn is deferred to v2.
+Its requirement, its task and its limit of -3.0 to +3.0 stops move to the deferred-to-v2 material of the PRD, the tracker and the domain model, with their text kept, as the Group and Account material was moved; the limit is v2's starting point.
+
+**A print saved with strokes keeps printing as saved.**
+This was firstmate's default, stated to the captain.
+A recipe saved with Dodge/Burn strokes before this change keeps printing exactly as saved, byte for byte, so the renderer keeps the strokes' code, for those recipes and for v2.
+Its strokes cannot be edited one by one, and Reset to Original clears them with every other Basic Edit.
+v1 is unreleased, so only test iPhones can hold such a recipe.
+
+With no Dodge/Burn, nothing on the Darkroom's print takes a drag in v1, so the photo view's swipe and the Darkroom never compete for a gesture on the print, and the Darkroom's fixed control band loses what was likely its tallest tool.
+The accepted cost is that v1 has no local print exposure: a photographer can lighten or darken only the whole print, or its edges with Vignette.
+
+Decided on 2026-10-26.
+
+---
+
+### Reconciliation note for ADR 0023
+
+Interpret the ADR with the PRD amendment of 2026-10-26, FR-34 and its section 6, which keeps PRD 2.1's Dodge/Burn text as v2 material.
+The tracker moves DRK-05 to its Deferred to v2 section with its text unchanged, and DEC-11 records that the Dodge and Burn limit of 2026-10-13 now waits for v2.

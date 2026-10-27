@@ -91,6 +91,12 @@ No requirement text, FR, DEC or section number changes.
 FR-05's "Exact codecs, resolutions, and audio channel guarantees are not yet specified" and FR-07's "Exact control ranges and medium-specific applicability require render validation" are left as written and are read with section 15: the formats and the ranges are now decided, the toning strength later the same day on a board of its own.
 The notes under the user journeys in section 5.1 and the prototype gap in section 18 that name DEC-04 or DEC-11 as open are left as written too and are read the same way.
 
+**Amendment of 2026-10-26 (a separate file, no version change).**
+After using the app on his iPhone, the captain asked for eleven changes and settled each the same day: a photo view that swipes between prints, Zoom Steps and live sound on the movie Cameras, a focus switch starting on Auto, the iPhone Camera's 4:3 Viewfinder area under a one-line header, Camera names without a decade, a Darkroom that never turns and keeps its print one size, Adjust with quarter turns and straightening, Saturation, Vignette, and Dodge/Burn deferred to v2.
+Reading its draft the same day, he set the open sound format and the Instant reveal's hold, and asked that the Instant ask about originals once, after the pack.
+The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-22 to FR-35, and ADRs 0018 to 0023 record them.
+Where it supersedes text in this file, a short note marked "2026-10-26" says so and points there; this file's text, FR, DEC and section numbers are otherwise unchanged.
+
 **Decisions of 2026-10-16 (amended in version 2.1, no version change).**
 After trying the build on his iPhone, the captain made three decisions, recorded in [ADR 0017](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and in the tracker's decisions table:
 
@@ -169,6 +175,8 @@ People who want a phone camera to behave like a chosen, bounded camera instead o
 | People whose subscription lapses | Former subscribers. | To finish, develop, view, edit and export existing Films without renewing. | Story 45; principle 7; FR-20; ADR 0006 |
 | People who replace or restore an iPhone | Users who move to a new or restored iPhone. | Their Films back from the iOS device backup, with honest disclosure of what a backup does and does not protect. | Stories 40 and 52; principle 8; FR-08; FR-21; acceptability of device-local loss risk is an open research question (research 12) |
 
+> **2026-10-26:** The home-movie row's "silence or a built-in soundtrack" now reads as recorded sound, a built-in Soundtrack in its place, or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-28).
+
 **Not v1 users.**
 Hosts, Participants and Guests of shared Films, and anyone who needs an Account, are not v1 users.
 Group and Account requirements are deferred to v2 (section 8).
@@ -235,6 +243,9 @@ Never collect sealed media, and add no telemetry of any kind without a new decis
 
 “Personal-only” applies to Instant support and whole-Film deletion; “device-local” applies to personal Film storage. In v1 every Film is personal; shared Group workflows are deferred to v2 (section 8).
 
+> **2026-10-26:** The Editing row's excluded "Saturation slider" is superseded: color prints get Saturation as a stated exception ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-32).
+> The Formats row's excluded "(including live-audio Movie capture with microphone permission)" is superseded too: the Super 8 and the 16mm record live sound with microphone permission (FR-27), and the excluded formats themselves stand.
+
 ## 4. Roles and vocabulary
 
 In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identity, Subscriber Load, Capacity Pause, Private Review / Release, Private Print) are deferred to v2 and preserved in section 8.1. The Account term is deferred too: v1 has no Account.
@@ -250,6 +261,8 @@ In v1 every Film is personal. Group-only terms (Host, Participant, Guest Identit
 | Personal owner | User controlling a device-local personal Film. All v1 use is account-free. |
 | Trial Film | A free personal Photo OR Movie Film for a non-subscriber; entitlement and restored-Film rules are defined in FR-21. |
 | Discarded Frame | Numbered metadata-only chronology placeholder after permanent media removal. |
+
+> **2026-10-26:** The Film Stock row's "6×6 Medium Format or 16mm Cinema Film" now reads as a 6×6 or 16mm Film; the rule stands ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24).
 
 ### 4.1 Permission summary
 
@@ -374,6 +387,8 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 - Render quality and export codecs are open under DEC-04; frame rates are set in section 6.2.
 - The built-in soundtrack rights are open under DEC-05.
 
+> **2026-10-26:** Steps 1, 3 and 8 are superseded for a movie Film loaded with the build that adds Live Audio (MOV-12) or a later one: it records sound and asks for the microphone, and its Developed Movie plays its recorded sound, a Soundtrack in its place, or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28). Every journey's Camera names are now Disposable, Instant, 6×6, Super 8 and 16mm (FR-24).
+
 #### Journey 3 - Trial to subscription, and a subscriber who lets it lapse
 
 **Who:** a person deciding whether to subscribe, who later stops paying (section 1.1).
@@ -458,6 +473,8 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas. The 6×6 Medium Format and the 16mm Cinema carry no decade, because their color reference films are present-day ones (version 2.0).
 
+> **2026-10-26:** The Cameras are now named Disposable, Instant, 6×6, Super 8 and 16mm, with no decade on any of them, and the Disposable focuses on Auto or Fixed and the 6×6 on Auto or Manual ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24 and FR-25).
+
 ### 6.2 Movie Cameras
 
 | Camera | Fixed capacity | Capture/developed character | Audio |
@@ -467,6 +484,8 @@ The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, 
 
 
 Both Movie Cameras support personal Films. Each capacity is one real load of the Camera's Format Reference: a 50-foot Super 8 cartridge at 18 frames per second and a 100-foot 16mm spool at 24 frames per second. There is no capacity selector.
+
+> **2026-10-26:** Both Audio cells and the Super 8's "fixed-focus lens" are superseded: a Film loaded with the build that adds Live Audio (MOV-12) or a later one records sound, both Cameras offer Zoom Steps, and the Super 8 focuses on Auto or Fixed ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-25 to FR-28).
 
 ### 6.3 Format References and developed look (version 2.0)
 
@@ -481,6 +500,8 @@ Developed results show each format as freshly processed, not aged: no fading, ye
 | 6×6 Medium Format | Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 (color Film Stock) or Kodak Tri-X 400 (black-and-white Film Stock) |
 | 1960s Super 8 Home Movie | Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second |
 | 16mm Cinema | Bolex H16 Reflex, loaded with Kodak Vision3 250D (color Film Stock) or Eastman Double-X (black-and-white Film Stock) |
+
+> **2026-10-26:** The Camera column's names, and the Camera names in the rest of this section, are now Disposable, Instant, 6×6, Super 8 and 16mm; the Format References are unchanged and stay internal ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24).
 
 **Film Stock.** The 6×6 Medium Format and the 16mm Cinema each offer a color or black-and-white Film Stock.
 It is chosen at Load Film, fixed for that Film, and never changes mid-Film or after Development (ADR 0014).
@@ -553,6 +574,8 @@ Personal capture works offline once entitled and needs no server. Starting the T
 
 **Acceptance:** No review/delete path for an individual sealed personal capture. No hidden-image thumbnails or automatic Photos writes. A lens change does not reset capacity. Failure before durable save must not consume an exposure or Trial entitlement.
 
+> **2026-10-26:** Superseded in this FR: the viewfinder sized as "the largest box ... the room leaves" (now the iPhone Camera's 4:3 photo frame, FR-23), the Darkroom turning with the iPhone (it never turns, FR-29), Zoom on the 6×6 alone (the Super 8 and the 16mm too, FR-26), and the Super 8's fixed-focus lens (a focus switch starting on Auto, FR-25); see the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md).
+
 ### FR-05 — Movie recording, orientation, and audio
 
 **Tasks MOV-01–MOV-07, MOV-09–MOV-11**
@@ -568,6 +591,8 @@ Calls, screen lock, and leaving the app end the active clip. Save recoverable fo
 Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie may remain silent or use one built-in, period-inspired, export-licensed instrumental soundtrack. No v1 Camera requires microphone permission or records audio. Additional sound-editing tools are out of scope.
 
 **Acceptance:** Pause has zero budget effect; interruption never resets budget or loses already saved clips. Orientation is consistent in playback/export. Both Movie Cameras operate with microphone denied. Exact codecs, resolutions, and audio channel guarantees are not yet specified.
+
+> **2026-10-26:** The fourth paragraph's "Super 8 and 16mm do not capture Live Audio ... No v1 Camera requires microphone permission or records audio." is superseded for Films loaded with the build that adds Live Audio (MOV-12) or a later one ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27 and FR-28); the sound is in the iPhone Camera app's own format (DEC-19).
 
 ### FR-06 — Completion, early Development, Instant reveal, and recovery
 
@@ -595,6 +620,8 @@ Movies have no Darkroom; permitted soundtrack and privacy-removal actions are se
 
 **Acceptance:** Reset reproduces the original developed result. No saturation control or Movie Darkroom entry exists. No crop control appears for an Instant print. Exact control ranges and medium-specific applicability require render validation.
 
+> **2026-10-26:** Crop is now Adjust, with quarter turns and straightening, and the Instant gets quarter turns only (FR-31); color prints get Saturation as a stated exception (FR-32); every print gets Vignette (FR-33); and local Dodge/Burn is deferred to v2, its text kept in the amendment's section 6 (FR-34). See the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md).
+
 ### FR-08 — Personal local storage, Photos export, and source cleanup
 
 **Tasks STO-01–STO-11**
@@ -611,6 +638,8 @@ Unrevealed original captures stay in private app storage and are never written t
 Present the original-export choice at personal Development. If a personal user chooses original export, remove private sources only after successful Photos saving. If they decline, delete sources only after verifying the developed master is safely stored and explaining that originals are removed from current app-controlled storage; originals present in an earlier iOS device backup can return when that backup is restored (DEC-17). Keep developed masters and reversible edits. Keep Developed Clips needed for future Movie reassembly. The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames.
 
 **Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup. The privacy copy says that restoring an older backup can bring back app data removed after it, including discarded media or a deleted whole Film (DEC-17).
+
+> **2026-10-26:** The Instant's originals choice is presented once, at the camera, after the pack's last print, for every print still undecided; missed or cancelled, it is not presented again, and the Film screen's Originals button can decide it at any time ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-35).
 
 ## 8. Deferred to v2 - Group Film and Account requirements
 
@@ -1058,6 +1087,8 @@ Movie removal deletes the selected clip's picture and audio, retained source, an
 
 **Acceptance:** A removal acknowledgement cannot coexist with viewing/export of the removed app-controlled media. Test retries, stale movie versions, and cleanup failures. A privacy placeholder never contains a thumbnail or retained private content. Duration/refund behavior is unchanged by removal. Under DEC-09, after every Movie clip is Discarded the Film remains as numbered discarded placeholders with no playback or export.
 
+> **2026-10-26:** "Preserve orientation and any selected soundtrack" now reads as the Movie's sound choice: recorded sound, a Soundtrack or silence ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-28).
+
 ### FR-18 — Delete personal Film
 
 **Tasks DEL-01–DEL-04**
@@ -1160,6 +1191,8 @@ No native codebase exists in the supplied workspace, and v1 needs no production 
 | Entitlements | StoreKit purchases, restore and expiry; per-iPhone Trial record in the Keychain | StoreKit, Keychain, local persistence |
 | Privacy Removal | Tombstones, media deletion, movie-version retirement/reassembly | Storage, development |
 
+> **2026-10-26:** The Photo Darkroom row's "local masks" are deferred to v2 with Dodge/Burn, their text kept in the amendment's section 6 ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-34).
+
 ### 12.1 Proposed data responsibilities
 
 Model stable IDs for Film, immutable Camera definition/version, the Film Stock chosen at Load Film where the Camera offers one, capture sequence and orientation, source/master/Developed Clip assets, development assignment/progress, reversible edit recipes, Trial start and consumption (recorded in the Keychain), and privacy deletion state.
@@ -1212,6 +1245,8 @@ Version 1.0 test groups 2, 3 and 4 (Group capacity/race, Group reveal/security, 
 
 **Release gate:** Native capture, media treatment quality, permissions, purchase, Trial, backup and restore, privacy removal, and export must be validated on the real app. The browser study is insufficient evidence for those gates. The supported iPhone models, performance/size limits, and measurable reliability budgets remain open rather than invented numbers; the platform is iOS 26, iPhone only.
 
+> **2026-10-26:** Test group 4's "no microphone permission prompt" is superseded: the movie Cameras ask for the microphone the first time one opens and record silent when it is declined ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-27); its section 5.4 lists what only a phone can prove.
+
 ## 14. Implementation delivery sequence and tracking
 
 This is a proposed dependency order within the agreed scope, not an automatic decision to cut features or launch early.
@@ -1251,6 +1286,8 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 
 Do not resolve these by silently shipping assumptions that change the product's reveal, billing, privacy, or capacity promises. Implementation estimates and calendar release dates are not agreed.
 
+> **2026-10-26:** DEC-04's "silent" Movie export, DEC-11's Dodge and Burn limit and DEC-13's "no ... microphone" are superseded, DEC-11 gains the straightening, saturation and vignette limits, and DEC-11's "the Instant asks about keeping the original after each print" now reads once, after the pack ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), sections 2 and 4, FR-35).
+
 ## 16. Out of scope and possible later work
 
 V1 does not include Group Films of any kind. Deferred to v2 are Photo Group pools and Group Movies with Recording Turns, joining by code or QR, accountless Guest participants, the Host role, load contribution and Add Shared Exposures, shared reservation and upload, manual Group closure, Host Development, Private Review and Release, the Group export deadline and Group notifications, contribution withdrawal and bulk withdrawal and reporting, Leave Film and Participant removal, Guest identity deletion, and Private Prints on Group Films. Their requirements are preserved in section 8.
@@ -1260,6 +1297,8 @@ V1 also has no Accounts, sign-in, server or Account deletion; those are deferred
 V1 also does not include digital nostalgia formats (CCD, MiniDV), additional Camera catalog entries, Instant Group Films, same-device Give Camera/phone lockdown, individual Group exposure quotas or private subscriber reserves, subscriber-added Movie duration, automatic Closing Time, automatic Group Development/Release, co-hosting/Host transfer, whole-Group deletion, a separate Event container, public social feeds, imported-media treatment, Movie editing, saturation/AI retouching, app-managed backup or sync (iOS device backup does include Films), an analytics SDK or service, iPad or Mac versions, iOS before 26, web/Android/App Clip capture, a monthly exposure wallet, or per-Film charges.
 
 Additional historical Cameras and digital-era experiences may be evaluated for v2 with their own authentic review rules. The retained Group requirements in section 8 are the starting point for that evaluation. Listing these ideas, and the deferred Group requirements, is not implementation approval or a committed v2 roadmap.
+
+> **2026-10-26:** "saturation" is no longer out of scope (AI retouching still is), and the Darkroom's Dodge/Burn is deferred to v2 ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-32 and FR-34).
 
 ## 17. Decision evolution and superseded proposals
 
@@ -1321,6 +1360,12 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | A single lens on every Camera | Captain decision, 2026-10-16 (ADR 0017): "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)". The 6×6's rear camera offers the steps of the iPhone's own lenses, and a sensor-crop step only where the camera reports one; the front camera and every other Camera keep their single lens. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
+
+> **2026-10-26:** The rows "Saturation/basic modern editor" and "A single lens on every Camera" are superseded.
+> In the Darkroom-ranges row, Dodge and Burn's -3.0 to +3.0 stops move to v2 while print exposure's stand, crop is now part of Adjust, and "the Instant asks about keeping the original after each print" now reads once, after the pack.
+> The export row's Movies are no longer "silent": a Developed Movie exports with its sound choice, in the iPhone Camera app's own sound format (DEC-19).
+> The DEC-13 row's "no ... microphone" now says the microphone records only the sound of movie clips.
+> The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) names each of these clauses and what replaces it in its section 2.1, and adds the decisions of that day in its section 9.
 
 ## 18. Current evidence and definition of done
 

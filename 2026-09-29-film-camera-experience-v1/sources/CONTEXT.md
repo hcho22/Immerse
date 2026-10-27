@@ -52,6 +52,14 @@
 > **2026-10-07 note (PRD version 2.1).**
 > The Darkroom rule on contrast changed: every Photo Film, color or black-and-white, may use contrast grades, while chemical toning stays black-and-white only.
 > This reverses the contrast half of the 2026-10-06 decision.
+>
+> **2026-10-26 note (ADRs 0018 to 0023; the PRD amendment of 2026-10-26).**
+> After using the app on his iPhone the captain renamed the Cameras **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm**, with the catalog descriptions of the Disposable, the Instant and the Super 8 carrying their era and those of the 6×6 and the 16mm naming no decade; the Language, Relationships and catalog below use the new names, the dated notes above and the Flagged ambiguities keep the names of their day, and the old names are a resolved ambiguity.
+> The Super 8 and the 16mm now record **Live Audio** and ask for the microphone, so "Neither v1 Movie Camera captures **Live Audio** or requires microphone permission." and "A silent **Developed Movie** may remain silent or use one built-in **Soundtrack**." were replaced, **Live Audio** was redefined (it was "Sound captured alongside a Recorded Clip when the selected Camera's Historical Format supports in-camera audio"), a **Soundtrack** now replaces a Developed Movie's sound instead of being "added after Development to a silent Developed Movie", and the Super 8's catalog line lost "silent" (ADR 0018).
+> **Zoom Step** widened from "the 6×6 Medium Format's rear camera" to the rear cameras of the 6×6, the Super 8 and the 16mm, replacing "the other Cameras and the front camera keep their single lens"; every Camera focuses on Auto unless set to Fixed (Disposable, Super 8) or Manual (6×6), replacing the catalog's "fixed focus" and "a fixed-focus lens" (ADR 0020).
+> The **Viewfinder** sits in one area on every Camera, the phone's Camera app's 4:3 photo frame (ADR 0019); a developed photo opened from its Film opens in a full-screen view that swipes between prints and turns with the phone, an Instant print revealed at the camera shows alone in that view and stays upright while the shooting screen is up, and the **Darkroom** never turns (ADR 0021).
+> In the **Darkroom**, **Adjust** (crop, quarter turns, straightening) and **Vignette** are new terms; "The **Darkroom** does not offer a saturation control." was replaced by a Saturation control on color prints as a stated exception (ADR 0022); the Instant's rules gained quarter turns; **Basic Edit** is the general word for a Darkroom edit and no longer lists "saturation slider" under _Avoid_; "Darkroom adjustments" became "Basic Edits"; and **Dodge/Burn** with its rule moved, unchanged, to "Deferred to v2 - Darkroom Dodge/Burn" (ADR 0023).
+> Reading the draft of that amendment the same day, he chose that an Instant asks about keeping its prints' originals once, after the pack's last print, instead of after each print ("Originals option appears AFTER all 10 exposures are used"), which added a Relationships rule.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -70,7 +78,7 @@ The primary **Film Library** action that begins setup of a new **Film**.
 _Avoid_: Capture, Join Film, Add Shared Exposures, apply filter
 
 **Load Film**:
-The explicit final setup confirmation that fixes a Film's selected **Camera**, and for the 6×6 Medium Format and the 16mm Cinema its **Film Stock**, before capture becomes available.
+The explicit final setup confirmation that fixes a Film's selected **Camera**, and for the 6×6 and the 16mm its **Film Stock**, before capture becomes available.
 _Avoid_: Capture, Development, Trial Activation, Add Shared Exposures
 
 **Film Title**:
@@ -86,15 +94,15 @@ A complete vintage-inspired capture package that defines the medium, visual trea
 _Avoid_: Filter, preset, effect, separately selectable film type
 
 **Film Stock**:
-The color or black-and-white film chosen for a 6×6 Medium Format or 16mm Cinema **Film** at **Load Film** and fixed for that Film; no other v1 Camera offers one.
+The color or black-and-white film chosen for a 6×6 or 16mm **Film** at **Load Film** and fixed for that Film; no other v1 Camera offers one.
 _Avoid_: Film type, filter, look, second Camera
 
 **Viewfinder**:
-The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the live picture fills it in every hold.
+The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the live picture fills it in every hold. On every Camera it sits in the same area, the phone's own Camera app's 4:3 photo frame across the full width of the screen, with the Camera's shape inside it as that app shows a square.
 _Avoid_: Filter preview, developed-image preview
 
 **Zoom Step**:
-One of the fixed focal lengths the 6×6 Medium Format's rear camera offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of one of those lenses that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
+One of the fixed focal lengths the rear camera of the 6×6, the Super 8 or the 16mm offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of one of those lenses that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
 _Avoid_: Digital zoom, pinch zoom, lens picker
 
 **Selfie Capture**:
@@ -158,12 +166,12 @@ The preserved, one-time developed result of one Recorded Clip used to assemble a
 _Avoid_: Original source clip, rerolled treatment, editable timeline item
 
 **Live Audio**:
-Sound captured alongside a Recorded Clip when the selected Camera's Historical Format supports in-camera audio.
-_Avoid_: Added soundtrack, voice-over
+Sound the phone records, while the microphone is allowed, alongside each Recorded Clip of a Super 8 or 16mm Movie Film whose locked Camera package records sound, kept as recorded: Development adds no sound treatment to it.
+_Avoid_: Added soundtrack, voice-over, period sound effect
 
 **Soundtrack**:
-An optional, export-licensed, period-inspired instrumental track added after Development to a silent Developed Movie.
-_Avoid_: Live Audio, arbitrary song import, editable audio timeline
+An optional, export-licensed, period-inspired instrumental track chosen after Development as a Developed Movie's sound, in place of its Live Audio or of silence, never mixed with Live Audio.
+_Avoid_: Live Audio, arbitrary song import, editable audio timeline, music bed under recorded sound
 
 **Exposure Limit**:
 The fixed number of **Exposures** available in a photo **Film**.
@@ -386,8 +394,8 @@ The Camera-defined condition and ritual that determine when captured media becom
 _Avoid_: Universal preview rule
 
 **Basic Edit**:
-A post-Development adjustment to one **Exposure** that represents a technique physically achievable during analog darkroom printing or processing.
-_Avoid_: Camera swap, film-type change, saturation slider, digital reprocessing
+A reversible post-Development edit to one **Exposure** in the **Darkroom** that represents a technique physically achievable during analog darkroom printing or processing, or one of the stated exceptions to that test; the general word for any Darkroom edit.
+_Avoid_: Camera swap, film-type change, digital reprocessing, adjustment (which collides with **Adjust**)
 
 **Darkroom**:
 The photo-only v1 post-Development workspace where reversible analog-printing **Basic Edits** are applied to individual **Exposures** while preserving each original developed result.
@@ -397,9 +405,13 @@ _Avoid_: Filter picker, camera editor
 A contributor-only, reversibly edited version of their own released Group Exposure that may be exported without changing the shared Film.
 _Avoid_: Shared Film edit, replacement developed master, another Participant's edited capture
 
-**Dodge/Burn**:
-A local Darkroom adjustment that selectively withholds or adds print exposure to part of one developed **Exposure**.
-_Avoid_: Retouch brush, object removal
+**Adjust**:
+The **Darkroom** tool that crops a print, turns it a quarter turn left or right, and straightens it; on an Instant print it offers only the quarter turns, which turn the whole print, card included.
+_Avoid_: Crop (as the tool's name), rotate filter, light-and-color adjustment
+
+**Vignette**:
+A **Basic Edit** that burns in or dodges a print's edges toward its corners, with a fixed soft falloff toward the center.
+_Avoid_: Lens vignette (the 16mm's and the 6×6 color Film Stock's edge darkening belong to their **Developed Treatment**)
 
 **Completed Film**:
 A **Film** whose capture has irreversibly ended through full capacity, an early personal Development action, or Host closure.
@@ -421,9 +433,11 @@ _Avoid_: Draft, incomplete album
 - Both personal and Group Film creation use an explicit **Load Film** confirmation showing the selected Camera, capture capacity, and Reveal Rule before capture becomes available.
 - Load Film irreversibly fixes the selected Camera package for the Film; it is not an Exposure, a recording, or Development and does not bypass existing Trial Activation, Subscription, permission, or Group capture-access requirements.
 - For a Group Film, the Host's Load Film confirmation performs the existing **Camera Lock**, rather than requiring a second locking step or a separate loading action from each Participant.
-- For the 6×6 Medium Format and the 16mm Cinema only, Load Film also confirms and irreversibly fixes the **Film Stock**, color or black-and-white; a Film Stock never changes mid-Film or after Development ([ADR 0014](../adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md)).
+- For the 6×6 and the 16mm only, Load Film also confirms and irreversibly fixes the **Film Stock**, color or black-and-white; a Film Stock never changes mid-Film or after Development ([ADR 0014](../adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md)).
 - Locking the Camera package does not freeze supported Camera-authentic capture controls; focus, flash, and exposure remain adjustable where the selected Camera and active phone lens support them.
+- Every Camera focuses on Auto, the phone's continuous autofocus with tap-to-focus on the **Viewfinder**, unless its Film is set otherwise: the Disposable and the Super 8 switch between Auto and Fixed, and the 6×6 between Auto and Manual; every new Film starts on Auto, and each Film keeps its setting.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
+- A developed photo opened from its Film opens in a full-screen view of the Film's developed photos, which swipes between them in capture order, skips sealed and Discarded frames, and turns with the phone; an Instant print revealed at the camera opens in the same view alone, with no swiping, and stays upright while the shooting screen is up; the **Darkroom** opens from either on the photo shown, and keeps its portrait layout whichever way the phone is held.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
 - Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
@@ -448,6 +462,7 @@ _Avoid_: Draft, incomplete album
 - When original export is chosen, source copies are removed only after saving to Photos succeeds.
 - When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
 - The original-export choice is presented at personal Development or Group Film Release.
+- An **Instant Film** presents the original-export choice once, at the camera, after its last Exposure's print is revealed, for every print still undecided; a choice missed or cancelled there is not presented again, and its owner may make it at any time from the Film (2026-10-26).
 - For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
 - Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
 - Participants are told the export deadline and that unexported originals will be permanently deleted; the developed master and reversible edits remain available after expiry.
@@ -466,10 +481,10 @@ _Avoid_: Draft, incomplete album
 - Each **Camera** is identified by a descriptive **Historical Format** rather than an invented brand or exact manufacturer model.
 - The Camera catalog prioritizes nostalgic and behaviorally distinct **Historical Formats**, not literal historical sales rank or cosmetically different treatments.
 - Each **Camera** has one **Format Reference**, and its **Developed Treatment** is judged against that original as it performed when new; the Camera is still identified to users only by its descriptive **Historical Format** ([ADR 0015](../adr/0015-each-camera-is-judged-against-one-named-format-reference.md)).
-- The **Format Reference** for the 1970s Instant is the original 1970s Polaroid integral print, and for the 1990s Disposable it is the Kodak Fun Saver 35mm single-use camera with flash, loaded with 800-speed color film.
-- The **Format Reference** for the 6×6 Medium Format is a Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 for the color **Film Stock** and Kodak Tri-X 400 for the black-and-white **Film Stock**.
-- The **Format Reference** for the 16mm Cinema is the Bolex H16 Reflex, loaded with Kodak Vision3 250D color negative film for the color **Film Stock** and Eastman Double-X for the black-and-white **Film Stock**.
-- The **Format Reference** for the 1960s Super 8 Home Movie is the Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second.
+- The **Format Reference** for the Instant is the original 1970s Polaroid integral print, and for the Disposable it is the Kodak Fun Saver 35mm single-use camera with flash, loaded with 800-speed color film.
+- The **Format Reference** for the 6×6 is a Hasselblad 500C with its 80mm lens, loaded with Kodak Portra 400 for the color **Film Stock** and Kodak Tri-X 400 for the black-and-white **Film Stock**.
+- The **Format Reference** for the 16mm is the Bolex H16 Reflex, loaded with Kodak Vision3 250D color negative film for the color **Film Stock** and Eastman Double-X for the black-and-white **Film Stock**.
+- The **Format Reference** for the Super 8 is the Kodak Instamatic M4, the automatic-exposure model, loaded with Kodachrome II and running at 18 frames per second.
 - The v1 Camera catalog contains only **Analog Cameras**; nostalgic digital Cameras belong to a later release with their own authentic review and editing rules.
 - A **Film**'s **Camera** cannot be replaced after **Load Film**, including during capture or after Development.
 - A **Film** has one editable **Film Title** and one system-derived **Capture Date Range**.
@@ -493,8 +508,9 @@ _Avoid_: Draft, incomplete album
 - Each Recorded Clip produces one **Developed Clip**, retained independently of the assembled Developed Movie after original source cleanup.
 - A **Developed Movie** orders every **Recorded Clip** chronologically and preserves each start/stop boundary as a cut.
 - A **Movie Film** is not a reorderable editing timeline.
-- Neither v1 Movie Camera captures **Live Audio** or requires microphone permission.
-- A silent **Developed Movie** may remain silent or use one built-in **Soundtrack**.
+- Both v1 Movie Cameras capture **Live Audio** on a Film loaded with the app build that adds it or a later one, whose locked Camera package records that the Film has sound, and ask for microphone permission the first time a movie Camera opens; while the microphone is declined or turned off they record silent **Recorded Clips**, and once it is allowed the next clips record sound, so such a Film's **Developed Movie** can mix silent clips and clips with sound and nothing is blocked.
+- A Movie Film loaded with an earlier build stays silent throughout, whatever the date it was loaded, because its locked Camera package records no sound, and the rule that a **Developed Movie** never mixes sound and silent clips holds only for such a Film.
+- A **Developed Movie**'s sound is its **Live Audio**, one built-in **Soundtrack** in its place, or silence; choosing a Soundtrack or silence never discards the Live Audio, and the choice can be changed back without repeating Development.
 - For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
 - Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
 - The shared Group Movie and its Developed Exports use the same released Soundtrack choice; reassembly after Discard or Withdraw preserves that choice without blocking the removal of private content.
@@ -676,25 +692,25 @@ _Avoid_: Draft, incomplete album
 - A **Developed Treatment** may include **Authentic Imperfections**, but random Development effects must not make an otherwise valid capture completely unusable.
 - A **Developed Treatment** shows its **Historical Format** as freshly processed in its era, not as surviving prints or reels look decades later; fading, yellowing, dye shift, and wear from storage or repeated projection are not **Authentic Imperfections** ([ADR 0013](../adr/0013-developed-treatments-show-the-medium-fresh-not-aged.md)).
 - Severe failures may result from authentic capture conditions such as darkness, motion, an obstructed lens, or incorrect manual exposure.
-- The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an Exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects.
-- The 1990s Disposable's **Developed Treatment** adds no light leaks, red-eye, or dust and scratches.
-- The 1960s Super 8 Home Movie's **Authentic Imperfections** are an unsteady frame, brightness flicker, and dust and hair in the gate, each present from capture or first showing rather than from age.
-- The 16mm Cinema's **Authentic Imperfections** are visible grain, minor jitter and weave, and soft focus with vignetting toward the edges; it has no brightness flicker and no dust or hair in the gate.
-- The 16mm Cinema shows highlight halation on both **Film Stocks**: a neutral glow in black-and-white and a red glow in color; the red glow is a deliberate departure from its color **Format Reference**, whose anti-halation backing prevents it.
-- A 16mm Cinema **Recorded Clip** has no per-clip limit and may run for the whole **Duration Limit**; the spring-wound run time of its **Format Reference** is deliberately not reproduced.
-- The 16mm Cinema's color **Film Stock** keeps a fixed daylight color balance: daylight develops neutral, warm indoor light develops orange, and Development does not correct it.
-- The 6×6 Medium Format's **Viewfinder** shows the scene the normal way, not reversed; its developed Exposures are never reversed, and **Selfie Capture** keeps its mirrored Viewfinder.
-- The 6×6 Medium Format's rear camera offers a **Zoom Step** for each lens the phone has, and a native sensor-crop **Zoom Step** only where the phone's camera reports one; it offers no step between them, no pinch or digital zoom and no control on a phone with one rear lens and no reported crop. A **Zoom Step** is taken only between **Exposures**, as a lens switch is, and the other Cameras and the front camera keep their single lens.
-- The 6×6 Medium Format's focus is optical only: its **Developed Treatment** never synthesizes background blur, so depth of field is whatever the device lens produced at capture.
-- The 1990s Disposable's **Viewfinder** shows a live low-light cue advising flash when the scene is too dim for its fixed exposure; the cue is exposure guidance and never previews the developed result.
-- The **Darkroom** may adjust a Developed Treatment within analog constraints but cannot replace it.
-- V1 Darkroom adjustments apply only to Photo Films, including personal Exposures (and, in v2, eligible Group Film Private Prints); Movie Films have no Darkroom or post-Development Basic Edits.
-- A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Withdraw, Developed Export, and silent-format Soundtrack choice remain separate actions, not Movie Darkroom editing.
+- The Disposable has fixed exposure: scene brightness and flash use decide how an Exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects.
+- The Disposable's **Developed Treatment** adds no light leaks, red-eye, or dust and scratches.
+- The Super 8's **Authentic Imperfections** are an unsteady frame, brightness flicker, and dust and hair in the gate, each present from capture or first showing rather than from age.
+- The 16mm's **Authentic Imperfections** are visible grain, minor jitter and weave, and soft focus with vignetting toward the edges; it has no brightness flicker and no dust or hair in the gate.
+- The 16mm shows highlight halation on both **Film Stocks**: a neutral glow in black-and-white and a red glow in color; the red glow is a deliberate departure from its color **Format Reference**, whose anti-halation backing prevents it.
+- A 16mm **Recorded Clip** has no per-clip limit and may run for the whole **Duration Limit**; the spring-wound run time of its **Format Reference** is deliberately not reproduced.
+- The 16mm's color **Film Stock** keeps a fixed daylight color balance: daylight develops neutral, warm indoor light develops orange, and Development does not correct it.
+- The 6×6's **Viewfinder** shows the scene the normal way, not reversed; its developed Exposures are never reversed, and **Selfie Capture** keeps its mirrored Viewfinder.
+- The rear camera of the 6×6, the Super 8 and the 16mm offers a **Zoom Step** for each lens the phone has, and a native sensor-crop **Zoom Step** only where the phone's camera reports one; it offers no step between them, no pinch or digital zoom and no control on a phone with one rear lens and no reported crop. A **Zoom Step** is taken only between **Exposures** or between **Recorded Clips**, as a lens switch is, and the Disposable, the Instant and every front camera keep their single lens.
+- The 6×6's focus is optical only: its **Developed Treatment** never synthesizes background blur, so depth of field is whatever the device lens produced at capture.
+- The Disposable's **Viewfinder** shows a live low-light cue advising flash when the scene is too dim for its fixed exposure; the cue is exposure guidance and never previews the developed result.
+- The **Darkroom** may change how a Developed Treatment prints within analog constraints but cannot replace it.
+- V1 **Basic Edits** apply only to Photo Films, including personal Exposures (and, in v2, eligible Group Film Private Prints); Movie Films have no Darkroom or post-Development Basic Edits.
+- A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Withdraw, Developed Export, and the Movie's sound choice remain separate actions, not Movie Darkroom editing.
 - A developed **Exposure** may receive its own **Basic Edits** independently of every other Exposure in the Film.
 - Developed Exposures from every Photo Camera are eligible for the **Darkroom**, including Instant prints; the original developed print is preserved, and Reset returns to it.
-- Each developed Instant Exposure carries a slight variation in color and density of its own, assigned once at Development, so no two prints are identical; the 1970s Instant adds no uneven-chemistry or spread flaws.
-- The **Darkroom** offers no crop for an Instant print; its square picture and white card always stay whole.
-- Instant prints are the one exception to the physical-technique test for **Basic Edits**: they receive the same Basic Edits as other color Exposures, except crop, even though an instant print has no darkroom printing stage.
+- Each developed Instant Exposure carries a slight variation in color and density of its own, assigned once at Development, so no two prints are identical; the Instant adds no uneven-chemistry or spread flaws.
+- The **Darkroom** offers no crop and no straightening for an Instant print, only **Adjust**'s quarter turns, which turn the whole print, white card included; its square picture and white card always stay whole, and every other Basic Edit reaches the picture only.
+- Instant prints are one of two stated exceptions to the physical-technique test for **Basic Edits**: they receive the same Basic Edits as other color Exposures, except crop and straightening, even though an instant print has no darkroom printing stage.
 - After Group Film Release, the Host and Participants with current access may use the Darkroom only on Group Exposures they captured themselves.
 - Group Film Basic Edits belong to a **Private Print**, visible only to its contributor and available for Developed Export; each Private Print derives from exactly one Group Exposure.
 - The shared Group Film always displays the original developed results, never a contributor's Private Print or Darkroom edits.
@@ -702,13 +718,13 @@ _Avoid_: Draft, incomplete album
 - **Basic Edits** cannot replace the vintage treatment chosen when the **Film** began.
 - **Basic Edits** are non-destructive and can always be reset to the original developed result.
 - The **Darkroom** never alters or replaces the preserved original developed result.
-- The **Darkroom** exposes only controls corresponding to techniques physically possible in analog darkroom printing or processing.
+- The **Darkroom** exposes only controls corresponding to techniques physically possible in analog darkroom printing or processing, with two stated exceptions: the Instant print's Basic Edits, and Saturation ([ADR 0022](../adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md)).
 - Digital-only content manipulation is outside the **Darkroom** boundary.
-- The **Darkroom** does not offer a saturation control.
+- The **Darkroom** offers a Saturation control on color prints only, as a stated exception (2026-10-26; until then it offered none); it never takes a print to gray, so it cannot stand in for the black-and-white **Film Stock**.
+- **Adjust** turns a print a quarter turn and straightens it the way the paper is turned and the easel tilted, and **Vignette** burns in or dodges a print's edges; both pass the physical-technique test.
 - Color Films may use physical-printing equivalents such as color filtration or color balance, and every Photo Film, color or black-and-white, may use contrast grades; only black-and-white Films may use chemical toning.
 - Contrast grades adjust a print's contrast in the **Darkroom**; each Camera's own developed contrast is set by its **Developed Treatment**, which the user cannot change.
-- In v1 the only black-and-white Photo Films, and so the only Films that may use chemical toning, are 6×6 Medium Format Films loaded with the black-and-white **Film Stock**.
-- The **Darkroom** includes reversible **Dodge/Burn** adjustments.
+- In v1 the only black-and-white Photo Films, and so the only Films that may use chemical toning, are 6×6 Films loaded with the black-and-white **Film Stock**.
 - A user may keep multiple **Unfinished Films** and resume any of them later.
 - Starting or resuming another **Film** does not reveal the captures in an **Unfinished Film**.
 
@@ -799,20 +815,34 @@ _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 - Camera Preview could be mistaken for a Host-only feature or a free captured-media trial — resolved: curated samples are available to anyone browsing a new Film before sign-in or activation, without a live filter preview, captured-media reveal, or Trial entitlement use.
 - Optional personal-use sign-in conflicted with enforcing a single free Trial Film — resolved: Trial creation and activation require an Account and account-scoped eligibility, but a captured Trial Film may be preserved and finished locally after Account deletion; paid personal use may remain account-free, and Group Film guest entry is unchanged.
 
+## Deferred to v2 - Darkroom Dodge/Burn
+
+> **Deferred to v2 (2026-10-26).**
+> By captain decision, the v1 **Darkroom** has no Dodge/Burn tool ([ADR 0023](../adr/0023-dodge-and-burn-are-deferred-to-v2.md)).
+> The term and rule below are kept as they stood so v2 can take them up; they are not v1 rules.
+> A v1 print saved with Dodge/Burn strokes before the app build that removes the tool keeps printing as saved, and Reset to Original clears them.
+
+**Dodge/Burn**:
+A local Darkroom adjustment that selectively withholds or adds print exposure to part of one developed **Exposure**.
+_Avoid_: Retouch brush, object removal
+
+- The **Darkroom** includes reversible **Dodge/Burn** adjustments.
+
 ## V1 Camera catalog
 
 ### Photo Cameras
 
-- **1990s Disposable**: 27 borderless 3:2 Exposures with no date stamp, showing warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges; fixed focus, fixed exposure, optional flash, and roll-level Development.
-- **1970s Instant**: a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.
-- **6×6 Medium Format**: 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a normal **Viewfinder**, **Zoom Steps** on the rear camera, deliberate focus and exposure controls, and roll-level Development; it carries no decade because its color film is a present-day one.
+- **Disposable**: a 1990s single-use camera; 27 borderless 3:2 Exposures with no date stamp, showing warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges; Auto or Fixed focus, fixed exposure, optional flash, and roll-level Development.
+- **Instant**: a 1970s instant camera; a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.
+- **6×6**: a medium-format camera, spoken "6 by 6", whose color film is a present-day one, so its description names no decade; 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a normal **Viewfinder**, **Zoom Steps** on the rear camera, Auto or Manual focus, deliberate exposure controls, and roll-level Development.
 
 ### Movie Cameras
 
-- **1960s Super 8 Home Movie**: 3:20 of silent handheld cartridge footage at 18 frames per second, with a fixed-focus lens, automatic exposure, strong, rich color, fine grain, an unsteady frame, brightness flicker, and dust and hair in the gate.
-- **16mm Cinema**: 2:47 of deliberately framed motion film at 24 frames per second, with visible grain, highlight halation, minor jitter and weave, and soft, darkened edges, in color or black-and-white according to the **Film Stock** chosen at Load Film; it carries no decade because its color film is a present-day one.
+- **Super 8**: a 1960s home-movie camera; 3:20 of handheld cartridge footage with its **Live Audio** at 18 frames per second, with Auto or Fixed focus, **Zoom Steps** on the rear camera, automatic exposure, strong, rich color, fine grain, an unsteady frame, brightness flicker, and dust and hair in the gate.
+- **16mm**: a 16mm cinema camera whose color film is a present-day one, so its description names no decade; 2:47 of deliberately framed motion film with its **Live Audio** at 24 frames per second, with **Zoom Steps** on the rear camera, visible grain, highlight halation, minor jitter and weave, and soft, darkened edges, in color or black-and-white according to the **Film Stock** chosen at Load Film.
 
 Each v1 Movie capacity is one real load of its **Format Reference**: a 50-foot Super 8 cartridge at 18 frames per second (3:20) and a 100-foot 16mm spool at 24 frames per second (2:47).
+No Camera's name carries a decade; the Disposable's, the Instant's and the Super 8's descriptions say their era, and the 6×6's and the 16mm's name no decade.
 
 ## Example dialogue
 
@@ -842,7 +872,7 @@ Each v1 Movie capacity is one real load of its **Format Reference**: a 50-foot S
 - "Number of exposures/films" mixed the capacity of a photo film with the film itself — resolved: a photo **Film** has an **Exposure Limit**; a movie **Film** has a **Duration Limit**.
 - "Finish Film Early" was initially rejected as an early-preview loophole — revised for physical-camera authenticity: personal **Roll Films** may use **Rewind & Develop Early**, permanently wasting remaining Exposures after an explicit warning.
 - A **Film** was initially described as event-bounded — resolved: the roll capacity is the boundary; its **Film Title** is editable and it may span multiple events.
-- "Film type" was used for the underlying vintage treatment — resolved: **Camera** is the complete selectable package in v1, and there is no separate film-stock choice, except that the 6×6 Medium Format and the 16mm Cinema each offer a color or black-and-white **Film Stock** at Load Film.
+- "Film type" was used for the underlying vintage treatment — resolved: **Camera** is the complete selectable package in v1, and there is no separate film-stock choice, except that the 6×6 and the 16mm each offer a color or black-and-white **Film Stock** at Load Film.
 - "Front camera" could be confused with a separately selected vintage **Camera** — resolved: **Selfie Capture** uses the phone's front lens within the same Film and Camera package; v1 is not rear-camera-only.
 - Movie "orientation" could mean an individual clip's capture orientation or the final movie's presentation — resolved: clips may mix portrait and landscape, while **Movie Orientation** fixes one presentation frame chosen at Film setup, with opposite-orientation clips fitted using borders.
 - Personal Film deletion could be confused with per-capture **Discard** — resolved: **Delete Film** removes the whole personal Film from current app-controlled storage after a warning, including an unfinished Film without preview; Discard removes one revealed capture while retaining the Film's chronology. Restoring an iOS backup made before either removal can bring the removed data back (DEC-17).
@@ -865,7 +895,10 @@ Each v1 Movie capacity is one real load of its **Format Reference**: a 50-foot S
 - The 6×6 Medium Format's **Viewfinder** was first specified as a waist-level one that shows the scene reversed left to right, then withdrawn on 2026-10-16 - resolved: it shows the scene the normal way, and only **Selfie Capture**'s Viewfinder is mirrored.
 - "Shooting sideways" could mean the shooting screen turns with the phone or that only its contents do - resolved (2026-10-16): the screen never turns, its **Viewfinder** keeps its size and place, and only its words and icons turn to read upright, as in the phone's own Camera app.
 - "1960s 6×6 Medium Format" and "1960s 16mm Cinema" each paired a 1960s name with a film first made decades later — resolved: the Cameras are **6×6 Medium Format** and **16mm Cinema** with no decade, so a present-day film contradicts nothing.
-- "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead.
+- The Cameras were named "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" and "16mm Cinema" - resolved (2026-10-26, "we don't need the year of the camera"): they are **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm** on every screen, and the Disposable's, the Instant's and the Super 8's catalog descriptions carry their era, while the 6×6's and the 16mm's name no decade; a Film loaded under an old name keeps its stored Camera package and is shown with the new one. Code identifiers such as `disposable1990s` and `super8HomeMovie` keep the old names.
+- "Adjust" could mean a Darkroom edit in general, or light and color as the phone's Photos app uses the word - resolved (2026-10-26): **Adjust** is the Darkroom tool that crops, turns and straightens a print, and a Darkroom edit in general is a **Basic Edit**, never an "adjustment".
+- The Super 8's **Format Reference** had no sound, so "Live Audio when the Historical Format supports in-camera audio" kept both movie Cameras silent - resolved (2026-10-26, ADR 0018): both record **Live Audio** on Films loaded with the app build that adds it or a later one, as the captain chose knowing the original was silent.
+- "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead. Reversed on 2026-10-26 by captain decision ([ADR 0022](../adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md)): the **Darkroom** offers Saturation on color prints only, as a stated exception to the physical-technique test, from half the developed color to half again, never reaching gray.
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.
 - A universal no-preview rule conflicted with historically instant formats — resolved: each **Camera** owns a **Reveal Rule**, and Camera authenticity takes precedence over uniform behavior.
 - CCD and MiniDV nostalgia conflicted with v1's delayed analog Development and Darkroom model — resolved: v1 is analog-only, and nostalgic digital formats are deferred.
