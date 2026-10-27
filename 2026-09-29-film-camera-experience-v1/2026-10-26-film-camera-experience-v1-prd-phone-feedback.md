@@ -387,7 +387,7 @@ For both movie Cameras, Load Film shows "One silent Movie after Development" (`r
 **Data and compatibility.**
 A Camera package locked with the MOV-12 build or a later one records that its Film has sound, and that record, never the date a Film was loaded, decides whether it records sound; a package stored before reads as silent.
 Every check listed in Today accepts one sound track or none on a clip of a Film with sound, on its Developed Clip and on its original, and keeps refusing any sound track on a clip of a Film without sound; the assembled Movie's checks, in `FilmProcessor` and in `FilmRepository.writeAssembledMovie`, accept the sound its choice gives it, the recorded sound track under Recorded sound included (FR-28).
-A movie Camera's sample movie may carry one sound track, so a sample shot and exported with the app under Recorded sound shows in the catalog with its sound.
+A movie Camera's sample movie may carry one sound track, so a sample shot and exported with the app under Recorded sound shows in the catalog with its sound (**Builder's reading** of movies recording sound; the captain did not decide it).
 An original clip saved to Photos keeps its recorded sound, as captured, and its source is then removed from Immerse as FR-08 has it (**Builder's reading** of "kept exactly as the iPhone captured it" and "never discarded").
 A Developed Clip keeps its clip's sound, so a Movie rebuilt after Discard keeps the sound of the surviving clips, and a discarded clip's sound goes with its picture (FR-16 already says "picture and audio").
 The Debug build's Develop at once preview stays byte for byte the master Development makes (`PreviewDevelopment`), sound included.
@@ -435,7 +435,7 @@ The picture's export format of 2026-10-13 is unchanged.
 
 **Accessibility.** The choices are a standard picker with their names read by VoiceOver.
 
-**Simulator and iPhone.** Assembly, the choice and the exported file are provable in runtime tests and on simulators; playback through the phone's speaker and in Photos only on a phone (QA-17).
+**Simulator and iPhone.** Assembly, the choice and the exported file are provable in runtime tests and on simulators; playback through the phone's speaker and in Photos, and the sound's codec, sample rate and channels against a video the same iPhone's Camera app records (DEC-19), only on a phone (QA-17).
 
 ### FR-29 - The Darkroom never turns
 
@@ -685,7 +685,7 @@ Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "sile
 | Focus (FR-25) | Switch, storage, placement | Autofocus, Fixed on each lens, tap-to-focus |
 | Zoom Steps (FR-26) | Step derivation from injected lenses, refusal while recording | Real lenses, their 4:3 movie formats, the recorded clips |
 | Live sound (FR-27) | Question, declined path, note, every check that refused sound, originals saved with sound, stored package | Real sound, sync with picture, calls, Bluetooth and wired microphones |
-| Sound choice and export (FR-28) | Assembly, choice, exported file read back | Playback through the speaker and in Photos |
+| Sound choice and export (FR-28) | Assembly, choice, exported file read back | Playback through the speaker and in Photos; the sound's codec, sample rate and channels against a video the same iPhone's Camera app records (DEC-19) |
 | Darkroom (FR-29 to FR-34) | Everything, including render bytes | One pass on a phone for feel |
 | Instant originals (FR-35) | The single question after the pack, the count, no question after a missed or cancelled one, the Originals button | One real pack on a phone |
 
@@ -693,9 +693,9 @@ No simulator result is a physical-iPhone result; QA-17 holds the phone checks, a
 
 ### 5.5 The captain's approval stops
 
-1. The shooting screen: screenshots of every Camera, upright and sideways, at the default and the largest text size, on the smallest and largest supported iPhone (FR-23), with the header's words for its other states and the microphone strings (section 8).
-2. The focus switch's placement (FR-25).
-3. The Darkroom's band: screenshots of every tool on the smallest and largest supported iPhone at the default and the largest text size (FR-30), with the Vignette's falloff and the place of Saturation.
+1. The shooting screen: screenshots of every Camera, upright and sideways, at the default and the largest text size, on the smallest and largest supported iPhone (FR-23), with the header's words for its other states, the microphone strings and Load Film's sound, reveal and controls lines (section 8, questions 1 and 2), and the builder's answer to whether another app's audio pauses while a clip records (question 3).
+2. The focus switch's placement (FR-25), with the builder's answers to whether a Viewfinder tap also sets exposure and whether it focuses while a clip records (section 8, question 4).
+3. The Darkroom's band: screenshots of every tool on the smallest and largest supported iPhone at the default and the largest text size (FR-30), with the Vignette's falloff, the places of Saturation and Vignette (section 8, question 5), and the builder's answer to whether the Darkroom says that a print carries Dodge/Burn strokes from before (question 6).
 
 The smallest supported iPhone screen is the iPhone SE (3rd generation); the largest is the largest current Pro Max the simulator offers.
 
