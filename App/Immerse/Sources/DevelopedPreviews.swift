@@ -12,7 +12,7 @@ import SwiftUI
 /// (the captain, 2026-10-21). While on, every photo of the 6×6 and the Disposable and every clip of the 16mm and the
 /// Super 8 develops as soon as it is saved, rendered by Development's own code with the treatment Development will give it
 /// (`PreviewDevelopment`), and shows on the shooting screen, and those Cameras' shooting screens say beside Done that the
-/// switch is on (`DevelopAtOnceNotice`). Every capture develops, one at a time in the order they were saved (the captain,
+/// switch is on (`DevelopAtOnceNotice`) beside Done in the one-line shooting header. Every capture develops, one at a time in the order they were saved (the captain,
 /// 2026-10-21: "preview - every shot"): each preview takes the card from the one before as it finishes, and in a quick
 /// burst the newest waits behind the ones before it. Nothing develops while the app is in the background; the capture
 /// it stopped develops again on return. The roll stays sealed and develops as before; an Instant print
@@ -463,10 +463,10 @@ struct DevelopedPreviewNotice: View {
 }
 
 /// Says on the shooting screen that Develop at once is on, whenever it is on for that Camera, so a screenshot of a Camera
-/// that previews its captures is never taken for the real thing. It sits beside Done, in the header (`CaptureDoneRow`).
+/// that previews its captures is never taken for the real thing. It sits beside Done in the shooting header (`CaptureDoneRow`).
 struct DevelopAtOnceNotice: View {
     var body: some View {
-        // Short enough for one line in the header's shortest lines, held on its side at the default size.
+        // Short enough to stay beside Done in the one-line header.
         HStack(spacing: 4) {
             Image(systemName: "hammer")
             Text("Develop at once")
@@ -474,8 +474,7 @@ struct DevelopAtOnceNotice: View {
         .font(.caption2.weight(.semibold))
         .padding(.horizontal, 6).padding(.vertical, 4)
         .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 8))
-        // Done grows at every text size and this does not past xxLarge, so held upright the two fit on one line at the
-        // largest size even in the 343-point row of a 375-point iPhone, and the header is as tall as with the switch off.
+        // The notice stays capped at xxLarge so it can share the header with the Camera name and count at accessibility sizes.
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Develop at once is on. Debug build.")

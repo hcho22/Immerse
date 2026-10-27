@@ -11,10 +11,9 @@ struct CaptureView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    /// How long a line of the header reads when the iPhone is on its side, before it turns, at least. The header takes
-    /// this much of the screen's height in every hold, so the viewfinder below it never moves. Wide enough for
-    /// "12 exposures left" and a Camera's name in two or three lines.
-    @ScaledMetric(relativeTo: .body) private var headerLength: CGFloat = 128
+    /// How long the one-line header reads when the iPhone is on its side. It reserves the same space in every hold, so
+    /// the Viewfinder area below it never moves.
+    private let headerLineLength: CGFloat = 300
     /// How long the notices over the viewfinder read when the iPhone is on its side, at most.
     @ScaledMetric(relativeTo: .callout) private var noticeLength: CGFloat = 220
     /// How long a slider's caption reads when the iPhone is on its side, which is as tall as the row it sits in.
@@ -45,6 +44,7 @@ struct CaptureView: View {
                 let room = screen.size.height
                 CaptureColumn {
                     header(capture, room: room).padding(.horizontal, 16).captureColumnRole(.header)
+                        .zIndex(1)
                     if let film = model.film(filmID) {
                         let behavior = CaptureBehavior.for(film.camera.id)
                         viewfinder(film, behavior: behavior, held: held)
@@ -129,31 +129,34 @@ struct CaptureView: View {
     private var pendingPreview: DevelopedPreviews.Pending? { model.developedPreviews.pending(for: filmID) }
     #endif
 
-    /// Done, the Camera's name and what is left above the viewfinder. With the iPhone on its side the whole block turns, as
-    /// the portrait header it is, taking at least `headerLength` of the screen's height in either hold. At the largest text
-    /// sizes the column scrolls when the header and the fixed viewfinder area cannot both fit above the shutter bar.
+    /// Done, Develop at once when enabled, and the Camera name and count share one line above the Viewfinder area. With
+    /// the iPhone on its side the whole line turns and reserves the same length in either hold.
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
-        TurnedBlock(length: headerLength, reservesLength: true, maximumLength: room) {
-            VStack(spacing: 12) {
-                doneRow(capture)
+        TurnedBlock(length: headerLineLength, reservesLength: true, maximumLength: room) {
+            HStack(spacing: 8) {
+                doneRow(capture).fixedSize(horizontal: true, vertical: true)
+                Spacer(minLength: 0)
                 if let film = model.film(filmID) {
-                    film.camera.shortNameText.font(.system(.title3, design: .serif)).multilineTextAlignment(.center)
                     TimelineView(.periodic(from: .now, by: 0.1)) { context in
-                        if let start = capture.recordingStarted {
-                            film.remainingText(recordedFor: context.date.timeIntervalSince(start))
-                                .font(.body.monospaced()).foregroundStyle(.red)
-                        } else { (model.hasPendingSave(filmID) ? Text("Finishing save") : film.remainingText).font(.body.monospaced()) }
-                    }.multilineTextAlignment(.center)
-                    if film.completionState != .open {
-                        Text(film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete").font(.headline)
+                        let elapsed = capture.recordingStarted.map { context.date.timeIntervalSince($0) } ?? 0
+                        let status = CaptureHeaderStatus.make(for: film,
+                                                              finishingSave: model.hasPendingSave(filmID),
+                                                              recordedFor: elapsed)
+                        CaptureHeaderLabel(film: film, status: status,
+                                           recording: capture.recordingStarted != nil)
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .background(.background)
         }
+        // The reserved top bar stays 44 points tall. Turned text and icons continue along the physical top edge while
+        // held sideways, over the Viewfinder area as Camera controls do, without changing that area's position.
+        .frame(height: 44, alignment: .topLeading)
+        .zIndex(1)
     }
 
-    /// The header's first line, which in a Debug build says whether Develop at once is on for this Film's Camera.
+    /// The leading part of the one-line header, which in a Debug build includes Develop at once when it is on.
     private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
         let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
         #if DEBUG
@@ -226,7 +229,8 @@ struct CaptureView: View {
             .overlay {
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
                         showsPreview: showsDevelopedPreview, boxHeight: area.size.height)
-                    .frame(width: area.size.width, height: area.size.height, alignment: held.topEdge)
+                    .frame(width: area.size.width, height: area.size.height,
+                           alignment: held.isSideways ? .center : held.topEdge)
             }
             .overlay(alignment: held.bottomEdge) {
                 if film.completionState == .open && hasFloatingControls(behavior, capture: capture) {
@@ -262,9 +266,8 @@ struct CaptureView: View {
             || (behavior.offersZoomSteps && capture.position == .rear && capture.controls.zoomSteps.count > 1)
     }
 
-    /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, against the edge of
-    /// the viewfinder that is its top as the iPhone is held, turned as one block. The block is as long as the box lets it
-    /// be, so it is never cut off.
+    /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, turned as one block.
+    /// It sits at the viewfinder's top when upright and in its middle when held sideways, clear of the rotated header.
     @ViewBuilder private func notices(
         _ film: Film, controller capture: CaptureController, showsLowLightCue: Bool, showsStatus: Bool, showsPreview: Bool,
         boxHeight: CGFloat
@@ -436,8 +439,8 @@ struct CaptureView: View {
     }
 }
 
-/// The header's first line: Done, against the leading edge, and in a Debug build the notice that Develop at once is on
-/// for the Camera, which sits there with it, never over the viewfinder (`DoneRowLayout`).
+/// The leading part of the one-line header: Done and, in a Debug build, the notice that Develop at once is on for this
+/// Camera. `CaptureView` places the Camera name and count beside this row.
 struct CaptureDoneRow: View {
     let done: @MainActor () -> Void
     #if DEBUG
@@ -458,6 +461,31 @@ struct CaptureDoneRow: View {
             Spacer(minLength: 0)
         }
         #endif
+    }
+}
+
+/// The Camera's short name and compact count in the one-line shooting header. The visible words stay short at every text
+/// size; the full Camera name and count remain available to VoiceOver and the Large Content Viewer.
+private struct CaptureHeaderLabel: View {
+    let film: Film
+    let status: CaptureHeaderStatus
+    let recording: Bool
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(SpokenText.shown(film.camera.shortName))
+                .font(.system(.title3, design: .serif))
+                .lineLimit(1).minimumScaleFactor(0.6)
+            Text(status.visible)
+                .font(.body.monospaced())
+                .foregroundStyle(recording ? .red : .primary)
+                .lineLimit(1).minimumScaleFactor(0.6)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(status.spoken)
+        .accessibilityShowsLargeContentViewer()
+        .accessibilityIdentifier("capture-header-status")
     }
 }
 

@@ -189,6 +189,8 @@ final class JournalIntegrationTests: XCTestCase {
     func testRecordingLineCountsDownFromTheRestingLineOnceASecond() throws {
         let film = try Film(camera: CameraCatalog.cinema16mm, title: "Synthetic reel", movieOrientation: .landscape, filmStock: .color)
         XCTAssertEqual(film.remainingLabel(recordedFor: 0), film.remainingLabel)
+        XCTAssertEqual(film.remainingAmountLabel(recordedFor: 0), "2:47")
+        XCTAssertEqual(film.remainingAmountLabel(recordedFor: 47), "2:00")
         XCTAssertEqual(film.remainingLabel(recordedFor: 0.9), "2:47 left")
         XCTAssertEqual(film.remainingLabel(recordedFor: 1), "2:46 left")
         XCTAssertEqual(film.remainingLabel(recordedFor: 1.9), "2:46 left")
@@ -204,6 +206,30 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(reel.remainingLabel(recordedFor: 0.5), "3:17 left")
         XCTAssertEqual(reel.remainingLabel(recordedFor: 0.6), "3:16 left")
         XCTAssertEqual(reel.remainingSpokenLabel(recordedFor: 0.6), "3 minutes 16 seconds left")
+        XCTAssertEqual(reel.remainingAmountLabel(recordedFor: 0.6), "3:16")
+    }
+
+    func testCaptureHeaderKeepsCompactCountsAndFullSpokenStates() throws {
+        let disposable = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        XCTAssertEqual(CaptureHeaderStatus.make(for: disposable, finishingSave: false, recordedFor: 0),
+                       CaptureHeaderStatus(visible: "27", spoken: "Disposable, 27 exposures left"))
+        XCTAssertEqual(CaptureHeaderStatus.make(for: disposable, finishingSave: true, recordedFor: 0),
+                       CaptureHeaderStatus(visible: "Finishing save", spoken: "Disposable, Finishing save"))
+
+        var early = disposable
+        _ = try early.recordSavedPhoto()
+        _ = try early.completeEarly()
+        XCTAssertEqual(CaptureHeaderStatus.make(for: early, finishingSave: false, recordedFor: 0),
+                       CaptureHeaderStatus(visible: "Ended early", spoken: "Disposable, Ended early, 26 exposures wasted"))
+
+        var instant = try Film(camera: CameraCatalog.instant1970s, title: "Synthetic pack")
+        for _ in 0..<10 { _ = try instant.recordSavedPhoto() }
+        XCTAssertEqual(CaptureHeaderStatus.make(for: instant, finishingSave: false, recordedFor: 0),
+                       CaptureHeaderStatus(visible: "Pack complete", spoken: "Instant, Pack complete"))
+
+        let sixBySix = try Film(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic square", filmStock: .color)
+        XCTAssertEqual(CaptureHeaderStatus.make(for: sixBySix, finishingSave: false, recordedFor: 0).spoken,
+                       "6 by 6, 12 exposures left")
     }
 
     /// PRD 2.1 sections 6.1 and 6.2 as Load Film shows them: what each Camera does, how it develops, and never a maker

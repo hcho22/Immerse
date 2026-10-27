@@ -142,6 +142,12 @@ extension Film {
 
     func remainingSpokenLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.spoken, elapsed) }
 
+    /// The compact count shown beside a Camera's name on the shooting screen: a number for photos and M:SS for Movies.
+    func remainingAmountLabel(recordedFor elapsed: TimeInterval) -> String {
+        if let remainingExposures { return String(remainingExposures) }
+        return MovieDurationText.clock(MovieDurationText.wholeSeconds((remainingMovieSeconds ?? 0) - elapsed))
+    }
+
     func remainingText(recordedFor elapsed: TimeInterval) -> Text {
         Text(remainingLabel(recordedFor: elapsed)).accessibilityLabel(remainingSpokenLabel(recordedFor: elapsed))
     }
@@ -167,6 +173,30 @@ extension Film {
         switch camera.capacity {
         case let .exposures(total): return Double(savedCaptureCount) / Double(total)
         case let .seconds(total): return consumedMovieSeconds / Double(total)
+        }
+    }
+}
+
+/// The short status beside the Camera name in the shooting screen's one-line header, and the full text VoiceOver reads.
+struct CaptureHeaderStatus: Equatable {
+    let visible: String
+    let spoken: String
+
+    static func make(for film: Film, finishingSave: Bool, recordedFor elapsed: TimeInterval) -> Self {
+        let name = SpokenText.of(film.camera.shortName)
+        if finishingSave {
+            return Self(visible: "Finishing save", spoken: "\(name), Finishing save")
+        }
+
+        switch film.completionState {
+        case .open:
+            return Self(visible: film.remainingAmountLabel(recordedFor: elapsed),
+                        spoken: "\(name), \(film.remainingSpokenLabel(recordedFor: elapsed))")
+        case .capacityFull:
+            let complete = film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete"
+            return Self(visible: complete, spoken: "\(name), \(complete)")
+        case .completedEarly:
+            return Self(visible: "Ended early", spoken: "\(name), Ended early, \(film.remainingLabel)")
         }
     }
 }
