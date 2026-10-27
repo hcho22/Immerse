@@ -354,10 +354,12 @@ final class CaptureControllerIntegrationTests: XCTestCase {
             XCTAssertEqual(plan.lockedMovieOrientation, camera.medium == .movie ? .portrait : nil)
         }
         let super8 = CaptureBehavior.for(.super8HomeMovie)
-        XCTAssertEqual(super8.focus, .fixed)
+        XCTAssertEqual(super8.focus, .deviceDefault)
+        XCTAssertEqual(CaptureBehavior.for(.super8HomeMovie, focusSetting: .fixed).focus, .fixed)
         XCTAssertEqual(super8.exposure, .automatic)
         let disposable = CaptureBehavior.for(.disposable1990s)
-        XCTAssertEqual(disposable.focus, .fixed)
+        XCTAssertEqual(disposable.focus, .deviceDefault)
+        XCTAssertEqual(CaptureBehavior.for(.disposable1990s, focusSetting: .fixed).focus, .fixed)
         XCTAssertEqual(disposable.exposure, .fixed)
     }
 

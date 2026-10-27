@@ -63,6 +63,16 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
 }
 
 extension CameraPackage {
+    /// Focus modes the Camera offers on each Film: the Disposable and Super 8 can hold a fixed focus, while the 6×6
+    /// alone exposes manual focus. Every Camera starts in Auto.
+    public var focusSettings: [FilmFocusSetting] {
+        switch id {
+        case .disposable1990s, .super8HomeMovie: [.auto, .fixed]
+        case .mediumFormat6x6: [.auto, .manual]
+        case .instant1970s, .cinema16mm: [.auto]
+        }
+    }
+
     /// The Film Stocks Load Film offers for this Camera, color first, or none for a Camera that is a complete package
     /// (ADR 0014). It follows the Camera, not the stored package, so a package a Film locked before Film Stock
     /// existed answers the same as today's.

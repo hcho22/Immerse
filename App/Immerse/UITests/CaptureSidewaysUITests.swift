@@ -14,6 +14,27 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         try check(id: "mediumFormat6x6", name: "6×6")
     }
 
+    func testDisposableFocusSwitchShowsAutoAndFixedInsideTheViewfinderBand() throws {
+        let app = XCUIApplication()
+        let title = try openShootingScreen(app, id: "disposable1990s", developsAtOnce: false)
+        defer { deleteFilm(titled: title, app) }
+
+        let focusMode = app.segmentedControls["capture-focus-mode"]
+        XCTAssertTrue(focusMode.exists(within: 10), "The Disposable offers its per-Film focus switch")
+        let layout = try wait(app)
+        XCTAssertTrue(layout.viewfinder.contains(focusMode.frame), "The focus switch stays in the floating control band")
+        let automatic = focusMode.buttons["Auto"]
+        let fixed = focusMode.buttons["Fixed"]
+        XCTAssertTrue(automatic.exists)
+        XCTAssertTrue(fixed.exists)
+        XCTAssertEqual(focusMode.value as? String, "Auto", "A new Film starts on Auto")
+
+        tapWhole(app, fixed)
+        let selectedFixed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "Fixed"), object: focusMode)
+        XCTAssertEqual(XCTWaiter().wait(for: [selectedFixed], timeout: 5), .completed,
+                       "The Film keeps the selected Fixed mode")
+    }
+
     func testInstantShootingScreenKeepsItsLayoutHeldSideways() throws {
         try check(id: "instant1970s", name: "Instant", showsNotice: false)
     }

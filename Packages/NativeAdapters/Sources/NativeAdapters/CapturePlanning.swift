@@ -49,6 +49,14 @@ public enum ZoomDecision: Equatable, Sendable {
     case blockedDuring(CapturePhase)
 }
 
+/// Whether an automatic-focus point can move to a tapped location now.
+public enum FocusPointDecision: Equatable, Sendable {
+    case allowed
+    case notAutomatic
+    case unsupported
+    case blockedDuring(CapturePhase)
+}
+
 public struct CaptureSessionRequest: Equatable, Sendable {
     public let preferredPosition: CapturePosition
     public let mediaKind: CaptureMediaKind
@@ -133,6 +141,27 @@ public struct CaptureSessionPlan: Equatable, Sendable {
                 supportsLensSwitchDuringSession: capabilities.supportsLensSwitchDuringSession, rearLenses: lenses
             )
         )
+    }
+
+    public func updatingBehavior(_ behavior: CaptureBehavior) -> CaptureSessionPlan {
+        CaptureSessionPlan(
+            request: CaptureSessionRequest(
+                preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                behavior: behavior, manualLensPosition: manualLensPosition
+            ),
+            capabilities: capabilities
+        )
+    }
+
+    /// Tapping focuses in Auto. A live Movie keeps accepting focus points during recording; captures that are saving
+    /// remain unchanged until the next idle or recording state.
+    public func focusPointDecision(supported: Bool, during phase: CapturePhase) -> FocusPointDecision {
+        guard behavior.focus == .deviceDefault else { return .notAutomatic }
+        guard supported else { return .unsupported }
+        return switch phase {
+        case .idle, .recordingMovie: .allowed
+        case .savingPhoto, .savingMovieClip, .interrupted: .blockedDuring(phase)
+        }
     }
 
     public func zoomDecision(to step: ZoomStep, during phase: CapturePhase) -> ZoomDecision {

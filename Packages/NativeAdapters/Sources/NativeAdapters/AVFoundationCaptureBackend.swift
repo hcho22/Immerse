@@ -8,6 +8,8 @@ import UIKit
 public struct NativeCameraControls: Sendable {
     public var flash = false
     public var manualFocus = false
+    public var fixedFocus = false
+    public var supportsFocusPoint = false
     public var minimumExposureBias: Float?
     public var maximumExposureBias: Float?
     /// The bias the active lens's automatic exposure holds now, which the 6×6 exposure control shows.
@@ -101,6 +103,9 @@ public actor AVFoundationCaptureBackend {
         guard let device = input?.device else { return result }
         result.flash = photoOutput?.supportedFlashModes.contains(.on) == true && device.hasFlash
         result.manualFocus = device.isLockingFocusWithCustomLensPositionSupported
+        result.fixedFocus = device.isLockingFocusWithCustomLensPositionSupported || device.isFocusModeSupported(.locked)
+        result.supportsFocusPoint = device.isFocusPointOfInterestSupported
+            && (device.isFocusModeSupported(.continuousAutoFocus) || device.isFocusModeSupported(.autoFocus))
         if device.isExposureModeSupported(.continuousAutoExposure) {
             result.minimumExposureBias = device.minExposureTargetBias
             result.maximumExposureBias = device.maxExposureTargetBias
@@ -120,6 +125,58 @@ public actor AVFoundationCaptureBackend {
         defer { device.unlockForConfiguration() }
         device.setFocusModeLocked(lensPosition: position)
         manualLensPosition = position
+    }
+
+    /// Applies a Film's Auto/Fixed/Manual choice to the active lens without changing exposure, zoom or output format.
+    /// A focus mode can change between captures or while a Movie is being recorded.
+    public func setFocusBehavior(_ behavior: CaptureBehavior) throws {
+        guard session.isRunning, let device = input?.device, let plan else { return }
+        guard behavior.viewfinder == plan.behavior.viewfinder,
+              behavior.exposure == plan.behavior.exposure,
+              behavior.offersZoomSteps == plan.behavior.offersZoomSteps else {
+            throw NativeCaptureError.configurationFailed
+        }
+        switch operations.phase {
+        case .idle, .recordingMovie:
+            break
+        case .savingPhoto, .savingMovieClip, .interrupted:
+            throw NativeCaptureError.busy
+        }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        Self.applyFocusBehavior(behavior.focus, manualLensPosition: manualLensPosition, to: device)
+        self.plan = plan.updatingBehavior(behavior)
+    }
+
+    /// Tap-to-focus is supported in Auto. Movie recording accepts tap adjustments; saves and interruptions defer them.
+    public func focus(at point: CGPoint, alsoExpose: Bool) throws -> FocusPointDecision {
+        guard session.isRunning, let device = input?.device, let plan else { return .unsupported }
+        guard point.x.isFinite, point.y.isFinite, (0...1).contains(point.x), (0...1).contains(point.y) else {
+            throw NativeCaptureError.configurationFailed
+        }
+        let phase = operations.phase
+        let focusSupported = device.isFocusPointOfInterestSupported
+            && (device.isFocusModeSupported(.continuousAutoFocus) || device.isFocusModeSupported(.autoFocus))
+        let decision = plan.focusPointDecision(supported: focusSupported, during: phase)
+        let exposureSupported = alsoExpose && [.idle, .recordingMovie].contains(phase)
+            && device.isExposurePointOfInterestSupported && device.isExposureModeSupported(.continuousAutoExposure)
+        guard decision == .allowed || exposureSupported else { return decision }
+
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        if decision == .allowed {
+            device.focusPointOfInterest = point
+            if device.isFocusModeSupported(.continuousAutoFocus) {
+                device.focusMode = .continuousAutoFocus
+            } else if device.isFocusModeSupported(.autoFocus) {
+                device.focusMode = .autoFocus
+            }
+        }
+        if exposureSupported {
+            device.exposurePointOfInterest = point
+            device.exposureMode = .continuousAutoExposure
+        }
+        return decision
     }
 
     public func setExposureBias(_ bias: Float) throws {
@@ -458,7 +515,13 @@ public actor AVFoundationCaptureBackend {
             if device.exposureMode != .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
             if device.exposureTargetBias != bias { device.setExposureTargetBias(bias) }
         }
-        switch behavior.focus {
+        Self.applyFocusBehavior(behavior.focus, manualLensPosition: manualLensPosition, to: device)
+    }
+
+    private static func applyFocusBehavior(
+        _ behavior: FocusBehavior, manualLensPosition: Float, to device: AVCaptureDevice
+    ) {
+        switch behavior {
         case .fixed:
             if device.isLockingFocusWithCustomLensPositionSupported {
                 device.setFocusModeLocked(lensPosition: FixedFocus.lensPosition)
@@ -468,6 +531,9 @@ public actor AVFoundationCaptureBackend {
         case .deviceDefault:
             if device.focusMode != .continuousAutoFocus, device.isFocusModeSupported(.continuousAutoFocus) {
                 device.focusMode = .continuousAutoFocus
+            } else if !device.isFocusModeSupported(.continuousAutoFocus),
+                      device.focusMode != .autoFocus, device.isFocusModeSupported(.autoFocus) {
+                device.focusMode = .autoFocus
             }
         case .manual:
             if device.isLockingFocusWithCustomLensPositionSupported {

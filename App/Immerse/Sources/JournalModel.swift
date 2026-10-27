@@ -126,6 +126,13 @@ final class JournalModel {
 
     func film(_ id: UUID) -> Film? { films.first { $0.id == id } }
 
+    func setFocusSetting(_ setting: FilmFocusSetting, filmID: UUID) throws -> Film {
+        guard !busyFilms.contains(filmID), !hiddenFilms.contains(filmID), film(filmID) != nil else {
+            throw JournalError.operationInProgress
+        }
+        return try repository.setFocusSetting(filmID: filmID, to: setting)
+    }
+
     func report(_ error: Error) {
         guard let message = FailureCopy.message(for: error) else { return }
         alert = .failure(message)

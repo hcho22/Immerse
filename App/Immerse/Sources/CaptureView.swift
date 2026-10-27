@@ -46,7 +46,7 @@ struct CaptureView: View {
                     header(capture, room: room).padding(.horizontal, 16).captureColumnRole(.header)
                         .zIndex(1)
                     if let film = model.film(filmID) {
-                        let behavior = CaptureBehavior.for(film.camera.id)
+                        let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
                         viewfinder(film, behavior: behavior, held: held)
                             .captureColumnRole(.viewfinder(aspect: CGFloat(behavior.viewfinder.aspectRatio)))
                     }
@@ -171,7 +171,7 @@ struct CaptureView: View {
     /// the active lens cannot do that this Camera asks of it. Over the viewfinder, where they never move it, they sit on
     /// a dark ground; at the largest text sizes they are part of the header, on the screen's own.
     @ViewBuilder private func statusLines(_ film: Film, controller capture: CaptureController, onDark: Bool) -> some View {
-        let behavior = CaptureBehavior.for(film.camera.id)
+        let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
         let secondary: Color = onDark ? .white.opacity(0.85) : .secondary
         if let error { Text(error).foregroundStyle(.red).font(.callout).multilineTextAlignment(.center) }
         if let message = capture.message, message != "Saved" || savedShowing {
@@ -195,7 +195,7 @@ struct CaptureView: View {
 
     /// Whether there is anything for `statusLines` to show.
     private func hasStatus(_ film: Film, controller capture: CaptureController) -> Bool {
-        let behavior = CaptureBehavior.for(film.camera.id)
+        let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
         return error != nil || cameraDenied || (capture.message.map { $0 != "Saved" || savedShowing } ?? false)
             || capture.offersResume(for: film, showingError: error != nil)
             || (film.completionState == .open && !lensNotes(behavior: behavior, controller: capture).isEmpty)
@@ -216,7 +216,13 @@ struct CaptureView: View {
                 ZStack {
                     Color.black
                     if let preview = capture.preview {
-                        CameraPreview(source: preview, position: capture.position, behavior: behavior)
+                        CameraPreview(source: preview, position: capture.position, behavior: behavior) { point in
+                            guard film.effectiveFocusSetting == .auto else { return }
+                            Task {
+                                do { _ = try await capture.focus(at: point, for: film) }
+                                catch { self.error = FailureCopy.message(for: error) }
+                            }
+                        }
                     } else if !showsStatus && !showsDevelopedPreview {
                         // Without a picture the Camera icon is inside the Camera's shape, never in its bars.
                         Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
@@ -233,9 +239,9 @@ struct CaptureView: View {
                            alignment: held.isSideways ? .center : held.topEdge)
             }
             .overlay(alignment: held.bottomEdge) {
-                if film.completionState == .open && hasFloatingControls(behavior, capture: capture) {
+                if film.completionState == .open && hasFloatingControls(behavior, film: film, capture: capture) {
                     VStack(spacing: 4) {
-                        controls(behavior: behavior, controller: capture).padding(.horizontal, 12)
+                        controls(film: film, behavior: behavior, controller: capture).padding(.horizontal, 12)
                         zoomSteps(behavior: behavior, capture: capture)
                     }
                     .padding(.bottom, 8)
@@ -260,7 +266,8 @@ struct CaptureView: View {
         }
     }
 
-    private func hasFloatingControls(_ behavior: CaptureBehavior, capture: CaptureController) -> Bool {
+    private func hasFloatingControls(_ behavior: CaptureBehavior, film: Film, capture: CaptureController) -> Bool {
+        if film.camera.focusSettings.count > 1 { return true }
         guard capture.lensIsLive else { return false }
         return behavior.offersManualFocus || behavior.offersExposureBias
             || (behavior.offersZoomSteps && capture.position == .rear && capture.controls.zoomSteps.count > 1)
@@ -328,7 +335,7 @@ struct CaptureView: View {
     /// Focus and exposure, in rows the Camera always has (`CaptureBehavior`), whatever the active lens reports, so the
     /// viewfinder never moves when the camera opens, switches or takes a zoom step: where the lens cannot do one, its row
     /// says so in the slider's place. A caption turns beside its slider, which stays across the screen.
-    private func controls(behavior: CaptureBehavior, controller: CaptureController) -> some View {
+    private func controls(film: Film, behavior: CaptureBehavior, controller: CaptureController) -> some View {
         @Bindable var capture = controller
         let bias: ClosedRange<Double>? = {
             guard let minimum = capture.controls.minimumExposureBias, let maximum = capture.controls.maximumExposureBias,
@@ -336,6 +343,27 @@ struct CaptureView: View {
             return Double(minimum)...Double(maximum)
         }()
         return VStack(spacing: 8) {
+            if film.camera.focusSettings.count > 1 {
+                Picker("Focus", selection: Binding(
+                    get: { film.effectiveFocusSetting },
+                    set: { setting in
+                        guard setting != film.effectiveFocusSetting else { return }
+                        model.perform({
+                            let updated = try model.setFocusSetting(setting, filmID: filmID)
+                            try await capture.updateFocusSetting(for: updated)
+                        }, failure: { error = $0 })
+                    }
+                )) {
+                    ForEach(film.camera.focusSettings, id: \.self) { setting in
+                        Text(setting.title).tag(setting)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityLabel("Focus mode")
+                .accessibilityValue(film.effectiveFocusSetting.title)
+                .accessibilityIdentifier("capture-focus-mode")
+                .disabled(capture.busy || capture.phase == .savingPhoto || capture.phase == .savingMovieClip)
+            }
             if behavior.offersManualFocus {
                 CaptionedSlider(
                     captionLength: captionLength, caption: Text("Focus").font(.caption),
@@ -368,6 +396,11 @@ struct CaptureView: View {
     private func lensNotes(behavior: CaptureBehavior, controller capture: CaptureController) -> [String] {
         guard capture.lensIsLive else { return [] }
         var notes: [String] = []
+        if behavior.focus == .deviceDefault && !capture.controls.supportsFocusPoint {
+            notes.append("Tap to focus unavailable on this lens")
+        } else if behavior.focus == .fixed && !capture.controls.fixedFocus {
+            notes.append("Fixed focus unavailable on this lens")
+        }
         if behavior.offersFlash && !capture.controls.flash { notes.append("Flash unavailable on this lens") }
         if behavior.exposure == .fixed && !capture.controls.fixedExposure { notes.append("Fixed exposure unavailable on this lens") }
         return notes
@@ -379,7 +412,7 @@ struct CaptureView: View {
         if let film = model.film(filmID), film.completionState == .open {
             HStack(spacing: 32) {
                 Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
-                    model.perform { try await capture.switchLens(camera: film.camera) } failure: { error = $0 }
+                    model.perform { try await capture.switchLens(film: film) } failure: { error = $0 }
                 }.labelStyle(.iconOnly).font(.title2)
                     .frame(minWidth: 44, minHeight: 44).turnedWithTheHold()
                     .disabled(capture.phase != .idle || capture.busy)
@@ -398,7 +431,7 @@ struct CaptureView: View {
                 .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
                 .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
                 .accessibilityIdentifier("capture-shutter")
-                if CaptureBehavior.for(film.camera.id).offersFlash && capture.controls.flash {
+                if CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting).offersFlash && capture.controls.flash {
                     Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
                         .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
                         .turnedWithTheHold().disabled(capture.phase != .idle)
@@ -547,13 +580,17 @@ private struct CameraPreview: UIViewRepresentable {
     let source: CapturePreviewSource
     let position: CapturePosition
     let behavior: CaptureBehavior
+    let onFocusPoint: (CGPoint) -> Void
     func makeUIView(context: Context) -> PreviewSurface {
         let surface = PreviewSurface()
         surface.source = source
+        surface.onFocusPoint = onFocusPoint
         surface.preview = source.makeLayer()
+        surface.addGestureRecognizer(UITapGestureRecognizer(target: surface, action: #selector(PreviewSurface.focusTapped(_:))))
         return surface
     }
     func updateUIView(_ uiView: PreviewSurface, context: Context) {
+        uiView.onFocusPoint = onFocusPoint
         uiView.preview?.videoGravity = behavior.viewfinder.cropsCapture ? .resizeAspectFill : .resizeAspect
         uiView.mirrored = behavior.isViewfinderMirrored(position: position)
         uiView.setNeedsLayout()
@@ -565,6 +602,7 @@ private struct CameraPreview: UIViewRepresentable {
 /// photo or clip follows the hold.
 private final class PreviewSurface: UIView {
     var source: CapturePreviewSource?
+    var onFocusPoint: ((CGPoint) -> Void)?
     var mirrored = false
     var preview: AVCaptureVideoPreviewLayer? {
         didSet { oldValue?.removeFromSuperlayer(); if let preview { layer.addSublayer(preview) }; setNeedsLayout() }
@@ -578,6 +616,11 @@ private final class PreviewSurface: UIView {
     private func rotatePreview() {
         guard let preview, let source else { return }
         try? source.update(preview, mirrored: mirrored, orientation: .portrait)
+    }
+
+    @objc func focusTapped(_ recognizer: UITapGestureRecognizer) {
+        guard recognizer.state == .ended, let preview else { return }
+        onFocusPoint?(preview.captureDevicePointConverted(fromLayerPoint: recognizer.location(in: self)))
     }
 }
 

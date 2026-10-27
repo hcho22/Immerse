@@ -66,7 +66,8 @@ final class CaptureController {
     ) -> CaptureSessionPlan {
         CaptureSessionPlan(request: CaptureSessionRequest(
             preferredPosition: position, mediaKind: film.camera.medium == .photo ? .photo : .movie,
-            lockedMovieOrientation: film.movieOrientation, behavior: .for(film.camera.id),
+            lockedMovieOrientation: film.movieOrientation,
+            behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting),
             manualLensPosition: Float(focus)
         ), capabilities: capabilities)
     }
@@ -172,16 +173,30 @@ final class CaptureController {
         await updatePhase(backend)
     }
 
-    func switchLens(camera: CameraPackage) async throws {
+    func switchLens(film: Film) async throws {
         guard let backend else { return }
         let request = sessionRequest
         let next: CapturePosition = position == .rear ? .front : .rear
         try await backend.switchLens(to: next)
         position = next
         flash = false
-        if request == sessionRequest { watchSceneLight(behavior: .for(camera.id)) }
+        if request == sessionRequest {
+            watchSceneLight(behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting))
+        }
         controls = await backend.controls()
         exposure = Double(controls.exposureBias)
+    }
+
+    func updateFocusSetting(for film: Film) async throws {
+        guard let backend else { return }
+        let phase = await backend.phase
+        guard phase == .idle || phase == .recordingMovie else { return }
+        try await backend.setFocusBehavior(.for(film.camera.id, focusSetting: film.effectiveFocusSetting))
+    }
+
+    func focus(at point: CGPoint, for film: Film) async throws -> FocusPointDecision {
+        let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
+        return try await backend?.focus(at: point, alsoExpose: behavior.exposure == .automatic) ?? .unsupported
     }
 
     /// Takes a zoom step of the iPhone's own lenses (the 6×6's rear camera). Only between exposures, like a lens switch.

@@ -5,28 +5,33 @@ import XCTest
 final class CaptureBehaviorTests: XCTestCase {
     func testEachCameraAsksForItsOwnFocusExposureAndFraming() {
         let disposable = CaptureBehavior.for(.disposable1990s)
-        XCTAssertEqual(disposable.focus, .fixed)
+        XCTAssertEqual(disposable.focus, .deviceDefault, "Auto starts on continuous autofocus")
         XCTAssertEqual(disposable.exposure, .fixed)
         XCTAssertEqual(disposable.viewfinder, .threeByTwo)
         XCTAssertTrue(disposable.offersFlash)
         XCTAssertTrue(disposable.showsLowLightCue)
         XCTAssertFalse(disposable.offersZoomSteps)
+        XCTAssertEqual(CaptureBehavior.for(.disposable1990s, focusSetting: .fixed).focus, .fixed)
 
         let super8 = CaptureBehavior.for(.super8HomeMovie)
-        XCTAssertEqual(super8.focus, .fixed, "Fixed-focus lens")
+        XCTAssertEqual(super8.focus, .deviceDefault, "Auto starts on continuous autofocus")
         XCTAssertEqual(super8.exposure, .automatic, "Automatic exposure")
         XCTAssertEqual(super8.viewfinder, .fourByThree)
         XCTAssertFalse(super8.offersFlash)
         XCTAssertFalse(super8.showsLowLightCue)
+        XCTAssertEqual(CaptureBehavior.for(.super8HomeMovie, focusSetting: .fixed).focus, .fixed)
 
         let medium = CaptureBehavior.for(.mediumFormat6x6)
-        XCTAssertEqual(medium.focus, .manual)
+        XCTAssertEqual(medium.focus, .deviceDefault, "Auto starts on continuous autofocus")
         XCTAssertEqual(medium.exposure, .manualBias)
         XCTAssertEqual(medium.viewfinder, .square)
-        XCTAssertTrue(medium.offersManualFocus)
+        XCTAssertFalse(medium.offersManualFocus, "The Focus slider stays hidden in Auto")
         XCTAssertTrue(medium.offersExposureBias)
         XCTAssertTrue(medium.offersZoomSteps, "The 6×6 offers the iPhone's own zoom steps")
         XCTAssertFalse(medium.offersFlash)
+        let manual = CaptureBehavior.for(.mediumFormat6x6, focusSetting: .manual)
+        XCTAssertEqual(manual.focus, .manual)
+        XCTAssertTrue(manual.offersManualFocus)
     }
 
     func testCamerasOtherThanThoseThatChangedKeepTheirCaptureConfiguration() {
@@ -79,14 +84,44 @@ final class CaptureBehaviorTests: XCTestCase {
     func testSessionPlanCarriesTheCameraBehavior() {
         let capabilities = CaptureCapabilities(availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true)
         let plan = CaptureSessionPlan(request: CaptureSessionRequest(
-            preferredPosition: .rear, mediaKind: .photo, behavior: .for(.mediumFormat6x6), manualLensPosition: 0.1
+            preferredPosition: .rear, mediaKind: .photo,
+            behavior: .for(.mediumFormat6x6, focusSetting: .manual), manualLensPosition: 0.1
         ), capabilities: capabilities)
-        XCTAssertEqual(plan.behavior, CaptureBehavior.for(.mediumFormat6x6))
+        XCTAssertEqual(plan.behavior, CaptureBehavior.for(.mediumFormat6x6, focusSetting: .manual))
         XCTAssertEqual(plan.manualLensPosition, 0.1, "The person's focus travels with the plan")
         let plain = CaptureSessionPlan(request: CaptureSessionRequest(preferredPosition: .rear, mediaKind: .movie),
                                        capabilities: capabilities)
         XCTAssertEqual(plain.behavior, CaptureBehavior.deviceDefault)
         XCTAssertEqual(plain.manualLensPosition, FixedFocus.lensPosition, "The Focus control's resting value")
+    }
+
+    func testTapToFocusNeedsAutoAndRunsIdleOrDuringMovieRecording() {
+        let capabilities = CaptureCapabilities(availablePositions: [.rear], supportsLensSwitchDuringSession: false)
+        func plan(_ setting: FilmFocusSetting) -> CaptureSessionPlan {
+            CaptureSessionPlan(request: CaptureSessionRequest(
+                preferredPosition: .rear, mediaKind: .movie,
+                behavior: .for(.super8HomeMovie, focusSetting: setting)
+            ), capabilities: capabilities)
+        }
+
+        for camera in CameraID.allCases {
+            let mediaKind: CaptureMediaKind = switch camera {
+            case .super8HomeMovie, .cinema16mm: .movie
+            default: .photo
+            }
+            let automatic = CaptureSessionPlan(request: CaptureSessionRequest(
+                preferredPosition: .rear, mediaKind: mediaKind,
+                behavior: .for(camera, focusSetting: .auto)
+            ), capabilities: capabilities)
+            XCTAssertEqual(automatic.focusPointDecision(supported: true, during: CapturePhase.idle), FocusPointDecision.allowed, "\(camera)")
+            if camera == .super8HomeMovie || camera == .cinema16mm {
+                XCTAssertEqual(automatic.focusPointDecision(supported: true, during: CapturePhase.recordingMovie), FocusPointDecision.allowed)
+            }
+            XCTAssertEqual(automatic.focusPointDecision(supported: false, during: CapturePhase.idle), FocusPointDecision.unsupported)
+            XCTAssertEqual(automatic.focusPointDecision(supported: true, during: CapturePhase.savingPhoto), FocusPointDecision.blockedDuring(.savingPhoto))
+        }
+        XCTAssertEqual(plan(.fixed).focusPointDecision(supported: true, during: CapturePhase.idle), FocusPointDecision.notAutomatic)
+        XCTAssertEqual(plan(.manual).focusPointDecision(supported: true, during: CapturePhase.idle), FocusPointDecision.notAutomatic)
     }
 
     func testFixedExposureGivesEveryLensTheSameLightValue() {

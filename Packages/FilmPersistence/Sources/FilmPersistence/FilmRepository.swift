@@ -95,6 +95,17 @@ public final class FilmRepository {
         return try decoder.decode(Film.self, from: data)
     }
 
+    /// Saves a per-Film focus selection without changing its locked Camera package or capture history.
+    @discardableResult
+    public func setFocusSetting(filmID: UUID, to setting: FilmFocusSetting) throws -> Film {
+        try database.withTransaction {
+            var film = try film(id: filmID)
+            try film.setFocusSetting(setting)
+            try save(film)
+            return film
+        }
+    }
+
     @discardableResult
     public func savePhotoCapture(
         filmID: UUID,

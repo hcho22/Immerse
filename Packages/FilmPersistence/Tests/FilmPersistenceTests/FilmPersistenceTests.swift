@@ -67,6 +67,20 @@ final class FilmPersistenceTests: XCTestCase {
         XCTAssertTrue(try repository.assetExists(filmID: film.id, sequenceNumber: 1, kind: .source))
     }
 
+    func testFocusSettingSurvivesReopeningTheFilmRepository() throws {
+        let film = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Roll")
+        XCTAssertEqual(film.effectiveFocusSetting, .auto)
+        try repository.setFocusSetting(filmID: film.id, to: .fixed)
+
+        repository = try FilmRepository(rootURL: rootURL)
+        XCTAssertEqual(try repository.film(id: film.id).effectiveFocusSetting, .fixed)
+
+        let otherFilm = try repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "Reel",
+                                                  movieOrientation: .landscape)
+        XCTAssertEqual(try repository.film(id: otherFilm.id).effectiveFocusSetting, .auto,
+                       "Focus mode belongs to each Film")
+    }
+
     func testFailureBeforeDurableMoveDoesNotDebitOrLeaveSource() throws {
         let film = try repository.createFilm(
             camera: CameraCatalog.disposable1990s,
