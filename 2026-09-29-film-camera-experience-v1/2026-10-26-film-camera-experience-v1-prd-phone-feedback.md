@@ -47,7 +47,7 @@ Each ask was settled the same day by choosing among lettered options; the reply 
 | 3 | Live sound on the movie Cameras | "B", "A", "b"; then "A" | Every Super 8 and 16mm Recorded Clip records sound; the microphone is asked for the first time a movie Camera opens; declined means silent clips with a note, and a Film whose microphone is allowed or turned off partway can mix silent clips and clips with sound; a Developed Movie's sound is its recorded sound, a Soundtrack in its place, or silence; the recorded sound is kept as captured. | FR-27, FR-28 | 0018 |
 | 4 | Focus switch | "A" | "Auto / Fixed" on the Disposable and the Super 8, "Auto / Manual" on the 6×6; every new Film starts on Auto; Auto is continuous autofocus plus tap-to-focus on all five Cameras. | FR-25 | 0020 |
 | 5 | Viewfinder | "A, change the Camera's name to Super 8, 16mm, Instant, Disposable, 6x6, and the count should be just a number." | Every Viewfinder area is the iPhone Camera app's 4:3 photo frame, full width, the same on every Camera and iPhone and in every hold; a one-line header beside Done with the short name and the count as a number. | FR-23 | 0019 |
-| 6 | Camera names | "B, we don't need the year of the camera" | Disposable, Instant, 6×6, Super 8 and 16mm on every screen; the catalog description carries the era. | FR-24 | 0019 |
+| 6 | Camera names | "B, we don't need the year of the camera" | Disposable, Instant, 6×6, Super 8 and 16mm on every screen; the Disposable's, the Instant's and the Super 8's catalog descriptions carry their era, and the 6×6's and the 16mm's name no decade. | FR-24 | 0019 |
 | 7 | Darkroom size | "A" | The print keeps one area whatever tool is selected; the controls sit in one fixed-height band below it, which scrolls inside itself at large text sizes. | FR-30 | 0021 |
 | 8 | Darkroom never sideways | "A" | The Darkroom keeps its portrait layout in every hold, opened from anywhere; the 2026-10-14 side-by-side arrangement is removed; the photo view turns with the iPhone. | FR-29 | 0021 |
 | 9 | Adjust | "C", "A", "A" | Crop is renamed Adjust and gains Rotate left, Rotate right and a straightening slider from -45° to +45° in 0.1° steps; the Instant gets quarter turns only. | FR-31 | none needed (passes the physical-technique test) |
@@ -56,7 +56,7 @@ Each ask was settled the same day by choosing among lettered options; the reply 
 | 12 | Dodge/Burn | "remove dodge and burn from current darkroom. lets save it for v2" | No Dodge/Burn tool in v1; its requirement and limit move to v2; a print saved with strokes keeps printing as saved, and Reset clears them. | FR-34 | 0023 |
 | 13 | The Instant's reveal at the camera (DEC-20) | "1A" | The photo view showing a new Instant print over the camera stays upright while the shooting screen is up; it turns only when opened from the Film screen. | FR-22 | 0021 |
 | 14 | The sound format (DEC-19) | "2 Same format as iphone's own camera" | A Developed Movie's recorded sound and its export use the format the iPhone's own Camera app records. | FR-28 | 0018 |
-| 15 | The Instant's originals | "for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure." | The question about keeping an Instant print's original comes once, after the pack's last print is revealed, and covers every print still undecided. | FR-35 | none needed (a reversible flow change) |
+| 15 | The Instant's originals | "for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."; then "C" | The question about keeping an Instant print's original comes once, at the camera, after the pack's last print is revealed, and covers every print still undecided; missed or cancelled, it does not come back by itself. | FR-35 | none needed (a reversible flow change) |
 
 ## 2. What this amendment supersedes
 
@@ -93,7 +93,7 @@ The superseded text stays where it is, with a note pointing here; nothing is del
 | FR-08, third paragraph | "The exact per-print presentation of this choice for Instant needs interaction design; it must not export future sealed frames." | FR-35 decides when the Instant asks; the rule against exporting future sealed frames stands |
 | Section 15, DEC-13 row | The privacy text "says there is no ... microphone" | FR-27, Privacy |
 | Section 16 | "saturation/AI retouching" | FR-32 (AI retouching stays out) |
-| Section 17 | Row "Saturation/basic modern editor": "Analog-constrained per-photo Darkroom without saturation; reversible Dodge/Burn included."; row "A single lens on every Camera": "every other Camera keep their single lens" | FR-32, FR-34, FR-26; section 9 adds rows |
+| Section 17 | Row "Saturation/basic modern editor": "Analog-constrained per-photo Darkroom without saturation; reversible Dodge/Burn included."; row "A single lens on every Camera": "every other Camera keep their single lens"; the Darkroom-ranges row's "Print exposure and Dodge and Burn each run from -3.0 to +3.0 stops" and "crop is per photo"; the export row's Movies "silent"; the DEC-13 row's "no server, account, analytics or microphone" | FR-32, FR-34, FR-26; FR-34 (the Dodge and Burn limit moves to v2; print exposure's stands) and FR-31 (Adjust); FR-28 (DEC-19); FR-27; section 9 adds rows |
 
 ### 2.2 ADRs and recorded decisions
 
@@ -254,12 +254,13 @@ The catalog descriptions, which Load Film shows (`controlsLabel` and `lookLines`
 **Required.**
 
 1. The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, from `CameraPackage.shortName`: the Film screen's and the shooting screen's headers change to it, and the catalog, Load Film, the Journal and every other place a Camera is named keep it.
-2. Each catalog description carries the era and the look, for example that the Super 8 is a 1960s home-movie camera.
+2. Each catalog description carries the look, and the Disposable's, the Instant's and the Super 8's also carry their era, for example that the Super 8 is a 1960s home-movie camera.
+   The 6×6's and the 16mm's name no decade, because their color films are present-day ones, as decided on 2026-10-06 (version 2.0).
 3. Product text keeps "6×6" with the multiplication sign, spoken "6 by 6" (**Firstmate's stated default**, the existing rule).
 4. A Film already loaded keeps its stored Camera package, displayName included, and is shown with the new name (**Firstmate's stated default**): the shown name follows the Camera, not the stored package, as `shortName` already does.
 5. Suggested titles of new Films keep the short names they use today (`suggestedTitle`); a Film's title, once kept or chosen, is the person's and never changes with this.
 
-**Acceptance.** No screen of the app shows "1990s", "1970s", "1960s", "Medium Format", "Home Movie" or "Cinema" in a Camera's name, for a new Film or for a Film loaded before this change; the catalog descriptions name each Camera's era.
+**Acceptance.** No screen of the app shows "1990s", "1970s", "1960s", "Medium Format", "Home Movie" or "Cinema" in a Camera's name, for a new Film or for a Film loaded before this change; the catalog descriptions of the Disposable, the Instant and the Super 8 name their era, and those of the 6×6 and the 16mm name no decade.
 
 **Data and compatibility.** No stored record is rewritten, and `CameraPackage.displayName` stays stored but is no longer shown; code identifiers (`disposable1990s`, `instant1970s`, `mediumFormat6x6`, `super8HomeMovie`, `cinema16mm`) may stay.
 Format Reference names stay internal and never appear in the product.
@@ -602,7 +603,7 @@ The Film screen asks the same for prints revealed while it was away (its reveal 
 3. One choice covers every print of the pack still undecided (**Firstmate's stated default**).
 4. Discarded prints, and prints already decided through the Film screen's Originals button, are not asked about again (**Firstmate's stated default**).
 5. The Film screen's Originals button stays, so a pack that is never finished can still be decided at any time (**Firstmate's stated default**).
-6. If the app closes or leaves the camera before the question is answered, the Film screen asks on the next visit (**Firstmate's stated default**: today's reveal-watch path, moved to the pack's completion).
+6. The question is asked only there: if it is missed, because the app closes or leaves the camera first, or cancelled, it does not come back by itself, and the Film screen asks nothing on its own; its Originals button is the way to decide later, and nothing new is stored (the captain, "C").
 7. The choice and its effects are unchanged: originals are removed from Immerse only after a usable developed master is safely stored, and only after a successful Photos save where saving was chosen (FR-08); no future sealed frame is ever exported.
 
 **Acceptance.**
@@ -610,7 +611,7 @@ The Film screen asks the same for prints revealed while it was away (its reveal 
 - Exposures 1 to 9 of a pack each reveal a print with no originals question after it.
 - After the tenth print's view closes, one sheet titled "Originals of 10 photos" (fewer if some were discarded or decided) asks once; confirming applies to all of them.
 - A print decided earlier from the Film screen's Originals button is not in that count.
-- Quitting the app before answering, then opening the Film, brings the question there.
+- Quitting the app before answering, or cancelling the sheet, and then opening the Film brings no question; the Film screen's Originals button decides the prints still undecided.
 - A pack left at 6 of 10 can have its six originals decided from the Originals button, and is then not asked about them again.
 
 **Limits.** Only the Instant changes; the roll Cameras keep their choice at Develop Film, and the movie Cameras theirs.
@@ -669,7 +670,7 @@ Changes: `NSMicrophoneUsageDescription` added; the camera purpose string's "sile
 | Live sound (FR-27) | Question, declined path, note, save check, stored package | Real sound, sync with picture, calls, Bluetooth and wired microphones |
 | Sound choice and export (FR-28) | Assembly, choice, exported file read back | Playback through the speaker and in Photos |
 | Darkroom (FR-29 to FR-34) | Everything, including render bytes | One pass on a phone for feel |
-| Instant originals (FR-35) | The single question after the pack, the count, the Film screen fallback | One real pack on a phone |
+| Instant originals (FR-35) | The single question after the pack, the count, no question after a missed or cancelled one, the Originals button | One real pack on a phone |
 
 No simulator result is a physical-iPhone result; QA-17 holds the phone checks, and the manual test plan gains a section for them with its own letter.
 
@@ -718,7 +719,7 @@ Each task's title carries today's date, its stable ID is in the tracker's group 
   Landing slice 1 first and rebasing slice 2 on it is the simpler order; the microphone note must sit in FR-23's notice block.
 - **The photo view and the Darkroom.** UX-10 and DRK-11 both change how the Darkroom is presented (`PhotoView.swift`, `InterfaceOrientationLock.swift`): the photo view turns and the Darkroom opened from it must not.
   Whichever lands second makes the other's entry point hold: DRK-11's "opened from anywhere" includes the photo view once it exists.
-- **The Instant's reveal flow.** UX-11 (the reveal in the photo view, upright at the camera) and DEV-12 (the originals question after the pack) both change what follows an Instant exposure at the camera (`CaptureView.swift`'s print and `OriginalAsk` sheets, and `FilmDetailView`'s reveal watch), so they belong in one slice and DEV-12 follows UX-11; slice 1 also changes `CaptureView.swift`.
+- **The Instant's reveal flow.** UX-11 (the reveal in the photo view, upright at the camera) and DEV-12 (the originals question after the pack) both change what follows an Instant exposure at the camera (`CaptureView.swift`'s print and `OriginalAsk` sheets, and `FilmDetailView`'s own question about prints revealed while it was away, which DEV-12 removes), so they belong in one slice and DEV-12 follows UX-11; slice 1 also changes `CaptureView.swift`.
 - **The Darkroom band.** DRK-12 is sized for the tallest tool, so it is built after DRK-13 to DRK-16 settle the tool set, and after DRK-11 removes the landscape arrangement.
 - **Phone acceptance.** QA-17 needs every slice; the manual test candidate is re-pinned when they land.
 
@@ -774,7 +775,7 @@ Acceptance: the new print alone, no swiping, the Darkroom button, upright in eve
 
 **DEV-12 - 2026-10-26 - The Instant asks about originals once, after the pack** (FR-35)
 Dependencies: UX-11 (same reveal flow at the camera).
-Acceptance: FR-35; the reveal-watch fallback on the Film screen; `AGENTS.md`'s sentence on `OriginalAsk` corrected.
+Acceptance: FR-35; no question on the Film screen after a missed or cancelled one; `AGENTS.md`'s sentence on `OriginalAsk` corrected.
 
 **DRK-11 - 2026-10-26 - The Darkroom upright in every hold** (FR-29)
 Dependencies: DEC-18; coordinate with UX-10.
@@ -843,3 +844,4 @@ These rows extend PRD 2.1 section 17.
 | Movie sound format, open in the draft (DEC-19) | Captain, 2026-10-26 ("2 Same format as iphone's own camera"): the format the iPhone's own Camera app records (FR-28, ADR 0018). |
 | The Instant asks about keeping the original after each print (2026-10-13, DEC-11) | Captain, 2026-10-26 ("for Instant camera, Originals option appears AFTER all 10 exposures are used instead of after each exposure."): one question after the pack's last print, covering every print still undecided (FR-35). |
 | One Developed Movie never mixes sound and silent clips (decision 3, 2026-10-26) | Captain, 2026-10-26 ("A"): once the microphone is allowed partway through a Film after being declined, the next clips record sound, and once it is turned off partway, the next clips record silent, so such a Film's Developed Movie can mix silent clips and clips with sound, and nothing is blocked; the rule that a Developed Movie never mixes them holds only for a Film loaded before the build that adds Live Audio (MOV-12), which stays silent throughout (FR-27, ADR 0018). |
+| The Film screen asks about the Instant's originals on the next visit if the question was missed (FR-35 in the draft, Firstmate's stated default) | Captain, 2026-10-26 ("C"): the question is asked only at the camera, once, after the pack's last print is revealed and its view closes; missed or cancelled, it does not come back by itself, the Film screen's Originals button is the way to decide later, and nothing new is stored (FR-35). |

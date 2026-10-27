@@ -576,13 +576,14 @@ Screenshots on the smallest and largest supported iPhones go to the captain for 
 
 **The Cameras are named without a decade.**
 Asked whether the short names belonged on the shooting screen only, as firstmate recommended, or everywhere, he chose everywhere: "B, we don't need the year of the camera".
-The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, and each catalog description carries the era and the look.
+The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, and each catalog description carries the look.
+The Disposable's, the Instant's and the Super 8's descriptions also carry their era; the 6×6's and the 16mm's name no decade, because their color films are present-day ones, as decided on 2026-10-06.
 Product text keeps "6×6" with the multiplication sign, spoken "6 by 6", as before.
 A Film already loaded keeps its stored Camera package unchanged and is shown with the new name.
 The Format References (ADR 0015) are unchanged and stay internal.
 
 The alternatives considered were keeping the viewfinder sized to the room under a taller header, as ADR 0017 had it, and short names on the shooting screen only, with the full names everywhere else.
-The accepted costs are that the controls now sit over the bottom of the live picture or in the shutter bar instead of beside it, that the Disposable's picture has bars at its sides, as a square has in the iPhone Camera app, and that the era no longer shows in a Camera's name, only in its description.
+The accepted costs are that the controls now sit over the bottom of the live picture or in the shutter bar instead of beside it, that the Disposable's picture has bars at its sides, as a square has in the iPhone Camera app, and that the era no longer shows in a Camera's name, only in the Disposable's, the Instant's and the Super 8's descriptions.
 
 Decided on 2026-10-26.
 
@@ -682,6 +683,7 @@ It supersedes ADR 0017's "Every other screen keeps turning with the iPhone, the 
 `PhotoView` on `main` already showed one developed print with Darkroom and Discard buttons before the Darkroom; the photo view decided here is that view made full-screen, swiping and turning.
 The photo view that shows the Instant's reveal at the camera stays upright under ADR 0017's "Instant - 1", as the captain chose on reading the PRD draft ("1A", DEC-20 in the tracker), which the ADR now records.
 The same day he moved the Instant's question about keeping each print's original from after each print to once after the pack's last print ("Originals option appears AFTER all 10 exposures are used"), reversing that part of the 2026-10-13 decision under DEC-11; it changes when a question is asked, is easily reversed and is no real trade-off, so it has no ADR of its own, and the PRD amendment's FR-35 and the tracker's DEV-12 record it, with this note and the ADR's reveal sentence pointing there.
+Asked the same day what happens when that question is missed or cancelled, he chose "C": it is asked only at the camera, does not come back by itself, and the Film screen's Originals button decides later.
 
 ### ADR 0022
 

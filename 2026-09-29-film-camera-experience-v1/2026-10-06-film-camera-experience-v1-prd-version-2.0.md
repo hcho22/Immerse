@@ -638,7 +638,7 @@ Present the original-export choice at personal Development. If a personal user c
 
 **Acceptance:** Denied Photos permission or failed writing is not export success. Source cleanup must not destroy the only usable developed result. Revealed personal media remains viewable offline. Saving developed output and saving originals are independent choices. Films, sealed state and reversible edits return on a replacement iPhone restored from a device backup. The privacy copy says that restoring an older backup can bring back app data removed after it, including discarded media or a deleted whole Film (DEC-17).
 
-> **2026-10-26:** The Instant's originals choice is presented once, after the pack's last print, for every print still undecided, and the Film screen can decide it at any time before that ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-35).
+> **2026-10-26:** The Instant's originals choice is presented once, at the camera, after the pack's last print, for every print still undecided; missed or cancelled, it is not presented again, and the Film screen's Originals button can decide it at any time ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-35).
 
 ## 8. Deferred to v2 - Group Film and Account requirements
 
@@ -1360,7 +1360,11 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
-> **2026-10-26:** The rows "Saturation/basic modern editor" and "A single lens on every Camera" are superseded, and so is the Darkroom-ranges row's "the Instant asks about keeping the original after each print"; the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) adds the decisions of that day in its section 9.
+> **2026-10-26:** The rows "Saturation/basic modern editor" and "A single lens on every Camera" are superseded.
+> In the Darkroom-ranges row, Dodge and Burn's -3.0 to +3.0 stops move to v2 while print exposure's stand, crop is now part of Adjust, and "the Instant asks about keeping the original after each print" now reads once, after the pack.
+> The export row's Movies are no longer "silent": a Developed Movie exports with its sound choice, in the iPhone Camera app's own sound format (DEC-19).
+> The DEC-13 row's "no ... microphone" now says the microphone records only the sound of movie clips.
+> The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) names each of these clauses and what replaces it in its section 2.1, and adds the decisions of that day in its section 9.
 
 ## 18. Current evidence and definition of done
 
