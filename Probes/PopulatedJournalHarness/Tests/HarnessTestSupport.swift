@@ -88,6 +88,27 @@ class HarnessTestCase: XCTestCase {
         element.tap()
     }
 
+    /// A sheet is still rising when its controls first exist, whether the app raised it on its own or a tap of the test's
+    /// did, and iOS ignores a tap sent while it rises. Two looks alike a quarter of a second apart mean it has come to rest.
+    func waitUntilStill(_ app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        var last = app.screenshot().pngRepresentation
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.25)
+            let now = app.screenshot().pngRepresentation
+            if now == last { return true }
+            last = now
+        }
+        return false
+    }
+
+    /// Taps the photo view's Darkroom button once the screen is still: a tap sent 0.3 s after the print was tapped, while
+    /// the photo view was still rising, did nothing on the iPhone 17 Pro Max simulator. One tap, never a second.
+    func tapDarkroom(_ app: XCUIApplication) {
+        XCTAssertTrue(waitUntilStill(app), "The photo view has come to rest before Darkroom is tapped")
+        app.buttons["Darkroom"].tap()
+    }
+
     override func setUp() async throws {
         try await super.setUp()
         XCUIDevice.shared.orientation = .portrait

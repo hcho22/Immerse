@@ -44,12 +44,12 @@ The two camera changes, which the pin before this one was made for, are these:
 The captain asked for both on 2026-10-16 and for the plan to be updated on 2026-10-17 ("please update the iphone test plan"), following his standing practice from 2026-10-14 ("test plan - after crop") of re-pinning the plan once the changes it waits for have landed.
 The pin of 2026-10-17 was the first commit on `main` that held both.
 
-The sideways Darkroom of the pin before this one, and the four changes of 2026-10-14 before it, are still in the candidate and their scenarios are unchanged but where this plan says so:
+The side-by-side Darkroom of the earlier pin remains in its historical evidence, but its current scenarios have been rewritten to the 2026-10-26 upright-layout requirement below. The four other changes of 2026-10-14 remain in the candidate:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
 | https://github.com/hcho22/Immerse/pull/33 | Screen tests that load a Film start on an empty Journal. Its one change to the app is a test identifier on each Journal row (`App/Immerse/Sources/JournalView.swift`), which shows nothing and which VoiceOver does not read | [064](ui-test-isolation-064.md) |
-| https://github.com/hcho22/Immerse/pull/34 | The Darkroom held sideways puts the print on the left, a column of tool buttons beside it with Reset to Original at its foot, and the chosen tool's controls on the right; held upright it is as it was. Opened from a Journal row or the Film screen it still does; opened from an Instant's print over the camera it keeps the camera's portrait layout (PR 38) | [065](darkroom-landscape-side-by-side-065.md) |
+| https://github.com/hcho22/Immerse/pull/34 | Historical behavior: the Darkroom used a side-by-side arrangement when held sideways; that arrangement is superseded by FR-29. | [065](darkroom-landscape-side-by-side-065.md) |
 
 The four changes of 2026-10-14, which the pin of that day was made for, are these:
 
@@ -117,7 +117,7 @@ Each record's own list of what only a phone can show is carried by those scenari
 | The 6×6's rear viewfinder shows the scene the normal way, not reversed; the front viewfinder is still mirrored; its Load Film note about the reversed viewfinder is gone | [068](capture-sideways-zoom-068.md), [ADR 0017](../../2026-09-29-film-camera-experience-v1/adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) | [H05](#h05---the-6x6-viewfinder-is-not-reversed), M01, M05 |
 | The 6×6's rear camera offers a zoom step for each lens the iPhone reports, and for a native crop where it reports one, with Focus and Exposure rows that always take their room | [068](capture-sideways-zoom-068.md) | [H06](#h06---the-zoom-steps-on-this-iphone), [H07](#h07---focus-exposure-and-a-zoom-while-a-photo-saves), [H08](#h08---the-6x6-picture-at-every-zoom-step) |
 | Tapping **Done** with the iPhone on its side returns to screens that turn with it; the camera opens in the portrait layout | [068](capture-sideways-zoom-068.md) | [H09](#h09---done-while-the-iphone-is-sideways) |
-| An Instant's print, its question and the Darkroom opened from that print stay in the camera's portrait layout while the camera is up; the Darkroom opened from the Journal or the Film screen is unchanged | [068](capture-sideways-zoom-068.md), [ADR 0017](../../2026-09-29-film-camera-experience-v1/adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) | [H10](#h10---the-darkroom-and-an-instant-print-after-the-camera), [C01](#c01---the-instants-camera-after-each-exposure), W01 |
+| An Instant's print, its question and the Darkroom opened from that print stay in the camera's portrait layout while the camera is up; the Darkroom opened from any entry point keeps one portrait arrangement and restores the covered screen's orientation | [068](capture-sideways-zoom-068.md), [ADR 0017](../../2026-09-29-film-camera-experience-v1/adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) | [H10](#h10---the-darkroom-and-an-instant-print-after-the-camera), [C01](#c01---the-instants-camera-after-each-exposure), [W01](#w01---the-darkroom-keeps-one-layout-in-every-hold) |
 
 ### What changed between `38792bb` and `771d5e2`
 
@@ -128,29 +128,29 @@ Each record's own list of what only a phone can show is carried by those scenari
 
 | Change since `38792bb` | Record | Scenarios |
 | --- | --- | --- |
-| Held sideways, the Darkroom puts the print on the left, a 44 pt column of tool buttons beside it with Reset to Original at its foot, and the chosen tool's heading and controls on the right in a column that scrolls on its own; there is no bottom bar in landscape | [065](darkroom-landscape-side-by-side-065.md) | [W01](#w01---the-darkroom-held-sideways), M28 |
-| In landscape, up to the extra large text size, a slider's caption sits beside it (Filtration, Crop and Dodge / Burn), and the space between controls is 12 pt | [065](darkroom-landscape-side-by-side-065.md) | [W01](#w01---the-darkroom-held-sideways), [W02](#w02---text-sizes-held-sideways) |
-| Turning the iPhone keeps the tool, the edits, the Dodge or Burn choice and its strength; a stroke being drawn as it turns is dropped, and a slider's edit cut off by the turn is rendered | [065](darkroom-landscape-side-by-side-065.md), "Turning the iPhone" | [W03](#w03---turning-between-edits), [W04](#w04---turning-in-the-middle-of-a-stroke-or-a-slider-drag) |
-| A column that cannot show everything at rest flashes its scroll indicator; on the shortest screens the tool column gives up its margins, and where even that is not enough, as with Display Zoom, it scrolls with Reset kept whole | [065](darkroom-landscape-side-by-side-065.md), "The Shortest Landscape Darkroom" and "Showing That a Column Scrolls" | [W02](#w02---text-sizes-held-sideways), [W05](#w05---display-zoom-held-sideways) |
-| The Darkroom read with VoiceOver in landscape | [065](darkroom-landscape-side-by-side-065.md) | [W06](#w06---voiceover-held-sideways) |
-| Held upright, nothing changed | [065](darkroom-landscape-side-by-side-065.md), "Portrait unchanged" | [W01](#w01---the-darkroom-held-sideways), D01, [D04](#d04---the-crop-tool-on-a-short-screen) |
+| Held sideways, the Darkroom used the historical side-by-side layout with no bottom bar | [065](darkroom-landscape-side-by-side-065.md) | Superseded by FR-29; current layout is W01 |
+| Captions sat beside sliders in the historical landscape layout | [065](darkroom-landscape-side-by-side-065.md) | Superseded by FR-29; current large-text checks are W04 |
+| Turning preserved edits in the historical landscape layout | [065](darkroom-landscape-side-by-side-065.md), "Turning the iPhone" | Superseded layout; current orientation return is W05 |
+| Tool and control columns scrolled independently in the historical landscape layout | [065](darkroom-landscape-side-by-side-065.md), "The Shortest Landscape Darkroom" and "Showing That a Column Scrolls" | Superseded by FR-29; current fixed-band scrolling is W04 |
+| VoiceOver was not checked in the historical landscape layout | [065](darkroom-landscape-side-by-side-065.md) | Current upright-layout VoiceOver check is W06 |
+| Held upright, the historical portrait layout remained in place | [065](darkroom-landscape-side-by-side-065.md), "Portrait unchanged" | Current all-hold layout is W01; current fixed-area checks are W02 to W04 |
 | A test identifier on each Journal row, for the screen tests; nothing on screen changes | [064](ui-test-isolation-064.md) | None |
 
 ### What changed between `5c3a217` and `38792bb`
 
-This table was written for the 2026-10-14 pin and is kept as it was; the scenarios it names still carry those checks, but D04's landscape step, which the sideways Darkroom changed, now points to the W scenarios.
+This table records the 2026-10-14 candidate. Its side-by-side layout checks are historical and superseded by FR-29; current Darkroom scenarios are W01 to W06. D04 no longer tests a landscape arrangement.
 
 | Change since `5c3a217` | Record | Scenarios |
 | --- | --- | --- |
-| Darkroom limits: print exposure -3.0 to +3.0 stops, Dodge and Burn strokes of 0.1 to 3.0 stops with a Strength slider, overlapping strokes held to 3 stops together, a stored value outside the limits refused and explained | [060](darkroom-export-decisions-060.md) | M13, [D01](#d01---the-darkrooms-limits-under-a-finger) |
+| Darkroom limits: print exposure -3.0 to +3.0 stops, Dodge and Burn strokes of 0.1 to 3.0 stops with a Strength slider, overlapping strokes held to 3 stops together, a stored value outside the limits refused and explained | [060](darkroom-export-decisions-060.md) | M13, [D01](#d01---darkroom-controls-saving-and-reset) |
 | Export sizes and formats as approved, a Developed Clip of whole frames, a cropped 6×6 print square to the pixel | [060](darkroom-export-decisions-060.md) | M15, M19, [D02](#d02---export-sizes-and-formats-read-from-photos), L08 |
 | The Instant shows each print, then asks about its original; a revealed print's original is saved to Photos as soon as the choice is confirmed | [060](darkroom-export-decisions-060.md) | M15, [D03](#d03---the-instant-asks-about-each-prints-original) |
 | A soundtrack can always be changed later (no soundtrack ships, so no control shows) | [060](darkroom-export-decisions-060.md) | M20 |
-| The Darkroom under an error explanation takes the explanation's height from the print, and the Crop tool's Size caption sits with the others | [060](darkroom-export-decisions-060.md), "After testing" | M13, [D04](#d04---the-crop-tool-on-a-short-screen) |
+| The prior Darkroom error layout took the explanation's height from the print; it is superseded by the fixed controls band | [060](darkroom-export-decisions-060.md), "After testing" | M13, [D04](#d04---adjust-and-a-short-screen) |
 | The Instant's contrast B, treatment version 4; an Instant pack loaded under version 3 keeps version 3 | [061](instant-study-and-toning-061.md) | L05, L07, [I01](#i01---the-instants-contrast-on-the-phone), [I03](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast) |
 | Both chemical toners from the untoned print to the strength shown as 1.00, kept in one place | [061](instant-study-and-toning-061.md) | M13, [I02](#i02---sepia-and-selenium-on-the-phone) |
 | The warning below 2 GB free; the Film screen's gray text slightly darker and its progress bar hidden from VoiceOver | [062](low-storage-warning-062.md) | M08, M28, [S01 to S05](#low-storage-on-a-real-iphone) |
-| The Crop tool's print gives up height in portrait, down to 64 pt, so all three Crop sliders show; landscape unchanged | [063](crop-fit-short-screens-063.md) | [D04](#d04---the-crop-tool-on-a-short-screen) |
+| The 2026-10-14 Crop fit gave the print up height in portrait, down to 64 pt; the 2026-10-26 fixed print area supersedes it | [063](crop-fit-short-screens-063.md) | [D04](#d04---adjust-and-a-short-screen) |
 
 ### What changed between `71391e4` and `5c3a217`
 
@@ -179,7 +179,7 @@ execute them now. Do not ask the captain to reconnect a phone on this plan's bas
 The captain's instruction of 2026-10-13, "update the Immerse iPhone test plan now", asked for this document to be brought up to date.
 It did not start the manual phase, and it extends none of the scopes below.
 His answer of 2026-10-14, "test plan - after crop", chose when this plan was re-pinned again; it too starts no manual phase and extends no scope.
-The re-pin of 2026-10-15, after his choice of 2026-10-14 for the Darkroom ("landscape - side by side") had landed, follows that same practice and likewise starts nothing and extends nothing.
+The 2026-10-15 re-pin followed the captain's then-current "landscape - side by side" choice. FR-29 supersedes that layout; W01 to W06 now cover the upright Darkroom.
 So does the re-pin of 2026-10-17, made after his instruction "please update the iphone test plan" and the two camera changes of 2026-10-16 had landed.
 
 The earlier **"Confirm device and approve probe-only test"** approval covers only
@@ -200,7 +200,7 @@ Before future **agent execution**, Firstmate must supply a concrete action scope
 | Photos exports/container inspection | Only named synthetic test media, explicit add-only writes and read-only access to this test app's container. No personal Photos/library/Keychain dump or deletion. |
 | Trial faults and uninstall | Named production-protocol test artifact, exact failpoints, receipt service and synthetic app data; separately approved delete/reinstall of that app. Approval of a marker does not authorize production Trial consumption/reset. |
 | Backup/restore, OS update or erase | Dedicated/resettable source and destination, protected existing data, exact operation and recovery plan. Whole-device overwrite, account changes and erasure are never inferred from device availability. |
-| Display Zoom, text size, VoiceOver and orientation lock ([W01 to W06](#the-sideways-darkroom-on-a-real-iphone), [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone), [D04](#d04---the-crop-tool-on-a-short-screen), [S04](#s04---voiceover-and-the-largest-text-size)) | Only the settings the scenario names, each written down before it is changed and set back after, as the scenario's last step says. For the captain on his own phone these are his own settings; for an agent the row above applies. |
+| Text size, VoiceOver and orientation ([W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone), [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone), [D04](#d04---adjust-and-a-short-screen), [S04](#s04---voiceover-and-the-largest-text-size)) | Only the settings the scenario names, each written down before it is changed and set back after, as the scenario's last step says. For the captain on his own phone these are his own settings; for an agent the row above applies. |
 | Filling free space ([S01 to S05](#low-storage-on-a-real-iphone)) | Only test filler files the tester adds for the run and removes after it, never the deletion of personal photos, videos, messages, apps or their data. No filling a personal phone to exhaustion (M08); the one case that comes close, S05, runs only if the captain chooses it himself. |
 | Billing | Approved products/configuration, explicit local StoreKit or sandbox mode and account/action scope. No purchase, sandbox account switch, App Store Connect edit or real charge is authorized now. |
 | Distribution | Separate retained ordinary release task plus concrete TestFlight/App Store authority through Firstmate. This handoff authorizes neither. |
@@ -222,8 +222,8 @@ The rows after it were recorded at the earlier candidates they name and keep the
 | Gates at the earlier pin `d348d99` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/43 passed (run 39202888924, all four parts and `local-native`). `main`'s own check on `d348d99` (run 39252986897) failed in the harness part, on `PopulatedWorkflowTests.testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize` (packages, ui-text and ui-flows passed); its check found no dropped touch for that test, and `local-native` failed after it. No cause was claimed when this row was written; [main-ci-flakes-072](main-ci-flakes-072.md) has since recorded one. `main`'s check on the plan's re-pin to `3a008ba` passed (run 39196559304). A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `3a008ba` (history) | The pull request check of each change passed: for https://github.com/hcho22/Immerse/pull/40 run 39085816736 and for https://github.com/hcho22/Immerse/pull/41 run 39141419393, and `main`'s own check on `3a008ba` passed (run 39165281093). `main`'s check on `7447153`, the merge of https://github.com/hcho22/Immerse/pull/40, failed (run 39098085159); it was not looked into here. A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `79a1b1c` (history) | Each of the two camera changes since `771d5e2` ran its own tests on simulators, and each record says what it ran: [067](instant-camera-stays-on-067.md) and [068](capture-sideways-zoom-068.md), the latter noting that its screen tests were not run again after its last corrections. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/37 run 38975556396 at its head `197d790`, and for https://github.com/hcho22/Immerse/pull/38 run 39010839301 at its head `fd28a9f` (its run 39004998658 at `2eda3b4` had failed before the last fixes). `main`'s own checks failed on both: on `003d8d4`, the merge of https://github.com/hcho22/Immerse/pull/37, in the harness part (run 38980604148, the Darkroom landscape and crop tests of `PopulatedWorkflowTests`), and on `79a1b1c` in the ui-flows part (run 39041986761, `TestingUnlockUITests.testUnlockIndicatorShowsAfterTheSettingsSwitchIsTurnedOn`). Both trees passed the same checks on their own pull requests, so they look like flaky screen tests; no cause is claimed here, and a separate task is looking into them. A Mac and simulators only, and the simulator has no camera: no iPhone ran anything, and scenarios [H01 to H10](#the-sideways-shooting-screen-and-the-zoom-steps-on-a-real-iphone) and [C01](#c01---the-instants-camera-after-each-exposure) carry what that leaves. |
-| Gates at the earlier pin `771d5e2` (history) | Each of the two app changes since `38792bb` ran its own tests on simulators, and each record says what it ran: [064](ui-test-isolation-064.md) and [065](darkroom-landscape-side-by-side-065.md) "Runs", the latter on iPhone SE (3rd generation), iPhone 13 mini and iPhone 17 Pro simulators on iOS 26.5, in light and in dark. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/33 run 38724598104 at its head `ae29314`, and for https://github.com/hcho22/Immerse/pull/34 run 38790053549 at its head `4f1bb47`. That head was not brought up to https://github.com/hcho22/Immerse/pull/33 before it merged, so no pull request check ran the tree of `771d5e2` itself; `main`'s check on `a12e360`, the merge of https://github.com/hcho22/Immerse/pull/33, passed (run 38740399174), and its run on `771d5e2` was still running when this was written (https://github.com/hcho22/Immerse/actions/runs/38800044550): read its result before testing. A Mac and simulators only: no iPhone ran anything, the simulator offers no Display Zoom, and scenarios [W01 to W06](#the-sideways-darkroom-on-a-real-iphone) carry what that leaves. |
-| Gates at the earlier pin `38792bb` (history) | Each of the four changes ran its own tests on a Mac and on simulators, and each record says what it ran: [060](darkroom-export-decisions-060.md) "What was run" and the rounds after it, [061](instant-study-and-toning-061.md) "What ran", [062](low-storage-warning-062.md) "Runs" (all four parts of the check on its merge with `main`), [063](crop-fit-short-screens-063.md) "Runs". The pull request check of each passed; for https://github.com/hcho22/Immerse/pull/31 that was run 38671959157 at its head `495c764`, whose tree is the same as `38792bb`'s. `main`'s own check failed on `9d54ba1` (the packages part) and on `5c427bc` (the harness part, on `RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths`, a test older than those changes, as [063](crop-fit-short-screens-063.md) records), and its run on `38792bb` was still running when that row was written (https://github.com/hcho22/Immerse/actions/runs/38684788575); it has since passed. A Mac and simulators only, an iPhone SE (3rd generation) simulator among them: no iPhone ran anything, and scenarios [D01 to D04, I01 to I03 and S01 to S05](#the-2026-10-14-changes-on-a-real-iphone) carry what that leaves. |
+| Gates at the earlier pin `771d5e2` (history) | Each of the two app changes since `38792bb` ran its own tests on simulators, and each record says what it ran: [064](ui-test-isolation-064.md) and [065](darkroom-landscape-side-by-side-065.md) "Runs", the latter on iPhone SE (3rd generation), iPhone 13 mini and iPhone 17 Pro simulators on iOS 26.5, in light and in dark. The pull request check of each passed: for https://github.com/hcho22/Immerse/pull/33 run 38724598104 at its head `ae29314`, and for https://github.com/hcho22/Immerse/pull/34 run 38790053549 at its head `4f1bb47`. That head was not brought up to https://github.com/hcho22/Immerse/pull/33 before it merged, so no pull request check ran the tree of `771d5e2` itself; `main`'s check on `a12e360`, the merge of https://github.com/hcho22/Immerse/pull/33, passed (run 38740399174), and its run on `771d5e2` was still running when this was written (https://github.com/hcho22/Immerse/actions/runs/38800044550): read its result before testing. A Mac and simulators only: no iPhone ran anything, the simulator offers no Display Zoom, and the old small-screen landscape Darkroom layout is superseded by FR-29; simulator approval screenshots carry the smallest-screen comparison. |
+| Gates at the earlier pin `38792bb` (history) | Each of the four changes ran its own tests on a Mac and on simulators, and each record says what it ran: [060](darkroom-export-decisions-060.md) "What was run" and the rounds after it, [061](instant-study-and-toning-061.md) "What ran", [062](low-storage-warning-062.md) "Runs" (all four parts of the check on its merge with `main`), [063](crop-fit-short-screens-063.md) "Runs". The pull request check of each passed; for https://github.com/hcho22/Immerse/pull/31 that was run 38671959157 at its head `495c764`, whose tree is the same as `38792bb`'s. `main`'s own check failed on `9d54ba1` (the packages part) and on `5c427bc` (the harness part, on `RetainedWorkflowTests.testDarkroomAccessibleControlsReachNonGestureEditingPaths`, a test older than those changes, as [063](crop-fit-short-screens-063.md) records), and its run on `38792bb` was still running when that row was written (https://github.com/hcho22/Immerse/actions/runs/38684788575); it has since passed. A Mac and simulators only, an iPhone SE (3rd generation) simulator among them: no iPhone ran anything. The 2026-10-14 side-by-side Darkroom and Crop fit are historical; the current manual scenarios are rewritten for the 2026-10-26 amendment. |
 | Gates at the earlier pin `5c3a217` (history) | [prd-2-slice-4-looks.md](prd-2-slice-4-looks.md), "Tests": on 2026-10-12 `sh Scripts/validate-local.sh` passed with a simulator named for the app and for the harness (iPhone 17 Pro, iOS 26.5): every package's tests, both unsigned app builds, the 30 populated-harness tests, the render tests inside the simulator, the app's 76 UI tests in light and its 13 audit tests in dark. Three review rounds followed that day and reran only what that record names for each, ending with the RenderCore tests on the Mac (98) and inside the simulator (96). The pull request's CI check passed at its head `961f796`, which [059](dropped-touch-059.md) records as the same tree as `5c3a217`. The check on the squash commit itself, on `main`, was cancelled at its 120-minute limit with no test failed (run 38403410314, same record), so that commit has no finished check of its own. The check has since been split into four parts (CI row below), and `main`'s run on `d82c6fa`, which builds the same app, was waiting to start when this was written (https://github.com/hcho22/Immerse/actions/runs/38473025368): read its result before testing. A Mac and the simulator only: no iPhone ran anything, and scenarios [L01 to L07](#looks-on-a-real-iphone) carry what that leaves. |
 | Full local gate: 140 package tests, 20 study and process-exit tests, unsigned simulator/generic-device builds | `sh Scripts/validate-local.sh` at the 046 source ([capture controller report](capture-controller-quiescence-046.md)): FilmDomain 13, MediaCatalog 4, RenderFixtures 2, RenderCore 11, FilmPersistence 25, NativeAdapters 24, CapturePipeline 6, EntitlementCore 12, FilmRuntime 43, TrialCommitStudy 17, DevelopmentProcessExit 3. Later checkpoints changed app views, tests and validation stages; [056](title-field-hit-area-056.md) records the latest full gate. Covers actual SQLite, native synthetic decoding/rendering, receipt policies and recovery. No camera, physical Keychain, PhotoKit device write or power-loss observation. |
 | Hosted app tests | 12 Journal and CaptureController tests on iOS 26.5 and 26.2, plus 4 local StoreKit tests on 26.2 (046). Actual controller, capture backend, Trial owner, repository and processor on a camera-less simulator with injected Keychain calls. |
@@ -246,7 +246,7 @@ Keep both records. No evidence of this document's preparation is a rerun.
 | HC_iPhone13 | The captain's own iPhone **13 Pro** on iOS **26.6.2**, as he last gave it on 2026-10-13 ("iphone 13 pro on ios 26.6.2"). His earlier answer in this project said "iphone 13"; Xcode's read-only discovery on 2026-09-30 reported `iPhone14,2`, an iPhone 13 Pro ([probe plan](../../Probes/TrialKeychainProbe/PERSONAL_DEVICE_TEST_PLAN.md)). Existing Apple development team. Not an iPhone 13 or iPhone 11. | Read the iOS version again at test time (Settings > General > About > iOS Version, tap the version to see the build) and record both; do not assume 26.6.2 still holds. Future manual phase and Immerse-specific authority, reachable/unlocked state, compatible device support, signed artifact. Last probe tunnel failed; do not infer current reachability. |
 | iPhone 11 / iOS 26 | Required by ARC-08 / architecture S1. **Not yet possible:** the captain has said "Only personal iPhones are available", and his is an iPhone 13 Pro. | Suitable authorized hardware. HC_iPhone13 timings cannot replace this early floor check. M29 stays required and unaccepted until an iPhone 11 is in hand. |
 | Second physical iPhone | Required by TRI-11, ARC-11/S12, ARC-12/S13 and QA-15. **Not yet possible:** no second phone is on record. | Dedicated authorized restore target and protected data; destination-unused and destination-consumed Trial histories. Simulator copies do not satisfy this. T11 and B01 to B04 stay required and unaccepted until a second iPhone is in hand. |
-| A small iPhone (iPhone SE size, 667 points tall, or an iPhone 12 mini or 13 mini) | The project's small-screen checks ran on iPhone SE (3rd generation) and iPhone 13 mini simulators only ([063](crop-fit-short-screens-063.md), [062](low-storage-warning-062.md), [065](darkroom-landscape-side-by-side-065.md)). **Not yet possible:** the captain's iPhone 13 Pro is 844 points tall and 390 points held sideways, and no small iPhone is on record. | A small iPhone for the short-screen part of [D04](#d04---the-crop-tool-on-a-short-screen), the small-iPhone part of [S04](#s04---voiceover-and-the-largest-text-size), and the sideways Darkroom on the screens it was fitted to: the iPhone SE, where it was first cut, and a 12 mini or 13 mini, the shortest sideways Darkroom of any supported iPhone at the standard display setting (277 pt), where the tool column gives up its margins to fit ([W01](#w01---the-darkroom-held-sideways)). All stay required and unaccepted until one is in hand; what the iPhone 13 Pro can show is in those scenarios. |
+| A small iPhone (iPhone SE size, 667 points tall, or an iPhone 12 mini or 13 mini) | The project's small-screen checks ran on iPhone SE (3rd generation) and iPhone 13 mini simulators only ([063](crop-fit-short-screens-063.md), [062](low-storage-warning-062.md), [065](darkroom-landscape-side-by-side-065.md)). **Not yet possible:** the captain's iPhone 13 Pro is 844 points tall and 390 points held sideways, and no small iPhone is on record. | A small iPhone is needed only for the older small-screen and accessibility scenarios that say so, including [S04](#s04---voiceover-and-the-largest-text-size). The Darkroom size comparison is supplied by the SE and largest Pro Max simulator screenshots in the current approval pack; a physical phone is used for the one-pass feel check, not as a substitute for those screens. |
 | Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12's device/OS/accessibility matrix remains open: it was not put to the captain. Its speed and storage targets were approved on 2026-10-13 as targets for the iPhone 11, none yet measured (M29). Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
 | Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. The Debug-only [testing unlock](#debug-testing-unlock) covers loading and capturing with all five Cameras without the Trial; it is not paid-entitlement or Trial evidence. |
 | Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Release UI exposes no test switch; Debug builds expose only the [testing unlock](#debug-testing-unlock). |
@@ -385,7 +385,7 @@ Cameras and Movie rows for both Movie Cameras, front/rear and the specified
 orientations. Repeat relevant error/retry cases without treating one success as
 coverage of every adapter. Record case-specific observed results, not checkmarks
 against this plan. `M-*` labels are runbook labels, not replacement tracker IDs.
-The rows were written for the earlier pin, corrected on 2026-10-13 against the pin of that day, corrected again on 2026-10-14 against the pin of that day, and on 2026-10-15 against this candidate, where the sideways Darkroom touches them (M13, M28); where a row could not be confirmed from the code and records, it says so.
+The rows were written for the earlier pin, corrected through 2026-10-15, and are reconciled here with the 2026-10-26 amendment: M13 and M28 use the upright Darkroom and fixed-band scenarios below. Where a row could not be confirmed from the code and records, it says so.
 The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium Format, 1960s Super 8 Home Movie and 16mm Cinema.
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
@@ -402,7 +402,7 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M10 / FR-06; DEV-02,03; DEC-09 | Zero-save Film: early Development disabled, Delete Film available. At 22/27, cancel five-unused warning (no change), then confirm (exactly five wasted). Repeat 6x6 and fractional Movie remaining time. Cannot reopen/refund; completion remains separate from explicit Development. | Exact persisted remainder, warning text, cancel/confirm/relaunch and absence of fabricated empty result. |
 | M11 / FR-06; DEV-04,06...08 | Start Development; interrupt before assignment, during rendering and after output persistence; reopen/resume. Same treatment/seed/master, once-only completed items, no reroll or partial roll/Movie reveal. Instant prior prints stay available. | Assignment and decoded master/clip hashes, processing journal and visible resume state. Exact phase cases require native harness, not guessed force-quit timing. Since PRD 2.1 slice 4 the treatment version is part of what must not change: a Film keeps the version its Camera package recorded at Load Film ([L07](#l07---a-film-started-before-this-build-keeps-its-look)), and a Develop tapped just before leaving the app is [L02](#l02---develop-tapped-just-before-leaving-the-app). |
 | M12 / FR-04,08; CAP-10; UX-03 | Visit Journal, Film details, archive, search/navigation and export surfaces before reveal and during recovery. No sealed photo/clip review, thumbnail, individual deletion, export or Photos copy. Whole-Film deletion remains possible without reveal. | Screen traversal plus access-path/storage review; no app background preview leaking sealed imagery. Existing UI paths only, no invented search requirement. |
-| M13 / FR-07; DRK; QA-04 | Open each revealed eligible photo: exposure, contrast/grades, crop and Dodge/Burn; filtration/balance on color prints only and Chemical toning on black-and-white prints only. Save/cancel/reopen independently on two photos; try touch and accessible point controls. | Recipe diff and decoded renders, preserved master. The Darkroom's limits were decided on 2026-10-13 (`DarkroomLimits` in `Packages/RenderCore/Sources/RenderCore/DarkroomRecipe.swift`, [060](darkroom-export-decisions-060.md)); [D01](#d01---the-darkrooms-limits-under-a-finger) carries them on the phone and [D04](#d04---the-crop-tool-on-a-short-screen) the Crop tool's layout, and [W01 to W06](#the-sideways-darkroom-on-a-real-iphone) the Darkroom held sideways. Dodge / Burn is unavailable while a crop is on (`PhotoView.swift`). Draw a Dodge stroke with a finger on the print: it must paint without scrolling the Darkroom (047, simulator only). PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): every Photo Film offers contrast grades 0 to 5, and none offered Chemical toning before slice 3; an Instant print shows its white card, offers no Crop, and its card stays white under every adjustment and Dodge/Burn stroke. PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): a black-and-white 6×6 Film develops gray prints with high contrast and visible grain, and its Darkroom offers Chemical toning (sepia, selenium) and no Filtration; a color 6×6 Film keeps Filtration and offers no toning. Since slice 4 the black-and-white look is the one the captain approved on the 6×6 board on 2026-10-12 (`prd-2-slice-4-looks.md`). Since 2026-10-13 the toning range is his too, each toner from the untoned print to the strength the board showed as 1.00 ([061](instant-study-and-toning-061.md)); [I02](#i02---sepia-and-selenium-on-the-phone) looks at it on the phone. |
+| M13 / FR-07; DRK; QA-04 | Open each revealed eligible photo and use the tools available for its Camera and Film Stock; save, reopen, cancel and Reset edits on separate photos. FR-29 to FR-34 amend the Darkroom layout and tool set: Adjust replaces Crop, Saturation and Vignette are added, and the Dodge/Burn tool is removed. | Recipe diffs, decoded renders and preserved masters; [D01](#d01---darkroom-controls-saving-and-reset) checks the phone controls and Reset, [D04](#d04---adjust-and-a-short-screen) checks Adjust, and [W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone) check layout, fixed print area, band, orientation and VoiceOver. Stored legacy Dodge/Burn strokes continue to print; a new build cannot create or edit them. Tool availability follows the print: Filtration and Saturation on color only, Chemical toning on black-and-white only, and Instant quarter turns only in Adjust. The black-and-white look and toner ranges remain those approved in [061](instant-study-and-toning-061.md). |
 | M14 / FR-07 | Edit then Reset; compare original developed master appearance and exported decoded pixels under matching render/export settings. Exact restoration, no accumulated edits, reroll or cross-photo change. No saturation, AI/content removal, stock swap or Movie Darkroom entry. | Original/reset master hash, recipe equality, decoded pixels and export metadata; file-container hash differences alone do not prove pixel differences. |
 | M15 / FR-08; STO; QA-09 | Independently choose developed export and originals export after reveal; also decline both. Originals choice at Development explicit, not preselected; no automatic Photos write. Only individually revealed Instant frames eligible, not future sealed frames. | Selection, permission/write events, actual Photos asset counts/content, source retention. Since the 2026-10-14 pin an Instant print is shown first and its original is asked about when the print is closed, and choosing to save writes the original to Photos at once ([060](darkroom-export-decisions-060.md), DEC-11 decided 2026-10-13); [D03](#d03---the-instant-asks-about-each-prints-original) carries it. A developed Instant export is the picture on its white card, as the Journal shows it (PRD 2.1 slice 1), 2282 x 2774 ([D02](#d02---export-sizes-and-formats-read-from-photos)). |
 | M16 / FR-08 | Deny/restrict add-only Photos, fail actual write, cancel/retry and recover. No false success; retry cannot remove only usable media. Granting export permission never grants library read or triggers other exports. | Actual PhotoKit completion/error and UI outcome, counts, retained sources/masters. Controlled native write-failure harness may be needed. |
@@ -417,7 +417,7 @@ The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium
 | M25 / FR-08,18; QA-15 | Settings, originals cleanup, Discard and Delete Film copy explain local-only storage, optional flattened exports, backup inclusion/loss and older backup restoration of BOTH discarded media and whole deleted Films. Revealed content usable offline. | Exact current copy/screens and restored behavior B01...B04. Final support/privacy copy DEC-13 remains open. |
 | M26 / FR-20; BIL; ARC-09 | Approved monthly/yearly one-plan product purchase, pending/cancel/error, renewal/expiry, Restore Purchases after one online sync and offline entitlement reads. All five Cameras/unlimited new paid Films, no tiers/per-Film fees/account/server. | Verified StoreKit transactions/events, localized price/product/group, network state; production config/prices absent, sandbox authority needed. Local fixture is a separate software gate. |
 | M27 / FR-20; BIL-05...07 | Expire subscription with unfinished Photo/Movie/Instant Films. Block only new paid loads; finish/capture/develop/view/edit/export old Films offline. Renewal/restore recovers new-Film access. Manage Subscription separate from Archive/Delete Film. | Pre/post transaction and Film rights/state, StoreKit event receipt, actual media. Refund/revocation policy DEC-02 not silently selected. PRD open question 7 is pending the captain: a lapsed subscriber who never used the Trial currently gets the Trial Film as a provisional default; record that outcome as the default, not acceptance. |
-| M28 / QA-13; UX | Real Journal/setup/capture/Film/reveal/Darkroom/archive/settings/paywall/error/confirmation screens: default/largest, light/dark, portrait/landscape; VoiceOver labels/order/focus/actions and Switch Control; no clipped unreachable commands or misleading disabled states. | Full traversal recording, all-category audit issues, assistive interaction evidence. The low-storage warning has its own VoiceOver and largest-text check in [S04](#s04---voiceover-and-the-largest-text-size), the Crop tool's text sizes are in [D04](#d04---the-crop-tool-on-a-short-screen), and the Darkroom held sideways, its text sizes, Display Zoom and VoiceOver are in [W01 to W06](#the-sideways-darkroom-on-a-real-iphone). Current accessibility failures retained; simulator screenshots don't prove physical assistive behavior or open DEC-12 matrix. |
+| M28 / QA-13; UX | Traverse Journal, setup, capture, Film, photo view, Darkroom, archive, Settings, paywall, errors and confirmations at default and largest text, in light and dark, portrait and landscape. Check VoiceOver labels, order, focus and actions; no clipped or unreachable commands. | Full traversal and accessibility evidence. Low-storage text and largest-size check: [S04](#s04---voiceover-and-the-largest-text-size); Adjust at varied text sizes: [D04](#d04---adjust-and-a-short-screen); Darkroom portrait layout in every hold, one print area, internal band scrolling and controls: [W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone). Simulator output is not physical assistive-technology acceptance. |
 | M29 / ARC-08; QA-13 | On iPhone 11/iOS 26, time full 27-photo Development and full 200s Movie, plus interrupted/resumed runs; record capture-to-save, foreground completion, peak memory, thermal/storage conditions. Repeat equivalent relevant cases on HC_iPhone13 separately. | Actual timing trace/device/thermal/candidate/output verification. DEC-12's targets, approved on 2026-10-13 and not yet measured, are for the iPhone 11: a photo saved in under 1 second, a 27-photo roll developed in under 45 seconds, a full Super 8 Movie assembled in under 90 seconds (task tracker, DEC-12). No debugger/observer-induced timing presented as production. Since PRD 2.1 slice 4, also time a full 167 s 16mm Cinema Film on the color Film Stock, whose Development reads the film's color table for every frame, and a 12-exposure 6×6 color Film; and record peak memory across two Movie Developments in one launch, since the grain fields stay in memory after a Development (about 34 MB for one kind of grain and 67 MB for two, from the review of pull request 25). The HC_iPhone13 runs are [L06](#l06---how-long-development-takes-on-the-phone); they do not replace the iPhone 11. **Not yet possible:** no iPhone 11 is in hand. |
 | M30 / QA-14 | Inspect final binary, rights, Camera samples/treatments, icon/name/store materials, support/privacy disclosures and local-only permissions. Review open decisions, all evidence and no-mistakes/CI results before readiness. | Final signed artifact/configuration and owner sign-offs; production assets, price, quality, support, budgets and release remain unapproved. TestFlight learning needs DEC-14 and separate exposure authority, not telemetry. |
 
@@ -973,10 +973,10 @@ The authority and stop conditions at the top of this plan apply to each of them 
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
-| D01 / FR-07; DRK-02, DRK-05, DRK-06, DEC-11 | Take the Darkroom's exposure to -3.0 and +3.0 stops, Dodge and Burn strokes to 3.0 stops, and overlap many strokes on one spot. Every end is reached, the print stays a whole, smooth picture, and saving, reopening and Reset to Original behave as before. | Screenshots at each end, the captain's words on how the ranges feel. [Steps](#d01---the-darkrooms-limits-under-a-finger). |
+| D01 / FR-29 to FR-34; DRK-11 to DRK-16 | Use current tools on color and black-and-white prints, reach the limits, save, reopen and Reset. Verify legacy strokes only if a previously saved test print has them; the current build offers no Dodge/Burn control. | Screenshots, values reached, saved recipe and the captain's words on control feel. [Steps](#d01---darkroom-controls-saving-and-reset). |
 | D02 / FR-08; STO, DEC-04 | Save each Camera's developed result to Photos and read its format, size and frame rate. Each is the size the captain approved on 2026-10-13. | The details panel for each copy, QuickTime's inspector for Movies. [Steps](#d02---export-sizes-and-formats-read-from-photos). |
 | D03 / FR-08; DEV, DEC-11 | Take Instant prints from real captures. Each print is shown first, its original is asked about when it is closed, a saved original reaches Photos at once, and a discarded print brings no question. | Screen recording, Photos before and after. [Steps](#d03---the-instant-asks-about-each-prints-original). |
-| D04 / FR-07; DRK-04, QA-13 | Open the Crop tool with a crop smaller than the print, at every text size and in landscape. All three Crop sliders show at the default size, the print never grows as text grows, landscape is unchanged. A small iPhone is **not yet possible**. | Screenshots at each text size, the text size setting before and after. [Steps](#d04---the-crop-tool-on-a-short-screen). |
+| D04 / FR-31; DRK-13, QA-13 | Open Adjust on a short screen at default and large text sizes. The print area stays fixed while the controls remain reachable in the internal band; 6×6 stays square and Instant offers quarter turns only. | Screenshots and the text-size setting before and after. [Steps](#d04---adjust-and-a-short-screen); approval pack carries SE and Pro Max simulator views. |
 | I01 / FR-01 A11; CAM-03, CAM-17, QA-16 | Develop Instant prints of real scenes and judge contrast B against the phone's own photo, the board and a real print if one is to hand. | A verdict in the captain's words, screenshots. [Steps](#i01---the-instants-contrast-on-the-phone). |
 | I02 / FR-07; DRK-03, DRK-10, QA-16 | Tone black-and-white 6×6 prints with sepia and selenium from the untoned end of each slider to its top. The low end is the untoned print; whether selenium at its top can be seen at all is recorded. | Screenshots at each strength, the captain's words. [Steps](#i02---sepia-and-selenium-on-the-phone). |
 | I03 / FR-06, section 11 "one treatment"; CAM-17, DEV-06 | Begin an Instant pack on the build before the Instant change, update to the candidate, and finish it. Its prints keep version 3's contrast; a pack loaded after the update has version 4's. | Needs the earlier build installed first. Screenshots of the same subject from each pack. [Steps](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast). |
@@ -986,67 +986,38 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | S04 / CAP-15; QA-13 | VoiceOver and the largest text size on the warning in each place. Read as one item, nothing clipped, every command reachable. The small-iPhone part is **not yet possible**. | Screen recording with VoiceOver, screenshots. [Steps](#s04---voiceover-and-the-largest-text-size). |
 | S05 / CAP-15, FR-04; CAP-09, QA-09 | Only if the captain chooses it: fill the phone until a save cannot finish. It fails with its existing message, uses no exposure or time, and finishes once space is freed. | His decision first, then counts and the exact message. [Steps](#s05---a-save-that-cannot-finish-fails-honestly). |
 
-### D01 - The Darkroom's limits under a finger
+### D01 - Darkroom controls, saving and Reset
 
 **Why.**
-On 2026-10-13 the captain asked for print exposure and Dodge and Burn of plus and minus 3 stops ([060](darkroom-export-decisions-060.md)).
-To reach 3 stops, a Dodge or Burn stroke now has a **Strength** slider, from 0.1 to 3.0 stops, starting at 0.4, the fixed strength every stroke had before.
-Strokes add up where they overlap, and the print is held within 3 stops of its print exposure after each stroke, because unbounded a few heavy strokes broke the picture into a ring with a dark middle.
-Every limit is in `DarkroomLimits` (`Packages/RenderCore/Sources/RenderCore/DarkroomRecipe.swift`).
-Tests reached each end in the simulator; how the ranges feel under a finger is for the captain to judge, and that is the main purpose of this scenario.
+The 2026-10-26 amendment removes Dodge/Burn from the current Darkroom and adds Adjust, Saturation and Vignette. Print exposure remains -3.0 to +3.0 stops; Saturation is -50 to +50 on color prints, and Vignette is -2.0 to +2.0 stops. The limits are enforced and rendered in software tests. This phone pass checks that the controls are understandable and usable, edits can be saved, and Reset restores the developed print.
+A print whose saved recipe already contains Dodge/Burn strokes keeps rendering those strokes byte for byte; Reset clears the recipe. The build offers no way to add or edit strokes. The legacy render tests own exact byte preservation.
 
 **You need.**
-A developed Photo Film on a color stock, such as a 1990s Disposable from L05, and a developed 6×6 Medium Format on **Black and white**, each with a picture of the gray card, the colored objects and a lamp.
+A developed color Disposable and a black-and-white 6×6 Film. If one of the test Films already has saved Dodge/Burn strokes, include it; do not create strokes in this build.
 
 **Steps.**
-Hold the phone upright, where the tools are the row of icons under the print; held sideways they are a column beside it ([W01](#w01---the-darkroom-held-sideways)), and every step here works the same there. VoiceOver names them **Exposure**, **Contrast**, **Filtration** (color prints only), **Crop** (not on an Instant), **Dodge / Burn** and **Chemical toning** (black-and-white prints only).
 
-1. Open a developed Disposable photo and tap **Darkroom**.
-2. **Exposure.**
-   Drag the slider fully left, then fully right.
-   The value above it reads **-3.0 stops** and **3.0 stops** at the ends, in steps of 0.1.
-   With VoiceOver on, the slider reads "minus 3 stops" and "plus 3 stops".
-3. **Dodge / Burn with Exposure at -3.0 stops.**
-   Choose **Dodge**, drag **Strength** fully right so it reads **Strength: 3.0 stops**, set **Horizontal** and **Vertical** to a dark part of the print, and tap **Dodge point**.
-   The spot comes back near the brightness of the unedited print.
-   Then draw a stroke with a finger on the print: it paints, and the Darkroom does not scroll.
-4. **Overlapping strokes.**
-   Tap **Reset to Original**.
-   With Exposure at 0.0 and **Dodge** at 3.0 stops, tap **Dodge point** eight times without moving the sliders.
-   Then choose **Burn** at 3.0 stops and tap **Burn point** eight times at the same spot.
-   Take a screenshot after the dodges and after the burns.
-5. **Filtration.**
-   Drag **Cyan**, **Magenta** and **Yellow** each to both ends.
-6. **Contrast.**
-   Choose **Grade 0**, then **Grade 5**, then **Original**.
-7. Set a mix of edits, tap **Save**, close the photo, force-quit and reopen Immerse (common step 7), and open the Darkroom again.
-8. Tap **Reset to Original** and **Save**.
-9. Repeat steps 2 to 4 on a black-and-white 6×6 print.
+1. Open the Disposable's Darkroom. Confirm the print is above the fixed controls band and **Reset to Original** is in the bottom bar.
+2. Move **Print exposure** fully left and right. Read the values, then return it to 0.0.
+3. Visit **Contrast** and **Filtration**, then **Adjust**, **Saturation** and **Vignette**. Reach both ends of Saturation and Vignette and note how they feel; do not keep an edit yet.
+4. Save a small combination of edits, close the photo, reopen it, and confirm they remain. Tap **Reset to Original** and **Save**.
+5. Repeat the save and Reset check on the black-and-white 6×6, using its available tools; confirm Filtration and Saturation are absent and Chemical toning is available.
+6. If a test print with saved strokes was available, verify its appearance before Reset and that Reset returns to the unedited developed print.
 
 **Expect.**
 
-- Each slider reaches its ends: exposure -3.0 and 3.0, strength 0.1 and 3.0.
-- After eight overlapping 3-stop dodges the spot is light but still a smooth part of the picture, with soft edges; after eight burns on top it is darker again.
-  Nowhere does a ring, a dark hole, a black patch or scrambled pixels appear.
-- The print at -3.0 stops is very dark and at 3.0 very light, and still shows its picture.
-- What was saved in step 7 is there after the relaunch, and the print looks as it did.
-- Reset to Original brings back the developed print exactly, and nothing else in the Film changes.
-- While **Crop** is on, the Dodge / Burn controls are dimmed (`PhotoView.swift`); that is how the build works and is not a failure.
+- Exposure reaches -3.0 and +3.0 stops; the values do not pass their limits.
+- Color prints offer Saturation and Vignette at their stated limits. Black-and-white prints offer neither Saturation nor Filtration.
+- Saved edits remain after reopening. Reset returns the developed print and does not change another photo.
+- Existing saved strokes, if present, continue to print; there is no Dodge/Burn tool or stroke control.
 
 **It fails if.**
 
-- A slider cannot reach its end, for example exposure stops at -2.9 under a finger.
-  The record saw XCTest's own drag stop there once, and a finger should reach -3.0 ([060](darkroom-export-decisions-060.md), "The second round").
-- Overlapping strokes produce a ring, a dark middle in a dodged spot, or a broken picture.
-- A saved edit is gone or changed after the relaunch, or Reset to Original does not restore the print.
-- A warning mark shows in place of the print, or the Darkroom says its settings are outside what this version of Immerse can print.
-  Nothing in this plan can make such a setting, so it would be a defect to report with the steps that led to it.
-
-**What is a finding and not a failure.**
-Whether 3 stops is too much or too little, and whether the Strength slider is easy to use, is the captain's to judge; write it in his words.
+- A control is missing where the print type offers it, reaches past its limit, or cannot be used.
+- A saved edit disappears after reopening, Reset changes another photo, or a legacy saved stroke fails to render.
 
 **Write down.**
-The Film and photo, screenshots at each end and after steps 4 and 7, any value that would not reach its end, and the captain's words.
+The Film and photo, values reached, screenshots before and after Save and Reset, the available tools, and the captain's words about the controls' feel.
 
 ### D02 - Export sizes and formats, read from Photos
 
@@ -1153,67 +1124,38 @@ Saving an original after Photos access was refused is M16's, which needs its own
 **Write down.**
 For each print: what was shown, in what order, the question's heading, the choice, and whether Photos gained a picture; a screen recording of steps 7 and 8.
 
-### D04 - The Crop tool on a short screen
+### D04 - Adjust and a short screen
 
 **Why.**
-On an iPhone SE simulator, with a crop smaller than the whole print, the Crop tool's Vertical slider rested wholly under the **Reset to Original** bar with nothing to show it was there.
-The captain chose on 2026-10-14 that the print gives up height in the Crop tool so all three sliders show ("immerse crop fit"; [063](crop-fit-short-screens-063.md)).
-In portrait the print in the Crop tool now shrinks below its usual smallest size, as far as 64 points, to rest every Crop control on screen; where even that is not enough, as at large text sizes, it stays at 64 points and the rest scrolls, so it never grows back as the text grows.
-In landscape the Crop fit changed nothing; since the pin of 2026-10-15 the Darkroom held sideways is a different arrangement, side by side ([065](darkroom-landscape-side-by-side-065.md)), and the Crop tool's print there is still the size it is on **Exposure** (`testDarkroomCropKeepsThePrintInLandscape`, which 065 still runs).
-
-**Which phone shows what.**
-The iPhone SE is 667 points tall, the iPhone 17 Pro of the records 874, and the captain's iPhone 13 Pro 844.
-On the iPhone 17 Pro all three sliders showed at the default text size before the change, and nothing changes there.
-Whether the iPhone 13 Pro's print shrinks at the default text size cannot be told from the records, since neither of the two simulators is its size; at larger text sizes it must, as on both simulators.
-So on HC_iPhone13 this scenario raises the text size step by step to reach the short-screen case.
-The same check on a small iPhone is **not yet possible**: none is on record.
+The 2026-10-26 amendment supersedes the 2026-10-14 Crop fit choice: the print now keeps one area whatever tool is selected, and the fixed controls band scrolls internally at larger text sizes. The iPhone SE (3rd generation) simulator and largest Pro Max simulator carry the approved size comparisons; this physical check is for the controls' reach and feel on the captain's phone.
 
 **You need.**
-A developed Disposable photo and a developed 6×6 photo.
-The text size changes in this scenario are the phone's own setting: write down how it is set before you start and set it back at the end.
+Developed color Disposable and 6×6 photos, a developed Instant print, and the phone's current text-size setting written down.
 
 **Steps.**
 
-1. Write down the text size setting: Settings > Accessibility > Display & Text Size > **Larger Text**, whether **Larger Accessibility Sizes** is on, and where the slider stands.
-   If it is not the default, the middle mark with **Larger Accessibility Sizes** off, set it to the default for steps 2 and 3.
-2. Open the Disposable photo, tap **Darkroom**, and take a screenshot on **Exposure**.
-3. Tap **Crop**, turn the **Crop** switch on, and drag **Size** to about the middle of its slider.
-   The **Horizontal** and **Vertical** sliders appear under it.
-   Without scrolling, take a screenshot, then drag **Vertical**.
-4. Turn on **Larger Accessibility Sizes** and move the text size up one step at a time to the largest, coming back to the Darkroom each time.
-   You can use the Text Size control in Control Center to stay in Immerse.
-   At each step take a screenshot at rest, and if the **Vertical** slider is not fully in view, drag up in the left margin until it is, then drag it.
-5. Back at the default text size, turn the **Crop** switch off and tap **Exposure**.
-6. **Landscape.**
-   Turn the crop on again with **Size** in the middle, in portrait.
-   Turn the phone to landscape (Portrait Orientation Lock off in Control Center), then switch between **Crop** and **Exposure** a few times.
-   Held sideways, the tool buttons are a column beside the print; if the controls do not all show, drag up in the controls column on the right, never near the top of the screen, where a drag down can pull the whole Darkroom away.
-7. Repeat steps 2 and 3 on the 6×6 photo.
-8. Set the text size, Larger Accessibility Sizes and Portrait Orientation Lock back as they were in step 1, and write down that you did.
+1. At the default text size, open the Disposable's Darkroom and select **Adjust**. Turn Crop on; reach Size, Horizontal, Vertical and Straighten. Note the print's area before and after changing the tool and the controls.
+2. Repeat on the color 6×6. Confirm its cropped print remains square.
+3. Open the Instant print's Adjust tool. Confirm it offers quarter turns only and that the whole card turns; there is no Crop or Straighten control.
+4. Set the phone to its largest text size and revisit Adjust. Scroll within the controls band until each control is wholly visible and usable. Confirm the print area does not change while the band scrolls.
+5. Cancel without saving and restore the text-size setting from step 1.
 
 **Expect.**
 
-- At the default text size: the **Crop** switch, the **Size**, **Horizontal** and **Vertical** captions and all three sliders rest above **Reset to Original** with nothing scrolled, and **Vertical** moves the crop.
-- As the text grows the print in the Crop tool gets smaller or stays the same, never larger; at its smallest, 64 points, it is still a picture about a centimeter tall whose framing can be judged.
-  Where the controls no longer fit, a drag up brings **Vertical** fully clear above **Reset to Original**, and it moves the crop.
-- No control ends up under **Reset to Original** after scrolling.
-- After step 5 the print on **Exposure** is the size it was in step 2.
-- In landscape the print in the Crop tool has the size and place it has on **Exposure**, and switching tools never moves it.
-  With the crop on, the print shows the cropped picture, in the arrangement [W01](#w01---the-darkroom-held-sideways) describes, and the **Crop** switch and its three sliders show beside it.
+- Adjust offers Crop and Straighten on non-Instant prints and quarter turns on all photo prints.
+- A 6×6 print remains square. An Instant offers no crop or straightening and turns its entire card.
+- The print area stays put as the selected tool changes and as the band scrolls. At larger text sizes, every control can be brought into view within the band.
 
 **It fails if.**
 
-- At the default text size in portrait a Crop slider rests under **Reset to Original** or in the fade above it with nothing scrolled.
-- The print grows back when the text grows, or a slider cannot be brought into view or does not respond.
-- In landscape switching between **Crop** and **Exposure** changes the print's size or place.
+- A control is hidden behind Reset or cannot be reached by scrolling inside the band.
+- Changing tools or scrolling moves or resizes the print area, or an Instant crop/straighten control appears.
 
-**Since the pin of 2026-10-15.**
-The version of this scenario for `38792bb` noted that in landscape on the iPhone SE simulator most of the tool row lay hidden under **Reset to Original** ([063](crop-fit-short-screens-063.md), "Pictures"), and asked for a screenshot if the iPhone 13 Pro showed the same.
-The sideways Darkroom replaced that arrangement ([065](darkroom-landscape-side-by-side-065.md)): there is no tool row and no bottom bar in landscape now.
-A tool button or a control hidden or cut held sideways at the default text size is a failure of [W01](#w01---the-darkroom-held-sideways), not a finding here.
+**What the small-screen comparison proves.**
+The current approval pack uses the iPhone SE (3rd generation) and largest supported Pro Max simulators at default and largest text size. This phone's physical screen does not stand in for either simulator.
 
 **Write down.**
-The text size setting before and after, and for each text size whether every Crop control showed at rest, how many drags reached **Vertical**, and a screenshot; the landscape screenshots.
+The text-size setting before and after, screenshots of the print and controls, whether scrolling was needed, and the captain's judgment of the controls' feel.
 
 ### I01 - The Instant's contrast on the phone
 
@@ -1558,305 +1500,108 @@ The app shows the save as done when it was not, the count drops for a save that 
 **Write down.**
 The captain's decision, **Available** at each step, the counts before and after, the exact words of each message, and screenshots.
 
-## The Sideways Darkroom on a Real iPhone
+## The Darkroom's upright layout on a real iPhone
 
-On 2026-10-14 the captain chose that the Darkroom, held sideways, puts the print beside its controls ("landscape - side by side"); it merged on 2026-10-15 as https://github.com/hcho22/Immerse/pull/34 ([065](darkroom-landscape-side-by-side-065.md)).
-It ran on iPhone SE (3rd generation), iPhone 13 mini and iPhone 17 Pro simulators only.
-These six scenarios are what it leaves for a phone, taken from 065 "Not Shown Here" and from "Not yet run on a real iPhone" in that pull request: how it feels in the hand, turning the phone in the middle of a stroke or a slider drag, Display Zoom, the text sizes between the default and the largest held sideways, and VoiceOver.
-All six read **UNTESTED: physical execution deferred**.
-Like L01 to L08, they are written to be run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, and they use the common steps and the "What to write down" rule of [Looks on a Real iPhone](#before-you-start).
-The authority and stop conditions at the top of this plan apply to each of them unchanged.
-None of them saves an edit you want to keep: each ends with **Cancel**, which leaves the print as it was, unless a step says **Save**.
+The 2026-10-26 amendment removes the 2026-10-14 side-by-side landscape arrangement. The Darkroom keeps its portrait layout in every hold and opens from the Journal, Film photo view, or an Instant reveal. The simulator can prove geometry and rotation; the captain's phone supplies the one physical pass for feel (QA-17). W01 to W06 replace the earlier sideways-Darkroom scenarios; the prior screenshots and implementation history remain in [065](darkroom-landscape-side-by-side-065.md).
+All six read **UNTESTED: physical execution deferred**. Run them by hand on the captain's phone under the authority and stop conditions above; do not install a build or change personal settings for this plan unless the captain has authorized that operation. Use synthetic or disposable test Films, and finish edits with **Cancel** unless a step says otherwise.
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
-| W01 / FR-07; DRK, QA-13 | Use every tool of three Films held sideways, both ways round, with the thumbs. Print on the left, tool column with Reset to Original at its foot, controls on the right; every button and control shows at the default text size, nothing scrolls. Upright is as before. | Screenshots of each tool, the captain's words on how it feels. [Steps](#w01---the-darkroom-held-sideways). |
-| W02 / FR-07; QA-13 | Step the text size from the default to the largest, held sideways. Captions sit beside their sliders up to one step above the default and above them after; where the controls run past their column it flashes its scroll indicator, and every control can be reached. | Screenshots at each size, the text size setting before and after. [Steps](#w02---text-sizes-held-sideways). |
-| W03 / FR-07; DRK | Turn the phone between edits. The tool, the edits, Dodge or Burn and its strength, a crop and every stroke stay, each stroke where it was drawn. | Screenshots before and after each turn. [Steps](#w03---turning-between-edits). |
-| W04 / FR-07; DRK | Turn the phone with a finger still drawing a stroke, and with a finger still on a slider. The unfinished stroke is dropped and joins nothing; the slider's value and the print agree, and are what is saved. | Screen recording, Save and reopen. [Steps](#w04---turning-in-the-middle-of-a-stroke-or-a-slider-drag). |
-| W05 / FR-07; QA-13 | Turn on Display Zoom's larger setting and hold the Darkroom sideways. The tool column scrolls and flashes its indicator, Reset stays whole, every tool can be reached; Display Zoom is set back. | Screenshots, a screen recording of the flash, the setting before and after. [Steps](#w05---display-zoom-held-sideways). |
-| W06 / FR-07; QA-13 | VoiceOver through the Darkroom held sideways. Every item named and reached once, in the order print, tools, Reset, controls. | Screen recording with VoiceOver's speech. [Steps](#w06---voiceover-held-sideways). |
+| W01 / FR-29; DRK-11; QA-17 | Open a developed photo's Darkroom from the Journal and from the Film screen, upright and while the phone is sideways. In every case the print remains above the tools and controls, Reset stays in the bottom bar, and the side-by-side landscape arrangement never appears. When opened sideways, note how the portrait layout reads in the hand; Cancel returns to the covered screen. | Screenshots in each hold, a short recording of opening and closing, the captain's judgment on feel. [Steps](#w01---the-darkroom-keeps-one-layout-in-every-hold). |
+| W02 / FR-30; DRK-12 | On a color Disposable, visit Exposure, Contrast, Filtration, Adjust, Saturation and Vignette. The print stays in the same area as the selected tool changes; controls stay in the band below. | Screenshots of each tool and print bounds. [Steps](#w02---one-print-area-across-tools). |
+| W03 / FR-30; DRK-12 | Repeat the area check on a color 6×6, a black-and-white 6×6 and an Instant. The Instant's card stays whole, and its edits reach only the picture where specified. | Screenshots of the camera-specific tool sets. [Steps](#w03---camera-specific-darkroom-tools). |
+| W04 / FR-30; DRK-12 | At the largest text size, use the tallest controls on each applicable print. The band scrolls inside itself to expose every control; scrolling never changes the print area. | Screenshots at the largest text size, the text-size setting before and after. [Steps](#w04---the-band-at-large-text-sizes). |
+| W05 / FR-29; DRK-11 | While unsaved edits are open, turn the phone between upright and sideways. The portrait arrangement remains; the selected tool and edits stay, and Cancel returns to the photo view in its former orientation. | Screenshots before and after each turn, then reopen to confirm the print is unchanged. [Steps](#w05---turning-with-the-darkroom-open). |
+| W06 / FR-29, FR-30; QA-17 | Use VoiceOver through the upright Darkroom. It names and reaches the print, tools, Reset, and selected controls in a usable order; the fixed band does not hide controls from accessibility navigation. | Screen recording with VoiceOver speech and the sequence written down. [Steps](#w06---voiceover-in-the-darkroom). |
 
-**What the build does, from 065 and the code at the pinned commit.**
+**What the build does, from the amendment and the code.**
 
-- Held upright, the Darkroom is as it was: the print at the top, the row of tool icons under it, the chosen tool's controls under that, and **Reset to Original** in the bar at the bottom of the screen ([065](darkroom-landscape-side-by-side-065.md), "Portrait unchanged").
-- Held sideways (`DarkroomLayout` in `App/Immerse/Sources/PhotoView.swift`), from the left: the print, as large as fits; a narrow column of tool buttons, one icon each, with **Reset to Original** at its foot as a round button with a curved arrow; then the chosen tool's name as a heading and its controls, in a column of their own.
-  There is no bar at the bottom.
-  This order does not depend on which way the phone is turned, and the whole arrangement keeps clear of the notch and the home indicator on both sides.
-- The tools are those of the print: a color photo such as a 1990s Disposable's has **Exposure**, **Contrast**, **Filtration**, **Crop** and **Dodge / Burn**; a black-and-white 6×6 Medium Format print has **Exposure**, **Contrast**, **Crop**, **Dodge / Burn** and **Chemical toning**; a 1970s Instant print has **Exposure**, **Contrast**, **Filtration** and **Dodge / Burn**.
-- Held sideways, up to one step above the default text size, a slider's caption sits on the same line, to its left: **Cyan**, **Magenta** and **Yellow** in Filtration, **Size**, **Horizontal** and **Vertical** in Crop, and **Strength**, **Horizontal** and **Vertical** in Dodge / Burn, with a tool's sliders lined up after its longest caption.
-  A caption whose number changes keeps the width of its widest value, so a slider never changes length under a finger.
-  At larger sizes the caption is above its slider, as upright.
-- A column that cannot show all it holds scrolls on its own; the print, the tool buttons and Reset stay where they are.
-  About half a second after its contents come to run past it, the column flashes its scroll indicator, a thin bar at its right edge, inside the column; a column that holds everything never flashes ([065](darkroom-landscape-side-by-side-065.md), "Showing That a Column Scrolls").
-- Turning keeps the chosen tool, Dodge or Burn, the stroke strength and every edit; a stroke or crop lands on the same part of the picture whatever the print's size.
-  A stroke still being drawn when the phone turns is dropped.
-  A slider's edit is applied to the print when the finger lifts; if the phone turns before that, the turn applies it (065, "Turning the iPhone").
-
-**What the iPhone 13 Pro should show, and what it cannot.**
-Held sideways the iPhone 13 Pro is 390 points tall.
-065 measured the Darkroom's height under the navigation bar on three simulators: 297 pt on the iPhone SE, 304 pt on the iPhone 17 Pro (402 points tall) and 277 pt on the iPhone 13 mini (375 points tall), the last two after a home indicator like the 13 Pro's.
-By the same arithmetic the 13 Pro has about 292 pt, more than the 290 pt the tool column takes with its full margins and the 277 pt in which every tool's controls fitted on the mini; that is worked out from the record, not measured.
-So at the default text size on this phone, every tool button, Reset and every control of every tool should rest on screen with nothing to scroll, and no column should flash.
-The shortest screens it was fitted to, an iPhone SE and a 12 mini or 13 mini, are **not yet possible**: no small iPhone is on record ([Device and Matrix Prerequisites](#device-and-matrix-prerequisites)).
-The 13 Pro's results are recorded for its own size and do not stand in for them.
+- The Darkroom has one vertical arrangement in every hold: print area first, a fixed-height controls band below, and **Reset to Original** in the bottom bar. It no longer changes to a side-by-side arrangement in landscape.
+- Changing tools or showing a render error leaves the print area where it was. At the default text size the band is sized for the tallest tool; at larger text sizes its own scroll view makes the controls reachable.
+- Color photo prints offer **Exposure**, **Contrast**, **Filtration**, **Adjust**, **Saturation** and **Vignette**; black-and-white 6×6 prints offer **Exposure**, **Contrast**, **Adjust**, **Vignette** and **Chemical toning**; Instant prints offer **Exposure**, **Contrast**, **Adjust**, **Saturation** and **Vignette**. There is no Dodge/Burn tool. Instant Adjust turns the whole card; other Instant edits reach its picture only.
+- The photo view turns with the iPhone. The Darkroom keeps its portrait layout while it is open and returns to the orientation of the screen it covered when dismissed. Opened while the iPhone is sideways, its portrait layout may read sideways until the phone is turned upright.
 
 **You need, for all six.**
-Developed Films from earlier scenarios or new ones: a 1990s Disposable, a 6×6 Medium Format on **Black and white** and a 1970s Instant, each with a picture of the gray card, the colored objects and a lamp.
-**Portrait Orientation Lock** off in Control Center, so the screen turns with the phone; write down how it was and set it back at the end.
-Before W01, write down the text size (Settings > Accessibility > Display & Text Size > **Larger Text**, as in D04 step 1) and Display Zoom (Settings > **Display & Brightness** > **Display Zoom**), and have both at their defaults: the middle mark with **Larger Accessibility Sizes** off, and **Default**.
 
-### W01 - The Darkroom held sideways
+A developed color Disposable, a color 6×6, a black-and-white 6×6, and an Instant print; use test Films that can be cancelled without keeping edits. Set text size to the default for W01 to W03, and record the current setting so W04 can use the largest size and restore it afterwards. VoiceOver is enabled only for W06 and turned back off at its end.
 
-**Steps.**
-
-1. Open a developed Disposable photo, tap **Darkroom**, and hold the phone upright.
-   Take a screenshot on **Exposure** and one on **Dodge / Burn**.
-2. Turn the phone onto its side, its top to your left, and hold it in both hands as you would to take a photo.
-   Tap each tool in turn and take a screenshot of each.
-   On **Crop**, turn the crop on with **Size** at about the middle of its slider for the screenshot, then turn it off again: while a crop is on, Dodge / Burn's controls are dimmed (M13).
-3. On each tool, use every control with your right thumb, without moving your grip: drag each slider to both ends, tap the segments and buttons.
-   On **Dodge / Burn** choose **Burn**, tap **Burn point**, then draw a stroke on the print with a finger, and tap **Undo last stroke**.
-4. Reach every tool button and **Reset to Original** with a thumb, without moving your grip, and tap **Reset to Original**.
-5. Turn the phone to its other side, its top to your right, and take a screenshot on **Dodge / Burn** and on **Crop**.
-6. Tap **Cancel**.
-7. Do steps 2 to 6 on the black-and-white 6×6 print, with **Sepia** chosen in **Chemical toning**, and on an Instant print.
-8. Hold the phone upright and open the Disposable photo's Darkroom again: take the screenshots of step 1 again, then tap **Cancel**.
-
-**Expect.**
-
-- Sideways, from the left: the print; the column of tool buttons with **Reset to Original** at its foot; the tool's name and its controls.
-  There is no bar at the bottom of the screen.
-- Every tool button is whole, none cut off, faded or behind **Reset to Original**, and the chosen one is highlighted.
-- At this text size every control of every tool is on screen at rest, above the bottom edge and not faded, with nothing to scroll, and no scroll indicator flashes.
-- In Filtration, Crop and Dodge / Burn each caption sits to the left of its slider, and the sliders line up.
-  While **Strength** moves from **0.4 stops** to **3.0 stops**, or **Horizontal** from **0%** to **100%**, the slider keeps its length.
-- Nothing is under the notch or the home indicator, either way round.
-- Every control responds, the stroke paints on the print without the screen scrolling, and **Reset to Original** brings back the developed print.
-- The Instant shows four tools, the 6×6 five, the Disposable five; the Instant's print keeps its white card.
-- Upright, in step 8, the Darkroom is as D01 and D04 describe it: the print above, the row of icons under it, **Reset to Original** in the bar at the bottom.
-
-**It fails if.**
-
-- A tool button or **Reset to Original** is cut off, hidden or cannot be tapped.
-- At the default text size a control is off screen or in the fade at rest, or the controls column must be scrolled to reach one.
-- A slider changes length as its number changes, or a control does nothing.
-- Anything sits under the notch or the home indicator.
-- Upright, the tools or **Reset to Original** are not where D01 and D04 say.
-
-**What is a finding and not a failure.**
-How the Darkroom feels held sideways is the captain's to judge, in his words: the length of the sliders beside their captions (065 measured 154 pt for Dodge / Burn's on an iPhone SE; the 13 Pro's screen is wider), whether his thumb reaches the tool column and **Reset to Original** comfortably, and whether the print is large enough.
-A change to the arrangement would be his decision.
-
-**Write down.**
-The Film and print, a screenshot of every tool each way round and upright, any control or button that did not show or respond, and the captain's words on the feel.
-
-### W02 - Text sizes held sideways
-
-**Why.**
-065 checked the sideways Darkroom on screen at the default and the largest text size only; the sizes between were covered by its layout rule and a hosted test ("Not Shown Here").
+### W01 - The Darkroom keeps one layout in every hold
 
 **Steps.**
 
-1. Start from the default text size, written down as in "You need, for all six".
-2. Open the Disposable photo's Darkroom and hold the phone sideways.
-3. Move the text size up one step at a time, using the Text Size control in Control Center to stay in Immerse.
-   The **Larger Text** slider's default is its middle mark; after its last mark turn on **Larger Accessibility Sizes** (Settings > Accessibility > Display & Text Size > **Larger Text**) and go on to the largest.
-4. At each step, choose **Dodge / Burn** and then **Filtration**.
-   Each time a tool comes up, watch the right edge of the controls column for about a second, and say whether a thin scroll bar flashed there.
-   Take a screenshot at rest; then, if **Undo last stroke** or **Yellow** is not fully in view, drag up in the controls column, away from the sliders, until it is, and tap or drag it.
-5. At the largest size, also check that the tool buttons and **Reset to Original** have kept their size and place, and turn the phone upright and back once.
-6. Set the text size and **Larger Accessibility Sizes** back as they were, and write down that you did.
+1. Open a developed Disposable photo's Darkroom from the Journal while upright. Record the print, controls band, tool row and bottom bar.
+2. Cancel, open the same photo from the Film screen, and enter Darkroom again. Confirm the same arrangement.
+3. Hold the phone sideways and open the Darkroom from the photo view. Look at the layout without changing an edit, then turn the phone upright and confirm the controls remain below the print.
+4. Cancel and confirm the photo view returns in its former orientation. Repeat from the Journal and from an Instant reveal if the captain's own capture workflow is available.
 
-**Expect.**
+**Expect.** One portrait arrangement in every entry path and hold; the print is above the controls, Reset is in the bottom bar, and no side-by-side tool column appears. Cancel restores the covered screen and its orientation.
 
-- At the default and at one step above it, captions sit beside their sliders; from the second step above the default, above them.
-- While all of a tool's controls show, no scroll bar flashes.
-  Once they run past the column, a scroll bar flashes inside the column at its right edge, about half a second after the tool comes up or the phone turns, and the column scrolls; the print, the tool buttons and **Reset to Original** do not move.
-- Every control can be brought fully into view and used at every size.
-- The tool icons stop growing at the largest ordinary size, and **Reset to Original** stays the same size at every text size (065, "Failures on the way, kept"), so every tool button stays whole.
+**Write down.** Entry path, hold, the observed arrangement, any text that reads sideways until the phone turns, and the captain's judgment on feel.
 
-**It fails if.**
-
-- A control cannot be brought into view, or cannot be used once there.
-- A tool button is cut off or crowded behind **Reset to Original** at any size.
-- Scrolling the controls moves the print, the tools or **Reset to Original**.
-- A slider is too short to use at a size where its caption is beside it.
-
-**What is a finding and not a failure.**
-Whether the flash is noticed, and whether it is enough to show that a column scrolls, is for the captain to say; 065 saw it only in simulator screenshots.
-
-**Write down.**
-For each step: the size, where the captions were, whether a scroll bar flashed for each tool, how many drags reached the last control, and a screenshot; the settings before and after.
-
-### W03 - Turning between edits
+### W02 - One print area across tools
 
 **Steps.**
 
-1. Open the Disposable photo's Darkroom upright.
-   On **Exposure** set **1.5 stops**.
-   On **Dodge / Burn** choose **Burn**, drag **Strength** to **3.0 stops**, and draw a short stroke near the top left of the print.
-   Take a screenshot.
-2. Turn the phone sideways.
-   Take a screenshot.
-3. Draw a second burn stroke near the bottom right of the print, and take a screenshot.
-4. Turn the phone upright, and take a screenshot.
-   Tap **Undo last stroke** once.
-5. Choose **Crop**, turn it on, and set **Size**, **Horizontal** and **Vertical** away from their ends; write down their values.
-   Turn the phone sideways, and back upright.
-6. Tap **Save**, close the photo, and open its Darkroom again, sideways this time: hold the phone sideways before tapping **Darkroom**.
-7. Tap **Reset to Original**, **Save**, and close.
+1. Open a color Disposable's Darkroom at the default text size and note the print's position and bounds.
+2. Select Exposure, Contrast, Filtration, Adjust, Saturation and Vignette in turn, taking a screenshot after each has settled.
+3. Confirm that the print has the same position and bounds through each selection and that the selected tool's controls remain below it in the band.
+4. Cancel.
 
-**Expect.**
+**Expect.** Tool selection changes neither the print area nor the band's position. All controls are reachable; Dodge/Burn is absent.
 
-- After each turn the same tool is chosen, with the same values: **Exposure** at **1.5 stops**, **Burn** chosen at **3.0 stops**, the crop's three values.
-- Each stroke is darker on the same part of the picture whichever way the phone is held, and nowhere else.
-  After step 4 both strokes show upright, and **Undo last stroke** removes only the bottom right one.
-- The cropped print has the same shape and framing both ways.
-- Opened sideways in step 6, the Darkroom comes up in the sideways arrangement with the saved edits.
-- Step 7 brings back the developed print.
+**Write down.** Screenshots of each tool, the print bounds, and any control that cannot be reached.
 
-**It fails if.**
-A turn changes the tool, a value, Dodge or Burn, a stroke's place or the crop; a stroke appears twice or vanishes; or what was saved differs from what was shown.
-
-**Write down.**
-The screenshots of each step, and anything that changed with a turn.
-
-### W04 - Turning in the middle of a stroke or a slider drag
-
-**Why.**
-Turning the phone rebuilds the Darkroom in the other arrangement, which ends a finger's gesture without its end.
-The build drops a stroke still being drawn, so it neither becomes a stroke nor joins the next, and applies a slider's edit that the turn cut off, which would otherwise be saved without showing on the print (065, "Turning the iPhone").
-No screen test can turn the screen with a finger down, so this is the first look at it, and whether iOS turns the screen while a finger is on it at all is not on record.
-
-**How to turn with a finger down.**
-Hold the phone in your left hand, put a finger of your right hand on the screen, and turn the phone a quarter turn with your left hand while the finger stays down and keeps moving a little.
-Lift the finger only after the screen has turned.
-A try where the screen did not turn until the finger lifted shows nothing; write it down and try again, slower.
+### W03 - Camera-specific Darkroom tools
 
 **Steps.**
 
-1. Open the Disposable photo's Darkroom upright and choose **Dodge / Burn**, **Burn**, **Strength** at **3.0 stops**.
-   Draw one stroke near the top left, and lift.
-2. **A stroke cut by a turn.**
-   Start a long stroke across the middle of the print and, still drawing, turn the phone sideways; lift after the screen has turned.
-   Take a screenshot.
-3. Draw a short stroke near the bottom right, and take a screenshot.
-4. Tap **Undo last stroke** once, take a screenshot, and tap **Reset to Original**.
-5. Do steps 1 to 4 again, starting with the phone sideways and turning it upright.
-6. **A slider cut by a turn.**
-   On **Exposure**, upright, put a finger on the slider and drag it to about **2.0 stops**, and, finger still down, turn the phone sideways; lift after the screen has turned.
-   Write down the value shown, and take a screenshot.
-7. Tap **Save**, close the photo, and open its Darkroom again.
-8. Do steps 6 and 7 with **Cyan** in **Filtration**, with **Size** in **Crop** (the crop turned on), and on the black-and-white 6×6 print with the **Sepia** slider; then from sideways to upright with **Exposure**.
-9. On each print, tap **Reset to Original** and **Save**.
+1. Repeat W02's print-area check on a color 6×6 and a black-and-white 6×6, visiting every tool each stock offers.
+2. Repeat it on an Instant print. Check that Adjust turns the entire card and that Saturation and Vignette affect only its picture.
+3. Cancel each Darkroom without saving.
 
-**Expect.**
+**Expect.** Each print keeps one area across its own tools. Filtration and Saturation are absent on black-and-white; Chemical toning is absent on color and Instant; Instant crop and straightening are absent. No Camera offers Dodge/Burn.
 
-- The stroke cut by the turn leaves nothing on the print, or, if what the finger did after the turn was taken as a stroke of its own, only that part; write down which.
-  It never joins the stroke that follows: the short stroke of step 3 is a separate mark, with no line from the cut stroke to it, and **Undo last stroke** removes only that short stroke.
-- The stroke of step 1 is unchanged throughout.
-- After a slider's drag is cut by a turn, the print shows the value the slider shows, and after **Save** and reopening the print and the value are the same as before **Save**.
-- The app stays open throughout.
+**Write down.** Camera and Film Stock, available tools, screenshots and any change to print bounds.
 
-**It fails if.**
-
-- A line joins the cut stroke to the next, or **Undo last stroke** removes more than the last stroke.
-- After a turn the slider shows a value the print does not show, for example **2.0 stops** over a print as dark as before, or the print after reopening differs from what was shown before **Save**.
-- Immerse closes or freezes.
-
-**Write down.**
-For each try: the direction of the turn, whether the screen turned before the finger lifted, what the print showed after, the value shown, and a screenshot before **Save** and after reopening; a screen recording of at least one stroke try and one slider try.
-
-### W05 - Display Zoom held sideways
-
-**Why.**
-Display Zoom's larger setting shows everything larger by making the screen narrower in points.
-On a 390-point-wide iPhone such as the 13 Pro that is 320 x 693 points (a public table of iPhone screen sizes, https://iosref.com/res; no record of this project measured it), so held sideways the screen is 320 points tall, the zoomed height 065 gives for an iPhone SE or a mini.
-065 works out that this leaves the Darkroom about 222 pt on a mini, whose home indicator is like the 13 Pro's, less than the 270 pt that five tool buttons and **Reset to Original** need with no margins at all.
-There the tool column falls back to scrolling: the review of that change chose no new layout for it, and the simulator, which offers no Display Zoom, showed it only in a stand-in screen 222 pt tall ("The Shortest Landscape Darkroom").
-This scenario is the first look at it on a screen.
-
-**Setting it, and setting it back.**
-Display Zoom is the captain's own setting, which he can change and change back on his phone at any time; nothing of his is lost by it.
-Changing it restarts the phone's display, so do it with no edit open in Immerse.
-
-- To turn it on: Settings > **Display & Brightness** > **Display Zoom**, choose **Larger Text**, tap **Done**, and confirm (iOS asks whether to use the zoomed view).
-- To turn it back off: the same place, choose **Default**, tap **Done**, and confirm.
-- The words iOS uses may differ a little from version to version; choose the larger setting and then the default one.
+### W04 - The band at large text sizes
 
 **Steps.**
 
-1. Write down the Display Zoom setting as it was, then turn on **Larger Text**.
-2. Open Immerse, open the Disposable photo's Darkroom and hold the phone sideways.
-   Start a screen recording, and watch the tool column for about a second.
-   Take a screenshot at rest.
-3. Drag up in the tool column until the last tool button is fully in view, tap it, and take a screenshot.
-4. Tap **Dodge / Burn** and, if **Undo last stroke** is not in view, drag up in the controls column until it is.
-   Tap **Burn point** and **Undo last stroke**.
-5. Tap **Reset to Original**, then turn the phone upright and back.
-6. Do steps 2 to 5 on the black-and-white 6×6 print and on an Instant print.
-7. Upright, open the Disposable's Darkroom, choose **Crop**, turn it on with **Size** at about the middle, and take a screenshot; this is a short screen, but a narrower one than an iPhone SE's, so it is a look and not D04's small-iPhone check.
-8. Tap **Cancel**, close the photo, and set Display Zoom back to what step 1 recorded.
-   Write down that it is back.
+1. Record the current text size and set the largest accessibility text size.
+2. Open the Disposable's Darkroom and select Filtration. Scroll inside the band to each slider and verify it can be reached.
+3. Repeat on the largest tool set for the color 6×6 and on Chemical toning for the black-and-white 6×6. On the Instant, visit each tool and reach its controls.
+4. Return to the top of the band and compare the print's position and bounds with the first screenshot.
+5. Cancel and restore the recorded text setting.
 
-**Expect.**
+**Expect.** The band scrolls internally where the controls need more space. The print area keeps its size and position while scrolling and while tools change; no control is trapped under the bottom bar.
 
-- Sideways, the tool column cannot show all five tools of the Disposable and the 6×6: the last one or more lie partly or wholly out of view at rest, and a scroll bar flashes in the tool column about half a second after the Darkroom comes to rest sideways.
-- **Reset to Original** stays whole at the foot of the column at all times, and a drag in the column brings every tool button into view, where it can be tapped.
-- Dodge / Burn's controls scroll in their own column, which flashes in the same way, and every control can be reached.
-- The print, the tools and **Reset to Original** do not move while a column scrolls.
-- The Instant's four tools and **Reset to Original** need 226 pt, about what the column has, so whether its column scrolls cannot be told in advance: write down which.
-- Upright, nothing is cut off, and the Crop tool shows its three sliders, scrolling if it must, as D04 describes.
+**Write down.** The text setting before and after, each tool whose controls required scrolling, and screenshots at the top and bottom of the band.
 
-**It fails if.**
-
-- A tool button cannot be brought into view or tapped, or **Reset to Original** is cut off or hidden.
-- The tool column holds tools out of view and nothing ever showed that it scrolls: no scroll bar flashed, on the screen or in the recording.
-- A control cannot be reached.
-
-**What is a finding and not a failure.**
-Whether a scrolling tool column is acceptable with Display Zoom is the captain's to judge, and a different layout for it would be his decision.
-The iPhone SE and the minis with Display Zoom, 242 and 222 pt sideways (065), are **not yet possible**.
-
-**Write down.**
-The Display Zoom setting before and after, the screenshots, whether and where each column flashed, how many tool buttons showed at rest on each print, and the recording.
-
-### W06 - VoiceOver held sideways
-
-**Why.**
-065 keeps the reading order of the screen held upright, print first, then the tools, then the controls; VoiceOver has not been used on a device in either arrangement ("Not Shown Here").
-Device VoiceOver for the rest of the app stays in M28.
+### W05 - Turning with the Darkroom open
 
 **Steps.**
 
-1. Turn on VoiceOver (Settings > Accessibility > **VoiceOver**).
-   With VoiceOver on, tap once to select an item, double-tap to use it, and swipe right or left with one finger to move between items.
-2. Open the Disposable photo's Darkroom and hold the phone sideways.
-   Start a screen recording with sound.
-3. Touch the top left of the screen, then swipe right through every item to the end, writing down each one VoiceOver reads.
-4. Select **Dodge / Burn** and double-tap.
-   Swipe through its controls; on **Local exposure strength** swipe up and down with one finger to change it, and double-tap **Dodge point**.
-5. Turn the phone upright and back, and write down where VoiceOver's focus is after each turn.
-6. Do steps 3 and 4 upright, and compare.
-7. Tap **Cancel** (select it and double-tap), and turn VoiceOver off.
+1. Open a Disposable photo's Darkroom, make a reversible edit, and note the selected tool and print.
+2. Turn the phone sideways and back upright. Confirm the same portrait layout and edit remain.
+3. Tap **Cancel**. Confirm the photo view returns in the orientation it had before Darkroom opened, with its print unchanged.
+4. Repeat from a landscape photo view; open Darkroom, verify its portrait arrangement, Cancel, and verify the photo view returns sideways.
 
-**Expect.**
+**Expect.** The Darkroom does not rearrange its print and controls when the phone turns. The covered screen regains its orientation on dismissal; cancelling does not save the edit.
 
-- After the navigation bar's **Cancel**, **Darkroom** and **Save**, in whatever order iOS reads them, VoiceOver reads the print as "Photo" and its number with "print preview", then each tool button by name, the chosen one as selected, then **Reset to Original**, then the tool's name and its controls.
-- Every item is read once, with a name; no item is read only as "button" or "image".
-- In Dodge / Burn, after the Dodge and Burn choice, each caption is read as it shows, such as "Strength: 0.4 stops", just before its slider: **Local exposure strength**, **Local exposure horizontal position**, **Local exposure vertical position**; then **Dodge point** and **Undo last stroke**.
-  A slider reads its value, such as "0.4 stops" for the strength, and changes it by a step for each swipe up or down.
-- The upright order is the same: print, tools, controls, and **Reset to Original**, which is in the bar at the bottom there.
+**Write down.** Orientations before and after, screenshots, selected tool, and whether the print view returned in its prior orientation.
 
-**It fails if.**
-An item is missing, read without a name or read twice, a control cannot be reached or used with VoiceOver, or the order mixes the print, the tools and the controls.
+### W06 - VoiceOver in the Darkroom
 
-**What is not known.**
-Where VoiceOver's focus goes after a turn is not on record; write it down, and if it lands somewhere that makes the screen hard to use, that is a finding for the captain.
+**Steps.**
 
-**Write down.**
-The list of what VoiceOver read, each way round, where focus went after each turn, and the recording.
+1. Enable VoiceOver in Settings and open a Disposable photo's Darkroom.
+2. Swipe through the navigation actions, print, tool buttons, Reset and selected tool controls. Adjust an accessible slider by one step.
+3. Repeat on an Instant print and a black-and-white 6×6 to confirm the available tools and controls are named.
+4. Cancel and turn VoiceOver off.
+
+**Expect.** VoiceOver names and reaches the print, available tools, Reset and selected controls. Controls in the band remain accessible by swiping even when they are below the visible area; unavailable tools are not offered.
+
+**Write down.** The order and spoken labels, each control used, the recording, and the VoiceOver setting before and after.
 
 ## The Sideways Shooting Screen and the Zoom Steps on a Real iPhone
 
@@ -1882,7 +1627,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
-| H10 / FR-07, FR-06; DRK, DEV | After using the camera, the Darkroom opened from the Journal and held sideways still puts the print beside its controls (W01). An Instant print that opens over the camera, its question and the Darkroom opened from that print keep the camera's portrait layout with the iPhone on its side, as the captain chose ("Instant - 1"); as each rises, gives way to the next and closes, the camera beneath is always in its portrait layout, never turned; and after they close the camera, as [C01](#c01---the-instants-camera-after-each-exposure) expects, starts again by itself. | Screenshots, a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera). |
+| H10 / FR-29, FR-35; DRK, DEV | After camera use, the Darkroom from the Journal keeps its one portrait arrangement in every hold. The Instant reveal and Darkroom remain inside the shooting screen's portrait hold; cancelling Darkroom must not release that outer hold. Closing the reveal follows the pack-end Originals question and resumes capture. | Screenshots and a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera), plus [W01](#w01---the-darkroom-keeps-one-layout-in-every-hold) and [W05](#w05---turning-with-the-darkroom-open). |
 
 **What the build does, from the record and the code.**
 
@@ -1907,7 +1652,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
   Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
 - Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
-  Opened from the Journal or the Film screen, the same print and its Darkroom turn with the iPhone, the Darkroom side by side as in W01.
+  The photo view opened from the Journal or Film screen turns with the iPhone. Darkroom keeps its portrait arrangement from either entry point and restores the photo view orientation when it closes, as W01 and W05 describe.
 - While no lens is running (the camera starting, asking for access, refused or unavailable) the 6×6's rows are empty and no "... unavailable on this lens" note shows.
 
 **What this iPhone should show, and what it cannot.**
@@ -2147,28 +1892,27 @@ A screen recording of each turn.
 
 **Steps.**
 
-1. After H01 to H09, open a developed Disposable photo's Darkroom from the Journal, hold the iPhone on its side, and compare with W01.
-2. On the Instant, with the iPhone on its side, start a screen recording and take a photo.
-3. When the print opens over the camera, keep the iPhone on its side, tap **Darkroom** on it, look at the Darkroom's arrangement, and close the Darkroom.
-4. Tap **Done** on the print, answer the question about its original (**Cancel** leaves it) and look at the camera.
-5. Step through the recording frame by frame where the print rises, where the Darkroom opens and closes over it, where the print gives way to the question, and where the question closes.
+1. After H01 to H09, open a developed Disposable photo's Darkroom from the Journal, hold the iPhone sideways, and compare its one portrait arrangement with W01.
+2. On a full Instant pack, start a screen recording and take the last photo while the iPhone is sideways. The new print opens alone over the shooting screen.
+3. Open **Darkroom** from that print. Check that the Darkroom keeps its portrait layout and the capture screen remains held underneath it. Tap **Cancel** to return to the same reveal.
+4. While the reveal is still open, turn the iPhone sideways and confirm the shooting screen remains in its portrait layout. Turn back upright, then tap **Done** on the print.
+5. Answer the one Originals question for any still-undecided prints. Confirm the camera resumes by itself. Review the recording frame by frame as the print, Darkroom and question open and close.
 
 **Expect.**
 
-- The Darkroom opened from the Journal is side by side held sideways, as in W01, including after the camera was used.
-- The print, the Darkroom opened from it and the question keep the camera's portrait layout and read sideways with the iPhone on its side, the Darkroom in its portrait arrangement, as the captain chose ("Instant - 1", ADR 0017).
-- In every frame, the camera beneath the sheets is in its portrait layout, with its words turned to read upright as you hold the iPhone; it is never laid out in a landscape window, never with a short viewfinder, and never with words that read sideways.
-- When the sheets close, the camera is in the portrait layout and starts again by itself.
+- The Darkroom opened from the Journal keeps the same portrait arrangement while the iPhone is held sideways; its print remains above the tool row and controls, with Reset in the bottom bar.
+- The Instant reveal is upright while the shooting screen is up. Its Darkroom is portrait; Cancel returns to the reveal without releasing the capture screen's portrait orientation mask.
+- The capture screen stays portrait as the reveal and Originals question come and go, and resumes by itself when they close.
 
 **It fails if.**
 
-- The Darkroom opened from the Journal stays in the portrait layout with the iPhone on its side.
-- The Darkroom opened from the print over the camera turns to its side-by-side arrangement.
-- Any frame shows the camera in a landscape window or with its words reading sideways, or the window turns at all while the print, its Darkroom and its question come and go.
-- The camera is left in a landscape layout.
+- The Darkroom moves to a side-by-side layout or changes its print/tools/controls order while the phone turns.
+- Cancelling Darkroom over the Instant reveal releases the capture screen's portrait hold, so turning the device turns the shooting screen landscape.
+- The reveal, Darkroom or Originals question exposes a landscape capture interface or rotates the window while the capture screen remains up.
+- The camera requires a manual resume after the question closes.
 
 **Write down.**
-Screenshots, and the screen recording of the Instant case with the frames of each transition.
+Screenshots and the screen recording of each transition, whether turning the phone after Darkroom closes preserves the capture layout, and the Originals question's scope and result.
 
 ## The Instant Camera Staying On on a Real iPhone
 
@@ -2417,7 +2161,7 @@ nonmigration are both required; one cannot substitute for the other.
 | FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05; the shooting screen held sideways, the 6×6's viewfinder and its zoom steps are H01 to H10, and the Instant's camera after each exposure is C01. |
 | FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06, and H04 for a clip's orientation; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
 | FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03. |
-| FR-07 A01...A05 | M13, M14, M28, D01, D04, I02, W01 to W06 (the Darkroom held sideways), with A05 (no crop on an Instant print) in M13; the ranges were approved on 2026-10-13. |
+| FR-07 A01...A05 (PRD 2.1 baseline) | M13, M14, M28, D01, D04, I02, W01 to W06 (current Darkroom layout and controls); FR-29 to FR-34 supersede the baseline orientation, Crop and Dodge/Burn tool details. |
 | FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, D03 for the Instant's question about each original, and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
 | FR-18 A01...A05 | M24, M25, T01, T07, T10, B03. |
@@ -2453,3 +2197,110 @@ The 2026-10-13, 2026-10-14 and 2026-10-15 updates of this plan were documents-on
 Full-v1
 completion stays withheld until every required check, decision and hardware gate
 is resolved and recorded. Actual publication needs separate release authority.
+## 2026-10-26 phone-feedback acceptance
+
+These cases map one-to-one to the physical-iPhone rows in the amendment's section 5.4. Every case is **UNTESTED: physical execution deferred**. The candidate must be re-pinned after this change merges, and the captain must authorize physical execution. Simulator screenshots and package results do not count as phone results. Use test Films and a non-private scene; preserve receipts without keeping private pictures, recordings, or audio.
+
+| Case | Physical-only acceptance row | State |
+| --- | --- | --- |
+| Q01 | Photo view swipe feel (FR-22) | UNTESTED |
+| Q02 | Live picture against the iPhone Camera app (FR-23) | UNTESTED |
+| Q03 | Camera names (FR-24; nothing beyond a look) | UNTESTED |
+| Q04 | Autofocus, fixed focus and tap-to-focus on real lenses (FR-25) | UNTESTED |
+| Q05 | Super 8 and 16mm Zoom Steps on real lenses and clips (FR-26) | UNTESTED |
+| Q06 | Live sound, sync, interruptions and microphone routes (FR-27) | UNTESTED |
+| Q07 | Playback and exported sound format (FR-28) | UNTESTED |
+| Q08 | Darkroom feel (FR-29 to FR-34) | UNTESTED |
+| Q09 | One complete Instant pack (FR-35) | UNTESTED |
+
+Run only against the post-merge candidate and only after the captain authorizes the phone work. Before each case, record the candidate commit, phone model and iOS version, Film used, and any temporary permission or setting that the approved procedure requires. Restore temporary settings at the end. Stop and record an unexpected data loss, a blocked capture, a permission state that cannot be restored, or an export sent somewhere other than the phone's Photos library; do not repeat a destructive step to get a cleaner result.
+
+### Q01 - Swipe feel in the photo view
+
+**Prepare.** Use a test Film with at least three developed prints and, if available, one sealed and one discarded frame between developed prints. Keep the Film's Originals and edits unchanged.
+
+**Steps.** Open its first developed print from the Film screen. Swipe through the developed prints in both directions, including across the sealed or discarded frame. Try to swipe past the first and last prints. Open the Darkroom and Cancel back to the print, then Discard only if this test Film is disposable.
+
+**Expect.** Each swipe feels like paging through photographs and changes exactly one print in capture order. Sealed and discarded frames are skipped; the ends do not wrap. Cancel returns to the same print. Discard shows the next developed print or closes the photo view when none remains.
+
+**Write down.** Whether the direction and distance feel predictable one-handed; note any missed, repeated or overscrolled page. Capture a screen recording with the test Film only.
+
+### Q02 - Live picture in the Viewfinder area
+
+**Prepare.** Use a static, non-private scene with clear edges. Open the built-in iPhone Camera app and select its 4:3 photo framing as the comparison.
+
+**Steps.** For Disposable, Instant, 6×6, Super 8 and 16mm, open the shooting screen and compare its live picture to the same scene in the iPhone Camera app. Check upright and both sideways holds. Observe the Viewfinder area while controls and any notice appear.
+
+**Expect.** The live picture sits in the centered Camera shape inside the full-width 4:3 portrait Viewfinder area. The area remains in the same place in each hold and for every Camera; controls and notices do not move it. Record any framing difference from the iPhone Camera app without adjusting either image after capture.
+
+**Write down.** Camera, hold, the visible shape, any frame or placement difference, and screenshots that contain no private scene.
+
+### Q03 - Camera names
+
+**Prepare.** No capture or setting change is needed.
+
+**Steps.** Look at the camera catalog and the visible Camera name on each of the five shooting screens and Film screens.
+
+**Expect.** The names read Disposable, Instant, 6×6, Super 8 and 16mm. This row requires no additional physical measurement beyond a look; simulator copy checks remain the evidence for the full set of screens.
+
+**Write down.** Any label that differs from the listed name and the screen where it appeared.
+
+### Q04 - Focus on real lenses
+
+**Prepare.** Use a well-lit test scene with near and far edges. List the physical rear lenses the iPhone Camera app exposes before testing.
+
+**Steps.** On each Camera, keep Auto selected and tap a near object then a distant object in the Viewfinder. On the Disposable and Super 8, test Fixed on each available lens. On the 6×6, compare Auto with Manual and move the Focus slider in Manual. Check the Instant and 16mm in Auto.
+
+**Expect.** Auto continuously refocuses where the lens supports it, and a tap focuses the tapped area and shows a yellow square where it focused; a tap on a lens without autofocus shows no square. Fixed holds focus on each supported Disposable and Super 8 lens. Manual focus responds on the 6×6 where available. Record a lens that cannot perform an offered mode; do not infer hardware support from a simulator.
+
+**Write down.** Lens identity, mode, approximate target distance, and whether focus followed the tap or stayed fixed. Do not retain a picture of a person or private scene.
+
+### Q05 - Movie Zoom Steps on real lenses
+
+**Prepare.** Use a test Super 8 Film, a test 16mm Film, and a 6×6 Film on a phone with multiple rear lenses. Record the step labels the iPhone Camera app exposes and the same Film's 6×6 steps.
+
+**Steps.** Compare the Super 8 and 16mm steps with the 6×6. Select each step only between short Recorded Clips; attempt no step change while a clip is recording. Play each resulting Developed Clip.
+
+**Expect.** Super 8 and 16mm offer the iPhone's reported Zoom Steps, subject to supported 4:3 movie formats, without added steps. A change during recording is unavailable. Clips from each offered step keep the same 4:3 output shape, frame rate and Developed Treatment as that Camera's 1× clip.
+
+**Write down.** Reported lenses and steps, any 4:3 format exclusion, clip metadata and playback result. Save short test clips only.
+
+### Q06 - Recorded sound on movie Clips
+
+**Prepare.** Use a test Super 8 Film and a quiet spoken clap or tone, with permission and route state changed only under the captain's approved device procedure. Record the microphone permission state before the test so it can be restored. Include a wired or Bluetooth microphone only if separately authorized.
+
+**Steps.** Start music in another app, open the Super 8's shooting screen and note whether the music pauses as the screen opens, as a clip starts, or not at all, and whether the iPhone's own Camera app does the same when it records video. Record one short clip with the built-in microphone, then test the declined-permission path if the approved procedure allows changing it. If authorized, repeat with each connected microphone route and use a controlled incoming call or another recording app to test interruption behavior.
+
+**Expect.** Sound follows the picture without a perceptible offset. Declining permission leaves video capture available, shows the note, and produces a silent clip. A call or competing recording ends the clip safely and retains its saved picture and sound. Each connected route behaves as iOS routes it.
+
+**Write down.** Permission state before and after, when the other app's music paused in Immerse and in the iPhone's Camera app, microphone route, clip duration, whether the note appeared, sync result, and interruption behavior. Keep only the metadata and a pass/fail note; delete test audio after review.
+
+### Q07 - Playback and sound format
+
+**Prepare.** Record one short test video in the iPhone Camera app and one short Super 8 clip of the same non-private scene and sound. Use the app's Recorded sound choice.
+
+**Steps.** Play the Developed Movie through the iPhone speaker and from Photos. Save Developed to Photos. Read the exported file's codec, sample rate and channel count and compare them with the iPhone Camera reference. Change the app's choice to Silent and back to Recorded sound; verify playback each time.
+
+**Expect.** The speaker and Photos play the selected sound. Silent removes it from playback and export; selecting Recorded sound restores it without another Development. The recorded and exported sound format matches the iPhone Camera reference.
+
+**Write down.** The two files' audio metadata and playback results. Keep no voice content in the evidence; retain only metadata and non-private screenshots.
+
+### Q08 - Darkroom feel
+
+**Prepare.** Use test prints for a color photo Camera, the Instant and the 6×6, including a black-and-white 6×6 if available. Start with no unsaved recipe changes.
+
+**Steps.** Visit every available Darkroom tool on each test print, use the controls band, and turn the iPhone sideways and back while Darkroom is open. Scroll the band where needed. Finish with Cancel or Reset to Original on the test Film.
+
+**Expect.** The Darkroom stays upright in every hold. The print remains above the fixed controls band as tools change; large controls scroll inside the band. Adjust, Saturation and Vignette behave as labeled, the Instant's edits reach only its picture except for whole-card quarter turns, and no Dodge/Burn control appears. Reset restores the original test print.
+
+**Write down.** Hand feel, reach, clipping or unintended movement; attach screenshots for a clear visual defect. This one physical pass adds judgment to the simulator geometry and render evidence.
+
+### Q09 - One complete Instant pack
+
+**Prepare.** Load a fresh test Instant Film with all ten exposures remaining. Confirm storage is available. Use only test subjects and retain no private print.
+
+**Steps.** Capture and reveal all ten prints. Leave any Originals undecided until the tenth reveal. When the single Originals question appears, Cancel it, close the photo view, and revisit the shooting screen to check that the question does not return by itself. Use the Film screen's Originals button to decide later.
+
+**Expect.** No Originals question appears after prints one through nine. After the final print, one question covers every undecided original. A cancelled question does not return by itself; the Film screen's Originals button remains available and lets the person decide later.
+
+**Write down.** Remaining-exposure count at each reveal, question count and timing, selected response, and whether the Film screen's Originals button works. Record screenshots using test prints only.

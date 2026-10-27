@@ -3,136 +3,55 @@ import ImageIO
 import RenderCore
 import SwiftUI
 
-/// The height of the Darkroom's controls, which the print preview leaves room for.
-private struct ControlsHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
-}
-
-/// The Darkroom's print and its controls: the print above them in portrait, and beside them in landscape.
+/// The Darkroom's print and its controls, in one arrangement in every hold: `DarkroomView` holds the window upright (the
+/// captain, 2026-10-26: "No darkroom on landscape across all cameras").
 ///
-/// In portrait the print takes the height the controls leave at their full size, and below the navigation bar: the
-/// sheet's safe area starts under the bar, and the content scrolls only when even the smallest print does not fit. The
-/// scroll area stops above the floating Reset to Original bar, so no control rests under it, where its taps would reach
-/// the bar, and the last row scrolls fully clear of it. Rendering shows over the print, outside the measured controls, so
-/// it does not resize the print on every render or rescale a Dodge/Burn stroke. An error shows between the print and the
-/// controls and is measured with them: the print gives up the error's height, so the selected tool rests on screen
-/// under the error and does not wait below the fold. In portrait, a tool whose controls must all show at once, the
-/// Adjust's three crop sliders, has the print go below its smallest ordinary size, down to a smaller floor, to rest every
-/// control on screen; past that floor the screen scrolls the rest.
-///
-/// In landscape (a compact vertical size class) the screen is too short for a print over its controls (the captain,
-/// 2026-10-14: "landscape - side by side"). The print takes the leading side, as large as it fits there, then come the
-/// tool buttons in a column with Reset to Original at its foot, then the selected tool's controls. Read in that order,
-/// the screen is the portrait one turned on its side: the print first, then the tools, then the controls that change it.
-/// No bottom bar takes the screen's height, and the controls scroll on their own when they cannot all show, as at the
-/// largest text sizes, while the print, the tools and Reset stay where they are. A column that cannot show everything at
-/// rest, the controls there or the tools on a Display Zoom screen, shows that it scrolls (`ColumnScrollView`).
+/// The print takes what the screen leaves above one band of fixed height, so its frame is the same whatever tool is
+/// selected (the captain, 2026-10-26: "Darkroom - keep the screen size consistent."); it differs between iPhones, never
+/// between tools. The band holds the tool buttons and the selected tool's controls and is as tall as the tallest tool
+/// needs at the default text size (`controlBandHeight`). At larger text sizes, and under an error or the note about saved
+/// Dodge/Burn strokes, the band scrolls inside itself and shows that it does (`BandScrollView`); the print never
+/// shrinks. Rendering shows over the print. Reset to Original stays in the bottom bar.
 struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: View {
     let rendering: Bool
     let error: String?
-    /// Whether the print gives up height below `minimumPrintHeight`, down to `smallestFittedPrintHeight`, to rest every
-    /// control on screen in portrait. Where even that print leaves controls below the fold, the print stays at that size
-    /// and the screen scrolls only the rest, so a larger text size never has a larger print. In landscape the print is
-    /// beside the controls, whose height never reaches it.
-    var fitsEveryControl = false
     @ViewBuilder let preview: Preview
-    /// One button per tool: a row above the controls in portrait, a column beside them in landscape.
+    /// One button per tool, in a row across the band.
     @ViewBuilder let tools: Tools
     @ViewBuilder let controls: Controls
-    /// Reset to Original: the floating bottom bar in portrait, the foot of the tool column in landscape.
     @ViewBuilder let reset: Reset
-    /// The height of everything under the print, measured at the current text size.
-    @State private var controlsHeight: CGFloat = 260
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
-    /// The smallest height the print preview is scaled down to before the screen scrolls. Under an error it is half
-    /// that: the longest explanation then leaves the Exposure tool on an iPhone SE's screen, with the print still shown.
-    private var minimumPrintHeight: CGFloat { error == nil ? 160 : 80 }
-
-    /// The smallest the print is shown in a tool whose controls must all show, two fifths of its ordinary smallest size,
-    /// with or without an error. With a crop smaller than the whole print, the Crop tool's controls leave an iPhone SE's
-    /// print 80 pt at the default text size, a fraction of a point short of the 80 pt an error allows, so the fitted
-    /// print is allowed less.
-    private static var smallestFittedPrintHeight: CGFloat { 64 }
-
-    /// The controls' bottom margin, over which controls that run past the scroll area fade out rather than end in a
-    /// sliver. The last row, scrolled fully into view, ends above it.
+    /// The band's height: what Adjust needs at the default text size with a crop smaller than the print, the tallest
+    /// any tool gets. That is the 16 pt top margin, the 44 pt tool row, the Adjust heading's row with its turn buttons,
+    /// five rows of a caption beside its control (Straighten, Crop and the crop's Size, Horizontal and Vertical), the
+    /// gaps between them and the bottom margin, held whole on an iPhone SE by `PopulatedWorkflowTests`.
+    private static var controlBandHeight: CGFloat { 330 }
+    /// The space between the band's rows.
+    private static var spacing: CGFloat { 12 }
     private static var bottomMargin: CGFloat { 12 }
 
-    /// The space between the scroll area and the floating Reset to Original bar. The bar itself is the bottom safe area,
-    /// which takes every tap across the screen's width; kept off it, the scroll view ends above the bar instead of
-    /// drawing controls under it.
-    private static var bottomBarSpacing: CGFloat { 4 }
-
-    /// The width of a tool button in the landscape column, the least a button takes a tap in.
-    private static var toolColumnWidth: CGFloat { 44 }
-
-    /// The space between the print, the tool column and the controls in landscape, and between the controls there.
-    private static var sideBySideSpacing: CGFloat { 12 }
-
-    /// The share of the landscape width the controls take from the print, leaving the print the rest.
-    private static var controlsShare: CGFloat { 0.55 }
-
-    private func printHeight(in available: CGFloat) -> CGFloat {
-        max(fitsEveryControl && verticalSizeClass == .regular ? Self.smallestFittedPrintHeight : minimumPrintHeight,
-            available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
-    }
-
     var body: some View {
-        if verticalSizeClass == .compact { sideBySide } else { stacked }
-    }
-
-    private var stacked: some View {
         GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 18) {
-                    preview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
-                        .overlay(alignment: .topTrailing) { progress }
-                    VStack(spacing: 18) {
+            VStack(spacing: 0) {
+                preview.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .topTrailing) { progress }
+                    .accessibilityIdentifier("darkroom-print-area")
+                BandScrollView {
+                    VStack(alignment: .leading, spacing: Self.spacing) {
                         if let error { Text(error).foregroundStyle(.red) }
                         HStack { tools }
                         controls
-                    }.background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
-                }.padding([.horizontal, .top]).padding(.bottom, Self.bottomMargin)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.horizontal, .top])
+                    .padding(.bottom, Self.bottomMargin)
+                }
+                .accessibilityIdentifier("darkroom-control-band")
+                .frame(height: min(Self.controlBandHeight, geometry.size.height))
+                .mask { fade }
             }
-            .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
-            .mask { fade }
-            .padding(.bottom, Self.bottomBarSpacing)
         }
         .toolbar { ToolbarItem(placement: .bottomBar) { reset } }
-    }
-
-    private var sideBySide: some View {
-        GeometryReader { geometry in
-            let spacing = Self.sideBySideSpacing
-            // The leading and trailing margins and the two gaps around the tool column are 16, 12, 12 and 16 pt.
-            let shared = geometry.size.width - 16 - spacing - Self.toolColumnWidth - spacing - 16
-            HStack(spacing: spacing) {
-                preview.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(alignment: .topTrailing) { progress }
-                    .padding(.leading).padding(.vertical)
-                // A button's icon sits 12 pt inside its frame, so at the column's full margin the first icon is level
-                // with the heading beside it.
-                ToolColumn {
-                    ColumnScrollView { VStack(spacing: 0) { tools } }.scrollBounceBehavior(.basedOnSize)
-                    // The glass circle the bottom bar gave it, large enough to take a tap across more than 44 pt, its symbol
-                    // the size the bar draws. Like the bar's, it keeps its size as the text grows, so it never crowds the
-                    // tools out of the column.
-                    reset.labelStyle(.iconOnly).imageScale(.large).buttonStyle(.glass).buttonBorderShape(.circle)
-                        .controlSize(.large).dynamicTypeSize(.large)
-                }
-                .frame(width: Self.toolColumnWidth)
-                ColumnScrollView {
-                    VStack(spacing: spacing) {
-                        if let error { Text(error).foregroundStyle(.red) }
-                        controls
-                    }.padding([.trailing, .top]).padding(.bottom, Self.bottomMargin)
-                }
-                .mask { fade }
-                .frame(width: (shared * Self.controlsShare).rounded() + 16)
-            }
-        }
     }
 
     @ViewBuilder private var progress: some View {
@@ -148,25 +67,21 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     }
 }
 
-/// A landscape Darkroom column's scroll area. Where its content runs more than a point past what it shows, it flashes
-/// its scroll indicator, so a column that cannot show everything at rest shows that it scrolls: 0.6 s after its content
-/// comes to run past it, as the Darkroom opens or turns into landscape and whenever a tool's controls or an explanation
-/// come to run past it. The wait is longer than the sheet takes to rise, since a flash at the column's first layout, as
-/// the sheet rises, is not drawn, nor is one asked for in the same update as the content grows, before the scroll view
-/// has its new height. It flashes only as its content comes to run past it, never as it comes to fit, and a column that
-/// holds everything never flashes, as where the tools exactly fill their column on an iPhone 13 mini. The container is
-/// the column inside the safe area, so the insets that reach under the navigation bar and the home indicator are no
-/// part of what it shows. Beside a safe area, as at the trailing edge of an iPhone with a notch or the Dynamic Island
-/// held sideways, the scroll view reaches into it and draws its indicator at its own edge, outside the column's fade,
-/// unless the indicator has a margin of its own: then it is also inset by the safe area, and shows inside the column.
-private struct ColumnScrollView<Content: View>: View {
+/// The Darkroom band's scroll area. Where its content runs more than a point past what it shows, it flashes its scroll
+/// indicator, so a band that cannot show everything shows that it scrolls: 0.6 s after its content comes to run past
+/// it, as the Darkroom opens and whenever a tool's controls, an explanation or a larger text size come to run past it.
+/// The wait is longer than the sheet takes to rise, since a flash at the band's first layout, as the sheet rises, is not
+/// drawn, nor is one asked for in the same update as the content grows, before the scroll view has its new height. It
+/// flashes only as its content comes to run past it, never as it comes to fit, and a band that holds everything never
+/// flashes.
+private struct BandScrollView<Content: View>: View {
     @ViewBuilder let content: Content
     @State private var overflows = false
     @State private var flashes = 0
 
     var body: some View {
         ScrollView { content }
-            .contentMargins(.trailing, 1, for: .scrollIndicators)
+            .scrollBounceBehavior(.basedOnSize)
             .onScrollGeometryChange(for: Bool.self) { $0.contentSize.height > $0.containerSize.height + 1 } action: {
                 overflows = $1
             }
@@ -176,32 +91,6 @@ private struct ColumnScrollView<Content: View>: View {
                 try? await Task.sleep(for: .seconds(0.6))
                 if !Task.isCancelled { flashes += 1 }
             }
-    }
-}
-
-/// The Darkroom's landscape tool column: the tools' scroll area, then Reset to Original at its foot, 8 pt from the
-/// column's ends and 4 pt apart. Where the column is too short for those, the margins and the gap give up what the tools
-/// and Reset need, down to none, so every tool rests whole above Reset at any height that holds them, as on an iPhone 13
-/// mini, whose home indicator leaves the Darkroom 277 pt in landscape. Below that, as on a Display Zoom screen, the tools
-/// scroll and show that they do, and Reset stays.
-private struct ToolColumn: Layout {
-    private static let margin: CGFloat = 8
-    private static let gap: CGFloat = 4
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        proposal.replacingUnspecifiedDimensions()
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        guard let tools = subviews.first, let reset = subviews.last else { return }
-        let resetSize = reset.sizeThatFits(.unspecified)
-        let toolsHeight = tools.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
-        let share = min(1, max(0, (bounds.height - toolsHeight - resetSize.height) / (2 * Self.margin + Self.gap)))
-        let toolsTop = bounds.minY + Self.margin * share
-        let resetTop = bounds.maxY - Self.margin * share - resetSize.height
-        tools.place(at: CGPoint(x: bounds.minX, y: toolsTop),
-                    proposal: ProposedViewSize(width: bounds.width, height: max(0, resetTop - Self.gap * share - toolsTop)))
-        reset.place(at: CGPoint(x: bounds.midX, y: resetTop), anchor: .top, proposal: ProposedViewSize(resetSize))
     }
 }
 
@@ -373,17 +262,13 @@ struct DarkroomView: View {
     @State private var rendering = false
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
-    /// The recipe last handed to `render()`, so a turn renders only an edit that has not reached the print.
-    @State private var renderedRecipe = DarkroomRecipe.original
     @State private var error: String?
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
-    /// In landscape, where `DarkroomLayout` puts the controls in a short column beside the print, captions sit beside
-    /// sliders through the extra large text size. At larger sizes, captions sit above their sliders and the column scrolls.
-    private var captionsBeside: Bool { verticalSizeClass == .compact && dynamicTypeSize <= .xLarge }
-
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
+
+    /// Captions sit beside their sliders through the extra large text size, which keeps the tallest tool inside the
+    /// band at the default size; at larger sizes they sit above their sliders and the band scrolls.
+    private var captionsBeside: Bool { dynamicTypeSize <= .xLarge }
 
     enum PrintTool: String, CaseIterable, Identifiable {
         case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", adjust = "Adjust"
@@ -404,12 +289,18 @@ struct DarkroomView: View {
 
     var body: some View {
         NavigationStack {
-            DarkroomLayout(rendering: rendering, error: error, fitsEveryControl: tool == .adjust) {
+            DarkroomLayout(rendering: rendering, error: error) {
                 printPreview
             } tools: {
                 tools
             } controls: {
-                Text(tool.rawValue).font(.headline); controls
+                if !recipe.dodgeBurnMasks.isEmpty {
+                    Text("This print keeps its earlier Dodge/Burn strokes until Reset to Original.")
+                        .font(.footnote)
+                        .accessibilityIdentifier("darkroom-legacy-strokes-note")
+                }
+                heading
+                controls
             } reset: {
                 Button("Reset to Original", systemImage: "arrow.counterclockwise") { recipe.resetToOriginal(); render() }
             }
@@ -427,6 +318,7 @@ struct DarkroomView: View {
                     }.disabled(rendering || model.hiddenFilms.contains(filmID))
                 }
             }
+            .holdsPortraitOrientationPreservingCurrent()
             .task {
                 do {
                     process = try model.repository.photoPrintProcess(filmID: filmID)
@@ -436,13 +328,6 @@ struct DarkroomView: View {
                 catch { self.error = FailureCopy.message(for: error) }
             }
             .onDisappear { renderTask?.cancel(); image = nil }
-            // Turning the iPhone rebuilds the print and controls in the other layout, and a recipe that differs from the
-            // one last rendered is rendered, so a slider's edit, which renders only at the end of its drag, still
-            // reaches the print. An unchanged recipe is not rendered again, so a turn leaves a load or
-            // save error, and the print it refers to, as they were.
-            .onChange(of: verticalSizeClass) {
-                if recipe != renderedRecipe { render() }
-            }
         }
     }
 
@@ -459,8 +344,8 @@ struct DarkroomView: View {
         } else { ProgressView() }
     }
 
-    /// One button per tool, across the width in portrait and down a column in landscape. The icons stop growing with the
-    /// text size at the largest ordinary size, so they always fit inside the side margins and down the column.
+    /// One button per tool in the fixed controls band. The icons stop growing with the text size at the largest ordinary
+    /// size so every tool remains reachable across the row.
     private var tools: some View {
         ForEach(PrintTool.allCases.filter { choice in
             choice != .toning || process.supportsChemicalToning
@@ -472,6 +357,29 @@ struct DarkroomView: View {
             }.accessibilityLabel(choice.rawValue).help(choice.rawValue)
                 .accessibilityAddTraits(tool == choice ? .isSelected : [])
         }.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+
+    /// The selected tool's name, and on Adjust its two quarter-turn buttons beside it, which every print offers, the
+    /// Instant's included.
+    private var heading: some View {
+        HStack {
+            Text(tool.rawValue).font(.headline)
+            if tool == .adjust {
+                Spacer()
+                Button { recipe.rotateLeft(); render() } label: { turnLabel("Rotate left", systemImage: "rotate.left") }
+                    .accessibilityIdentifier("darkroom-rotate-left")
+                Button { recipe.rotateRight(); render() } label: { turnLabel("Rotate right", systemImage: "rotate.right") }
+                    .accessibilityIdentifier("darkroom-rotate-right")
+            }
+        }
+        .buttonStyle(.bordered).buttonBorderShape(.circle)
+        .frame(minHeight: 44)
+    }
+
+    /// A quarter-turn button's icon, with the circle the bordered style draws around it 44 points across, a whole tap
+    /// target.
+    private func turnLabel(_ title: String, systemImage: String) -> some View {
+        Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 30, height: 30)
     }
 
     @ViewBuilder private var controls: some View {
@@ -528,28 +436,23 @@ struct DarkroomView: View {
                 }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
             }
         case .adjust:
-            let straightening = StopsText.tenths(
-                recipe.straighteningDegrees ?? 0,
-                in: DarkroomLimits.straighteningDegrees
-            )
-            HStack {
-                Button("Rotate left", systemImage: "rotate.left") {
-                    recipe.rotateLeft()
-                    render()
-                }
-                .accessibilityIdentifier("darkroom-rotate-left")
-                Button("Rotate right", systemImage: "rotate.right") {
-                    recipe.rotateRight()
-                    render()
-                }
-                .accessibilityIdentifier("darkroom-rotate-right")
-            }
+            // The turn buttons are beside the heading. Straightening comes first, so it stays where it is as the crop's
+            // own rows come and go below it.
             if !isInstant {
-                Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
-                    recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
-                }))
-                if let crop = recipe.crop {
-                    captionedSliders {
+                let straightening = StopsText.tenths(recipe.straighteningDegrees ?? 0, in: DarkroomLimits.straighteningDegrees)
+                captionedSliders {
+                    captioned(Text("Straighten \(String(format: "%.1f", straightening))°").font(.caption).monospacedDigit(),
+                              Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
+                                  let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
+                                  recipe.straighteningDegrees = value == 0 ? nil : value
+                              }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
+                                     onEditingChanged: { if !$0 { render() } })
+                                  .accessibilityLabel("Straighten")
+                                  .accessibilityValue("\(String(format: "%.1f", straightening)) degrees"))
+                    captioned(Text("Crop").font(.caption), Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
+                        recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
+                    })).labelsHidden().frame(maxWidth: .infinity, alignment: .trailing))
+                    if let crop = recipe.crop {
                         captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
                             let size = $0
                             recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
@@ -560,23 +463,15 @@ struct DarkroomView: View {
                         }
                     }
                 }
-                Text("Straighten \(String(format: "%.1f", straightening))°").monospacedDigit()
-                Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
-                    let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
-                    recipe.straighteningDegrees = value == 0 ? nil : value
-                }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
-                    onEditingChanged: { if !$0 { render() } })
-                    .accessibilityLabel("Straighten")
-                    .accessibilityValue("\(String(format: "%.1f", straightening)) degrees")
             }
         }
     }
 
-    /// The space between a caption and the slider beside it.
+    /// The space between a caption and the control beside it.
     private static let captionSpacing: CGFloat = 12
 
-    /// A tool's captioned sliders: in landscape the rows of a grid, so the sliders beside their captions line up; in
-    /// portrait the content as it is, each caption above its slider.
+    /// A tool's captioned controls: the rows of a grid through the extra large text size, so the controls beside their
+    /// captions line up; at larger sizes the content as it is, each caption above its control.
     @ViewBuilder private func captionedSliders(@ViewBuilder _ content: () -> some View) -> some View {
         if captionsBeside {
             Grid(alignment: .leading, horizontalSpacing: Self.captionSpacing) { content() }
@@ -585,12 +480,12 @@ struct DarkroomView: View {
         }
     }
 
-    /// A caption and its slider: one grid row in landscape, the caption above the slider in portrait.
-    @ViewBuilder private func captioned(_ caption: some View, _ slider: some View) -> some View {
+    /// A caption and its control: one grid row through the extra large text size, the caption above it beyond.
+    @ViewBuilder private func captioned(_ caption: some View, _ control: some View) -> some View {
         if captionsBeside {
-            GridRow { caption; slider }
+            GridRow { caption; control }
         } else {
-            VStack(alignment: .leading) { caption; slider }
+            VStack(alignment: .leading) { caption; control }
         }
     }
 
@@ -614,7 +509,6 @@ struct DarkroomView: View {
         let id = UUID()
         renderID = id
         let selected = recipe
-        renderedRecipe = selected
         rendering = true
         renderTask = Task {
             do {

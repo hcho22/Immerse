@@ -21,7 +21,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.buttons["Open photo 1"].waitForExistence(timeout: 40))
         snapshot(app, "revealed-photo-Film")
         app.buttons["Open photo 1"].tap()
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 5))
         // A color Photo Film gets contrast grades and Adjust; the print process hides toning.
         XCTAssertTrue(app.buttons["Contrast"].exists)
@@ -179,6 +179,16 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertEqual(photo.label, "Photo 2, 2 of 2")
         turn(app, to: .landscapeLeft)
         XCTAssertGreaterThan(photo.frame.width, photo.frame.height, "The photo view turns with the iPhone")
+        tapDarkroom(app)
+        XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10))
+        let darkroomPortrait = NSPredicate { _, _ in app.windows.firstMatch.frame.height > app.windows.firstMatch.frame.width }
+        wait(for: [XCTNSPredicateExpectation(predicate: darkroomPortrait, object: nil)], timeout: 10)
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 10))
+        let photoLandscape = NSPredicate { _, _ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height }
+        wait(for: [XCTNSPredicateExpectation(predicate: photoLandscape, object: nil)], timeout: 10)
+        XCTAssertGreaterThan(photo.frame.width, photo.frame.height, "Cancel restores the turning photo view")
         turn(app, to: .portrait)
         photo.swipeLeft()
         XCTAssertTrue(app.navigationBars["Photo 2"].exists, "The view stays at the end")
@@ -186,11 +196,11 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10), "A right swipe returns to the earlier print")
         photo.swipeLeft()
 
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10))
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 10), "Cancel returns to the print being edited")
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10))
         app.buttons["Save"].tap()
         XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 20), "Save returns to the same print")
@@ -249,7 +259,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let app = launch(arguments: ["--developed-photo"])
         openFilm(app)
         app.buttons["Open photo 1"].tap()
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         let exposure = app.sliders["Print exposure"]
         XCTAssertTrue(exposure.waitForExistence(timeout: 10))
         XCTAssertEqual(exposure.value as? String, "0 stops")
@@ -279,7 +289,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         save.tap()
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10), "A recipe at the limits saves")
         snapshot(app, "Photo-printed-at-the-limits")
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 10), "The saved recipe comes back")
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         app.buttons["Cancel"].tap()
@@ -302,20 +312,6 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         while Date() < deadline {
             if element.screenshot().pngRepresentation != before { return true }
             Thread.sleep(forTimeInterval: 0.25)
-        }
-        return false
-    }
-
-    /// A sheet the app raises on its own, not after a tap of the test's, is still rising when its controls first exist,
-    /// and iOS ignores a tap sent while it rises. Two looks alike a quarter of a second apart mean it has come to rest.
-    private func waitUntilStill(_ app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
-        let deadline = Date().addingTimeInterval(timeout)
-        var last = app.screenshot().pngRepresentation
-        while Date() < deadline {
-            Thread.sleep(forTimeInterval: 0.25)
-            let now = app.screenshot().pngRepresentation
-            if now == last { return true }
-            last = now
         }
         return false
     }
@@ -465,6 +461,18 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         image.swipeLeft()
         XCTAssertTrue(print.exists, "The Instant reveal does not swipe to earlier prints")
         XCTAssertFalse(app.navigationBars["Originals"].exists)
+        tapDarkroom(app)
+        XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10), "The camera reveal opens the same Darkroom")
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
+        XCTAssertGreaterThan(app.windows.firstMatch.frame.height, app.windows.firstMatch.frame.width,
+                             "The Darkroom stays upright over the shooting screen")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(print.waitForExistence(timeout: 10), "Cancel returns to the camera reveal")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        XCTAssertEqual(XCUIDevice.shared.orientation, .landscapeLeft)
+        wait(for: [XCTNSPredicateExpectation(predicate: staysPortrait, object: nil)], timeout: 10)
+        XCUIDevice.shared.orientation = .portrait
+        turn(app, to: .portrait)
         print.buttons["Done"].tap()
         XCTAssertTrue(app.buttons["capture-shutter"].waitForExistence(timeout: 20))
     }
@@ -492,7 +500,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.buttons["Open photo 1"].tap()
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
         snapshot(app, "Instant-card-photo-screen")
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
         snapshot(app, "Instant-card-darkroom-exposure")
@@ -527,7 +535,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         snapshot(app, "BW-6x6-film-screen")
         open.tap()
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
         for tool in ["Exposure", "Contrast", "Adjust", "Chemical toning"] { XCTAssertTrue(app.buttons[tool].exists, tool) }
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
@@ -619,460 +627,218 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         }
     }
 
-    /// The Darkroom lays out without overlap, clipping or lost margins for each Photo Camera on the smallest supported
-    /// iPhone, at the default and the largest text size. At rest the whole print, an Instant card included, sits below the
-    /// navigation bar and inside the screen, scaled to the space the controls leave; the controls clear the reset button;
-    /// and the tool row and slider keep the same side margins. At the largest size the slider can also be scrolled to.
-    /// At the largest text size the controls can scroll within their area while the print and Reset button stay fixed.
-    func testDarkroomFitsAnInstantPrintAtTheDefaultSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: false) }
-    func testDarkroomFitsAnInstantPrintAtTheLargestSize() throws { assertDarkroomFits("--instant", label: "Instant", largest: true) }
-    func testDarkroomFitsADisposablePrintAtTheDefaultSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: false) }
-    func testDarkroomFitsADisposablePrintAtTheLargestSize() throws { assertDarkroomFits("--developed-photo", label: "Disposable", largest: true) }
-    func testDarkroomFitsA6x6PrintAtTheDefaultSize() throws {
-        try requireTetrahedralReader()
-        assertDarkroomFits("--medium-format", label: "6x6", largest: false)
-    }
-    func testDarkroomFitsA6x6PrintAtTheLargestSize() throws {
-        try requireTetrahedralReader()
-        assertDarkroomFits("--medium-format", label: "6x6", largest: true)
-    }
-    func testDarkroomFitsABlackAndWhite6x6PrintAtTheDefaultSize() throws {
-        assertDarkroomFits("--medium-format", label: "6x6-black-and-white", largest: false, blackAndWhite: true)
-    }
-    func testDarkroomFitsABlackAndWhite6x6PrintAtTheLargestSize() throws {
-        assertDarkroomFits("--medium-format", label: "6x6-black-and-white", largest: true, blackAndWhite: true)
+    /// The Darkroom band's text at every one of the 12 text sizes (FR-30): on a color print, every text of every tool
+    /// scrolls whole into the band, and the print keeps its frame. One test per size keeps each inside its allowance.
+    func testDarkroomBandTextAtExtraSmall() throws { checkBandText("XS") }
+    func testDarkroomBandTextAtSmall() throws { checkBandText("S") }
+    func testDarkroomBandTextAtMedium() throws { checkBandText("M") }
+    func testDarkroomBandTextAtLarge() throws { checkBandText("L") }
+    func testDarkroomBandTextAtExtraLarge() throws { checkBandText("XL") }
+    func testDarkroomBandTextAtExtraExtraLarge() throws { checkBandText("XXL") }
+    func testDarkroomBandTextAtExtraExtraExtraLarge() throws { checkBandText("XXXL") }
+    func testDarkroomBandTextAtAccessibilityMedium() throws { checkBandText("AccessibilityM") }
+    func testDarkroomBandTextAtAccessibilityLarge() throws { checkBandText("AccessibilityL") }
+    func testDarkroomBandTextAtAccessibilityExtraLarge() throws { checkBandText("AccessibilityXL") }
+    func testDarkroomBandTextAtAccessibilityExtraExtraLarge() throws { checkBandText("AccessibilityXXL") }
+    func testDarkroomBandTextAtAccessibilityExtraExtraExtraLarge() throws { checkBandText("AccessibilityXXXL") }
+
+    private func checkBandText(_ size: String) {
+        let app = launch(arguments: ["--developed-photo", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategory\(size)"])
+        openFilm(app)
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
+        tapWhole(app, open)
+        tapDarkroom(app)
+        let print = app.images["Photo 1, print preview"]
+        let band = app.scrollViews["darkroom-control-band"]
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(size): print")
+        XCTAssertTrue(band.waitForExistence(timeout: 10), "\(size): band")
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10), size)
+        let printFrame = print.frame
+        for tool in ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"] {
+            let button = app.buttons[tool]
+            scrollBand(band, untilWhole: button)
+            tapWhole(app, button)
+            XCTAssertTrue(button.isSelected, "\(size): \(tool) is selected")
+            for text in band.staticTexts.allElementsBoundByIndex where text.exists && !text.label.isEmpty {
+                scrollBand(band, untilWhole: text)
+                XCTAssertTrue(band.frame.contains(text.frame),
+                              "\(size) \(tool): \"\(text.label)\" scrolls whole into the band: \(text.frame) in \(band.frame)")
+            }
+            XCTAssertEqual(print.frame, printFrame, "\(size) \(tool): the print keeps its frame")
+        }
+        snapshot(app, "Darkroom-band-text-\(size)")
     }
 
-    private func assertDarkroomFits(_ mode: String, label: String, largest: Bool, blackAndWhite: Bool = false) {
+    /// Scrolls the band with short held drags in its leading margin, never free swipes, until `element` is whole in it.
+    private func scrollBand(_ band: XCUIElement, untilWhole element: XCUIElement) {
+        for _ in 0..<12 {
+            let frame = element.frame, visible = band.frame.insetBy(dx: 0, dy: 2)
+            if visible.contains(frame) { return }
+            // Content moves with the finger: drag up to reach text below the band, down to reach text above it.
+            let distance = min(visible.height * 0.4, max(frame.maxY - visible.maxY, visible.minY - frame.minY) + 8)
+            let up = frame.maxY > visible.maxY
+            let start = band.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: up ? 0.75 : 0.25))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: up ? -distance : distance)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+    }
+
+    /// Every tool uses the same print area and fixed controls band. At the largest text size, the band scrolls internally.
+    func testDarkroomKeepsThePrintAreaAtEveryToolAtTheDefaultSize() throws {
+        assertDarkroomLayout("--developed-photo", label: "Disposable", largest: false)
+    }
+
+    func testDarkroomKeepsThePrintAreaAtEveryToolAtTheLargestSize() throws {
+        assertDarkroomLayout("--developed-photo", label: "Disposable", largest: true)
+    }
+
+    func testInstantDarkroomKeepsThePrintAreaAtEveryTool() throws {
+        assertDarkroomLayout("--instant", label: "Instant", largest: false)
+    }
+
+    func testInstantDarkroomKeepsThePrintAreaAtEveryToolAtTheLargestSize() throws {
+        assertDarkroomLayout("--instant", label: "Instant", largest: true)
+    }
+
+    func testSixBySixDarkroomKeepsThePrintAreaAtEveryTool() throws {
+        try requireTetrahedralReader()
+        assertDarkroomLayout("--medium-format", label: "6x6", largest: false)
+    }
+
+    func testSixBySixDarkroomKeepsThePrintAreaAtEveryToolAtTheLargestSize() throws {
+        try requireTetrahedralReader()
+        assertDarkroomLayout("--medium-format", label: "6x6", largest: true)
+    }
+
+    func testBlackAndWhiteSixBySixDarkroomKeepsThePrintAreaAtEveryToolAtTheDefaultSize() throws {
+        assertDarkroomLayout("--medium-format", label: "6x6-black-and-white", largest: false, blackAndWhite: true)
+    }
+
+    func testBlackAndWhiteSixBySixDarkroomKeepsThePrintAreaAtEveryTool() throws {
+        assertDarkroomLayout("--medium-format", label: "6x6-black-and-white", largest: true, blackAndWhite: true)
+    }
+
+    private func assertDarkroomLayout(_ mode: String, label: String, largest: Bool, blackAndWhite: Bool = false) {
         var arguments = [mode]
         if blackAndWhite { arguments.append("--black-and-white") }
         if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         let app = launch(arguments: arguments)
         openFilm(app)
         let open = app.buttons["Open photo 1"]
-        // At the largest size the print grid starts below the first screen and its rows are created as they scroll in.
         for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
         XCTAssertTrue(open.exists, "\(label) \(largest)")
-        open.tap()
-        app.buttons["Darkroom"].tap()
-        let exposure = app.sliders["Print exposure"]
-        XCTAssertTrue(exposure.waitForExistence(timeout: 10), label)
+        tapWhole(app, open)
+        tapDarkroom(app)
+
         let name = "Darkroom-\(label)-\(largest ? "largest" : "default")"
-        let window = app.windows.firstMatch.frame
-        let bar = app.navigationBars["Darkroom"]
-        let reset = app.buttons["Reset to Original"]
+        XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10), name)
         let print = app.images["Photo 1, print preview"]
-        XCTAssertTrue(print.waitForExistence(timeout: 10), "\(name) print")
-        // Let the first render and the controls' measured height settle before reading frames.
-        Thread.sleep(forTimeInterval: 1.5)
-        // The print, at rest: clear of the bar above, inside the screen, and a usable size.
-        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
-        XCTAssertTrue(window.contains(print.frame), "\(name): the print is on screen")
-        XCTAssertGreaterThanOrEqual(print.frame.height, 100, "\(name): the print is not squeezed away")
-        // The controls, at rest: full size, in the side margins, clear of the reset button.
-        let margin: CGFloat = 16
-        for control in [exposure] + ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette", "Chemical toning"].map({ app.buttons[$0] })
-        where control.exists {
-            XCTAssertGreaterThanOrEqual(control.frame.minX, margin - 2, "\(name): \(control.label) keeps its left margin")
-            XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX - margin + 2, "\(name): \(control.label) keeps its right margin")
-        }
-        XCTAssertGreaterThanOrEqual(exposure.frame.minX, margin - 2, "\(name): slider left margin")
-        XCTAssertLessThanOrEqual(exposure.frame.maxX, window.maxX - margin + 2, "\(name): slider right margin")
-        XCTAssertLessThanOrEqual(print.frame.maxY, exposure.frame.minY, "\(name): the print is above the controls")
-        XCTAssertLessThanOrEqual(exposure.frame.maxY, reset.frame.minY, "\(name): the slider clears the reset button")
-        let value = app.staticTexts["0.0 stops"]
-        XCTAssertTrue(value.exists, "\(name) value")
-        XCTAssertLessThanOrEqual(value.frame.maxY, reset.frame.minY, "\(name): the value clears the reset button")
-        XCTAssertTrue(window.contains(value.frame), "\(name): the value is not clipped")
-        XCTAssertTrue(window.contains(exposure.frame), "\(name): the slider is on screen")
-        snapshot(app, name)
-        // Rendering never resizes the print: releasing the slider starts a render, and the print keeps its frame while
-        // it runs and after it ends. The progress sits over the print, not among the controls.
+        let band = app.scrollViews["darkroom-control-band"]
+        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name): print")
+        XCTAssertTrue(band.waitForExistence(timeout: 10), "\(name): fixed controls band")
+        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10), name)
+        Thread.sleep(forTimeInterval: 1)
+
+        let window = app.windows.firstMatch.frame
+        let initialPrint = print.frame
+        let initialBand = band.frame
+        XCTAssertTrue(window.contains(print.frame), "\(name): print is on screen")
+        XCTAssertGreaterThan(print.frame.height, 0, "\(name): the print remains visible in its fixed area")
+        XCTAssertTrue(window.contains(band.frame), "\(name): controls band is on screen")
+        XCTAssertGreaterThanOrEqual(band.frame.height, 300, "\(name): band fits the tallest controls at default size")
+
+        let tools: [String]
         if label == "Instant" {
-            let before = print.frame
-            exposure.adjust(toNormalizedSliderPosition: 0.75)
-            for _ in 0..<20 {
-                XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): the print keeps its height while rendering")
-                XCTAssertEqual(print.frame.minY, before.minY, accuracy: 1, "\(name): the print keeps its place while rendering")
-                Thread.sleep(forTimeInterval: 0.1)
-            }
-            app.buttons["Reset to Original"].tap()
-            Thread.sleep(forTimeInterval: 1)
-            XCTAssertEqual(print.frame.height, before.height, accuracy: 1, "\(name): and after resetting")
+            tools = ["Exposure", "Contrast", "Adjust", "Saturation", "Vignette"]
+        } else if blackAndWhite {
+            tools = ["Exposure", "Contrast", "Adjust", "Vignette", "Chemical toning"]
+        } else if label == "6x6" {
+            tools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"]
+        } else {
+            tools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"]
         }
-        // Everything fits at rest, so a swipe has nothing to scroll and the print cannot slide under the bar.
-        let restingTop = print.frame.minY
-        XCTAssertTrue(exposure.isHittable, "\(name): the slider can be used without scrolling")
-        app.swipeUp()
-        XCTAssertEqual(print.frame.minY, restingTop, accuracy: 1, "\(name): the print stays below the bar after a swipe")
-        XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): still below the bar after a swipe")
+
+        for tool in tools {
+            let button = app.buttons[tool]
+            XCTAssertTrue(button.exists, "\(name): \(tool) is available")
+            tapWhole(app, button)
+            XCTAssertTrue(button.isSelected, "\(name): \(tool) is selected")
+            Thread.sleep(forTimeInterval: 0.25)
+            XCTAssertEqual(print.frame.minX, initialPrint.minX, accuracy: 1, "\(name): \(tool) keeps the print's left edge")
+            XCTAssertEqual(print.frame.minY, initialPrint.minY, accuracy: 1, "\(name): \(tool) keeps the print's top edge")
+            XCTAssertEqual(print.frame.width, initialPrint.width, accuracy: 1, "\(name): \(tool) keeps the print's width")
+            XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): \(tool) keeps the print's height")
+            XCTAssertEqual(band.frame.minY, initialBand.minY, accuracy: 1, "\(name): \(tool) keeps the band's top edge")
+            XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): \(tool) keeps the band's height")
+            snapshot(app, "\(name)-tool-\(tool)")
+        }
+
+        if largest && tools.contains("Filtration") {
+            tapWhole(app, app.buttons["Filtration"])
+            let yellow = app.sliders["Yellow"]
+            XCTAssertTrue(yellow.waitForExistence(timeout: 5), "\(name): the last Filtration slider exists")
+            scrollBand(band, untilWhole: yellow)
+            XCTAssertTrue(band.frame.contains(yellow.frame), "\(name): the fixed band scrolls internally at large text")
+            XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): scrolling the band does not resize the print")
+            snapshot(app, "\(name)-tool-Filtration-bottom")
+        } else if !largest && label != "Instant" {
+            // The tallest tool is Adjust with a crop smaller than the print, which shows all five of its rows. At the
+            // default text size every one of them rests whole in the band, unscrolled.
+            tapWhole(app, app.buttons["Adjust"])
+            let crop = app.switches["Crop"]
+            XCTAssertTrue(crop.waitForExistence(timeout: 5), "\(name): Crop")
+            crop.flipSwitch()
+            let size = app.sliders["Crop size"]
+            XCTAssertTrue(size.waitForExistence(timeout: 5), "\(name): Crop size")
+            size.adjust(toNormalizedSliderPosition: 0.5)
+            XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5), "\(name): Crop Vertical")
+            let rows = [app.sliders["Straighten"], crop, size, app.sliders["Crop Horizontal"], app.sliders["Crop Vertical"]]
+            for row in rows {
+                XCTAssertTrue(band.frame.contains(row.frame), "\(name): \(row.label) rests whole in the band at the default size")
+            }
+            XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): the crop's rows keep the band's height")
+            snapshot(app, "\(name)-tool-Adjust-crop")
+            crop.flipSwitch()
+        }
+        snapshot(app, name)
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists, "\(name): Dodge/Burn is not a Darkroom tool")
     }
 
-    /// A Darkroom explanation takes its height from the print, so the selected tool stays where a finger finds it. With
-    /// the explanation of a print whose stored recipe is outside the limits showing (`--recipe-outside-limits`), at the
-    /// default text size the tool row, the tool's heading, its value and its slider all rest on screen, above the fade
-    /// and the Reset to Original bar, and the slider takes a drag with nothing scrolled. At the largest size the
-    /// explanation alone is taller than the screen, so the slider is scrolled to: it comes fully clear of the fade and
-    /// takes the same drag.
-    func testDarkroomRestsTheSelectedToolOnScreenUnderAnExplanation() throws { assertDarkroomExplains(largest: false) }
-    func testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize() throws { assertDarkroomExplains(largest: true) }
-
-    private func assertDarkroomExplains(largest: Bool) {
-        var arguments = ["--developed-photo", "--recipe-outside-limits"]
-        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
-        let app = launch(arguments: arguments)
-        openFilm(app)
-        let open = app.buttons["Open photo 1"]
-        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
-        XCTAssertTrue(open.exists, "\(largest)")
-        open.tap()
-        app.buttons["Darkroom"].tap()
-        let name = "Darkroom-explanation-\(largest ? "largest" : "default")"
-        let mark = app.images["Print unavailable"]
-        XCTAssertTrue(mark.waitForExistence(timeout: 20), "\(name): the print is refused")
-        let explanation = app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "outside what this version of Immerse can print")).firstMatch
-        XCTAssertTrue(explanation.exists, "\(name): the Darkroom says why")
-        let exposure = app.sliders["Print exposure"]
-        XCTAssertTrue(exposure.exists, "\(name) slider")
-        // Let the controls' measured height settle before reading frames.
-        Thread.sleep(forTimeInterval: 1.5)
-        let bar = app.navigationBars["Darkroom"]
-        let reset = app.buttons["Reset to Original"]
-        let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Print unavailable")).firstMatch.frame
-        // The scroll area's last 12 pt fade out, so a control in full view ends above them.
-        let clear = area.maxY - 12 + 1
-        snapshot(app, name)
-        if largest {
-            // The held drags in the left margin neither coast nor move a slider.
-            for _ in 0..<16 where exposure.frame.maxY > clear {
-                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
-                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -240)), withVelocity: .slow, thenHoldForDuration: 0.3)
-            }
-            snapshot(app, "\(name)-slider")
-        } else {
-            XCTAssertGreaterThanOrEqual(mark.frame.minY, bar.frame.maxY, "\(name): the print's place is below the navigation bar")
-            XCTAssertLessThanOrEqual(mark.frame.maxY, explanation.frame.minY, "\(name): the explanation is under the print's place")
-            let tools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"].map { app.buttons[$0] }
-            for control in [explanation, app.staticTexts["Exposure"], app.staticTexts["3.5 stops"]] + tools {
-                XCTAssertTrue(control.exists, name)
-                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
-                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
-            }
-        }
-        XCTAssertGreaterThanOrEqual(exposure.frame.minY, bar.frame.maxY, "\(name): the slider is in view")
-        XCTAssertLessThanOrEqual(exposure.frame.maxY, clear, "\(name): the slider is in view, above the fade")
-        XCTAssertLessThanOrEqual(area.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
-        XCTAssertTrue(reset.isHittable, "\(name): Reset to Original is on screen")
-        // A drag sent to where the slider's thumb is, which scrolls nothing: 3.5 stops rests at the slider's end.
-        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.96, dy: 0.5))
-            .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: -0.2, dy: 0.5)))
-        XCTAssertTrue(app.staticTexts["-3.0 stops"].waitForExistence(timeout: 5),
-                      "\(name): the slider takes the drag, and it reads \(exposure.value as? String ?? "no value")")
-        XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 20), "\(name): inside the limits the print is made")
-        XCTAssertFalse(explanation.exists, "\(name): the explanation goes once the print can be made")
-    }
-
-    /// The captain (2026-10-14): on a short screen the print gives up height in the Crop tool, so every Crop control
-    /// shows. With a crop smaller than the whole print, at the default text size the switch and the Size, Horizontal and
-    /// Vertical sliders and their captions all rest between the navigation bar and the fade, above Reset to Original,
-    /// with nothing scrolled, and the Vertical slider takes a drag there. The print is still shown above them, and back
-    /// in Exposure it has the size it had before Crop. At the largest size the controls cannot all fit, so the print
-    /// keeps 64 pt and the Vertical slider is scrolled to, comes fully clear of the fade and takes the same drag.
-    func testDarkroomRestsEveryCropControlOnScreenAtTheDefaultSize() throws { assertDarkroomCropFits(largest: false) }
-    func testDarkroomScrollsTheCropControlsClearAtTheLargestSize() throws { assertDarkroomCropFits(largest: true) }
-
-    private func assertDarkroomCropFits(largest: Bool) {
-        var arguments = ["--developed-photo"]
-        if largest { arguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
-        let app = launch(arguments: arguments)
-        openFilm(app)
-        let open = app.buttons["Open photo 1"]
-        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
-        XCTAssertTrue(open.exists, "\(largest)")
-        open.tap()
-        app.buttons["Darkroom"].tap()
-        let name = "Darkroom-crop-\(largest ? "largest" : "default")"
-        let print = app.images["Photo 1, print preview"]
-        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name) print")
-        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10), name)
-        // Let the first render and the controls' measured height settle before reading frames.
-        Thread.sleep(forTimeInterval: 1.5)
-        let exposurePrint = print.frame
-        app.buttons["Adjust"].tap()
-        let crop = app.switches["Crop"]
-        XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
-        // At the largest size the switch can start below the fold; held drags in the left margin bring it up.
-        let area = app.scrollViews.containing(NSPredicate(format: "label == %@", "Photo 1, print preview")).firstMatch
-        for _ in 0..<12 where !crop.isHittable { dragUp(app, by: 160) }
-        crop.flipSwitch()
-        let size = app.sliders["Crop size"]
-        XCTAssertTrue(size.waitForExistence(timeout: 5), name)
-        for _ in 0..<12 where !size.isHittable { dragUp(app, by: 160) }
-        size.adjust(toNormalizedSliderPosition: 0.6)
-        let vertical = app.sliders["Crop Vertical"]
-        XCTAssertTrue(vertical.waitForExistence(timeout: 5), name)
-        XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name): the cropped print is made")
-        Thread.sleep(forTimeInterval: 1.5)
-        let bar = app.navigationBars["Darkroom"]
-        let reset = app.buttons["Reset to Original"]
-        // The scroll area's last 12 pt fade out, so a control in full view ends above them.
-        let clear = area.frame.maxY - 12 + 1
-        XCTAssertLessThanOrEqual(area.frame.maxY, reset.frame.minY, "\(name): the controls end above Reset to Original")
-        snapshot(app, name)
-        if largest {
-            XCTAssertEqual(print.frame.height, 64, accuracy: 1, "\(name): the print keeps its smallest Crop size, never 160 pt")
-            for _ in 0..<16 where vertical.frame.maxY > clear { dragUp(app, by: 240) }
-            snapshot(app, "\(name)-vertical")
-        } else {
-            let controls = [crop, size, app.sliders["Crop Horizontal"], vertical, app.staticTexts["Crop"].firstMatch]
-                + ["Size", "Horizontal", "Vertical"].map { app.staticTexts[$0] }
-            for control in controls {
-                XCTAssertTrue(control.exists, "\(name): \(control.label)")
-                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) rests on screen")
-                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
-            }
-            // The print is still shown, below the bar and above the controls.
-            XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
-            XCTAssertLessThanOrEqual(print.frame.maxY, crop.frame.minY, "\(name): the print is above the controls")
-            XCTAssertGreaterThanOrEqual(print.frame.height, 64, "\(name): the print is not squeezed away")
-        }
-        XCTAssertGreaterThanOrEqual(vertical.frame.minY, bar.frame.maxY, "\(name): the Vertical slider is in view")
-        XCTAssertLessThanOrEqual(vertical.frame.maxY, clear, "\(name): the Vertical slider is in view, above the fade")
-        XCTAssertTrue(vertical.isHittable, "\(name): the Vertical slider can be used")
-        // A drag from the thumb at the start of the slider to past its end moves the crop to the bottom of the print.
-        let before = vertical.value as? String
-        vertical.coordinate(withNormalizedOffset: CGVector(dx: 0.04, dy: 0.5))
-            .press(forDuration: 0.2, thenDragTo: vertical.coordinate(withNormalizedOffset: CGVector(dx: 1.2, dy: 0.5)))
-        XCTAssertNotEqual(vertical.value as? String, before, "\(name): the Vertical slider takes the drag")
-        // Without the crop, back in Exposure, the print has the size it had before Crop opened.
-        for _ in 0..<16 where !crop.isHittable { dragDown(app, by: 240) }
-        crop.flipSwitch()
-        app.buttons["Exposure"].tap()
-        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 5), name)
-        Thread.sleep(forTimeInterval: 1.5)
-        XCTAssertEqual(print.frame.height, exposurePrint.height, accuracy: 1, "\(name): Exposure keeps the print's size")
-    }
-
-    /// The captain (2026-10-14): the Crop tool's smaller print is for portrait. In landscape the print sits beside the
-    /// controls, so no tool's controls reach it, and with a crop smaller than the whole print the Crop tool keeps the
-    /// print the size and place Exposure gives it, and switching tools never moves it. The crop is set in portrait,
-    /// where every control rests on screen, so nothing is scrolled: a drag down at the top of the Darkroom in landscape
-    /// pulls its sheet away.
-    func testDarkroomCropKeepsThePrintInLandscape() throws {
+    /// The Darkroom locks portrait even when opened over the landscape photo view, then restores that view's orientation.
+    func testDarkroomOpenedFromLandscapePhotoViewRestoresThePhotoView() throws {
         XCUIDevice.shared.orientation = .portrait
         addTeardownBlock { XCUIDevice.shared.orientation = .portrait }
         let app = launch(arguments: ["--developed-photo"])
         openFilm(app)
         let open = app.buttons["Open photo 1"]
         for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
-        open.tap()
-        app.buttons["Darkroom"].tap()
-        let print = app.images["Photo 1, print preview"]
-        XCTAssertTrue(print.waitForExistence(timeout: 20), "print")
+        tapWhole(app, open)
+        let photo = app.descendants(matching: .any)["photo-view-image"]
+        XCTAssertTrue(photo.waitForExistence(timeout: 10))
+        turn(app, to: .landscapeLeft)
+        XCTAssertGreaterThan(photo.frame.width, photo.frame.height, "The photo view follows the iPhone")
+
+        tapDarkroom(app)
+        XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10))
+        let upright = NSPredicate { _, _ in app.windows.firstMatch.frame.height > app.windows.firstMatch.frame.width }
+        wait(for: [XCTNSPredicateExpectation(predicate: upright, object: nil)], timeout: 10)
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
-        app.buttons["Adjust"].tap()
-        let crop = app.switches["Crop"]
-        XCTAssertTrue(crop.waitForExistence(timeout: 5))
-        XCTAssertTrue(crop.isHittable, "In portrait the Crop switch rests on screen")
-        crop.flipSwitch()
-        let size = app.sliders["Crop size"]
-        XCTAssertTrue(size.waitForExistence(timeout: 5))
-        XCTAssertTrue(size.isHittable, "In portrait the Size slider rests on screen")
-        size.adjust(toNormalizedSliderPosition: 0.6)
-        XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5))
-        XCTAssertTrue(print.waitForExistence(timeout: 20), "the cropped print is made")
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
+        let sideways = NSPredicate { _, _ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height }
+        wait(for: [XCTNSPredicateExpectation(predicate: sideways, object: nil)], timeout: 10)
+        XCTAssertGreaterThan(photo.frame.width, photo.frame.height, "Cancel restores the photo view's landscape orientation")
 
-        XCUIDevice.shared.orientation = .landscapeLeft
-        let settled = NSPredicate { _, _ in app.windows.firstMatch.frame.width > app.windows.firstMatch.frame.height }
-        wait(for: [XCTNSPredicateExpectation(predicate: settled, object: nil)], timeout: 10)
-        Thread.sleep(forTimeInterval: 1.5)
-        let cropPrint = print.frame
-        uprightSnapshot(app, "Darkroom-crop-landscape")
-        app.buttons["Exposure"].tap()
-        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 5))
-        Thread.sleep(forTimeInterval: 1.5)
-        XCTAssertEqual(cropPrint.height, print.frame.height, accuracy: 1, "Crop keeps the print's size in landscape")
-        XCTAssertEqual(cropPrint.minY, print.frame.minY, accuracy: 1, "Crop keeps the print's place in landscape")
-    }
-
-    /// The captain (2026-10-14): "landscape - side by side". In landscape the print takes the leading side and the tool
-    /// buttons, Reset to Original and the selected tool's controls the other, so at the default text size every tool
-    /// button and every control of every tool rests on screen, clear of the print and of each other, and takes a tap with
-    /// nothing scrolled. The print is larger than the 160 pt the layout before gave it over the controls. The Disposable
-    /// has every tool but toning, which the black-and-white 6×6 has instead of filtration. Each test visits a few tools,
-    /// inside the 3-minute allowance.
-    func testDarkroomRestsExposureContrastAndFiltrationBesideADisposablePrintInLandscape() throws {
-        assertDarkroomSideBySide(["--developed-photo"], label: "Disposable", tools: Self.disposableTools,
-                                 visiting: ["Exposure", "Contrast", "Filtration"])
-    }
-    func testDarkroomRestsChemicalToningBesideABlackAndWhite6x6PrintInLandscape() throws {
-        assertDarkroomSideBySide(["--medium-format", "--black-and-white"], label: "6x6-black-and-white",
-                                 tools: ["Exposure", "Contrast", "Adjust", "Chemical toning"], visiting: ["Chemical toning"])
-    }
-
-    private static let disposableTools = ["Exposure", "Contrast", "Filtration", "Adjust", "Saturation", "Vignette"]
-
-    private func assertDarkroomSideBySide(_ arguments: [String], label: String, tools: [String], visiting: [String]) {
-        let app = openDarkroomInLandscape(arguments)
-        let window = app.windows.firstMatch.frame
-        let bar = app.navigationBars["Darkroom"]
-        let reset = app.buttons["Reset to Original"]
-        let print = app.images["Photo 1, print preview"]
-        let buttons = tools.map { app.buttons[$0] }
-        for tool in visiting {
-            let name = "Darkroom-landscape-\(label)-\(tool.replacingOccurrences(of: " / ", with: "-"))"
-            let button = app.buttons[tool]
-            XCTAssertTrue(button.isHittable, "\(name): the tool's button takes a tap")
-            button.tap()
-            XCTAssertTrue(button.isSelected, name)
-            let controls: [XCUIElement]
-            switch tool {
-            case "Exposure":
-                controls = [app.sliders["Print exposure"], app.staticTexts["0.0 stops"]]
-            case "Contrast":
-                controls = [app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Contrast grade")).firstMatch]
-            case "Filtration":
-                controls = ["Cyan", "Magenta", "Yellow"].flatMap { [app.sliders[$0], app.staticTexts[$0]] }
-            case "Saturation":
-                controls = [app.sliders["Saturation"], app.staticTexts["0"]]
-            case "Vignette":
-                controls = [app.sliders["Vignette"], app.staticTexts["0.0 stops"]]
-            case "Chemical toning":
-                let toner = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Chemical toning,")).firstMatch
-                XCTAssertTrue(toner.waitForExistence(timeout: 5), name)
-                XCTAssertTrue(toner.isHittable, "\(name): the toner picker takes a tap")
-                toner.tap()
-                XCTAssertTrue(app.buttons["Sepia"].waitForExistence(timeout: 5), name)
-                app.buttons["Sepia"].tap()
-                XCTAssertTrue(app.sliders["Toning amount"].waitForExistence(timeout: 5), name)
-                controls = [toner, app.sliders["Toning amount"]]
-            default:
-                let crop = app.switches["Crop"]
-                XCTAssertTrue(crop.waitForExistence(timeout: 5), name)
-                XCTAssertTrue(crop.isHittable, "\(name): the Crop switch takes a tap")
-                crop.flipSwitch()
-                let size = app.sliders["Crop size"]
-                XCTAssertTrue(size.waitForExistence(timeout: 5), name)
-                XCTAssertTrue(size.isHittable, "\(name): the Size slider takes a drag")
-                size.adjust(toNormalizedSliderPosition: 0.6)
-                XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5), name)
-                controls = [crop, size, app.sliders["Crop Horizontal"], app.sliders["Crop Vertical"]]
-                    + ["Size", "Horizontal", "Vertical"].map { app.staticTexts[$0] }
-            }
-            XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name): the print is made")
-            // Let the render and the layout settle before reading frames.
-            Thread.sleep(forTimeInterval: 1.5)
-            let heading = app.staticTexts[tool].firstMatch
-            // The controls' own scroll area: the smallest that holds the tool's heading.
-            let area = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(heading.frame) }
-                .min { $0.width * $0.height < $1.width * $1.height } ?? window
-            // The arrangement's foot, above a home indicator, which the scroll area's frame reaches past: the print is
-            // centered between it and the navigation bar.
-            let foot = min(area.maxY, window.maxY, 2 * print.frame.midY - bar.frame.maxY)
-            // The scroll area's last 12 pt fade out, so a control in full view ends above them.
-            let clear = foot - 12 + 1
-            uprightSnapshot(app, name)
-            // The print: below the bar, on screen, on the leading side, and larger than it was over the controls.
-            XCTAssertGreaterThanOrEqual(print.frame.minY, bar.frame.maxY + 4, "\(name): the print is below the navigation bar")
-            XCTAssertTrue(window.contains(print.frame), "\(name): the print is on screen")
-            XCTAssertGreaterThan(print.frame.height, 160, "\(name): the print is larger than it was over the controls")
-            let toolsEdge = buttons.map(\.frame.minX).min() ?? 0
-            XCTAssertLessThanOrEqual(print.frame.maxX, toolsEdge, "\(name): the print is beside the tools")
-            for element in buttons + [reset] {
-                XCTAssertTrue(element.isHittable, "\(name): \(element.label) takes a tap")
-                XCTAssertGreaterThanOrEqual(element.frame.minY, bar.frame.maxY, "\(name): \(element.label) is below the bar")
-                XCTAssertTrue(window.contains(element.frame), "\(name): \(element.label) is on screen")
-            }
-            XCTAssertLessThanOrEqual(buttons.map(\.frame.maxY).max() ?? 0, reset.frame.minY, "\(name): Reset is under the tools")
-            XCTAssertLessThanOrEqual(reset.frame.maxY, foot + 0.5, "\(name): Reset is above the arrangement's foot")
-            XCTAssertGreaterThanOrEqual(min(reset.frame.width, reset.frame.height), 44, "\(name): Reset takes a tap across 44 pt")
-            // `isHittable` needs only a button's center on screen: each button rests whole inside the tools' own scroll
-            // area, so the selected tool's highlight is never cut.
-            let toolsArea = app.scrollViews.allElementsBoundByIndex.map(\.frame).filter { $0.contains(buttons[0].frame) }
-                .min { $0.width * $0.height < $1.width * $1.height } ?? window
-            for button in buttons {
-                XCTAssertTrue(toolsArea.insetBy(dx: -0.5, dy: -0.5).contains(button.frame), "\(name): \(button.label) rests whole")
-            }
-            // The controls: each on screen in full, after the tools, clear of the fade, and taking a tap where it can.
-            for control in [heading] + controls {
-                XCTAssertTrue(control.exists, "\(name): \(control.label)")
-                XCTAssertGreaterThanOrEqual(control.frame.minY, bar.frame.maxY, "\(name): \(control.label) is below the bar")
-                XCTAssertLessThanOrEqual(control.frame.maxY, clear, "\(name): \(control.label) rests on screen, above the fade")
-                XCTAssertLessThanOrEqual(control.frame.maxX, window.maxX, "\(name): \(control.label) is on screen")
-                XCTAssertGreaterThanOrEqual(control.frame.minX, reset.frame.maxX, "\(name): \(control.label) is beside the tools")
-                if control.elementType != .staticText {
-                    XCTAssertTrue(control.isHittable, "\(name): \(control.label) takes a tap")
-                }
-            }
-        }
-    }
-
-    /// A crop set in landscape keeps its slider values and the cropped print's proportions turned back to portrait, with
-    /// the Crop tool still selected.
-    func testDarkroomTurningKeepsTheAdjustCrop() throws {
-        let app = openDarkroomInLandscape(["--developed-photo"])
-        let print = app.images["Photo 1, print preview"]
-        app.buttons["Adjust"].tap()
-        let crop = app.switches["Crop"]
-        XCTAssertTrue(crop.waitForExistence(timeout: 5))
-        crop.flipSwitch()
-        let size = app.sliders["Crop size"]
-        XCTAssertTrue(size.waitForExistence(timeout: 5))
-        size.adjust(toNormalizedSliderPosition: 0.6)
-        let horizontal = app.sliders["Crop Horizontal"]
-        XCTAssertTrue(horizontal.waitForExistence(timeout: 5))
-        horizontal.adjust(toNormalizedSliderPosition: 1)
-        Thread.sleep(forTimeInterval: 2)
-        let values = [size, horizontal, app.sliders["Crop Vertical"]].map { $0.value as? String }
-        let landscapeShape = print.frame.width / print.frame.height
-        uprightSnapshot(app, "Darkroom-crop-set-in-landscape")
-
+        tapDarkroom(app)
+        XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10))
+        wait(for: [XCTNSPredicateExpectation(predicate: upright, object: nil)], timeout: 10)
         turn(app, to: .portrait)
-        XCTAssertTrue(app.buttons["Adjust"].isSelected, "Portrait keeps the Adjust tool")
-        XCTAssertEqual([size, horizontal, app.sliders["Crop Vertical"]].map { $0.value as? String }, values, "and the crop")
-        XCTAssertEqual(print.frame.width / print.frame.height, landscapeShape, accuracy: 0.02, "and the cropped print's shape")
-        snapshot(app, "Darkroom-crop-turned-back-portrait")
-    }
-
-    /// Turning renders only an edit that has not reached the print. Where print 1's stored recipe cannot be read
-    /// (`--recipe-unreadable`), the Darkroom says the load failed and shows no print; turning to landscape and back
-    /// leaves both as they were, never the original print in place of the photo's own.
-    func testDarkroomTurningLeavesALoadErrorInPlace() throws {
-        let app = openDarkroomInLandscape(["--developed-photo", "--recipe-unreadable"], turn: false, loads: false)
-        let unavailable = app.images["Print unavailable"]
-        let failure = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "The operation did not finish.")).firstMatch
-        XCTAssertTrue(unavailable.waitForExistence(timeout: 20), "The print is unavailable")
-        XCTAssertTrue(failure.exists, "The Darkroom says the load failed")
-        for orientation in [UIDeviceOrientation.landscapeLeft, .portrait] {
-            turn(app, to: orientation)
-            // Longer than a print of the photo takes, so a render the turn started would have shown it.
-            Thread.sleep(forTimeInterval: 3)
-            let name = orientation.isLandscape ? "landscape" : "portrait"
-            XCTAssertTrue(unavailable.exists, "Turned to \(name), the print is still unavailable")
-            XCTAssertTrue(failure.exists, "Turned to \(name), the load failure still shows")
-            XCTAssertFalse(app.images["Photo 1, print preview"].exists, "Turned to \(name), no print stands in for the photo's")
-            if orientation.isLandscape { uprightSnapshot(app, "Darkroom-load-error-landscape") }
-            else { snapshot(app, "Darkroom-load-error-portrait") }
-        }
-    }
-
-    /// The Darkroom on photo 1, its print made unless `loads` is false and turned to landscape unless `turn` is false.
-    /// The Darkroom opens in portrait: in landscape the Film screen's grid starts below the fold.
-    private func openDarkroomInLandscape(_ arguments: [String], turn shouldTurn: Bool = true,
-                                         loads: Bool = true) -> XCUIApplication {
-        XCUIDevice.shared.orientation = .portrait
-        addTeardownBlock { XCUIDevice.shared.orientation = .portrait }
-        let app = launch(arguments: arguments)
-        openFilm(app)
-        let open = app.buttons["Open photo 1"]
-        for _ in 0..<12 where !open.exists { _ = open.waitForExistence(timeout: 3); if !open.exists { app.swipeUp() } }
-        open.tap()
-        app.buttons["Darkroom"].tap()
-        if loads { XCTAssertTrue(app.images["Photo 1, print preview"].waitForExistence(timeout: 30), "print") }
-        XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
-        if shouldTurn { turn(app, to: .landscapeLeft) }
-        return app
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
+        wait(for: [XCTNSPredicateExpectation(predicate: upright, object: nil)], timeout: 10)
+        XCTAssertGreaterThan(photo.frame.height, photo.frame.width,
+                             "The photo view follows the phone's current orientation after Darkroom closes")
     }
 
     /// Turns the simulator and waits for the window to follow and the layout to settle.

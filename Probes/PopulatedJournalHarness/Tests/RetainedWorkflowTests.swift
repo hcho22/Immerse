@@ -128,9 +128,14 @@ import XCTest
         size.adjust(toNormalizedSliderPosition: 0.6)
         XCTAssertTrue(app.sliders["Crop Horizontal"].exists)
         XCTAssertTrue(app.sliders["Crop Vertical"].exists)
-        // The three crop captions sit alike, at their sliders' leading edge.
-        for caption in ["Size", "Horizontal", "Vertical"] {
-            XCTAssertEqual(app.staticTexts[caption].frame.minX, size.frame.minX, accuracy: 1, caption)
+        // At the default text size each caption sits beside its slider, the captions in one column and the sliders in
+        // the next.
+        for caption in ["Crop", "Size", "Horizontal", "Vertical"] {
+            XCTAssertEqual(app.staticTexts[caption].frame.minX, app.staticTexts["Size"].frame.minX, accuracy: 1, caption)
+            XCTAssertLessThan(app.staticTexts[caption].frame.maxX, size.frame.minX, caption)
+        }
+        for slider in ["Straighten", "Crop Horizontal", "Crop Vertical"] {
+            XCTAssertEqual(app.sliders[slider].frame.minX, size.frame.minX, accuracy: 1, slider)
         }
         snapshot(app, "darkroom-crop-captions")
         crop.flipSwitch()
@@ -182,10 +187,11 @@ import XCTest
         vignette.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             .dragThumb(to: vignette.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5)))
         XCTAssertEqual(vignette.value as? String, "minus 2 stops")
+        snapshot(app, "darkroom-vignette-minus-2-stops")
         vignette.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5))
             .dragThumb(to: vignette.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5)))
         XCTAssertEqual(vignette.value as? String, "plus 2 stops")
-        snapshot(app, "darkroom-vignette-control")
+        snapshot(app, "darkroom-vignette-plus-2-stops")
     }
 
     func testBlackAndWhiteDarkroomHidesColorControlsButKeepsVignette() throws {
@@ -206,6 +212,10 @@ import XCTest
         XCTAssertFalse(app.buttons["Dodge point"].exists)
         XCTAssertFalse(app.buttons["Burn point"].exists)
         XCTAssertFalse(app.buttons["Undo last stroke"].exists)
+        let legacyNote = app.staticTexts["darkroom-legacy-strokes-note"]
+        XCTAssertEqual(legacyNote.label,
+                       "This print keeps its earlier Dodge/Burn strokes until Reset to Original.")
+        snapshot(app, "legacy-stroke-notice")
         let print = app.images["Photo 1, print preview"]
         XCTAssertTrue(print.waitForExistence(timeout: 10))
         let legacyStrokePrint = print.screenshot().pngRepresentation
@@ -219,6 +229,7 @@ import XCTest
         let printAfterReopeningDarkroom = app.images["Photo 1, print preview"]
         XCTAssertTrue(printAfterReopeningDarkroom.waitForExistence(timeout: 10))
         app.buttons["Reset to Original"].tap()
+        XCTAssertTrue(legacyNote.waitForNonExistence(timeout: 5), "Reset clears the saved Dodge/Burn strokes and their notice")
         var resetPrint: Data?
         for _ in 0..<60 where resetPrint == nil {
             let current = printAfterReopeningDarkroom.screenshot().pngRepresentation
@@ -294,7 +305,7 @@ import XCTest
         for _ in 0..<6 where !photo.exists { app.swipeUp() }
         XCTAssertTrue(photo.waitForExistence(timeout: 5))
         photo.tap()
-        app.buttons["Darkroom"].tap()
+        tapDarkroom(app)
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
     }
 
