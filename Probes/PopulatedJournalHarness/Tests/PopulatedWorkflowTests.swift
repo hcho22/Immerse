@@ -45,6 +45,9 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
         discardConfirmation.tap()
+        // The photo view shows the next print once one is discarded (FR-22 item 7); Done returns to the Film.
+        XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 20))
+        app.navigationBars["Photo 2"].buttons["Done"].tap()
         XCTAssertTrue(app.staticTexts["Discarded"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Open photo 1"].exists)
         XCTAssertTrue(app.buttons["Open photo 2"].exists)
@@ -110,6 +113,17 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.staticTexts["01"].exists)
         XCTAssertTrue(app.staticTexts["02"].exists)
         snapshot(app, "empty-Movie-placeholders")
+    }
+
+    /// S8: a Film loaded before live sound records none, and with no Soundtrack in the catalog it has no choice to make,
+    /// so its Film screen offers no Movie sound button, though its Movie plays.
+    func testAnEarlierSilentMovieFilmOffersNoSoundChoiceWithoutCatalogSoundtracks() throws {
+        try requireTetrahedralReader()
+        let app = launch(arguments: ["--movie", "--earlier-package", "--hide-inspection-bar"])
+        openFilm(app)
+        XCTAssertTrue(app.buttons["Save Developed to Photos"].waitForExistence(timeout: 20), "The Movie is developed")
+        XCTAssertFalse(app.buttons["movie-sound-choice"].exists, "No dead-end Movie sound button")
+        snapshot(app, "earlier-16mm-without-sound-choice")
     }
 
     func testSuper8SoundChoiceWorksWithoutCatalogSoundtracks() throws {
@@ -234,23 +248,87 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertEqual(photo.label, "Photo 1, 1 of 1")
     }
 
-    func testPhotoViewDiscardShowsTheNextPrintThenClosesAtTheEnd() throws {
-        let app = launch(arguments: ["--developed-photo"])
+    /// FR-22 item 7, as the Photos app does it (P4): Discard shows the next print, or the previous one when the last in
+    /// order goes, and closes the view only when no developed print is left.
+    func testPhotoViewDiscardShowsTheNearestPrintAndClosesWhenNoneIsLeft() throws {
+        let app = launch(arguments: ["--developed-photo", "--three-distinct-prints"])
         openFilm(app)
-        tapWhole(app, app.buttons["Open photo 1"])
-        XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
-        app.buttons["Discard"].tap()
-        let discardFirst = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
-        XCTAssertTrue(discardFirst.waitForExistence(timeout: 5))
-        discardFirst.tap()
-        XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 20), "Discard advances to the next print")
-        app.buttons["Discard"].tap()
-        let discardLast = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
-        XCTAssertTrue(discardLast.waitForExistence(timeout: 5))
-        discardLast.tap()
+        tapWhole(app, app.buttons["Open photo 2"])
+        XCTAssertTrue(app.navigationBars["Photo 2"].waitForExistence(timeout: 10))
+        let photo = app.descendants(matching: .any)["photo-view-image"]
+        for (expected, label) in [("Photo 3", "Photo 3, 2 of 2"), ("Photo 1", "Photo 1, 1 of 1")] {
+            discardShownPrint(app)
+            XCTAssertTrue(app.navigationBars[expected].waitForExistence(timeout: 20), "Discard shows \(expected)")
+            XCTAssertEqual(photo.label, label)
+        }
+        discardShownPrint(app)
         XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 20),
-                      "Discard closes the view when no later print remains")
+                      "Discard closes the view once no developed print is left")
         XCTAssertTrue(app.staticTexts["Discarded"].exists)
+    }
+
+    private func discardShownPrint(_ app: XCUIApplication) {
+        XCTAssertTrue(waitUntilStill(app))
+        app.buttons["Discard"].tap()
+        let confirm = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+    }
+
+    /// FR-22 on three prints opened from the middle (P1, P8): each swipe shows the next print's own picture, not only its
+    /// title, the ends stop, and a Darkroom Save shows its edit on that print after swiping away and back, while Cancel
+    /// changes nothing.
+    func testPhotoViewShowsEachPrintsPictureAndTheDarkroomsEdit() throws {
+        let app = launch(arguments: ["--developed-photo", "--three-distinct-prints"])
+        openFilm(app)
+        tapWhole(app, app.buttons["Open photo 2"])
+        let photo = app.descendants(matching: .any)["photo-view-image"]
+        XCTAssertTrue(photo.waitForExistence(timeout: 10))
+        func shown(_ label: String) -> Data {
+            let labelled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", label), object: photo)
+            XCTAssertEqual(XCTWaiter().wait(for: [labelled], timeout: 10), .completed, label)
+            XCTAssertTrue(waitUntilStill(app), label)
+            return photo.screenshot().pngRepresentation
+        }
+        let second = shown("Photo 2, 2 of 3")
+        photo.swipeLeft()
+        let third = shown("Photo 3, 3 of 3")
+        XCTAssertNotEqual(third, second, "A swipe shows the next print's picture")
+        photo.swipeLeft()
+        XCTAssertEqual(shown("Photo 3, 3 of 3"), third, "The last print stops the swipe")
+        photo.swipeRight()
+        photo.swipeRight()
+        let first = shown("Photo 1, 1 of 3")
+        XCTAssertNotEqual(first, second)
+        XCTAssertNotEqual(first, third)
+        photo.swipeRight()
+        XCTAssertEqual(shown("Photo 1, 1 of 3"), first, "The first print stops the swipe")
+        photo.swipeLeft()
+        XCTAssertEqual(shown("Photo 2, 2 of 3"), second, "Swiping back shows the same picture")
+
+        // Cancel leaves the print as it was; Save shows the edit there, after swiping away and back too.
+        tapDarkroom(app)
+        let exposure = app.sliders["Print exposure"]
+        XCTAssertTrue(exposure.waitForExistence(timeout: 10))
+        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
+        app.buttons["Cancel"].tap()
+        XCTAssertEqual(shown("Photo 2, 2 of 3"), second, "Cancel changes nothing")
+        tapDarkroom(app)
+        XCTAssertTrue(exposure.waitForExistence(timeout: 10))
+        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)))
+        XCTAssertNotEqual(exposure.value as? String, "0 stops")
+        let save = app.buttons["Save"]
+        let rendered = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: save)
+        XCTAssertEqual(XCTWaiter().wait(for: [rendered], timeout: 20), .completed)
+        save.tap()
+        let edited = shown("Photo 2, 2 of 3")
+        XCTAssertNotEqual(edited, second, "After Save the photo view shows the edit")
+        photo.swipeLeft()
+        _ = shown("Photo 3, 3 of 3")
+        photo.swipeRight()
+        XCTAssertEqual(shown("Photo 2, 2 of 3"), edited, "Swiping away and back still shows the edit")
     }
 
     /// Print exposure reaches both three-stop limits, prints each edit, and saves the result. Dodge/Burn is not an
@@ -354,13 +432,39 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 10), "The shooting screen returns after cancellation")
         app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.buttons["Open photo 10"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.navigationBars["Originals"].exists, "Cancelling does not ask again by itself")
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "Cancelling does not ask again by itself")
         tapWhole(app, app.buttons["Originals"])
         XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Original captures"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
         snapshot(app, "Instant-originals-remain-available-on-film-screen")
         app.buttons["Cancel"].tap()
+    }
+
+    /// The pack-end question, answered once, decides every undecided original together (FR-35 item 3, P8): after it the
+    /// Film screen's Originals has nothing left to ask about.
+    func testThePackEndAnswerDecidesEveryUndecidedOriginal() throws {
+        let app = launch(arguments: ["--instant-final", "--reveal-at-camera"])
+        openFilm(app)
+        tapWhole(app, app.buttons["Open Camera"])
+        let revealed = printRevealedAtTheCamera(10, app: app)
+        revealed.buttons["Done"].tap()
+        XCTAssertTrue(app.staticTexts["Originals of 10 photos"].waitForExistence(timeout: 10))
+        app.buttons["Remove from Immerse without saving"].tap()
+        let confirm = app.buttons["confirm-original-choice"]
+        let chosen = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isEnabled == true"), object: confirm)
+        XCTAssertEqual(XCTWaiter().wait(for: [chosen], timeout: 5), .completed)
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["Originals of 10 photos"].waitForNonExistence(timeout: 20), "The answer closes it")
+        XCTAssertTrue(app.buttons["Done"].firstMatch.waitForExistence(timeout: 10))
+        app.buttons["Done"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Open photo 10"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "Nothing is asked again")
+        tapWhole(app, app.buttons["Originals"])
+        XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 2),
+                       "Every original of the pack was decided by the one answer")
+        app.buttons["Cancel"].firstMatch.tap()
     }
 
     func testInstantDoesNotReaskAfterAppClosesWhilePackEndQuestionIsOpen() throws {
@@ -379,8 +483,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         openFilm(app)
         XCTAssertTrue(app.buttons["Open photo 10"].exists)
         XCTAssertTrue(app.buttons["Originals"].exists)
-        XCTAssertFalse(app.navigationBars["Originals"].exists, "The missed camera question does not return")
-        XCTAssertFalse(app.staticTexts["Originals of 10 photos"].exists)
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "The missed camera question does not return")
+        XCTAssertFalse(app.staticTexts["Originals of 10 photos"].waitForExistence(timeout: 2))
     }
 
     /// A print discarded from the sheet that revealed it at the camera closes with nothing after it: no earlier print is
@@ -397,7 +501,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         discardConfirmation.tap()
         XCTAssertTrue(revealed.waitForNonExistence(timeout: 20), "The discarded print closes")
         XCTAssertFalse(app.navigationBars["Photo 1"].waitForExistence(timeout: 5), "No earlier print is shown in its place")
-        XCTAssertFalse(app.navigationBars["Originals"].exists, "No question follows a discarded print")
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "No question follows a discarded print")
         snapshot(app, "Instant-print-discarded-at-the-camera")
         app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Discarded"].waitForExistence(timeout: 10))
@@ -405,7 +509,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertFalse(app.buttons["Open photo 2"].exists)
         // The Film screen asks nothing either: print 1 was revealed before the camera opened.
         Thread.sleep(forTimeInterval: 2)
-        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2))
         app.buttons["Originals"].tap()
         XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
@@ -426,14 +530,14 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertFalse(later.exists, "The earlier print is shown first")
         earlier.buttons["Done"].tap()
         XCTAssertTrue(later.waitForExistence(timeout: 20), "The later print follows directly")
-        XCTAssertFalse(app.navigationBars["Originals"].exists, "No question interrupts the reveal queue")
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "No question interrupts the reveal queue")
         later.buttons["Done"].tap()
         XCTAssertTrue(app.buttons["capture-shutter"].waitForExistence(timeout: 20), "The camera resumes after the queue")
-        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2))
         app.buttons["Done"].firstMatch.tap()
         XCTAssertTrue(app.buttons["Open photo 3"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Open photo 2"].exists)
-        XCTAssertFalse(app.navigationBars["Originals"].exists, "The Film screen does not ask before the pack is full")
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "The Film screen does not ask before the pack is full")
         tapWhole(app, app.buttons["Originals"])
         XCTAssertTrue(app.navigationBars["Originals"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Remove from Immerse without saving"].waitForExistence(timeout: 5))
@@ -457,10 +561,12 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCUIDevice.shared.orientation = .portrait
         turn(app, to: .portrait)
         let image = app.descendants(matching: .any)["photo-view-image"]
-        XCTAssertEqual(image.label, "Photo 2, 1 of 1", "The reveal includes only its new print")
-        image.swipeLeft()
+        // The reveal shows only its new print, counted among the pack's developed prints (P7).
+        XCTAssertEqual(image.label, "Photo 2, 2 of 2")
+        image.swipeRight()
         XCTAssertTrue(print.exists, "The Instant reveal does not swipe to earlier prints")
-        XCTAssertFalse(app.navigationBars["Originals"].exists)
+        XCTAssertEqual(image.label, "Photo 2, 2 of 2")
+        XCTAssertFalse(app.navigationBars["Originals"].waitForExistence(timeout: 2), "No originals question after one print")
         tapDarkroom(app)
         XCTAssertTrue(app.navigationBars["Darkroom"].waitForExistence(timeout: 10), "The camera reveal opens the same Darkroom")
         XCTAssertTrue(app.sliders["Print exposure"].waitForExistence(timeout: 10))
@@ -662,23 +768,36 @@ final class PopulatedWorkflowTests: HarnessTestCase {
             XCTAssertTrue(button.isSelected, "\(size): \(tool) is selected")
             for text in band.staticTexts.allElementsBoundByIndex where text.exists && !text.label.isEmpty {
                 scrollBand(band, untilWhole: text)
-                XCTAssertTrue(band.frame.contains(text.frame),
-                              "\(size) \(tool): \"\(text.label)\" scrolls whole into the band: \(text.frame) in \(band.frame)")
+                XCTAssertTrue(visibleBand(app, band).contains(text.frame),
+                              "\(size) \(tool): \"\(text.label)\" scrolls whole into the band: \(text.frame) in \(visibleBand(app, band))")
             }
             XCTAssertEqual(print.frame, printFrame, "\(size) \(tool): the print keeps its frame")
         }
         snapshot(app, "Darkroom-band-text-\(size)")
     }
 
-    /// Scrolls the band with short held drags in its leading margin, never free swipes, until `element` is whole in it.
+    /// The part of the band a person sees: its scroll view reaches on under the bottom bar, so it ends at the top of
+    /// Reset to Original's bar.
+    private func visibleBand(_ app: XCUIApplication, _ band: XCUIElement) -> CGRect {
+        let reset = app.buttons["Reset to Original"]
+        var frame = band.frame
+        if reset.exists { frame.size.height = max(0, min(frame.maxY, reset.frame.minY - 4) - frame.minY) }
+        return frame
+    }
+
+    /// Scrolls the band with held drags in its leading margin, never free swipes, until `element` is whole in its visible
+    /// part. A drag moves at least 40 points, more than the scroll view's own threshold, which a shorter one may not pass.
     private func scrollBand(_ band: XCUIElement, untilWhole element: XCUIElement) {
+        let app = XCUIApplication()
         for _ in 0..<12 {
-            let frame = element.frame, visible = band.frame.insetBy(dx: 0, dy: 2)
+            let frame = element.frame, visible = visibleBand(app, band).insetBy(dx: 0, dy: 2)
             if visible.contains(frame) { return }
             // Content moves with the finger: drag up to reach text below the band, down to reach text above it.
-            let distance = min(visible.height * 0.4, max(frame.maxY - visible.maxY, visible.minY - frame.minY) + 8)
+            let needed = max(frame.maxY - visible.maxY, visible.minY - frame.minY) + 8
+            let distance = min(visible.height * 0.6, max(40, needed))
             let up = frame.maxY > visible.maxY
-            let start = band.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: up ? 0.75 : 0.25))
+            let start = band.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0))
+                .withOffset(CGVector(dx: 0, dy: up ? visible.height * 0.85 : visible.height * 0.15))
             start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: up ? -distance : distance)),
                         withVelocity: .slow, thenHoldForDuration: 0.3)
         }
@@ -779,7 +898,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
             let yellow = app.sliders["Yellow"]
             XCTAssertTrue(yellow.waitForExistence(timeout: 5), "\(name): the last Filtration slider exists")
             scrollBand(band, untilWhole: yellow)
-            XCTAssertTrue(band.frame.contains(yellow.frame), "\(name): the fixed band scrolls internally at large text")
+            XCTAssertTrue(visibleBand(app, band).contains(yellow.frame), "\(name): the fixed band scrolls internally at large text")
             XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): scrolling the band does not resize the print")
             snapshot(app, "\(name)-tool-Filtration-bottom")
         } else if !largest && label != "Instant" {
@@ -795,7 +914,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
             XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5), "\(name): Crop Vertical")
             let rows = [app.sliders["Straighten"], crop, size, app.sliders["Crop Horizontal"], app.sliders["Crop Vertical"]]
             for row in rows {
-                XCTAssertTrue(band.frame.contains(row.frame), "\(name): \(row.label) rests whole in the band at the default size")
+                XCTAssertTrue(visibleBand(app, band).contains(row.frame),
+                              "\(name): \(row.label) rests whole in the band at the default size")
             }
             XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): the crop's rows keep the band's height")
             snapshot(app, "\(name)-tool-Adjust-crop")

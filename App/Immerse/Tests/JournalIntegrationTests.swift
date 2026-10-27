@@ -322,6 +322,26 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(SpokenText.of(text), spoken, file: file, line: line)
     }
 
+    /// FR-22's order, ends and labels (P8): a 12-exposure 6×6 whose photo 4 is discarded reads its last print as
+    /// "Photo 12, 11 of 11"; the ends offer no move beyond them; Discard shows the next print, else the previous one.
+    func testPhotoNavigationFollowsTheDevelopedPrintsInCaptureOrder() {
+        let developed = Array(1...12).filter { $0 != 4 }
+        let last = PhotoNavigation(developed: developed, shown: 12)
+        XCTAssertEqual(last.label, "Photo 12, 11 of 11")
+        XCTAssertNil(last.next)
+        XCTAssertEqual(last.previous, 11)
+        let first = PhotoNavigation(developed: developed, shown: 1)
+        XCTAssertEqual(first.label, "Photo 1, 1 of 11")
+        XCTAssertNil(first.previous)
+        XCTAssertEqual(first.next, 2)
+        XCTAssertEqual(PhotoNavigation(developed: developed, shown: 3).next, 5, "The discarded frame is skipped")
+        XCTAssertEqual(PhotoNavigation(developed: developed, shown: 5).previous, 3)
+
+        XCTAssertEqual(PhotoNavigation.afterDiscarding(5, remaining: [1, 2, 3, 6, 7]), 6, "The next later print")
+        XCTAssertEqual(PhotoNavigation.afterDiscarding(7, remaining: [1, 2, 3, 6]), 6, "The last in order shows the previous")
+        XCTAssertNil(PhotoNavigation.afterDiscarding(1, remaining: []), "None left closes the view")
+    }
+
     /// The control band owns errors and controls; neither changes the print area above it.
     func testDarkroomPrintAreaStaysFixedWhenControlsAndErrorsGrow() async throws {
         let probe = DarkroomLayoutProbe()

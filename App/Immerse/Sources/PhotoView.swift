@@ -117,27 +117,44 @@ struct RevealedPhoto: View {
     let sequence: Int
     /// Whether to set an Instant print's card apart from the screen, for the large views rather than thumbnails.
     var showsCardEdge = false
+    /// The longest side the print is decoded to, in pixels: a thumbnail's by default, the screen's in the photo view.
+    var maximumPixels = 600
+    /// The ground around the print: the grid's gray by default, black in the photo view.
+    var background = Color(uiColor: .secondarySystemBackground)
     @State private var image: UIImage?
     @State private var failed = false
 
+    /// What the shown picture depends on: a new print, an edit saved to it, or a new size reloads it.
+    private struct Load: Hashable {
+        let revision: UUID
+        let sequence: Int
+        let maximumPixels: Int
+    }
+
     var body: some View {
         ZStack {
-            Rectangle().fill(Color(uiColor: .secondarySystemBackground))
-            if !model.hiddenFilms.contains(filmID), let image {
+            Rectangle().fill(background)
+            if !model.hiddenFilms.contains(filmID), !failed, let image {
                 Image(uiImage: image).resizable().scaledToFit()
                     .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s, large: showsCardEdge))
             } else if failed { Image(systemName: "exclamationmark.triangle") }
             else { ProgressView() }
         }
-        .task(id: model.mediaRevision) {
-            image = nil
+        .task(id: Load(revision: model.mediaRevision, sequence: sequence, maximumPixels: maximumPixels)) {
+            // The picture shown stays until the next one is decoded, so a swipe to another print does not flash a spinner.
             failed = false
-            guard !model.hiddenFilms.contains(filmID) else { return }
+            guard !model.hiddenFilms.contains(filmID) else { image = nil; return }
             do {
                 let data = try await model.processor.photo(filmID: filmID, sequence: sequence)
                 guard !Task.isCancelled, !model.hiddenFilms.contains(filmID) else { return }
-                image = DisplayPhoto.image(data, maximumPixels: 600)
-                failed = image == nil
+                let pixels = maximumPixels
+                // A screen-sized decode is too slow for the main actor, which it would hold up on every swipe.
+                let decoded = await Task.detached(priority: .userInitiated) {
+                    DisplayPhoto.image(data, maximumPixels: pixels)
+                }.value
+                guard !Task.isCancelled else { return }
+                image = decoded
+                failed = decoded == nil
             } catch { failed = true }
         }
         .onDisappear { image = nil }
@@ -146,7 +163,15 @@ struct RevealedPhoto: View {
 }
 
 enum DisplayPhoto {
-    static func image(_ data: Data, maximumPixels: Int = 1600) -> UIImage? {
+    /// The longest side of this iPhone's screen in pixels, which a full-screen print is decoded to, so it is sharp
+    /// whichever way the iPhone is held.
+    @MainActor static var fullScreenPixels: Int {
+        let screen = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.screen }.first
+        guard let screen else { return 2_048 }
+        return Int((max(screen.bounds.width, screen.bounds.height) * screen.scale).rounded(.up))
+    }
+
+    nonisolated static func image(_ data: Data, maximumPixels: Int = 1600) -> UIImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
@@ -175,30 +200,34 @@ struct PhotoView: View {
         _shownSequence = State(initialValue: sequence)
     }
 
-    private var developedSequences: [Int] {
-        guard !isInstantReveal else { return [shownSequence] }
-        return model.film(filmID)?.captures
-            .filter { $0.revealState == .revealed && !$0.isDiscarded }
-            .map(\.sequenceNumber).sorted() ?? []
+    /// Where the view is among the Film's developed prints. The Instant's reveal at the camera shows its one new print
+    /// and moves nowhere, but counts it among the pack's prints as the Film screen does.
+    private var navigation: PhotoNavigation {
+        PhotoNavigation(developed: PhotoNavigation.developed(in: model.film(filmID)), shown: shownSequence)
     }
-
-    private var position: Int? { developedSequences.firstIndex(of: shownSequence).map { $0 + 1 } }
-    private var count: Int { developedSequences.count }
-    private var photoLabel: String { "Photo \(shownSequence), \(position ?? 1) of \(count)" }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
                 else {
-                    RevealedPhoto(filmID: filmID, sequence: shownSequence, showsCardEdge: true)
+                    RevealedPhoto(filmID: filmID, sequence: shownSequence, showsCardEdge: true,
+                                  maximumPixels: DisplayPhoto.fullScreenPixels, background: .black)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .contentShape(Rectangle())
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(photoLabel)
+                        .accessibilityLabel(navigation.label)
+                        .accessibilityAddTraits(.isImage)
                         .accessibilityIdentifier("photo-view-image")
-                        .accessibilityAction(named: Text("Previous photo")) { move(by: -1) }
-                        .accessibilityAction(named: Text("Next photo")) { move(by: 1) }
+                        .accessibilityActions {
+                            // Only the moves there are: none at the ends, and none at the camera's reveal.
+                            if !isInstantReveal, navigation.previous != nil {
+                                Button("Previous photo") { move(by: -1) }
+                            }
+                            if !isInstantReveal, navigation.next != nil {
+                                Button("Next photo") { move(by: 1) }
+                            }
+                        }
                         .gesture(DragGesture(minimumDistance: 32).onEnded { value in
                             guard !isInstantReveal, abs(value.translation.width) > abs(value.translation.height),
                                   abs(value.translation.width) >= 48 else { return }
@@ -208,6 +237,8 @@ struct PhotoView: View {
                 if let error { Text(error).foregroundStyle(.red).padding() }
             }
             .background(Color.black.ignoresSafeArea())
+            // The photo view is black as the Photos app is, in light and dark: its progress and errors draw for that.
+            .environment(\.colorScheme, .dark)
             .navigationTitle("Photo \(shownSequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
@@ -229,11 +260,10 @@ struct PhotoView: View {
                     let discardedSequence = shownSequence
                     model.perform {
                         try await model.remove(filmID, sequence: discardedSequence)
+                        let remaining = PhotoNavigation.developed(in: model.film(filmID))
                         if !isInstantReveal,
-                           let next = model.film(filmID)?.captures
-                            .filter({ $0.revealState == .revealed && !$0.isDiscarded && $0.sequenceNumber > discardedSequence })
-                            .map(\.sequenceNumber).min() {
-                            shownSequence = next
+                           let nearest = PhotoNavigation.afterDiscarding(discardedSequence, remaining: remaining) {
+                            shownSequence = nearest
                         } else { dismiss() }
                     } failure: { error = $0 }
                 }.accessibilityIdentifier("confirm-discard-photo")
@@ -242,11 +272,37 @@ struct PhotoView: View {
     }
 
     private func move(by offset: Int) {
-        guard !isInstantReveal, let current = developedSequences.firstIndex(of: shownSequence) else { return }
-        let target = current + offset
-        guard developedSequences.indices.contains(target) else { return }
+        guard !isInstantReveal, let target = offset < 0 ? navigation.previous : navigation.next else { return }
         error = nil
-        shownSequence = developedSequences[target]
+        shownSequence = target
+        // VoiceOver reads the print it moved to, as it would after a swipe.
+        AccessibilityNotification.LayoutChanged().post()
+    }
+}
+
+/// A Film's developed prints as the photo view moves through them (FR-22): capture order, sealed and discarded frames
+/// left out.
+struct PhotoNavigation: Equatable {
+    /// The developed prints' sequence numbers, in capture order.
+    let developed: [Int]
+    let shown: Int
+
+    static func developed(in film: Film?) -> [Int] {
+        film?.captures.filter { $0.revealState == .revealed && !$0.isDiscarded }.map(\.sequenceNumber).sorted() ?? []
+    }
+
+    private var index: Int? { developed.firstIndex(of: shown) }
+
+    /// What VoiceOver reads: the print's frame number, then its place among the developed prints, "Photo 12, 11 of 11".
+    var label: String { "Photo \(shown), \((index ?? 0) + 1) of \(developed.count)" }
+
+    var previous: Int? { index.flatMap { $0 > 0 ? developed[$0 - 1] : nil } }
+    var next: Int? { index.flatMap { $0 + 1 < developed.count ? developed[$0 + 1] : nil } }
+
+    /// The print to show once `discarded` is gone, as the Photos app does: the next later print, else the nearest earlier
+    /// one, else none, and the view closes.
+    static func afterDiscarding(_ discarded: Int, remaining: [Int]) -> Int? {
+        remaining.first { $0 > discarded } ?? remaining.last { $0 < discarded }
     }
 }
 
@@ -263,6 +319,10 @@ struct DarkroomView: View {
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
     @State private var error: String?
+    /// The straightening angle while its slider moves, and the print without straightening that turns under it, so the
+    /// crop-in shows as the slider moves (FR-31 item 3); the print itself is made when the slider is let go.
+    @State private var straighteningDrag: Double?
+    @State private var unstraightened: (recipe: DarkroomRecipe, image: UIImage)?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
 
@@ -333,7 +393,16 @@ struct DarkroomView: View {
 
     /// The print scaled to fit its region, with an Instant card's margin and shadow inside it.
     @ViewBuilder private var printPreview: some View {
-        if let image, !model.hiddenFilms.contains(filmID) {
+        if let angle = straighteningDrag, let base = unstraightened?.image, !model.hiddenFilms.contains(filmID) {
+            // The print turned by the angle and enlarged to the largest rectangle of its shape inside it, clipped to that
+            // rectangle, as `StraighteningGeometry` cuts the print.
+            let kept = StraighteningGeometry.keptFraction(width: base.size.width, height: base.size.height, degrees: angle)
+            Image(uiImage: base).resizable().scaledToFit()
+                .rotationEffect(.degrees(-angle))
+                .scaleEffect(1 / kept)
+                .clipped()
+                .accessibilityLabel("Photo \(sequence), print preview")
+        } else if let image, !model.hiddenFilms.contains(filmID) {
             Image(uiImage: image).resizable().scaledToFit()
                 .accessibilityLabel("Photo \(sequence), print preview")
                 .modifier(PrintCardEdge(isInstant: isInstant, large: true))
@@ -445,8 +514,11 @@ struct DarkroomView: View {
                               Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
                                   let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
                                   recipe.straighteningDegrees = value == 0 ? nil : value
+                                  if straighteningDrag != nil { straighteningDrag = value }
                               }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
-                                     onEditingChanged: { if !$0 { render() } })
+                                     onEditingChanged: { editing in
+                                         if editing { beginStraightening() } else { straighteningDrag = nil; render() }
+                                     })
                                   .accessibilityLabel("Straighten")
                                   .accessibilityValue("\(String(format: "%.1f", straightening)) degrees"))
                     captioned(Text("Crop").font(.caption), Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
@@ -502,6 +574,20 @@ struct DarkroomView: View {
             if x { recipe.crop?.x = $0 } else { recipe.crop?.y = $0 }
         }), in: 0...max(0.001, 1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
             .accessibilityLabel("Crop \(name)"))
+    }
+
+    /// Shows the crop-in while the Straighten slider moves: the print without straightening, made once for the recipe's
+    /// other edits, turns under the slider.
+    private func beginStraightening() {
+        straighteningDrag = recipe.straighteningDegrees ?? 0
+        var flat = recipe
+        flat.straighteningDegrees = nil
+        guard unstraightened?.recipe != flat else { return }
+        Task {
+            guard let data = try? await model.processor.photo(filmID: filmID, sequence: sequence, recipe: flat),
+                  let decoded = DisplayPhoto.image(data) else { return }
+            unstraightened = (flat, decoded)
+        }
     }
 
     private func render() {

@@ -1,8 +1,10 @@
+import CoreGraphics
 import CryptoKit
 import EntitlementCore
 import FilmDomain
 @testable import FilmPersistence
 import Foundation
+import ImageIO
 import Observation
 import RenderCore
 import RenderFixtures
@@ -91,9 +93,15 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 : arguments.contains("--medium-format") ? "medium-format" : "early-photo"
             let movie = mode == "movie", instant = mode.hasPrefix("instant")
             // `--super8` films the Movie on the Super 8 instead of the 16mm.
-            let camera = movie ? (arguments.contains("--super8") ? CameraCatalog.super8HomeMovie : CameraCatalog.cinema16mm)
+            let catalogCamera = movie ? (arguments.contains("--super8") ? CameraCatalog.super8HomeMovie : CameraCatalog.cinema16mm)
                 : instant ? CameraCatalog.instant1970s
                 : mode == "medium-format" ? CameraCatalog.mediumFormat6x6 : CameraCatalog.disposable1990s
+            // `--earlier-package` loads the 16mm Film on the package a build before live sound locked, which records no
+            // sound.
+            let camera = movie && arguments.contains("--earlier-package")
+                ? CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie, capacity: .seconds(165),
+                                revealRule: .movieDevelopment, supportsBuiltInSoundtrack: true)
+                : catalogCamera
             let model = scenario.model
             // `--black-and-white` loads the 6×6 or 16mm Film on the black-and-white Film Stock; otherwise a Camera with a
             // Film Stock gets Load Film's default, color.
@@ -131,9 +139,13 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     } else {
                     // `--two-sealed`, with `--instant-mixed`, leaves two sealed Instant prints where there is otherwise one,
                     // so one Development reveals both.
-                    let captures = mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
+                    // `--three-distinct-prints` takes three photos of three plainly different scenes, red, green and blue,
+                    // so a test can tell the prints apart by their pictures.
+                    let distinct = arguments.contains("--three-distinct-prints")
+                    let captures = distinct ? 3 : mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
                     for index in 1...captures {
-                        try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
+                        let picture = distinct ? try Self.plainScene(index) : data
+                        try model.repository.savePhotoCapture(filmID: film.id, sourceData: picture)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
                     }
                     }
@@ -242,5 +254,28 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         let handle = try FileHandle(forWritingTo: url)
         defer { try? handle.close() }
         try handle.synchronize()
+    }
+}
+
+extension WorkflowScenario {
+    /// A 320 by 240 JPEG of one plain color, the `index`th of red, green and blue.
+    static func plainScene(_ index: Int) throws -> Data {
+        let colors: [(CGFloat, CGFloat, CGFloat)] = [(0.85, 0.15, 0.12), (0.15, 0.7, 0.2), (0.12, 0.25, 0.85)]
+        let color = colors[(index - 1) % colors.count]
+        guard let context = CGContext(data: nil, width: 320, height: 240, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+            throw WorkflowError.cannotReseedHistory
+        }
+        context.setFillColor(red: color.0, green: color.1, blue: color.2, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: 320, height: 240))
+        let data = NSMutableData()
+        guard let image = context.makeImage(),
+              let destination = CGImageDestinationCreateWithData(data, "public.jpeg" as CFString, 1, nil) else {
+            throw WorkflowError.cannotReseedHistory
+        }
+        CGImageDestinationAddImage(destination, image, nil)
+        guard CGImageDestinationFinalize(destination) else { throw WorkflowError.cannotReseedHistory }
+        return data as Data
     }
 }
