@@ -11,18 +11,14 @@ struct CaptureView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     /// How long a line of the header reads when the iPhone is on its side, before it turns, at least. The header takes
     /// this much of the screen's height in every hold, so the viewfinder below it never moves. Wide enough for
-    /// "12 exposures left" and a Camera's name in two or three lines; where the screen has room to spare, the column
-    /// gives the header more (`CaptureColumn`).
+    /// "12 exposures left" and a Camera's name in two or three lines.
     @ScaledMetric(relativeTo: .body) private var headerLength: CGFloat = 128
     /// How long the notices over the viewfinder read when the iPhone is on its side, at most.
     @ScaledMetric(relativeTo: .callout) private var noticeLength: CGFloat = 220
     /// How long a slider's caption reads when the iPhone is on its side, which is as tall as the row it sits in.
     @ScaledMetric(relativeTo: .caption) private var captionLength: CGFloat = 64
-    /// The room above the column and below it, which the screen's top and the shutter bar keep clear.
-    private static let verticalPadding: CGFloat = 12
     let filmID: UUID
     @State private var error: String?
     @State private var cameraDenied = false
@@ -45,20 +41,18 @@ struct CaptureView: View {
         let held = HeldTurn(capture.held)
         GeometryReader { screen in
             ScrollView {
-                // The reader's size is the screen's safe area less the shutter bar: the room the column has.
-                let room = screen.size.height - 2 * Self.verticalPadding
-                CaptureColumn(available: room) {
-                    header(capture, room: room).captureColumnRole(.header)
+                // The safe-area reader ends at the shutter bar; the full-width area keeps its own height within it.
+                let room = screen.size.height
+                CaptureColumn {
+                    header(capture, room: room).padding(.horizontal, 16).captureColumnRole(.header)
                     if let film = model.film(filmID) {
                         let behavior = CaptureBehavior.for(film.camera.id)
                         viewfinder(film, behavior: behavior, held: held)
                             .captureColumnRole(.viewfinder(aspect: CGFloat(behavior.viewfinder.aspectRatio)))
-                        if film.completionState == .open { controls(behavior: behavior, controller: capture).captureColumnRole(.controls) }
                     }
                 }
-                .padding(.horizontal).padding(.vertical, Self.verticalPadding)
             }
-            // The column is as tall as the screen has room for, so it scrolls only where it cannot be (large text).
+            // The full-width 4:3 area keeps its dimensions; the content scrolls when the screen cannot show all of it.
             .scrollBounceBehavior(.basedOnSize)
         }
         // The shutter stays on screen on small iPhones, at large text sizes and below messages.
@@ -135,10 +129,9 @@ struct CaptureView: View {
     private var pendingPreview: DevelopedPreviews.Pending? { model.developedPreviews.pending(for: filmID) }
     #endif
 
-    /// Done, the Camera's name and what is left above the viewfinder, in view at rest without scrolling. With the iPhone on
-    /// its side the whole block turns, as the portrait header it is, taking at least `headerLength` of the screen's height in
-    /// either hold. At the largest text sizes the notices that sit over the viewfinder come here, where they scroll; held on
-    /// its side its lines then run no longer than the `room` the screen shows above the shutter bar, so each starts in view.
+    /// Done, the Camera's name and what is left above the viewfinder. With the iPhone on its side the whole block turns, as
+    /// the portrait header it is, taking at least `headerLength` of the screen's height in either hold. At the largest text
+    /// sizes the column scrolls when the header and the fixed viewfinder area cannot both fit above the shutter bar.
     private func header(_ capture: CaptureController, room: CGFloat) -> some View {
         TurnedBlock(length: headerLength, reservesLength: true, maximumLength: room) {
             VStack(spacing: 12) {
@@ -153,9 +146,6 @@ struct CaptureView: View {
                     }.multilineTextAlignment(.center)
                     if film.completionState != .open {
                         Text(film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete").font(.headline)
-                    }
-                    if dynamicTypeSize.isAccessibilitySize, let film = model.film(filmID) {
-                        statusLines(film, controller: capture, onDark: false)
                     }
                 }
             }
@@ -208,35 +198,50 @@ struct CaptureView: View {
             || (film.completionState == .open && !lensNotes(behavior: behavior, controller: capture).isEmpty)
     }
 
-    /// The viewfinder: a box of the Camera's portrait shape, the same size and place in every hold, as large as the room
-    /// above the shutter bar leaves (`CaptureColumn`). The live picture fills it in every hold: held on its side, the box is
-    /// the landscape shape the photo saves, as in the iPhone's Camera app. The notices sit over it, so a message coming or
-    /// going never moves it.
+    /// A full-width 4:3 area with the Camera's portrait picture centered inside it. Only that picture frame receives the
+    /// live preview; black bars fill the rest. Notices and camera controls float over the area without changing its size.
     private func viewfinder(_ film: Film, behavior: CaptureBehavior, held: HeldTurn) -> some View {
         let capture = model.capture
         let showsLowLightCue = behavior.showsLowLightCue && capture.showsLowLightCue
-        let showsStatus = !dynamicTypeSize.isAccessibilitySize && hasStatus(film, controller: capture)
-        return ZStack {
-            Color.black
-            if let preview = capture.preview {
-                CameraPreview(source: preview, position: capture.position, behavior: behavior)
-            } else if !showsStatus && !showsDevelopedPreview {
-                // Without a picture the frame shows a camera, unless a notice says what is wrong in its place.
-                Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
+        let showsStatus = hasStatus(film, controller: capture)
+        return GeometryReader { area in
+            let cameraFrame = CaptureAreaGeometry.cameraFrame(
+                aspectRatio: CGFloat(behavior.viewfinder.aspectRatio), in: area.size
+            )
+            ZStack {
+                Color.black
+                ZStack {
+                    Color.black
+                    if let preview = capture.preview {
+                        CameraPreview(source: preview, position: capture.position, behavior: behavior)
+                    } else if !showsStatus && !showsDevelopedPreview {
+                        // Without a picture the Camera icon is inside the Camera's shape, never in its bars.
+                        Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
+                    }
+                }
+                .frame(width: cameraFrame.width, height: cameraFrame.height)
+                .position(x: cameraFrame.midX, y: cameraFrame.midY)
+                .clipped()
             }
-        }
-        .overlay {
-            GeometryReader { box in
+            .overlay {
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
-                        showsPreview: showsDevelopedPreview, boxHeight: box.size.height)
-                    .frame(width: box.size.width, height: box.size.height, alignment: held.topEdge)
+                        showsPreview: showsDevelopedPreview, boxHeight: area.size.height)
+                    .frame(width: area.size.width, height: area.size.height, alignment: held.topEdge)
+            }
+            .overlay(alignment: held.bottomEdge) {
+                if film.completionState == .open && hasFloatingControls(behavior, capture: capture) {
+                    VStack(spacing: 4) {
+                        controls(behavior: behavior, controller: capture).padding(.horizontal, 12)
+                        zoomSteps(behavior: behavior, capture: capture)
+                    }
+                    .padding(.bottom, 8)
+                    .background(.black.opacity(0.58), in: RoundedRectangle(cornerRadius: 14))
+                    .environment(\.colorScheme, .dark)
+                    .tint(.white)
+                }
             }
         }
-        .overlay(alignment: held.bottomEdge) {
-            if film.completionState == .open { zoomSteps(behavior: behavior, capture: capture) }
-        }
-        .aspectRatio(behavior.viewfinder.aspectRatio, contentMode: .fit)
-        .clipped()
+        .aspectRatio(CaptureAreaGeometry.aspectRatio, contentMode: .fit)
         .accessibilityElement(children: .contain)
         .accessibilityLabel(viewfinderLabel(position: capture.position))
         .accessibilityIdentifier("viewfinder")
@@ -249,6 +254,12 @@ struct CaptureView: View {
             try? await Task.sleep(for: .seconds(2.5))
             savedShowing = false
         }
+    }
+
+    private func hasFloatingControls(_ behavior: CaptureBehavior, capture: CaptureController) -> Bool {
+        guard capture.lensIsLive else { return false }
+        return behavior.offersManualFocus || behavior.offersExposureBias
+            || (behavior.offersZoomSteps && capture.position == .rear && capture.controls.zoomSteps.count > 1)
     }
 
     /// The low-light cue, the status lines and, in a Debug build, the preview of the latest capture, against the edge of

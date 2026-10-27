@@ -3,9 +3,8 @@ import SwiftUI
 /// What a subview of the `CaptureColumn` is.
 enum CaptureColumnRole: Equatable {
     case header
-    /// The viewfinder's box, with its width over its height.
+    /// The Camera's picture frame inside the full-width viewfinder area.
     case viewfinder(aspect: CGFloat)
-    case controls
 }
 
 private struct CaptureColumnRoleKey: LayoutValueKey {
@@ -16,69 +15,47 @@ extension View {
     func captureColumnRole(_ role: CaptureColumnRole) -> some View { layoutValue(key: CaptureColumnRoleKey.self, value: role) }
 }
 
-/// The shooting screen's column: the header, the viewfinder and the controls under it, which together are as tall as the
-/// room between the top of the screen and the shutter bar, so the whole viewfinder shows (the captain, 2026-10-16:
-/// "viewfinder does not fit the screen"). Each Camera keeps its viewfinder's shape; the box is the largest of that shape
-/// that the room leaves after the header and the controls, narrower than the screen where the room is short, and never
-/// smaller than `minimumViewfinder`, below which the screen scrolls instead, as at the largest text sizes.
-///
-/// Where the room is more than the viewfinder at the screen's full width needs, the rest is shared: half goes above the
-/// viewfinder, to the header (up to `maximumHeader` in all), so that held on its side the Camera's name and its count can
-/// each read on one line, and half below it. Held upright the header's lines stay against the top, so Done is where it is
-/// on every Camera, with the viewfinder centred in the room under them.
-///
-/// Nothing here depends on how the iPhone is held, so the viewfinder is the same size in the same place in every hold:
-/// the header and the controls reserve their heights for every hold (`TurnedBlock`, `CaptionedSlider`).
-struct CaptureColumn: Layout {
-    /// The room the column has, from the top of the screen's safe area to the shutter bar.
-    var available: CGFloat
-    var spacing: CGFloat = 12
-    var minimumViewfinder: CGFloat = 220
-    var maximumHeader: CGFloat = 300
+/// Geometry shared by every Camera: the viewfinder area is the iPhone Camera app's full-width, portrait 4:3 photo frame.
+/// Each Camera's own picture stays centered inside that area, with no live image drawn in the bars around it.
+enum CaptureAreaGeometry {
+    static let aspectRatio: CGFloat = 3.0 / 4.0
 
+    static func cameraFrame(aspectRatio: CGFloat, in area: CGSize) -> CGRect {
+        guard area.width > 0, area.height > 0, aspectRatio > 0 else { return .zero }
+        let size: CGSize
+        if area.width / area.height > aspectRatio {
+            size = CGSize(width: area.height * aspectRatio, height: area.height)
+        } else {
+            size = CGSize(width: area.width, height: area.width / aspectRatio)
+        }
+        return CGRect(x: (area.width - size.width) / 2, y: (area.height - size.height) / 2,
+                      width: size.width, height: size.height)
+    }
+}
+
+/// The shooting screen's fixed top-to-bottom arrangement: one header, then the same full-width 4:3 area on every Camera.
+/// The viewfinder size never depends on Camera shape, controls, notices or the room below it; a short screen scrolls instead.
+struct CaptureColumn: Layout {
     private struct Plan {
         var header: LayoutSubview?
         var viewfinder: LayoutSubview?
-        var controls: LayoutSubview?
         var width: CGFloat
         var headerHeight: CGFloat
         var viewfinderSize: CGSize
-        var controlsHeight: CGFloat
-        var gaps: CGFloat
-        var height: CGFloat { headerHeight + viewfinderSize.height + controlsHeight + gaps }
+        var height: CGFloat { headerHeight + viewfinderSize.height }
     }
 
     private func plan(_ proposal: ProposedViewSize, _ subviews: Subviews) -> Plan {
         let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? 390
         let header = subviews.first { $0[CaptureColumnRoleKey.self] == .header }
-        let controls = subviews.first { $0[CaptureColumnRoleKey.self] == .controls }
-        var viewfinder: LayoutSubview?
-        var aspect: CGFloat = 1
-        for subview in subviews {
-            if case let .viewfinder(shape)? = subview[CaptureColumnRoleKey.self] { viewfinder = subview; aspect = shape }
+        let viewfinder = subviews.first {
+            if case .viewfinder? = $0[CaptureColumnRoleKey.self] { return true }
+            return false
         }
-        let widthOnly = ProposedViewSize(width: width, height: nil)
-        let controlsHeight = controls?.sizeThatFits(widthOnly).height ?? 0
-        let headerMinimum = header?.sizeThatFits(widthOnly).height ?? 0
-        let parts = [headerMinimum > 0, viewfinder != nil, controlsHeight > 0].filter { $0 }.count
-        let gaps = spacing * CGFloat(max(0, parts - 1))
-        let room = available - controlsHeight - gaps
-        var headerHeight = headerMinimum
-        var viewfinderSize = CGSize.zero
-        if viewfinder != nil {
-            let ideal = width / aspect
-            var height = ideal
-            if room - headerMinimum >= ideal {
-                let spare = room - headerMinimum - ideal
-                headerHeight = headerMinimum + min(spare / 2, max(0, maximumHeader - headerMinimum))
-            } else {
-                height = max(minimumViewfinder, room - headerMinimum)
-            }
-            height = min(height, ideal)
-            viewfinderSize = CGSize(width: height * aspect, height: height)
-        }
-        return Plan(header: header, viewfinder: viewfinder, controls: controls, width: width, headerHeight: headerHeight,
-                    viewfinderSize: viewfinderSize, controlsHeight: controlsHeight, gaps: gaps)
+        let headerHeight = header?.sizeThatFits(ProposedViewSize(width: width, height: nil)).height ?? 0
+        let viewfinderSize = viewfinder == nil ? .zero : CGSize(width: width, height: width / CaptureAreaGeometry.aspectRatio)
+        return Plan(header: header, viewfinder: viewfinder, width: width, headerHeight: headerHeight,
+                    viewfinderSize: viewfinderSize)
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
@@ -88,19 +65,9 @@ struct CaptureColumn: Layout {
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         let plan = plan(ProposedViewSize(width: bounds.width, height: nil), subviews)
-        var y = bounds.minY
-        if let header = plan.header, plan.headerHeight > 0 {
-            header.place(at: CGPoint(x: bounds.minX, y: y), anchor: .topLeading,
-                         proposal: ProposedViewSize(width: plan.width, height: plan.headerHeight))
-            y += plan.headerHeight + spacing
-        }
-        if let viewfinder = plan.viewfinder {
-            viewfinder.place(at: CGPoint(x: bounds.midX, y: y), anchor: .top, proposal: ProposedViewSize(plan.viewfinderSize))
-            y += plan.viewfinderSize.height + spacing
-        }
-        if let controls = plan.controls, plan.controlsHeight > 0 {
-            controls.place(at: CGPoint(x: bounds.minX, y: y), anchor: .topLeading,
-                           proposal: ProposedViewSize(width: plan.width, height: nil))
-        }
+        plan.header?.place(at: CGPoint(x: bounds.minX, y: bounds.minY), anchor: .topLeading,
+                           proposal: ProposedViewSize(width: plan.width, height: plan.headerHeight))
+        plan.viewfinder?.place(at: CGPoint(x: bounds.minX, y: bounds.minY + plan.headerHeight), anchor: .topLeading,
+                               proposal: ProposedViewSize(plan.viewfinderSize))
     }
 }

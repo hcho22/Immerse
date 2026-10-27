@@ -156,23 +156,21 @@ final class CaptureSidewaysTests: XCTestCase {
 
     // MARK: The column
 
-    /// Where `CaptureColumn` puts a header, a viewfinder of `aspect` and, with `controls` high, controls, for a screen with
-    /// `available` points of room between its top and the shutter bar, as the screen lays them out in a window.
-    /// With a `notice`, the header ends with it, as at the largest text sizes.
+    /// Where `CaptureColumn` puts the header and the fixed 4:3 viewfinder area in a window.
     private func column(
-        available: CGFloat, aspect: CGFloat, controls: CGFloat = 0, turn: HeldTurn = .upright, width: CGFloat = 358,
-        notice: String? = nil
-    ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, controls: CGRect, size: CGSize) {
+        aspect: CGFloat, turn: HeldTurn = .upright, width: CGFloat = 358, proposalHeight: CGFloat = 3000,
+        extraHeaderText: String? = nil
+    ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, size: CGSize) {
         let frames = Frames()
         let inColumn: @Sendable (GeometryProxy) -> CGRect = { $0.frame(in: .named("column")) }
-        let view = CaptureColumn(available: available) {
-            TurnedBlock(length: 128, reservesLength: true, maximumLength: available) {
+        let view = CaptureColumn {
+            TurnedBlock(length: 128, reservesLength: true, maximumLength: 760) {
                 VStack(spacing: 12) {
                     Color.clear.frame(height: 44)
                         .onGeometryChange(for: CGRect.self, of: inColumn) { frames.firstLine = $0 }
                     Color.clear.frame(height: 28)
                     Color.clear.frame(height: 22)
-                    if let notice { Text(notice) }
+                    if let extraHeaderText { Text(extraHeaderText) }
                 }.frame(maxWidth: .infinity)
             }
             .onGeometryChange(for: CGRect.self, of: inColumn) { frames.header = $0 }
@@ -180,11 +178,6 @@ final class CaptureSidewaysTests: XCTestCase {
             Color.black
                 .onGeometryChange(for: CGRect.self, of: inColumn) { frames.viewfinder = $0 }
                 .captureColumnRole(.viewfinder(aspect: aspect))
-            if controls > 0 {
-                Color.clear.frame(height: controls)
-                    .onGeometryChange(for: CGRect.self, of: inColumn) { frames.controls = $0 }
-                    .captureColumnRole(.controls)
-            }
         }
         .environment(\.heldTurn, turn)
         .coordinateSpace(name: "column")
@@ -196,84 +189,67 @@ final class CaptureSidewaysTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
-        return (frames.header, frames.firstLine, frames.viewfinder, frames.controls,
-                host.sizeThatFits(in: CGSize(width: width, height: 3000)))
+        return (frames.header, frames.firstLine, frames.viewfinder,
+                host.sizeThatFits(in: CGSize(width: width, height: proposalHeight)))
     }
 
-    private final class Frames { var header = CGRect.zero, firstLine = CGRect.zero, viewfinder = CGRect.zero, controls = CGRect.zero }
+    private final class Frames { var header = CGRect.zero, firstLine = CGRect.zero, viewfinder = CGRect.zero }
 
-    /// With room to spare, the viewfinder keeps the screen's full width and the rest is shared: half to the header, as far as
-    /// 300 points in all, so held on its side its lines need not wrap, and half below the viewfinder, which sits centred in the
-    /// room under the header's lines. Held upright, those lines stay against the top.
-    func testRoomToSpareIsSharedAboveAndBelowTheViewfinderAfterItHasItsFullWidth() async throws {
-        let big = try await column(available: 700, aspect: 1)
-        XCTAssertEqual(big.viewfinder.width, 358, accuracy: 0.5)
-        XCTAssertEqual(big.viewfinder.height, 358, accuracy: 0.5)
-        let spare = 700 - 12 - 128 - 358.0
-        XCTAssertEqual(big.header.height, 128 + spare / 2, accuracy: 0.5, "Half the spare room is the header's")
-        XCTAssertEqual(big.viewfinder.minY, 128 + spare / 2 + 12, accuracy: 0.5)
-        XCTAssertEqual(700 - big.viewfinder.maxY, spare / 2, accuracy: 0.5, "Half is below the viewfinder")
-        XCTAssertEqual(big.firstLine.minY, 0, accuracy: 0.5, "Held upright, the header's first line is against the top")
-        let tight = try await column(available: 520, aspect: 1)
-        XCTAssertEqual(tight.viewfinder.height, 358, accuracy: 0.5, "The viewfinder has its full width first")
-        XCTAssertEqual(tight.header.height, 128 + (520 - 12 - 128 - 358.0) / 2, accuracy: 0.5)
-        XCTAssertEqual(tight.firstLine.minY, 0, accuracy: 0.5)
-        let huge = try await column(available: 1200, aspect: 1)
-        XCTAssertEqual(huge.header.height, 300, accuracy: 0.5, "The header is capped at 300 points")
-    }
-
-    /// Short of room, the viewfinder keeps its shape and gives up width, so the whole of it shows above the shutter bar.
-    func testShortOfRoomTheViewfinderKeepsItsShapeAndGivesUpWidth() async throws {
-        let tall = try await column(available: 540, aspect: 2.0 / 3)
-        XCTAssertEqual(tall.header.height, 128, accuracy: 0.5)
-        XCTAssertEqual(tall.viewfinder.height, 540 - 128 - 12, accuracy: 0.5)
-        XCTAssertEqual(tall.viewfinder.width, tall.viewfinder.height * 2.0 / 3, accuracy: 0.5)
-        XCTAssertLessThan(tall.viewfinder.width, 358)
-        XCTAssertEqual(tall.viewfinder.midX, 179, accuracy: 0.5, "It sits in the middle")
-        XCTAssertLessThanOrEqual(tall.viewfinder.maxY, 540 + 0.5, "The whole viewfinder is within the room")
-        let controls = try await column(available: 540, aspect: 1, controls: 120)
-        XCTAssertEqual(controls.viewfinder.height, 540 - 128 - 120 - 24, accuracy: 0.5, "The controls take their room first")
-        XCTAssertEqual(controls.controls.minY, controls.viewfinder.maxY + 12, accuracy: 0.5)
-        XCTAssertLessThanOrEqual(controls.controls.maxY, 540 + 0.5)
-    }
-
-    /// Below the smallest viewfinder the column is taller than the room, and the screen scrolls.
-    func testTheViewfinderIsNeverSmallerThanItsMinimum() async throws {
-        let cramped = try await column(available: 300, aspect: 1)
-        XCTAssertEqual(cramped.viewfinder.height, 220, accuracy: 0.5)
-        XCTAssertGreaterThan(cramped.size.height, 300)
-    }
-
-    /// The viewfinder is the same size in the same place however the iPhone is held, with and without controls and at the
-    /// shape of every Camera.
-    func testTheViewfinderIsTheSameInEveryHold() async throws {
-        for (aspect, controls) in [(CGFloat(1), CGFloat(0)), (2.0 / 3, 0), (3.0 / 4, 0), (1, 120)] {
-            for available in [CGFloat(480), 560, 640, 760] {
-                let upright = try await column(available: available, aspect: aspect, controls: controls)
+    /// Every Camera gets the same full-width 4:3 area, regardless of its picture shape, the available height or the hold.
+    func testEveryCameraUsesTheSameFullWidthFourByThreeAreaInEveryHold() async throws {
+        for aspect in [CGFloat(1), CGFloat(2.0 / 3), CGFloat(3.0 / 4)] {
+            for width in [CGFloat(375), CGFloat(402), CGFloat(440)] {
+                let upright = try await column(aspect: aspect, width: width)
+                XCTAssertEqual(upright.viewfinder.minX, 0, accuracy: 0.5)
+                XCTAssertEqual(upright.viewfinder.width, width, accuracy: 0.5)
+                XCTAssertEqual(upright.viewfinder.height, width / CaptureAreaGeometry.aspectRatio, accuracy: 0.5)
+                XCTAssertEqual(upright.viewfinder.minY, upright.header.height, accuracy: 0.5)
                 for turn in [HeldTurn.clockwise, .counterClockwise] {
-                    let turned = try await column(available: available, aspect: aspect, controls: controls, turn: turn)
-                    XCTAssertEqual(turned.viewfinder, upright.viewfinder, "aspect \(aspect), room \(available), \(turn)")
-                    XCTAssertEqual(turned.header.height, upright.header.height, "aspect \(aspect), room \(available), \(turn)")
-                    XCTAssertEqual(turned.controls, upright.controls)
+                    let turned = try await column(aspect: aspect, turn: turn, width: width)
+                    XCTAssertEqual(turned.viewfinder, upright.viewfinder, "aspect \(aspect), width \(width), \(turn)")
+                    XCTAssertEqual(turned.header.height, upright.header.height, "aspect \(aspect), width \(width), \(turn)")
                 }
             }
         }
     }
 
-    /// At the largest text sizes the header, with the notices in it, is taller than the room above the shutter bar, and
-    /// wider than the screen once turned, where it scrolls across it. It still reserves the height it has in the portrait
-    /// hold, so the viewfinder keeps its place, and its lines run no longer than the room, so their first line, Done's,
-    /// shows at rest at whichever end of the screen it starts.
-    func testAHeaderTallerThanTheRoomKeepsItsPortraitHeightAndItsFirstLineInView() async throws {
-        let notice = String(repeating: "Camera unavailable. ", count: 40)
-        let upright = try await column(available: 480, aspect: 1, notice: notice)
-        XCTAssertGreaterThan(upright.header.height, 480, "The header is taller than the room")
+    /// Camera-specific picture bounds are centered: square frames fill the area's width, 4:3 fills the area and 3:2
+    /// portrait pictures fill its height with equal bars at the sides.
+    func testEachCameraPictureShapeIsCenteredInsideTheArea() {
+        let area = CGSize(width: 375, height: 500)
+        let square = CaptureAreaGeometry.cameraFrame(aspectRatio: 1, in: area)
+        XCTAssertEqual(square, CGRect(x: 0, y: 62.5, width: 375, height: 375))
+        let disposable = CaptureAreaGeometry.cameraFrame(aspectRatio: 2.0 / 3, in: area)
+        XCTAssertEqual(disposable.width, 1000.0 / 3, accuracy: 0.01)
+        XCTAssertEqual(disposable.height, 500, accuracy: 0.01)
+        XCTAssertEqual(disposable.minX, (375 - 1000.0 / 3) / 2, accuracy: 0.01)
+        XCTAssertEqual(disposable.minY, 0, accuracy: 0.01)
+        let fourByThree = CaptureAreaGeometry.cameraFrame(aspectRatio: 3.0 / 4, in: area)
+        XCTAssertEqual(fourByThree, CGRect(origin: .zero, size: area))
+    }
+
+    /// The full area keeps its width and height even when the room is short; the scroll view, not the area, gives up room.
+    func testShortRoomDoesNotResizeTheViewfinderArea() async throws {
+        let cramped = try await column(aspect: 2.0 / 3, proposalHeight: 300)
+        let spacious = try await column(aspect: 1, proposalHeight: 760)
+        XCTAssertEqual(cramped.viewfinder.width, 358, accuracy: 0.5)
+        XCTAssertEqual(cramped.viewfinder.height, 358 / CaptureAreaGeometry.aspectRatio, accuracy: 0.5)
+        XCTAssertEqual(cramped.viewfinder, spacious.viewfinder)
+        XCTAssertGreaterThan(cramped.size.height, 300)
+    }
+
+    /// A tall header can make the column scroll, but the fixed viewfinder stays directly below it and keeps its area in both
+    /// holds.
+    func testATallHeaderDoesNotResizeTheViewfinderArea() async throws {
+        let extraHeaderText = String(repeating: "Camera name. ", count: 40)
+        let upright = try await column(aspect: 1, extraHeaderText: extraHeaderText)
+        XCTAssertGreaterThan(upright.header.height, 300, "The long heading makes the column much taller")
+        XCTAssertEqual(upright.viewfinder.minY, upright.header.maxY, accuracy: 0.5)
+        XCTAssertGreaterThan(upright.size.height, upright.header.height + 300, "The full area stays in the scrollable column")
         for turn in [HeldTurn.clockwise, .counterClockwise] {
-            let turned = try await column(available: 480, aspect: 1, turn: turn, notice: notice)
+            let turned = try await column(aspect: 1, turn: turn, extraHeaderText: extraHeaderText)
             XCTAssertEqual(turned.header.height, upright.header.height, "\(turn)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "\(turn)")
-            XCTAssertLessThanOrEqual(turned.firstLine.maxY, 480 + 0.5, "The first line is within the room, \(turn)")
-            XCTAssertGreaterThanOrEqual(turned.firstLine.minY, -0.5, "The first line is within the room, \(turn)")
         }
     }
 

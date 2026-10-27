@@ -6,27 +6,28 @@ import XCTest
 /// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
 /// raises, are in `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
 /// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock and answers a fresh Camera request
-/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera shape, the 6×6
+/// itself, and each test starts on an empty Journal and deletes the Film it loaded. One test per Camera, the 6×6
 /// again at the largest text size and the Disposable with Develop at once off, to stay inside the per-test time allowance.
 @MainActor
 final class CaptureSidewaysUITests: ScreenTestCase {
     func testSixBySixShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "mediumFormat6x6", name: "6×6", fillsTheRoom: false)
+        try check(id: "mediumFormat6x6", name: "6×6")
     }
 
-    /// The Instant's square viewfinder keeps the screen's full width where the room allows, so the room left over is
-    /// shared above and below it.
     func testInstantShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "instant1970s", name: "Instant", fillsTheRoom: false, showsNotice: false)
+        try check(id: "instant1970s", name: "Instant", showsNotice: false)
     }
 
-    /// The tallest viewfinder: the 2:3 box, with the error, the message and Resume Camera over it.
     func testDisposableShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "disposable1990s", name: "Disposable", fillsTheRoom: true)
+        try check(id: "disposable1990s", name: "Disposable")
     }
 
     func testSuper8ShootingScreenKeepsItsLayoutHeldSideways() throws {
-        try check(id: "super8HomeMovie", name: "Super 8", fillsTheRoom: true)
+        try check(id: "super8HomeMovie", name: "Super 8")
+    }
+
+    func testSixteenMillimeterShootingScreenKeepsItsLayoutHeldSideways() throws {
+        try check(id: "cinema16mm", name: "16mm")
     }
 
     /// What the screen shows, measured in the window's own portrait frame.
@@ -163,9 +164,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(unavailable.exists(within: 30), "The camera's open ended")
     }
 
-    /// `fillsTheRoom`: the Camera's viewfinder is taller than it is wide, so the room above the shutter bar, not the screen's
-    /// width, sets its size, and it ends just above the bar.
-    private func check(id: String, name: String, fillsTheRoom: Bool, showsNotice: Bool = true) throws {
+    private func check(id: String, name: String, showsNotice: Bool = true) throws {
         let app = XCUIApplication()
         defer { XCUIDevice.shared.orientation = .portrait }
         let title = try openShootingScreen(app, id: id)
@@ -185,7 +184,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
         XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
         XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
-        try checkFits(upright, app, "upright", fillsTheRoom: fillsTheRoom)
+        try checkFits(upright, app, "upright")
         checkNotice(upright, shows: showsNotice, "upright")
         // Held upright, Done sits just below the status bar on every Camera and every iPhone, with the name and the count
         // right under it, whatever room the viewfinder leaves.
@@ -202,7 +201,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
-            try checkFits(turned, app, side, fillsTheRoom: fillsTheRoom)
+            try checkFits(turned, app, side)
             checkNotice(turned, shows: showsNotice, "held on its \(side)")
             retainFrames(turned, name: name, hold: side)
             XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
@@ -244,17 +243,17 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         add(attachment)
     }
 
-    /// The whole viewfinder shows above the shutter bar, and everything drawn in it, the notices and their buttons, lies
-    /// within it: a frame that reaches past its box is text the box cuts off.
-    private func checkFits(_ layout: Layout, _ app: XCUIApplication, _ hold: String, fillsTheRoom: Bool) throws {
-        XCTAssertLessThanOrEqual(layout.viewfinder.maxY, layout.shutter.minY, "The whole viewfinder is above the shutter bar, \(hold)")
-        XCTAssertGreaterThanOrEqual(layout.viewfinder.minX, layout.window.minX, "The viewfinder is within the screen, \(hold)")
-        XCTAssertLessThanOrEqual(layout.viewfinder.maxX, layout.window.maxX, "The viewfinder is within the screen, \(hold)")
-        if fillsTheRoom {
-            // The shutter bar's top is 8 points above the shutter's frame, and the column leaves 12 above the bar.
-            XCTAssertLessThanOrEqual(layout.shutter.minY - layout.viewfinder.maxY, 40,
-                                     "The viewfinder takes the room above the shutter bar, \(hold)")
-        }
+    /// The area is full width and four thirds as tall on every Camera and in every hold. Notices and buttons drawn over it
+    /// remain inside its frame.
+    private func checkFits(_ layout: Layout, _ app: XCUIApplication, _ hold: String) throws {
+        XCTAssertEqual(layout.viewfinder.minX, layout.window.minX, accuracy: 1,
+                       "The viewfinder area starts at the screen edge, \(hold)")
+        XCTAssertEqual(layout.viewfinder.width, layout.window.width, accuracy: 1,
+                       "The viewfinder area is full width, \(hold)")
+        XCTAssertEqual(layout.viewfinder.height, layout.window.width * 4 / 3, accuracy: 1,
+                       "The viewfinder area is four thirds as tall as it is wide, \(hold)")
+        XCTAssertLessThanOrEqual(layout.viewfinder.maxY, layout.shutter.minY,
+                                 "The visible viewfinder area ends above the shutter bar, \(hold)")
         let viewfinder = app.otherElements["viewfinder"]
         let inside = layout.viewfinder.insetBy(dx: -1, dy: -1)
         for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex {
