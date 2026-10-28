@@ -239,12 +239,15 @@ struct DevelopedPreviewCard: View {
     static let sidewaysLength: CGFloat = 300
     let preview: DevelopedPreviews.Preview?
     let pending: DevelopedPreviews.Pending?
+    /// Whether the picture opens full size: not while a clip records, since the full-size player would take the
+    /// iPhone's sound from the clip's microphone. The card then shows dimmed, and its close button still works.
+    var opens = true
     let open: () -> Void
     let close: () -> Void
 
     var body: some View {
         // Within the viewfinder at every text size, as the zoom steps are; the picture's size follows the same cap.
-        PreviewCardContent(preview: preview, pending: pending, open: open, close: close)
+        PreviewCardContent(preview: preview, pending: pending, opens: opens, open: open, close: close)
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
@@ -252,6 +255,7 @@ struct DevelopedPreviewCard: View {
 private struct PreviewCardContent: View {
     let preview: DevelopedPreviews.Preview?
     let pending: DevelopedPreviews.Pending?
+    let opens: Bool
     let open: () -> Void
     let close: () -> Void
     @ScaledMetric(relativeTo: .caption) private var side: CGFloat = 48
@@ -276,11 +280,11 @@ private struct PreviewCardContent: View {
             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
     }
 
-    /// The picture and the lines, which open the preview full size once there is one to open; a disabled button would
-    /// dim them.
+    /// The picture and the lines, which open the preview full size once there is one to open, dimmed while it cannot
+    /// open; with none to open they are no button, which would dim them.
     @ViewBuilder private var tappableContent: some View {
         if preview?.url != nil {
-            Button(action: open) { content }.buttonStyle(.plain)
+            Button(action: open) { content }.buttonStyle(.plain).disabled(!opens)
         } else {
             content
         }
