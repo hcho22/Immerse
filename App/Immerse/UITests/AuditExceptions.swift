@@ -17,11 +17,11 @@ struct AuditException: Equatable {
         // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
         AuditException(audit: "16mm-title-accessibility-largest", type: .contrast, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
         // Contrast at the Disposable Load screen's low-storage audit, at the end of the Form, where the warning and
-        // Load Film are on screen together. The Form stops there in every run with the Camera's controls line and
-        // look line under the navigation bar's scroll-edge blur; at rest each measured 21.00:1 light and 13.94:1
-        // dark (Evidence/NativeApp/low-storage-warning-062.md).
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "Auto or fixed focus, fixed exposure, optional flash and a live low-light cue"),
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"),
+        // Load Film are on screen together. The Form stops there in every run with the end of the Camera's controls
+        // line and the start of its look line under the navigation bar's scroll-edge blur; at rest each measured
+        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/low-storage-warning-062.md).
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"),
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"),
     ]
 
     /// Whether `exceptions` accept a finding; a finding without an element label is never accepted.

@@ -398,12 +398,6 @@ public final class FilmRepository {
         try finishPendingDeletions(filmID: filmID)
     }
 
-    /// Compatibility for callers that still describe a nil selection as Silent.
-    public func selectMovieSoundtrack(filmID: UUID, asset: VerifiedCatalogAsset?, verification: VerifiedMedia?) throws {
-        try selectMovieSoundChoice(filmID: filmID, choice: asset == nil ? .silent : .soundtrack,
-                                   asset: asset, verification: verification)
-    }
-
     @discardableResult
     public func completeEarly(filmID: UUID, confirmedCaptureCount: Int? = nil) throws -> Film {
         try database.withTransaction {

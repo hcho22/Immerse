@@ -73,21 +73,30 @@ public enum NativeMovieRenderer {
         ])
         guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
         writer.add(input)
-        var audioInput: AVAssetWriterInput?
+        var sound: (reader: AVAssetReader, output: AVAssetReaderTrackOutput, input: AVAssetWriterInput)?
         if let audioTrack = audioTracks.first {
             let formats = try await audioTrack.load(.formatDescriptions)
             guard let format = formats.first else { throw NativeRenderError.invalidMovie() }
+            let audioReader = try AVAssetReader(asset: asset)
+            audioReader.timeRange = CMTimeRange(start: .zero, duration: developedDuration)
+            let audioOutput = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: nil)
+            guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed }
+            audioReader.add(audioOutput)
             let input = AVAssetWriterInput(mediaType: .audio, outputSettings: nil, sourceFormatHint: format)
             input.expectsMediaDataInRealTime = false
             guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
             writer.add(input)
-            audioInput = input
+            sound = (audioReader, audioOutput, input)
         }
         guard reader.startReading() else { throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?) }
+        if let sound, !sound.reader.startReading() {
+            throw NativeRenderError.invalidMovie(underlying: sound.reader.error as NSError?)
+        }
         guard writer.startWriting() else { throw NativeRenderError.writerFailed }
         writer.startSession(atSourceTime: .zero)
         defer {
             if reader.status == .reading { reader.cancelReading() }
+            if sound?.reader.status == .reading { sound?.reader.cancelReading() }
             if writer.status == .writing { writer.cancelWriting() }
         }
         let context = CIContext(options: [.cacheIntermediates: false])
@@ -95,15 +104,39 @@ public enum NativeMovieRenderer {
         var frame = 0
         var firstTime: CMTime?
         var lastImage: CIImage?
+        var soundFinished = sound == nil
 
-        func append(_ image: CIImage) async throws {
+        /// Appends the clip's sound while its input takes more. The writer interleaves picture and sound, so an input
+        /// that runs ahead waits until the other catches up.
+        func appendSound() throws {
+            guard let sound, !soundFinished else { return }
+            while sound.input.isReadyForMoreMediaData {
+                guard let sample = sound.output.copyNextSampleBuffer() else {
+                    guard sound.reader.status == .completed else {
+                        throw NativeRenderError.invalidMovie(underlying: sound.reader.error as NSError?)
+                    }
+                    sound.input.markAsFinished()
+                    soundFinished = true
+                    return
+                }
+                guard writer.status == .writing, sound.input.append(sample) else { throw NativeRenderError.writerFailed }
+            }
+        }
+
+        func waitAppendingSound(until ready: () -> Bool) async throws {
             let deadline = ContinuousClock.now + .seconds(15)
-            while !input.isReadyForMoreMediaData {
+            while true {
                 try Task.checkCancellation()
+                try appendSound()
+                if ready() { return }
                 guard writer.status == .writing else { throw NativeRenderError.writerFailed }
                 guard ContinuousClock.now < deadline else { throw NativeRenderError.writerTimedOut }
                 try await Task.sleep(for: .milliseconds(2))
             }
+        }
+
+        func append(_ image: CIImage) async throws {
+            try await waitAppendingSound { input.isReadyForMoreMediaData }
             guard let pool = adaptor.pixelBufferPool else { throw NativeRenderError.writerFailed }
             var buffer: CVPixelBuffer?
             guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer) == kCVReturnSuccess, let buffer else {
@@ -140,32 +173,9 @@ public enum NativeMovieRenderer {
             throw NativeRenderError.invalidMovie(underlying: reader.error as NSError?)
         }
         while frame < frameCount { try await append(lastImage) }
-        if let audioTrack = audioTracks.first, let audioInput {
-            let audioReader = try AVAssetReader(asset: asset)
-            audioReader.timeRange = CMTimeRange(start: .zero, duration: developedDuration)
-            let audioOutput = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: nil)
-            guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed }
-            audioReader.add(audioOutput)
-            guard audioReader.startReading() else {
-                throw NativeRenderError.invalidMovie(underlying: audioReader.error as NSError?)
-            }
-            let deadline = ContinuousClock.now + .seconds(15)
-            while let sample = audioOutput.copyNextSampleBuffer() {
-                try Task.checkCancellation()
-                while !audioInput.isReadyForMoreMediaData {
-                    guard writer.status == .writing else { throw NativeRenderError.writerFailed }
-                    guard ContinuousClock.now < deadline else { throw NativeRenderError.writerTimedOut }
-                    try await Task.sleep(for: .milliseconds(2))
-                }
-                guard writer.status == .writing, audioInput.append(sample) else { throw NativeRenderError.writerFailed }
-            }
-            guard audioReader.status == .completed else {
-                throw NativeRenderError.invalidMovie(underlying: audioReader.error as NSError?)
-            }
-            audioInput.markAsFinished()
-        }
-        writer.endSession(atSourceTime: duration)
         input.markAsFinished()
+        try await waitAppendingSound { soundFinished }
+        writer.endSession(atSourceTime: duration)
         await writer.finishWriting()
         guard writer.status == .completed else { throw NativeRenderError.writerFailed }
     }

@@ -142,6 +142,12 @@ At rest, at the top of the Form, each measured 21.00:1 in light and 13.94:1 in d
 `App/Immerse/UITests/AuditExceptions.swift` accepts exactly these two at this one audit point: "Fixed focus, fixed exposure, optional flash and a live low-light cue" and "Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges".
 Neither is the warning.
 
+The 2026-10-26 phone feedback changed both rows' words, and on 2026-10-27 the two exceptions were measured again for the new words on an iPhone 17 Pro simulator with iOS 26.5, one run in light and one in dark.
+The Form stopped at the same pose in both, with the end of the controls line and the start of the look line under the navigation bar's blur.
+Light reported the look line only; dark reported both.
+At rest, at the top of the Form, each measured 21.00:1 in light and 13.94:1 in dark, as before.
+The exceptions now accept exactly "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue" and "1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges".
+
 ### Existing Film screen findings, fixed
 
 The Film screen had no full audit before this change.

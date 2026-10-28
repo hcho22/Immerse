@@ -207,6 +207,34 @@ final class NativeRenderTests: XCTestCase {
         } catch { }
     }
 
+    /// A clip with several seconds of recorded sound develops completely (FR-27): every whole frame, and its sound to
+    /// the last frame's end, however far the writer lets the picture run ahead of the sound.
+    func testAClipWithSeveralSecondsOfSoundDevelopsEveryFrameAndAllOfItsSound() async throws {
+        let root = makeRoot()
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let source = root.appendingPathComponent("captured-with-sound.mov")
+        try await Self.capturedMovie(at: source, seconds: 4)
+
+        let developed = root.appendingPathComponent("developed.mov")
+        try await NativeMovieRenderer.developClip(source: source, destination: developed,
+            camera: CameraCatalog.super8HomeMovie, seed: 17, orientation: .landscape, longEdge: 320)
+        let sourceVideo = try await AVURLAsset(url: source).loadTracks(withMediaType: .video)
+        let pictureSeconds = try await XCTUnwrap(sourceVideo.first).load(.timeRange).duration.seconds
+        let wholeFrames = DevelopedMovieFormat.frameCount(seconds: pictureSeconds, camera: .super8HomeMovie)
+        XCTAssertGreaterThan(wholeFrames, 18 * 3)
+        let frames = try await decodedFrames(developed)
+        XCTAssertEqual(frames.count, wholeFrames, "Every whole frame of the clip is developed")
+        let developedAudio = try await AVURLAsset(url: developed).loadTracks(withMediaType: .audio)
+        let developedRange = try await XCTUnwrap(developedAudio.first).load(.timeRange)
+        XCTAssertEqual(developedRange.duration.seconds, Double(wholeFrames) / 18, accuracy: 1.0 / 600,
+                       "The sound runs to the last whole frame's end")
+        let sourceSamples = try await decodedAudioSamples(source)
+        let developedSamples = try await decodedAudioSamples(developed)
+        XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),
+                       "Development keeps the original sound samples without treatment")
+    }
+
     func testBothMovieCamerasUsePortraitThreeByFourWithLetterboxedLandscape() async throws {
         try requireTetrahedralReader()
         let root = makeRoot()
@@ -297,24 +325,27 @@ final class NativeRenderTests: XCTestCase {
                                        magicCookie: nil, extensions: nil, formatDescriptionOut: &soundFormat)
         let frames = Int((seconds * 30).rounded())
         let samples = (frames + 1) * 1_600
+        var frame = 0
         var written = 0
-        func waitFor(_ input: AVAssetWriterInput) async throws {
-            while !input.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(1)) }
-        }
-        for frame in 0..<frames {
-            var buffer: CVPixelBuffer?
-            CVPixelBufferPoolCreatePixelBuffer(nil, try XCTUnwrap(adaptor.pixelBufferPool), &buffer)
-            let pixels = try XCTUnwrap(buffer)
-            CVPixelBufferLockBaseAddress(pixels, [])
-            let shade = Int32(40 + frame * 7 % 180)
-            memset(CVPixelBufferGetBaseAddress(pixels), shade, CVPixelBufferGetDataSize(pixels))
-            CVPixelBufferUnlockBaseAddress(pixels, [])
-            try await waitFor(video)
-            XCTAssertTrue(adaptor.append(pixels, withPresentationTime: CMTime(value: Int64(frame), timescale: 30)))
-            // The sound is written alongside the picture, so the writer can interleave them.
-            let soundUntil: Int = min(samples, (frame + 2) * 1_600)
-            while written < soundUntil {
-                let count = min(1_024, soundUntil - written)
+        // Each input takes the next picture frame or sound packet whenever it is ready, as a capture's are, so the
+        // writer interleaves them however far either runs ahead.
+        while frame < frames || written < samples {
+            var appended = false
+            if frame < frames, video.isReadyForMoreMediaData {
+                var buffer: CVPixelBuffer?
+                CVPixelBufferPoolCreatePixelBuffer(nil, try XCTUnwrap(adaptor.pixelBufferPool), &buffer)
+                let pixels = try XCTUnwrap(buffer)
+                CVPixelBufferLockBaseAddress(pixels, [])
+                let shade = Int32(40 + frame * 7 % 180)
+                memset(CVPixelBufferGetBaseAddress(pixels), shade, CVPixelBufferGetDataSize(pixels))
+                CVPixelBufferUnlockBaseAddress(pixels, [])
+                XCTAssertTrue(adaptor.append(pixels, withPresentationTime: CMTime(value: Int64(frame), timescale: 30)))
+                frame += 1
+                if frame == frames { video.markAsFinished() }
+                appended = true
+            }
+            if written < samples, audio.isReadyForMoreMediaData {
+                let count = min(1_024, samples - written)
                 var bytes = Data(count: count * 4)
                 bytes.withUnsafeMutableBytes { raw in
                     let values = raw.bindMemory(to: Int16.self)
@@ -337,13 +368,13 @@ final class NativeRenderTests: XCTestCase {
                     allocator: nil, dataBuffer: blockBuffer, formatDescription: try XCTUnwrap(soundFormat),
                     sampleCount: count, presentationTimeStamp: CMTime(value: Int64(written), timescale: 48_000),
                     packetDescriptions: nil, sampleBufferOut: &sample)
-                try await waitFor(audio)
                 XCTAssertTrue(audio.append(try XCTUnwrap(sample)))
                 written += count
+                if written == samples { audio.markAsFinished() }
+                appended = true
             }
+            if !appended { try await Task.sleep(for: .milliseconds(1)) }
         }
-        video.markAsFinished()
-        audio.markAsFinished()
         await writer.finishWriting()
         XCTAssertEqual(writer.status, .completed, "\(String(describing: writer.error))")
     }

@@ -110,12 +110,6 @@ public actor FilmProcessor {
         try await job.value
     }
 
-    /// Compatibility entry point: the earlier picker offered Silent or a Soundtrack.
-    public func selectSoundtrack(filmID: UUID, assetID: String?, catalog: BundleMediaCatalog) async throws {
-        try await selectMovieSound(filmID: filmID, choice: assetID == nil ? .silent : .soundtrack,
-                                   assetID: assetID, catalog: catalog)
-    }
-
     /// Photos permission is settled before the export starts, so its prompt never interrupts a write.
     public func export<Authorizer: PhotoLibraryAuthorizing, Writer: PhotoLibraryWriting>(
         filmID: UUID, sequences: [Int], originals: Bool,

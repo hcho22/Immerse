@@ -87,7 +87,8 @@ final class SoundtrackTests: XCTestCase {
         let clip = try repository.revealedAsset(filmID: filmID, sequenceNumber: 2, kind: .clip)
         let clipBytes = try Data(contentsOf: clip.url)
         let assignments = try repository.developmentRun(filmID: filmID)?.assignments
-        try await fixture.processor.selectSoundtrack(filmID: filmID, assetID: "tone", catalog: fixture.catalog())
+        try await fixture.processor.selectMovieSound(filmID: filmID, choice: .soundtrack, assetID: "tone",
+                                                     catalog: fixture.catalog())
         XCTAssertFalse(FileManager.default.fileExists(atPath: oldMovie.url.path))
         let movie = try repository.revealedAsset(filmID: filmID, sequenceNumber: 0, kind: .movie)
         let verified = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
@@ -127,13 +128,13 @@ final class SoundtrackTests: XCTestCase {
         defer { fixture.remove() }
         let repository = fixture.repository
         let id = fixture.film.id
-        try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: fixture.catalog())
+        try await fixture.processor.selectMovieSound(filmID: id, choice: .soundtrack, assetID: "tone", catalog: fixture.catalog())
         let old = try repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
         let oldData = try Data(contentsOf: old.url)
         let oldProof = try await VerifiedMedia.movie(at: old.url, allowsAudio: true)
         let revision = try XCTUnwrap(repository.movieAudioSelection(filmID: id)).revision
         let audio = try XCTUnwrap(repository.retainedSoundtrack(filmID: id))
-        try repository.selectMovieSoundtrack(filmID: id, asset: nil, verification: nil)
+        try repository.selectMovieSoundChoice(filmID: id, choice: .silent, asset: nil, verification: nil)
         XCTAssertFalse(FileManager.default.fileExists(atPath: old.url.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: audio.url.path))
         XCTAssertThrowsError(try repository.writeAssembledMovie(filmID: id, data: oldData,
@@ -164,14 +165,16 @@ final class SoundtrackTests: XCTestCase {
         let stages = StageLog()
         let later = try FilmProcessor(root: fixture.root, developmentObserver: { _, stage in await stages.record(stage) })
         var revisions: Set<UUID> = []
-        for (choice, tracks) in [("tone", 1), (nil, 0), ("tone", 1), ("tone", 1), (nil, 0)] as [(String?, Int)] {
-            try await later.selectSoundtrack(filmID: id, assetID: choice, catalog: fixture.catalog())
+        for (choice, assetID, tracks) in [(.soundtrack, "tone", 1), (.silent, nil, 0), (.soundtrack, "tone", 1),
+                                          (.soundtrack, "tone", 1), (.silent, nil, 0)] as [(MovieSoundChoice, String?, Int)] {
+            try await later.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: fixture.catalog())
             let selection = try XCTUnwrap(repository.movieAudioSelection(filmID: id))
-            XCTAssertEqual(selection.asset?.id, choice)
+            XCTAssertEqual(selection.choice, choice)
+            XCTAssertEqual(selection.asset?.id, assetID)
             revisions.insert(selection.revision)
             let movie = try repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie)
             let proof = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
-            XCTAssertEqual(proof.audioTrackCount, tracks, "\(choice ?? "silent")")
+            XCTAssertEqual(proof.audioTrackCount, tracks, "\(choice)")
             XCTAssertEqual(try XCTUnwrap(proof.durationSeconds), fixture.duration * 2, accuracy: 0.01)
             XCTAssertEqual(try [1, 2].map { try repository.revealedAsset(filmID: id, sequenceNumber: $0, kind: .clip).record }, clips.map(\.record))
             XCTAssertEqual(try clips.map { try Data(contentsOf: $0.url) }, clipBytes)
@@ -193,13 +196,14 @@ final class SoundtrackTests: XCTestCase {
         let corrupt = Data("not audio".utf8)
         try corrupt.write(to: fixture.bundle.appendingPathComponent("tone.wav"))
         do {
-            try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: fixture.catalog(audio: corrupt))
+            try await fixture.processor.selectMovieSound(filmID: id, choice: .soundtrack, assetID: "tone",
+                                                         catalog: fixture.catalog(audio: corrupt))
             XCTFail("Integrity checks cannot substitute for actual media decode")
         } catch { }
         XCTAssertNil(try fixture.repository.movieAudioSelection(filmID: id))
         XCTAssertEqual(try fixture.repository.revealedAsset(filmID: id, sequenceNumber: 0, kind: .movie).record, original.record)
         try fixture.audio.write(to: fixture.bundle.appendingPathComponent("tone.wav"))
-        try await fixture.processor.selectSoundtrack(filmID: id, assetID: "tone", catalog: fixture.catalog())
+        try await fixture.processor.selectMovieSound(filmID: id, choice: .soundtrack, assetID: "tone", catalog: fixture.catalog())
         let selection = try fixture.repository.movieAudioSelection(filmID: id)
         let retained = try XCTUnwrap(fixture.repository.retainedSoundtrack(filmID: id))
         try Data("damage after selection".utf8).write(to: retained.url)
