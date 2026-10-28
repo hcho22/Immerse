@@ -99,8 +99,8 @@ The earlier pins are history; do not test any of them as the candidate.
 Two earlier commits of `main` are still used, each only as the build installed before the candidate in one scenario: `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` in [L07](#l07---a-film-started-before-this-build-keeps-its-look) and `9d54ba166299eea3edfecc2c9fde29331a76dae4` in [I03](#i03---an-instant-pack-begun-before-the-update-keeps-its-contrast).
 Neither is a candidate.
 
-This is the execution companion to the [137-task evidence map](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md),
-[74 acceptance clauses and nine invariants](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md),
+This is the execution companion to the [154-task evidence map](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-evidence-map.md),
+[98 acceptance clauses and nine invariants](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md),
 and [QA-14 handoff](launch-readiness.md). It does not replace those IDs, change
 original ADRs, include deferred Groups/Accounts, or check any tracker box.
 The counts are the ones `Scripts/verify-requirement-map.sh` checks at this candidate (137 intake IDs since CAP-15, the warning below 2 GB free, was added on 2026-10-13); the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 the count before CAP-15.
