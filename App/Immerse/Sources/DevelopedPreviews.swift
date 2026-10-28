@@ -239,8 +239,8 @@ struct DevelopedPreviewCard: View {
     static let sidewaysLength: CGFloat = 300
     let preview: DevelopedPreviews.Preview?
     let pending: DevelopedPreviews.Pending?
-    /// Whether the picture opens full size: not while a clip records, since the full-size player would take the
-    /// iPhone's sound from the clip's microphone. The card then shows dimmed, and its close button still works.
+    /// Whether the picture opens full size: not while a clip starts, records or saves, since the full-size player would
+    /// take the iPhone's sound from the clip's microphone. The card then shows dimmed, and its close button still works.
     var opens = true
     let open: () -> Void
     let close: () -> Void
@@ -308,7 +308,7 @@ private struct PreviewCardContent: View {
         if let preview {
             let capture = name(preview.medium, preview.sequenceNumber)
             switch preview.state {
-            case .ready: lines.append("\(capture) developed. Tap to view.")
+            case .ready: lines.append("\(capture) developed. \(opens ? "Tap to view." : "Opens when the clip ends.")")
             case .failed: lines.append("\(capture) could not develop here. It is saved and develops with the roll.")
             }
         }

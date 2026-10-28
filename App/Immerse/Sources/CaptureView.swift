@@ -341,7 +341,8 @@ struct CaptureView: View {
                     #if DEBUG
                     if showsPreview {
                         DevelopedPreviewCard(preview: developedPreview, pending: pendingPreview,
-                                             opens: capture.phase != .recordingMovie,
+                                             opens: film.camera.medium == .photo
+                                                 || (!capture.busy && [.idle, .interrupted].contains(capture.phase)),
                                              open: { model.developedPreviews.inspected = developedPreview },
                                              close: { model.developedPreviews.dismiss() })
                     }
