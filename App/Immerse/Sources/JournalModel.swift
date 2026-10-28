@@ -217,6 +217,15 @@ final class JournalModel {
         }
     }
 
+    /// The prints the Instant's one question at the end of its pack covers (DEV-12): once every exposure is used and
+    /// every kept print is revealed, each revealed print whose original is still undecided. While a print is still
+    /// sealed there is none, so the question waits for that print's reveal and then covers it too.
+    func packEndOriginalQuestion(_ id: UUID) -> [Int] {
+        guard let film = film(id), film.camera.id == .instant1970s, film.remainingExposures == 0,
+              !film.captures.contains(where: { $0.revealState == .sealed }) else { return [] }
+        return printsAwaitingOriginalChoice(id, among: revealedInstantPrints(id))
+    }
+
     func selectMovieSound(_ id: UUID, choice: MovieSoundChoice, assetID: String?) async throws {
         guard (choice == .soundtrack) == (assetID != nil), !busyFilms.contains(id), !hiddenFilms.contains(id) else {
             throw JournalError.operationInProgress

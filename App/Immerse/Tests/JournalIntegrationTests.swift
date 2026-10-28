@@ -464,6 +464,57 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(model.revealedInstantPrints(roll.id), [])
     }
 
+    /// DEV-12: the Instant's one question at the end of its pack waits while a kept print of the full pack is still
+    /// sealed, as one left by Development stopped in the background, so it never opens without that print; once the
+    /// print is revealed it covers every revealed print still undecided.
+    func testThePackEndQuestionWaitsForEveryPrintOfTheFullPack() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalIntegration-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic pack", access: .subscription)
+        let source = try syntheticPhoto()
+        for _ in 0..<9 { try model.repository.savePhotoCapture(filmID: film.id, sourceData: source) }
+        model.refresh()
+        try await model.develop(film.id)
+        XCTAssertEqual(model.packEndOriginalQuestion(film.id), [], "The pack still has an exposure")
+
+        try model.repository.savePhotoCapture(filmID: film.id, sourceData: source)
+        model.refresh()
+        XCTAssertEqual(model.film(film.id)?.remainingExposures, 0)
+        XCTAssertEqual(model.film(film.id)?.captures.last?.revealState, .sealed)
+        XCTAssertEqual(model.packEndOriginalQuestion(film.id), [], "Not while the pack's last print is sealed")
+
+        try model.chooseOriginals(film.id, sequences: [4], export: false)
+        try await model.develop(film.id)
+        XCTAssertEqual(model.packEndOriginalQuestion(film.id), [1, 2, 3, 5, 6, 7, 8, 9, 10],
+                       "Every revealed print still undecided, the last one with them")
+    }
+
+    /// D1: while the Straighten slider moves, the Darkroom turns the print made without straightening only for the edits
+    /// as they are. Its own angle changes nothing; after a quarter turn, a crop, Reset or another edit, the earlier print
+    /// is never turned.
+    func testTheStraighteningPreviewTurnsOnlyThePrintMadeForTheEditsAsTheyAre() {
+        var recipe = DarkroomRecipe(printExposureStops: 0.5, straighteningDegrees: 2.5)
+        let image = UIImage()
+        let made = UnstraightenedPrint(recipe: UnstraightenedPrint.recipe(for: recipe), image: image)
+        XCTAssertTrue(made.image(for: recipe) === image)
+        recipe.straighteningDegrees = -7.1
+        XCTAssertTrue(made.image(for: recipe) === image, "The slider's own angle turns the same print")
+        var turned = recipe
+        turned.rotateLeft()
+        XCTAssertNil(made.image(for: turned), "A quarter turn needs its own print")
+        var cropped = recipe
+        cropped.crop = Crop(x: 0, y: 0, width: 0.5, height: 0.5)
+        XCTAssertNil(made.image(for: cropped), "A crop needs its own print")
+        var reset = recipe
+        reset.resetToOriginal()
+        XCTAssertNil(made.image(for: reset), "Reset needs its own print")
+        var brighter = recipe
+        brighter.printExposureStops = 1
+        XCTAssertNil(made.image(for: brighter), "Another edit needs its own print")
+    }
+
     /// Stops as the Darkroom shows and speaks them (DEC-11): in tenths, never "-0.0", and inside the limits.
     func testStopsTextShowsSpeaksAndKeepsTenthsInsideTheLimits() {
         XCTAssertEqual(StopsText.shown(0), "0.0 stops")

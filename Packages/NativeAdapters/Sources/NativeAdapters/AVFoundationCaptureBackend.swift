@@ -236,9 +236,7 @@ public actor AVFoundationCaptureBackend {
             ),
             capabilities: AVFoundationCaptureDeviceDiscoverer().capabilities()
         )
-        // The capabilities were read with the session running, so the rear lenses are current, and the rear wide lens is
-        // the only camera a switch returns to.
-        zoomStep = self.plan?.restingZoomStep
+        refreshRearLenses()
         restartMeter()
     }
 

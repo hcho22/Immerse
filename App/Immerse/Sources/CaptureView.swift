@@ -488,10 +488,8 @@ struct CaptureView: View {
         revealedPrints = Array(revealedPrints.dropFirst())
         instantPrint = revealedPrints.first
         guard revealedPrints.isEmpty, let film = model.film(filmID) else { return }
-        if film.camera.id == .instant1970s, film.remainingExposures == 0 {
-            let prints = model.printsAwaitingOriginalChoice(filmID, among: model.revealedInstantPrints(filmID))
-            if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints); return }
-        }
+        let prints = model.packEndOriginalQuestion(filmID)
+        if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints); return }
         // The camera starts again only after its print views close, while the pack is still open and no save needs retry.
         if model.capture.printsClosed(allowingRestart: film.completionState == .open && error == nil && !model.hasPendingSave(filmID)) {
             open(film)

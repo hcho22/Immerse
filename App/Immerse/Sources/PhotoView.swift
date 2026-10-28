@@ -306,6 +306,25 @@ struct PhotoNavigation: Equatable {
     }
 }
 
+/// The print without straightening that the Darkroom turns under the Straighten slider while it moves (D1).
+struct UnstraightenedPrint {
+    let recipe: DarkroomRecipe
+    let image: UIImage
+
+    /// The recipe such a print is made for: `recipe` without its straightening.
+    static func recipe(for recipe: DarkroomRecipe) -> DarkroomRecipe {
+        var flat = recipe
+        flat.straighteningDegrees = nil
+        return flat
+    }
+
+    /// The print, only while it was made for `recipe`'s other edits: after a turn, a crop, Reset or any other edit it is
+    /// an earlier print, and the slider waits for the one made for the edits as they are.
+    func image(for recipe: DarkroomRecipe) -> UIImage? {
+        self.recipe == Self.recipe(for: recipe) ? image : nil
+    }
+}
+
 struct DarkroomView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -322,7 +341,7 @@ struct DarkroomView: View {
     /// The straightening angle while its slider moves, and the print without straightening that turns under it, so the
     /// crop-in shows as the slider moves (FR-31 item 3); the print itself is made when the slider is let go.
     @State private var straighteningDrag: Double?
-    @State private var unstraightened: (recipe: DarkroomRecipe, image: UIImage)?
+    @State private var unstraightened: UnstraightenedPrint?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
 
@@ -393,7 +412,7 @@ struct DarkroomView: View {
 
     /// The print scaled to fit its region, with an Instant card's margin and shadow inside it.
     @ViewBuilder private var printPreview: some View {
-        if let angle = straighteningDrag, let base = unstraightened?.image, !model.hiddenFilms.contains(filmID) {
+        if let angle = straighteningDrag, let base = unstraightened?.image(for: recipe), !model.hiddenFilms.contains(filmID) {
             // The print turned by the angle and enlarged to the largest rectangle of its shape inside it, clipped to that
             // rectangle, as `StraighteningGeometry` cuts the print.
             let kept = StraighteningGeometry.keptFraction(width: base.size.width, height: base.size.height, degrees: angle)
@@ -572,7 +591,7 @@ struct DarkroomView: View {
     private func cropPosition(_ name: String, x: Bool) -> some View {
         captioned(Text(name).font(.caption), Slider(value: Binding(get: { x ? recipe.crop!.x : recipe.crop!.y }, set: {
             if x { recipe.crop?.x = $0 } else { recipe.crop?.y = $0 }
-        }), in: 0...max(0.001, 1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
+        }), in: 0...(1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
             .accessibilityLabel("Crop \(name)"))
     }
 
@@ -580,13 +599,12 @@ struct DarkroomView: View {
     /// other edits, turns under the slider.
     private func beginStraightening() {
         straighteningDrag = recipe.straighteningDegrees ?? 0
-        var flat = recipe
-        flat.straighteningDegrees = nil
-        guard unstraightened?.recipe != flat else { return }
+        guard unstraightened?.image(for: recipe) == nil else { return }
+        let flat = UnstraightenedPrint.recipe(for: recipe)
         Task {
             guard let data = try? await model.processor.photo(filmID: filmID, sequence: sequence, recipe: flat),
                   let decoded = DisplayPhoto.image(data) else { return }
-            unstraightened = (flat, decoded)
+            unstraightened = UnstraightenedPrint(recipe: flat, image: decoded)
         }
     }
 

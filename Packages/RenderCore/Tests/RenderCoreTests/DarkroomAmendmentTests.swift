@@ -253,6 +253,42 @@ final class DarkroomAmendmentTests: XCTestCase {
         XCTAssertLessThan(movedRight, atLeft - 0.3, "A larger Horizontal moves the crop right on the turned print")
     }
 
+    /// A crop of any size the Size slider gives, at either end of the position sliders, stays inside the print exactly
+    /// after every quarter turn either way, so the turned recipe is valid and prints; from the top-left crop the
+    /// Darkroom starts with, four turns give the crop back.
+    func testEveryTurnedCropStaysInsideThePrint() throws {
+        let camera = CameraCatalog.disposable1990s
+        let master = try solidJPEG(width: 60, height: 40, color: (120, 120, 120))
+        let printed: [Double] = [1.0 / 3, 0.6123456789012345]
+        let sizes = printed + (0...800).map { 0.2 + Double($0) * 0.001 }
+            + (1...2000).map { 0.2 + (Double($0) * 0.6180339887498949).truncatingRemainder(dividingBy: 0.8) }
+        for size in sizes {
+            for (x, y) in [(0, 0), (1 - size, 1 - size), (0, 1 - size), (1 - size, 0)] {
+                let start = DarkroomRecipe(crop: Crop(x: x, y: y, width: size, height: size))
+                try NativePhotoRenderer.validate(start, camera: camera)
+                var left = start, right = start
+                for _ in 0..<4 {
+                    left.rotateLeft()
+                    right.rotateRight()
+                    for turned in [left, right] {
+                        let crop = try XCTUnwrap(turned.crop)
+                        guard crop.x + crop.width <= 1, crop.y + crop.height <= 1, crop.x >= 0, crop.y >= 0 else {
+                            return XCTFail("A turned crop of \(size) at (\(x), \(y)) left the print: \(crop)")
+                        }
+                        XCTAssertNoThrow(try NativePhotoRenderer.validate(turned, camera: camera), "\(size)")
+                        if printed.contains(size) {
+                            XCTAssertNoThrow(try NativePhotoRenderer.print(master: master, recipe: turned, camera: camera))
+                        }
+                    }
+                }
+                if x == 0, y == 0 {
+                    XCTAssertEqual(left, start, "Four turns left give back the crop of \(size)")
+                    XCTAssertEqual(right, start, "Four turns right give back the crop of \(size)")
+                }
+            }
+        }
+    }
+
     private func instantCardWithItsDeepBorderAtTheBottom() throws -> Data {
         let width = InstantPrintCard.width, height = InstantPrintCard.height
         let side = (width - InstantPrintCard.pictureSide) / 2

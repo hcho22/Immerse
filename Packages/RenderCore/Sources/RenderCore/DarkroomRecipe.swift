@@ -48,7 +48,7 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
     public mutating func rotateLeft() {
         let turns = ((rotationQuarterTurns ?? 0) + 1) % DarkroomLimits.rotationQuarterTurnCount
         rotationQuarterTurns = turns == 0 ? nil : turns
-        crop = crop.map { Crop(x: $0.y, y: Self.turned(1 - $0.x - $0.width), width: $0.height, height: $0.width) }
+        crop = crop.map { Crop(x: $0.y, y: Self.turned($0.x, extent: $0.width), width: $0.height, height: $0.width) }
     }
 
     /// Turns the print a quarter turn clockwise, its crop with it: the crop's top edge becomes its right edge.
@@ -56,12 +56,14 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
         let turns = ((rotationQuarterTurns ?? 0) + DarkroomLimits.rotationQuarterTurnCount - 1)
             % DarkroomLimits.rotationQuarterTurnCount
         rotationQuarterTurns = turns == 0 ? nil : turns
-        crop = crop.map { Crop(x: Self.turned(1 - $0.y - $0.height), y: $0.x, width: $0.height, height: $0.width) }
+        crop = crop.map { Crop(x: Self.turned($0.y, extent: $0.height), y: $0.x, width: $0.height, height: $0.width) }
     }
 
-    /// A crop edge after a turn, rid of the floating-point remainder of `1 - x - width`, so four turns give back the
-    /// recipe they began with.
-    private static func turned(_ value: Double) -> Double { (value * 1e12).rounded() / 1e12 }
+    /// A crop edge after a turn, `1 - edge - extent` rid of its floating-point remainder, so four turns give back the
+    /// recipe they began with, and never past `1 - extent`, so the turned crop stays inside the print.
+    private static func turned(_ edge: Double, extent: Double) -> Double {
+        min(((1 - edge - extent) * 1e12).rounded() / 1e12, 1 - extent)
+    }
 }
 
 /// The print a straightening leaves (FR-31 item 3): the largest rectangle of the print's own shape, centered, whose

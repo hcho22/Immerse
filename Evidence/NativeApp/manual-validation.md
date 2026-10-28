@@ -2259,9 +2259,9 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Prepare.** Use a test Super 8 Film, a test 16mm Film, and a 6×6 Film on a phone with multiple rear lenses. Record the step labels the iPhone Camera app exposes and the same Film's 6×6 steps.
 
-**Steps.** Compare the Super 8 and 16mm steps with the 6×6. Select each step only between short Recorded Clips; attempt no step change while a clip is recording. Play each resulting Developed Clip.
+**Steps.** Compare the Super 8 and 16mm steps with the 6×6. Select each step only between short Recorded Clips; attempt no step change while a clip is recording. On the Super 8 and 16mm, tap Switch Camera twice, to the front camera and back, and compare the steps again, then select each one. Play each resulting Developed Clip.
 
-**Expect.** Super 8 and 16mm offer the iPhone's reported Zoom Steps, subject to supported 4:3 movie formats, without added steps. A change during recording is unavailable. Clips from each offered step keep the same 4:3 output shape, frame rate and Developed Treatment as that Camera's 1× clip.
+**Expect.** Super 8 and 16mm offer the iPhone's reported Zoom Steps, subject to supported 4:3 movie formats, without added steps. After the switch to the front camera and back they offer the same steps, and each one changes the lens. A change during recording is unavailable. Clips from each offered step keep the same 4:3 output shape, frame rate and Developed Treatment as that Camera's 1× clip.
 
 **Write down.** Reported lenses and steps, any 4:3 format exclusion, clip metadata and playback result. Save short test clips only.
 
