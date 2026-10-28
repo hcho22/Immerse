@@ -133,7 +133,7 @@ final class CaptureSidewaysTests: XCTestCase {
     /// never moves when a lens cannot do the control or the camera starts or stops.
     func testARowIsAsTallWithTheLensNoteAsWithItsSliderAndWithNoLens() {
         func row(slider: Bool, live: Bool = true) -> CaptionedSlider<Slider<EmptyView, EmptyView>> {
-            CaptionedSlider(captionLength: 64, caption: Text("Focus").font(.caption),
+            CaptionedSlider(caption: Text("Focus").font(.caption),
                             unavailable: "Manual focus unavailable on this lens", lensIsLive: live,
                             slider: slider ? Slider(value: .constant(0.5)) : nil)
         }
@@ -143,6 +143,20 @@ final class CaptureSidewaysTests: XCTestCase {
             XCTAssertEqual(size(row(slider: false, live: false), turn: turn).height, upright.height, "No lens, \(turn)")
             XCTAssertEqual(size(row(slider: true), turn: turn).height, upright.height, "\(turn)")
         }
+    }
+
+    /// A notice's words stay whole: offered lines shorter than its longest word, its text asks for that word's length, so
+    /// the notices read at a smaller text size rather than hyphenate it. Where every word fits it is the text as it was.
+    func testANoticeTextAsksForItsLongestWordRatherThanBreakingIt() {
+        let font = Font.system(size: 51)
+        let longestWord = size(Text("unavailable.").font(font).fixedSize(), turn: .upright).width
+        XCTAssertLessThan(size(Text("Camera unavailable.").font(font), turn: .upright, width: 150).width, longestWord,
+                          "A plain text breaks a word longer than its lines")
+        XCTAssertGreaterThanOrEqual(size(WholeWords("Camera unavailable.").font(font), turn: .upright, width: 150).width,
+                                    longestWord, "The notice's text asks for its longest word's length")
+        XCTAssertEqual(size(WholeWords("Camera unavailable.").font(font), turn: .upright, width: 358),
+                       size(Text("Camera unavailable.").font(font), turn: .upright, width: 358),
+                       "Where every word fits, the notice's text is the text as it was")
     }
 
     /// The slider is the same view as the iPhone turns, so a drag in progress is not cut off and its end still reaches
@@ -530,7 +544,7 @@ private struct ScrollProbeView: View {
 private struct SliderProbeView: View {
     let probe: SliderProbe
     var body: some View {
-        CaptionedSlider(captionLength: 64, caption: Text("Focus").font(.caption), unavailable: "Manual focus unavailable",
+        CaptionedSlider(caption: Text("Focus").font(.caption), unavailable: "Manual focus unavailable",
                         lensIsLive: true, slider: Color.gray.frame(height: 30).onAppear { probe.appearances += 1 })
             .environment(\.heldTurn, probe.turn)
             .padding()

@@ -18,8 +18,8 @@ struct CaptureView: View {
     private let headerLineLength: CGFloat = 300
     /// How long the notices over the viewfinder read when the iPhone is on its side, at most.
     @ScaledMetric(relativeTo: .callout) private var noticeLength: CGFloat = 220
-    /// How long a slider's caption reads when the iPhone is on its side, which is as tall as the row it sits in.
-    @ScaledMetric(relativeTo: .caption) private var captionLength: CGFloat = 64
+    /// The person's text size, from which the notices step down only where they do not fit their room (`notices`).
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let filmID: UUID
     @State private var error: String?
     @State private var cameraDenied = false
@@ -213,27 +213,35 @@ struct CaptureView: View {
     @ViewBuilder private func statusLines(_ film: Film, controller capture: CaptureController, onDark: Bool) -> some View {
         let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
         let secondary: Color = onDark ? .white.opacity(0.85) : .secondary
-        if let error { Text(error).foregroundStyle(.red).font(.callout).multilineTextAlignment(.center) }
+        if let error { WholeWords(error).foregroundStyle(.red).font(.callout).multilineTextAlignment(.center) }
         if let message = capture.message, message != "Saved" || savedShowing {
-            Text(message).font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
+            WholeWords(message).font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
         }
         if capture.microphoneUnavailable {
-            Text("Microphone access is off. Movie clips will be silent.")
+            WholeWords("Microphone access is off. Movie clips will be silent.")
                 .font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
                 .accessibilityIdentifier("microphone-permission-note")
         }
         if cameraDenied {
-            Button("Open iPhone Settings", systemImage: "gearshape") {
+            Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
-            }.noticeButtonStyle(onDark: onDark)
+            } label: {
+                Label { WholeWords("Open iPhone Settings") } icon: { Image(systemName: "gearshape") }
+            }
+            .accessibilityLabel("Open iPhone Settings")
+            .noticeButtonStyle(onDark: onDark)
         }
         if capture.offersResume(for: film, showingError: error != nil) {
-            Button("Resume Camera", systemImage: "arrow.clockwise") { open(film) }.disabled(capture.busy)
-                .noticeButtonStyle(onDark: onDark)
+            Button { open(film) } label: {
+                Label { WholeWords("Resume Camera") } icon: { Image(systemName: "arrow.clockwise") }
+            }
+            .accessibilityLabel("Resume Camera")
+            .disabled(capture.busy)
+            .noticeButtonStyle(onDark: onDark)
         }
         if film.completionState == .open {
             ForEach(lensNotes(behavior: behavior, controller: capture), id: \.self) {
-                Text($0).font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
+                WholeWords($0).font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
             }
         }
     }
@@ -358,11 +366,16 @@ struct CaptureView: View {
                 }
             }
             .padding(8)
-            // A block taller than the room it is given, as the 6×6's upright at the largest text sizes, scrolls in that
-            // room rather than running over the controls below it. It holds no state a swap of identity could lose.
-            ViewThatFits(in: .vertical) {
+            // The block reads at the person's text size where it fits the room above the controls whole. Where it does
+            // not, as over the 6×6's rows or with the microphone note at the largest sizes, it reads at the largest
+            // smaller size, no smaller than the default, at which it fits with every word on one line (`WholeWords`):
+            // turned, that is along its lines and across them. Only a block too long even then scrolls in its room
+            // rather than running over the controls. It holds no state a swap of identity could lose.
+            let smaller = DynamicTypeSize.allCases.filter { $0 >= .large && $0 < dynamicTypeSize }.reversed()
+            ViewThatFits(in: HeldTurn(capture.held).isSideways ? [.horizontal, .vertical] : .vertical) {
                 block
-                ScrollView(.vertical, showsIndicators: false) { block }
+                ForEach(smaller, id: \.self) { block.dynamicTypeSize($0) }
+                ScrollView(.vertical, showsIndicators: false) { block.dynamicTypeSize(min(dynamicTypeSize, .large)) }
             }
         }
     }
@@ -400,7 +413,9 @@ struct CaptureView: View {
 
     /// Focus and exposure, in rows the Camera always has (`CaptureBehavior`), whatever the active lens reports, so the
     /// viewfinder never moves when the camera opens, switches or takes a zoom step: where the lens cannot do one, its row
-    /// says so in the slider's place. A caption turns beside its slider, which stays across the screen.
+    /// says so in the slider's place. A caption turns beside its slider, which stays across the screen. Like the focus
+    /// switch and the zoom steps, the rows grow with the text size no further than the first accessibility size, so at the
+    /// largest sizes the 6×6's switch and both its rows stay inside the Viewfinder area and leave the notices room above.
     private func controls(film: Film, behavior: CaptureBehavior, controller: CaptureController) -> some View {
         @Bindable var capture = controller
         let bias: ClosedRange<Double>? = {
@@ -421,7 +436,7 @@ struct CaptureView: View {
             }
             if behavior.offersManualFocus {
                 CaptionedSlider(
-                    captionLength: captionLength, caption: Text("Focus").font(.caption),
+                    caption: Text("Focus").font(.caption),
                     unavailable: "Manual focus unavailable on this lens", lensIsLive: capture.lensIsLive,
                     slider: capture.controls.manualFocus
                         ? Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
@@ -432,7 +447,6 @@ struct CaptureView: View {
             }
             if behavior.offersExposureBias {
                 CaptionedSlider(
-                    captionLength: captionLength,
                     caption: (bias == nil ? Text("Exposure") : Text("Exposure \(capture.exposure, specifier: "%.1f") EV"))
                         .font(.caption.monospaced()),
                     unavailable: "Exposure unavailable on this lens", lensIsLive: capture.lensIsLive,
@@ -444,6 +458,7 @@ struct CaptureView: View {
                 )
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 
     /// What the running lens cannot do that this Camera asks of it, apart from the controls whose rows say so. Nothing is
@@ -684,7 +699,8 @@ private struct LowLightCueView: View {
 /// no lens is running the row is kept, empty.
 struct CaptionedSlider<Control: View>: View {
     @Environment(\.heldTurn) private var turn
-    let captionLength: CGFloat
+    /// How long the caption reads when the iPhone is on its side, which is as tall as the row.
+    @ScaledMetric(relativeTo: .caption) private var captionLength: CGFloat = 64
     let caption: Text
     let unavailable: String
     let lensIsLive: Bool
@@ -814,6 +830,38 @@ final class FocusMark: UIView {
                 self.alpha = 0
             }
         }
+    }
+}
+
+/// A notice's text, which never breaks inside a word: offered lines shorter than its longest word, it asks for that
+/// word's length instead, so the notices read at a smaller text size rather than hyphenate the word. Where every word
+/// fits it is the text as it was.
+struct WholeWords: View {
+    let text: String
+    init(_ text: String) { self.text = text }
+
+    var body: some View {
+        WholeWordsLayout {
+            Text(text)
+            // Each word on a line of its own, in the text's own font, is as wide as the longest word.
+            Text(text.split(whereSeparator: \.isWhitespace).joined(separator: "\n")).fixedSize().hidden()
+        }
+        // One element, the text as it shows, for VoiceOver and for anything the notice adds to it.
+        .accessibilityRepresentation { Text(text) }
+    }
+}
+
+private struct WholeWordsLayout: Layout {
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let longestWord = subviews[1].sizeThatFits(.unspecified).width
+        return subviews[0].sizeThatFits(ProposedViewSize(width: proposal.width.map { max($0, longestWord) },
+                                                         height: proposal.height))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        // Offered no height, so the text takes the height it measured (as `TurnedLayout` does).
+        subviews[0].place(at: bounds.origin, anchor: .topLeading, proposal: ProposedViewSize(width: bounds.width, height: nil))
+        subviews[1].place(at: bounds.origin, anchor: .topLeading, proposal: .zero)
     }
 }
 

@@ -8,7 +8,8 @@ import XCTest
 /// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock; opening
 /// the shooting screen answers fresh Camera and microphone requests, and each test starts on an empty Journal and deletes
 /// the Film it loaded. Each Camera is checked at the default text size, and again at the largest size for the approval
-/// screenshots; the Disposable also runs with Develop at once off and the Super 8 with microphone access denied.
+/// screenshots; the Disposable also runs with Develop at once off, the Super 8 with microphone access denied and the 6×6
+/// in Manual.
 @MainActor
 final class CaptureSidewaysUITests: ScreenTestCase {
     private var microphonePromptWasDeclined = false
@@ -82,7 +83,23 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let note = app.descendants(matching: .any)["microphone-permission-note"]
         XCTAssertTrue(note.exists(within: 10), "The microphone denial is a notice over the fixed Viewfinder area")
         XCTAssertTrue(app.windows.firstMatch.frame.contains(note.frame), "The silent-recording notice fits at the largest text size")
-        retainScreenshot(name: "Super8-microphone-declined")
+        try checkNoticeShowsWholeInEveryHold(app, name: "Super8-microphone-declined")
+    }
+
+    /// In Manual the 6×6 adds its Focus row under the switch. At the largest text size the switch and both rows stay
+    /// inside the Viewfinder area, and the camera's notice still shows whole above them in every hold.
+    func testSixBySixInManualShowsTheWholeNoticeAtTheLargestTextSize() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let title = try openShootingScreen(app, id: "mediumFormat6x6")
+        defer { deleteFilm(titled: title, app) }
+        let focusMode = app.descendants(matching: .any)["capture-focus-mode"]
+        XCTAssertTrue(focusMode.exists(within: 10), "The 6×6 offers its focus switch")
+        focusMode.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.5)).tap()
+        let manual = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "Manual"), object: focusMode)
+        XCTAssertEqual(XCTWaiter().wait(for: [manual], timeout: 5), .completed, "The Film is in Manual")
+        try checkNoticeShowsWholeInEveryHold(app, name: "6×6-Manual-largest")
     }
 
     /// What the screen shows, measured in the window's own portrait frame.
@@ -115,7 +132,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
         XCTAssertTrue(upright.window.contains(upright.remaining), "The Camera name and count are on screen upright")
         checkNotice(upright, shows: true, "upright at the largest text size")
-        checkNoticesShowAboveTheControls(upright, app, "upright at the largest text size")
+        checkNoticeShowsWhole(upright, app, "upright at the largest text size")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
         // Each side twice, so the header turns straight from one side to the other both ways.
@@ -143,6 +160,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             let header = [turned.remaining, turned.notice].compactMap { $0 }.reduce(turned.done) { $0.union($1) }
             XCTAssertFalse(focusSwitch.intersects(header),
                            "The focus switch is clear of the turned header held on its \(side): \(focusSwitch) and \(header)")
+            checkNoticeShowsWhole(turned, app, "held on its \(side) at the largest text size")
         }
         XCUIDevice.shared.orientation = .portrait
         let upAgain = try wait(app) { $0.done.width > $0.done.height }
@@ -305,6 +323,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         try checkFits(upright, app, "upright")
         checkNotice(upright, shows: showsNotice, "upright")
         checkFocusSwitch(upright, app, "upright")
+        checkNoticeShowsWhole(upright, app, "upright")
         // Held upright, Done, the Camera name and its count share one line below the status bar.
         XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
         XCTAssertLessThanOrEqual(upright.done.maxY, upright.viewfinder.minY + 0.5, "Done stays in the top bar, above the area")
@@ -348,6 +367,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                 }
             }
             checkFocusSwitch(turned, app, "held on its \(side)")
+            checkNoticeShowsWhole(turned, app, "held on its \(side)")
         }
 
         // The hold ends with the screen: Film's screen turns with the iPhone again. XCTest taps in the device's own frame, so
@@ -417,22 +437,55 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
     }
 
-    /// The notices over the area (the camera's error, Resume Camera) show only in the room above the controls at its
-    /// bottom: a block too tall for that room, as the 6×6's at the largest text size, scrolls inside it, so no part of it
-    /// shows under the focus switch. A notice scrolled past its room keeps its whole frame, so only the part inside its
-    /// scroll view is what shows.
-    private func checkNoticesShowAboveTheControls(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
-        guard let focusSwitch = layout.focusSwitch else { return XCTFail("The focus switch shows, \(hold)") }
+    /// The camera's notice over the area (its error, the microphone note and the whole Resume Camera button) shows whole
+    /// without scrolling: each part lies inside the Viewfinder area and inside any scroll view it is in, so none of it is
+    /// cut at that view's edge or out of view, and clear of the focus switch and the header. A part scrolled past its room
+    /// keeps its whole frame, so a cut part lies outside its scroll view's frame.
+    private func checkNoticeShowsWhole(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
         let viewfinder = app.otherElements["viewfinder"]
-        let notices = (viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex)
-            .filter { $0.label == "Resume Camera" || $0.label.hasPrefix("Camera unavailable") }
-        XCTAssertFalse(notices.isEmpty, "The camera's error and Resume Camera show over the area, \(hold)")
-        for notice in notices {
-            let room = viewfinder.scrollViews.containing(NSPredicate(format: "label == %@", notice.label)).firstMatch
-            let shown = notice.frame.intersection(room.exists ? room.frame : layout.viewfinder)
-            XCTAssertFalse(shown.intersects(focusSwitch),
-                           "\(notice.label) shows clear of the focus switch, \(hold): \(shown) and \(focusSwitch)")
+        let resume = viewfinder.buttons["Resume Camera"]
+        XCTAssertTrue(resume.exists, "Resume Camera shows over the area, \(hold)")
+        let parts = [resume] + viewfinder.staticTexts.allElementsBoundByIndex.filter {
+            $0.label.hasPrefix("Camera unavailable") || $0.identifier == "microphone-permission-note"
         }
+        let header = [layout.done, layout.remaining] + [layout.notice].compactMap { $0 }
+        for part in parts where part.exists {
+            let frame = part.frame
+            XCTAssertTrue(layout.viewfinder.insetBy(dx: -1, dy: -1).contains(frame),
+                          "\(part.label) is whole inside the Viewfinder area, \(hold): \(frame) in \(layout.viewfinder)")
+            for room in viewfinder.scrollViews.containing(NSPredicate(format: "label == %@", part.label)).allElementsBoundByIndex {
+                XCTAssertTrue(room.frame.insetBy(dx: -1, dy: -1).contains(frame),
+                              "\(part.label) shows whole without scrolling, \(hold): \(frame) in \(room.frame)")
+            }
+            if let focusSwitch = layout.focusSwitch {
+                XCTAssertFalse(frame.intersects(focusSwitch),
+                               "\(part.label) is clear of the focus switch, \(hold): \(frame) and \(focusSwitch)")
+            }
+            for other in header {
+                XCTAssertFalse(frame.intersects(other), "\(part.label) is clear of the header, \(hold): \(frame) and \(other)")
+            }
+        }
+    }
+
+    /// The camera's notice shows whole upright and held on each side, with the focus switch inside the Viewfinder area,
+    /// which keeps its place; each hold's screenshot is kept under `name`.
+    private func checkNoticeShowsWholeInEveryHold(_ app: XCUIApplication, name: String) throws {
+        let upright = try wait(app)
+        for (orientation, side) in [(UIDeviceOrientation.portrait, "portrait"), (.landscapeLeft, "left"), (.landscapeRight, "right")] {
+            XCUIDevice.shared.orientation = orientation
+            let layout = try wait(app) {
+                orientation == .portrait ? $0.remaining.width > $0.remaining.height : $0.remaining.height > $0.remaining.width
+            }
+            retainScreenshot(name: "\(name)-capture-\(side)")
+            XCTAssertEqual(layout.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place, \(side)")
+            if let focusSwitch = layout.focusSwitch {
+                XCTAssertTrue(layout.viewfinder.contains(focusSwitch),
+                              "The focus switch is inside the Viewfinder area, \(side): \(focusSwitch) in \(layout.viewfinder)")
+            }
+            checkNoticeShowsWhole(layout, app, side)
+        }
+        XCUIDevice.shared.orientation = .portrait
+        _ = try wait(app) { $0.remaining.width > $0.remaining.height }
     }
 
     /// Develop at once's notice stays beside Done in the one-line header, clear of the shutter bar's buttons and the
