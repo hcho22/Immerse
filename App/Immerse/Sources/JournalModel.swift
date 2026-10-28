@@ -126,6 +126,13 @@ final class JournalModel {
 
     func film(_ id: UUID) -> Film? { films.first { $0.id == id } }
 
+    func setFocusSetting(_ setting: FilmFocusSetting, filmID: UUID) throws -> Film {
+        guard !busyFilms.contains(filmID), !hiddenFilms.contains(filmID), film(filmID) != nil else {
+            throw JournalError.operationInProgress
+        }
+        return try repository.setFocusSetting(filmID: filmID, to: setting)
+    }
+
     func report(_ error: Error) {
         guard let message = FailureCopy.message(for: error) else { return }
         alert = .failure(message)
@@ -210,14 +217,27 @@ final class JournalModel {
         }
     }
 
-    func selectSoundtrack(_ id: UUID, assetID: String?) async throws {
-        guard let mediaCatalog, !busyFilms.contains(id), !hiddenFilms.contains(id) else {
+    /// The prints the Instant's one question at the end of its pack covers (DEV-12), which the shooting screen asks as
+    /// its last print closes: once every exposure is used and every kept print is revealed, each revealed print whose
+    /// original is still undecided. While a print is still sealed there is none. A print revealed at the camera closes
+    /// there and the question follows it; a last print whose Development the app stopped in the background is revealed
+    /// elsewhere, so its question is missed and does not come back by itself (the captain's "C"), and the Film screen's
+    /// Originals button remains.
+    func packEndOriginalQuestion(_ id: UUID) -> [Int] {
+        guard let film = film(id), film.camera.id == .instant1970s, film.remainingExposures == 0,
+              !film.captures.contains(where: { $0.revealState == .sealed }) else { return [] }
+        return printsAwaitingOriginalChoice(id, among: revealedInstantPrints(id))
+    }
+
+    func selectMovieSound(_ id: UUID, choice: MovieSoundChoice, assetID: String?) async throws {
+        guard (choice == .soundtrack) == (assetID != nil), !busyFilms.contains(id), !hiddenFilms.contains(id) else {
             throw JournalError.operationInProgress
         }
+        guard assetID == nil || mediaCatalog != nil else { throw PersistenceError.invalidMedia }
         busyFilms.insert(id)
         mediaRevision = UUID()
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
-        try await processor.selectSoundtrack(filmID: id, assetID: assetID, catalog: mediaCatalog)
+        try await processor.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: mediaCatalog)
     }
 
     func remove(_ id: UUID, sequence: Int? = nil) async throws {

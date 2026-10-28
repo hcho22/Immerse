@@ -19,6 +19,8 @@ final class CaptureController {
     private(set) var controls = NativeCameraControls()
     /// The scene is dim enough that the Disposable's fixed exposure would develop dark (`LowLightCue`).
     private(set) var isLowLight = false
+    /// A permission note independent of transient camera errors, so an unavailable or interrupted camera cannot hide it.
+    private(set) var microphoneUnavailable = false
     private var lowLightCue = LowLightCue()
     private var lightTask: Task<Void, Never>?
     /// Whether scene light reaches the cue: the viewfinder is live for a Camera that shows one.
@@ -66,7 +68,9 @@ final class CaptureController {
     ) -> CaptureSessionPlan {
         CaptureSessionPlan(request: CaptureSessionRequest(
             preferredPosition: position, mediaKind: film.camera.medium == .photo ? .photo : .movie,
-            lockedMovieOrientation: film.movieOrientation, behavior: .for(film.camera.id),
+            lockedMovieOrientation: film.movieOrientation,
+            recordsLiveSound: film.camera.recordsLiveSound == true,
+            behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting),
             manualLensPosition: Float(focus)
         ), capabilities: capabilities)
     }
@@ -74,14 +78,25 @@ final class CaptureController {
     func open(film: Film, model: JournalModel) async throws {
         guard !busy else { throw JournalError.operationInProgress }
         busy = true
+        updateOrientation()
+        microphoneUnavailable = false
+        // iOS makes the app inactive while it asks for the camera or the microphone, which pauses the camera
+        // (`pauseForInactiveScene`) and so ends any open that has already taken its session request. The questions come
+        // first, so the answer leads straight on to the camera starting.
+        let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
+        if allowed, film.camera.recordsLiveSound == true {
+            let status = authorizer.microphoneAuthorizationStatus()
+            let hasMicrophone: Bool
+            if status == .notDetermined { hasMicrophone = await authorizer.requestMicrophoneAccess() }
+            else { hasMicrophone = status == .authorized }
+            microphoneUnavailable = !hasMicrophone
+        }
         let request = sessionRequest
         defer {
             busy = false
             // Whatever stopped the camera during this open owns the wait for a print now.
             if request == sessionRequest { resumesAfterReveal = false }
         }
-        updateOrientation()
-        let allowed = authorizer.authorizationStatus() == .authorized ? true : await authorizer.requestAccess()
         guard allowed else {
             throw JournalError.cameraDenied
         }
@@ -154,7 +169,12 @@ final class CaptureController {
         exposure = Double(controls.exposureBias)
         preview = await backend.previewSource()
         await updatePhase(backend)
+        // The camera runs again, so a note that it was paused, left by the last close or an interruption, is over.
         message = nil
+        if film.camera.recordsLiveSound == true,
+           authorizer.microphoneAuthorizationStatus() != .authorized {
+            microphoneUnavailable = true
+        }
     }
 
     func shutter(film: Film) async throws {
@@ -166,25 +186,42 @@ final class CaptureController {
         } else if film.camera.medium == .photo {
             try await backend.capturePhoto(orientation: orientation, flash: flash && controls.flash)
         } else {
+            if film.camera.recordsLiveSound == true {
+                microphoneUnavailable = authorizer.microphoneAuthorizationStatus() != .authorized
+            }
             try await backend.startMovie(orientation: orientation, remainingFrames: film.remainingMovieFrames ?? 0)
             recordingStarted = Date()
         }
         await updatePhase(backend)
     }
 
-    func switchLens(camera: CameraPackage) async throws {
+    func switchLens(film: Film) async throws {
         guard let backend else { return }
         let request = sessionRequest
         let next: CapturePosition = position == .rear ? .front : .rear
         try await backend.switchLens(to: next)
         position = next
         flash = false
-        if request == sessionRequest { watchSceneLight(behavior: .for(camera.id)) }
+        if request == sessionRequest {
+            watchSceneLight(behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting))
+        }
         controls = await backend.controls()
         exposure = Double(controls.exposureBias)
     }
 
-    /// Takes a zoom step of the iPhone's own lenses (the 6×6's rear camera). Only between exposures, like a lens switch.
+    func updateFocusSetting(for film: Film) async throws {
+        guard let backend else { return }
+        let phase = await backend.phase
+        guard phase == .idle || phase == .recordingMovie else { return }
+        try await backend.setFocusBehavior(.for(film.camera.id, focusSetting: film.effectiveFocusSetting))
+    }
+
+    func focus(at point: CGPoint, for film: Film) async throws -> FocusPointDecision {
+        let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
+        return try await backend?.focus(at: point, alsoExpose: behavior.exposure == .automatic) ?? .unsupported
+    }
+
+    /// Takes a zoom step on the 6×6, Super 8 or 16mm rear camera. Only between photo exposures or Recorded Clips.
     func selectZoomStep(_ step: ZoomStep) async throws {
         guard let backend else { return }
         try await backend.selectZoomStep(step)
@@ -219,6 +256,31 @@ final class CaptureController {
 
     func setFocus() async throws { try await backend?.setManualFocus(Float(focus)) }
     func setExposure() async throws { try await backend?.setExposureBias(Float(exposure)) }
+
+    /// Whether a shooting screen's session is under way: between `beginShootingSession` and `endShootingSession`.
+    private(set) var shootingSessionActive = false
+
+    /// Starts a shooting screen's session: the iPhone's hold is read and followed, and the window held portrait. Only
+    /// once, however often the screen appears behind the prints and questions it shows.
+    func beginShootingSession() {
+        guard !shootingSessionActive else { return }
+        shootingSessionActive = true
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        updateOrientation()
+        presented = true
+        InterfaceOrientationLock.hold(.portrait)
+    }
+
+    /// Ends the shooting screen's session exactly once, however the screen left: the camera stops, the hold is no longer
+    /// read, and the window turns back to how the iPhone is held.
+    func endShootingSession() {
+        guard shootingSessionActive else { return }
+        shootingSessionActive = false
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        presented = false
+        suspend()
+        InterfaceOrientationLock.release(turningTo: InterfaceOrientationLock.mask(held: held))
+    }
 
     /// Stops the camera while an Instant print shows. Unlike `suspend`, it is meant to end: `printsClosed`.
     func pauseForReveal() {
@@ -279,6 +341,7 @@ final class CaptureController {
         self.filmID = nil
         phase = .interrupted
         message = nil
+        microphoneUnavailable = false
         recordingStarted = nil
     }
 

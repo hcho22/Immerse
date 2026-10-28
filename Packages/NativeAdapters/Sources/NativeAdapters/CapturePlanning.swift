@@ -39,7 +39,7 @@ public enum LensSwitchDecision: Equatable, Sendable {
     case disabledByConfiguration
 }
 
-/// Whether a zoom step can be taken now. A zoom change follows the lens switch's rule: only between exposures.
+/// Whether a zoom step can be taken now: only between photo exposures or Recorded Clips.
 public enum ZoomDecision: Equatable, Sendable {
     case allowed
     /// The Camera has no zoom steps, or the active camera is the front one.
@@ -49,11 +49,21 @@ public enum ZoomDecision: Equatable, Sendable {
     case blockedDuring(CapturePhase)
 }
 
+/// Whether an automatic-focus point can move to a tapped location now.
+public enum FocusPointDecision: Equatable, Sendable {
+    case allowed
+    case notAutomatic
+    case unsupported
+    case blockedDuring(CapturePhase)
+}
+
 public struct CaptureSessionRequest: Equatable, Sendable {
     public let preferredPosition: CapturePosition
     public let mediaKind: CaptureMediaKind
     public let permissionPromptPolicy: PermissionPromptPolicy
     public let lockedMovieOrientation: MovieOrientation?
+    /// Live sound is an immutable capability of the Film's locked package; old movie Films remain silent.
+    public let recordsLiveSound: Bool
     public let behavior: CaptureBehavior
     /// Where `.manual` focus holds the lens (0 is closest, 1 furthest): the person's Focus control.
     public let manualLensPosition: Float
@@ -63,6 +73,7 @@ public struct CaptureSessionRequest: Equatable, Sendable {
         mediaKind: CaptureMediaKind,
         permissionPromptPolicy: PermissionPromptPolicy = .deferToFlowCoordinator,
         lockedMovieOrientation: MovieOrientation? = nil,
+        recordsLiveSound: Bool = false,
         behavior: CaptureBehavior = .deviceDefault,
         manualLensPosition: Float = FixedFocus.lensPosition
     ) {
@@ -70,6 +81,7 @@ public struct CaptureSessionRequest: Equatable, Sendable {
         self.mediaKind = mediaKind
         self.permissionPromptPolicy = permissionPromptPolicy
         self.lockedMovieOrientation = lockedMovieOrientation
+        self.recordsLiveSound = recordsLiveSound
         self.behavior = behavior
         self.manualLensPosition = manualLensPosition
     }
@@ -79,6 +91,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
     public let activePosition: CapturePosition
     public let mediaKind: CaptureMediaKind
     public let lockedMovieOrientation: MovieOrientation?
+    public let recordsLiveSound: Bool
     public let behavior: CaptureBehavior
     public let manualLensPosition: Float
     private let capabilities: CaptureCapabilities
@@ -87,6 +100,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         self.activePosition = request.preferredPosition
         self.mediaKind = request.mediaKind
         self.lockedMovieOrientation = request.lockedMovieOrientation
+        self.recordsLiveSound = request.recordsLiveSound
         self.behavior = request.behavior
         self.manualLensPosition = request.manualLensPosition
         self.capabilities = capabilities
@@ -126,6 +140,7 @@ public struct CaptureSessionPlan: Equatable, Sendable {
         CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                recordsLiveSound: recordsLiveSound,
                 behavior: behavior, manualLensPosition: manualLensPosition
             ),
             capabilities: CaptureCapabilities(
@@ -133,6 +148,28 @@ public struct CaptureSessionPlan: Equatable, Sendable {
                 supportsLensSwitchDuringSession: capabilities.supportsLensSwitchDuringSession, rearLenses: lenses
             )
         )
+    }
+
+    public func updatingBehavior(_ behavior: CaptureBehavior) -> CaptureSessionPlan {
+        CaptureSessionPlan(
+            request: CaptureSessionRequest(
+                preferredPosition: activePosition, mediaKind: mediaKind, lockedMovieOrientation: lockedMovieOrientation,
+                recordsLiveSound: recordsLiveSound,
+                behavior: behavior, manualLensPosition: manualLensPosition
+            ),
+            capabilities: capabilities
+        )
+    }
+
+    /// Tapping focuses in Auto. A live Movie keeps accepting focus points during recording; captures that are saving
+    /// remain unchanged until the next idle or recording state.
+    public func focusPointDecision(supported: Bool, during phase: CapturePhase) -> FocusPointDecision {
+        guard behavior.focus == .deviceDefault else { return .notAutomatic }
+        guard supported else { return .unsupported }
+        return switch phase {
+        case .idle, .recordingMovie: .allowed
+        case .savingPhoto, .savingMovieClip, .interrupted: .blockedDuring(phase)
+        }
     }
 
     public func zoomDecision(to step: ZoomStep, during phase: CapturePhase) -> ZoomDecision {
@@ -166,6 +203,35 @@ public enum MovieCaptureFormat {
             return size.width * 3 == size.height * 4 && size.width <= maximumWidth
                 && size.height <= maximumHeight && recordsMovieFrameRate(format)
         }.max { dimensions($0).width < dimensions($1).width }
+    }
+
+    /// A format of exactly `size` that records `MovieFrames.perSecond`: what a zoom step's lens records at, so every step
+    /// of a movie Camera records the size its wide lens does (FR-26 item 4).
+    public static func matching<Format>(
+        _ size: (width: Int, height: Int),
+        among formats: [Format],
+        dimensions: (Format) -> (width: Int, height: Int),
+        recordsMovieFrameRate: (Format) -> Bool
+    ) -> Format? {
+        formats.first { dimensions($0) == size && recordsMovieFrameRate($0) }
+    }
+
+    /// The rear lenses a movie Camera offers zoom steps on (FR-26 item 4): the wide lens, and each other lens with a format
+    /// of the size the wide lens records (`preferred`) at `MovieFrames.perSecond`. A lens without one is not offered on
+    /// this iPhone, its native crops with it, so no step records a different size or fails to open mid-shoot.
+    public static func lensesRecordingTheWideLensFormat<Format>(
+        _ capabilities: RearLensCapabilities,
+        formats: (RearLens) -> [Format],
+        dimensions: (Format) -> (width: Int, height: Int),
+        recordsMovieFrameRate: (Format) -> Bool
+    ) -> RearLensCapabilities {
+        guard let wide = preferred(among: formats(.wide), dimensions: dimensions, recordsMovieFrameRate: recordsMovieFrameRate)
+        else { return RearLensCapabilities(lenses: capabilities.lenses.filter { $0.lens == .wide }) }
+        let size = dimensions(wide)
+        return RearLensCapabilities(lenses: capabilities.lenses.filter { lens in
+            lens.lens == .wide
+                || matching(size, among: formats(lens.lens), dimensions: dimensions, recordsMovieFrameRate: recordsMovieFrameRate) != nil
+        })
     }
 }
 

@@ -3,139 +3,55 @@ import ImageIO
 import RenderCore
 import SwiftUI
 
-/// The height of the Darkroom's controls, which the print preview leaves room for.
-private struct ControlsHeightKey: PreferenceKey {
-    static let defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
-}
-
-/// The Darkroom's print and its controls: the print above them in portrait, and beside them in landscape.
+/// The Darkroom's print and its controls, in one arrangement in every hold: `DarkroomView` holds the window upright (the
+/// captain, 2026-10-26: "No darkroom on landscape across all cameras").
 ///
-/// In portrait the print takes the height the controls leave at their full size, and below the navigation bar: the
-/// sheet's safe area starts under the bar, and the content scrolls only when even the smallest print does not fit. The
-/// scroll area stops above the floating Reset to Original bar, so no control rests under it, where its taps would reach
-/// the bar, and the last row scrolls fully clear of it. Rendering shows over the print, outside the measured controls, so
-/// it does not resize the print on every render or rescale a Dodge/Burn stroke. An error shows between the print and the
-/// controls and is measured with them: the print gives up the error's height, so the selected tool rests on screen
-/// under the error and does not wait below the fold. In portrait, a tool whose controls must all show at once, the
-/// Crop's three sliders, has the print go below its smallest ordinary size, down to a smaller floor, to rest every
-/// control on screen; past that floor the screen scrolls the rest.
-///
-/// In landscape (a compact vertical size class) the screen is too short for a print over its controls (the captain,
-/// 2026-10-14: "landscape - side by side"). The print takes the leading side, as large as it fits there, then come the
-/// tool buttons in a column with Reset to Original at its foot, then the selected tool's controls. Read in that order,
-/// the screen is the portrait one turned on its side: the print first, then the tools, then the controls that change it.
-/// No bottom bar takes the screen's height, and the controls scroll on their own when they cannot all show, as at the
-/// largest text sizes, while the print, the tools and Reset stay where they are. A column that cannot show everything at
-/// rest, the controls there or the tools on a Display Zoom screen, shows that it scrolls (`ColumnScrollView`).
+/// The print takes what the screen leaves above one band of fixed height, so its frame is the same whatever tool is
+/// selected (the captain, 2026-10-26: "Darkroom - keep the screen size consistent."); it differs between iPhones, never
+/// between tools. The band holds the tool buttons and the selected tool's controls and is as tall as the tallest tool
+/// needs at the default text size (`controlBandHeight`). At larger text sizes, and under an error or the note about saved
+/// Dodge/Burn strokes, the band scrolls inside itself and shows that it does (`BandScrollView`); the print never
+/// shrinks. Rendering shows over the print. Reset to Original stays in the bottom bar.
 struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: View {
     let rendering: Bool
     let error: String?
-    /// Whether the print gives up height below `minimumPrintHeight`, down to `smallestFittedPrintHeight`, to rest every
-    /// control on screen in portrait. Where even that print leaves controls below the fold, the print stays at that size
-    /// and the screen scrolls only the rest, so a larger text size never has a larger print. In landscape the print is
-    /// beside the controls, whose height never reaches it.
-    var fitsEveryControl = false
     @ViewBuilder let preview: Preview
-    /// One button per tool: a row above the controls in portrait, a column beside them in landscape.
+    /// One button per tool, in a row across the band.
     @ViewBuilder let tools: Tools
     @ViewBuilder let controls: Controls
-    /// Reset to Original: the floating bottom bar in portrait, the foot of the tool column in landscape.
     @ViewBuilder let reset: Reset
-    /// The height of everything under the print, measured at the current text size.
-    @State private var controlsHeight: CGFloat = 260
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
-    /// The smallest height the print preview is scaled down to before the screen scrolls. Under an error it is half
-    /// that: the longest explanation then leaves the Exposure tool on an iPhone SE's screen, with the print still shown.
-    private var minimumPrintHeight: CGFloat { error == nil ? 160 : 80 }
-
-    /// The smallest the print is shown in a tool whose controls must all show, two fifths of its ordinary smallest size,
-    /// with or without an error. With a crop smaller than the whole print, the Crop tool's controls leave an iPhone SE's
-    /// print 80 pt at the default text size, a fraction of a point short of the 80 pt an error allows, so the fitted
-    /// print is allowed less.
-    private static var smallestFittedPrintHeight: CGFloat { 64 }
-
-    /// The controls' bottom margin, over which controls that run past the scroll area fade out rather than end in a
-    /// sliver. The last row, scrolled fully into view, ends above it.
+    /// The band's height: what Adjust needs at the default text size with a crop smaller than the print, the tallest
+    /// any tool gets. That is the 16 pt top margin, the 44 pt tool row, the Adjust heading's row with its turn buttons,
+    /// five rows of a caption beside its control (Straighten, Crop and the crop's Size, Horizontal and Vertical), the
+    /// gaps between them and the bottom margin, held whole on an iPhone SE by `PopulatedWorkflowTests`.
+    private static var controlBandHeight: CGFloat { 330 }
+    /// The space between the band's rows.
+    private static var spacing: CGFloat { 12 }
     private static var bottomMargin: CGFloat { 12 }
 
-    /// The space between the scroll area and the floating Reset to Original bar. The bar itself is the bottom safe area,
-    /// which takes every tap across the screen's width; kept off it, the scroll view ends above the bar instead of
-    /// drawing controls under it.
-    private static var bottomBarSpacing: CGFloat { 4 }
-
-    /// The width of a tool button in the landscape column, the least a button takes a tap in.
-    private static var toolColumnWidth: CGFloat { 44 }
-
-    /// The space between the print, the tool column and the controls in landscape, and between the controls there:
-    /// less than portrait's 18 pt, so the longest tool, Dodge / Burn, rests whole at the default text size on an iPhone
-    /// SE and on an iPhone 13 mini, the shortest landscape Darkroom.
-    private static var sideBySideSpacing: CGFloat { 12 }
-
-    /// The share of the landscape width the controls take from the print. It leaves the Dodge / Burn sliders, beside
-    /// their captions, a usable length on an iPhone SE, and the print the rest.
-    private static var controlsShare: CGFloat { 0.55 }
-
-    private func printHeight(in available: CGFloat) -> CGFloat {
-        max(fitsEveryControl && verticalSizeClass == .regular ? Self.smallestFittedPrintHeight : minimumPrintHeight,
-            available - controlsHeight - 18 - 16 - Self.bottomMargin - Self.bottomBarSpacing)
-    }
-
     var body: some View {
-        if verticalSizeClass == .compact { sideBySide } else { stacked }
-    }
-
-    private var stacked: some View {
         GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 18) {
-                    preview.frame(maxWidth: .infinity).frame(height: printHeight(in: geometry.size.height))
-                        .overlay(alignment: .topTrailing) { progress }
-                    VStack(spacing: 18) {
+            VStack(spacing: 0) {
+                preview.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .topTrailing) { progress }
+                    .accessibilityIdentifier("darkroom-print-area")
+                BandScrollView {
+                    VStack(alignment: .leading, spacing: Self.spacing) {
                         if let error { Text(error).foregroundStyle(.red) }
                         HStack { tools }
                         controls
-                    }.background(GeometryReader { Color.clear.preference(key: ControlsHeightKey.self, value: $0.size.height) })
-                }.padding([.horizontal, .top]).padding(.bottom, Self.bottomMargin)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.horizontal, .top])
+                    .padding(.bottom, Self.bottomMargin)
+                }
+                .accessibilityIdentifier("darkroom-control-band")
+                .frame(height: min(Self.controlBandHeight, geometry.size.height))
+                .mask { fade }
             }
-            .onPreferenceChange(ControlsHeightKey.self) { controlsHeight = $0 }
-            .mask { fade }
-            .padding(.bottom, Self.bottomBarSpacing)
         }
         .toolbar { ToolbarItem(placement: .bottomBar) { reset } }
-    }
-
-    private var sideBySide: some View {
-        GeometryReader { geometry in
-            let spacing = Self.sideBySideSpacing
-            // The leading and trailing margins and the two gaps around the tool column are 16, 12, 12 and 16 pt.
-            let shared = geometry.size.width - 16 - spacing - Self.toolColumnWidth - spacing - 16
-            HStack(spacing: spacing) {
-                preview.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(alignment: .topTrailing) { progress }
-                    .padding(.leading).padding(.vertical)
-                // A button's icon sits 12 pt inside its frame, so at the column's full margin the first icon is level
-                // with the heading beside it.
-                ToolColumn {
-                    ColumnScrollView { VStack(spacing: 0) { tools } }.scrollBounceBehavior(.basedOnSize)
-                    // The glass circle the bottom bar gave it, large enough to take a tap across more than 44 pt, its symbol
-                    // the size the bar draws. Like the bar's, it keeps its size as the text grows, so it never crowds the
-                    // tools out of the column.
-                    reset.labelStyle(.iconOnly).imageScale(.large).buttonStyle(.glass).buttonBorderShape(.circle)
-                        .controlSize(.large).dynamicTypeSize(.large)
-                }
-                .frame(width: Self.toolColumnWidth)
-                ColumnScrollView {
-                    VStack(spacing: spacing) {
-                        if let error { Text(error).foregroundStyle(.red) }
-                        controls
-                    }.padding([.trailing, .top]).padding(.bottom, Self.bottomMargin)
-                }
-                .mask { fade }
-                .frame(width: (shared * Self.controlsShare).rounded() + 16)
-            }
-        }
     }
 
     @ViewBuilder private var progress: some View {
@@ -151,25 +67,21 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     }
 }
 
-/// A landscape Darkroom column's scroll area. Where its content runs more than a point past what it shows, it flashes
-/// its scroll indicator, so a column that cannot show everything at rest shows that it scrolls: 0.6 s after its content
-/// comes to run past it, as the Darkroom opens or turns into landscape and whenever a tool's controls or an explanation
-/// come to run past it. The wait is longer than the sheet takes to rise, since a flash at the column's first layout, as
-/// the sheet rises, is not drawn, nor is one asked for in the same update as the content grows, before the scroll view
-/// has its new height. It flashes only as its content comes to run past it, never as it comes to fit, and a column that
-/// holds everything never flashes, as where the tools exactly fill their column on an iPhone 13 mini. The container is
-/// the column inside the safe area, so the insets that reach under the navigation bar and the home indicator are no
-/// part of what it shows. Beside a safe area, as at the trailing edge of an iPhone with a notch or the Dynamic Island
-/// held sideways, the scroll view reaches into it and draws its indicator at its own edge, outside the column's fade,
-/// unless the indicator has a margin of its own: then it is also inset by the safe area, and shows inside the column.
-private struct ColumnScrollView<Content: View>: View {
+/// The Darkroom band's scroll area. Where its content runs more than a point past what it shows, it flashes its scroll
+/// indicator, so a band that cannot show everything shows that it scrolls: 0.6 s after its content comes to run past
+/// it, as the Darkroom opens and whenever a tool's controls, an explanation or a larger text size come to run past it.
+/// The wait is longer than the sheet takes to rise, since a flash at the band's first layout, as the sheet rises, is not
+/// drawn, nor is one asked for in the same update as the content grows, before the scroll view has its new height. It
+/// flashes only as its content comes to run past it, never as it comes to fit, and a band that holds everything never
+/// flashes.
+private struct BandScrollView<Content: View>: View {
     @ViewBuilder let content: Content
     @State private var overflows = false
     @State private var flashes = 0
 
     var body: some View {
         ScrollView { content }
-            .contentMargins(.trailing, 1, for: .scrollIndicators)
+            .scrollBounceBehavior(.basedOnSize)
             .onScrollGeometryChange(for: Bool.self) { $0.contentSize.height > $0.containerSize.height + 1 } action: {
                 overflows = $1
             }
@@ -179,32 +91,6 @@ private struct ColumnScrollView<Content: View>: View {
                 try? await Task.sleep(for: .seconds(0.6))
                 if !Task.isCancelled { flashes += 1 }
             }
-    }
-}
-
-/// The Darkroom's landscape tool column: the tools' scroll area, then Reset to Original at its foot, 8 pt from the
-/// column's ends and 4 pt apart. Where the column is too short for those, the margins and the gap give up what the tools
-/// and Reset need, down to none, so every tool rests whole above Reset at any height that holds them, as on an iPhone 13
-/// mini, whose home indicator leaves the Darkroom 277 pt in landscape. Below that, as on a Display Zoom screen, the tools
-/// scroll and show that they do, and Reset stays.
-private struct ToolColumn: Layout {
-    private static let margin: CGFloat = 8
-    private static let gap: CGFloat = 4
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        proposal.replacingUnspecifiedDimensions()
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        guard let tools = subviews.first, let reset = subviews.last else { return }
-        let resetSize = reset.sizeThatFits(.unspecified)
-        let toolsHeight = tools.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
-        let share = min(1, max(0, (bounds.height - toolsHeight - resetSize.height) / (2 * Self.margin + Self.gap)))
-        let toolsTop = bounds.minY + Self.margin * share
-        let resetTop = bounds.maxY - Self.margin * share - resetSize.height
-        tools.place(at: CGPoint(x: bounds.minX, y: toolsTop),
-                    proposal: ProposedViewSize(width: bounds.width, height: max(0, resetTop - Self.gap * share - toolsTop)))
-        reset.place(at: CGPoint(x: bounds.midX, y: resetTop), anchor: .top, proposal: ProposedViewSize(resetSize))
     }
 }
 
@@ -231,36 +117,64 @@ struct RevealedPhoto: View {
     let sequence: Int
     /// Whether to set an Instant print's card apart from the screen, for the large views rather than thumbnails.
     var showsCardEdge = false
+    /// The longest side the print is decoded to, in pixels: a thumbnail's by default, the screen's in the photo view.
+    var maximumPixels = 600
+    /// The ground around the print: the grid's gray by default, black in the photo view.
+    var background = Color(uiColor: .secondarySystemBackground)
+    /// Whether the decoded picture stays while the view is out of sight: only the Film screen's grid, which the photo
+    /// view covers and which then reloads it in place. Every other print lets its picture go as it leaves the screen.
+    var keepsPictureOutOfSight = false
     @State private var image: UIImage?
     @State private var failed = false
 
+    /// What the shown picture depends on: a new print, an edit saved to it, or a new size reloads it.
+    private struct Load: Hashable {
+        let revision: UUID
+        let sequence: Int
+        let maximumPixels: Int
+    }
+
     var body: some View {
         ZStack {
-            Rectangle().fill(Color(uiColor: .secondarySystemBackground))
-            if !model.hiddenFilms.contains(filmID), let image {
+            Rectangle().fill(background)
+            if !model.hiddenFilms.contains(filmID), !failed, let image {
                 Image(uiImage: image).resizable().scaledToFit()
                     .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s, large: showsCardEdge))
             } else if failed { Image(systemName: "exclamationmark.triangle") }
             else { ProgressView() }
         }
-        .task(id: model.mediaRevision) {
-            image = nil
+        .task(id: Load(revision: model.mediaRevision, sequence: sequence, maximumPixels: maximumPixels)) {
+            // The picture shown stays until the next one is decoded, so a swipe to another print does not flash a spinner.
             failed = false
-            guard !model.hiddenFilms.contains(filmID) else { return }
+            guard !model.hiddenFilms.contains(filmID) else { image = nil; return }
             do {
                 let data = try await model.processor.photo(filmID: filmID, sequence: sequence)
                 guard !Task.isCancelled, !model.hiddenFilms.contains(filmID) else { return }
-                image = DisplayPhoto.image(data, maximumPixels: 600)
-                failed = image == nil
+                let pixels = maximumPixels
+                // A screen-sized decode is too slow for the main actor, which it would hold up on every swipe.
+                let decoded = await Task.detached(priority: .userInitiated) {
+                    DisplayPhoto.image(data, maximumPixels: pixels)
+                }.value
+                guard !Task.isCancelled else { return }
+                image = decoded
+                failed = decoded == nil
             } catch { failed = true }
         }
-        .onDisappear { image = nil }
+        .onDisappear { if !keepsPictureOutOfSight { image = nil } }
         .accessibilityLabel("Developed photo \(sequence)")
     }
 }
 
 enum DisplayPhoto {
-    static func image(_ data: Data, maximumPixels: Int = 1600) -> UIImage? {
+    /// The longest side of this iPhone's screen in pixels, which a full-screen print is decoded to, so it is sharp
+    /// whichever way the iPhone is held.
+    @MainActor static var fullScreenPixels: Int {
+        let screen = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.screen }.first
+        guard let screen else { return 2_048 }
+        return Int((max(screen.bounds.width, screen.bounds.height) * screen.scale).rounded(.up))
+    }
+
+    nonisolated static func image(_ data: Data, maximumPixels: Int = 1600) -> UIImage? {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
@@ -276,18 +190,59 @@ struct PhotoView: View {
     @Environment(\.dismiss) private var dismiss
     let filmID: UUID
     let sequence: Int
+    let isInstantReveal: Bool
+    @State private var shownSequence: Int
     @State private var editing = false
     @State private var discarding = false
     @State private var error: String?
 
+    init(filmID: UUID, sequence: Int, isInstantReveal: Bool = false) {
+        self.filmID = filmID
+        self.sequence = sequence
+        self.isInstantReveal = isInstantReveal
+        _shownSequence = State(initialValue: sequence)
+    }
+
+    /// Where the view is among the Film's developed prints. The Instant's reveal at the camera shows its one new print
+    /// and moves nowhere, but counts it among the pack's prints as the Film screen does.
+    private var navigation: PhotoNavigation {
+        PhotoNavigation(developed: PhotoNavigation.developed(in: model.film(filmID)), shown: shownSequence)
+    }
+
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
-                else { RevealedPhoto(filmID: filmID, sequence: sequence, showsCardEdge: true) }
+                else {
+                    RevealedPhoto(filmID: filmID, sequence: shownSequence, showsCardEdge: true,
+                                  maximumPixels: DisplayPhoto.fullScreenPixels, background: .black)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(navigation.label)
+                        .accessibilityAddTraits(.isImage)
+                        .accessibilityIdentifier("photo-view-image")
+                        .accessibilityActions {
+                            // Only the moves there are: none at the ends, and none at the camera's reveal.
+                            if !isInstantReveal, navigation.previous != nil {
+                                Button("Previous photo") { move(by: -1) }
+                            }
+                            if !isInstantReveal, navigation.next != nil {
+                                Button("Next photo") { move(by: 1) }
+                            }
+                        }
+                        .gesture(DragGesture(minimumDistance: 32).onEnded { value in
+                            guard !isInstantReveal, abs(value.translation.width) > abs(value.translation.height),
+                                  abs(value.translation.width) >= 48 else { return }
+                            move(by: value.translation.width < 0 ? 1 : -1)
+                        }, including: isInstantReveal ? .none : .all)
+                }
                 if let error { Text(error).foregroundStyle(.red).padding() }
             }
-            .navigationTitle("Photo \(sequence)").navigationBarTitleDisplayMode(.inline)
+            .background(Color.black.ignoresSafeArea())
+            // The photo view is black as the Photos app is, in light and dark: its progress and errors draw for that.
+            .environment(\.colorScheme, .dark)
+            .navigationTitle("Photo \(shownSequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
                 ToolbarItemGroup(placement: .bottomBar) {
@@ -298,17 +253,81 @@ struct PhotoView: View {
                         .disabled(model.hiddenFilms.contains(filmID))
                 }
             }
-            .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: sequence) }
-            .confirmationDialog("Discard photo \(sequence)?", isPresented: $discarding, titleVisibility: .visible) {
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(.black, for: .bottomBar)
+            .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
+            .confirmationDialog("Discard photo \(shownSequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
                     error = nil
+                    let discardedSequence = shownSequence
                     model.perform {
-                        try await model.remove(filmID, sequence: sequence)
-                        dismiss()
+                        try await model.remove(filmID, sequence: discardedSequence)
+                        let remaining = PhotoNavigation.developed(in: model.film(filmID))
+                        if !isInstantReveal,
+                           let nearest = PhotoNavigation.afterDiscarding(discardedSequence, remaining: remaining) {
+                            shownSequence = nearest
+                        } else { dismiss() }
                     } failure: { error = $0 }
                 }.accessibilityIdentifier("confirm-discard-photo")
             } message: { Text(PrivacyCopy.discard) }
         }
+    }
+
+    private func move(by offset: Int) {
+        guard !isInstantReveal, let target = offset < 0 ? navigation.previous : navigation.next else { return }
+        error = nil
+        shownSequence = target
+        // VoiceOver reads the print it moved to, as it would after a swipe.
+        AccessibilityNotification.LayoutChanged().post()
+    }
+}
+
+/// A Film's developed prints as the photo view moves through them (FR-22): capture order, sealed and discarded frames
+/// left out.
+struct PhotoNavigation: Equatable {
+    /// The developed prints' sequence numbers, in capture order.
+    let developed: [Int]
+    let shown: Int
+
+    static func developed(in film: Film?) -> [Int] {
+        film?.captures.filter { $0.revealState == .revealed && !$0.isDiscarded }.map(\.sequenceNumber).sorted() ?? []
+    }
+
+    private var index: Int? { developed.firstIndex(of: shown) }
+
+    /// What VoiceOver reads: the print's frame number, then its place among the developed prints, "Photo 12, 11 of 11".
+    var label: String { "Photo \(shown), \((index ?? 0) + 1) of \(developed.count)" }
+
+    var previous: Int? { index.flatMap { $0 > 0 ? developed[$0 - 1] : nil } }
+    var next: Int? { index.flatMap { $0 + 1 < developed.count ? developed[$0 + 1] : nil } }
+
+    /// The print to show once `discarded` is gone, as the Photos app does: the next later print, else the nearest earlier
+    /// one, else none, and the view closes.
+    static func afterDiscarding(_ discarded: Int, remaining: [Int]) -> Int? {
+        remaining.first { $0 > discarded } ?? remaining.last { $0 < discarded }
+    }
+}
+
+/// The print without straightening that the Darkroom turns under the Straighten slider while it moves (D1). It has no
+/// vignette either: the renderer darkens the corners of the straightened print, so turned with the print they would show
+/// out of place until the slider stops.
+struct UnstraightenedPrint {
+    let recipe: DarkroomRecipe
+    let image: UIImage
+
+    /// The recipe such a print is made for: `recipe` without its straightening or vignette.
+    static func recipe(for recipe: DarkroomRecipe) -> DarkroomRecipe {
+        var flat = recipe
+        flat.straighteningDegrees = nil
+        flat.vignetteStops = nil
+        return flat
+    }
+
+    /// The print, only while it was made for `recipe`'s other edits: after a turn, a crop, Reset or any other edit it is
+    /// an earlier print, and the slider waits for the one made for the edits as they are.
+    func image(for recipe: DarkroomRecipe) -> UIImage? {
+        self.recipe == Self.recipe(for: recipe) ? image : nil
     }
 }
 
@@ -321,41 +340,33 @@ struct DarkroomView: View {
     @State private var process = PhotoPrintProcess.color
     @State private var image: UIImage?
     @State private var tool = PrintTool.exposure
-    @State private var brushKind = LocalMask.Kind.dodge
-    @State private var brushStops = DarkroomLimits.defaultStrokeStops
-    @State private var brushPoints: [MaskPoint] = []
-    @State private var brushX = 0.5
-    @State private var brushY = 0.5
     @State private var rendering = false
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
-    /// The recipe last handed to `render()`, so a turn renders only an edit that has not reached the print.
-    @State private var renderedRecipe = DarkroomRecipe.original
     @State private var error: String?
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    /// The straightening angle while its slider moves, and the print without straightening that turns under it, so the
+    /// crop-in shows as the slider moves (FR-31 item 3); the print itself is made when the slider is let go.
+    @State private var straighteningDrag: Double?
+    @State private var unstraightened: UnstraightenedPrint?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
-    /// In landscape, where `DarkroomLayout` puts the controls in a short column beside the print, a caption sits beside
-    /// its slider on one row, and a tool's sliders line up after the longest caption, so Dodge / Burn rests whole on an
-    /// iPhone SE. Past the extra large text size its caption would leave the slider too short to use, so there, as in
-    /// portrait, the caption is above it and the column scrolls.
-    private var captionsBeside: Bool { verticalSizeClass == .compact && dynamicTypeSize <= .xLarge }
-
     private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
 
-    /// The strengths a Dodge/Burn stroke can be given: from the smallest step to the limit.
-    private static let strokeStops = DarkroomLimits.exposureStep...DarkroomLimits.localExposureStops
+    /// Captions sit beside their sliders through the extra large text size, which keeps the tallest tool inside the
+    /// band at the default size; at larger sizes they sit above their sliders and the band scrolls.
+    private var captionsBeside: Bool { dynamicTypeSize <= .xLarge }
 
     enum PrintTool: String, CaseIterable, Identifiable {
-        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", crop = "Crop", brush = "Dodge / Burn", toning = "Chemical toning"
+        case exposure = "Exposure", contrast = "Contrast", filtration = "Filtration", adjust = "Adjust"
+        case saturation = "Saturation", vignette = "Vignette", toning = "Chemical toning"
         var id: Self { self }
         var symbol: String {
             switch self {
             case .exposure: "sun.max"
             case .contrast: "circle.lefthalf.filled"
             case .filtration: "camera.filters"
-            case .crop: "crop"
-            case .brush: "paintbrush.pointed"
+            case .adjust: "crop.rotate"
+            case .saturation: "slider.horizontal.3"
+            case .vignette: "circle.dashed"
             case .toning: "drop"
             }
         }
@@ -363,12 +374,18 @@ struct DarkroomView: View {
 
     var body: some View {
         NavigationStack {
-            DarkroomLayout(rendering: rendering, error: error, fitsEveryControl: tool == .crop) {
+            DarkroomLayout(rendering: rendering, error: error) {
                 printPreview
             } tools: {
                 tools
             } controls: {
-                Text(tool.rawValue).font(.headline); controls
+                if !recipe.dodgeBurnMasks.isEmpty {
+                    Text("This print keeps its earlier Dodge/Burn strokes until Reset to Original.")
+                        .font(.footnote)
+                        .accessibilityIdentifier("darkroom-legacy-strokes-note")
+                }
+                heading
+                controls
             } reset: {
                 Button("Reset to Original", systemImage: "arrow.counterclockwise") { recipe.resetToOriginal(); render() }
             }
@@ -386,6 +403,7 @@ struct DarkroomView: View {
                     }.disabled(rendering || model.hiddenFilms.contains(filmID))
                 }
             }
+            .holdsPortraitOrientationPreservingCurrent()
             .task {
                 do {
                     process = try model.repository.photoPrintProcess(filmID: filmID)
@@ -395,23 +413,22 @@ struct DarkroomView: View {
                 catch { self.error = FailureCopy.message(for: error) }
             }
             .onDisappear { renderTask?.cancel(); image = nil }
-            // Turning the iPhone rebuilds the print and the controls in the other layout, which ends a gesture without
-            // its end: a stroke being drawn never becomes a stroke of its own nor joins the next one, and a recipe that
-            // differs from the one last rendered is rendered, so a slider's edit, which renders only at the end of its
-            // drag, still reaches the print. An unchanged recipe is not rendered again, so a turn leaves a load or
-            // save error, and the print it refers to, as they were.
-            .onChange(of: verticalSizeClass) {
-                brushPoints = []
-                if recipe != renderedRecipe { render() }
-            }
         }
     }
 
     /// The print scaled to fit its region, with an Instant card's margin and shadow inside it.
     @ViewBuilder private var printPreview: some View {
-        if let image, !model.hiddenFilms.contains(filmID) {
+        if let angle = straighteningDrag, let base = unstraightened?.image(for: recipe), !model.hiddenFilms.contains(filmID) {
+            // The print turned by the angle and enlarged to the largest rectangle of its shape inside it, clipped to that
+            // rectangle, as `StraighteningGeometry` cuts the print.
+            let kept = StraighteningGeometry.keptFraction(width: base.size.width, height: base.size.height, degrees: angle)
+            Image(uiImage: base).resizable().scaledToFit()
+                .rotationEffect(.degrees(-angle))
+                .scaleEffect(1 / kept)
+                .clipped()
+                .accessibilityLabel("Photo \(sequence), print preview")
+        } else if let image, !model.hiddenFilms.contains(filmID) {
             Image(uiImage: image).resizable().scaledToFit()
-                .overlay { brushSurface }
                 .accessibilityLabel("Photo \(sequence), print preview")
                 .modifier(PrintCardEdge(isInstant: isInstant, large: true))
         } else if error != nil, !rendering {
@@ -421,20 +438,42 @@ struct DarkroomView: View {
         } else { ProgressView() }
     }
 
-    /// One button per tool, across the width in portrait and down a column in landscape. The icons stop growing with the
-    /// text size at the largest ordinary size, so five of them always fit inside the side margins, and down the column.
+    /// One button per tool in the fixed controls band. The icons stop growing with the text size at the largest ordinary
+    /// size so every tool remains reachable across the row.
     private var tools: some View {
         ForEach(PrintTool.allCases.filter { choice in
             choice != .toning || process.supportsChemicalToning
         }.filter { choice in choice != .filtration || process == .color }
-            // An Instant print keeps its square picture and white card whole, so it has no crop.
-            .filter { choice in choice != .crop || !isInstant }) { choice in
+            .filter { choice in choice != .saturation || process == .color }) { choice in
             Button { tool = choice } label: {
                 Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
                     .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
             }.accessibilityLabel(choice.rawValue).help(choice.rawValue)
                 .accessibilityAddTraits(tool == choice ? .isSelected : [])
         }.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+
+    /// The selected tool's name, and on Adjust its two quarter-turn buttons beside it, which every print offers, the
+    /// Instant's included.
+    private var heading: some View {
+        HStack {
+            Text(tool.rawValue).font(.headline)
+            if tool == .adjust {
+                Spacer()
+                Button { recipe.rotateLeft(); render() } label: { turnLabel("Rotate left", systemImage: "rotate.left") }
+                    .accessibilityIdentifier("darkroom-rotate-left")
+                Button { recipe.rotateRight(); render() } label: { turnLabel("Rotate right", systemImage: "rotate.right") }
+                    .accessibilityIdentifier("darkroom-rotate-right")
+            }
+        }
+        .buttonStyle(.bordered).buttonBorderShape(.circle)
+        .frame(minHeight: 44)
+    }
+
+    /// A quarter-turn button's icon, with the circle the bordered style draws around it 44 points across, a whole tap
+    /// target.
+    private func turnLabel(_ title: String, systemImage: String) -> some View {
+        Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 30, height: 30)
     }
 
     @ViewBuilder private var controls: some View {
@@ -457,6 +496,25 @@ struct DarkroomView: View {
                 filtrationSlider("Magenta", path: \.magenta)
                 filtrationSlider("Yellow", path: \.yellow)
             }
+        case .saturation:
+            Text("\(recipe.saturation ?? 0)").monospacedDigit()
+            Slider(value: Binding(get: { Double(recipe.saturation ?? 0) }, set: {
+                let value = Int($0.rounded())
+                recipe.saturation = value == 0 ? nil : value
+            }), in: Double(DarkroomLimits.saturation.lowerBound)...Double(DarkroomLimits.saturation.upperBound),
+                step: Double(DarkroomLimits.saturationStep),
+                onEditingChanged: { if !$0 { render() } })
+                .accessibilityLabel("Saturation")
+                .accessibilityValue("\(recipe.saturation ?? 0)")
+        case .vignette:
+            Text(StopsText.shown(recipe.vignetteStops ?? 0)).monospacedDigit()
+            Slider(value: Binding(get: { recipe.vignetteStops ?? 0 }, set: {
+                let value = StopsText.tenths($0, in: DarkroomLimits.vignetteStops)
+                recipe.vignetteStops = value == 0 ? nil : value
+            }), in: DarkroomLimits.vignetteStops, step: DarkroomLimits.vignetteStep,
+                onEditingChanged: { if !$0 { render() } })
+                .accessibilityLabel("Vignette")
+                .accessibilityValue(StopsText.spoken(recipe.vignetteStops ?? 0))
         case .toning:
             Picker("Chemical toning", selection: Binding(get: { recipe.chemicalToning?.chemistry }, set: {
                 recipe.chemicalToning = $0.map { ChemicalToning(chemistry: $0, amount: 0.5) }; render()
@@ -471,104 +529,46 @@ struct DarkroomView: View {
                     recipe.chemicalToning?.amount = $0
                 }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
             }
-        case .crop:
-            Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
-                recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
-            }))
-            if let crop = recipe.crop {
+        case .adjust:
+            // The turn buttons are beside the heading. Straightening comes first, so it stays where it is as the crop's
+            // own rows come and go below it.
+            if !isInstant {
+                let straightening = StopsText.tenths(recipe.straighteningDegrees ?? 0, in: DarkroomLimits.straighteningDegrees)
                 captionedSliders {
-                    captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
-                        let size = $0
-                        recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
-                    }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size"))
-                    if crop.width < 1 {
-                        cropPosition("Horizontal", x: true)
-                        cropPosition("Vertical", x: false)
+                    captioned(Text("Straighten \(String(format: "%.1f", straightening))°").font(.caption).monospacedDigit(),
+                              Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
+                                  let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
+                                  recipe.straighteningDegrees = value == 0 ? nil : value
+                                  if straighteningDrag != nil { straighteningDrag = value }
+                              }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
+                                     onEditingChanged: { editing in
+                                         if editing { beginStraightening() } else { straighteningDrag = nil; render() }
+                                     })
+                                  .accessibilityLabel("Straighten")
+                                  .accessibilityValue("\(String(format: "%.1f", straightening)) degrees"))
+                    captioned(Text("Crop").font(.caption), Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
+                        recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
+                    })).labelsHidden().frame(maxWidth: .infinity, alignment: .trailing))
+                    if let crop = recipe.crop {
+                        captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
+                            let size = $0
+                            recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
+                        }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size"))
+                        if crop.width < 1 {
+                            cropPosition("Horizontal", x: true)
+                            cropPosition("Vertical", x: false)
+                        }
                     }
                 }
             }
-        case .brush:
-            Picker("Local exposure", selection: $brushKind) {
-                Text("Dodge").tag(LocalMask.Kind.dodge)
-                Text("Burn").tag(LocalMask.Kind.burn)
-            }.pickerStyle(.segmented)
-            Group {
-                if captionsBeside {
-                    Grid(alignment: .leading, horizontalSpacing: Self.captionSpacing) {
-                        GridRow { steady(strengthCaption, widest: Self.strongestCaption); strengthSlider }
-                        GridRow { steady(horizontalCaption, widest: "Horizontal: 100%"); horizontalSlider }
-                        GridRow { steady(verticalCaption, widest: "Vertical: 100%"); verticalSlider }
-                        pointButton
-                    }
-                } else {
-                    VStack(alignment: .leading) {
-                        strengthCaption
-                        strengthSlider
-                        horizontalCaption
-                        horizontalSlider
-                        verticalCaption
-                        verticalSlider
-                        pointButton
-                    }
-                }
-            }.disabled(recipe.crop != nil)
-            Button("Undo last stroke", systemImage: "arrow.uturn.backward") {
-                _ = recipe.dodgeBurnMasks.popLast(); render()
-            }.disabled(recipe.dodgeBurnMasks.isEmpty)
         }
     }
 
-    /// The space between a caption and the slider beside it.
+    /// The space between a caption and the control beside it.
     private static let captionSpacing: CGFloat = 12
 
-    /// The Strength caption at the strongest stroke, the widest it reads.
-    private static var strongestCaption: String { "Strength: \(StopsText.shown(strokeStops.upperBound))" }
-
-    /// How far each stroke lightens or darkens the print. Strokes add up where they overlap, to the limit.
-    private var strengthCaption: Text { Text("Strength: \(StopsText.shown(brushStops))").monospacedDigit() }
-
-    private var strengthSlider: some View {
-        Slider(value: Binding(get: { brushStops }, set: { brushStops = StopsText.tenths($0, in: Self.strokeStops) }),
-               in: Self.strokeStops, step: DarkroomLimits.exposureStep)
-            .accessibilityLabel("Local exposure strength")
-            .accessibilityValue(StopsText.spoken(brushStops, signed: false))
-    }
-
-    private var horizontalCaption: Text { Text("Horizontal: \(Int(brushX * 100))%").monospacedDigit() }
-
-    private var horizontalSlider: some View {
-        Slider(value: $brushX, in: 0...1, step: 0.05)
-            .accessibilityLabel("Local exposure horizontal position")
-            .accessibilityValue("\(Int(brushX * 100)) percent from left")
-    }
-
-    private var verticalCaption: Text { Text("Vertical: \(Int(brushY * 100))%").monospacedDigit() }
-
-    private var verticalSlider: some View {
-        Slider(value: $brushY, in: 0...1, step: 0.05)
-            .accessibilityLabel("Local exposure vertical position")
-            .accessibilityValue("\(Int(brushY * 100)) percent from top")
-    }
-
-    private var pointButton: some View {
-        Button(brushKind == .dodge ? "Dodge point" : "Burn point", systemImage: "plus.circle") {
-            recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind,
-                points: [MaskPoint(x: brushX, y: brushY)], exposureStops: brushStops))
-            render()
-        }
-    }
-
-    /// A caption whose value changes as its slider moves, held at the width of its widest value, so the sliders beside
-    /// the captions keep their length while one of them is dragged.
-    private func steady(_ caption: Text, widest: String) -> some View {
-        ZStack(alignment: .leading) {
-            Text(widest).monospacedDigit().hidden().accessibilityHidden(true)
-            caption
-        }
-    }
-
-    /// A tool's captioned sliders: in landscape the rows of a grid, so the sliders beside their captions line up; in
-    /// portrait the content as it is, each caption above its slider.
+    /// A tool's captioned controls: the rows of a grid through the extra large text size, so the controls beside their
+    /// captions line up; at larger sizes the content as it is, each caption above its control.
     @ViewBuilder private func captionedSliders(@ViewBuilder _ content: () -> some View) -> some View {
         if captionsBeside {
             Grid(alignment: .leading, horizontalSpacing: Self.captionSpacing) { content() }
@@ -577,12 +577,12 @@ struct DarkroomView: View {
         }
     }
 
-    /// A caption and its slider: one grid row in landscape, the caption above the slider in portrait.
-    @ViewBuilder private func captioned(_ caption: some View, _ slider: some View) -> some View {
+    /// A caption and its control: one grid row through the extra large text size, the caption above it beyond.
+    @ViewBuilder private func captioned(_ caption: some View, _ control: some View) -> some View {
         if captionsBeside {
-            GridRow { caption; slider }
+            GridRow { caption; control }
         } else {
-            VStack(alignment: .leading) { caption; slider }
+            VStack(alignment: .leading) { caption; control }
         }
     }
 
@@ -597,29 +597,20 @@ struct DarkroomView: View {
     private func cropPosition(_ name: String, x: Bool) -> some View {
         captioned(Text(name).font(.caption), Slider(value: Binding(get: { x ? recipe.crop!.x : recipe.crop!.y }, set: {
             if x { recipe.crop?.x = $0 } else { recipe.crop?.y = $0 }
-        }), in: 0...max(0.001, 1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
+        }), in: 0...(1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
             .accessibilityLabel("Crop \(name)"))
     }
 
-    /// Dodge/Burn strokes. On an Instant print they are fractions of the picture and the card takes none, so the
-    /// surface covers the picture only.
-    @ViewBuilder private var brushSurface: some View {
-        if tool == .brush && recipe.crop == nil {
-            GeometryReader { geometry in
-                let fractions = isInstant ? InstantPrintCard.pictureFractions : CGRect(x: 0, y: 0, width: 1, height: 1)
-                let area = CGRect(x: fractions.minX * geometry.size.width, y: fractions.minY * geometry.size.height,
-                                  width: fractions.width * geometry.size.width, height: fractions.height * geometry.size.height)
-                Color.clear.frame(width: area.width, height: area.height).contentShape(Rectangle())
-                    .gesture(DragGesture(minimumDistance: 0).onChanged { value in
-                        let point = MaskPoint(x: min(1, max(0, value.location.x / area.width)),
-                                              y: min(1, max(0, value.location.y / area.height)))
-                        if brushPoints.count < 500 { brushPoints.append(point) }
-                    }.onEnded { _ in
-                        recipe.dodgeBurnMasks.append(LocalMask(kind: brushKind, points: brushPoints, exposureStops: brushStops))
-                        brushPoints = []; render()
-                    })
-                    .position(x: area.midX, y: area.midY)
-            }
+    /// Shows the crop-in while the Straighten slider moves: the print without straightening, made once for the recipe's
+    /// other edits, turns under the slider.
+    private func beginStraightening() {
+        straighteningDrag = recipe.straighteningDegrees ?? 0
+        guard unstraightened?.image(for: recipe) == nil else { return }
+        let flat = UnstraightenedPrint.recipe(for: recipe)
+        Task {
+            guard let data = try? await model.processor.photo(filmID: filmID, sequence: sequence, recipe: flat),
+                  let decoded = DisplayPhoto.image(data) else { return }
+            unstraightened = UnstraightenedPrint(recipe: flat, image: decoded)
         }
     }
 
@@ -628,7 +619,6 @@ struct DarkroomView: View {
         let id = UUID()
         renderID = id
         let selected = recipe
-        renderedRecipe = selected
         rendering = true
         renderTask = Task {
             do {

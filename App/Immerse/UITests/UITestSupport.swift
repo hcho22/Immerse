@@ -148,7 +148,8 @@ extension XCTestCase {
     /// Scrolls up in the same held drags, `distance` points each, until `done` holds. It stops asking once `done`
     /// holds: a `where` clause skips the drag but goes on through every remaining pass, and each pass asked again,
     /// about 5 seconds a scroll at the largest text size on this Intel Mac (Evidence/NativeApp/ui-test-isolation-064.md).
-    /// With a keyboard raised, a drag starts just above it instead, since one that starts on the keyboard types.
+    /// With a keyboard raised, a drag starts just above it instead, since one that starts on the keyboard types. A negative
+    /// distance drags the list back down.
     @nonobjc func scrollUp(_ app: XCUIApplication, by distance: CGFloat = 300, until done: () -> Bool) {
         for _ in 0..<16 {
             if done() { return }

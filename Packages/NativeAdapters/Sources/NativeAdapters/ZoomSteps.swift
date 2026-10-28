@@ -7,7 +7,7 @@ public enum RearLens: Int, Codable, Equatable, Comparable, Sendable {
     public static func < (lhs: RearLens, rhs: RearLens) -> Bool { lhs.rawValue < rhs.rawValue }
 }
 
-/// One zoom step the 6×6 offers on the rear camera. A step is a whole lens, or a native crop of a lens that the camera API
+/// One zoom step offered on a rear camera that supports lens zoom. A step is a whole lens, or a native crop of a lens that the camera API
 /// reports as a step (the sensor crops some iPhones offer, such as 2x of the wide lens), and it is labeled the way the
 /// iPhone's own Camera app labels it. The app never offers a step the iPhone does not report, and never a digital zoom
 /// between steps.

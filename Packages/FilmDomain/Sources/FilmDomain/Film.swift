@@ -69,6 +69,21 @@ public enum DevelopmentState: String, Codable, Equatable, Sendable {
     case developed
 }
 
+/// A Film's selected lens focus behavior. Cameras without a focus switch always use `auto`.
+public enum FilmFocusSetting: String, CaseIterable, Codable, Equatable, Sendable {
+    case auto
+    case fixed
+    case manual
+
+    public var title: String {
+        switch self {
+        case .auto: "Auto"
+        case .fixed: "Fixed"
+        case .manual: "Manual"
+        }
+    }
+}
+
 public enum FilmDomainError: Error, Equatable, Sendable {
     case wrongCameraMedium
     case movieOrientationRequired
@@ -88,6 +103,7 @@ public enum FilmDomainError: Error, Equatable, Sendable {
     case captureNotFound
     case captureNotRevealed
     case captureAlreadyDiscarded
+    case focusSettingNotOffered
     case emptyTitle
 }
 
@@ -102,6 +118,8 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
     /// (ADR 0014). Nil on a Camera that offers none, and on a 6×6 or 16mm Film loaded before Film Stock existed,
     /// whose stored record has no value and which develops as color.
     public let filmStock: FilmStock?
+    /// The focus mode selected for this Film. Nil on earlier stored Films, which start on Auto until changed.
+    public private(set) var focusSetting: FilmFocusSetting?
     public private(set) var completionState: CompletionState
     public private(set) var developmentState: DevelopmentState
     public private(set) var captures: [CaptureRecord]
@@ -134,6 +152,7 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         self.loadedAt = loadedAt
         self.movieOrientation = movieOrientation
         self.filmStock = filmStock
+        self.focusSetting = .auto
         self.completionState = .open
         self.developmentState = .notStarted
         self.captures = []
@@ -141,6 +160,14 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
 
     public var savedCaptureCount: Int {
         captures.count
+    }
+
+    /// Older Films have no saved choice; their new default is Auto without rewriting their record.
+    public var effectiveFocusSetting: FilmFocusSetting { focusSetting ?? .auto }
+
+    public mutating func setFocusSetting(_ setting: FilmFocusSetting) throws {
+        guard camera.focusSettings.contains(setting) else { throw FilmDomainError.focusSettingNotOffered }
+        focusSetting = setting
     }
 
     public var captureDateRange: ClosedRange<Date>? {

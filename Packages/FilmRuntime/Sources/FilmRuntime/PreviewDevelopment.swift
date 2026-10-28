@@ -12,8 +12,8 @@ import RenderCore
 /// type is compiled out of Release; `Scripts/verify-release-excludes-testing-unlock.sh` checks the Release binary.
 public enum PreviewDevelopment {
     /// Develops saved capture `sequenceNumber` of the Film at `root` into `directory`, replacing an earlier preview of
-    /// it, and returns the file: a JPEG for a photo, a silent `.mov` Developed Clip for a Movie's clip. An Instant print
-    /// develops by itself when it is saved, so an Instant Film has no preview.
+    /// it, and returns the file: a JPEG for a photo or a `.mov` Developed Clip that retains recorded sound. An Instant
+    /// print develops by itself when it is saved, so an Instant Film has no preview.
     public static func render(root: URL, filmID: UUID, sequenceNumber: Int, directory: URL) async throws -> URL {
         let repository = try FilmRepository(rootURL: root)
         let film = try repository.film(id: filmID)

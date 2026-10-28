@@ -8,8 +8,20 @@ final class JournalFlowTests: ScreenTestCase {
         try app.performAccessibilityAudit(for: Self.auditTypes)
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
-        for id in ["disposable1990s", "instant1970s", "mediumFormat6x6", "super8HomeMovie", "cinema16mm"] {
-            XCTAssertTrue(app.buttons["camera-\(id)"].exists)
+        let cameraNames = [
+            "disposable1990s": "Disposable",
+            "instant1970s": "Instant",
+            "mediumFormat6x6": "6×6",
+            "super8HomeMovie": "Super 8",
+            "cinema16mm": "16mm"
+        ]
+        for (id, name) in cameraNames {
+            let row = app.buttons["camera-\(id)"]
+            XCTAssertTrue(row.exists)
+            XCTAssertTrue(row.label.contains(name), row.label)
+            for oldName in ["1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie", "16mm Cinema"] {
+                XCTAssertFalse(row.label.contains(oldName), row.label)
+            }
         }
         let camera = app.buttons["camera-super8HomeMovie"]
         camera.tap()
@@ -19,6 +31,7 @@ final class JournalFlowTests: ScreenTestCase {
         // outgoing camera row mid-push (Evidence/NativeApp/qa13-measurement-049.md).
         XCTAssertTrue(app.staticTexts["Capacity, 3 minutes 20 seconds of film"].exists)
         XCTAssertFalse(app.alerts.firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "1960s home-movie camera")).firstMatch.exists)
         try audit(app, name: "Super8-load-default", for: Self.auditTypes)
         retainScreenshot(name: "Super8-load-default")
         // The Form is lazy and its Camera description is long enough that the command is below the first screen.
@@ -110,15 +123,34 @@ final class JournalFlowTests: ScreenTestCase {
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].exists)
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "16mm-load-accessibility-largest")
+        // The two audits below, 16mm-title-accessibility-largest and 16mm-command-accessibility-largest, are taken with
+        // the list scrolled down, so they leave out the clipped-text check: it shrinks and regrows the text in place, the
+        // list jumps near its top, and the check then reported clipping with no element on a screen where nothing is
+        // clipped. The audits at rest at the top of a screen keep it. ContentSizeTests still measures every text on this
+        // screen at the largest size, never clipped (testSixteenMillimeterLoadScreenTextAtAccessibilityExtraExtraExtraLarge,
+        // and the Super 8's title, access and actions tests for the rows the 16mm shares)
+        // (Evidence/NativeApp/largest-text-load-audits-077.md).
+        let scrolledAuditTypes = Self.auditTypes.subtracting(.textClipped)
         let title = app.staticTexts["film-title-heading"]
         scrollUpUntilWhole(app, title)
         XCTAssertTrue(title.isHittable)
-        try audit(app, name: "16mm-title-accessibility-largest", for: Self.auditTypes)
+        try audit(app, name: "16mm-title-accessibility-largest", for: scrolledAuditTypes)
         retainScreenshot(name: "16mm-title-accessibility-largest")
         let load = app.buttons["load-film"]
         scrollUp(app, until: load)
+        // At the end of the list the entitlement row sat half under the navigation bar, where the contrast check
+        // measured its text against the bar. The list moves back down in short drags, each shorter than the gap between
+        // two rows, until the first row showing below the bar starts at or below the bar's bottom edge.
+        let barBottom = app.navigationBars["16mm"].frame.maxY
+        let list = app.collectionViews.firstMatch
+        let firstRowClearsBar = {
+            let rows = ((try? list.snapshot().children) ?? []).filter { $0.elementType == .cell && $0.frame.maxY > barBottom }
+            return rows.map { $0.frame.minY }.min().map { $0 >= barBottom } ?? false
+        }
+        scrollUp(app, by: -30, until: firstRowClearsBar)
+        XCTAssertTrue(firstRowClearsBar(), "A row still sat under the 16mm navigation bar")
         XCTAssertTrue(load.isHittable)
-        try audit(app, name: "16mm-command-accessibility-largest", for: Self.auditTypes)
+        try audit(app, name: "16mm-command-accessibility-largest", for: scrolledAuditTypes)
         retainScreenshot(name: "16mm-command-accessibility-largest")
         goBack(app, from: "16mm", to: "Choose a Camera")
         app.buttons["Cancel"].tap()

@@ -14,9 +14,10 @@ import XCTest
 /// What Save Developed to Photos writes, read back from the file handed to Photos, against the sizes and formats the
 /// captain approved on 2026-10-13 (DEC-04): JPEG photos, the Disposable at no more than 12,000,000 pixels in its
 /// borderless 3:2 shape and the 6×6 at 3072 x 3072; Movies as H.264 in a `.mov` at 1920 x 1440, or 1440 x 1920 for a
-/// portrait Movie, the Super 8 at 18 frames a second and the 16mm at 24, silent. An Instant print is saved exactly as
-/// it was developed, 2282 x 2774, the 2048 x 2048 picture on its white card, with no resampling (his answer the same
-/// day: "instant export size: A").
+/// portrait Movie, the Super 8 at 18 frames a second and the 16mm at 24. This fixture has no captured sound or
+/// soundtrack, so its Developed Movies are silent. An Instant print without an Adjust quarter turn is saved exactly
+/// as it was developed, 2282 x 2774, the 2048 x 2048 picture on its white card, with no resampling (his answer the same
+/// day: "instant export size: A"); a quarter-turn recipe rotates the whole card and exports the swapped dimensions.
 final class ApprovedExportTests: XCTestCase {
     private var root: URL!
 
@@ -58,9 +59,9 @@ final class ApprovedExportTests: XCTestCase {
         }
     }
 
-    /// An Instant print is saved exactly as it was developed (DEC-04, the captain, 2026-10-13): a JPEG of 2282 x 2774,
-    /// the 2048 x 2048 picture on its white card. Unedited, the file handed to Photos is the developed print byte for
-    /// byte, so nothing is resampled or encoded again; an edited print keeps the size.
+    /// An Instant print without a quarter turn is saved exactly as it was developed (DEC-04, the captain, 2026-10-13):
+    /// a JPEG of 2282 x 2774, the 2048 x 2048 picture on its white card. Unedited, the file handed to Photos is the
+    /// developed print byte for byte; a light or contrast edit keeps the size.
     func testAnInstantExportIsTheDevelopedPrintByteForByteAt2282By2774() async throws {
         XCTAssertEqual([InstantPrintCard.width, InstantPrintCard.height], [2282, 2774])
         XCTAssertEqual(InstantPrintCard.pictureSide, 2048)
@@ -107,7 +108,7 @@ final class ApprovedExportTests: XCTestCase {
         XCTAssertEqual([edited.colorSpace, cropped.colorSpace], [CGColorSpace.sRGB as String, CGColorSpace.sRGB as String])
     }
 
-    func testAMovieExportIsSilentH264InAMovAtTheApprovedSizeAndTheCamerasFrameRate() async throws {
+    func testAMovieWithoutRecordedSoundExportsAsSilentH264InAMovAtTheApprovedSizeAndFrameRate() async throws {
         let fixtures = root.appendingPathComponent("Fixtures")
         var settings = RenderFixtureSettings.defaultExperimental
         settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.5
@@ -141,7 +142,7 @@ final class ApprovedExportTests: XCTestCase {
                 let tracks = try await asset.loadTracks(withMediaType: .video)
                 XCTAssertEqual(tracks.count, 1, name)
                 let audio = try await asset.loadTracks(withMediaType: .audio)
-                XCTAssertTrue(audio.isEmpty, "\(name) is silent")
+                XCTAssertTrue(audio.isEmpty, "\(name) has no captured sound or soundtrack in this fixture")
                 let track = try XCTUnwrap(tracks.first)
                 let dimensions = try await track.load(.naturalSize)
                 let transform = try await track.load(.preferredTransform)

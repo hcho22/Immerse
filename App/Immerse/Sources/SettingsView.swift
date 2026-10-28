@@ -26,8 +26,8 @@ struct SettingsView: View {
                 Section("Privacy") {
                     LabeledContent("Camera", value: PermissionCopy.label(AVFoundationCaptureAuthorizer().authorizationStatus()))
                     LabeledContent("Photos (add only)", value: PermissionCopy.label(PhotoKitAuthorizer().authorizationStatus(for: .addOnly)))
-                    LabeledContent("Microphone", value: "Not used")
-                    Text("No Accounts, sign-in, analytics or Immerse server. Your Films stay under your control.")
+                    LabeledContent("Microphone", value: "Movie clips only · \(PermissionCopy.label(AVFoundationCaptureAuthorizer().microphoneAuthorizationStatus()))")
+                    Text("No Accounts, sign-in, analytics or Immerse server. Your Films stay under your control. The microphone records only sound with Super 8 and 16mm movie clips; clips stay in their Film on this iPhone.")
                     Button("Open iPhone Settings", systemImage: "gearshape") {
                         if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                     }

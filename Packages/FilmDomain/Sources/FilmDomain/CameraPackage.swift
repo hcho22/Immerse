@@ -38,6 +38,9 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
     public let capacity: FilmCapacity
     public let revealRule: RevealRule
     public let supportsBuiltInSoundtrack: Bool
+    /// Whether this stored Camera package may record live sound. Optional so packages saved before MOV-12 decode as
+    /// silent forever; new movie packages explicitly lock the capability into their Film.
+    public let recordsLiveSound: Bool?
     /// The version of the Developed Treatments this package develops with. A Film keeps the package it locked at Load
     /// Film, so it develops with the treatments it started with after an update changes a Camera's look (ADR 0013,
     /// CAM-01, RK-11). Nil in a package locked before packages recorded one.
@@ -50,6 +53,7 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
         capacity: FilmCapacity,
         revealRule: RevealRule,
         supportsBuiltInSoundtrack: Bool = false,
+        recordsLiveSound: Bool? = nil,
         treatmentVersion: String? = nil
     ) {
         self.id = id
@@ -58,11 +62,22 @@ public struct CameraPackage: Codable, Equatable, Identifiable, Sendable {
         self.capacity = capacity
         self.revealRule = revealRule
         self.supportsBuiltInSoundtrack = supportsBuiltInSoundtrack
+        self.recordsLiveSound = recordsLiveSound
         self.treatmentVersion = treatmentVersion
     }
 }
 
 extension CameraPackage {
+    /// Focus modes the Camera offers on each Film: the Disposable and Super 8 can hold a fixed focus, while the 6×6
+    /// alone exposes manual focus. Every Camera starts in Auto.
+    public var focusSettings: [FilmFocusSetting] {
+        switch id {
+        case .disposable1990s, .super8HomeMovie: [.auto, .fixed]
+        case .mediumFormat6x6: [.auto, .manual]
+        case .instant1970s, .cinema16mm: [.auto]
+        }
+    }
+
     /// The Film Stocks Load Film offers for this Camera, color first, or none for a Camera that is a complete package
     /// (ADR 0014). It follows the Camera, not the stored package, so a package a Film locked before Film Stock
     /// existed answers the same as today's.
@@ -117,6 +132,7 @@ public enum CameraCatalog {
         capacity: .seconds(200),
         revealRule: .movieDevelopment,
         supportsBuiltInSoundtrack: true,
+        recordsLiveSound: true,
         treatmentVersion: treatmentVersion
     )
 
@@ -127,6 +143,7 @@ public enum CameraCatalog {
         capacity: .seconds(167),
         revealRule: .movieDevelopment,
         supportsBuiltInSoundtrack: true,
+        recordsLiveSound: true,
         treatmentVersion: treatmentVersion
     )
 

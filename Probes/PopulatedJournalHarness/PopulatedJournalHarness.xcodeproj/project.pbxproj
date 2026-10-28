@@ -391,7 +391,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Private Workflow Harness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and movie clips for your Films.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound with your Super 8 and 16mm movie clips.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -565,7 +566,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Private Workflow Harness";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and silent movie clips for your Films.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and movie clips for your Films.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound with your Super 8 and 16mm movie clips.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

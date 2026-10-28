@@ -92,6 +92,10 @@ private struct LoadFilmView: View {
             Section {
                 LabeledContent("Capacity") { camera.capacityText }
                 Text(camera.revealLabel)
+                if let sound = camera.loadSoundLabel {
+                    Text(sound).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("load-film-sound")
+                }
                 Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 // The choice comes before the look lines, which on the 6×6 say what each Film Stock develops like.
                 if !camera.filmStocks.isEmpty {
@@ -104,10 +108,6 @@ private struct LoadFilmView: View {
                     Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
                 }
                 if camera.medium == .movie {
-                    HStack {
-                        Image(systemName: "mic.slash").font(.system(size: 20)).accessibilityHidden(true)
-                        Text("Silent capture").fixedSize(horizontal: false, vertical: true)
-                    }.accessibilityElement(children: .combine)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
                         SegmentedChoice(label: "Movie Orientation",
@@ -156,6 +156,7 @@ private struct LoadFilmView: View {
                 }.disabled(loading).accessibilityIdentifier("load-film")
             }
         }
+        .contentMargins(.bottom, 34, for: .scrollContent)
     }
 
     private var suggestedTitle: String {

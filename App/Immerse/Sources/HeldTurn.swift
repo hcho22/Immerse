@@ -75,13 +75,10 @@ private struct TurnedWithTheHold: ViewModifier {
 /// scrolls across the screen, which is up and down for the person holding the iPhone on its side, starting from its top.
 ///
 /// With `reservesLength` the block takes the greater of its two heights in every hold, fills the width it is offered and
-/// sits against the edge that is its top as the person holds the iPhone. The Camera's header uses it, so the viewfinder
-/// below it is the same size and in the same place however the iPhone is held. A reserving block that is offered more
-/// height than its length is laid out that long (`CaptureColumn` offers the header the room the viewfinder leaves, so a
-/// tall iPhone keeps the Camera's name and its count on one line each), though never longer than `maximumLength`, at its
-/// top: the header's lines run no longer than the room above the shutter bar, so where the header is taller, as at the
-/// largest text sizes, each line starts in view at whichever end of the screen it starts. Any other block is exactly as
-/// wide as it is tall once turned, and its parent puts it where it belongs.
+/// sits against the edge that is its top as the person holds the iPhone. The Camera's one-line header uses it, so the
+/// Viewfinder area below stays the same size and in the same place however the iPhone is held. A reserving block that is
+/// offered more height than its length is laid out that long, though never longer than `maximumLength`, at its top.
+/// Any other block is exactly as wide as it is tall once turned, and its parent puts it where it belongs.
 struct TurnedBlock<Content: View>: View {
     @Environment(\.heldTurn) private var turn
     var length: CGFloat?
@@ -103,8 +100,9 @@ struct TurnedBlock<Content: View>: View {
             content.rotationEffect(turn.angle)
         }
         if turn.isSideways {
-            // The one `ViewThatFits`, which swaps the block's view identity where it starts to overflow: only the
-            // header turns this far, it holds no state, and no layout of one `Layout` alone can scroll.
+            // A `ViewThatFits`, which swaps the block's view identity where it starts to overflow (the shooting screen's
+            // notices have the only other): only the header turns this far, it holds no state, and no layout of one
+            // `Layout` alone can scroll.
             ViewThatFits(in: .horizontal) {
                 block
                 ScrollView(.horizontal, showsIndicators: false) { block }

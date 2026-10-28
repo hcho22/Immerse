@@ -13,7 +13,7 @@ public enum CaptureMediaKind: String, Codable, Equatable, Sendable {
 public struct CaptureCapabilities: Codable, Equatable, Sendable {
     public let availablePositions: Set<CapturePosition>
     public let supportsLensSwitchDuringSession: Bool
-    /// The rear lenses and their native crops, which the 6×6's zoom steps derive from.
+    /// The rear lenses and their native crops, which the 6×6, Super 8 and 16mm zoom steps derive from.
     public let rearLenses: RearLensCapabilities
 
     public init(

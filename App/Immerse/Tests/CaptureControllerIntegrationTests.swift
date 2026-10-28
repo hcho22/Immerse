@@ -269,6 +269,95 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertNil(CaptureFrameOrientation(device: .faceUp))
     }
 
+    func testMicrophoneIsAskedOnlyForNewMoviePackagesAndDecliningDoesNotBlockTheScreen() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureMicrophone-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let calls = HeldReceiptCalls()
+        let microphoneCalls = MicrophonePromptCounter()
+        let authorizer = SyntheticCamera(granted: true, microphoneStatus: .notDetermined,
+                                         microphoneResult: false, microphoneCalls: microphoneCalls)
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: calls),
+                                     cameraAuthorizer: authorizer)
+        await model.recoverAtLaunch()
+        // Whether an open went on to start the camera, which the simulator has none of, rather than stopping before it.
+        func reachesTheCamera(_ film: Film) async -> Bool {
+            do { try await model.capture.open(film: film, model: model); return false }
+            catch let error as NativeCaptureError { return error == .notRunning || error == .configurationFailed }
+            catch { return false }
+        }
+
+        let photo = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                    title: "Synthetic photo", access: .subscription)
+        let photoReached = await reachesTheCamera(photo)
+        XCTAssertTrue(photoReached)
+        XCTAssertEqual(microphoneCalls.value, 0, "Photo Cameras never ask for microphone access")
+
+        let oldPackage = CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie,
+                                       capacity: .seconds(165), revealRule: .movieDevelopment,
+                                       supportsBuiltInSoundtrack: true)
+        let oldFilm = try model.repository.createFilm(camera: oldPackage, title: "Earlier Movie",
+                                                      movieOrientation: .portrait, filmStock: .color, access: .subscription)
+        let oldReached = await reachesTheCamera(oldFilm)
+        XCTAssertTrue(oldReached)
+        XCTAssertEqual(microphoneCalls.value, 0, "A package stored before live sound stays silent and never asks")
+        XCTAssertFalse(model.capture.microphoneUnavailable)
+
+        let newFilm = try model.repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "New Movie",
+                                                      movieOrientation: .portrait, access: .subscription)
+        let newReached = await reachesTheCamera(newFilm)
+        XCTAssertTrue(newReached, "Declining the microphone does not stop the camera starting")
+        XCTAssertEqual(microphoneCalls.value, 1, "The new movie package asks on its first shooting-screen open")
+        XCTAssertTrue(model.capture.microphoneUnavailable, "Declining access leaves an independent silent-recording note")
+    }
+
+    /// P2: the shooting screen's session starts once and ends once, however often the screen appears again behind a print:
+    /// its two starts and its one end leave nothing held, the hold's orientation notifications included.
+    func testTheShootingSessionStartsAndEndsExactlyOnce() {
+        // From no request for orientation notifications, so a start left unbalanced shows; others' are put back after.
+        var others = 0
+        while UIDevice.current.isGeneratingDeviceOrientationNotifications, others < 100 {
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+            others += 1
+        }
+        defer { for _ in 0..<others { UIDevice.current.beginGeneratingDeviceOrientationNotifications() } }
+        XCTAssertFalse(UIDevice.current.isGeneratingDeviceOrientationNotifications)
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
+        capture.beginShootingSession()
+        capture.beginShootingSession()
+        XCTAssertTrue(capture.presented)
+        XCTAssertTrue(capture.shootingSessionActive)
+        XCTAssertTrue(UIDevice.current.isGeneratingDeviceOrientationNotifications)
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait)
+        capture.endShootingSession()
+        XCTAssertFalse(capture.presented)
+        XCTAssertFalse(capture.shootingSessionActive)
+        XCTAssertFalse(UIDevice.current.isGeneratingDeviceOrientationNotifications,
+                       "The session's one end ends the notifications its starts asked for")
+        XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "The hold ends with the session")
+    }
+
+    /// S1: iOS makes the app inactive while it asks for the microphone, which pauses the camera. The question is asked
+    /// before the open takes its session, so answering it leads on to starting the camera (which throws on the
+    /// simulator, which has none) instead of ending the open quietly on a paused camera.
+    func testTheMicrophoneQuestionDoesNotStopTheOpenThatAskedIt() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("CaptureMicrophoneOpen-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let scene = InactiveDuringQuestion()
+        let authorizer = SyntheticCamera(granted: true, microphoneStatus: .notDetermined, microphoneResult: true,
+                                         whileAskingForTheMicrophone: { await scene.goInactive() })
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     cameraAuthorizer: authorizer)
+        scene.model = model
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "New Movie",
+                                                   movieOrientation: .portrait, access: .subscription)
+        var reachedTheCamera = false
+        do { try await model.capture.open(film: film, model: model) } catch { reachedTheCamera = error is NativeCaptureError }
+        XCTAssertTrue(scene.wentInactive, "The question made the app inactive, as iOS does")
+        XCTAssertTrue(reachedTheCamera, "After the answer the open starts the camera instead of ending on a paused one")
+        XCTAssertFalse(model.capture.microphoneUnavailable)
+    }
+
     /// The actual capture screen while a 16mm clip records, retained as a screenshot. The simulator has no camera,
     /// so a recording start stands in for a clip: the line counts down in red in the resting line's minutes and
     /// seconds, while the shutter and the missing-camera message still show the simulator's idle camera.
@@ -354,10 +443,12 @@ final class CaptureControllerIntegrationTests: XCTestCase {
             XCTAssertEqual(plan.lockedMovieOrientation, camera.medium == .movie ? .portrait : nil)
         }
         let super8 = CaptureBehavior.for(.super8HomeMovie)
-        XCTAssertEqual(super8.focus, .fixed)
+        XCTAssertEqual(super8.focus, .deviceDefault)
+        XCTAssertEqual(CaptureBehavior.for(.super8HomeMovie, focusSetting: .fixed).focus, .fixed)
         XCTAssertEqual(super8.exposure, .automatic)
         let disposable = CaptureBehavior.for(.disposable1990s)
-        XCTAssertEqual(disposable.focus, .fixed)
+        XCTAssertEqual(disposable.focus, .deviceDefault)
+        XCTAssertEqual(CaptureBehavior.for(.disposable1990s, focusSetting: .fixed).focus, .fixed)
         XCTAssertEqual(disposable.exposure, .fixed)
     }
 
@@ -513,10 +604,39 @@ extension XCTestCase {
     }
 }
 
+final class MicrophonePromptCounter: Sendable {
+    private let count = Mutex(0)
+    var value: Int { count.withLock { $0 } }
+    func increment() { count.withLock { $0 += 1 } }
+}
+
+/// Stands in for the scene going inactive while iOS shows a permission question.
+@MainActor final class InactiveDuringQuestion: Sendable {
+    weak var model: JournalModel?
+    private(set) var wentInactive = false
+    func goInactive() {
+        wentInactive = true
+        model?.capture.pauseForInactiveScene()
+    }
+}
+
 struct SyntheticCamera: CapturePermissionAuthorizing {
     let granted: Bool
+    var microphoneStatus: CaptureAuthorizationStatus = .authorized
+    var microphoneResult = true
+    var microphoneCalls: MicrophonePromptCounter?
+    /// What happens while the microphone question shows, as the app going inactive.
+    var whileAskingForTheMicrophone: (@Sendable () async -> Void)?
     func authorizationStatus() -> CaptureAuthorizationStatus { granted ? .authorized : .denied }
     func requestAccess() async -> Bool { granted }
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus {
+        microphoneStatus
+    }
+    func requestMicrophoneAccess() async -> Bool {
+        microphoneCalls?.increment()
+        await whileAskingForTheMicrophone?()
+        return microphoneResult
+    }
 }
 
 /// In-memory receipt calls. A held update blocks its caller, which is always the Trial owner

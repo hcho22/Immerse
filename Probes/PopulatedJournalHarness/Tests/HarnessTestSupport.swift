@@ -70,6 +70,45 @@ class HarnessTestCase: XCTestCase {
         app.terminate()
     }
 
+    /// Keeps taps clear of the home indicator and scroll edge effect, using the app screen suite's short held drag when
+    /// a row is clipped. `UITestSupport.swift` has the same helper for the native app target.
+    func tapWhole(_ app: XCUIApplication, _ element: XCUIElement) {
+        let window = app.windows.firstMatch
+        for _ in 0..<16 {
+            let indicator: CGFloat = max(window.frame.width, window.frame.height) > 700 ? 40 : 4
+            let bottom = window.frame.maxY - indicator
+            if element.exists, element.frame.minY >= window.frame.minY, element.frame.maxY <= bottom { break }
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -100)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
+        }
+        let indicator: CGFloat = max(window.frame.width, window.frame.height) > 700 ? 40 : 4
+        XCTAssertLessThanOrEqual(element.frame.maxY, window.frame.maxY - indicator,
+                                 "\(element) is whole on screen before the tap")
+        element.tap()
+    }
+
+    /// A sheet is still rising when its controls first exist, whether the app raised it on its own or a tap of the test's
+    /// did, and iOS ignores a tap sent while it rises. Two looks alike a quarter of a second apart mean it has come to rest.
+    func waitUntilStill(_ app: XCUIApplication, timeout: TimeInterval = 15) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        var last = app.screenshot().pngRepresentation
+        while Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.25)
+            let now = app.screenshot().pngRepresentation
+            if now == last { return true }
+            last = now
+        }
+        return false
+    }
+
+    /// Taps the photo view's Darkroom button once the screen is still: a tap sent 0.3 s after the print was tapped, while
+    /// the photo view was still rising, did nothing on the iPhone 17 Pro Max simulator. One tap, never a second.
+    func tapDarkroom(_ app: XCUIApplication) {
+        XCTAssertTrue(waitUntilStill(app), "The photo view has come to rest before Darkroom is tapped")
+        app.buttons["Darkroom"].tap()
+    }
+
     override func setUp() async throws {
         try await super.setUp()
         XCUIDevice.shared.orientation = .portrait

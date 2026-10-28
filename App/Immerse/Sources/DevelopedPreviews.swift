@@ -12,7 +12,7 @@ import SwiftUI
 /// (the captain, 2026-10-21). While on, every photo of the 6×6 and the Disposable and every clip of the 16mm and the
 /// Super 8 develops as soon as it is saved, rendered by Development's own code with the treatment Development will give it
 /// (`PreviewDevelopment`), and shows on the shooting screen, and those Cameras' shooting screens say beside Done that the
-/// switch is on (`DevelopAtOnceNotice`). Every capture develops, one at a time in the order they were saved (the captain,
+/// switch is on (`DevelopAtOnceNotice`) beside Done in the one-line shooting header. Every capture develops, one at a time in the order they were saved (the captain,
 /// 2026-10-21: "preview - every shot"): each preview takes the card from the one before as it finishes, and in a quick
 /// burst the newest waits behind the ones before it. Nothing develops while the app is in the background; the capture
 /// it stopped develops again on return. The roll stays sealed and develops as before; an Instant print
@@ -239,12 +239,15 @@ struct DevelopedPreviewCard: View {
     static let sidewaysLength: CGFloat = 300
     let preview: DevelopedPreviews.Preview?
     let pending: DevelopedPreviews.Pending?
+    /// Whether the picture opens full size: not while a clip starts, records or saves, since the full-size player would
+    /// take the iPhone's sound from the clip's microphone. The card then shows dimmed, and its close button still works.
+    var opens = true
     let open: () -> Void
     let close: () -> Void
 
     var body: some View {
         // Within the viewfinder at every text size, as the zoom steps are; the picture's size follows the same cap.
-        PreviewCardContent(preview: preview, pending: pending, open: open, close: close)
+        PreviewCardContent(preview: preview, pending: pending, opens: opens, open: open, close: close)
             .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
@@ -252,6 +255,7 @@ struct DevelopedPreviewCard: View {
 private struct PreviewCardContent: View {
     let preview: DevelopedPreviews.Preview?
     let pending: DevelopedPreviews.Pending?
+    let opens: Bool
     let open: () -> Void
     let close: () -> Void
     @ScaledMetric(relativeTo: .caption) private var side: CGFloat = 48
@@ -276,11 +280,11 @@ private struct PreviewCardContent: View {
             .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
     }
 
-    /// The picture and the lines, which open the preview full size once there is one to open; a disabled button would
-    /// dim them.
+    /// The picture and the lines, which open the preview full size once there is one to open, dimmed while it cannot
+    /// open; with none to open they are no button, which would dim them.
     @ViewBuilder private var tappableContent: some View {
         if preview?.url != nil {
-            Button(action: open) { content }.buttonStyle(.plain)
+            Button(action: open) { content }.buttonStyle(.plain).disabled(!opens)
         } else {
             content
         }
@@ -304,7 +308,7 @@ private struct PreviewCardContent: View {
         if let preview {
             let capture = name(preview.medium, preview.sequenceNumber)
             switch preview.state {
-            case .ready: lines.append("\(capture) developed. Tap to view.")
+            case .ready: lines.append("\(capture) developed. \(opens ? "Tap to view." : "Opens when the clip ends.")")
             case .failed: lines.append("\(capture) could not develop here. It is saved and develops with the roll.")
             }
         }
@@ -430,13 +434,17 @@ struct DevelopedPreviewSheet: View {
                 image = await Task.detached { UIImage(contentsOfFile: url.path)?.preparingForDisplay() }.value
                 unavailable = image == nil
             } else {
+                MoviePlaybackAudio.prepare()
                 let queue = AVQueuePlayer()
                 looper = AVPlayerLooper(player: queue, templateItem: AVPlayerItem(url: url))
                 player = queue
                 queue.play()
             }
         }
-        .onDisappear { player?.pause(); looper = nil; player = nil; image = nil }
+        .onDisappear {
+            if player != nil { MoviePlaybackAudio.finish() }
+            player?.pause(); looper = nil; player = nil; image = nil
+        }
     }
 }
 
@@ -463,10 +471,10 @@ struct DevelopedPreviewNotice: View {
 }
 
 /// Says on the shooting screen that Develop at once is on, whenever it is on for that Camera, so a screenshot of a Camera
-/// that previews its captures is never taken for the real thing. It sits beside Done, in the header (`CaptureDoneRow`).
+/// that previews its captures is never taken for the real thing. It sits beside Done in the shooting header (`CaptureDoneRow`).
 struct DevelopAtOnceNotice: View {
     var body: some View {
-        // Short enough for one line in the header's shortest lines, held on its side at the default size.
+        // Short enough to stay beside Done in the one-line header.
         HStack(spacing: 4) {
             Image(systemName: "hammer")
             Text("Develop at once")
@@ -474,8 +482,7 @@ struct DevelopAtOnceNotice: View {
         .font(.caption2.weight(.semibold))
         .padding(.horizontal, 6).padding(.vertical, 4)
         .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 8))
-        // Done grows at every text size and this does not past xxLarge, so held upright the two fit on one line at the
-        // largest size even in the 343-point row of a 375-point iPhone, and the header is as tall as with the switch off.
+        // The notice stays capped at xxLarge so it can share the header with the Camera name and count at accessibility sizes.
         .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Develop at once is on. Debug build.")

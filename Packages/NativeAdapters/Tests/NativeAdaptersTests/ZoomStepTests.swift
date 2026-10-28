@@ -2,8 +2,8 @@ import FilmDomain
 @testable import NativeAdapters
 import XCTest
 
-/// The 6×6's zoom steps follow the lenses the iPhone reports (the captain, 2026-10-16: "allow zoom as allowed by
-/// camera native"). Each case injects what an iPhone's camera API would report.
+/// The 6×6, Super 8 and 16mm zoom steps follow the lenses the iPhone reports (the captain, 2026-10-16: "allow zoom as
+/// allowed by camera native"). Each case injects what an iPhone's camera API would report.
 final class ZoomStepTests: XCTestCase {
     /// `crops` are the native crops the API reports for the wide lens, and the others those of the other two lenses.
     private func lenses(
@@ -115,9 +115,14 @@ final class ZoomStepTests: XCTestCase {
     private func plan(
         _ camera: CameraID, position: CapturePosition = .rear, rear: RearLensCapabilities
     ) -> CaptureSessionPlan {
-        CaptureSessionPlan(
+        let mediaKind: CaptureMediaKind = switch camera {
+        case .super8HomeMovie, .cinema16mm: .movie
+        default: .photo
+        }
+        return CaptureSessionPlan(
             request: CaptureSessionRequest(
-                preferredPosition: position, mediaKind: .photo, behavior: .for(camera)
+                preferredPosition: position, mediaKind: mediaKind,
+                lockedMovieOrientation: mediaKind == .movie ? .portrait : nil, behavior: .for(camera)
             ),
             capabilities: CaptureCapabilities(
                 availablePositions: [.rear, .front], supportsLensSwitchDuringSession: true, rearLenses: rear
@@ -125,13 +130,26 @@ final class ZoomStepTests: XCTestCase {
         )
     }
 
-    func testOnlyTheSixBySixRearCameraOffersZoomSteps() {
+    func testThe6x6AndMovieCamerasOfferOnlyTheirRearZoomSteps() throws {
         XCTAssertEqual(plan(.mediumFormat6x6, rear: threeLenses).zoomSteps.map(\.label), ["0.5x", "1x", "3x"])
         XCTAssertEqual(plan(.mediumFormat6x6, rear: threeLenses).restingZoomStep?.label, "1x")
         XCTAssertEqual(plan(.mediumFormat6x6, position: .front, rear: threeLenses).zoomSteps, [],
                        "The front camera has no zoom steps")
         XCTAssertNil(plan(.mediumFormat6x6, position: .front, rear: threeLenses).restingZoomStep)
-        for camera in CameraID.allCases where camera != .mediumFormat6x6 {
+        for camera in [CameraID.super8HomeMovie, .cinema16mm] {
+            let movie = plan(camera, rear: threeLenses)
+            XCTAssertEqual(movie.mediaKind, .movie)
+            XCTAssertEqual(movie.lockedMovieOrientation, .portrait)
+            XCTAssertEqual(movie.behavior.viewfinder, .fourByThree)
+            XCTAssertEqual(movie.zoomSteps.map(\.label), ["0.5x", "1x", "3x"], "\(camera) follows the phone's reported lenses")
+            XCTAssertEqual(movie.restingZoomStep?.label, "1x")
+            XCTAssertEqual(plan(camera, position: .front, rear: threeLenses).zoomSteps, [], "\(camera) front has no zoom steps")
+            let telephoto = try XCTUnwrap(movie.zoomSteps.last)
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .idle), .allowed)
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .recordingMovie), .blockedDuring(.recordingMovie))
+            XCTAssertEqual(movie.zoomDecision(to: telephoto, during: .savingMovieClip), .blockedDuring(.savingMovieClip))
+        }
+        for camera in [CameraID.disposable1990s, .instant1970s] {
             XCTAssertEqual(plan(camera, rear: threeLenses).zoomSteps, [], "\(camera) keeps its single lens")
         }
         XCTAssertEqual(plan(.mediumFormat6x6, rear: .wideOnly).zoomSteps, [], "One lens, no zoom control")
@@ -197,5 +215,53 @@ final class ZoomStepTests: XCTestCase {
         XCTAssertEqual(updated.manualLensPosition, 0.3)
         XCTAssertEqual(updated.activePosition, .rear)
         XCTAssertEqual(updated.lensSwitchDecision(to: .front, during: .idle), .allowed)
+    }
+
+    /// A stand-in for a lens's format: its landscape size and whether it records 30 frames per second.
+    private struct Format { let width: Int; let height: Int; var thirty = true }
+
+    private func movieLenses(_ formats: [RearLens: [Format]]) -> RearLensCapabilities {
+        MovieCaptureFormat.lensesRecordingTheWideLensFormat(
+            lenses([(.ultraWide, 0.5), (.wide, 1), (.telephoto, 3)], crops: [2], telephotoCrops: [2]),
+            formats: { formats[$0] ?? [] },
+            dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty }
+        )
+    }
+
+    /// FR-26 item 4: a movie Camera offers a lens's steps only where the lens records the wide lens's 4:3 movie size at the
+    /// movie frame rate, so every step records the same size and none fails to open mid-shoot.
+    func testAMovieStepIsOfferedOnlyOnALensThatRecordsTheWideLensMovieSize() {
+        let wide = [Format(width: 1920, height: 1080), Format(width: 1440, height: 1080), Format(width: 640, height: 480)]
+        let every = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080)],
+                                 .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(every), ["0.5x", "1x", "2x", "3x", "6x"], "Every lens records 1440 by 1080")
+
+        let noFourByThree = movieLenses([.wide: wide, .ultraWide: [Format(width: 1920, height: 1080)],
+                                         .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(noFourByThree), ["1x", "2x", "3x", "6x"], "An ultra wide lens with no 4:3 format drops out")
+
+        let otherSize = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080)],
+                                     .telephoto: [Format(width: 1280, height: 960), Format(width: 640, height: 480)]])
+        XCTAssertEqual(labels(otherSize), ["0.5x", "1x", "2x"],
+                       "A telephoto lens with only other 4:3 sizes drops out, its own crop with it")
+
+        let tooSlow = movieLenses([.wide: wide, .ultraWide: [Format(width: 1440, height: 1080, thirty: false)],
+                                   .telephoto: [Format(width: 1440, height: 1080)]])
+        XCTAssertEqual(labels(tooSlow), ["1x", "2x", "3x", "6x"], "A lens that cannot record 30 frames per second drops out")
+
+        let wideOnly = movieLenses([.wide: wide])
+        XCTAssertEqual(labels(wideOnly), ["1x", "2x"], "The wide lens keeps its own native crop")
+    }
+
+    func testAZoomStepLensRecordsExactlyTheWideLensMovieSize() {
+        let formats = [Format(width: 1920, height: 1440), Format(width: 1440, height: 1080, thirty: false),
+                       Format(width: 1440, height: 1080)]
+        let wide = MovieCaptureFormat.preferred(among: [Format(width: 1440, height: 1080)],
+                                                dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty })
+        let matched = MovieCaptureFormat.matching((1440, 1080), among: formats,
+                                                  dimensions: { ($0.width, $0.height) }, recordsMovieFrameRate: { $0.thirty })
+        XCTAssertEqual(wide.map { [$0.width, $0.height] }, [1440, 1080])
+        XCTAssertEqual(matched.map { [$0.width, $0.height, $0.thirty ? 30 : 0] }, [1440, 1080, 30],
+                       "The lens records the wide lens's size at 30 frames per second, never its own larger format")
     }
 }

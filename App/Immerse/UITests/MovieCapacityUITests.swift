@@ -26,12 +26,16 @@ final class MovieCapacityUITests: ScreenTestCase {
         if let size { app.launchArguments += ["-UIPreferredContentSizeCategoryName", size] }
         // An earlier test can leave Camera declined, so Load Film asks afresh and a person allows it.
         app.resetAuthorizationStatus(for: .camera)
+        app.resetAuthorizationStatus(for: .microphone)
         var allowed = false
-        let monitor = addUIInterruptionMonitor(withDescription: "Camera access request") { alert in
+        let monitor = addUIInterruptionMonitor(withDescription: "Camera and microphone requests") { alert in
             let allow = alert.buttons["Allow"]
-            guard alert.label.localizedCaseInsensitiveContains("Camera"), allow.exists else { return false }
+            // Read before the tap: the alert is gone once Allow is tapped, and a query of it then fails the test.
+            let asksForCamera = alert.label.localizedCaseInsensitiveContains("Camera")
+            guard allow.exists,
+                  asksForCamera || alert.label.localizedCaseInsensitiveContains("Microphone") else { return false }
             allow.tap()
-            allowed = true
+            if asksForCamera { allowed = true }
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }
@@ -58,6 +62,8 @@ final class MovieCapacityUITests: ScreenTestCase {
         }
         XCTAssertTrue(detail.exists)
         XCTAssertTrue(load.waitForNonExistence(timeout: 5), "The Load screen closed")
+        XCTAssertTrue(app.staticTexts["16mm"].exists, "The Film screen shows the Camera's short name")
+        XCTAssertFalse(app.staticTexts["16mm Cinema"].exists, "The Film screen does not show the stored package name")
         XCTAssertTrue(allowed, "Load Film asks for Camera access")
         XCTAssertTrue(app.staticTexts["2 minutes 47 seconds left"].exists, "Film detail header")
 

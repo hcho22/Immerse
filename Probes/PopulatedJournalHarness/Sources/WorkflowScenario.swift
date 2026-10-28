@@ -1,8 +1,10 @@
+import CoreGraphics
 import CryptoKit
 import EntitlementCore
 import FilmDomain
 @testable import FilmPersistence
 import Foundation
+import ImageIO
 import Observation
 import RenderCore
 import RenderFixtures
@@ -84,15 +86,22 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         if reopening {
             _ = try JSONDecoder().decode(Seed.self, from: Data(contentsOf: seedURL))
         } else {
-            let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-mixed") ? "instant-mixed"
+            let mode = arguments.contains("--movie") ? "movie" : arguments.contains("--instant-final") ? "instant-final"
+                : arguments.contains("--instant-mixed") ? "instant-mixed"
                 : arguments.contains("--instant") ? "instant" : arguments.contains("--empty") ? "empty"
                 : arguments.contains("--developed-photo") ? "developed-photo"
                 : arguments.contains("--medium-format") ? "medium-format" : "early-photo"
             let movie = mode == "movie", instant = mode.hasPrefix("instant")
             // `--super8` films the Movie on the Super 8 instead of the 16mm.
-            let camera = movie ? (arguments.contains("--super8") ? CameraCatalog.super8HomeMovie : CameraCatalog.cinema16mm)
+            let catalogCamera = movie ? (arguments.contains("--super8") ? CameraCatalog.super8HomeMovie : CameraCatalog.cinema16mm)
                 : instant ? CameraCatalog.instant1970s
                 : mode == "medium-format" ? CameraCatalog.mediumFormat6x6 : CameraCatalog.disposable1990s
+            // `--earlier-package` loads the 16mm Film on the package a build before live sound locked, which records no
+            // sound.
+            let camera = movie && arguments.contains("--earlier-package")
+                ? CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie, capacity: .seconds(165),
+                                revealRule: .movieDevelopment, supportsBuiltInSoundtrack: true)
+                : catalogCamera
             let model = scenario.model
             // `--black-and-white` loads the 6×6 or 16mm Film on the black-and-white Film Stock; otherwise a Camera with a
             // Film Stock gets Load Film's default, color.
@@ -123,12 +132,22 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     }
                 } else {
                     let data = try Data(contentsOf: source("--photo-source") ?? fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
+                    if mode == "instant-final" {
+                        for _ in 0..<9 { try model.repository.savePhotoCapture(filmID: film.id, sourceData: data) }
+                        model.refresh()
+                        try await model.develop(film.id)
+                    } else {
                     // `--two-sealed`, with `--instant-mixed`, leaves two sealed Instant prints where there is otherwise one,
                     // so one Development reveals both.
-                    let captures = mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
+                    // `--three-distinct-prints` takes three photos of three plainly different scenes, red, green and blue,
+                    // so a test can tell the prints apart by their pictures.
+                    let distinct = arguments.contains("--three-distinct-prints")
+                    let captures = distinct ? 3 : mode == "instant-mixed" && arguments.contains("--two-sealed") ? 3 : 2
                     for index in 1...captures {
-                        try model.repository.savePhotoCapture(filmID: film.id, sourceData: data)
+                        let picture = distinct ? try Self.plainScene(index) : data
+                        try model.repository.savePhotoCapture(filmID: film.id, sourceData: picture)
                         if mode == "instant-mixed", index == 1 { model.refresh(); try await model.develop(film.id) }
+                    }
                     }
                 }
                 let developsEarly = mode == "developed-photo" || mode == "medium-format"
@@ -138,13 +157,19 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 }
             }
             try persist(Seed(mode: mode, filmID: film.id), to: seedURL)
-            // `--reveal-at-camera` develops the Film's sealed Instant print once the camera screen is open, as the app does
-            // when a save lands there, so a test can meet the reveal and the question about its original at the camera.
+            // `--reveal-at-camera` saves and develops an Instant print once the shooting screen is open, as the app does
+            // when a save lands there. `--instant-final` leaves its tenth exposure for this moment to test the one pack-end
+            // Originals question.
             // The simulator has no camera, so nothing is captured.
             if arguments.contains("--reveal-at-camera") {
                 Task {
                     while !model.capture.presented { try? await Task.sleep(for: .milliseconds(100)) }
                     try? await Task.sleep(for: .seconds(1))
+                    if mode == "instant-final",
+                       let source = try? Data(contentsOf: directory.appendingPathComponent("Fixtures/synthetic-developed-photo.jpg")) {
+                        _ = try? model.repository.savePhotoCapture(filmID: film.id, sourceData: source)
+                        model.refresh()
+                    }
                     model.developSavedPrint(film.id) { _ in }
                 }
             }
@@ -162,6 +187,14 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         // Darkroom fails to load it; it goes to the store the same way, after the inspection.
         if !reopening, arguments.contains("--recipe-unreadable"), let film = scenario.model.films.first {
             try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1", data: Data("unreadable".utf8))
+        }
+        // A pre-change Film can still have a Dodge/Burn recipe. Seed one after the initial inspection so the harness UI
+        // opens that exact stored recipe, while the retained-history check can compare it with the reset result.
+        if !reopening, arguments.contains("--recipe-with-strokes"), let film = scenario.model.films.first {
+            let stroke = LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.5)], exposureStops: 1)
+            let recipe = DarkroomRecipe(dodgeBurnMasks: [stroke])
+            try scenario.model.repository.database.setValue(filmID: film.id, key: "recipe-1",
+                data: JSONEncoder().encode(recipe))
         }
         return scenario
     }
@@ -221,5 +254,28 @@ private struct FixtureTrialStore: DeviceTrialStoring {
         let handle = try FileHandle(forWritingTo: url)
         defer { try? handle.close() }
         try handle.synchronize()
+    }
+}
+
+extension WorkflowScenario {
+    /// A 320 by 240 JPEG of one plain color, the `index`th of red, green and blue.
+    static func plainScene(_ index: Int) throws -> Data {
+        let colors: [(CGFloat, CGFloat, CGFloat)] = [(0.85, 0.15, 0.12), (0.15, 0.7, 0.2), (0.12, 0.25, 0.85)]
+        let color = colors[(index - 1) % colors.count]
+        guard let context = CGContext(data: nil, width: 320, height: 240, bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+            throw WorkflowError.cannotReseedHistory
+        }
+        context.setFillColor(red: color.0, green: color.1, blue: color.2, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: 320, height: 240))
+        let data = NSMutableData()
+        guard let image = context.makeImage(),
+              let destination = CGImageDestinationCreateWithData(data, "public.jpeg" as CFString, 1, nil) else {
+            throw WorkflowError.cannotReseedHistory
+        }
+        CGImageDestinationAddImage(destination, image, nil)
+        guard CGImageDestinationFinalize(destination) else { throw WorkflowError.cannotReseedHistory }
+        return data as Data
     }
 }

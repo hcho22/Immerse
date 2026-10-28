@@ -18,23 +18,6 @@ struct FilmDetailView: View {
     @State private var soundtrack = false
     @State private var selectedPhoto: CaptureRecord?
     @State private var discard: CaptureRecord?
-    /// The Instant prints this screen has seen revealed, so it asks about the original of each new one once.
-    @State private var seenPrints: Set<Int>?
-    @State private var originalAsk: OriginalAsk?
-
-    /// What decides whether a newly revealed Instant print is asked about now: the revealed prints, and whether this
-    /// screen is free to ask. The camera asks about the prints revealed while it is open.
-    private struct RevealWatch: Equatable {
-        let prints: Set<Int>
-        let capturing: Bool
-        let free: Bool
-    }
-
-    private var revealWatch: RevealWatch {
-        RevealWatch(prints: model.revealedInstantPrints(filmID), capturing: capturing,
-                    free: !capturing && !developing && !originals && !soundtrack && selectedPhoto == nil && originalAsk == nil
-                        && !model.busyFilms.contains(filmID) && !model.hiddenFilms.contains(filmID))
-    }
 
     var body: some View {
         Group {
@@ -55,21 +38,13 @@ struct FilmDetailView: View {
             } else { ContentUnavailableView("Film removed", systemImage: "film") }
         }
         .task { await model.storage.refresh() }
-        .fullScreenCover(isPresented: $capturing) { CaptureView(filmID: filmID) }
+        .fullScreenCover(isPresented: $capturing, onDismiss: { model.capture.endShootingSession() }) {
+            CaptureView(filmID: filmID)
+        }
         .sheet(isPresented: $developing) { OriginalChoiceView(filmID: filmID, startsDevelopment: true) }
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
         .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
-        .sheet(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
-        .sheet(item: $originalAsk) { ask in OriginalChoiceView(filmID: filmID, startsDevelopment: false, prints: ask.prints) }
-        .onAppear { if seenPrints == nil { seenPrints = revealWatch.prints } }
-        .onChange(of: revealWatch) { _, watch in
-            guard let seen = seenPrints else { return }
-            if watch.capturing { seenPrints = watch.prints }
-            guard watch.free else { return }
-            seenPrints = watch.prints
-            let prints = model.printsAwaitingOriginalChoice(filmID, among: watch.prints.subtracting(seen))
-            if !prints.isEmpty { originalAsk = OriginalAsk(prints: prints) }
-        }
+        .fullScreenCover(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
         .alert("Rename Film", isPresented: $renaming) {
             TextField("Film title", text: $title)
             Button("Cancel", role: .cancel) {}
@@ -104,7 +79,7 @@ struct FilmDetailView: View {
 
     private func header(_ film: Film) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            film.camera.displayNameText.font(.system(.title2, design: .serif))
+            film.camera.shortNameText.font(.system(.title2, design: .serif))
             if let stock = film.filmStock { Text("\(stock.label) Film Stock").font(.subheadline) }
             Text(film.journalState).font(.headline)
             // The system secondary label is 3.44:1 on this screen's white ground in light mode, under the 4.5:1 bar.
@@ -152,10 +127,28 @@ struct FilmDetailView: View {
                     Button("Originals", systemImage: "photo.stack") { originals = true }
                 }
             }
-            if film.canPlaybackDevelopedMovie, let catalog = model.mediaCatalog,
-               !catalog.assets(for: film.camera.id, purpose: .instrumental).isEmpty {
-                Button("Soundtrack", systemImage: "music.note") { soundtrack = true }
+            if film.canPlaybackDevelopedMovie && offersSoundChoice(film) {
+                Button(movieSoundTitle(film), systemImage: "waveform") { soundtrack = true }
+                    .accessibilityIdentifier("movie-sound-choice")
             }
+        }
+    }
+
+    /// Whether the Movie has a sound to choose: its recorded sound, or a Soundtrack in the catalog for its Camera. A Film
+    /// loaded before live sound with no Soundtrack to offer stays silent and shows no choice.
+    private func offersSoundChoice(_ film: Film) -> Bool {
+        film.camera.recordsLiveSound == true
+            || model.mediaCatalog?.assets(for: film.camera.id, purpose: .instrumental).isEmpty == false
+    }
+
+    private func movieSoundTitle(_ film: Film) -> String {
+        guard let choice = try? model.repository.movieSoundChoice(filmID: filmID) else { return "Movie sound" }
+        switch choice {
+        case .recordedSound: return "Movie sound: Recorded sound"
+        case .soundtrack:
+            let title = (try? model.repository.movieAudioSelection(filmID: filmID))?.asset?.title ?? "Soundtrack"
+            return "Movie sound: \(title)"
+        case .silent: return "Movie sound: Silent"
         }
     }
 
@@ -166,7 +159,7 @@ struct FilmDetailView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         if capture.revealState == .revealed {
                             Button { selectedPhoto = capture } label: {
-                                RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber)
+                                RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber, keepsPictureOutOfSight: true)
                                     .aspectRatio(film.camera.printAspectRatio, contentMode: .fit)
                             }.buttonStyle(.plain).accessibilityLabel("Open photo \(capture.sequenceNumber)")
                         } else { placeholder(capture).aspectRatio(film.camera.printAspectRatio, contentMode: .fit) }
@@ -339,6 +332,7 @@ private struct DevelopedMovieView: View {
         .task {
             do {
                 let asset = try model.repository.revealedAsset(filmID: filmID, sequenceNumber: 0, kind: .movie)
+                MoviePlaybackAudio.prepare()
                 player = AVPlayer(url: asset.url)
             } catch { self.error = "Movie is unavailable until reassembly finishes." }
         }
@@ -346,5 +340,8 @@ private struct DevelopedMovieView: View {
         .onChange(of: model.busyFilms.contains(filmID)) { _, busy in if busy { clear() } }
         .onDisappear { clear() }
     }
-    private func clear() { player?.pause(); player?.replaceCurrentItem(with: nil); player = nil }
+    private func clear() {
+        if player != nil { MoviePlaybackAudio.finish() }
+        player?.pause(); player?.replaceCurrentItem(with: nil); player = nil
+    }
 }

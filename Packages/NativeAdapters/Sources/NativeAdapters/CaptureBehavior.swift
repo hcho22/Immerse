@@ -1,8 +1,8 @@
 import FilmDomain
 import Foundation
 
-/// How a Camera's lens focuses. `fixed` holds one lens position like a fixed-focus lens; `manual`
-/// leaves focus to the person (the 6×6 focus control); `deviceDefault` is the phone's continuous autofocus.
+/// How the Film's selected focus mode configures the active lens. `fixed` holds one lens position; `manual` leaves focus
+/// to the person; `deviceDefault` is continuous autofocus.
 public enum FocusBehavior: Equatable, Sendable {
     case deviceDefault, fixed, manual
 }
@@ -37,7 +37,7 @@ public struct CaptureBehavior: Equatable, Sendable {
     public let focus: FocusBehavior
     public let exposure: ExposureBehavior
     public let viewfinder: ViewfinderShape
-    /// The rear camera offers the zoom steps the iPhone's own lenses have (the 6×6), never a digital zoom between them.
+    /// The rear camera offers the iPhone's reported lens steps on the 6×6, Super 8 and 16mm, never digital steps between them.
     public let offersZoomSteps: Bool
     public let offersFlash: Bool
     /// The viewfinder shows a cue advising flash when the scene is too dim for the fixed exposure.
@@ -61,19 +61,24 @@ public struct CaptureBehavior: Equatable, Sendable {
 
     public static let deviceDefault = CaptureBehavior()
 
-    public static func `for`(_ camera: CameraID) -> CaptureBehavior {
-        switch camera {
+    public static func `for`(_ camera: CameraID, focusSetting: FilmFocusSetting = .auto) -> CaptureBehavior {
+        let focus: FocusBehavior = switch focusSetting {
+        case .auto: .deviceDefault
+        case .fixed: .fixed
+        case .manual: .manual
+        }
+        return switch camera {
         case .disposable1990s:
-            CaptureBehavior(focus: .fixed, exposure: .fixed, viewfinder: .threeByTwo,
+            CaptureBehavior(focus: focus, exposure: .fixed, viewfinder: .threeByTwo,
                             offersFlash: true, showsLowLightCue: true)
         case .instant1970s:
-            CaptureBehavior(viewfinder: .square)
+            CaptureBehavior(focus: focus, viewfinder: .square)
         case .mediumFormat6x6:
-            CaptureBehavior(focus: .manual, exposure: .manualBias, viewfinder: .square, offersZoomSteps: true)
+            CaptureBehavior(focus: focus, exposure: .manualBias, viewfinder: .square, offersZoomSteps: true)
         case .super8HomeMovie:
-            CaptureBehavior(focus: .fixed)
+            CaptureBehavior(focus: focus, offersZoomSteps: true)
         case .cinema16mm:
-            CaptureBehavior()
+            CaptureBehavior(focus: focus, offersZoomSteps: true)
         }
     }
 

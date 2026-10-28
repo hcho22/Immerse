@@ -26,7 +26,7 @@ command also runs the native UI and local StoreKit tests on dedicated simulators
 Do not use a physical-device identifier. Tests never require Apple credentials,
 real purchases, services, or a connected phone. XcodeGen is required only after
 changing project configuration; the generated project is committed for CI.
-The gate also verifies coverage of every intake task ID, 74 acceptance clauses
+The gate also verifies coverage of every intake task ID, 98 acceptance clauses
 and nine invariants. Coverage is not acceptance. UI audits include the largest
 Dynamic Type size and scroll to the title and Load Film command, and every Camera's
 Load screen at the smallest size, where the hit-region check once flagged the Film
@@ -65,7 +65,7 @@ It appears only when the scheme's Run action uses Debug.
 Debug builds alone also preview each saved capture (`Sources/DevelopedPreviews.swift` and FilmRuntime's `PreviewDevelopment`, both under `#if DEBUG`), at the captain's request of 2026-10-21.
 While **Develop at once - Debug build** is on in Settings (on by default; `-ImmerseDebugDevelopedPreview NO` turns it off for one launch), every photo of the 6×6 and the Disposable and every clip of the 16mm and the Super 8 shows developed on the shooting screen, marked **Debug preview**, as soon as it is saved.
 Those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done** for as long as the switch is on, so its state shows without opening Settings.
-It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a clip has no soundtrack, which only the developed Movie gets.
+It renders through Development's own code with the treatment Development will assign, so a preview is the developed master or Developed Clip; a movie clip keeps its captured sound, while the Developed Movie can replace it with a Soundtrack.
 Every capture develops, one at a time in the order it was saved, and each preview takes the card from the one before as it is ready.
 The roll stays sealed and develops as before, the Instant is unchanged, and previews live only in the app's Caches folder, removed once nothing shows them, when the roll develops, when the Film is deleted, when the switch is turned off and at launch.
 The same Release check fails if Release contains any of it.
@@ -100,6 +100,7 @@ fault/native-app gates, historical D3 migration and still-unaccepted hardware li
 SwiftUI, raw SQLite and local package boundaries are reversible baseline defaults,
 not a newly approved DEC-03.
 The captain decided the Darkroom's ranges, the export sizes and formats, the Instant's question about each print's original and that a soundtrack can be changed later on 2026-10-13 (`Evidence/NativeApp/darkroom-export-decisions-060.md`).
+His phone feedback of 2026-10-26 (`2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md`) moved that question to once after the Instant pack's last print, gave new Super 8 and 16mm Films recorded sound, and changed the Darkroom: Dodge/Burn removed, Crop renamed Adjust with quarter turns and straightening, and Saturation and Vignette added within new limits.
 The same day, after a study of preserved 1970s prints, he chose the Instant's contrast, which a Film loaded since develops with as treatment version 4 (`film-look-4`), its print-to-print variation unchanged, and each toner's range, from the untoned print to a strength of 1 (`Evidence/NativeApp/instant-study-and-toning-061.md`).
 His own sample shots, instrumental licenses, support/privacy wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
@@ -113,8 +114,11 @@ audio/license recovery and tests. Chemical toning is offered only on black-and-w
 Camera sample. Remaining acceptance gaps and manual procedures live under
 `Evidence/` and the canonical requirement map.
 
-The app requests Camera at explicit Load Film/Open Camera and Photos add-only at
-explicit export. It never requests microphone, location or photo-library reading.
+The app requests Camera at explicit Load Film/Open Camera, microphone access the
+first time a new Super 8 or 16mm Film opens its shooting screen, and Photos
+add-only at explicit export. The microphone records sound only during movie
+clips on new movie Films; older stored movie Films stay silent and never prompt.
+It never requests location or photo-library reading.
 PhotoKit exports cannot be recalled. Older iOS backups can restore removed media.
 The historical SQL-before-Keychain Trial window has a software correction in the
 production receipt report above. Cross-store power-loss, device retention and

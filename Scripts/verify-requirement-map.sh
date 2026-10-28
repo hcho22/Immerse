@@ -23,7 +23,7 @@ awk -F '|' '
     { id=$2; gsub(/^ +| +$/, "", id) }
     id ~ /^FR-[0-9][0-9] A[0-9][0-9]$/ { print id }
 ' "$package/$package-acceptance-evidence.md" | sort > "$temporary/clauses"
-test "$(wc -l < "$temporary/clauses" | tr -d ' ')" = 74
+test "$(wc -l < "$temporary/clauses" | tr -d ' ')" = 98
 test -z "$(uniq -d "$temporary/clauses")"
 awk -F '|' '
     /^## Section 11 Invariants/ { inInvariants=1; next }
@@ -31,4 +31,4 @@ awk -F '|' '
     inInvariants && /^\| / && $2 !~ /Invariant|---/ { print $2 }
 ' "$package/$package-acceptance-evidence.md" > "$temporary/invariants"
 test "$(wc -l < "$temporary/invariants" | tr -d ' ')" = 9
-printf '%s\n' 'Traceability: 154 intake IDs, 74 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'
+printf '%s\n' 'Traceability: 154 intake IDs, 98 unique acceptance clauses, 9 invariants. This is coverage, not product acceptance.'

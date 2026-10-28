@@ -5,6 +5,7 @@ import SwiftUI
 
 @main
 struct WorkflowHarnessApp: App {
+    @UIApplicationDelegateAdaptor(ImmerseAppDelegate.self) private var appDelegate
     @State private var scenario: WorkflowScenario?
     @State private var failure: String?
 

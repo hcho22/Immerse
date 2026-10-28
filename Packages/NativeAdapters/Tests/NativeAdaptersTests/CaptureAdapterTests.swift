@@ -163,6 +163,15 @@ private final class FakeCaptureAuthorizer: CapturePermissionAuthorizing, @unchec
         requestCount += 1
         return status == .authorized
     }
+
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus {
+        status
+    }
+
+    func requestMicrophoneAccess() async -> Bool {
+        requestCount += 1
+        return status == .authorized
+    }
 }
 
 private final class RecordingCaptureSink: CaptureEventSink, @unchecked Sendable {

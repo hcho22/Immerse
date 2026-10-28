@@ -4,7 +4,7 @@ This separate, non-shipping target compiles the actual app views/model/modules
 and seeds only its own temporary sandbox with generated native media. It does not
 add fixture loading, Trial bypasses or imported media to the production app. It
 does not prove native capture, entitlement, Photos writes or real-device behavior.
-There is no Photos usage key; a Camera usage key exists only for the declined-request test below.
+There is no Photos usage key; the Camera and Microphone usage keys exist only so the app's own requests can show, and the declined-request test below can decline the Camera one.
 
 The initial Film uses synthetic preexisting subscription rights so edit/removal
 workflows can run without configuring purchases. Tests exercise the real native
@@ -51,10 +51,11 @@ SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/PopulatedJournalHarn
 The runner requires the explicitly selected owned simulator to be Shutdown,
 preserves appearance/content size, records source/artifact/runtime and xcresult
 attachments, copies only newly created histories and shuts down after execution.
-The six retained tests cover empty-Film Delete confirmation, early cancellation
+The six retained histories cover empty-Film Delete confirmation, early cancellation
 and separate Development/original choice, one Instant revealed while the next is
 sealed, saved per-photo edit/exact Reset across relaunch, Darkroom control
-reachability (044) and a drawn dodge stroke saved across relaunch (047). They never
+reachability, and a pre-change Dodge/Burn recipe that still prints until Reset
+clears it across relaunch. They never
 tap Open Camera, execute Photos export or purchase. Runs before 044 produced four
 histories; the inspector now requires all six and tells the three developed-photo
 histories apart by their inspection reasons. The offline Ruby inspector compares
@@ -66,9 +67,13 @@ Set. It is an additional required check, not inferred from a screenshot/test exi
 
 `--reveal-at-camera`, with `--instant-mixed`, develops the Film's sealed Instant print once the
 camera screen is open, as the app does when a save lands there, so a test can meet the
-reveal and the question about the print's original at the camera. Nothing is captured:
-the simulator has no camera. `--two-sealed` leaves that Film two sealed prints where there is
-otherwise one, so the one Development reveals both.
+reveal at the camera. Nothing is captured: the simulator has no camera. `--two-sealed` leaves
+that Film two sealed prints where there is otherwise one, so the one Development reveals both.
+`--instant-final` loads the Instant with nine prints developed; with `--reveal-at-camera` it
+saves and develops the tenth once the camera screen is open, so a test can meet the pack's last
+print and the one question about the originals that follows it.
+`--three-distinct-prints` takes three photos of plainly different scenes, red, green and blue,
+so a test can tell the prints apart by their pictures.
 
 `--recipe-outside-limits` leaves print 1 a stored print exposure of 3.5 stops, past the Darkroom's
 limits, so a test can meet the print the app refuses and its Darkroom's explanation. The app's own
@@ -79,6 +84,10 @@ reopened: use it only in tests that do neither.
 `--recipe-unreadable` leaves print 1 a stored recipe no build can read, as a damaged store might,
 so a test can meet the Darkroom's failure to load it. It is written the same way and has the same
 limits as `--recipe-outside-limits`.
+
+`--recipe-with-strokes` leaves print 1 a stored recipe with one burn stroke, as a Film edited
+before the Dodge/Burn tool was removed can hold. It is written after the seeded inspection too,
+but it is within the limits, so its history can be reopened and inspected.
 
 These are functional navigation tests, not replacements for all-category
 accessibility audits or the hardware/manual matrix in
@@ -99,7 +108,7 @@ player-retirement check; it is not a production diagnostic, private API probe or
 hardware playback-cache test.
 
 ```sh
-xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-darkroom-controls-044.xcresult -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testDarkroomAccessibleControlsReachNonGestureEditingPaths -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
+xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-darkroom-controls-044.xcresult -only-testing:PopulatedJournalHarnessTests/RetainedWorkflowTests/testDarkroomAccessibleControlsReachAdjustmentPaths -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
 xcodebuild -quiet -project Probes/PopulatedJournalHarness/PopulatedJournalHarness.xcodeproj -scheme PopulatedJournalHarness -destination "platform=iOS Simulator,id=$SIM" -derivedDataPath DerivedData/PopulatedJournalHarness -resultBundlePath DerivedData/Populated-movie-player-observer-044-2.xcresult -only-testing:PopulatedJournalHarnessTests/PopulatedWorkflowTests/testMovieDiscardRetiresObservedPlayerItemBeforeSuccessorPlayback -parallel-testing-enabled NO -test-timeouts-enabled YES -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO test
 ```
 
@@ -121,13 +130,14 @@ Read `Evidence/NativeApp/permission-storage-failures-045.md` for the reproduced 
 A simulator privacy revoke is not a device PhotoKit write, restricted-status or prompt-timing result.
 
 `CameraPermissionWorkflowTests` resets the harness's Camera authorization, opens an existing Film's camera and declines the actual system request through an interruption monitor; without the monitor XCTest allows it.
-The harness declares a Camera usage key only for this test; other tests never open the camera, and the simulator has no camera to capture with.
+The simulator has no camera to capture with.
 The test also checks that the guidance and the shutter are on screen without scrolling; run it on small screens such as an iPhone SE (3rd generation) as well.
 Read `Evidence/NativeApp/visual-sweep-048.md` for the outcomes and limits.
 
 `--black-and-white` loads the seeded 6×6 (`--medium-format`) or 16mm (`--movie`) Film on the black-and-white Film
 Stock; without it a Camera with a Film Stock gets Load Film's default, color.
 `--super8` loads the `--movie` Film on the Super 8 instead of the 16mm, and `--landscape-movie` locks it landscape where it is otherwise portrait.
+`--earlier-package` loads the `--movie` 16mm Film on the package a build before live sound locked, which records no sound.
 `--photo-source PATH` and
 `--movie-source PATH` capture an existing still or silent movie instead of the generated fixtures, so screenshots can
 show a natural scene; the UI tests pass them on when the run sets `TEST_RUNNER_PHOTO_SOURCE` and

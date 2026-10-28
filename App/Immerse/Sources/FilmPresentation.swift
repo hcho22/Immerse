@@ -21,8 +21,6 @@ extension CameraPackage {
     /// The Camera's names as text that VoiceOver reads naturally. Every view that shows a name uses these; a navigation
     /// title uses `SpokenText.title`.
     var shortNameText: Text { Text(SpokenText.shown(shortName)) }
-    var displayNameText: Text { Text(SpokenText.shown(displayName)) }
-
     /// The title Load Film suggests for this Camera's `roll`th Film, such as "6×6 - Roll #01".
     func suggestedTitle(roll: Int) -> String { "\(shortName) - Roll #\(String(format: "%02d", roll))" }
 
@@ -50,18 +48,24 @@ extension CameraPackage {
         switch revealRule {
         case .rollLevelDevelopment: "Sealed until Development"
         case .instantPerExposure: "An individual print with every exposure"
-        case .movieDevelopment: "One silent Movie after Development"
+        case .movieDevelopment: "One Movie after Development"
         }
     }
     /// What the photographer does with this Camera (PRD 2.1 sections 6.1 and 6.2).
     var controlsLabel: String {
         switch id {
-        case .disposable1990s: "Fixed focus, fixed exposure, optional flash and a live low-light cue"
-        case .instant1970s: "Square picture on a white card"
-        case .mediumFormat6x6: "Square framing, deliberate focus and exposure, optical focus only"
-        case .super8HomeMovie: "Handheld, fixed focus, automatic exposure, 18 frames per second"
-        case .cinema16mm: "Deliberate framing, 24 frames per second"
+        case .disposable1990s: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"
+        case .instant1970s: "Auto focus with tap to focus; square picture on a white card"
+        case .mediumFormat6x6: "Square framing; Focus switch: Auto / Manual; tap to focus in Auto; Focus slider in Manual; deliberate exposure; optical focus only"
+        case .super8HomeMovie: "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second"
+        case .cinema16mm: "Auto focus with tap to focus; deliberate framing, 24 frames per second"
         }
+    }
+
+    /// The Load Film sound line for a new movie Camera. The system asks only when its shooting screen first opens.
+    var loadSoundLabel: String? {
+        guard recordsLiveSound == true else { return nil }
+        return "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."
     }
 
     /// How a Film from this Camera develops on the chosen Film Stock, one Load Film row per line; the 6×6 gives each
@@ -69,11 +73,11 @@ extension CameraPackage {
     /// Names a look only in descriptive terms, never a maker or a film.
     func lookLines(filmStock: FilmStock?) -> [String] {
         switch id {
-        case .disposable1990s: ["Borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
-        case .instant1970s: ["Warm, faded color, soft contrast and soft detail"]
+        case .disposable1990s: ["1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"]
+        case .instant1970s: ["1970s instant camera: warm, faded color, soft contrast and soft detail"]
         case .mediumFormat6x6: ["Borderless square picture", "Color: natural, warm color, very fine grain and gentle contrast",
                                 "Black and white: high contrast and distinct grain"]
-        case .super8HomeMovie: ["Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
+        case .super8HomeMovie: ["1960s home-movie camera: muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair"]
         case .cinema16mm:
             filmStock == .blackAndWhite
                 ? ["Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges"]
@@ -144,6 +148,12 @@ extension Film {
 
     func remainingSpokenLabel(recordedFor elapsed: TimeInterval) -> String { remaining(MovieDurationText.spoken, elapsed) }
 
+    /// The compact count shown beside a Camera's name on the shooting screen: a number for photos and M:SS for Movies.
+    func remainingAmountLabel(recordedFor elapsed: TimeInterval) -> String {
+        if let remainingExposures { return String(remainingExposures) }
+        return MovieDurationText.clock(MovieDurationText.wholeSeconds((remainingMovieSeconds ?? 0) - elapsed))
+    }
+
     func remainingText(recordedFor elapsed: TimeInterval) -> Text {
         Text(remainingLabel(recordedFor: elapsed)).accessibilityLabel(remainingSpokenLabel(recordedFor: elapsed))
     }
@@ -169,6 +179,30 @@ extension Film {
         switch camera.capacity {
         case let .exposures(total): return Double(savedCaptureCount) / Double(total)
         case let .seconds(total): return consumedMovieSeconds / Double(total)
+        }
+    }
+}
+
+/// The short status beside the Camera name in the shooting screen's one-line header, and the full text VoiceOver reads.
+struct CaptureHeaderStatus: Equatable {
+    let visible: String
+    let spoken: String
+
+    static func make(for film: Film, finishingSave: Bool, recordedFor elapsed: TimeInterval) -> Self {
+        let name = SpokenText.of(film.camera.shortName)
+        if finishingSave {
+            return Self(visible: "Finishing save", spoken: "\(name), Finishing save")
+        }
+
+        switch film.completionState {
+        case .open:
+            return Self(visible: film.remainingAmountLabel(recordedFor: elapsed),
+                        spoken: "\(name), \(film.remainingSpokenLabel(recordedFor: elapsed))")
+        case .capacityFull:
+            let complete = film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete"
+            return Self(visible: complete, spoken: "\(name), \(complete)")
+        case .completedEarly:
+            return Self(visible: "Ended early", spoken: "\(name), Ended early, \(film.remainingLabel)")
         }
     }
 }

@@ -47,10 +47,9 @@ histories.each do |directory|
     check(states[0].fetch('captures')[0] == states[1].fetch('captures')[0], 'First revealed print changed on second reveal')
     check(states[0].fetch('development').fetch('assignments').fetch('1') == states[1].fetch('development').fetch('assignments').fetch('1'), 'First assignment changed')
     check(states[1].fetch('film').fetch('completionState') == {'open'=>{}}, 'Instant pack completed early')
-    # The print just revealed was asked about and its original removed; the earlier print, not asked about, keeps its
-    # original and has no choice recorded.
-    check(states[1].fetch('captures')[1].fetch('originalDisposition') == {'declined'=>{}}, 'Answer about the revealed print was not recorded')
-    check(states[1].fetch('captures')[1]['sourceSHA256'].nil?, 'Declined original of the revealed print was kept')
+    # DEV-12 asks once only after the Instant pack is full, so neither revealed print has an Originals choice here.
+    check(states[1].fetch('captures')[1]['originalDisposition'].nil?, 'An unfinished pack recorded an Originals choice')
+    check(states[1].fetch('captures')[1]['sourceSHA256'], 'Original of the newly revealed print was removed before the pack was full')
     check(states[1].fetch('captures')[1]['masterSHA256'], 'Revealed print lost its developed master')
     check(states[1].fetch('captures')[0]['originalDisposition'].nil?, 'Answer reached a print that was not asked about')
     check(states[1].fetch('captures')[0]['sourceSHA256'], 'Original of a print that was not asked about was removed')
@@ -74,17 +73,20 @@ histories.each do |directory|
       saved = states[1].fetch('captures')[0]
       check(saved.fetch('recipe').key?('colorFiltration'), 'Filtration edit was not saved')
       check(!saved.fetch('recipe').key?('crop'), 'Crop that was switched off was saved')
-      check(saved.fetch('recipe').fetch('dodgeBurnMasks').empty?, 'Undone dodge point was saved')
+      check(saved.fetch('recipe').fetch('dodgeBurnMasks').empty?, 'The recipe without legacy strokes changed unexpectedly')
       check(original.fetch('printSHA256') != saved.fetch('printSHA256'), 'Saved control edits did not change the print')
-    elsif reasons == %w[seeded explicit reopen]
-      scenario = 'developed-photo-stroke'
-      check(snapshots.length == 3, 'Drawn stroke inspections incomplete')
-      saved = states[1].fetch('captures')[0]
-      masks = saved.fetch('recipe').fetch('dodgeBurnMasks')
-      check(masks.length == 1 && masks[0].fetch('kind') == 'dodge', 'Drawn stroke was not saved as one dodge mask')
-      check(masks[0].fetch('points').length > 1, 'Drawn stroke saved as a single point')
-      check(original.fetch('printSHA256') != saved.fetch('printSHA256'), 'Drawn stroke did not change the print')
-      check(states[1] == states[2], 'Saved stroke changed on reopen')
+    elsif reasons == %w[seeded explicit explicit reopen explicit]
+      scenario = 'developed-photo-legacy-stroke-reset'
+      check(snapshots.length == 5, 'Legacy stroke and Reset inspections incomplete')
+      loaded = states[1].fetch('captures')[0]
+      masks = loaded.fetch('recipe').fetch('dodgeBurnMasks')
+      check(masks.length == 1 && masks[0].fetch('kind') == 'burn', 'Stored legacy stroke was not loaded')
+      check(original.fetch('printSHA256') != loaded.fetch('printSHA256'), 'Stored legacy stroke did not change the printed bytes')
+      reset = states[2].fetch('captures')[0]
+      check(reset.fetch('recipe').fetch('dodgeBurnMasks').empty?, 'Reset retained a legacy stroke')
+      check(reset.fetch('recipe') == original.fetch('recipe'), 'Reset did not restore the original recipe')
+      check(reset.fetch('printSHA256') == original.fetch('printSHA256'), 'Reset did not restore the exact original print bytes')
+      check(states[2] == states[3] && states[3] == states[4], 'Reset result changed on reopen or inspection')
     else
       raise "Unexpected developed-photo history #{reasons.inspect}"
     end
@@ -98,5 +100,5 @@ histories.each do |directory|
   scenarios << scenario
   puts "PASS #{scenario}: #{snapshots.length} native inspections, #{File.basename(directory)}"
 end
-check(scenarios.sort == %w[developed-photo-controls developed-photo-reset developed-photo-stroke early-photo empty instant-mixed], 'Missing or duplicated scenario')
+check(scenarios.sort == %w[developed-photo-controls developed-photo-legacy-stroke-reset developed-photo-reset early-photo empty instant-mixed], 'Missing or duplicated scenario')
 puts 'Bounded UI/state evidence only; no Camera, Photos, Security, StoreKit or hardware acceptance.'

@@ -15,6 +15,8 @@ public enum PermissionPromptPolicy: Equatable, Sendable {
 public protocol CapturePermissionAuthorizing: Sendable {
     func authorizationStatus() -> CaptureAuthorizationStatus
     func requestAccess() async -> Bool
+    func microphoneAuthorizationStatus() -> CaptureAuthorizationStatus
+    func requestMicrophoneAccess() async -> Bool
 }
 
 public enum CaptureStartupOutcome: Equatable, Sendable {

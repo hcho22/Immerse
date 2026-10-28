@@ -33,7 +33,7 @@ struct CaptureCommitJournal {
     func prepare(film: Film, access: FilmAccess, source: URL, kind: CaptureKind, savedAt: Date) async throws -> PendingCaptureCommit {
         let id = source.lastPathComponent
         guard validID(id) else { throw PersistenceError.invalidAssetPath }
-        let verification = try await Self.verify(source, kind: kind)
+        let verification = try await Self.verify(source, kind: kind, camera: film.camera)
         var proposed = film
         let sequence: Int
         switch kind {
@@ -58,7 +58,7 @@ struct CaptureCommitJournal {
 
     func verifiedBytes(_ operation: PendingCaptureCommit) async throws -> Data {
         let source = media(operation)
-        let verification = try await Self.verify(source, kind: operation.kind)
+        let verification = try await Self.verify(source, kind: operation.kind, camera: operation.camera)
         let bytes = try Data(contentsOf: source)
         guard verification.sha256 == operation.sourceSHA256, Self.hash(bytes) == operation.sourceSHA256 else {
             throw PersistenceError.mediaChangedDuringVerification
@@ -87,11 +87,11 @@ struct CaptureCommitJournal {
         try handle.synchronize()
     }
     static func hash(_ data: Data) -> String { SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined() }
-    static func verify(_ url: URL, kind: CaptureKind) async throws -> VerifiedMedia {
+    static func verify(_ url: URL, kind: CaptureKind, camera: CameraPackage? = nil) async throws -> VerifiedMedia {
         switch kind {
         case .photo: return try VerifiedMedia.photo(at: url)
         case let .movieClip(seconds, _):
-            let verification = try await VerifiedMedia.movie(at: url)
+            let verification = try await VerifiedMedia.movie(at: url, allowsAudio: camera?.recordsLiveSound == true)
             guard verification.durationSeconds == seconds else { throw PersistenceError.invalidMedia }
             return verification
         }

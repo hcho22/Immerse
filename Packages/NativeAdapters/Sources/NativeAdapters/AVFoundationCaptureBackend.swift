@@ -8,13 +8,15 @@ import UIKit
 public struct NativeCameraControls: Sendable {
     public var flash = false
     public var manualFocus = false
+    public var fixedFocus = false
+    public var supportsFocusPoint = false
     public var minimumExposureBias: Float?
     public var maximumExposureBias: Float?
     /// The bias the active lens's automatic exposure holds now, which the 6×6 exposure control shows.
     public var exposureBias: Float = 0
     /// Whether the active lens can hold the Disposable's custom exposure.
     public var fixedExposure = false
-    /// The zoom steps the iPhone's own lenses give the 6×6's rear camera, empty where the Camera has none, the front
+    /// The zoom steps the iPhone's own lenses give the 6×6, Super 8 or 16mm rear camera, empty where the Camera has none, the front
     /// camera is active or the iPhone has one rear lens, and the step the camera is on.
     public var zoomSteps: [ZoomStep] = []
     public var zoomStep: ZoomStep?
@@ -76,6 +78,11 @@ public actor AVFoundationCaptureBackend {
     private var plan: CaptureSessionPlan?
     private var zoomStep: ZoomStep?
     private var input: AVCaptureDeviceInput?
+    /// The microphone, attached only while a clip records (`attachMovieSound`), as the iPhone's Camera app does.
+    private var audioInput: AVCaptureDeviceInput?
+    /// The size the movie session records at, the wide lens's (`MovieCaptureFormat.preferred`): every zoom step's lens
+    /// records exactly this size.
+    private var movieFormatSize: (width: Int, height: Int)?
     private var photoOutput: AVCapturePhotoOutput?
     private var movieOutput: AVCaptureMovieFileOutput?
     private var photoDelegate: PhotoSaveDelegate?
@@ -101,6 +108,9 @@ public actor AVFoundationCaptureBackend {
         guard let device = input?.device else { return result }
         result.flash = photoOutput?.supportedFlashModes.contains(.on) == true && device.hasFlash
         result.manualFocus = device.isLockingFocusWithCustomLensPositionSupported
+        result.fixedFocus = device.isLockingFocusWithCustomLensPositionSupported || device.isFocusModeSupported(.locked)
+        result.supportsFocusPoint = device.isFocusPointOfInterestSupported
+            && (device.isFocusModeSupported(.continuousAutoFocus) || device.isFocusModeSupported(.autoFocus))
         if device.isExposureModeSupported(.continuousAutoExposure) {
             result.minimumExposureBias = device.minExposureTargetBias
             result.maximumExposureBias = device.maxExposureTargetBias
@@ -120,6 +130,60 @@ public actor AVFoundationCaptureBackend {
         defer { device.unlockForConfiguration() }
         device.setFocusModeLocked(lensPosition: position)
         manualLensPosition = position
+    }
+
+    /// Applies a Film's Auto/Fixed/Manual choice to the active lens without changing exposure, zoom or output format.
+    /// A focus mode can change between captures or while a Movie is being recorded.
+    public func setFocusBehavior(_ behavior: CaptureBehavior) throws {
+        guard session.isRunning, let device = input?.device, let plan else { return }
+        guard behavior.viewfinder == plan.behavior.viewfinder,
+              behavior.exposure == plan.behavior.exposure,
+              behavior.offersZoomSteps == plan.behavior.offersZoomSteps else {
+            throw NativeCaptureError.configurationFailed
+        }
+        switch operations.phase {
+        case .idle, .recordingMovie:
+            break
+        case .savingPhoto, .savingMovieClip, .interrupted:
+            throw NativeCaptureError.busy
+        }
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        Self.applyFocusBehavior(behavior.focus, manualLensPosition: manualLensPosition, to: device)
+        self.plan = plan.updatingBehavior(behavior)
+    }
+
+    /// Tap-to-focus is supported in Auto. Movie recording accepts tap adjustments; saves and interruptions defer them.
+    /// A point converted from a tap at the very edge of the picture can fall a little outside it, so it is kept inside.
+    /// Once the scene the point was on changes, focus and metering return to the centre (`subjectAreaChanged`).
+    public func focus(at tapped: CGPoint, alsoExpose: Bool) throws -> FocusPointDecision {
+        guard session.isRunning, let device = input?.device, let plan else { return .unsupported }
+        guard tapped.x.isFinite, tapped.y.isFinite else { throw NativeCaptureError.configurationFailed }
+        let point = CGPoint(x: min(max(tapped.x, 0), 1), y: min(max(tapped.y, 0), 1))
+        let phase = operations.phase
+        let focusSupported = device.isFocusPointOfInterestSupported
+            && (device.isFocusModeSupported(.continuousAutoFocus) || device.isFocusModeSupported(.autoFocus))
+        let decision = plan.focusPointDecision(supported: focusSupported, during: phase)
+        let exposureSupported = alsoExpose && [.idle, .recordingMovie].contains(phase)
+            && device.isExposurePointOfInterestSupported && device.isExposureModeSupported(.continuousAutoExposure)
+        guard decision == .allowed || exposureSupported else { return decision }
+
+        try device.lockForConfiguration()
+        defer { device.unlockForConfiguration() }
+        if decision == .allowed {
+            device.focusPointOfInterest = point
+            if device.isFocusModeSupported(.continuousAutoFocus) {
+                device.focusMode = .continuousAutoFocus
+            } else if device.isFocusModeSupported(.autoFocus) {
+                device.focusMode = .autoFocus
+            }
+        }
+        if exposureSupported {
+            device.exposurePointOfInterest = point
+            device.exposureMode = .continuousAutoExposure
+        }
+        device.isSubjectAreaChangeMonitoringEnabled = true
+        return decision
     }
 
     public func setExposureBias(_ bias: Float) throws {
@@ -162,22 +226,21 @@ public actor AVFoundationCaptureBackend {
         guard plan.lensSwitchDecision(to: position, during: operations.phase) == .allowed else {
             throw NativeCaptureError.configurationFailed
         }
-        try replaceInput(with: camera(at: position), plan: plan)
+        try replaceInput(with: camera(at: position), plan: plan, movieSize: nil)
         self.plan = CaptureSessionPlan(
             request: CaptureSessionRequest(
                 preferredPosition: position, mediaKind: plan.mediaKind,
-                lockedMovieOrientation: plan.lockedMovieOrientation, behavior: plan.behavior,
+                lockedMovieOrientation: plan.lockedMovieOrientation, recordsLiveSound: plan.recordsLiveSound,
+                behavior: plan.behavior,
                 manualLensPosition: manualLensPosition
             ),
             capabilities: AVFoundationCaptureDeviceDiscoverer().capabilities()
         )
-        // The capabilities were read with the session running, so the rear lenses are current, and the rear wide lens is
-        // the only camera a switch returns to.
-        zoomStep = self.plan?.restingZoomStep
+        refreshRearLenses()
         restartMeter()
     }
 
-    /// Takes a zoom step of the iPhone's own lenses (the 6×6, rear camera): changes to that lens, and crops it where the
+    /// Takes a zoom step of the iPhone's own lenses (the 6×6, Super 8 or 16mm rear camera): changes to that lens, and crops it where the
     /// step is a native sensor crop. Only between exposures, the rule of a lens switch. The person's Focus position and
     /// exposure bias go with them to the new lens, the bias within that lens's range. A lens runs on the format the session
     /// gives it only once it is the input, and that format decides its native crops, so they are read again then. A crop
@@ -193,11 +256,11 @@ public actor AVFoundationCaptureBackend {
         let device = try camera(for: step.lens)
         let bias = active.exposureTargetBias
         if device !== active {
-            try replaceInput(with: device, plan: plan)
-            plan = plan.updatingRearLenses(AVFoundationCaptureDeviceDiscoverer.rearLenses())
+            try replaceInput(with: device, plan: plan, movieSize: movieFormatSize)
+            plan = plan.updatingRearLenses(offeredRearLenses(for: plan))
             self.plan = plan
             guard plan.zoomDecision(to: step, during: operations.phase) == .allowed else {
-                try replaceInput(with: active, plan: plan)
+                try replaceInput(with: active, plan: plan, movieSize: movieFormatSize)
                 try applyLensBehavior(plan.behavior, to: active, zoomFactor: zoomStep?.lensZoomFactor ?? 1)
                 restartMeter()
                 return
@@ -209,9 +272,10 @@ public actor AVFoundationCaptureBackend {
     }
 
     /// Replaces the session's camera with `device`, keeping its outputs, and holds the Camera's behavior on it. The movie
-    /// session runs at `.inputPriority`, so the added lens keeps the format chosen here.
-    private func replaceInput(with device: AVCaptureDevice, plan: CaptureSessionPlan) throws {
-        if plan.mediaKind == .movie { try selectMovieFormat(device) }
+    /// session runs at `.inputPriority`, so the added lens keeps the format chosen here: exactly `movieSize` for a zoom
+    /// step, so every step records the wide lens's size, and the camera's own largest for a switch between cameras.
+    private func replaceInput(with device: AVCaptureDevice, plan: CaptureSessionPlan, movieSize: (width: Int, height: Int)?) throws {
+        if plan.mediaKind == .movie { try selectMovieFormat(device, size: movieSize) }
         let replacement = try AVCaptureDeviceInput(device: device)
         session.beginConfiguration()
         defer { session.commitConfiguration() }
@@ -231,8 +295,19 @@ public actor AVFoundationCaptureBackend {
     /// depend on its active format.
     private func refreshRearLenses() {
         guard let current = plan else { return }
-        plan = current.updatingRearLenses(AVFoundationCaptureDeviceDiscoverer.rearLenses())
+        plan = current.updatingRearLenses(offeredRearLenses(for: current))
         zoomStep = plan?.restingZoomStep
+    }
+
+    /// The rear lenses as the iPhone reports them, less, on a movie Camera, each lens that cannot record the wide lens's
+    /// movie size at the movie frame rate (FR-26 item 4).
+    private func offeredRearLenses(for plan: CaptureSessionPlan) -> RearLensCapabilities {
+        let lenses = AVFoundationCaptureDeviceDiscoverer.rearLenses()
+        guard plan.mediaKind == .movie else { return lenses }
+        return MovieCaptureFormat.lensesRecordingTheWideLensFormat(
+            lenses, formats: { lens in (try? self.camera(for: lens)).map(Self.movieFormats) ?? [] },
+            dimensions: Self.dimensions, recordsMovieFrameRate: Self.recordsMovieFrameRate
+        )
     }
 
     public func capturePhoto(orientation: CaptureFrameOrientation, flash: Bool = false) async throws {
@@ -275,31 +350,90 @@ public actor AVFoundationCaptureBackend {
         photoOutput.capturePhoto(with: settings, delegate: delegate)
     }
 
-    public func startMovie(orientation: CaptureFrameOrientation, remainingFrames: Int) throws {
+    public func startMovie(orientation: CaptureFrameOrientation, remainingFrames: Int) async throws {
         guard session.isRunning, let movieOutput else { throw NativeCaptureError.notRunning }
         guard remainingFrames > 0 else {
             throw NativeCaptureError.invalidDuration
         }
         try operations.requireIdle()
         guard !isRecovering, try files.pendingRecords().isEmpty else { throw NativeCaptureError.pendingRecoveryRequired }
-        try configureConnection(movieOutput.connection(with: .video), orientation: orientation)
-        let id = try operations.begin(.movie)
+        await attachMovieSound()
+        let id: UUID
+        do {
+            // The wait for the microphone let other work in: the camera may have paused or a capture begun meanwhile.
+            guard session.isRunning else { throw NativeCaptureError.notRunning }
+            try operations.requireIdle()
+            try configureConnection(movieOutput.connection(with: .video), orientation: orientation)
+            id = try operations.begin(.movie)
+        } catch { detachMovieSound(); throw error }
         do {
             try files.prepare(PendingCaptureRecord(id: id, mediaKind: .movie,
-                orientation: orientation.clipOrientation, remainingFrames: remainingFrames))
-        } catch { operations.finish(id: id); throw error }
+                orientation: orientation.clipOrientation, remainingFrames: remainingFrames,
+                allowsAudio: plan?.recordsLiveSound == true))
+        } catch { operations.finish(id: id); detachMovieSound(); throw error }
         movieOutput.maxRecordedDuration = CMTime(value: CMTimeValue(remainingFrames), timescale: CMTimeScale(MovieFrames.perSecond))
         movieOutput.metadata = input.flatMap { Self.sceneWhiteBalanceItem($0.device) }.map { [$0] }
+        let allowsAudio = plan?.recordsLiveSound == true
         let delegate = MovieSaveDelegate { [weak self] successfullyFinished in
             Task {
                 await self?.movieFinished(
                     id: id, orientation: orientation.clipOrientation,
-                    remainingFrames: remainingFrames, successfullyFinished: successfullyFinished
+                    remainingFrames: remainingFrames, allowsAudio: allowsAudio,
+                    successfullyFinished: successfullyFinished
                 )
             }
         }
         movieDelegate = delegate
         movieOutput.startRecording(to: files.movieDestination(id: id), recordingDelegate: delegate)
+    }
+
+    /// Attaches the microphone for one clip, as the iPhone's Camera app does: only while a clip records is the microphone
+    /// in use and other audio interrupted, and a call or another app's recording between clips leaves the viewfinder
+    /// running. The system grant is read for each clip, so returning from Settings changes the next clip without changing
+    /// the Film's locked sound capability or asking again; a missing grant or route records the clip silent. The clip
+    /// starts only once the microphone's connection is live, at most half a second later, so its first moments carry
+    /// sound.
+    private func attachMovieSound() async {
+        detachMovieSound()
+        guard let plan, plan.mediaKind == .movie, plan.recordsLiveSound,
+              AVCaptureDevice.authorizationStatus(for: .audio) == .authorized,
+              let device = AVCaptureDevice.default(for: .audio),
+              let microphone = try? AVCaptureDeviceInput(device: device) else { return }
+        // The iPhone's Camera app records stereo where the phone can (DEC-19); an input records one channel by default.
+        if microphone.isMultichannelAudioModeSupported(.stereo) { microphone.multichannelAudioMode = .stereo }
+        session.beginConfiguration()
+        guard session.canAddInput(microphone) else { session.commitConfiguration(); return }
+        session.addInput(microphone)
+        audioInput = microphone
+        pinMovieSoundFormat()
+        session.commitConfiguration()
+        let deadline = ContinuousClock.now + .milliseconds(500)
+        while movieOutput?.connection(with: .audio)?.isActive != true, ContinuousClock.now < deadline {
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+    }
+
+    /// The Camera app's sound format, AAC at 48 kHz (DEC-19), where the output lets it be set; the channels stay the
+    /// microphone's, stereo where `attachMovieSound` could ask for it. Every other setting stays the output's own.
+    private func pinMovieSoundFormat() {
+        guard let movieOutput, let connection = movieOutput.connection(with: .audio) else { return }
+        let keys = movieOutput.supportedOutputSettingsKeys(for: connection)
+        guard keys.contains(AVFormatIDKey) else { return }
+        var settings = movieOutput.outputSettings(for: connection)
+        settings[AVFormatIDKey] = kAudioFormatMPEG4AAC
+        if keys.contains(AVSampleRateKey) { settings[AVSampleRateKey] = 48_000 }
+        movieOutput.setOutputSettings(settings, for: connection)
+    }
+
+    /// Lets the microphone go once a clip ends, or the camera pauses, and gives the sound back to other apps: music the
+    /// clip paused plays again, as it does after the iPhone's Camera app records.
+    private func detachMovieSound() {
+        guard let audioInput else { return }
+        session.beginConfiguration()
+        session.removeInput(audioInput)
+        session.commitConfiguration()
+        self.audioInput = nil
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     /// The light the clip starts in, as the lens's white balance judges it, for a Film Stock with a fixed color
@@ -330,6 +464,7 @@ public actor AVFoundationCaptureBackend {
         releaseFixedExposure()
         if movieOutput?.isRecording == true { movieOutput?.stopRecording() }
         if session.isRunning { session.stopRunning() }
+        detachMovieSound()
         eventContinuation.yield(.interrupted(reason))
     }
 
@@ -408,15 +543,17 @@ public actor AVFoundationCaptureBackend {
         defer { session.commitConfiguration() }
         for old in session.inputs { session.removeInput(old) }
         for old in session.outputs { session.removeOutput(old) }
-        session.automaticallyConfiguresApplicationAudioSession = false
+        session.automaticallyConfiguresApplicationAudioSession = next.mediaKind == .movie && next.recordsLiveSound
         photoOutput = nil
         movieOutput = nil
         input = nil
+        audioInput = nil
         plan = nil
         guard session.canAddInput(newInput) else { throw NativeCaptureError.configurationFailed }
-        // Only a .video device is ever discovered or added. No microphone input or audio session.
+        // The Camera remains the only video input; a new movie Film's microphone joins it only while a clip records.
         session.addInput(newInput)
         input = newInput
+        plan = next
         if next.mediaKind == .photo {
             let output = AVCapturePhotoOutput()
             guard session.canAddOutput(output) else { throw NativeCaptureError.configurationFailed }
@@ -429,11 +566,11 @@ public actor AVFoundationCaptureBackend {
             let output = AVCaptureMovieFileOutput()
             guard session.canAddOutput(output) else { throw NativeCaptureError.configurationFailed }
             // Choosing the input's format switches the session to its `.inputPriority` preset.
+            movieFormatSize = nil
             try selectMovieFormat(newInput.device)
             session.addOutput(output)
             movieOutput = output
         }
-        plan = next
         ensureUnmirroredOutput()
         try applyLensBehavior(next.behavior, to: newInput.device)
     }
@@ -458,7 +595,39 @@ public actor AVFoundationCaptureBackend {
             if device.exposureMode != .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
             if device.exposureTargetBias != bias { device.setExposureTargetBias(bias) }
         }
-        switch behavior.focus {
+        // A point tapped on another Film, Camera or lens never carries over: every lens starts at the centre.
+        if !fixedExposureHeld { Self.recentre(device) }
+        Self.applyFocusBehavior(behavior.focus, manualLensPosition: manualLensPosition, to: device)
+    }
+
+    /// Returns focus and metering to the centre of the picture and stops watching for a changed scene, as the iPhone's
+    /// Camera app does once the scene a tap chose changes. The automatic modes are set again so the point takes effect;
+    /// a locked focus is left locked. Call with the device locked for configuration.
+    private static func recentre(_ device: AVCaptureDevice) {
+        let centre = CGPoint(x: 0.5, y: 0.5)
+        if device.isFocusPointOfInterestSupported {
+            device.focusPointOfInterest = centre
+            if device.focusMode == .continuousAutoFocus { device.focusMode = .continuousAutoFocus }
+        }
+        if device.isExposurePointOfInterestSupported {
+            device.exposurePointOfInterest = centre
+            if device.exposureMode == .continuousAutoExposure { device.exposureMode = .continuousAutoExposure }
+        }
+        device.isSubjectAreaChangeMonitoringEnabled = false
+    }
+
+    /// The scene a tapped point was on has changed: focus and metering return to the centre.
+    private func subjectAreaChanged(deviceID: String?) {
+        guard let device = input?.device, device.uniqueID == deviceID, !fixedExposureHeld,
+              (try? device.lockForConfiguration()) != nil else { return }
+        Self.recentre(device)
+        device.unlockForConfiguration()
+    }
+
+    private static func applyFocusBehavior(
+        _ behavior: FocusBehavior, manualLensPosition: Float, to device: AVCaptureDevice
+    ) {
+        switch behavior {
         case .fixed:
             if device.isLockingFocusWithCustomLensPositionSupported {
                 device.setFocusModeLocked(lensPosition: FixedFocus.lensPosition)
@@ -468,6 +637,9 @@ public actor AVFoundationCaptureBackend {
         case .deviceDefault:
             if device.focusMode != .continuousAutoFocus, device.isFocusModeSupported(.continuousAutoFocus) {
                 device.focusMode = .continuousAutoFocus
+            } else if !device.isFocusModeSupported(.continuousAutoFocus),
+                      device.focusMode != .autoFocus, device.isFocusModeSupported(.autoFocus) {
+                device.focusMode = .autoFocus
             }
         case .manual:
             if device.isLockingFocusWithCustomLensPositionSupported {
@@ -516,21 +688,40 @@ public actor AVFoundationCaptureBackend {
         meter?.isPaused = false
     }
 
-    private func selectMovieFormat(_ device: AVCaptureDevice) throws {
-        let rate = Float64(MovieFrames.perSecond)
-        let formats = device.formats.filter {
-            CMFormatDescriptionGetMediaSubType($0.formatDescription) == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+    /// Sets `device`'s movie format: the largest 4:3 one the session allows (`MovieCaptureFormat.preferred`) on the lens
+    /// a session starts on, which sets `movieFormatSize`, and exactly `size` on a zoom step's lens.
+    private func selectMovieFormat(_ device: AVCaptureDevice, size: (width: Int, height: Int)? = nil) throws {
+        let formats = Self.movieFormats(of: device)
+        let chosen = if let size {
+            MovieCaptureFormat.matching(size, among: formats, dimensions: Self.dimensions,
+                                        recordsMovieFrameRate: Self.recordsMovieFrameRate)
+        } else {
+            MovieCaptureFormat.preferred(among: formats, dimensions: Self.dimensions,
+                                         recordsMovieFrameRate: Self.recordsMovieFrameRate)
         }
-        guard let format = MovieCaptureFormat.preferred(among: formats, dimensions: {
-            let size = CMVideoFormatDescriptionGetDimensions($0.formatDescription)
-            return (Int(size.width), Int(size.height))
-        }, recordsMovieFrameRate: {
-            $0.videoSupportedFrameRateRanges.contains { $0.minFrameRate <= rate && rate <= $0.maxFrameRate }
-        }) else { throw NativeCaptureError.configurationFailed }
+        guard let format = chosen else { throw NativeCaptureError.configurationFailed }
         try device.lockForConfiguration()
         defer { device.unlockForConfiguration() }
         device.activeFormat = format
         device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(MovieFrames.perSecond))
+        if size == nil { movieFormatSize = Self.dimensions(format) }
+    }
+
+    /// A lens's formats a movie can record from: the 420v ones.
+    private static func movieFormats(of device: AVCaptureDevice) -> [AVCaptureDevice.Format] {
+        device.formats.filter {
+            CMFormatDescriptionGetMediaSubType($0.formatDescription) == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
+        }
+    }
+
+    private static func dimensions(_ format: AVCaptureDevice.Format) -> (width: Int, height: Int) {
+        let size = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
+        return (Int(size.width), Int(size.height))
+    }
+
+    private static func recordsMovieFrameRate(_ format: AVCaptureDevice.Format) -> Bool {
+        let rate = Float64(MovieFrames.perSecond)
+        return format.videoSupportedFrameRateRanges.contains { $0.minFrameRate <= rate && rate <= $0.maxFrameRate }
     }
 
     private func camera(for lens: RearLens) throws -> AVCaptureDevice {
@@ -585,8 +776,10 @@ public actor AVFoundationCaptureBackend {
     }
 
     private func movieFinished(
-        id: UUID, orientation: ClipOrientation, remainingFrames: Int, successfullyFinished: Bool
+        id: UUID, orientation: ClipOrientation, remainingFrames: Int, allowsAudio: Bool,
+        successfullyFinished: Bool
     ) async {
+        detachMovieSound()
         guard operations.operationID == id, operations.pendingSave == nil else { return }
         movieDelegate = nil
         if privacyCancelled { operations.finish(id: id); return }
@@ -595,7 +788,7 @@ public actor AVFoundationCaptureBackend {
         // Even an unsuccessful callback may have salvageable footage: validate the actual file.
         do {
             let event = try await files.movieSavedEvent(
-                id: id, orientation: orientation, remainingFrames: remainingFrames
+                id: id, orientation: orientation, remainingFrames: remainingFrames, allowsAudio: allowsAudio
             )
             if privacyCancelled { operations.finish(id: id); return }
             guard operations.stage(event, id: id) else { return }
@@ -629,6 +822,10 @@ public actor AVFoundationCaptureBackend {
         }
         notifications.observe(UIApplication.willResignActiveNotification, object: nil) { [weak self] _ in
             Task { await self?.suspend(reason: .applicationInactive) }
+        }
+        notifications.observe(AVCaptureDevice.subjectAreaDidChangeNotification, object: nil) { [weak self] notification in
+            let deviceID = (notification.object as? AVCaptureDevice)?.uniqueID
+            Task { await self?.subjectAreaChanged(deviceID: deviceID) }
         }
     }
 
