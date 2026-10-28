@@ -357,13 +357,14 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(crowded.print, resting.print, "A tall tool scrolls inside the controls band")
         XCTAssertGreaterThan(crowded.controls.height, resting.controls.height)
 
+        probe.extraControlsHeight = 0
         probe.error = String(repeating: "The print could not be rendered. ", count: 80)
         let failed = try await settledFrames(probe)
         XCTAssertEqual(failed.print, resting.print, "An error scrolls inside the band without resizing the print")
-        XCTAssertGreaterThan(failed.controls.height, resting.controls.height, "The long error joins the controls inside the band")
+        XCTAssertGreaterThan(failed.controls.minY, resting.controls.minY + 200,
+                             "The long error sits above the controls inside the band")
 
         probe.error = nil
-        probe.extraControlsHeight = 0
         let cleared = try await settledFrames(probe)
         XCTAssertEqual(cleared.print, resting.print)
         XCTAssertEqual(cleared.controls, resting.controls)
@@ -464,10 +465,10 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(model.revealedInstantPrints(roll.id), [])
     }
 
-    /// DEV-12: the Instant's one question at the end of its pack waits while a kept print of the full pack is still
-    /// sealed, as one left by Development stopped in the background, so it never opens without that print; once the
-    /// print is revealed it covers every revealed print still undecided.
-    func testThePackEndQuestionWaitsForEveryPrintOfTheFullPack() async throws {
+    /// DEV-12: what the Instant's question at the end of its pack covers. Nothing while the pack has an exposure left or a
+    /// kept print of the full pack is still sealed; once every print is revealed, every revealed print still undecided.
+    /// Only the model is checked: the shooting screen asks it as a print closes.
+    func testThePackEndQuestionCoversNothingUntilEveryPrintOfTheFullPackIsRevealed() async throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("JournalIntegration-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }
         let model = try JournalModel(root: root)
@@ -483,7 +484,7 @@ final class JournalIntegrationTests: XCTestCase {
         model.refresh()
         XCTAssertEqual(model.film(film.id)?.remainingExposures, 0)
         XCTAssertEqual(model.film(film.id)?.captures.last?.revealState, .sealed)
-        XCTAssertEqual(model.packEndOriginalQuestion(film.id), [], "Not while the pack's last print is sealed")
+        XCTAssertEqual(model.packEndOriginalQuestion(film.id), [], "Nothing while the pack's last print is sealed")
 
         try model.chooseOriginals(film.id, sequences: [4], export: false)
         try await model.develop(film.id)

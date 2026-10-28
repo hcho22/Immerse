@@ -44,7 +44,6 @@ public enum NativeMovieRenderer {
         // Only whole frames: the clip's last frame is held to where the recording stopped. A frame begun in the sliver
         // of time left over would last a fraction of a frame and count against the Camera's frame rate.
         let frameCount = DevelopedMovieFormat.frameCount(seconds: duration.seconds, camera: camera.id)
-        let developedDuration = CMTime(value: Int64(frameCount), timescale: Int32(fps))
         let width = orientation == .landscape ? longEdge : longEdge * 3 / 4
         let height = orientation == .landscape ? longEdge * 3 / 4 : longEdge
         let bounds = CGRect(x: 0, y: 0, width: width, height: height)
@@ -78,7 +77,7 @@ public enum NativeMovieRenderer {
             let formats = try await audioTrack.load(.formatDescriptions)
             guard let format = formats.first else { throw NativeRenderError.invalidMovie() }
             let audioReader = try AVAssetReader(asset: asset)
-            audioReader.timeRange = CMTimeRange(start: .zero, duration: developedDuration)
+            audioReader.timeRange = CMTimeRange(start: .zero, duration: duration)
             let audioOutput = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: nil)
             guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed }
             audioReader.add(audioOutput)

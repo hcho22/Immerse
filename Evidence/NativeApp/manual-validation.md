@@ -1984,7 +1984,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 - Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold, readable and clear of the viewfinder and the shutter, at every text size, before and after the card is closed: beside Done, or under it where the header's line is too short, as held on its side at the default size.
 - A card marked **Debug preview** shows within a moment of each save, says the photo or clip is developing, and then shows its picture.
 - The full-size view shows that Camera's look and, on the 6×6 and the 16mm, the chosen Film Stock, with the notice **Develop at once - Debug build** under it.
-- A clip plays silently on a loop: the soundtrack is chosen and heard only on the developed Movie.
+- A clip plays on a loop with its recorded sound through the speaker on a Film loaded with this build, and silently on a Film loaded with an earlier build or with the microphone declined; a soundtrack is chosen and heard only on the developed Movie.
 - The shutter, the lens switch and the controls keep working while a preview develops, and the remaining exposures or time count down as usual.
 
 **It fails if.**
@@ -2050,17 +2050,18 @@ A screenshot of steps 3 and 5 and the switch after the relaunch.
 **Steps.**
 
 1. On a 16mm Cinema Film with **Color** record one clip of about 60 seconds.
-2. While its card says it is developing, record two short clips straight away.
+2. While its card says it is developing, record two short clips straight away, and while the second one records and then saves, tap the card and then its **x**.
 3. On a 6×6 Medium Format Film with **Color** take five photos as quickly as the shutter allows.
 4. Take one more photo and, while its card says it is developing, lock the iPhone for about ten seconds; unlock it and go back to the camera.
 
 **Expect.**
 Every capture develops, one after another in the order it was saved: while the 60-second clip develops the card says the newest short clip is waiting to develop, then each clip's preview takes the card in turn, the long clip's first; the five photos' previews follow the same way, the fifth last.
+While a clip starts, records or saves, the card is dimmed, reads **Opens when the clip ends.** and does not open when tapped, while its **x** still closes it; once the clip is saved, a tap on the card opens it again.
 The camera never pauses, and every capture is counted and saved.
 After step 4 the card says the photo is developing again and then shows it developed; nothing develops while the iPhone is locked.
 
 **It fails if.**
-A capture's preview never shows, previews show out of the order they were taken, the photo locked away in step 4 shows "could not develop here" or a wrong or partly drawn picture, a capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
+A capture's preview never shows, previews show out of the order they were taken, a card opens while a clip records or saves, the photo locked away in step 4 shows "could not develop here" or a wrong or partly drawn picture, a capture fails to save, **Finishing save** stays on screen, the app stops responding, or the phone becomes too hot to hold.
 
 **Write down.**
 How long the 60-second clip's preview took, how long the last of the five photos took to show after its shutter, whether the camera stayed smooth, and the phone's warmth.

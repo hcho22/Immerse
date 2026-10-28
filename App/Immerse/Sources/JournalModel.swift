@@ -217,9 +217,12 @@ final class JournalModel {
         }
     }
 
-    /// The prints the Instant's one question at the end of its pack covers (DEV-12): once every exposure is used and
-    /// every kept print is revealed, each revealed print whose original is still undecided. While a print is still
-    /// sealed there is none, so the question waits for that print's reveal and then covers it too.
+    /// The prints the Instant's one question at the end of its pack covers (DEV-12), which the shooting screen asks as
+    /// its last print closes: once every exposure is used and every kept print is revealed, each revealed print whose
+    /// original is still undecided. While a print is still sealed there is none. A print revealed at the camera closes
+    /// there and the question follows it; a last print whose Development the app stopped in the background is revealed
+    /// elsewhere, so its question is missed and does not come back by itself (the captain's "C"), and the Film screen's
+    /// Originals button remains.
     func packEndOriginalQuestion(_ id: UUID) -> [Int] {
         guard let film = film(id), film.camera.id == .instant1970s, film.remainingExposures == 0,
               !film.captures.contains(where: { $0.revealState == .sealed }) else { return [] }

@@ -190,13 +190,12 @@ final class DarkroomAmendmentTests: XCTestCase {
     /// A horizontal edge straightened by 7.3° tilts across the print by about tan(7.3°) of its width, and the print is the
     /// largest same-shape rectangle less its sampling margin, upright and sideways (D4, D1).
     func testStraighteningTiltsThePictureAndKeepsTheLargestRectangle() throws {
-        for (width, height) in [(240, 160), (160, 240)] {
+        for (width, height) in [(240, 160), (160, 240)] { for degrees in [7.3, -7.3] {
             let master = try twoToneJPEG(width: width, height: height)
-            let degrees = 7.3
             let straightened = try DecodedPixels(NativePhotoRenderer.print(
                 master: master, recipe: DarkroomRecipe(straighteningDegrees: degrees), camera: CameraCatalog.disposable1990s
             ))
-            let radians = degrees * .pi / 180, ratio = Double(width) / Double(height)
+            let radians = abs(degrees) * .pi / 180, ratio = Double(width) / Double(height)
             let largest = min(Double(width) / (cos(radians) + sin(radians) / ratio),
                               Double(height) / (sin(radians) + cos(radians) / ratio))
             XCTAssertEqual(straightened.width, Int((largest - 4).rounded(.down)), "\(width)x\(height): the largest rectangle")
@@ -207,10 +206,12 @@ final class DarkroomAmendmentTests: XCTestCase {
                 (0..<straightened.height).first { straightened.channel(0, x: column, y: $0) > 128 } ?? straightened.height
             }
             let left = edgeRow(2), right = edgeRow(straightened.width - 3)
-            let rise = Double(abs(left - right))
+            // The print turns the way the Darkroom's preview turns it (`rotationEffect(.degrees(-angle))`): a positive
+            // angle turns it counterclockwise, so the edge rises to the right, and a negative one clockwise.
+            let rise = Double(left - right) * (degrees > 0 ? 1 : -1)
             XCTAssertEqual(rise, tan(radians) * Double(straightened.width - 5), accuracy: 4,
-                           "\(width)x\(height): the edge tilts end to end (rows \(left) and \(right))")
-        }
+                           "\(width)x\(height) at \(degrees)°: the edge tilts end to end (rows \(left) and \(right))")
+        } }
     }
 
     /// Straightening keeps light above white, as every other step does: a bright corner printed +2 stops with a Vignette

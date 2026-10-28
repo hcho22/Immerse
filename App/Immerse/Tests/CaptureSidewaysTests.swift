@@ -82,28 +82,33 @@ final class CaptureSidewaysTests: XCTestCase {
         XCTAssertEqual(InterfaceOrientationLock.mask(deviceOrientation: .faceUp, fallback: .landscapeLeft), .landscapeLeft)
     }
 
-    /// The shooting screen holds the window for as long as it is up, the print and the question that follow an Instant
-    /// exposure included, so the camera is never seen in a turned window beneath them as they come and go; the hold ends
-    /// with the screen.
+    /// The shooting session holds the window for as long as the screen is up, the full-screen print and question that
+    /// follow an Instant exposure included, which the screen disappears beneath without ending its session, so the
+    /// camera is never seen in a turned window as they come and go; the hold ends with the screen.
     func testTheHoldLastsWhileAPrintIsOverTheScreenAndEndsWithIt() async throws {
         let showing = PrintShowing()
+        let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
         let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
-        window.rootViewController = UIHostingController(rootView: HoldProbe(showing: showing))
+        window.rootViewController = UIHostingController(rootView: SessionProbe(capture: capture, showing: showing))
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "The shooting screen holds the window")
+        XCTAssertTrue(capture.shootingSessionActive)
         showing.print = true
         try await Task.sleep(for: .milliseconds(800))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "A print over the camera keeps the hold")
+        XCTAssertTrue(capture.shootingSessionActive, "The print's cover does not end the session")
         showing.print = false
         try await Task.sleep(for: .milliseconds(800))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .portrait, "So does the print closing")
+        XCTAssertTrue(capture.shootingSessionActive)
         window.isHidden = true
         window.rootViewController = nil
         try await Task.sleep(for: .milliseconds(500))
         XCTAssertEqual(ImmerseAppDelegate.supportedOrientations, .allButUpsideDown, "The hold ends with the screen")
+        XCTAssertFalse(capture.shootingSessionActive)
     }
 
     /// While a clip records, the words and icons keep turning with the iPhone, and the clip keeps the orientation it
@@ -471,12 +476,25 @@ final class CaptureSidewaysTests: XCTestCase {
 /// Whether an Instant print is over the camera, for the test of the hold.
 @Observable private final class PrintShowing { var print = false }
 
-/// Holds the window as `CaptureView` does, with a sheet over it as the print is.
-private struct HoldProbe: View {
+/// Starts and ends the shooting session as `CaptureView` does, once per presentation and not as a full-screen print
+/// covers it, with the print as a full-screen cover as the Instant's is.
+private struct SessionProbe: View {
+    let capture: CaptureController
     @Bindable var showing: PrintShowing
+    @State private var started = false
+
     var body: some View {
-        Color.clear.holdsInterfaceOrientation(.portrait) { .portrait }
-            .sheet(isPresented: $showing.print) { Text("Print") }
+        Color.clear
+            .onAppear {
+                guard !started else { return }
+                started = true
+                capture.beginShootingSession()
+            }
+            .onDisappear {
+                guard !showing.print else { return }
+                capture.endShootingSession()
+            }
+            .fullScreenCover(isPresented: $showing.print) { Text("Print") }
     }
 }
 

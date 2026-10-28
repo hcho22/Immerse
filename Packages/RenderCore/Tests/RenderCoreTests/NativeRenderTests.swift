@@ -171,15 +171,19 @@ final class NativeRenderTests: XCTestCase {
                        try Self.streamDescription(sourceFormat).mSampleRate)
         XCTAssertEqual(try Self.streamDescription(developedFormat).mChannelsPerFrame,
                        try Self.streamDescription(sourceFormat).mChannelsPerFrame)
-        // The sound is cut to the clip's whole frames: it runs from 0 to the last frame's end, shorter than the capture's.
+        // The clip lasts until the recording stopped, its last whole frame held there, and its sound runs to that same
+        // end, so a Movie has no silence where one clip meets the next; only the sound past the picture is cut.
         let sourceVideo = try await AVURLAsset(url: source).loadTracks(withMediaType: .video)
         let pictureSeconds = try await XCTUnwrap(sourceVideo.first).load(.timeRange).duration.seconds
         let wholeFrames = DevelopedMovieFormat.frameCount(seconds: pictureSeconds, camera: .super8HomeMovie)
+        XCTAssertLessThan(Double(wholeFrames) / 18, pictureSeconds - 0.005, "The recording stops part way through a frame")
+        let clipSeconds = try await developedAsset.load(.duration).seconds
+        XCTAssertEqual(clipSeconds, pictureSeconds, accuracy: 1.0 / 600)
         let developedRange = try await XCTUnwrap(developedAudio.first).load(.timeRange)
         XCTAssertEqual(developedRange.start.seconds, 0, accuracy: 1.0 / 600)
-        XCTAssertEqual(developedRange.duration.seconds, Double(wholeFrames) / 18, accuracy: 1.0 / 600,
-                       "Development cuts the captured sound to the clip's \(wholeFrames) whole frames")
-        XCTAssertLessThan(developedSamples.count, sourceSamples.count, "The sound past the last whole frame is cut")
+        XCTAssertEqual(developedRange.end.seconds, clipSeconds, accuracy: 1.0 / 600,
+                       "The developed sound runs to where the recording stopped")
+        XCTAssertLessThan(developedSamples.count, sourceSamples.count, "The sound past the picture's end is cut")
         XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),
                        "Development keeps the original sound samples without treatment")
 
@@ -195,7 +199,10 @@ final class NativeRenderTests: XCTestCase {
                        try Self.streamDescription(developedFormat).mSampleRate)
         XCTAssertEqual(try Self.streamDescription(assembledFormat).mChannelsPerFrame,
                        try Self.streamDescription(developedFormat).mChannelsPerFrame)
-        XCTAssertEqual(assembledDuration, Double(wholeFrames) / 18, accuracy: 0.02)
+        XCTAssertEqual(assembledDuration, clipSeconds, accuracy: 1.0 / 600)
+        let assembledRange = try await XCTUnwrap(assembledAudio.first).load(.timeRange)
+        XCTAssertEqual(assembledRange.end.seconds, assembledDuration, accuracy: 1.0 / 600,
+                       "The Movie's recorded sound runs to the clip's last frame")
 
         let oldPackage = CameraPackage(id: .cinema16mm, displayName: "16mm Cinema", medium: .movie,
                                        capacity: .seconds(165), revealRule: .movieDevelopment,
@@ -208,7 +215,7 @@ final class NativeRenderTests: XCTestCase {
     }
 
     /// A clip with several seconds of recorded sound develops completely (FR-27): every whole frame, and its sound to
-    /// the last frame's end, however far the writer lets the picture run ahead of the sound.
+    /// the clip's end, however far the writer lets the picture run ahead of the sound.
     func testAClipWithSeveralSecondsOfSoundDevelopsEveryFrameAndAllOfItsSound() async throws {
         let root = makeRoot()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -227,8 +234,9 @@ final class NativeRenderTests: XCTestCase {
         XCTAssertEqual(frames.count, wholeFrames, "Every whole frame of the clip is developed")
         let developedAudio = try await AVURLAsset(url: developed).loadTracks(withMediaType: .audio)
         let developedRange = try await XCTUnwrap(developedAudio.first).load(.timeRange)
-        XCTAssertEqual(developedRange.duration.seconds, Double(wholeFrames) / 18, accuracy: 1.0 / 600,
-                       "The sound runs to the last whole frame's end")
+        let clipSeconds = try await AVURLAsset(url: developed).load(.duration).seconds
+        XCTAssertEqual(developedRange.start.seconds, 0, accuracy: 1.0 / 600)
+        XCTAssertEqual(developedRange.end.seconds, clipSeconds, accuracy: 1.0 / 600, "The sound runs to the clip's end")
         let sourceSamples = try await decodedAudioSamples(source)
         let developedSamples = try await decodedAudioSamples(developed)
         XCTAssertEqual(developedSamples, sourceSamples.prefix(developedSamples.count),

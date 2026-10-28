@@ -68,7 +68,9 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
 }
 
 /// The print a straightening leaves (FR-31 item 3): the largest rectangle of the print's own shape, centered, whose
-/// corners all stay inside the print turned by the straightening angle, less a two pixel sampling margin at each side.
+/// corners all stay inside the print turned by the straightening angle, less a sampling margin of two pixels at each side
+/// of its width; its height follows the print's shape, which on a landscape print leaves a smaller margin above and
+/// below (about 1.3 pixels on a 3:2 print).
 /// The renderer crops to it, and the Darkroom shows the same crop-in on its preview while the slider moves.
 public enum StraighteningGeometry {
     /// How much of the print's width the largest same-shape rectangle keeps at `degrees`: 1 at 0°.
@@ -79,7 +81,8 @@ public enum StraighteningGeometry {
         return min(1 / (cosine + sine / ratio), (height / width) / (sine + cosine / ratio))
     }
 
-    /// The straightened print's size in whole pixels, in the print's own shape.
+    /// The straightened print's size in whole pixels, in the print's own shape: the largest rectangle's width less four
+    /// pixels, rounded down, and the height that width gives.
     public static func croppedSize(width: Double, height: Double, degrees: Double) -> (width: Int, height: Int) {
         let largest = width * keptFraction(width: width, height: height, degrees: degrees)
         let outputWidth = max(1, Int((largest - 4).rounded(.down)))
