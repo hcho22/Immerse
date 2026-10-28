@@ -386,7 +386,7 @@ orientations. Repeat relevant error/retry cases without treating one success as
 coverage of every adapter. Record case-specific observed results, not checkmarks
 against this plan. `M-*` labels are runbook labels, not replacement tracker IDs.
 The rows were written for the earlier pin, corrected through 2026-10-15, and are reconciled here with the 2026-10-26 amendment: M13 and M28 use the upright Darkroom and fixed-band scenarios below. Where a row could not be confirmed from the code and records, it says so.
-The Camera names in the product are 1990s Disposable, 1970s Instant, 6×6 Medium Format, 1960s Super 8 Home Movie and 16mm Cinema.
+Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, Super 8 and 16mm (FR-24, [Q03](#q03---camera-names)); scenarios written before then call them 1990s Disposable, 1970s Instant, 6×6 Medium Format, 1960s Super 8 Home Movie and 16mm Cinema.
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
@@ -475,7 +475,8 @@ The names in bold are the words on the screen.
    On the 1990s Disposable the button to its right turns the flash on and off.
    Tap **Done** to leave the camera.
    On the 1970s Instant each print develops by itself and opens over the camera as **Photo** and its number.
-   Tap **Done** on the print to close it; a sheet titled **Originals** then asks about that print's original (**Original of photo** and its number).
+   Tap **Done** on the print to close it.
+   Only after the pack's last print closes does a sheet titled **Originals** ask, once, about every print whose original is still undecided (FR-35).
    Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
 3. **Finish a roll or reel before it is full.**
    On the Film's screen tap the **...** menu at the top right, then **Rewind & Develop Early** (photo roll) or **Stop & Develop Early** (Movie), then **Complete Film**.
@@ -492,7 +493,7 @@ The names in bold are the words on the screen.
    **Save Developed to Photos** saves the developed result.
    If you chose to save originals in step 4, **Originals** and then **Save Originals to Photos** saves the captures as the phone made them.
    An Instant pack never shows the Development sheet.
-   Its question comes when each print is closed (step 2), or under **Originals** on the Film's screen if it was left: choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**, which saves that print's original to Photos at once, or **Remove from Immerse without saving** if the scenario does not need the original.
+   Its question comes once, after the pack's last print closes (step 2), and **Originals** on the Film's screen offers it at any time: choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**, which saves those prints' originals to Photos at once, or **Remove from Immerse without saving** if the scenario does not need the original.
    If the save does not finish, the choice stands and the same sheet, or **Originals**, offers **Save Originals to Photos** to try again.
    iOS asks to let Immerse add to Photos; that permission is add-only.
    These copies are test media: keep them out of Git and delete them only when you choose to.
@@ -678,7 +679,7 @@ Whether this phone adds HDR information to a photo, and whether that changes wha
    Title each "L04" and its Camera.
 3. On each, capture that scene twice with the rear lens and once with the front lens: exposures on the Photo Cameras, clips of about five seconds on the Movie Cameras.
 4. Finish each Film and develop it, choosing **Save Originals to Photos after reveal**.
-   The Instant develops each print by itself and asks about its original when the print is closed; choose **Save to Photos, then remove from Immerse** (common steps 2 and 6).
+   The Instant develops each print by itself, and finishing its pack takes all ten exposures; when the one question about the originals follows the last print, choose **Save to Photos, then remove from Immerse** (common steps 2 and 6).
 5. For each Film tap **Save Developed to Photos**, then **Originals** and **Save Originals to Photos**.
    The Instant's originals are already in Photos from step 4.
 6. In the Photos app open each original and each developed copy and swipe up for its details.
@@ -975,7 +976,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
 | --- | --- | --- |
 | D01 / FR-29 to FR-34; DRK-11 to DRK-16 | Use current tools on color and black-and-white prints, reach the limits, save, reopen and Reset. Verify legacy strokes only if a previously saved test print has them; the current build offers no Dodge/Burn control. | Screenshots, values reached, saved recipe and the captain's words on control feel. [Steps](#d01---darkroom-controls-saving-and-reset). |
 | D02 / FR-08; STO, DEC-04 | Save each Camera's developed result to Photos and read its format, size and frame rate. Each is the size the captain approved on 2026-10-13. | The details panel for each copy, QuickTime's inspector for Movies. [Steps](#d02---export-sizes-and-formats-read-from-photos). |
-| D03 / FR-08; DEV, DEC-11 | Take Instant prints from real captures. Each print is shown first, its original is asked about when it is closed, a saved original reaches Photos at once, and a discarded print brings no question. | Screen recording, Photos before and after. [Steps](#d03---the-instant-asks-about-each-prints-original). |
+| D03 / FR-08; DEV, DEC-11 | Superseded on 2026-10-26 by FR-35: the Instant no longer asks after each print. Run [Q09](#q09---one-complete-instant-pack) instead. | [Why](#d03---the-instant-asks-about-each-prints-original). |
 | D04 / FR-31; DRK-13, QA-13 | Open Adjust on a short screen at default and large text sizes. The print area stays fixed while the controls remain reachable in the internal band; 6×6 stays square and Instant offers quarter turns only. | Screenshots and the text-size setting before and after. [Steps](#d04---adjust-and-a-short-screen); approval pack carries SE and Pro Max simulator views. |
 | I01 / FR-01 A11; CAM-03, CAM-17, QA-16 | Develop Instant prints of real scenes and judge contrast B against the phone's own photo, the board and a real print if one is to hand. | A verdict in the captain's words, screenshots. [Steps](#i01---the-instants-contrast-on-the-phone). |
 | I02 / FR-07; DRK-03, DRK-10, QA-16 | Tone black-and-white 6×6 prints with sepia and selenium from the untoned end of each slider to its top. The low end is the untoned print; whether selenium at its top can be seen at all is recorded. | Screenshots at each strength, the captain's words. [Steps](#i02---sepia-and-selenium-on-the-phone). |
@@ -1066,63 +1067,9 @@ For each copy: the Film, the details panel's words, a screenshot of it, and for 
 
 ### D03 - The Instant asks about each print's original
 
-**Why.**
-Since the 2026-10-13 decisions the screen a print is revealed on asks about its original, once ([060](darkroom-export-decisions-060.md), "The Instant asks about each print's original").
-At the camera the print is shown first and the question comes when it is closed; prints revealed together are shown and asked about one by one; a print revealed while the Film's screen is open is asked about there; a print discarded where it was revealed brings no question.
-The simulator has no camera, so the save that leads to a reveal was stood in for, and saving an original to Photos was not run.
-
-**You need.**
-The phone's Photos app, to see which originals arrive.
-
-**Steps.**
-
-1. Start a 1970s Instant Film titled "D03" and open the camera.
-2. **Print 1.**
-   Take a print.
-   It develops and opens over the camera.
-   Tap **Done**.
-   A sheet titled **Originals** asks about **Original of photo 1**: choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**.
-   Check in Photos that one new picture, the phone's original capture, has arrived.
-3. **Print 2.**
-   Take a print, tap **Done**, choose **Remove from Immerse without saving** and tap **Confirm choice**.
-4. **Print 3.**
-   Take a print, tap **Done**, and tap **Cancel** on the question.
-5. **Print 4.**
-   Take a print and, on the print itself, tap **Discard** and confirm.
-6. Tap **Done** to leave the camera, then tap **Originals** on the Film's screen.
-7. **A print revealed on the Film's screen.**
-   Open the camera, take a print and at once, within about a second, swipe up to the Home Screen.
-   Wait ten seconds and return to Immerse.
-   If the print is still sealed, the Film's screen offers **Resume Development**: tap it and stay on the Film's screen.
-   If the print had already opened, this try shows nothing; try again, leaving sooner.
-8. **Two prints revealed together.**
-   Repeat the start of step 7, but on return open the camera instead of tapping **Resume Development**, and take one more print.
-
-**Expect.**
-
-- Step 2: the print is shown before any question, the question names only that print, and Photos gains the original at once.
-- Step 3: no original reaches Photos.
-- Step 4: the question goes away.
-  In step 6 **Originals** still offers the two choices, which now cover print 3 alone, the one left unanswered; choosing **Remove from Immerse without saving** and **Confirm choice** there settles it, and opening **Originals** again offers no choice.
-- Step 5: the print closes with no question, and no earlier print is shown in its place.
-- Step 7: when **Resume Development** reveals the print, the Film's screen asks about its original.
-- Step 8: both prints are shown, one after the other in the order they were taken, and each is asked about when it is closed, before the next is shown; none is skipped and none asked twice.
-- An answer about one print never changes another print's choice.
-
-**It fails if.**
-
-- A question comes before its print has been shown, or names a print it should not.
-- A print is never asked about on either screen and its choice is not waiting under **Originals**.
-- Choosing to save leaves Photos without the original and shows nothing to try again.
-- Discarding a print brings an earlier print or a question.
-
-**What is not known.**
-Whether steps 7 and 8 can leave a print sealed on a real phone depends on timing.
-If after five tries the print always opens before you leave, record those two steps as INCONCLUSIVE with the number of tries.
-Saving an original after Photos access was refused is M16's, which needs its own settings scope.
-
-**Write down.**
-For each print: what was shown, in what order, the question's heading, the choice, and whether Photos gained a picture; a screen recording of steps 7 and 8.
+Superseded on 2026-10-26: the captain moved the question to once, after the pack's last print, covering every print whose original is still undecided (FR-35, DEV-12).
+Do not run this case on a candidate that holds the amendment; [Q09](#q09---one-complete-instant-pack) checks the pack-end question, and **Originals** on the Film's screen stays as common step 6 describes.
+The per-print question it checked was decided on 2026-10-13 and is recorded in [060](darkroom-export-decisions-060.md), "The Instant asks about each print's original".
 
 ### D04 - Adjust and a short screen
 
@@ -1651,7 +1598,7 @@ The authority and stop conditions at the top of this plan apply to each of them 
   Your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
   Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
-- Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the question about its original and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
+- Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the pack's one question about the originals after its last print and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
   The photo view opened from the Journal or Film screen turns with the iPhone. Darkroom keeps its portrait arrangement from either entry point and restores the photo view orientation when it closes, as W01 and W05 describe.
 - While no lens is running (the camera starting, asking for access, refused or unavailable) the 6×6's rows are empty and no "... unavailable on this lens" note shows.
 
@@ -1916,7 +1863,7 @@ Screenshots and the screen recording of each transition, whether turning the pho
 
 ## The Instant Camera Staying On on a Real iPhone
 
-On 2026-10-16 the captain reported that the Instant showed "Camera paused. Saved captures are unchanged." and a Resume Camera button after every exposure; the camera now starts again by itself when the last print and its question close ([067](instant-camera-stays-on-067.md)).
+On 2026-10-16 the captain reported that the Instant showed "Camera paused. Saved captures are unchanged." and a Resume Camera button after every exposure; the camera now starts again by itself when the last print closes ([067](instant-camera-stays-on-067.md)); since 2026-10-26 no question about originals follows a print before the pack's last (FR-35, [Q09](#q09---one-complete-instant-pack)).
 It is part of the pinned candidate.
 A complete Film shows no **Resume Camera** on any Camera and no live viewfinder: step 10 covers the Instant's pack and step 11 a Disposable's Film.
 Run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
@@ -1928,31 +1875,30 @@ It reads **UNTESTED: physical execution deferred**.
 
 1. Load a 1970s Instant Film and open the camera.
 2. Take an exposure.
-   When the print shows, close it; answer the question about its original.
+   When the print shows, close it.
 3. Look at the shooting screen straight away, without touching it.
 4. Take three more exposures in a row the same way.
-5. Take an exposure and, while its print shows, pull down Notification Center and put it away, then pull down Control Center and put it away; close the print and answer the question.
-6. If iOS has not yet asked this install about Photos, take an exposure, close the print, choose **Save to Photos, then remove from Immerse** and tap **Confirm choice**; answer iOS's question about adding to Photos.
-   If it has already asked, record this step as UNTESTED, since asking again needs the app's permissions reset.
+5. Take an exposure and, while its print shows, pull down Notification Center and put it away, then pull down Control Center and put it away; close the print.
+6. Withdrawn on 2026-10-26: no question about originals follows a print before the pack's last (FR-35), so iOS's question about Photos cannot come over the camera between exposures. Record this step as not applicable.
 7. Take an exposure and, while its print shows, press the side button to lock the phone, then unlock it and close the print.
 8. Take an exposure, and while its print shows, call the phone from another phone and answer the call; end the call, then close the print.
 9. Take an exposure and close the print; tap **Done** at once, then reopen the camera.
-10. Take the last exposure of a pack.
+10. Take the last exposure of a pack, close its print, and cancel the one question about the originals that follows it.
 11. On a Disposable Film, take a few exposures and complete the Film early from its Film screen (or take all 27), then open its camera again if the Film screen still offers it.
 
 **Expect.**
 
-- After steps 2, 4, 5 and 6 the live viewfinder is back within about a second of the last question closing, with no **Resume Camera** button and no "Camera paused" text; the shutter works at once.
+- After steps 2, 4 and 5 the live viewfinder is back within about a second of the print closing, with no **Resume Camera** button and no "Camera paused" text; the shutter works at once.
 - After steps 7 and 8 the screen reads "Camera paused. Saved captures are unchanged." (or "Camera is available. Resume when ready.") with **Resume Camera**, and the camera does not start by itself.
 - After step 9 the camera is off on the Journal (no green camera dot in the status bar) and the reopened camera starts normally.
 - After step 10 the screen reads "Pack complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
 - After step 11 the Disposable's complete Film reads "Film complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
 
 **It fails if.**
-**Resume Camera** has to be tapped after an ordinary exposure or after Notification Center, Control Center or the Photos question over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, **Resume Camera** shows on a complete pack or Film, or the green camera dot stays on after leaving the camera.
+**Resume Camera** has to be tapped after an ordinary exposure or after Notification Center or Control Center over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, **Resume Camera** shows on a complete pack or Film, or the green camera dot stays on after leaving the camera.
 
 **Write down.**
-Each step's result, how long the viewfinder took to return, a screen recording of steps 2 to 6, and whether the green dot was on at step 9.
+Each step's result, how long the viewfinder took to return, a screen recording of steps 2 to 5, and whether the green dot was on at step 9.
 
 ## Develop at Once on a Real iPhone
 
@@ -2168,7 +2114,7 @@ nonmigration are both required; one cannot substitute for the other.
 | FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06, and H04 for a clip's orientation; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
 | FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03. |
 | FR-07 A01...A05 (PRD 2.1 baseline) | M13, M14, M28, D01, D04, I02, W01 to W06 (current Darkroom layout and controls); FR-29 to FR-34 supersede the baseline orientation, Crop and Dodge/Burn tool details. |
-| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, D03 for the Instant's question about each original, and L08 for how an exported Movie looks elsewhere. |
+| FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, Q09 for the Instant's one question about its originals (D03 before 2026-10-26), and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
 | FR-18 A01...A05 | M24, M25, T01, T07, T10, B03. |
 | FR-20 A01...A04 | M26, M27; refund/revocation and pricing remain DEC-02. |
