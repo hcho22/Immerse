@@ -430,13 +430,17 @@ struct DevelopedPreviewSheet: View {
                 image = await Task.detached { UIImage(contentsOfFile: url.path)?.preparingForDisplay() }.value
                 unavailable = image == nil
             } else {
+                MoviePlaybackAudio.prepare()
                 let queue = AVQueuePlayer()
                 looper = AVPlayerLooper(player: queue, templateItem: AVPlayerItem(url: url))
                 player = queue
                 queue.play()
             }
         }
-        .onDisappear { player?.pause(); looper = nil; player = nil; image = nil }
+        .onDisappear {
+            if player != nil { MoviePlaybackAudio.finish() }
+            player?.pause(); looper = nil; player = nil; image = nil
+        }
     }
 }
 

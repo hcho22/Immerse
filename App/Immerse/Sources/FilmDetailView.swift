@@ -159,7 +159,7 @@ struct FilmDetailView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         if capture.revealState == .revealed {
                             Button { selectedPhoto = capture } label: {
-                                RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber)
+                                RevealedPhoto(filmID: filmID, sequence: capture.sequenceNumber, keepsPictureOutOfSight: true)
                                     .aspectRatio(film.camera.printAspectRatio, contentMode: .fit)
                             }.buttonStyle(.plain).accessibilityLabel("Open photo \(capture.sequenceNumber)")
                         } else { placeholder(capture).aspectRatio(film.camera.printAspectRatio, contentMode: .fit) }

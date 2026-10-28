@@ -59,8 +59,9 @@ public struct DarkroomRecipe: Codable, Equatable, Sendable {
         crop = crop.map { Crop(x: Self.turned($0.y, extent: $0.height), y: $0.x, width: $0.height, height: $0.width) }
     }
 
-    /// A crop edge after a turn, `1 - edge - extent` rid of its floating-point remainder, so four turns give back the
-    /// recipe they began with, and never past `1 - extent`, so the turned crop stays inside the print.
+    /// A crop edge after a turn: `1 - edge - extent` rounded to the 1e-12 grid and never past `1 - extent`, so the
+    /// turned crop stays inside the print. Four turns give back exactly a crop whose edges lie on that grid, such as
+    /// the top-left crop the Darkroom starts with; an edge a slider left between grid points comes back within 1e-12.
     private static func turned(_ edge: Double, extent: Double) -> Double {
         min(((1 - edge - extent) * 1e12).rounded() / 1e12, 1 - extent)
     }

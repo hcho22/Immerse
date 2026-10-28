@@ -121,6 +121,9 @@ struct RevealedPhoto: View {
     var maximumPixels = 600
     /// The ground around the print: the grid's gray by default, black in the photo view.
     var background = Color(uiColor: .secondarySystemBackground)
+    /// Whether the decoded picture stays while the view is out of sight: only the Film screen's grid, which the photo
+    /// view covers and which then reloads it in place. Every other print lets its picture go as it leaves the screen.
+    var keepsPictureOutOfSight = false
     @State private var image: UIImage?
     @State private var failed = false
 
@@ -157,6 +160,7 @@ struct RevealedPhoto: View {
                 failed = decoded == nil
             } catch { failed = true }
         }
+        .onDisappear { if !keepsPictureOutOfSight { image = nil } }
         .accessibilityLabel("Developed photo \(sequence)")
     }
 }
