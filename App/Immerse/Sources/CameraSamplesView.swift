@@ -76,8 +76,8 @@ private struct CatalogSampleView: View {
             } catch { if !Task.isCancelled { failed = true } }
         }
         .onDisappear {
+            if player != nil { MoviePlaybackAudio.finish() }
             player?.pause(); player?.replaceCurrentItem(with: nil); player = nil; image = nil
-            MoviePlaybackAudio.finish()
         }
     }
 }

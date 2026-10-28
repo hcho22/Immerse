@@ -157,7 +157,6 @@ struct RevealedPhoto: View {
                 failed = decoded == nil
             } catch { failed = true }
         }
-        .onDisappear { image = nil }
         .accessibilityLabel("Developed photo \(sequence)")
     }
 }
@@ -306,15 +305,18 @@ struct PhotoNavigation: Equatable {
     }
 }
 
-/// The print without straightening that the Darkroom turns under the Straighten slider while it moves (D1).
+/// The print without straightening that the Darkroom turns under the Straighten slider while it moves (D1). It has no
+/// vignette either: the renderer darkens the corners of the straightened print, so turned with the print they would show
+/// out of place until the slider stops.
 struct UnstraightenedPrint {
     let recipe: DarkroomRecipe
     let image: UIImage
 
-    /// The recipe such a print is made for: `recipe` without its straightening.
+    /// The recipe such a print is made for: `recipe` without its straightening or vignette.
     static func recipe(for recipe: DarkroomRecipe) -> DarkroomRecipe {
         var flat = recipe
         flat.straighteningDegrees = nil
+        flat.vignetteStops = nil
         return flat
     }
 

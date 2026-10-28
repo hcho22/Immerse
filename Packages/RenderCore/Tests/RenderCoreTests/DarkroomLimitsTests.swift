@@ -235,6 +235,28 @@ final class DarkroomLimitsTests: XCTestCase {
             dodgeBurnMasks: [LocalMask(kind: .burn, points: [MaskPoint(x: 0.5, y: 0.25)], exposureStops: 0.4)]))
     }
 
+    /// A vignette is exposure at the corners (FR-33), so a toned print's corners take the toner as paper printed that much
+    /// darker does: the corner of a print with Vignette +2.0 has the cast of the same print printed 2 stops darker. A toned
+    /// print without a vignette is toned where it always was and prints the bytes the build before printed.
+    func testAVignetteIsTonedAsTheExposureItIs() throws {
+        let camera = CameraCatalog.mediumFormat6x6
+        let master = try Chart.solid(gray: 240, side: 120)
+        for chemistry in ChemicalToning.Chemistry.allCases {
+            let toning = ChemicalToning(chemistry: chemistry, amount: 1)
+            let plain = DarkroomRecipe(chemicalToning: toning)
+            XCTAssertEqual(try NativePhotoRenderer.print(master: master, recipe: plain, camera: camera, process: .silverGelatin),
+                           try EarlierDarkroom.print(master: master, recipe: plain), "\(chemistry)")
+            let vignetted = try DecodedPixels(NativePhotoRenderer.print(master: master,
+                recipe: DarkroomRecipe(vignetteStops: 2, chemicalToning: toning), camera: camera, process: .silverGelatin))
+            let darker = try DecodedPixels(NativePhotoRenderer.print(master: master,
+                recipe: DarkroomRecipe(printExposureStops: -2, chemicalToning: toning), camera: camera, process: .silverGelatin))
+            let corner = vignetted.channels(x: 0, y: 0).map(Int.init), printed = darker.channels(x: 60, y: 60).map(Int.init)
+            // The cast is the spread between the channels.
+            XCTAssertEqual(corner[0] - corner[1], printed[0] - printed[1], accuracy: 1, "\(chemistry): \(corner), \(printed)")
+            XCTAssertEqual(corner[2] - corner[1], printed[2] - printed[1], accuracy: 1, "\(chemistry): \(corner), \(printed)")
+        }
+    }
+
     /// A cropped 6×6 print is square in whole pixels wherever the crop sits. Each side of a crop is rounded out to whole
     /// pixels on its own, which printed a crop lying between pixels a pixel longer one way than the other: the first two
     /// crops are ones the Darkroom stored, saved to Photos at 619 × 618 and 629 × 628. A crop the build before printed
@@ -357,6 +379,13 @@ private struct Chart {
         } }
         master = try Self.jpeg(bytes, width: Self.width, height: Self.height)
         decoded = try DecodedPixels(master)
+    }
+
+    /// A print of one gray, `side` pixels square.
+    static func solid(gray: UInt8, side: Int) throws -> Data {
+        var bytes = [UInt8](repeating: 255, count: side * side * 4)
+        for index in stride(from: 0, to: bytes.count, by: 4) { for channel in 0..<3 { bytes[index + channel] = gray } }
+        return try jpeg(bytes, width: side, height: side)
     }
 
     /// The chart's top left 2048 pixel square, tiled, on an Instant print's white card.

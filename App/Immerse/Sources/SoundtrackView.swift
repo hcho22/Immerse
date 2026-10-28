@@ -106,13 +106,21 @@ struct SoundtrackView: View {
 /// The sound of a developed Movie or a sample movie plays as a video in Photos does: through the speaker, whatever the
 /// Ring/Silent switch, and not through the earpiece a movie Camera's microphone left the app routed to. The category is
 /// set as a player is made; the player makes it active as it starts, so other audio stops only once a movie plays.
+/// Each view that made a player calls `finish` once as the player goes.
+@MainActor
 enum MoviePlaybackAudio {
+    /// The players made and not yet gone.
+    private static var players = 0
+
     static func prepare() {
+        players += 1
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
     }
 
-    /// Lets other audio resume once the player is gone.
+    /// Lets other audio resume once the last player is gone, never while another still plays.
     static func finish() {
+        players -= 1
+        guard players == 0 else { return }
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 }

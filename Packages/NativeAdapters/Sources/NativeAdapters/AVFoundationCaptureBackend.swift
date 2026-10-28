@@ -425,13 +425,15 @@ public actor AVFoundationCaptureBackend {
         movieOutput.setOutputSettings(settings, for: connection)
     }
 
-    /// Lets the microphone go once a clip ends, or the camera pauses, so other audio can resume.
+    /// Lets the microphone go once a clip ends, or the camera pauses, and gives the sound back to other apps: music the
+    /// clip paused plays again, as it does after the iPhone's Camera app records.
     private func detachMovieSound() {
         guard let audioInput else { return }
         session.beginConfiguration()
         session.removeInput(audioInput)
         session.commitConfiguration()
         self.audioInput = nil
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     /// The light the clip starts in, as the lens's white balance judges it, for a Film Stock with a fixed color

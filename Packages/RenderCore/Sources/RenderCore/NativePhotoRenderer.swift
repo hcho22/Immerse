@@ -186,7 +186,10 @@ public enum NativePhotoRenderer {
                     .applyingFilter("CIMaximumCompositing", parameters: [kCIInputBackgroundImageKey: floor])
             }
         }
-        if let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
+        // A vignette is exposure at the corners, so a print with one is toned after it, as burned paper is toned; a print
+        // without one is toned here, where a recipe saved before the vignette was toned.
+        let vignette = recipe.vignetteStops.flatMap { $0 == 0 ? nil : $0 }
+        if vignette == nil, let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
         // The crop is placed on the print as it is turned, so Horizontal moves it across the turned print as it shows.
         // A recipe saved before quarter turns has none, so its crop prints as it did.
         if camera.id != .instant1970s, let turns = recipe.rotationQuarterTurns, turns != 0 {
@@ -211,8 +214,9 @@ public enum NativePhotoRenderer {
         if camera.id != .instant1970s, let degrees = recipe.straighteningDegrees, degrees != 0 {
             image = try straighten(image, degrees: degrees)
         }
-        if let vignette = recipe.vignetteStops, vignette != 0 {
+        if let vignette {
             image = applyVignette(vignette, to: image)
+            if let toning = recipe.chemicalToning { image = ToningLook.apply(toning, to: image) }
         }
         return image
     }

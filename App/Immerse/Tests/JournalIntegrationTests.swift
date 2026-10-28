@@ -492,15 +492,19 @@ final class JournalIntegrationTests: XCTestCase {
     }
 
     /// D1: while the Straighten slider moves, the Darkroom turns the print made without straightening only for the edits
-    /// as they are. Its own angle changes nothing; after a quarter turn, a crop, Reset or another edit, the earlier print
-    /// is never turned.
+    /// as they are. Its own angle changes nothing; the vignette, which the renderer puts on the straightened print, is
+    /// left out of it; after a quarter turn, a crop, Reset or another edit, the earlier print is never turned.
     func testTheStraighteningPreviewTurnsOnlyThePrintMadeForTheEditsAsTheyAre() {
-        var recipe = DarkroomRecipe(printExposureStops: 0.5, straighteningDegrees: 2.5)
+        var recipe = DarkroomRecipe(printExposureStops: 0.5, straighteningDegrees: 2.5, vignetteStops: 2)
+        XCTAssertNil(UnstraightenedPrint.recipe(for: recipe).straighteningDegrees)
+        XCTAssertNil(UnstraightenedPrint.recipe(for: recipe).vignetteStops, "The turned print has no vignette")
         let image = UIImage()
         let made = UnstraightenedPrint(recipe: UnstraightenedPrint.recipe(for: recipe), image: image)
         XCTAssertTrue(made.image(for: recipe) === image)
         recipe.straighteningDegrees = -7.1
         XCTAssertTrue(made.image(for: recipe) === image, "The slider's own angle turns the same print")
+        recipe.vignetteStops = -1.5
+        XCTAssertTrue(made.image(for: recipe) === image, "A vignette changes nothing the slider turns")
         var turned = recipe
         turned.rotateLeft()
         XCTAssertNil(made.image(for: turned), "A quarter turn needs its own print")

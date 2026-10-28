@@ -341,7 +341,7 @@ private struct DevelopedMovieView: View {
         .onDisappear { clear() }
     }
     private func clear() {
+        if player != nil { MoviePlaybackAudio.finish() }
         player?.pause(); player?.replaceCurrentItem(with: nil); player = nil
-        MoviePlaybackAudio.finish()
     }
 }
