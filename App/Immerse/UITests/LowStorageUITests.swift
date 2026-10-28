@@ -36,7 +36,13 @@ final class LowStorageUITests: ScreenTestCase {
         let app = launch(freeSpace: "1999999999", size: "UICTContentSizeCategoryAccessibilityXXXL")
         openDisposableLoadScreen(app)
         let warning = app.staticTexts["low-storage-warning"]
+        // The warning is audited once its top has reached the navigation bar and it fills the screen, a pose it sets
+        // alone. Where it first scrolls into view depends on the Camera's rows above it: with the phone feedback's
+        // longer Disposable rows that pose left the Film title half under the bar, where the auditor reported clipped
+        // text with no element in every run (Evidence/NativeApp/low-storage-warning-062.md).
         scrollUp(app, until: warning)
+        let bar = app.navigationBars["Disposable"]
+        scrollUp(app, by: 100) { warning.frame.minY <= bar.frame.maxY }
         XCTAssertEqual(warning.label, Self.captureWarning)
         retainScreenshot(app, name: "Load-low-storage-accessibility-largest")
         try audit(app, name: "Load-low-storage-accessibility-largest", for: JournalFlowTests.auditTypes)

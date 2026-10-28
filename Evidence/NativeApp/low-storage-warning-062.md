@@ -148,6 +148,18 @@ Light reported the look line only; dark reported both.
 At rest, at the top of the Form, each measured 21.00:1 in light and 13.94:1 in dark, as before.
 The exceptions now accept exactly "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue" and "1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges".
 
+### The largest-text audit pose, 2026-10-28
+
+On 2026-10-28 the largest-text Load Film audit at the warning failed on CI (run 40707150573) and in 4 of 4 local runs on an iPhone 17 Pro simulator with iOS 26.5, in light.
+Each time the auditor reported "Text of this element may be clipped at larger Dynamic Type sizes" with no element.
+The test audited where the warning first scrolls into view, and the phone feedback's longer Disposable rows had moved that pose: the Film title sat half under the navigation bar.
+The screenshot of that pose shows the entitlement row and Subscription whole and the warning's first line uncut; only the Film title is cut, by the bar.
+A diagnostic run stepped through the Form in drags of about 65 points and audited clipped text alone at each pose.
+It reported the element-less finding only where the Camera's rows or the Film title were under the bar, including poses with no warning on screen, and never where only the warning was under it.
+So the test now goes on in 100-point drags until the warning's top reaches the bar, where the warning fills the screen whatever rows come above it, and audits there.
+The finding came from the scroll pose, not from clipped text in the warning or a control, and no exception was added for it.
+The new pose was run only on the iPhone 17 Pro, the gate's simulator; the iPhone SE results below are from before it.
+
 ### Existing Film screen findings, fixed
 
 The Film screen had no full audit before this change.
