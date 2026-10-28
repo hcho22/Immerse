@@ -390,7 +390,7 @@ Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, 
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
-| M01 / FR-01,03; CAM, SET | Browse all five Cameras; preview approved samples; cancel setup. No Film, capacity debit, Trial consumption, camera/Photos prompt or live filter preview. Descriptive historical names, no capacity chooser, a Film Stock choice only on the 6×6 and 16mm, and no unsupported emulation claim. | Before/after Journal and entitlement; production samples/rights DEC-05 absent, so preview acceptance remains blocked. PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): the 6×6 Medium Format and 16mm Cinema carry no decade in the catalog, Load Film, capture and Film detail, and VoiceOver reads "6×6" as "6 by 6"; each Load Film screen shows its controls and look lines, and no maker or film is named (the 6×6's Load Film note about a reversed viewfinder was removed with the reversal, [068](capture-sideways-zoom-068.md); none shows). PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): only the 6×6 and 16mm Load Film screens offer "Film Stock", Color (selected first) or Black and white; load one Film on each stock and confirm the Film screen names it, and that nothing later changes it. PRD 2.1 slice 4 additions (`prd-2-slice-4-looks.md`, "Load Film copy"): the 16mm look line follows the chosen Film Stock and changes each time the stock is switched, "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white; the Instant's reads "Warm, faded color, soft contrast and soft detail" and the Super 8's "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair". |
+| M01 / FR-01,03; CAM, SET | Browse all five Cameras; preview approved samples; cancel setup. No Film, capacity debit, Trial consumption, camera/Photos prompt or live filter preview. Short Camera names, with an era only in the Disposable's, Instant's and Super 8's descriptions ([Q03](#q03---camera-names)), no capacity chooser, a Film Stock choice only on the 6×6 and 16mm, and no unsupported emulation claim. | Before/after Journal and entitlement; production samples/rights DEC-05 absent, so preview acceptance remains blocked. PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): the 6×6 and 16mm carry no decade in the catalog, Load Film, capture and Film detail, and VoiceOver reads "6×6" as "6 by 6"; each Load Film screen shows its controls and look lines, and no maker or film is named (the 6×6's Load Film note about a reversed viewfinder was removed with the reversal, [068](capture-sideways-zoom-068.md); none shows). PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): only the 6×6 and 16mm Load Film screens offer "Film Stock", Color (selected first) or Black and white; load one Film on each stock and confirm the Film screen names it, and that nothing later changes it. PRD 2.1 slice 4 additions (`prd-2-slice-4-looks.md`, "Load Film copy"): the 16mm look line follows the chosen Film Stock and changes each time the stock is switched, "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white; the Instant's reads "Warm, faded color, soft contrast and soft detail" and the Super 8's "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair". |
 | M02 / FR-03; SET-05,06,08 | Load explicit Camera/capacity/reveal choice; lock final Movie orientation before recording. Load alone saves no capture or developed result. Rename/lens change cannot change package/version/capacity/orientation. Cancel confirmation creates nothing. | Screens and persisted package/state comparison. Valid entitlement and Camera permission required. On the device, change Text Size in Control Center while the load screen is open and confirm the Movie Orientation choice grows with it (049). |
 | M03 / FR-02; UX-01...08 | Maintain several unfinished Films, suggested roll titles, custom rename before/after Development; switch/resume and Archive/restore. Only revealed thumbnails; dates derive from first/last captures; archive changes no capture/reveal/billing state. | Capture timestamps and visible date/title/state before/after. Multiple Films need approved paid test entitlement. |
 | M04 / FR-04; CAP-01...07 | Capture asymmetric text/grid targets rear/front in portrait and both landscape directions. Front preview mirrored; saved originals, developed photos and Movie clips unmirrored and upright. Switch only between saves/clips; no imports, preview treatment or budget reset. | Paired preview recording and decoded output target orientation, hashes and counters. Native camera only. Turn straight from one landscape side to the other with the viewfinder open, and again while a clip records: the picture must stay upright each time. The shooting screen itself does not turn on the pinned candidate, only its words and icons, so the turning is [H01](#h01---the-shooting-screen-held-upright-and-on-each-side) and [H04](#h04---photos-and-clips-taken-sideways), and "both landscape directions" here means holding the iPhone on each side. |
@@ -409,7 +409,7 @@ Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, 
 | M17 / FR-08; STO; ARC-03 | Choose originals export: retain until successful Photos write AND decoded/hash-verified master. Decline: cleanup only after verified master and disclosure. Make master missing/corrupt/hash-matching undecodable; cleanup must stop. | Approved synthetic container fault and raw decode/hash checks, originals/masters/recipes/Developed Clips before/after. No corruption of captain media. |
 | M18 / FR-05; MOV-01,02,04,06,07 | Record separated active clips to exactly 200s Super 8 / 167s 16mm, with long idle/pause periods and interruption. Only successfully saved active duration debits; no over-budget footage; per-clip orientation locks at start. | Decoded track durations vs persisted capacity and wall time; no microphone prompt/input/audio track. Capacity is whole 30 fps frames (6000 Super 8, 5010 16mm; a 16mm Film loaded before PRD 2.1 slice 1 keeps 165 s, 4950): record the persisted remaining frames before the last clip and confirm that clip stops at exactly that duration, saves and completes the Film. Do not invent timing tolerance before DEC-04/12. |
 | M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder box is 3:4 in every hold and the picture in it reads upright and, held sideways, fills it as 4:3 ([H03](#h03---the-shape-of-the-live-picture-held-sideways)), same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; the captain approved these sizes and the codec on 2026-10-13, [060](darkroom-export-decisions-060.md), and [D02](#d02---export-sizes-and-formats-read-from-photos) reads them from Photos), and it carries no color tags, which [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags) puts in front of the captain. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
-| M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No recorded audio, imported music or voice-over; same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity. DEC-11 was decided on 2026-10-13: a soundtrack can be changed later any number of times without developing again ([060](darkroom-export-decisions-060.md)). DEC-05 keeps the catalog empty until a license allows a soundtrack inside exported Movies, so the build offers no soundtrack and shows no Soundtrack control; this row stays unrunnable on the phone until one ships. Missing production Soundtrack UI is not a pass. |
+| M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No imported music or voice-over, and a soundtrack replaces a Film's recorded sound, never mixing with it (FR-28); same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity. DEC-11 was decided on 2026-10-13: a soundtrack can be changed later any number of times without developing again ([060](darkroom-export-decisions-060.md)). DEC-05 keeps the catalog empty until a license allows a soundtrack inside exported Movies, so the build offers no soundtrack and this row stays unrunnable on the phone until one ships; the sound choice of Recorded sound and Silent shows without one, and [Q07](#q07---playback-and-sound-format) checks it. Missing production Soundtrack UI is not a pass. |
 | M21 / FR-16; PRV; QA-11 | Discard revealed photo/clip while viewing; revisit/force-quit/reopen. Numbered metadata-only placeholder, no source/master/clip/cache or old assembled Movie accessible; no capacity refund. Surviving clips keep byte/treatment identity/order/orientation/music. | Before/after media inventory/hash, stale viewer/export handle attempts, decoded rebuilt Movie; current-store scope only. |
 | M22 / FR-16; DEC-09 | Discard the final Movie clip. Retain Film and numbered discarded placeholders, no player or export, no reopened time budget. Relaunch and try stale handles. | Screens/state and storage, zero playable media. External Photos copies intentionally unchanged. |
 | M23 / FR-16,18; ARC-06 | Race Discard/Delete with in-flight rendering, export and pending save. Interrupt/fail filesystem cleanup and resume. Discarding a revealed Instant print must keep another print's unfinished save for Resume Save (046). Tombstones win; stale jobs cannot resurrect media; no successful privacy completion while stale app viewing/export remains possible. | Ordered request/completion/state and file evidence. Already-completed external Photos copies cannot be recalled. Fault/race harness and native permission scope required. |
@@ -418,7 +418,7 @@ Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, 
 | M26 / FR-20; BIL; ARC-09 | Approved monthly/yearly one-plan product purchase, pending/cancel/error, renewal/expiry, Restore Purchases after one online sync and offline entitlement reads. All five Cameras/unlimited new paid Films, no tiers/per-Film fees/account/server. | Verified StoreKit transactions/events, localized price/product/group, network state; production config/prices absent, sandbox authority needed. Local fixture is a separate software gate. |
 | M27 / FR-20; BIL-05...07 | Expire subscription with unfinished Photo/Movie/Instant Films. Block only new paid loads; finish/capture/develop/view/edit/export old Films offline. Renewal/restore recovers new-Film access. Manage Subscription separate from Archive/Delete Film. | Pre/post transaction and Film rights/state, StoreKit event receipt, actual media. Refund/revocation policy DEC-02 not silently selected. PRD open question 7 is pending the captain: a lapsed subscriber who never used the Trial currently gets the Trial Film as a provisional default; record that outcome as the default, not acceptance. |
 | M28 / QA-13; UX | Traverse Journal, setup, capture, Film, photo view, Darkroom, archive, Settings, paywall, errors and confirmations at default and largest text, in light and dark, portrait and landscape. Check VoiceOver labels, order, focus and actions; no clipped or unreachable commands. | Full traversal and accessibility evidence. Low-storage text and largest-size check: [S04](#s04---voiceover-and-the-largest-text-size); Adjust at varied text sizes: [D04](#d04---adjust-and-a-short-screen); Darkroom portrait layout in every hold, one print area, internal band scrolling and controls: [W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone). Simulator output is not physical assistive-technology acceptance. |
-| M29 / ARC-08; QA-13 | On iPhone 11/iOS 26, time full 27-photo Development and full 200s Movie, plus interrupted/resumed runs; record capture-to-save, foreground completion, peak memory, thermal/storage conditions. Repeat equivalent relevant cases on HC_iPhone13 separately. | Actual timing trace/device/thermal/candidate/output verification. DEC-12's targets, approved on 2026-10-13 and not yet measured, are for the iPhone 11: a photo saved in under 1 second, a 27-photo roll developed in under 45 seconds, a full Super 8 Movie assembled in under 90 seconds (task tracker, DEC-12). No debugger/observer-induced timing presented as production. Since PRD 2.1 slice 4, also time a full 167 s 16mm Cinema Film on the color Film Stock, whose Development reads the film's color table for every frame, and a 12-exposure 6×6 color Film; and record peak memory across two Movie Developments in one launch, since the grain fields stay in memory after a Development (about 34 MB for one kind of grain and 67 MB for two, from the review of pull request 25). The HC_iPhone13 runs are [L06](#l06---how-long-development-takes-on-the-phone); they do not replace the iPhone 11. **Not yet possible:** no iPhone 11 is in hand. |
+| M29 / ARC-08; QA-13 | On iPhone 11/iOS 26, time full 27-photo Development and full 200s Movie, plus interrupted/resumed runs; record capture-to-save, foreground completion, peak memory, thermal/storage conditions. Repeat equivalent relevant cases on HC_iPhone13 separately. | Actual timing trace/device/thermal/candidate/output verification. DEC-12's targets, approved on 2026-10-13 and not yet measured, are for the iPhone 11: a photo saved in under 1 second, a 27-photo roll developed in under 45 seconds, a full Super 8 Movie assembled in under 90 seconds (task tracker, DEC-12). No debugger/observer-induced timing presented as production. Since PRD 2.1 slice 4, also time a full 167 s 16mm Film on the color Film Stock, whose Development reads the film's color table for every frame, and a 12-exposure 6×6 color Film; and record peak memory across two Movie Developments in one launch, since the grain fields stay in memory after a Development (about 34 MB for one kind of grain and 67 MB for two, from the review of pull request 25). The HC_iPhone13 runs are [L06](#l06---how-long-development-takes-on-the-phone); they do not replace the iPhone 11. **Not yet possible:** no iPhone 11 is in hand. |
 | M30 / QA-14 | Inspect final binary, rights, Camera samples/treatments, icon/name/store materials, support/privacy disclosures and local-only permissions. Review open decisions, all evidence and no-mistakes/CI results before readiness. | Final signed artifact/configuration and owner sign-offs; production assets, price, quality, support, budgets and release remain unapproved. TestFlight learning needs DEC-14 and separate exposure authority, not telemetry. |
 
 ## Looks on a Real iPhone
@@ -465,16 +465,16 @@ The names in bold are the words on the screen.
 1. **Start a Film.**
    In the **Film Journal**, tap the round plus button near the bottom (VoiceOver calls it "Start a Film").
    On **Choose a Camera**, tap the Camera.
-   On its screen choose **Film Stock** (6×6 Medium Format and 16mm Cinema only) and **Movie Orientation** (Movie Cameras only), type a **Film title**, and tap **Load Film**.
+   On its screen choose **Film Stock** (6×6 and 16mm only) and **Movie Orientation** (Movie Cameras only), type a **Film title**, and tap **Load Film**.
    The first time, iOS asks for the Camera; allow it.
    The screen shows **Testing unlock - Debug build** while the unlock is on.
 2. **Capture.**
    On the Film's screen tap **Open Camera**.
    The big round button takes a photo; on a Movie Camera it starts a clip and the same button stops it.
    The button to its left switches between the rear and front lens, between captures only.
-   On the 1990s Disposable the button to its right turns the flash on and off.
+   On the Disposable the button to its right turns the flash on and off.
    Tap **Done** to leave the camera.
-   On the 1970s Instant each print develops by itself and opens over the camera as **Photo** and its number.
+   On the Instant each print develops by itself and opens over the camera as **Photo** and its number.
    Tap **Done** on the print to close it.
    Only after the pack's last print closes does a sheet titled **Originals** ask, once, about every print whose original is still undecided (FR-35).
    Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
@@ -509,7 +509,7 @@ Screenshots and screen recordings of the test app are evidence; a recording that
 ### L01 - The color tables read on the iPhone for the first time
 
 **Why.**
-The color Film Stocks of the 16mm Cinema and the 6×6 Medium Format develop through a table of the film's colors that the app works out on the phone.
+The color Film Stocks of the 16mm and the 6×6 develop through a table of the film's colors that the app works out on the phone.
 The table is read by a small routine the app makes the first time a Development needs it, and it checks the routine before using it.
 That routine has run on a Mac and in the simulator, never on an iPhone (`prd-2-slice-4-looks.md`, "Read tetrahedrally").
 There is no second way to read the table, by the captain's own decision ("Immerse color-table backup: remove it").
@@ -521,17 +521,17 @@ The gray card, the colored objects and the page of text in daylight, and somethi
 **Steps.**
 
 1. Force-quit and reopen Immerse (common step 7).
-2. Start a 6×6 Medium Format Film on **Color**, titled "L01 6x6 color".
+2. Start a 6×6 Film on **Color**, titled "L01 6x6 color".
    Take three exposures: the card with the colored objects, the even shading, and the page of text.
 3. Finish the roll early and develop it (common steps 3 and 4).
    Start the stopwatch as you tap **Develop Film** and stop it when **Processing Film** goes away.
 4. Open each of the three photos.
-5. Without quitting, start a 16mm Cinema Film on **Color**, **Landscape**, titled "L01 16mm color A".
+5. Without quitting, start a 16mm Film on **Color**, **Landscape**, titled "L01 16mm color A".
    Record two clips of about five seconds of the same subjects, finish early, develop and time it, and play the Movie.
 6. Force-quit and reopen Immerse.
-   Start a second 16mm Cinema Film on **Color**, titled "L01 16mm color B", record one clip, finish early, develop and time it.
+   Start a second 16mm Film on **Color**, titled "L01 16mm color B", record one clip, finish early, develop and time it.
    This makes a 16mm Film the first Development after a launch.
-7. As a control, start a 6×6 Medium Format Film on **Black and white**, take one exposure of the card, finish early and develop.
+7. As a control, start a 6×6 Film on **Black and white**, take one exposure of the card, finish early and develop.
    The black-and-white stocks do not use the table.
 
 **Expect.**
@@ -575,7 +575,7 @@ No iPhone has run this, and the simulator does not refuse the work, so this is t
 
 **Steps.**
 
-1. Start a 6×6 Medium Format Film on **Color**, titled "L02 6x6", and take three exposures.
+1. Start a 6×6 Film on **Color**, titled "L02 6x6", and take three exposures.
 2. Finish the roll early (common step 3).
    When the **Development** sheet opens, tap **Cancel**.
    The Film now reads **Ready to develop** and shows a **Develop Film** button.
@@ -584,7 +584,7 @@ No iPhone has run this, and the simulator does not refuse the work, so this is t
    Tap **Develop Film**, choose what to do with the originals, then tap **Develop Film** on the sheet and at once, within about a second, swipe up to the Home Screen.
 5. Wait ten seconds, then open Immerse again and look at the Film.
 6. If it is not developed, tap **Resume Development**, or **Develop Film** if that is the button shown, and stay in the app until it finishes.
-7. Repeat steps 1 to 6 with a 16mm Cinema Film on **Color** with two clips of about five seconds, titled "L02 16mm".
+7. Repeat steps 1 to 6 with a 16mm Film on **Color** with two clips of about five seconds, titled "L02 16mm".
    Its table is larger and is worked out before the routine is first made, so the moment to leave is a little later: try leaving at once, after about one second and after about three, each time with a new Film and a fresh launch.
 8. Do each stock once more, pressing the side button to lock the phone in place of going to the Home Screen.
 
@@ -611,7 +611,7 @@ For each try: the stock, how long after the tap you left, whether you went Home 
 ### L03 - The 16mm color stock under warm light
 
 **Why.**
-The 16mm Cinema's color Film Stock has a fixed daylight balance, so warm indoor light develops orange (PRD 2.1 section 6.2).
+The 16mm's color Film Stock has a fixed daylight balance, so warm indoor light develops orange (PRD 2.1 section 6.2).
 The phone removes that warmth while recording, so the app writes the phone's reading of the light into each clip when recording starts, and Development puts the light back (`prd-2-slice-4-looks.md`, "The 16mm color stock's fixed daylight balance").
 The viewfinder keeps the phone's ordinary color, so nothing previews the developed result (FR-04).
 The reading has never come from a real lens, and the warm scene on the board is a daylight picture marked as 3200 K, not a capture under bulbs.
@@ -619,7 +619,7 @@ Review also made recording safe when the phone gives a reading it cannot convert
 
 **Steps.**
 
-1. Start a 16mm Cinema Film on **Color**, **Landscape**, titled "L03 color".
+1. Start a 16mm Film on **Color**, **Landscape**, titled "L03 color".
    Record these clips of the gray card with the colored objects, five to ten seconds each, and note each clip's number:
    1. In direct daylight outdoors, or by a window with the room lights off.
    2. Indoors with daylight shut out, lit only by warm household bulbs. Write down the bulb's type and its kelvin figure if the bulb states one.
@@ -628,7 +628,7 @@ Review also made recording safe when the phone gives a reading it cannot convert
    5. Start recording under the warm bulbs and, while still recording, carry the phone to daylight and hold it there a few seconds.
    6. Under a strongly colored or very dim light, such as a single-color lamp or a candle alone.
 2. While each clip records, look at the viewfinder and note the card's color there.
-3. Start a 16mm Cinema Film on **Black and white**, titled "L03 bw", and a 1960s Super 8 Home Movie Film, titled "L03 super8", and record clips 1 and 2 on each.
+3. Start a 16mm Film on **Black and white**, titled "L03 bw", and a Super 8 Film, titled "L03 super8", and record clips 1 and 2 on each.
 4. Finish and develop all three Films.
 5. On the Mac, open `Evidence/AssetReview/looks/16mm/index.html` and find the warm-light scene (`color-tungsten-skin-01.jpg`) and the shade scene (`color-shade-harbor-02.jpg`) on the color Film Stock's part of the board.
 
@@ -675,7 +675,7 @@ Whether this phone adds HDR information to a photo, and whether that changes wha
 **Steps.**
 
 1. Find one scene with very bright and very dark parts together, such as a sunlit window seen from inside a dim room, or a bright lamp against a dark wall.
-2. Start one Film per Camera and Film Stock: 1990s Disposable, 1970s Instant, 6×6 Medium Format on Color and on Black and white, 1960s Super 8 Home Movie, 16mm Cinema on Color and on Black and white.
+2. Start one Film per Camera and Film Stock: Disposable, Instant, 6×6 on Color and on Black and white, Super 8, 16mm on Color and on Black and white.
    Title each "L04" and its Camera.
 3. On each, capture that scene twice with the rear lens and once with the front lens: exposures on the Photo Cameras, clips of about five seconds on the Movie Cameras.
 4. Finish each Film and develop it, choosing **Save Originals to Photos after reveal**.
@@ -732,13 +732,13 @@ The expectations are the looks record's and ADR 0016's.
 
 | Look and board | Capture | Expect |
 | --- | --- | --- |
-| 1990s Disposable, `disposable`, approved 2026-10-10 ("fresh") | (a) Bright daylight outdoors. (b) Overcast or shade. (c) A dim room without flash; the viewfinder should show **Low light - use flash** (M05). (d) The same dim room with flash on, an object within arm's reach or two and a wall several meters behind it. (e) Flash on in daylight on a near object. | A borderless 3:2 picture with no date stamp. Warm, saturated color, never yellowed or faded. Heavy grain, heavier still in the dim scene without flash, which develops dark and grainy. Soft corners a little darker than the center. With flash: a hot center that falls away to the corners, harsher contrast, the near object lit flat and the background dark. No light leaks, red-eye effect, dust or scratches. |
-| 1970s Instant, `instant`, approved 2026-10-10 ("faded", then "approved"), its contrast chosen on 2026-10-13 ("B", then "version 4") | Four prints of one daylight scene from one spot, and one print indoors. | A square picture on a white card. Compare with the board's version 4 pictures, not its version 3 ones. Blacks that are a dark gray and not pure black, deeper than version 3's milky blacks, whites a little under the card's white, contrast a little softer than the phone's own photo and more than version 3's, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft detail and a coarse texture ([061](instant-study-and-toning-061.md); [I01](#i01---the-instants-contrast-on-the-phone) looks at the contrast closely). The four prints differ slightly in density and color, and none shows a flaw such as uneven chemistry. A print looks the same when opened again after a force-quit. The card stays white. |
-| 6×6 Medium Format, Color, `6x6`, approved 2026-10-12 ("everything looks good") | The card and objects in daylight, an outdoor scene with greenery and sky, the page of text, and a scene with deep shadow. | A borderless square. Gentle contrast with lifted blacks, so the deepest shadow is a dark gray and not pure black. Cream-warm grays, quiet reds, pastel blues leaning to cyan, softer greens. Very fine grain, barely visible. Corners slightly darker than the center. Sharp to the corners, with no softening, glow or added background blur. |
-| 6×6 Medium Format, Black and white, `6x6` | The same scenes. | Gray only, with no color cast. High contrast, distinct grain, rich blacks and clean whites. |
-| 1960s Super 8 Home Movie, `super8`, approved 2026-10-10 ("muted with a glow") | At least six clips of five seconds or more, some with a lamp or sun glint in frame and some with blue sky. | Motion at 18 frames per second. Lower contrast, slightly desaturated color, darker shadows, lowered whites, teal in the shadows and warmth in the highlights, a softer picture, and a warm reddish-orange glow around bright highlights. Fine grain. An unsteady frame whose edge never shows. A slight brightness flicker. Dust specks that come and go, a few on a frame at most. On about half of the clips a hair at the gate's edge for the whole clip. No scratches and no frame border. A 4:3 picture. |
-| 16mm Cinema, Color, `16mm`, approved 2026-10-12 ("lets go with C") | At least four daylight clips, some with a lamp or sun glint in frame, some with greenery and sky, and one of a dark scene. If you also load a **Portrait** Film, record the same subject on it. | Motion at 24 frames per second. Black at about 4 percent, so shadows are open and black is a very dark gray. A long, soft roll-off in the highlights. Muted greens, aquas and purples, with olive greens. Daylight gray develops neutral. Visible grain. A red glow around bright highlights. Minor jitter and weave whose edge never shows. Soft, darker edges. No brightness flicker, dust or hair. A 4:3 picture. A portrait Film shows grain and glow of the same size as a landscape one. |
-| 16mm Cinema, Black and white, `16mm` ("black and white looks good") | The same clips. | Gray only. Visible grain, a neutral glow around bright highlights, minor jitter and weave, soft, darker edges. No flicker, dust or hair. |
+| Disposable, `disposable`, approved 2026-10-10 ("fresh") | (a) Bright daylight outdoors. (b) Overcast or shade. (c) A dim room without flash; the viewfinder should show **Low light - use flash** (M05). (d) The same dim room with flash on, an object within arm's reach or two and a wall several meters behind it. (e) Flash on in daylight on a near object. | A borderless 3:2 picture with no date stamp. Warm, saturated color, never yellowed or faded. Heavy grain, heavier still in the dim scene without flash, which develops dark and grainy. Soft corners a little darker than the center. With flash: a hot center that falls away to the corners, harsher contrast, the near object lit flat and the background dark. No light leaks, red-eye effect, dust or scratches. |
+| Instant, `instant`, approved 2026-10-10 ("faded", then "approved"), its contrast chosen on 2026-10-13 ("B", then "version 4") | Four prints of one daylight scene from one spot, and one print indoors. | A square picture on a white card. Compare with the board's version 4 pictures, not its version 3 ones. Blacks that are a dark gray and not pure black, deeper than version 3's milky blacks, whites a little under the card's white, contrast a little softer than the phone's own photo and more than version 3's, muted color with aqua blues and olive greens, blue in the shadows and yellow in the highlights, soft detail and a coarse texture ([061](instant-study-and-toning-061.md); [I01](#i01---the-instants-contrast-on-the-phone) looks at the contrast closely). The four prints differ slightly in density and color, and none shows a flaw such as uneven chemistry. A print looks the same when opened again after a force-quit. The card stays white. |
+| 6×6, Color, `6x6`, approved 2026-10-12 ("everything looks good") | The card and objects in daylight, an outdoor scene with greenery and sky, the page of text, and a scene with deep shadow. | A borderless square. Gentle contrast with lifted blacks, so the deepest shadow is a dark gray and not pure black. Cream-warm grays, quiet reds, pastel blues leaning to cyan, softer greens. Very fine grain, barely visible. Corners slightly darker than the center. Sharp to the corners, with no softening, glow or added background blur. |
+| 6×6, Black and white, `6x6` | The same scenes. | Gray only, with no color cast. High contrast, distinct grain, rich blacks and clean whites. |
+| Super 8, `super8`, approved 2026-10-10 ("muted with a glow") | At least six clips of five seconds or more, some with a lamp or sun glint in frame and some with blue sky. | Motion at 18 frames per second. Lower contrast, slightly desaturated color, darker shadows, lowered whites, teal in the shadows and warmth in the highlights, a softer picture, and a warm reddish-orange glow around bright highlights. Fine grain. An unsteady frame whose edge never shows. A slight brightness flicker. Dust specks that come and go, a few on a frame at most. On about half of the clips a hair at the gate's edge for the whole clip. No scratches and no frame border. A 4:3 picture. |
+| 16mm, Color, `16mm`, approved 2026-10-12 ("lets go with C") | At least four daylight clips, some with a lamp or sun glint in frame, some with greenery and sky, and one of a dark scene. If you also load a **Portrait** Film, record the same subject on it. | Motion at 24 frames per second. Black at about 4 percent, so shadows are open and black is a very dark gray. A long, soft roll-off in the highlights. Muted greens, aquas and purples, with olive greens. Daylight gray develops neutral. Visible grain. A red glow around bright highlights. Minor jitter and weave whose edge never shows. Soft, darker edges. No brightness flicker, dust or hair. A 4:3 picture. A portrait Film shows grain and glow of the same size as a landscape one. |
+| 16mm, Black and white, `16mm` ("black and white looks good") | The same clips. | Gray only. Visible grain, a neutral glow around bright highlights, minor jitter and weave, soft, darker edges. No flicker, dust or hair. |
 
 **For every Movie.**
 Judge the look where Immerse plays it, on the Film's screen.
@@ -800,7 +800,7 @@ They are not a pass or a fail on this phone, so this scenario records times and 
 5. Keep the screen awake by touching it every few seconds.
    Immerse does not keep the screen on, and when the phone locks or the app leaves the screen, Development stops by design and waits for **Resume Development** (`ImmerseApp.swift`).
    If that happens, write down the time lost, tap **Resume Development**, and mark the run as interrupted.
-6. For the 1970s Instant, time from the shutter tap to the print opening on screen, for the first, fifth and tenth print of a pack.
+6. For the Instant, time from the shutter tap to the print opening on screen, for the first, fifth and tenth print of a pack.
 7. Develop a Super 8 Film, a 16mm color Film and a 16mm black-and-white Film one after another without quitting Immerse.
 8. Time one Film of each kind a second time as the first Development after a force-quit and reopen, to see what the first run of a launch adds.
 
@@ -845,12 +845,12 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 1. Check out the earlier commit: `git checkout --detach 0e69ed23e62c7244aecc6e6632c7fba2f8159f08`.
    Build and run it on the phone with the same steps as the candidate ("Xcode Build and Run"), in Debug, with the testing unlock on.
 2. Set up one fixed subject you can return to in the same light: the gray card, the colored objects and the lamp.
-3. For the 1960s Super 8 Home Movie, the 16mm Cinema on **Color** and the 6×6 Medium Format on **Color**, do both of these.
+3. For the Super 8, the 16mm on **Color** and the 6×6 on **Color**, do both of these.
    The Disposable and the black-and-white stocks may be added the same way.
    - Start a Film titled "OLD done" and its Camera, capture the subject, finish it early and develop it.
      Take a screenshot of each developed photo, and of one paused frame of each Movie.
    - Start a Film titled "OLD open" and its Camera, capture the subject, and leave it unfinished and undeveloped.
-4. Start a 1970s Instant Film titled "OLD pack" and take two prints of the subject.
+4. Start an Instant Film titled "OLD pack" and take two prints of the subject.
    They develop at once; take a screenshot of each, and leave the pack open with eight exposures left.
 5. For the 16mm color Films, capture one clip under warm household bulbs as well.
 
@@ -900,8 +900,8 @@ On 2026-10-13, told that exported Movies carry no color tags today and that this
 
 - **Save Developed to Photos** on a Movie Film saves one file: the Film's whole Developed Movie, a `.mov`, copied to Photos byte for byte (`Packages/FilmRuntime/Sources/FilmRuntime/FilmExportWorker.swift`).
 - That Movie is the Film's Developed Clips joined end to end without being encoded again (`NativeMovieRenderer.assemble` in `Packages/RenderCore/Sources/RenderCore/NativeMovieRenderer.swift`).
-  It has no sound unless a soundtrack was chosen, and the build ships no soundtrack to choose.
-- Each Developed Clip is H.264 at about 8 megabits per second, 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, at 18 frames per second on the 1960s Super 8 Home Movie and 24 on the 16mm Cinema (`NativeMovieRenderer.developClip`, same file).
+  It has the sound chosen for it: the clips' recorded sound on a Film loaded with this build unless **Silent** is chosen, and none on a Film loaded with an earlier build, since the build ships no soundtrack to choose.
+- Each Developed Clip is H.264 at about 8 megabits per second, 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, at 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`, same file).
   The captain approved these sizes and the codec on 2026-10-13 ([060](darkroom-export-decisions-060.md)); [D02](#d02---export-sizes-and-formats-read-from-photos) checks them from Photos.
   Since that change each Developed Clip is its whole frames, with the last held to where recording stopped, so the Movie reads at its Camera's frame rate.
 - A color tag is a note in a video file that tells a player which standard its colors are written in.
@@ -916,7 +916,7 @@ On the Mac that made the looks record, the system's reader guessed the standard 
 What Photos on the iPhone, QuickTime Player, a browser, a television or any other player does with this file cannot be told from the code, and this plan does not guess.
 
 **You need.**
-A developed 1960s Super 8 Home Movie Film and a developed 16mm Cinema Film on **Color**; the ones from L05 will do.
+A developed Super 8 Film and a developed 16mm Film on **Color**; the ones from L05 will do.
 Each should hold the gray card, the strongly colored objects and a bright light.
 A developed photo of the same card and objects from any Photo Camera, for the control.
 A Mac, and whatever other players you would really use or expect others to use.
@@ -1028,14 +1028,14 @@ Tests read every export back from the file handed to Photos, on a Mac and in the
 That change also made a Developed Clip its whole frames, so a Movie reads at its Camera's frame rate, and made a cropped 6×6 print square to the pixel.
 
 **You need.**
-Developed Films from L05 or new ones: a 1990s Disposable with photos taken with the phone held both ways, a 6×6 Medium Format on each Film Stock, a 1970s Instant pack, a 1960s Super 8 Home Movie and a 16mm Cinema on each Film Stock, with at least one **Portrait** Movie Film.
+Developed Films from L05 or new ones: a Disposable with photos taken with the phone held both ways, a 6×6 on each Film Stock, an Instant pack, a Super 8 and a 16mm on each Film Stock, with at least one **Portrait** Movie Film.
 The Movies must have been developed with this candidate: a clip developed by an earlier build keeps its sliver frame.
 A Mac with QuickTime Player, for the Movies.
 
 **Steps.**
 
 1. On each Film tap **Save Developed to Photos**.
-2. In the 6×6 Darkroom, crop one print to a small, off-center square (**Crop** on, **Size** near its left end, **Horizontal** and **Vertical** away from both ends), tap **Save**, and save that Film to Photos again.
+2. In the 6×6 Darkroom, crop one print to a small, off-center square (**Adjust**, then **Crop** on, **Size** near its left end, **Horizontal** and **Vertical** away from both ends), tap **Save**, and save that Film to Photos again.
 3. In Photos, open each copy, swipe up and write down the format line: the file type, the pixel size and, for a Movie, what it says of the frame rate.
 4. Play each Movie in Photos from start to end.
 5. AirDrop one Movie of each Camera to the Mac by a route that keeps the file as it is (L08 step 3), open it in QuickTime Player and choose Window > Show Movie Inspector.
@@ -1045,11 +1045,11 @@ A Mac with QuickTime Player, for the Movies.
 
 | Camera | What Photos and the Mac should show |
 | --- | --- |
-| 1990s Disposable | JPEG, 4032 x 2688, or 2688 x 4032 when the phone was held upright, from the phone's 12-megapixel capture; in any case 3:2 and no more than 12,000,000 pixels |
-| 6×6 Medium Format | JPEG, 3072 x 3072 on both Film Stocks; the cropped print square, the same number of pixels each way |
-| 1970s Instant | JPEG, 2282 x 2774: the square picture on its white card, exactly as developed |
-| 1960s Super 8 Home Movie | H.264 `.mov`, 1920 x 1440 landscape or 1440 x 1920 portrait, 18 frames a second, no sound track |
-| 16mm Cinema | The same at 24 frames a second, on both Film Stocks |
+| Disposable | JPEG, 4032 x 2688, or 2688 x 4032 when the phone was held upright, from the phone's 12-megapixel capture; in any case 3:2 and no more than 12,000,000 pixels |
+| 6×6 | JPEG, 3072 x 3072 on both Film Stocks; the cropped print square, the same number of pixels each way |
+| Instant | JPEG, 2282 x 2774: the square picture on its white card, exactly as developed |
+| Super 8 | H.264 `.mov`, 1920 x 1440 landscape or 1440 x 1920 portrait, 18 frames a second; a sound track only where the Movie's sound is **Recorded sound**, on a Film loaded with this build, and none where it is **Silent** ([Q07](#q07---playback-and-sound-format) checks the sound) |
+| 16mm | The same at 24 frames a second, on both Film Stocks |
 
 - Each Movie plays in Photos from start to end and lasts as long as its clips were recorded.
 - A developed photo's copy looks the same in Photos as in Immerse.
@@ -1058,7 +1058,7 @@ A Mac with QuickTime Player, for the Movies.
 **It fails if.**
 
 - A size, format or frame rate differs from the table, or a Disposable photo has more than 12,000,000 pixels.
-- A Movie reads above its Camera's frame rate, such as 19.9 for a Super 8 Movie developed with this build, or has a sound track.
+- A Movie reads above its Camera's frame rate, such as 19.9 for a Super 8 Movie developed with this build, or has a sound track where its sound is **Silent** or none where it is **Recorded sound**.
 - The cropped 6×6 print is a pixel longer one way.
 - A Movie does not play to its end in Photos, or a copy is missing.
 
@@ -1119,7 +1119,7 @@ The Instant board on the Mac: `open Evidence/AssetReview/looks/instant/index.htm
 
 **Steps.**
 
-1. Start a 1970s Instant Film titled "I01".
+1. Start an Instant Film titled "I01".
 2. Take one print of each scene, and two of the card with the objects from one spot.
    When each print's question comes, choose **Save to Photos, then remove from Immerse** (common step 6), so the phone's original of each is in Photos.
 3. Open each print full size in Immerse, and its original in Photos.
@@ -1156,7 +1156,7 @@ He was told that this range leaves selenium that faint.
 The tones recorded for Core Image's sepia are from a Mac and the simulator, not an iPhone.
 
 **You need.**
-A developed 6×6 Medium Format Film on **Black and white** with pictures of the gray card, the even shading of L01, a scene with deep shadow and the colored objects.
+A developed 6×6 Film on **Black and white** with pictures of the gray card, the even shading of L01, a scene with deep shadow and the colored objects.
 The toning board on the Mac: `open Evidence/AssetReview/looks/toning/index.html`.
 
 **Steps.**
@@ -1216,9 +1216,9 @@ If the candidate is already on the phone, do not install this build over it; rec
 1. Check out the earlier commit: `git checkout --detach 9d54ba166299eea3edfecc2c9fde29331a76dae4`.
    Build and run it on the phone with the same steps as the candidate ("Xcode Build and Run"), in Debug, with the testing unlock on.
 2. Set up one fixed subject in light you can return to: the gray card, the colored objects, a lamp and a dark area.
-3. Start a 1970s Instant Film titled "V3 pack" and take two prints of the subject.
+3. Start an Instant Film titled "V3 pack" and take two prints of the subject.
    Take a screenshot of each.
-4. Start a second 1970s Instant Film titled "V3 empty" and take no print.
+4. Start a second Instant Film titled "V3 empty" and take no print.
 
 **Part B, on the candidate.**
 
@@ -1226,7 +1226,7 @@ If the candidate is already on the phone, do not install this build over it; rec
 2. Confirm that the Journal lists both packs with the same titles and remaining exposures.
 3. Open "V3 pack" and compare its two prints with the screenshots from part A.
 4. Take two more prints of the subject on "V3 pack" and one on "V3 empty".
-5. Start a 1970s Instant Film titled "V4 pack" and take two prints of the subject.
+5. Start an Instant Film titled "V4 pack" and take two prints of the subject.
 
 **Expect.**
 
@@ -1306,7 +1306,7 @@ Each time: **Available** and the iPhone Storage line as Settings shows them, the
 
 **Steps.**
 
-1. With **Available** well over 2 GB, open Immerse, tap the round plus button, choose the 1990s Disposable, and scroll to **Load Film**: no warning.
+1. With **Available** well over 2 GB, open Immerse, tap the round plus button, choose the Disposable, and scroll to **Load Film**: no warning.
    Open an unfinished Film's screen: no warning above **Open Camera**.
 2. Add filler until **Available** reads between 2.2 and 2.4 GB.
    Return to Immerse and look at both screens again.
@@ -1359,14 +1359,14 @@ That is the stale reading review fixed before merge ([062](low-storage-warning-0
 ### S03 - Saves still work just under 2 GB
 
 **You need.**
-**Available** between about 1.7 and 1.9 GB, with the warning showing, and a 1990s Disposable Film filled to 27 exposures and not yet developed (from M09 or L06), so its Development is a full Film's.
+**Available** between about 1.7 and 1.9 GB, with the warning showing, and a Disposable Film filled to 27 exposures and not yet developed (from M09 or L06), so its Development is a full Film's.
 
 **Steps.**
 
 1. Write down the remaining exposures or time of each Film used.
-2. On an open 1990s Disposable Film take a photo.
-3. On an open 1970s Instant Film take a print; it develops and opens.
-4. On an open 1960s Super 8 Home Movie Film record a clip of about ten seconds.
+2. On an open Disposable Film take a photo.
+3. On an open Instant Film take a print; it develops and opens.
+4. On an open Super 8 Film record a clip of about ten seconds.
 5. Open the full Disposable Film, which shows the Development sentence above **Develop Film**, and develop it.
 6. Read **Available** after each step; if it falls under about 1.6 GB, remove a 100 MB filler file before going on.
 
@@ -1426,7 +1426,7 @@ The software tests that hold this behavior are listed in [062](low-storage-warni
 
 **Steps.**
 
-1. From S03's state, with the warning showing, write down the remaining exposures of an open 1990s Disposable Film.
+1. From S03's state, with the warning showing, write down the remaining exposures of an open Disposable Film.
 2. Add a 100 MB filler file (make more on the Mac as needed), wait a minute, read **Available**, open the camera and take one photo.
 3. Repeat step 2 until a photo does not save.
    Stop at once if iOS says storage is almost full in a way that affects other apps, and remove the filler.
@@ -1610,7 +1610,7 @@ Nor is an iPhone 17 Pro, whose Camera app shows 0.5x, 1x, 2x, 4x and 8x: whether
 The 13 Pro's result stands for its own lenses only.
 
 **You need, for all ten.**
-All five Cameras loaded as Films with the Debug testing unlock on, a Disposable, an Instant, a 6×6 Medium Format (either Film Stock), a Super 8 and a 16mm.
+All five Cameras loaded as Films with the Debug testing unlock on, a Disposable, an Instant, a 6×6 (either Film Stock), a Super 8 and a 16mm.
 A printed page of text with something asymmetric and large on it, such as a big letter R, and the gray card and colored objects of the earlier scenarios.
 A room you can make dim, for the Disposable's cue.
 **Portrait Orientation Lock** off in Control Center, so the phone reports how it is held; write down how it was and set it back at the end.
@@ -1873,7 +1873,7 @@ It reads **UNTESTED: physical execution deferred**.
 
 **Steps.**
 
-1. Load a 1970s Instant Film and open the camera.
+1. Load an Instant Film and open the camera.
 2. Take an exposure.
    When the print shows, close it.
 3. Look at the shooting screen straight away, without touching it.
@@ -1907,7 +1907,7 @@ Debug builds therefore have **Settings > Develop at once - Debug build**, on by 
 While it is on, each saved photo or clip of those four Cameras shows on the shooting screen as a card marked **Debug preview**: "developing" first, then the developed picture, which opens full size when tapped; the **x** closes it.
 Every capture develops, one after another in the order it was saved, and none is skipped: in a quick burst the card keeps the latest developed picture and says which newer capture is developing or waiting to develop, and each newer preview takes the card as it is ready.
 That is how to tell the switch's state without opening Settings: while it is on, those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done**, from before the first capture, and with it off, as on the Instant at any time, nothing shows there.
-The roll itself stays sealed and develops exactly as before, and the 1970s Instant is unchanged.
+The roll itself stays sealed and develops exactly as before, and the Instant is unchanged.
 Release, TestFlight and App Store builds have none of it (`sh Scripts/verify-release-excludes-testing-unlock.sh`).
 It is not in the pinned candidate until the plan is re-pinned to a build that holds it.
 A card over the viewfinder is a developed result shown before Development, which FR-04 rules out for the product, so **turn the switch off for every scenario outside P01 to P05**, and above all for L03 and L05, which watch that the viewfinder never previews the developed result; no **Develop at once** beside **Done** shows it is off.
@@ -1919,10 +1919,10 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 **Steps.**
 
 1. Check **Settings > Develop at once - Debug build** is on.
-2. Load a 1990s Disposable Film, check its shooting screen shows **Develop at once** next to **Done** before the first photo, upright and held on its side, and take a photo with the flash off, then one with the flash on.
-3. Load a 6×6 Medium Format Film with **Color**, take a photo, then load one with **Black and white** and take a photo.
-4. Load a 16mm Cinema Film with each Film Stock and record a clip of about 5 seconds on each.
-5. Load a 1960s Super 8 Home Movie Film and record a clip of about 5 seconds.
+2. Load a Disposable Film, check its shooting screen shows **Develop at once** next to **Done** before the first photo, upright and held on its side, and take a photo with the flash off, then one with the flash on.
+3. Load a 6×6 Film with **Color**, take a photo, then load one with **Black and white** and take a photo.
+4. Load a 16mm Film with each Film Stock and record a clip of about 5 seconds on each.
+5. Load a Super 8 Film and record a clip of about 5 seconds.
 6. After each capture, watch the card over the viewfinder; when it says the capture is developed, tap it, look at the picture or clip full size, tap the checkmark, and close the card with the **x**.
 
 **Expect.**
@@ -1946,7 +1946,7 @@ For each capture, the seconds from the shutter to the developed card, a screensh
 1. On a new Disposable Film take three photos of different scenes, opening each full-size preview and taking a screenshot of it.
 2. Tap **Done**, open the Film's **...** menu, choose **Rewind & Develop Early**, complete the Film and develop it.
 3. Open each developed photo full size and compare it with its preview screenshot.
-4. Repeat with a 16mm Cinema Film of two short clips, comparing each clip's preview with the Developed Movie.
+4. Repeat with a 16mm Film of two short clips, comparing each clip's preview with the Developed Movie.
 
 **Expect.**
 Each developed photo is the same picture as its preview, grain and all; each clip in the Developed Movie looks like its preview.
@@ -1961,7 +1961,7 @@ The preview and developed screenshots side by side for each capture.
 ### P03 - The Instant is unchanged
 
 **Steps.**
-Load a 1970s Instant Film with the switch on and take two exposures.
+Load an Instant Film with the switch on and take two exposures.
 
 **Expect.**
 Each print develops and opens over the camera as before, the camera comes back as in C01, and no **Debug preview** card or **Develop at once** notice ever shows.
@@ -1995,12 +1995,12 @@ A screenshot of steps 3 and 5 and the switch after the relaunch.
 
 **Steps.**
 
-1. On a 16mm Cinema Film with **Color** record one clip of about 60 seconds.
+1. On a 16mm Film with **Color** record one clip of about 60 seconds.
 2. While its card says it is developing, record two short clips straight away.
 3. Once a clip's preview is on the card and it reads "Clip N developed. Tap to view.", record one more short clip, and while it records and then saves, tap the card.
 4. Once that clip is saved, tap the card, look at the full-size view and close it.
 5. Record another short clip and, while it records, tap the card's **x**.
-6. On a 6×6 Medium Format Film with **Color** take five photos as quickly as the shutter allows.
+6. On a 6×6 Film with **Color** take five photos as quickly as the shutter allows.
 7. Take one more photo and, while its card says it is developing, lock the iPhone for about ten seconds; unlock it and go back to the camera.
 
 **Expect.**
