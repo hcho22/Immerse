@@ -137,6 +137,12 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             // The shutter bar's top is 8 points above the shutter's frame.
             XCTAssertLessThanOrEqual(turned.done.maxY, turned.shutter.minY - 8, "Done is clear of the shutter bar held on its \(side)")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
+            // The 6×6's rows lift the focus switch up the area at this size, to where the turned header runs down its side,
+            // from Done to the Camera name and count, so the switch keeps clear of the header's whole run.
+            let focusSwitch = try XCTUnwrap(turned.focusSwitch, "The focus switch shows held on its \(side)")
+            let header = [turned.remaining, turned.notice].compactMap { $0 }.reduce(turned.done) { $0.union($1) }
+            XCTAssertFalse(focusSwitch.intersects(header),
+                           "The focus switch is clear of the turned header held on its \(side): \(focusSwitch) and \(header)")
         }
         XCUIDevice.shared.orientation = .portrait
         let upAgain = try wait(app) { $0.done.width > $0.done.height }

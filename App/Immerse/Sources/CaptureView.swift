@@ -34,8 +34,8 @@ struct CaptureView: View {
     @State private var savedShowing = false
     /// The height of the controls over the Viewfinder area's bottom, which the notices above them leave free.
     @State private var floatingControlsHeight: CGFloat = 0
-    /// How thick the header's line is, which held sideways runs down the Viewfinder area's side, so the notices keep
-    /// clear of it.
+    /// How thick the header's line is, which held sideways runs down the Viewfinder area's side, so the notices, and the
+    /// controls where it reaches them, keep clear of it.
     @State private var headerThickness: CGFloat = 44
     /// Whether this screen has started its shooting session. A full-screen print or question over it makes it disappear
     /// and appear again, which must not start the session, or open the camera, a second time.
@@ -193,6 +193,10 @@ struct CaptureView: View {
         return 0
     }
 
+    /// How far the header, held sideways, runs down the Viewfinder area: its turned length, less the 44-point top bar it
+    /// starts from.
+    private var headerReach: CGFloat { headerLineLength + developAtOnceLength - 44 }
+
     private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
         let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
         #if DEBUG
@@ -249,6 +253,9 @@ struct CaptureView: View {
         let capture = model.capture
         let showsLowLightCue = behavior.showsLowLightCue && capture.showsLowLightCue
         let showsStatus = hasStatus(film, controller: capture)
+        // Held sideways, the header runs down the side that is then the top: its thickness, its 16-point margin and 8 more
+        // is what anything over the area keeps clear of on that side.
+        let headerSide: Edge.Set = held == .clockwise ? .trailing : held == .counterClockwise ? .leading : []
         return GeometryReader { area in
             CameraShapeArea(aspectRatio: CGFloat(behavior.viewfinder.aspectRatio)) {
                     if let preview = capture.preview {
@@ -264,11 +271,8 @@ struct CaptureView: View {
             }
             .overlay(alignment: .top) {
                 // The notices take the area above the controls at its bottom, so a long notice, as at the largest text
-                // sizes, never runs over the focus switch.
-                // Held sideways they also keep clear of the header running down the side that is then the top: its
-                // thickness, its 16-point margin and 8 more.
+                // sizes, never runs over the focus switch. Held sideways they also keep clear of the header.
                 let room = max(area.size.height - (floatingControlsHeight > 0 ? floatingControlsHeight + 8 : 0), 80)
-                let headerSide: Edge.Set = held == .clockwise ? .trailing : held == .counterClockwise ? .leading : []
                 notices(film, controller: capture, showsLowLightCue: showsLowLightCue, showsStatus: showsStatus,
                         showsPreview: showsDevelopedPreview, boxHeight: room)
                     .padding(headerSide, headerThickness + 24)
@@ -277,7 +281,10 @@ struct CaptureView: View {
             // The focus switch and the 6×6's sliders stay across the area's bottom in every hold, as the screen's layout
             // does; only their captions turn. The zoom steps sit over its bottom edge as the iPhone is held, as in the
             // iPhone's Camera app: under the switch upright, and turned with the hold at the side that is then the bottom.
+            // Held sideways, where the header's run reaches the controls, as the 6×6's taller rows lift them at the
+            // largest text sizes, they keep clear of the header as the notices do.
             .overlay(alignment: .bottom) {
+                let reachesControls = held.isSideways && headerReach + 8 > area.size.height - floatingControlsHeight
                 VStack(spacing: 4) {
                     if film.completionState == .open {
                         if !held.isSideways { zoomSteps(behavior: behavior, capture: capture) }
@@ -291,6 +298,7 @@ struct CaptureView: View {
                 .environment(\.colorScheme, .dark)
                 .tint(.white)
                 .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { floatingControlsHeight = $0 }
+                .padding(reachesControls ? headerSide : [], headerThickness + 24)
             }
             .overlay(alignment: .top) {
                 // Held sideways, the zoom steps stand at the side that is then the bottom, in the room above the controls
