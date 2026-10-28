@@ -33,7 +33,9 @@ struct SoundtrackView: View {
                                 }
                             }
                             Text("Silent").tag(MovieSoundChoice.silent.rawValue)
-                        }.pickerStyle(.inline)
+                        }
+                        // The section names it; shown, an inline picker's label is a row that reads as one more choice.
+                        .pickerStyle(.inline).labelsHidden()
                     }
                     Button("Apply sound choice", systemImage: "checkmark") {
                         working = true

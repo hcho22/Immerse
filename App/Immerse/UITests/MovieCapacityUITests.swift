@@ -30,11 +30,12 @@ final class MovieCapacityUITests: ScreenTestCase {
         var allowed = false
         let monitor = addUIInterruptionMonitor(withDescription: "Camera and microphone requests") { alert in
             let allow = alert.buttons["Allow"]
+            // Read before the tap: the alert is gone once Allow is tapped, and a query of it then fails the test.
+            let asksForCamera = alert.label.localizedCaseInsensitiveContains("Camera")
             guard allow.exists,
-                  alert.label.localizedCaseInsensitiveContains("Camera")
-                    || alert.label.localizedCaseInsensitiveContains("Microphone") else { return false }
+                  asksForCamera || alert.label.localizedCaseInsensitiveContains("Microphone") else { return false }
             allow.tap()
-            if alert.label.localizedCaseInsensitiveContains("Camera") { allowed = true }
+            if asksForCamera { allowed = true }
             return true
         }
         defer { removeUIInterruptionMonitor(monitor) }

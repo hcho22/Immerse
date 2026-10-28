@@ -264,7 +264,7 @@ struct CaptureView: View {
             }
             .overlay(alignment: .top) {
                 // The notices take the area above the controls at its bottom, so a long notice, as at the largest text
-                // sizes held sideways, never runs over the focus switch.
+                // sizes, never runs over the focus switch.
                 // Held sideways they also keep clear of the header running down the side that is then the top: its
                 // thickness, its 16-point margin and 8 more.
                 let room = max(area.size.height - (floatingControlsHeight > 0 ? floatingControlsHeight + 8 : 0), 80)
@@ -330,7 +330,7 @@ struct CaptureView: View {
         boxHeight: CGFloat
     ) -> some View {
         if showsLowLightCue || showsStatus || showsPreview {
-            TurnedBlock(length: min(noticeBlockLength(showsPreview: showsPreview), max(boxHeight - 16, 80))) {
+            let block = TurnedBlock(length: min(noticeBlockLength(showsPreview: showsPreview), max(boxHeight - 16, 80))) {
                 VStack(spacing: 6) {
                     if showsLowLightCue { LowLightCueView() }
                     if showsStatus {
@@ -350,6 +350,12 @@ struct CaptureView: View {
                 }
             }
             .padding(8)
+            // A block taller than the room it is given, as the 6×6's upright at the largest text sizes, scrolls in that
+            // room rather than running over the controls below it. It holds no state a swap of identity could lose.
+            ViewThatFits(in: .vertical) {
+                block
+                ScrollView(.vertical, showsIndicators: false) { block }
+            }
         }
     }
 

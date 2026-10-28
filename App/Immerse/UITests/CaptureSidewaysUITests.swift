@@ -115,6 +115,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertTrue(upright.window.contains(upright.done), "Done is on screen upright: \(upright.done)")
         XCTAssertTrue(upright.window.contains(upright.remaining), "The Camera name and count are on screen upright")
         checkNotice(upright, shows: true, "upright at the largest text size")
+        checkNoticesShowAboveTheControls(upright, app, "upright at the largest text size")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
         // Each side twice, so the header turns straight from one side to the other both ways.
@@ -407,6 +408,24 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
         if let notice = layout.notice {
             XCTAssertFalse(focusSwitch.intersects(notice), "The focus switch is clear of the notice, \(hold)")
+        }
+    }
+
+    /// The notices over the area (the camera's error, Resume Camera) show only in the room above the controls at its
+    /// bottom: a block too tall for that room, as the 6×6's at the largest text size, scrolls inside it, so no part of it
+    /// shows under the focus switch. A notice scrolled past its room keeps its whole frame, so only the part inside its
+    /// scroll view is what shows.
+    private func checkNoticesShowAboveTheControls(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
+        guard let focusSwitch = layout.focusSwitch else { return XCTFail("The focus switch shows, \(hold)") }
+        let viewfinder = app.otherElements["viewfinder"]
+        let notices = (viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex)
+            .filter { $0.label == "Resume Camera" || $0.label.hasPrefix("Camera unavailable") }
+        XCTAssertFalse(notices.isEmpty, "The camera's error and Resume Camera show over the area, \(hold)")
+        for notice in notices {
+            let room = viewfinder.scrollViews.containing(NSPredicate(format: "label == %@", notice.label)).firstMatch
+            let shown = notice.frame.intersection(room.exists ? room.frame : layout.viewfinder)
+            XCTAssertFalse(shown.intersects(focusSwitch),
+                           "\(notice.label) shows clear of the focus switch, \(hold): \(shown) and \(focusSwitch)")
         }
     }
 

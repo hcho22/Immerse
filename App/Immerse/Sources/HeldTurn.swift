@@ -100,8 +100,9 @@ struct TurnedBlock<Content: View>: View {
             content.rotationEffect(turn.angle)
         }
         if turn.isSideways {
-            // The one `ViewThatFits`, which swaps the block's view identity where it starts to overflow: only the
-            // header turns this far, it holds no state, and no layout of one `Layout` alone can scroll.
+            // A `ViewThatFits`, which swaps the block's view identity where it starts to overflow (the shooting screen's
+            // notices have the only other): only the header turns this far, it holds no state, and no layout of one
+            // `Layout` alone can scroll.
             ViewThatFits(in: .horizontal) {
                 block
                 ScrollView(.horizontal, showsIndicators: false) { block }
