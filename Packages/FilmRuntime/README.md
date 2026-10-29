@@ -8,8 +8,12 @@ is separately owned by `TrialCoordinator`; these Development hooks do not alter 
 screen; exports keep running. A job it stopped reports `DevelopmentSuspended` to
 its callers whatever the stopped work ended with, since iOS takes the video
 encoder from an app leaving the screen and a clip being written then fails as it
-stops (`Evidence/NativeApp/development-stop-079.md`). A job stopped by deleting
-or discarding still ends with `CancellationError`.
+stops (`Evidence/NativeApp/development-stop-079.md`). The app also records
+leaving at once with `appLeftTheScreen`, since the work can fail before the stop
+reaches it: until `appReturnedToTheScreen`, any failure of a Development, a
+discard's Movie rebuild included, is `DevelopmentSuspended`, except a full iPhone,
+which is reported as itself. A job stopped by deleting or discarding still ends
+with `CancellationError`.
 
 ## Development Observation
 

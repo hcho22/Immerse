@@ -5,14 +5,15 @@ import FilmPersistence
 import FilmRuntime
 import NativeAdapters
 import RenderCore
+import Synchronization
 import XCTest
 @testable import Immerse
 
 /// What the captain met on 2026-10-28 (Evidence/NativeApp/development-stop-079.md): a 16mm Film on the color Film Stock,
 /// one Recorded Clip with Live Audio, stopped early, whose Development stopped with "Could not finish" and advice to check
 /// storage on an iPhone with plenty free. The app stops Development when it leaves the screen, as an auto-lock makes it
-/// do, and iOS then takes its video encoder, so the clip's writer fails as it stops; the simulator keeps the encoder, so
-/// an observer fails the writer as iOS does once the stop has reached the Development. The clip is saved through the
+/// do, and iOS then takes its video encoder, so the clip's writer fails as the stop reaches it or before; the simulator
+/// keeps the encoder, so an observer fails the writer as iOS does, in either order. The clip is saved through the
 /// camera's own save path, from a file staged as the camera leaves one.
 @MainActor
 final class DevelopmentStopTests: XCTestCase {
@@ -67,6 +68,131 @@ final class DevelopmentStopTests: XCTestCase {
         let developed = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
         XCTAssertEqual(developed.audioTrackCount, 1, "The Developed Movie plays the clip's sound")
         XCTAssertEqual(screen.holds, [true, false, true, false])
+    }
+
+    /// The other order an iPhone can take: iOS takes the clip's encoder as Immerse leaves the screen, and the writer's
+    /// failure reaches Development before the stop does. The scene's move to the background is recorded as it is
+    /// reported, so the failure still reads as the stop, and the Film stays resumable with nothing lost.
+    func testAWriterFailureThatReachesDevelopmentBeforeTheStopReadsAsTheStop() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        let encoder = EncoderTakenFirst()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     cameraAuthorizer: SyntheticCamera(granted: true),
+                                     developmentObserver: { try await encoder.observe($1) })
+        await model.recoverAtLaunch()
+        let film = try await stoppedEarlyReelWithSound(model)
+
+        // Develop Film, its outcome taken off the main actor so that it can come back while the main actor is held.
+        let processor = model.processor, filmID = film.id
+        let returned = DispatchSemaphore(value: 0)
+        let development = Task.detached {
+            defer { returned.signal() }
+            try await processor.develop(filmID: filmID)
+        }
+        try await waitUntil { encoder.reached }
+        // The scene leaves on the main actor, as SwiftUI reports it, and the stop's own task waits for the main actor,
+        // which stays held until the writer's failure has come back from Development.
+        model.sceneChanged(to: .inactive)
+        model.sceneChanged(to: .background)
+        encoder.take()
+        XCTAssertTrue(holdTheMainActor(until: returned), "Development came back")
+        XCTAssertFalse(encoder.stopReachedFirst, "The writer failed before the stop reached the Development")
+        var ended: Error?
+        do { try await development.value } catch { ended = error }
+        let stop = try XCTUnwrap(ended, "A stopped Development reported success")
+        XCTAssertTrue(stop is DevelopmentSuspended, "Reported as the stop, not as the writer's failure: \(stop)")
+        XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: stop, retry: "Resume Development")),
+                       "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes.")
+        model.refresh()
+        let stopped = try XCTUnwrap(model.film(film.id))
+        XCTAssertEqual(stopped.developmentState, .developing)
+        XCTAssertTrue(stopped.offersResumeDevelopment)
+        XCTAssertEqual(stopped.captures.map(\.revealState), [.sealed])
+        let source = try XCTUnwrap(model.repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source))
+        let kept = try await VerifiedMedia.movie(at: source.url, allowsAudio: true)
+        XCTAssertEqual(kept.audioTrackCount, 1, "The Recorded Clip keeps its sound")
+
+        // Back on the screen, Resume Development.
+        model.sceneChanged(to: .active)
+        model.perform { try await model.develop(film.id) }
+        try await waitUntil { model.film(film.id)?.developmentState == .developed && model.busyFilms.isEmpty }
+        XCTAssertNil(model.alert)
+        let movie = try model.repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie)
+        let developed = try await VerifiedMedia.movie(at: movie.url, allowsAudio: true)
+        XCTAssertEqual(developed.audioTrackCount, 1, "The Developed Movie plays the clip's sound")
+    }
+
+    /// An Instant print develops as it is saved, at the camera, which shows its failure in place of the Resume Development
+    /// the Film's screen offers: a print stopped as Immerse leaves the screen says to open the Film and tap it there.
+    func testAnInstantPrintStoppedAtTheCameraSaysToOpenTheFilmAndResume() async throws {
+        let leaving = LeavesTheScreen()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     developmentObserver: { try await leaving.observe($1) })
+        leaving.model = model
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.instant1970s, title: "Synthetic Instant pack",
+                                                   access: .subscription)
+        try model.repository.savePhotoCapture(filmID: film.id, sourceData: syntheticPhoto())
+        model.refresh()
+
+        // The camera's notice, as the camera shows a print's failure while it is up.
+        let notice = CameraNotice()
+        model.developSavedPrint(film.id) { notice.text = $0 }
+        try await waitUntil { notice.text != nil }
+        XCTAssertTrue(leaving.left, "The app left the screen while the print developed")
+        XCTAssertEqual(notice.text, "Development stopped because Immerse left the screen. Saved captures are unchanged. Open the Film and tap Resume Development and keep Immerse open until it finishes.")
+        XCTAssertNil(model.alert, "The camera shows it, not the Journal")
+        XCTAssertTrue(try XCTUnwrap(model.film(film.id)).offersResumeDevelopment)
+
+        // Back on the screen, the Film's Resume Development reveals the print.
+        model.sceneChanged(to: .active)
+        try await model.develop(film.id)
+        XCTAssertEqual(model.film(film.id)?.captures.map(\.revealState), [.revealed])
+    }
+
+    /// A Movie's sound change and a clip's discard each develop the Movie again, and their failures say what went wrong in
+    /// Development's words with the button that tries again where the message shows: Apply sound choice on the Movie
+    /// sound sheet, and Rebuild Movie on the Film's screen. A discard that fails before it is recorded is no Development.
+    func testASoundChangeAndADiscardsRebuildSayWhatWentWrongWithTheirOwnButton() async throws {
+        let failing = FailsNextDevelopment()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     developmentObserver: { try await failing.observe($1) })
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
+                                                   movieOrientation: .portrait, filmStock: .blackAndWhite,
+                                                   access: .subscription)
+        for index in 1...2 {
+            let clip = root.appendingPathComponent("clip-\(index).mov")
+            try await writeClipWithSound(to: clip, seconds: 1)
+            try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip), durationSeconds: 1,
+                                               orientation: .portrait)
+        }
+        _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: 2)
+        model.refresh()
+        try await model.develop(film.id)
+        XCTAssertEqual(model.film(film.id)?.developmentState, .developed)
+
+        let writer = NativeRenderError.writerFailed(underlying: NSError(domain: AVFoundationErrorDomain, code: -11800))
+        failing.arm(writer)
+        let sound = try await failure { try await model.selectMovieSound(film.id, choice: .silent, assetID: nil) }
+        XCTAssertEqual(FailureCopy.message(for: sound), "Immerse could not finish writing this Film's developed photos or clips, so Development stopped. Saved captures are unchanged. Tap Apply sound choice to try again.")
+        failing.arm(PersistenceError.soundtrackUnavailable)
+        let soundtrack = try await failure { try await model.selectMovieSound(film.id, choice: .recordedSound, assetID: nil) }
+        XCTAssertEqual(FailureCopy.message(for: soundtrack), "The Soundtrack chosen for this Movie could not be read, so the Movie was not made. Saved captures are unchanged. Choose the Movie's sound again, or tap Apply sound choice.")
+
+        failing.arm(writer)
+        let discard = try await failure { try await model.remove(film.id, sequence: 1) }
+        XCTAssertEqual(FailureCopy.message(for: discard), "Immerse could not finish writing this Film's developed photos or clips, so Development stopped. Saved captures are unchanged. Tap Rebuild Movie to try again.")
+        let unbuilt = try XCTUnwrap(model.film(film.id))
+        XCTAssertEqual(unbuilt.captures.map(\.isDiscarded), [true, false])
+        XCTAssertTrue(unbuilt.canPlaybackDevelopedMovie, "The Film's screen offers Rebuild Movie in the Movie's place")
+        XCTAssertNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
+        let unrecorded = try await failure { try await model.remove(film.id, sequence: 9) }
+        XCTAssertFalse(unrecorded is DevelopmentFailure, "\(unrecorded)")
+
+        // Rebuild Movie.
+        try await model.develop(film.id)
+        XCTAssertNotNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
     }
 
     /// The screen stays on while any Development runs and may sleep again however it ends: finished, failed, or stopped
@@ -159,7 +285,7 @@ final class DevelopmentStopTests: XCTestCase {
             (CocoaError(.fileReadNoPermission), "Development stopped before it finished.")
         ]
         for (error, cause) in causes {
-            for retry in ["Resume Development", "Rebuild Movie"] {
+            for retry in ["Resume Development", "Rebuild Movie", "Apply sound choice"] {
                 let message = try XCTUnwrap(FailureCopy.message(for: DevelopmentFailure(underlying: error, retry: retry)))
                 XCTAssertTrue(message.hasPrefix(cause), "\(error): \(message)")
                 XCTAssertFalse(message.localizedCaseInsensitiveContains("storage"), "\(error): \(message)")
@@ -171,15 +297,25 @@ final class DevelopmentStopTests: XCTestCase {
                     XCTAssertFalse(message.contains(name), "\(error): no internal names in \(message)")
                 }
             }
+            // The camera has no Resume Development: its words send the person to the Film's screen for it.
+            let atTheCamera = try XCTUnwrap(FailureCopy.message(for: DevelopmentFailure(
+                underlying: error, retry: "Resume Development", atTheCamera: true)))
+            XCTAssertTrue(atTheCamera.hasPrefix(cause), "\(error): \(atTheCamera)")
+            if !(error is PersistenceError && (error as? PersistenceError) == .filmNotFound) {
+                XCTAssertTrue(atTheCamera.localizedCaseInsensitiveContains("open the Film and tap Resume Development"),
+                              "\(error): \(atTheCamera)")
+            }
+            XCTAssertFalse(atTheCamera.contains("Tap Resume Development"), "\(error): \(atTheCamera)")
         }
+        XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: PersistenceError.outOfSpace,
+                                                                   retry: "Resume Development", atTheCamera: true)),
+                       "This iPhone is out of space, so Development stopped. Saved captures are unchanged. Free space in iPhone Settings, then open the Film and tap Resume Development.")
         XCTAssertNil(FailureCopy.message(for: DevelopmentFailure(underlying: CancellationError(), retry: "Resume Development")))
         XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: PersistenceError.operationInProgress,
                                                                    retry: "Resume Development")),
                        FailureCopy.message(for: PersistenceError.operationInProgress))
         XCTAssertFalse(FailureCopy.retry.contains("storage"), "The general words name no cause")
         XCTAssertEqual(FailureCopy.message(for: NativeRenderError.invalidMovie()), FailureCopy.retry)
-        let stoppedRebuild = try XCTUnwrap(FailureCopy.message(for: DevelopmentSuspended()))
-        XCTAssertTrue(stoppedRebuild.hasPrefix("This stopped because Immerse left the screen."), stoppedRebuild)
     }
 
     /// A 16mm Film on the color Film Stock with one Recorded Clip with Live Audio, saved through the camera's save path,
@@ -290,6 +426,18 @@ final class DevelopmentStopTests: XCTestCase {
         XCTAssertEqual(writer.status, .completed, writer.error.map { "\($0)" } ?? "")
     }
 
+    /// The error `operation` throws.
+    private func failure(_ operation: () async throws -> Void) async throws -> Error {
+        do { try await operation() } catch { return error }
+        XCTFail("The failure reported success")
+        throw CancellationError()
+    }
+
+    /// Holds the main thread, and with it the main actor, until `semaphore` is signalled, for up to a minute.
+    private func holdTheMainActor(until semaphore: DispatchSemaphore) -> Bool {
+        semaphore.wait(timeout: .now() + 60) == .success
+    }
+
     private func waitUntil(_ condition: () -> Bool) async throws {
         let deadline = ContinuousClock.now + .seconds(60)
         while !condition() {
@@ -331,6 +479,47 @@ final class DevelopmentStopTests: XCTestCase {
         model.sceneChanged(to: .inactive)
         model.sceneChanged(to: .background)
         return true
+    }
+}
+
+/// Stands in for iOS taking the clip's encoder as Immerse leaves the screen, before the stop reaches the Development:
+/// once the clip has developed it waits for the test to take the encoder, then fails the clip's writer at once with the
+/// error iOS gives ("Operation Interrupted"), noting whether the stop had reached it by then. Later Developments go on.
+private final class EncoderTakenFirst: Sendable {
+    private let state = Mutex((armed: true, reached: false, taken: false, stopReachedFirst: false))
+    var reached: Bool { state.withLock { $0.reached } }
+    var stopReachedFirst: Bool { state.withLock { $0.stopReachedFirst } }
+    func take() { state.withLock { $0.taken = true } }
+
+    func observe(_ stage: DevelopmentStage) async throws {
+        guard stage == .afterRendering(sequence: 1), state.withLock({ $0.armed }) else { return }
+        state.withLock { $0.armed = false; $0.reached = true }
+        while !state.withLock({ $0.taken }) { try? await Task.sleep(for: .milliseconds(5)) }
+        state.withLock { $0.stopReachedFirst = Task.isCancelled }
+        throw NativeRenderError.writerFailed(underlying: NSError(domain: AVFoundationErrorDomain, code: -11847,
+            userInfo: [NSLocalizedDescriptionKey: "Operation Interrupted"]))
+    }
+}
+
+/// What the camera shows of a print's failure while it is up.
+@MainActor private final class CameraNotice {
+    var text: String?
+}
+
+/// Fails the next Development, a Movie's rebuild included, as it begins, with the error the test arms it with.
+@MainActor private final class FailsNextDevelopment {
+    private var armed: Error?
+
+    func arm(_ failure: Error) { armed = failure }
+
+    nonisolated func observe(_ stage: DevelopmentStage) async throws {
+        guard stage == .beforeBegin, let failure = await take() else { return }
+        throw failure
+    }
+
+    private func take() -> Error? {
+        defer { armed = nil }
+        return armed
     }
 }
 

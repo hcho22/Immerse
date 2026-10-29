@@ -660,7 +660,8 @@ No iPhone has run this, and the simulator does not refuse the work, so this is t
   It reads **Developing** and offers **Resume Development**, or it still reads **Ready to develop** and offers **Develop Film** if Development had not yet begun.
 - There may be no alert at all, since leaving the app simply stops Development, or there may be the **Could not finish** alert of L01.
   Either is acceptable.
-  On a candidate that holds [079](development-stop-079.md), a Development that was running when the app left always brings **Could not finish** with "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes." ([R02](#r02---locking-the-iphone-partway-through-a-long-movie-development)), and no alert mentions storage.
+  On a candidate that holds [079](development-stop-079.md), a Development that was still running when the app left brings **Could not finish** with "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes." ([R02](#r02---locking-the-iphone-partway-through-a-long-movie-development)), and no alert mentions storage.
+  Whether iOS takes the clip's encoder before Immerse learns it has left is for R02 to show, not assumed here: an alert that Immerse could not finish writing or could not read the Film's clips in place of those words is that order, and is recorded there.
 - **Resume Development** then finishes the Film, with whole and untinted pictures, without force-quitting the app.
 - If the Film already reads **Developed** on return, Development finished before the app left: that run shows nothing, so repeat it and leave sooner.
 - If Immerse reopens from its launch screen, iOS ended it while it was away.
@@ -2428,6 +2429,7 @@ The Auto-Lock setting, each Development's time and clip length, whether the scre
 **Expect.**
 
 - On return Immerse shows **Could not finish** with "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes."
+  Immerse reads any failure from the moment it learns it has left the screen as the stop; which comes first on a phone, that or iOS taking the clip's encoder, is what this step shows.
 - No alert mentions storage.
 - The Film still reads **Developing**, with every capture counted, and offers **Resume Development**; nothing of it is revealed.
 - **Resume Development** finishes it, with whole pictures and the Movie playing its recorded sound, without force-quitting the app.
@@ -2435,6 +2437,7 @@ The Auto-Lock setting, each Development's time and clip length, whether the scre
 
 **It fails if.**
 The alert names storage or any cause other than leaving the screen, the Film or a capture is missing, a half-made picture or Movie shows, or **Resume Development** fails again and again.
+An alert that Immerse could not finish writing or could not read the Film's photos or clips means iOS took the encoder before Immerse learned it had left: write it down as that order.
 
 **Write down.**
 For each try: the Camera, the clip length or exposures, how long after **Develop Film** the phone locked or left, the alert's exact words, the state line before and after, and how many taps of **Resume Development** it took.

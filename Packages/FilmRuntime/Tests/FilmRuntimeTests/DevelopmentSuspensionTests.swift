@@ -9,9 +9,10 @@ import XCTest
 /// The 16mm Film whose Development stopped on the captain's iPhone on 2026-10-28: the color Film Stock, one Recorded Clip
 /// with Live Audio, stopped early. A Development stops when the app leaves the screen (`suspendProcessing`), and iOS takes
 /// an app's video encoder away there too ("The asset writer must give up encoding resources when your app goes into the
-/// background", AVFoundation's engineers), so the clip being written fails as it stops. The simulator and a Mac keep the
-/// encoder, so the observer stands in for iOS: it fails the clip's writer with the error iOS gives, once the stop has
-/// reached the Development. Evidence/NativeApp/development-stop-079.md has the reproduction.
+/// background", AVFoundation's engineers), so the clip being written fails as the stop reaches it, or before. The
+/// simulator and a Mac keep the encoder, so the observer stands in for iOS: it fails the clip's writer with the error iOS
+/// gives, after the stop has reached the Development or before. Evidence/NativeApp/development-stop-079.md has the
+/// reproduction.
 final class DevelopmentSuspensionTests: XCTestCase {
     /// iOS's error for a writer whose encoder it took: AVFoundation's "Operation Interrupted", -11847, which macOS's
     /// `AVError.Code` does not name.
@@ -39,6 +40,48 @@ final class DevelopmentSuspensionTests: XCTestCase {
 
         // Resume Development, with the app on the screen.
         try await FilmProcessor(root: fixture.root).develop(filmID: fixture.film.id)
+        try await fixture.assertDevelopedWithItsClipAndSound()
+    }
+
+    /// The other order: iOS takes the encoder as the app leaves, and the writer's failure reaches the processor before
+    /// `suspendProcessing` does. The app records leaving at once (`appLeftTheScreen`), so the failure is still the stop's
+    /// and the Film stays resumable. A full iPhone reads as itself even then, and back on the screen the writer's failure
+    /// is itself again, as Resume Development would show it.
+    func testAFailureWhileTheAppIsAwayIsTheStopEvenBeforeTheStopArrives() async throws {
+        try XCTSkipUnless(NativePhotoRenderer.readsFilmTables, "Core Image cannot run the tetrahedral reader here")
+        let fixture = try await Fixture()
+        defer { fixture.remove() }
+        let failures = NextFailure()
+        let processor = try FilmProcessor(root: fixture.root, developmentObserver: { _, stage in
+            if stage == .afterRendering(sequence: 1), let failure = await failures.take() { throw failure }
+        })
+
+        processor.appLeftTheScreen()
+        await failures.arm(Self.encoderTaken)
+        do {
+            try await processor.develop(filmID: fixture.film.id)
+            XCTFail("A stopped Development reported success")
+        } catch is DevelopmentSuspended {
+        } catch {
+            XCTFail("The writer failed before the stop arrived and is still the stop's: \(error)")
+        }
+        // The stop arrives after, with nothing left to stop.
+        await processor.suspendProcessing()
+        try await fixture.assertStoppedWithEverythingKept()
+
+        await failures.arm(PersistenceError.outOfSpace)
+        do { try await processor.develop(filmID: fixture.film.id); XCTFail("A full iPhone reported success") }
+        catch PersistenceError.outOfSpace { }
+        try await fixture.assertStoppedWithEverythingKept()
+
+        processor.appReturnedToTheScreen()
+        await failures.arm(Self.encoderTaken)
+        do { try await processor.develop(filmID: fixture.film.id); XCTFail("The failure reported success") }
+        catch let error as NativeRenderError { XCTAssertEqual(error, Self.encoderTaken) }
+        try await fixture.assertStoppedWithEverythingKept()
+
+        // Resume Development.
+        try await processor.develop(filmID: fixture.film.id)
         try await fixture.assertDevelopedWithItsClipAndSound()
     }
 
@@ -143,6 +186,18 @@ final class DevelopmentSuspensionTests: XCTestCase {
             XCTAssertNil(try repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source),
                          "The original goes once Development is verified, as chosen")
         }
+    }
+}
+
+/// The failure the next Development meets once its clip has developed, if the test armed one.
+private actor NextFailure {
+    private var armed: Error?
+
+    func arm(_ failure: Error) { armed = failure }
+
+    func take() -> Error? {
+        defer { armed = nil }
+        return armed
     }
 }
 

@@ -123,13 +123,10 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     arguments.firstIndex(of: flag).flatMap { arguments.indices.contains($0 + 1) ? URL(fileURLWithPath: arguments[$0 + 1]) : nil }
                 }
                 if movie, arguments.contains("--recorded-sound") {
-                    // `--recorded-sound` saves one Recorded Clip with Live Audio in place of the two silent clips, ten
-                    // seconds long unless `--clip-seconds` says otherwise, as a 16mm or Super 8 records with the
-                    // microphone allowed.
-                    let seconds = arguments.firstIndex(of: "--clip-seconds")
-                        .flatMap { arguments.indices.contains($0 + 1) ? Double(arguments[$0 + 1]) : nil } ?? 10
+                    // `--recorded-sound` saves one ten-second Recorded Clip with Live Audio in place of the two silent
+                    // clips, as a 16mm or Super 8 records with the microphone allowed.
                     let clip = fixtures.appendingPathComponent("recorded-clip-with-sound.mov")
-                    try await Self.writeClipWithSound(to: clip, seconds: seconds)
+                    try await Self.writeClipWithSound(to: clip, seconds: 10)
                     let recorded = try await VerifiedMedia.movie(at: clip, allowsAudio: true)
                     try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip),
                         durationSeconds: recorded.durationSeconds ?? 0, orientation: .landscape)

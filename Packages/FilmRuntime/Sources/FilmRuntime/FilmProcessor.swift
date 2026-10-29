@@ -1,17 +1,41 @@
+import AVFoundation
 import FilmDomain
 import FilmPersistence
 import Foundation
 import RenderCore
 import NativeAdapters
 import MediaCatalog
+import Synchronization
 
-/// Development, or a developed Movie's rebuild, that `FilmProcessor.suspendProcessing` stopped as the app left the screen.
-/// It is thrown whatever the stopped work ended with: iOS takes an app's graphics and video work away once it leaves the
-/// screen, so a clip being written then fails as it stops, and that failure is the stop's, not a fault of the Film.
-/// Nothing is lost: every capture and every Developed Clip already saved stays, and the next Development goes on from
-/// them.
+/// Development, or a developed Movie's rebuild, that stopped as the app left the screen: stopped by
+/// `FilmProcessor.suspendProcessing`, or failing while the app was away from the screen. It is thrown whatever the work
+/// ended with: iOS takes an app's graphics and video work away once it leaves the screen, so a clip being written then
+/// fails, as the stop reaches it or before, and that failure is the stop's, not a fault of the Film. Nothing is lost:
+/// every capture and every Developed Clip already saved stays, and the next Development goes on from them.
 public struct DevelopmentSuspended: Error, Equatable {
     public init() {}
+}
+
+/// The system's or the Film store's report that the iPhone is full.
+public enum OutOfSpace {
+    /// Whether the error, or one it carries, reports a full iPhone.
+    public static func reported(by error: Error) -> Bool {
+        switch error {
+        case PersistenceError.outOfSpace: return true
+        case let NativeRenderError.writerFailed(underlying?), let NativeRenderError.invalidMovie(underlying?):
+            return reported(by: underlying)
+        case is NativeRenderError, is PersistenceError: return false
+        default: break
+        }
+        let error = error as NSError
+        switch (error.domain, error.code) {
+        case (NSCocoaErrorDomain, NSFileWriteOutOfSpaceError), (NSPOSIXErrorDomain, Int(ENOSPC)),
+             (NSPOSIXErrorDomain, Int(EDQUOT)), (AVFoundationErrorDomain, AVError.Code.diskFull.rawValue):
+            return true
+        default:
+            return error.underlyingErrors.contains(where: reported(by:))
+        }
+    }
 }
 
 public actor FilmProcessor {
@@ -30,6 +54,8 @@ public actor FilmProcessor {
     }
     private var jobs: [UUID: Job] = [:]
     private var removing: Set<UUID> = []
+    /// Whether the app is away from the screen, from `appLeftTheScreen` until `appReturnedToTheScreen`.
+    private let away = Mutex(false)
 
     public init(root: URL, developmentObserver: DevelopmentObserver? = nil) throws {
         self.root = root
@@ -49,6 +75,13 @@ public actor FilmProcessor {
         try await outcome(of: job)
     }
 
+    /// Records at once, before `suspendProcessing` can reach the processor, that the app has left the screen. Until
+    /// `appReturnedToTheScreen`, a Development's failure is the stop's (`DevelopmentSuspended`), whatever it was doing.
+    public nonisolated func appLeftTheScreen() { away.withLock { $0 = true } }
+
+    /// Records that the app is active on the screen again, so a Development's failure is its own once more.
+    public nonisolated func appReturnedToTheScreen() { away.withLock { $0 = false } }
+
     /// Stops Development and Movie work before the app is suspended. Exports keep running. Each stopped job's callers
     /// get `DevelopmentSuspended`.
     public func suspendProcessing() async {
@@ -60,11 +93,19 @@ public actor FilmProcessor {
         for job in active { _ = await job.task.result }
     }
 
-    /// A job's outcome for its callers. Once `suspendProcessing` has stopped it, any failure is the stop's: a clip whose
-    /// encoder iOS took away fails rather than ending at its next cancellation check.
+    /// A job's outcome for its callers, with a failure that is the stop's reported as `DevelopmentSuspended`.
     private func outcome(of job: Job) async throws {
         do { try await job.task.value }
-        catch where job.suspension.requested { throw DevelopmentSuspended() }
+        catch let error where isTheStop(error, stopped: job.suspension.requested) { throw DevelopmentSuspended() }
+    }
+
+    /// Whether a Development's failure is the stop's: once `suspendProcessing` has stopped it (`stopped`), or arriving
+    /// while the app is away from the screen. iOS takes an app's video encoder and decoder and refuses its graphics work
+    /// as it leaves, so the work can fail before the stop reaches it. A full iPhone is never the stop's, and a
+    /// cancellation the stop did not make is a deletion's or a discard's.
+    private func isTheStop(_ error: Error, stopped: Bool) -> Bool {
+        guard !OutOfSpace.reported(by: error) else { return false }
+        return stopped || (!(error is CancellationError) && away.withLock { $0 })
     }
 
     public func discard(filmID: UUID, sequence: Int) async throws {
@@ -76,7 +117,8 @@ public actor FilmProcessor {
         let film = try repository.discardRevealedCapture(filmID: filmID, sequenceNumber: sequence)
         try removeWork(filmID: filmID)
         if film.canPlaybackDevelopedMovie {
-            try await DevelopmentWorker.run(root: root, filmID: filmID, observer: developmentObserver)
+            do { try await DevelopmentWorker.run(root: root, filmID: filmID, observer: developmentObserver) }
+            catch let error where isTheStop(error, stopped: false) { throw DevelopmentSuspended() }
         }
     }
 

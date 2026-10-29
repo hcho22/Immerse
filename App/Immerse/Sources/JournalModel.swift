@@ -208,7 +208,8 @@ final class JournalModel {
         return film
     }
 
-    func develop(_ id: UUID) async throws {
+    /// - Parameter atTheCamera: whether a failure shows at the camera, away from the Film's screen.
+    func develop(_ id: UUID, atTheCamera: Bool = false) async throws {
         guard !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { throw JournalError.operationInProgress }
         busyFilms.insert(id)
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
@@ -217,9 +218,16 @@ final class JournalModel {
         #endif
         // A developed Movie Film develops again only to rebuild its Movie.
         let retry = film(id)?.developmentState == .developed ? "Rebuild Movie" : "Resume Development"
-        do { try await screenAwake.during { try await processor.develop(filmID: id) } }
+        try await developing(retry: retry, atTheCamera: atTheCamera) { try await processor.develop(filmID: id) }
+    }
+
+    /// Runs a Development, or a developed Movie's rebuild, with the screen held on, and reports its failure as
+    /// `DevelopmentFailure`, naming `retry`, the button that tries it again on the screen that shows the message.
+    private func developing(retry: String, atTheCamera: Bool = false,
+                            _ development: () async throws -> Void) async throws {
+        do { try await screenAwake.during(development) }
         catch is CancellationError { throw CancellationError() }
-        catch { throw DevelopmentFailure(underlying: error, retry: retry) }
+        catch { throw DevelopmentFailure(underlying: error, retry: retry, atTheCamera: atTheCamera) }
     }
 
     /// What the app does as its scene comes and goes. The app and the screen-test harness both forward the scene's
@@ -227,11 +235,13 @@ final class JournalModel {
     func sceneChanged(to phase: ScenePhase) {
         switch phase {
         case .active:
+            processor.appReturnedToTheScreen()
             refresh()
             #if DEBUG
             developedPreviews.resume()
             #endif
         case .background:
+            processor.appLeftTheScreen()
             capture.suspend()
             Task { await processor.suspendProcessing() }
             #if DEBUG
@@ -248,7 +258,7 @@ final class JournalModel {
     func developSavedPrint(_ id: UUID, failure: @escaping @MainActor (String) -> Void) {
         perform({ [self] in
             guard film(id) != nil, !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { return }
-            try await develop(id)
+            try await develop(id, atTheCamera: true)
         }, failure: failure)
     }
 
@@ -292,7 +302,7 @@ final class JournalModel {
         busyFilms.insert(id)
         mediaRevision = UUID()
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
-        try await screenAwake.during {
+        try await developing(retry: "Apply sound choice") {
             try await processor.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: mediaCatalog)
         }
     }
@@ -306,7 +316,10 @@ final class JournalModel {
         if let sequence {
             // Discard tombstones only this revealed capture, including any staged copy of it.
             // Another capture's unfinished save stays staged for its retry. A Movie's discard develops its Movie again.
-            try await screenAwake.during { try await processor.discard(filmID: id, sequence: sequence) }
+            do { try await screenAwake.during { try await processor.discard(filmID: id, sequence: sequence) } }
+            catch let error where discardLeftAMovieToRebuild(id, sequence: sequence) {
+                throw DevelopmentFailure(underlying: error, retry: "Rebuild Movie")
+            }
         } else {
             #if DEBUG
             developedPreviews.clear(filmID: id)
@@ -315,6 +328,13 @@ final class JournalModel {
             try await capture.cancelForPrivacy(filmID: id)
             try await trial.deleteFilm(filmID: id, processor: processor)
         }
+    }
+
+    /// Whether the discard of `sequence` is recorded and the Film has a Movie to make again: the discard develops that
+    /// Movie again (`FilmProcessor.discard`), so its failure is that Development's, which Rebuild Movie tries again.
+    private func discardLeftAMovieToRebuild(_ id: UUID, sequence: Int) -> Bool {
+        guard let film = try? repository.film(id: id) else { return false }
+        return film.canPlaybackDevelopedMovie && film.captures.contains { $0.sequenceNumber == sequence && $0.isDiscarded }
     }
 
     func export(_ id: UUID, originals: Bool) async throws {
