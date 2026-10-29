@@ -2313,12 +2313,13 @@ Run only against the pinned candidate and only after the captain authorizes the 
 ## Finish & Develop Early on a Real iPhone
 
 On 2026-10-28 the captain renamed the photo Roll Cameras' early-finish action from **Rewind & Develop Early** to **Finish & Develop Early**, because neither original rewinds its film at the end; the Movie Cameras keep **Stop & Develop Early**, the Instant still has no early end, and the rule is unchanged: the rest of the roll is wasted after the confirmation that names the exact number of exposures ([078](finish-and-develop-early-078.md), DEC-01 in part).
-The simulator holds the label on the Disposable and the 6×6 at all 12 text sizes and the Movie's label beside it (`FinishEarlyWorkflowTests`); only a phone shows how the menu reads and how VoiceOver says it.
+He also gave the photo item the skip-to-end symbol (⏭, `forward.end`) in place of skip-back (⏮, `backward.end`), which the Movie's item keeps.
+The simulator holds the label and its symbol on the Disposable and the 6×6 at the default text size and at AX XXXL, and the Movie's label and symbol beside them (`FinishEarlyWorkflowTests`); only a phone shows how the menu reads and how VoiceOver says it.
 The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), on test Films that can be finished.
 Each scenario reads **UNTESTED: physical execution deferred**.
 
-### F01 - The label on the Disposable and the 6×6
+### F01 - The label and symbol on the Disposable and the 6×6
 
 **Steps.**
 
@@ -2330,12 +2331,12 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 **Expect.**
 
-- The Disposable's and the 6×6's menus read **Finish & Develop Early**, whole at the default and the largest text size, and no screen says **Rewind & Develop Early**.
-- The confirmation is unchanged: **Complete Film early?**, the exact number of exposures that will be wasted, and **Complete Film**; afterwards the Film is complete and offers **Develop Film**.
-- The Movie's menu reads **Stop & Develop Early**, and the Instant's menu has no early end.
+- The Disposable's and the 6×6's menus read **Finish & Develop Early**, whole at the default and the largest text size, beside the skip-to-end symbol (⏭) at the default size (at the largest size the system menu draws no symbol beside any item), and no screen says **Rewind & Develop Early**.
+- The confirmation is unchanged: **Complete Film early?**, the exact number of exposures that will be wasted, and **Complete Film**; afterwards the **Development** sheet opens by itself; closed without developing, the Film is complete and offers **Develop Film**.
+- The Movie's menu reads **Stop & Develop Early** beside the skip-back symbol (⏮) at the default size, and the Instant's menu has no early end.
 
 **It fails if.**
-Any screen shows **Rewind & Develop Early**, the label is cut or overlaps another item at either size, the confirmation's count differs from the exposures left, or a Movie or Instant menu changed.
+Any screen shows **Rewind & Develop Early**, the photo item shows the skip-back symbol, the label is cut or overlaps another item at either size, the confirmation's count differs from the exposures left, or a Movie or Instant menu changed.
 
 **Write down.**
 A screenshot of each menu at both text sizes and of the confirmation.

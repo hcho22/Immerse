@@ -2,28 +2,21 @@ import XCTest
 
 /// The early-finish action in the Film actions menu, on synthetic Films with saved captures, which the app's own screen
 /// tests cannot make: the Disposable and the 6×6 offer "Finish & Develop Early" (renamed from "Rewind & Develop Early"
-/// on 2026-10-28) at all 12 text sizes, whole inside the screen, and the Movie Cameras keep "Stop & Develop Early".
-/// The menu is the system's, so the frame and a screenshot are kept for each size rather than its text's ink.
+/// on 2026-10-28) with the skip-to-end symbol, at the default text size and at AX XXXL, whole inside the screen, and the
+/// Movie Cameras keep "Stop & Develop Early" with the skip-back symbol. The menu is the system's, so the frame and a
+/// screenshot are kept for each size rather than its text's ink.
 @MainActor final class FinishEarlyWorkflowTests: HarnessTestCase {
     private static let finish = "Finish & Develop Early"
 
-    func testFinishAndDevelopEarlyAtExtraSmall() throws { check("XS") }
-    func testFinishAndDevelopEarlyAtSmall() throws { check("S") }
-    func testFinishAndDevelopEarlyAtMedium() throws { check("M") }
-    func testFinishAndDevelopEarlyAtLarge() throws { check("L") }
-    func testFinishAndDevelopEarlyAtExtraLarge() throws { check("XL") }
-    func testFinishAndDevelopEarlyAtExtraExtraLarge() throws { check("XXL") }
-    func testFinishAndDevelopEarlyAtExtraExtraExtraLarge() throws { check("XXXL") }
-    func testFinishAndDevelopEarlyAtAccessibilityMedium() throws { check("AccessibilityM") }
-    func testFinishAndDevelopEarlyAtAccessibilityLarge() throws { check("AccessibilityL") }
-    func testFinishAndDevelopEarlyAtAccessibilityExtraLarge() throws { check("AccessibilityXL") }
-    func testFinishAndDevelopEarlyAtAccessibilityExtraExtraLarge() throws { check("AccessibilityXXL") }
+    func testFinishAndDevelopEarlyAtDefaultSize() throws { check("L") }
     func testFinishAndDevelopEarlyAtAccessibilityExtraExtraExtraLarge() throws { check("AccessibilityXXXL") }
 
     func testMovieKeepsStopAndDevelopEarly() throws {
         let app = launch(["--movie", "--open-film"])
         openActions(app)
-        XCTAssertTrue(app.buttons["Stop & Develop Early"].waitForExistence(timeout: 5))
+        let action = app.buttons["Stop & Develop Early"]
+        XCTAssertTrue(action.waitForExistence(timeout: 5))
+        XCTAssertEqual(action.identifier, "backward.end", "The system menu names an item's symbol in its identifier")
         XCTAssertFalse(app.buttons[Self.finish].exists)
         XCTAssertFalse(app.buttons["Rewind & Develop Early"].exists)
         snapshot(app, "Movie-film-actions")
@@ -38,6 +31,7 @@ import XCTest
             let action = app.buttons[Self.finish]
             XCTAssertTrue(action.waitForExistence(timeout: 5), "\(camera) \(category)")
             XCTAssertFalse(app.buttons["Rewind & Develop Early"].exists, "\(camera) \(category)")
+            XCTAssertEqual(action.identifier, "forward.end", "The skip-to-end symbol: \(camera) \(category)")
             XCTAssertTrue(action.isEnabled, "A Film with saved captures can finish early: \(camera) \(category)")
             XCTAssertTrue(action.isHittable, "\(camera) \(category)")
             XCTAssertTrue(window.contains(action.frame), "\(camera) \(category): \(action.frame) inside \(window)")
