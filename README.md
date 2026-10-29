@@ -6,7 +6,7 @@ You load a Film into one of five period Cameras, capture without seeing results,
 
 This README describes the app as it exists on `main` today.
 Where the product documents and the code differ, it describes the code and notes the gap.
-Nothing in the [PRD amendment of 2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) (FR-22 to FR-35) is built yet, so the changes it specifies are not described here.
+The [PRD amendment of 2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) (FR-22 to FR-35) is built on `main` (pull request #63, merged 2026-10-28), but this README does not yet describe the changes it specifies.
 
 ## What the current build does
 
