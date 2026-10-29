@@ -472,12 +472,16 @@ struct DevelopedPreviewNotice: View {
 
 /// Says on the shooting screen that Develop at once is on, whenever it is on for that Camera, so a screenshot of a Camera
 /// that previews its captures is never taken for the real thing. It sits beside Done in the shooting header (`CaptureDoneRow`).
+/// Held sideways the top bar has room only for pieces that turn in place, so the notice is its hammer alone, turned to
+/// read upright, and VoiceOver still reads it whole.
 struct DevelopAtOnceNotice: View {
+    @Environment(\.heldTurn) private var turn
+
     var body: some View {
         // Short enough to stay beside Done in the one-line header.
         HStack(spacing: 4) {
-            Image(systemName: "hammer")
-            Text("Develop at once")
+            Image(systemName: "hammer").turnedWithTheHold()
+            if !turn.isSideways { Text("Develop at once") }
         }
         .font(.caption2.weight(.semibold))
         .padding(.horizontal, 6).padding(.vertical, 4)
@@ -490,11 +494,10 @@ struct DevelopAtOnceNotice: View {
     }
 }
 
-/// The header's first line: Done against the leading edge and, where a second view is given, Develop at once's notice
-/// at the far end where the two fit on one line, as they always do held upright, or under Done where they do not, as in
-/// the header's shorter lines with the iPhone on its side, which lengthens the turned header across the screen but not
-/// the height it reserves. Beside Done the notice is shorter than it, so the header, and the viewfinder under it, keep
-/// their heights whether the switch is on or off. One layout for both, so Done keeps its view.
+/// The upright header's first line: Done against the leading edge and, where a second view is given, Develop at once's
+/// notice at the far end where the two fit on one line, as they always do on the shooting screen's top bar, or under Done
+/// in a row too short for both. Beside Done the notice is shorter than it, so the header, and the viewfinder under it,
+/// keep their heights whether the switch is on or off. One layout for both, so Done keeps its view.
 struct DoneRowLayout: Layout {
     var spacing: CGFloat = 8
 
