@@ -138,6 +138,8 @@ Read `Evidence/NativeApp/visual-sweep-048.md` for the outcomes and limits.
 Stock; without it a Camera with a Film Stock gets Load Film's default, color.
 `--super8` loads the `--movie` Film on the Super 8 instead of the 16mm, and `--landscape-movie` locks it landscape where it is otherwise portrait.
 `--earlier-package` loads the `--movie` 16mm Film on the package a build before live sound locked, which records no sound.
+`--recorded-sound` saves the `--movie` Film one Recorded Clip with Live Audio in place of its two silent clips: a generated picture with a stereo AAC tone, ten seconds long unless `--clip-seconds` gives another length.
+The harness forwards its scene's phase to `JournalModel.sceneChanged(to:)`, as the app does, so a harness Film's Development stops when the harness leaves the screen and its camera pauses when the scene goes inactive; `DevelopmentStopWorkflowTests` locks the simulator partway through a Development and resumes it ([079](../../Evidence/NativeApp/development-stop-079.md)).
 `--open-film` leaves the seeded `--medium-format` or `--movie` Film open with its saved captures, where it is otherwise finished early and developed, so its Film actions menu offers the early finish (`FinishEarlyWorkflowTests`).
 `--photo-source PATH` and
 `--movie-source PATH` capture an existing still or silent movie instead of the generated fixtures, so screenshots can

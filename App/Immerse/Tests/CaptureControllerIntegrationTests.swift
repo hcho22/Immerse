@@ -257,7 +257,7 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         model.capture.presented = true
         _ = try stageUnfinishedSave(film, model)
         try await openWithoutSimulatorCamera(film, model)
-        try await waitUntil { model.capture.message?.hasPrefix(FailureCopy.retry) == true }
+        try await waitUntil { model.capture.message?.hasPrefix("Development stopped before it finished.") == true }
         XCTAssertNil(model.alert, "Over the camera the failure shows once, on the camera")
     }
 

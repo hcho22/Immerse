@@ -11,7 +11,9 @@ public enum NativeRenderError: Error, Equatable {
     /// A movie that cannot be developed or assembled. Where AVFoundation could not read a clip, `underlying` is the error
     /// it gave, for diagnosis: the failure text a person sees is the same either way.
     case invalidMovie(underlying: NSError? = nil)
-    case writerFailed
+    /// A movie that could not be written. Where AVFoundation's writer failed, `underlying` is the error it gave, so a
+    /// full disk, or iOS taking the encoder from an app that left the screen, can be told from other failures.
+    case writerFailed(underlying: NSError? = nil)
     case writerTimedOut
     /// An Instant master that is not the card-sized print every developed Instant exposure is.
     case instantMasterWithoutCard
@@ -265,7 +267,7 @@ public enum NativePhotoRenderer {
     }
 
     /// Core Image's context for straightening, made once: a context is safe to share.
-    nonisolated(unsafe) private static let straighteningContext = CIContext(options: [.cacheIntermediates: false])
+    private static let straighteningContext = CIContext(options: [.cacheIntermediates: false])
 
     /// Applies a smooth radial exposure change that reaches the requested stop value at each print corner.
     private static func applyVignette(_ stops: Double, to image: CIImage) -> CIImage {

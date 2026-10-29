@@ -1,3 +1,4 @@
+@preconcurrency import AVFoundation
 import CoreGraphics
 import CryptoKit
 import EntitlementCore
@@ -121,7 +122,18 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                 let source = { (flag: String) -> URL? in
                     arguments.firstIndex(of: flag).flatMap { arguments.indices.contains($0 + 1) ? URL(fileURLWithPath: arguments[$0 + 1]) : nil }
                 }
-                if movie {
+                if movie, arguments.contains("--recorded-sound") {
+                    // `--recorded-sound` saves one Recorded Clip with Live Audio in place of the two silent clips, ten
+                    // seconds long unless `--clip-seconds` says otherwise, as a 16mm or Super 8 records with the
+                    // microphone allowed.
+                    let seconds = arguments.firstIndex(of: "--clip-seconds")
+                        .flatMap { arguments.indices.contains($0 + 1) ? Double(arguments[$0 + 1]) : nil } ?? 10
+                    let clip = fixtures.appendingPathComponent("recorded-clip-with-sound.mov")
+                    try await Self.writeClipWithSound(to: clip, seconds: seconds)
+                    let recorded = try await VerifiedMedia.movie(at: clip, allowsAudio: true)
+                    try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip),
+                        durationSeconds: recorded.durationSeconds ?? 0, orientation: .landscape)
+                } else if movie {
                     let clip = source("--movie-source") ?? fixtures.appendingPathComponent("synthetic-developed-movie.mov")
                     let data = try Data(contentsOf: clip)
                     let seconds = source("--movie-source") == nil ? manifest.movie.durationSeconds
@@ -244,7 +256,9 @@ private struct FixtureTrialStore: DeviceTrialStoring {
 
     private func assetHash(film: Film, sequence: Int, kind: StoredAsset.Kind) async throws -> String? {
         guard let asset = try model.repository.mediaAsset(filmID: film.id, sequenceNumber: sequence, kind: kind) else { return nil }
-        let verified = film.camera.medium == .photo ? try VerifiedMedia.photo(at: asset.url) : try await VerifiedMedia.movie(at: asset.url)
+        // A clip, and the Movie made from it, can carry the Live Audio a sound-recording Camera records.
+        let verified = film.camera.medium == .photo ? try VerifiedMedia.photo(at: asset.url)
+            : try await VerifiedMedia.movie(at: asset.url, allowsAudio: film.camera.recordsLiveSound == true)
         guard verified.sha256 == asset.record.sha256 else { throw PersistenceError.mediaChangedDuringVerification }
         return verified.sha256
     }
@@ -260,6 +274,91 @@ private struct FixtureTrialStore: DeviceTrialStoring {
 }
 
 extension WorkflowScenario {
+    /// A clip as a movie Camera writes one with the microphone allowed: a 320 by 240 H.264 picture at 30 frames a second
+    /// that brightens as it plays, with a stereo 440 Hz tone in AAC at 48 kHz beside it.
+    static func writeClipWithSound(to url: URL, seconds: Double) async throws {
+        let (width, height, rate, packet) = (320, 240, 48_000.0, 1024)
+        let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
+        let picture = AVAssetWriterInput(mediaType: .video, outputSettings: [
+            AVVideoCodecKey: AVVideoCodecType.h264, AVVideoWidthKey: width, AVVideoHeightKey: height
+        ])
+        let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: picture, sourcePixelBufferAttributes: [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height
+        ])
+        let sound = AVAssetWriterInput(mediaType: .audio, outputSettings: [
+            AVFormatIDKey: kAudioFormatMPEG4AAC, AVSampleRateKey: rate, AVNumberOfChannelsKey: 2
+        ])
+        // Real-time inputs, as the camera's movie output writes: neither waits for the other to interleave.
+        picture.expectsMediaDataInRealTime = true
+        sound.expectsMediaDataInRealTime = true
+        writer.add(picture)
+        writer.add(sound)
+        guard writer.startWriting() else { throw WorkflowError.cannotReseedHistory }
+        writer.startSession(atSourceTime: .zero)
+        var format = AudioStreamBasicDescription(mSampleRate: rate, mFormatID: kAudioFormatLinearPCM,
+            mFormatFlags: kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked, mBytesPerPacket: 4,
+            mFramesPerPacket: 1, mBytesPerFrame: 4, mChannelsPerFrame: 2, mBitsPerChannel: 16, mReserved: 0)
+        var description: CMAudioFormatDescription?
+        CMAudioFormatDescriptionCreate(allocator: nil, asbd: &format, layoutSize: 0, layout: nil, magicCookieSize: 0,
+                                       magicCookie: nil, extensions: nil, formatDescriptionOut: &description)
+        guard let description else { throw WorkflowError.cannotReseedHistory }
+        let frames = Int(seconds * 30)
+        var soundTime = 0
+        for frame in 0..<frames {
+            // The sound up to the end of this picture frame, then the frame.
+            while Double(soundTime) / rate < Double(frame + 1) / 30 {
+                while !sound.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
+                var samples = [Int16](repeating: 0, count: packet * 2)
+                for index in 0..<packet {
+                    let value = Int16(sin(Double(soundTime + index) * 2 * .pi * 440 / rate) * 4_000)
+                    samples[2 * index] = value; samples[2 * index + 1] = value
+                }
+                var block: CMBlockBuffer?
+                CMBlockBufferCreateWithMemoryBlock(allocator: nil, memoryBlock: nil, blockLength: packet * 4,
+                    blockAllocator: nil, customBlockSource: nil, offsetToData: 0, dataLength: packet * 4, flags: 0,
+                    blockBufferOut: &block)
+                guard let block else { throw WorkflowError.cannotReseedHistory }
+                samples.withUnsafeBytes { _ = CMBlockBufferReplaceDataBytes(with: $0.baseAddress!, blockBuffer: block,
+                                                                            offsetIntoDestination: 0, dataLength: packet * 4) }
+                var buffer: CMSampleBuffer?
+                CMAudioSampleBufferCreateReadyWithPacketDescriptions(allocator: nil, dataBuffer: block,
+                    formatDescription: description, sampleCount: packet,
+                    presentationTimeStamp: CMTime(value: CMTimeValue(soundTime), timescale: CMTimeScale(rate)),
+                    packetDescriptions: nil, sampleBufferOut: &buffer)
+                guard let buffer, sound.append(buffer) else { throw WorkflowError.cannotReseedHistory }
+                soundTime += packet
+            }
+            while !picture.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
+            var buffer: CVPixelBuffer?
+            guard let pool = adaptor.pixelBufferPool else { throw WorkflowError.cannotReseedHistory }
+            CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer)
+            guard let pixels = buffer else { throw WorkflowError.cannotReseedHistory }
+            CVPixelBufferLockBaseAddress(pixels, [])
+            let base = CVPixelBufferGetBaseAddress(pixels)!.assumingMemoryBound(to: UInt8.self)
+            let row = CVPixelBufferGetBytesPerRow(pixels)
+            for y in 0..<height {
+                for x in 0..<width {
+                    // Blue, green, red and alpha: a warm half and a cool half.
+                    let pixel = base + y * row + x * 4
+                    pixel[0] = x < width / 2 ? 60 : 170
+                    pixel[1] = UInt8(60 + frame % 120)
+                    pixel[2] = x < width / 2 ? 190 : 70
+                    pixel[3] = 255
+                }
+            }
+            CVPixelBufferUnlockBaseAddress(pixels, [])
+            guard adaptor.append(pixels, withPresentationTime: CMTime(value: CMTimeValue(frame), timescale: 30)) else {
+                throw WorkflowError.cannotReseedHistory
+            }
+        }
+        picture.markAsFinished()
+        sound.markAsFinished()
+        writer.endSession(atSourceTime: CMTime(value: CMTimeValue(frames), timescale: 30))
+        await writer.finishWriting()
+        guard writer.status == .completed else { throw WorkflowError.cannotReseedHistory }
+    }
+
     /// A 320 by 240 JPEG of one plain color, the `index`th of red, green and blue.
     static func plainScene(_ index: Int) throws -> Data {
         let colors: [(CGFloat, CGFloat, CGFloat)] = [(0.85, 0.15, 0.12), (0.15, 0.7, 0.2), (0.12, 0.25, 0.85)]

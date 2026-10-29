@@ -5,6 +5,15 @@ import RenderCore
 import NativeAdapters
 import MediaCatalog
 
+/// Development, or a developed Movie's rebuild, that `FilmProcessor.suspendProcessing` stopped as the app left the screen.
+/// It is thrown whatever the stopped work ended with: iOS takes an app's graphics and video work away once it leaves the
+/// screen, so a clip being written then fails as it stops, and that failure is the stop's, not a fault of the Film.
+/// Nothing is lost: every capture and every Developed Clip already saved stays, and the next Development goes on from
+/// them.
+public struct DevelopmentSuspended: Error, Equatable {
+    public init() {}
+}
+
 public actor FilmProcessor {
     private let root: URL
     private let repository: FilmRepository
@@ -13,6 +22,11 @@ public actor FilmProcessor {
     private struct Job {
         let task: Task<Void, Error>
         let suspendable: Bool
+        /// Set when `suspendProcessing` stopped the job.
+        let suspension = Suspension()
+    }
+    private final class Suspension {
+        var requested = false
     }
     private var jobs: [UUID: Job] = [:]
     private var removing: Set<UUID> = []
@@ -25,20 +39,32 @@ public actor FilmProcessor {
 
     public func develop(filmID: UUID) async throws {
         guard !removing.contains(filmID) else { throw PersistenceError.filmNotFound }
-        if let job = jobs[filmID] { return try await job.task.value }
+        if let job = jobs[filmID] { return try await outcome(of: job) }
         let root = self.root
         let observer = developmentObserver
-        let job = Task.detached { try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer) }
-        jobs[filmID] = Job(task: job, suspendable: true)
+        let job = Job(task: Task.detached { try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer) },
+                      suspendable: true)
+        jobs[filmID] = job
         defer { jobs[filmID] = nil }
-        try await job.value
+        try await outcome(of: job)
     }
 
-    /// Stops Development and Movie work before the app is suspended. Exports keep running.
+    /// Stops Development and Movie work before the app is suspended. Exports keep running. Each stopped job's callers
+    /// get `DevelopmentSuspended`.
     public func suspendProcessing() async {
-        let active = jobs.values.filter(\.suspendable).map(\.task)
-        for task in active { task.cancel() }
-        for task in active { _ = await task.result }
+        let active = jobs.values.filter(\.suspendable)
+        for job in active {
+            job.suspension.requested = true
+            job.task.cancel()
+        }
+        for job in active { _ = await job.task.result }
+    }
+
+    /// A job's outcome for its callers. Once `suspendProcessing` has stopped it, any failure is the stop's: a clip whose
+    /// encoder iOS took away fails rather than ending at its next cancellation check.
+    private func outcome(of job: Job) async throws {
+        do { try await job.task.value }
+        catch where job.suspension.requested { throw DevelopmentSuspended() }
     }
 
     public func discard(filmID: UUID, sequence: Int) async throws {
@@ -105,9 +131,10 @@ public actor FilmProcessor {
             try Task.checkCancellation()
             try await DevelopmentWorker.run(root: root, filmID: filmID, observer: observer)
         }
-        jobs[filmID] = Job(task: job, suspendable: true)
+        let movieJob = Job(task: job, suspendable: true)
+        jobs[filmID] = movieJob
         defer { jobs[filmID] = nil }
-        try await job.value
+        try await outcome(of: movieJob)
     }
 
     /// Photos permission is settled before the export starts, so its prompt never interrupts a write.

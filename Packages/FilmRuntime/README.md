@@ -4,6 +4,13 @@
 The ordinary app constructs `FilmProcessor(root:)`. Trial/capture serialization
 is separately owned by `TrialCoordinator`; these Development hooks do not alter it.
 
+`suspendProcessing` stops Development and Movie rebuilds as the app leaves the
+screen; exports keep running. A job it stopped reports `DevelopmentSuspended` to
+its callers whatever the stopped work ended with, since iOS takes the video
+encoder from an app leaving the screen and a clip being written then fails as it
+stops (`Evidence/NativeApp/development-stop-079.md`). A job stopped by deleting
+or discarding still ends with `CancellationError`.
+
 ## Development Observation
 
 The optional `developmentObserver` initializer argument is absent by default.
