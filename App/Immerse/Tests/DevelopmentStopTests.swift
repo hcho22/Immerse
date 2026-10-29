@@ -156,19 +156,9 @@ final class DevelopmentStopTests: XCTestCase {
     func testASoundChangeAndADiscardsRebuildSayWhatWentWrongWithTheirOwnButton() async throws {
         let failing = FailsNextDevelopment()
         let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
-                                     developmentObserver: { try await failing.observe($1) })
+                                     developmentObserver: { try await failing.observe($0, $1) })
         await model.recoverAtLaunch()
-        let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
-                                                   movieOrientation: .portrait, filmStock: .blackAndWhite,
-                                                   access: .subscription)
-        for index in 1...2 {
-            let clip = root.appendingPathComponent("clip-\(index).mov")
-            try await writeClipWithSound(to: clip, seconds: 1)
-            try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip), durationSeconds: 1,
-                                               orientation: .portrait)
-        }
-        _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: 2)
-        model.refresh()
+        let film = try await reel(model, clips: 2)
         try await model.develop(film.id)
         XCTAssertEqual(model.film(film.id)?.developmentState, .developed)
 
@@ -193,6 +183,71 @@ final class DevelopmentStopTests: XCTestCase {
         // Rebuild Movie.
         try await model.develop(film.id)
         XCTAssertNotNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
+    }
+
+    /// Once a Movie Film reads Developed and plays its Movie, its originals chosen to be removed go after it. A stop then,
+    /// as Immerse leaves the screen and iOS takes the decoder reading the Developed Clip, shows nothing, as before the stop
+    /// was reported: nothing the person needs was lost, and the originals stay.
+    func testAStopWhileTheOriginalsAreRemovedAfterTheFilmIsDevelopedShowsNothing() async throws {
+        let failing = FailsNextDevelopment()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     developmentObserver: { try await failing.observe($0, $1) })
+        failing.model = model
+        await model.recoverAtLaunch()
+        let film = try await reel(model, clips: 1)
+        // Remove originals after verified Development, then Develop Film.
+        try model.chooseOriginals(film.id, sequences: [1], export: false)
+        failing.armAtTheOriginalsRemoval(leavingTheScreen: true)
+        model.perform { try await model.develop(film.id) }
+        try await waitUntil { failing.reachedTheOriginalsRemoval && model.busyFilms.isEmpty }
+        XCTAssertNil(model.alert, "Nothing the person needs was lost")
+        let developed = try XCTUnwrap(model.film(film.id))
+        XCTAssertEqual(developed.developmentState, .developed)
+        XCTAssertNoThrow(try model.repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
+        XCTAssertNotNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 1, kind: .source),
+                        "The original stays")
+    }
+
+    /// A Rebuild Movie that makes the Movie and then fails to remove the originals chosen to be removed: the Film's screen
+    /// plays the Movie again and shows no Rebuild Movie, so the message names no button and says what is left.
+    func testARebuildWhoseOriginalsAreNotRemovedSaysSoAndNamesNoButton() async throws {
+        let failing = FailsNextDevelopment()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     developmentObserver: { try await failing.observe($0, $1) })
+        failing.model = model
+        await model.recoverAtLaunch()
+        let film = try await reel(model, clips: 2)
+        try await model.develop(film.id)
+        // A discard whose Movie is not made again leaves Rebuild Movie in the Movie's place.
+        failing.arm(NativeRenderError.writerFailed(underlying: NSError(domain: AVFoundationErrorDomain, code: -11800)))
+        _ = try await failure { try await model.remove(film.id, sequence: 1) }
+        XCTAssertNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 0, kind: .movie))
+        try model.chooseOriginals(film.id, sequences: [2], export: false)
+
+        // Rebuild Movie, whose originals' removal cannot read the Developed Clip.
+        failing.armAtTheOriginalsRemoval(leavingTheScreen: false)
+        let rebuild = try await failure { try await model.develop(film.id) }
+        XCTAssertTrue(failing.reachedTheOriginalsRemoval)
+        XCTAssertEqual(FailureCopy.message(for: rebuild), "This Film is developed, but its originals were not removed yet.")
+        XCTAssertNoThrow(try model.repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie),
+                         "The Film's screen plays the Movie, with no Rebuild Movie")
+        XCTAssertNotNil(try model.repository.mediaAsset(filmID: film.id, sequenceNumber: 2, kind: .source))
+    }
+
+    /// Develop Film on a full iPhone, failing before Development starts: the Film still offers Develop Film, which the
+    /// message names.
+    func testDevelopFilmOnAFullIPhoneBeforeDevelopmentStartsNamesDevelopFilm() async throws {
+        let failing = FailsNextDevelopment()
+        let model = try JournalModel(root: root, trialStore: KeychainDeviceTrialStore(calls: HeldReceiptCalls()),
+                                     developmentObserver: { try await failing.observe($0, $1) })
+        await model.recoverAtLaunch()
+        let film = try roll(model, title: "Full roll")
+        failing.arm(PersistenceError.outOfSpace)
+        let full = try await failure { try await model.develop(film.id) }
+        XCTAssertEqual(FailureCopy.message(for: full), "This iPhone is out of space, so Development stopped. Saved captures are unchanged. Free space in iPhone Settings, then tap Develop Film.")
+        let unstarted = try XCTUnwrap(model.film(film.id))
+        XCTAssertEqual(unstarted.developmentState, .notStarted)
+        XCTAssertTrue(unstarted.canStartDevelopment)
     }
 
     /// The screen stays on while any Development runs and may sleep again however it ends: finished, failed, or stopped
@@ -310,6 +365,14 @@ final class DevelopmentStopTests: XCTestCase {
         XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: PersistenceError.outOfSpace,
                                                                    retry: "Resume Development", atTheCamera: true)),
                        "This iPhone is out of space, so Development stopped. Saved captures are unchanged. Free space in iPhone Settings, then open the Film and tap Resume Development.")
+        // Once the Film shows its developed result, no button develops it again.
+        for retry in ["Resume Development", nil] {
+            XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(
+                underlying: OriginalsNotRemoved(underlying: PersistenceError.invalidMedia), retry: retry)),
+                "This Film is developed, but its originals were not removed yet.")
+        }
+        XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: NativeRenderError.renderFailed, retry: nil)),
+                       FailureCopy.retry)
         XCTAssertNil(FailureCopy.message(for: DevelopmentFailure(underlying: CancellationError(), retry: "Resume Development")))
         XCTAssertEqual(FailureCopy.message(for: DevelopmentFailure(underlying: PersistenceError.operationInProgress,
                                                                    retry: "Resume Development")),
@@ -333,6 +396,22 @@ final class DevelopmentStopTests: XCTestCase {
         try await waitUntil { model.film(film.id)?.savedCaptureCount == 1 }
         _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: 1)
         try model.chooseOriginals(film.id, sequences: [1], export: false)
+        model.refresh()
+        return try XCTUnwrap(model.film(film.id))
+    }
+
+    /// A 16mm Film on the black and white Film Stock with `clips` one-second Recorded Clips with Live Audio, stopped early.
+    private func reel(_ model: JournalModel, clips: Int) async throws -> Film {
+        let film = try model.repository.createFilm(camera: CameraCatalog.cinema16mm, title: "Synthetic reel",
+                                                   movieOrientation: .portrait, filmStock: .blackAndWhite,
+                                                   access: .subscription)
+        for index in 1...clips {
+            let clip = root.appendingPathComponent("clip-\(index).mov")
+            try await writeClipWithSound(to: clip, seconds: 1)
+            try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip), durationSeconds: 1,
+                                               orientation: .portrait)
+        }
+        _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: clips)
         model.refresh()
         return try XCTUnwrap(model.film(film.id))
     }
@@ -506,20 +585,46 @@ private final class EncoderTakenFirst: Sendable {
     var text: String?
 }
 
-/// Fails the next Development, a Movie's rebuild included, as it begins, with the error the test arms it with.
+/// Fails the next Development, a Movie's rebuild included: as it begins, with the error the test arms it with, or once its
+/// result is made, by making its Developed Clips unreadable as the originals chosen to be removed go, leaving the screen
+/// first if asked, as iOS takes the decoder from an app that leaves.
 @MainActor private final class FailsNextDevelopment {
+    weak var model: JournalModel?
     private var armed: Error?
+    /// Armed for the originals' removal: whether to leave the screen there.
+    private var leavesTheScreenAtTheOriginalsRemoval: Bool?
+    private(set) var reachedTheOriginalsRemoval = false
 
     func arm(_ failure: Error) { armed = failure }
 
-    nonisolated func observe(_ stage: DevelopmentStage) async throws {
-        guard stage == .beforeBegin, let failure = await take() else { return }
-        throw failure
+    func armAtTheOriginalsRemoval(leavingTheScreen: Bool) { leavesTheScreenAtTheOriginalsRemoval = leavingTheScreen }
+
+    nonisolated func observe(_ film: UUID, _ stage: DevelopmentStage) async throws {
+        switch stage {
+        case .beforeBegin: if let failure = await take() { throw failure }
+        case .beforeRevealOrCleanup(.sourceCleanup): try await breakTheDevelopedClips(of: film)
+        default: break
+        }
     }
 
     private func take() -> Error? {
         defer { armed = nil }
         return armed
+    }
+
+    private func breakTheDevelopedClips(of filmID: UUID) throws {
+        guard let leaves = leavesTheScreenAtTheOriginalsRemoval, let model else { return }
+        leavesTheScreenAtTheOriginalsRemoval = nil
+        reachedTheOriginalsRemoval = true
+        if leaves {
+            model.sceneChanged(to: .inactive)
+            model.sceneChanged(to: .background)
+        }
+        for capture in try model.repository.film(id: filmID).captures where !capture.isDiscarded {
+            if let clip = try model.repository.mediaAsset(filmID: filmID, sequenceNumber: capture.sequenceNumber, kind: .clip) {
+                try Data("not a clip".utf8).write(to: clip.url)
+            }
+        }
     }
 }
 

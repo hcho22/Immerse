@@ -294,9 +294,9 @@ enum PrivacyCopy {
 /// says why in Development's own words and how to try again from the screen that shows it.
 struct DevelopmentFailure: Error {
     let underlying: Error
-    /// The button that tries again: on the Film's screen Resume Development, or Rebuild Movie for a developed Movie, and
-    /// on the Movie sound sheet Apply sound choice.
-    let retry: String
+    /// The button that tries again, as the failure left the Film: on the Film's screen Develop Film, Resume Development or
+    /// Rebuild Movie, and on the Movie sound sheet Apply sound choice. Nil once the Film shows its developed result.
+    let retry: String?
     /// Whether the message shows at the camera, which has no such button, so it says to open the Film first.
     var atTheCamera = false
 }
@@ -352,13 +352,21 @@ enum FailureCopy {
     /// What stopped a Development, and what the person can do. Storage is named only for a full iPhone.
     static func developmentMessage(for failure: DevelopmentFailure) -> String? {
         let error = failure.underlying
+        switch error {
+        case is CancellationError: return nil
+        case is OriginalsNotRemoved: return "This Film is developed, but its originals were not removed yet."
+        case PersistenceError.filmNotFound: return "This Film is no longer in your Journal, so it was not developed."
+        case JournalError.operationInProgress, PersistenceError.operationInProgress: return message(for: error)
+        default: break
+        }
+        // Once the Film shows its developed result no button develops it again.
+        guard let retry = failure.retry else { return message(for: error) }
         let unchanged = "Saved captures are unchanged."
         // How to try again from the screen that shows the message, within a sentence and to begin one.
-        let tap = (failure.atTheCamera ? "open the Film and tap " : "tap ") + failure.retry
+        let tap = (failure.atTheCamera ? "open the Film and tap " : "tap ") + retry
         let firstTap = tap.prefix(1).uppercased() + tap.dropFirst()
         let again = "\(firstTap) to try again."
         switch error {
-        case is CancellationError: return nil
         case is DevelopmentSuspended:
             return "Development stopped because Immerse left the screen. \(unchanged) \(firstTap) and keep Immerse open until it finishes."
         case _ where OutOfSpace.reported(by: error):
@@ -378,10 +386,6 @@ enum FailureCopy {
             return "The Soundtrack chosen for this Movie could not be read, so the Movie was not made. \(unchanged) Choose the Movie's sound again, or \(tap)."
         case PersistenceError.soundtrackChanged:
             return "The Movie's sound changed while the Movie was being made. \(unchanged) \(firstTap) to make it with the sound now chosen."
-        case PersistenceError.filmNotFound:
-            return "This Film is no longer in your Journal, so it was not developed."
-        case JournalError.operationInProgress, PersistenceError.operationInProgress:
-            return message(for: error)
         default:
             return ["Development stopped before it finished. \(unchanged) \(again)", systemDetail(for: error)]
                 .compactMap { $0 }.joined(separator: " ")

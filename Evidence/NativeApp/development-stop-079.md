@@ -87,7 +87,8 @@ The smallest change that flips the simulator's silent stop into the captain's al
   A full iPhone is reported as itself even then; a failure without the stop, or once Immerse is back on the screen, is reported as itself, so a fault met in the background shows its own words when Resume Development meets it again.
 - `NativeRenderError.writerFailed` carries AVFoundation's error, as `invalidMovie` does since record 070, and SQLite's full disk is `PersistenceError.outOfSpace`, so a real full disk can be told from every other failure.
 - The app wraps a Development's failure as `DevelopmentFailure`, with the button that tries again where the message shows, and `FailureCopy.developmentMessage(for:)` names each cause in plain words.
-  On the Film's screen that is Resume Development, or Rebuild Movie for a developed Movie and for the Movie a discard makes again; on the Movie sound sheet it is Apply sound choice.
+  The button is read from the Film as the failure left it, not as it was before: Develop Film while it can still start, Resume Development while it offers it, and Rebuild Movie for a developed Movie without its Movie; on the Movie sound sheet it is Apply sound choice.
+  Once the Film shows its developed result nothing it needs was lost: a stop then shows nothing, as before this record, and a failure of the originals' removal after it (`OriginalsNotRemoved`, from `DevelopmentWorker`) reads "This Film is developed, but its originals were not removed yet.", with no button and no promise that they will be removed later.
   The camera, where an Instant print develops as it is saved, has no such button, so its notice says "Open the Film and tap Resume Development".
   Storage is named only for a full iPhone (Cocoa's out-of-space, POSIX `ENOSPC` and `EDQUOT`, AVFoundation's disk full, and SQLite's, also beneath another error).
   The general words no longer mention storage: "The operation did not finish. Saved captures remain private; try again."
@@ -106,9 +107,10 @@ The smallest change that flips the simulator's silent stop into the captain's al
 | A writer or render that does not finish | Immerse could not finish writing this Film's developed photos or clips, so Development stopped. |
 | A Soundtrack that cannot be read, or that changed during the Movie's assembly | The Soundtrack chosen for this Movie could not be read, so the Movie was not made. / The Movie's sound changed while the Movie was being made. |
 | The Film was deleted | This Film is no longer in your Journal, so it was not developed. |
+| The originals chosen to be removed were not, after the Film's result was made (`OriginalsNotRemoved`) | This Film is developed, but its originals were not removed yet. (nothing more) |
 | Anything else | Development stopped before it finished. ... Tap Resume Development to try again., with the system's own description when there is one |
 
-The middle rows end "Tap Resume Development to try again.", with Rebuild Movie or Apply sound choice where that is the button; at the camera they end "Open the Film and tap Resume Development to try again."
+The middle rows end "Tap Resume Development to try again.", with Develop Film, Rebuild Movie or Apply sound choice where that is the button; at the camera they end "Open the Film and tap Resume Development to try again."
 
 ## Tests
 
@@ -123,6 +125,9 @@ The middle rows end "Tap Resume Development to try again.", with Rebuild Movie o
 | `DevelopmentStopTests.testAnInstantPrintStoppedAtTheCameraSaysToOpenTheFilmAndResume` | An Instant print stopped at the camera as the app leaves: the camera's notice says to open the Film and tap Resume Development, and Resume Development reveals the print. |
 | `DevelopmentStopTests.testASoundChangeAndADiscardsRebuildSayWhatWentWrongWithTheirOwnButton` | A sound change's and a discard's Movie rebuild fail in Development's words with Apply sound choice and Rebuild Movie; a discard that fails before it is recorded keeps its own words; Rebuild Movie then makes the Movie. |
 | `DevelopmentStopTests.testTheScreenStaysOnWhileADevelopmentRunsAndSleepsHoweverItEnds` | The screen is held during a Development and let go after it finishes, fails, or is stopped by deleting its Film; two at once hold it until the second ends. |
+| `DevelopmentStopTests.testAStopWhileTheOriginalsAreRemovedAfterTheFilmIsDevelopedShowsNothing` | A 16mm Film with its originals to be removed reads Developed and plays its Movie, then Immerse leaves the screen while the originals go and the Developed Clip cannot be read: no alert, and the original stays. |
+| `DevelopmentStopTests.testARebuildWhoseOriginalsAreNotRemovedSaysSoAndNamesNoButton` | A Rebuild Movie that makes the Movie and then cannot remove an original says the Film is developed and its originals were not removed yet, naming no Rebuild Movie, which the playing Movie's screen does not show. |
+| `DevelopmentStopTests.testDevelopFilmOnAFullIPhoneBeforeDevelopmentStartsNamesDevelopFilm` | Develop Film failing for a full iPhone before Development starts names Develop Film, which the Film still offers. |
 | `DevelopmentStopTests.testEveryDevelopmentFailureSaysWhatWentWrong` | Every Development error's words, the button each names, the camera's "Open the Film and tap Resume Development", storage only for a full iPhone, and no internal names. |
 | `PopulatedJournalHarnessTests/DevelopmentStopWorkflowTests.testLockingTheIPhoneDuringDevelopmentSaysSoAndResumeDevelopmentFinishes` | The person's path on the Film screen with a real lock of the simulator partway through: the alert says so, the Film reads Developing, and Resume Development finishes it with "Movie sound: Recorded sound". |
 

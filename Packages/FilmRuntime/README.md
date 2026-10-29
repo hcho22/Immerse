@@ -13,7 +13,8 @@ leaving at once with `appLeftTheScreen`, since the work can fail before the stop
 reaches it: until `appReturnedToTheScreen`, any failure of a Development, a
 discard's Movie rebuild included, is `DevelopmentSuspended`, except a full iPhone,
 which is reported as itself. A job stopped by deleting or discarding still ends
-with `CancellationError`.
+with `CancellationError`. Once a Development's result is made, a failure to
+remove the originals chosen to be removed after it is `OriginalsNotRemoved`.
 
 ## Development Observation
 

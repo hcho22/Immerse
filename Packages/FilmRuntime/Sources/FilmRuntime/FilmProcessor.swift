@@ -16,6 +16,16 @@ public struct DevelopmentSuspended: Error, Equatable {
     public init() {}
 }
 
+/// A Development that made and showed its result, but did not remove the originals the person chose to remove after it:
+/// their verification or removal failed. The developed Film is whole, and its originals stay in Immerse.
+public struct OriginalsNotRemoved: Error {
+    public let underlying: Error
+
+    public init(underlying: Error) {
+        self.underlying = underlying
+    }
+}
+
 /// The system's or the Film store's report that the iPhone is full.
 public enum OutOfSpace {
     /// Whether the error, or one it carries, reports a full iPhone.
@@ -327,7 +337,8 @@ enum DevelopmentWorker {
             try await observer(filmID, .beforeRevealOrCleanup(.sourceCleanup))
             try Task.checkCancellation()
         }
-        try await cleanup(root: root, filmID: filmID)
+        do { try await cleanup(root: root, filmID: filmID) }
+        catch let error where !(error is CancellationError) { throw OriginalsNotRemoved(underlying: error) }
     }
 
     static func cleanup(root: URL, filmID: UUID) async throws {

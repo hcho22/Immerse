@@ -2433,7 +2433,7 @@ The Auto-Lock setting, each Development's time and clip length, whether the scre
 - No alert mentions storage.
 - The Film still reads **Developing**, with every capture counted, and offers **Resume Development**; nothing of it is revealed.
 - **Resume Development** finishes it, with whole pictures and the Movie playing its recorded sound, without force-quitting the app.
-- If the Film reads **Developed** on return, Development finished before the phone locked: repeat with a longer clip or lock sooner.
+- If the Film reads **Developed** on return, Development finished before the phone locked, and no alert shows, even if the lock came while the originals were being removed: repeat with a longer clip or lock sooner.
 
 **It fails if.**
 The alert names storage or any cause other than leaving the screen, the Film or a capture is missing, a half-made picture or Movie shows, or **Resume Development** fails again and again.
