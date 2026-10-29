@@ -60,7 +60,7 @@ jobs:
         run: sh Scripts/validate-local.sh
       # A packages part that failed keeps what the machine recorded about a media read that did not finish: the video
       # decoder's crash and memory-pressure reports, the system log around the failure filtered to it and to the test
-      # processes, and the process-exit probe's unfinished Films (Scripts/collect-failure-evidence.sh), so a clip that
+      # processes, and the process-exit probe's Films (Scripts/collect-failure-evidence.sh), so a clip that
       # failed to read can be told from a decoder that failed (Evidence/NativeApp/developed-clip-reader-failure-070.md).
       - name: Keep the evidence of a failed packages part
         if: failure() && matrix.part == 'packages'

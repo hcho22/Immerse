@@ -3,7 +3,7 @@
 # failed to read on CI can be told from a decoder that failed (Evidence/NativeApp/developed-clip-reader-failure-070.md):
 # the crash and memory-pressure reports of the video decoder service and of the test processes, the system log of the
 # last minutes filtered to them, media errors and memory-pressure lines, and the Film directories of the process-exit
-# probe that did not finish, which hold only synthetic media. It reads nothing else and never fails the job itself.
+# probe, which hold only synthetic media, the newest first up to 100 MB. It reads nothing else and never fails the job.
 # Usage: sh Scripts/collect-failure-evidence.sh [output directory]
 set -u
 out=${1:-DerivedData/FailureEvidence}
@@ -13,7 +13,7 @@ minutes=20
 log_seconds=300
 log_bytes=50000000
 most_reports=20
-most_films=10
+most_film_bytes=100000000
 rm -rf "$out"
 mkdir -p "$out/reports" "$out/films"
 notes="$out/notes.txt"
@@ -56,18 +56,27 @@ rm -f "$out/system-log-status"
 echo "system log: $(wc -c < "$out/system-log.txt" | tr -d ' ') bytes, log show ended with status $status" >> "$notes"
 [ -s "$out/system-log-errors.txt" ] || rm -f "$out/system-log-errors.txt"
 
-# A probe Film whose test finished has its resumed snapshot; one without it is where a test stopped.
+# Every probe Film, finished or not, since a test reads its clips and Movie again after its resumed snapshot; on a fresh
+# runner the folder holds only this run's Films. The newest first, until the copied total would pass the cap.
+for film in "$films"/*/; do
+    [ -d "$film" ] && stat -f '%m %N' "${film%/}"
+done | sort -rn | cut -d ' ' -f 2- > "$out/film-list.txt"
 kept=0
-if [ -d "$films" ]; then
-    for film in "$films"/*/; do
-        film=${film%/}
-        [ -d "$film" ] || continue
-        [ -f "$film/resumed.json" ] && continue
-        [ "$kept" -lt "$most_films" ] || { echo "more unfinished Films than $most_films; the rest were left" >> "$notes"; break; }
-        cp -R "$film" "$out/films/" || echo "could not copy $film" >> "$notes"
-        kept=$((kept + 1))
-    done
-fi
-echo "unfinished probe Films kept: $kept" >> "$notes"
+left=0
+copied=0
+while IFS= read -r film; do
+    if [ "$left" -eq 0 ]; then
+        bytes=$(find "$film" -type f -exec stat -f '%z' {} + | awk '{ total += $1 } END { print total + 0 }')
+        if [ $((copied + bytes)) -le "$most_film_bytes" ]; then
+            cp -R "$film" "$out/films/" || echo "could not copy $film" >> "$notes"
+            copied=$((copied + bytes))
+            kept=$((kept + 1))
+            continue
+        fi
+    fi
+    left=$((left + 1))
+done < "$out/film-list.txt"
+rm -f "$out/film-list.txt"
+echo "probe Films kept: $kept ($copied bytes); left past the $most_film_bytes-byte cap: $left" >> "$notes"
 cat "$notes"
 exit 0
