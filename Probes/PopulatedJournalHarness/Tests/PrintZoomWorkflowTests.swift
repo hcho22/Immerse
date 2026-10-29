@@ -117,8 +117,8 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.5)))
         XCTAssertTrue(isZoomed(preview), "A slider move keeps the zoom")
-        exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.5))
-            .dragThumb(to: exposure.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)))
+        // Back to the developed print exactly, which a drag back to the slider's middle need not land on.
+        app.buttons["Reset to Original"].tap()
         XCTAssertTrue(app.staticTexts["0.0 stops"].waitForExistence(timeout: 5))
 
         app.buttons["Contrast"].tap()
