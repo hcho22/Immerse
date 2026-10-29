@@ -46,7 +46,9 @@ public struct VerifiedMedia: Sendable {
         output.alwaysCopiesSampleData = false
         guard reader.canAdd(output) else { throw PersistenceError.invalidMedia }
         reader.add(output)
-        guard reader.startReading() else { throw PersistenceError.invalidMedia }
+        guard reader.startReading() else {
+            throw PersistenceError.unreadableMedia(MediaReadFailure(.pictureStart, framesRead: 0, reader: reader))
+        }
         defer { if reader.status == .reading { reader.cancelReading() } }
         var frames = 0
         while let sample = output.copyNextSampleBuffer() {
@@ -54,7 +56,10 @@ public struct VerifiedMedia: Sendable {
             guard CMSampleBufferGetImageBuffer(sample) != nil else { throw PersistenceError.invalidMedia }
             frames += 1
         }
-        guard reader.status == .completed, frames > 0 else { throw PersistenceError.invalidMedia }
+        guard reader.status == .completed else {
+            throw PersistenceError.unreadableMedia(MediaReadFailure(.picture, framesRead: frames, reader: reader))
+        }
+        guard frames > 0 else { throw PersistenceError.invalidMedia }
         if let audioTrack = audio.first { _ = try decodeAudio(asset: asset, track: audioTrack) }
         guard try Checksum.sha256Hex(contentsOf: url) == hash else {
             throw PersistenceError.mediaChangedDuringVerification
@@ -80,7 +85,9 @@ public struct VerifiedMedia: Sendable {
         let output = AVAssetReaderTrackOutput(track: track, outputSettings: [AVFormatIDKey: kAudioFormatLinearPCM])
         guard reader.canAdd(output) else { throw PersistenceError.invalidMedia }
         reader.add(output)
-        guard reader.startReading() else { throw PersistenceError.invalidMedia }
+        guard reader.startReading() else {
+            throw PersistenceError.unreadableMedia(MediaReadFailure(.soundStart, framesRead: 0, reader: reader))
+        }
         defer { if reader.status == .reading { reader.cancelReading() } }
         var frames = 0
         while let sample = output.copyNextSampleBuffer() {
@@ -90,7 +97,10 @@ public struct VerifiedMedia: Sendable {
             }
             frames += CMSampleBufferGetNumSamples(sample)
         }
-        guard reader.status == .completed, frames > 0 else { throw PersistenceError.invalidMedia }
+        guard reader.status == .completed else {
+            throw PersistenceError.unreadableMedia(MediaReadFailure(.sound, framesRead: frames, reader: reader))
+        }
+        guard frames > 0 else { throw PersistenceError.invalidMedia }
         return frames
     }
 
@@ -100,6 +110,86 @@ public struct VerifiedMedia: Sendable {
         self.durationSeconds = durationSeconds
         self.decodedFrameCount = decodedFrameCount
         self.audioTrackCount = audioTrackCount
+    }
+}
+
+/// What AVFoundation said about a read that did not finish: which read it was and where it stopped, how many frames it
+/// had read, the reader's status, and its error with every error underneath, since a failed status alone names no cause.
+/// It holds the errors' text, not the errors, so it stays `Sendable`.
+public struct MediaReadFailure: Sendable, Equatable, CustomStringConvertible, CustomDebugStringConvertible {
+    public enum Stage: String, Sendable {
+        /// The picture read did not start.
+        case pictureStart = "picture read did not start"
+        /// The picture read started and ended without finishing.
+        case picture = "picture read did not finish"
+        /// The sound read did not start.
+        case soundStart = "sound read did not start"
+        /// The sound read started and ended without finishing.
+        case sound = "sound read did not finish"
+    }
+
+    /// One error as AVFoundation gave it.
+    public struct ReportedError: Sendable, Equatable {
+        public let domain: String
+        public let code: Int
+        public let description: String
+        public let reason: String?
+
+        public init(domain: String, code: Int, description: String, reason: String? = nil) {
+            self.domain = domain
+            self.code = code
+            self.description = description
+            self.reason = reason
+        }
+    }
+
+    public let stage: Stage
+    /// Picture frames, or sound sample frames, read before the read ended.
+    public let framesRead: Int
+    /// The reader's `AVAssetReader.Status` raw value.
+    public let status: Int
+    /// The reader's error first, then each error underneath it; empty when the reader recorded none.
+    public let errors: [ReportedError]
+
+    public init(stage: Stage, framesRead: Int, status: Int, errors: [ReportedError]) {
+        self.stage = stage
+        self.framesRead = framesRead
+        self.status = status
+        self.errors = errors
+    }
+
+    init(_ stage: Stage, framesRead: Int, reader: AVAssetReader) {
+        var errors: [ReportedError] = []
+        var error = reader.error as NSError?
+        while let current = error {
+            errors.append(ReportedError(domain: current.domain, code: current.code, description: current.localizedDescription,
+                                        reason: current.localizedFailureReason))
+            error = current.userInfo[NSUnderlyingErrorKey] as? NSError
+        }
+        self.init(stage: stage, framesRead: framesRead, status: reader.status.rawValue, errors: errors)
+    }
+
+    public var description: String {
+        var parts = ["\(stage.rawValue): reader status \(statusName) (\(status)) after \(framesRead) frames"]
+        for (depth, error) in errors.enumerated() {
+            parts.append("\(depth == 0 ? "error" : "underlying error"): \(error.domain) \(error.code), \"\(error.description)\""
+                + (error.reason.map { ", reason \"\($0)\"" } ?? ""))
+        }
+        if errors.isEmpty { parts.append("no error recorded") }
+        return parts.joined(separator: "; ")
+    }
+
+    public var debugDescription: String { description }
+
+    private var statusName: String {
+        switch AVAssetReader.Status(rawValue: status) {
+        case .unknown: "unknown"
+        case .reading: "reading"
+        case .completed: "completed"
+        case .failed: "failed"
+        case .cancelled: "cancelled"
+        default: "new"
+        }
     }
 }
 

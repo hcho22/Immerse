@@ -14,7 +14,11 @@ public enum PersistenceError: Error, Equatable {
     case captureRemoved
     case invalidAssetPath
     case conflictingCaptureReceipt
+    /// The media is not what it should be: the wrong tracks, no duration, no frames or a picture without an image.
     case invalidMedia
+    /// A read of a movie's pictures or of its sound did not finish, with what AVFoundation said about it. The media may
+    /// be whole: a decoder that fails partway ends a read the same way as a damaged file.
+    case unreadableMedia(MediaReadFailure)
     case mediaChangedDuringVerification
     case mediaNotRevealed
     case originalChoiceRequired

@@ -2,7 +2,8 @@
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work, and start a bug fix from the failure as a person would meet it.
 On 2026-10-17 RenderCore's `FilmLookTests.testADevelopedClipReadsTheLightItWasRecordedIn` failed once, in the packages part of run 39085816736 (pull request 40, commit 38cb644), and passed in the rerun of the same job.
-This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error, and nothing else; Development's and export's verification reads still do not (What stays open).
+This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error.
+The last section adds the second sighting of 2026-10-28, a reproduction of it by hand, and the change that makes `VerifiedMedia`'s reads, which guard Development, export and a capture's save, name their error too.
 GitHub's Macs are Apple silicon virtual machines and this Mac is an Intel i9; every number from CI is read from the job's own log.
 
 ## The failure
@@ -80,3 +81,53 @@ The throwaway stress test used for the second and third rows is not committed.
   Its reads of a Film's clips and Movie are `FilmProcessor`'s, of each clip `developClip` writes, the stored clip and the assembled Movie and again of the clip and the Movie before a source is cleaned up, `FilmExportWorker`'s two checks, of the assembled Movie or an original clip before it is saved and of the copy handed to Photos, and `CaptureCommitJournal.verify`'s, of each Movie clip a capture commits.
   A recurrence in any of those reads fails with `invalidMedia` and no AVFoundation error, before any of the test helpers above reads the clip, the Movie or the file handed to Photos.
   Carrying the error there would mean a payload on `PersistenceError.invalidMedia`, which tests in several packages compare for equality, and that was not done here.
+  Done on 2026-10-28 with a new error case instead (next section).
+
+## 2026-10-28: a second sighting, a reproduction, and the error carried
+
+### What the second sighting showed
+
+On 2026-10-28 the packages part of run 40766665458 (pull request 63, head c3b6ec7) failed in the process-exit probe's `DevelopmentProcessExitTests.testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns`, and passed on the rerun.
+In its 16mm half the helper process the test starts (`DevelopmentExitWorker`) discards the first clip and then, at Development's `afterAssignments` point, reads back the one clip left, clip-2, with `VerifiedMedia.movie(at:)`.
+That read threw a bare `PersistenceError.invalidMedia`, the helper stopped with Swift's top-level fatal error (status 5, the trap signal on arm64), and the test's three assertions on the helper's exit and its snapshot failed.
+The test process had read the same clip-2 whole three times seconds earlier (Development's check of the stored clip, its check before removing the source, and the test's own snapshot), and nothing writes, renames or removes clip-2 between those reads and the helper's: the test process is waiting for the helper, and the helper's own discard removes only clip-1, the old Movie and the work folder, before its read.
+So, as on 2026-10-17, a read ended `failed` partway through a developed 16mm clip that was whole, this time in a process of its own.
+The machine was slow (the probe's first test took 199.8 s against 60.8 to 88.4 s in the passing runs of the same branch), and the 2026-10-17 one was not.
+Of 79 finished packages jobs from 2026-10-10 to 2026-10-28, these two are the only clip-read failures, both on macos-26-arm64 and both on developed 16mm clips.
+The log could not say which of `VerifiedMedia`'s refusals threw or what AVFoundation reported: that is the item left open above.
+
+### What a reproduction on this Mac showed, and what it did not
+
+On macOS 26 a process decodes H.264 through a video decoder service of its own (`VTDecoderXPCService`), which it starts at its first decode; the probe's helper is a new process, so its decoder service starts for that one read.
+Run in 5 ms slices and then killed while the helper's read of clip-2 was decoding, that service ended the read with status failed (3) and AVFoundation error -11821 "Cannot Decode" over `NSOSStatusErrorDomain` -12137, and the probe failed with the same three assertion failures and the same top-level `PersistenceError.invalidMedia` as on CI, 4 times in 4.
+Killed partway through a longer read, it ended the read after 89 and 98 frames with the same errors, which is the 2026-10-17 shape.
+Killed before its first session, it was started again about 10 s later and the read finished; stopped for up to 25 s, or slowed about 40-fold, it only made the read slower; and 300 reads in fresh processes, with and without 12 busy loops, all finished.
+So a decoder that dies or fails mid-read is enough to produce both sightings, and load alone did not produce one here.
+It does not show that the decoder failed on CI: this Mac decodes in hardware, CI's virtual machines most likely in software, and the failing jobs kept no decoder log or crash report.
+No test or script in the repository stops, slows or kills a system service; the reproduction was done by hand and is described here only.
+
+### What changed
+
+- `VerifiedMedia` carries AVFoundation's error.
+  A read of a movie's pictures or of its sound (`decodeAudio`, also the Soundtrack's read) that does not start, or that ends with a status other than completed, throws `PersistenceError.unreadableMedia(MediaReadFailure)`.
+  `MediaReadFailure` holds the stage (the picture or sound read, not started or not finished), the frames read, the reader's status, and the error's domain, code, description and reason with every error underneath it, and its description prints all of them.
+  So a top-level fatal error such as the helper's now reads, for a clip cut off partway on this Mac: `PersistenceError.unreadableMedia(picture read did not finish: reader status failed (3) after 13 frames; error: AVFoundationErrorDomain -11880, "Invalid sample cursor", reason "Sample cursor was invalid, or samples were out of range."; underlying error: NSOSStatusErrorDomain -12551, ...)`.
+  Every other refusal (the wrong tracks, no duration, no frames, a picture without an image) is `invalidMedia` as before.
+- Nothing else changes: no caller matched `invalidMedia`, so Development, a save to Photos and a capture's save stop where they did and keep what they had, and `FailureCopy` gives the new case the same retry text it gives `invalidMedia`.
+  No retry, no longer timeout and no looser assertion was added.
+- When the packages part of CI fails, `Scripts/collect-failure-evidence.sh` keeps, as the run's `failure-evidence-packages` artifact for 14 days: the crash and memory-pressure reports of the decoder service, the test runner and the probe's helper; the system log of the last 20 minutes filtered to the decoder service, the test processes' errors and decoder connection lines, media errors and the kernel's memory-pressure lines; and the probe's Films, finished or not, since a test reads its clips and Movie again after its resumed snapshot, the newest first up to 100 MB, which hold only synthetic media.
+  It is bounded in time and size, reads nothing else, and does not change the job's verdict.
+- Tests: `MediaReadFailureTests` (FilmPersistence) cut a clip and a Soundtrack off partway and hold them to the new error with an `AVFoundationErrorDomain` error and one underneath, and media of the wrong shape to `invalidMedia`; `UnreadableMediaTests` (FilmRuntime) hold Development, a save to Photos and a capture's save to keeping their state on such a read and finishing once it reads again; `JournalIntegrationTests` holds the text a person sees to the retry text; and the scripts' tests hold the collection to what it keeps and to running only after a failed packages part.
+- Left as it was: NativeAdapters' own check of a recorded clip before it is handed to the save (`CapturedMediaFiles`) still ends a failed read in a bare `NativeCaptureError.invalidMedia`, and photo reads still end in `invalidMedia`; neither has failed on CI.
+
+### What the next sighting will tell apart
+
+Read its error, and the run's `failure-evidence-packages` artifact, against this table before changing anything.
+
+| What it shows | Points to | What it would mean |
+| --- | --- | --- |
+| -11821 over -12137, with the reading process's connection to `com.apple.coremedia.videodecoder` interrupted, or a `VTDecoderXPCService` crash or memory-pressure report at that time | The decoder service died mid-read | A fault of the machine, as reproduced here; no defect in the clip |
+| -11821 over -12137 with no such death, and the kept clip reading whole elsewhere | The virtual machine's decoder failed for a while | A fault of the machine; nothing in the clip |
+| A decoder data error such as -12909 (`kVTVideoDecoderBadDataErr`), or the kept clip failing again when read elsewhere | The clip's bytes | A real defect, to look for in how developed 16mm clips are written |
+| An allocation error from Core Video or a memory-pressure kill of the test process | Memory on the virtual machine | A fault of the machine under pressure |
+| `invalidMedia` | A refusal of the media's shape, not a failed read | Something different from both sightings |

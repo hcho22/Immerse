@@ -108,10 +108,17 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(FailureCopy.message(for: NativeRenderError.invalidMovie(underlying: unreadClip)),
                        FailureCopy.message(for: NativeRenderError.invalidMovie()))
         XCTAssertEqual(FailureCopy.message(for: NativeRenderError.invalidMovie()), FailureCopy.retry)
+        // A picture read that a decoder ended partway, status failed (3), as the 2026-10-28 sighting could have been.
+        let unreadMovie = PersistenceError.unreadableMedia(MediaReadFailure(stage: .picture, framesRead: 13, status: 3, errors: [
+            .init(domain: "AVFoundationErrorDomain", code: -11821, description: "Cannot Decode"),
+            .init(domain: NSOSStatusErrorDomain, code: -12137, description: "The operation couldn’t be completed.")
+        ]))
+        XCTAssertEqual(FailureCopy.message(for: unreadMovie), FailureCopy.message(for: PersistenceError.invalidMedia))
+        XCTAssertEqual(FailureCopy.message(for: unreadMovie), FailureCopy.retry)
         let failures: [Error] = [JournalError.cameraDenied, FilmExportError.permissionDenied, FilmExportError.needsPermission,
                                  FilmExportError.writeFailed("synthetic"), FilmExportError.missingReceipt,
-                                 PersistenceError.invalidMedia, NativeCaptureError.invalidMedia, CocoaError(.fileReadNoPermission),
-                                 trialRecordFailure(errSecNotAvailable)]
+                                 PersistenceError.invalidMedia, unreadMovie, NativeCaptureError.invalidMedia,
+                                 CocoaError(.fileReadNoPermission), trialRecordFailure(errSecNotAvailable)]
         for failure in failures {
             let message = try XCTUnwrap(FailureCopy.message(for: failure))
             XCTAssertFalse(message.contains("couldn’t be completed"), message)
