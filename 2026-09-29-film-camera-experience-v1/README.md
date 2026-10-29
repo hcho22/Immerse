@@ -1,6 +1,6 @@
 # Film Camera Experience — V1 Requirements Package
 
-**Prepared:** September 29, 2026 · **Version:** 2.1 (updated October 7, 2026, amended October 16, 2026 by ADR 0017 October 26, 2026 by the PRD amendment of that date and ADRs 0018 to 0023, and October 29, 2026 by the PRD amendment of that date and ADR 0024; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
+**Prepared:** September 29, 2026 · **Version:** 2.1 (updated October 7, 2026, amended October 16, 2026 by ADR 0017, October 26, 2026 by the PRD amendment of that date and ADRs 0018 to 0023, and October 29, 2026 by the PRD amendment of that date and ADR 0024; version 2.0 was October 6, 2026; versions 1.1 to 1.5 were September 30, 2026)\
 **Format:** Local Markdown documents; no external publication.  
 **Working title:** Film Camera Experience · **Selected design:** A — Film Journal.
 
