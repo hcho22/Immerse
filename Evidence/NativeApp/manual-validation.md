@@ -2386,7 +2386,7 @@ On 2026-10-28 a 16mm Film on **Color** with one clip of about 16 seconds, stoppe
 [079](development-stop-079.md) traces it to Development stopping when Immerse leaves the screen, as an auto-lock makes it do, with iOS taking the clip's video encoder at that moment, so the stop was reported as a failure and blamed on storage.
 The build now keeps the screen on while any Development runs, says when Development stopped because Immerse left the screen, names every other cause in its own words, and mentions storage only for a full iPhone.
 The simulator keeps an app's video encoder in the background and never locks by itself, so only a phone shows these.
-The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above), except R03's first step, which is on the build already installed.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above), except R03's first step, which is on the build already installed.
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), and Immerse opened from the Home Screen so no debugger is attached.
 Before starting, write down **Settings > Display & Brightness > Auto-Lock** and leave it at 30 seconds, the default, unless a step says otherwise.
 Each scenario reads **UNTESTED: physical execution deferred**.
