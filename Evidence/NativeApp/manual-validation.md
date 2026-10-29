@@ -85,6 +85,7 @@ No output means every later commit on `main` changed documents, probes or script
 When this was written, `d5fd1af` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
 Two later changes to `App` or `Packages` are not in this pin yet, and the next re-pin, made on `main` after the second merges, takes both: https://github.com/hcho22/Immerse/pull/65 (`Packages` and a hosted test under `App/Immerse/Tests`: a failed clip read names AVFoundation's error, which changes no scenario) and the rename of the photo Roll Cameras' early-finish action to **Finish & Develop Early** ([078](finish-and-develop-early-078.md)), whose phone checks are [F01 and F02](#finish--develop-early-on-a-real-iphone).
 Until that re-pin, the candidate's menu reads **Rewind & Develop Early**, and F01 and F02 wait for it.
+Print Zoom and Adjust's crop box ([079](print-zoom-and-crop-box-079.md)) are not in this pin either; their phone checks, [Z01 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone), wait for the re-pin that takes them.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -1136,6 +1137,8 @@ Developed color Disposable and 6×6 photos, a developed Instant print, and the p
 4. Set the phone to its largest text size and revisit Adjust. Scroll within the controls band until each control is wholly visible and usable. Confirm the print area does not change while the band scrolls.
 5. Cancel without saving and restore the text-size setting from step 1.
 
+On a candidate that holds [079](print-zoom-and-crop-box-079.md), Adjust has a crop box and a straighten dial in place of Crop, Size, Horizontal, Vertical and Straighten: in step 1 reach the dial, the shapes and the crop box's handles instead, and use [Z05 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone) for how they work by hand.
+
 **Expect.**
 
 - Adjust offers Crop and Straighten on non-Instant prints and quarter turns on all photo prints.
@@ -2166,7 +2169,7 @@ nonmigration are both required; one cannot substitute for the other.
 | FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05; the shooting screen held sideways, the 6×6's viewfinder and its zoom steps are H01 to H10, and the Instant's camera after each exposure is C01. |
 | FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06, and H04 for a clip's orientation; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
 | FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03, and F01 and F02 for the early-finish action's label. |
-| FR-07 A01...A05 (PRD 2.1 baseline) | M13, M14, M28, D01, D04, I02, W01 to W06 (current Darkroom layout and controls); FR-29 to FR-34 supersede the baseline orientation, Crop and Dodge/Burn tool details. |
+| FR-07 A01...A05 (PRD 2.1 baseline) | M13, M14, M28, D01, D04, I02, W01 to W06 (current Darkroom layout and controls); FR-29 to FR-34 supersede the baseline orientation, Crop and Dodge/Burn tool details; Z01 to Z08 for Print Zoom in the photo view and the Darkroom and Adjust's crop box and straighten dial (2026-10-29). |
 | FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, Q09 for the Instant's one question about its originals (D03 before 2026-10-26), and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
 | FR-18 A01...A05 | M24, M25, T01, T07, T10, B03. |
@@ -2356,3 +2359,193 @@ VoiceOver says "Rewind", skips the item, or reads a label that is not on the scr
 
 **Write down.**
 What VoiceOver said for each item, word for word.
+
+## Print Zoom and the Crop Box on a Real iPhone
+
+On 2026-10-29 the captain asked to zoom in on developed photos and in the Darkroom, and for the Darkroom to crop as the iPhone's Photos app does ([079](print-zoom-and-crop-box-079.md); his choices "1A", "2A", "3A" and "8A").
+Print Zoom: in the full-screen photo view of every photo Camera, the Instant print at the camera included, a pinch or a double-tap zooms in and a drag looks around; only the whole print swipes to the previous or next one; on every Darkroom tool except Adjust the same zoom is for looking only and the whole print comes back on another tool, on Save and on Cancel.
+Adjust's crop box: corner and edge handles, a pinch or drag on the print under the box, the box re-centering after a handle is let go, a rule-of-thirds grid while anything moves, the shapes Original, Freeform, Square, 4:3 and 3:2 sideways or upright on the Disposable, a square box with no shapes on the 6×6, and a straighten dial from -45° to +45° in tenths; the Instant keeps quarter turns only.
+The Darkroom's controls band is 250 points tall where it was 330, so the print area is 80 points taller on every iPhone.
+The simulator holds the gestures' results, the shapes, the square 6×6, the Instant's turns, the dial's range and every earlier recipe's bytes (`PrintZoomWorkflowTests`, `DarkroomCropTests`); only a phone shows how they feel by hand, how sharp the furthest zoom is, and how the oldest supported iPhone keeps up.
+The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on a re-pin that does (The Candidate, above).
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), on developed test prints of the Disposable, the 6×6 and the Instant, at least one of them photographed with fine detail such as text or leaves.
+Each scenario reads **UNTESTED: physical execution deferred**.
+
+### Z01 - Pinch and double-tap in the photo view
+
+**Steps.**
+
+1. Open a developed Disposable print full screen from its Film's screen.
+2. Pinch out slowly, then quickly; pinch in past the whole print and let go.
+3. Double-tap a detail, then double-tap again.
+4. Zoomed in, drag around to each edge of the print and past it, then let go.
+5. Turn the iPhone on its side and back while zoomed in.
+6. Do steps 2 to 4 on a 6×6 print and on an Instant print.
+
+**Expect.**
+
+- The print follows the fingers as in the Photos app, with the point between them staying under them; pinched in past the whole print it springs back to the whole print.
+- A double-tap zooms in about the tapped point and the second double-tap shows the whole print again, both animated.
+- At an edge the print resists and settles back when let go, as in the Photos app.
+- Turned, the zoom and the part of the print in view stay about the same.
+- On the Instant the white card, its edge and its shadow zoom with the picture.
+
+**It fails if.**
+The print jumps, stutters, drifts away from the fingers, zooms about the wrong point, leaves a gap that does not settle back, or shows the whole print at the wrong size after a turn.
+
+**Write down.**
+A screen recording of steps 2 to 5 on the Disposable, and how it felt beside the Photos app on the same iPhone.
+
+### Z02 - Sharpness at the furthest zoom
+
+**Steps.**
+
+1. Open the print with fine detail full screen and pinch out as far as it goes on that detail.
+2. Wait two seconds, then take a screenshot.
+3. Open the same print's Darkroom, stay on **Exposure**, pinch out as far as it goes on the same detail, wait two seconds, take a screenshot, then move the Exposure slider and let go.
+
+**Expect.**
+
+- Within a moment of the pinch ending the detail turns from soft to sharp: the furthest zoom shows the developed print's own pixels, each about two of the screen's.
+- In the Darkroom the same happens, and after the slider is let go the edited print shows first soft and then sharp again, within about a second.
+- The app does not close or warn about memory while zooming on any print.
+
+**It fails if.**
+The detail stays soft at the furthest zoom, the sharp picture shows a different part or size from the soft one, the Darkroom takes much longer than a second to sharpen after a slider move, or the app closes.
+
+**Write down.**
+Both screenshots, the seconds from letting go to sharp in each, and whether the phone grew warm.
+
+### Z03 - Swiping only at the whole print
+
+**Steps.**
+
+1. Open the middle print of a Film with at least three developed prints.
+2. Swipe left and right while the whole print shows.
+3. Zoom in, then swipe left and right.
+4. Double-tap back to the whole print and swipe left.
+5. Turn on VoiceOver, zoom in, and use the **Previous photo** and **Next photo** actions; turn VoiceOver off.
+6. Take an Instant exposure and, on the print shown at the camera, zoom in, then double-tap back and swipe.
+
+**Expect.**
+
+- At the whole print, a swipe moves to the previous or next print, and the next print shows whole.
+- Zoomed in, a swipe only looks around the print; the title stays on the same photo.
+- VoiceOver's actions move to the previous or next print even while zoomed in, and the print they move to shows whole; VoiceOver reads "Zoomed in" while the view is.
+- The Instant print at the camera zooms the same way and never swipes to another print.
+
+**It fails if.**
+A swipe while zoomed in changes the print, a swipe at the whole print does not, a print shows zoomed in when moved to, or the Instant reveal moves to another print.
+
+**Write down.**
+What happened at each step, and a screen recording of steps 2 to 4.
+
+### Z04 - Print Zoom in the Darkroom is for looking only
+
+**Steps.**
+
+1. Open a Disposable print's Darkroom on **Exposure**, pinch out and drag around; double-tap, and double-tap again.
+2. Zoom in and move the Exposure slider; let it go.
+3. Change tool to **Contrast**, then to **Adjust**, then back to **Exposure**.
+4. Zoom in and tap **Cancel**; open the Darkroom again.
+5. Zoom in without changing anything, tap **Save**, and look at the print in the photo view.
+
+**Expect.**
+
+- The print zooms as in the photo view, inside its own area; the band below does not move.
+- The zoom holds while the slider moves and the print updates in place.
+- Every tool change, **Cancel** and **Save** shows the whole print again, and Adjust shows its crop box, not a zoomed print.
+- A Save after only zooming leaves the print as it was.
+
+**It fails if.**
+The zoom changes the print, the band or the print area moves, a tool change keeps the zoom, or the Darkroom opens zoomed in.
+
+**Write down.**
+Screenshots of steps 1 and 5.
+
+### Z05 - The crop box's handles and the print under it
+
+**Steps.**
+
+1. Open a Disposable print's Darkroom and choose **Adjust**; check **Freeform** is chosen.
+2. Drag each corner handle in, and an edge handle in and out, slowly; let go after each.
+3. Pinch out and in on the print inside the box, and drag the print to each side and past it.
+4. Tap **Save**, look at the print in the photo view, open the Darkroom again and choose **Adjust**.
+5. Tap **Reset to Original**, then **Cancel**.
+
+**Expect.**
+
+- A handle moves only its corner or edge while the print stays still, and the rule-of-thirds grid shows while it moves; let go, the box glides to the middle and grows to fill the print area, the print growing with it.
+- The box never leaves the print: a handle stops at the print's edge.
+- A pinch or drag moves the print under a still box, with the grid; past the print's edge or its largest or smallest size it resists and settles back.
+- The saved print is exactly what the box showed, and the Darkroom opens on the same crop and shape.
+- Reset shows the whole print again, on **Freeform**.
+
+**It fails if.**
+The print moves while a handle is dragged, the box leaves the print or shows the background, the box does not re-center, the saved print differs from the box, or a handle is hard to catch with a thumb.
+
+**Write down.**
+A screen recording of steps 2 and 3, and the screenshots of the box and of the saved print.
+
+### Z06 - Shapes, sideways and upright, and the 6×6's square
+
+**Steps.**
+
+1. In a Disposable print's **Adjust**, choose each of **Original**, **Square**, **4:3** and **3:2**, and for each but **Square** flip it with the sideways-or-upright button; drag a corner handle after each.
+2. Choose **Freeform** and drag a corner handle.
+3. Tap **Rotate left** with a **4:3** crop in place.
+4. Open a 6×6 print's **Adjust**, drag each kind of handle, and pinch the print under the box.
+
+**Expect.**
+
+- Each shape changes the box at once to that shape, about as large as it was; sideways and upright swap its sides; a corner handle keeps the shape; **Square** and **Freeform** have no sideways or upright.
+- After a quarter turn the crop turns with the print and still has its shape, now the other way up.
+- The 6×6 shows no shapes, and its box stays square whatever is dragged.
+
+**It fails if.**
+A shape does not hold under a handle, the 6×6 box becomes a rectangle or shows shapes, or a turn loses the crop.
+
+**Write down.**
+A screenshot of each shape and of the 6×6.
+
+### Z07 - The straighten dial by hand
+
+**Steps.**
+
+1. In a Disposable print's **Adjust**, drag the dial slowly a few degrees each way, then quickly to each end.
+2. Drag it back to 0.0°.
+3. Straighten a print with a tilted horizon to level, tap **Save**, and look at it.
+4. Do steps 1 and 2 on a 6×6 print.
+
+**Expect.**
+
+- The ruler follows the finger and reads in tenths of a degree, from -45.0° to 45.0°, with a light tap felt at 0.0°.
+- The print turns under the box about its middle while the box stays still, the grid shows, and the box is always filled with picture: the print grows as the angle grows.
+- The saved print is level and is what the box showed; the 6×6 stays square.
+
+**It fails if.**
+The dial is hard to set to a tenth, overshoots, jumps, cannot reach either end or 0.0°, shows any background inside the box, or the saved print differs from what the box showed.
+
+**Write down.**
+A screen recording of step 1 and the before-and-after of step 3.
+
+### Z08 - VoiceOver, large text and earlier crops
+
+**Steps.**
+
+1. Before installing this candidate, on the build before it, crop and straighten one Disposable print and one 6×6 print and save them; take a screenshot of each.
+2. Install this candidate and look at both prints in the photo view; take a screenshot of each.
+3. Turn on VoiceOver and, in a Disposable print's **Adjust**, move to **Crop left edge** and swipe up and down; do the same for the other three edges, the **Straighten** dial and a shape.
+4. Set the largest text size, open **Adjust** again, and reach the dial, every shape and the sideways-or-upright button by scrolling inside the band; set the text size back.
+
+**Expect.**
+
+- The prints cropped by the build before look exactly as they did.
+- VoiceOver reads each edge with its place in percent and moves it by a hundredth of the print each swipe; the dial moves a whole degree each swipe; the box reads how much of the width and height it keeps.
+- At the largest text size every control in Adjust can be scrolled into view and used, and the print area stays put.
+
+**It fails if.**
+An earlier print changed, an edge or the dial cannot be set with VoiceOver, or a control cannot be reached at the largest text size.
+
+**Write down.**
+The screenshots of steps 1 and 2 side by side, and what VoiceOver said for one edge and the dial, word for word.

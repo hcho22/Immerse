@@ -618,8 +618,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.buttons["Adjust"].tap()
         XCTAssertTrue(app.buttons["darkroom-rotate-left"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["darkroom-rotate-right"].exists)
-        XCTAssertFalse(app.switches["Crop"].exists)
-        XCTAssertFalse(app.sliders["Straighten"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["darkroom-crop-box"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["darkroom-straighten-dial"].exists)
         app.buttons["Vignette"].tap()
         XCTAssertTrue(app.sliders["Vignette"].waitForExistence(timeout: 5))
         app.buttons["Contrast"].tap()
@@ -771,7 +771,14 @@ final class PopulatedWorkflowTests: HarnessTestCase {
                 XCTAssertTrue(visibleBand(app, band).contains(text.frame),
                               "\(size) \(tool): \"\(text.label)\" scrolls whole into the band: \(text.frame) in \(visibleBand(app, band))")
             }
-            XCTAssertEqual(print.frame, printFrame, "\(size) \(tool): the print keeps its frame")
+            if tool == "Adjust" {
+                // Adjust shows the crop box over the print in the same region.
+                let box = app.descendants(matching: .any)["darkroom-crop-box"]
+                XCTAssertTrue(box.waitForExistence(timeout: 20), "\(size) \(tool): the crop box")
+                XCTAssertTrue(printFrame.contains(box.frame), "\(size) \(tool): the crop box is in the print's region")
+            } else {
+                XCTAssertEqual(print.frame, printFrame, "\(size) \(tool): the print keeps its frame")
+            }
         }
         snapshot(app, "Darkroom-band-text-\(size)")
     }
@@ -865,7 +872,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(window.contains(print.frame), "\(name): print is on screen")
         XCTAssertGreaterThan(print.frame.height, 0, "\(name): the print remains visible in its fixed area")
         XCTAssertTrue(window.contains(band.frame), "\(name): controls band is on screen")
-        XCTAssertGreaterThanOrEqual(band.frame.height, 300, "\(name): band fits the tallest controls at default size")
+        XCTAssertGreaterThanOrEqual(band.frame.height, 250, "\(name): band fits the tallest controls at default size")
 
         let tools: [String]
         if label == "Instant" {
@@ -883,11 +890,21 @@ final class PopulatedWorkflowTests: HarnessTestCase {
             XCTAssertTrue(button.exists, "\(name): \(tool) is available")
             tapWhole(app, button)
             XCTAssertTrue(button.isSelected, "\(name): \(tool) is selected")
-            Thread.sleep(forTimeInterval: 0.25)
-            XCTAssertEqual(print.frame.minX, initialPrint.minX, accuracy: 1, "\(name): \(tool) keeps the print's left edge")
-            XCTAssertEqual(print.frame.minY, initialPrint.minY, accuracy: 1, "\(name): \(tool) keeps the print's top edge")
-            XCTAssertEqual(print.frame.width, initialPrint.width, accuracy: 1, "\(name): \(tool) keeps the print's width")
-            XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): \(tool) keeps the print's height")
+            if tool == "Adjust" && label != "Instant" {
+                // Adjust shows the crop box over the print in the same region, except on an Instant, which only turns.
+                let box = app.descendants(matching: .any)["darkroom-crop-box"]
+                XCTAssertTrue(box.waitForExistence(timeout: 20), "\(name): Adjust shows the crop box")
+                Thread.sleep(forTimeInterval: 0.25)
+                XCTAssertTrue(initialPrint.contains(box.frame), "\(name): the crop box is in the print's region")
+                XCTAssertEqual(box.frame.midY, initialPrint.midY, accuracy: 1, "\(name): the crop box is in its middle")
+            } else {
+                XCTAssertTrue(print.waitForExistence(timeout: 20), "\(name): \(tool) shows the print")
+                Thread.sleep(forTimeInterval: 0.25)
+                XCTAssertEqual(print.frame.minX, initialPrint.minX, accuracy: 1, "\(name): \(tool) keeps the print's left edge")
+                XCTAssertEqual(print.frame.minY, initialPrint.minY, accuracy: 1, "\(name): \(tool) keeps the print's top edge")
+                XCTAssertEqual(print.frame.width, initialPrint.width, accuracy: 1, "\(name): \(tool) keeps the print's width")
+                XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): \(tool) keeps the print's height")
+            }
             XCTAssertEqual(band.frame.minY, initialBand.minY, accuracy: 1, "\(name): \(tool) keeps the band's top edge")
             XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): \(tool) keeps the band's height")
             snapshot(app, "\(name)-tool-\(tool)")
@@ -902,24 +919,21 @@ final class PopulatedWorkflowTests: HarnessTestCase {
             XCTAssertEqual(print.frame.height, initialPrint.height, accuracy: 1, "\(name): scrolling the band does not resize the print")
             snapshot(app, "\(name)-tool-Filtration-bottom")
         } else if !largest && label != "Instant" {
-            // The tallest tool is Adjust with a crop smaller than the print, which shows all five of its rows. At the
-            // default text size every one of them rests whole in the band, unscrolled.
+            // Adjust's straighten dial and, except on the 6×6, its shapes rest whole in the band at the default size.
             tapWhole(app, app.buttons["Adjust"])
-            let crop = app.switches["Crop"]
-            XCTAssertTrue(crop.waitForExistence(timeout: 5), "\(name): Crop")
-            crop.flipSwitch()
-            let size = app.sliders["Crop size"]
-            XCTAssertTrue(size.waitForExistence(timeout: 5), "\(name): Crop size")
-            size.adjust(toNormalizedSliderPosition: 0.5)
-            XCTAssertTrue(app.sliders["Crop Vertical"].waitForExistence(timeout: 5), "\(name): Crop Vertical")
-            let rows = [app.sliders["Straighten"], crop, size, app.sliders["Crop Horizontal"], app.sliders["Crop Vertical"]]
+            let dial = app.descendants(matching: .any)["darkroom-straighten-dial"]
+            XCTAssertTrue(dial.waitForExistence(timeout: 20), "\(name): the straighten dial")
+            var rows = [dial]
+            if !label.hasPrefix("6x6") {
+                rows += ["Original", "3:2"].map { app.buttons["darkroom-crop-shape-\($0)"] }
+                rows.append(app.buttons["darkroom-crop-orientation"])
+            }
             for row in rows {
                 XCTAssertTrue(visibleBand(app, band).contains(row.frame),
-                              "\(name): \(row.label) rests whole in the band at the default size")
+                              "\(name): \(row.identifier) rests whole in the band at the default size")
             }
-            XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): the crop's rows keep the band's height")
+            XCTAssertEqual(band.frame.height, initialBand.height, accuracy: 1, "\(name): Adjust keeps the band's height")
             snapshot(app, "\(name)-tool-Adjust-crop")
-            crop.flipSwitch()
         }
         snapshot(app, name)
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists, "\(name): Dodge/Burn is not a Darkroom tool")
