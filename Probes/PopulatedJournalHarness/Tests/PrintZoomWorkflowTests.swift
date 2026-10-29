@@ -239,6 +239,28 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         app.buttons["Cancel"].tap()
     }
 
+    /// At the largest text size Adjust opens with its shapes readable in the band, under the heading, and the chosen
+    /// shape is always whole in the row, which scrolls sideways there.
+    func testAdjustShowsItsShapesAndTheChosenOneWholeAtTheLargestTextSize() throws {
+        let app = launch(["--developed-photo", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
+        openFilm(app)
+        openPhoto(app)
+        tapDarkroom(app)
+        openAdjust(app)
+        let row = app.scrollViews["darkroom-crop-shapes"]
+        XCTAssertTrue(row.waitForExistence(timeout: 10))
+        XCTAssertTrue(visibleBand(app).contains(row.frame), "The shapes open whole in the band: \(row.frame) in \(visibleBand(app))")
+        XCTAssertTrue(waitForWhole(shape(app, "Freeform"), in: row), "The chosen shape opens whole in its row")
+        snapshot(app, "adjust-largest-shapes-open")
+        for name in ["3:2", "Original", "4:3"] {
+            shape(app, name).tap()
+            XCTAssertTrue(shape(app, name).isSelected, name)
+            XCTAssertTrue(waitForWhole(shape(app, name), in: row), "\(name) is whole in the row once chosen")
+        }
+        snapshot(app, "adjust-largest-shapes-4x3")
+        app.buttons["Cancel"].tap()
+    }
+
     /// VoiceOver sets a crop by its four edges, each adjustable.
     func testTheCropBoxEdgesCanBeMovedOneAtATimeWithoutTouchingTheBox() throws {
         let app = launch(["--developed-photo"])
@@ -393,6 +415,20 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
                         thenHoldForDuration: 0.3)
         }
         element.tap()
+    }
+
+    /// The part of the Darkroom's band a person sees, above Reset to Original's bar.
+    private func visibleBand(_ app: XCUIApplication) -> CGRect {
+        let reset = app.buttons["Reset to Original"]
+        var frame = app.scrollViews["darkroom-control-band"].frame
+        if reset.exists { frame.size.height = max(0, min(frame.maxY, reset.frame.minY - 4) - frame.minY) }
+        return frame
+    }
+
+    /// Whether `element` comes to lie whole inside `container`, once any scrolling has settled.
+    private func waitForWhole(_ element: XCUIElement, in container: XCUIElement, timeout: TimeInterval = 5) -> Bool {
+        let whole = NSPredicate { _, _ in container.frame.insetBy(dx: -0.5, dy: -0.5).contains(element.frame) }
+        return XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: whole, object: nil)], timeout: timeout) == .completed
     }
 
     private func isZoomed(_ element: XCUIElement) -> Bool { (element.value as? String) == "Zoomed in" }

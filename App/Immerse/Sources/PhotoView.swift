@@ -515,7 +515,16 @@ struct DarkroomView: View {
     /// A quarter-turn button's icon, with the circle the bordered style draws around it 44 points across, a whole tap
     /// target.
     private func turnLabel(_ title: String, systemImage: String) -> some View {
+        Self.roundSymbol(title, systemImage: systemImage)
+    }
+
+    /// The icon of one of Adjust's round buttons, inside the 44-point circle the bordered style draws around it. Like the
+    /// tool row's icons it stops growing with the text size at the largest ordinary size, where it still fits its circle,
+    /// and the Large Content Viewer shows it larger.
+    private static func roundSymbol(_ title: String, systemImage: String) -> some View {
         Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 30, height: 30)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .accessibilityShowsLargeContentViewer()
     }
 
     @ViewBuilder private var controls: some View {
@@ -572,50 +581,59 @@ struct DarkroomView: View {
                 }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
             }
         case .adjust:
-            // The turn buttons are beside the heading. The straighten dial comes first, nearest the print as in the Photos
-            // app; the shapes follow, except on the 6×6, whose crop stays square.
+            // The turn buttons are beside the heading. The shapes come first, except on the 6×6, whose crop stays square,
+            // so they open in view under the heading at every text size; the straighten dial follows, and at the largest
+            // sizes the band scrolls to it.
             if !isInstant {
+                if !isSquareOnly { shapes }
                 StraightenDial(degrees: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
                     recipe.straighteningDegrees = $0 == 0 ? nil : $0
                 })) { editing in
                     dialing = editing
                     if !editing { render() }
                 }
-                if !isSquareOnly { shapes }
             }
         }
     }
 
-    /// The crop box's shapes, and whether a shape with a ratio stands sideways or upright.
+    /// The crop box's shapes, and whether a shape with a ratio stands sideways or upright. Where the row is wider than the
+    /// band, at large text sizes, it scrolls sideways, and the chosen shape is scrolled whole into view whenever the row
+    /// appears or the shape changes.
     private var shapes: some View {
         HStack(spacing: 4) {
-            ScrollView(.horizontal) {
-                HStack(spacing: 5) {
-                    ForEach(CropShape.allCases, id: \.self) { choice in
-                        Button { choose(choice) } label: {
-                            Text(choice.rawValue).font(.footnote).lineLimit(1)
-                                .padding(.horizontal, 8).frame(minHeight: 32)
-                                .background(shape == choice ? Color.accentColor.opacity(0.18) : Color(uiColor: .tertiarySystemFill),
-                                            in: Capsule())
-                                .frame(minHeight: 44)
-                                .contentShape(Rectangle())
+            ScrollViewReader { row in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 5) {
+                        ForEach(CropShape.allCases, id: \.self) { choice in
+                            Button { choose(choice) } label: {
+                                Text(choice.rawValue).font(.footnote).lineLimit(1)
+                                    .padding(.horizontal, 8).frame(minHeight: 32)
+                                    .background(shape == choice ? Color.accentColor.opacity(0.18) : Color(uiColor: .tertiarySystemFill),
+                                                in: Capsule())
+                                    .frame(minHeight: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(shape == choice ? Color.accentColor : Color.primary)
+                            .accessibilityLabel(Self.spoken(choice))
+                            .accessibilityAddTraits(shape == choice ? .isSelected : [])
+                            .accessibilityIdentifier("darkroom-crop-shape-\(choice.rawValue)")
+                            .id(choice)
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(shape == choice ? Color.accentColor : Color.primary)
-                        .accessibilityLabel(Self.spoken(choice))
-                        .accessibilityAddTraits(shape == choice ? .isSelected : [])
-                        .accessibilityIdentifier("darkroom-crop-shape-\(choice.rawValue)")
                     }
                 }
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                .accessibilityIdentifier("darkroom-crop-shapes")
+                .onAppear { row.scrollTo(shape) }
+                .onChange(of: shape) { _, chosen in withAnimation { row.scrollTo(chosen) } }
+                .onChange(of: dynamicTypeSize) { row.scrollTo(shape) }
             }
-            .scrollIndicators(.hidden)
-            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             Button {
                 upright.toggle()
                 reshape()
             } label: {
-                Label("Crop orientation", systemImage: upright ? "rectangle.portrait" : "rectangle")
-                    .labelStyle(.iconOnly).frame(width: 30, height: 30)
+                Self.roundSymbol("Crop orientation", systemImage: upright ? "rectangle.portrait" : "rectangle")
             }
             .buttonStyle(.bordered).buttonBorderShape(.circle)
             .disabled(!shape.turns)
