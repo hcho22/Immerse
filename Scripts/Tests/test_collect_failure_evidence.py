@@ -113,5 +113,6 @@ class CollectFailureEvidenceTests(unittest.TestCase):
         self.assertEqual(retain["with"]["path"], "DerivedData/FailureEvidence")
         self.assertEqual(retain["with"]["name"], "failure-evidence-packages")
 
+
 if __name__ == "__main__":
     unittest.main()

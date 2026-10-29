@@ -2,7 +2,8 @@
 
 Captain's standing instruction: fix test failures and flakiness even when they are not caused by the current work, and start a bug fix from the failure as a person would meet it.
 On 2026-10-17 RenderCore's `FilmLookTests.testADevelopedClipReadsTheLightItWasRecordedIn` failed once, in the packages part of run 39085816736 (pull request 40, commit 38cb644), and passed in the rerun of the same job.
-This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error, and nothing else; Development's and export's verification reads still do not (What stays open).
+This record says what the log shows, what was tried to reproduce it (nothing reproduced it), what is and is not known, and what changed: a failed read of a clip in the tests' helpers and in `NativeMovieRenderer.developClip` now names its error.
+The last section adds the second sighting of 2026-10-28, a reproduction of it by hand, and the change that makes `VerifiedMedia`'s reads, which guard Development, export and a capture's save, name their error too.
 GitHub's Macs are Apple silicon virtual machines and this Mac is an Intel i9; every number from CI is read from the job's own log.
 
 ## The failure
