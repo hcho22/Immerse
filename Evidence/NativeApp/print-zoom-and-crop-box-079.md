@@ -42,4 +42,4 @@ The first runs failed where the tests had expected the old arrangement or where 
 ## What only a phone can show
 
 How the zoom, the handles, the pinch under the box and the dial feel by hand beside the Photos app, how sharp the furthest zoom is, how fast the sharper picture comes on the oldest supported iPhone, and what VoiceOver says: Z01 to Z08.
-The candidate pinned on 2026-10-28, `d5fd1af`, does not hold this change; they wait for the re-pin that takes it.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold this change; they wait for the re-pin that takes it.
