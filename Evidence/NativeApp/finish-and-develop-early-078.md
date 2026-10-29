@@ -45,4 +45,4 @@ Its screenshots, read by eye: at the default size the Disposable's and the 6×6'
 ## What only a phone can show
 
 How the menu reads at the person's text size on a real iPhone, and what VoiceOver says for the item: F01 and F02.
-The candidate pinned on 2026-10-28, `d5fd1af`, does not hold this change; they wait for the re-pin after it merges.
+The candidate pinned on 2026-10-28, `d5fd1af`, does not hold this change; the candidate pinned on 2026-10-29, `25fdec1`, is its merge and does.
