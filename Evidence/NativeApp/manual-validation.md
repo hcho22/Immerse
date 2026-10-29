@@ -2325,7 +2325,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 1. Load a Disposable Film, take one photo, tap **Done**, and on the Film's screen open the **...** menu.
 2. Do the same on a 6×6 Film.
-3. On each, set **Settings > Accessibility > Display & Text Size > Larger Text** to the largest size, open the menu again, then set the text size back.
+3. On each, set **Settings > Accessibility > Display & Text Size > Larger Text** to the largest size (**Larger Accessibility Sizes** on, the slider at its end), open the menu again, then set the text size back.
 4. On the Disposable Film, choose **Finish & Develop Early**, read the confirmation, and tap **Complete Film**.
 5. Open the **...** menu of a Super 8 or 16mm Film with one clip, and of an Instant Film.
 
@@ -2345,7 +2345,7 @@ A screenshot of each menu at both text sizes and of the confirmation.
 
 **Steps.**
 
-1. Turn on VoiceOver, open the **...** menu of the Disposable or 6×6 Film from F01's step 2, and move to the early-finish item.
+1. Turn on VoiceOver, open the **...** menu of the 6×6 Film from F01's step 2, which is still open, and move to the early-finish item.
 2. Do the same on the Movie Film from F01's step 5.
 
 **Expect.**
