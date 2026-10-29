@@ -150,9 +150,11 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     }
                     }
                 }
-                let developsEarly = mode == "developed-photo" || mode == "medium-format"
-                if movie || developsEarly { try model.repository.completeEarly(filmID: film.id) }
-                if movie || developsEarly || mode == "instant" {
+                // `--open-film` leaves the `--medium-format` or `--movie` Film open with its saved captures, where it is
+                // otherwise finished early and developed.
+                let finishes = !arguments.contains("--open-film") && (movie || mode == "developed-photo" || mode == "medium-format")
+                if finishes { try model.repository.completeEarly(filmID: film.id) }
+                if finishes || mode == "instant" {
                     model.refresh(); try await model.develop(film.id)
                 }
             }

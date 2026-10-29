@@ -206,7 +206,7 @@ struct FilmDetailView: View {
                 model.perform { try model.repository.setArchived(filmID: filmID, archived: !film.isArchived) }
             }
             if film.completionState == .open && film.camera.revealRule != .instantPerExposure {
-                Button(film.camera.medium == .photo ? "Rewind & Develop Early" : "Stop & Develop Early", systemImage: "backward.end") { earlySnapshot = film; early = true }
+                Button(film.camera.medium == .photo ? "Finish & Develop Early" : "Stop & Develop Early", systemImage: "backward.end") { earlySnapshot = film; early = true }
                     .disabled(film.savedCaptureCount == 0 || model.busyFilms.contains(filmID) || model.hasPendingSave(filmID))
             }
             Button("Delete Film", systemImage: "trash", role: .destructive) { deleting = true }

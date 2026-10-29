@@ -101,7 +101,7 @@ import XCTest
     /// Completes the open Film early and leaves the Development sheet, so the Film screen offers Develop Film.
     private func completeEarly(_ app: XCUIApplication) {
         app.buttons["Film actions"].tap()
-        app.buttons["Rewind & Develop Early"].tap()
+        app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.buttons["Complete Film"].waitForExistence(timeout: 5))
         app.buttons["Complete Film"].tap()
         XCTAssertTrue(app.navigationBars["Development"].waitForExistence(timeout: 10))

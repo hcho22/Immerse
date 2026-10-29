@@ -12,7 +12,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertEqual(app.buttons.matching(identifier: "Open photo 1").count, 0)
         XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
         app.buttons["Film actions"].tap()
-        app.buttons["Rewind & Develop Early"].tap()
+        app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "25 exposures")).firstMatch.exists)
         app.buttons["Complete Film"].tap()
         XCTAssertTrue(app.navigationBars["Development"].waitForExistence(timeout: 5))
@@ -591,7 +591,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.buttons["Open photo 2"].exists)
         XCTAssertFalse(app.buttons["Develop Film"].exists)
         app.buttons["Film actions"].tap()
-        XCTAssertFalse(app.buttons["Rewind & Develop Early"].exists)
+        XCTAssertFalse(app.buttons["Finish & Develop Early"].exists)
         app.tap()
         snapshot(app, "Instant-revealed-pack-open")
     }

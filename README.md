@@ -53,7 +53,7 @@ All screens live in [`App/Immerse/Sources`](App/Immerse/Sources).
   The Camera permission is requested here and in Open Camera, not at launch.
 - **Capture.** Open Camera shows a live viewfinder, remaining exposures or M:SS time, and a shutter that saves each capture privately inside the app.
   Saves that were interrupted are recovered at launch or resumed with Resume Save.
-- **Early completion.** Disposable, 6×6 and Movie Films can be completed early ("Rewind & Develop Early" or "Stop & Develop Early") once they have at least one saved capture; unused capacity is permanently wasted.
+- **Early completion.** Disposable, 6×6 and Movie Films can be completed early ("Finish & Develop Early" or "Stop & Develop Early") once they have at least one saved capture; unused capacity is permanently wasted.
   Instant Films have no early completion because each print develops on its own.
 - **Development.** A full or early-completed Film is developed once.
   Before Development you choose whether original captures are saved to Photos after the reveal or removed after verified Development.
