@@ -1,20 +1,29 @@
 # Physical v1 Validation Handoff
 
-Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright, re-pinned on 2026-10-18 to the build that also holds two changes that touch no screen: the screen tests' fixes and the clip reader's error, re-pinned on 2026-10-19 to the build that also holds the hosted tests' wait for the app's window scene, re-pinned on 2026-10-19 again to the build that also holds the slider drags' held lift and the app's one launch per screen-test class, and re-pinned on 2026-10-20 to the build that also holds the shooting-screen tests' quicker waits.
+Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright, re-pinned on 2026-10-18 to the build that also holds two changes that touch no screen: the screen tests' fixes and the clip reader's error, re-pinned on 2026-10-19 to the build that also holds the hosted tests' wait for the app's window scene, re-pinned on 2026-10-19 again to the build that also holds the slider drags' held lift and the app's one launch per screen-test class, re-pinned on 2026-10-20 to the build that also holds the shooting-screen tests' quicker waits, and re-pinned on 2026-10-28 to the build that also holds the screen tests' warm-up of a freshly booted simulator, the Debug build's Develop at once and the 2026-10-26 phone-feedback amendment.
 **Plan only; every physical scenario below is deferred and unaccepted. v1 is not ready for manual sign-off.**
 Nothing in this plan has been run on a phone.
 
 ## The Candidate
 
-The software candidate is commit `8a104e1e75dd49bae6c6e9705fab8da1793f8dda` on `main`, the squash of https://github.com/hcho22/Immerse/pull/47.
-It holds everything the pin before it did (PRD 2.1, the four changes of 2026-10-14, the sideways Darkroom, the two camera changes below, the screen tests' fixes and the clip reader's error of 2026-10-18, the hosted tests' wait for the app's window scene, and the slider drags' held lift with the app's one launch per screen-test class), and one change merged to `main` since that pin, which changes nothing a person sees:
+The software candidate is commit `d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130` on `main`, the squash of https://github.com/hcho22/Immerse/pull/63.
+It holds everything the pin before it did (PRD 2.1, the four changes of 2026-10-14, the two camera changes below, the screen tests' fixes and the clip reader's error of 2026-10-18, the hosted tests' wait for the app's window scene, the slider drags' held lift with the app's one launch per screen-test class, and the shooting-screen tests' quicker waits), except the side-by-side Darkroom of 2026-10-15, which the amendment replaced, and it adds four changes merged to `main` since that pin, two of which change the app:
+
+| Pull request | What it changed | Record |
+| --- | --- | --- |
+| https://github.com/hcho22/Immerse/pull/60 | Tests only: `SimulatorWarmUp` makes a session's first steps in the first screen-test class's `setUp`, in measured passes, on a freshly booted simulator, and every screen test opens the catalog with `openCameraCatalog`. No app source changed | [main-ci-flakes-075](main-ci-flakes-075.md) |
+| https://github.com/hcho22/Immerse/pull/61 | Debug builds only: **Settings > Develop at once - Debug build**, on by default, develops each saved capture of the Disposable, 6×6, Super 8 and 16mm at once and shows it on a card over the viewfinder, with a **Develop at once** notice beside **Done**; the roll stays sealed and develops as before, the Instant is unchanged, and Release builds have none of it | [076](develop-at-once-076.md) |
+| https://github.com/hcho22/Immerse/pull/62 | Documents only: the 2026-10-26 PRD amendment from the captain's iPhone feedback (FR-22 to FR-35, ADRs 0018 to 0023) | [phone-feedback PRD](../../2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) |
+| https://github.com/hcho22/Immerse/pull/63 | The amendment's build: Camera short names, one 4:3 Viewfinder area under a one-line header on every Camera, a focus switch starting on Auto, Zoom Steps on the Super 8 and the 16mm, live sound on Super 8 and 16mm clips with the microphone asked for, a Movie sound choice of Recorded sound, Soundtrack or Silent, the full-screen photo view, one upright Darkroom with Adjust, Saturation and Vignette and no Dodge and Burn, and the Instant's one Originals question at the pack's end | [largest-text-load-audits-077](largest-text-load-audits-077.md), ADRs 0018 to 0023 |
+
+Their device checks are named in "What changed between `8a104e1` and this pin" below.
+The pin before this one was made for this change of 2026-10-20, which is still in the candidate and changes no scenario:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
 | https://github.com/hcho22/Immerse/pull/47 | Tests only: the shooting-screen UI tests use waits that answer at once for an element already present (`exists(within:)` and `isGone(within:)`), `CaptureSidewaysUITests`' settle wait waits for the camera open, and `ScreenTestCase` in `App/Immerse/UITests/UITestSupport.swift` makes the session's first tap and screenshot in its class `setUp`. No app source changed | [main-ci-flakes-073](main-ci-flakes-073.md) |
 
-No scenario changes for it.
-The pin before this one was made for this change of 2026-10-19, which is still in the candidate and changes no scenario either:
+The pin before that one was made for this change of 2026-10-19, which is still in the candidate and changes no scenario either:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
@@ -64,16 +73,16 @@ To check it out and confirm it:
 
 ```sh
 git fetch origin
-git checkout --detach 8a104e1e75dd49bae6c6e9705fab8da1793f8dda
+git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130
 git rev-parse HEAD     # must print the hash above
 git status --short     # must print nothing
 ```
 
 Re-pin before any manual run if the app has changed since this commit.
 The app is built from `App/Immerse` and the local packages under `Packages` and from nothing else (`App/Immerse/project.yml`).
-To tell whether it has changed, run `git diff --stat 8a104e1e75dd49bae6c6e9705fab8da1793f8dda origin/main -- App Packages`.
+To tell whether it has changed, run `git diff --stat d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
-When this was written, `8a104e1` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
+When this was written, `d5fd1af` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -81,12 +90,14 @@ reassess affected scenarios after any production, asset, signing or OS change.
 
 The earlier pins are history; do not test any of them as the candidate.
 
+- `8a104e1e75dd49bae6c6e9705fab8da1793f8dda` on `main` (https://github.com/hcho22/Immerse/pull/47), the pin from 2026-10-20 to 2026-10-28.
+  It holds neither Develop at once nor the 2026-10-26 amendment: it has the side-by-side Darkroom held sideways, the Crop and Dodge and Burn tools, the longer shooting-screen header with each Camera's own viewfinder size, fixed focus on the Disposable and the Super 8, no zoom on the movie Cameras, silent movie clips with no microphone request, and an Instant question about each print's original as it closes.
 - `d1ce143b1ec43a37bd4f979e0454e4841787af8d` on `main` (https://github.com/hcho22/Immerse/pull/45), the pin from 2026-10-19 to 2026-10-20.
-  It holds everything the candidate does except the shooting-screen tests' quicker waits, which touch tests only.
+  It holds everything `8a104e1` does except the shooting-screen tests' quicker waits, which touch tests only.
 - `3a008ba3f6701dd2130e6d1219f724a58670f1b9` on `main` (https://github.com/hcho22/Immerse/pull/41), the pin from 2026-10-18 to 2026-10-19.
-  It holds everything the candidate does except the three test changes since (the hosted tests' wait for the app's window scene, the slider drags' held lift with the app's one launch per class, and the shooting-screen tests' quicker waits), which touch tests only.
+  It holds everything `8a104e1` does except the three test changes after it (the hosted tests' wait for the app's window scene, the slider drags' held lift with the app's one launch per class, and the shooting-screen tests' quicker waits), which touch tests only.
 - `79a1b1c629e9158c475057513280d097c6512acc` on `main` (https://github.com/hcho22/Immerse/pull/38), the pin from 2026-10-17 to 2026-10-18.
-  It holds everything the candidate does except the three changes above, which touch tests and the clip reader's error only.
+  It holds everything `8a104e1` does except the five changes of 2026-10-18 to 2026-10-20, which touch tests and the clip reader's error only.
 - `771d5e2514165c04c384f5c7f6d8967af941dace` on `main` (https://github.com/hcho22/Immerse/pull/34), the pin from 2026-10-15 to 2026-10-17.
   It holds PRD 2.1, the four changes of 2026-10-14 and the sideways Darkroom but not the two camera changes: it shows the 6×6's rear viewfinder reversed, turns the shooting screen with the iPhone, has no zoom steps and asks for **Resume Camera** after each Instant exposure.
 - `38792bb3f76472860e1da8a702c78bee20f2b444` on `main` (https://github.com/hcho22/Immerse/pull/31), the pin from 2026-10-14 to 2026-10-15.
@@ -105,7 +116,29 @@ and [QA-14 handoff](launch-readiness.md). It does not replace those IDs, change
 original ADRs, include deferred Groups/Accounts, or check any tracker box.
 The counts are the ones `Scripts/verify-requirement-map.sh` checks at this candidate (137 intake IDs since CAP-15, the warning below 2 GB free, was added on 2026-10-13); the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 the count before CAP-15.
 
-### What changed between `771d5e2` and this pin
+### What changed between `8a104e1` and this pin
+
+Each line names the record to read and the scenarios below that carry its device checks.
+Each record's own list of what only a phone can show is carried by those scenarios.
+The 2026-10-26 amendment's own physical rows are Q01 to Q09; the other scenarios named here are earlier ones it changed, which this re-pin brought up to the candidate.
+
+| Change since `8a104e1` | Record | Scenarios |
+| --- | --- | --- |
+| Debug builds only: **Develop at once**, on by default, shows each capture of every Camera but the Instant developed on a card over the viewfinder, with a notice beside **Done**; it is turned off for every other scenario | [076](develop-at-once-076.md) | [P01 to P05](#develop-at-once-on-a-real-iphone), [Debug Testing Unlock](#debug-testing-unlock) |
+| The Cameras are named Disposable, Instant, 6×6, Super 8 and 16mm on every screen, and the Disposable's, Instant's and Super 8's descriptions carry their era | [ADR 0019](../../2026-09-29-film-camera-experience-v1/adr/0019-every-viewfinder-is-the-iphone-cameras-4-3-frame-and-cameras-carry-no-decade.md) | [Q03](#q03---camera-names), M01 |
+| One 4:3 Viewfinder area, full width, in the same place on every Camera and in every hold, under a one-line header of the Camera's name and its count beside **Done** | [ADR 0019](../../2026-09-29-film-camera-experience-v1/adr/0019-every-viewfinder-is-the-iphone-cameras-4-3-frame-and-cameras-carry-no-decade.md), [077](largest-text-load-audits-077.md) | [Q02](#q02---live-picture-in-the-viewfinder-area), [H01 to H03](#h01---the-shooting-screen-held-upright-and-on-each-side) |
+| A focus switch that starts on Auto with tap to focus: Auto or Fixed on the Disposable and the Super 8, Auto or Manual on the 6×6 with its Focus slider only in Manual, and tap to focus on the Instant and the 16mm | [ADR 0020](../../2026-09-29-film-camera-experience-v1/adr/0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md) | [Q04](#q04---focus-on-real-lenses), M05, [H07](#h07---focus-exposure-and-a-zoom-while-a-photo-saves) |
+| Zoom Steps on the Super 8's and the 16mm's rear camera, taken only between clips | [ADR 0020](../../2026-09-29-film-camera-experience-v1/adr/0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md) | [Q05](#q05---movie-zoom-steps-on-real-lenses), [H06](#h06---the-zoom-steps-on-this-iphone) |
+| Super 8 and 16mm Films loaded on the candidate record live sound, and the app asks for the microphone when their shooting screen first opens; a Film loaded earlier stays silent | [ADR 0018](../../2026-09-29-film-camera-experience-v1/adr/0018-the-movie-cameras-record-live-sound.md) | [Q06](#q06---recorded-sound-on-movie-clips), M18, L07, Xcode Build and Run step 7 |
+| A Movie's sound is Recorded sound, one Soundtrack or Silent, changeable without developing again, in the iPhone Camera app's own format | [ADR 0018](../../2026-09-29-film-camera-experience-v1/adr/0018-the-movie-cameras-record-live-sound.md) | [Q07](#q07---playback-and-sound-format), M20, D02 |
+| The photo view is full screen and pages through developed prints | Phone-feedback PRD, FR-22 | [Q01](#q01---swipe-feel-in-the-photo-view) |
+| One upright Darkroom in every hold with a fixed print area and controls band; Adjust replaces Crop, Saturation and Vignette are added, Dodge and Burn are deferred to v2, and the Darkroom's new limits | [ADR 0021](../../2026-09-29-film-camera-experience-v1/adr/0021-the-darkroom-never-turns-and-its-print-keeps-one-size.md), [ADR 0022](../../2026-09-29-film-camera-experience-v1/adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md), [ADR 0023](../../2026-09-29-film-camera-experience-v1/adr/0023-dodge-and-burn-are-deferred-to-v2.md) | [Q08](#q08---darkroom-feel), [W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone), D01, D04, M13, M14, M28 |
+| The Instant asks one Originals question when the last print of its full pack closes, covering every print still undecided | Phone-feedback PRD, FR-35 | [Q09](#q09---one-complete-instant-pack), M15, D03, C01 |
+| Tests only: a freshly booted simulator is warmed before a session's first screen test | [main-ci-flakes-075](main-ci-flakes-075.md) | None |
+
+### What changed between `771d5e2` and `8a104e1`
+
+This table was written for the 2026-10-17 pin and is kept as it was; its Darkroom line is superseded by the 2026-10-26 amendment, and the table below names where the amendment changed its other scenarios.
 
 Each line names the record to read and the scenarios below that carry its device checks.
 Each record's own list of what only a phone can show is carried by those scenarios.
@@ -217,7 +250,8 @@ The rows after it were recorded at the earlier candidates they name and keep the
 
 | Observed software gate | Bound evidence and limit |
 | --- | --- |
-| Gates at the pinned candidate `8a104e1` | The pull request check of https://github.com/hcho22/Immerse/pull/47 passed at its head `167dc80` (run 39377185262, all four parts and `local-native`, first attempt). `main`'s own check on `8a104e1` (run 39424197098) failed at its first attempt in the harness part, on `PopulatedWorkflowTests.testDarkroomTurningLeavesALoadErrorInPlace` and `PopulatedWorkflowTests.testInstantLookScreens` (scope, packages, ui-text and ui-flows passed), and `local-native` failed after it: the first test stopped at its 3-minute allowance with every assertion passed, after XCTest's animation stall ("App animations complete notification not received" twice, the app's animation-idle requests unanswered; [main-ci-flakes-069](main-ci-flakes-069.md)), and the second met a dropped touch (7 skipped touch events), which got no rerun because the stall was not excused. The second attempt reran the harness part and passed all four parts and `local-native`. [main-ci-flakes-073](main-ci-flakes-073.md) also notes a local sighting of the XCTest animation stall that the captain chose to keep waiting on. A Mac and simulators only: no iPhone ran anything. |
+| Gates at the pinned candidate `d5fd1af` | The pull request check of https://github.com/hcho22/Immerse/pull/63 passed at its head `c3b6ec7`, whose tree is the same as `d5fd1af`'s, on the second attempt of run 40766665458 (all four parts and `local-native`). Its first attempt failed in the packages part on `DevelopmentProcessExitTests.testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns`: the worker process the test ends on purpose stopped instead on Swift's fatal error "Error raised at top level: FilmPersistence.PersistenceError.invalidMedia", so it did not exit with status 81 or write its snapshot; the harness part was cancelled, and `local-native` failed after it. No cause has been looked for, and a pass on the rerun does not show that the failure cannot come back. The earlier heads `0a64f91` (run 40707150573) and `0b83e49` (run 40736496272, both attempts) failed in the ui-flows part. For the other changes since `8a104e1`: https://github.com/hcho22/Immerse/pull/61 passed at its head `818b080`, whose tree is the same as `8eb6f50`'s (run 39679983691), and `main`'s own check on `8eb6f50` passed (run 39689998499); https://github.com/hcho22/Immerse/pull/60 passed at its head `41f1402`, whose tree is the same as `a16187f`'s (run 39541430482), and `main`'s check on `a16187f` passed (run 39595416528); `main`'s check on `d6cbb24`, the documents of https://github.com/hcho22/Immerse/pull/62, passed (run 40510930064). `main`'s own check on `d5fd1af` (run 40789577687) was still running when this was written, with its scope part passed: read its result before testing. A Mac and simulators only, and the simulator has no camera or microphone: no iPhone ran anything. |
+| Gates at the earlier pin `8a104e1` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/47 passed at its head `167dc80` (run 39377185262, all four parts and `local-native`, first attempt). `main`'s own check on `8a104e1` (run 39424197098) failed at its first attempt in the harness part, on `PopulatedWorkflowTests.testDarkroomTurningLeavesALoadErrorInPlace` and `PopulatedWorkflowTests.testInstantLookScreens` (scope, packages, ui-text and ui-flows passed), and `local-native` failed after it: the first test stopped at its 3-minute allowance with every assertion passed, after XCTest's animation stall ("App animations complete notification not received" twice, the app's animation-idle requests unanswered; [main-ci-flakes-069](main-ci-flakes-069.md)), and the second met a dropped touch (7 skipped touch events), which got no rerun because the stall was not excused. The second attempt reran the harness part and passed all four parts and `local-native`. [main-ci-flakes-073](main-ci-flakes-073.md) also notes a local sighting of the XCTest animation stall that the captain chose to keep waiting on. A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `d1ce143` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/45 passed only on a re-run: its ui-flows part failed at its first head `135c9a1` (run 39292846150) and again in the first attempt of run 39307626086 at its final head `cc8bd14`, each time on a slow runner, and `local-native` failed after it; the second attempt of run 39307626086 passed all four parts and `local-native`, and [main-ci-flakes-072](main-ci-flakes-072.md) records the cause it found. `main`'s own check on `d1ce143` passed (run 39342462086, all four parts and `local-native`). A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `d348d99` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/43 passed (run 39202888924, all four parts and `local-native`). `main`'s own check on `d348d99` (run 39252986897) failed in the harness part, on `PopulatedWorkflowTests.testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize` (packages, ui-text and ui-flows passed); its check found no dropped touch for that test, and `local-native` failed after it. No cause was claimed when this row was written; [main-ci-flakes-072](main-ci-flakes-072.md) has since recorded one. `main`'s check on the plan's re-pin to `3a008ba` passed (run 39196559304). A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `3a008ba` (history) | The pull request check of each change passed: for https://github.com/hcho22/Immerse/pull/40 run 39085816736 and for https://github.com/hcho22/Immerse/pull/41 run 39141419393, and `main`'s own check on `3a008ba` passed (run 39165281093). `main`'s check on `7447153`, the merge of https://github.com/hcho22/Immerse/pull/40, failed (run 39098085159); it was not looked into here. A Mac and simulators only: no iPhone ran anything. |
@@ -249,7 +283,7 @@ Keep both records. No evidence of this document's preparation is a rerun.
 | A small iPhone (iPhone SE size, 667 points tall, or an iPhone 12 mini or 13 mini) | The project's small-screen checks ran on iPhone SE (3rd generation) and iPhone 13 mini simulators only ([063](crop-fit-short-screens-063.md), [062](low-storage-warning-062.md), [065](darkroom-landscape-side-by-side-065.md)). **Not yet possible:** the captain's iPhone 13 Pro is 844 points tall and 390 points held sideways, and no small iPhone is on record. | A small iPhone is needed only for the older small-screen and accessibility scenarios that say so, including [S04](#s04---voiceover-and-the-largest-text-size). The Darkroom size comparison is supplied by the SE and largest Pro Max simulator screenshots in the current approval pack; a physical phone is used for the one-pass feel check, not as a substitute for those screens. |
 | Remaining supported/accessibility matrix | iPhone-only, minimum iOS 26 is settled. | DEC-12's device/OS/accessibility matrix remains open: it was not put to the captain. Its speed and storage targets were approved on 2026-10-13 as targets for the iPhone 11, none yet measured (M29). Keep default/largest, light/dark and all-category engineering gates plus assistive testing; no waiver or newly invented numeric threshold. |
 | Entitlement capacity for all cases | One Trial per physical iPhone, first saved capture consumes it. | An approved paid test entitlement or enough dedicated fresh devices. One phone cannot start five saved Trial Films. Browsing and deleting zero-save Films can exercise all choices before consumption, but cannot prove first-save behavior for all five. Never reset service/bundle/Keychain identity or add a production bypass. The Debug-only [testing unlock](#debug-testing-unlock) covers loading and capturing with all five Cameras without the Trial; it is not paid-entitlement or Trial evidence. |
-| Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Release UI exposes no test switch; Debug builds expose only the [testing unlock](#debug-testing-unlock). |
+| Controlled native failure tests | [ReceiptScenarioHarness](../../Probes/ReceiptScenarioHarness/README.md) now compiles for iOS and uses the production `prepared`, `receiptResolved`, `projected` checkpoints, real media journal/SQLite and receipt encoding. [Checkpoint 035](../ReceiptScenarioHarness/035/README.md) records executed simulator results and exact limits. | Native Security capability returned `-34018` unsigned and skipped; no native receipt pass. Physical signing/install/action scope, actual Security faults and power-loss evidence remain absent. Exact Development and FIFO queue-entry controls are still missing; see the [engineering inventory](../ReceiptScenarioHarness/035/remaining-engineering.md). Release UI exposes no test switch; Debug builds expose only the [testing unlock](#debug-testing-unlock) and [Develop at once](#develop-at-once-on-a-real-iphone). |
 
 ## Xcode Build and Run
 
@@ -312,8 +346,8 @@ Install the builds only in that order, oldest first: going back to an older buil
    `ImmerseMonthlyProductID` / `ImmerseYearlyProductID` are intentionally absent.
 7. Build using **Product > Build**. Retain its log and the actual signed `.app`
    artifact path, executable/Info.plist/resource hashes and signature identity.
-   Check requested capabilities/usage strings: Camera and Photos add-only, no
-   microphone/location/library-read request. Do not mistake `CODE_SIGNING_ALLOWED=NO`
+   Check requested capabilities/usage strings: Camera, Photos add-only and the
+   microphone for Super 8 and 16mm clips, with no location or library-read request. Do not mistake `CODE_SIGNING_ALLOWED=NO`
    output for an installable app or reuse the signed marker-probe artifact.
 8. Only within the approved install scope use **Product > Run** to install/launch
    on the confirmed target. Record whether Xcode's debugger is attached. For
@@ -375,6 +409,10 @@ Release, TestFlight and App Store builds keep the StoreKit subscription and one-
 - **Turn the switch off before any Trial, locked-load or plan-screen check** (for example T01...T12 and M27). With it off, the Debug build gates new Films exactly as Release does.
 - Films loaded while the unlock was on are subscription Films. After the switch is turned off they keep their capture rights and stay developable, viewable, editable and exportable (ADR 0006), and they stay on the phone until deleted. The Trial remains unused by them.
 - Scenarios L01 to L08, D01 to D04, I01 to I03, S01 to S05, W01 to W06 and H01 to H10 are run with the switch on. The earlier builds that L07 and I03 install first have the same unlock, on by default, so no build uses the Trial there.
+- Debug builds of the candidate also have **Settings > Develop at once - Debug build**, under this switch and on by default, which shows each capture of every Camera but the Instant developed on the shooting screen ([Develop at Once on a Real iPhone](#develop-at-once-on-a-real-iphone)).
+  **Turn it off for every scenario except P01 to P05**: with it on, a roll is not sealed to the eye as M09 and M12 expect, the viewfinder shows a developed result that L03 and L05 rule out, and its work runs inside the timings of M29 and L06.
+  No **Develop at once** beside **Done** on the shooting screen shows that it is off.
+  The earlier builds that L07 and I03 install first do not have it.
 - Hosted tests cover on, off and off-after-on (`App/Immerse/Tests/TestingUnlockTests.swift`) and the indicator and persisted switch across relaunches (`App/Immerse/UITests/TestingUnlockUITests.swift`); outcomes are in [testing-unlock-debug.md](testing-unlock-debug.md). Physical-device behavior is untested until this manual phase.
 
 ## Ordinary App Scenarios
@@ -390,11 +428,11 @@ Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, 
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
-| M01 / FR-01,03; CAM, SET | Browse all five Cameras; preview approved samples; cancel setup. No Film, capacity debit, Trial consumption, camera/Photos prompt or live filter preview. Short Camera names, with an era only in the Disposable's, Instant's and Super 8's descriptions ([Q03](#q03---camera-names)), no capacity chooser, a Film Stock choice only on the 6×6 and 16mm, and no unsupported emulation claim. | Before/after Journal and entitlement; production samples/rights DEC-05 absent, so preview acceptance remains blocked. PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): the 6×6 and 16mm carry no decade in the catalog, Load Film, capture and Film detail, and VoiceOver reads "6×6" as "6 by 6"; each Load Film screen shows its controls and look lines, and no maker or film is named (the 6×6's Load Film note about a reversed viewfinder was removed with the reversal, [068](capture-sideways-zoom-068.md); none shows). PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): only the 6×6 and 16mm Load Film screens offer "Film Stock", Color (selected first) or Black and white; load one Film on each stock and confirm the Film screen names it, and that nothing later changes it. PRD 2.1 slice 4 additions (`prd-2-slice-4-looks.md`, "Load Film copy"): the 16mm look line follows the chosen Film Stock and changes each time the stock is switched, "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white; the Instant's reads "Warm, faded color, soft contrast and soft detail" and the Super 8's "Muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair". |
+| M01 / FR-01,03; CAM, SET | Browse all five Cameras; preview approved samples; cancel setup. No Film, capacity debit, Trial consumption, camera/Photos prompt or live filter preview. Short Camera names, with an era only in the Disposable's, Instant's and Super 8's descriptions ([Q03](#q03---camera-names)), no capacity chooser, a Film Stock choice only on the 6×6 and 16mm, and no unsupported emulation claim. | Before/after Journal and entitlement; production samples/rights DEC-05 absent, so preview acceptance remains blocked. PRD 2.1 slice 1 additions (`prd-2-slice-1-names-card-copy.md`): the 6×6 and 16mm carry no decade in the catalog, Load Film, capture and Film detail, and VoiceOver reads "6×6" as "6 by 6"; each Load Film screen shows its controls and look lines, and no maker or film is named (the 6×6's Load Film note about a reversed viewfinder was removed with the reversal, [068](capture-sideways-zoom-068.md); none shows). PRD 2.1 slice 3 additions (`prd-2-slice-3-film-stock.md`): only the 6×6 and 16mm Load Film screens offer "Film Stock", Color (selected first) or Black and white; load one Film on each stock and confirm the Film screen names it, and that nothing later changes it. PRD 2.1 slice 4 additions (`prd-2-slice-4-looks.md`, "Load Film copy"): the 16mm look line follows the chosen Film Stock and changes each time the stock is switched, "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges" on Color and "Visible grain, a neutral highlight glow, minor jitter and weave, soft dark edges" on Black and white; the Instant's reads "1970s instant camera: warm, faded color, soft contrast and soft detail" and the Super 8's "1960s home-movie camera: muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair", and the Disposable's starts "1990s disposable camera: borderless 3:2 picture" (FR-24). Since the 2026-10-26 amendment the Super 8 and 16mm Load Film screens say "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera." in place of silent capture (ADR 0018). |
 | M02 / FR-03; SET-05,06,08 | Load explicit Camera/capacity/reveal choice; lock final Movie orientation before recording. Load alone saves no capture or developed result. Rename/lens change cannot change package/version/capacity/orientation. Cancel confirmation creates nothing. | Screens and persisted package/state comparison. Valid entitlement and Camera permission required. On the device, change Text Size in Control Center while the load screen is open and confirm the Movie Orientation choice grows with it (049). |
 | M03 / FR-02; UX-01...08 | Maintain several unfinished Films, suggested roll titles, custom rename before/after Development; switch/resume and Archive/restore. Only revealed thumbnails; dates derive from first/last captures; archive changes no capture/reveal/billing state. | Capture timestamps and visible date/title/state before/after. Multiple Films need approved paid test entitlement. |
 | M04 / FR-04; CAP-01...07 | Capture asymmetric text/grid targets rear/front in portrait and both landscape directions. Front preview mirrored; saved originals, developed photos and Movie clips unmirrored and upright. Switch only between saves/clips; no imports, preview treatment or budget reset. | Paired preview recording and decoded output target orientation, hashes and counters. Native camera only. Turn straight from one landscape side to the other with the viewfinder open, and again while a clip records: the picture must stay upright each time. The shooting screen itself does not turn on the pinned candidate, only its words and icons, so the turning is [H01](#h01---the-shooting-screen-held-upright-and-on-each-side) and [H04](#h04---photos-and-clips-taken-sideways), and "both landscape directions" here means holding the iPhone on each side. |
-| M05 / FR-01; CAM-02,03,05; CAP-07 | Check Disposable fixed-focus/optional supported flash; Instant package behavior; 6x6 square framing, focus/exposure (the rear viewfinder shows the scene the normal way, not reversed, [H05](#h05---the-6x6-viewfinder-is-not-reversed); the zoom steps are [H06](#h06---the-zoom-steps-on-this-iphone) to [H08](#h08---the-6x6-picture-at-every-zoom-step)). Change each permitted control and switch lens. Unsupported hardware controls absent/disabled with explanation, never inert pretending to work. | Actual lens capability and observable output/focus/exposure; no requirement that front lens support rear capabilities. PRD 2.1 additions (`capture-behavior-prd2-slice2.md`): Disposable viewfinder 3:2 and developed picture 3:2 with no border or date stamp; dim scene without flash develops dark, bright scene is not blank, flash lights only nearby subjects and keeps the fixed focus; low-light cue appears in a dim scene (once flash is off and supported), disappears in daylight without flicker, also right after each capture, never appears for a moment when switching lens in daylight, still appears after switching lens or closing and reopening the camera, never darkens the viewfinder and is announced by VoiceOver; Super 8 holds focus at one lens position with automatic exposure; the 6×6 rear viewfinder is not reversed, also after switching to the front lens and back, and neither is the saved and developed asymmetric target, while the front viewfinder is mirrored as before ([H05](#h05---the-6x6-viewfinder-is-not-reversed)); a 6×6 exposure bias does not carry into a Disposable or Super 8 Film opened next, and after a 16mm or Super 8 Film the 6×6 focuses where its Focus control shows. Record the active lens, scene light and the exposure the saved file reports. How those exposures look once developed, the real flash included, is [L05](#l05---each-look-on-real-captures-against-its-approved-board). |
+| M05 / FR-01; CAM-02,03,05; CAP-07 | Check the Disposable's focus switch (Auto first, then Fixed, [Q04](#q04---focus-on-real-lenses)) and optional supported flash; Instant package behavior; 6x6 square framing, focus/exposure (the rear viewfinder shows the scene the normal way, not reversed, [H05](#h05---the-6x6-viewfinder-is-not-reversed); the zoom steps are [H06](#h06---the-zoom-steps-on-this-iphone) to [H08](#h08---the-6x6-picture-at-every-zoom-step)). Change each permitted control and switch lens. Unsupported hardware controls absent/disabled with explanation, never inert pretending to work. | Actual lens capability and observable output/focus/exposure; no requirement that front lens support rear capabilities. PRD 2.1 additions (`capture-behavior-prd2-slice2.md`): Disposable viewfinder 3:2 and developed picture 3:2 with no border or date stamp; dim scene without flash develops dark, bright scene is not blank, flash lights only nearby subjects and leaves the Film's focus mode as it was; low-light cue appears in a dim scene (once flash is off and supported), disappears in daylight without flicker, also right after each capture, never appears for a moment when switching lens in daylight, still appears after switching lens or closing and reopening the camera, never darkens the viewfinder and is announced by VoiceOver; the Super 8 starts on Auto, holds focus at one lens position in Fixed, and keeps automatic exposure in both; the 6×6 rear viewfinder is not reversed, also after switching to the front lens and back, and neither is the saved and developed asymmetric target, while the front viewfinder is mirrored as before ([H05](#h05---the-6x6-viewfinder-is-not-reversed)); a 6×6 exposure bias does not carry into a Disposable or Super 8 Film opened next, and after a 16mm or Super 8 Film, a 6×6 Film set to Manual focuses where its Focus slider shows. Record the active lens, scene light and the exposure the saved file reports. How those exposures look once developed, the real flash included, is [L05](#l05---each-look-on-real-captures-against-its-approved-board). |
 | M06 / FR-04; CAP-08,09 | Deny/restrict Camera, reopen setup and camera, then grant only within authorized settings scope. On the device, confirm Open iPhone Settings from the capture screen reaches Immerse's settings and the shutter stays on screen (048 simulator layout check). No false load/save/capacity debit; recover without losing prior Films. Test initial offline Trial start and existing entitled offline capture. | Permission state, error, counts, actual offline state. Restricted-state setup may require dedicated device/configuration; don't change personal restrictions. |
 | M07 / FR-04,05; CAP-09; QA-13 | Interrupt photo save and Movie recording by background, lock, camera interruption/call and process termination. Saved captures survive; valid interrupted footage saved once, invalid unsaved footage spends nothing, recording never auto-resumes; the Instant's camera starts by itself only after its own print, never after a background or an answered call ([C01](#c01---the-instants-camera-after-each-exposure)). Retry/rapid repeated command never duplicates. Open Camera on a Film whose previous save is still finishing and tap Done at once: the camera indicator must turn off and stay off (046 software ordering check). | Native event timeline, decoded valid clips, once-only IDs/duration, pre/post relaunch state. Controlled call/fault authority needed. |
 | M08 / FR-04,08; CAP-09; QA-09,13 | Exercise low-space/camera unavailable/failed durable write and recovery. Preserve all previous media; no false successful-save/capacity/Trial acknowledgment. Free only authorized synthetic test allocations; retry same pending save. | Storage levels, actual failure and recovery, receipt matrix below. No filling a personal phone to exhaustion. DEC-12's targets were approved on 2026-10-13 and none is measured; its warning below 2 GB free is built (CAP-15, [062](low-storage-warning-062.md)), and [S01 to S05](#low-storage-on-a-real-iphone) carry its device checks, S05 only by the captain's own choice. |
@@ -403,13 +441,13 @@ Since 2026-10-26 the Camera names in the product are Disposable, Instant, 6×6, 
 | M11 / FR-06; DEV-04,06...08 | Start Development; interrupt before assignment, during rendering and after output persistence; reopen/resume. Same treatment/seed/master, once-only completed items, no reroll or partial roll/Movie reveal. Instant prior prints stay available. | Assignment and decoded master/clip hashes, processing journal and visible resume state. Exact phase cases require native harness, not guessed force-quit timing. Since PRD 2.1 slice 4 the treatment version is part of what must not change: a Film keeps the version its Camera package recorded at Load Film ([L07](#l07---a-film-started-before-this-build-keeps-its-look)), and a Develop tapped just before leaving the app is [L02](#l02---develop-tapped-just-before-leaving-the-app). |
 | M12 / FR-04,08; CAP-10; UX-03 | Visit Journal, Film details, archive, search/navigation and export surfaces before reveal and during recovery. No sealed photo/clip review, thumbnail, individual deletion, export or Photos copy. Whole-Film deletion remains possible without reveal. | Screen traversal plus access-path/storage review; no app background preview leaking sealed imagery. Existing UI paths only, no invented search requirement. |
 | M13 / FR-07; DRK; QA-04 | Open each revealed eligible photo and use the tools available for its Camera and Film Stock; save, reopen, cancel and Reset edits on separate photos. FR-29 to FR-34 amend the Darkroom layout and tool set: Adjust replaces Crop, Saturation and Vignette are added, and the Dodge/Burn tool is removed. | Recipe diffs, decoded renders and preserved masters; [D01](#d01---darkroom-controls-saving-and-reset) checks the phone controls and Reset, [D04](#d04---adjust-and-a-short-screen) checks Adjust, and [W01 to W06](#the-darkrooms-upright-layout-on-a-real-iphone) check layout, fixed print area, band, orientation and VoiceOver. Stored legacy Dodge/Burn strokes continue to print; a new build cannot create or edit them. Tool availability follows the print: Filtration and Saturation on color only, Chemical toning on black-and-white only, and Instant quarter turns only in Adjust. The black-and-white look and toner ranges remain those approved in [061](instant-study-and-toning-061.md). |
-| M14 / FR-07 | Edit then Reset; compare original developed master appearance and exported decoded pixels under matching render/export settings. Exact restoration, no accumulated edits, reroll or cross-photo change. No saturation, AI/content removal, stock swap or Movie Darkroom entry. | Original/reset master hash, recipe equality, decoded pixels and export metadata; file-container hash differences alone do not prove pixel differences. |
-| M15 / FR-08; STO; QA-09 | Independently choose developed export and originals export after reveal; also decline both. Originals choice at Development explicit, not preselected; no automatic Photos write. Only individually revealed Instant frames eligible, not future sealed frames. | Selection, permission/write events, actual Photos asset counts/content, source retention. Since the 2026-10-14 pin an Instant print is shown first and its original is asked about when the print is closed, and choosing to save writes the original to Photos at once ([060](darkroom-export-decisions-060.md), DEC-11 decided 2026-10-13); [D03](#d03---the-instant-asks-about-each-prints-original) carries it. A developed Instant export is the picture on its white card, as the Journal shows it (PRD 2.1 slice 1), 2282 x 2774 ([D02](#d02---export-sizes-and-formats-read-from-photos)). |
+| M14 / FR-07 | Edit then Reset; compare original developed master appearance and exported decoded pixels under matching render/export settings. Exact restoration, no accumulated edits, reroll or cross-photo change. No AI/content removal, stock swap or Movie Darkroom entry; Saturation is offered on color prints only (ADR 0022). | Original/reset master hash, recipe equality, decoded pixels and export metadata; file-container hash differences alone do not prove pixel differences. |
+| M15 / FR-08; STO; QA-09 | Independently choose developed export and originals export after reveal; also decline both. Originals choice at Development explicit, not preselected; no automatic Photos write. Only individually revealed Instant frames eligible, not future sealed frames. | Selection, permission/write events, actual Photos asset counts/content, source retention. Since the 2026-10-26 amendment an Instant print is shown first, and the Instant asks one Originals question when the last print of its full pack closes, covering every print still undecided; choosing to save writes those originals to Photos at once (FR-35, [Q09](#q09---one-complete-instant-pack); before it, from the 2026-10-14 pin, each print's original was asked about as that print closed, [060](darkroom-export-decisions-060.md)). A developed Instant export is the picture on its white card, as the Journal shows it (PRD 2.1 slice 1), 2282 x 2774 ([D02](#d02---export-sizes-and-formats-read-from-photos)). |
 | M16 / FR-08 | Deny/restrict add-only Photos, fail actual write, cancel/retry and recover. No false success; retry cannot remove only usable media. Granting export permission never grants library read or triggers other exports. | Actual PhotoKit completion/error and UI outcome, counts, retained sources/masters. Controlled native write-failure harness may be needed. |
 | M17 / FR-08; STO; ARC-03 | Choose originals export: retain until successful Photos write AND decoded/hash-verified master. Decline: cleanup only after verified master and disclosure. Make master missing/corrupt/hash-matching undecodable; cleanup must stop. | Approved synthetic container fault and raw decode/hash checks, originals/masters/recipes/Developed Clips before/after. No corruption of captain media. |
-| M18 / FR-05; MOV-01,02,04,06,07 | Record separated active clips to exactly 200s Super 8 / 167s 16mm, with long idle/pause periods and interruption. Only successfully saved active duration debits; no over-budget footage; per-clip orientation locks at start. | Decoded track durations vs persisted capacity and wall time; no microphone prompt/input/audio track. Capacity is whole 30 fps frames (6000 Super 8, 5010 16mm; a 16mm Film loaded before PRD 2.1 slice 1 keeps 165 s, 4950): record the persisted remaining frames before the last clip and confirm that clip stops at exactly that duration, saves and completes the Film. Do not invent timing tolerance before DEC-04/12. |
+| M18 / FR-05; MOV-01,02,04,06,07 | Record separated active clips to exactly 200s Super 8 / 167s 16mm, with long idle/pause periods and interruption. Only successfully saved active duration debits; no over-budget footage; per-clip orientation locks at start. | Decoded track durations vs persisted capacity and wall time. With microphone access allowed, each clip of a Film loaded on the candidate has an audio track as long as its picture; with it declined, the clip is silent and the shooting screen says "Microphone access is off. Movie clips will be silent." ([Q06](#q06---recorded-sound-on-movie-clips)); a Film loaded with an earlier build stays silent and never asks (ADR 0018). Capacity is whole 30 fps frames (6000 Super 8, 5010 16mm; a 16mm Film loaded before PRD 2.1 slice 1 keeps 165 s, 4950): record the persisted remaining frames before the last clip and confirm that clip stops at exactly that duration, saves and completes the Film. Do not invent timing tolerance before DEC-04/12. |
 | M19 / FR-05; MOV-03,05,10,11; ARC-10 | Record identifiable numbered clips in both orientations; Develop with both final orientations. One chronological Movie preserves start/stop cuts, opposite orientation fits with borders in native 4:3/3:4 proportions, no crop/stretch/9:16 conversion. | Original/clip/master/export transforms, dimensions, frame timing, codec/color/HDR metadata and visual playback. HEVC/HDR capture availability and final specs require explicit coverage, no fixture-only substitute. Capture-format check, device only: on rear and front, the decoded original clip is a native 4:3 format (expected 1440x1080 at 30 fps on HC_iPhone13; provisional pending DEC-04), the viewfinder box is 3:4 in every hold and the picture in it reads upright and, held sideways, fills it as 4:3 ([H03](#h03---the-shape-of-the-live-picture-held-sideways)), same-orientation clips fill the developed frame with no borders and only opposite-orientation clips are bordered. Record the active format if it differs. PRD 2.1 slice 3: develop a 16mm Film loaded on the black-and-white Film Stock and confirm every played and exported frame is gray (`prd-2-slice-3-film-stock.md`). PRD 2.1 slice 4: a Developed Clip is H.264 at 1920 x 1440 for a landscape Film or 1440 x 1920 for a portrait one, 18 frames per second on the Super 8 and 24 on the 16mm (`NativeMovieRenderer.developClip`; the captain approved these sizes and the codec on 2026-10-13, [060](darkroom-export-decisions-060.md), and [D02](#d02---export-sizes-and-formats-read-from-photos) reads them from Photos), and it carries no color tags, which [L08](#l08---an-exported-movie-in-other-players-for-the-captains-decision-on-color-tags) puts in front of the captain. HDR capture is [L04](#l04---hdr-capture-photos-and-movie-clips) and the 16mm color stock's white balance is [L03](#l03---the-16mm-color-stock-under-warm-light). |
-| M20 / MOV-09,11; QA-11 | Play/export silent Movie, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No imported music or voice-over, and a soundtrack replaces a Film's recorded sound, never mixing with it (FR-28); same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity. DEC-11 was decided on 2026-10-13: a soundtrack can be changed later any number of times without developing again ([060](darkroom-export-decisions-060.md)). DEC-05 keeps the catalog empty until a license allows a soundtrack inside exported Movies, so the build offers no soundtrack and this row stays unrunnable on the phone until one ships; the sound choice of Recorded sound and Silent shows without one, and [Q07](#q07---playback-and-sound-format) checks it. Missing production Soundtrack UI is not a pass. |
+| M20 / MOV-09,11; QA-11 | Play/export the Movie with Recorded sound, choose Silent and play/export again, then select one cleared built-in instrumental; replay/export/reopen and Discard/reassemble. No imported music or voice-over, and a soundtrack replaces a Film's recorded sound, never mixing with it (FR-28); same selected soundtrack and orientation survive reassembly. | Audio tracks/content/duration and asset/license identity. DEC-11 was decided on 2026-10-13: a soundtrack can be changed later any number of times without developing again ([060](darkroom-export-decisions-060.md)). DEC-05 keeps the catalog empty until a license allows a soundtrack inside exported Movies, so the build offers no soundtrack and this row stays unrunnable on the phone until one ships; the sound choice of Recorded sound and Silent shows without one, and [Q07](#q07---playback-and-sound-format) checks it. Missing production Soundtrack UI is not a pass. |
 | M21 / FR-16; PRV; QA-11 | Discard revealed photo/clip while viewing; revisit/force-quit/reopen. Numbered metadata-only placeholder, no source/master/clip/cache or old assembled Movie accessible; no capacity refund. Surviving clips keep byte/treatment identity/order/orientation/music. | Before/after media inventory/hash, stale viewer/export handle attempts, decoded rebuilt Movie; current-store scope only. |
 | M22 / FR-16; DEC-09 | Discard the final Movie clip. Retain Film and numbered discarded placeholders, no player or export, no reopened time budget. Relaunch and try stale handles. | Screens/state and storage, zero playable media. External Photos copies intentionally unchanged. |
 | M23 / FR-16,18; ARC-06 | Race Discard/Delete with in-flight rendering, export and pending save. Interrupt/fail filesystem cleanup and resume. Discarding a revealed Instant print must keep another print's unfinished save for Resume Save (046). Tombstones win; stale jobs cannot resurrect media; no successful privacy completion while stale app viewing/export remains possible. | Ordered request/completion/state and file evidence. Already-completed external Photos copies cannot be recalled. Fault/race harness and native permission scope required. |
@@ -459,6 +497,10 @@ Outdoors, frame sky, foliage, buildings and objects, with no person who could be
 Skin tones are therefore not judged on a real capture in this plan; the boards carry the skin scenes.
 Whether to photograph a person for that is the captain's own decision and is not a step here.
 
+**Develop at once off.**
+Turn **Settings > Develop at once - Debug build** off before every scenario here; no **Develop at once** beside **Done** on the shooting screen shows that it is off.
+With it on, each capture develops on the camera at once, so a Film's own Development is not the first after a launch (L01, L02), a developed result shows over the viewfinder (L03, L05), and its work runs inside the times of L06 ([Develop at Once on a Real iPhone](#develop-at-once-on-a-real-iphone)).
+
 **The steps every scenario uses.**
 The names in bold are the words on the screen.
 
@@ -466,10 +508,12 @@ The names in bold are the words on the screen.
    In the **Film Journal**, tap the round plus button near the bottom (VoiceOver calls it "Start a Film").
    On **Choose a Camera**, tap the Camera.
    On its screen choose **Film Stock** (6×6 and 16mm only) and **Movie Orientation** (Movie Cameras only), type a **Film title**, and tap **Load Film**.
-   The first time, iOS asks for the Camera; allow it.
    The screen shows **Testing unlock - Debug build** while the unlock is on.
 2. **Capture.**
    On the Film's screen tap **Open Camera**.
+   The first time, iOS asks for the Camera; allow it.
+   On a Super 8 or 16mm Film loaded with the candidate, iOS then asks, the first time, for the Microphone; allow it, or the clips record no sound and the camera says **Microphone access is off. Movie clips will be silent.**
+   Every Camera's focus switch, where it has one, starts on **Auto**; leave it there unless a scenario says otherwise.
    The big round button takes a photo; on a Movie Camera it starts a clip and the same button stops it.
    The button to its left switches between the rear and front lens, between captures only.
    On the Disposable the button to its right turns the flash on and off.
@@ -829,7 +873,8 @@ Software tests hold this (`TreatmentVersionDevelopmentTests`, `LegacyLookTests`)
 
 **You need.**
 A build from before treatment versions were recorded: commit `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` on `main`, the squash of https://github.com/hcho22/Immerse/pull/24, which was the build before the 2026-10-13 pin.
-The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, and by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3" (`git diff 5c3a217 8a104e1 -- Packages/FilmPersistence Packages/FilmDomain`), so the candidate opens what the earlier build saved.
+The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3", and, in the 2026-10-26 amendment, by three optional fields and the checks that use them: a Film's focus setting, whether its Camera package records live sound, and a Movie's sound choice; a Movie's length is also now read from its picture (`git diff 5c3a217 d5fd1af -- Packages/FilmPersistence Packages/FilmDomain`).
+A record saved before has none of those fields and still opens, as `FilmFocusSettingTests.testOlderFilmWithoutFocusSettingOpensOnAuto` holds for the focus setting: its Film starts on Auto focus, and an earlier Super 8 or 16mm Film stays silent and never asks for the microphone (ADR 0018), so the candidate opens what the earlier build saved.
 The app has no way to bring a Film in from outside, so installing the earlier build first is the only way to have a Film that was started before this one.
 For an agent, the earlier build is a second named artifact and needs its own install scope from Firstmate (authority table, first row); for the captain running this by hand it is his own choice.
 
@@ -857,12 +902,13 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 **Part B, on the candidate.**
 
 1. If you are also running I03, do its part A now, before the candidate.
-   Check out the candidate, `git checkout --detach 8a104e1e75dd49bae6c6e9705fab8da1793f8dda`, and build and run it on the same phone without deleting Immerse.
+   Check out the candidate, `git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists every Film from part A with the same title, Camera, Film Stock and remaining capacity.
 3. Open each "OLD done" Film and compare its pictures with the screenshots from part A.
 4. On each "OLD open" Film capture the same subject again, and on the 16mm color one a clip under the warm bulbs as well.
+   The candidate's shooting screen has a focus switch starting on **Auto** where the earlier build held fixed or manual focus; the focus mode does not change the look this scenario checks, so leave it on **Auto**.
    Then finish it early and develop it.
-5. Start a Film titled "NEW" and its Camera on the same Camera and Film Stock, make the same captures, the warm clip on the 16mm color one included, finish it early and develop it.
+5. Start a Film titled "NEW" and its Camera on the same Camera and Film Stock (on the Super 8 and the 16mm iOS asks for the Microphone the first time; allow it), make the same captures, the warm clip on the 16mm color one included, finish it early and develop it.
 6. On "OLD pack" take two more prints, and start a "NEW pack" and take two.
 
 **Expect.**
@@ -873,6 +919,7 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 - "NEW" has the look of L05.
 - No clip under warm bulbs on the "OLD open" 16mm color Film develops orange, whichever build recorded it, since the earlier look has no fixed daylight balance, while the "NEW" one does, as in L03.
 - No Film is missing, renamed or changed in capacity, and no Development shows **Could not finish**.
+- "OLD" Super 8 and 16mm Films never ask for the Microphone, and their Movies stay silent with no **Movie sound** button, while the "NEW" ones show **Movie sound: Recorded sound** and play their recorded sound.
 
 **It fails if.**
 
@@ -999,7 +1046,7 @@ A developed color Disposable and a black-and-white 6×6 Film. If one of the test
 **Steps.**
 
 1. Open the Disposable's Darkroom. Confirm the print is above the fixed controls band and **Reset to Original** is in the bottom bar.
-2. Move **Print exposure** fully left and right. Read the values, then return it to 0.0.
+2. Select **Exposure** and move its slider (VoiceOver calls it **Print exposure**) fully left and right. Read the values, then return it to 0.0.
 3. Visit **Contrast** and **Filtration**, then **Adjust**, **Saturation** and **Vignette**. Reach both ends of Saturation and Vignette and note how they feel; do not keep an edit yet.
 4. Save a small combination of edits, close the photo, reopen it, and confirm they remain. Tap **Reset to Original** and **Save**.
 5. Repeat the save and Reset check on the black-and-white 6×6, using its available tools; confirm Filtration and Saturation are absent and Chemical toning is available.
@@ -1048,7 +1095,7 @@ A Mac with QuickTime Player, for the Movies.
 | Disposable | JPEG, 4032 x 2688, or 2688 x 4032 when the phone was held upright, from the phone's 12-megapixel capture; in any case 3:2 and no more than 12,000,000 pixels |
 | 6×6 | JPEG, 3072 x 3072 on both Film Stocks; the cropped print square, the same number of pixels each way |
 | Instant | JPEG, 2282 x 2774: the square picture on its white card, exactly as developed |
-| Super 8 | H.264 `.mov`, 1920 x 1440 landscape or 1440 x 1920 portrait, 18 frames a second; a sound track only where the Movie's sound is **Recorded sound**, on a Film loaded with this build, and none where it is **Silent** ([Q07](#q07---playback-and-sound-format) checks the sound) |
+| Super 8 | H.264 `.mov`, 1920 x 1440 landscape or 1440 x 1920 portrait, 18 frames a second; a sound track only where the Movie's sound is **Recorded sound**, on a Film loaded with this build with microphone access allowed while its clips recorded, and none where it is **Silent** ([Q07](#q07---playback-and-sound-format) checks the sound) |
 | 16mm | The same at 24 frames a second, on both Film Stocks |
 
 - Each Movie plays in Photos from start to end and lasts as long as its clips were recorded.
@@ -1058,7 +1105,7 @@ A Mac with QuickTime Player, for the Movies.
 **It fails if.**
 
 - A size, format or frame rate differs from the table, or a Disposable photo has more than 12,000,000 pixels.
-- A Movie reads above its Camera's frame rate, such as 19.9 for a Super 8 Movie developed with this build, or has a sound track where its sound is **Silent** or none where it is **Recorded sound**.
+- A Movie reads above its Camera's frame rate, such as 19.9 for a Super 8 Movie developed with this build, or has a sound track where its sound is **Silent** or none where it is **Recorded sound** and microphone access was allowed while its clips recorded.
 - The cropped 6×6 print is a pixel longer one way.
 - A Movie does not play to its end in Photos, or a copy is missing.
 
@@ -1121,7 +1168,7 @@ The Instant board on the Mac: `open Evidence/AssetReview/looks/instant/index.htm
 
 1. Start an Instant Film titled "I01".
 2. Take one print of each scene, and two of the card with the objects from one spot.
-   When each print's question comes, choose **Save to Photos, then remove from Immerse** (common step 6), so the phone's original of each is in Photos.
+   After the last print, open **Originals** on the Film's screen, choose **Save to Photos, then remove from Immerse** and tap **Confirm choice** (common step 6), so the phone's original of each print is in Photos; the pack is not full, so the question at its end does not come by itself.
 3. Open each print full size in Immerse, and its original in Photos.
 4. Compare each print with its original, with the board's version 4 and version 3 pictures of the nearest kind of scene, and, if you have one, with the real print in the same light.
 5. Write down the phone's display settings (brightness, True Tone, Night Shift).
@@ -1203,7 +1250,7 @@ Here that is a software test with a reopened store and an install-over update in
 
 **You need.**
 The build just before the Instant change: commit `9d54ba166299eea3edfecc2c9fde29331a76dae4` on `main`, the squash of https://github.com/hcho22/Immerse/pull/28, which records version 3 for a new Film (`CameraCatalog.treatmentVersion` in `Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift` reads "film-look-3" there and "film-look-4" at the candidate).
-From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4" (`git diff 9d54ba1 8a104e1 -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
+From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4", and, in the 2026-10-26 amendment, by three optional fields that a record saved before does not have and that change nothing for an Instant pack: a Film's focus setting (the Instant has Auto only), whether its Camera package records live sound, and a Movie's sound choice (`git diff 9d54ba1 d5fd1af -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
 For an agent the earlier build is another named artifact and needs its own install scope (authority table, first row); for the captain it is his own choice.
 
 **Order matters.**
@@ -1222,7 +1269,7 @@ If the candidate is already on the phone, do not install this build over it; rec
 
 **Part B, on the candidate.**
 
-1. Check out the candidate, `git checkout --detach 8a104e1e75dd49bae6c6e9705fab8da1793f8dda`, and build and run it on the same phone without deleting Immerse.
+1. Check out the candidate, `git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists both packs with the same titles and remaining exposures.
 3. Open "V3 pack" and compare its two prints with the screenshots from part A.
 4. Take two more prints of the subject on "V3 pack" and one on "V3 empty".
@@ -1465,7 +1512,7 @@ All six read **UNTESTED: physical execution deferred**. Run them by hand on the 
 
 - The Darkroom has one vertical arrangement in every hold: print area first, a fixed-height controls band below, and **Reset to Original** in the bottom bar. It no longer changes to a side-by-side arrangement in landscape.
 - Changing tools or showing a render error leaves the print area where it was. At the default text size the band is sized for the tallest tool; at larger text sizes its own scroll view makes the controls reachable.
-- Color photo prints offer **Exposure**, **Contrast**, **Filtration**, **Adjust**, **Saturation** and **Vignette**; black-and-white 6×6 prints offer **Exposure**, **Contrast**, **Adjust**, **Vignette** and **Chemical toning**; Instant prints offer **Exposure**, **Contrast**, **Adjust**, **Saturation** and **Vignette**. There is no Dodge/Burn tool. Instant Adjust turns the whole card; other Instant edits reach its picture only.
+- Color photo prints offer **Exposure**, **Contrast**, **Filtration**, **Adjust**, **Saturation** and **Vignette**; black-and-white 6×6 prints offer **Exposure**, **Contrast**, **Adjust**, **Vignette** and **Chemical toning**; Instant prints offer **Exposure**, **Contrast**, **Filtration**, **Adjust**, **Saturation** and **Vignette**, since an Instant print is a color print. There is no Dodge/Burn tool. Instant Adjust turns the whole card; other Instant edits reach its picture only.
 - The photo view turns with the iPhone. The Darkroom keeps its portrait layout while it is open and returns to the orientation of the screen it covered when dismissed. Opened while the iPhone is sideways, its portrait layout may read sideways until the phone is turned upright.
 
 **You need, for all six.**
@@ -1558,20 +1605,21 @@ These ten scenarios, with [C01](#c01---the-instants-camera-after-each-exposure) 
 All ten read **UNTESTED: physical execution deferred**.
 
 **They belong to the pinned candidate.**
-The build before it showed the 6×6's rear viewfinder reversed, turned the shooting screen with the iPhone and had no zoom steps; none of H01 to H10 applies to it, and M05's earlier reversed-viewfinder check was dropped with the reversal.
+The build before the 2026-10-17 pin showed the 6×6's rear viewfinder reversed, turned the shooting screen with the iPhone and had no zoom steps; none of H01 to H10 applies to it, and M05's earlier reversed-viewfinder check was dropped with the reversal.
+The 2026-10-26 amendment, in the candidate since 2026-10-28, kept the screen from turning and changed its layout (ADR 0019): one full-width 4:3 Viewfinder area under a one-line header, a focus switch starting on **Auto** (ADR 0020), and Zoom Steps on the Super 8 and the 16mm too. What follows describes the candidate; [Q02](#q02---live-picture-in-the-viewfinder-area), [Q04](#q04---focus-on-real-lenses) and [Q05](#q05---movie-zoom-steps-on-real-lenses) carry the amendment's own checks.
 
 Like L01 to L08 and W01 to W06, they are written to be run by hand, alone, on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, and they use the common steps and the "What to write down" rule of [Looks on a Real iPhone](#before-you-start).
 The authority and stop conditions at the top of this plan apply to each of them unchanged.
 
 | Case / requirement | Actions and expected result | Evidence / extra prerequisite |
 | --- | --- | --- |
-| H01 / FR-04; CAP-03, QA-13 | Open the camera of each of the five Cameras and hold the iPhone upright, with its top to your left and with its top to your right. The screen never turns: the viewfinder is the same size in the same place in all three holds, and Done, what is left, the status, Switch Camera, the flash and the zoom steps turn to read upright when the iPhone is on its side. Nothing is clipped or overlapping, and every control can be reached with the thumbs. | A screenshot of each Camera in each hold, the viewfinder's edges compared between the three, the captain's words on how it feels. [Steps](#h01---the-shooting-screen-held-upright-and-on-each-side). |
-| H02 / FR-04; QA-13 | Step the text size from the default to the largest on the 6×6 and the Disposable, held upright and on each side. The header stays in view and legible; once it is too long for the screen turned, it scrolls across the screen, which is up and down for you, and every control stays reachable. | Screenshots at each size, the text size setting before and after. [Steps](#h02---text-sizes-on-the-shooting-screen-held-sideways). |
-| H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture reads upright and fills the same viewfinder, as in the iPhone's Camera app, which held so is the Camera's landscape shape: a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm, square for the Instant and the 6×6. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
+| H01 / FR-04; CAP-03, QA-13 | Open the camera of each of the five Cameras and hold the iPhone upright, with its top to your left and with its top to your right. The screen never turns: the Viewfinder area is the same size in the same place in all three holds and on every Camera, and Done, what is left, the status, Switch Camera, the flash and the zoom steps turn to read upright when the iPhone is on its side. Nothing is clipped or overlapping, and every control can be reached with the thumbs. | A screenshot of each Camera in each hold, the viewfinder's edges compared between the three, the captain's words on how it feels. [Steps](#h01---the-shooting-screen-held-upright-and-on-each-side). |
+| H02 / FR-04; QA-13 | Step the text size from the default to the largest on the 6×6 and the Disposable, held upright and on each side. The one-line header stays in view and legible, its words no larger than at the large size; the notices stay over the Viewfinder area, whole; and every control stays reachable. | Screenshots at each size, the text size setting before and after. [Steps](#h02---text-sizes-on-the-shooting-screen-held-sideways). |
+| H03 / FR-04; CAP-03, CAP-11 | Held sideways, the live picture reads upright and fills the Camera's shape in the same Viewfinder area, as in the iPhone's Camera app, which held so is the Camera's landscape shape: a wide 3:2 for the Disposable, a wide 4:3 for the Super 8 and the 16mm, square for the Instant and the 6×6. What the viewfinder frames is what is saved. | The viewfinder against the developed result for each Camera. [Steps](#h03---the-shape-of-the-live-picture-held-sideways). |
 | H04 / FR-04, FR-05; CAP-01, MOV-04 | Take photos upright and on each side, and a clip started upright and one started on its side. Each photo develops the way it was held, upright in the picture; each clip keeps the orientation it started in, even if the iPhone is turned while it records, while the words and icons turn with the iPhone to read upright. | Developed pictures and clips, with the orientation each was taken in. [Steps](#h04---photos-and-clips-taken-sideways). |
 | H05 / FR-04; CAP-05, CAP-14 | The 6×6's rear viewfinder shows a page of text the normal way, not reversed, also after switching to the front lens and back; the front viewfinder is mirrored; the saved and developed pictures of both are not. Every other Camera is as before. | A paired viewfinder screenshot and developed picture of an asymmetric target, rear and front. [Steps](#h05---the-6x6-viewfinder-is-not-reversed). |
-| H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step, of any lens, only where the Camera app also shows it, no zoom control on the front camera or on any other Camera, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
-| H07 / FR-04; CAP-06, CAP-07 | At each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
+| H06 / FR-04; CAP-07, CAP-14 | The 6×6's zoom steps are exactly the rear lenses this iPhone has, labeled as its own Camera app labels them, and each one changes the picture to that lens. No step the iPhone lacks, any native crop step, of any lens, only where the Camera app also shows it, no zoom control on the front camera, the Disposable or the Instant, 1x each time the 6×6 opens, and no other Camera opened afterwards is zoomed. The Super 8's and the 16mm's own steps are [Q05](#q05---movie-zoom-steps-on-real-lenses). | The Camera app's labels written down first, a screenshot at each step. [Steps](#h06---the-zoom-steps-on-this-iphone). |
+| H07 / FR-04; CAP-06, CAP-07 | With the 6×6's focus switch on **Manual**, at each zoom step the Focus slider works where the lens can focus by hand, or the note "Manual focus unavailable on this lens" shows in its place, and the Exposure slider keeps the bias you set, within that lens's range. The viewfinder does not move as the sliders and notes change. A zoom step tapped while a photo saves is refused, and the saved photo is from the lens that took it. | Screenshots per step, the lens the saved file reports. [Steps](#h07---focus-exposure-and-a-zoom-while-a-photo-saves). |
 | H08 / FR-01; CAM-05 | One exposure of the same scene at every zoom step develops to a borderless 3072 by 3072 square. Beside the 1x picture the telephoto and any crop step show a narrower view with no more softness than the iPhone's own Camera shows at that step. | Developed pictures, the size Photos reports, the captain's eye on detail. [Steps](#h08---the-6x6-picture-at-every-zoom-step). |
 | H09 / FR-04; QA-13 | Tap Done with the iPhone held sideways: the Film screen turns with the iPhone at once, and so do the Journal and Settings. Open the camera sideways and it comes up in the portrait layout. | Screen recording of each turn. [Steps](#h09---done-while-the-iphone-is-sideways). |
 | H10 / FR-29, FR-35; DRK, DEV | After camera use, the Darkroom from the Journal keeps its one portrait arrangement in every hold. The Instant reveal and Darkroom remain inside the shooting screen's portrait hold; cancelling Darkroom must not release that outer hold. Closing the reveal follows the pack-end Originals question and resumes capture. | Screenshots and a screen recording of the Instant case. [Steps](#h10---the-darkroom-and-an-instant-print-after-the-camera), plus [W01](#w01---the-darkroom-keeps-one-layout-in-every-hold) and [W05](#w05---turning-with-the-darkroom-open). |
@@ -1579,23 +1627,24 @@ The authority and stop conditions at the top of this plan apply to each of them 
 **What the build does, from the record and the code.**
 
 - The shooting screen keeps the portrait layout in every hold.
-  The viewfinder box is the Camera's portrait shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm), the same size in the same place whichever way the iPhone is held.
-  The whole viewfinder shows above the shutter bar on every Camera: it is the largest box of its shape that the room leaves after the header and the controls, narrower than the screen where the room is short (the Disposable, the Super 8 and the 16mm, and the 6×6 with its two rows), and it never changes size when a message comes or goes.
-  The 6×6's Focus and Exposure rows are always there, so the viewfinder does not move when the camera opens, switches or takes a zoom step; where the lens cannot do one, its row says so in the slider's place ("Manual focus unavailable on this lens", "Exposure unavailable on this lens").
-  Held upright, the screen is as it was except that **Done** is a button at the top of the screen's own content, not in a navigation bar, and the header keeps the room it needs turned, so the viewfinder sits a little lower.
-- Held on its side, the live picture fills the viewfinder and reads upright, as in the iPhone's Camera app: the box, portrait on the screen, is then the landscape shape the Camera develops to (a square stays square), with no black band around the picture.
-- Held on its side, the header (**Done**, the Camera's name, what is left and the status of a complete Film) turns as one block, so it reads upright and sits against the edge of the screen that is the top for you; where the screen has room to spare, as on a tall iPhone with a square viewfinder, the name and the count each read on one line, and the viewfinder sits centred in the room under the header's lines, with Done in the same place just below the status bar on every Camera.
-  The error, the message, **Open iPhone Settings**, **Resume Camera**, the flash and fixed exposure notes ("... unavailable on this lens") and the Disposable's low-light cue sit in one dark block over the viewfinder, against its top edge as you hold the iPhone, so a message never moves the viewfinder; "Saved" shows there for a moment after each capture.
+  The Viewfinder area is the full width of the screen and 4:3 portrait, directly under the header, the same size in the same place on every Camera and whichever way the iPhone is held (ADR 0019).
+  The Camera's shape (square for the Instant and the 6×6, 2:3 for the Disposable, 3:4 for the Super 8 and the 16mm) sits centred in it, only that shape receives the live picture, and the bars around it stay black.
+  Where the screen is too short for the header and the whole area above the shutter bar, the screen scrolls; the area never shrinks, and it never changes size when a message comes or goes.
+  The focus switch (Auto and Fixed on the Disposable and the Super 8, Auto and Manual on the 6×6) and the 6×6's Exposure row float over the bottom of the Viewfinder area in every hold, so they never move it; the 6×6's Focus row shows only in Manual, above its Exposure row, and where the lens cannot do one, its row says so in the slider's place ("Manual focus unavailable on this lens", "Exposure unavailable on this lens").
+  Held upright, **Done**, the Camera's short name and what is left share one 44-point line under the status bar, with **Develop at once** beside **Done** in a Debug build while that switch is on, and the Viewfinder area starts directly below it.
+- Held on its side, the live picture fills the Camera's shape and reads upright, as in the iPhone's Camera app: the shape is then the landscape shape the Camera develops to (a square stays square), and the black bars around it in the Viewfinder area carry no picture.
+- Held on its side, the one-line header (**Done**, the Camera's short name and what is left, or the status of a complete Film) turns as one block, so it reads upright and runs down the side of the Viewfinder area that is the top for you, on a translucent panel; the area does not move.
+  The error, the message, the microphone note, **Open iPhone Settings**, **Resume Camera**, the lens notes ("... unavailable on this lens"), the Disposable's low-light cue and, in a Debug build with Develop at once on, its card sit in one dark block over the Viewfinder area: at its top upright, and in its middle held on its side, clear of the header and of the controls at the bottom, so a message never moves the area; "Saved" shows there for a moment after each capture.
   The focus and exposure captions turn beside their sliders, and the zoom steps turn too.
-  At the largest text sizes the error, the message, the buttons and the notes are part of the header instead, where they scroll.
-  The Switch Camera, flash and microphone icons in the shutter bar turn in place.
+  At every text size the notices stay over the Viewfinder area, whole: where they do not fit, they read at the largest smaller size, no smaller than the default, with every word on one line, and the header's words grow no larger than at the large size.
+  The Switch Camera and flash icons in the shutter bar turn in place.
   The shutter does not turn.
-- A header too long to fit turned scrolls across the screen, from its top, and below the smallest viewfinder (220 points) the screen scrolls up and down, as at the largest text sizes.
+- A header too long to fit turned scrolls across the screen, from its top, and where the header and the whole Viewfinder area do not fit above the shutter bar, the screen scrolls up and down.
 - Upside-down portrait is not handled: the screen reads as if the iPhone were upright.
 - A photo is saved the way the iPhone was held, and a clip keeps the orientation it started in; while a clip records, the screen's words and icons still turn with the iPhone.
-- The zoom steps (6×6, rear camera) sit in a dark pill over the bottom of the viewfinder, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera or on another Camera.
-  Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures; the buttons are dimmed while the camera is busy.
-  Your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
+- The zoom steps (the 6×6, the Super 8 and the 16mm, rear camera only) sit in a dark pill over the bottom of the Viewfinder area, as in the iPhone's Camera app, one button for each lens the iPhone has and one for each native sensor crop of a lens where the camera reports it, and nowhere on the front camera, the Disposable or the Instant; on the Super 8 and the 16mm a lens is offered only if it records the wide lens's 4:3 movie size at 30 frames per second.
+  Taking a step changes the camera to that lens, and crops it for a crop step, only between exposures or Recorded Clips; the buttons are dimmed while the camera is busy or recording.
+  On the 6×6 your exposure bias goes with you to the new lens of a zoom step, within its range; Switch Camera leaves the front and the rear camera each on its own.
   Once a lens is the camera's, its crops are read again: a crop step its format does not report is refused, the camera stays on the step it was on, and the crop leaves the pill.
   Each time the camera opens, and each time it switches back to the rear, it is on **1x**.
 - Everything opened from the camera stays upright, as the captain chose ("Instant - 1"): a print that opens over the camera after an Instant exposure, the pack's one question about the originals after its last print and the Darkroom opened from that print keep the camera's portrait layout, so held on its side they read sideways until you turn the iPhone upright; the camera beneath them is never seen turned as they come and go.
@@ -1631,11 +1680,11 @@ Keep every photo and clip as test media, out of Git.
 
 **Expect.**
 
-- The screen stays in the portrait layout in all three holds: the viewfinder keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words and the icons turning; the picture keeps reading upright and filling the viewfinder.
-- The whole viewfinder shows above the shutter bar in every hold, on every Camera, with nothing of it behind the bar; a message or Resume Camera showing over it, and then going, does not change its size or place.
+- The screen stays in the portrait layout in all three holds: the Viewfinder area keeps its size and place, to the point, and nothing slides or resizes as the iPhone turns apart from the words and the icons turning; the picture keeps reading upright and filling the Camera's shape.
+- The whole Viewfinder area shows above the shutter bar in every hold, on every Camera, with nothing of it behind the bar, or the screen scrolls to show it; a message or Resume Camera showing over it, and then going, does not change its size or place.
 - Held on its side, every word and icon reads upright, the count and status are legible, and nothing is clipped, hidden behind the shutter bar or overlapping the viewfinder or another control: the notes, the captions, the cue, the message and the zoom labels are whole.
 - **Done** is a button of at least the size of a thumb tip, wherever it sits in each hold.
-- The Disposable's cue reads upright on its side, in a dark capsule at the edge of the viewfinder that is its top.
+- The Disposable's cue reads upright on its side, in a dark capsule in the middle of the Viewfinder area, clear of the header.
 
 **It fails if.**
 
@@ -1645,7 +1694,7 @@ Keep every photo and clip as test media, out of Git.
 
 **What is a finding and not a failure.**
 How the turned words feel, whether the header's place against the screen's edge is where the captain expects it, and what the camera does with **Portrait Orientation Lock** on, are his to judge; a change would be his decision.
-The viewfinder is narrower than the screen on a short iPhone, a smaller picture than the room beside it could frame; that is the cost of showing the whole of it, and the size is his to judge.
+On a short iPhone the screen scrolls to show the whole Viewfinder area; how that feels is his to judge.
 
 **Write down.**
 Each Camera and hold, a screenshot of each, any control that did not respond, and the captain's words on the feel.
@@ -1662,7 +1711,7 @@ Each Camera and hold, a screenshot of each, any control that did not respond, an
 
 **Expect.**
 
-- The header and the controls stay legible and in the same order at every size; at the largest sizes the error, the message and the notes are in the header, not over the viewfinder.
+- The header and the controls stay legible and in the same order at every size; at the largest sizes the error, the message and the notes stay over the Viewfinder area, whole, at the largest smaller size that fits.
 - Once the header is too long for the screen turned, it scrolls across the screen, which is up and down for you, from its top; **Done** is in view at the start.
 - The shutter, Switch Camera and the zoom steps stay reachable, and the viewfinder is not hidden behind anything.
 
@@ -1683,7 +1732,7 @@ The size, the hold, a screenshot, whether the header scrolled, and the settings 
 
 **Expect.**
 
-- Held on its side, the viewfinder shows the page upright and the picture fills the whole box, which held so is the Camera's landscape shape (3:2 or 4:3; square for the Instant and the 6×6), with no black band around the picture.
+- Held on its side, the viewfinder shows the page upright and the picture fills the whole of the Camera's shape, which held so is its landscape shape (3:2 or 4:3; square for the Instant and the 6×6); only the Viewfinder area's black bars lie around it, with no picture in them.
 - What the viewfinder frames is what is saved: the developed picture's edges are where the viewfinder's were.
 
 **It fails if.**
@@ -1742,21 +1791,22 @@ The screenshots and developed pictures, rear and front.
 
 1. Open the 6×6 and compare its zoom steps with the labels written down from the iPhone's Camera app.
 2. Tap each step in turn and take a screenshot, noting the view each shows.
-3. Switch to the front lens and open each of the other Cameras in turn.
+3. Switch to the front lens, then open the Disposable and the Instant in turn.
 4. Zoom the 6×6 to its narrowest step, tap **Done**, open the 6×6 again, then open a Disposable, an Instant and a Super 8.
+   The Super 8 has steps of its own, which [Q05](#q05---movie-zoom-steps-on-real-lenses) checks; here, only look that it opens on 1x.
 
 **Expect.**
 
 - The 6×6 lists the same steps as the Camera app, each labeled the same, and each shows that lens's view: 0.5x the widest, 1x the middle, the telephoto step the narrowest.
 - No step the iPhone lacks; a native crop step of any lens, such as 2x, only where the Camera app also lists it.
 - A tap never lands on a step other than the one tapped: a step is taken, or the camera stays where it was.
-- The front camera and every other Camera show no zoom steps.
-- The 6×6 is on 1x each time it opens, and the other Cameras opened after it are not zoomed.
+- The front camera, the Disposable and the Instant show no zoom steps.
+- The 6×6 is on 1x each time it opens, and the other Cameras opened after it are not zoomed: the Super 8 opens on its own 1x.
 
 **It fails if.**
 
 - A step is missing, extra or labeled differently from the Camera app, or a step does not change the view.
-- A zoom step shows on another Camera or the front camera, the 6×6 does not open on 1x, or another Camera opens zoomed.
+- A zoom step shows on the Disposable, the Instant or the front camera, the 6×6 does not open on 1x, or another Camera opens zoomed.
 
 **What is a finding and not a failure.**
 Whether a native crop step appears, and where, is the iPhone's own to say; the 13 Pro has no high-resolution wide sensor, so none is expected.
@@ -1769,7 +1819,8 @@ The Camera app's labels, the 6×6's labels, each step's screenshot and which Cam
 
 **Steps.**
 
-1. At each step, drag the Focus slider across its range on a near and a far object, and drag the Exposure slider.
+1. Set the 6×6's focus switch to **Manual**, so its Focus slider shows.
+   At each step, drag the Focus slider across its range on a near and a far object, and drag the Exposure slider.
 2. Write down any step on which the note "Manual focus unavailable on this lens" shows in place of the Focus slider.
 3. At 1x, set the Exposure to +1.0 EV, then tap each other step and back to 1x, watching the Exposure value and the viewfinder's edges.
 4. Tap the shutter and, at once, tap another zoom step; repeat a few times, and then develop the Film.
@@ -1892,7 +1943,7 @@ It reads **UNTESTED: physical execution deferred**.
 - After steps 7 and 8 the screen reads "Camera paused. Saved captures are unchanged." (or "Camera is available. Resume when ready.") with **Resume Camera**, and the camera does not start by itself.
 - After step 9 the camera is off on the Journal (no green camera dot in the status bar) and the reopened camera starts normally.
 - After step 10 the screen reads "Pack complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
-- After step 11 the Disposable's complete Film reads "Film complete", shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
+- After step 11 the Disposable's Film reads "Ended early", or "Film complete" if all 27 were taken, shows no live viewfinder and no **Resume Camera** button, and does not start the camera.
 
 **It fails if.**
 **Resume Camera** has to be tapped after an ordinary exposure or after Notification Center or Control Center over a print, **Resume Camera** appears even briefly while the viewfinder comes back, the camera starts by itself after the phone was locked, after an answered call, after Done or after the pack's last exposure, **Resume Camera** shows on a complete pack or Film, or the green camera dot stays on after leaving the camera.
@@ -1909,7 +1960,7 @@ Every capture develops, one after another in the order it was saved, and none is
 That is how to tell the switch's state without opening Settings: while it is on, those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done**, from before the first capture, and with it off, as on the Instant at any time, nothing shows there.
 The roll itself stays sealed and develops exactly as before, and the Instant is unchanged.
 Release, TestFlight and App Store builds have none of it (`sh Scripts/verify-release-excludes-testing-unlock.sh`).
-It is not in the pinned candidate until the plan is re-pinned to a build that holds it.
+The candidate pinned on 2026-10-28, `d5fd1af`, holds it.
 A card over the viewfinder is a developed result shown before Development, which FR-04 rules out for the product, so **turn the switch off for every scenario outside P01 to P05**, and above all for L03 and L05, which watch that the viewfinder never previews the developed result; no **Develop at once** beside **Done** shows it is off.
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
 Each scenario reads **UNTESTED: physical execution deferred**.
@@ -1927,7 +1978,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 **Expect.**
 
-- Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold, readable and clear of the viewfinder and the shutter, at every text size, before and after the card is closed: beside Done, or under it where the header's line is too short, as held on its side at the default size.
+- Each of the four Cameras' shooting screens shows **Develop at once** next to **Done** in every hold, on the one-line header, readable and clear of the shutter and the Camera's controls, at every text size, before and after the card is closed; held on its side the header, notice included, runs down the side of the Viewfinder area on its translucent panel.
 - A card marked **Debug preview** shows within a moment of each save, says the photo or clip is developing, and then shows its picture.
 - The full-size view shows that Camera's look and, on the 6×6 and the 16mm, the chosen Film Stock, with the notice **Develop at once - Debug build** under it.
 - A clip plays on a loop with its recorded sound through the speaker on a Film loaded with this build, and silently on a Film loaded with an earlier build or with the microphone declined; a soundtrack is chosen and heard only on the developed Movie.
@@ -2151,7 +2202,7 @@ completion stays withheld until every required check, decision and hardware gate
 is resolved and recorded. Actual publication needs separate release authority.
 ## 2026-10-26 phone-feedback acceptance
 
-These cases map one-to-one to the physical-iPhone rows in the amendment's section 5.4. Every case is **UNTESTED: physical execution deferred**. The candidate must be re-pinned after this change merges, and the captain must authorize physical execution. Simulator screenshots and package results do not count as phone results. Use test Films and a non-private scene; preserve receipts without keeping private pictures, recordings, or audio.
+These cases map one-to-one to the physical-iPhone rows in the amendment's section 5.4. Every case is **UNTESTED: physical execution deferred**. The candidate pinned on 2026-10-28, `d5fd1af`, is this change's merge, and the captain must authorize physical execution. Simulator screenshots and package results do not count as phone results. Use test Films and a non-private scene; preserve receipts without keeping private pictures, recordings, or audio.
 
 | Case | Physical-only acceptance row | State |
 | --- | --- | --- |
@@ -2165,7 +2216,7 @@ These cases map one-to-one to the physical-iPhone rows in the amendment's sectio
 | Q08 | Darkroom feel (FR-29 to FR-34) | UNTESTED |
 | Q09 | One complete Instant pack (FR-35) | UNTESTED |
 
-Run only against the post-merge candidate and only after the captain authorizes the phone work. Before each case, record the candidate commit, phone model and iOS version, Film used, and any temporary permission or setting that the approved procedure requires. Restore temporary settings at the end. Stop and record an unexpected data loss, a blocked capture, a permission state that cannot be restored, or an export sent somewhere other than the phone's Photos library; do not repeat a destructive step to get a cleaner result.
+Run only against the pinned candidate and only after the captain authorizes the phone work. Before each case, record the candidate commit, phone model and iOS version, Film used, and any temporary permission or setting that the approved procedure requires. Restore temporary settings at the end. Stop and record an unexpected data loss, a blocked capture, a permission state that cannot be restored, or an export sent somewhere other than the phone's Photos library; do not repeat a destructive step to get a cleaner result.
 
 ### Q01 - Swipe feel in the photo view
 
@@ -2173,7 +2224,7 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Steps.** Open its first developed print from the Film screen. Swipe through the developed prints in both directions, including across the sealed or discarded frame. Try to swipe past the first and last prints. Open the Darkroom and Cancel back to the print, then Discard only if this test Film is disposable.
 
-**Expect.** Each swipe feels like paging through photographs and changes exactly one print in capture order. Sealed and discarded frames are skipped; the ends do not wrap. Cancel returns to the same print. Discard shows the next developed print or closes the photo view when none remains.
+**Expect.** Each swipe feels like paging through photographs and changes exactly one print in capture order. Sealed and discarded frames are skipped; the ends do not wrap. Cancel returns to the same print. Discard shows the next developed print, or the one before it after the last print, or closes the photo view when none remains.
 
 **Write down.** Whether the direction and distance feel predictable one-handed; note any missed, repeated or overscrolled page. Capture a screen recording with the test Film only.
 
@@ -2251,7 +2302,7 @@ Run only against the post-merge candidate and only after the captain authorizes 
 
 **Prepare.** Load a fresh test Instant Film with all ten exposures remaining. Confirm storage is available. Use only test subjects and retain no private print.
 
-**Steps.** Capture and reveal all ten prints. Leave any Originals undecided until the tenth reveal. When the single Originals question appears, Cancel it, close the photo view, and revisit the shooting screen to check that the question does not return by itself. Use the Film screen's Originals button to decide later.
+**Steps.** Capture and reveal all ten prints. Leave any Originals undecided until the tenth reveal. Close the tenth print. When the single Originals question appears, Cancel it, and stay on the shooting screen, then leave it and open it again, to check that the question does not return by itself. Use the Film screen's Originals button to decide later.
 
 **Expect.** No Originals question appears after prints one through nine. After the final print, one question covers every undecided original. A cancelled question does not return by itself; the Film screen's Originals button remains available and lets the person decide later.
 
