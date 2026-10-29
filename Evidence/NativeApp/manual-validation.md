@@ -83,7 +83,7 @@ The app is built from `App/Immerse` and the local packages under `Packages` and 
 To tell whether it has changed, run `git diff --stat d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
 When this was written, `d5fd1af` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
-Two later changes to `App` or `Packages` are not in this pin yet, and the next re-pin, made on `main` after the second merges, takes both: https://github.com/hcho22/Immerse/pull/65 (`Packages` only: a failed clip read names AVFoundation's error, which changes no scenario) and the rename of the photo Roll Cameras' early-finish action to **Finish & Develop Early** ([078](finish-and-develop-early-078.md)), whose phone checks are [F01 and F02](#finish--develop-early-on-a-real-iphone).
+Two later changes to `App` or `Packages` are not in this pin yet, and the next re-pin, made on `main` after the second merges, takes both: https://github.com/hcho22/Immerse/pull/65 (`Packages` and a hosted test under `App/Immerse/Tests`: a failed clip read names AVFoundation's error, which changes no scenario) and the rename of the photo Roll Cameras' early-finish action to **Finish & Develop Early** ([078](finish-and-develop-early-078.md)), whose phone checks are [F01 and F02](#finish--develop-early-on-a-real-iphone).
 Until that re-pin, the candidate's menu reads **Rewind & Develop Early**, and F01 and F02 wait for it.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
@@ -525,7 +525,7 @@ The names in bold are the words on the screen.
    Only after the pack's last print closes does a sheet titled **Originals** ask, once, about every print whose original is still undecided (FR-35).
    Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
 3. **Finish a roll or reel before it is full.**
-   On the Film's screen tap the **...** menu at the top right, then **Finish & Develop Early** (photo roll; **Rewind & Develop Early** on a build from before 2026-10-28, such as `d5fd1af`) or **Stop & Develop Early** (Movie), then **Complete Film**.
+   On the Film's screen tap the **...** menu at the top right, then **Finish & Develop Early** (photo roll; **Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`) or **Stop & Develop Early** (Movie), then **Complete Film**.
    The unused exposures or time are lost for good, which is what the confirmation says.
    The **Development** sheet then opens by itself.
    An Instant pack has no such command: each print develops by itself right after it is taken.
@@ -1997,7 +1997,7 @@ For each capture, the seconds from the shutter to the developed card, a screensh
 **Steps.**
 
 1. On a new Disposable Film take three photos of different scenes, opening each full-size preview and taking a screenshot of it.
-2. Tap **Done**, open the Film's **...** menu, choose **Finish & Develop Early** (**Rewind & Develop Early** on a build from before 2026-10-28), complete the Film and develop it.
+2. Tap **Done**, open the Film's **...** menu, choose **Finish & Develop Early** (**Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`), complete the Film and develop it.
 3. Open each developed photo full size and compare it with its preview screenshot.
 4. Repeat with a 16mm Film of two short clips, comparing each clip's preview with the Developed Movie.
 
