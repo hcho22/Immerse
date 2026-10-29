@@ -58,9 +58,7 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         for camera in cameras {
             let app = launch(camera.arguments + Self.evidenceArguments)
             openFilm(app)
-            let open = app.buttons["Open photo 1"]
-            XCTAssertTrue(open.waitForExistence(timeout: 30), camera.name)
-            tapWhole(app, open)
+            openPhoto(app)
             let photo = app.descendants(matching: .any)["photo-view-image"]
             XCTAssertTrue(photo.waitForExistence(timeout: 10), camera.name)
             XCTAssertTrue(waitUntilStill(app), camera.name)
@@ -264,9 +262,7 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         let arguments = NativePhotoRenderer.readsFilmTables ? ["--medium-format"] : ["--medium-format", "--black-and-white"]
         let app = launch(arguments + Self.evidenceArguments)
         openFilm(app)
-        let open = app.buttons["Open photo 1"]
-        XCTAssertTrue(open.waitForExistence(timeout: 30))
-        tapWhole(app, open)
+        openPhoto(app)
         tapDarkroom(app)
         openAdjust(app)
         let box = cropBox(app)
@@ -461,6 +457,14 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
     private func openFilm(_ app: XCUIApplication) {
         app.buttons.containing(NSPredicate(format: "label CONTAINS %@", "Private synthetic Film")).firstMatch.tap()
         XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 5))
+    }
+
+    /// Opens the Film's first print, scrolling to it where a large text size puts it below the screen.
+    private func openPhoto(_ app: XCUIApplication) {
+        let open = app.buttons["Open photo 1"]
+        for _ in 0..<12 where !open.exists { if !open.waitForExistence(timeout: 3) { app.swipeUp() } }
+        XCTAssertTrue(open.exists, "The Film's first print")
+        tapWhole(app, open)
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {
