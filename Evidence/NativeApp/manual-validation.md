@@ -83,6 +83,8 @@ The app is built from `App/Immerse` and the local packages under `Packages` and 
 To tell whether it has changed, run `git diff --stat d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
 When this was written, `d5fd1af` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
+Two later changes to `App` or `Packages` are not in this pin yet, and the next re-pin, made on `main` after the second merges, takes both: https://github.com/hcho22/Immerse/pull/65 (`Packages` and a hosted test under `App/Immerse/Tests`: a failed clip read names AVFoundation's error, which changes no scenario) and the rename of the photo Roll Cameras' early-finish action to **Finish & Develop Early** ([078](finish-and-develop-early-078.md)), whose phone checks are [F01 and F02](#finish--develop-early-on-a-real-iphone).
+Until that re-pin, the candidate's menu reads **Rewind & Develop Early**, and F01 and F02 wait for it.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -523,7 +525,7 @@ The names in bold are the words on the screen.
    Only after the pack's last print closes does a sheet titled **Originals** ask, once, about every print whose original is still undecided (FR-35).
    Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
 3. **Finish a roll or reel before it is full.**
-   On the Film's screen tap the **...** menu at the top right, then **Rewind & Develop Early** (photo roll) or **Stop & Develop Early** (Movie), then **Complete Film**.
+   On the Film's screen tap the **...** menu at the top right, then **Finish & Develop Early** (photo roll; **Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`) or **Stop & Develop Early** (Movie), then **Complete Film**.
    The unused exposures or time are lost for good, which is what the confirmation says.
    The **Development** sheet then opens by itself.
    An Instant pack has no such command: each print develops by itself right after it is taken.
@@ -1995,7 +1997,7 @@ For each capture, the seconds from the shutter to the developed card, a screensh
 **Steps.**
 
 1. On a new Disposable Film take three photos of different scenes, opening each full-size preview and taking a screenshot of it.
-2. Tap **Done**, open the Film's **...** menu, choose **Rewind & Develop Early**, complete the Film and develop it.
+2. Tap **Done**, open the Film's **...** menu, choose **Finish & Develop Early** (**Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`), complete the Film and develop it.
 3. Open each developed photo full size and compare it with its preview screenshot.
 4. Repeat with a 16mm Film of two short clips, comparing each clip's preview with the Developed Movie.
 
@@ -2163,7 +2165,7 @@ nonmigration are both required; one cannot substitute for the other.
 | FR-03 A01...A03 | M01, M02, M06, T01. |
 | FR-04 A01...A06 | M04, M06...M08, M12, M15...M17, T02...T08, S03, S05; the viewfinder never previewing the developed result is also watched in L03 and L05; the shooting screen held sideways, the 6×6's viewfinder and its zoom steps are H01 to H10, and the Instant's camera after each exposure is C01. |
 | FR-05 A01...A06 | M07, M18...M20, M29, L03, L04, L06, and H04 for a clip's orientation; approved output specs still needed, and L08 puts one of them, color tags on a Movie, to the captain. |
-| FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03. |
+| FR-06 A01...A05 | M09...M11, M24, L01, L02, L07, I03, S03, and F01 and F02 for the early-finish action's label. |
 | FR-07 A01...A05 (PRD 2.1 baseline) | M13, M14, M28, D01, D04, I02, W01 to W06 (current Darkroom layout and controls); FR-29 to FR-34 supersede the baseline orientation, Crop and Dodge/Burn tool details. |
 | FR-08 A01...A10 | M12, M15...M17, M25, B01...B04; L04 for what an exported copy reports, D02 for its size and format, Q09 for the Instant's one question about its originals (D03 before 2026-10-26), and L08 for how an exported Movie looks elsewhere. |
 | FR-16 A01...A08 | M21...M23, T07, B03. |
@@ -2307,3 +2309,50 @@ Run only against the pinned candidate and only after the captain authorizes the 
 **Expect.** No Originals question appears after prints one through nine. After the final print, one question covers every undecided original. A cancelled question does not return by itself; the Film screen's Originals button remains available and lets the person decide later.
 
 **Write down.** Remaining-exposure count at each reveal, question count and timing, selected response, and whether the Film screen's Originals button works. Record screenshots using test prints only.
+
+## Finish & Develop Early on a Real iPhone
+
+On 2026-10-28 the captain renamed the photo Roll Cameras' early-finish action from **Rewind & Develop Early** to **Finish & Develop Early**, because neither original rewinds its film at the end; the Movie Cameras keep **Stop & Develop Early**, the Instant still has no early end, and the rule is unchanged: the rest of the roll is wasted after the confirmation that names the exact number of exposures ([078](finish-and-develop-early-078.md), DEC-01 in part).
+He also gave the photo item the skip-to-end symbol (⏭, `forward.end`) in place of skip-back (⏮, `backward.end`), which the Movie's item keeps.
+The simulator holds the label and its symbol on the Disposable and the 6×6 at the default text size and at AX XXXL, and the Movie's label and symbol beside them (`FinishEarlyWorkflowTests`); only a phone shows how the menu reads and how VoiceOver says it.
+The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), on test Films that can be finished.
+Each scenario reads **UNTESTED: physical execution deferred**.
+
+### F01 - The label and symbol on the Disposable and the 6×6
+
+**Steps.**
+
+1. Load a Disposable Film, take one photo, tap **Done**, and on the Film's screen open the **...** menu.
+2. Do the same on a 6×6 Film.
+3. On each, set **Settings > Accessibility > Display & Text Size > Larger Text** to the largest size (**Larger Accessibility Sizes** on, the slider at its end), open the menu again, then set the text size back.
+4. On the Disposable Film, choose **Finish & Develop Early**, read the confirmation, and tap **Complete Film**.
+5. Open the **...** menu of a Super 8 or 16mm Film with one clip, and of an Instant Film.
+
+**Expect.**
+
+- The Disposable's and the 6×6's menus read **Finish & Develop Early**, whole at the default and the largest text size, beside the skip-to-end symbol (⏭) at the default size (at the largest size the system menu draws no symbol beside any item), and no screen says **Rewind & Develop Early**.
+- The confirmation is unchanged: **Complete Film early?**, the exact number of exposures that will be wasted, and **Complete Film**; afterwards the **Development** sheet opens by itself; closed without developing, the Film is complete and offers **Develop Film**.
+- The Movie's menu reads **Stop & Develop Early** beside the skip-back symbol (⏮) at the default size, and the Instant's menu has no early end.
+
+**It fails if.**
+Any screen shows **Rewind & Develop Early**, the photo item shows the skip-back symbol, the label is cut or overlaps another item at either size, the confirmation's count differs from the exposures left, or a Movie or Instant menu changed.
+
+**Write down.**
+A screenshot of each menu at both text sizes and of the confirmation.
+
+### F02 - VoiceOver reads Finish & Develop Early
+
+**Steps.**
+
+1. Turn on VoiceOver, open the **...** menu of the 6×6 Film from F01's step 2, which is still open, and move to the early-finish item.
+2. Do the same on the Movie Film from F01's step 5.
+
+**Expect.**
+VoiceOver says "Finish and Develop Early" (or "Finish ampersand Develop Early"), a button, on the photo Film, and "Stop and Develop Early" on the Movie Film.
+
+**It fails if.**
+VoiceOver says "Rewind", skips the item, or reads a label that is not on the screen.
+
+**Write down.**
+What VoiceOver said for each item, word for word.

@@ -15,7 +15,7 @@ import XCTest
         app.buttons.containing(NSPredicate(format: "label CONTAINS %@", "Private synthetic Film")).firstMatch.tap()
         XCTAssertTrue(app.navigationBars["Private synthetic Film"].waitForExistence(timeout: 5))
         app.buttons["Film actions"].tap()
-        app.buttons["Rewind & Develop Early"].tap()
+        app.buttons["Finish & Develop Early"].tap()
         app.buttons["Complete Film"].tap()
         XCTAssertTrue(app.navigationBars["Development"].waitForExistence(timeout: 10))
         reveal(app.buttons["Save Originals to Photos after reveal"], in: app).tap()

@@ -60,6 +60,11 @@
 > The **Viewfinder** sits in one area on every Camera, the phone's Camera app's 4:3 photo frame (ADR 0019); a developed photo opened from its Film opens in a full-screen view that swipes between prints and turns with the phone, an Instant print revealed at the camera shows alone in that view and stays upright while the shooting screen is up, and the **Darkroom** never turns (ADR 0021).
 > In the **Darkroom**, **Adjust** (crop, quarter turns, straightening) and **Vignette** are new terms; "The **Darkroom** does not offer a saturation control." was replaced by a Saturation control on color prints as a stated exception (ADR 0022); the Instant's rules gained quarter turns; **Basic Edit** is the general word for a Darkroom edit and no longer lists "saturation slider" under _Avoid_; "Darkroom adjustments" became "Basic Edits"; and **Dodge/Burn** with its rule moved, unchanged, to "Deferred to v2 - Darkroom Dodge/Burn" (ADR 0023).
 > Reading the draft of that amendment the same day, he chose that an Instant asks about keeping its prints' originals once, after the pack's last print, instead of after each print ("Originals option appears AFTER all 10 exposures are used"), which added a Relationships rule.
+>
+> **2026-10-28 note (DEC-01, in part).**
+> The captain renamed the personal Roll Film's early-finish action from "Rewind & Develop Early" to **Finish & Develop Early**, because neither photo Roll Camera's original rewinds its film at the end: a 6×6 winds its roll film onto a take-up spool that goes to the lab, and many disposables wind the film back into its cassette as they shoot.
+> The term, its _Avoid_ list, the **Early Development Warning**'s _Avoid_ ("Silent rewind" became "Silent early finish") and the Roll Film completion rules below use the new name; the rule is unchanged, and the Movie action keeps **Stop & Develop Early**.
+> The Flagged ambiguity on "Finish Film Early" is history about an early-preview loophole and keeps the name of its day.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -365,13 +370,13 @@ _Avoid_: Silent expiration, automatic closure
 The explicit Host override available 48 hours after Group Film closure that permanently excludes unresolved uploads and permits Development.
 _Avoid_: Automatic upload timeout, silent capture loss
 
-**Rewind & Develop Early**:
+**Finish & Develop Early**:
 The irreversible personal Roll Film action that wastes every remaining Exposure and makes the Film ready for Development.
-_Avoid_: Preview shortcut, refundable capacity, temporary pause
+_Avoid_: Rewind & Develop Early, preview shortcut, refundable capacity, temporary pause
 
 **Early Development Warning**:
 The confirmation shown before early personal Development, stating exactly how many remaining Exposures or how much recording time will be permanently wasted.
-_Avoid_: Silent rewind, reversible confirmation
+_Avoid_: Silent early finish, reversible confirmation
 
 **Stop & Develop Early**:
 The irreversible personal Movie Film action that wastes all remaining recording time and makes the Film ready for Development.
@@ -515,8 +520,8 @@ _Avoid_: Draft, incomplete album
 - Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
 - The shared Group Movie and its Developed Exports use the same released Soundtrack choice; reassembly after Discard or Withdraw preserves that choice without blocking the removal of private content.
 - Adding a **Soundtrack** does not permit trimming, reordering, voice-over, or arbitrary music import.
-- A personal **Roll Film** becomes a Completed Film when its full Exposure Limit is consumed or its owner performs **Rewind & Develop Early**.
-- Rewind & Develop Early permanently wastes every remaining Exposure and requires an **Early Development Warning**.
+- A personal **Roll Film** becomes a Completed Film when its full Exposure Limit is consumed or its owner performs **Finish & Develop Early**.
+- Finish & Develop Early permanently wastes every remaining Exposure and requires an **Early Development Warning**.
 - A personal **Movie Film** becomes a Completed Film when its full Duration Limit is consumed or its owner performs **Stop & Develop Early**.
 - Stop & Develop Early permanently wastes all remaining recording time and requires an **Early Development Warning**.
 - Each **Camera** defines exactly one **Reveal Rule** that reflects its Historical Format.
@@ -898,6 +903,7 @@ No Camera's name carries a decade; the Disposable's, the Instant's and the Super
 - The Cameras were named "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" and "16mm Cinema" - resolved (2026-10-26, "we don't need the year of the camera"): they are **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm** on every screen, and the Disposable's, the Instant's and the Super 8's catalog descriptions carry their era, while the 6×6's and the 16mm's name no decade; a Film loaded under an old name keeps its stored Camera package and is shown with the new one. Code identifiers such as `disposable1990s` and `super8HomeMovie` keep the old names.
 - "Adjust" could mean a Darkroom edit in general, or light and color as the phone's Photos app uses the word - resolved (2026-10-26): **Adjust** is the Darkroom tool that crops, turns and straightens a print, and a Darkroom edit in general is a **Basic Edit**, never an "adjustment".
 - The Super 8's **Format Reference** had no sound, so "Live Audio when the Historical Format supports in-camera audio" kept both movie Cameras silent - resolved (2026-10-26, ADR 0018): both record **Live Audio** on Films loaded with the app build that adds it or a later one, as the captain chose knowing the original was silent.
+- "Rewind & Develop Early" named an end neither photo Roll Camera's original has - resolved: it was renamed **Finish & Develop Early** on 2026-10-28, because neither photo Roll Camera's original rewinds its film at the end; the rule is unchanged.
 - "Saturation" was named as a **Basic Edit** — resolved: omit it because a modern saturation slider has no direct universal darkroom equivalent; use medium-specific analog controls instead. Reversed on 2026-10-26 by captain decision ([ADR 0022](../adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md)): the **Darkroom** offers Saturation on color prints only, as a stated exception to the physical-technique test, from half the developed color to half again, never reaching gray.
 - Camera naming could use invented brands, real manufacturer models, or format labels — resolved: use descriptive **Historical Formats**.
 - A universal no-preview rule conflicted with historically instant formats — resolved: each **Camera** owns a **Reveal Rule**, and Camera authenticity takes precedence over uniform behavior.

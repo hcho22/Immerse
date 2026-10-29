@@ -6,7 +6,7 @@ import XCTest
         openFilm(app)
         XCTAssertFalse(app.buttons["Develop Film"].exists)
         app.buttons["Film actions"].tap()
-        XCTAssertFalse(app.buttons["Rewind & Develop Early"].isEnabled)
+        XCTAssertFalse(app.buttons["Finish & Develop Early"].isEnabled)
         app.buttons["Delete Film"].tap()
         XCTAssertTrue(app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch.waitForExistence(timeout: 5))
         cancelConfirmation(app)
@@ -285,7 +285,7 @@ import XCTest
 
     private func early(_ app: XCUIApplication) {
         app.buttons["Film actions"].tap()
-        app.buttons["Rewind & Develop Early"].tap()
+        app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.buttons["Complete Film"].waitForExistence(timeout: 5))
     }
 

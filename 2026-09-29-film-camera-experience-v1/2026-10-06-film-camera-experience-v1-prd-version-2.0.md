@@ -97,6 +97,12 @@ Reading its draft the same day, he set the open sound format and the Instant rev
 The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-22 to FR-35, and ADRs 0018 to 0023 record them.
 Where it supersedes text in this file, a short note marked "2026-10-26" says so and points there; this file's text, FR, DEC and section numbers are otherwise unchanged.
 
+**Decision of 2026-10-28 (amended in place, no version change).**
+The captain renamed the photo Roll Cameras' early-finish action from "Rewind & Develop Early" to "Finish & Develop Early", choosing it over "Wind On & Develop Early" and over keeping the old name.
+Neither original rewinds its film at the end: a 6×6 winds its roll film onto a take-up spool that goes to the lab, and many disposables wind the film back into its cassette as they shoot, while the app holds every Camera to a named original.
+The new name sits beside the Movie Cameras' "Stop & Develop Early", which is unchanged, and the early-finish rule is unchanged: the rest of the roll is still wasted after the explicit warning, with no preview shortcut.
+The name is amended in place, in Journey 1's step 7 and in FR-06, each with a short note marked "2026-10-28"; the decision is recorded under DEC-01 in section 15 and in the tracker's decisions table, and no FR, DEC or section number changes.
+
 **Decisions of 2026-10-16 (amended in version 2.1, no version change).**
 After trying the build on his iPhone, the captain made three decisions, recorded in [ADR 0017](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and in the tracker's decisions table:
 
@@ -336,13 +342,15 @@ Wherever a step says "open", nothing in this PRD decides it, and any behavior th
 | 4 | The Film starts as a Trial Film from this iPhone's entitlement.<br>Starting it needs no connectivity.<br>The entitlement is consumed only by the first successfully saved capture. | Story 43; FR-21; DEC-15 |
 | 5 | The person shoots exposures through a framing-only viewfinder, optionally with the front camera.<br>In dim light the viewfinder shows a cue advising flash.<br>Each saved capture stays sealed with no thumbnail or review.<br>A failed save consumes no exposure and no Trial entitlement. | Stories 9 and 10; FR-04; FR-21 |
 | 6 | They leave the app and come back.<br>Saved captures remain and the Film is still unfinished. | Stories 6 and 7; FR-02; FR-04 |
-| 7 | At 27 exposures the roll is complete, and nothing is developed automatically.<br>Alternatively, they choose Rewind & Develop Early and confirm the exact number of exposures permanently wasted. | Story 12; FR-06; section 11 |
+| 7 | At 27 exposures the roll is complete, and nothing is developed automatically.<br>Alternatively, they choose Finish & Develop Early and confirm the exact number of exposures permanently wasted. | Story 12; FR-06; section 11 |
 | 8 | They choose to develop. | FR-06 |
 | 9 | A brief Development ritual reveals the roll.<br>If the app is interrupted, Development resumes with the same result.<br>The original-export choice is presented at personal Development, and Save Originals to Photos is offered after eligible reveal.<br>When the choice appears relative to the reveal is open.<br>Immerse removes its private source photos only as FR-08 describes. | Stories 18 and 19; FR-06; FR-08 |
 | 10 | The developed photos appear as a contact sheet in the Film Journal.<br>Nothing sealed leaks into thumbnails before this point. | Story 51; FR-02 |
 | 11 | Optionally, they open a photo in the Darkroom, adjust it, and Reset to Original. | Stories 20 and 21; FR-07 |
 | 12 | They choose Save Developed to Photos.<br>A denied permission or a failed write is not shown as success.<br>Saving developed output and saving originals are independent choices. | Story 40; FR-08 |
 | 13 | The app explains that Films are protected only if the person has an iOS device backup, and that a Photos export is a flattened result, not a restorable Film.<br>Where and when it explains this is open. | Story 40; principle 8; FR-08 |
+
+> **2026-10-28:** Step 7's "Finish & Develop Early" was "Rewind & Develop Early" until the captain renamed it that day; the step is otherwise unchanged (see "Decision of 2026-10-28" in the document guide).
 
 **Open in this journey.**
 
@@ -598,13 +606,15 @@ Super 8 and 16mm do not capture Live Audio. After Development, a silent Movie ma
 
 **Tasks DEV-01–DEV-08, DEV-10** (DEV-09 is deferred to v2)
 
-A personal Roll Film completes at full exposure capacity or through Rewind & Develop Early. A personal Movie completes at full recorded duration or through Stop & Develop Early. Early actions require explicit confirmation stating the exact remaining exposures or time permanently wasted. No refund, reopening, or temporary preview shortcut.
+A personal Roll Film completes at full exposure capacity or through Finish & Develop Early. A personal Movie completes at full recorded duration or through Stop & Develop Early. Early actions require explicit confirmation stating the exact remaining exposures or time permanently wasted. No refund, reopening, or temporary preview shortcut.
 
 The completed Film is eligible for explicit Development. A brief ritual reveals it without an artificial waiting period. Reaching capacity does not automatically develop. Instant Cameras instead develop and reveal each exposure individually, including the final print of the pack. Discarding a print still consumes its frame.
 
 Development assigns each capture a one-time Developed Treatment. The treatment shows the Camera's format as freshly processed, judged against its Format Reference (section 6.3); it adds no fading, yellowing, dye shift, or wear from storage or repeated projection (ADR 0013). Each Instant print carries a slight variation in color and density of its own, assigned once. Preserve the developed master and each Developed Clip. Interruptions—including app closure—resume the same Development, keep saved captures intact, and preserve already assigned treatment. Incomplete results stay hidden; previously revealed Instant prints stay revealed. Recovery must not restore removed media.
 
 **Acceptance:** Repeated retries do not reroll treatments. A warning of five unused exposures means exactly five are irrevocably wasted if confirmed. Completion and Development remain distinct. Under DEC-09, early Development is disabled until a Film has a saved capture, and an empty Film uses Delete Film rather than an invented empty developed result.
+
+> **2026-10-28:** "Finish & Develop Early" was "Rewind & Develop Early" until the captain renamed it that day, because neither photo Roll Camera's original rewinds its film at the end; the rule, and the Movie's "Stop & Develop Early", are unchanged (see "Decision of 2026-10-28" in the document guide).
 
 ### FR-07 — Photo Darkroom
 
@@ -1270,7 +1280,7 @@ These are unresolved choices, not newly approved features. Their tasks appear as
 
 | ID | Decision needed | Why it matters |
 | --- | --- | --- |
-| DEC-01 | Final brand/product name and final in-app copy | Current title is descriptive; historic labels avoid unapproved branding. |
+| DEC-01 | Final brand/product name and final in-app copy. **Partly decided 2026-10-28 (captain), for one label only:** the photo Roll Cameras' early-finish action is "Finish & Develop Early" (it was "Rewind & Develop Early"). The product name and the rest of the final copy stay open. | Current title is descriptive; historic labels avoid unapproved branding. |
 | DEC-02 | Monthly/yearly prices, offers, restoration/refund/revocation handling. Timing (captain decision): decide after testing willingness to pay with TestFlight testers and before billing work starts in M2 | One-plan structure is fixed; commercial and edge entitlement behavior are not. Nothing in M0 and M1 depends on the price. |
 | DEC-03 | Native stack. Settled 2026-09-30: minimum iOS 26 and iPhone only; v1 needs no backend or auth vendors. The native stack itself stays open for M0; the architecture baseline lists GRDB (D4) and Swift 6, SwiftUI and Xcode Cloud (D8) only as defaults D4 and D8, not a decision | Required to turn proposed modules into deployable architecture. |
 | DEC-04 | Render specs. **Partly decided 2026-10-05 and 2026-10-06 (captain, version 2.0):** each Camera's Format Reference, picture shape, look, imperfections and frame rate are set in section 6. Still open: exact tone, contrast and grain values for each Camera and Film Stock; the Instant's contrast and the amount of its print-to-print variation, which wait on a study of preserved 1970s prints; toning controls; export codecs/resolution/audio guarantees. **Partly decided 2026-10-13 (captain):** photos export as JPEG, the Disposable at no more than 12,000,000 pixels in its borderless 3:2 shape and the 6×6 at 3072 × 3072; Movies export as H.264 in a `.mov` at 1920 × 1440, or 1440 × 1920 for a portrait Movie, the Super 8 at 18 frames a second and the 16mm at 24, silent; an Instant print exports exactly as it was developed, 2282 × 2774, the 2048 × 2048 picture on its white card ("instant export size: A,  leave Movies as they are"), and Movies keep no color tags. **Decided later on 2026-10-13 (captain), on review boards of their own:** the Instant's contrast, its print-to-print variation unchanged, and the toning strength ([A.1 and A.3 of the 2026-10-13 addendum](2026-09-29-film-camera-experience-v1-open-decision-recommendations.md#a1-and-a3---the-instants-contrast-and-variation-and-the-toning-strength)). Still open: the native 4:3 format size of Movie capture, provisional in the tracker's DEC-04 | Prototype samples are illustrative, not validated emulation, and no developed output has been compared with a Format Reference. |
@@ -1358,6 +1368,7 @@ Rows tagged [v2 Groups] record decisions made for the Group design, which versio
 | A 6×6 Medium Format waist-level viewfinder that shows the scene reversed left to right | Captain decision, 2026-10-16 (ADR 0017): "6x6 Viewfinder - normal viewfinder. No reverse". The rear viewfinder shows the scene the normal way; the front viewfinder stays mirrored for every Camera, and no developed exposure is reversed. |
 | A shooting screen that turns with the iPhone | Captain decision, 2026-10-16 (ADR 0017), after he saw a Camera held sideways with its viewfinder running off the screen: "viewfinder should be same size whether the user is shooting portrait or landscape style. Adjust the text when shooting so that its legible when shooting both styles", and "Like iPhone Camera" when asked how it should work. The screen keeps its portrait layout in every hold, the viewfinder keeps its size and place, and only the words and icons turn to read upright. Photos still save the way the iPhone was held. |
 | A single lens on every Camera | Captain decision, 2026-10-16 (ADR 0017): "6x6 - allow zoom as allowed by camera native (0.5x, 1x, 3x, 5x, etc.)". The 6×6's rear camera offers the steps of the iPhone's own lenses, and a sensor-crop step only where the camera reports one; the front camera and every other Camera keep their single lens. |
+| "Rewind & Develop Early" for ending a photo roll early | Captain decision, 2026-10-28 (DEC-01, for this label only): "Finish & Develop Early", chosen over "Wind On & Develop Early" and over keeping the old name, because neither photo Roll Camera's original rewinds its film at the end. The early-finish rule and the Movie Cameras' "Stop & Develop Early" are unchanged. |
 
 The ADR compilation preserves historical text unchanged. Where an ADR is narrower or older than later detailed rules, its collection notes identify the applicable qualification rather than rewriting its history.
 
