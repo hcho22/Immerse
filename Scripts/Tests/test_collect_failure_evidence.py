@@ -1,6 +1,7 @@
 """Scripts/collect-failure-evidence.sh: what a failed packages part keeps, and that only a failed packages part keeps it."""
+import json
 import os
-import re
+import subprocess
 import tempfile
 import unittest
 
@@ -73,18 +74,20 @@ class CollectFailureEvidenceTests(unittest.TestCase):
         self.assertEqual(kept, ["JetsamEvent-2026-10-28-%06d.ips" % index for index in range(10, 30)])
 
     def test_the_workflow_keeps_it_only_after_a_failed_packages_part(self):
-        with open(os.path.join(ROOT, ".github", "workflows", "native.yml")) as file:
-            workflow = file.read()
-        steps = re.split(r"\n      - ", workflow)
-        named = {re.match(r"(?:name: )?(.*)", step).group(1): step for step in steps}
-        names = list(named)
-        for name in ("Keep the evidence of a failed packages part", "Retain the evidence of a failed packages part"):
-            self.assertIn("\n        if: failure() && matrix.part == 'packages'\n", named[name], name)
-            self.assertGreater(names.index(name), names.index("Validate"))
-        self.assertIn("run: sh Scripts/collect-failure-evidence.sh DerivedData/FailureEvidence",
-                      named["Keep the evidence of a failed packages part"])
-        self.assertIn("path: DerivedData/FailureEvidence", named["Retain the evidence of a failed packages part"])
-
+        # GitHub reads the workflow as YAML; Ruby's YAML reads it the same way and hands the steps over as JSON.
+        parsed = subprocess.run(["ruby", "-ryaml", "-rjson", "-e", "puts JSON.dump(YAML.load_file(ARGV[0]))",
+                                 os.path.join(ROOT, ".github", "workflows", "native.yml")],
+                                capture_output=True, text=True, check=True)
+        steps = json.loads(parsed.stdout)["jobs"]["part"]["steps"]
+        names = [step.get("name") for step in steps]
+        keep = steps[names.index("Keep the evidence of a failed packages part")]
+        retain = steps[names.index("Retain the evidence of a failed packages part")]
+        for step in (keep, retain):
+            self.assertEqual(step["if"], "failure() && matrix.part == 'packages'")
+            self.assertGreater(steps.index(step), names.index("Validate"))
+        self.assertEqual(keep["run"], "sh Scripts/collect-failure-evidence.sh DerivedData/FailureEvidence")
+        self.assertEqual(retain["with"]["path"], "DerivedData/FailureEvidence")
+        self.assertEqual(retain["with"]["name"], "failure-evidence-packages")
 
 if __name__ == "__main__":
     unittest.main()
