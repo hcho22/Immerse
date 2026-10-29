@@ -58,6 +58,22 @@ jobs:
           esac
       - name: Validate
         run: sh Scripts/validate-local.sh
+      # A packages part that failed keeps what the machine recorded about a media read that did not finish: the video
+      # decoder's crash and memory-pressure reports, the system log around the failure filtered to it and to the test
+      # processes, and the process-exit probe's unfinished Films (Scripts/collect-failure-evidence.sh), so a clip that
+      # failed to read can be told from a decoder that failed (Evidence/NativeApp/developed-clip-reader-failure-070.md).
+      - name: Keep the evidence of a failed packages part
+        if: failure() && matrix.part == 'packages'
+        timeout-minutes: 10
+        run: sh Scripts/collect-failure-evidence.sh DerivedData/FailureEvidence
+      - name: Retain the evidence of a failed packages part
+        if: failure() && matrix.part == 'packages'
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-evidence-packages
+          path: DerivedData/FailureEvidence
+          if-no-files-found: ignore
+          retention-days: 14
       # A part that passed only because a screen test was run once more, on the simulator's own record that it
       # dropped that test's touch or the result bundle's record of an animation stall (Scripts/screen-tests.sh),
       # says so, naming each test and the record, on the run's page and to the summary check.
