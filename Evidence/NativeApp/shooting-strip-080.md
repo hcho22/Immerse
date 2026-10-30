@@ -82,12 +82,14 @@ VoiceOver reads them "Focus" and "Exposure" with the slider's value ("50 percent
 
 **One departure from the brief, which the captain accepted.**
 The brief, and FR-39 item 3, have the slider open in place of the Zoom Steps, the switch and the buttons staying, and the same button bringing the steps back.
-Held sideways, a slider's caption turns to read upright beside it, which makes the slider's line about 64 points tall; with the settings' line under it the strip would be about 120 points, and the iPhone 17 Pro leaves 102 under the area.
+Held sideways, a slider's caption turns to read upright beside it, which makes the slider's line about 64 points tall; with the settings' line under it the strip would be about 120 points, more than the iPhone 17 Pro leaves under the area (102 points then, 118 for the 6×6 with today's shorter shutter bar).
 So the open slider takes the whole strip, the switch and the buttons included, and the close button is the way back; the strip stays under the area on the 17 Pro and every larger iPhone.
 The captain accepted it on seeing the screenshots: "Accept: an open slider takes the whole strip".
 
 **The shutter bar.**
-To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in a 76-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 118 points under the area, and the 17 Pro Max 147 to 150.
+To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in a 76-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 118 points under the area with the 6×6 at the default text size, and the 17 Pro Max 147 to 150.
+The room is not quite the same on every Camera: SwiftUI puts its default spacing between the shooting column and the shutter bar, which it sets from the views on either side, so on the 17 Pro, measured in one run of the hosted tests, the room under the area is 114 points with every Camera but the 6×6 at every text size, and 118 with the 6×6 at the default size and 117 at the largest size short of the accessibility sizes and above.
+The shutter itself is 122 points below the area on every Camera, and with that spacing set to none the room was 122 points on all of them; the figures above and in this record are those of that run.
 The shutter sits on the screen's centre line on every Camera, in every hold and at every text size: Switch Camera and the flash each take one half of the room beside it.
 Before, the row was centred as a whole, so at the largest text size on the iPhone SE the enlarged Switch Camera symbol, with nothing as wide on the other side, pushed the Super 8's and the 16mm's record button about 19 points right of centre, and the Disposable's flash pushed its shutter a few points left.
 
@@ -126,7 +128,7 @@ On the branch merged with `main` at `ac371d7`, on an iPhone 17 Pro simulator, iO
   A first run failed every sideways hold on one check: Done's round button sat 5 points further in than upright, because the `.glass` button style pads a circle's label wider than the circle; Done is now its own glass circle (`glassEffect`).
 
 The approval screenshots, on the iPhone SE (3rd generation) and the iPhone 17 Pro Max simulators, iOS 26.5, are kept with the task's records, outside this repository.
-The set he approved showed the plain counts only and three lenses' four Zoom Steps; `testTheShootingScreensForApproval` now also keeps each of the four state words held sideways in both holds at the default and the largest text size, and, but on the iPhone SE, the Super 8 upright with the 17 Pro's five Zoom Steps at the largest size short of the accessibility sizes and the first of those, run on the iPhone 17 Pro too for that.
+The set he approved showed the plain counts only and three lenses' four Zoom Steps; `testTheTopBarsStatesHeldSidewaysForApproval` now keeps each of the four state words held sideways in both holds at the default and the largest text size, and `testTheSuper8sFiveZoomStepsForApproval`, but on the iPhone SE, the Super 8 upright with the 17 Pro's five Zoom Steps at the largest size short of the accessibility sizes and the first of those, run on the iPhone 17 Pro too for that; each is a test of its own beside `testTheShootingScreensForApproval`, so none of the three comes near the hosted run's 120 seconds a test on CI (77, 34 and 4 seconds on the 17 Pro simulator, in that order).
 Those screenshots have not yet been before the captain.
 
 ## Not Proven Without a Phone

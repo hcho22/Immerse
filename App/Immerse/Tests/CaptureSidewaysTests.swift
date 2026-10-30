@@ -597,15 +597,12 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
-    /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, the
-    /// 6×6 with each of its sliders open, the top bar held sideways in each state longer than a count, and, but on the
-    /// iPhone SE, the Super 8 with the iPhone 17 Pro's five Zoom Steps at the largest size short of the accessibility sizes
-    /// and the first of those. Run on the iPhone SE (3rd generation), the iPhone 17 Pro and the largest supported iPhone.
+    /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, and
+    /// the 6×6 with each of its sliders open. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
     func testTheShootingScreensForApproval() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
-        let width = try await hostWindowScene().screen.bounds.width
-        let device = width < 390 ? "SE" : width >= 440 ? "Largest" : "\(Int(width))-point"
+        let device = try await approvalDevice()
         for camera in Self.cameras {
             let film = try makeFilm(camera, model)
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
@@ -640,8 +637,15 @@ final class CaptureSidewaysTests: XCTestCase {
                 keep(screenshot, "Approval-\(device)-mediumFormat6x6-\(slider)-open-\(name)")
             }
         }
-        // The count's corner held sideways in each state longer than a count (the captain, 2026-10-30, "Smaller words,
-        // same wording").
+    }
+
+    /// The top bar held sideways in each state longer than a count, the count's corner showing it one whole word to a line
+    /// (the captain, 2026-10-30, "Smaller words, same wording"), both ways, at the default text size and the largest, kept
+    /// for the captain's approval. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
+    func testTheTopBarsStatesHeldSidewaysForApproval() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let device = try await approvalDevice()
         for (state, film) in try filmsShowingEachState(model) {
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
                 for (held, name) in Self.holds where held != .portrait {
@@ -652,16 +656,28 @@ final class CaptureSidewaysTests: XCTestCase {
                 }
             }
         }
-        // The Super 8 upright with the iPhone 17 Pro's five Zoom Steps, which share Auto / Fixed's line in smaller words
-        // where they would not otherwise. The iPhone SE has one rear lens.
-        if device != "SE" {
-            let super8 = try makeFilm(CameraCatalog.super8HomeMovie, model)
-            for size in [DynamicTypeSize.xxxLarge, .accessibility1] {
-                let screenshot = try await showScreen(model, film: super8, lenses: Self.iPhone17ProLenses,
-                                                      textSize: size).screenshot
-                keep(screenshot, "Approval-\(device)-super8HomeMovie-five-steps-\(size)")
-            }
+    }
+
+    /// The Super 8 upright with the iPhone 17 Pro's five Zoom Steps, which share Auto / Fixed's line in smaller words where
+    /// they would not otherwise (the captain, 2026-10-30), at the largest size short of the accessibility sizes and the
+    /// first of those, kept for the captain's approval. Run on the iPhone 17 Pro and the largest supported iPhone; the
+    /// iPhone SE has one rear lens.
+    func testTheSuper8sFiveZoomStepsForApproval() async throws {
+        let device = try await approvalDevice()
+        if device == "SE" { throw XCTSkip("The iPhone SE has one rear lens, so no Zoom Steps") }
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let super8 = try makeFilm(CameraCatalog.super8HomeMovie, model)
+        for size in [DynamicTypeSize.xxxLarge, .accessibility1] {
+            let screenshot = try await showScreen(model, film: super8, lenses: Self.iPhone17ProLenses, textSize: size).screenshot
+            keep(screenshot, "Approval-\(device)-super8HomeMovie-five-steps-\(size)")
         }
+    }
+
+    /// What the approval screenshots call this simulator's iPhone: "SE", "Largest" or its width in points.
+    private func approvalDevice() async throws -> String {
+        let width = try await hostWindowScene().screen.bounds.width
+        return width < 390 ? "SE" : width >= 440 ? "Largest" : "\(Int(width))-point"
     }
 
     /// A Film whose top bar shows each state longer than a count: a save still finishing, a full Disposable roll, a full

@@ -110,8 +110,8 @@ struct TurnedBlock<Content: View>: View {
         }
         if turn.isSideways {
             // A `ViewThatFits`, which swaps the block's view identity where it starts to overflow (the shooting screen's
-            // notices have the only other): a turned block this long holds no state, and no layout of one `Layout`
-            // alone can scroll.
+            // notices and its control strip have the others): a turned block this long holds no state, and no layout of
+            // one `Layout` alone can scroll.
             // In a stack of its own, so the identity it takes for each side stays inside the block: a parent that lists
             // several blocks, as the notices' `ViewThatFits` does, would otherwise see them all with one identity.
             ZStack {
