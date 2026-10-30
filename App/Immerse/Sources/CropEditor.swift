@@ -264,9 +264,9 @@ struct CropEditor: View {
     /// The placement and crop for a box at `start` with `handle` moved by `travel`, or as near it as the crop allows, from
     /// the gesture's start alone. On a shape, on the 6×6 and on an edge the handle goes as far along the travel as the
     /// crop allows. A Freeform corner goes to the finger where the crop allows it there, and otherwise to the allowed
-    /// position nearest the finger (`nearestAllowed`), so an edge held at the print's edge or at the smallest crop leaves
-    /// the other following the finger, and on a straightened print the corner slides along a limit with it, as in the
-    /// Photos app. Nil where none of the travel is allowed.
+    /// position nearest the finger (`nearestAllowed`), so an edge held at the print's edge or at the smallest crop, even
+    /// one held both ways, leaves the other following the finger, and on a straightened print the corner slides along a
+    /// limit with it, as in the Photos app. Nil where none of the travel is allowed.
     func handled(_ handle: Handle, by travel: CGSize, from start: Placement) -> (placement: Placement, rect: CGRect)? {
         guard handle.isCorner, !square, ratio == nil else { return farthest(handle, along: travel, from: start).moved }
         return moved(start, handle: handle, by: travel)
@@ -293,29 +293,41 @@ struct CropEditor: View {
     /// The travel to the corner position the crop allows that is nearest the finger at `travel`. On a straightened print
     /// the crop's longer side grows with the square of the box's longer side over its shorter one, so the positions the
     /// crop allows are not a polygon to project the finger onto, and they are searched along straight lines from where
-    /// the corner began instead. On each of `nearestLines` lines, evenly turned from the right, the point nearest the
-    /// finger on the part the crop allows; the nearest of those, the first line's on an exact tie, then refined between
-    /// the lines either side of it by golden section. Where the crop touches a print edge the positions it allows can
-    /// lie, seen from where the corner began, in a wedge narrower than the lines' spacing, so wherever two neighbouring
-    /// lines disagree on whether the crop allows their point nearest the finger, the edge between them is found by
-    /// halving, and the nearest point of the line just inside it is a candidate too. A refined or edge point replaces the
-    /// nearest only when strictly nearer, so the result depends on nothing but the travel, and the same finger always
-    /// gives the same corner.
+    /// the corner began instead. On each of `nearestLines` lines, evenly turned from the right and exactly along the
+    /// axes on the four that are, the point nearest the finger on the part the crop allows, kept only where `moved`
+    /// accepts it; the nearest of those, the first line's on an exact tie, then refined between the lines either side of
+    /// it by golden section. Where the crop touches a print edge the positions it allows can lie, seen from where the
+    /// corner began, in a wedge narrower than the lines' spacing, so wherever two neighbouring lines disagree on whether
+    /// the crop allows their point nearest the finger, the edge between them is found by halving, and the nearest point
+    /// of the line just inside it is a candidate too. Where an edge of the box is held both ways, at the smallest box or
+    /// the smallest crop against a print edge, the positions the crop allows are a line or a wedge whose sides run along
+    /// the box's edges or the print's as the box shows them, turned by the straightening angle, so the lines along those
+    /// are candidates too. A refined, edge or turned point replaces the nearest only when strictly nearer, so the result
+    /// depends on nothing but the travel, and the same finger always gives the same corner.
     private func nearestAllowed(_ handle: Handle, to travel: CGSize, from start: Placement) -> CGSize {
         // Where the corner began is allowed, so the nearest allowed position is no farther from the finger than that.
         let reach = 2 * hypot(travel.width, travel.height)
-        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize, reaches: Bool) {
-            let direction = CGSize(width: cos(angle), height: sin(angle))
+        func nearest(toward direction: CGSize) -> (distance: CGFloat, travel: CGSize, reaches: Bool) {
             let line = farthest(handle, along: CGSize(width: direction.width * reach, height: direction.height * reach),
                                 from: start)
             let allowed = line.moved == nil ? 0 : line.share * reach
             let nearestOnLine = max(direction.width * travel.width + direction.height * travel.height, 0)
             let along = min(nearestOnLine, allowed)
             let point = CGSize(width: direction.width * along, height: direction.height * along)
-            return (hypot(travel.width - point.width, travel.height - point.height), point, allowed >= nearestOnLine)
+            let distance = moved(start, handle: handle, by: point) == nil
+                ? .infinity : hypot(travel.width - point.width, travel.height - point.height)
+            return (distance, point, allowed >= nearestOnLine)
+        }
+        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize, reaches: Bool) {
+            nearest(toward: CGSize(width: cos(angle), height: sin(angle)))
         }
         let step = 2 * CGFloat.pi / CGFloat(Self.nearestLines)
-        let lines = (0..<Self.nearestLines).map { nearest(along: CGFloat($0) * step) }
+        let axes = [CGSize(width: 1, height: 0), CGSize(width: 0, height: 1), CGSize(width: -1, height: 0),
+                    CGSize(width: 0, height: -1)]
+        let quarter = Self.nearestLines / 4
+        let lines = (0..<Self.nearestLines).map {
+            $0 % quarter == 0 ? nearest(toward: axes[$0 / quarter]) : nearest(along: CGFloat($0) * step)
+        }
         var best = 0
         for line in lines.indices where lines[line].distance < lines[best].distance { best = line }
         let golden = (CGFloat(5).squareRoot() - 1) / 2
@@ -345,11 +357,23 @@ struct CropEditor: View {
             let edge = nearest(along: inside)
             if edge.distance < chosen.distance { chosen = edge }
         }
+        let radians = CGFloat(degrees) * .pi / 180
+        let cosine = cos(radians), sine = sin(radians)
+        for axis in axes {
+            let clockwise = CGSize(width: axis.width * cosine - axis.height * sine,
+                                   height: axis.width * sine + axis.height * cosine)
+            let counterclockwise = CGSize(width: axis.width * cosine + axis.height * sine,
+                                          height: axis.height * cosine - axis.width * sine)
+            for turned in [clockwise, counterclockwise] {
+                let along = nearest(toward: turned)
+                if along.distance < chosen.distance { chosen = along }
+            }
+        }
         return chosen.travel
     }
 
     /// The placement and crop for a box with `handle` moved by `travel`, or nil where that crop would leave the print or
-    /// be too small.
+    /// be too small, or where the handle would pass the box's other side and turn it inside out.
     func moved(_ start: Placement, handle: Handle, by travel: CGSize) -> (placement: Placement, rect: CGRect)? {
         let old = start.box
         var box = old
@@ -380,7 +404,9 @@ struct CropEditor: View {
             if edges.y < 0 { box.origin.y += travel.height; box.size.height -= travel.height }
             if edges.y > 0 { box.size.height += travel.height }
         }
-        guard box.width >= min(Self.smallestBox, old.width), box.height >= min(Self.smallestBox, old.height) else { return nil }
+        guard box.size.width >= min(Self.smallestBox, old.width), box.size.height >= min(Self.smallestBox, old.height) else {
+            return nil
+        }
         // The print stays still: the pixel at the box's center moves with the box.
         let shift = unscreen(CGVector(dx: box.midX - old.midX, dy: box.midY - old.midY), start.scale)
         let center = CGPoint(x: start.center.x + shift.dx, y: start.center.y + shift.dy)

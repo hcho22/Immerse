@@ -90,6 +90,75 @@ final class PrintZoomTests: XCTestCase {
         _ = dragged(editor(crop: Crop(x: 0.4, y: 0.2, width: 0.6, height: 0.6), degrees: -8), .topRight, along: rightAndDown)
     }
 
+    /// A Freeform corner whose box edge is held both ways, under the smallest box or at the smallest crop against a print
+    /// edge, still follows the finger along the one line or narrow wedge the crop allows: the top-right corner of a strip
+    /// along the print's top dragged left with the finger drifting up or down, the bottom-right corner of a strip at the
+    /// print's right dragged up, the top-left corner of one at its left dragged down, and straightened, the bottom-right
+    /// corner of a narrow crop at the print's right dragged up and the top-left corner of the smallest strip along its
+    /// top dragged right.
+    func testAFreeformCornerFollowsTheFingerAlongAnEdgeHeldBothWays() {
+        let strip = 200 / Self.printSize.width
+        for drift in [0.01, 0.1, -0.01, -0.1] as [CGFloat] {
+            let left = dragged(editor(crop: Crop(x: 0, y: 0, width: 1, height: 0.25)), .topRight,
+                               along: (1...100).map { CGSize(width: -CGFloat($0), height: drift * CGFloat($0)) })
+            XCTAssertEqual(left.corner.x, left.finger.x, accuracy: 1, "The right edge follows the finger, drifting \(drift)")
+        }
+        _ = dragged(editor(crop: Crop(x: 1 - strip, y: 0.2, width: strip, height: 0.6)), .bottomRight,
+                    along: (1...100).map { CGSize(width: -0.05 * CGFloat($0), height: -CGFloat($0)) })
+        _ = dragged(editor(crop: Crop(x: 0, y: 0.2, width: strip, height: 0.6)), .topLeft,
+                    along: (1...100).map { CGSize(width: 0.05 * CGFloat($0), height: CGFloat($0)) })
+        _ = dragged(editor(crop: Crop(x: 0.915, y: 0.291, width: 0.085, height: 0.709), degrees: -0.32), .bottomRight,
+                    along: (1...80).map { CGSize(width: -0.05 * CGFloat($0), height: -CGFloat($0)) })
+        let down = CGVector(dx: cos(8.1 * CGFloat.pi / 180), dy: sin(8.1 * CGFloat.pi / 180))
+        _ = dragged(editor(crop: Crop(x: 0, y: 0, width: 1, height: 0.1), degrees: 3), .topLeft,
+                    along: (1...60).map { CGSize(width: down.dx * CGFloat($0), height: down.dy * CGFloat($0)) })
+    }
+
+    /// A corner dragged past the box's other side stops there, the box no smaller than it may be, and never turns the
+    /// box inside out onto the other side: on Freeform the top-right corner of a narrow strip at the print's right
+    /// dragged far left, and on a square the top-right corner of a crop in the print's middle dragged far down and left.
+    func testACornerNeverTurnsTheBoxInsideOut() throws {
+        let narrow = editor(crop: Crop(x: 0.9, y: 0.1, width: 0.1, height: 0.8))
+        let narrowStart = narrow.resting(CropGeometry.rect(narrow.crop, printSize: Self.printSize),
+                                         in: Self.smallestPrintArea)
+        let across = try XCTUnwrap(narrow.handled(.topRight, by: CGSize(width: -100, height: 0), from: narrowStart))
+        XCTAssertGreaterThan(across.placement.box.size.width, 0, "The box keeps its right edge right of its left")
+        XCTAssertEqual(across.placement.box.minX, narrowStart.box.minX, accuracy: 1e-6, "Its left edge stays")
+        let square = editor(crop: Crop(x: 0.4, y: 0.35, width: 0.2, height: 0.3), ratio: 1)
+        let squareStart = square.resting(CropGeometry.rect(square.crop, printSize: Self.printSize),
+                                         in: Self.smallestPrintArea)
+        let side = squareStart.box.width
+        let past = try XCTUnwrap(square.handled(.topRight, by: CGSize(width: -2 * side, height: 2 * side), from: squareStart))
+        XCTAssertGreaterThan(past.placement.box.size.width, 0, "The square keeps its right edge right of its left")
+        XCTAssertGreaterThan(past.placement.box.size.height, 0, "The square keeps its top above its bottom")
+        XCTAssertEqual(past.placement.box.minX, squareStart.box.minX, accuracy: 1e-6, "Its left edge stays")
+        XCTAssertEqual(past.placement.box.maxY, squareStart.box.maxY, accuracy: 1e-6, "Its bottom stays")
+    }
+
+    /// Random drags, from a fixed seed, of every corner of strips at the print's edges, some as narrow as a crop can be,
+    /// at 0° and small straightening angles, each event held to the grid and to the lines along the box's and the
+    /// print's edges, where a held edge leaves the crop allowing positions on a line no grid point need lie on.
+    func testFreeformCornersOfStripsAtThePrintsEdgesGoWhereAllowedNearestTheFinger() {
+        let narrowest = 200 / Self.printSize.width, narrow = 300 / Self.printSize.width
+        let strips = [Crop(x: 0, y: 0, width: 1, height: 0.1), Crop(x: 0, y: 0, width: 1, height: 0.15),
+                      Crop(x: 0, y: 0.9, width: 1, height: 0.1), Crop(x: 0, y: 0.85, width: 1, height: 0.15),
+                      Crop(x: 0, y: 0.2, width: narrowest, height: 0.6), Crop(x: 0, y: 0.1, width: narrow, height: 0.8),
+                      Crop(x: 1 - narrowest, y: 0.2, width: narrowest, height: 0.6),
+                      Crop(x: 1 - narrow, y: 0.1, width: narrow, height: 0.8),
+                      Crop(x: 0.3, y: 0, width: 0.4, height: 0.1), Crop(x: 0.2, y: 0.9, width: 0.5, height: 0.1)]
+        let angles: [Double] = [0, 0.32, -0.32, 1, -1, 3, -3]
+        let corners: [CropEditor.Handle] = [.topLeft, .topRight, .bottomRight, .bottomLeft]
+        var random = SeededRandom(state: 20_261_031)
+        for _ in 0..<30 {
+            let crop = strips[Int(random.next() % UInt64(strips.count))]
+            let degrees = angles[Int(random.next() % UInt64(angles.count))]
+            let corner = corners[Int(random.next() % UInt64(corners.count))]
+            let angle = CGFloat(random.next() % 36_000) / 36_000 * 2 * .pi
+            _ = dragged(editor(crop: crop, degrees: degrees), corner,
+                        along: (1...40).map { CGSize(width: cos(angle) * CGFloat($0), height: sin(angle) * CGFloat($0)) })
+        }
+    }
+
     /// A tight crop on the smallest supported iPhone shows the print at more pixels than its screen-sized picture has,
     /// so the crop box draws from the print's sharper picture; at the whole print the screen-sized one is enough and
     /// nothing sharper is decoded.
@@ -173,10 +242,11 @@ final class PrintZoomTests: XCTestCase {
     }
 
     /// Steps `handle` along `path` as a drag's events come and holds every event to the rule: no allowed corner position
-    /// of a grid a quarter point apart lies nearer the finger than the corner, and the corner never moved more than the
-    /// finger did and a point. Where the corner and the finger end. The check is on the distance: along a limit that
-    /// curves almost as the circle round the finger does, positions far apart lie almost equally near it, which no grid
-    /// tells apart, and nearest is a matter of distance.
+    /// of a grid a quarter point apart lies nearer the finger than the corner, nor any allowed point of the lines from
+    /// where the corner began along the box's and the print's edges (`edgeLines`), on which a held edge can leave every
+    /// allowed position, and the corner never moved more than the finger did and a point. Where the corner and the
+    /// finger end. The check is on the distance: along a limit that curves almost as the circle round the finger does,
+    /// positions far apart lie almost equally near it, which no grid tells apart, and nearest is a matter of distance.
     private func dragged(_ cropEditor: CropEditor, _ handle: CropEditor.Handle,
                          along path: [CGSize]) -> (corner: CGPoint, finger: CGPoint) {
         let start = cropEditor.resting(CropGeometry.rect(cropEditor.crop, printSize: Self.printSize),
@@ -189,10 +259,22 @@ final class PrintZoomTests: XCTestCase {
                 XCTFail("The \(handle) corner has nowhere to go at \(travel)")
                 return (corner, next)
             }
+            XCTAssertGreaterThan(moved.placement.box.size.width, 0, "The \(handle) corner keeps the box the right way out")
+            XCTAssertGreaterThan(moved.placement.box.size.height, 0, "The \(handle) corner keeps the box the right way out")
             let point = handle.point(on: moved.placement.box)
             let gap = hypot(point.x - next.x, point.y - next.y)
             if let nearer = nearerOnGrid(cropEditor, handle, than: gap, to: travel, from: start) {
                 XCTFail("At \(travel) the \(handle) corner is \(gap) from the finger, where the crop allows \(nearer)")
+            }
+            let onLines = edgeLines(turnedBy: cropEditor.degrees).compactMap { line -> CGFloat? in
+                let along = max(line.width * travel.width + line.height * travel.height, 0)
+                let onLine = CGSize(width: line.width * along, height: line.height * along)
+                guard cropEditor.moved(start, handle: handle, by: onLine) != nil else { return nil }
+                return hypot(travel.width - onLine.width, travel.height - onLine.height)
+            }
+            if let nearestOnLines = onLines.min() {
+                XCTAssertLessThanOrEqual(gap, nearestOnLines + 0.001,
+                                         "At \(travel) the \(handle) corner is farther from the finger than an edge line")
             }
             let fingerMoved = hypot(next.x - finger.x, next.y - finger.y)
             XCTAssertLessThanOrEqual(hypot(point.x - corner.x, point.y - corner.y), fingerMoved + 1,
@@ -230,6 +312,36 @@ final class PrintZoomTests: XCTestCase {
             }
         }
         return nearest
+    }
+
+    /// The directions from where a corner began along the box's edges, the axes, and along the print's as the box shows
+    /// them, the axes turned by `degrees` either way.
+    private func edgeLines(turnedBy degrees: Double) -> [CGSize] {
+        let radians = CGFloat(degrees) * .pi / 180
+        let cosine = cos(radians), sine = sin(radians)
+        var lines: [CGSize] = []
+        for axis in [CGSize(width: 1, height: 0), CGSize(width: 0, height: 1), CGSize(width: -1, height: 0),
+                     CGSize(width: 0, height: -1)] {
+            lines.append(axis)
+            lines.append(CGSize(width: axis.width * cosine - axis.height * sine,
+                                height: axis.width * sine + axis.height * cosine))
+            lines.append(CGSize(width: axis.width * cosine + axis.height * sine,
+                                height: axis.height * cosine - axis.width * sine))
+        }
+        return lines
+    }
+
+    /// SplitMix64, so the random drags are the same on every run.
+    private struct SeededRandom {
+        var state: UInt64
+
+        mutating func next() -> UInt64 {
+            state &+= 0x9E37_79B9_7F4A_7C15
+            var mixed = state
+            mixed = (mixed ^ (mixed >> 30)) &* 0xBF58_476D_1CE4_E5B9
+            mixed = (mixed ^ (mixed >> 27)) &* 0x94D0_49BB_1331_11EB
+            return mixed ^ (mixed >> 31)
+        }
     }
 
     private func editor(crop: Crop?, degrees: Double = 0, ratio: Double? = nil,
