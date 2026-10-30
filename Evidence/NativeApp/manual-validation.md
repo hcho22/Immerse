@@ -92,7 +92,7 @@ The app is built from `App/Immerse` and the local packages under `Packages` and 
 To tell whether it has changed, run `git diff --stat 25fdec1fd5617246da4612a1f817253796eb5d90 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
 When this was written, `25fdec1` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
-Print Zoom and Adjust's crop box ([079](print-zoom-and-crop-box-079.md)) are not in this pin; their phone checks, [Z01 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone), wait for the re-pin that takes them.
+Print Zoom and Adjust's crop box ([080](print-zoom-and-crop-box-080.md)) are not in this pin; their phone checks, [Z01 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone), wait for the re-pin that takes them.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -616,6 +616,7 @@ If it happens by itself, the app must do all of this, and each line is something
 - The two color stocks do not develop, while the black-and-white control and the other Cameras develop as usual.
 - The app reports a failure: an alert titled **Could not finish** reading "The operation did not finish. Saved captures remain private; retry after checking available storage."
   That is the app's general failure text; it has no separate wording for this case (`FailureCopy` in `App/Immerse/Sources/FilmPresentation.swift`), so the alert will not say that the table is the cause.
+  On a candidate that holds [079](development-stop-079.md) the alert names the cause instead: "This iPhone could not prepare the colors of the Color Film Stock, so Development stopped. Saved captures are unchanged. Tap Resume Development to try again."
 - The Film is not lost: it is still in the Journal with every capture counted, it reads **Developing**, and its screen offers **Resume Development**.
 - Nothing half-made is shown: no photo or Movie of that Film is revealed.
 - It tries again at the next Development: tap **Resume Development** and the app makes and checks the routine again.
@@ -660,6 +661,8 @@ No iPhone has run this, and the simulator does not refuse the work, so this is t
   It reads **Developing** and offers **Resume Development**, or it still reads **Ready to develop** and offers **Develop Film** if Development had not yet begun.
 - There may be no alert at all, since leaving the app simply stops Development, or there may be the **Could not finish** alert of L01.
   Either is acceptable.
+  On a candidate that holds [079](development-stop-079.md), a Development that was still running when the app left brings **Could not finish** with "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes." ([R02](#r02---locking-the-iphone-partway-through-a-long-movie-development)), and no alert mentions storage.
+  Whether iOS takes the clip's encoder before Immerse learns it has left is for R02 to show, not assumed here: an alert that Immerse could not finish writing or could not read the Film's clips in place of those words is that order, and is recorded there.
 - **Resume Development** then finishes the Film, with whole and untinted pictures, without force-quitting the app.
 - If the Film already reads **Developed** on return, Development finished before the app left: that run shows nothing, so repeat it and leave sooner.
 - If Immerse reopens from its launch screen, iOS ended it while it was away.
@@ -865,6 +868,7 @@ They are not a pass or a fail on this phone, so this scenario records times and 
    Stop it when **Processing Film** goes away and the Film reads **Developed**.
 5. Keep the screen awake by touching it every few seconds.
    Immerse does not keep the screen on, and when the phone locks or the app leaves the screen, Development stops by design and waits for **Resume Development** (`ImmerseApp.swift`).
+   On a candidate that holds [079](development-stop-079.md) Immerse keeps the screen on while a Development runs, so leave it untouched; locking the phone or leaving Immerse still stops Development.
    If that happens, write down the time lost, tap **Resume Development**, and mark the run as interrupted.
 6. For the Instant, time from the shutter tap to the print opening on screen, for the first, fifth and tenth print of a pack.
 7. Develop a Super 8 Film, a 16mm color Film and a 16mm black-and-white Film one after another without quitting Immerse.
@@ -1156,7 +1160,7 @@ Developed color Disposable and 6×6 photos, a developed Instant print, and the p
 4. Set the phone to its largest text size and revisit Adjust. Scroll within the controls band until each control is wholly visible and usable. Confirm the print area does not change while the band scrolls.
 5. Cancel without saving and restore the text-size setting from step 1.
 
-On a candidate that holds [079](print-zoom-and-crop-box-079.md), Adjust has a crop box and a straighten dial in place of Crop, Size, Horizontal, Vertical and Straighten: in step 1 reach the dial, the shapes and the crop box's handles instead, and use [Z05 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone) for how they work by hand.
+On a candidate that holds [080](print-zoom-and-crop-box-080.md), Adjust has a crop box and a straighten dial in place of Crop, Size, Horizontal, Vertical and Straighten: in step 1 reach the dial, the shapes and the crop box's handles instead, and use [Z05 to Z08](#print-zoom-and-the-crop-box-on-a-real-iphone) for how they work by hand.
 
 **Expect.**
 
@@ -1509,6 +1513,7 @@ The software tests that hold this behavior are listed in [062](low-storage-warni
 
 - The warning was showing before the failed save.
 - The save fails with the app's existing words: at the camera "Capture could not finish saving. Retry before taking another capture." (`CaptureController.swift`), or "The operation did not finish. Saved captures remain private; retry after checking available storage." (`FailureCopy` in `FilmPresentation.swift`), with or without iOS's own reason after it.
+  On a candidate that holds [079](development-stop-079.md) the second is "This iPhone is out of space, so the operation did not finish. Saved captures are unchanged. Free space in iPhone Settings, then try again." where iOS reports the disk full, and "The operation did not finish. Saved captures remain private; try again." for any other cause.
 - The remaining exposures do not drop for the failed save, and every earlier capture is still there.
 - Once space is freed, the waiting capture saves once, and the count drops by exactly one.
 
@@ -2379,9 +2384,131 @@ VoiceOver says "Rewind", skips the item, or reads a label that is not on the scr
 **Write down.**
 What VoiceOver said for each item, word for word.
 
+## Development That Stops on a Real iPhone
+
+On 2026-10-28 a 16mm Film on **Color** with one clip of about 16 seconds, stopped early, did not finish developing on the captain's iPhone: it read **Developing**, offered **Resume Development**, and showed **Could not finish** with "The operation did not finish. Saved captures remain private; retry after checking available storage." on a phone with plenty free.
+[079](development-stop-079.md) traces it to Development stopping when Immerse leaves the screen, as an auto-lock makes it do, with iOS taking the clip's video encoder at that moment, so the stop was reported as a failure and blamed on storage.
+The build now keeps the screen on while any Development runs, says when Development stopped because Immerse left the screen, names every other cause in its own words, and mentions storage only for a full iPhone.
+The simulator keeps an app's video encoder in the background and never locks by itself, so only a phone shows these.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above), except R03's first step, which is on the build already installed.
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), and Immerse opened from the Home Screen so no debugger is attached.
+Before starting, write down **Settings > Display & Brightness > Auto-Lock** and leave it at 30 seconds, the default, unless a step says otherwise.
+Each scenario reads **UNTESTED: physical execution deferred**.
+
+### R01 - A 16mm Film like the captain's develops with the screen left alone
+
+**Steps.**
+
+1. Load a 16mm Film on **Color**, titled "R01 16mm", and allow the microphone when asked.
+2. Record one clip of about 16 seconds with sound, of a scene that moves, and tap **Done**.
+3. Open the Film's **...** menu, choose **Stop & Develop Early**, tap **Complete Film**, choose **Remove originals after verified Development**, and tap **Develop Film**.
+4. Start the stopwatch and put the phone down face up without touching it.
+5. Stop the stopwatch when the Film reads **Developed**, and note whether the screen dimmed or locked before that.
+6. Play the Movie.
+7. Repeat with a new 16mm Film on **Color** and one clip of about 1 minute, titled "R01 16mm long", and once more with the Super 8.
+
+**Expect.**
+
+- The screen stays on, undimmed, until each Development finishes, and dims and locks on its Auto-Lock time after it.
+- Each Film reads **Developed** with no alert, and its Movie plays with the recorded sound.
+
+**It fails if.**
+The screen dims or locks while a Development runs, a Film does not reach **Developed**, an alert appears, or a Movie plays silent.
+
+**Write down.**
+The Auto-Lock setting, each Development's time and clip length, whether the screen dimmed before **Developed**, and how long after **Developed** it locked.
+
+### R02 - Locking the iPhone partway through a long Movie Development
+
+**Steps.**
+
+1. Load a 16mm Film on **Color**, titled "R02 16mm", record one clip of about 1 minute with sound, and develop it as in R01's step 3.
+2. About ten seconds after tapping **Develop Film**, press the side button to lock the phone.
+3. Wait ten seconds, unlock the phone and open Immerse.
+4. Read the alert, tap **OK**, and read the Film's screen.
+5. Tap **Resume Development** and leave the phone alone until it finishes, then play the Movie.
+6. Repeat steps 1 to 5 swiping up to the Home Screen in place of the lock in step 2, and once with a 6×6 Film on **Color** of 12 exposures.
+
+**Expect.**
+
+- On return Immerse shows **Could not finish** with "Development stopped because Immerse left the screen. Saved captures are unchanged. Tap Resume Development and keep Immerse open until it finishes."
+  Immerse reads any failure from the moment it learns it has left the screen as the stop; which comes first on a phone, that or iOS taking the clip's encoder, is what this step shows.
+- No alert mentions storage.
+- The Film still reads **Developing**, with every capture counted, and offers **Resume Development**; nothing of it is revealed.
+- **Resume Development** finishes it, with whole pictures and the Movie playing its recorded sound, without force-quitting the app.
+- If the Film reads **Developed** on return, Development finished before the phone locked, and no alert shows, even if the lock came while the originals were being removed: repeat with a longer clip or lock sooner.
+
+**It fails if.**
+The alert names storage or any cause other than leaving the screen, the Film or a capture is missing, a half-made picture or Movie shows, or **Resume Development** fails again and again.
+An alert that Immerse could not finish writing or could not read the Film's photos or clips means iOS took the encoder before Immerse learned it had left: write it down as that order.
+
+**Write down.**
+For each try: the Camera, the clip length or exposures, how long after **Develop Film** the phone locked or left, the alert's exact words, the state line before and after, and how many taps of **Resume Development** it took.
+
+### R03 - Resume Development on a Film the earlier build left stuck
+
+**Steps.**
+
+1. Before installing the candidate, open the captain's Film "16mm - Roll #01", kept on his iPhone, and take a screenshot of its screen.
+   Do not tap **Resume Development** on the earlier build.
+2. Install the candidate from Xcode over the earlier build, without deleting Immerse, so its Films stay.
+3. Open Immerse from the Home Screen, open "16mm - Roll #01", tap **Resume Development**, and leave the phone alone until it finishes.
+4. Play the Movie, and look at the Film's clip row and its sound line.
+
+**Expect.**
+
+- The Film reads **Developed**, its one clip of about 16 seconds is there, and the Movie plays with the clip's recorded sound if the microphone was allowed when it was recorded, or silently if not.
+- No alert appears.
+
+**It fails if.**
+The Film or its clip is gone, the Movie is missing or plays the wrong sound, or **Resume Development** stops again.
+If an alert appears, its words name the cause the earlier build's general text hid: write them down word for word, since they say what actually stopped the captain's Development.
+
+**Write down.**
+The screenshot of step 1, whether the Film developed, the time it took, any alert's exact words, and whether the Movie has sound.
+
+### R04 - The screen sleeps again however a Development ends
+
+**Steps.**
+
+1. Develop a 6×6 Film on **Color** of three exposures and leave the phone alone after **Developed**.
+2. Start the Development of a 16mm Film with a clip of about 1 minute, tap **<** to go back to the Journal while it runs, and leave the phone alone.
+3. Start the Development of another such Film and, while it runs, delete it from its **...** menu.
+
+**Expect.**
+
+- In each case the screen stays on while the Development runs and dims and locks on its Auto-Lock time once it has ended: finished, finished with the Film's screen closed, or stopped by the Film's deletion.
+
+**It fails if.**
+The screen stays on after a Development has ended, until Immerse is closed, or dims while one runs.
+
+**Write down.**
+For each case, how long after the Development ended the screen dimmed and locked.
+
+### R05 - The out-of-space words on a full iPhone
+
+**This scenario is the captain's decision**, as S05 is, and needs the phone filled until a Development cannot write.
+If he chooses not to, record R05 as UNTESTED with that reason.
+
+**Steps.**
+
+1. With the phone filled as in S05 until less than about 200 MB is free, develop a 16mm Film on **Color** with a clip of about 1 minute.
+2. Write down the exact words of any alert, free space, and tap **Resume Development**.
+
+**Expect.**
+
+- If Development cannot write, the alert reads "This iPhone is out of space, so Development stopped. Saved captures are unchanged. Free space in iPhone Settings, then tap Resume Development."
+- Once space is freed, **Resume Development** finishes the Film with nothing lost.
+
+**It fails if.**
+A full phone's alert does not name space, or an alert names space on a phone with space free.
+
+**Write down.**
+The captain's decision, free space at each step, and the alert's exact words.
+
 ## Print Zoom and the Crop Box on a Real iPhone
 
-On 2026-10-29 the captain asked to zoom in on developed photos and in the Darkroom, and for the Darkroom to crop as the iPhone's Photos app does ([079](print-zoom-and-crop-box-079.md); his choices "1A", "2A", "3A" and "8A").
+On 2026-10-29 the captain asked to zoom in on developed photos and in the Darkroom, and for the Darkroom to crop as the iPhone's Photos app does ([080](print-zoom-and-crop-box-080.md); his choices "1A", "2A", "3A" and "8A", FR-36 to FR-38 of the 2026-10-29 amendment).
 Print Zoom: in the full-screen photo view of every photo Camera, the Instant print at the camera included, a pinch or a double-tap zooms in and a drag looks around; only the whole print swipes to the previous or next one; on every Darkroom tool except Adjust the same zoom is for looking only and the whole print comes back on another tool, on Save and on Cancel.
 Adjust's crop box: corner and edge handles, a pinch or drag on the print under the box, the box re-centering after a handle is let go, a rule-of-thirds grid while anything moves, the shapes Original, Freeform, Square, 4:3 and 3:2 sideways or upright on the Disposable, a square box with no shapes on the 6×6, and a straighten dial from -45° to +45° in tenths; the Instant keeps quarter turns only.
 The Darkroom's controls band is 250 points tall where it was 330, so the print area is 80 points taller on every iPhone.
@@ -2555,13 +2682,13 @@ A screen recording of step 1 and the before-and-after of step 3.
 1. Before installing this candidate, on the build before it, crop and straighten one Disposable print and one 6×6 print and save them; take a screenshot of each.
 2. Install this candidate and look at both prints in the photo view; take a screenshot of each.
 3. Turn on VoiceOver and, in a Disposable print's **Adjust**, move to **Crop left edge** and swipe up and down; do the same for the other three edges, the **Straighten** dial and a shape.
-4. Set the largest text size, open **Adjust** again, and reach the dial, every shape and the sideways-or-upright button by scrolling inside the band; set the text size back.
+4. Set the largest text size, open **Adjust** again, check the shapes and the whole dial show without scrolling the controls, and reach every shape by swiping the shape row and the sideways-or-upright button; set the text size back.
 
 **Expect.**
 
 - The prints cropped by the build before look exactly as they did.
 - VoiceOver reads each edge with its place in percent and moves it by a hundredth of the print each swipe; the dial moves a whole degree each swipe; the box reads how much of the width and height it keeps.
-- At the largest text size every control in Adjust can be scrolled into view and used, and the print area stays put.
+- At the largest text size the shapes and the dial show as Adjust opens, every shape can be swiped to and chosen without the controls moving, and the print area stays put.
 
 **It fails if.**
 An earlier print changed, an edge or the dial cannot be set with VoiceOver, or a control cannot be reached at the largest text size.

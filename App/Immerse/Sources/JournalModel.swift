@@ -21,6 +21,32 @@ enum JournalError: Error {
     case cameraDenied, subscriptionUnavailable, subscriptionRequired, trialInProgress(UUID), operationInProgress
 }
 
+/// Keeps the iPhone's screen on while a Development runs, so its auto-lock cannot stop it: Development stops when Immerse
+/// leaves the screen (`FilmProcessor.suspendProcessing`), and a Movie's Development can outlast the auto-lock. The
+/// screen may sleep again once the last Development running ends, however it ends. Nothing else in Immerse holds the
+/// screen on.
+@MainActor
+final class DevelopmentScreenAwake {
+    private var running = 0
+    private let hold: @MainActor (Bool) -> Void
+
+    /// - Parameter hold: holds the screen on, or lets it sleep; tests record it.
+    init(hold: @escaping @MainActor (Bool) -> Void = { UIApplication.shared.isIdleTimerDisabled = $0 }) {
+        self.hold = hold
+    }
+
+    /// Runs one Development with the screen held on.
+    func during<T>(_ development: () async throws -> T) async rethrows -> T {
+        running += 1
+        if running == 1 { hold(true) }
+        defer {
+            running -= 1
+            if running == 0 { hold(false) }
+        }
+        return try await development()
+    }
+}
+
 @MainActor @Observable
 final class JournalModel {
     let repository: FilmRepository
@@ -33,6 +59,7 @@ final class JournalModel {
     let catalogError: String?
     /// Whether this iPhone is low on free space, for the warning before a step that needs space.
     let storage: LowStorageCheck
+    let screenAwake: DevelopmentScreenAwake
     var films: [Film] = []
     var trialState: DeviceTrialState?
     var trialError: String?
@@ -52,8 +79,10 @@ final class JournalModel {
     init(root: URL, trialStore: any DeviceTrialStoring = KeychainDeviceTrialStore(),
          cameraAuthorizer: any CapturePermissionAuthorizing = AVFoundationCaptureAuthorizer(),
          subscriptions: SubscriptionConfiguration? = SubscriptionController.bundleConfiguration(),
-         freeSpace: (any FreeSpaceReading)? = nil) throws {
+         freeSpace: (any FreeSpaceReading)? = nil, screenAwake: DevelopmentScreenAwake? = nil,
+         developmentObserver: DevelopmentObserver? = nil) throws {
         self.cameraAuthorizer = cameraAuthorizer
+        self.screenAwake = screenAwake ?? DevelopmentScreenAwake()
         #if DEBUG
         developedPreviews = DevelopedPreviews(root: root, defaults: nil)
         #endif
@@ -73,7 +102,8 @@ final class JournalModel {
             catalogError = ["Bundled media is unavailable.", FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
         }
         repository = try FilmRepository(rootURL: root)
-        processor = try FilmProcessor(root: root)
+        // Only isolated tests observe Development; the app installs no observer.
+        processor = try FilmProcessor(root: root, developmentObserver: developmentObserver)
         trial = try TrialCoordinator(root: root, store: trialStore)
         try repository.recover()
         reloadFilms()
@@ -178,14 +208,71 @@ final class JournalModel {
         return film
     }
 
-    func develop(_ id: UUID) async throws {
+    /// - Parameter atTheCamera: whether a failure shows at the camera, away from the Film's screen.
+    func develop(_ id: UUID, atTheCamera: Bool = false) async throws {
         guard !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { throw JournalError.operationInProgress }
         busyFilms.insert(id)
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
         #if DEBUG
         developedPreviews.clear(filmID: id)
         #endif
-        try await processor.develop(filmID: id)
+        try await developing(id, atTheCamera: atTheCamera) { try await processor.develop(filmID: id) }
+    }
+
+    /// Runs a Development, or a developed Movie's rebuild, with the screen held on, and reports its failure as the
+    /// Development's (`developmentFailure`). `retry` names the button that tries it again where the message shows, when
+    /// that is not the Film's screen.
+    private func developing(_ id: UUID, retry: String? = nil, atTheCamera: Bool = false,
+                            _ development: () async throws -> Void) async throws {
+        do { try await screenAwake.during(development) }
+        catch is CancellationError { throw CancellationError() }
+        catch { throw developmentFailure(error, filmID: id, retry: retry, atTheCamera: atTheCamera) }
+    }
+
+    /// A Development's failure as the Film it left reads, read again after it: `DevelopmentFailure` with the button that
+    /// develops the Film again, `retry` or else the Film screen's. Once the Film shows its developed result nothing it
+    /// needs was lost, so a stop there shows nothing.
+    private func developmentFailure(_ error: Error, filmID id: UUID, retry: String? = nil,
+                                    atTheCamera: Bool = false) -> Error {
+        let film = try? repository.film(id: id)
+        let screenRetry = film.flatMap(developmentRetry)
+        if error is DevelopmentSuspended, film != nil, screenRetry == nil { return CancellationError() }
+        return DevelopmentFailure(underlying: error, retry: retry ?? screenRetry, atTheCamera: atTheCamera)
+    }
+
+    /// The Film screen's button that develops `film` again as it stands: Develop Film, Resume Development, or Rebuild
+    /// Movie for a developed Movie without its Movie. Nil once the Film shows its developed result.
+    private func developmentRetry(_ film: Film) -> String? {
+        if film.canStartDevelopment { return "Develop Film" }
+        if film.offersResumeDevelopment { return "Resume Development" }
+        if film.canPlaybackDevelopedMovie,
+           (try? repository.revealedAsset(filmID: film.id, sequenceNumber: 0, kind: .movie)) == nil {
+            return "Rebuild Movie"
+        }
+        return nil
+    }
+
+    /// What the app does as its scene comes and goes. The app and the screen-test harness both forward the scene's
+    /// phase here, so the harness's Films stop and carry on as the app's do.
+    func sceneChanged(to phase: ScenePhase) {
+        switch phase {
+        case .active:
+            processor.appReturnedToTheScreen()
+            refresh()
+            #if DEBUG
+            developedPreviews.resume()
+            #endif
+        case .background:
+            processor.appLeftTheScreen()
+            capture.suspend()
+            Task { await processor.suspendProcessing() }
+            #if DEBUG
+            developedPreviews.suspend()
+            #endif
+        default:
+            // Control Center, a call or a permission prompt only pauses the camera.
+            capture.pauseForInactiveScene()
+        }
     }
 
     /// Instant prints develop as each save lands. A print saved while another operation owns
@@ -193,7 +280,7 @@ final class JournalModel {
     func developSavedPrint(_ id: UUID, failure: @escaping @MainActor (String) -> Void) {
         perform({ [self] in
             guard film(id) != nil, !busyFilms.contains(id), !hiddenFilms.contains(id), !hasPendingSave(id) else { return }
-            try await develop(id)
+            try await develop(id, atTheCamera: true)
         }, failure: failure)
     }
 
@@ -237,7 +324,9 @@ final class JournalModel {
         busyFilms.insert(id)
         mediaRevision = UUID()
         defer { busyFilms.remove(id); refresh(); mediaRevision = UUID() }
-        try await processor.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: mediaCatalog)
+        try await developing(id, retry: "Apply sound choice") {
+            try await processor.selectMovieSound(filmID: id, choice: choice, assetID: assetID, catalog: mediaCatalog)
+        }
     }
 
     func remove(_ id: UUID, sequence: Int? = nil) async throws {
@@ -248,8 +337,11 @@ final class JournalModel {
         defer { refresh(); hiddenFilms.remove(id); mediaRevision = UUID() }
         if let sequence {
             // Discard tombstones only this revealed capture, including any staged copy of it.
-            // Another capture's unfinished save stays staged for its retry.
-            try await processor.discard(filmID: id, sequence: sequence)
+            // Another capture's unfinished save stays staged for its retry. A Movie's discard develops its Movie again.
+            do { try await screenAwake.during { try await processor.discard(filmID: id, sequence: sequence) } }
+            catch let error where discardLeftAMovieToRebuild(id, sequence: sequence) {
+                throw developmentFailure(error, filmID: id)
+            }
         } else {
             #if DEBUG
             developedPreviews.clear(filmID: id)
@@ -258,6 +350,13 @@ final class JournalModel {
             try await capture.cancelForPrivacy(filmID: id)
             try await trial.deleteFilm(filmID: id, processor: processor)
         }
+    }
+
+    /// Whether the discard of `sequence` is recorded and the Film has a Movie to make again: the discard develops that
+    /// Movie again (`FilmProcessor.discard`), so its failure is that Development's.
+    private func discardLeftAMovieToRebuild(_ id: UUID, sequence: Int) -> Bool {
+        guard let film = try? repository.film(id: id) else { return false }
+        return film.canPlaybackDevelopedMovie && film.captures.contains { $0.sequenceNumber == sequence && $0.isDiscarded }
     }
 
     func export(_ id: UUID, originals: Bool) async throws {

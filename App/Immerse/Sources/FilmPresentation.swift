@@ -290,11 +290,28 @@ enum PrivacyCopy {
     static let backup = "Films, sealed captures and reversible edits are included in iOS device backups. Immerse provides no sync or app-managed backup. Without an iOS backup, losing this iPhone loses its Films. Restoring an older backup can bring back discarded media and deleted Films."
 }
 
+/// A Development, or a developed Movie's rebuild, that stopped before it finished, with what stopped it, so its message
+/// says why in Development's own words and how to try again from the screen that shows it.
+struct DevelopmentFailure: Error {
+    let underlying: Error
+    /// The button that tries again, as the failure left the Film: on the Film's screen Develop Film, Resume Development or
+    /// Rebuild Movie, and on the Movie sound sheet Apply sound choice. Nil once the Film shows its developed result.
+    let retry: String?
+    /// Whether the message shows at the camera, which has no such button, so it says to open the Film first.
+    var atTheCamera = false
+}
+
 enum FailureCopy {
-    static let retry = "The operation did not finish. Saved captures remain private; retry after checking available storage."
+    /// The words for a failure nothing more is known about. They name no cause, storage included: a full iPhone has its
+    /// own words (`outOfSpace`), and telling people to check storage for any other failure sent them looking for a cause
+    /// that was not there.
+    static let retry = "The operation did not finish. Saved captures remain private; try again."
+    static let outOfSpace = "This iPhone is out of space, so the operation did not finish. Saved captures are unchanged. Free space in iPhone Settings, then try again."
 
     /// User-facing text for a failed operation, or nil when the person cancelled it.
     static func message(for error: Error) -> String? {
+        if let failure = error as? DevelopmentFailure { return developmentMessage(for: failure) }
+        if OutOfSpace.reported(by: error) { return outOfSpace }
         switch error {
         case is CancellationError: return nil
         case JournalError.cameraDenied:
@@ -329,6 +346,49 @@ enum FailureCopy {
             return "Photos did not confirm the save, so this Film is unchanged. A copy may already be in Photos; check there before saving again."
         default:
             return [retry, systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
+        }
+    }
+
+    /// What stopped a Development, and what the person can do. Storage is named only for a full iPhone.
+    static func developmentMessage(for failure: DevelopmentFailure) -> String? {
+        let error = failure.underlying
+        switch error {
+        case is CancellationError: return nil
+        case is OriginalsNotRemoved: return "This Film is developed, but its originals were not removed yet."
+        case PersistenceError.filmNotFound: return "This Film is no longer in your Journal, so it was not developed."
+        case JournalError.operationInProgress, PersistenceError.operationInProgress: return message(for: error)
+        default: break
+        }
+        // Once the Film shows its developed result no button develops it again.
+        guard let retry = failure.retry else { return message(for: error) }
+        let unchanged = "Saved captures are unchanged."
+        // How to try again from the screen that shows the message, within a sentence and to begin one.
+        let tap = (failure.atTheCamera ? "open the Film and tap " : "tap ") + retry
+        let firstTap = tap.prefix(1).uppercased() + tap.dropFirst()
+        let again = "\(firstTap) to try again."
+        switch error {
+        case is DevelopmentSuspended:
+            return "Development stopped because Immerse left the screen. \(unchanged) \(firstTap) and keep Immerse open until it finishes."
+        case _ where OutOfSpace.reported(by: error):
+            return "This iPhone is out of space, so Development stopped. \(unchanged) Free space in iPhone Settings, then \(tap)."
+        case NativeRenderError.tableReaderUnavailable:
+            return "This iPhone could not prepare the colors of the Color Film Stock, so Development stopped. \(unchanged) \(again)"
+        case NativeRenderError.unrenderableTreatment, PersistenceError.treatmentConflict:
+            return "This Film began developing in a newer version of Immerse, so this version cannot finish it. \(unchanged) Update Immerse, then \(tap)."
+        case NativeRenderError.unreadableSource, NativeRenderError.invalidMovie, PersistenceError.invalidMedia,
+             PersistenceError.unreadableMedia, PersistenceError.mediaChangedDuringVerification, PersistenceError.captureNotFound,
+             PersistenceError.missingVerifiedMaster, PersistenceError.masterChecksumMismatch,
+             PersistenceError.missingDevelopedClip, PersistenceError.clipChecksumMismatch:
+            return "Immerse could not read one of this Film's photos or clips, so Development stopped. \(unchanged) \(again)"
+        case NativeRenderError.writerFailed, NativeRenderError.writerTimedOut, NativeRenderError.renderFailed:
+            return "Immerse could not finish writing this Film's developed photos or clips, so Development stopped. \(unchanged) \(again)"
+        case PersistenceError.soundtrackUnavailable:
+            return "The Soundtrack chosen for this Movie could not be read, so the Movie was not made. \(unchanged) Choose the Movie's sound again, or \(tap)."
+        case PersistenceError.soundtrackChanged:
+            return "The Movie's sound changed while the Movie was being made. \(unchanged) \(firstTap) to make it with the sound now chosen."
+        default:
+            return ["Development stopped before it finished. \(unchanged) \(again)", systemDetail(for: error)]
+                .compactMap { $0 }.joined(separator: " ")
         }
     }
 

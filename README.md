@@ -6,7 +6,7 @@ You load a Film into one of five period Cameras, capture without seeing results,
 
 This README describes the app as it exists on `main` today.
 Where the product documents and the code differ, it describes the code and notes the gap.
-Nothing in the [PRD amendment of 2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) (FR-22 to FR-35) is built yet, so the changes it specifies are not described here.
+The [PRD amendment of 2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) (FR-22 to FR-35) is built on `main` (pull request #63, merged 2026-10-28), but this README does not yet describe the changes it specifies.
 
 ## What the current build does
 
@@ -233,11 +233,11 @@ The plan is in [`Evidence/NativeApp/manual-validation.md`](Evidence/NativeApp/ma
 - DEC-13: the support and App Store wording (its approach is approved).
 - DEC-14: the learning targets themselves (no analytics, and learning from TestFlight interviews, tester feedback and Apple's reports, is decided).
 
-DEC-09, DEC-11 (since 2026-10-13) and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD section 15, and DEC-18 to DEC-20 (since 2026-10-26) in the tracker and the PRD amendment of 2026-10-26.
+DEC-09, DEC-11 (since 2026-10-13) and DEC-15 to DEC-17 are decided and recorded in the tracker and PRD section 15, DEC-18 to DEC-20 (since 2026-10-26) in the tracker and the PRD amendment of 2026-10-26, and DEC-21 (since 2026-10-29) in the tracker and the PRD amendment of 2026-10-29.
 
 ## Further reading
 
-- [PRD, version 2.1](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) and its [amendment of 2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
+- [PRD, version 2.1](2026-09-29-film-camera-experience-v1/2026-10-06-film-camera-experience-v1-prd-version-2.0.md) and its amendments of [2026-10-26](2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) and [2026-10-29](2026-09-29-film-camera-experience-v1/2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) (version 1.5 is kept [beside it](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-prd.md))
 - [Domain glossary](2026-09-29-film-camera-experience-v1/sources/CONTEXT.md)
 - [Architecture baseline](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-architecture.md)
 - [ADR collection](2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-adrs.md) and [individual ADRs](2026-09-29-film-camera-experience-v1/adr)

@@ -98,9 +98,8 @@ final class JournalIntegrationTests: XCTestCase {
         let keychain = try XCTUnwrap(FailureCopy.message(for: trialRecordFailure(errSecInteractionNotAllowed)))
         XCTAssertFalse(keychain.contains("storage"), keychain)
         XCTAssertTrue(keychain.contains("has not been reset"), keychain)
-        let storage = try XCTUnwrap(FailureCopy.message(for: CocoaError(.fileWriteOutOfSpace)))
-        XCTAssertTrue(storage.hasPrefix(FailureCopy.retry), storage)
-        XCTAssertTrue(storage.contains("enough space"), storage)
+        // Only a full iPhone is told about space (DevelopmentStopTests has every Development failure).
+        XCTAssertEqual(FailureCopy.message(for: CocoaError(.fileWriteOutOfSpace)), FailureCopy.outOfSpace)
         let unreadClip = NSError(domain: "AVFoundationErrorDomain", code: -11880, userInfo: [
             NSLocalizedDescriptionKey: "Invalid sample cursor",
             NSUnderlyingErrorKey: NSError(domain: NSOSStatusErrorDomain, code: -12551)
@@ -560,7 +559,7 @@ final class JournalIntegrationTests: XCTestCase {
         let message = try XCTUnwrap(FailureCopy.message(for: NativeRenderError.invalidRecipe))
         XCTAssertTrue(message.contains("Reset to Original"))
         XCTAssertTrue(message.contains("developed photo is unchanged"))
-        XCTAssertFalse(message.contains(FailureCopy.retry), "Not the storage guidance, which would mislead")
+        XCTAssertFalse(message.contains(FailureCopy.retry), "Not the general words, which name no cause")
     }
 
     func testPhotoFilmRowsKeepExposureCounts() throws {

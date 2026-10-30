@@ -65,6 +65,12 @@
 > The captain renamed the personal Roll Film's early-finish action from "Rewind & Develop Early" to **Finish & Develop Early**, because neither photo Roll Camera's original rewinds its film at the end: a 6×6 winds its roll film onto a take-up spool that goes to the lab, and many disposables wind the film back into its cassette as they shoot.
 > The term, its _Avoid_ list, the **Early Development Warning**'s _Avoid_ ("Silent rewind" became "Silent early finish") and the Roll Film completion rules below use the new name; the rule is unchanged, and the Movie action keeps **Stop & Develop Early**.
 > The Flagged ambiguity on "Finish Film Early" is history about an early-preview loophole and keeps the name of its day.
+>
+> **2026-10-29 note (ADR 0024; the PRD amendment of 2026-10-29).**
+> After using the app on his iPhone again the captain asked to zoom into developed prints, which added the term **Print Zoom** for looking closer at a developed print in the photo view or the **Darkroom**, kept apart from the capture's **Zoom Step**, whose _Avoid_ list gained it.
+> He chose that **Adjust** crops as the phone's Photos app does, so its entry, which read "The **Darkroom** tool that crops a print, turns it a quarter turn left or right, and straightens it; on an Instant print it offers only the quarter turns, which turn the whole print, card included.", now names its crop shapes, its straighten dial and the 6×6's square crop, and a Relationships rule was added for the crop's shapes; the 6×6's crop staying square is the rule of 2026-10-13, unchanged.
+> He chose that the Camera's lens, focus and exposure controls sit in one strip directly under the **Viewfinder** and that the shooting screen's top bar stays above it whichever way the phone is held (ADR 0024), so the **Viewfinder** entry gained the strip, and the shooting-screen rule, which read "The shooting screen keeps its portrait layout in every hold, so a **Viewfinder** keeps its size and place; held on its side the phone shows a landscape picture in it, and only the screen's words and icons turn to read upright.", gained the top bar.
+> A Relationships rule after the photo view's says where **Print Zoom** works and that the view swipes to another print only while the print shows whole, and a Flagged ambiguity on "zoom" was added.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -103,12 +109,12 @@ The color or black-and-white film chosen for a 6×6 or 16mm **Film** at **Load F
 _Avoid_: Film type, filter, look, second Camera
 
 **Viewfinder**:
-The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the live picture fills it in every hold. On every Camera it sits in the same area, the phone's own Camera app's 4:3 photo frame across the full width of the screen, with the Camera's shape inside it as that app shows a square.
+The Camera-authentic live framing surface that shows capture cues without previewing the final developed treatment. It keeps its size and place on the shooting screen whichever way the phone is held, and the live picture fills it in every hold. On every Camera it sits in the same area, the phone's own Camera app's 4:3 photo frame across the full width of the screen, with the Camera's shape inside it as that app shows a square. The Camera's lens, focus and exposure controls sit in one strip directly under it, over its bottom edge only on a phone that leaves no room below it.
 _Avoid_: Filter preview, developed-image preview
 
 **Zoom Step**:
 One of the fixed focal lengths the rear camera of the 6×6, the Super 8 or the 16mm offers: a lens the phone has (ultra wide, wide or telephoto), or a native sensor crop of one of those lenses that the phone's camera reports, labeled as the phone's own Camera app labels it (0.5x, 1x, 2x, 2.5x, 3x, 5x). A phone with one rear lens and no reported crop has none.
-_Avoid_: Digital zoom, pinch zoom, lens picker
+_Avoid_: Digital zoom, pinch zoom, lens picker, Print Zoom (looking closer at a developed print)
 
 **Selfie Capture**:
 Front-facing capture within a **Film** that retains its selected **Camera**, capacity, **Developed Treatment**, and **Reveal Rule**.
@@ -411,12 +417,16 @@ A contributor-only, reversibly edited version of their own released Group Exposu
 _Avoid_: Shared Film edit, replacement developed master, another Participant's edited capture
 
 **Adjust**:
-The **Darkroom** tool that crops a print, turns it a quarter turn left or right, and straightens it; on an Instant print it offers only the quarter turns, which turn the whole print, card included.
+The **Darkroom** tool that crops a print with a crop box, in the print's own shape, freeform, square, 4:3 or 3:2, turns it a quarter turn left or right, and straightens it with a dial, as the phone's Photos app does; on a 6×6 print the crop stays square, and on an Instant print it offers only the quarter turns, which turn the whole print, card included.
 _Avoid_: Crop (as the tool's name), rotate filter, light-and-color adjustment
 
 **Vignette**:
 A **Basic Edit** that burns in or dodges a print's edges toward its corners, with a fixed soft falloff toward the center.
 _Avoid_: Lens vignette (the 16mm's and the 6×6 color Film Stock's edge darkening belong to their **Developed Treatment**)
+
+**Print Zoom**:
+Looking closer at a developed print, in the full-screen photo view or the **Darkroom**, by pinching or double-tapping and dragging to look around; it never changes the print.
+_Avoid_: Zoom Step, digital zoom, crop
 
 **Completed Film**:
 A **Film** whose capture has irreversibly ended through full capacity, an early personal Development action, or Host closure.
@@ -443,6 +453,7 @@ _Avoid_: Draft, incomplete album
 - Every Camera focuses on Auto, the phone's continuous autofocus with tap-to-focus on the **Viewfinder**, unless its Film is set otherwise: the Disposable and the Super 8 switch between Auto and Fixed, and the 6×6 between Auto and Manual; every new Film starts on Auto, and each Film keeps its setting.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
 - A developed photo opened from its Film opens in a full-screen view of the Film's developed photos, which swipes between them in capture order, skips sealed and Discarded frames, and turns with the phone; an Instant print revealed at the camera opens in the same view alone, with no swiping, and stays upright while the shooting screen is up; the **Darkroom** opens from either on the photo shown, and keeps its portrait layout whichever way the phone is held.
+- **Print Zoom** works on every developed photo in that view, the Instant's reveal included, and in the **Darkroom** on every tool but **Adjust**, whose pinch is part of cropping; the view swipes to another photo only while the photo shown is whole; Developed Movies and a Film's small prints have no Print Zoom, and Print Zoom never changes a print, its **Basic Edits** or an export.
 - Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
 - Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
@@ -481,7 +492,7 @@ _Avoid_: Draft, incomplete album
 - Capture controls must belong to the selected **Camera** and be genuinely supported by the active phone lens; unsupported controls are hidden with a brief explanation rather than presented as nonfunctional controls.
 - Hardware-aware control availability does not change the **Film**'s framing, capacity, **Developed Treatment**, or **Reveal Rule**.
 - Each **Camera** provides a **Viewfinder** appropriate to its Historical Format.
-- The shooting screen keeps its portrait layout in every hold, so a **Viewfinder** keeps its size and place; held on its side the phone shows a landscape picture in it, and only the screen's words and icons turn to read upright. The photo is saved, and a **Recorded Clip** keeps, the orientation the phone was held in.
+- The shooting screen keeps its portrait layout in every hold, so a **Viewfinder** keeps its size and place; held on its side the phone shows a landscape picture in it, and only the screen's words and icons turn to read upright. Its top bar stays above the **Viewfinder** in every hold, Done and the count turning in place, and the Camera's name is hidden while the phone is on its side. The photo is saved, and a **Recorded Clip** keeps, the orientation the phone was held in.
 - A **Viewfinder** may show framing, aspect ratio, focus behavior, flash state, exposure guidance, or period-appropriate overlays, but not the developed result: final grain, color variation, halation, flicker, frame unsteadiness, dust, or edge softening.
 - Each **Camera** is identified by a descriptive **Historical Format** rather than an invented brand or exact manufacturer model.
 - The Camera catalog prioritizes nostalgic and behaviorally distinct **Historical Formats**, not literal historical sales rank or cosmetically different treatments.
@@ -727,6 +738,7 @@ _Avoid_: Draft, incomplete album
 - Digital-only content manipulation is outside the **Darkroom** boundary.
 - The **Darkroom** offers a Saturation control on color prints only, as a stated exception (2026-10-26; until then it offered none); it never takes a print to gray, so it cannot stand in for the black-and-white **Film Stock**.
 - **Adjust** turns a print a quarter turn and straightens it the way the paper is turned and the easel tilted, and **Vignette** burns in or dodges a print's edges; both pass the physical-technique test.
+- **Adjust** crops any rectangle of a print, as an easel's blades do, in the print's own shape, freeform, square, 4:3 or 3:2, every shape but square and freeform either sideways or upright; a 6×6 print's crop stays square; it offers no flip and no perspective correction.
 - Color Films may use physical-printing equivalents such as color filtration or color balance, and every Photo Film, color or black-and-white, may use contrast grades; only black-and-white Films may use chemical toning.
 - Contrast grades adjust a print's contrast in the **Darkroom**; each Camera's own developed contrast is set by its **Developed Treatment**, which the user cannot change.
 - In v1 the only black-and-white Photo Films, and so the only Films that may use chemical toning, are 6×6 Films loaded with the black-and-white **Film Stock**.
@@ -901,6 +913,7 @@ No Camera's name carries a decade; the Disposable's, the Instant's and the Super
 - "Shooting sideways" could mean the shooting screen turns with the phone or that only its contents do - resolved (2026-10-16): the screen never turns, its **Viewfinder** keeps its size and place, and only its words and icons turn to read upright, as in the phone's own Camera app.
 - "1960s 6×6 Medium Format" and "1960s 16mm Cinema" each paired a 1960s name with a film first made decades later — resolved: the Cameras are **6×6 Medium Format** and **16mm Cinema** with no decade, so a present-day film contradicts nothing.
 - The Cameras were named "1990s Disposable", "1970s Instant", "6×6 Medium Format", "1960s Super 8 Home Movie" and "16mm Cinema" - resolved (2026-10-26, "we don't need the year of the camera"): they are **Disposable**, **Instant**, **6×6**, **Super 8** and **16mm** on every screen, and the Disposable's, the Instant's and the Super 8's catalog descriptions carry their era, while the 6×6's and the 16mm's name no decade; a Film loaded under an old name keeps its stored Camera package and is shown with the new one. Code identifiers such as `disposable1990s` and `super8HomeMovie` keep the old names.
+- "Zoom" could mean a **Zoom Step** taken at capture or looking closer at a developed print - resolved (2026-10-29): a **Zoom Step** is a lens or native sensor crop at capture, never a pinch, and **Print Zoom** is looking closer at a developed print, which changes nothing.
 - "Adjust" could mean a Darkroom edit in general, or light and color as the phone's Photos app uses the word - resolved (2026-10-26): **Adjust** is the Darkroom tool that crops, turns and straightens a print, and a Darkroom edit in general is a **Basic Edit**, never an "adjustment".
 - The Super 8's **Format Reference** had no sound, so "Live Audio when the Historical Format supports in-camera audio" kept both movie Cameras silent - resolved (2026-10-26, ADR 0018): both record **Live Audio** on Films loaded with the app build that adds it or a later one, as the captain chose knowing the original was silent.
 - "Rewind & Develop Early" named an end neither photo Roll Camera's original has - resolved: it was renamed **Finish & Develop Early** on 2026-10-28, because neither photo Roll Camera's original rewinds its film at the end; the rule is unchanged.

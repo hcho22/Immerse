@@ -134,7 +134,7 @@ private actor DevelopmentGate {
             XCTAssertFalse(suspensionReturned)
             try await gate.release()
             do { try await job.value; XCTFail("Cancelled observer continuation reported success") }
-            catch is CancellationError { }
+            catch is DevelopmentSuspended { }
             await suspension.value
             let cancelled = try await fixture.snapshot("cancelled")
             XCTAssertEqual(cancelled.film, held.film)

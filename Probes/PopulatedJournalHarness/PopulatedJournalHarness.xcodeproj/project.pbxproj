@@ -40,6 +40,7 @@
 		CEC0D82590BBF96DC2C822CE /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */; };
 		CECCEBA019C00D8C6D4C6325 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACA806F51C52F191067D24F /* SubscriptionController.swift */; };
 		E26C46435CED6B8457FC788D /* FinishEarlyWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D13586D120BB350A6F935DF /* FinishEarlyWorkflowTests.swift */; };
+		E2994E6DF472F8183D88B4B1 /* DevelopmentStopWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28AEE062EE58334D0B5D8AE /* DevelopmentStopWorkflowTests.swift */; };
 		E356F161029518C4A53542B1 /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8681BF5B8F679782806990D9 /* JournalModel.swift */; };
 		E93C59AF5D9CDE8530C632B0 /* LowStorageWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */; };
 		F1712FD6166F62ECC9ACC8F0 /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 27B793DD093A09187B9C988B /* RenderFixtures */; };
@@ -96,6 +97,7 @@
 		9C07737AFFDECE551D6E1CF8 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
 		A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlock.swift; sourceTree = "<group>"; };
 		BACA806F51C52F191067D24F /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
+		C28AEE062EE58334D0B5D8AE /* DevelopmentStopWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentStopWorkflowTests.swift; sourceTree = "<group>"; };
 		C4BF3192B0F536068A133B6A /* CaptureColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureColumn.swift; sourceTree = "<group>"; };
 		C98F98988E7D41895751822D /* PopulatedJournalHarnessTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PopulatedJournalHarnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1C097FF52FC8220B01E1FA9 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */,
+				C28AEE062EE58334D0B5D8AE /* DevelopmentStopWorkflowTests.swift */,
 				3D13586D120BB350A6F935DF /* FinishEarlyWorkflowTests.swift */,
 				8161A4FC3A56BE5A9719BF6F /* HarnessTestSupport.swift */,
 				6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */,
@@ -378,6 +381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */,
+				E2994E6DF472F8183D88B4B1 /* DevelopmentStopWorkflowTests.swift in Sources */,
 				E26C46435CED6B8457FC788D /* FinishEarlyWorkflowTests.swift in Sources */,
 				37A4E3B86BA535C0A7F6B955 /* HarnessTestSupport.swift in Sources */,
 				E93C59AF5D9CDE8530C632B0 /* LowStorageWorkflowTests.swift in Sources */,

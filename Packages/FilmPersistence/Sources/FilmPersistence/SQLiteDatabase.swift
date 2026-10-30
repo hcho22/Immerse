@@ -15,7 +15,7 @@ final class SQLiteDatabase {
     init(url: URL) throws {
         let flags = SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX
         if sqlite3_open_v2(url.path, &handle, flags, nil) != SQLITE_OK {
-            throw SQLiteError.openFailed(lastMessage)
+            throw failure(SQLiteError.openFailed)
         }
         sqlite3_busy_timeout(handle, 5_000)
         try execute("PRAGMA journal_mode = WAL;")
@@ -33,6 +33,7 @@ final class SQLiteDatabase {
         if status != SQLITE_OK {
             let message = errorMessage.map { String(cString: $0) } ?? lastMessage
             sqlite3_free(errorMessage)
+            if status & 0xff == SQLITE_FULL { throw PersistenceError.outOfSpace }
             throw SQLiteError.executeFailed(message)
         }
     }
@@ -76,7 +77,7 @@ final class SQLiteDatabase {
             if status == SQLITE_DONE {
                 return nil
             }
-            throw SQLiteError.stepFailed(lastMessage)
+            throw failure(SQLiteError.stepFailed)
         }
     }
 
@@ -113,7 +114,7 @@ final class SQLiteDatabase {
             try bindText(captureID, to: statement, index: 2)
             let status = sqlite3_step(statement)
             if status == SQLITE_DONE { return nil }
-            guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+            guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
             return Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0)))
         }
     }
@@ -125,7 +126,7 @@ final class SQLiteDatabase {
             while true {
                 let status = sqlite3_step(statement)
                 if status == SQLITE_DONE { return result }
-                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
                 result.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
             }
         }
@@ -154,7 +155,7 @@ final class SQLiteDatabase {
             if status == SQLITE_DONE {
                 return nil
             }
-            throw SQLiteError.stepFailed(lastMessage)
+            throw failure(SQLiteError.stepFailed)
         }
     }
 
@@ -182,7 +183,7 @@ final class SQLiteDatabase {
             try bindText(key, to: statement, index: 2)
             let status = sqlite3_step(statement)
             if status == SQLITE_DONE { return nil }
-            guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+            guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
             return Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0)))
         }
     }
@@ -201,7 +202,7 @@ final class SQLiteDatabase {
             while true {
                 let status = sqlite3_step(statement)
                 if status == SQLITE_DONE { return result }
-                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
                 result.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
             }
         }
@@ -221,7 +222,7 @@ final class SQLiteDatabase {
             while true {
                 let status = sqlite3_step(statement)
                 if status == SQLITE_DONE { return values }
-                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
                 values.append(Data(bytes: sqlite3_column_blob(statement, 0)!, count: Int(sqlite3_column_bytes(statement, 0))))
             }
         }
@@ -264,7 +265,7 @@ final class SQLiteDatabase {
             while true {
                 let status = sqlite3_step(statement)
                 if status == SQLITE_DONE { return paths }
-                guard status == SQLITE_ROW else { throw SQLiteError.stepFailed(lastMessage) }
+                guard status == SQLITE_ROW else { throw failure(SQLiteError.stepFailed) }
                 paths.append(String(cString: sqlite3_column_text(statement, 0)))
             }
         }
@@ -298,7 +299,7 @@ final class SQLiteDatabase {
                 guard status == SQLITE_ROW,
                       let id = UUID(uuidString: String(cString: sqlite3_column_text(statement, 0))),
                       let kind = StoredAsset.Kind(rawValue: String(cString: sqlite3_column_text(statement, 2))) else {
-                    throw SQLiteError.stepFailed(lastMessage)
+                    throw failure(SQLiteError.stepFailed)
                 }
                 result.append(
                     StoredAsset(
@@ -316,7 +317,7 @@ final class SQLiteDatabase {
     private func withStatement<T>(_ sql: String, _ operation: (OpaquePointer) throws -> T) throws -> T {
         var statement: OpaquePointer?
         guard sqlite3_prepare_v2(handle, sql, -1, &statement, nil) == SQLITE_OK, let statement else {
-            throw SQLiteError.prepareFailed(lastMessage)
+            throw failure(SQLiteError.prepareFailed)
         }
         defer { sqlite3_finalize(statement) }
         return try operation(statement)
@@ -324,7 +325,7 @@ final class SQLiteDatabase {
 
     private func bindText(_ value: String, to statement: OpaquePointer, index: Int32) throws {
         if sqlite3_bind_text(statement, index, value, -1, SQLITE_TRANSIENT) != SQLITE_OK {
-            throw SQLiteError.bindFailed(lastMessage)
+            throw failure(SQLiteError.bindFailed)
         }
     }
 
@@ -333,26 +334,32 @@ final class SQLiteDatabase {
             sqlite3_bind_blob(statement, index, buffer.baseAddress, Int32(value.count), SQLITE_TRANSIENT)
         }
         if status != SQLITE_OK {
-            throw SQLiteError.bindFailed(lastMessage)
+            throw failure(SQLiteError.bindFailed)
         }
     }
 
     private func bindDouble(_ value: Double, to statement: OpaquePointer, index: Int32) throws {
         if sqlite3_bind_double(statement, index, value) != SQLITE_OK {
-            throw SQLiteError.bindFailed(lastMessage)
+            throw failure(SQLiteError.bindFailed)
         }
     }
 
     private func bindInt(_ value: Int, to statement: OpaquePointer, index: Int32) throws {
         if sqlite3_bind_int(statement, index, Int32(value)) != SQLITE_OK {
-            throw SQLiteError.bindFailed(lastMessage)
+            throw failure(SQLiteError.bindFailed)
         }
     }
 
     private func stepDone(_ statement: OpaquePointer) throws {
         guard sqlite3_step(statement) == SQLITE_DONE else {
-            throw SQLiteError.stepFailed(lastMessage)
+            throw failure(SQLiteError.stepFailed)
         }
+    }
+
+    /// What a failed call throws: the store's out-of-space error where SQLite found the disk full, so the person can be
+    /// told to free space, and otherwise `kind` with SQLite's own message.
+    private func failure(_ kind: (String) -> SQLiteError) -> Error {
+        sqlite3_errcode(handle) & 0xff == SQLITE_FULL ? PersistenceError.outOfSpace : kind(lastMessage)
     }
 
     private var lastMessage: String {
