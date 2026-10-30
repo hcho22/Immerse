@@ -46,7 +46,7 @@ The 16mm failure was settled from the facts of a screenshot he sent (decision 6)
 | 3 | Zoom in the Darkroom | "3A" | Print Zoom on every Darkroom tool except Adjust, for looking only; the view returns to the whole print when the tool changes, on Save and on Cancel; the accepted cost is a possible lag on the oldest supported iPhone after a slider move while zoomed. | FR-38 | none needed (a viewing aid that changes no print; its accepted cost is recorded in FR-38) |
 | 4 | Controls under the viewfinder | "4A" | One control strip directly under the Viewfinder area, where the iPhone Camera app has its PHOTO / VIDEO row, holding the Zoom Steps and the focus switch; on the 6×6, Focus and Exposure buttons in the strip each open their slider in its place; on the iPhone SE the strip sits over the bottom edge of the picture. | FR-39 | 0024 |
 | 5 | Done and the title held sideways | "5A" | The top bar stays above the Viewfinder area in every hold, and only its pieces turn in place: Done in its corner and the count in the other; the Camera's name is hidden while the iPhone is held sideways, VoiceOver still reads the full name and count, and nothing runs over the picture. | FR-40 | 0024 |
-| 6 | The 16mm failure | The captain's screenshot | A 16mm Film on the color Film Stock, ended early after about 49 seconds, reads "Developing" with Resume Development and an alert that blames storage, on an iPhone with plenty of free storage. | FR-41 | none needed (a fault, not a decision) |
+| 6 | The 16mm failure | The captain's screenshot | A 16mm Film on the color Film Stock, ended early after about 16 seconds, reads "Developing" with Resume Development and an alert that blames storage, on an iPhone with plenty of free storage. | FR-41 | none needed (a fault, not a decision) |
 | 7 | Scope of the 16mm fix | "7A" | Reproduce such a Film in the simulator, find and fix the real cause and add a regression test; every Development failure message says what went wrong and names storage only when storage is the cause; the screen stays awake while a Development runs; a Film already stuck finishes with Resume Development, with nothing lost. | FR-41 | none needed (a fix that revises no recorded decision) |
 | 8 | The 6×6's crop | "8A" | The rule of 2026-10-13 stands: on the 6×6 the crop box stays square, the handles resize it as a square and the shape choices are hidden, while pinching, dragging and the straighten dial work as on the Disposable, which gets every shape. | FR-37 | none needed (it keeps the decision of 2026-10-13 under DEC-11) |
 | 9 | How it is built | "9A, please generate a detailed PRD with today's date as part of the name to keep track of the records." | Three changes side by side, each through the full review and test pipeline to its own pull request for approval: the 16mm Development fix first, zoom and crop as one change, and the shooting screen; screenshots of the second and third go to the captain before they ship; each adds its real-phone checks to the iPhone test plan; this dated document keeps the records. | Section 7 | 0024 revises the layout decisions of 2026-10-16 and 2026-10-26 |
@@ -375,7 +375,7 @@ The header's pieces keep the Large Content Viewer at the accessibility text size
 The captain's screenshot of the Film screen shows:
 
 - a 16mm Film, "16mm - Roll #01", on the color Film Stock, recorded on Oct 28, 2026;
-- ended early with "2:31 wasted" of its 3:20, so about 49 seconds were recorded;
+- ended early with "2:31 wasted" of its 2:47, so about 16 seconds were recorded;
 - the Film reading "Developing", with Resume Development offered;
 - an alert reading "Could not finish" with "The operation did not finish. Saved captures remain private; retry after checking available storage." and nothing after it;
 - an iPhone with plenty of free storage, by his word.
@@ -398,7 +398,7 @@ Suspects that the build is to prove or rule out, none of them established: the s
 
 **Required.**
 
-1. **Find and fix the cause.** A Film like the captain's (16mm, color Film Stock, one clip of about 49 seconds, Stop & Develop Early) is reproduced in the simulator, the real cause is found and fixed, and a regression test that fails without the fix keeps it from coming back.
+1. **Find and fix the cause.** A Film like the captain's (16mm, color Film Stock, one clip of about 16 seconds, Stop & Develop Early) is reproduced in the simulator, the real cause is found and fixed, and a regression test that fails without the fix keeps it from coming back.
 2. **Say what went wrong.** Every Development failure message, on every Camera, says what actually went wrong, and names storage only when storage is the cause, such as when the system reports that the iPhone is out of space.
    Each still says that saved captures are kept, and that Resume Development tries again where it can (**Builder's reading**).
    The messages stay in `FailureCopy`, never the raw system text (Immerse's rule), and their words are **Open** (section 8, question 3).
