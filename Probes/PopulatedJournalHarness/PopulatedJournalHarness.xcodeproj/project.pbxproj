@@ -25,6 +25,7 @@
 		677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BF3192B0F536068A133B6A /* CaptureColumn.swift */; };
 		6AFFE8F4C9F144833B546A12 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */; };
 		6CD8EC42521CB218F1B49E00 /* WorkflowHarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A988703796E8A16B38EA1BF /* WorkflowHarnessApp.swift */; };
+		7AAD05A5E2BBE16DE7F8A34F /* PrintZoomWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60D343CB78757F59AC84A1B /* PrintZoomWorkflowTests.swift */; };
 		7E10CBB3EF15C17916C9FCA3 /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FFCE9E01DB928F875296A0E /* MediaCatalog.json */; };
 		8132825A6E8823A102FF1D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00B81FCC70A05084325DA5A1 /* Assets.xcassets */; };
 		8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */; };
@@ -45,8 +46,10 @@
 		F1712FD6166F62ECC9ACC8F0 /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 27B793DD093A09187B9C988B /* RenderFixtures */; };
 		F2BB2E934519F5EDDFDD26F2 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */; };
 		F695F91CFCA23E101A79E450 /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */; };
+		F754B040EF8A2FF9BA038AE4 /* PrintZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E158D7C807FF4BAA60A83F /* PrintZoom.swift */; };
 		F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3000C80787BFE05052237403 /* JournalView.swift */; };
 		FB1EC98DDBE88D13838E1468 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */; };
+		FC3EFC07422A02B8671E1A1E /* CropEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C65B072C83AFC8A3C38535 /* CropEditor.swift */; };
 		FF8B8E375E5DDF29A604A63B /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +67,7 @@
 		00B81FCC70A05084325DA5A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0353E472543323E10BB6D087 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCatalogView.swift; sourceTree = "<group>"; };
+		14E158D7C807FF4BAA60A83F /* PrintZoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintZoom.swift; sourceTree = "<group>"; };
 		180EA8C32123473E8CAC95A0 /* WorkflowScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowScenario.swift; sourceTree = "<group>"; };
 		20F8529C612A024EE989E6A3 /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		24247B3F4D8AAEF0AA7AD432 /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
@@ -77,6 +81,7 @@
 		3D13586D120BB350A6F935DF /* FinishEarlyWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishEarlyWorkflowTests.swift; sourceTree = "<group>"; };
 		3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopulatedWorkflowTests.swift; sourceTree = "<group>"; };
 		40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundtrackView.swift; sourceTree = "<group>"; };
+		55C65B072C83AFC8A3C38535 /* CropEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditor.swift; sourceTree = "<group>"; };
 		5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowStorageWorkflowTests.swift; sourceTree = "<group>"; };
 		7400BB1444CBFD7AF92EA764 /* RenderFixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderFixtures; path = ../../Packages/RenderFixtures; sourceTree = SOURCE_ROOT; };
@@ -103,6 +108,7 @@
 		E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		E41D46942323019637CC91E2 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		F60D343CB78757F59AC84A1B /* PrintZoomWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintZoomWorkflowTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +172,7 @@
 				6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */,
 				5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */,
 				3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */,
+				F60D343CB78757F59AC84A1B /* PrintZoomWorkflowTests.swift */,
 				94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */,
 			);
 			path = Tests;
@@ -208,6 +215,7 @@
 				C4BF3192B0F536068A133B6A /* CaptureColumn.swift */,
 				2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */,
 				0353E472543323E10BB6D087 /* CaptureView.swift */,
+				55C65B072C83AFC8A3C38535 /* CropEditor.swift */,
 				2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */,
 				27E8ACB31376AA5F1A9E08D2 /* FilmDetailView.swift */,
 				DAAB2B694752974D58F54C7B /* FilmPresentation.swift */,
@@ -217,6 +225,7 @@
 				3000C80787BFE05052237403 /* JournalView.swift */,
 				9086F51CA1E7770D35C16DE2 /* LowStorage.swift */,
 				D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */,
+				14E158D7C807FF4BAA60A83F /* PrintZoom.swift */,
 				9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */,
 				E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */,
 				40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */,
@@ -346,6 +355,7 @@
 				677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */,
 				F2BB2E934519F5EDDFDD26F2 /* CaptureController.swift in Sources */,
 				3C252AA2E53787F521A71D60 /* CaptureView.swift in Sources */,
+				FC3EFC07422A02B8671E1A1E /* CropEditor.swift in Sources */,
 				FF8B8E375E5DDF29A604A63B /* DevelopedPreviews.swift in Sources */,
 				09D38255E770B7DA3A752A08 /* FilmDetailView.swift in Sources */,
 				0D3A143D2C068D14C86A7A1E /* FilmPresentation.swift in Sources */,
@@ -355,6 +365,7 @@
 				F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */,
 				ADC5301961A81CA4038CEB73 /* LowStorage.swift in Sources */,
 				FB1EC98DDBE88D13838E1468 /* PhotoView.swift in Sources */,
+				F754B040EF8A2FF9BA038AE4 /* PrintZoom.swift in Sources */,
 				0CE35ED846B9F215A059FD8C /* SettingsView.swift in Sources */,
 				6AFFE8F4C9F144833B546A12 /* SoundtrackView.swift in Sources */,
 				CECCEBA019C00D8C6D4C6325 /* SubscriptionController.swift in Sources */,
@@ -376,6 +387,7 @@
 				E93C59AF5D9CDE8530C632B0 /* LowStorageWorkflowTests.swift in Sources */,
 				02A7AEC38F9BBF16A99705DC /* PhotosPermissionWorkflowTests.swift in Sources */,
 				659C053BB2A6A00BE88D24C5 /* PopulatedWorkflowTests.swift in Sources */,
+				7AAD05A5E2BBE16DE7F8A34F /* PrintZoomWorkflowTests.swift in Sources */,
 				1008D5C0A3495A394D5B701B /* RetainedWorkflowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -21,11 +21,11 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     @ViewBuilder let controls: Controls
     @ViewBuilder let reset: Reset
 
-    /// The band's height: what Adjust needs at the default text size with a crop smaller than the print, the tallest
-    /// any tool gets. That is the 16 pt top margin, the 44 pt tool row, the Adjust heading's row with its turn buttons,
-    /// five rows of a caption beside its control (Straighten, Crop and the crop's Size, Horizontal and Vertical), the
-    /// gaps between them and the bottom margin, held whole on an iPhone SE by `PopulatedWorkflowTests`.
-    private static var controlBandHeight: CGFloat { 330 }
+    /// The band's height: what the tallest tool needs at the default text size, Filtration with its three sliders beside
+    /// their captions under its heading (249 points with the 16 pt top margin, the 44 pt tool row, the gaps between them
+    /// and the bottom margin), held whole on an iPhone SE by `PopulatedWorkflowTests`. Adjust, with the straighten dial
+    /// and the crop box's shapes, needs 243. It was 330 while Adjust had five rows of crop and straightening sliders.
+    private static var controlBandHeight: CGFloat { 250 }
     /// The space between the band's rows.
     private static var spacing: CGFloat { 12 }
     private static var bottomMargin: CGFloat { 12 }
@@ -94,64 +94,56 @@ private struct BandScrollView<Content: View>: View {
     }
 }
 
-/// Sets an Instant print's white card apart from a white screen: a hairline edge everywhere, and in the large views
-/// also a margin and a soft shadow, so the card reads as a print in light and dark appearance. The margin is padding,
-/// so the print fits inside whatever size the view is given.
+/// Sets an Instant print's white card apart from a white screen with a hairline edge, in the thumbnails. The large views
+/// draw the same edge with a margin and a soft shadow in `PrintZoom`.
 private struct PrintCardEdge: ViewModifier {
     let isInstant: Bool
-    var large = false
 
     func body(content: Content) -> some View {
         if isInstant {
-            let edged = content.overlay(Rectangle().strokeBorder(Color.primary.opacity(0.22), lineWidth: 0.5))
-            if large { edged.shadow(color: .primary.opacity(0.28), radius: 5, y: 1).padding(16) } else { edged }
+            content.overlay(Rectangle().strokeBorder(Color.primary.opacity(0.22), lineWidth: 0.5))
         } else {
             content
         }
     }
 }
 
+/// A developed print as the Film screen's grid and the Journal show it: a thumbnail on the grid's gray.
 struct RevealedPhoto: View {
     @Environment(JournalModel.self) private var model
     let filmID: UUID
     let sequence: Int
-    /// Whether to set an Instant print's card apart from the screen, for the large views rather than thumbnails.
-    var showsCardEdge = false
-    /// The longest side the print is decoded to, in pixels: a thumbnail's by default, the screen's in the photo view.
-    var maximumPixels = 600
-    /// The ground around the print: the grid's gray by default, black in the photo view.
-    var background = Color(uiColor: .secondarySystemBackground)
     /// Whether the decoded picture stays while the view is out of sight: only the Film screen's grid, which the photo
     /// view covers and which then reloads it in place. Every other print lets its picture go as it leaves the screen.
     var keepsPictureOutOfSight = false
     @State private var image: UIImage?
     @State private var failed = false
 
-    /// What the shown picture depends on: a new print, an edit saved to it, or a new size reloads it.
+    /// The longest side the print is decoded to, in pixels.
+    private static let maximumPixels = 600
+
+    /// What the shown picture depends on: a new print or an edit saved to it reloads it.
     private struct Load: Hashable {
         let revision: UUID
         let sequence: Int
-        let maximumPixels: Int
     }
 
     var body: some View {
         ZStack {
-            Rectangle().fill(background)
+            Rectangle().fill(Color(uiColor: .secondarySystemBackground))
             if !model.hiddenFilms.contains(filmID), !failed, let image {
                 Image(uiImage: image).resizable().scaledToFit()
-                    .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s, large: showsCardEdge))
+                    .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s))
             } else if failed { Image(systemName: "exclamationmark.triangle") }
             else { ProgressView() }
         }
-        .task(id: Load(revision: model.mediaRevision, sequence: sequence, maximumPixels: maximumPixels)) {
-            // The picture shown stays until the next one is decoded, so a swipe to another print does not flash a spinner.
+        .task(id: Load(revision: model.mediaRevision, sequence: sequence)) {
             failed = false
             guard !model.hiddenFilms.contains(filmID) else { image = nil; return }
             do {
                 let data = try await model.processor.photo(filmID: filmID, sequence: sequence)
                 guard !Task.isCancelled, !model.hiddenFilms.contains(filmID) else { return }
-                let pixels = maximumPixels
-                // A screen-sized decode is too slow for the main actor, which it would hold up on every swipe.
+                let pixels = Self.maximumPixels
                 let decoded = await Task.detached(priority: .userInitiated) {
                     DisplayPhoto.image(data, maximumPixels: pixels)
                 }.value
@@ -162,6 +154,69 @@ struct RevealedPhoto: View {
         }
         .onDisappear { if !keepsPictureOutOfSight { image = nil } }
         .accessibilityLabel("Developed photo \(sequence)")
+    }
+}
+
+/// The photo view's print, on black, with Print Zoom. It is decoded to the screen's size and, once zoomed in past that,
+/// to the print's own (`ZoomedPicture`). Another print, an edit saved to this one and a return from the Darkroom show it
+/// whole; a change to another Film's media leaves the zoom and the sharp picture as they are.
+private struct ZoomablePrint: View {
+    @Environment(JournalModel.self) private var model
+    let filmID: UUID
+    let sequence: Int
+    /// How many times the Darkroom has closed over the photo view; each shows the print whole, as the Photos app shows
+    /// a photo whole after editing it, whether the edit was saved or not.
+    let darkroomClosings: Int
+    let swipe: ((Int) -> Void)?
+    @Binding var reading: PrintZoomReading
+    @State private var picture = ZoomedPicture()
+    @State private var failed = false
+
+    private struct Load: Hashable {
+        let revision: UUID
+        let sequence: Int
+    }
+
+    /// The print shown: another sequence, other bytes for this one, or the Darkroom closing shows it whole.
+    private struct Shown: Hashable {
+        let sequence: Int
+        let print: Int
+        let darkroomClosings: Int
+    }
+
+    var body: some View {
+        let load = Load(revision: model.mediaRevision, sequence: sequence)
+        ZStack {
+            Color.black
+            if !model.hiddenFilms.contains(filmID), !failed, let image = picture.shown {
+                PrintZoom(image: image, printSize: picture.printSize,
+                          cardEdge: model.film(filmID)?.camera.id == .instant1970s,
+                          whole: Shown(sequence: sequence, print: picture.generation, darkroomClosings: darkroomClosings),
+                          swipe: swipe, zoomed: {
+                    reading = $0
+                    picture.follow($0)
+                })
+            } else if failed { Image(systemName: "exclamationmark.triangle") }
+            else { ProgressView() }
+        }
+        .task(id: load) {
+            // The picture shown stays until the next one is decoded, so a swipe to another print does not flash a spinner.
+            failed = false
+            guard !model.hiddenFilms.contains(filmID) else { picture.clear(); return }
+            do {
+                let data = try await model.processor.photo(filmID: filmID, sequence: sequence)
+                guard !Task.isCancelled, !model.hiddenFilms.contains(filmID) else { return }
+                let pixels = DisplayPhoto.fullScreenPixels
+                // A screen-sized decode is too slow for the main actor, which it would hold up on every swipe.
+                let decoded = await Task.detached(priority: .userInitiated) {
+                    (DisplayPhoto.image(data, maximumPixels: pixels), DisplayPhoto.pixelSize(data))
+                }.value
+                guard !Task.isCancelled else { return }
+                guard let image = decoded.0, let size = decoded.1 else { failed = true; return }
+                picture.show(data, image: image, printSize: size, reading: PrintZoomReading())
+            } catch { failed = true }
+        }
+        .onDisappear { picture.clear() }
     }
 }
 
@@ -193,8 +248,11 @@ struct PhotoView: View {
     let isInstantReveal: Bool
     @State private var shownSequence: Int
     @State private var editing = false
+    /// Counts the Darkroom's closings, by Save or Cancel, each of which shows the print whole.
+    @State private var darkroomClosings = 0
     @State private var discarding = false
     @State private var error: String?
+    @State private var zoom = PrintZoomReading()
 
     init(filmID: UUID, sequence: Int, isInstantReveal: Bool = false) {
         self.filmID = filmID
@@ -214,12 +272,14 @@ struct PhotoView: View {
             VStack(spacing: 0) {
                 if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
                 else {
-                    RevealedPhoto(filmID: filmID, sequence: shownSequence, showsCardEdge: true,
-                                  maximumPixels: DisplayPhoto.fullScreenPixels, background: .black)
+                    // Print Zoom (FR-22 with the 2026-10-29 amendment): swiping to the previous or next print only at the
+                    // whole print, as in the Photos app, and never at the camera's reveal.
+                    ZoomablePrint(filmID: filmID, sequence: shownSequence, darkroomClosings: darkroomClosings,
+                                  swipe: isInstantReveal ? nil : { move(by: $0) }, reading: $zoom)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .contentShape(Rectangle())
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(navigation.label)
+                        .accessibilityValue(zoom.isZoomed ? "Zoomed in" : "")
                         .accessibilityAddTraits(.isImage)
                         .accessibilityIdentifier("photo-view-image")
                         .accessibilityActions {
@@ -231,11 +291,6 @@ struct PhotoView: View {
                                 Button("Next photo") { move(by: 1) }
                             }
                         }
-                        .gesture(DragGesture(minimumDistance: 32).onEnded { value in
-                            guard !isInstantReveal, abs(value.translation.width) > abs(value.translation.height),
-                                  abs(value.translation.width) >= 48 else { return }
-                            move(by: value.translation.width < 0 ? 1 : -1)
-                        }, including: isInstantReveal ? .none : .all)
                 }
                 if let error { Text(error).foregroundStyle(.red).padding() }
             }
@@ -257,6 +312,7 @@ struct PhotoView: View {
             .toolbarBackground(.black, for: .navigationBar)
             .toolbarBackground(.black, for: .bottomBar)
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
+            .onChange(of: editing) { _, editing in if !editing { darkroomClosings += 1 } }
             .confirmationDialog("Discard photo \(shownSequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
                     error = nil
@@ -309,28 +365,6 @@ struct PhotoNavigation: Equatable {
     }
 }
 
-/// The print without straightening that the Darkroom turns under the Straighten slider while it moves (D1). It has no
-/// vignette either: the renderer darkens the corners of the straightened print, so turned with the print they would show
-/// out of place until the slider stops.
-struct UnstraightenedPrint {
-    let recipe: DarkroomRecipe
-    let image: UIImage
-
-    /// The recipe such a print is made for: `recipe` without its straightening or vignette.
-    static func recipe(for recipe: DarkroomRecipe) -> DarkroomRecipe {
-        var flat = recipe
-        flat.straighteningDegrees = nil
-        flat.vignetteStops = nil
-        return flat
-    }
-
-    /// The print, only while it was made for `recipe`'s other edits: after a turn, a crop, Reset or any other edit it is
-    /// an earlier print, and the slider waits for the one made for the edits as they are.
-    func image(for recipe: DarkroomRecipe) -> UIImage? {
-        self.recipe == Self.recipe(for: recipe) ? image : nil
-    }
-}
-
 struct DarkroomView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -338,18 +372,27 @@ struct DarkroomView: View {
     let sequence: Int
     @State private var recipe = DarkroomRecipe.original
     @State private var process = PhotoPrintProcess.color
-    @State private var image: UIImage?
+    /// The print as the recipe makes it, with Print Zoom's sharper picture once zoomed in.
+    @State private var picture = ZoomedPicture()
+    @State private var zoom = PrintZoomReading()
     @State private var tool = PrintTool.exposure
     @State private var rendering = false
     @State private var renderTask: Task<Void, Never>?
     @State private var renderID = UUID()
     @State private var error: String?
-    /// The straightening angle while its slider moves, and the print without straightening that turns under it, so the
-    /// crop-in shows as the slider moves (FR-31 item 3); the print itself is made when the slider is let go.
-    @State private var straighteningDrag: Double?
-    @State private var unstraightened: UnstraightenedPrint?
+    /// The print the crop box sits over, made once for the recipe's other edits.
+    @State private var uncropped: UncroppedPrint?
+    /// The crop box's shape. It is the Darkroom's choice while it is open, read back from the crop when the print is.
+    @State private var shape = CropShape.freeform
+    @State private var upright = false
+    @State private var shapeRead = false
+    /// Whether the straighten dial is moving, which shows the crop box's grid.
+    @State private var dialing = false
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    private var isInstant: Bool { model.film(filmID)?.camera.id == .instant1970s }
+    private var camera: CameraID? { model.film(filmID)?.camera.id }
+    private var isInstant: Bool { camera == .instant1970s }
+    /// The 6×6 crops square only (DEC-11, the captain, 2026-10-29, "8A").
+    private var isSquareOnly: Bool { camera == .mediumFormat6x6 }
 
     /// Captions sit beside their sliders through the extra large text size, which keeps the tallest tool inside the
     /// band at the default size; at larger sizes they sit above their sliders and the band scrolls.
@@ -387,7 +430,12 @@ struct DarkroomView: View {
                 heading
                 controls
             } reset: {
-                Button("Reset to Original", systemImage: "arrow.counterclockwise") { recipe.resetToOriginal(); render() }
+                Button("Reset to Original", systemImage: "arrow.counterclockwise") {
+                    recipe.resetToOriginal()
+                    shapeRead = false
+                    readShape()
+                    render()
+                }
             }
             .navigationTitle("Darkroom").navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -412,25 +460,39 @@ struct DarkroomView: View {
                 }
                 catch { self.error = FailureCopy.message(for: error) }
             }
-            .onDisappear { renderTask?.cancel(); image = nil }
+            .task(id: tool == .adjust && !isInstant ? UncroppedPrint.recipe(for: recipe) : nil) { await makeUncropped() }
+            .onChange(of: tool) {
+                zoom = PrintZoomReading()
+                picture.follow(zoom)
+            }
+            .onDisappear { renderTask?.cancel(); picture.clear(); uncropped = nil }
         }
     }
 
-    /// The print scaled to fit its region, with an Instant card's margin and shadow inside it.
+    /// The print in its one region: in Adjust the crop box over the print (an Instant only turns, so it shows its print),
+    /// and on every other tool the print with Print Zoom, which looks closer without changing it and shows the whole
+    /// print again on another tool (the captain, 2026-10-29, "3A").
     @ViewBuilder private var printPreview: some View {
-        if let angle = straighteningDrag, let base = unstraightened?.image(for: recipe), !model.hiddenFilms.contains(filmID) {
-            // The print turned by the angle and enlarged to the largest rectangle of its shape inside it, clipped to that
-            // rectangle, as `StraighteningGeometry` cuts the print.
-            let kept = StraighteningGeometry.keptFraction(width: base.size.width, height: base.size.height, degrees: angle)
-            Image(uiImage: base).resizable().scaledToFit()
-                .rotationEffect(.degrees(-angle))
-                .scaleEffect(1 / kept)
-                .clipped()
-                .accessibilityLabel("Photo \(sequence), print preview")
-        } else if let image, !model.hiddenFilms.contains(filmID) {
-            Image(uiImage: image).resizable().scaledToFit()
-                .accessibilityLabel("Photo \(sequence), print preview")
-                .modifier(PrintCardEdge(isInstant: isInstant, large: true))
+        if model.hiddenFilms.contains(filmID) {
+            ProgressView()
+        } else if tool == .adjust, !isInstant, let uncropped, uncropped.matches(recipe) {
+            CropEditor(print: uncropped, quarterTurns: recipe.rotationQuarterTurns ?? 0, crop: recipe.crop,
+                       degrees: recipe.straighteningDegrees ?? 0, ratio: cropRatio, square: isSquareOnly,
+                       dialing: dialing) { crop in
+                recipe.crop = crop
+                render()
+            }
+        } else if let image = picture.shown {
+            // An Instant print only turns in Adjust, so it shows there unzoomed, in the same place.
+            PrintZoom(image: image, printSize: picture.printSize, cardEdge: isInstant, whole: tool, zooms: tool != .adjust,
+                      zoomed: {
+                zoom = $0
+                picture.follow($0)
+            })
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Photo \(sequence), print preview")
+            .accessibilityValue(zoom.isZoomed ? "Zoomed in" : "")
+            .accessibilityAddTraits(.isImage)
         } else if error != nil, !rendering {
             // A print that cannot be made, such as one whose saved recipe is outside the limits, has no preview to wait for.
             Image(systemName: "exclamationmark.triangle").font(.largeTitle).foregroundStyle(.secondary)
@@ -460,9 +522,9 @@ struct DarkroomView: View {
             Text(tool.rawValue).font(.headline)
             if tool == .adjust {
                 Spacer()
-                Button { recipe.rotateLeft(); render() } label: { turnLabel("Rotate left", systemImage: "rotate.left") }
+                Button { turn(left: true) } label: { turnLabel("Rotate left", systemImage: "rotate.left") }
                     .accessibilityIdentifier("darkroom-rotate-left")
-                Button { recipe.rotateRight(); render() } label: { turnLabel("Rotate right", systemImage: "rotate.right") }
+                Button { turn(left: false) } label: { turnLabel("Rotate right", systemImage: "rotate.right") }
                     .accessibilityIdentifier("darkroom-rotate-right")
             }
         }
@@ -473,7 +535,16 @@ struct DarkroomView: View {
     /// A quarter-turn button's icon, with the circle the bordered style draws around it 44 points across, a whole tap
     /// target.
     private func turnLabel(_ title: String, systemImage: String) -> some View {
+        Self.roundSymbol(title, systemImage: systemImage)
+    }
+
+    /// The icon of one of Adjust's round buttons, inside the 44-point circle the bordered style draws around it. Like the
+    /// tool row's icons it stops growing with the text size at the largest ordinary size, where it still fits its circle,
+    /// and the Large Content Viewer shows it larger.
+    private static func roundSymbol(_ title: String, systemImage: String) -> some View {
         Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 30, height: 30)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .accessibilityShowsLargeContentViewer()
     }
 
     @ViewBuilder private var controls: some View {
@@ -530,38 +601,131 @@ struct DarkroomView: View {
                 }), in: 0...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Toning amount")
             }
         case .adjust:
-            // The turn buttons are beside the heading. Straightening comes first, so it stays where it is as the crop's
-            // own rows come and go below it.
+            // The turn buttons are beside the heading. The shapes come first, except on the 6×6, whose crop stays square,
+            // and the straighten dial follows; with their text stopping at the largest ordinary size, both are in view
+            // when Adjust opens at every text size.
             if !isInstant {
-                let straightening = StopsText.tenths(recipe.straighteningDegrees ?? 0, in: DarkroomLimits.straighteningDegrees)
-                captionedSliders {
-                    captioned(Text("Straighten \(String(format: "%.1f", straightening))°").font(.caption).monospacedDigit(),
-                              Slider(value: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
-                                  let value = StopsText.tenths($0, in: DarkroomLimits.straighteningDegrees)
-                                  recipe.straighteningDegrees = value == 0 ? nil : value
-                                  if straighteningDrag != nil { straighteningDrag = value }
-                              }), in: DarkroomLimits.straighteningDegrees, step: DarkroomLimits.straighteningStep,
-                                     onEditingChanged: { editing in
-                                         if editing { beginStraightening() } else { straighteningDrag = nil; render() }
-                                     })
-                                  .accessibilityLabel("Straighten")
-                                  .accessibilityValue("\(String(format: "%.1f", straightening)) degrees"))
-                    captioned(Text("Crop").font(.caption), Toggle("Crop", isOn: Binding(get: { recipe.crop != nil }, set: {
-                        recipe.crop = $0 ? Crop(x: 0, y: 0, width: 1, height: 1) : nil; render()
-                    })).labelsHidden().frame(maxWidth: .infinity, alignment: .trailing))
-                    if let crop = recipe.crop {
-                        captioned(Text("Size").font(.caption), Slider(value: Binding(get: { crop.width }, set: {
-                            let size = $0
-                            recipe.crop = Crop(x: min(crop.x, 1 - size), y: min(crop.y, 1 - size), width: size, height: size)
-                        }), in: 0.2...1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel("Crop size"))
-                        if crop.width < 1 {
-                            cropPosition("Horizontal", x: true)
-                            cropPosition("Vertical", x: false)
-                        }
-                    }
+                if !isSquareOnly { shapes }
+                StraightenDial(degrees: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
+                    recipe.straighteningDegrees = $0 == 0 ? nil : $0
+                })) { editing in
+                    dialing = editing
+                    if !editing { render() }
                 }
             }
         }
+    }
+
+    /// The crop box's shapes, and whether a shape with a ratio stands sideways or upright. Where the row is wider than the
+    /// band, at large text sizes, it scrolls sideways, and the chosen shape is scrolled whole into view whenever the row
+    /// appears or the shape changes; the band itself does not move.
+    private var shapes: some View {
+        HStack(spacing: 4) {
+            ScrollViewReader { row in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 5) {
+                        ForEach(CropShape.allCases, id: \.self) { choice in
+                            Button { choose(choice) } label: {
+                                Text(choice.rawValue).font(.footnote).lineLimit(1)
+                                    .padding(.horizontal, 8).frame(minHeight: 32)
+                                    .background(shape == choice ? Color.accentColor.opacity(0.18) : Color(uiColor: .tertiarySystemFill),
+                                                in: Capsule())
+                                    .frame(minHeight: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(shape == choice ? Color.accentColor : Color.primary)
+                            .accessibilityLabel(Self.spoken(choice))
+                            .accessibilityAddTraits(shape == choice ? .isSelected : [])
+                            .accessibilityIdentifier("darkroom-crop-shape-\(choice.rawValue)")
+                            .accessibilityShowsLargeContentViewer()
+                            .id(choice)
+                        }
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                // The shapes stop growing at the largest ordinary text size, as the tool row does, so the straighten dial
+                // under them is in view when Adjust opens at every size; the Large Content Viewer shows them larger.
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                .accessibilityIdentifier("darkroom-crop-shapes")
+                .onAppear { row.scrollTo(shape) }
+                .onChange(of: shape) { _, chosen in withAnimation { row.scrollTo(chosen) } }
+                .onChange(of: dynamicTypeSize) { row.scrollTo(shape) }
+            }
+            Button {
+                upright.toggle()
+                reshape()
+            } label: {
+                Self.roundSymbol("Crop orientation", systemImage: upright ? "rectangle.portrait" : "rectangle")
+            }
+            .buttonStyle(.bordered).buttonBorderShape(.circle)
+            .disabled(!shape.turns)
+            .accessibilityValue(upright ? "Upright" : "Sideways")
+            .accessibilityIdentifier("darkroom-crop-orientation")
+        }
+    }
+
+    /// "4 by 3" for "4:3", as VoiceOver should read a shape.
+    private static func spoken(_ shape: CropShape) -> String {
+        shape.rawValue.replacingOccurrences(of: ":", with: " by ")
+    }
+
+    /// Width over height for the crop box, in the turned print's pixels; nil for Freeform.
+    private var cropRatio: Double? {
+        guard let size = turnedPrintSize else { return nil }
+        return isSquareOnly ? 1 : shape.ratio(printSize: size, upright: upright)
+    }
+
+    /// The print's size as it is turned, once the print the crop box sits over is made.
+    private var turnedPrintSize: CGSize? {
+        guard let size = uncropped?.pixelSize else { return nil }
+        return (recipe.rotationQuarterTurns ?? 0) % 2 == 0 ? size : CGSize(width: size.height, height: size.width)
+    }
+
+    private func choose(_ choice: CropShape) {
+        shape = choice
+        reshape()
+    }
+
+    /// Gives the crop the chosen shape, about as big as it was and where it was (`CropGeometry.reshaped`).
+    private func reshape() {
+        guard let size = turnedPrintSize, let ratio = cropRatio else { return }
+        let rect = CropGeometry.reshaped(CropGeometry.rect(recipe.crop, printSize: size), ratio: ratio, printSize: size)
+        recipe.crop = CropGeometry.crop(rect, printSize: size, square: isSquareOnly)
+        render()
+    }
+
+    /// Turns the print a quarter, its crop with it; a shape with a ratio turns too, so it still fits the crop.
+    private func turn(left: Bool) {
+        if left { recipe.rotateLeft() } else { recipe.rotateRight() }
+        upright.toggle()
+        render()
+    }
+
+    /// Reads the shape back from the saved crop, once the print's size is known.
+    private func readShape() {
+        guard !shapeRead, let size = turnedPrintSize else { return }
+        (shape, upright) = CropGeometry.shape(of: recipe.crop, printSize: size)
+        shapeRead = true
+    }
+
+    /// Makes the print the crop box sits over, for the recipe's other edits as they are.
+    private func makeUncropped() async {
+        guard tool == .adjust, !isInstant, uncropped?.matches(recipe) != true else { readShape(); return }
+        let flat = UncroppedPrint.recipe(for: recipe)
+        do {
+            let data = try await model.processor.photo(filmID: filmID, sequence: sequence, recipe: flat)
+            let pixels = DisplayPhoto.fullScreenPixels
+            let decoded = await Task.detached(priority: .userInitiated) {
+                (DisplayPhoto.image(data, maximumPixels: pixels), DisplayPhoto.pixelSize(data))
+            }.value
+            guard !Task.isCancelled, let image = decoded.0, let size = decoded.1 else { return }
+            let picture = ZoomedPicture()
+            picture.show(data, image: image, printSize: size, reading: PrintZoomReading())
+            uncropped = UncroppedPrint(recipe: flat, picture: picture, pixelSize: size)
+            readShape()
+        } catch { if !Task.isCancelled { self.error = FailureCopy.message(for: error) } }
     }
 
     /// The space between a caption and the control beside it.
@@ -594,26 +758,6 @@ struct DarkroomView: View {
         }), in: DarkroomLimits.colorFiltration, step: 1, onEditingChanged: { if !$0 { render() } }).accessibilityLabel(name))
     }
 
-    private func cropPosition(_ name: String, x: Bool) -> some View {
-        captioned(Text(name).font(.caption), Slider(value: Binding(get: { x ? recipe.crop!.x : recipe.crop!.y }, set: {
-            if x { recipe.crop?.x = $0 } else { recipe.crop?.y = $0 }
-        }), in: 0...(1 - (recipe.crop?.width ?? 1)), onEditingChanged: { if !$0 { render() } })
-            .accessibilityLabel("Crop \(name)"))
-    }
-
-    /// Shows the crop-in while the Straighten slider moves: the print without straightening, made once for the recipe's
-    /// other edits, turns under the slider.
-    private func beginStraightening() {
-        straighteningDrag = recipe.straighteningDegrees ?? 0
-        guard unstraightened?.image(for: recipe) == nil else { return }
-        let flat = UnstraightenedPrint.recipe(for: recipe)
-        Task {
-            guard let data = try? await model.processor.photo(filmID: filmID, sequence: sequence, recipe: flat),
-                  let decoded = DisplayPhoto.image(data) else { return }
-            unstraightened = UnstraightenedPrint(recipe: flat, image: decoded)
-        }
-    }
-
     private func render() {
         renderTask?.cancel()
         let id = UUID()
@@ -624,7 +768,9 @@ struct DarkroomView: View {
             do {
                 let data = try await model.processor.photo(filmID: filmID, sequence: sequence, recipe: selected)
                 guard !Task.isCancelled, renderID == id, !model.hiddenFilms.contains(filmID) else { return }
-                image = DisplayPhoto.image(data)
+                if let image = DisplayPhoto.image(data), let size = DisplayPhoto.pixelSize(data) {
+                    picture.show(data, image: image, printSize: size, reading: zoom)
+                }
                 error = nil
             } catch { if !Task.isCancelled { self.error = FailureCopy.message(for: error) } }
             if renderID == id { rendering = false }

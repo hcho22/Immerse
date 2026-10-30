@@ -29,7 +29,9 @@ jobs:
           fi
           sh Scripts/validation-scope.sh "$GITHUB_EVENT_NAME" < "$RUNNER_TEMP/changed.txt" | tee -a "$GITHUB_OUTPUT"
   # Validation in parts side by side, each on its own runner (Scripts/validation-parts.sh says what each holds).
-  # One job ran them in turn for about two hours.
+  # One job ran them in turn for about two hours. The limit stops a stuck part, and stays the same share over the
+  # slowest part seen as when the parts began, since one runner runs a part up to 1.4 times as long as another
+  # (Evidence/NativeApp/print-zoom-and-crop-box-080.md).
   part:
     needs: scope
     name: ${{ matrix.part }}
@@ -38,7 +40,7 @@ jobs:
       matrix:
         part: ${{ fromJSON(needs.scope.outputs.parts) }}
     runs-on: macos-26
-    timeout-minutes: 75
+    timeout-minutes: 110
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
       IMMERSE_VALIDATE_PART: ${{ matrix.part }}

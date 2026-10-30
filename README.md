@@ -181,7 +181,7 @@ For dark-mode coverage beyond the audits, and for small-screen checks on an iPho
 A single package can be tested on its own, for example `swift test --package-path Packages/FilmRuntime`.
 
 CI ([`.github/workflows/native.yml`](.github/workflows/native.yml)) runs the same script on `macos-26` with Xcode 26.5 for every pull request and push to `main`, creating its own iOS 26.5 and iOS 26.2 simulators and keeping the `.xcresult` bundles as artifacts.
-It runs the script as four parts side by side, chosen with `IMMERSE_VALIDATE_PART` (`packages`, `harness`, `ui-text`, `ui-flows`), each with a 75-minute limit, and one summary check, `local-native`, is green only when every part is.
+It runs the script as four parts side by side, chosen with `IMMERSE_VALIDATE_PART` (`packages`, `harness`, `ui-text`, `ui-flows`), each with a 110-minute limit, and one summary check, `local-native`, is green only when every part is.
 A pull request that changes only Markdown runs the `packages` part alone.
 A failed screen test is run once more only when the simulator's own log shows it dropped that test's touch, and a run that passed that way says so ([`Evidence/NativeApp/dropped-touch-059.md`](Evidence/NativeApp/dropped-touch-059.md)).
 A failed `packages` part also keeps what the machine recorded about a media read that did not finish, as the `failure-evidence-packages` artifact ([`Scripts/collect-failure-evidence.sh`](Scripts/collect-failure-evidence.sh)).

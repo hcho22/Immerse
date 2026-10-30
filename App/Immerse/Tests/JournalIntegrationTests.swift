@@ -498,32 +498,30 @@ final class JournalIntegrationTests: XCTestCase {
                        "Every revealed print still undecided, the last one with them")
     }
 
-    /// D1: while the Straighten slider moves, the Darkroom turns the print made without straightening only for the edits
-    /// as they are. Its own angle changes nothing; the vignette, which the renderer puts on the straightened print, is
-    /// left out of it; after a quarter turn, a crop, Reset or another edit, the earlier print is never turned.
-    func testTheStraighteningPreviewTurnsOnlyThePrintMadeForTheEditsAsTheyAre() {
-        var recipe = DarkroomRecipe(printExposureStops: 0.5, straighteningDegrees: 2.5, vignetteStops: 2)
-        XCTAssertNil(UnstraightenedPrint.recipe(for: recipe).straighteningDegrees)
-        XCTAssertNil(UnstraightenedPrint.recipe(for: recipe).vignetteStops, "The turned print has no vignette")
-        let image = UIImage()
-        let made = UnstraightenedPrint(recipe: UnstraightenedPrint.recipe(for: recipe), image: image)
-        XCTAssertTrue(made.image(for: recipe) === image)
+    /// The crop box sits over the print made for the recipe's other edits as they are: its own crop, angle, quarter turns
+    /// and vignette, which the box shows itself, change nothing; after Reset or another edit, the earlier print is never
+    /// shown under it.
+    func testTheCropBoxShowsOnlyThePrintMadeForTheEditsAsTheyAre() {
+        var recipe = DarkroomRecipe(printExposureStops: 0.5, crop: Crop(x: 0.1, y: 0.1, width: 0.5, height: 0.5),
+                                    rotationQuarterTurns: 1, straighteningDegrees: 2.5, vignetteStops: 2)
+        let flat = UncroppedPrint.recipe(for: recipe)
+        XCTAssertNil(flat.crop)
+        XCTAssertNil(flat.straighteningDegrees)
+        XCTAssertNil(flat.rotationQuarterTurns)
+        XCTAssertNil(flat.vignetteStops, "The print under the box has no vignette")
+        let made = UncroppedPrint(recipe: flat, picture: ZoomedPicture(), pixelSize: CGSize(width: 300, height: 200))
+        XCTAssertTrue(made.matches(recipe))
         recipe.straighteningDegrees = -7.1
-        XCTAssertTrue(made.image(for: recipe) === image, "The slider's own angle turns the same print")
+        recipe.crop = Crop(x: 0, y: 0, width: 0.3, height: 0.8)
+        recipe.rotateLeft()
         recipe.vignetteStops = -1.5
-        XCTAssertTrue(made.image(for: recipe) === image, "A vignette changes nothing the slider turns")
-        var turned = recipe
-        turned.rotateLeft()
-        XCTAssertNil(made.image(for: turned), "A quarter turn needs its own print")
-        var cropped = recipe
-        cropped.crop = Crop(x: 0, y: 0, width: 0.5, height: 0.5)
-        XCTAssertNil(made.image(for: cropped), "A crop needs its own print")
+        XCTAssertTrue(made.matches(recipe), "The box's own crop, angle and turns, and a vignette, show over the same print")
         var reset = recipe
         reset.resetToOriginal()
-        XCTAssertNil(made.image(for: reset), "Reset needs its own print")
+        XCTAssertFalse(made.matches(reset), "Reset needs its own print")
         var brighter = recipe
         brighter.printExposureStops = 1
-        XCTAssertNil(made.image(for: brighter), "Another edit needs its own print")
+        XCTAssertFalse(made.matches(brighter), "Another edit needs its own print")
     }
 
     /// Stops as the Darkroom shows and speaks them (DEC-11): in tenths, never "-0.0", and inside the limits.
