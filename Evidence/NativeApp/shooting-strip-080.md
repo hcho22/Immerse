@@ -54,13 +54,22 @@ Per Camera: the 6×6 has the Zoom Steps, **Auto** / **Manual**, a Focus button (
 The Zoom Steps show, as before, only on the rear camera of an iPhone that reports more than one, and a step is still taken only between exposures or Recorded Clips; where the 16mm has none it has no strip.
 Each control has its own dark ground (the pill, the switch's capsule, the round buttons), so the strip reads the same under the area and over the picture, in light and dark.
 Each control takes the same room in every hold and only its words and icons turn inside it (`TurnedInPlace` in `HeldTurn.swift`), so the strip never moves or changes size as the iPhone turns.
-The strip grows with the text size no further than the first accessibility size, as the controls did before, except the focus switch's words and the Zoom Steps' labels, which grow no further than the largest size short of the accessibility sizes.
+The strip grows with the text size no further than the first accessibility size, as the controls did before, except the focus switch's words and the Zoom Steps' labels, which grow no further than the largest size short of the accessibility sizes, or one size less where the Super 8's Zoom Steps and **Auto** / **Fixed** would not share a line (below).
 Every Zoom Step label keeps 8 points to its capsule's edges in every hold, at its sides upright and at its ends turned; the switch's turned words keep 4 points at their ends, inside the selected capsule.
 With the 10-point gap between the lines, the Zoom Step labels growing to the first accessibility size would have taken the 6×6's strip 10 points over the area on the 17 Pro Max, and the 80-point shutter frame it 2 points over on the 17 Pro at the default size; firstmate chose to stop the labels at the same size as the switch's words and to trim the frame to 76 points (2026-10-30).
 The shutter bar's Switch Camera and flash symbols also grew with the text size, to about 83 points at the accessibility sizes, taller than the shutter, which made the bar taller and left the 6×6's strip 2 points to spare under the area on the 17 Pro Max; like the top bar's pieces they now grow no further than the largest size short of the accessibility sizes, and show in the Large Content Viewer, so the bar is the shutter's height at every size.
-Its words reserve their turned length, which makes it the strip's tallest control; grown to the first accessibility size it made the 6×6's strip 142 points tall, more than the 133 the iPhone 17 Pro Max then left under the area, so the strip sat over the top of its square picture's black bar.
+The focus switch's words reserve their turned length, which makes it the strip's tallest control; grown to the first accessibility size it made the 6×6's strip 142 points tall, more than the 133 the iPhone 17 Pro Max then left under the area, so the strip sat over the top of its square picture's black bar.
 At the largest size on the 17 Pro Max the strip is now under the area with a gap above it, and the Zoom Steps' labels keep the 8 points at each side they have at the default size.
-On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (130 points) is still taller than the 110 points under the area, so it sits down to the shutter bar and 20 points over the top of the 67-point black bar under its square picture, none of it over the picture.
+On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (138 points) is still taller than the 117 points under the area, so it sits down to the shutter bar and 21 points over the top of the 67-point black bar under its square picture, none of it over the picture.
+
+**Five Zoom Steps.**
+The iPhone 17 Pro's Camera app offers five Zoom Steps (0.5x, 1x, 2x, 4x and 8x), where the screenshots had three lenses' four.
+With the five, at the largest size short of the accessibility sizes and above, the Super 8's steps (240 points wide) and **Auto** / **Fixed** (145) do not fit the 378 points across the 17 Pro's strip with 12 between them, so they took two lines, 121 points, more than the 114 points under the area there, and the strip's top sat 7 points over the Super 8's picture, which fills the area.
+The captain chose (2026-10-30) to keep its Zoom Steps and **Auto** / **Fixed** on one line by having their words stop growing one text size earlier where needed, keeping the 12-point gap.
+The strip now tries its controls at their usual sizes and, where the steps and the switch do not share a line, with their words one size smaller (`CaptureView.controlStrip`); the 6×6, which keeps two lines, and a strip of one kind of control always take the first, so every other screen, the 17 Pro Max's included, is unchanged.
+One size smaller does not make one line on the 17 Pro: the steps (236 points) and the switch (136) still need 384 of the 378 points.
+Its two lines are 113 points, so the strip sits under the area, less than a point from the picture above and the shutter bar below, and no control covers the picture.
+Keeping one line there would take the words a second size smaller or a narrower gap, which is for the captain to choose.
 
 **The 6×6's sliders.**
 The Focus (`scope`) and Exposure (`plusminus.circle`) buttons each open their slider in the strip.
@@ -90,7 +99,9 @@ Moving Done up into the status bar's room instead was not tried: on the iPhone S
 
 **The top bar held sideways.**
 Upright the bar is unchanged: **Done**, the Camera's short name and the count on one 44-point line, with **Develop at once** beside **Done** in a Debug build while that switch is on.
-Held sideways (`CaptureDoneRow`, `CaptureHeaderLabel`), the bar stays where it is: **Done** is a 38-point round glass button in its corner with its word turned to read upright, the count is turned in place in the other corner (lines 38 points long, so "27" and "3:20" fit, and the longer states, "Film complete", "Pack complete", "Ended early" and "Finishing save", shrink to fit rather than run over the area), and the Camera's name is hidden.
+Held sideways (`CaptureDoneRow`, `CaptureHeaderLabel`), the bar stays where it is: **Done** is a 38-point round glass button in its corner with its word turned to read upright, the count is turned in place in the other corner, in lines 38 points long, and the Camera's name is hidden.
+The corner holds one whole word to a line: the count ("27", "3:20") in SF Mono, and the longer states ("Finishing save", "Film complete", "Pack complete", "Ended early") in the system font, as small as their longest word needs to fit the line (the captain, 2026-10-30, "Smaller words, same wording").
+A first build set them all in SF Mono in two lines that shrank no further than half size, which held neither "complete" nor "Finishing" whole: the corner read "Film / comple…" and "Finishi / ng save", and "3:20", a little longer than the line, broke as "3:2 / 0".
 VoiceOver still reads the status element's whole label, such as "Super 8, 3 minutes 20 seconds left", and the Large Content Viewer shows it.
 The Debug notice is its hammer alone, turned beside **Done**, with its whole spoken label.
 `TurnedBlock`'s reserving mode (`reservesLength`, `maximumLength`), which only the header used, and the room the turned header reserved are gone; the notices no longer move aside for it.
@@ -104,18 +115,21 @@ The new screenshot test met it with the Disposable's low-light cue and a message
 
 On the branch merged with `main` at `ac371d7`, on an iPhone 17 Pro simulator, iOS 26.5, as CI uses:
 
-- `ImmerseTests/CaptureSidewaysTests`, 28 tests, and `ImmerseTests/DevelopedPreviewsTests`, 19 tests, passed.
+- `ImmerseTests/CaptureSidewaysTests`, 30 tests, and `ImmerseTests/DevelopedPreviewsTests`, 19 tests, passed.
   New: where the strip goes (`testWhereTheStripGoes`), the strip in rooms like the 17 Pro Max's, the 17 Pro's, a shorter one and the iPhone SE's (`testTheStripSitsUnderTheAreaWhereItFitsAndOverItsBottomEdgeWhereNot`), one line or two (`testTheStripSharesOneLineWhereItsControlsFit`), every Camera's strip under the area and the same in every hold, with and without Zoom Steps (`testEveryCameraPutsItsStripUnderTheViewfinderAreaInEveryHold`), the strip over the area's bottom edge in a box the iPhone SE's size (`testOnTheIPhoneSETheStripSitsOverTheAreasBottomEdge`), the 6×6's Focus and Exposure sliders open in the strip in every hold (`testTheSixBySixOpensEachSliderInTheStrip`), the focus switch and a turned word the same in every hold.
-  The 28 also passed on iPhone SE (3rd generation) and iPhone 17 Pro Max simulators, iOS 26.5.
+  Also new: every Camera with Zoom Steps with the 17 Pro's five at the largest size short of the accessibility sizes and every larger one, no strip control over the picture (`testFiveZoomStepsLeaveThePictureClearAtTheLargestTextSizes`), and each of the four states and the counts "27" and "3:20" whole in the count's corner, one word to a line, in both sideways holds at the default and the largest text size, in top bars as wide as the iPhone SE's and the 17 Pro Max's, read from SwiftUI's own text layout (`testHeldSidewaysTheCountsCornerShowsEveryStateWhole`).
+  Before the changes the second test failed on "Finishing save", "Film complete", "Pack complete" and "3:20", and the first on the Super 8 at every one of those sizes, its strip 7 points over the picture.
+  The first 28 also passed on iPhone SE (3rd generation) and iPhone 17 Pro Max simulators, iOS 26.5, and with the two new tests so did `testEveryCameraPutsItsStripUnderTheViewfinderAreaInEveryHold` and `testOnTheIPhoneSETheStripSitsOverTheAreasBottomEdge`.
 - `ImmerseUITests/CaptureSidewaysUITests`, 14 tests, and `ImmerseUITests/DevelopedPreviewUITests`, 1 test, passed.
   They now hold the focus switch under the Viewfinder area on an iPhone at least 390 points wide and in the same place in every hold, and held sideways Done and the count in the top bar above the area, Done in its corner where it starts upright, 6 points above the area in every hold, with a tap 2 points below its glass closing the screen, the count in the other corner and narrower than upright, without the Camera's name, with VoiceOver still reading the whole label, and Develop at once's hammer above the area beside Done.
   A first run failed every sideways hold on one check: Done's round button sat 5 points further in than upright, because the `.glass` button style pads a circle's label wider than the circle; Done is now its own glass circle (`glassEffect`).
 
 The approval screenshots, on the iPhone SE (3rd generation) and the iPhone 17 Pro Max simulators, iOS 26.5, are kept with the task's records, outside this repository.
+They show the plain counts only and three lenses' four Zoom Steps, so neither the corner's state words held sideways nor the Super 8's strip with five steps on the iPhone 17 Pro has been before the captain.
 
 ## Not Proven Without a Phone
 
 - How the strip sits under a thumb, on each Camera and in each hold (U01).
 - The 6×6's slider swap with a real lens, its bias kept across closing, and the extra tap (U02).
-- The turned top bar read in the hand in both holds, and what VoiceOver says there (U03).
-- An iPhone 17 Pro's five Zoom Steps (0.5x, 1x, 2x, 4x and 8x in its Camera app), which the tests stand in for with four.
+- The turned top bar read in the hand in both holds, its smaller state words included, and what VoiceOver says there (U03).
+- Whether an iPhone 17 Pro's camera API reports the five Zoom Steps its Camera app shows (0.5x, 1x, 2x, 4x and 8x), which the hosted tests stand in for at the largest text sizes and with four elsewhere.

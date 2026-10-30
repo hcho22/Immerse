@@ -363,19 +363,22 @@ struct CaptureView: View {
 
     /// The control strip under the Viewfinder area (the captain, 2026-10-29, "4A"), where the iPhone Camera app has its
     /// PHOTO / VIDEO row: the Zoom Steps, the focus switch and, on the 6×6, its Focus and Exposure buttons. Its lines are
-    /// kept short (44 points, and the 6×6's switch as tall as "Manual" is long), so the 6×6's two lines fit under the area
-    /// on an iPhone 17 Pro and every larger one. A 6×6 slider opens in the strip in the Zoom Steps' place, as the iPhone Camera app swaps its zoom buttons
-    /// for its exposure dial, and takes the whole strip, since its caption, turned with the iPhone on its side, is longer
-    /// than one line is tall; its close button brings the steps back. Each control has its own dark ground, so the strip
-    /// reads alike under the area and over the picture, and takes the same room in every hold, its words and icons
-    /// turning inside it. Like the focus switch before it, every part grows with the text size no further than the first
-    /// accessibility size.
+    /// kept short (44 points, and the 6×6's switch as tall as "Manual" is long), so at the default text size the 6×6's two
+    /// lines fit under the area on an iPhone 17 Pro and every larger one. A 6×6 slider opens in the strip in the Zoom
+    /// Steps' place, as the iPhone Camera app swaps its zoom buttons for its exposure dial, and takes the whole strip, since
+    /// its caption, turned with the iPhone on its side, is longer than one line is tall; its close button brings the steps
+    /// back. Each control has its own dark ground, so the strip reads alike under the area and over the picture, and takes
+    /// the same room in every hold, its words and icons turning inside it. The slider and the buttons grow with the text
+    /// size no further than the first accessibility size, and the focus switch's words and the Zoom Step labels, which
+    /// reserve their turned length, no further than the largest size short of those, or one size less where the Super 8's
+    /// Zoom Steps and Auto / Fixed would not share a line. The shutter bar's symbols also stop at the largest size short of
+    /// the accessibility sizes (`shutterBar`).
     private func controlStrip(_ film: Film, behavior: CaptureBehavior, controller capture: CaptureController) -> some View {
         let steps = zoomSteps(behavior, controller: capture)
         let sliders = offersSliders(behavior)
         let open = openSlider.flatMap { $0 == .focus && !behavior.offersManualFocus ? nil : $0 }
         return ZStack {
-            ControlStripLayout(keepsStepsLine: sliders) {
+            let controls = ControlStripLayout(keepsStepsLine: sliders) {
                 if !steps.isEmpty {
                     zoomStepsPill(steps, controller: capture).controlStripLine(.steps)
                 } else if sliders {
@@ -398,6 +401,14 @@ struct CaptureView: View {
                 }
                 if behavior.offersManualFocus { sliderButton(.focus, controller: capture) }
                 if behavior.offersExposureBias { sliderButton(.exposure, controller: capture) }
+            }
+            // Where the Super 8's Zoom Steps and focus switch would not share one line, as the iPhone 17 Pro's five steps
+            // would not at the largest text sizes, their words stop growing one size earlier (the captain, 2026-10-30),
+            // which there keeps the strip's two lines under the Viewfinder area, off the picture. The 6×6, which keeps two
+            // lines, and a strip of one kind of control always fit the first.
+            ViewThatFits(in: .horizontal) {
+                controls
+                controls.dynamicTypeSize(...DynamicTypeSize.xxLarge)
             }
             .opacity(open == nil ? 1 : 0).allowsHitTesting(open == nil).accessibilityHidden(open != nil)
             if sliders {
@@ -797,7 +808,7 @@ struct CaptureDoneRow: View {
 /// The Camera's short name and compact count in the shooting screen's top bar. The visible words stay short at every
 /// text size; the full Camera name and count remain available to VoiceOver and the Large Content Viewer. Held sideways
 /// only the count shows, turned in place in the bar's corner, as tall as the bar at most.
-private struct CaptureHeaderLabel: View {
+struct CaptureHeaderLabel: View {
     @Environment(\.heldTurn) private var turn
     let film: Film
     let status: CaptureHeaderStatus
@@ -806,10 +817,14 @@ private struct CaptureHeaderLabel: View {
     var body: some View {
         Group {
             if turn.isSideways {
-                // Lines as long as Done is tall, which turned keeps the count level with it: "27" and "3:20" fit at the
-                // size the bar holds, and the longer states ("Film complete") shrink to fit rather than run over the area.
+                // Lines as long as Done is tall, which turned keeps the count level with it, one whole word to a line: a
+                // count ("27", "3:20") in SF Mono, and a state ("Film complete", "Finishing save") in the system font (the
+                // captain, 2026-10-30, "Smaller words, same wording"). A word broken or cut short would take a line more
+                // than the text has words, so the text shrinks instead, as far as its longest word needs.
+                let words = status.visible.split(separator: " ")
                 TurnedBlock(length: CaptureDoneRow.height) {
-                    count.multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.5)
+                    count(words.joined(separator: "\n"), monospaced: words.count == 1)
+                        .multilineTextAlignment(.center).lineLimit(words.count).minimumScaleFactor(0.1)
                         .frame(width: CaptureDoneRow.height)
                 }
             } else {
@@ -817,7 +832,7 @@ private struct CaptureHeaderLabel: View {
                     Text(SpokenText.shown(film.camera.shortName))
                         .font(.system(.title3, design: .serif))
                         .lineLimit(1).minimumScaleFactor(0.6)
-                    count.lineLimit(1).minimumScaleFactor(0.6)
+                    count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
                 }
             }
         }
@@ -831,9 +846,9 @@ private struct CaptureHeaderLabel: View {
         .accessibilityIdentifier("capture-header-status")
     }
 
-    private var count: some View {
-        Text(status.visible)
-            .font(.body.monospaced())
+    private func count(_ text: String, monospaced: Bool = true) -> some View {
+        Text(text)
+            .font(monospaced ? .body.monospaced() : .body)
             .foregroundStyle(recording ? .red : .primary)
     }
 }

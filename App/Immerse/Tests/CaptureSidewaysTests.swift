@@ -207,6 +207,52 @@ final class CaptureSidewaysTests: XCTestCase {
         XCTAssertEqual(sideways.height, 132, "A row of buttons becomes a column as long as it was wide")
     }
 
+    // MARK: The top bar
+
+    /// Held sideways the count's corner shows every state the top bar has whole, one word to a line, in lines as long as
+    /// Done is tall (the captain, 2026-10-30, "Smaller words, same wording"): "Finishing save", "Film complete", "Pack
+    /// complete" and "Ended early", which shrink as far as their longest word needs, and a count such as "27" or "3:20".
+    /// None is cut short or broken inside a word, in either sideways hold, at the default and the largest text size, in a
+    /// top bar as wide as the iPhone SE's and the iPhone 17 Pro Max's.
+    func testHeldSidewaysTheCountsCornerShowsEveryStateWhole() async throws {
+        let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        let scene = try await hostWindowScene()
+        for visible in ["Finishing save", "Film complete", "Pack complete", "Ended early", "27", "3:20"] {
+            let status = CaptureHeaderStatus(visible: visible, spoken: "Disposable, \(visible)")
+            for (screenWidth, phone) in [(CGFloat(375), "iPhone SE"), (440, "iPhone 17 Pro Max")] {
+                for size in [DynamicTypeSize.large, .accessibility5] {
+                    for turn in [HeldTurn.clockwise, .counterClockwise] {
+                        let name = "\"\(visible)\", \(phone), \(size), \(turn)"
+                        let probe = TextLayoutProbe()
+                        let bar = HStack(spacing: 8) {
+                            Spacer(minLength: 0)
+                            CaptureHeaderLabel(film: film, status: status, recording: false)
+                        }
+                        .frame(height: CaptureDoneRow.height)
+                        .padding(.horizontal, 16)
+                        .frame(width: screenWidth)
+                        .onPreferenceChange(Text.LayoutKey.self) { probe.read($0) }
+                        .environment(\.heldTurn, turn)
+                        .dynamicTypeSize(size)
+                        let window = UIWindow(windowScene: scene)
+                        window.rootViewController = UIHostingController(rootView: bar)
+                        window.makeKeyAndVisible()
+                        try await Task.sleep(for: .milliseconds(300))
+                        window.isHidden = true
+                        window.rootViewController = nil
+                        XCTAssertFalse(probe.texts.isEmpty, name)
+                        for text in probe.texts {
+                            XCTAssertEqual(text.lines, visible.split(separator: " ").map(\.count),
+                                           "As many lines as words, each holding its whole word, \(name)")
+                            XCTAssertFalse(text.truncated, "Not cut short, \(name)")
+                            XCTAssertLessThanOrEqual(text.longest, CaptureDoneRow.height + 0.5, "Within the corner's line, \(name)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: The column
 
     /// Where `CaptureColumn` puts the header, the fixed 4:3 viewfinder area and, given a `stripHeight`, a control strip in
@@ -438,7 +484,7 @@ final class CaptureSidewaysTests: XCTestCase {
             for steps in [true, false] {
                 var upright: (viewfinder: CGRect, strip: CGRect?)?
                 for held in [CaptureFrameOrientation.portrait, .landscapeLeft, .landscapeRight] {
-                    let probe = try await showScreen(model, film: film, zoomSteps: steps, held: held).probe
+                    let probe = try await showScreen(model, film: film, lenses: steps ? Self.threeLenses : nil, held: held).probe
                     let name = "\(camera.id.rawValue), \(steps ? "with" : "without") Zoom Steps, \(held)"
                     let hasStrip = camera.id != CameraCatalog.instant1970s.id
                         && (steps || camera.id != CameraCatalog.cinema16mm.id)
@@ -482,7 +528,7 @@ final class CaptureSidewaysTests: XCTestCase {
         for camera in [CameraCatalog.disposable1990s, CameraCatalog.mediumFormat6x6, CameraCatalog.super8HomeMovie] {
             let film = try makeFilm(camera, model)
             for held in [CaptureFrameOrientation.portrait, .landscapeLeft, .landscapeRight] {
-                let probe = try await showScreen(model, film: film, zoomSteps: false, held: held, size: iPhoneSE).probe
+                let probe = try await showScreen(model, film: film, lenses: nil, held: held, size: iPhoneSE).probe
                 let name = "\(camera.id.rawValue), \(held)"
                 XCTAssertEqual(probe.viewfinder.size.width, 375, accuracy: 0.5, name)
                 XCTAssertEqual(probe.viewfinder.size.height, 500, accuracy: 0.5, name)
@@ -520,6 +566,31 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
+    /// With the iPhone 17 Pro's five Zoom Steps, at the largest size short of the accessibility sizes and at every larger
+    /// one, no strip control covers a Camera's picture on an iPhone at least 390 points wide, every one but the iPhone SE and
+    /// the mini: where the Super 8's Zoom Steps and Auto / Fixed would not share a line, their words stop growing one size
+    /// earlier (the captain, 2026-10-30), still 12 points apart beside each other or 10 apart on lines of their own.
+    func testFiveZoomStepsLeaveThePictureClearAtTheLargestTextSizes() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        for camera in [CameraCatalog.mediumFormat6x6, CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
+            let film = try makeFilm(camera, model)
+            let aspect = CaptureBehavior.for(camera.id, focusSetting: film.effectiveFocusSetting).viewfinder.aspectRatio
+            for size in DynamicTypeSize.allCases where size >= .xxxLarge {
+                let probe = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, textSize: size).probe
+                let name = "\(camera.id.rawValue), \(size)"
+                XCTAssertNotNil(probe.zoomSteps, name)
+                let strip = try XCTUnwrap(probe.strip, name)
+                let picture = CaptureAreaGeometry.cameraFrame(aspectRatio: CGFloat(aspect), in: probe.viewfinder.size)
+                    .offsetBy(dx: probe.viewfinder.minX, dy: probe.viewfinder.minY)
+                if probe.room.width >= 390 {
+                    XCTAssertGreaterThanOrEqual(strip.minY, picture.maxY - 0.5, "No strip control covers the picture, \(name)")
+                }
+                checkStepsKeepClearOfTheSwitch(probe, name)
+            }
+        }
+    }
+
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
     /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, and
     /// the 6×6 with each of its sliders open. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
@@ -532,7 +603,8 @@ final class CaptureSidewaysTests: XCTestCase {
             let film = try makeFilm(camera, model)
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
                 for (held, name) in Self.holds {
-                    let (probe, screenshot) = try await showScreen(model, film: film, zoomSteps: device != "SE", held: held,
+                    let (probe, screenshot) = try await showScreen(model, film: film,
+                                                                   lenses: device != "SE" ? Self.threeLenses : nil, held: held,
                                                                    textSize: size)
                     keep(screenshot, "Approval-\(device)-\(camera.id.rawValue)-\(sizeName)-\(name)")
                     let shot = "\(camera.id.rawValue), \(sizeName), \(name)"
@@ -556,8 +628,8 @@ final class CaptureSidewaysTests: XCTestCase {
         film = try model.setFocusSetting(.manual, filmID: film.id)
         for slider in [StripSlider.focus, .exposure] {
             for (held, name) in Self.holds {
-                let screenshot = try await showScreen(model, film: film, zoomSteps: device != "SE", held: held,
-                                                      slider: slider).screenshot
+                let screenshot = try await showScreen(model, film: film, lenses: device != "SE" ? Self.threeLenses : nil,
+                                                      held: held, slider: slider).screenshot
                 keep(screenshot, "Approval-\(device)-mediumFormat6x6-\(slider)-open-\(name)")
             }
         }
@@ -652,12 +724,22 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
-    /// The shooting screen of `film` as it shows with a lens running, by default a three-lens rear camera with its 1x step
-    /// selected, held as `held`, with any `slider` open and `message` over the viewfinder, in a window or, given a `size`,
-    /// in a box that size in the middle of it, which no safe area reaches. It returns where the screen put its parts and
-    /// the window drawn.
+    /// A three-lens rear camera: 0.5x, 1x, its wide lens's 2x crop and 3x.
+    private static let threeLenses = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                                   .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                                   .init(.telephoto, displayFactor: 3)])
+    /// The iPhone 17 Pro's rear camera, whose Camera app offers five Zoom Steps: 0.5x, 1x, its wide lens's 2x crop, 4x and
+    /// its telephoto lens's 8x crop.
+    private static let iPhone17ProLenses = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                                         .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                                         .init(.telephoto, displayFactor: 4, nativeCropFactors: [2])])
+
+    /// The shooting screen of `film` as it shows with a lens running, by default `threeLenses` with its 1x step selected
+    /// (`lenses` nil gives no Zoom Steps), held as `held`, with any `slider` open and `message` over the viewfinder, in a
+    /// window or, given a `size`, in a box that size in the middle of it, which no safe area reaches. It returns where the
+    /// screen put its parts and the window drawn.
     private func showScreen(
-        _ model: JournalModel, film: Film, zoomSteps: Bool = true, zoomStep: Int = 1,
+        _ model: JournalModel, film: Film, lenses: RearLensCapabilities? = CaptureSidewaysTests.threeLenses, zoomStep: Int = 1,
         held: CaptureFrameOrientation = .portrait, slider: StripSlider? = nil, size: CGSize? = nil,
         textSize: DynamicTypeSize = .large, style: UIUserInterfaceStyle = .light, sceneEV100: Double? = nil,
         message: String? = nil
@@ -668,10 +750,7 @@ final class CaptureSidewaysTests: XCTestCase {
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
-        if zoomSteps {
-            let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
-                                                      .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
-                                                      .init(.telephoto, displayFactor: 3)]).zoomSteps
+        if let steps = lenses?.zoomSteps {
             controls.zoomSteps = steps
             controls.zoomStep = steps[zoomStep]
         }
@@ -714,6 +793,20 @@ final class CaptureSidewaysTests: XCTestCase {
                                      cameraAuthorizer: SyntheticCamera(granted: true))
         await model.recoverAtLaunch()
         return (root, model)
+    }
+}
+
+/// How the text views under a view were laid out, for the test of the count's corner: for each, how many characters
+/// each of its lines holds (a line break is none of them), whether it was cut short and how long its longest line is.
+private final class TextLayoutProbe {
+    var texts: [(lines: [Int], truncated: Bool, longest: CGFloat)] = []
+
+    func read(_ layouts: Text.LayoutKey.Value) {
+        texts = layouts.map { anchored in
+            let layout = anchored.layout
+            return (layout.map { line in Set(line.flatMap(\.characterIndices)).count }, layout.isTruncated,
+                    layout.map(\.typographicBounds.width).max() ?? 0)
+        }
     }
 }
 
