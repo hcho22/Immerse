@@ -1,13 +1,22 @@
 # Physical v1 Validation Handoff
 
-Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright, re-pinned on 2026-10-18 to the build that also holds two changes that touch no screen: the screen tests' fixes and the clip reader's error, re-pinned on 2026-10-19 to the build that also holds the hosted tests' wait for the app's window scene, re-pinned on 2026-10-19 again to the build that also holds the slider drags' held lift and the app's one launch per screen-test class, re-pinned on 2026-10-20 to the build that also holds the shooting-screen tests' quicker waits, and re-pinned on 2026-10-28 to the build that also holds the screen tests' warm-up of a freshly booted simulator, the Debug build's Develop at once and the 2026-10-26 phone-feedback amendment.
+Prepared 2026-10-01 for Firstmate instruction 029, reconciled on 2026-10-02 after checkpoint 049, re-pinned on 2026-10-13 to the build that holds all of PRD 2.1, re-pinned on 2026-10-14 to the build that also holds the four changes merged that day, re-pinned on 2026-10-15 to the build that also holds the Darkroom side by side in landscape, and re-pinned on 2026-10-17 to the build that also holds the Instant's camera staying on and the shooting screen held upright, re-pinned on 2026-10-18 to the build that also holds two changes that touch no screen: the screen tests' fixes and the clip reader's error, re-pinned on 2026-10-19 to the build that also holds the hosted tests' wait for the app's window scene, re-pinned on 2026-10-19 again to the build that also holds the slider drags' held lift and the app's one launch per screen-test class, re-pinned on 2026-10-20 to the build that also holds the shooting-screen tests' quicker waits, re-pinned on 2026-10-28 to the build that also holds the screen tests' warm-up of a freshly booted simulator, the Debug build's Develop at once and the 2026-10-26 phone-feedback amendment, and re-pinned on 2026-10-29 to the build that also holds a failed clip read's named error and the photo Roll Cameras' **Finish & Develop Early**.
 **Plan only; every physical scenario below is deferred and unaccepted. v1 is not ready for manual sign-off.**
 Nothing in this plan has been run on a phone.
 
 ## The Candidate
 
-The software candidate is commit `d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130` on `main`, the squash of https://github.com/hcho22/Immerse/pull/63.
-It holds everything the pin before it did (PRD 2.1, the four changes of 2026-10-14, the two camera changes below, the screen tests' fixes and the clip reader's error of 2026-10-18, the hosted tests' wait for the app's window scene, the slider drags' held lift with the app's one launch per screen-test class, and the shooting-screen tests' quicker waits), except the side-by-side Darkroom of 2026-10-15, which the amendment replaced, and it adds four changes merged to `main` since that pin, two of which change the app:
+The software candidate is commit `25fdec1fd5617246da4612a1f817253796eb5d90` on `main`, the squash of https://github.com/hcho22/Immerse/pull/66.
+It holds everything the pin before it, `d5fd1af`, did, and it adds the two changes merged to `main` since that pin, both of which change `App` or `Packages`:
+
+| Pull request | What it changed | Record |
+| --- | --- | --- |
+| https://github.com/hcho22/Immerse/pull/65 | When `FilmPersistence` checks a stored clip or soundtrack and its read of the pictures or the sound does not start or does not finish, it throws `PersistenceError.unreadableMedia`, which carries the read's stage, the frames read, the reader's status and AVFoundation's errors, where it threw a bare `invalidMedia`. The app shows the same message for both, `FailureCopy.retry`, which a hosted test under `App/Immerse/Tests` now holds. It also keeps the video decoder's evidence from a failed packages CI part (workflow and scripts only). No screen changed | [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) |
+| https://github.com/hcho22/Immerse/pull/66 | On the Disposable and the 6×6 the Film's early-finish menu item reads **Finish & Develop Early** beside the skip-to-end symbol (⏭, `forward.end`), where it read **Rewind & Develop Early** beside skip-back (⏮, `backward.end`). The Movie Cameras keep **Stop & Develop Early** beside skip-back, the Instant has no early end, and the confirmation and the rule are unchanged | [078](finish-and-develop-early-078.md) |
+
+Their device checks are named in "What changed between `d5fd1af` and this pin" below.
+The pin before this one, `d5fd1af`, was made for the four changes of 2026-10-21 to 2026-10-28 below, which are still in the candidate.
+That pin held everything the pin before it did (PRD 2.1, the four changes of 2026-10-14, the two camera changes below, the screen tests' fixes and the clip reader's error of 2026-10-18, the hosted tests' wait for the app's window scene, the slider drags' held lift with the app's one launch per screen-test class, and the shooting-screen tests' quicker waits), except the side-by-side Darkroom of 2026-10-15, which the amendment replaced, and it added four changes merged to `main` since the pin before it, two of which change the app:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
@@ -16,8 +25,8 @@ It holds everything the pin before it did (PRD 2.1, the four changes of 2026-10-
 | https://github.com/hcho22/Immerse/pull/62 | Documents only: the 2026-10-26 PRD amendment from the captain's iPhone feedback (FR-22 to FR-35, ADRs 0018 to 0023) | [phone-feedback PRD](../../2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) |
 | https://github.com/hcho22/Immerse/pull/63 | The amendment's build: Camera short names, one 4:3 Viewfinder area under a one-line header on every Camera, a focus switch starting on Auto, Zoom Steps on the Super 8 and the 16mm, live sound on Super 8 and 16mm clips with the microphone asked for, a Movie sound choice of Recorded sound, Soundtrack or Silent, the full-screen photo view, one upright Darkroom with Adjust, Saturation and Vignette and no Dodge and Burn, and the Instant's one Originals question at the pack's end | [largest-text-load-audits-077](largest-text-load-audits-077.md), ADRs 0018 to 0023 |
 
-Their device checks are named in "What changed between `8a104e1` and this pin" below.
-The pin before this one was made for this change of 2026-10-20, which is still in the candidate and changes no scenario:
+Their device checks are named in "What changed between `8a104e1` and `d5fd1af`" below.
+The pin before that one was made for this change of 2026-10-20, which is still in the candidate and changes no scenario:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
@@ -43,7 +52,7 @@ The pin before that one was made for these two changes of 2026-10-18, which are 
 | https://github.com/hcho22/Immerse/pull/41 | When Development cannot read a clip it has recorded, the error now carries AVFoundation's own error (`NativeRenderError.invalidMovie(underlying:)`), and a clip reader that fails to start throws `invalidMovie` where it threw `writerFailed`. Nothing in the app tells the two apart: both show `FailureCopy.retry`, "The operation did not finish. Saved captures remain private; retry after checking available storage.", which a hosted test now holds | [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) |
 
 The scenarios that fail or interrupt Development, or end in a failure message, expect the same text and the same behavior as at the pins before: the app maps both errors to the same message, so a failed Movie Development shows what it showed, and the scenarios stand as written.
-The two camera changes, which the pin before this one was made for, are these:
+The two camera changes, which the pin of 2026-10-17 was made for, are these:
 
 | Pull request | What it changed | Record |
 | --- | --- | --- |
@@ -73,18 +82,16 @@ To check it out and confirm it:
 
 ```sh
 git fetch origin
-git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130
+git checkout --detach 25fdec1fd5617246da4612a1f817253796eb5d90
 git rev-parse HEAD     # must print the hash above
 git status --short     # must print nothing
 ```
 
 Re-pin before any manual run if the app has changed since this commit.
 The app is built from `App/Immerse` and the local packages under `Packages` and from nothing else (`App/Immerse/project.yml`).
-To tell whether it has changed, run `git diff --stat d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130 origin/main -- App Packages`.
+To tell whether it has changed, run `git diff --stat 25fdec1fd5617246da4612a1f817253796eb5d90 origin/main -- App Packages`.
 No output means every later commit on `main` changed documents, probes or scripts only, the software is the same, and this pin stands; this re-pin itself arrived in such a commit.
-When this was written, `d5fd1af` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
-Two later changes to `App` or `Packages` are not in this pin yet, and the next re-pin, made on `main` after the second merges, takes both: https://github.com/hcho22/Immerse/pull/65 (`Packages` and a hosted test under `App/Immerse/Tests`: a failed clip read names AVFoundation's error, which changes no scenario) and the rename of the photo Roll Cameras' early-finish action to **Finish & Develop Early** ([078](finish-and-develop-early-078.md)), whose phone checks are [F01 and F02](#finish--develop-early-on-a-real-iphone).
-Until that re-pin, the candidate's menu reads **Rewind & Develop Early**, and F01 and F02 wait for it.
+When this was written, `25fdec1` was the newest commit on `main`, and the newest that changes `App` or `Packages`.
 Any output means the candidate has changed: write the new commit's full hash here, and reassess every scenario the change touches before running it.
 A change to tests only, under `App/Immerse/Tests` or `App/Immerse/UITests`, also shows there; it changes no app, but write the new hash here all the same, so the plan names the commit that was built.
 Record the exact eventual tested revision and configuration;
@@ -92,6 +99,8 @@ reassess affected scenarios after any production, asset, signing or OS change.
 
 The earlier pins are history; do not test any of them as the candidate.
 
+- `d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130` on `main` (https://github.com/hcho22/Immerse/pull/63), the pin from 2026-10-28 to 2026-10-29.
+  It holds everything the candidate does except https://github.com/hcho22/Immerse/pull/65 and https://github.com/hcho22/Immerse/pull/66: its Disposable and 6×6 menus read **Rewind & Develop Early** beside the skip-back symbol, so it cannot pass F01 or F02, and a clip read that does not finish throws a bare `invalidMedia`.
 - `8a104e1e75dd49bae6c6e9705fab8da1793f8dda` on `main` (https://github.com/hcho22/Immerse/pull/47), the pin from 2026-10-20 to 2026-10-28.
   It holds neither Develop at once nor the 2026-10-26 amendment: it has the side-by-side Darkroom held sideways, the Crop and Dodge and Burn tools, the longer shooting-screen header with each Camera's own viewfinder size, fixed focus on the Disposable and the Super 8, no zoom on the movie Cameras, silent movie clips with no microphone request, and an Instant question about each print's original as it closes.
 - `d1ce143b1ec43a37bd4f979e0454e4841787af8d` on `main` (https://github.com/hcho22/Immerse/pull/45), the pin from 2026-10-19 to 2026-10-20.
@@ -118,11 +127,20 @@ and [QA-14 handoff](launch-readiness.md). It does not replace those IDs, change
 original ADRs, include deferred Groups/Accounts, or check any tracker box.
 The counts are the ones `Scripts/verify-requirement-map.sh` checks at this candidate (137 intake IDs since CAP-15, the warning below 2 GB free, was added on 2026-10-13); the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 the count before CAP-15.
 
-### What changed between `8a104e1` and this pin
+### What changed between `d5fd1af` and this pin
+
+Each line names the record to read and the scenarios below that carry its device checks.
+
+| Change since `d5fd1af` | Record | Scenarios |
+| --- | --- | --- |
+| The Disposable's and the 6×6's early-finish item reads **Finish & Develop Early** beside the skip-to-end symbol (⏭); the Movie's **Stop & Develop Early** beside skip-back (⏮), the confirmation and the rule are unchanged | [078](finish-and-develop-early-078.md) | [F01 and F02](#finish--develop-early-on-a-real-iphone); step 3 of [Before you start](#before-you-start) and [P02](#p02---the-preview-is-what-the-roll-develops) name the new label |
+| A read of a stored clip's pictures or sound that does not start or does not finish throws `PersistenceError.unreadableMedia`, naming AVFoundation's errors, where it threw `invalidMedia`; the app shows the same retry message for both, and a failed packages CI part keeps the video decoder's evidence | [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) | None of its own: no screen changed, and a phone has no way to make a read fail on purpose; the scenarios that end in a failure message expect the same text as before |
+
+### What changed between `8a104e1` and `d5fd1af`
 
 Each line names the record to read and the scenarios below that carry its device checks.
 Each record's own list of what only a phone can show is carried by those scenarios.
-The 2026-10-26 amendment's own physical rows are Q01 to Q09; the other scenarios named here are earlier ones it changed, which this re-pin brought up to the candidate.
+The 2026-10-26 amendment's own physical rows are Q01 to Q09; the other scenarios named here are earlier ones it changed, which the re-pin to `d5fd1af` brought up to that candidate.
 
 | Change since `8a104e1` | Record | Scenarios |
 | --- | --- | --- |
@@ -252,7 +270,8 @@ The rows after it were recorded at the earlier candidates they name and keep the
 
 | Observed software gate | Bound evidence and limit |
 | --- | --- |
-| Gates at the pinned candidate `d5fd1af` | The pull request check of https://github.com/hcho22/Immerse/pull/63 passed at its head `c3b6ec7`, whose tree is the same as `d5fd1af`'s, on the second attempt of run 40766665458 (all four parts and `local-native`). Its first attempt failed in the packages part on `DevelopmentProcessExitTests.testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns`: the worker process the test ends on purpose stopped instead on Swift's fatal error "Error raised at top level: FilmPersistence.PersistenceError.invalidMedia", so it did not exit with status 81 or write its snapshot; the harness part was cancelled, and `local-native` failed after it. No cause had been looked for when this row was written; [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) has since reproduced the failure by ending the reading process's video decoder mid-read, without proving that cause on CI, and a pass on the rerun does not show that the failure cannot come back. The earlier heads `0a64f91` (run 40707150573) and `0b83e49` (run 40736496272, both attempts) failed in the ui-flows part. For the other changes since `8a104e1`: https://github.com/hcho22/Immerse/pull/61 passed at its head `818b080`, whose tree is the same as `8eb6f50`'s (run 39679983691), and `main`'s own check on `8eb6f50` passed (run 39689998499); https://github.com/hcho22/Immerse/pull/60 passed at its head `41f1402`, whose tree is the same as `a16187f`'s (run 39541430482), and `main`'s check on `a16187f` passed (run 39595416528); `main`'s check on `d6cbb24`, the documents of https://github.com/hcho22/Immerse/pull/62, passed (run 40510930064). `main`'s own check on `d5fd1af` (run 40789577687, first attempt) failed in the ui-text part, and `local-native` failed after it (scope, packages, harness and ui-flows passed): `ContentSizeTests.testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge` stopped at its 3-minute allowance while it was still scrolling the 16mm Load screen on **Black and white**, Its rerun check found neither a dropped touch nor XCTest's animation stall in the test's run, so it got no rerun. Its activities in the result bundle hold no "App animations complete notification not received": the time went to many slow steps rather than one long wait, first a 32.5-second launch of the app (23 seconds of it before XCTest's automation session began), then about 60 seconds of held drags scrolling the catalog to the 6×6, with pauses of 4 to 14 seconds between steps that usually take under one. No cause has been looked for. The same test passed on the pull request's check at the same tree. A Mac and simulators only, and the simulator has no camera or microphone: no iPhone ran anything. |
+| Gates at the pinned candidate `25fdec1` | The pull request check of https://github.com/hcho22/Immerse/pull/66 passed at its head `9b3e825`, whose tree is the same as `25fdec1`'s, on its first attempt (run 40920731362, all four parts and `local-native`). https://github.com/hcho22/Immerse/pull/65 passed at its head `2c9dad8`, whose tree is the same as `edf8ca2`'s, on its first attempt (run 40807636356), and `main`'s own check on `edf8ca2` passed on its first attempt (run 40817738459). `main`'s own check on `25fdec1` passed on its first attempt (run 40942022224: scope, packages, harness, ui-text and ui-flows, then `local-native`), and no part's notes name a test that passed only through a rerun. A Mac and simulators only, and the simulator has no camera or microphone: no iPhone ran anything. |
+| Gates at the earlier pin `d5fd1af` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/63 passed at its head `c3b6ec7`, whose tree is the same as `d5fd1af`'s, on the second attempt of run 40766665458 (all four parts and `local-native`). Its first attempt failed in the packages part on `DevelopmentProcessExitTests.testMovieDiscardExitRetiresOldAssemblyAndOnlySurvivingClipReturns`: the worker process the test ends on purpose stopped instead on Swift's fatal error "Error raised at top level: FilmPersistence.PersistenceError.invalidMedia", so it did not exit with status 81 or write its snapshot; the harness part was cancelled, and `local-native` failed after it. No cause had been looked for when this row was written; [developed-clip-reader-failure-070](developed-clip-reader-failure-070.md) has since reproduced the failure by ending the reading process's video decoder mid-read, without proving that cause on CI, and a pass on the rerun does not show that the failure cannot come back. The earlier heads `0a64f91` (run 40707150573) and `0b83e49` (run 40736496272, both attempts) failed in the ui-flows part. For the other changes since `8a104e1`: https://github.com/hcho22/Immerse/pull/61 passed at its head `818b080`, whose tree is the same as `8eb6f50`'s (run 39679983691), and `main`'s own check on `8eb6f50` passed (run 39689998499); https://github.com/hcho22/Immerse/pull/60 passed at its head `41f1402`, whose tree is the same as `a16187f`'s (run 39541430482), and `main`'s check on `a16187f` passed (run 39595416528); `main`'s check on `d6cbb24`, the documents of https://github.com/hcho22/Immerse/pull/62, passed (run 40510930064). `main`'s own check on `d5fd1af` (run 40789577687, first attempt) failed in the ui-text part, and `local-native` failed after it (scope, packages, harness and ui-flows passed): `ContentSizeTests.testFilmStockLoadScreenTextAtAccessibilityExtraExtraExtraLarge` stopped at its 3-minute allowance while it was still scrolling the 16mm Load screen on **Black and white**, Its rerun check found neither a dropped touch nor XCTest's animation stall in the test's run, so it got no rerun. Its activities in the result bundle hold no "App animations complete notification not received": the time went to many slow steps rather than one long wait, first a 32.5-second launch of the app (23 seconds of it before XCTest's automation session began), then about 60 seconds of held drags scrolling the catalog to the 6×6, with pauses of 4 to 14 seconds between steps that usually take under one. No cause has been looked for. The same test passed on the pull request's check at the same tree. A Mac and simulators only, and the simulator has no camera or microphone: no iPhone ran anything. |
 | Gates at the earlier pin `8a104e1` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/47 passed at its head `167dc80` (run 39377185262, all four parts and `local-native`, first attempt). `main`'s own check on `8a104e1` (run 39424197098) failed at its first attempt in the harness part, on `PopulatedWorkflowTests.testDarkroomTurningLeavesALoadErrorInPlace` and `PopulatedWorkflowTests.testInstantLookScreens` (scope, packages, ui-text and ui-flows passed), and `local-native` failed after it: the first test stopped at its 3-minute allowance with every assertion passed, after XCTest's animation stall ("App animations complete notification not received" twice, the app's animation-idle requests unanswered; [main-ci-flakes-069](main-ci-flakes-069.md)), and the second met a dropped touch (7 skipped touch events), which got no rerun because the stall was not excused. The second attempt reran the harness part and passed all four parts and `local-native`. [main-ci-flakes-073](main-ci-flakes-073.md) also notes a local sighting of the XCTest animation stall that the captain chose to keep waiting on. A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `d1ce143` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/45 passed only on a re-run: its ui-flows part failed at its first head `135c9a1` (run 39292846150) and again in the first attempt of run 39307626086 at its final head `cc8bd14`, each time on a slow runner, and `local-native` failed after it; the second attempt of run 39307626086 passed all four parts and `local-native`, and [main-ci-flakes-072](main-ci-flakes-072.md) records the cause it found. `main`'s own check on `d1ce143` passed (run 39342462086, all four parts and `local-native`). A Mac and simulators only: no iPhone ran anything. |
 | Gates at the earlier pin `d348d99` (history) | The pull request check of https://github.com/hcho22/Immerse/pull/43 passed (run 39202888924, all four parts and `local-native`). `main`'s own check on `d348d99` (run 39252986897) failed in the harness part, on `PopulatedWorkflowTests.testDarkroomUnderAnExplanationScrollsItsSliderClearAtTheLargestSize` (packages, ui-text and ui-flows passed); its check found no dropped touch for that test, and `local-native` failed after it. No cause was claimed when this row was written; [main-ci-flakes-072](main-ci-flakes-072.md) has since recorded one. `main`'s check on the plan's re-pin to `3a008ba` passed (run 39196559304). A Mac and simulators only: no iPhone ran anything. |
@@ -525,7 +544,7 @@ The names in bold are the words on the screen.
    Only after the pack's last print closes does a sheet titled **Originals** ask, once, about every print whose original is still undecided (FR-35).
    Answer it as step 6 says, or tap **Cancel** to leave the choice for later under **Originals** on the Film's screen.
 3. **Finish a roll or reel before it is full.**
-   On the Film's screen tap the **...** menu at the top right, then **Finish & Develop Early** (photo roll; **Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`) or **Stop & Develop Early** (Movie), then **Complete Film**.
+   On the Film's screen tap the **...** menu at the top right, then **Finish & Develop Early** (photo roll; **Rewind & Develop Early** on [L07](#l07---a-film-started-before-this-build-keeps-its-look)'s earlier build, which predates [078](finish-and-develop-early-078.md)) or **Stop & Develop Early** (Movie), then **Complete Film**.
    The unused exposures or time are lost for good, which is what the confirmation says.
    The **Development** sheet then opens by itself.
    An Instant pack has no such command: each print develops by itself right after it is taken.
@@ -875,7 +894,7 @@ Software tests hold this (`TreatmentVersionDevelopmentTests`, `LegacyLookTests`)
 
 **You need.**
 A build from before treatment versions were recorded: commit `0e69ed23e62c7244aecc6e6632c7fba2f8159f08` on `main`, the squash of https://github.com/hcho22/Immerse/pull/24, which was the build before the 2026-10-13 pin.
-The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3", and, in the 2026-10-26 amendment, by three optional fields and the checks that use them: a Film's focus setting, whether its Camera package records live sound, and a Movie's sound choice; a Movie's length is also now read from its picture (`git diff 5c3a217 d5fd1af -- Packages/FilmPersistence Packages/FilmDomain`).
+The 2026-10-13 version of this plan recorded that it stores Films the same way as `5c3a217`, and from `5c3a217` to this pin the Film store's code changed only by dropping a lock on choosing a soundtrack again and that lock's error, by the treatment version a newly loaded Film records, "film-look-4" in place of "film-look-3", and, in the 2026-10-26 amendment, by three optional fields and the checks that use them: a Film's focus setting, whether its Camera package records live sound, and a Movie's sound choice; a Movie's length is also now read from its picture, and since https://github.com/hcho22/Immerse/pull/65 a read of a clip's pictures or sound that does not finish throws an error naming AVFoundation's, which stores nothing (`git diff 5c3a217 25fdec1 -- Packages/FilmPersistence Packages/FilmDomain`).
 A record saved before has none of those fields and still opens, as `FilmFocusSettingTests.testOlderFilmWithoutFocusSettingOpensOnAuto` holds for the focus setting: its Film starts on Auto focus, and an earlier Super 8 or 16mm Film stays silent and never asks for the microphone (ADR 0018), so the candidate opens what the earlier build saved.
 The app has no way to bring a Film in from outside, so installing the earlier build first is the only way to have a Film that was started before this one.
 For an agent, the earlier build is a second named artifact and needs its own install scope from Firstmate (authority table, first row); for the captain running this by hand it is his own choice.
@@ -904,7 +923,7 @@ Deleting Immerse to start over removes its Films and is the captain's decision a
 **Part B, on the candidate.**
 
 1. If you are also running I03, do its part A now, before the candidate.
-   Check out the candidate, `git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130`, and build and run it on the same phone without deleting Immerse.
+   Check out the candidate, `git checkout --detach 25fdec1fd5617246da4612a1f817253796eb5d90`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists every Film from part A with the same title, Camera, Film Stock and remaining capacity.
 3. Open each "OLD done" Film and compare its pictures with the screenshots from part A.
 4. On each "OLD open" Film capture the same subject again, and on the 16mm color one a clip under the warm bulbs as well.
@@ -1252,7 +1271,7 @@ Here that is a software test with a reopened store and an install-over update in
 
 **You need.**
 The build just before the Instant change: commit `9d54ba166299eea3edfecc2c9fde29331a76dae4` on `main`, the squash of https://github.com/hcho22/Immerse/pull/28, which records version 3 for a new Film (`CameraCatalog.treatmentVersion` in `Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift` reads "film-look-3" there and "film-look-4" at the candidate).
-From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4", and, in the 2026-10-26 amendment, by three optional fields that a record saved before does not have and that change nothing for an Instant pack: a Film's focus setting (the Instant has Auto only), whether its Camera package records live sound, and a Movie's sound choice (`git diff 9d54ba1 d5fd1af -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
+From that build to the candidate the Film store's code changed only in the treatment version a newly loaded Film records, "film-look-3" to "film-look-4", and, in the 2026-10-26 amendment, by three optional fields that a record saved before does not have and that change nothing for an Instant pack: a Film's focus setting (the Instant has Auto only), whether its Camera package records live sound, and a Movie's sound choice; and, since https://github.com/hcho22/Immerse/pull/65, by the error a read of a clip's pictures or sound throws when it does not finish, which names AVFoundation's, stores nothing and reads no Instant print (`git diff 9d54ba1 25fdec1 -- Packages/FilmPersistence Packages/FilmDomain`; the version of this plan for `38792bb` named a dropped lock on choosing a soundtrack again here, but that change is already in `9d54ba1`), so the candidate opens what it saved.
 For an agent the earlier build is another named artifact and needs its own install scope (authority table, first row); for the captain it is his own choice.
 
 **Order matters.**
@@ -1271,7 +1290,7 @@ If the candidate is already on the phone, do not install this build over it; rec
 
 **Part B, on the candidate.**
 
-1. Check out the candidate, `git checkout --detach d5fd1af83c1fa0be8a1ead5b1b2cab48bad97130`, and build and run it on the same phone without deleting Immerse.
+1. Check out the candidate, `git checkout --detach 25fdec1fd5617246da4612a1f817253796eb5d90`, and build and run it on the same phone without deleting Immerse.
 2. Confirm that the Journal lists both packs with the same titles and remaining exposures.
 3. Open "V3 pack" and compare its two prints with the screenshots from part A.
 4. Take two more prints of the subject on "V3 pack" and one on "V3 empty".
@@ -1962,7 +1981,7 @@ Every capture develops, one after another in the order it was saved, and none is
 That is how to tell the switch's state without opening Settings: while it is on, those four Cameras' shooting screens show **Develop at once** with a hammer beside **Done**, from before the first capture, and with it off, as on the Instant at any time, nothing shows there.
 The roll itself stays sealed and develops exactly as before, and the Instant is unchanged.
 Release, TestFlight and App Store builds have none of it (`sh Scripts/verify-release-excludes-testing-unlock.sh`).
-The candidate pinned on 2026-10-28, `d5fd1af`, holds it.
+The candidate pinned on 2026-10-29, `25fdec1`, holds it, as did the pin of 2026-10-28, `d5fd1af`.
 A card over the viewfinder is a developed result shown before Development, which FR-04 rules out for the product, so **turn the switch off for every scenario outside P01 to P05**, and above all for L03 and L05, which watch that the viewfinder never previews the developed result; no **Develop at once** beside **Done** shows it is off.
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start).
 Each scenario reads **UNTESTED: physical execution deferred**.
@@ -1997,7 +2016,7 @@ For each capture, the seconds from the shutter to the developed card, a screensh
 **Steps.**
 
 1. On a new Disposable Film take three photos of different scenes, opening each full-size preview and taking a screenshot of it.
-2. Tap **Done**, open the Film's **...** menu, choose **Finish & Develop Early** (**Rewind & Develop Early** on a candidate without [078](finish-and-develop-early-078.md), such as `d5fd1af`), complete the Film and develop it.
+2. Tap **Done**, open the Film's **...** menu, choose **Finish & Develop Early**, complete the Film and develop it.
 3. Open each developed photo full size and compare it with its preview screenshot.
 4. Repeat with a 16mm Film of two short clips, comparing each clip's preview with the Developed Movie.
 
@@ -2204,7 +2223,7 @@ completion stays withheld until every required check, decision and hardware gate
 is resolved and recorded. Actual publication needs separate release authority.
 ## 2026-10-26 phone-feedback acceptance
 
-These cases map one-to-one to the physical-iPhone rows in the amendment's section 5.4. Every case is **UNTESTED: physical execution deferred**. The candidate pinned on 2026-10-28, `d5fd1af`, is this change's merge, and the captain must authorize physical execution. Simulator screenshots and package results do not count as phone results. Use test Films and a non-private scene; preserve receipts without keeping private pictures, recordings, or audio.
+These cases map one-to-one to the physical-iPhone rows in the amendment's section 5.4. Every case is **UNTESTED: physical execution deferred**. The candidate pinned on 2026-10-28, `d5fd1af`, was this change's merge, the candidate pinned on 2026-10-29, `25fdec1`, holds it too, and the captain must authorize physical execution. Simulator screenshots and package results do not count as phone results. Use test Films and a non-private scene; preserve receipts without keeping private pictures, recordings, or audio.
 
 | Case | Physical-only acceptance row | State |
 | --- | --- | --- |
@@ -2315,7 +2334,7 @@ Run only against the pinned candidate and only after the captain authorizes the 
 On 2026-10-28 the captain renamed the photo Roll Cameras' early-finish action from **Rewind & Develop Early** to **Finish & Develop Early**, because neither original rewinds its film at the end; the Movie Cameras keep **Stop & Develop Early**, the Instant still has no early end, and the rule is unchanged: the rest of the roll is wasted after the confirmation that names the exact number of exposures ([078](finish-and-develop-early-078.md), DEC-01 in part).
 He also gave the photo item the skip-to-end symbol (⏭, `forward.end`) in place of skip-back (⏮, `backward.end`), which the Movie's item keeps.
 The simulator holds the label and its symbol on the Disposable and the 6×6 at the default text size and at AX XXXL, and the Movie's label and symbol beside them (`FinishEarlyWorkflowTests`); only a phone shows how the menu reads and how VoiceOver says it.
-The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
+The candidate pinned on 2026-10-29, `25fdec1`, is this change's merge; the pin before it, `d5fd1af`, does not hold it (The Candidate, above).
 Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on and **Develop at once** off, with the common steps of [Looks on a Real iPhone](#before-you-start), on test Films that can be finished.
 Each scenario reads **UNTESTED: physical execution deferred**.
 
