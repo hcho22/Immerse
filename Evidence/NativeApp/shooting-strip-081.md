@@ -119,7 +119,7 @@ The new screenshot test met it with the Disposable's low-light cue and a message
 
 ## Runs
 
-On the code this record is committed with (after `b6d047c`), each class run with `xcodebuild -project App/Immerse/Immerse.xcodeproj -scheme Immerse -destination 'platform=iOS Simulator,id=<udid>' -only-testing:<class> test` on simulators of iOS 26.5:
+On the code this record is committed with (after `3f1c8b0`), each class run with `xcodebuild -project App/Immerse/Immerse.xcodeproj -scheme Immerse -destination 'platform=iOS Simulator,id=<udid>' -only-testing:<class> test` on simulators of iOS 26.5:
 
 - `ImmerseTests/CaptureSidewaysTests`, 33 tests: all 33 passed on an iPhone 17 Pro (419 seconds) and on an iPhone 17 Pro Max (426 seconds), and on an iPhone SE (3rd generation) 32 passed and `testTheSuper8sFiveZoomStepsForApproval` was skipped, as it is on an iPhone with one rear lens (389 seconds).
   The longest test, `testTheShootingScreensForApproval`, took 86, 78 and 88 seconds on the 17 Pro, the SE and the 17 Pro Max, `testTheTopBarsStatesHeldSidewaysForApproval` 38, 35 and 39, `testTheSixBySixStripKeepsItsHeightWithoutItsZoomSteps` 12 or 13, and `testTheSuper8sFiveZoomStepsForApproval` 5 where it ran, all well inside the 120 seconds a hosted test has on CI.
@@ -130,7 +130,7 @@ On the code this record is committed with (after `b6d047c`), each class run with
   Their check that the room holds the strip asked for 8 points more than the strip while the room ended at SwiftUI's default spacing above the bar; it now asks for the strip alone, since those 8 points lie below the room's end, between it and the bar.
   By the figures above, the 6×6's strip so keeps 3 points above and below it in the room at the default size on the 17 Pro (108 points in 114) and 3.5 at the largest size on the 17 Pro Max (138 in 145).
 - `ImmerseTests/DevelopedPreviewsTests`, 19 tests, passed on the iPhone 17 Pro.
-- `ImmerseUITests/CaptureSidewaysUITests`, 14 tests, and `ImmerseUITests/DevelopedPreviewUITests`, 1 test, passed when this record was first written (`1a55b3b`, on an iPhone 17 Pro simulator, iOS 26.5), before this review's changes to the top bar's state words, the Super 8's word sizes, the room's 8 points and the 6×6's steps' line; they have not been run since.
+- `ImmerseUITests/CaptureSidewaysUITests`, 14 tests, and `ImmerseUITests/DevelopedPreviewUITests`, 1 test, passed when this record was first written (`d4cb605`, on an iPhone 17 Pro simulator, iOS 26.5), before this review's changes to the top bar's state words, the Super 8's word sizes, the room's 8 points and the 6×6's steps' line; they have not been run since.
   They now hold the focus switch under the Viewfinder area on an iPhone at least 390 points wide and in the same place in every hold, and held sideways Done and the count in the top bar above the area, Done in its corner where it starts upright, 6 points above the area in every hold, with a tap 2 points below its glass closing the screen, the count in the other corner and narrower than upright, without the Camera's name, with VoiceOver still reading the whole label, and Develop at once's hammer above the area beside Done.
   A first run failed every sideways hold on one check: Done's round button sat 5 points further in than upright, because the `.glass` button style pads a circle's label wider than the circle; Done is now its own glass circle (`glassEffect`).
 
