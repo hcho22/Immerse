@@ -142,5 +142,6 @@ Those screenshots have not yet been before the captain.
 
 - How the strip sits under a thumb, on each Camera and in each hold (U01).
 - The 6×6's slider swap with a real lens, its bias kept across closing, and the extra tap (U02).
+- Whether the steps a real iPhone's camera list gives before the session starts make the 6×6's strip as tall as the running lens's do, so that at the largest text sizes it stays put as the camera opens and switches (U02); the hosted tests give both the same steps.
 - The turned top bar read in the hand in both holds, its smaller state words included, and what VoiceOver says there (U03).
 - Whether an iPhone 17 Pro's camera API reports the five Zoom Steps its Camera app shows (0.5x, 1x, 2x, 4x and 8x), which the hosted tests stand in for at the largest text sizes and with four elsewhere.
