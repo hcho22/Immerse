@@ -55,7 +55,8 @@ struct CaptureView: View {
         let held = HeldTurn(capture.held)
         GeometryReader { screen in
             ScrollView {
-                // The safe-area reader ends at the shutter bar; the full-width area keeps its own height within it.
+                // The safe-area reader ends where the column's room does, 8 points above the shutter bar; the full-width area
+                // keeps its own height within it.
                 CaptureColumn(room: screen.size.height) {
                     header(capture).padding(.horizontal, 16).captureColumnRole(.header)
                         .zIndex(1)

@@ -256,7 +256,7 @@ final class CaptureSidewaysTests: XCTestCase {
     // MARK: The column
 
     /// Where `CaptureColumn` puts the header, the fixed 4:3 viewfinder area and, given a `stripHeight`, a control strip in
-    /// a window, with `room` above the shutter bar.
+    /// a window, with `room` for the column, which on the shooting screen ends 8 points above the shutter bar.
     private func column(
         aspect: CGFloat, turn: HeldTurn = .upright, width: CGFloat = 358, proposalHeight: CGFloat = 3000,
         extraHeaderText: String? = nil, stripHeight: CGFloat? = nil, room: CGFloat? = nil
@@ -376,13 +376,14 @@ final class CaptureSidewaysTests: XCTestCase {
 
     // MARK: The control strip
 
-    /// Where the strip's top goes: centred in the room between the area and the shutter bar where that holds the strip,
-    /// as low as the room allows where it holds at least half of it, otherwise over the area with its bottom on the area's.
+    /// Where the strip's top goes: centred in the room between the area and the room's end, 8 points above the shutter
+    /// bar, where that holds the strip, down to the room's end where it holds at least half of it, otherwise over the area
+    /// with its bottom on the area's.
     func testWhereTheStripGoes() {
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 44, room: 674), 605, "Centred in 94 points")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 94, room: 674), 580, "Exactly the room")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 120, room: 674), 554,
-                       "Room for most of it: down to the shutter bar, 26 points over the area")
+                       "Room for most of it: down to the room's end, 8 points above the shutter bar, 26 points over the area")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 200, room: 674), 380,
                        "Room for less than half: wholly over the area's bottom edge")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 544, stripHeight: 92, room: 543), 452,
@@ -390,13 +391,13 @@ final class CaptureSidewaysTests: XCTestCase {
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 44, room: nil), 580)
     }
 
-    /// The strip is centred in the room between the area and the shutter bar where that holds it, as on the largest
-    /// iPhone; where the room holds most of it, it sits down to the shutter bar, partly over the area; and where it holds
-    /// less than half, as on the iPhone SE (3rd generation), it sits over the area's bottom edge, its bottom on the
-    /// area's. The area keeps its size and place in each.
+    /// The strip is centred in the room under the area, which ends 8 points above the shutter bar, where that holds it, as
+    /// on the largest iPhone; where the room holds most of it, it sits down to the room's end, partly over the area; and
+    /// where it holds less than half, as on the iPhone SE (3rd generation), it sits over the area's bottom edge, its bottom
+    /// on the area's. The area keeps its size and place in each.
     func testTheStripSitsUnderTheAreaWhereItFitsAndOverItsBottomEdgeWhereNot() async throws {
-        // Rooms like those the iPhone 17 Pro Max, the largest supported, and the iPhone 17 Pro leave above the shutter
-        // bar, a shorter one, and the iPhone SE's.
+        // Rooms like those the iPhone 17 Pro Max, the largest supported, and the iPhone 17 Pro leave the column, ending 8
+        // points above the shutter bar, a shorter one, and the iPhone SE's.
         let cases: [(name: String, width: CGFloat, room: CGFloat, strip: CGFloat)] = [
             ("17 Pro Max, one line", 440, 756, 44), ("17 Pro Max, two lines", 440, 756, 92),
             ("17 Pro, two lines", 402, 682, 100), ("most of it", 402, 640, 92), ("less than half", 402, 610, 92),
@@ -415,7 +416,7 @@ final class CaptureSidewaysTests: XCTestCase {
                                "Centred in the room under the area, \(c.name)")
             } else {
                 XCTAssertEqual(with.strip.maxY, under >= c.strip / 2 ? c.room : with.viewfinder.maxY, accuracy: 0.5,
-                               "Down to the shutter bar or over the area's bottom edge, \(c.name)")
+                               "Down to the room's end, 8 points above the shutter bar, or over the area's bottom edge, \(c.name)")
             }
         }
         let se = try await column(aspect: 1, width: 375, stripHeight: 44, room: 543)
