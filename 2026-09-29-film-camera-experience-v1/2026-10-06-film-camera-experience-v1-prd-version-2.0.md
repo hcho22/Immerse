@@ -97,6 +97,11 @@ Reading its draft the same day, he set the open sound format and the Instant rev
 The [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-22 to FR-35, and ADRs 0018 to 0023 record them.
 Where it supersedes text in this file, a short note marked "2026-10-26" says so and points there; this file's text, FR, DEC and section numbers are otherwise unchanged.
 
+**Amendment of 2026-10-29 (a separate file, no version change).**
+After using the app on his iPhone again, the captain asked for five changes and settled each the same day: Print Zoom on developed prints in the photo view and the Darkroom, Adjust cropping as the Photos app crops (the 6×6 staying square), one control strip under the Viewfinder area, a top bar that stays put when the iPhone is held sideways, and a fix for a 16mm Development that could not finish.
+The [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) specifies them as FR-36 to FR-41, and ADR 0024 records the two shooting-screen decisions.
+Where it supersedes text in this file, a short note marked "2026-10-29" says so and points there; this file's text, FR, DEC and section numbers are otherwise unchanged.
+
 **Decision of 2026-10-28 (amended in place, no version change).**
 The captain renamed the photo Roll Cameras' early-finish action from "Rewind & Develop Early" to "Finish & Develop Early", choosing it over "Wind On & Develop Early" and over keeping the old name.
 Neither original rewinds its film at the end: a 6×6 winds its roll film onto a take-up spool that goes to the lab, and many disposables wind the film back into its cassette as they shoot, while the app holds every Camera to a named original.
@@ -583,6 +588,9 @@ Personal capture works offline once entitled and needs no server. Starting the T
 **Acceptance:** No review/delete path for an individual sealed personal capture. No hidden-image thumbnails or automatic Photos writes. A lens change does not reset capacity. Failure before durable save must not consume an exposure or Trial entitlement.
 
 > **2026-10-26:** Superseded in this FR: the viewfinder sized as "the largest box ... the room leaves" (now the iPhone Camera's 4:3 photo frame, FR-23), the Darkroom turning with the iPhone (it never turns, FR-29), Zoom on the 6×6 alone (the Super 8 and the 16mm too, FR-26), and the Super 8's fixed-focus lens (a focus switch starting on Auto, FR-25); see the [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md).
+
+> **2026-10-29:** Superseded in this FR: the 6×6's "Focus and Exposure rows are there whatever the lens" (they now open from buttons in one control strip under the Viewfinder area, FR-39), and, for the shooting screen's header, its words turning as one line (the top bar stays above the Viewfinder area and only its pieces turn in place, with the Camera's name hidden while sideways, FR-40); see the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md).
+> "No pinch or digital zoom" stands for capture; Print Zoom is only for looking at a developed print (FR-36, FR-38).
 
 ### FR-05 — Movie recording, orientation, and audio
 
