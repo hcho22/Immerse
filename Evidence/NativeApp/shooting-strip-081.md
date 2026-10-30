@@ -1,4 +1,4 @@
-# The Shooting Screen's Control Strip and Its Sideways Top Bar 080
+# The Shooting Screen's Control Strip and Its Sideways Top Bar 081
 
 Captain (2026-10-29), after using the build on his iPhone:
 
