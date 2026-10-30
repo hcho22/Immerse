@@ -146,3 +146,5 @@ The harness forwards its scene's phase to `JournalModel.sceneChanged(to:)`, as t
 show a natural scene; the UI tests pass them on when the run sets `TEST_RUNNER_PHOTO_SOURCE` and
 `TEST_RUNNER_MOVIE_SOURCE` (for example `Evidence/AssetReview/sources/window-still-life-generated.png` and
 `Evidence/AssetReview/draft-01/source-landscape.mov`). They are evidence aids only; nothing in the shipping app reads them.
+`PrintZoomWorkflowTests` also passes `TEST_RUNNER_CONTENT_SIZE` (a `UICTContentSizeCategory…` name) on as the text size, so
+its screenshots of Print Zoom and the crop box can be taken at any size.

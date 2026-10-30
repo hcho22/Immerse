@@ -118,27 +118,28 @@ import XCTest
         cyan.adjust(toNormalizedSliderPosition: 0.65)
         XCTAssertTrue(app.sliders["Magenta"].exists)
         XCTAssertTrue(app.sliders["Yellow"].exists)
-
-        app.buttons["Adjust"].tap()
-        let crop = app.switches["Crop"]
-        XCTAssertTrue(crop.waitForExistence(timeout: 5))
-        crop.flipSwitch()
-        let size = app.sliders["Crop size"]
-        XCTAssertTrue(size.waitForExistence(timeout: 5))
-        size.adjust(toNormalizedSliderPosition: 0.6)
-        XCTAssertTrue(app.sliders["Crop Horizontal"].exists)
-        XCTAssertTrue(app.sliders["Crop Vertical"].exists)
         // At the default text size each caption sits beside its slider, the captions in one column and the sliders in
         // the next.
-        for caption in ["Crop", "Size", "Horizontal", "Vertical"] {
-            XCTAssertEqual(app.staticTexts[caption].frame.minX, app.staticTexts["Size"].frame.minX, accuracy: 1, caption)
-            XCTAssertLessThan(app.staticTexts[caption].frame.maxX, size.frame.minX, caption)
+        for caption in ["Cyan", "Magenta", "Yellow"] {
+            XCTAssertEqual(app.staticTexts[caption].frame.minX, app.staticTexts["Magenta"].frame.minX, accuracy: 1, caption)
+            XCTAssertLessThan(app.staticTexts[caption].frame.maxX, cyan.frame.minX, caption)
+            XCTAssertEqual(app.sliders[caption].frame.minX, cyan.frame.minX, accuracy: 1, caption)
         }
-        for slider in ["Straighten", "Crop Horizontal", "Crop Vertical"] {
-            XCTAssertEqual(app.sliders[slider].frame.minX, size.frame.minX, accuracy: 1, slider)
+        snapshot(app, "darkroom-filtration-captions")
+
+        // Adjust's crop box, its four edges for VoiceOver, its shapes and the straighten dial.
+        app.buttons["Adjust"].tap()
+        let box = app.descendants(matching: .any)["darkroom-crop-box"]
+        XCTAssertTrue(box.waitForExistence(timeout: 20))
+        for edge in ["left", "right", "top", "bottom"] {
+            XCTAssertTrue(app.descendants(matching: .any)["darkroom-crop-\(edge)"].exists, edge)
         }
-        snapshot(app, "darkroom-crop-captions")
-        crop.flipSwitch()
+        XCTAssertTrue(app.descendants(matching: .any)["darkroom-straighten-dial"].exists)
+        app.buttons["darkroom-crop-shape-Square"].tap()
+        let square = NSPredicate(format: "value == %@", "67 percent of the width, 100 percent of the height")
+        XCTAssertEqual(XCTWaiter().wait(for: [XCTNSPredicateExpectation(predicate: square, object: box)], timeout: 10), .completed,
+                       "Square keeps the largest square of the 3:2 print")
+        snapshot(app, "darkroom-crop-square")
 
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         XCTAssertFalse(app.buttons["Dodge point"].exists)
@@ -156,15 +157,22 @@ import XCTest
         app.buttons["Adjust"].tap()
         XCTAssertTrue(app.buttons["darkroom-rotate-left"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["darkroom-rotate-right"].exists)
-        let straighten = app.sliders["Straighten"]
-        XCTAssertTrue(straighten.exists)
+        let straighten = app.descendants(matching: .any)["darkroom-straighten-dial"]
+        XCTAssertTrue(straighten.waitForExistence(timeout: 20))
         XCTAssertEqual(straighten.value as? String, "0.0 degrees")
-        tapWhole(app, straighten)
-        straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            .dragThumb(to: straighten.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5)))
+        // The ruler slides under its mark: dragged right it turns the print the other way, to its end. A drag of 250
+        // points turns it 50°, so two reach either end; a third covers a short one.
+        for _ in 0..<3 where straighten.value as? String != "-45.0 degrees" {
+            let start = straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7))
+            start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 250, dy: 0)), withVelocity: .default,
+                        thenHoldForDuration: 0.3)
+        }
         XCTAssertEqual(straighten.value as? String, "-45.0 degrees")
-        straighten.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0.5))
-            .dragThumb(to: straighten.coordinate(withNormalizedOffset: CGVector(dx: 1, dy: 0.5)))
+        for _ in 0..<3 where straighten.value as? String != "45.0 degrees" {
+            let start = straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.7))
+            start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: -250, dy: 0)), withVelocity: .default,
+                        thenHoldForDuration: 0.3)
+        }
         XCTAssertEqual(straighten.value as? String, "45.0 degrees")
 
         app.buttons["Saturation"].tap()
