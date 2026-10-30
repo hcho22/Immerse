@@ -2748,10 +2748,12 @@ A screenshot of each Camera upright and on each side, and the captain's words on
 3. Set the focus switch to **Manual**, tap the Focus button, drag the Focus slider, and close it; then choose **Auto** and look for the Focus button.
 4. Do steps 1 and 2 held on each side.
 5. Switch to the front camera and open the Exposure slider.
+6. Set **Settings > Accessibility > Display & Text Size > Larger Text** to the largest size short of the accessibility sizes, open the 6×6's camera again, and switch to the front camera and back, watching **Auto** / **Manual** and the buttons.
 
 **Expect.**
 
 - The slider, with its caption and its value ("Exposure 0.0 EV"), fills the strip in the Zoom Steps' place; the strip and the Viewfinder area do not move; the close button brings back the Zoom Steps and the switch.
+- At the default and the largest text size, the strip, its switch and its buttons stay where they are as the camera opens and as it switches between the cameras, whether the Zoom Steps show or not.
 - The bias set stays after closing the slider and on the photo taken; the Focus button shows only in **Manual**, and goes when **Auto** is chosen.
 - Where the lens cannot do one, the slider's place says "Manual focus unavailable on this lens" or "Exposure unavailable on this lens".
 - Held sideways, the slider's caption reads upright beside it.

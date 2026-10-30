@@ -545,6 +545,27 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
+    /// On an iPhone whose rear camera offers Zoom Steps, the 6×6's strip is as tall and in the same place whether its steps
+    /// show or not, as on its front camera or before a lens reports them, at the default text size, the largest short of
+    /// the accessibility sizes and the first of those: its empty steps line is as tall as the steps the iPhone's camera
+    /// list gives, so its switch and buttons never move as the steps come and go.
+    func testTheSixBySixStripKeepsItsHeightWithoutItsZoomSteps() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try makeFilm(CameraCatalog.mediumFormat6x6, model)
+        for size in [DynamicTypeSize.large, .xxxLarge, .accessibility1] {
+            let shown = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, textSize: size).probe
+            let hidden = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, showsSteps: false,
+                                              textSize: size).probe
+            let name = "\(size)"
+            XCTAssertNotNil(shown.zoomSteps, "The steps show, \(name)")
+            XCTAssertNil(hidden.zoomSteps, "No steps show, \(name)")
+            let strip = try XCTUnwrap(shown.strip, name)
+            XCTAssertEqual(try XCTUnwrap(hidden.strip, name), strip, "The strip keeps its size and place, \(name)")
+            XCTAssertEqual(hidden.focusSwitch, shown.focusSwitch, "The focus switch keeps its place, \(name)")
+        }
+    }
+
     /// The 6×6's Focus and Exposure buttons each open their slider in the strip, in the Zoom Steps' place, and the strip
     /// keeps its size and place for it in every hold, so nothing else moves.
     func testTheSixBySixOpensEachSliderInTheStrip() async throws {
@@ -817,11 +838,12 @@ final class CaptureSidewaysTests: XCTestCase {
 
     /// The shooting screen of `film` as it shows with a lens running, by default `threeLenses` with its 1x step selected
     /// (`lenses` nil gives no Zoom Steps), held as `held`, with any `slider` open and `message` over the viewfinder, in a
-    /// window or, given a `size`, in a box that size in the middle of it, which no safe area reaches. It returns where the
-    /// screen put its parts and the window drawn.
+    /// window or, given a `size`, in a box that size in the middle of it, which no safe area reaches. The iPhone's camera
+    /// list gives `lenses` for its rear camera; `showsSteps` false leaves the running lens's report without them, as on the
+    /// front camera or before a lens reports them. It returns where the screen put its parts and the window drawn.
     private func showScreen(
         _ model: JournalModel, film: Film, lenses: RearLensCapabilities? = CaptureSidewaysTests.threeLenses, zoomStep: Int = 1,
-        held: CaptureFrameOrientation = .portrait, slider: StripSlider? = nil, size: CGSize? = nil,
+        showsSteps: Bool = true, held: CaptureFrameOrientation = .portrait, slider: StripSlider? = nil, size: CGSize? = nil,
         textSize: DynamicTypeSize = .large, style: UIUserInterfaceStyle = .light, sceneEV100: Double? = nil,
         message: String? = nil
     ) async throws -> (probe: CaptureLayoutProbe, screenshot: UIImage) {
@@ -831,13 +853,15 @@ final class CaptureSidewaysTests: XCTestCase {
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
-        if let steps = lenses?.zoomSteps {
+        if let steps = lenses?.zoomSteps, showsSteps {
             controls.zoomSteps = steps
             controls.zoomStep = steps[zoomStep]
         }
         let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.overrideUserInterfaceStyle = style
+        // The controller outlives each screen, so the last screen's lens report goes before this one shows.
+        model.capture.setForTesting(controls: NativeCameraControls())
         model.capture.hold(forTesting: held)
         let probe = CaptureLayoutProbe()
         var screen = CaptureView(filmID: film.id)
@@ -852,6 +876,7 @@ final class CaptureSidewaysTests: XCTestCase {
         // screen has settled.
         try await Task.sleep(for: .seconds(1))
         model.capture.setForTesting(controls: controls, sceneEV100: sceneEV100 ?? FixedExposure.referenceEV100)
+        model.capture.setForTesting(rearZoomSteps: lenses?.zoomSteps ?? [])
         model.capture.setForTesting(phase: .idle)
         model.capture.message = message
         try await Task.sleep(for: .milliseconds(500))

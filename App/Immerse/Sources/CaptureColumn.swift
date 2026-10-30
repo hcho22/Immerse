@@ -126,8 +126,9 @@ extension View {
 /// buttons above its PHOTO / VIDEO row, each line centred across the screen and the two 10 points apart (the captain,
 /// 2026-10-29: "please allow extra spacing between zoom buttons and auto/manual buttons"). Where both fit on one line
 /// they share it, steps first and 12 points from the settings, unless `keepsStepsLine`: the 6×6 keeps both lines whether
-/// its steps show or not, so its strip, which a slider fills when one opens, is the same height on either camera and with
-/// a slider open or not.
+/// its steps show or not, the steps' line as tall as the rear camera's steps at every text size where it has them
+/// (`CaptureController.rearZoomSteps`), so its strip, which a slider fills when one opens, is the same height on either
+/// camera, before a lens reports its steps and with a slider open or not.
 ///
 /// Each control takes the same room in every hold, its words and icons turning inside it, so the strip is the same in
 /// every hold.

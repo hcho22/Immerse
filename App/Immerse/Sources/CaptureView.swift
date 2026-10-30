@@ -392,10 +392,23 @@ struct CaptureView: View {
                 ForEach([DynamicTypeSize.xxxLarge, .xxLarge, .xLarge], id: \.self) { largest in
                     ControlStripLayout(keepsStepsLine: sliders) {
                         if !steps.isEmpty {
-                            zoomStepsPill(steps, controller: capture).dynamicTypeSize(...largest).controlStripLine(.steps)
+                            zoomStepsPill(steps, controller: capture).dynamicTypeSize(...largest)
+                                #if DEBUG
+                                .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.zoomSteps = $0 }
+                                #endif
+                                .controlStripLine(.steps)
                         } else if sliders {
-                            // The 6×6's steps' line, kept where it has no steps, as on its front camera.
-                            Color.clear.frame(width: 0, height: 44).accessibilityHidden(true).controlStripLine(.steps)
+                            // The 6×6's steps' line, kept where its steps do not show, as on its front camera or before a
+                            // lens reports them: as tall as the steps the iPhone's camera list gives for its rear camera,
+                            // or a line's 44 points where it has one rear lens.
+                            Group {
+                                if capture.rearZoomSteps.isEmpty {
+                                    Color.clear.frame(height: 44)
+                                } else {
+                                    zoomStepsPill(capture.rearZoomSteps, controller: capture).dynamicTypeSize(...largest).hidden()
+                                }
+                            }
+                            .frame(width: 0).accessibilityHidden(true).controlStripLine(.steps)
                         }
                         if film.camera.focusSettings.count > 1 {
                             FocusModeSwitch(settings: film.camera.focusSettings, selected: film.effectiveFocusSetting) { setting in
@@ -464,9 +477,6 @@ struct CaptureView: View {
         }
         .padding(.horizontal, 4)
         .background(.black.opacity(0.6), in: Capsule())
-        #if DEBUG
-        .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.zoomSteps = $0 }
-        #endif
     }
 
     /// The 6×6's Focus or Exposure button, which opens its slider in the strip. With no lens running there is no slider

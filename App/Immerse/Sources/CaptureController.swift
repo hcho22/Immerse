@@ -17,6 +17,10 @@ final class CaptureController {
     private(set) var phase = CapturePhase.interrupted
     private(set) var busy = false
     private(set) var controls = NativeCameraControls()
+    /// The Zoom Steps the iPhone's rear camera offers, read from its camera list as the shooting screen appears, before
+    /// any session starts and without asking for the camera, so the 6×6's strip keeps their room while they do not show,
+    /// on the front camera or before a lens reports them. Empty on an iPhone with one rear lens, such as the iPhone SE.
+    private(set) var rearZoomSteps: [ZoomStep] = []
     /// The scene is dim enough that the Disposable's fixed exposure would develop dark (`LowLightCue`).
     private(set) var isLowLight = false
     /// A permission note independent of transient camera errors, so an unavailable or interrupted camera cannot hide it.
@@ -265,6 +269,7 @@ final class CaptureController {
     func beginShootingSession() {
         guard !shootingSessionActive else { return }
         shootingSessionActive = true
+        rearZoomSteps = AVFoundationCaptureDeviceDiscoverer().capabilities().rearLenses.zoomSteps
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
         updateOrientation()
         presented = true
@@ -400,6 +405,9 @@ extension CaptureController {
             isLowLight = lowLightCue.isShowing
         }
     }
+
+    /// Hosted tests have no camera list, so they set the Zoom Steps an iPhone's rear camera would offer.
+    func setForTesting(rearZoomSteps: [ZoomStep]) { self.rearZoomSteps = rearZoomSteps }
 
     /// Stands in for attaching a backend's scene light.
     func attachForTesting(sceneLight: AsyncStream<Double>) { read(sceneLight: sceneLight) }
