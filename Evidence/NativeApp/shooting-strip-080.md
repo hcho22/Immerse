@@ -23,6 +23,8 @@ On seeing the screenshots he answered (2026-10-29):
 - "Changes needed - please add little bit of spacing between the "Done" button and the viewfinder", "across all cameras".
 - On the 6×6's open slider taking the whole strip: "Accept: an open slider takes the whole strip".
 
+On the next set (2026-10-30) he asked to "please allow extra spacing between zoom buttons and auto/manual buttons", and on the set after it he answered "Approve".
+
 This record is simulator evidence only.
 The simulator has no camera, so the hosted tests raise what a running lens would report (three rear lenses, manual focus and an exposure range) and the screen tests measure only what the screen draws without one.
 No real iPhone has run it; the manual iPhone test plan's [U01 to U03](manual-validation.md#the-control-strip-and-the-sideways-top-bar-on-a-real-iphone) are what it leaves for a phone.

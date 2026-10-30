@@ -2527,6 +2527,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 
 - The strip sits between the Viewfinder area and the shutter bar, with nothing of it over the picture on this iPhone, and the Viewfinder area is where it was before the change.
 - The 6×6 shows the Zoom Steps above **Auto** / **Manual**, its Exposure button and, in **Manual** only, its Focus button; the Super 8 shows its Zoom Steps beside **Auto** / **Fixed**; the 16mm its Zoom Steps; the Disposable **Auto** / **Fixed**; the Instant no strip.
+- The Zoom Steps read clearly apart from the focus switch (10 points above it on the 6×6, 12 beside it on the Super 8), and a thumb meant for one does not catch the other.
 - Held sideways the strip stays where it is and its words and icons read upright; every control in it can be reached and tapped in each hold.
 
 **It fails if.**
