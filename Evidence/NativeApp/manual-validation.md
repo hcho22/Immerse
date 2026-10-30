@@ -2595,6 +2595,7 @@ What happened at each step, and a screen recording of steps 2 to 4.
 3. Change tool to **Contrast**, then to **Adjust**, then back to **Exposure**.
 4. Zoom in and tap **Cancel**; open the Darkroom again.
 5. Zoom in without changing anything, tap **Save**, and look at the print in the photo view.
+6. In the photo view zoom in, open the Darkroom and tap **Cancel**; zoom in again, open it and tap **Save** without changing anything.
 
 **Expect.**
 
@@ -2602,9 +2603,10 @@ What happened at each step, and a screen recording of steps 2 to 4.
 - The zoom holds while the slider moves and the print updates in place.
 - Every tool change, **Cancel** and **Save** shows the whole print again, and Adjust shows its crop box, not a zoomed print.
 - A Save after only zooming leaves the print as it was.
+- Back in the photo view after **Cancel** or **Save**, the print shows whole.
 
 **It fails if.**
-The zoom changes the print, the band or the print area moves, a tool change keeps the zoom, or the Darkroom opens zoomed in.
+The zoom changes the print, the band or the print area moves, a tool change keeps the zoom, the Darkroom opens zoomed in, or the photo view is still zoomed after the Darkroom closes.
 
 **Write down.**
 Screenshots of steps 1 and 5.

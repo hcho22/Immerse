@@ -145,8 +145,8 @@ The Instant's reveal at the camera is the same view with swiping off (`isInstant
 5. The Instant print is zoomed whole, picture and white card together, as it is shown.
 6. The print shown at the camera right after an Instant exposure zooms in the same way, stays upright while the shooting screen is up, and still swipes nowhere (FR-22 item 6).
 7. A zoomed print looks sharper than the whole print shown on the screen: the zoomed view shows the developed master's own detail, not an enlargement of the screen-sized picture (**Builder's reading** of "zoom in on photos").
-8. Moving to another print, by a VoiceOver action or after Discard, shows that print whole, and so does returning from the Darkroom (**Builder's reading**, as Photos shows each photo whole).
-9. Turning the iPhone while a print is zoomed shows the print whole in the new hold (**Builder's reading**).
+8. Moving to another print, by a VoiceOver action or after Discard, shows that print whole, and so does returning from the Darkroom, by Save, whether the print changed or not, or by Cancel (**Builder's reading**, as Photos shows each photo whole, and a photo whole again after editing it).
+9. Turning the iPhone while a print is zoomed keeps the zoom and the part of the print in view, as the Photos app keeps a zoomed photo zoomed through a turn (**Builder's reading** of "1A", settled in review on 2026-10-30; it first read that a turn shows the print whole in the new hold, section 9).
 10. Super 8 and 16mm Developed Movies are unchanged, with no zoom, and the Film screen's small prints get none: tapping one opens the photo view, as today.
 11. Print Zoom never changes the print, its Darkroom recipe or anything exported, and nothing about it is stored.
 
@@ -154,6 +154,7 @@ The Instant's reveal at the camera is the same view with swiping off (`isInstant
 
 - On a developed Disposable, Instant and 6×6 print in the photo view, a pinch out zooms in and a pinch in zooms back to the whole print.
 - A double-tap zooms in on the place tapped; a second double-tap shows the whole print again.
+- Turned while zoomed in, the print stays zoomed on about the same part; back from the Darkroom, by Save or Cancel, it shows whole.
 - Zoomed in, a sideways drag moves across the print and the title stays on the same "Photo N"; zoomed all the way out, the same drag moves to the next or previous print.
 - Zoomed in on an Instant print, the white card zooms with the picture.
 - The Instant's reveal at the camera zooms, stays upright, and offers no swipe to another print.
@@ -231,8 +232,8 @@ If the new box is placed on the straightened print, the builder records that pla
 A 6×6 crop stays square to the pixel, giving up a pixel at the right or the bottom as today.
 
 **Accessibility.**
-VoiceOver cannot drag handles, so the box's size and position stay reachable as adjustable values, and the dial reads "Straighten" with its value in degrees and steps by 0.1° with the adjustable action (**Builder's reading**, as FR-31 has the slider).
-The shape choices are buttons read by name, such as "4:3, upright", and the turn buttons keep their labels.
+VoiceOver cannot drag handles, so the box's size and position stay reachable as adjustable values, and the dial reads "Straighten" with its value in degrees; touch sets it in 0.1° steps (FR-31), and its adjustable action steps a whole degree, since tenths would take up to 450 swipes to reach an end (**Builder's reading** of "1A" and "2A", settled in review on 2026-10-30; it first read 0.1° steps for the adjustable action, as FR-31 has the slider, section 9).
+The shape choices are buttons read by name as the controls show them, such as "4 by 3", and whether a shape stands sideways or upright is a button of its own, "Crop orientation", read with its value, "Sideways" or "Upright" (**Builder's reading**, settled the same way; it first read a shape and its way together, such as "4:3, upright"); the turn buttons keep their labels.
 The band's text is measured at all 12 sizes (`ContentSizeTests`), as FR-30 has it.
 
 **Simulator and iPhone.** The shapes, the square 6×6, the Instant's turns only, the saved crops and the byte-for-byte older recipes are provable in RenderCore and FilmRuntime tests and in screen tests; how the handles, the pinch and the dial feel only a phone shows (QA-18).
@@ -562,3 +563,6 @@ These rows extend PRD 2.1 section 17 and the 2026-10-26 amendment's section 9.
 | The header's line turns as a block and runs down the Viewfinder area held sideways (ADR 0017, ADR 0019) | Captain, 2026-10-29 ("5A"): the top bar stays put and only its pieces turn, the Camera's name hidden sideways (FR-40, ADR 0024). |
 | Development failures without their own text advise checking storage | Captain, 2026-10-29 ("7A"): each says what went wrong, storage only when it is the cause, and the screen stays awake while a Development runs (FR-41). |
 | Crop per photo, with the 6×6 staying square (2026-10-13, DEC-11) | Captain, 2026-10-29 ("8A"): it stands for the crop box, which stays square on the 6×6 (FR-37). |
+| A turn of the iPhone shows a zoomed print whole in the new hold (FR-36 item 9 as first written, **Builder's reading**) | **Builder's reading**, settled in review on 2026-10-30 toward "1A", as in the iPhone's Photos app, not the captain's words: a turn keeps the zoom and the part of the print in view (FR-36 item 9). |
+| Returning from the Darkroom shows the print whole (FR-36 item 8, **Builder's reading**), which the first build did only when the print's bytes changed | **Builder's reading**, kept and settled the same way: after the Darkroom closes, by Save, changed or not, or by Cancel, the photo view shows the print whole, and the build does (FR-36 item 8). |
+| The dial steps by 0.1° with VoiceOver's adjustable action, and a shape reads with its way, such as "4:3, upright" (FR-37 Accessibility as first written, **Builder's reading**) | **Builder's reading**, settled the same way: touch keeps the dial's 0.1° steps and the adjustable action steps a whole degree; the shapes read "4 by 3", with "Crop orientation" a button of its own, as the controls show them (FR-37 Accessibility). |

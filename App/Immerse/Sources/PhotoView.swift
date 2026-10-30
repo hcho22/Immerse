@@ -158,12 +158,15 @@ struct RevealedPhoto: View {
 }
 
 /// The photo view's print, on black, with Print Zoom. It is decoded to the screen's size and, once zoomed in past that,
-/// to the print's own (`ZoomedPicture`). Another print, or an edit saved to this one, shows whole; a change to another
-/// Film's media leaves the zoom and the sharp picture as they are.
+/// to the print's own (`ZoomedPicture`). Another print, an edit saved to this one and a return from the Darkroom show it
+/// whole; a change to another Film's media leaves the zoom and the sharp picture as they are.
 private struct ZoomablePrint: View {
     @Environment(JournalModel.self) private var model
     let filmID: UUID
     let sequence: Int
+    /// How many times the Darkroom has closed over the photo view; each shows the print whole, as the Photos app shows
+    /// a photo whole after editing it, whether the edit was saved or not.
+    let darkroomClosings: Int
     let swipe: ((Int) -> Void)?
     @Binding var reading: PrintZoomReading
     @State private var picture = ZoomedPicture()
@@ -174,10 +177,11 @@ private struct ZoomablePrint: View {
         let sequence: Int
     }
 
-    /// The print shown: another sequence, or other bytes for this one, shows it whole.
+    /// The print shown: another sequence, other bytes for this one, or the Darkroom closing shows it whole.
     private struct Shown: Hashable {
         let sequence: Int
         let print: Int
+        let darkroomClosings: Int
     }
 
     var body: some View {
@@ -187,7 +191,8 @@ private struct ZoomablePrint: View {
             if !model.hiddenFilms.contains(filmID), !failed, let image = picture.shown {
                 PrintZoom(image: image, printSize: picture.printSize,
                           cardEdge: model.film(filmID)?.camera.id == .instant1970s,
-                          whole: Shown(sequence: sequence, print: picture.generation), swipe: swipe, zoomed: {
+                          whole: Shown(sequence: sequence, print: picture.generation, darkroomClosings: darkroomClosings),
+                          swipe: swipe, zoomed: {
                     reading = $0
                     picture.follow($0)
                 })
@@ -243,6 +248,8 @@ struct PhotoView: View {
     let isInstantReveal: Bool
     @State private var shownSequence: Int
     @State private var editing = false
+    /// Counts the Darkroom's closings, by Save or Cancel, each of which shows the print whole.
+    @State private var darkroomClosings = 0
     @State private var discarding = false
     @State private var error: String?
     @State private var zoom = PrintZoomReading()
@@ -267,8 +274,8 @@ struct PhotoView: View {
                 else {
                     // Print Zoom (FR-22 with the 2026-10-29 amendment): swiping to the previous or next print only at the
                     // whole print, as in the Photos app, and never at the camera's reveal.
-                    ZoomablePrint(filmID: filmID, sequence: shownSequence, swipe: isInstantReveal ? nil : { move(by: $0) },
-                                  reading: $zoom)
+                    ZoomablePrint(filmID: filmID, sequence: shownSequence, darkroomClosings: darkroomClosings,
+                                  swipe: isInstantReveal ? nil : { move(by: $0) }, reading: $zoom)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(navigation.label)
@@ -305,6 +312,7 @@ struct PhotoView: View {
             .toolbarBackground(.black, for: .navigationBar)
             .toolbarBackground(.black, for: .bottomBar)
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
+            .onChange(of: editing) { _, editing in if !editing { darkroomClosings += 1 } }
             .confirmationDialog("Discard photo \(shownSequence)?", isPresented: $discarding, titleVisibility: .visible) {
                 Button("Discard", role: .destructive) {
                     error = nil

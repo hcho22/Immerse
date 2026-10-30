@@ -1,3 +1,4 @@
+import FilmDomain
 import RenderCore
 import SwiftUI
 import UIKit
@@ -235,6 +236,45 @@ final class PrintZoomTests: XCTestCase {
         XCTAssertTrue(readings.all.allSatisfy(\.isZoomed), "Never the whole print on the way: \(readings.all)")
     }
 
+    /// Leaving the Darkroom shows the photo view's print whole, as the Photos app shows a photo whole after editing it:
+    /// by Cancel, and by a Save that leaves the print as it was, each from a zoomed print. The Darkroom's buttons are
+    /// pressed through the toolbar items SwiftUI gives UIKit, as a tap on them would.
+    func testLeavingTheDarkroomShowsThePrintWhole() async throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("PrintZoomDarkroom-\(UUID())")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let model = try JournalModel(root: root)
+        await model.recoverAtLaunch()
+        let film = try model.repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Synthetic zoomed Film",
+                                                   access: .subscription)
+        try model.repository.savePhotoCapture(filmID: film.id, sourceData: try syntheticPhoto())
+        model.refresh()
+        _ = try model.repository.completeEarly(filmID: film.id, confirmedCaptureCount: 1)
+        try model.chooseOriginals(film.id, sequences: [1], export: false)
+        try await model.develop(film.id)
+        let developed = try await model.processor.photo(filmID: film.id, sequence: 1)
+
+        let scene = try await hostWindowScene()
+        let window = UIWindow(windowScene: scene)
+        let host = UIHostingController(rootView: PhotoView(filmID: film.id, sequence: 1).environment(model))
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await waitUntil("the print shows") { self.views(in: window).contains { $0 is PrintZoomScrollView } }
+        let photo = try XCTUnwrap(views(in: window).compactMap { $0 as? PrintZoomScrollView }.first)
+        try await Task.sleep(for: .milliseconds(300))
+
+        for leaving in ["Cancel", "Save"] {
+            photo.zoomScale = 3
+            try await press("Darkroom", in: host)
+            try await waitUntil("the Darkroom opens") { host.presentedViewController != nil }
+            try await press(leaving, in: host)
+            try await waitUntil("the Darkroom closes after \(leaving)") { host.presentedViewController == nil }
+            try await waitUntil("\(leaving) shows the print whole") { photo.zoomScale <= 1.001 }
+        }
+        let saved = try await model.processor.photo(filmID: film.id, sequence: 1)
+        XCTAssertEqual(saved, developed, "The Save left the print as it was")
+    }
+
     // MARK: Helpers
 
     private final class Readings {
@@ -342,6 +382,34 @@ final class PrintZoomTests: XCTestCase {
             mixed = (mixed ^ (mixed >> 27)) &* 0x94D0_49BB_1331_11EB
             return mixed ^ (mixed >> 31)
         }
+    }
+
+    private func views(in view: UIView) -> [UIView] { [view] + view.subviews.flatMap { views(in: $0) } }
+
+    /// Presses the toolbar button titled `title` on the screen `root` shows, or on one it presents, once it is enabled.
+    private func press(_ title: String, in root: UIViewController) async throws {
+        func controllers(_ controller: UIViewController) -> [UIViewController] {
+            [controller] + controller.children.flatMap(controllers)
+                + (controller.presentedViewController.map(controllers) ?? [])
+        }
+        func items(_ controller: UIViewController) -> [UIBarButtonItem] {
+            let navigation = controller.navigationItem
+            let groups = navigation.leadingItemGroups + navigation.trailingItemGroups
+            return groups.flatMap(\.barButtonItems) + (navigation.leftBarButtonItems ?? [])
+                + (navigation.rightBarButtonItems ?? []) + (controller.toolbarItems ?? [])
+        }
+        func button() -> UIBarButtonItem? {
+            controllers(root).flatMap(items).first { $0.title == title && $0.isEnabled }
+        }
+        try await waitUntil("\(title) can be pressed") { button() != nil }
+        let item = try XCTUnwrap(button())
+        let action = try XCTUnwrap(item.action, "\(title) has an action")
+        _ = item.target?.perform(action, with: item)
+    }
+
+    private func waitUntil(_ what: String, _ condition: () -> Bool) async throws {
+        for _ in 0..<200 where !condition() { try await Task.sleep(for: .milliseconds(50)) }
+        XCTAssertTrue(condition(), "Waited 10 seconds for \(what)")
     }
 
     private func editor(crop: Crop?, degrees: Double = 0, ratio: Double? = nil,
