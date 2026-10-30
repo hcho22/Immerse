@@ -1114,6 +1114,8 @@ A Mac with QuickTime Player, for the Movies.
 5. AirDrop one Movie of each Camera to the Mac by a route that keeps the file as it is (L08 step 3), open it in QuickTime Player and choose Window > Show Movie Inspector.
    Write down the format, the size, the frame rate and whether there is a sound track.
 
+On a candidate that holds [080](print-zoom-and-crop-box-080.md), the 6×6's Adjust has a square crop box in place of Crop, Size, Horizontal and Vertical: in step 2 drag a corner handle in until the box keeps about a third of the print, let go, and drag the print under the box so the crop sits away from every edge.
+
 **Expect.**
 
 | Camera | What Photos and the Mac should show |
