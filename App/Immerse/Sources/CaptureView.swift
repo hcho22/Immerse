@@ -36,6 +36,8 @@ struct CaptureView: View {
     @State private var stripFrame: CGRect?
     /// The 6×6's slider open in the strip in place of the Zoom Steps, if any.
     @State private var openSlider: StripSlider?
+    /// The screen's own bottom inset, the home indicator's, which the iPhone SE does not have.
+    @State private var bottomInset: CGFloat = 0
     /// Whether this screen has started its shooting session. A full-screen print or question over it makes it disappear
     /// and appear again, which must not start the session, or open the camera, a second time.
     @State private var started = false
@@ -80,6 +82,7 @@ struct CaptureView: View {
         }
         // The shutter stays on screen on small iPhones, at large text sizes and below messages.
         .safeAreaInset(edge: .bottom) { shutterBar(capture) }
+        .onGeometryChange(for: CGFloat.self, of: { $0.safeAreaInsets.bottom }) { bottomInset = $0 }
         // One ground around the black Viewfinder area, from the top bar to the shutter bar, however much room a taller
         // iPhone leaves between them.
         .background(Self.ground)
@@ -419,8 +422,9 @@ struct CaptureView: View {
                     TurnedInPlace {
                         Text(step.label).font(.footnote.weight(.semibold).monospacedDigit()).lineLimit(1)
                     }
-                    // Room at each end of a turned label, which "0.5x" needs at the accessibility sizes.
-                    .padding(.vertical, 4)
+                    // Room around a label at every text size, as "0.5x" has in its 44 points at the default size, and
+                    // at each end of it turned.
+                    .padding(.horizontal, 8).padding(.vertical, 4)
                     .foregroundStyle(selected ? Color.black : Color.white)
                     .frame(minWidth: 44, minHeight: 44)
                     .background { if selected { Circle().fill(Color.white).padding(3) } }
@@ -522,7 +526,9 @@ struct CaptureView: View {
         return notes
     }
 
-    /// Switch Camera, the shutter and flash. The icons turn in place; the shutter is a circle and stays as it is.
+    /// Switch Camera, the shutter and flash. The icons turn in place; the shutter is a circle and stays as it is, on the
+    /// screen's centre line whatever the symbols beside it are and however large the text makes them: each side takes
+    /// the same width, Switch Camera against the shutter on its left and the flash on its right.
     @ViewBuilder private func shutterBar(_ controller: CaptureController) -> some View {
         @Bindable var capture = controller
         if let film = model.film(filmID), film.completionState == .open {
@@ -532,6 +538,7 @@ struct CaptureView: View {
                 }.labelStyle(.iconOnly).font(.title2)
                     .frame(minWidth: 44, minHeight: 44).turnedWithTheHold()
                     .disabled(capture.phase != .idle || capture.busy)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                 Button {
                     Task {
                         do { try await capture.shutter(film: film) }
@@ -547,18 +554,26 @@ struct CaptureView: View {
                 .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
                 .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
                 .accessibilityIdentifier("capture-shutter")
-                if CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting).offersFlash && capture.controls.flash {
-                    Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
-                        .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
-                        .turnedWithTheHold().disabled(capture.phase != .idle)
-                } else if film.camera.medium == .photo {
-                    Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
-                } else {
-                    Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
+                #if DEBUG
+                .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.shutter = $0 }
+                #endif
+                Group {
+                    if CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting).offersFlash && capture.controls.flash {
+                        Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
+                            .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
+                            .turnedWithTheHold().disabled(capture.phase != .idle)
+                    } else if film.camera.medium == .photo {
+                        Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
+                    } else {
+                        Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            // As short as the shutter allows, which leaves the 6×6's two-line control strip room under the Viewfinder area.
-            .padding(.vertical, 4).frame(maxWidth: .infinity).background(Self.ground)
+            // As short as the shutter, which leaves the 6×6's two-line control strip room under the Viewfinder area, with
+            // room under it only where no home indicator's area gives it some, as on the iPhone SE.
+            .padding(.bottom, bottomInset > 0 ? 0 : 8)
+            .frame(maxWidth: .infinity).background(Self.ground)
         }
     }
 
@@ -618,6 +633,7 @@ enum StripSlider: Equatable {
     var zoomSteps: CGRect?
     /// The slider open in the 6×6's strip, once one has opened.
     var slider: CGRect?
+    var shutter = CGRect.zero
 }
 #endif
 
@@ -650,7 +666,10 @@ struct FocusModeSwitch: View {
         // Every segment as tall as the tallest, so the selected one's capsule is the same whichever is selected.
         .fixedSize()
         .background(Color.black.opacity(0.6), in: Capsule())
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        // Its words reserve their turned length, which makes it the strip's tallest control, so they grow no further
+        // than the largest size short of the accessibility sizes, where the 6×6's two lines still fit under the
+        // Viewfinder area on the largest iPhone.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Focus")
         .accessibilityValue(selected.title)

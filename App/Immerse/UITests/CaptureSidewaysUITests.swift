@@ -393,6 +393,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                        "The viewfinder area is four thirds as tall as it is wide, \(hold)")
         XCTAssertLessThanOrEqual(layout.viewfinder.maxY, layout.shutter.minY,
                                  "The visible viewfinder area ends above the shutter bar, \(hold)")
+        XCTAssertEqual(layout.shutter.midX, layout.window.midX, accuracy: 0.5,
+                       "The shutter is on the screen's centre line whatever is beside it, \(hold)")
         let viewfinder = app.otherElements["viewfinder"]
         let inside = layout.viewfinder.insetBy(dx: -1, dy: -1)
         for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex {
@@ -406,8 +408,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     /// area; a narrower one, as the iPhone SE, has the strip over the area's bottom edge.
     private func checkFocusSwitch(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
         guard let focusSwitch = layout.focusSwitch else { return }
-        // The shutter bar's top is 4 points above the shutter's frame.
-        XCTAssertLessThanOrEqual(focusSwitch.maxY, layout.shutter.minY - 4, "The focus switch is above the shutter bar, \(hold)")
+        XCTAssertLessThanOrEqual(focusSwitch.maxY, layout.shutter.minY, "The focus switch is above the shutter bar, \(hold)")
         XCTAssertGreaterThanOrEqual(focusSwitch.height, 44, "The switch is a full tap target tall, \(hold)")
         if layout.window.width >= 390 {
             XCTAssertGreaterThanOrEqual(focusSwitch.minY, layout.viewfinder.maxY - 0.5,

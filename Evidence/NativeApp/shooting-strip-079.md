@@ -44,7 +44,10 @@ Per Camera: the 6×6 has the Zoom Steps, **Auto** / **Manual**, a Focus button (
 The Zoom Steps show, as before, only on the rear camera of an iPhone that reports more than one, and a step is still taken only between exposures or Recorded Clips; where the 16mm has none it has no strip.
 Each control has its own dark ground (the pill, the switch's capsule, the round buttons), so the strip reads the same under the area and over the picture, in light and dark.
 Each control takes the same room in every hold and only its words and icons turn inside it (`TurnedInPlace` in `HeldTurn.swift`), so the strip never moves or changes size as the iPhone turns.
-The strip grows with the text size no further than the first accessibility size, as the controls did before.
+The strip grows with the text size no further than the first accessibility size, as the controls did before, except the focus switch, which grows no further than the largest size short of the accessibility sizes.
+Its words reserve their turned length, which makes it the strip's tallest control; grown to the first accessibility size it made the 6×6's strip 142 points tall, more than the 133 the iPhone 17 Pro Max then left under the area, so the strip sat over the top of its square picture's black bar.
+At the largest size on the 17 Pro Max the strip is now under the area with a gap above it, and the Zoom Steps' labels keep the 8 points at each side they have at the default size.
+On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (130 points) is still taller than the 110 points under the area, so it sits down to the shutter bar and 20 points over the top of the 67-point black bar under its square picture, none of it over the picture.
 
 **The 6×6's sliders.**
 The Focus (`scope`) and Exposure (`plusminus.circle`) buttons each open their slider in the strip.
@@ -59,7 +62,9 @@ Held sideways, a slider's caption turns to read upright beside it, which makes t
 So the open slider takes the whole strip, the switch and the buttons included, and the close button is the way back; the strip stays under the area on the 17 Pro and every larger iPhone.
 
 **The shutter bar.**
-To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 12 points shorter: the shutter keeps its 74-point circle in an 80-point frame (88 before) and the bar's padding is 4 points (8 before).
+To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in an 80-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 110 points under the area, and the 17 Pro Max 141.
+The shutter sits on the screen's centre line on every Camera, in every hold and at every text size: Switch Camera and the flash each take one half of the room beside it.
+Before, the row was centred as a whole, so at the largest text size on the iPhone SE the enlarged Switch Camera symbol, with nothing as wide on the other side, pushed the Super 8's and the 16mm's record button about 19 points right of centre, and the Disposable's flash pushed its shutter a few points left.
 
 **The top bar held sideways.**
 Upright the bar is unchanged: **Done**, the Camera's short name and the count on one 44-point line, with **Develop at once** beside **Done** in a Debug build while that switch is on.

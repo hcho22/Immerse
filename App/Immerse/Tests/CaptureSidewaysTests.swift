@@ -444,10 +444,12 @@ final class CaptureSidewaysTests: XCTestCase {
                     XCTAssertEqual(probe.strip != nil, hasStrip, "Whether the strip shows, \(name)")
                     XCTAssertEqual(probe.viewfinder.width, probe.room.width, accuracy: 0.5, name)
                     XCTAssertEqual(probe.viewfinder.height, probe.room.width * 4 / 3, accuracy: 0.5, name)
+                    XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
                     if let strip = probe.strip {
                         let under = probe.room.maxY - probe.viewfinder.maxY
                         if probe.room.width >= 390 {
-                            XCTAssertGreaterThanOrEqual(under, strip.height, "The room holds the strip, \(name)")
+                            // With a gap above and below it.
+                            XCTAssertGreaterThanOrEqual(under, strip.height + 8, "The room holds the strip, \(name)")
                         }
                         if under >= strip.height {
                             XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY - 0.5, "Under the area, \(name)")
@@ -482,6 +484,7 @@ final class CaptureSidewaysTests: XCTestCase {
                 let name = "\(camera.id.rawValue), \(held)"
                 XCTAssertEqual(probe.viewfinder.size.width, 375, accuracy: 0.5, name)
                 XCTAssertEqual(probe.viewfinder.size.height, 500, accuracy: 0.5, name)
+                XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
                 let strip = try XCTUnwrap(probe.strip, name)
                 // The few points under the area hold no strip, so it sits over the area's bottom edge.
                 XCTAssertLessThan(probe.room.maxY - probe.viewfinder.maxY, strip.height, name)
@@ -521,14 +524,28 @@ final class CaptureSidewaysTests: XCTestCase {
     func testTheShootingScreensForApproval() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
-        let device = try await hostWindowScene().screen.bounds.width < 390 ? "SE" : "Largest"
+        let width = try await hostWindowScene().screen.bounds.width
+        let device = width < 390 ? "SE" : width >= 440 ? "Largest" : "\(Int(width))-point"
         for camera in Self.cameras {
             let film = try makeFilm(camera, model)
             for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
                 for (held, name) in Self.holds {
-                    let screenshot = try await showScreen(model, film: film, zoomSteps: device != "SE", held: held,
-                                                          textSize: size).screenshot
+                    let (probe, screenshot) = try await showScreen(model, film: film, zoomSteps: device != "SE", held: held,
+                                                                   textSize: size)
                     keep(screenshot, "Approval-\(device)-\(camera.id.rawValue)-\(sizeName)-\(name)")
+                    let shot = "\(camera.id.rawValue), \(sizeName), \(name)"
+                    XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(shot)")
+                    // Where the room under the area holds a strip it is there with a gap above it, and on the largest
+                    // iPhone it holds every strip, the 6×6's two lines at the largest size included.
+                    if let strip = probe.strip {
+                        let under = probe.room.maxY - probe.viewfinder.maxY
+                        if device == "Largest" {
+                            XCTAssertGreaterThanOrEqual(under, strip.height + 8, "The room holds the strip, \(shot)")
+                        }
+                        if under >= strip.height + 8 {
+                            XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY + 4, "A gap under the area, \(shot)")
+                        }
+                    }
                 }
             }
         }
