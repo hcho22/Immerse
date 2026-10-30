@@ -290,22 +290,29 @@ struct CropEditor: View {
         return (low, found)
     }
 
-    /// The travel to the corner position the crop allows that is nearest the finger at `travel`. Along each of
-    /// `nearestLines` straight lines from where the corner began, evenly turned from the right, the point nearest the
+    /// The travel to the corner position the crop allows that is nearest the finger at `travel`. On a straightened print
+    /// the crop's longer side grows with the square of the box's longer side over its shorter one, so the positions the
+    /// crop allows are not a polygon to project the finger onto, and they are searched along straight lines from where
+    /// the corner began instead. On each of `nearestLines` lines, evenly turned from the right, the point nearest the
     /// finger on the part the crop allows; the nearest of those, the first line's on an exact tie, then refined between
-    /// the lines either side of it by golden section, where a refined point replaces it only when strictly nearer. It
-    /// depends on nothing but the travel, so the same finger always gives the same corner.
+    /// the lines either side of it by golden section. Where the crop touches a print edge the positions it allows can
+    /// lie, seen from where the corner began, in a wedge narrower than the lines' spacing, so wherever two neighbouring
+    /// lines disagree on whether the crop allows their point nearest the finger, the edge between them is found by
+    /// halving, and the nearest point of the line just inside it is a candidate too. A refined or edge point replaces the
+    /// nearest only when strictly nearer, so the result depends on nothing but the travel, and the same finger always
+    /// gives the same corner.
     private func nearestAllowed(_ handle: Handle, to travel: CGSize, from start: Placement) -> CGSize {
         // Where the corner began is allowed, so the nearest allowed position is no farther from the finger than that.
         let reach = 2 * hypot(travel.width, travel.height)
-        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize) {
+        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize, reaches: Bool) {
             let direction = CGSize(width: cos(angle), height: sin(angle))
             let line = farthest(handle, along: CGSize(width: direction.width * reach, height: direction.height * reach),
                                 from: start)
             let allowed = line.moved == nil ? 0 : line.share * reach
-            let along = min(max(direction.width * travel.width + direction.height * travel.height, 0), allowed)
+            let nearestOnLine = max(direction.width * travel.width + direction.height * travel.height, 0)
+            let along = min(nearestOnLine, allowed)
             let point = CGSize(width: direction.width * along, height: direction.height * along)
-            return (hypot(travel.width - point.width, travel.height - point.height), point)
+            return (hypot(travel.width - point.width, travel.height - point.height), point, allowed >= nearestOnLine)
         }
         let step = 2 * CGFloat.pi / CGFloat(Self.nearestLines)
         let lines = (0..<Self.nearestLines).map { nearest(along: CGFloat($0) * step) }
@@ -328,6 +335,16 @@ struct CropEditor: View {
         }
         var chosen = lines[best]
         for refined in [atA, atB] where refined.distance < chosen.distance { chosen = refined }
+        for line in lines.indices where lines[line].reaches != lines[(line + 1) % lines.count].reaches {
+            var inside = CGFloat(line) * step, outside = CGFloat(line + 1) * step
+            if !lines[line].reaches { (inside, outside) = (outside, inside) }
+            for _ in 0..<30 {
+                let middle = (inside + outside) / 2
+                if nearest(along: middle).reaches { inside = middle } else { outside = middle }
+            }
+            let edge = nearest(along: inside)
+            if edge.distance < chosen.distance { chosen = edge }
+        }
         return chosen.travel
     }
 

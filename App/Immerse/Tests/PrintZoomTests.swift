@@ -56,8 +56,9 @@ final class PrintZoomTests: XCTestCase {
 
     /// Stepped a point at a time, as a drag's events come, a straightened Freeform corner goes on every event to the
     /// allowed position nearest the finger and follows the finger wherever it can: from an untouched print past where the
-    /// whole drag stops being allowed, where two ways round a limit land equally near the finger, and along the print's
-    /// top with the finger drifting off it.
+    /// whole drag stops being allowed, where two ways round a limit land equally near the finger, along the print's top
+    /// with the finger drifting off it, and pushed straight out past a print edge the crop touches, where the positions
+    /// the crop allows lie in a wedge narrower than the search's lines' spacing.
     func testAStraightenedFreeformCornerGoesWhereAllowedNearestTheFinger() {
         let size = Self.printSize
         let direction = CGVector(dx: 131.8, dy: -2.6)
@@ -77,6 +78,16 @@ final class PrintZoomTests: XCTestCase {
         let alongTop = dragged(editor(crop: Crop(x: 0, y: 0, width: 0.6, height: 0.8), degrees: 3), .topLeft,
                                along: alongTheTop)
         XCTAssertEqual(alongTop.corner.x, alongTop.finger.x, accuracy: 1, "The left edge follows the finger along the top")
+
+        let down = (1...130).map { CGSize(width: 0, height: CGFloat($0)) }
+        let right = (1...130).map { CGSize(width: CGFloat($0), height: 0) }
+        let sixDegreesDown = CGVector(dx: cos(CGFloat.pi / 30), dy: sin(CGFloat.pi / 30))
+        let rightAndDown = (1...130).map {
+            CGSize(width: sixDegreesDown.dx * CGFloat($0), height: sixDegreesDown.dy * CGFloat($0))
+        }
+        _ = dragged(editor(crop: nil, degrees: 3), .bottomRight, along: down)
+        _ = dragged(editor(crop: Crop(x: 0.5, y: 0.5, width: 0.5, height: 0.5), degrees: -3), .topRight, along: right)
+        _ = dragged(editor(crop: Crop(x: 0.4, y: 0.2, width: 0.6, height: 0.6), degrees: -8), .topRight, along: rightAndDown)
     }
 
     /// A tight crop on the smallest supported iPhone shows the print at more pixels than its screen-sized picture has,
@@ -161,9 +172,11 @@ final class PrintZoomTests: XCTestCase {
         var all: [PrintZoomReading] = []
     }
 
-    /// Steps `handle` along `path` as a drag's events come and holds every event to the rule: the corner within a point of
-    /// the allowed position nearest the finger, and never moved more than the finger did and a point. Where the corner
-    /// and the finger end.
+    /// Steps `handle` along `path` as a drag's events come and holds every event to the rule: no allowed corner position
+    /// of a grid a quarter point apart lies nearer the finger than the corner, and the corner never moved more than the
+    /// finger did and a point. Where the corner and the finger end. The check is on the distance: along a limit that
+    /// curves almost as the circle round the finger does, positions far apart lie almost equally near it, which no grid
+    /// tells apart, and nearest is a matter of distance.
     private func dragged(_ cropEditor: CropEditor, _ handle: CropEditor.Handle,
                          along path: [CGSize]) -> (corner: CGPoint, finger: CGPoint) {
         let start = cropEditor.resting(CropGeometry.rect(cropEditor.crop, printSize: Self.printSize),
@@ -177,9 +190,10 @@ final class PrintZoomTests: XCTestCase {
                 return (corner, next)
             }
             let point = handle.point(on: moved.placement.box)
-            let nearest = nearestAllowed(cropEditor, handle, to: travel, from: start)
-            XCTAssertLessThanOrEqual(hypot(point.x - held.x - nearest.width, point.y - held.y - nearest.height), 1,
-                                     "The \(handle) corner at \(travel) is where the crop allows it nearest the finger")
+            let gap = hypot(point.x - next.x, point.y - next.y)
+            if let nearer = nearerOnGrid(cropEditor, handle, than: gap, to: travel, from: start) {
+                XCTFail("At \(travel) the \(handle) corner is \(gap) from the finger, where the crop allows \(nearer)")
+            }
             let fingerMoved = hypot(next.x - finger.x, next.y - finger.y)
             XCTAssertLessThanOrEqual(hypot(point.x - corner.x, point.y - corner.y), fingerMoved + 1,
                                      "The \(handle) corner jumps at \(travel)")
@@ -189,37 +203,33 @@ final class PrintZoomTests: XCTestCase {
         return (corner, finger)
     }
 
-    /// The travel to the allowed corner position nearest the finger, by brute force: the finger itself where the crop
-    /// allows it there, otherwise the nearest point of the allowed part of each straight line from where the corner
-    /// began, every half degree and then every four hundredth of a degree either side of the nearest line, since the
-    /// allowed position nearest the finger can lie in a wedge narrower than half a degree.
-    private func nearestAllowed(_ cropEditor: CropEditor, _ handle: CropEditor.Handle, to travel: CGSize,
-                                from start: CropEditor.Placement) -> CGSize {
-        func allowed(_ travel: CGSize) -> Bool { cropEditor.moved(start, handle: handle, by: travel) != nil }
-        if allowed(travel) { return travel }
-        let reach = 2 * hypot(travel.width, travel.height)
-        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize) {
-            let direction = CGSize(width: cos(angle), height: sin(angle))
-            var low: CGFloat = 0, high = reach
-            for _ in 0..<26 {
-                let middle = (low + high) / 2
-                let part = CGSize(width: direction.width * middle, height: direction.height * middle)
-                if allowed(part) { low = middle } else { high = middle }
+    /// The distance from the finger at `travel` to the nearest allowed corner position of a grid a quarter point apart
+    /// round it that lies a hundredth of a point or more nearer than `distance`, or nil where none does. The positions the
+    /// crop allows hold every straight line between two of them and where the corner began, which is no nearer the finger
+    /// than `distance`, so any nearer one means some in the point just inside `distance` too, the only band of the grid
+    /// looked at.
+    private func nearerOnGrid(_ cropEditor: CropEditor, _ handle: CropEditor.Handle, than distance: CGFloat,
+                              to travel: CGSize, from start: CropEditor.Placement) -> CGFloat? {
+        let spacing: CGFloat = 0.25, outer = distance - 0.01, inner = max(outer - 1, 0)
+        guard outer > 0 else { return nil }
+        var nearest: CGFloat?
+        let columns = Int((outer / spacing).rounded(.down))
+        for column in -columns...columns {
+            let x = CGFloat(column) * spacing
+            let farthest = (outer * outer - x * x).squareRoot()
+            let closest = abs(x) < inner ? (inner * inner - x * x).squareRoot() : 0
+            let rows = stride(from: Int((closest / spacing).rounded(.up)),
+                              through: Int((farthest / spacing).rounded(.down)), by: 1)
+            for row in rows {
+                for y in row == 0 ? [CGFloat(0)] : [CGFloat(row) * spacing, -CGFloat(row) * spacing] {
+                    let gap = hypot(x, y)
+                    guard gap >= inner, gap < outer, gap < (nearest ?? .infinity) else { continue }
+                    let position = CGSize(width: travel.width + x, height: travel.height + y)
+                    if cropEditor.moved(start, handle: handle, by: position) != nil { nearest = gap }
+                }
             }
-            let along = min(max(direction.width * travel.width + direction.height * travel.height, 0), low)
-            let point = CGSize(width: direction.width * along, height: direction.height * along)
-            return (hypot(travel.width - point.width, travel.height - point.height), point)
         }
-        let halfDegree = CGFloat.pi / 360
-        let lines = (0..<720).map { nearest(along: CGFloat($0) * halfDegree) }
-        var best = 0
-        for line in lines.indices where lines[line].distance < lines[best].distance { best = line }
-        var chosen = lines[best]
-        for fine in 0...400 {
-            let candidate = nearest(along: (CGFloat(best - 1) + CGFloat(fine) / 200) * halfDegree)
-            if candidate.distance < chosen.distance { chosen = candidate }
-        }
-        return chosen.travel
+        return nearest
     }
 
     private func editor(crop: Crop?, degrees: Double = 0, ratio: Double? = nil,
