@@ -55,6 +55,8 @@ public enum NativeMovieRenderer {
         guard reader.canAdd(output) else { throw NativeRenderError.invalidMovie() }
         reader.add(output)
         let writer = try AVAssetWriter(outputURL: destination, fileType: .mov)
+        /// The writer's failure, with AVFoundation's error where it gave one.
+        func writerFailure() -> NativeRenderError { .writerFailed(underlying: writer.error as NSError?) }
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: [
             AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: width, AVVideoHeightKey: height,
@@ -70,7 +72,7 @@ public enum NativeMovieRenderer {
             kCVPixelBufferWidthKey as String: width, kCVPixelBufferHeightKey as String: height,
             kCVPixelBufferIOSurfacePropertiesKey as String: [:]
         ])
-        guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
+        guard writer.canAdd(input) else { throw NativeRenderError.writerFailed() }
         writer.add(input)
         var sound: (reader: AVAssetReader, output: AVAssetReaderTrackOutput, input: AVAssetWriterInput)?
         if let audioTrack = audioTracks.first {
@@ -79,11 +81,11 @@ public enum NativeMovieRenderer {
             let audioReader = try AVAssetReader(asset: asset)
             audioReader.timeRange = CMTimeRange(start: .zero, duration: duration)
             let audioOutput = AVAssetReaderTrackOutput(track: audioTrack, outputSettings: nil)
-            guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed }
+            guard audioReader.canAdd(audioOutput) else { throw NativeRenderError.writerFailed() }
             audioReader.add(audioOutput)
             let input = AVAssetWriterInput(mediaType: .audio, outputSettings: nil, sourceFormatHint: format)
             input.expectsMediaDataInRealTime = false
-            guard writer.canAdd(input) else { throw NativeRenderError.writerFailed }
+            guard writer.canAdd(input) else { throw NativeRenderError.writerFailed() }
             writer.add(input)
             sound = (audioReader, audioOutput, input)
         }
@@ -91,7 +93,7 @@ public enum NativeMovieRenderer {
         if let sound, !sound.reader.startReading() {
             throw NativeRenderError.invalidMovie(underlying: sound.reader.error as NSError?)
         }
-        guard writer.startWriting() else { throw NativeRenderError.writerFailed }
+        guard writer.startWriting() else { throw writerFailure() }
         writer.startSession(atSourceTime: .zero)
         defer {
             if reader.status == .reading { reader.cancelReading() }
@@ -118,7 +120,7 @@ public enum NativeMovieRenderer {
                     soundFinished = true
                     return
                 }
-                guard writer.status == .writing, sound.input.append(sample) else { throw NativeRenderError.writerFailed }
+                guard writer.status == .writing, sound.input.append(sample) else { throw writerFailure() }
             }
         }
 
@@ -128,7 +130,7 @@ public enum NativeMovieRenderer {
                 try Task.checkCancellation()
                 try appendSound()
                 if ready() { return }
-                guard writer.status == .writing else { throw NativeRenderError.writerFailed }
+                guard writer.status == .writing else { throw writerFailure() }
                 guard ContinuousClock.now < deadline else { throw NativeRenderError.writerTimedOut }
                 try await Task.sleep(for: .milliseconds(2))
             }
@@ -136,15 +138,15 @@ public enum NativeMovieRenderer {
 
         func append(_ image: CIImage) async throws {
             try await waitAppendingSound { input.isReadyForMoreMediaData }
-            guard let pool = adaptor.pixelBufferPool else { throw NativeRenderError.writerFailed }
+            guard let pool = adaptor.pixelBufferPool else { throw writerFailure() }
             var buffer: CVPixelBuffer?
             guard CVPixelBufferPoolCreatePixelBuffer(nil, pool, &buffer) == kCVReturnSuccess, let buffer else {
-                throw NativeRenderError.writerFailed
+                throw NativeRenderError.writerFailed()
             }
             let treated = try treatment.apply(to: image, frame: frame, frameRate: fps)
             context.render(treated, to: buffer, bounds: bounds, colorSpace: colorSpace)
             guard adaptor.append(buffer, withPresentationTime: CMTime(value: Int64(frame), timescale: Int32(fps))) else {
-                throw NativeRenderError.writerFailed
+                throw writerFailure()
             }
             frame += 1
         }
@@ -176,7 +178,7 @@ public enum NativeMovieRenderer {
         try await waitAppendingSound { soundFinished }
         writer.endSession(atSourceTime: duration)
         await writer.finishWriting()
-        guard writer.status == .completed else { throw NativeRenderError.writerFailed }
+        guard writer.status == .completed else { throw writerFailure() }
     }
 
     /// The light the clip was recorded in, which the capture writes into the clip's QuickTime metadata.
@@ -253,7 +255,7 @@ public enum NativeMovieRenderer {
             }
         }
         guard let export = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough) else {
-            throw NativeRenderError.writerFailed
+            throw NativeRenderError.writerFailed()
         }
         try await export.export(to: destination, as: .mov)
     }

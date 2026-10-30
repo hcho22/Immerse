@@ -5,6 +5,8 @@
 The build plan in section 7 is proposed and not yet approved by the captain.\
 **Release:** these requirements belong to the v1 release; "v2" still means the later release with Groups and Accounts.
 
+> **2026-10-29:** The [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) amends this document with FR-36 to FR-41 and ADR 0024; where its section 2 names text here as superseded, a short note marked "2026-10-29" says so, and that document applies.
+
 ## Document guide and authority
 
 This document amends PRD version 2.1 with the decisions the captain made on 2026-10-26, after using the app on his iPhone.
@@ -185,6 +187,8 @@ When the captain decided, the choice was put as adding a viewer before the Darkr
 
 **Limits.** No zoom into the print, no sharing sheet and no editing in the photo view itself are added; those are not asked for.
 
+> **2026-10-29:** Print Zoom is added to the photo view, the Instant's reveal at the camera included, and a swipe moves to another print only while the print shown is zoomed all the way out (FR-36 of the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md)); no sharing sheet and no editing in the photo view stand.
+
 **Data and compatibility.** No stored data changes.
 Movie Films keep their clip list; the photo view is for photo Films only.
 
@@ -220,6 +224,10 @@ The viewfinder differed in size from Camera to Camera and from iPhone to iPhone,
 5. ADR 0017 stands for the rest: the screen keeps its portrait layout in every hold, and only its words and icons turn.
    Notices (an error, Resume Camera, a lens note, the Disposable's low-light cue, the microphone note of FR-27) sit over the Viewfinder area, as today, and never move it.
 6. The Debug build's notice beside Done (`DevelopAtOnceNotice`) still fits beside Done with the one-line header on a 375-point iPhone at every text size.
+
+> **2026-10-29:** Item 4 is superseded: the controls sit in one control strip directly under the Viewfinder area, over its bottom edge only on the iPhone SE (FR-39).
+> Item 5's "only its words and icons turn" is superseded for the header, and so is the acceptance's one-line header in a sideways hold: held sideways the top bar stays above the area, Done and the count turn in place, and the Camera's name is hidden (FR-40).
+> See the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) and ADR 0024.
 
 **Acceptance.**
 
@@ -292,6 +300,7 @@ Load Film's controls line (`controlsLabel`) says "Fixed focus" for the Disposabl
    On a lens without autofocus, such as the ultra wide or the front camera of some supported iPhones, Auto keeps that lens's fixed focus and a tap on the Viewfinder shows no focus mark (**Builder's reading** of the same FR-04 rule).
 7. The switch sits over the bottom of the Viewfinder area or in the shutter bar (FR-23).
    **Approval stop:** its placement is shown to the captain in screenshots and is final only after he approves it.
+   > **2026-10-29:** The switch's place, approved across the bottom of the Viewfinder area on 2026-10-28, is superseded: it sits in one control strip under the Viewfinder area (FR-39 of the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md), ADR 0024).
 8. Load Film's controls line names each Camera's focus as the switch it has, Auto or Fixed on the Disposable and the Super 8 and Auto or Manual on the 6×6, in place of a fixed or deliberate focus; the 6×6's exposure stays deliberate, and the words go to the captain with the other copy (section 8).
 
 **Acceptance.**
@@ -514,6 +523,8 @@ The print changed size as the person moved between tools.
 5. On the Instant, Adjust offers only Rotate left and Rotate right: the whole print, white card included, turns a quarter turn; there is no straightening and no crop, so the picture and the card stay whole.
 6. An Instant recipe with any crop or any straightening stays invalid; a quarter turn is valid.
 
+> **2026-10-29:** Items 2 and 3, the acceptance's "at -45° and +45° the slider stops" and the slider of the accessibility paragraph are superseded: Adjust crops with a crop box, handles and a choice of shapes, the 6×6's box staying square, and straightens with a dial over the same -45° to +45° in 0.1° steps whose crop-in shows as it turns (FR-37 of the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md)); quarter turns and the Instant's turns only stand.
+
 **Acceptance.**
 
 - On a Disposable print, Rotate right four times returns the print to how it started; one turn shows it in the other orientation, and its export is in that orientation.
@@ -705,6 +716,8 @@ No simulator result is a physical-iPhone result; QA-17 holds the phone checks, a
 3. The Darkroom's band: screenshots of every tool on the smallest and largest supported iPhone at the default and the largest text size (FR-30), with the Vignette's falloff, the places of Saturation and Vignette (section 8, question 5), and the builder's answer to whether the Darkroom says that a print carries Dodge/Burn strokes from before (question 6).
 
 The smallest supported iPhone screen is the iPhone SE (3rd generation); the largest is the largest current Pro Max the simulator offers.
+
+> **2026-10-29:** The captain approved all three on 2026-10-28 ("immerse - approve all"); the focus switch's place of item 2 is then superseded by one control strip under the Viewfinder area, and the sideways shooting screen of item 1 by a top bar that stays put (FR-39 and FR-40 of the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md), ADR 0024).
 
 ## 6. Deferred to v2 - Darkroom Dodge/Burn
 
