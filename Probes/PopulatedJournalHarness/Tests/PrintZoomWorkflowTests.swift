@@ -356,9 +356,10 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         snapshot(app, "adjust-Disposable-straighten")
         // The box still holds only picture: it keeps what straightening leaves, a crop of the print's own shape.
         XCTAssertEqual(cropBox(app).frame.width / cropBox(app).frame.height, 1.5, accuracy: 0.02)
-        for _ in 0..<4 { turnDial(app, by: -250) }
+        // A drag of 250 points turns the ruler 50°, so two reach either end from anywhere; a third covers a short one.
+        for _ in 0..<3 where dial.value as? String != "45.0 degrees" { turnDial(app, by: -250) }
         XCTAssertEqual(dial.value as? String, "45.0 degrees")
-        for _ in 0..<8 { turnDial(app, by: 250) }
+        for _ in 0..<3 where dial.value as? String != "-45.0 degrees" { turnDial(app, by: 250) }
         XCTAssertEqual(dial.value as? String, "-45.0 degrees")
         app.buttons["Cancel"].tap()
     }

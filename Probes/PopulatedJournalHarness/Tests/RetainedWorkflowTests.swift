@@ -160,14 +160,15 @@ import XCTest
         let straighten = app.descendants(matching: .any)["darkroom-straighten-dial"]
         XCTAssertTrue(straighten.waitForExistence(timeout: 20))
         XCTAssertEqual(straighten.value as? String, "0.0 degrees")
-        // The ruler slides under its mark: dragged right it turns the print the other way, to its end.
-        for _ in 0..<5 {
+        // The ruler slides under its mark: dragged right it turns the print the other way, to its end. A drag of 250
+        // points turns it 50°, so two reach either end; a third covers a short one.
+        for _ in 0..<3 where straighten.value as? String != "-45.0 degrees" {
             let start = straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7))
             start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 250, dy: 0)), withVelocity: .default,
                         thenHoldForDuration: 0.3)
         }
         XCTAssertEqual(straighten.value as? String, "-45.0 degrees")
-        for _ in 0..<9 {
+        for _ in 0..<3 where straighten.value as? String != "45.0 degrees" {
             let start = straighten.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.7))
             start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: -250, dy: 0)), withVelocity: .default,
                         thenHoldForDuration: 0.3)
