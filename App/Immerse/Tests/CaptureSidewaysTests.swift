@@ -386,8 +386,8 @@ final class CaptureSidewaysTests: XCTestCase {
                        "Room for most of it: down to the room's end, 8 points above the shutter bar, 26 points over the area")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 200, room: 674), 380,
                        "Room for less than half: wholly over the area's bottom edge")
-        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 544, stripHeight: 92, room: 543), 452,
-                       "No room under the area: wholly over its bottom edge")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 544, stripHeight: 92, room: 555), 452,
+                       "11 points under the area, as on the iPhone SE: wholly over its bottom edge")
         XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 44, room: nil), 580)
     }
 
@@ -396,12 +396,13 @@ final class CaptureSidewaysTests: XCTestCase {
     /// where it holds less than half, as on the iPhone SE (3rd generation), it sits over the area's bottom edge, its bottom
     /// on the area's. The area keeps its size and place in each.
     func testTheStripSitsUnderTheAreaWhereItFitsAndOverItsBottomEdgeWhereNot() async throws {
-        // Rooms like those the iPhone 17 Pro Max, the largest supported, and the iPhone 17 Pro leave the column, ending 8
-        // points above the shutter bar, a shorter one, and the iPhone SE's.
+        // The rooms the iPhone 17 Pro Max, the largest supported, and the iPhone 17 Pro leave the column, ending 8 points
+        // above the shutter bar (145 and 114 points under the area), two shorter rooms made up for the other two cases,
+        // and the iPhone SE's (11 points under the area).
         let cases: [(name: String, width: CGFloat, room: CGFloat, strip: CGFloat)] = [
-            ("17 Pro Max, one line", 440, 756, 44), ("17 Pro Max, two lines", 440, 756, 92),
-            ("17 Pro, two lines", 402, 682, 100), ("most of it", 402, 640, 92), ("less than half", 402, 610, 92),
-            ("iPhone SE, one line", 375, 543, 44), ("iPhone SE, two lines", 375, 543, 92),
+            ("17 Pro Max, one line", 440, 776, 44), ("17 Pro Max, two lines", 440, 776, 92),
+            ("17 Pro, two lines", 402, 694, 100), ("most of it", 402, 640, 92), ("less than half", 402, 610, 92),
+            ("iPhone SE, one line", 375, 555, 44), ("iPhone SE, two lines", 375, 555, 92),
         ]
         for c in cases {
             let without = try await column(aspect: 1, width: c.width, room: c.room)
@@ -419,7 +420,7 @@ final class CaptureSidewaysTests: XCTestCase {
                                "Down to the room's end, 8 points above the shutter bar, or over the area's bottom edge, \(c.name)")
             }
         }
-        let se = try await column(aspect: 1, width: 375, stripHeight: 44, room: 543)
+        let se = try await column(aspect: 1, width: 375, stripHeight: 44, room: 555)
         XCTAssertEqual(se.strip.maxY, se.viewfinder.maxY, accuracy: 0.5, "On the iPhone SE the strip is wholly over the area")
     }
 
