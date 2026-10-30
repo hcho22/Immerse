@@ -1,4 +1,4 @@
-# The Shooting Screen's Control Strip and Its Sideways Top Bar 079
+# The Shooting Screen's Control Strip and Its Sideways Top Bar 080
 
 Captain (2026-10-29), after using the build on his iPhone:
 
@@ -15,6 +15,13 @@ Asked how, he chose:
   The top bar stays above the Viewfinder area in every hold, and only its pieces turn in place to read upright, Done in its corner and the count (such as "27" or "3:20") in the other.
   The Camera's name is hidden while the iPhone is held sideways, VoiceOver still reads the full name and count, and nothing runs over the picture.
 - "9A": screenshots on the smallest and largest supported iPhone go for his approval before this ships.
+
+The [2026-10-29 PRD amendment](../../2026-09-29-film-camera-experience-v1/2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) records them as FR-39 (one control strip under the Viewfinder) and FR-40 (the top bar stays put when the iPhone is held sideways), with ADR 0024.
+
+On seeing the screenshots he answered (2026-10-29):
+
+- "Changes needed - please add little bit of spacing between the "Done" button and the viewfinder", "across all cameras".
+- On the 6×6's open slider taking the whole strip: "Accept: an open slider takes the whole strip".
 
 This record is simulator evidence only.
 The simulator has no camera, so the hosted tests raise what a running lens would report (three rear lenses, manual focus and an exposure range) and the screen tests measure only what the screen draws without one.
@@ -55,20 +62,29 @@ The 6×6 keeps both lines whether its Zoom Steps show or not, as on its front ca
 Its close button (×) brings back the Zoom Steps and the switch; choosing **Auto** closes the Focus slider too.
 The slider keeps its caption, its value ("Exposure 0.0 EV") and, where the lens cannot do it, its note in its place (`CaptionedSlider`, unchanged).
 The buttons wait for a running lens, since without one there is no slider to show.
+VoiceOver reads them "Focus" and "Exposure" with the slider's value ("50 percent", "0.0 EV"), and the close button "Close Focus" or "Close Exposure" (FR-39, Accessibility); they, the Zoom Steps and the focus switch show their words in the Large Content Viewer.
 
-**One departure from the brief, for the captain's approval.**
-The brief has the slider open "in place of the steps", the switch and the buttons staying.
+**One departure from the brief, which the captain accepted.**
+The brief, and FR-39 item 3, have the slider open in place of the Zoom Steps, the switch and the buttons staying, and the same button bringing the steps back.
 Held sideways, a slider's caption turns to read upright beside it, which makes the slider's line about 64 points tall; with the settings' line under it the strip would be about 120 points, and the iPhone 17 Pro leaves 102 under the area.
 So the open slider takes the whole strip, the switch and the buttons included, and the close button is the way back; the strip stays under the area on the 17 Pro and every larger iPhone.
+The captain accepted it on seeing the screenshots: "Accept: an open slider takes the whole strip".
 
 **The shutter bar.**
 To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in an 80-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 110 points under the area, and the 17 Pro Max 141.
 The shutter sits on the screen's centre line on every Camera, in every hold and at every text size: Switch Camera and the flash each take one half of the room beside it.
 Before, the row was centred as a whole, so at the largest text size on the iPhone SE the enlarged Switch Camera symbol, with nothing as wide on the other side, pushed the Super 8's and the 16mm's record button about 19 points right of centre, and the Disposable's flash pushed its shutter a few points left.
 
+**The space under Done.**
+After the first screenshots the captain asked for "little bit of spacing between the "Done" button and the viewfinder", "across all cameras".
+Done's bottom had sat on the Viewfinder area's top edge, the glass button as tall as the 44-point top bar.
+Done now shows 38 points tall at the top of the bar, in every hold, which leaves 6 points between it and the area; the count and, in a Debug build, Develop at once's notice stay centred on it (`CaptureDoneRow.height`).
+The bar is still 44 points tall, so the Viewfinder area keeps its size and place on every iPhone, and Done's tap area is still 44 points tall, 3 points past its glass above and below (`CaptureDoneRow.tapArea`).
+Moving Done up into the status bar's room instead was not tried: on the iPhone SE the status bar's own words sit right above the top bar.
+
 **The top bar held sideways.**
 Upright the bar is unchanged: **Done**, the Camera's short name and the count on one 44-point line, with **Develop at once** beside **Done** in a Debug build while that switch is on.
-Held sideways (`CaptureDoneRow`, `CaptureHeaderLabel`), the bar stays where it is: **Done** is a 44-point round glass button in its corner with its word turned to read upright, the count is turned in place in the other corner (lines 40 points long, so "27" and "3:20" fit, and the longer states, "Film complete", "Pack complete", "Ended early" and "Finishing save", shrink to fit rather than run over the area), and the Camera's name is hidden.
+Held sideways (`CaptureDoneRow`, `CaptureHeaderLabel`), the bar stays where it is: **Done** is a 38-point round glass button in its corner with its word turned to read upright, the count is turned in place in the other corner (lines 38 points long, so "27" and "3:20" fit, and the longer states, "Film complete", "Pack complete", "Ended early" and "Finishing save", shrink to fit rather than run over the area), and the Camera's name is hidden.
 VoiceOver still reads the status element's whole label, such as "Super 8, 3 minutes 20 seconds left", and the Large Content Viewer shows it.
 The Debug notice is its hammer alone, turned beside **Done**, with its whole spoken label.
 `TurnedBlock`'s reserving mode (`reservesLength`, `maximumLength`), which only the header used, and the room the turned header reserved are gone; the notices no longer move aside for it.
@@ -80,14 +96,14 @@ The new screenshot test met it with the Disposable's low-light cue and a message
 
 ## Runs
 
-On an iPhone 17 Pro simulator, iOS 26.5, as CI uses:
+On the branch merged with `main` at `ac371d7`, on an iPhone 17 Pro simulator, iOS 26.5, as CI uses:
 
 - `ImmerseTests/CaptureSidewaysTests`, 28 tests, and `ImmerseTests/DevelopedPreviewsTests`, 19 tests, passed.
   New: where the strip goes (`testWhereTheStripGoes`), the strip in rooms like the 17 Pro Max's, the 17 Pro's, a shorter one and the iPhone SE's (`testTheStripSitsUnderTheAreaWhereItFitsAndOverItsBottomEdgeWhereNot`), one line or two (`testTheStripSharesOneLineWhereItsControlsFit`), every Camera's strip under the area and the same in every hold, with and without Zoom Steps (`testEveryCameraPutsItsStripUnderTheViewfinderAreaInEveryHold`), the strip over the area's bottom edge in a box the iPhone SE's size (`testOnTheIPhoneSETheStripSitsOverTheAreasBottomEdge`), the 6×6's Focus and Exposure sliders open in the strip in every hold (`testTheSixBySixOpensEachSliderInTheStrip`), the focus switch and a turned word the same in every hold.
   The 28 also passed on iPhone SE (3rd generation) and iPhone 17 Pro Max simulators, iOS 26.5.
 - `ImmerseUITests/CaptureSidewaysUITests`, 14 tests, and `ImmerseUITests/DevelopedPreviewUITests`, 1 test, passed.
-  They now hold the focus switch under the Viewfinder area on an iPhone at least 390 points wide and in the same place in every hold, and held sideways Done and the count in the top bar above the area, Done in its corner as a 44-point button where it starts upright, the count in the other corner and narrower than upright, without the Camera's name, with VoiceOver still reading the whole label, and Develop at once's hammer above the area beside Done.
-  A first run failed every sideways hold on one check: Done's round button sat 5 points further in than upright, because the `.glass` button style pads a circle's label wider than the circle; Done is now its own 44-point glass circle (`glassEffect`).
+  They now hold the focus switch under the Viewfinder area on an iPhone at least 390 points wide and in the same place in every hold, and held sideways Done and the count in the top bar above the area, Done in its corner where it starts upright, 6 points above the area in every hold, with a tap 2 points below its glass closing the screen, the count in the other corner and narrower than upright, without the Camera's name, with VoiceOver still reading the whole label, and Develop at once's hammer above the area beside Done.
+  A first run failed every sideways hold on one check: Done's round button sat 5 points further in than upright, because the `.glass` button style pads a circle's label wider than the circle; Done is now its own glass circle (`glassEffect`).
 
 The approval screenshots, on the iPhone SE (3rd generation) and the iPhone 17 Pro Max simulators, iOS 26.5, are kept with the task's records, outside this repository.
 

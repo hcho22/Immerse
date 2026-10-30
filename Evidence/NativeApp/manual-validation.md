@@ -2507,7 +2507,7 @@ The captain's decision, free space at each step, and the alert's exact words.
 
 On 2026-10-29 the captain asked for the shooting screen's zoom options, focus switch and exposure to come down below the viewfinder ("4A"), and for Done and the title to be fixed when the iPhone is held sideways ("5A").
 The build puts the Zoom Steps, the focus switch and the 6×6's Focus and Exposure buttons in one control strip under the Viewfinder area, where the iPhone Camera app has its PHOTO / VIDEO row; on the 6×6 each button opens its slider in the strip, and a close button brings the Zoom Steps back.
-Held sideways, the top bar stays above the Viewfinder area: Done and the count (such as "27" or "3:20") turn in place in its corners, and the Camera's name is hidden while VoiceOver still reads it with the whole count ([079](shooting-strip-079.md)).
+Held sideways, the top bar stays above the Viewfinder area: Done and the count (such as "27" or "3:20") turn in place in its corners, and the Camera's name is hidden while VoiceOver still reads it with the whole count; in every hold Done keeps a little space between it and the Viewfinder area ([080](shooting-strip-080.md), FR-39 and FR-40 of the 2026-10-29 amendment).
 For a build holding this change these supersede H01's and H02's statements that the focus switch, the 6×6's rows and the Zoom Steps float over the bottom of the Viewfinder area and that the turned header runs down the area's side.
 The simulator measures the strip under the area on every Camera, over the area's bottom edge on the iPhone SE (3rd generation) and the same in every hold, and the top bar in both sideways holds (`CaptureSidewaysTests`, `CaptureSidewaysUITests`); only a phone shows how the strip sits under a thumb, how the 6×6's slider swap feels with a lens running, and how the turned pieces read in the hand.
 The candidate pinned on 2026-10-28, `d5fd1af`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
@@ -2572,7 +2572,7 @@ Screenshots with each slider open, upright and on one side, and the captain's wo
 
 **Expect.**
 
-- The top bar stays above the Viewfinder area in both holds: **Done**, a round button, turned in place in its corner, and the count ("27", "10", "12", "3:20", "2:47") turned to read upright in the other corner; the Camera's name is hidden; nothing of the bar is over the picture.
+- The top bar stays above the Viewfinder area in both holds, with a little space between **Done** and the area as upright: **Done**, a round button, turned in place in its corner, and the count ("27", "10", "12", "3:20", "2:47") turned to read upright in the other corner; the Camera's name is hidden; nothing of the bar is over the picture.
 - While a clip records, the count counts down, in red, turned to read upright.
 - VoiceOver reads the Camera's full name and the whole count ("Super 8, 3 minutes 20 seconds left") and "Done".
 - With **Develop at once** on in a Debug build, its hammer sits turned beside **Done**, and VoiceOver reads it whole.

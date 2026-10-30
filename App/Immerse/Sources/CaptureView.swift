@@ -192,7 +192,10 @@ struct CaptureView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(height: 44)
+        // Done is 38 points tall at the top of the 44-point bar, the count and the notice centred on it, which leaves 6
+        // points between Done and the Viewfinder area (the captain, 2026-10-29); its tap area stays 44 points.
+        .frame(height: CaptureDoneRow.height)
+        .frame(height: 44, alignment: .top)
         .zIndex(1)
     }
 
@@ -433,6 +436,7 @@ struct CaptureView: View {
                 .buttonStyle(.plain)
                 .disabled(capture.phase != .idle || capture.busy)
                 .accessibilityLabel("Zoom \(step.spokenLabel)")
+                .accessibilityShowsLargeContentViewer { Text(step.label) }
                 .accessibilityAddTraits(selected ? .isSelected : [])
                 .accessibilityIdentifier("zoom-\(step.label)")
             }
@@ -457,7 +461,11 @@ struct CaptureView: View {
         }
         .buttonStyle(.plain)
         .disabled(!capture.lensIsLive)
-        .accessibilityLabel(slider.title)
+        // "Focus" or "Exposure" with the slider's current value (FR-39).
+        .accessibilityLabel(slider.name)
+        .accessibilityValue(slider == .focus ? "\(Int((capture.focus * 100).rounded())) percent"
+                                              : String(format: "%.1f EV", capture.exposure))
+        .accessibilityShowsLargeContentViewer { Label(slider.name, systemImage: slider.symbol) }
         .accessibilityIdentifier("strip-\(slider.identifier)")
         .controlStripLine(.settings)
     }
@@ -500,7 +508,8 @@ struct CaptureView: View {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Close \(slider.title)")
+            .accessibilityLabel("Close \(slider.name)")
+            .accessibilityShowsLargeContentViewer { Label("Close \(slider.name)", systemImage: "xmark") }
             .accessibilityIdentifier("strip-close-slider")
         }
         .padding(.leading, 14).padding(.vertical, 4)
@@ -615,10 +624,8 @@ struct CaptureView: View {
 enum StripSlider: Equatable {
     case focus, exposure
 
-    /// The slider's own name, which its caption and VoiceOver use.
+    /// The slider's own name, which its caption, its button and VoiceOver use.
     var name: String { self == .focus ? "Focus" : "Exposure" }
-    /// What VoiceOver calls the button that opens it, apart from the focus switch, which VoiceOver calls "Focus".
-    var title: String { "\(name) slider" }
     var symbol: String { self == .focus ? "scope" : "plusminus.circle" }
     var identifier: String { self == .focus ? "focus" : "exposure" }
 }
@@ -673,6 +680,7 @@ struct FocusModeSwitch: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Focus")
         .accessibilityValue(selected.title)
+        .accessibilityShowsLargeContentViewer { Text(settings.map(\.title).joined(separator: " / ")) }
         .accessibilityAddTraits(.isButton)
         .accessibilityAction { step(by: 1) }
         .accessibilityAdjustableAction { direction in
@@ -726,17 +734,17 @@ struct CaptureDoneRow: View {
 
     var body: some View {
         if turn.isSideways {
-            // Held sideways Done turns in place in the top bar's corner: a round button as tall as the bar, whose word
-            // reads upright inside it, so no part of it runs over the Viewfinder area.
+            // Held sideways Done turns in place in the top bar's corner: a round button as tall as the upright one, whose
+            // word reads upright inside it, so no part of it runs over the Viewfinder area.
             HStack(spacing: 8) {
                 Button(action: done) {
                     TurnedInPlace { Text("Done").font(.footnote.weight(.semibold)) }
-                        .frame(width: 44, height: 44)
-                        .contentShape(Circle())
+                        .frame(width: Self.height, height: Self.height)
                 }
                 .buttonStyle(.plain)
-                // A glass circle exactly the bar's height, against the bar's edge where the upright button starts.
+                // A glass circle, against the bar's edge where the upright button starts.
                 .glassEffect(.regular.interactive(), in: Circle())
+                .contentShape(Self.tapArea)
                 .accessibilityLabel("Done")
                 .accessibilityShowsLargeContentViewer()
                 #if DEBUG
@@ -748,10 +756,17 @@ struct CaptureDoneRow: View {
         }
     }
 
+    /// How tall Done shows: 6 points short of the 44-point top bar, which leaves that much between it and the Viewfinder
+    /// area below (the captain, 2026-10-29: "please add little bit of spacing between the "Done" button and the
+    /// viewfinder").
+    static let height: CGFloat = 38
+    /// Done's tap area, 44 points tall: 3 points past its glass above and below.
+    private static var tapArea: some Shape { Rectangle().inset(by: -3) }
+
     @ViewBuilder private var uprightRow: some View {
-        // The glass adds 7 points above and below its label, so the button is the 44-point top bar's height and stays
-        // inside it.
-        let button = Button(action: done) { Text("Done").frame(minHeight: 30) }.buttonStyle(.glass)
+        // The glass adds 7 points above and below its label.
+        let button = Button(action: done) { Text("Done").frame(minHeight: Self.height - 14) }.buttonStyle(.glass)
+            .contentShape(Self.tapArea)
             .accessibilityShowsLargeContentViewer()
         #if DEBUG
         DoneRowLayout {
@@ -779,11 +794,11 @@ private struct CaptureHeaderLabel: View {
     var body: some View {
         Group {
             if turn.isSideways {
-                // Lines 40 points long, which turned is the bar's height less its margins: "27" and "3:20" fit at the
+                // Lines as long as Done is tall, which turned keeps the count level with it: "27" and "3:20" fit at the
                 // size the bar holds, and the longer states ("Film complete") shrink to fit rather than run over the area.
-                TurnedBlock(length: 40) {
+                TurnedBlock(length: CaptureDoneRow.height) {
                     count.multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.5)
-                        .frame(width: 40)
+                        .frame(width: CaptureDoneRow.height)
                 }
             } else {
                 HStack(spacing: 6) {

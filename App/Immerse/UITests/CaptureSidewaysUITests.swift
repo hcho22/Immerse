@@ -326,7 +326,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         checkNoticeShowsWhole(upright, app, "upright")
         // Held upright, Done, the Camera name and its count share the top bar below the status bar.
         XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
-        XCTAssertLessThanOrEqual(upright.done.maxY, upright.viewfinder.minY + 0.5, "Done stays in the top bar, above the area")
+        checkGapAboveTheArea(upright, "upright")
         XCTAssertEqual(upright.remaining.midY, upright.done.midY, accuracy: 12, "The count shares Done's header line")
         XCTAssertGreaterThanOrEqual(upright.remaining.width, 40,
                                     "The Camera name and count remain visible on one line at every text size")
@@ -361,7 +361,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCUIDevice.shared.orientation = .portrait
         let upAgain = try wait(app) { $0.remaining.width > $0.remaining.height }
         XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
-        done.tap()
+        tapDoneBelowItsGlass(done)
         XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
         XCTAssertTrue(detail.exists(within: 5))
         XCUIDevice.shared.orientation = .landscapeLeft
@@ -427,17 +427,29 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
     }
 
-    /// Held sideways the top bar stays above the Viewfinder area as it is upright: Done, a 44-point round button, turned
-    /// in place in its corner, and the count turned to read upright in the other, without the Camera's name, and nothing
-    /// of the bar over the area (the captain, 2026-10-29, "5A").
+    /// Done, the count and Develop at once's notice keep 6 points between them and the Viewfinder area below, in the
+    /// top bar (the captain, 2026-10-29: "please add little bit of spacing between the "Done" button and the
+    /// viewfinder"). XCTest reads Done as its tap area, 44 points tall and 3 points past its glass above and below, so the
+    /// glass is 6 points above the area where the tap area is 3; `tapDoneBelowItsGlass` taps that part of it.
+    private func checkGapAboveTheArea(_ layout: Layout, _ hold: String) {
+        XCTAssertEqual(layout.done.height, 44, accuracy: 0.5, "Done's tap area is 44 points tall, \(hold)")
+        XCTAssertLessThanOrEqual(layout.done.maxY, layout.viewfinder.minY - 3 + 0.5,
+                                 "Done's glass keeps 6 points above the Viewfinder area, \(hold): \(layout.done)")
+        for (label, frame) in [("The count", layout.remaining)] + (layout.notice.map { [("The notice", $0)] } ?? []) {
+            XCTAssertTrue(layout.window.contains(frame), "\(label) is on screen, \(hold): \(frame)")
+            XCTAssertLessThanOrEqual(frame.maxY, layout.viewfinder.minY - 6 + 0.5,
+                                     "\(label) keeps 6 points above the Viewfinder area, \(hold): \(frame) over \(layout.viewfinder)")
+        }
+    }
+
+    /// Held sideways the top bar stays above the Viewfinder area as it is upright: Done, a round button, turned in place
+    /// in its corner, and the count turned to read upright in the other, without the Camera's name, and nothing of the
+    /// bar over the area (the captain, 2026-10-29, "5A").
     private func checkTopBar(_ turned: Layout, upright: Layout, _ hold: String) {
         XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright, \(hold)")
-        XCTAssertGreaterThanOrEqual(turned.done.height, 44, "Done keeps a tap target of 44 points turned, \(hold)")
-        XCTAssertGreaterThanOrEqual(turned.done.width, 44, "Done keeps a tap target of 44 points turned, \(hold)")
+        XCTAssertGreaterThanOrEqual(turned.done.width, 38, "Done is as wide as it is tall turned, \(hold)")
+        checkGapAboveTheArea(turned, hold)
         for (label, frame) in [("Done", turned.done), ("The count", turned.remaining)] + (turned.notice.map { [("The notice", $0)] } ?? []) {
-            XCTAssertTrue(turned.window.contains(frame), "\(label) is on screen, \(hold): \(frame)")
-            XCTAssertLessThanOrEqual(frame.maxY, turned.viewfinder.minY + 0.5,
-                                     "\(label) stays in the top bar, above the area, \(hold): \(frame)")
             XCTAssertGreaterThanOrEqual(frame.minY, upright.done.minY - 0.5, "\(label) stays below the status bar, \(hold)")
         }
         XCTAssertEqual(turned.done.midY, upright.done.midY, accuracy: 1, "Done turns in place, \(hold)")
@@ -547,6 +559,11 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             latest = next
         }
         return latest
+    }
+
+    /// Taps 2 points below Done's glass, in the gap above the Viewfinder area, which Done's 44-point tap area covers.
+    private func tapDoneBelowItsGlass(_ done: XCUIElement) {
+        done.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1)).withOffset(CGVector(dx: 0, dy: -1)).tap()
     }
 
     private func retainScreenshot(name: String) {
