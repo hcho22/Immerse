@@ -272,20 +272,52 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         app.buttons["Cancel"].tap()
     }
 
-    /// VoiceOver sets a crop by its four edges, each adjustable.
+    /// VoiceOver sets a crop by its four edges, each adjustable and each along its own edge of the box, clear of the
+    /// box's middle, where VoiceOver finds the box itself.
     func testTheCropBoxEdgesCanBeMovedOneAtATimeWithoutTouchingTheBox() throws {
         let app = launch(["--developed-photo"])
         openFilm(app)
         tapWhole(app, app.buttons["Open photo 1"])
         tapDarkroom(app)
         openAdjust(app)
+        let box = cropBox(app).frame
         for edge in ["left", "right", "top", "bottom"] {
             let element = app.descendants(matching: .any)["darkroom-crop-\(edge)"]
             XCTAssertTrue(element.exists, edge)
             XCTAssertEqual(element.label, "Crop \(edge) edge")
+            let frame = element.frame
+            let along: (CGFloat, CGFloat) = switch edge {
+            case "left": (frame.midX, box.minX)
+            case "right": (frame.midX, box.maxX)
+            case "top": (frame.midY, box.minY)
+            default: (frame.midY, box.maxY)
+            }
+            XCTAssertEqual(along.0, along.1, accuracy: 1, "\(edge): \(frame) lies along its edge of \(box)")
+            XCTAssertFalse(frame.contains(CGPoint(x: box.midX, y: box.midY)), "\(edge): \(frame) is clear of the box's middle")
         }
         XCTAssertEqual(app.descendants(matching: .any)["darkroom-crop-left"].value as? String, "0 percent")
         XCTAssertEqual(app.descendants(matching: .any)["darkroom-crop-right"].value as? String, "100 percent")
+        app.buttons["Cancel"].tap()
+    }
+
+    /// On Freeform a corner whose one edge is held at the print's edge still moves its other edge with the finger, as in
+    /// the Photos app: with the top edge cropped in, the top-left corner dragged up, drifting a little left past the
+    /// print's left edge, brings the top edge up.
+    func testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge() throws {
+        let app = launch(["--developed-photo"])
+        openFilm(app)
+        tapWhole(app, app.buttons["Open photo 1"])
+        tapDarkroom(app)
+        openAdjust(app)
+        let box = cropBox(app)
+        drag(app, box, corner: CGVector(dx: 0.5, dy: 0), by: CGVector(dx: 0, dy: 40))
+        let cropped = kept(box)
+        XCTAssertEqual(cropped.width, 100)
+        XCTAssertLessThan(cropped.height, 100, "The top edge crops in")
+        drag(app, box, corner: CGVector(dx: 0, dy: 0), by: CGVector(dx: -6, dy: -25))
+        let raised = kept(box)
+        XCTAssertEqual(raised.width, 100, "The left edge stays on the print's")
+        XCTAssertGreaterThan(raised.height, cropped.height, "The top edge follows the finger up")
         app.buttons["Cancel"].tap()
     }
 

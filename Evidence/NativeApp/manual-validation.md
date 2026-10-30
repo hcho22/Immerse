@@ -2533,7 +2533,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 - The print follows the fingers as in the Photos app, with the point between them staying under them; pinched in past the whole print it springs back to the whole print.
 - A double-tap zooms in about the tapped point and the second double-tap shows the whole print again, both animated.
 - At an edge the print resists and settles back when let go, as in the Photos app.
-- Turned, the zoom and the part of the print in view stay about the same.
+- Turned, the zoom and the part of the print in view stay about the same, and the print stays sharp, never soft for a moment.
 - On the Instant the white card, its edge and its shadow zoom with the picture.
 
 **It fails if.**
@@ -2616,22 +2616,25 @@ Screenshots of steps 1 and 5.
 1. Open a Disposable print's Darkroom and choose **Adjust**; check **Freeform** is chosen.
 2. Drag each corner handle in, and an edge handle in and out, slowly; let go after each.
 3. Pinch out and in on the print inside the box, and drag the print to each side and past it.
-4. Tap **Save**, look at the print in the photo view, open the Darkroom again and choose **Adjust**.
-5. Tap **Reset to Original**, then **Cancel**.
+4. Drag the top edge handle down, then drag the top-left corner up and a little to the left.
+5. Crop in on the fine detail until the box keeps about a fifth of the print's width, let go, wait two seconds and take a screenshot.
+6. Tap **Save**, look at the print in the photo view, open the Darkroom again and choose **Adjust**.
+7. Tap **Reset to Original**, then **Cancel**.
 
 **Expect.**
 
 - A handle moves only its corner or edge while the print stays still, and the rule-of-thirds grid shows while it moves; let go, the box glides to the middle and grows to fill the print area, the print growing with it.
-- The box never leaves the print: a handle stops at the print's edge.
+- The box never leaves the print: a handle stops at the print's edge, and a corner held there by one edge still moves its other edge with the finger.
+- A tight crop is as sharp in the box as in the saved print, at most a moment after the box settles.
 - A pinch or drag moves the print under a still box, with the grid; past the print's edge or its largest or smallest size it resists and settles back.
 - The saved print is exactly what the box showed, and the Darkroom opens on the same crop and shape.
 - Reset shows the whole print again, on **Freeform**.
 
 **It fails if.**
-The print moves while a handle is dragged, the box leaves the print or shows the background, the box does not re-center, the saved print differs from the box, or a handle is hard to catch with a thumb.
+The print moves while a handle is dragged, the box leaves the print or shows the background, the box does not re-center, a corner stops while one of its edges could still move, a tight crop stays soft, the saved print differs from the box, or a handle is hard to catch with a thumb.
 
 **Write down.**
-A screen recording of steps 2 and 3, and the screenshots of the box and of the saved print.
+A screen recording of steps 2 to 4, the screenshot of step 5, and the screenshots of the box and of the saved print.
 
 ### Z06 - Shapes, sideways and upright, and the 6×6's square
 
@@ -2687,7 +2690,7 @@ A screen recording of step 1 and the before-and-after of step 3.
 **Expect.**
 
 - The prints cropped by the build before look exactly as they did.
-- VoiceOver reads each edge with its place in percent and moves it by a hundredth of the print each swipe; the dial moves a whole degree each swipe; the box reads how much of the width and height it keeps.
+- VoiceOver reads each edge with its place in percent, outlines that edge of the box only, and moves it by a hundredth of the print each swipe; the dial moves a whole degree each swipe; the box reads how much of the width and height it keeps, and a finger on the middle of the box finds the box.
 - At the largest text size the shapes and the dial show as Adjust opens, every shape can be swiped to and chosen without the controls moving, and the print area stays put.
 
 **It fails if.**

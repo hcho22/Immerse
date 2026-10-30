@@ -35,7 +35,7 @@ struct PrintZoom: UIViewRepresentable {
     }
 }
 
-/// How a Print Zoom stands.
+/// How a Print Zoom stands, or Adjust's crop box at rest.
 struct PrintZoomReading: Equatable {
     /// Whether the view shows less than the whole print.
     var isZoomed = false
@@ -63,6 +63,8 @@ final class PrintZoomScrollView: UIScrollView, UIScrollViewDelegate, UIGestureRe
     private var whole: AnyHashable?
     private var laidOutSize = CGSize.zero
     private var reading = PrintZoomReading()
+    /// Holds back reports while the view lays itself out, which passes through zoom 1 on the way to the zoom it keeps.
+    private var layingOut = false
     private let pager = UIPanGestureRecognizer()
     private let doubleTap = UITapGestureRecognizer()
 
@@ -136,6 +138,7 @@ final class PrintZoomScrollView: UIScrollView, UIScrollViewDelegate, UIGestureRe
             ? CGPoint(x: (contentOffset.x + bounds.width / 2) / (card.bounds.width * previousScale),
                       y: (contentOffset.y + bounds.height / 2) / (card.bounds.height * previousScale))
             : CGPoint(x: 0.5, y: 0.5)
+        layingOut = true
         zoomScale = 1
         card.frame = CGRect(x: 0, y: 0, width: fitted.width + 2 * margin, height: fitted.height + 2 * margin)
         picture.frame = card.bounds.insetBy(dx: margin, dy: margin)
@@ -154,6 +157,7 @@ final class PrintZoomScrollView: UIScrollView, UIScrollViewDelegate, UIGestureRe
                 x: min(max(middle.x * size.width - bounds.width / 2, 0), max(size.width - bounds.width, 0)),
                 y: min(max(middle.y * size.height - bounds.height / 2, 0), max(size.height - bounds.height, 0)))
         }
+        layingOut = false
         report(settled: true)
     }
 
@@ -185,6 +189,7 @@ final class PrintZoomScrollView: UIScrollView, UIScrollViewDelegate, UIGestureRe
     }
 
     private func report(settled: Bool) {
+        guard !layingOut else { return }
         let isZoomed = zoomScale > Self.wholeScale
         updateGestures()
         let screenScale = window?.screen.scale ?? traitCollection.displayScale
@@ -253,23 +258,27 @@ extension DisplayPhoto {
     }
 }
 
-/// A print's picture for Print Zoom: screen-sized at first, and as sharp as the print once a zoom needs more pixels than
-/// that. The sharper picture is decoded off the main actor and let go as the zoom returns to the whole print, which keeps
-/// memory low on the oldest supported iPhone.
+/// A print's picture for Print Zoom and for Adjust's crop box: screen-sized at first, and as sharp as the print once a
+/// zoom, or a crop box showing a small part of the print, needs more pixels than that. The sharper picture is decoded off
+/// the main actor and let go as the zoom returns to the whole print, which keeps memory low on the oldest supported
+/// iPhone.
 @MainActor @Observable
 final class ZoomedPicture {
     /// The picture to show.
     private(set) var shown: UIImage?
     private(set) var printSize = CGSize.zero
+    /// Counts the prints shown, so a sharper picture decoded for an earlier one is never shown, and a view can show each
+    /// new print whole.
+    private(set) var generation = 0
     @ObservationIgnored private var data: Data?
     @ObservationIgnored private var screen: UIImage?
-    /// Counts the prints shown, so a sharper picture decoded for an earlier one is never shown.
-    @ObservationIgnored private var generation = 0
     @ObservationIgnored private var sharp = false
     @ObservationIgnored private var detailTask: Task<Void, Never>?
 
-    /// Shows a newly made or loaded print: its screen-sized picture, then a sharper one if the zoom needs it.
+    /// Shows a newly made or loaded print: its screen-sized picture, then a sharper one if the zoom needs it. The same
+    /// print again, its bytes unchanged, keeps the picture shown, sharp or not.
     func show(_ data: Data, image: UIImage, printSize: CGSize, reading: PrintZoomReading) {
+        guard data != self.data else { return }
         detailTask?.cancel()
         detailTask = nil
         generation += 1

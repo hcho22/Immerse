@@ -54,6 +54,25 @@ At AX XXXL the dial test then took 168 s of its 180 s allowance, because it and 
 
 The first runs failed where the tests had expected the old arrangement or where the crop box's VoiceOver frame covered the whole print area (its modifiers came after `.position`), which put a test's corner drag off the handle; both were fixed before the runs above.
 
+## Fixes from the review of 2026-10-29
+
+- On Freeform a corner whose one edge is held, at the print's edge or at the smallest crop, still moves its other edge with the finger, as in the Photos app: each edge goes as far as it can on its own (`CropEditor.handled`), where before the whole drag stopped as soon as either edge did.
+A shape and the 6×6's square still move both edges of a corner together, along the shape.
+- A tight crop is sharp in Adjust, as it was before this change: where the box at rest shows the print at more pixels than its screen-sized picture has, the crop box draws from the print's own pixels through the same `ZoomedPicture` Print Zoom uses, decoded only then and let go at the whole print and as Adjust closes.
+On an iPhone SE that is any 3:2 crop keeping less than about 39% of the print's width.
+- The crop box's four VoiceOver edges take their accessibility modifiers before `.position`, as the box does, so each is the strip along its own edge.
+The review expected the earlier order to spread each over the whole print area, as it had the box; on the simulator their frames already lay along their edges, and the test below now holds them there.
+- A gesture that iOS cancels, such as a drag when the screen locks, settles as one that ends: it never calls `onEnded`, so as its `@GestureState` goes false the handles', the print's or the dial's state still held is committed and let go, and the box always shows what Save stores and the dial's angle is rendered.
+- A change of Darkroom tool resets the Darkroom's zoom reading, so no sharper picture is decoded for a zoom that has gone, Adjust included.
+- The photo view keeps its zoom and its sharp picture when another Film's media changes: `ZoomedPicture` keeps the picture shown for the same bytes, and the photo view shows the whole print only for another print or new bytes of this one.
+- A turn of the iPhone while zoomed no longer reports the whole print on its way to the zoom it keeps, which had let the sharp picture go and decoded it again.
+- Tests: `App/Immerse/Tests/PrintZoomTests.swift` (4 tests: the Freeform corner, a tight crop on an iPhone SE's print area drawing from the sharper picture, the same bytes keeping the sharp picture, a turn while zoomed); `PrintZoomWorkflowTests.testTheCropBoxEdgesCanBeMovedOneAtATimeWithoutTouchingTheBox` holds each edge to its edge of the box, and `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` drags the corner of the first fix on the simulator.
+
+Run on 2026-10-29 on a new iPhone SE (3rd generation) simulator on iOS 26.5, quieted with `Scripts/quiet-simulator.sh`, with Xcode 26.5, on an Intel Mac: `PrintZoomTests` (4 tests) and `JournalIntegrationTests.testTheCropBoxShowsOnlyThePrintMadeForTheEditsAsTheyAre` pass, and all 11 `PrintZoomWorkflowTests` pass.
+After `onEnded` was kept for a gesture's ordinary end, the reset of its `@GestureState` settling only a cancelled one, the five crop-box and dial tests of `PrintZoomWorkflowTests` and the hosted tests passed again.
+With each fix undone in turn, the Freeform, same-bytes and turn tests of `PrintZoomTests` failed, and so did `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` (the box kept 77% of the height before and after the corner drag); the edges test passed either way, as above.
+The tests read the edges but do not swipe them, which takes VoiceOver; that stays with Z08.
+
 ## What only a phone can show
 
 How the zoom, the handles, the pinch under the box and the dial feel by hand beside the Photos app, how sharp the furthest zoom is, how fast the sharper picture comes on the oldest supported iPhone, and what VoiceOver says: Z01 to Z08.

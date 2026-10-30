@@ -509,7 +509,7 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertNil(flat.straighteningDegrees)
         XCTAssertNil(flat.rotationQuarterTurns)
         XCTAssertNil(flat.vignetteStops, "The print under the box has no vignette")
-        let made = UncroppedPrint(recipe: flat, image: UIImage(), pixelSize: CGSize(width: 300, height: 200))
+        let made = UncroppedPrint(recipe: flat, picture: ZoomedPicture(), pixelSize: CGSize(width: 300, height: 200))
         XCTAssertTrue(made.matches(recipe))
         recipe.straighteningDegrees = -7.1
         recipe.crop = Crop(x: 0, y: 0, width: 0.3, height: 0.8)

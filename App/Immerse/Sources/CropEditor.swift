@@ -10,7 +10,8 @@ import SwiftUI
 /// The renderer crops the turned print and then straightens what it cut, keeping the largest centered rectangle of its
 /// shape (`CropGeometry`), so the box is that rectangle: the print under it turns by the straightening angle about the
 /// box's center and grows as the angle grows. Nothing here renders: the print shown is the one without crop,
-/// straightening, vignette or quarter turns (`UncroppedPrint`), placed by the recipe's crop and turned by its angle.
+/// straightening, vignette or quarter turns (`UncroppedPrint`), placed by the recipe's crop and turned by its angle, and
+/// drawn from its sharper picture where the box at rest shows it at more pixels than the screen-sized one has.
 struct CropEditor: View {
     let print: UncroppedPrint
     let quarterTurns: Int
@@ -29,6 +30,10 @@ struct CropEditor: View {
     @State private var live: Placement?
     @State private var liveRect: CGRect?
     @State private var gestureStart: (placement: Placement, rect: CGRect)?
+    /// Whether a handle or the print is held. A gesture that is cancelled never ends, and the box settles as this goes
+    /// false.
+    @GestureState private var moving = false
+    @Environment(\.displayScale) private var displayScale
 
     /// Room left around the box for its handles.
     private static let margin: CGFloat = 24
@@ -63,22 +68,36 @@ struct CropEditor: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .clipped()
+            .onChange(of: reading(in: geometry.size, displayScale: displayScale), initial: true) { _, reading in
+                print.picture.follow(reading)
+            }
         }
+        .onChange(of: moving) { _, moving in if !moving, gestureStart != nil { endGesture() } }
+        .onDisappear { print.picture.follow(PrintZoomReading()) }
         .accessibilityElement(children: .contain)
+    }
+
+    /// What the box at rest needs of the print's picture: the whole print's longer side at the box's scale, in this
+    /// screen's pixels, and whether the box shows less than the whole print.
+    private func reading(in size: CGSize, displayScale: CGFloat) -> PrintZoomReading {
+        let scale = resting(CropGeometry.rect(crop, printSize: printSize), in: size).scale
+        let needed = max(print.pixelSize.width, print.pixelSize.height) * scale * displayScale
+        return PrintZoomReading(isZoomed: crop != nil || degrees != 0, pixelsNeeded: Int(needed.rounded(.up)))
     }
 
     // MARK: Drawing
 
     /// The print placed so that its pixel `placement.center` is at the box's center, turned by its quarter turns and the
     /// straightening angle.
-    private func picture(_ placement: Placement) -> some View {
-        let middle = screen(CGPoint(x: printSize.width / 2, y: printSize.height / 2), placement)
-        return Image(uiImage: print.image).resizable()
-            .frame(width: print.pixelSize.width * placement.scale, height: print.pixelSize.height * placement.scale)
-            .rotationEffect(.degrees(-90 * Double(quarterTurns) - degrees))
-            .allowsHitTesting(false)
-            .accessibilityHidden(true)
-            .position(middle)
+    @ViewBuilder private func picture(_ placement: Placement) -> some View {
+        if let image = print.picture.shown {
+            Image(uiImage: image).resizable()
+                .frame(width: print.pixelSize.width * placement.scale, height: print.pixelSize.height * placement.scale)
+                .rotationEffect(.degrees(-90 * Double(quarterTurns) - degrees))
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+                .position(screen(CGPoint(x: printSize.width / 2, y: printSize.height / 2), placement))
+        }
     }
 
     /// The print around the box, darkened.
@@ -191,12 +210,13 @@ struct CropEditor: View {
             Color.clear
                 .frame(width: width, height: height)
                 .contentShape(Rectangle())
-                .position(x: x, y: y)
-                .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                    .onChanged { drag(handle, by: $0.translation, in: size) }
-                    .onEnded { _ in endGesture() })
                 .accessibilityHidden(handle.spoken == nil)
                 .modifier(SpokenEdge(handle: handle, value: edgeValue(handle)) { step(handle, by: $0, in: size) })
+                .position(x: x, y: y)
+                .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                    .updating($moving) { _, moving, _ in moving = true }
+                    .onChanged { drag(handle, by: $0.translation, in: size) }
+                    .onEnded { _ in endGesture() })
         }
     }
 
@@ -227,22 +247,35 @@ struct CropEditor: View {
     /// shape.
     private func drag(_ handle: Handle, by travel: CGSize, in size: CGSize) {
         if gestureStart == nil { gestureStart = (resting(rect, in: size), rect) }
-        guard let (start, _) = gestureStart else { return }
-        // The farthest part of the travel the crop allows, found by halving.
-        var allowed: (placement: Placement, rect: CGRect)?
-        if let whole = moved(start, handle: handle, by: travel) { allowed = whole } else {
+        guard let (start, _) = gestureStart, let allowed = handled(handle, by: travel, from: start) else { return }
+        live = allowed.placement
+        liveRect = allowed.rect
+    }
+
+    /// The placement and crop for a box at `start` with `handle` moved by as much of `travel` as the crop allows: on a
+    /// shape both edges of a corner together, along the shape, and on Freeform each edge as far as it can go, so an edge
+    /// held at the print's edge or at the smallest crop leaves the other following the finger, as in the Photos app. Nil
+    /// where none of it is allowed.
+    func handled(_ handle: Handle, by travel: CGSize, from start: Placement) -> (placement: Placement, rect: CGRect)? {
+        // The farthest part of a travel the crop allows, found by halving.
+        func farthest(_ part: (CGFloat) -> CGSize) -> (share: CGFloat, moved: (placement: Placement, rect: CGRect)?) {
+            if let whole = moved(start, handle: handle, by: part(1)) { return (1, whole) }
             var low: CGFloat = 0, high: CGFloat = 1
+            var allowed: (placement: Placement, rect: CGRect)?
             for _ in 0..<24 {
                 let middle = (low + high) / 2
-                if let fit = moved(start, handle: handle, by: CGSize(width: travel.width * middle, height: travel.height * middle)) {
+                if let fit = moved(start, handle: handle, by: part(middle)) {
                     allowed = fit
                     low = middle
                 } else { high = middle }
             }
+            return (low, allowed)
         }
-        guard let allowed else { return }
-        live = allowed.placement
-        liveRect = allowed.rect
+        guard !square, ratio == nil else {
+            return farthest { CGSize(width: travel.width * $0, height: travel.height * $0) }.moved
+        }
+        let across = farthest { CGSize(width: travel.width * $0, height: 0) }
+        return farthest { CGSize(width: travel.width * across.share, height: travel.height * $0) }.moved ?? across.moved
     }
 
     /// The placement and crop for a box with `handle` moved by `travel`, or nil where that crop would leave the print or
@@ -291,6 +324,7 @@ struct CropEditor: View {
 
     private func pictureGesture(in size: CGSize) -> some Gesture {
         SimultaneousGesture(MagnifyGesture(minimumScaleDelta: 0.01), DragGesture(minimumDistance: 2))
+            .updating($moving) { _, moving, _ in moving = true }
             .onChanged { value in
                 if gestureStart == nil { gestureStart = (resting(rect, in: size), rect) }
                 guard let (start, _) = gestureStart else { return }
@@ -344,7 +378,7 @@ struct CropEditor: View {
     // MARK: Geometry
 
     /// The box at rest: what the crop prints, as large as fits the area inside the margin, in its middle.
-    private func resting(_ rect: CGRect, in size: CGSize) -> Placement {
+    func resting(_ rect: CGRect, in size: CGSize) -> Placement {
         let output = CropGeometry.outputSize(of: rect.size, degrees: degrees)
         let room = CGSize(width: max(size.width - 2 * Self.margin, 1), height: max(size.height - 2 * Self.margin, 1))
         let scale = min(room.width / output.width, room.height / output.height)
@@ -401,7 +435,8 @@ private struct SpokenEdge: ViewModifier {
 /// straightened print, so on the whole print it would show out of place.
 struct UncroppedPrint {
     let recipe: DarkroomRecipe
-    let image: UIImage
+    /// Its picture: screen-sized, and as sharp as the print where the crop box shows it at more pixels than that.
+    let picture: ZoomedPicture
     /// The print's size in pixels, before any quarter turn.
     let pixelSize: CGSize
 
@@ -427,9 +462,11 @@ struct UncroppedPrint {
 /// moves it a degree at a time.
 struct StraightenDial: View {
     @Binding var degrees: Double
-    /// Told when a drag begins and ends.
+    /// Told when a drag begins and when it ends or is cancelled.
     let editing: (Bool) -> Void
     @State private var dragStart: Double?
+    /// Whether the ruler is held. A drag that is cancelled never ends, and it is let go as this goes false.
+    @GestureState private var turning = false
 
     /// The ruler's spacing.
     private static let pointsPerDegree: CGFloat = 5
@@ -462,11 +499,13 @@ struct StraightenDial: View {
             }
             .contentShape(Rectangle())
             .gesture(DragGesture(minimumDistance: 0)
+                .updating($turning) { _, turning, _ in turning = true }
                 .onChanged { value in
                     if dragStart == nil { dragStart = degrees; editing(true) }
                     degrees = Self.tenths((dragStart ?? 0) - value.translation.width / Self.pointsPerDegree)
                 }
-                .onEnded { _ in dragStart = nil; editing(false) })
+                .onEnded { _ in letGo() })
+            .onChange(of: turning) { _, turning in if !turning, dragStart != nil { letGo() } }
         }
         .frame(minHeight: 44)
         .sensoryFeedback(.selection, trigger: degrees == 0) { _, atZero in atZero }
@@ -484,6 +523,12 @@ struct StraightenDial: View {
             }
             editing(false)
         }
+    }
+
+    /// Ends a drag of the ruler, ended or cancelled.
+    private func letGo() {
+        dragStart = nil
+        editing(false)
     }
 
     /// The angle on the dial's step and inside its range, never "-0.0".

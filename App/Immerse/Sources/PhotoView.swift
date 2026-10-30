@@ -158,7 +158,8 @@ struct RevealedPhoto: View {
 }
 
 /// The photo view's print, on black, with Print Zoom. It is decoded to the screen's size and, once zoomed in past that,
-/// to the print's own (`ZoomedPicture`). Another print, or an edit saved to this one, shows whole.
+/// to the print's own (`ZoomedPicture`). Another print, or an edit saved to this one, shows whole; a change to another
+/// Film's media leaves the zoom and the sharp picture as they are.
 private struct ZoomablePrint: View {
     @Environment(JournalModel.self) private var model
     let filmID: UUID
@@ -173,13 +174,20 @@ private struct ZoomablePrint: View {
         let sequence: Int
     }
 
+    /// The print shown: another sequence, or other bytes for this one, shows it whole.
+    private struct Shown: Hashable {
+        let sequence: Int
+        let print: Int
+    }
+
     var body: some View {
         let load = Load(revision: model.mediaRevision, sequence: sequence)
         ZStack {
             Color.black
             if !model.hiddenFilms.contains(filmID), !failed, let image = picture.shown {
                 PrintZoom(image: image, printSize: picture.printSize,
-                          cardEdge: model.film(filmID)?.camera.id == .instant1970s, whole: load, swipe: swipe, zoomed: {
+                          cardEdge: model.film(filmID)?.camera.id == .instant1970s,
+                          whole: Shown(sequence: sequence, print: picture.generation), swipe: swipe, zoomed: {
                     reading = $0
                     picture.follow($0)
                 })
@@ -445,6 +453,10 @@ struct DarkroomView: View {
                 catch { self.error = FailureCopy.message(for: error) }
             }
             .task(id: tool == .adjust && !isInstant ? UncroppedPrint.recipe(for: recipe) : nil) { await makeUncropped() }
+            .onChange(of: tool) {
+                zoom = PrintZoomReading()
+                picture.follow(zoom)
+            }
             .onDisappear { renderTask?.cancel(); picture.clear(); uncropped = nil }
         }
     }
@@ -701,7 +713,9 @@ struct DarkroomView: View {
                 (DisplayPhoto.image(data, maximumPixels: pixels), DisplayPhoto.pixelSize(data))
             }.value
             guard !Task.isCancelled, let image = decoded.0, let size = decoded.1 else { return }
-            uncropped = UncroppedPrint(recipe: flat, image: image, pixelSize: size)
+            let picture = ZoomedPicture()
+            picture.show(data, image: image, printSize: size, reading: PrintZoomReading())
+            uncropped = UncroppedPrint(recipe: flat, picture: picture, pixelSize: size)
             readShape()
         } catch { if !Task.isCancelled { self.error = FailureCopy.message(for: error) } }
     }
