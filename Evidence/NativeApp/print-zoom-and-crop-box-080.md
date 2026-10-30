@@ -114,6 +114,17 @@ The first build did so only when a Save changed the print's bytes; the photo vie
 
 With the change, all 9 `PrintZoomTests` and `PrintZoomWorkflowTests`' `testDarkroomZoomIsForLookingOnly` and `testPhotoViewZoomsAsPhotosDoesAndSwipesOnlyAtTheWholePrint` pass on a new iPhone SE (3rd generation) simulator on iOS 26.5, and the documents zip matches its folder (`Scripts/verify-document-package.sh`).
 
+## The check's part limit
+
+This change's check at `56b2b8e` (run 41085860304, 2026-10-30) cancelled three of its four parts at the 75-minute limit each part had, and `local-native` failed because they had; no test failed.
+The harness part had passed 77 of its 79 tests, the packages part 123 of the hosted app's 124, and ui-flows was in its dark audits.
+Its runners were slower than main's last (run 40997555064): the tests both ran took 1.1 times as long in the harness part, 1.19 times in ui-flows, which holds nothing of this change, and 1.34 to 1.41 times in packages, where this change adds about 15 seconds.
+This change adds 11 harness tests, 664 seconds on that runner, about 10 minutes on main's.
+In main's and pull requests' last eight green runs the parts took 50 to 68 minutes (packages), 58 to 66 (harness), 49 to 69 (ui-text) and 63 to 74 (ui-flows), so with this change the harness part takes about 68 to 76 minutes on an ordinary runner, over 75 on some.
+When the parts began the slowest took 52 minutes and the limit was 23 minutes, about 1.44 times, over it, as one runner differed from the next by up to a third (`dropped-touch-059.md`).
+No part has room for the harness's new tests, and a fifth part would take a fifth macOS runner of the five the account runs at once, leaving a second run none.
+So the limit is now 110 minutes, the same 1.44 times the slowest part with this change, 76 minutes; it is there to stop a stuck part, and each test still has its own 3-minute allowance.
+
 ## What only a phone can show
 
 How the zoom, the handles, the pinch under the box and the dial feel by hand beside the Photos app, how sharp the furthest zoom is, how fast the sharper picture comes on the oldest supported iPhone, and what VoiceOver says: Z01 to Z08.
