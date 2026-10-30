@@ -11,6 +11,7 @@
 		042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */; };
 		065EF6F200F43137260FF11B /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9768749433340EB2381411D5 /* CaptureColumn.swift */; };
 		091CEBCEF1E80EA6D42859EB /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB69DC46BA17DE67B5919AC5 /* TestingUnlock.swift */; };
+		187704F23BFAA9F76987B38D /* DevelopmentStopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EDD52BA615FAC4807C862E /* DevelopmentStopTests.swift */; };
 		191D4DB282262239144D8478 /* CaptureSidewaysUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139074367BE9ABD0540B02C9 /* CaptureSidewaysUITests.swift */; };
 		1A16A0976D5522DFDD99BD87 /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */; };
 		1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */; };
@@ -80,6 +81,7 @@
 
 /* Begin PBXFileReference section */
 		0AB3F25C02325EB748DF09A0 /* MediaCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MediaCatalog; path = ../../Packages/MediaCatalog; sourceTree = SOURCE_ROOT; };
+		10EDD52BA615FAC4807C862E /* DevelopmentStopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentStopTests.swift; sourceTree = "<group>"; };
 		139074367BE9ABD0540B02C9 /* CaptureSidewaysUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSidewaysUITests.swift; sourceTree = "<group>"; };
 		17FC23B6591CF4D04A22FD93 /* Immerse.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Immerse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30073B98740522EE1997D947 /* LocalSubscriptions.storekit */ = {isa = PBXFileReference; path = LocalSubscriptions.storekit; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				E169BC5D2C79D13E86476FFB /* CaptureControllerIntegrationTests.swift */,
 				F99F2EDC4F51181E67A3A1D6 /* CaptureSidewaysTests.swift */,
 				61CF5DC6AEE016FF7D8253DD /* DevelopedPreviewsTests.swift */,
+				10EDD52BA615FAC4807C862E /* DevelopmentStopTests.swift */,
 				CCCF5370D54887CF2F93D995 /* HostWindowScene.swift */,
 				46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */,
 				586BF93AB2DBEC62EF49CD45 /* LowStorageTests.swift */,
@@ -439,6 +442,7 @@
 				279F9A68D0943C4A060B5F54 /* CaptureControllerIntegrationTests.swift in Sources */,
 				4AF581856EA78677AAD8EB65 /* CaptureSidewaysTests.swift in Sources */,
 				42BEB643FE82D676C7ED51B8 /* DevelopedPreviewsTests.swift in Sources */,
+				187704F23BFAA9F76987B38D /* DevelopmentStopTests.swift in Sources */,
 				346AA68DA8A06153C82EBBA0 /* HostWindowScene.swift in Sources */,
 				1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */,
 				A80AE03603DFB4EE9DA83CA7 /* LowStorageTests.swift in Sources */,

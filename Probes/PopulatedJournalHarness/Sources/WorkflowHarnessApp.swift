@@ -8,6 +8,7 @@ struct WorkflowHarnessApp: App {
     @UIApplicationDelegateAdaptor(ImmerseAppDelegate.self) private var appDelegate
     @State private var scenario: WorkflowScenario?
     @State private var failure: String?
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -18,6 +19,8 @@ struct WorkflowHarnessApp: App {
                 else if let failure { Text(failure).accessibilityIdentifier("fixture-failed") }
                 else { ProgressView("Preparing private fixtures").task { await prepare() } }
             }.tint(Color("AccentColor")) // Matches ImmerseApp's root tint.
+            // As ImmerseApp does: Development stops when the harness leaves the screen.
+            .onChange(of: scenePhase) { _, phase in scenario?.model.sceneChanged(to: phase) }
         }
     }
 

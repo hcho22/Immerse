@@ -20,6 +20,8 @@ public enum PersistenceError: Error, Equatable {
     /// be whole: a decoder that fails partway ends a read the same way as a damaged file.
     case unreadableMedia(MediaReadFailure)
     case mediaChangedDuringVerification
+    /// The store could not be written because the device has no free space left.
+    case outOfSpace
     case mediaNotRevealed
     case originalChoiceRequired
     case originalChoiceAlreadyMade
