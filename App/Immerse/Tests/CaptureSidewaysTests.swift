@@ -473,9 +473,10 @@ final class CaptureSidewaysTests: XCTestCase {
     // MARK: The shooting screen
 
     /// On every Camera with controls the strip is under the Viewfinder area on this simulator's iPhone, centred in the room
-    /// above the shutter bar, with the area where it is, and both are the same in every hold. On an iPhone at least 390
-    /// points wide, as every one but the iPhone SE and the mini is, the room holds every strip, the 6×6's two lines
-    /// included. The Instant has no strip, and the 16mm has one only where the iPhone offers Zoom Steps.
+    /// that ends 8 points above the shutter bar, read from the bar's own frame, so the room is the same on every Camera,
+    /// with the area where it is, and both are the same in every hold. On an iPhone at least 390 points wide, as every one
+    /// but the iPhone SE and the mini is, the room holds every strip, the 6×6's two lines included. The Instant has no
+    /// strip, and the 16mm has one only where the iPhone offers Zoom Steps.
     func testEveryCameraPutsItsStripUnderTheViewfinderAreaInEveryHold() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -492,16 +493,16 @@ final class CaptureSidewaysTests: XCTestCase {
                     XCTAssertEqual(probe.viewfinder.width, probe.room.width, accuracy: 0.5, name)
                     XCTAssertEqual(probe.viewfinder.height, probe.room.width * 4 / 3, accuracy: 0.5, name)
                     XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
+                    let room = roomBottom(probe, name)
                     if let strip = probe.strip {
-                        let under = probe.room.maxY - probe.viewfinder.maxY
+                        let under = room - probe.viewfinder.maxY
                         if probe.room.width >= 390 {
-                            // With a gap above and below it.
-                            XCTAssertGreaterThanOrEqual(under, strip.height + 8, "The room holds the strip, \(name)")
+                            XCTAssertGreaterThanOrEqual(under, strip.height, "The room holds the strip, \(name)")
                         }
                         if under >= strip.height {
                             XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY - 0.5, "Under the area, \(name)")
-                            XCTAssertEqual(strip.minY - probe.viewfinder.maxY, probe.room.maxY - strip.maxY, accuracy: 0.5,
-                                           "Centred between the area and the shutter bar, \(name)")
+                            XCTAssertEqual(strip.minY - probe.viewfinder.maxY, room - strip.maxY, accuracy: 0.5,
+                                           "Centred between the area and the room's end above the shutter bar, \(name)")
                         }
                         XCTAssertEqual(strip.width, probe.room.width, accuracy: 0.5, "Across the screen, \(name)")
                     }
@@ -535,7 +536,7 @@ final class CaptureSidewaysTests: XCTestCase {
                 XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
                 let strip = try XCTUnwrap(probe.strip, name)
                 // The few points under the area hold no strip, so it sits over the area's bottom edge.
-                XCTAssertLessThan(probe.room.maxY - probe.viewfinder.maxY, strip.height, name)
+                XCTAssertLessThan(roomBottom(probe, name) - probe.viewfinder.maxY, strip.height, name)
                 XCTAssertEqual(strip.maxY, probe.viewfinder.maxY, accuracy: 0.5, "Over the area's bottom edge, \(name)")
                 XCTAssertGreaterThan(strip.minY, probe.viewfinder.midY, "Low over the area, \(name)")
             }
@@ -614,12 +615,12 @@ final class CaptureSidewaysTests: XCTestCase {
                     let shot = "\(camera.id.rawValue), \(sizeName), \(name)"
                     XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(shot)")
                     checkStepsKeepClearOfTheSwitch(probe, shot)
-                    // Where the room under the area holds a strip it is there with a gap above it, and on the largest
-                    // iPhone it holds every strip, the 6×6's two lines at the largest size included.
+                    // Where the room under the area holds a strip with room to spare it is there with a gap above it, and
+                    // on the largest iPhone it holds every strip, the 6×6's two lines at the largest size included.
                     if let strip = probe.strip {
-                        let under = probe.room.maxY - probe.viewfinder.maxY
+                        let under = roomBottom(probe, shot) - probe.viewfinder.maxY
                         if device == "Largest" {
-                            XCTAssertGreaterThanOrEqual(under, strip.height + 8, "The room holds the strip, \(shot)")
+                            XCTAssertGreaterThanOrEqual(under, strip.height, "The room holds the strip, \(shot)")
                         }
                         if under >= strip.height + 8 {
                             XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY + 4, "A gap under the area, \(shot)")
@@ -703,6 +704,14 @@ final class CaptureSidewaysTests: XCTestCase {
                                                     recordedFor: 0).visible, state)
         }
         return films.map { (state: $0.0.lowercased().replacingOccurrences(of: " ", with: "-"), film: $0.1) }
+    }
+
+    /// Where the room the screen leaves the column ends, read from the shutter bar's own frame: 8 points above the bar,
+    /// which the screen's room is held to on every Camera.
+    private func roomBottom(_ probe: CaptureLayoutProbe, _ name: String) -> CGFloat {
+        let bottom = probe.shutterBar.minY - 8
+        XCTAssertEqual(probe.room.maxY, bottom, accuracy: 0.5, "The room ends 8 points above the shutter bar, \(name)")
+        return bottom
     }
 
     /// The Zoom Steps keep clearly apart from the focus switch (the captain, 2026-10-29: "please allow extra spacing

@@ -40,10 +40,10 @@ The hosted screenshots of that build (`CaptureSidewaysTests`) show both.
 
 **The column.**
 `CaptureColumn` (`App/Immerse/Sources/CaptureColumn.swift`) lays out the top bar, the full-width 4:3 Viewfinder area under it, exactly as before, and now the control strip.
-It is given the room the screen leaves above the shutter bar.
-Where that room under the area holds the strip, the strip is centred in it, between the area and the shutter bar.
+It is given the room the screen leaves above the shutter bar, which ends 8 points above the bar on every Camera (`CaptureView`'s `safeAreaInset`, with its spacing set to 8).
+Where that room under the area holds the strip, the strip is centred in it, between the area and the room's end 8 points above the shutter bar.
 Where that room holds at least half the strip, as with the 6×6's two lines at the largest text sizes, the strip sits as low as the room allows, partly over the area (on the 6×6, over its square picture's black bar).
-Where it holds less, as on the iPhone SE (3rd generation), which leaves 3 points under the area, the strip sits over the area's bottom edge, its bottom on the area's (`CaptureColumn.stripTop`).
+Where it holds less, as on the iPhone SE (3rd generation), which leaves 11 points under the area, the strip sits over the area's bottom edge, its bottom on the area's (`CaptureColumn.stripTop`).
 A first build let the strip ride up only by what it lacked everywhere, which on the iPhone SE left the bottom 3 points of the controls' dark grounds as a grey sliver under the picture; a second sat it wholly over the area wherever it did not fit, which at the largest text size on the iPhone 17 Pro Max left the room under the area empty.
 The area's size and place never depend on the strip.
 
@@ -60,7 +60,7 @@ With the 10-point gap between the lines, the Zoom Step labels growing to the fir
 The shutter bar's Switch Camera and flash symbols also grew with the text size, to about 83 points at the accessibility sizes, taller than the shutter, which made the bar taller and left the 6×6's strip 2 points to spare under the area on the 17 Pro Max; like the top bar's pieces they now grow no further than the largest size short of the accessibility sizes, and show in the Large Content Viewer, so the bar is the shutter's height at every size.
 The focus switch's words reserve their turned length, which makes it the strip's tallest control; grown to the first accessibility size it made the 6×6's strip 142 points tall, more than the 133 the iPhone 17 Pro Max then left under the area, so the strip sat over the top of its square picture's black bar.
 At the largest size on the 17 Pro Max the strip is now under the area with a gap above it, and the Zoom Steps' labels keep the 8 points at each side they have at the default size.
-On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (138 points) is still taller than the 117 points under the area, so it sits down to the shutter bar and 21 points over the top of the 67-point black bar under its square picture, none of it over the picture.
+On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (138 points) is still taller than the 114 points under the area, so it sits down to the room's end, 8 points above the shutter bar, and 24 points over the top of the 67-point black bar under its square picture, none of it over the picture.
 
 **Five Zoom Steps.**
 The iPhone 17 Pro's Camera app offers five Zoom Steps (0.5x, 1x, 2x, 4x and 8x), where the screenshots had three lenses' four.
@@ -82,14 +82,15 @@ VoiceOver reads them "Focus" and "Exposure" with the slider's value ("50 percent
 
 **One departure from the brief, which the captain accepted.**
 The brief, and FR-39 item 3, have the slider open in place of the Zoom Steps, the switch and the buttons staying, and the same button bringing the steps back.
-Held sideways, a slider's caption turns to read upright beside it, which makes the slider's line about 64 points tall; with the settings' line under it the strip would be about 120 points, more than the iPhone 17 Pro leaves under the area (102 points then, 118 for the 6×6 with today's shorter shutter bar).
+Held sideways, a slider's caption turns to read upright beside it, which makes the slider's line about 64 points tall; with the settings' line under it the strip would be about 120 points, more than the iPhone 17 Pro leaves under the area (102 points then, 114 with today's shorter shutter bar).
 So the open slider takes the whole strip, the switch and the buttons included, and the close button is the way back; the strip stays under the area on the 17 Pro and every larger iPhone.
 The captain accepted it on seeing the screenshots: "Accept: an open slider takes the whole strip".
 
 **The shutter bar.**
-To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in a 76-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 118 points under the area with the 6×6 at the default text size, and the 17 Pro Max 147 to 150.
-The room is not quite the same on every Camera: SwiftUI puts its default spacing between the shooting column and the shutter bar, which it sets from the views on either side, so on the 17 Pro, measured in one run of the hosted tests, the room under the area is 114 points with every Camera but the 6×6 at every text size, and 118 with the 6×6 at the default size and 117 at the largest size short of the accessibility sizes and above.
-The shutter itself is 122 points below the area on every Camera, and with that spacing set to none the room was 122 points on all of them; the figures above and in this record are those of that run.
+To leave the 6×6's two lines room under the area on the iPhone 17 Pro (86 points before, measured in the hosted tests), the shutter bar is 16 points shorter: the shutter keeps its 74-point circle in a 76-point frame (88 before) and the bar has no padding of its own (8 points above and below before) but 8 points under the shutter on an iPhone with no home indicator, the iPhone SE; the 17 Pro now leaves 114 points under the area, the 17 Pro Max 145 and the iPhone SE 11, on every Camera and at every text size, measured in one run of the hosted tests.
+The shutter bar is 122 points below the area on the 17 Pro, and the room ends 8 points above it.
+A first build left the spacing between the shooting column and the shutter bar to SwiftUI's default, which it sets from the views on either side, so the room, and with it the strip, differed between Cameras: on the 17 Pro the room was 114 points on every Camera but the 6×6, and 118 on the 6×6 at the default size and 117 at the largest size short of the accessibility sizes and above.
+The captain chose (2026-10-30) an explicit spacing of 8 points, which keeps the strip where it was on every Camera but the 6×6 and moves the 6×6's up, 2 points at the default size and 3 where it reaches the room's end; the hosted strip tests read the room's end from the shutter bar's own frame (`CaptureLayoutProbe.shutterBar`), so a room that differed between Cameras would fail them.
 The shutter sits on the screen's centre line on every Camera, in every hold and at every text size: Switch Camera and the flash each take one half of the room beside it.
 Before, the row was centred as a whole, so at the largest text size on the iPhone SE the enlarged Switch Camera symbol, with nothing as wide on the other side, pushed the Super 8's and the 16mm's record button about 19 points right of centre, and the Disposable's flash pushed its shutter a few points left.
 

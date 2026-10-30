@@ -80,8 +80,9 @@ struct CaptureView: View {
             .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.room = $0 }
             #endif
         }
-        // The shutter stays on screen on small iPhones, at large text sizes and below messages.
-        .safeAreaInset(edge: .bottom) { shutterBar(capture) }
+        // The shutter stays on screen on small iPhones, at large text sizes and below messages. The column's room ends 8
+        // points above it on every Camera.
+        .safeAreaInset(edge: .bottom, spacing: 8) { shutterBar(capture) }
         .onGeometryChange(for: CGFloat.self, of: { $0.safeAreaInsets.bottom }) { bottomInset = $0 }
         // One ground around the black Viewfinder area, from the top bar to the shutter bar, however much room a taller
         // iPhone leaves between them.
@@ -607,6 +608,9 @@ struct CaptureView: View {
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .padding(.bottom, bottomInset > 0 ? 0 : 8)
             .frame(maxWidth: .infinity).background(Self.ground)
+            #if DEBUG
+            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.shutterBar = $0 }
+            #endif
         }
     }
 
@@ -657,7 +661,7 @@ enum StripSlider: Equatable {
 #if DEBUG
 /// Where the shooting screen put its parts, in the window, for hosted tests, which cannot read the accessibility tree.
 @Observable final class CaptureLayoutProbe {
-    /// The room the screen leaves the column above the shutter bar.
+    /// The room the screen leaves the column, which ends 8 points above the shutter bar.
     var room = CGRect.zero
     var viewfinder = CGRect.zero
     var strip: CGRect?
@@ -666,6 +670,7 @@ enum StripSlider: Equatable {
     var slider: CGRect?
     var focusSwitch: CGRect?
     var shutter = CGRect.zero
+    var shutterBar = CGRect.zero
 }
 #endif
 

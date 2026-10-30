@@ -40,13 +40,14 @@ enum CaptureAreaGeometry {
 /// Camera shape, controls, notices or the room below it; a short screen scrolls instead.
 ///
 /// The strip sits under the area, where the iPhone Camera app has its PHOTO / VIDEO row, centred in the `room` the
-/// screen leaves between the area and the shutter bar wherever that holds it. Where that room holds at least half the
-/// strip, as with the 6×6's two lines at the largest text sizes, the strip sits as low as the room allows, partly over the
-/// area. Where it holds less, as on the iPhone SE (3rd generation), which leaves 3 points under the area, the strip sits
+/// screen leaves under the area, which ends 8 points above the shutter bar on every Camera, wherever that holds it. Where
+/// that room holds at least half the strip, as with the 6×6's two lines at the largest text sizes, the strip sits as low
+/// as the room allows, partly over the area. Where it holds less, as on the iPhone SE (3rd generation), the strip sits
 /// over the area's bottom edge, its bottom on the area's, as the iPhone Camera app's controls do there, rather than show
 /// a sliver of its dark grounds below the picture. Either way the area keeps its size and place.
 struct CaptureColumn: Layout {
-    /// The height the screen gives the column above the shutter bar. Without one the strip is always under the area.
+    /// The height the screen gives the column, which ends 8 points above the shutter bar. Without one the strip is always
+    /// under the area.
     var room: CGFloat?
 
     private struct Plan {
