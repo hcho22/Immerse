@@ -9,9 +9,10 @@ import Synchronization
 
 /// Development, or a developed Movie's rebuild, that stopped as the app left the screen: stopped by
 /// `FilmProcessor.suspendProcessing`, or failing while the app was away from the screen. It is thrown whatever the work
-/// ended with: iOS takes an app's graphics and video work away once it leaves the screen, so a clip being written then
-/// fails, as the stop reaches it or before, and that failure is the stop's, not a fault of the Film. Nothing is lost:
-/// every capture and every Developed Clip already saved stays, and the next Development goes on from them.
+/// ended with, except a full iPhone (`OutOfSpace`): iOS takes an app's graphics and video work away once it leaves the
+/// screen, so a clip being written then fails, as the stop reaches it or before, and that failure is the stop's, not a
+/// fault of the Film. Nothing is lost: every capture and every Developed Clip already saved stays, and the next
+/// Development goes on from them.
 public struct DevelopmentSuspended: Error, Equatable {
     public init() {}
 }

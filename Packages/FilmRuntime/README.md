@@ -11,10 +11,11 @@ encoder from an app leaving the screen and a clip being written then fails as it
 stops (`Evidence/NativeApp/development-stop-079.md`). The app also records
 leaving at once with `appLeftTheScreen`, since the work can fail before the stop
 reaches it: until `appReturnedToTheScreen`, any failure of a Development, a
-discard's Movie rebuild included, is `DevelopmentSuspended`, except a full iPhone,
-which is reported as itself. A job stopped by deleting or discarding still ends
-with `CancellationError`. Once a Development's result is made, a failure to
-remove the originals chosen to be removed after it is `OriginalsNotRemoved`.
+discard's Movie rebuild included, is `DevelopmentSuspended`. A full iPhone
+(`OutOfSpace`) is reported as itself in both cases. A job stopped by deleting or
+discarding still ends with `CancellationError`. Once a Development's result is
+made, a failure to remove the originals chosen to be removed after it is
+`OriginalsNotRemoved`.
 
 ## Development Observation
 
@@ -45,7 +46,7 @@ No gate can make native permission, export, capture or physical retention pass.
 ## Affected Checks
 
 ```sh
-swift test --package-path Packages/FilmRuntime --filter 'DevelopmentObserverTests|FilmProcessorTests|FilmExportTests|SoundtrackTests'
+swift test --package-path Packages/FilmRuntime --filter 'DevelopmentObserverTests|DevelopmentSuspensionTests|FilmProcessorTests|FilmExportTests|SoundtrackTests'
 SIMULATOR_ID=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60 sh Probes/ExportPrivacyHarness/run-simulator.sh development UNIQUE-LABEL
 ```
 

@@ -80,7 +80,7 @@ The smallest change that flips the simulator's silent stop into the captain's al
 
 ## What changed
 
-- `FilmProcessor` marks each job `suspendProcessing` stops, and its callers then get `DevelopmentSuspended` whatever the stopped work ended with (`outcome(of:)`).
+- `FilmProcessor` marks each job `suspendProcessing` stops, and its callers then get `DevelopmentSuspended` whatever the stopped work ended with, except a full iPhone (`outcome(of:)`).
 - The stop reaches the processor in a task of its own, so the clip's writer can fail before it does.
   `JournalModel.sceneChanged(to:)` therefore records the move to the background at once, before that task (`FilmProcessor.appLeftTheScreen`), and until the scene is active again any failure of a Development, a discard's Movie rebuild included, is `DevelopmentSuspended`, whatever it was doing: writing, reading, rendering, the color table or verifying media.
   The Film is left exactly as a stop leaves it.
