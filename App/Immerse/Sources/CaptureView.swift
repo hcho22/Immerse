@@ -370,45 +370,50 @@ struct CaptureView: View {
     /// back. Each control has its own dark ground, so the strip reads alike under the area and over the picture, and takes
     /// the same room in every hold, its words and icons turning inside it. The slider and the buttons grow with the text
     /// size no further than the first accessibility size, and the focus switch's words and the Zoom Step labels, which
-    /// reserve their turned length, no further than the largest size short of those, or one size less where the Super 8's
-    /// Zoom Steps and Auto / Fixed would not share a line. The shutter bar's symbols also stop at the largest size short of
-    /// the accessibility sizes (`shutterBar`).
+    /// reserve their turned length, no further than the largest size short of those, or one or two sizes less where the
+    /// Super 8's Zoom Steps and Auto / Fixed would not otherwise share a line. The shutter bar's symbols also stop at the
+    /// largest size short of the accessibility sizes (`shutterBar`).
     private func controlStrip(_ film: Film, behavior: CaptureBehavior, controller capture: CaptureController) -> some View {
         let steps = zoomSteps(behavior, controller: capture)
         let sliders = offersSliders(behavior)
         let open = openSlider.flatMap { $0 == .focus && !behavior.offersManualFocus ? nil : $0 }
         return ZStack {
-            let controls = ControlStripLayout(keepsStepsLine: sliders) {
-                if !steps.isEmpty {
-                    zoomStepsPill(steps, controller: capture).controlStripLine(.steps)
-                } else if sliders {
-                    // The 6×6's steps' line, kept where it has no steps, as on its front camera.
-                    Color.clear.frame(width: 0, height: 44).accessibilityHidden(true).controlStripLine(.steps)
-                }
-                if film.camera.focusSettings.count > 1 {
-                    FocusModeSwitch(settings: film.camera.focusSettings, selected: film.effectiveFocusSetting) { setting in
-                        guard setting != film.effectiveFocusSetting else { return }
-                        model.perform({
-                            let updated = try model.setFocusSetting(setting, filmID: filmID)
-                            try await capture.updateFocusSetting(for: updated)
-                        }, failure: { error = $0 })
-                    }
-                    .disabled(capture.busy || capture.phase == .savingPhoto || capture.phase == .savingMovieClip)
-                    #if DEBUG
-                    .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.focusSwitch = $0 }
-                    #endif
-                    .controlStripLine(.settings)
-                }
-                if behavior.offersManualFocus { sliderButton(.focus, controller: capture) }
-                if behavior.offersExposureBias { sliderButton(.exposure, controller: capture) }
-            }
-            // Where the Super 8's Zoom Steps and focus switch would not share one line, as the iPhone 17 Pro's five steps
-            // would not at the largest text sizes, their words stop growing one size earlier (the captain, 2026-10-30),
-            // which there keeps the strip's two lines under the Viewfinder area, off the picture. The 6×6, which keeps two
-            // lines, and a strip of one kind of control always fit the first.
+            // The focus switch's words and the Zoom Step labels reserve their turned length, which makes the switch the
+            // strip's tallest control, so they grow no further than the largest size short of the accessibility sizes,
+            // where the 6×6's two lines still fit under the Viewfinder area on the largest iPhone. Where the Super 8's
+            // would not share a line at that size, as the iPhone 17 Pro's five steps would not, they stop one size
+            // earlier, or two, the first at which they do, 12 points apart (the captain, 2026-10-30). A `Layout` cannot
+            // set the text size of what it places, so the strip tries each size in turn here; its controls hold no state
+            // that the change of their identity from one size to the next could lose. The 6×6, which keeps two lines, and
+            // a strip of one kind of control always keep the first.
             ViewThatFits(in: .horizontal) {
-                controls
-                controls.dynamicTypeSize(...DynamicTypeSize.xxLarge)
+                ForEach([DynamicTypeSize.xxxLarge, .xxLarge, .xLarge], id: \.self) { largest in
+                    ControlStripLayout(keepsStepsLine: sliders) {
+                        if !steps.isEmpty {
+                            zoomStepsPill(steps, controller: capture).dynamicTypeSize(...largest).controlStripLine(.steps)
+                        } else if sliders {
+                            // The 6×6's steps' line, kept where it has no steps, as on its front camera.
+                            Color.clear.frame(width: 0, height: 44).accessibilityHidden(true).controlStripLine(.steps)
+                        }
+                        if film.camera.focusSettings.count > 1 {
+                            FocusModeSwitch(settings: film.camera.focusSettings, selected: film.effectiveFocusSetting) { setting in
+                                guard setting != film.effectiveFocusSetting else { return }
+                                model.perform({
+                                    let updated = try model.setFocusSetting(setting, filmID: filmID)
+                                    try await capture.updateFocusSetting(for: updated)
+                                }, failure: { error = $0 })
+                            }
+                            .disabled(capture.busy || capture.phase == .savingPhoto || capture.phase == .savingMovieClip)
+                            .dynamicTypeSize(...largest)
+                            #if DEBUG
+                            .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.focusSwitch = $0 }
+                            #endif
+                            .controlStripLine(.settings)
+                        }
+                        if behavior.offersManualFocus { sliderButton(.focus, controller: capture) }
+                        if behavior.offersExposureBias { sliderButton(.exposure, controller: capture) }
+                    }
+                }
             }
             .opacity(open == nil ? 1 : 0).allowsHitTesting(open == nil).accessibilityHidden(open != nil)
             if sliders {
@@ -457,9 +462,6 @@ struct CaptureView: View {
         }
         .padding(.horizontal, 4)
         .background(.black.opacity(0.6), in: Capsule())
-        // Like the focus switch's words, its labels reserve their turned length, so they grow no further than the
-        // largest size short of the accessibility sizes, where the 6×6's two lines still fit under the Viewfinder area.
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         #if DEBUG
         .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.zoomSteps = $0 }
         #endif
@@ -696,10 +698,6 @@ struct FocusModeSwitch: View {
         // Every segment as tall as the tallest, so the selected one's capsule is the same whichever is selected.
         .fixedSize()
         .background(Color.black.opacity(0.6), in: Capsule())
-        // Its words reserve their turned length, which makes it the strip's tallest control, so they grow no further
-        // than the largest size short of the accessibility sizes, where the 6×6's two lines still fit under the
-        // Viewfinder area on the largest iPhone.
-        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Focus")
         .accessibilityValue(selected.title)

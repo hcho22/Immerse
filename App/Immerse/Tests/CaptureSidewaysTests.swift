@@ -568,8 +568,9 @@ final class CaptureSidewaysTests: XCTestCase {
 
     /// With the iPhone 17 Pro's five Zoom Steps, at the largest size short of the accessibility sizes and at every larger
     /// one, no strip control covers a Camera's picture on an iPhone at least 390 points wide, every one but the iPhone SE and
-    /// the mini: where the Super 8's Zoom Steps and Auto / Fixed would not share a line, their words stop growing one size
-    /// earlier (the captain, 2026-10-30), still 12 points apart beside each other or 10 apart on lines of their own.
+    /// the mini. On the iPhone 17 Pro and every wider iPhone, the ones with five steps, the Super 8's Zoom Steps and
+    /// Auto / Fixed share one line 12 points apart, their words a size or two smaller where they would not otherwise (the
+    /// captain, 2026-10-30); the 6×6's stay 10 points above its switch.
     func testFiveZoomStepsLeaveThePictureClearAtTheLargestTextSizes() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -579,12 +580,16 @@ final class CaptureSidewaysTests: XCTestCase {
             for size in DynamicTypeSize.allCases where size >= .xxxLarge {
                 let probe = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, textSize: size).probe
                 let name = "\(camera.id.rawValue), \(size)"
-                XCTAssertNotNil(probe.zoomSteps, name)
+                let steps = try XCTUnwrap(probe.zoomSteps, name)
                 let strip = try XCTUnwrap(probe.strip, name)
                 let picture = CaptureAreaGeometry.cameraFrame(aspectRatio: CGFloat(aspect), in: probe.viewfinder.size)
                     .offsetBy(dx: probe.viewfinder.minX, dy: probe.viewfinder.minY)
                 if probe.room.width >= 390 {
                     XCTAssertGreaterThanOrEqual(strip.minY, picture.maxY - 0.5, "No strip control covers the picture, \(name)")
+                }
+                if camera.id == CameraCatalog.super8HomeMovie.id && probe.room.width >= 402 {
+                    let focusSwitch = try XCTUnwrap(probe.focusSwitch, name)
+                    XCTAssertEqual(steps.midY, focusSwitch.midY, accuracy: 0.5, "The Zoom Steps share Auto / Fixed's line, \(name)")
                 }
                 checkStepsKeepClearOfTheSwitch(probe, name)
             }
@@ -592,8 +597,10 @@ final class CaptureSidewaysTests: XCTestCase {
     }
 
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
-    /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, and
-    /// the 6×6 with each of its sliders open. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
+    /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, the
+    /// 6×6 with each of its sliders open, the top bar held sideways in each state longer than a count, and, but on the
+    /// iPhone SE, the Super 8 with the iPhone 17 Pro's five Zoom Steps at the largest size short of the accessibility sizes
+    /// and the first of those. Run on the iPhone SE (3rd generation), the iPhone 17 Pro and the largest supported iPhone.
     func testTheShootingScreensForApproval() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -633,6 +640,53 @@ final class CaptureSidewaysTests: XCTestCase {
                 keep(screenshot, "Approval-\(device)-mediumFormat6x6-\(slider)-open-\(name)")
             }
         }
+        // The count's corner held sideways in each state longer than a count (the captain, 2026-10-30, "Smaller words,
+        // same wording").
+        for (state, film) in try filmsShowingEachState(model) {
+            for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
+                for (held, name) in Self.holds where held != .portrait {
+                    let screenshot = try await showScreen(model, film: film,
+                                                          lenses: device != "SE" ? Self.threeLenses : nil, held: held,
+                                                          textSize: size).screenshot
+                    keep(screenshot, "Approval-\(device)-\(state)-\(sizeName)-\(name)")
+                }
+            }
+        }
+        // The Super 8 upright with the iPhone 17 Pro's five Zoom Steps, which share Auto / Fixed's line in smaller words
+        // where they would not otherwise. The iPhone SE has one rear lens.
+        if device != "SE" {
+            let super8 = try makeFilm(CameraCatalog.super8HomeMovie, model)
+            for size in [DynamicTypeSize.xxxLarge, .accessibility1] {
+                let screenshot = try await showScreen(model, film: super8, lenses: Self.iPhone17ProLenses,
+                                                      textSize: size).screenshot
+                keep(screenshot, "Approval-\(device)-super8HomeMovie-five-steps-\(size)")
+            }
+        }
+    }
+
+    /// A Film whose top bar shows each state longer than a count: a save still finishing, a full Disposable roll, a full
+    /// Instant pack and a roll ended early.
+    private func filmsShowingEachState(_ model: JournalModel) throws -> [(state: String, film: Film)] {
+        let saving = try makeFilm(CameraCatalog.disposable1990s, model)
+        // A save's staged record, which the screen reads as a save still finishing until it commits.
+        let staging = try model.repository.captureStagingDirectory(filmID: saving.id)
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: true)
+        try Data("{}".utf8).write(to: staging.appendingPathComponent("pending.json"))
+        let roll = try makeFilm(CameraCatalog.disposable1990s, model)
+        for _ in 0..<27 { try model.repository.savePhotoCapture(filmID: roll.id, sourceData: syntheticPhoto()) }
+        let pack = try makeFilm(CameraCatalog.instant1970s, model)
+        for _ in 0..<10 { try model.repository.savePhotoCapture(filmID: pack.id, sourceData: syntheticPhoto()) }
+        let early = try makeFilm(CameraCatalog.disposable1990s, model)
+        try model.repository.savePhotoCapture(filmID: early.id, sourceData: syntheticPhoto())
+        try model.repository.completeEarly(filmID: early.id)
+        model.refresh()
+        let films = [("Finishing save", saving), ("Film complete", roll), ("Pack complete", pack), ("Ended early", early)]
+        for (state, film) in films {
+            let current = try XCTUnwrap(model.film(film.id), state)
+            XCTAssertEqual(CaptureHeaderStatus.make(for: current, finishingSave: model.hasPendingSave(film.id),
+                                                    recordedFor: 0).visible, state)
+        }
+        return films.map { (state: $0.0.lowercased().replacingOccurrences(of: " ", with: "-"), film: $0.1) }
     }
 
     /// The Zoom Steps keep clearly apart from the focus switch (the captain, 2026-10-29: "please allow extra spacing
