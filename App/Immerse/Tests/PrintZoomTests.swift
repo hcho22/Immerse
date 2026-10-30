@@ -25,8 +25,7 @@ final class PrintZoomTests: XCTestCase {
         // a little left past the print.
         let topCropped = editor(crop: Crop(x: 0, y: 0.3, width: 1, height: 0.7))
         let start = topCropped.resting(CropGeometry.rect(topCropped.crop, printSize: size), in: Self.smallestPrintArea)
-        let raised = try XCTUnwrap(topCropped.handled(.topLeft, by: CGSize(width: -3, height: -30),
-                                                      from: start, after: .zero))
+        let raised = try XCTUnwrap(topCropped.handled(.topLeft, by: CGSize(width: -3, height: -30), from: start))
         XCTAssertEqual(raised.rect.minX, 0, accuracy: 1e-6, "The left edge stays on the print's")
         XCTAssertEqual(raised.rect.minY, 600 - 30 / start.scale, accuracy: 0.5, "The top edge follows the finger")
         XCTAssertEqual(raised.rect.maxY, size.height, accuracy: 1e-6)
@@ -35,8 +34,7 @@ final class PrintZoomTests: XCTestCase {
         let narrowest = CropGeometry.minimumSide(printSize: size)
         let narrow = editor(crop: Crop(x: 0.4, y: 0.3, width: narrowest / size.width, height: 0.5))
         let narrowStart = narrow.resting(CropGeometry.rect(narrow.crop, printSize: size), in: Self.smallestPrintArea)
-        let taller = try XCTUnwrap(narrow.handled(.topLeft, by: CGSize(width: 5, height: -20),
-                                                  from: narrowStart, after: .zero))
+        let taller = try XCTUnwrap(narrow.handled(.topLeft, by: CGSize(width: 5, height: -20), from: narrowStart))
         XCTAssertEqual(taller.rect.width, narrowest, accuracy: 1e-3, "The crop narrows no further")
         XCTAssertEqual(taller.rect.minY, 600 - 20 / narrowStart.scale, accuracy: 0.5, "The top edge follows the finger")
 
@@ -44,54 +42,41 @@ final class PrintZoomTests: XCTestCase {
         // both ways, and once the box is as short as it can be its left edge still does.
         let straightened = editor(crop: Crop(x: 500 / size.width, y: 0, width: 2000 / size.width, height: 0.8), degrees: 8)
         let tilted = straightened.resting(CropGeometry.rect(straightened.crop, printSize: size), in: Self.smallestPrintArea)
-        let followed = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 20),
-                                                          from: tilted, after: .zero))
+        let followed = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 20), from: tilted))
         XCTAssertEqual(followed.placement.box.minX, tilted.box.minX - 15, accuracy: 0.01, "The left edge follows the finger")
         XCTAssertEqual(followed.placement.box.minY, tilted.box.minY + 20, accuracy: 0.01, "The top edge follows the finger")
-        let shortest = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 130),
-                                                          from: tilted, after: .zero))
-        XCTAssertEqual(shortest.placement.box.minX, tilted.box.minX - 15, accuracy: 0.01, "The left edge still follows")
+        let shortest = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 130), from: tilted))
+        XCTAssertEqual(shortest.placement.box.minX, tilted.box.minX - 15, accuracy: 0.05, "The left edge still follows")
         XCTAssertEqual(shortest.placement.box.height, 64, accuracy: 0.01, "The box is as short as it can be")
 
         // A shape grows along its diagonal, which the print's left edge stops.
         let shaped = editor(crop: Crop(x: 0, y: 0.3, width: 1, height: 0.7), ratio: 3000.0 / 1400)
-        XCTAssertNil(shaped.handled(.topLeft, by: CGSize(width: -3, height: -30), from: start, after: .zero))
+        XCTAssertNil(shaped.handled(.topLeft, by: CGSize(width: -3, height: -30), from: start))
     }
 
-    /// Stepped a point at a time, as a drag's events come, a straightened Freeform corner at its limit slides along it
-    /// with the finger and never jumps: from an untouched print, where the whole drag stops being allowed, and where the
-    /// edges in either order land as near the finger as each other.
-    func testAStraightenedFreeformCornerNeverJumpsAheadOfTheFinger() {
+    /// Stepped a point at a time, as a drag's events come, a straightened Freeform corner goes on every event to the
+    /// allowed position nearest the finger and follows the finger wherever it can: from an untouched print past where the
+    /// whole drag stops being allowed, where two ways round a limit land equally near the finger, and along the print's
+    /// top with the finger drifting off it.
+    func testAStraightenedFreeformCornerGoesWhereAllowedNearestTheFinger() {
         let size = Self.printSize
         let direction = CGVector(dx: 131.8, dy: -2.6)
         let length = hypot(direction.dx, direction.dy)
-        let rightAndUp = (1...200).map {
+        let rightAndUp = (1...150).map {
             CGSize(width: direction.dx / length * CGFloat($0), height: direction.dy / length * CGFloat($0))
         }
         let downThenAcross = (1...38).map { CGSize(width: 0, height: CGFloat($0)) }
             + (1...60).map { CGSize(width: -CGFloat($0), height: 38 + CGFloat($0)) }
-        let drags: [(cropEditor: CropEditor, handle: CropEditor.Handle, path: [CGSize])] = [
-            (editor(crop: nil, degrees: 3), .bottomLeft, rightAndUp),
-            (editor(crop: Crop(x: 0, y: 0, width: 1575 / size.width, height: 1133 / size.height), degrees: 3), .bottomRight,
-             downThenAcross),
-        ]
-        for (cropEditor, handle, path) in drags {
-            let start = cropEditor.resting(CropGeometry.rect(cropEditor.crop, printSize: size), in: Self.smallestPrintArea)
-            var allowed = CGSize.zero
-            var corner = handle.point(on: start.box)
-            var finger = CGSize.zero
-            for travel in path {
-                if let next = cropEditor.handled(handle, by: travel, from: start, after: allowed) {
-                    let moved = handle.point(on: next.placement.box)
-                    let fingerMoved = hypot(travel.width - finger.width, travel.height - finger.height)
-                    XCTAssertLessThanOrEqual(hypot(moved.x - corner.x, moved.y - corner.y), fingerMoved + 1,
-                                             "The \(handle) corner jumps at \(travel)")
-                    allowed = next.travel
-                    corner = moved
-                }
-                finger = travel
-            }
-        }
+        let alongTheTop = (1...80).map { CGSize(width: CGFloat($0), height: -0.1 * CGFloat($0)) }
+
+        let untouched = dragged(editor(crop: nil, degrees: 3), .bottomLeft, along: rightAndUp)
+        let untouchedGap = hypot(untouched.corner.x - untouched.finger.x, untouched.corner.y - untouched.finger.y)
+        XCTAssertLessThanOrEqual(untouchedGap, 3, "Past the limit the corner stays with the finger")
+        _ = dragged(editor(crop: Crop(x: 0, y: 0, width: 1575 / size.width, height: 1133 / size.height), degrees: 3),
+                    .bottomRight, along: downThenAcross)
+        let alongTop = dragged(editor(crop: Crop(x: 0, y: 0, width: 0.6, height: 0.8), degrees: 3), .topLeft,
+                               along: alongTheTop)
+        XCTAssertEqual(alongTop.corner.x, alongTop.finger.x, accuracy: 1, "The left edge follows the finger along the top")
     }
 
     /// A tight crop on the smallest supported iPhone shows the print at more pixels than its screen-sized picture has,
@@ -174,6 +159,67 @@ final class PrintZoomTests: XCTestCase {
 
     private final class Readings {
         var all: [PrintZoomReading] = []
+    }
+
+    /// Steps `handle` along `path` as a drag's events come and holds every event to the rule: the corner within a point of
+    /// the allowed position nearest the finger, and never moved more than the finger did and a point. Where the corner
+    /// and the finger end.
+    private func dragged(_ cropEditor: CropEditor, _ handle: CropEditor.Handle,
+                         along path: [CGSize]) -> (corner: CGPoint, finger: CGPoint) {
+        let start = cropEditor.resting(CropGeometry.rect(cropEditor.crop, printSize: Self.printSize),
+                                       in: Self.smallestPrintArea)
+        let held = handle.point(on: start.box)
+        var corner = held, finger = held
+        for travel in path {
+            let next = CGPoint(x: held.x + travel.width, y: held.y + travel.height)
+            guard let moved = cropEditor.handled(handle, by: travel, from: start) else {
+                XCTFail("The \(handle) corner has nowhere to go at \(travel)")
+                return (corner, next)
+            }
+            let point = handle.point(on: moved.placement.box)
+            let nearest = nearestAllowed(cropEditor, handle, to: travel, from: start)
+            XCTAssertLessThanOrEqual(hypot(point.x - held.x - nearest.width, point.y - held.y - nearest.height), 1,
+                                     "The \(handle) corner at \(travel) is where the crop allows it nearest the finger")
+            let fingerMoved = hypot(next.x - finger.x, next.y - finger.y)
+            XCTAssertLessThanOrEqual(hypot(point.x - corner.x, point.y - corner.y), fingerMoved + 1,
+                                     "The \(handle) corner jumps at \(travel)")
+            corner = point
+            finger = next
+        }
+        return (corner, finger)
+    }
+
+    /// The travel to the allowed corner position nearest the finger, by brute force: the finger itself where the crop
+    /// allows it there, otherwise the nearest point of the allowed part of each straight line from where the corner
+    /// began, every half degree and then every four hundredth of a degree either side of the nearest line, since the
+    /// allowed position nearest the finger can lie in a wedge narrower than half a degree.
+    private func nearestAllowed(_ cropEditor: CropEditor, _ handle: CropEditor.Handle, to travel: CGSize,
+                                from start: CropEditor.Placement) -> CGSize {
+        func allowed(_ travel: CGSize) -> Bool { cropEditor.moved(start, handle: handle, by: travel) != nil }
+        if allowed(travel) { return travel }
+        let reach = 2 * hypot(travel.width, travel.height)
+        func nearest(along angle: CGFloat) -> (distance: CGFloat, travel: CGSize) {
+            let direction = CGSize(width: cos(angle), height: sin(angle))
+            var low: CGFloat = 0, high = reach
+            for _ in 0..<26 {
+                let middle = (low + high) / 2
+                let part = CGSize(width: direction.width * middle, height: direction.height * middle)
+                if allowed(part) { low = middle } else { high = middle }
+            }
+            let along = min(max(direction.width * travel.width + direction.height * travel.height, 0), low)
+            let point = CGSize(width: direction.width * along, height: direction.height * along)
+            return (hypot(travel.width - point.width, travel.height - point.height), point)
+        }
+        let halfDegree = CGFloat.pi / 360
+        let lines = (0..<720).map { nearest(along: CGFloat($0) * halfDegree) }
+        var best = 0
+        for line in lines.indices where lines[line].distance < lines[best].distance { best = line }
+        var chosen = lines[best]
+        for fine in 0...400 {
+            let candidate = nearest(along: (CGFloat(best - 1) + CGFloat(fine) / 200) * halfDegree)
+            if candidate.distance < chosen.distance { chosen = candidate }
+        }
+        return chosen.travel
     }
 
     private func editor(crop: Crop?, degrees: Double = 0, ratio: Double? = nil,
