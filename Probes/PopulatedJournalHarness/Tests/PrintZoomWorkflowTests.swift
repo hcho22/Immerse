@@ -400,21 +400,28 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
     /// Drags the straighten dial's ruler by `points`, left for more degrees.
     private func turnDial(_ app: XCUIApplication, by points: CGFloat) {
         let dial = app.descendants(matching: .any)["darkroom-straighten-dial"]
+        scrollIntoBand(app, dial)
         let start = dial.coordinate(withNormalizedOffset: CGVector(dx: points < 0 ? 0.9 : 0.1, dy: 0.7))
         start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: points, dy: 0)), withVelocity: .default,
                     thenHoldForDuration: 0.3)
     }
 
-    /// Taps a control in the Darkroom's band once it is whole in view, scrolling the band where a large text size runs
-    /// it past the bottom.
+    /// Taps a control in the Darkroom's band once it is whole in view.
     private func tapInBand(_ app: XCUIApplication, _ element: XCUIElement) {
-        let band = app.scrollViews["darkroom-control-band"]
-        for _ in 0..<8 where !band.frame.contains(element.frame) {
-            let start = band.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.8))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -80)), withVelocity: .slow,
+        scrollIntoBand(app, element)
+        element.tap()
+    }
+
+    /// Scrolls the Darkroom's band, where a large text size runs it past Reset to Original's bar, until `element` is
+    /// whole in its visible part: held drags up from near that part's bottom in its leading margin, never free swipes.
+    private func scrollIntoBand(_ app: XCUIApplication, _ element: XCUIElement) {
+        for _ in 0..<8 where !visibleBand(app).contains(element.frame) {
+            let visible = visibleBand(app)
+            let start = app.coordinate(withNormalizedOffset: .zero)
+                .withOffset(CGVector(dx: visible.minX + 8, dy: visible.maxY - 16))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -60)), withVelocity: .slow,
                         thenHoldForDuration: 0.3)
         }
-        element.tap()
     }
 
     /// The part of the Darkroom's band a person sees, above Reset to Original's bar.
