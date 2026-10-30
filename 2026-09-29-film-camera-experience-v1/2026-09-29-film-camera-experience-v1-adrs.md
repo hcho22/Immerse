@@ -33,7 +33,8 @@ ADR 0024 was added on 2026-10-29.
 It records two decisions the captain made after using the app on his iPhone that day, which the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) specifies: the shooting screen's controls sit in one strip under the Viewfinder area ("4A"), and its top bar stays put when the iPhone is held sideways ("5A").
 It was written from his answers at firstmate's instruction.
 It supersedes parts of ADRs 0017, 0019 and 0020, whose text stays as written; their reconciliation notes say which.
-His other decisions of that day (Print Zoom, Adjust's crop box, the 16mm Development fix, the 6×6's square crop and the build plan) revise no recorded decision and need no ADR; the amendment's section 1 says why for each.
+His other decisions of that day (Print Zoom, Adjust's crop box, the 16mm Development fix, the 6×6's square crop and the build plan) need no ADR of their own; the amendment's section 1 says why for each.
+Print Zoom narrows ADR 0021's swipe between prints to a print zoomed all the way out, which ADR 0021's reconciliation note records.
 
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
@@ -92,8 +93,9 @@ No other ADR is superseded or contradicted.
 **2026-10-29 status.**
 After using the app on his iPhone again the captain made the decisions specified in the PRD amendment of 2026-10-29, two of which ADR 0024 records.
 ADR 0024 supersedes ADR 0019's controls floating over the bottom of the Viewfinder area, the place of ADR 0020's focus switch as he approved it on 2026-10-28, and, for the shooting screen's header held sideways, ADR 0017's and ADR 0019's turned line.
+Print Zoom narrows ADR 0021's swipe in the photo view: a swipe moves to another print only while the print shown is zoomed all the way out (FR-36); the rest of ADR 0021 stands.
 Print Zoom and Adjust's crop box take gestures on the Darkroom's print, which ADR 0023's commentary said nothing did; ADR 0023's decision stands.
-No other ADR is superseded or contradicted.
+No other ADR is superseded, narrowed or contradicted.
 
 | ADR | Applicability after PRD version 1.2 |
 | --- | --- |
@@ -702,6 +704,7 @@ It supersedes ADR 0017's "Every other screen keeps turning with the iPhone, the 
 The photo view that shows the Instant's reveal at the camera stays upright under ADR 0017's "Instant - 1", as the captain chose on reading the PRD draft ("1A", DEC-20 in the tracker), which the ADR now records.
 The same day he moved the Instant's question about keeping each print's original from after each print to once after the pack's last print ("Originals option appears AFTER all 10 exposures are used"), reversing that part of the 2026-10-13 decision under DEC-11; it changes when a question is asked, is easily reversed and is no real trade-off, so it has no ADR of its own, and the PRD amendment's FR-35 and the tracker's DEV-12 record it, with this note and the ADR's reveal sentence pointing there.
 Asked the same day what happens when that question is missed or cancelled, he chose "C": it is asked only at the camera, does not come back by itself, and the Film screen's Originals button decides later.
+On 2026-10-29 the captain added Print Zoom to the photo view ("1A"; PRD amendment of 2026-10-29, FR-36), which narrows the ADR's swipe: a swipe left or right moves to the previous or next developed print only while the print shown is zoomed all the way out, as in the Photos app, and while it is zoomed in a sideways drag looks around the print and never changes it.
 
 ### ADR 0022
 

@@ -41,7 +41,7 @@ The 16mm failure was settled from the facts of a screenshot he sent (decision 6)
 
 | # | Ask | Captain's reply | Decision | FR | ADR |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Zoom after Development | "1A" | Print Zoom in the full-screen photo view, as in the iPhone's Photos app, on every photo Camera, the Instant's reveal at the camera included: pinch or double-tap to zoom in, drag to look around; swiping to the previous or next print works only when zoomed all the way out; Developed Movies and the Film screen's small prints get no zoom. | FR-36 | none needed (looking closer changes no print and revises no recorded decision) |
+| 1 | Zoom after Development | "1A" | Print Zoom in the full-screen photo view, as in the iPhone's Photos app, on every photo Camera, the Instant's reveal at the camera included: pinch or double-tap to zoom in, drag to look around; swiping to the previous or next print works only when zoomed all the way out; Developed Movies and the Film screen's small prints get no zoom. | FR-36 | none needed (looking closer changes no print; its swipe only when zoomed all the way out narrows ADR 0021's swipe, section 2.3) |
 | 2 | Crop like the iPhone's own | "2A" | Adjust crops as the Photos app crops: a crop box with corner and edge handles, pinch and drag the print inside it, the box re-centers after release, a rule-of-thirds grid while dragging; Original, Freeform, Square, 4:3 and 3:2, each sideways or upright; a straighten dial in place of the slider over -45° to +45°; Rotate left and Rotate right stay; no flip and no perspective correction; the Instant keeps quarter turns only; prints already cropped keep printing as saved. | FR-37 | none needed (every step passes the physical-technique test, and the decision of 2026-10-13 on crop stands) |
 | 3 | Zoom in the Darkroom | "3A" | Print Zoom on every Darkroom tool except Adjust, for looking only; the view returns to the whole print when the tool changes, on Save and on Cancel; the accepted cost is a possible lag on the oldest supported iPhone after a slider move while zoomed. | FR-38 | none needed (a viewing aid that changes no print; its accepted cost is recorded in FR-38) |
 | 4 | Controls under the viewfinder | "4A" | One control strip directly under the Viewfinder area, where the iPhone Camera app has its PHOTO / VIDEO row, holding the Zoom Steps and the focus switch; on the 6×6, Focus and Exposure buttons in the strip each open their slider in its place; on the iPhone SE the strip sits over the bottom edge of the picture. | FR-39 | 0024 |
@@ -94,6 +94,7 @@ FR-07's crop and DEC-11's "crop per photo, with the 6×6 staying square and no c
 | ADR 0019 | "The 6×6's Zoom Steps and sliders, the focus switch and the movie Cameras' Zoom Steps float over the bottom of the Viewfinder area or move into the shutter bar" and the accepted cost "that the controls now sit over the bottom of the live picture or in the shutter bar instead of beside it" | ADR 0024, FR-39 |
 | ADR 0019 | The one-line header beside Done in a sideways hold | ADR 0024, FR-40 (upright it stands) |
 | ADR 0020 | "The switch's place on the shooting screen is shown to the captain for approval before it is final." | Approved across the area's bottom on 2026-10-28 (the tracker's decisions table), then moved by ADR 0024 into the control strip |
+| ADR 0021 | "a swipe left or right there moves to the previous or next developed print of that Film, on every photo Camera" | FR-36: a swipe moves to another print only while the print shown is zoomed all the way out (the rest of ADR 0021 stands) |
 | ADR 0023 | "nothing on the Darkroom's print takes a drag in v1, so the photo view's swipe and the Darkroom never compete for a gesture on the print" | FR-36 to FR-38: the photo view's swipe and Print Zoom share the print, and in the Darkroom Print Zoom and Adjust's crop box take gestures on it, one tool at a time |
 | Tracker, the captain's approval of 2026-10-28 ("immerse - approve all"), for the shooting screen | The focus switch's place across the Viewfinder area's bottom, and the sideways shooting screen as shown | ADR 0024, FR-39, FR-40 (the rest of that approval stands) |
 
@@ -123,7 +124,7 @@ Section 5 gathers the cross-cutting parts.
 
 ### FR-36 - Print Zoom in the photo view
 
-**Task UX-12 · Decision 1 · No ADR (looking closer changes no print and revises no recorded decision)**
+**Task UX-12 · Decision 1 · No ADR (looking closer changes no print; it narrows ADR 0021's swipe, section 2.3)**
 
 **Problem.**
 "All cameras - Ability to zoom in on photos after developement and darkroom".
