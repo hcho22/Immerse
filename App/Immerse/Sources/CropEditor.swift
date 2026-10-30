@@ -436,8 +436,11 @@ struct StraightenDial: View {
 
     var body: some View {
         VStack(spacing: 2) {
+            // The angle stops growing at the largest ordinary text size, as Adjust's other controls do, so the dial is in
+            // view under the shapes when Adjust opens at every size; the Large Content Viewer shows it larger.
             Text(Self.shown(degrees)).font(.caption).monospacedDigit()
                 .foregroundStyle(degrees == 0 ? Color.secondary : Color.accentColor)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             Canvas { context, size in
                 let middle = size.width / 2
                 for tick in Int(DarkroomLimits.straighteningDegrees.lowerBound)...Int(DarkroomLimits.straighteningDegrees.upperBound) {
@@ -471,6 +474,7 @@ struct StraightenDial: View {
         .accessibilityLabel("Straighten")
         .accessibilityValue("\(String(format: "%.1f", degrees)) degrees")
         .accessibilityIdentifier("darkroom-straighten-dial")
+        .accessibilityShowsLargeContentViewer()
         .accessibilityAdjustableAction { direction in
             // To the next whole degree each way.
             switch direction {

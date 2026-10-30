@@ -582,8 +582,8 @@ struct DarkroomView: View {
             }
         case .adjust:
             // The turn buttons are beside the heading. The shapes come first, except on the 6×6, whose crop stays square,
-            // so they open in view under the heading at every text size; the straighten dial follows, and at the largest
-            // sizes the band scrolls to it.
+            // and the straighten dial follows; with their text stopping at the largest ordinary size, both are in view
+            // when Adjust opens at every text size.
             if !isInstant {
                 if !isSquareOnly { shapes }
                 StraightenDial(degrees: Binding(get: { recipe.straighteningDegrees ?? 0 }, set: {
@@ -598,7 +598,7 @@ struct DarkroomView: View {
 
     /// The crop box's shapes, and whether a shape with a ratio stands sideways or upright. Where the row is wider than the
     /// band, at large text sizes, it scrolls sideways, and the chosen shape is scrolled whole into view whenever the row
-    /// appears or the shape changes.
+    /// appears or the shape changes; the band itself does not move.
     private var shapes: some View {
         HStack(spacing: 4) {
             ScrollViewReader { row in
@@ -618,12 +618,16 @@ struct DarkroomView: View {
                             .accessibilityLabel(Self.spoken(choice))
                             .accessibilityAddTraits(shape == choice ? .isSelected : [])
                             .accessibilityIdentifier("darkroom-crop-shape-\(choice.rawValue)")
+                            .accessibilityShowsLargeContentViewer()
                             .id(choice)
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
                 .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+                // The shapes stop growing at the largest ordinary text size, as the tool row does, so the straighten dial
+                // under them is in view when Adjust opens at every size; the Large Content Viewer shows them larger.
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                 .accessibilityIdentifier("darkroom-crop-shapes")
                 .onAppear { row.scrollTo(shape) }
                 .onChange(of: shape) { _, chosen in withAnimation { row.scrollTo(chosen) } }

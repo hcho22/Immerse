@@ -239,8 +239,9 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         app.buttons["Cancel"].tap()
     }
 
-    /// At the largest text size Adjust opens with its shapes readable in the band, under the heading, and the chosen
-    /// shape is always whole in the row, which scrolls sideways there.
+    /// At the largest text size Adjust opens with its shapes readable in the band, under the heading, and the straighten
+    /// dial whole under them, with nothing to scroll; the chosen shape is always whole in its row, which scrolls sideways
+    /// there, and choosing one leaves the band where it is.
     func testAdjustShowsItsShapesAndTheChosenOneWholeAtTheLargestTextSize() throws {
         let app = launch(["--developed-photo", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"])
         openFilm(app)
@@ -251,11 +252,21 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         XCTAssertTrue(visibleBand(app).contains(row.frame), "The shapes open whole in the band: \(row.frame) in \(visibleBand(app))")
         XCTAssertTrue(waitForWhole(shape(app, "Freeform"), in: row), "The chosen shape opens whole in its row")
+        let dial = app.descendants(matching: .any)["darkroom-straighten-dial"]
+        XCTAssertTrue(visibleBand(app).contains(dial.frame), "The dial opens whole in the band: \(dial.frame) in \(visibleBand(app))")
+        let tools = app.buttons["Adjust"]
+        let toolsFrame = tools.frame
+        XCTAssertTrue(visibleBand(app).contains(toolsFrame), "The tool row opens whole in the band")
         snapshot(app, "adjust-largest-shapes-open")
         for name in ["3:2", "Original", "4:3"] {
+            // As a person does, the row is swiped sideways to the shape, never the band: XCTest would scroll the band to
+            // reach a shape off the row's side.
+            reveal(shape(app, name), in: row)
             shape(app, name).tap()
             XCTAssertTrue(shape(app, name).isSelected, name)
             XCTAssertTrue(waitForWhole(shape(app, name), in: row), "\(name) is whole in the row once chosen")
+            XCTAssertEqual(tools.frame.minY, toolsFrame.minY, accuracy: 1, "Choosing \(name) leaves the band where it is")
+            XCTAssertTrue(visibleBand(app).contains(dial.frame), "The dial stays whole in the band after \(name)")
         }
         snapshot(app, "adjust-largest-shapes-4x3")
         app.buttons["Cancel"].tap()
@@ -406,21 +417,36 @@ final class PrintZoomWorkflowTests: HarnessTestCase {
                     thenHoldForDuration: 0.3)
     }
 
-    /// Taps a control in the Darkroom's band once it is whole in view.
+    /// Taps a control in the Darkroom's band once it is whole in view, a shape once its row is swiped to it.
     private func tapInBand(_ app: XCUIApplication, _ element: XCUIElement) {
         scrollIntoBand(app, element)
+        if element.identifier.hasPrefix("darkroom-crop-shape-") { reveal(element, in: app.scrollViews["darkroom-crop-shapes"]) }
         element.tap()
     }
 
     /// Scrolls the Darkroom's band, where a large text size runs it past Reset to Original's bar, until `element` is
-    /// whole in its visible part: held drags up from near that part's bottom in its leading margin, never free swipes.
+    /// whole top to bottom in its visible part: held drags up from near that part's bottom in its leading margin, never
+    /// free swipes. A control cut off at the side, such as a shape in its sideways-scrolling row, is not the band's to
+    /// scroll: the row brings it into view itself.
     private func scrollIntoBand(_ app: XCUIApplication, _ element: XCUIElement) {
-        for _ in 0..<8 where !visibleBand(app).contains(element.frame) {
+        func vertical(_ frame: CGRect) -> ClosedRange<CGFloat> { frame.minY...frame.maxY }
+        for _ in 0..<8 where !vertical(visibleBand(app)).contains(element.frame.minY)
+            || !vertical(visibleBand(app)).contains(element.frame.maxY) {
             let visible = visibleBand(app)
             let start = app.coordinate(withNormalizedOffset: .zero)
                 .withOffset(CGVector(dx: visible.minX + 8, dy: visible.maxY - 16))
             start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -60)), withVelocity: .slow,
                         thenHoldForDuration: 0.3)
+        }
+    }
+
+    /// Swipes the shape row sideways with held drags until `element` is whole in it.
+    private func reveal(_ element: XCUIElement, in row: XCUIElement) {
+        for _ in 0..<6 where !row.frame.insetBy(dx: -0.5, dy: -0.5).contains(element.frame) {
+            let toLeft = element.frame.midX > row.frame.midX
+            let start = row.coordinate(withNormalizedOffset: CGVector(dx: toLeft ? 0.8 : 0.2, dy: 0.5))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: toLeft ? -120 : 120, dy: 0)),
+                        withVelocity: .slow, thenHoldForDuration: 0.3)
         }
     }
 
