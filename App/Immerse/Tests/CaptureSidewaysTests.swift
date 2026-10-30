@@ -382,14 +382,15 @@ final class CaptureSidewaysTests: XCTestCase {
         let one = try await strip(width: 378, steps: 184, settings: [119])
         XCTAssertEqual(one.size.height, 44)
         XCTAssertEqual(one.steps.midY, one.settings[0].midY, "One line")
+        XCTAssertEqual(one.settings[0].minX - one.steps.maxX, 12, accuracy: 0.5, "The steps 12 points from the settings")
         XCTAssertEqual(one.steps.minX, 378 - one.settings[0].maxX, accuracy: 0.5, "Centred across the strip")
         let two = try await strip(width: 343, steps: 228, settings: [130])
-        XCTAssertEqual(two.size.height, 90, "Two 44-point lines 2 points apart")
-        XCTAssertEqual(two.steps.maxY + 2, two.settings[0].minY, accuracy: 0.5, "The steps above the settings")
+        XCTAssertEqual(two.size.height, 98, "Two 44-point lines 10 points apart")
+        XCTAssertEqual(two.steps.maxY + 10, two.settings[0].minY, accuracy: 0.5, "The steps above the settings")
         XCTAssertEqual(two.steps.midX, 343 / 2, accuracy: 0.5)
         XCTAssertEqual(two.settings[0].midX, 343 / 2, accuracy: 0.5)
         let kept = try await strip(width: 378, steps: 44, settings: [130, 44, 44], keepsStepsLine: true)
-        XCTAssertEqual(kept.size.height, 90, "The 6×6 keeps both lines")
+        XCTAssertEqual(kept.size.height, 98, "The 6×6 keeps both lines")
         XCTAssertEqual(kept.settings[1].minX - kept.settings[0].maxX, 8, accuracy: 0.5)
     }
 
@@ -458,6 +459,7 @@ final class CaptureSidewaysTests: XCTestCase {
                         }
                         XCTAssertEqual(strip.width, probe.room.width, accuracy: 0.5, "Across the screen, \(name)")
                     }
+                    if steps { checkStepsKeepClearOfTheSwitch(probe, name) }
                     if let upright {
                         XCTAssertEqual(probe.viewfinder, upright.viewfinder, "The area keeps its place, \(name)")
                         XCTAssertEqual(probe.strip, upright.strip, "The strip keeps its place, \(name)")
@@ -535,6 +537,7 @@ final class CaptureSidewaysTests: XCTestCase {
                     keep(screenshot, "Approval-\(device)-\(camera.id.rawValue)-\(sizeName)-\(name)")
                     let shot = "\(camera.id.rawValue), \(sizeName), \(name)"
                     XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(shot)")
+                    checkStepsKeepClearOfTheSwitch(probe, shot)
                     // Where the room under the area holds a strip it is there with a gap above it, and on the largest
                     // iPhone it holds every strip, the 6×6's two lines at the largest size included.
                     if let strip = probe.strip {
@@ -557,6 +560,18 @@ final class CaptureSidewaysTests: XCTestCase {
                                                       slider: slider).screenshot
                 keep(screenshot, "Approval-\(device)-mediumFormat6x6-\(slider)-open-\(name)")
             }
+        }
+    }
+
+    /// The Zoom Steps keep clearly apart from the focus switch (the captain, 2026-10-29: "please allow extra spacing
+    /// between zoom buttons and auto/manual buttons"): 10 points above it on a line of their own, as on the 6×6, and 12
+    /// points beside it on a shared line, as on the Super 8.
+    private func checkStepsKeepClearOfTheSwitch(_ probe: CaptureLayoutProbe, _ name: String) {
+        guard let steps = probe.zoomSteps, let focusSwitch = probe.focusSwitch else { return }
+        if steps.maxY <= focusSwitch.minY {
+            XCTAssertEqual(focusSwitch.minY - steps.maxY, 10, accuracy: 0.5, "10 points between the lines, \(name)")
+        } else {
+            XCTAssertEqual(focusSwitch.minX - steps.maxX, 12, accuracy: 0.5, "12 points between the two, \(name)")
         }
     }
 

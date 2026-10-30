@@ -122,43 +122,54 @@ extension View {
 }
 
 /// The control strip's arrangement: the steps' line above the settings' line, as the iPhone Camera app has its zoom
-/// buttons above its PHOTO / VIDEO row, each line centred across the screen. Where both fit on one line they share it,
-/// steps first, unless `keepsStepsLine`: the 6×6 keeps both lines whether its steps show or not, so its strip, which a
-/// slider fills when one opens, is the same height on either camera and with a slider open or not.
+/// buttons above its PHOTO / VIDEO row, each line centred across the screen and the two 10 points apart (the captain,
+/// 2026-10-29: "please allow extra spacing between zoom buttons and auto/manual buttons"). Where both fit on one line
+/// they share it, steps first and 12 points from the settings, unless `keepsStepsLine`: the 6×6 keeps both lines whether
+/// its steps show or not, so its strip, which a slider fills when one opens, is the same height on either camera and with
+/// a slider open or not.
 ///
 /// Each control takes the same room in every hold, its words and icons turning inside it, so the strip is the same in
 /// every hold.
 struct ControlStripLayout: Layout {
     var keepsStepsLine = false
+    /// Between the controls of one kind, as the 6×6's switch and its buttons.
     var spacing: CGFloat = 8
-    var lineSpacing: CGFloat = 2
+    /// Between the steps and the settings where they share a line.
+    var groupSpacing: CGFloat = 12
+    var lineSpacing: CGFloat = 10
+
+    /// A control and the room before it on its line.
+    private typealias Item = (subview: LayoutSubview, size: CGSize, before: CGFloat)
 
     private struct Plan {
-        var lines: [[(subview: LayoutSubview, size: CGSize)]]
+        var lines: [[Item]]
         var lineHeights: [CGFloat]
         var width: CGFloat
         var height: CGFloat { lineHeights.reduce(0, +) + lineSpacing * CGFloat(max(lineHeights.count - 1, 0)) }
         var lineSpacing: CGFloat
     }
 
+    private static func length(_ line: [Item]) -> CGFloat { line.map { $0.size.width + $0.before }.reduce(0, +) }
+
     private func plan(_ proposal: ProposedViewSize, _ subviews: Subviews) -> Plan {
         let steps = subviews.filter { $0[ControlStripLineKey.self] == .steps }
         let settings = subviews.filter { $0[ControlStripLineKey.self] == .settings }
-        let natural = { (subview: LayoutSubview) in (subview: subview, size: subview.sizeThatFits(.unspecified)) }
-        let settingsLine = settings.map(natural)
-        func length(_ line: [(subview: LayoutSubview, size: CGSize)]) -> CGFloat {
-            line.map(\.size.width).reduce(0, +) + spacing * CGFloat(max(line.count - 1, 0))
+        // Each line's first control has no room before it.
+        func line(_ group: [LayoutSubview], first: CGFloat = 0) -> [Item] {
+            group.enumerated().map { index, subview in
+                (subview: subview, size: subview.sizeThatFits(.unspecified), before: index == 0 ? first : spacing)
+            }
         }
         let offered = proposal.width.flatMap { $0.isFinite ? $0 : nil }
-        let together = steps.map(natural) + settingsLine
-        var lines: [[(subview: LayoutSubview, size: CGSize)]]
-        if !keepsStepsLine, offered.map({ length(together) <= $0 }) ?? true {
+        let together = line(steps) + line(settings, first: steps.isEmpty ? 0 : groupSpacing)
+        var lines: [[Item]]
+        if !keepsStepsLine, offered.map({ Self.length(together) <= $0 }) ?? true {
             lines = [together]
         } else {
-            lines = [steps.map(natural), settingsLine]
+            lines = [line(steps), line(settings)]
         }
         lines = lines.filter { !$0.isEmpty }
-        let width = offered ?? lines.map(length).max() ?? 0
+        let width = offered ?? lines.map(Self.length).max() ?? 0
         return Plan(lines: lines, lineHeights: lines.map { $0.map(\.size.height).max() ?? 0 }, width: width,
                     lineSpacing: lineSpacing)
     }
@@ -172,11 +183,11 @@ struct ControlStripLayout: Layout {
         let plan = plan(ProposedViewSize(width: bounds.width, height: nil), subviews)
         var y = bounds.minY
         for (line, height) in zip(plan.lines, plan.lineHeights) {
-            let length = line.map(\.size.width).reduce(0, +) + spacing * CGFloat(max(line.count - 1, 0))
-            var x = bounds.midX - length / 2
+            var x = bounds.midX - Self.length(line) / 2
             for item in line {
+                x += item.before
                 item.subview.place(at: CGPoint(x: x, y: y + height / 2), anchor: .leading, proposal: ProposedViewSize(item.size))
-                x += item.size.width + spacing
+                x += item.size.width
             }
             y += height + plan.lineSpacing
         }

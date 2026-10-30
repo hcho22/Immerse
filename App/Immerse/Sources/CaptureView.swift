@@ -391,6 +391,9 @@ struct CaptureView: View {
                         }, failure: { error = $0 })
                     }
                     .disabled(capture.busy || capture.phase == .savingPhoto || capture.phase == .savingMovieClip)
+                    #if DEBUG
+                    .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.focusSwitch = $0 }
+                    #endif
                     .controlStripLine(.settings)
                 }
                 if behavior.offersManualFocus { sliderButton(.focus, controller: capture) }
@@ -425,9 +428,9 @@ struct CaptureView: View {
                     TurnedInPlace {
                         Text(step.label).font(.footnote.weight(.semibold).monospacedDigit()).lineLimit(1)
                     }
-                    // Room around a label at every text size, as "0.5x" has in its 44 points at the default size, and
-                    // at each end of it turned.
-                    .padding(.horizontal, 8).padding(.vertical, 4)
+                    // 8 points around a label in every hold, as "0.5x" has at its sides in its 44 points at the
+                    // default size: upright at its sides, turned at its ends.
+                    .padding(8)
                     .foregroundStyle(selected ? Color.black : Color.white)
                     .frame(minWidth: 44, minHeight: 44)
                     .background { if selected { Circle().fill(Color.white).padding(3) } }
@@ -443,6 +446,9 @@ struct CaptureView: View {
         }
         .padding(.horizontal, 4)
         .background(.black.opacity(0.6), in: Capsule())
+        // Like the focus switch's words, its labels reserve their turned length, so they grow no further than the
+        // largest size short of the accessibility sizes, where the 6×6's two lines still fit under the Viewfinder area.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         #if DEBUG
         .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.zoomSteps = $0 }
         #endif
@@ -547,6 +553,7 @@ struct CaptureView: View {
                 }.labelStyle(.iconOnly).font(.title2)
                     .frame(minWidth: 44, minHeight: 44).turnedWithTheHold()
                     .disabled(capture.phase != .idle || capture.busy)
+                    .accessibilityShowsLargeContentViewer()
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 Button {
                     Task {
@@ -558,7 +565,7 @@ struct CaptureView: View {
                         Circle().stroke(.primary, lineWidth: 3).frame(width: 74, height: 74)
                         if capture.phase == .recordingMovie { RoundedRectangle(cornerRadius: 4).fill(.red).frame(width: 32, height: 32) }
                         else { Circle().fill(film.camera.medium == .movie ? Color.red : Color.primary).frame(width: 62, height: 62) }
-                    }.frame(width: 80, height: 80)
+                    }.frame(width: 76, height: 76)
                 }
                 .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
                 .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
@@ -571,6 +578,7 @@ struct CaptureView: View {
                         Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
                             .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
                             .turnedWithTheHold().disabled(capture.phase != .idle)
+                            .accessibilityShowsLargeContentViewer()
                     } else if film.camera.medium == .photo {
                         Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
                     } else {
@@ -580,7 +588,10 @@ struct CaptureView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             // As short as the shutter, which leaves the 6×6's two-line control strip room under the Viewfinder area, with
-            // room under it only where no home indicator's area gives it some, as on the iPhone SE.
+            // room under it only where no home indicator's area gives it some, as on the iPhone SE. Its symbols, like the
+            // top bar's, grow no further than the largest size short of the accessibility sizes, where they are still
+            // shorter than the shutter, and show in the Large Content Viewer.
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .padding(.bottom, bottomInset > 0 ? 0 : 8)
             .frame(maxWidth: .infinity).background(Self.ground)
         }
@@ -640,6 +651,7 @@ enum StripSlider: Equatable {
     var zoomSteps: CGRect?
     /// The slider open in the 6×6's strip, once one has opened.
     var slider: CGRect?
+    var focusSwitch: CGRect?
     var shutter = CGRect.zero
 }
 #endif
