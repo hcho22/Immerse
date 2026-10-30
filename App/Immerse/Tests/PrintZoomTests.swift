@@ -17,7 +17,8 @@ final class PrintZoomTests: XCTestCase {
     private static let printSize = CGSize(width: 3000, height: 2000)
 
     /// On Freeform a corner whose one edge cannot move, held at the print's edge or at the smallest crop, still moves its
-    /// other edge with the finger, as in the Photos app; on a shape both edges move together or not at all.
+    /// other edge with the finger, as in the Photos app, straightened too, where an edge's travel moves the crop along both
+    /// sides of the print; on a shape both edges move together or not at all.
     func testAFreeformCornerHeldOnOneSideStillMovesItsOtherEdge() throws {
         let size = Self.printSize
         // The top edge cropped in, the left edge still on the print's left edge; the top-left corner dragged up, drifting
@@ -36,6 +37,17 @@ final class PrintZoomTests: XCTestCase {
         let taller = try XCTUnwrap(narrow.handled(.topLeft, by: CGSize(width: 5, height: -20), from: narrowStart))
         XCTAssertEqual(taller.rect.width, narrowest, accuracy: 1e-3, "The crop narrows no further")
         XCTAssertEqual(taller.rect.minY, 600 - 20 / narrowStart.scale, accuracy: 0.5, "The top edge follows the finger")
+
+        // Straightened 8°, the crop's top on the print's: the top-left corner dragged left and down follows the finger
+        // both ways, and once the box is as short as it can be its left edge still does.
+        let straightened = editor(crop: Crop(x: 500 / size.width, y: 0, width: 2000 / size.width, height: 0.8), degrees: 8)
+        let tilted = straightened.resting(CropGeometry.rect(straightened.crop, printSize: size), in: Self.smallestPrintArea)
+        let followed = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 20), from: tilted))
+        XCTAssertEqual(followed.placement.box.minX, tilted.box.minX - 15, accuracy: 0.01, "The left edge follows the finger")
+        XCTAssertEqual(followed.placement.box.minY, tilted.box.minY + 20, accuracy: 0.01, "The top edge follows the finger")
+        let shortest = try XCTUnwrap(straightened.handled(.topLeft, by: CGSize(width: -15, height: 130), from: tilted))
+        XCTAssertEqual(shortest.placement.box.minX, tilted.box.minX - 15, accuracy: 0.01, "The left edge still follows")
+        XCTAssertEqual(shortest.placement.box.height, 64, accuracy: 0.01, "The box is as short as it can be")
 
         // A shape grows along its diagonal, which the print's left edge stops.
         let shaped = editor(crop: Crop(x: 0, y: 0.3, width: 1, height: 0.7), ratio: 3000.0 / 1400)
@@ -124,9 +136,10 @@ final class PrintZoomTests: XCTestCase {
         var all: [PrintZoomReading] = []
     }
 
-    private func editor(crop: Crop?, ratio: Double? = nil, picture: ZoomedPicture = ZoomedPicture()) -> CropEditor {
+    private func editor(crop: Crop?, degrees: Double = 0, ratio: Double? = nil,
+                        picture: ZoomedPicture = ZoomedPicture()) -> CropEditor {
         CropEditor(print: UncroppedPrint(recipe: .original, picture: picture, pixelSize: Self.printSize), quarterTurns: 0,
-                   crop: crop, degrees: 0, ratio: ratio, square: false, dialing: false) { _ in }
+                   crop: crop, degrees: degrees, ratio: ratio, square: false, dialing: false) { _ in }
     }
 
     /// A print of `printSize` in one color with a pattern, as a JPEG.

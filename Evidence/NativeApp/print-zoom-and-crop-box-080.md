@@ -56,7 +56,8 @@ The first runs failed where the tests had expected the old arrangement or where 
 
 ## Fixes from the review of 2026-10-29
 
-- On Freeform a corner whose one edge is held, at the print's edge or at the smallest crop, still moves its other edge with the finger, as in the Photos app: each edge goes as far as it can on its own (`CropEditor.handled`), where before the whole drag stopped as soon as either edge did.
+- On Freeform a corner whose one edge is held, at the print's edge or at the smallest crop, still moves its other edge with the finger, as in the Photos app: the whole drag where the crop allows it, and otherwise each edge as far as it can go (`CropEditor.handled`), where before the whole drag stopped as soon as either edge did.
+Straightened, an edge's travel moves the crop along both sides of the print, so a sideways move can be allowed only with the vertical one; the edges then go in both orders, sideways first and vertical first, and the one that leaves the corner nearer the finger is kept.
 A shape and the 6×6's square still move both edges of a corner together, along the shape.
 - A tight crop is sharp in Adjust, as it was before this change: where the box at rest shows the print at more pixels than its screen-sized picture has, the crop box draws from the print's own pixels through the same `ZoomedPicture` Print Zoom uses, decoded only then and let go at the whole print and as Adjust closes.
 On an iPhone SE that is any 3:2 crop keeping less than about 39% of the print's width.
@@ -66,12 +67,14 @@ The review expected the earlier order to spread each over the whole print area, 
 - A change of Darkroom tool resets the Darkroom's zoom reading, so no sharper picture is decoded for a zoom that has gone, Adjust included.
 - The photo view keeps its zoom and its sharp picture when another Film's media changes: `ZoomedPicture` keeps the picture shown for the same bytes, and the photo view shows the whole print only for another print or new bytes of this one.
 - A turn of the iPhone while zoomed no longer reports the whole print on its way to the zoom it keeps, which had let the sharp picture go and decoded it again.
-- Tests: `App/Immerse/Tests/PrintZoomTests.swift` (4 tests: the Freeform corner, a tight crop on an iPhone SE's print area drawing from the sharper picture, the same bytes keeping the sharp picture, a turn while zoomed); `PrintZoomWorkflowTests.testTheCropBoxEdgesCanBeMovedOneAtATimeWithoutTouchingTheBox` holds each edge to its edge of the box, and `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` drags the corner of the first fix on the simulator.
+- Tests: `App/Immerse/Tests/PrintZoomTests.swift` (4 tests: the Freeform corner, at 0° and at 8°, a tight crop on an iPhone SE's print area drawing from the sharper picture, the same bytes keeping the sharp picture, a turn while zoomed); `PrintZoomWorkflowTests.testTheCropBoxEdgesCanBeMovedOneAtATimeWithoutTouchingTheBox` holds each edge to its edge of the box, and `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` drags the corner of the first fix on the simulator.
 
 Run on 2026-10-29 on a new iPhone SE (3rd generation) simulator on iOS 26.5, quieted with `Scripts/quiet-simulator.sh`, with Xcode 26.5, on an Intel Mac: `PrintZoomTests` (4 tests) and `JournalIntegrationTests.testTheCropBoxShowsOnlyThePrintMadeForTheEditsAsTheyAre` pass, and all 11 `PrintZoomWorkflowTests` pass.
 After `onEnded` was kept for a gesture's ordinary end, the reset of its `@GestureState` settling only a cancelled one, the five crop-box and dial tests of `PrintZoomWorkflowTests` and the hosted tests passed again.
 With each fix undone in turn, the Freeform, same-bytes and turn tests of `PrintZoomTests` failed, and so did `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` (the box kept 77% of the height before and after the corner drag); the edges test passed either way, as above.
 The tests read the edges but do not swipe them, which takes VoiceOver; that stays with Z08.
+A second review found the straightened case: at 8° a Freeform corner dragged by (-15, +20) points on an iPhone SE's print area is allowed whole, but the edges taken sideways first left the box's left edge at 79.4 points where the finger took it to 64.4, and so did a drag of (-15, +130) past the shortest box.
+With the whole drag tried first and the edges in both orders, `PrintZoomTests` (4 tests) and `PrintZoomWorkflowTests`' `testAdjustCropsAsThePhotosAppCrops` and `testAFreeformCornerAtThePrintsEdgeStillMovesItsOtherEdge` pass on a new iPhone SE (3rd generation) simulator on iOS 26.5; on the code before, the straightened case failed at 79.4.
 
 ## What only a phone can show
 

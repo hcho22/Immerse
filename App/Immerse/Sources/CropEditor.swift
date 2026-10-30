@@ -186,6 +186,12 @@ struct CropEditor: View {
 
         var isCorner: Bool { edges.x != 0 && edges.y != 0 }
 
+        /// Where the handle sits on `box`: a corner, or the middle of an edge.
+        func point(on box: CGRect) -> CGPoint {
+            CGPoint(x: edges.x == 0 ? box.midX : (edges.x < 0 ? box.minX : box.maxX),
+                    y: edges.y == 0 ? box.midY : (edges.y < 0 ? box.minY : box.maxY))
+        }
+
         /// The edges VoiceOver can move, one at a time.
         var spoken: String? {
             switch self {
@@ -203,8 +209,7 @@ struct CropEditor: View {
         let reach: CGFloat = 44
         ForEach(Handle.allCases, id: \.self) { handle in
             let edges = handle.edges
-            let x = edges.x == 0 ? box.midX : (edges.x < 0 ? box.minX : box.maxX)
-            let y = edges.y == 0 ? box.midY : (edges.y < 0 ? box.minY : box.maxY)
+            let point = handle.point(on: box)
             let width = edges.x == 0 ? max(box.width - reach, 1) : reach
             let height = edges.y == 0 ? max(box.height - reach, 1) : reach
             Color.clear
@@ -212,7 +217,7 @@ struct CropEditor: View {
                 .contentShape(Rectangle())
                 .accessibilityHidden(handle.spoken == nil)
                 .modifier(SpokenEdge(handle: handle, value: edgeValue(handle)) { step(handle, by: $0, in: size) })
-                .position(x: x, y: y)
+                .position(point)
                 .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local)
                     .updating($moving) { _, moving, _ in moving = true }
                     .onChanged { drag(handle, by: $0.translation, in: size) }
@@ -253,9 +258,11 @@ struct CropEditor: View {
     }
 
     /// The placement and crop for a box at `start` with `handle` moved by as much of `travel` as the crop allows: on a
-    /// shape both edges of a corner together, along the shape, and on Freeform each edge as far as it can go, so an edge
-    /// held at the print's edge or at the smallest crop leaves the other following the finger, as in the Photos app. Nil
-    /// where none of it is allowed.
+    /// shape both edges of a corner together, along the shape, and on Freeform the whole travel where it is allowed and
+    /// otherwise each edge as far as it can go, so an edge held at the print's edge or at the smallest crop leaves the
+    /// other following the finger, as in the Photos app. Straightened, an edge's travel moves the crop along both sides of
+    /// the print, so the edges go in whichever order leaves the handle nearer the finger. Nil where none of it is
+    /// allowed.
     func handled(_ handle: Handle, by travel: CGSize, from start: Placement) -> (placement: Placement, rect: CGRect)? {
         // The farthest part of a travel the crop allows, found by halving.
         func farthest(_ part: (CGFloat) -> CGSize) -> (share: CGFloat, moved: (placement: Placement, rect: CGRect)?) {
@@ -274,8 +281,26 @@ struct CropEditor: View {
         guard !square, ratio == nil else {
             return farthest { CGSize(width: travel.width * $0, height: travel.height * $0) }.moved
         }
-        let across = farthest { CGSize(width: travel.width * $0, height: 0) }
-        return farthest { CGSize(width: travel.width * across.share, height: travel.height * $0) }.moved ?? across.moved
+        if let whole = moved(start, handle: handle, by: travel) { return whole }
+        // One edge as far as it can go, then the other as far as it can from there.
+        func edgeByEdge(acrossFirst: Bool) -> (placement: Placement, rect: CGRect)? {
+            let first = farthest {
+                acrossFirst ? CGSize(width: travel.width * $0, height: 0) : CGSize(width: 0, height: travel.height * $0)
+            }
+            let then = farthest {
+                acrossFirst ? CGSize(width: travel.width * first.share, height: travel.height * $0)
+                    : CGSize(width: travel.width * $0, height: travel.height * first.share)
+            }
+            return then.moved ?? first.moved
+        }
+        let held = handle.point(on: start.box)
+        let finger = CGPoint(x: held.x + travel.width, y: held.y + travel.height)
+        func distance(_ result: (placement: Placement, rect: CGRect)) -> CGFloat {
+            let point = handle.point(on: result.placement.box)
+            return hypot(point.x - finger.x, point.y - finger.y)
+        }
+        return [edgeByEdge(acrossFirst: true), edgeByEdge(acrossFirst: false)].compactMap { $0 }
+            .min { distance($0) < distance($1) }
     }
 
     /// The placement and crop for a box with `handle` moved by `travel`, or nil where that crop would leave the print or
