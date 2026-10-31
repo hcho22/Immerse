@@ -256,6 +256,10 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertTrue(copy[.disposable1990s]!.contains("3:2"))
         // The Instant's faded look is the captain's exception to PRD 2.1 section 6.1's wording (ADR 0016).
         XCTAssertTrue(copy[.instant1970s]!.contains("white card") && copy[.instant1970s]!.contains("faded color"))
+        // A Camera names the optional flash exactly where its shooting screen offers the flash switch.
+        for camera in CameraCatalog.all {
+            XCTAssertEqual(camera.controlsLabel.contains("optional flash"), CaptureBehavior.for(camera.id).offersFlash, camera.displayName)
+        }
         XCTAssertTrue(copy[.mediumFormat6x6]!.contains("optical focus only") && copy[.mediumFormat6x6]!.contains("Borderless square"))
         // The Super 8's muted color and glow are the captain's exception to PRD 2.1 section 6.2's wording (ADR 0016).
         XCTAssertTrue(copy[.super8HomeMovie]!.contains("muted color, a warm glow") && copy[.super8HomeMovie]!.contains("18 frames"))
