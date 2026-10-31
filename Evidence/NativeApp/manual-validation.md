@@ -2823,7 +2823,7 @@ The same day he asked for a developed flash look on the Instant too ("add harsh 
 For a build holding this change, the common steps' and H01's "on the Disposable" for the flash read "on the Disposable and the Instant".
 The simulator holds the switch's place and the note on lenses with and without flash, that an exposure asks for flash only when the switch is on and the lens has it, that the choice outlasts a print's stop and restart and ends with a lens switch or another Film, and that a print whose capture records the flash fired develops with the flash look in version 5, with the card unchanged, and with none in version 4 (`CaptureControllerIntegrationTests`, `CaptureBehaviorTests`, `FilmLookTests`, `InstantVersionTests`, `TreatmentVersionDevelopmentTests`); the simulator has no camera, so only a phone shows the flash firing and the print it lights.
 The candidate pinned on 2026-10-30, `4410d45`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
-Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start), on a test Instant Film loaded with the candidate, with at least four exposures left, in a room dim enough that a flash shows.
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start), on a test Instant Film loaded with the candidate, with at least seven exposures left, in a room dim enough that a flash shows: E01 to E03 take six exposures (three in E01, one in E02 and two in E03), and the seventh keeps the pack open, so the camera can still open again after E03 step 2.
 Each scenario reads **UNTESTED: physical execution deferred**.
 
 ### E01 - The Instant's flash on the rear camera
@@ -2876,7 +2876,7 @@ The front camera shows a flash switch that cannot fire, shows no note where the 
 **Write down.**
 A screenshot of the front camera's shutter bar and note, and the flash button's state after switching back.
 
-### E03 - The choice across a print and a pack's end
+### E03 - The choice across a print, a reopen and another Film
 
 **Steps.**
 
