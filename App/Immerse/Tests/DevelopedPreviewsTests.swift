@@ -274,8 +274,8 @@ final class DevelopedPreviewsTests: XCTestCase {
     /// Held upright, Develop at once's notice fits beside Done at every text size, so the header's first line, the only
     /// part of the header the switch changes, is as tall with it on as off, and the viewfinder under the header stays
     /// where it is. Measured in the row of the narrowest iPhones, the 375-point iPhone SE (3rd generation) and iPhone 13
-    /// mini, and of this simulator's screen, each less the screen's 16-point margins. In a row too short for both, as the
-    /// header's lines can be held on its side, the notice goes under Done.
+    /// mini, and of this simulator's screen, each less the screen's 16-point margins. In a row too short for both, which
+    /// the shooting screen's top bar never is, the notice goes under Done.
     func testTheNoticeLeavesTheHeaderAsTallAsWithTheSwitchOffAtEveryTextSize() async throws {
         func height(developsAtOnce: Bool, _ size: DynamicTypeSize, row: CGFloat) -> CGFloat {
             UIHostingController(rootView: CaptureDoneRow(done: {}, developsAtOnce: developsAtOnce).dynamicTypeSize(size))

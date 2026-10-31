@@ -1,10 +1,12 @@
 import XCTest
 
 /// The shooting screen as a person holds the iPhone sideways (the captain, 2026-10-16: "Like iPhone Camera"): the screen
-/// never turns, so the viewfinder keeps its size and place, and only the words and icons turn to read upright. The photo
-/// view turns with the iPhone; Darkroom stays portrait. The simulator has no camera, so the screen shows its message for the missing one,
-/// and only what it draws without a lens is measured; the zoom pill, the sliders and the Disposable's cue, which a lens
-/// raises, are in `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
+/// never turns, so the viewfinder keeps its size and place, and only the words and icons turn to read upright. The top bar
+/// stays above the viewfinder with Done and the count turned in place in its corners (2026-10-29, "5A"), and the focus
+/// switch sits in the control strip under the viewfinder ("4A"). The photo view turns with the iPhone; Darkroom stays
+/// portrait. The simulator has no camera, so the screen shows its message for the missing one, and only what it draws
+/// without a lens is measured; the Zoom Steps, the 6×6's sliders and the Disposable's cue, which a lens raises, are in
+/// `CaptureSidewaysTests`. Develop at once is on for each launch, as in a Debug build by default, so the
 /// Cameras it changes show its notice beside Done (`DevelopedPreviews`). Loading uses the Debug testing unlock; opening
 /// the shooting screen answers fresh Camera and microphone requests, and each test starts on an empty Journal and deletes
 /// the Film it loaded. Each Camera is checked at the default text size, and again at the largest size for the approval
@@ -18,7 +20,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         try check(id: "mediumFormat6x6", name: "6×6")
     }
 
-    func testDisposableFocusSwitchShowsAutoAndFixedInsideTheViewfinderBand() throws {
+    func testDisposableFocusSwitchShowsAutoAndFixedInTheStripUnderTheViewfinder() throws {
         let app = XCUIApplication()
         let title = try openShootingScreen(app, id: "disposable1990s", developsAtOnce: false)
         defer { deleteFilm(titled: title, app) }
@@ -26,7 +28,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         let focusMode = app.descendants(matching: .any)["capture-focus-mode"]
         XCTAssertTrue(focusMode.exists(within: 10), "The Disposable offers its per-Film focus switch")
         let layout = try wait(app)
-        XCTAssertTrue(layout.viewfinder.contains(focusMode.frame), "The focus switch stays in the floating control band")
+        checkFocusSwitch(layout, app, "upright")
         // VoiceOver reads it as one control, "Focus, Auto" (FR-25).
         XCTAssertEqual(focusMode.label, "Focus")
         XCTAssertEqual(focusMode.value as? String, "Auto", "A new Film starts on Auto")
@@ -86,8 +88,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         try checkNoticeShowsWholeInEveryHold(app, name: "Super8-microphone-declined")
     }
 
-    /// In Manual the 6×6 adds its Focus row under the switch. At the largest text size the switch and both rows stay
-    /// inside the Viewfinder area, and the camera's notice still shows whole above them in every hold.
+    /// In Manual the 6×6 adds its Focus button beside the switch. At the largest text size the switch stays in the strip
+    /// and the camera's notice still shows whole over the area in every hold.
     func testSixBySixInManualShowsTheWholeNoticeAtTheLargestTextSize() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
@@ -117,9 +119,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         var focusSwitch: CGRect?
     }
 
-    /// At the largest text size the one-line header stays fixed while the full Viewfinder area keeps its size and place.
-    /// Held on its side, the header turns across the Viewfinder area, and turned straight from one side to the other it
-    /// starts from Done.
+    /// At the largest text size the top bar stays fixed while the full Viewfinder area keeps its size and place. Held on its
+    /// side, Done and the count turn in place in the bar's corners, also turned straight from one side to the other.
     func testSixBySixShootingScreenKeepsItsViewfinderAtTheLargestTextSize() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
@@ -138,32 +139,21 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         // Each side twice, so the header turns straight from one side to the other both ways.
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right"), (.landscapeLeft, "left again")] {
             XCUIDevice.shared.orientation = orientation
-            // Turned straight from one side to the other Done stays turned, so the turn has ended once Done is on the side
-            // that is the header's top: the screen's right held on its left, its left held on its right.
-            let turned = try wait(app) {
-                $0.done.height > $0.done.width && (orientation == .landscapeLeft) == ($0.done.midX > $0.window.midX)
-            }
+            // Turned straight from one side to the other the count stays turned, so the reads that agree are taken after
+            // the turn has ended.
+            let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
             retainScreenshot(name: "6×6-largest-capture-\(side)")
             retainFrames(turned, name: "6×6-largest", hold: side)
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
-            XCTAssertTrue(turned.window.contains(turned.done), "The turned header starts from Done held on its \(side): \(turned.done)")
-            XCTAssertTrue(turned.window.contains(turned.remaining), "The Camera name and count stay visible held on its \(side)")
-            XCTAssertTrue(turned.remaining.intersects(turned.viewfinder), "The one-line header extends along the fixed Viewfinder area")
-            // The shutter bar's top is 8 points above the shutter's frame.
-            XCTAssertLessThanOrEqual(turned.done.maxY, turned.shutter.minY - 8, "Done is clear of the shutter bar held on its \(side)")
+            checkTopBar(turned, upright: upright, "held on its \(side) at the largest text size")
+            XCTAssertEqual(turned.focusSwitch, upright.focusSwitch, "The focus switch keeps its place held on its \(side)")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
-            // The 6×6's rows lift the focus switch up the area at this size, to where the turned header runs down its side,
-            // from Done to the Camera name and count, so the switch keeps clear of the header's whole run.
-            let focusSwitch = try XCTUnwrap(turned.focusSwitch, "The focus switch shows held on its \(side)")
-            let header = [turned.remaining, turned.notice].compactMap { $0 }.reduce(turned.done) { $0.union($1) }
-            XCTAssertFalse(focusSwitch.intersects(header),
-                           "The focus switch is clear of the turned header held on its \(side): \(focusSwitch) and \(header)")
             checkNoticeShowsWhole(turned, app, "held on its \(side) at the largest text size")
         }
         XCUIDevice.shared.orientation = .portrait
-        let upAgain = try wait(app) { $0.done.width > $0.done.height }
+        let upAgain = try wait(app) { $0.remaining.width > $0.remaining.height }
         XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
         done.tap()
         XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
@@ -194,6 +184,16 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertEqual(on.viewfinder, off.viewfinder, "The notice leaves the viewfinder where it is")
         XCTAssertEqual(on.done, off.done, "The notice leaves Done where it is")
         XCTAssertEqual(on.remaining, off.remaining, "The notice leaves the count where it is")
+        // Held on its side the notice is its hammer alone, turned in place beside Done in the top bar.
+        for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right")] {
+            XCUIDevice.shared.orientation = orientation
+            let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
+            retainScreenshot(name: "Disposable-develop-at-once-on-\(side)")
+            checkNotice(turned, shows: true, "held on its \(side)")
+            checkTopBar(turned, upright: on, "held on its \(side) with Develop at once on")
+        }
+        XCUIDevice.shared.orientation = .portrait
+        _ = try wait(app) { $0.remaining.width > $0.remaining.height }
     }
 
     /// Loads a Film in the Camera `id` with the title Load Film suggests, with Develop at once on or off for the launch as
@@ -324,9 +324,9 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         checkNotice(upright, shows: showsNotice, "upright")
         checkFocusSwitch(upright, app, "upright")
         checkNoticeShowsWhole(upright, app, "upright")
-        // Held upright, Done, the Camera name and its count share one line below the status bar.
+        // Held upright, Done, the Camera name and its count share the top bar below the status bar.
         XCTAssertLessThanOrEqual(upright.done.minY, upright.window.minY + 90, "Done is just below the status bar")
-        XCTAssertLessThanOrEqual(upright.done.maxY, upright.viewfinder.minY + 0.5, "Done stays in the top bar, above the area")
+        checkGapAboveTheArea(upright, "upright")
         XCTAssertEqual(upright.remaining.midY, upright.done.midY, accuracy: 12, "The count shares Done's header line")
         XCTAssertGreaterThanOrEqual(upright.remaining.width, 40,
                                     "The Camera name and count remain visible on one line at every text size")
@@ -345,27 +345,13 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             try checkFits(turned, app, side)
             checkNotice(turned, shows: showsNotice, "held on its \(side)")
             retainFrames(turned, name: screenshotName, hold: side)
-            XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright")
-            XCTAssertTrue(turned.remaining.intersects(turned.viewfinder),
-                          "The one-line header extends along the fixed Viewfinder area, held on its \(side)")
+            XCTAssertEqual(headerStatus.label, expectedSpokenHeader(for: id),
+                           "VoiceOver still gets the Camera name and full count held on its \(side)")
+            checkTopBar(turned, upright: upright, "held on its \(side)")
+            XCTAssertEqual(turned.focusSwitch, upright.focusSwitch, "The focus switch keeps its place held on its \(side)")
             XCTAssertGreaterThan(turned.switchCamera.height, turned.switchCamera.width,
                                  "Switch Camera, in the shutter bar, turns to read upright held on its \(side)")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
-            XCTAssertGreaterThanOrEqual(turned.done.height, 44, "Done keeps a tap target of 44 points turned")
-            XCTAssertGreaterThanOrEqual(turned.done.width, 44, "Done keeps a tap target of 44 points turned")
-            for (label, frame) in [("Done", turned.done), ("count", turned.remaining)] {
-                XCTAssertTrue(turned.window.contains(frame), "\(label) is on screen held on its \(side): \(frame)")
-            }
-            XCTAssertFalse(turned.done.intersects(turned.remaining), "Done and the count do not overlap held on its \(side)")
-            // The notices over the area (the camera's error, Resume Camera) keep clear of the turned header.
-            let viewfinder = app.otherElements["viewfinder"]
-            for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex
-            where element.label == "Resume Camera" || element.label.hasPrefix("Camera unavailable") {
-                for (label, frame) in [("Done", turned.done), ("Camera name and count", turned.remaining)] {
-                    XCTAssertFalse(element.frame.intersects(frame),
-                                   "\(element.label) is clear of \(label) held on its \(side): \(element.frame) and \(frame)")
-                }
-            }
             checkFocusSwitch(turned, app, "held on its \(side)")
             checkNoticeShowsWhole(turned, app, "held on its \(side)")
         }
@@ -375,7 +361,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCUIDevice.shared.orientation = .portrait
         let upAgain = try wait(app) { $0.remaining.width > $0.remaining.height }
         XCTAssertEqual(upAgain.viewfinder, upright.viewfinder, "The viewfinder is where it was held upright")
-        done.tap()
+        tapDoneBelowItsGlass(done)
         XCTAssertTrue(done.isGone(within: 5), "The shooting screen closed")
         XCTAssertTrue(detail.exists(within: 5))
         XCUIDevice.shared.orientation = .landscapeLeft
@@ -407,6 +393,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                        "The viewfinder area is four thirds as tall as it is wide, \(hold)")
         XCTAssertLessThanOrEqual(layout.viewfinder.maxY, layout.shutter.minY,
                                  "The visible viewfinder area ends above the shutter bar, \(hold)")
+        XCTAssertEqual(layout.shutter.midX, layout.window.midX, accuracy: 0.5,
+                       "The shutter is on the screen's centre line whatever is beside it, \(hold)")
         let viewfinder = app.otherElements["viewfinder"]
         let inside = layout.viewfinder.insetBy(dx: -1, dy: -1)
         for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex {
@@ -415,26 +403,60 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertGreaterThan(viewfinder.buttons["Resume Camera"].frame.height, 0, "Resume Camera is over the viewfinder, \(hold)")
     }
 
-    /// The focus switch stays across the bottom of the Viewfinder area in every hold, as the screen's layout does, clear
-    /// of the header that runs down the area's side when the iPhone is on its side.
+    /// The focus switch sits in the control strip between the Viewfinder area and the shutter bar, in the same place in
+    /// every hold. An iPhone at least 390 points wide, as this test's iPhone 17 Pro is, has room for the strip under the
+    /// area; a narrower one, as the iPhone SE, has the strip over the area's bottom edge.
     private func checkFocusSwitch(_ layout: Layout, _ app: XCUIApplication, _ hold: String) {
         guard let focusSwitch = layout.focusSwitch else { return }
+        XCTAssertLessThanOrEqual(focusSwitch.maxY, layout.shutter.minY, "The focus switch is above the shutter bar, \(hold)")
+        XCTAssertGreaterThanOrEqual(focusSwitch.height, 44, "The switch is a full tap target tall, \(hold)")
+        if layout.window.width >= 390 {
+            XCTAssertGreaterThanOrEqual(focusSwitch.minY, layout.viewfinder.maxY - 0.5,
+                                        "The focus switch is under the Viewfinder area, \(hold): \(focusSwitch)")
+        } else {
+            XCTAssertGreaterThan(focusSwitch.minY, layout.viewfinder.midY, "The strip is over the area's bottom, \(hold)")
+        }
         // The notices over the area (the camera's error, Resume Camera) stay clear of it at every text size.
         let viewfinder = app.otherElements["viewfinder"]
-        for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex
-        where !focusSwitch.insetBy(dx: -1, dy: -1).contains(element.frame) {
+        for element in viewfinder.staticTexts.allElementsBoundByIndex + viewfinder.buttons.allElementsBoundByIndex {
             XCTAssertFalse(focusSwitch.intersects(element.frame),
                            "\(element.label) is clear of the focus switch, \(hold): \(element.frame) and \(focusSwitch)")
         }
-        XCTAssertTrue(layout.viewfinder.contains(focusSwitch), "The focus switch is over the area, \(hold): \(focusSwitch)")
-        XCTAssertGreaterThan(focusSwitch.minY, layout.viewfinder.midY, "The focus switch is over the area's bottom, \(hold)")
-        XCTAssertEqual(focusSwitch.width, layout.viewfinder.width - 24, accuracy: 2, "The switch runs across the area, \(hold)")
         for (label, frame) in [("Done", layout.done), ("Camera name and count", layout.remaining)] {
             XCTAssertFalse(focusSwitch.intersects(frame), "The focus switch is clear of \(label), \(hold)")
         }
-        if let notice = layout.notice {
-            XCTAssertFalse(focusSwitch.intersects(notice), "The focus switch is clear of the notice, \(hold)")
+    }
+
+    /// Done, the count and Develop at once's notice keep 6 points between them and the Viewfinder area below, in the
+    /// top bar (the captain, 2026-10-29: "please add little bit of spacing between the "Done" button and the
+    /// viewfinder"). XCTest reads Done as its tap area, 44 points tall and 3 points past its glass above and below, so the
+    /// glass is 6 points above the area where the tap area is 3; `tapDoneBelowItsGlass` taps that part of it.
+    private func checkGapAboveTheArea(_ layout: Layout, _ hold: String) {
+        XCTAssertEqual(layout.done.height, 44, accuracy: 0.5, "Done's tap area is 44 points tall, \(hold)")
+        XCTAssertLessThanOrEqual(layout.done.maxY, layout.viewfinder.minY - 3 + 0.5,
+                                 "Done's glass keeps 6 points above the Viewfinder area, \(hold): \(layout.done)")
+        for (label, frame) in [("The count", layout.remaining)] + (layout.notice.map { [("The notice", $0)] } ?? []) {
+            XCTAssertTrue(layout.window.contains(frame), "\(label) is on screen, \(hold): \(frame)")
+            XCTAssertLessThanOrEqual(frame.maxY, layout.viewfinder.minY - 6 + 0.5,
+                                     "\(label) keeps 6 points above the Viewfinder area, \(hold): \(frame) over \(layout.viewfinder)")
         }
+    }
+
+    /// Held sideways the top bar stays above the Viewfinder area as it is upright: Done, a round button, turned in place
+    /// in its corner, and the count turned to read upright in the other, without the Camera's name, and nothing of the
+    /// bar over the area (the captain, 2026-10-29, "5A").
+    private func checkTopBar(_ turned: Layout, upright: Layout, _ hold: String) {
+        XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright, \(hold)")
+        XCTAssertGreaterThanOrEqual(turned.done.width, 38, "Done is as wide as it is tall turned, \(hold)")
+        checkGapAboveTheArea(turned, hold)
+        for (label, frame) in [("Done", turned.done), ("The count", turned.remaining)] + (turned.notice.map { [("The notice", $0)] } ?? []) {
+            XCTAssertGreaterThanOrEqual(frame.minY, upright.done.minY - 0.5, "\(label) stays below the status bar, \(hold)")
+        }
+        XCTAssertEqual(turned.done.midY, upright.done.midY, accuracy: 1, "Done turns in place, \(hold)")
+        XCTAssertEqual(turned.done.minX, upright.done.minX, accuracy: 2, "Done stays in its corner, \(hold)")
+        XCTAssertEqual(turned.remaining.maxX, upright.remaining.maxX, accuracy: 2, "The count stays in the other corner, \(hold)")
+        XCTAssertLessThan(turned.remaining.width, upright.remaining.width, "The Camera's name is hidden, \(hold)")
+        XCTAssertFalse(turned.done.intersects(turned.remaining), "Done and the count do not overlap, \(hold)")
     }
 
     /// The camera's notice over the area (its error, the microphone note and the whole Resume Camera button) shows whole
@@ -467,8 +489,8 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         }
     }
 
-    /// The camera's notice shows whole upright and held on each side, with the focus switch inside the Viewfinder area,
-    /// which keeps its place; each hold's screenshot is kept under `name`.
+    /// The camera's notice shows whole upright and held on each side, with the focus switch in the strip, and the
+    /// Viewfinder area keeps its place; each hold's screenshot is kept under `name`.
     private func checkNoticeShowsWholeInEveryHold(_ app: XCUIApplication, name: String) throws {
         let upright = try wait(app)
         for (orientation, side) in [(UIDeviceOrientation.portrait, "portrait"), (.landscapeLeft, "left"), (.landscapeRight, "right")] {
@@ -478,22 +500,20 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             }
             retainScreenshot(name: "\(name)-capture-\(side)")
             XCTAssertEqual(layout.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place, \(side)")
-            if let focusSwitch = layout.focusSwitch {
-                XCTAssertTrue(layout.viewfinder.contains(focusSwitch),
-                              "The focus switch is inside the Viewfinder area, \(side): \(focusSwitch) in \(layout.viewfinder)")
-            }
+            checkFocusSwitch(layout, app, side)
             checkNoticeShowsWhole(layout, app, side)
         }
         XCUIDevice.shared.orientation = .portrait
         _ = try wait(app) { $0.remaining.width > $0.remaining.height }
     }
 
-    /// Develop at once's notice stays beside Done in the one-line header, clear of the shutter bar's buttons and the
-    /// Camera name and count.
+    /// Develop at once's notice stays beside Done in the top bar, above the Viewfinder area, clear of the shutter bar's
+    /// buttons and the Camera name and count.
     private func checkNotice(_ layout: Layout, shows: Bool, _ hold: String) {
         guard shows else { return XCTAssertNil(layout.notice, "No Develop at once notice, \(hold)") }
         guard let notice = layout.notice else { return XCTFail("The Develop at once notice shows, \(hold)") }
         XCTAssertTrue(layout.window.contains(notice), "The notice is on screen, \(hold): \(notice)")
+        XCTAssertLessThanOrEqual(notice.maxY, layout.viewfinder.minY + 0.5, "The notice is above the area, \(hold): \(notice)")
         for (label, frame) in [("shutter", layout.shutter), ("Switch Camera", layout.switchCamera),
                                ("Done", layout.done), ("Camera name and count", layout.remaining)] {
             XCTAssertFalse(notice.intersects(frame), "The notice is clear of the \(label), \(hold): \(notice) and \(frame)")
@@ -539,6 +559,11 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             latest = next
         }
         return latest
+    }
+
+    /// Taps 2 points below Done's glass, in the gap above the Viewfinder area, which Done's 44-point tap area covers.
+    private func tapDoneBelowItsGlass(_ done: XCUIElement) {
+        done.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1)).withOffset(CGVector(dx: 0, dy: -1)).tap()
     }
 
     private func retainScreenshot(name: String) {

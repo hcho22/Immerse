@@ -5,6 +5,8 @@ enum CaptureColumnRole: Equatable {
     case header
     /// The Camera's picture frame inside the full-width viewfinder area.
     case viewfinder(aspect: CGFloat)
+    /// The control strip, under the viewfinder area where the screen has room for it and over its bottom edge where not.
+    case strip
 }
 
 private struct CaptureColumnRoleKey: LayoutValueKey {
@@ -33,29 +35,59 @@ enum CaptureAreaGeometry {
     }
 }
 
-/// The shooting screen's fixed top-to-bottom arrangement: one header, then the same full-width 4:3 area on every Camera.
-/// The viewfinder size never depends on Camera shape, controls, notices or the room below it; a short screen scrolls instead.
+/// The shooting screen's fixed top-to-bottom arrangement: one header, then the same full-width 4:3 area on every Camera,
+/// then the control strip where the Camera has one (the captain, 2026-10-29, "4A"). The viewfinder size never depends on
+/// Camera shape, controls, notices or the room below it; a short screen scrolls instead.
+///
+/// The strip sits under the area, where the iPhone Camera app has its PHOTO / VIDEO row, centred in the `room` the
+/// screen leaves under the area, which ends 8 points above the shutter bar on every Camera, wherever that holds it. Where
+/// that room holds at least half the strip, as with the 6×6's two lines at the largest text sizes, the strip sits as low
+/// as the room allows, partly over the area. Where it holds less, as on the iPhone SE (3rd generation), the strip sits
+/// over the area's bottom edge, its bottom on the area's, as the iPhone Camera app's controls do there, rather than show
+/// a sliver of its dark grounds below the picture. Either way the area keeps its size and place.
 struct CaptureColumn: Layout {
+    /// The height the screen gives the column, which ends 8 points above the shutter bar. Without one the strip is always
+    /// under the area.
+    var room: CGFloat?
+
     private struct Plan {
         var header: LayoutSubview?
         var viewfinder: LayoutSubview?
+        var strip: LayoutSubview?
         var width: CGFloat
         var headerHeight: CGFloat
         var viewfinderSize: CGSize
-        var height: CGFloat { headerHeight + viewfinderSize.height }
+        var stripHeight: CGFloat
+        var stripTop: CGFloat
+        var height: CGFloat { max(headerHeight + viewfinderSize.height, strip == nil ? 0 : stripTop + stripHeight) }
+    }
+
+    /// Where the strip's top goes: centred between the area's bottom and the bottom of the `room` where that holds the
+    /// strip, as low as the room allows where it holds at least half of it, and otherwise over the area with its bottom
+    /// on the area's.
+    static func stripTop(viewfinderBottom: CGFloat, stripHeight: CGFloat, room: CGFloat?) -> CGFloat {
+        guard let room, room.isFinite else { return viewfinderBottom }
+        let under = room - viewfinderBottom
+        if under >= stripHeight { return viewfinderBottom + (under - stripHeight) / 2 }
+        return under >= stripHeight / 2 ? room - stripHeight : viewfinderBottom - stripHeight
     }
 
     private func plan(_ proposal: ProposedViewSize, _ subviews: Subviews) -> Plan {
         let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? 390
-        let header = subviews.first { $0[CaptureColumnRoleKey.self] == .header }
+        func subview(_ role: CaptureColumnRole) -> LayoutSubview? { subviews.first { $0[CaptureColumnRoleKey.self] == role } }
+        let header = subview(.header)
         let viewfinder = subviews.first {
             if case .viewfinder? = $0[CaptureColumnRoleKey.self] { return true }
             return false
         }
+        let strip = subview(.strip)
         let headerHeight = header?.sizeThatFits(ProposedViewSize(width: width, height: nil)).height ?? 0
         let viewfinderSize = viewfinder == nil ? .zero : CGSize(width: width, height: width / CaptureAreaGeometry.aspectRatio)
-        return Plan(header: header, viewfinder: viewfinder, width: width, headerHeight: headerHeight,
-                    viewfinderSize: viewfinderSize)
+        let stripHeight = strip?.sizeThatFits(ProposedViewSize(width: width, height: nil)).height ?? 0
+        let stripTop = Self.stripTop(viewfinderBottom: headerHeight + viewfinderSize.height, stripHeight: stripHeight,
+                                     room: room)
+        return Plan(header: header, viewfinder: viewfinder, strip: strip, width: width, headerHeight: headerHeight,
+                    viewfinderSize: viewfinderSize, stripHeight: stripHeight, stripTop: stripTop)
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
@@ -69,5 +101,97 @@ struct CaptureColumn: Layout {
                            proposal: ProposedViewSize(width: plan.width, height: plan.headerHeight))
         plan.viewfinder?.place(at: CGPoint(x: bounds.minX, y: bounds.minY + plan.headerHeight), anchor: .topLeading,
                                proposal: ProposedViewSize(plan.viewfinderSize))
+        plan.strip?.place(at: CGPoint(x: bounds.minX, y: bounds.minY + plan.stripTop), anchor: .topLeading,
+                          proposal: ProposedViewSize(width: plan.width, height: plan.stripHeight))
+    }
+}
+
+/// Which line of the control strip a control belongs on.
+enum ControlStripLine: Equatable {
+    /// The Zoom Steps.
+    case steps
+    /// The focus switch and the 6×6's Focus and Exposure buttons.
+    case settings
+}
+
+private struct ControlStripLineKey: LayoutValueKey {
+    static let defaultValue = ControlStripLine.settings
+}
+
+extension View {
+    func controlStripLine(_ line: ControlStripLine) -> some View { layoutValue(key: ControlStripLineKey.self, value: line) }
+}
+
+/// The control strip's arrangement: the steps' line above the settings' line, as the iPhone Camera app has its zoom
+/// buttons above its PHOTO / VIDEO row, each line centred across the screen and the two 10 points apart (the captain,
+/// 2026-10-29: "please allow extra spacing between zoom buttons and auto/manual buttons"). Where both fit on one line
+/// they share it, steps first and 12 points from the settings, unless `keepsStepsLine`: the 6×6 keeps both lines whether
+/// its steps show or not, the steps' line as tall as the rear camera's steps at every text size where it has them
+/// (`CaptureController.rearZoomSteps`), so its strip, which a slider fills when one opens, is the same height on either
+/// camera, before a lens reports its steps and with a slider open or not.
+///
+/// Each control takes the same room in every hold, its words and icons turning inside it, so the strip is the same in
+/// every hold.
+struct ControlStripLayout: Layout {
+    var keepsStepsLine = false
+    /// Between the controls of one kind, as the 6×6's switch and its buttons.
+    var spacing: CGFloat = 8
+    /// Between the steps and the settings where they share a line.
+    var groupSpacing: CGFloat = 12
+    var lineSpacing: CGFloat = 10
+
+    /// A control and the room before it on its line.
+    private typealias Item = (subview: LayoutSubview, size: CGSize, before: CGFloat)
+
+    private struct Plan {
+        var lines: [[Item]]
+        var lineHeights: [CGFloat]
+        var width: CGFloat
+        var height: CGFloat { lineHeights.reduce(0, +) + lineSpacing * CGFloat(max(lineHeights.count - 1, 0)) }
+        var lineSpacing: CGFloat
+    }
+
+    private static func length(_ line: [Item]) -> CGFloat { line.map { $0.size.width + $0.before }.reduce(0, +) }
+
+    private func plan(_ proposal: ProposedViewSize, _ subviews: Subviews) -> Plan {
+        let steps = subviews.filter { $0[ControlStripLineKey.self] == .steps }
+        let settings = subviews.filter { $0[ControlStripLineKey.self] == .settings }
+        // Each line's first control has no room before it.
+        func line(_ group: [LayoutSubview], first: CGFloat = 0) -> [Item] {
+            group.enumerated().map { index, subview in
+                (subview: subview, size: subview.sizeThatFits(.unspecified), before: index == 0 ? first : spacing)
+            }
+        }
+        let offered = proposal.width.flatMap { $0.isFinite ? $0 : nil }
+        let together = line(steps) + line(settings, first: steps.isEmpty ? 0 : groupSpacing)
+        var lines: [[Item]]
+        if !keepsStepsLine, offered.map({ Self.length(together) <= $0 }) ?? true {
+            lines = [together]
+        } else {
+            lines = [line(steps), line(settings)]
+        }
+        lines = lines.filter { !$0.isEmpty }
+        let width = offered ?? lines.map(Self.length).max() ?? 0
+        return Plan(lines: lines, lineHeights: lines.map { $0.map(\.size.height).max() ?? 0 }, width: width,
+                    lineSpacing: lineSpacing)
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let plan = plan(proposal, subviews)
+        return CGSize(width: plan.width, height: plan.height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let plan = plan(ProposedViewSize(width: bounds.width, height: nil), subviews)
+        var y = bounds.minY
+        for (line, height) in zip(plan.lines, plan.lineHeights) {
+            var x = bounds.midX - Self.length(line) / 2
+            for item in line {
+                x += item.before
+                item.subview.place(at: CGPoint(x: x, y: y + height / 2), anchor: .leading, proposal: ProposedViewSize(item.size))
+                x += item.size.width
+            }
+            y += height + plan.lineSpacing
+        }
     }
 }

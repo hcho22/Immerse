@@ -57,17 +57,29 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
-    /// The focus switch's words turn with the hold, as the screen's other words do (C2): held sideways, "Manual" stands
-    /// on end, so the switch is taller than its upright 44 points.
-    func testTheFocusSwitchWordsTurnHeldSideways() {
-        func height(_ turn: HeldTurn) -> CGFloat {
-            UIHostingController(rootView: FocusModeSwitch(settings: [.auto, .manual], selected: .auto) { _ in }
-                .environment(\.heldTurn, turn))
-                .sizeThatFits(in: CGSize(width: 351, height: 400)).height
+    /// The focus switch takes the same room in every hold, its words turning inside it (C2), so the control strip it sits
+    /// in never moves as the iPhone turns.
+    func testTheFocusSwitchTakesTheSameRoomInEveryHold() {
+        for settings in [[FilmFocusSetting.auto, .manual], [.auto, .fixed]] {
+            func size(_ turn: HeldTurn) -> CGSize {
+                UIHostingController(rootView: FocusModeSwitch(settings: settings, selected: .auto) { _ in }
+                    .environment(\.heldTurn, turn))
+                    .sizeThatFits(in: CGSize(width: 351, height: 400))
+            }
+            XCTAssertGreaterThanOrEqual(size(.upright).height, 44, "\(settings)")
+            XCTAssertEqual(size(.clockwise), size(.upright), "\(settings)")
+            XCTAssertEqual(size(.counterClockwise), size(.upright), "\(settings)")
         }
-        XCTAssertEqual(height(.upright), 44, accuracy: 0.5)
-        XCTAssertGreaterThan(height(.clockwise), 50, "Turned, the longer word stands taller than the upright switch")
-        XCTAssertEqual(height(.clockwise), height(.counterClockwise), accuracy: 0.5)
+    }
+
+    /// A word that turns in place is as wide as it reads upright and as tall as it is long, in every hold.
+    func testAWordTurnedInPlaceTakesTheSameRoomInEveryHold() {
+        let word = TurnedInPlace { Color.clear.frame(width: 40, height: 16) }
+        for turn in [HeldTurn.upright, .clockwise, .counterClockwise] {
+            XCTAssertEqual(size(word, turn: turn), CGSize(width: 40, height: 40), "\(turn)")
+        }
+        XCTAssertEqual(size(TurnedInPlace { Color.clear.frame(width: 20, height: 30) }, turn: .clockwise),
+                       CGSize(width: 20, height: 30), "Taller than long, it keeps its height")
     }
 
     func testDarkroomLockRestoresTheInterfaceOrientationItCovered() {
@@ -177,26 +189,8 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
-    /// The header reserves the same height in every hold, so the viewfinder below it never moves.
-    func testAHeaderThatReservesItsLengthIsTheSameHeightInEveryHold() {
-        let header = TurnedBlock(length: 128, reservesLength: true) {
-            VStack(spacing: 12) {
-                Color.clear.frame(height: 44)
-                Color.clear.frame(height: 28)
-                Color.clear.frame(height: 22)
-            }.frame(maxWidth: .infinity)
-        }
-        // A reserving block offered height is laid out that long, so this one is offered none.
-        .fixedSize(horizontal: false, vertical: true)
-        let upright = size(header, turn: .upright)
-        XCTAssertEqual(size(header, turn: .clockwise).height, upright.height)
-        XCTAssertEqual(size(header, turn: .counterClockwise).height, upright.height)
-        XCTAssertEqual(upright.height, 128, "The portrait content is 118 high; the turned header is 128 long")
-        XCTAssertEqual(size(header, turn: .clockwise).width, 358, "The header spans the screen's width in every hold")
-    }
-
-    /// A block that does not reserve its length takes the room its turned size needs: as wide as it is tall, and `length`
-    /// high. Its parent puts it where it belongs.
+    /// A turned block takes the room its turned size needs: as wide as it is tall, and `length` high. Its parent puts it
+    /// where it belongs.
     func testATurnedBlockTakesTheRoomItNeedsOnceTurned() {
         let block = TurnedBlock(length: 100) { Color.clear.frame(maxWidth: .infinity).frame(height: 40) }
         XCTAssertEqual(size(block, turn: .upright, width: 300), CGSize(width: 300, height: 40))
@@ -213,30 +207,78 @@ final class CaptureSidewaysTests: XCTestCase {
         XCTAssertEqual(sideways.height, 132, "A row of buttons becomes a column as long as it was wide")
     }
 
+    // MARK: The top bar
+
+    /// Held sideways the count's corner shows every state the top bar has whole, one word to a line, in lines as long as
+    /// Done is tall (the captain, 2026-10-30, "Smaller words, same wording"): "Finishing save", "Film complete", "Pack
+    /// complete" and "Ended early", which shrink as far as their longest word needs, and a count such as "27" or "3:20".
+    /// None is cut short or broken inside a word, in either sideways hold, at the default and the largest text size, in a
+    /// top bar as wide as the iPhone SE's and the iPhone 17 Pro Max's.
+    func testHeldSidewaysTheCountsCornerShowsEveryStateWhole() async throws {
+        let film = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        let scene = try await hostWindowScene()
+        for visible in ["Finishing save", "Film complete", "Pack complete", "Ended early", "27", "3:20"] {
+            let status = CaptureHeaderStatus(visible: visible, spoken: "Disposable, \(visible)")
+            for (screenWidth, phone) in [(CGFloat(375), "iPhone SE"), (440, "iPhone 17 Pro Max")] {
+                for size in [DynamicTypeSize.large, .accessibility5] {
+                    for turn in [HeldTurn.clockwise, .counterClockwise] {
+                        let name = "\"\(visible)\", \(phone), \(size), \(turn)"
+                        let probe = TextLayoutProbe()
+                        let bar = HStack(spacing: 8) {
+                            Spacer(minLength: 0)
+                            CaptureHeaderLabel(film: film, status: status, recording: false)
+                        }
+                        .frame(height: CaptureDoneRow.height)
+                        .padding(.horizontal, 16)
+                        .frame(width: screenWidth)
+                        .onPreferenceChange(Text.LayoutKey.self) { probe.read($0) }
+                        .environment(\.heldTurn, turn)
+                        .dynamicTypeSize(size)
+                        let window = UIWindow(windowScene: scene)
+                        window.rootViewController = UIHostingController(rootView: bar)
+                        window.makeKeyAndVisible()
+                        try await Task.sleep(for: .milliseconds(300))
+                        window.isHidden = true
+                        window.rootViewController = nil
+                        XCTAssertFalse(probe.texts.isEmpty, name)
+                        for text in probe.texts {
+                            XCTAssertEqual(text.lines, visible.split(separator: " ").map(\.count),
+                                           "As many lines as words, each holding its whole word, \(name)")
+                            XCTAssertFalse(text.truncated, "Not cut short, \(name)")
+                            XCTAssertLessThanOrEqual(text.longest, CaptureDoneRow.height + 0.5, "Within the corner's line, \(name)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // MARK: The column
 
-    /// Where `CaptureColumn` puts the header and the fixed 4:3 viewfinder area in a window.
+    /// Where `CaptureColumn` puts the header, the fixed 4:3 viewfinder area and, given a `stripHeight`, a control strip in
+    /// a window, with `room` for the column, which on the shooting screen ends 8 points above the shutter bar.
     private func column(
         aspect: CGFloat, turn: HeldTurn = .upright, width: CGFloat = 358, proposalHeight: CGFloat = 3000,
-        extraHeaderText: String? = nil
-    ) async throws -> (header: CGRect, firstLine: CGRect, viewfinder: CGRect, size: CGSize) {
+        extraHeaderText: String? = nil, stripHeight: CGFloat? = nil, room: CGFloat? = nil
+    ) async throws -> (header: CGRect, viewfinder: CGRect, strip: CGRect, size: CGSize) {
         let frames = Frames()
         let inColumn: @Sendable (GeometryProxy) -> CGRect = { $0.frame(in: .named("column")) }
-        let view = CaptureColumn {
-            TurnedBlock(length: 128, reservesLength: true, maximumLength: 760) {
-                VStack(spacing: 12) {
-                    Color.clear.frame(height: 44)
-                        .onGeometryChange(for: CGRect.self, of: inColumn) { frames.firstLine = $0 }
-                    Color.clear.frame(height: 28)
-                    Color.clear.frame(height: 22)
-                    if let extraHeaderText { Text(extraHeaderText) }
-                }.frame(maxWidth: .infinity)
+        let view = CaptureColumn(room: room) {
+            VStack(spacing: 12) {
+                Color.clear.frame(height: 44)
+                if let extraHeaderText { Text(extraHeaderText) }
             }
+            .frame(maxWidth: .infinity)
             .onGeometryChange(for: CGRect.self, of: inColumn) { frames.header = $0 }
             .captureColumnRole(.header)
             Color.black
                 .onGeometryChange(for: CGRect.self, of: inColumn) { frames.viewfinder = $0 }
                 .captureColumnRole(.viewfinder(aspect: aspect))
+            if let stripHeight {
+                Color.gray.frame(height: stripHeight)
+                    .onGeometryChange(for: CGRect.self, of: inColumn) { frames.strip = $0 }
+                    .captureColumnRole(.strip)
+            }
         }
         .environment(\.heldTurn, turn)
         .coordinateSpace(name: "column")
@@ -248,11 +290,11 @@ final class CaptureSidewaysTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
         try await Task.sleep(for: .milliseconds(300))
-        return (frames.header, frames.firstLine, frames.viewfinder,
+        return (frames.header, frames.viewfinder, frames.strip,
                 host.sizeThatFits(in: CGSize(width: width, height: proposalHeight)))
     }
 
-    private final class Frames { var header = CGRect.zero, firstLine = CGRect.zero, viewfinder = CGRect.zero }
+    private final class Frames { var header = CGRect.zero, viewfinder = CGRect.zero, strip = CGRect.zero }
 
     /// Every Camera gets the same full-width 4:3 area, regardless of its picture shape, the available height or the hold.
     func testEveryCameraUsesTheSameFullWidthFourByThreeAreaInEveryHold() async throws {
@@ -312,9 +354,9 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
-    /// A header that scrolls across the screen once turned starts from its top in either hold, also turned straight from
+    /// A block that scrolls across the screen once turned starts from its top in either hold, also turned straight from
     /// one side to the other, where its top is at the other end.
-    func testAHeaderThatScrollsStartsFromItsTopTurnedFromSideToSide() async throws {
+    func testABlockThatScrollsStartsFromItsTopTurnedFromSideToSide() async throws {
         let probe = ScrollProbe()
         let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
@@ -332,64 +374,419 @@ final class CaptureSidewaysTests: XCTestCase {
         }
     }
 
+    // MARK: The control strip
+
+    /// Where the strip's top goes: centred in the room between the area and the room's end, 8 points above the shutter
+    /// bar, where that holds the strip, down to the room's end where it holds at least half of it, otherwise over the area
+    /// with its bottom on the area's.
+    func testWhereTheStripGoes() {
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 44, room: 674), 605, "Centred in 94 points")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 94, room: 674), 580, "Exactly the room")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 120, room: 674), 554,
+                       "Room for most of it: down to the room's end, 8 points above the shutter bar, 26 points over the area")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 200, room: 674), 380,
+                       "Room for less than half: wholly over the area's bottom edge")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 544, stripHeight: 92, room: 555), 452,
+                       "11 points under the area, as on the iPhone SE: wholly over its bottom edge")
+        XCTAssertEqual(CaptureColumn.stripTop(viewfinderBottom: 580, stripHeight: 44, room: nil), 580)
+    }
+
+    /// The strip is centred in the room under the area, which ends 8 points above the shutter bar, where that holds it, as
+    /// on the largest iPhone; where the room holds most of it, it sits down to the room's end, partly over the area; and
+    /// where it holds less than half, as on the iPhone SE (3rd generation), it sits over the area's bottom edge, its bottom
+    /// on the area's. The area keeps its size and place in each.
+    func testTheStripSitsUnderTheAreaWhereItFitsAndOverItsBottomEdgeWhereNot() async throws {
+        // The rooms the iPhone 17 Pro Max, the largest supported, and the iPhone 17 Pro leave the column, ending 8 points
+        // above the shutter bar (145 and 114 points under the area), two shorter rooms made up for the other two cases,
+        // and the iPhone SE's (11 points under the area).
+        let cases: [(name: String, width: CGFloat, room: CGFloat, strip: CGFloat)] = [
+            ("17 Pro Max, one line", 440, 776, 44), ("17 Pro Max, two lines", 440, 776, 92),
+            ("17 Pro, two lines", 402, 694, 100), ("most of it", 402, 640, 92), ("less than half", 402, 610, 92),
+            ("iPhone SE, one line", 375, 555, 44), ("iPhone SE, two lines", 375, 555, 92),
+        ]
+        for c in cases {
+            let without = try await column(aspect: 1, width: c.width, room: c.room)
+            let with = try await column(aspect: 1, width: c.width, stripHeight: c.strip, room: c.room)
+            XCTAssertEqual(with.viewfinder.minY, without.viewfinder.minY, accuracy: 0.5, "The area stays, \(c.name)")
+            XCTAssertEqual(with.viewfinder.height, without.viewfinder.height, accuracy: 0.5, "The area keeps its size, \(c.name)")
+            XCTAssertEqual(with.strip.height, c.strip, accuracy: 0.5, c.name)
+            let under = c.room - with.viewfinder.maxY
+            if under >= c.strip {
+                XCTAssertGreaterThanOrEqual(with.strip.minY, with.viewfinder.maxY - 0.5, "Under the area, \(c.name)")
+                XCTAssertEqual(with.strip.minY - with.viewfinder.maxY, c.room - with.strip.maxY, accuracy: 0.5,
+                               "Centred in the room under the area, \(c.name)")
+            } else {
+                XCTAssertEqual(with.strip.maxY, under >= c.strip / 2 ? c.room : with.viewfinder.maxY, accuracy: 0.5,
+                               "Down to the room's end, 8 points above the shutter bar, or over the area's bottom edge, \(c.name)")
+            }
+        }
+        let se = try await column(aspect: 1, width: 375, stripHeight: 44, room: 555)
+        XCTAssertEqual(se.strip.maxY, se.viewfinder.maxY, accuracy: 0.5, "On the iPhone SE the strip is wholly over the area")
+    }
+
+    /// The steps and the settings share one line where they fit across the strip and take a line each where they do not,
+    /// steps above, each line centred; the 6×6 keeps both lines whatever fits.
+    func testTheStripSharesOneLineWhereItsControlsFit() async throws {
+        let one = try await strip(width: 378, steps: 184, settings: [119])
+        XCTAssertEqual(one.size.height, 44)
+        XCTAssertEqual(one.steps.midY, one.settings[0].midY, "One line")
+        XCTAssertEqual(one.settings[0].minX - one.steps.maxX, 12, accuracy: 0.5, "The steps 12 points from the settings")
+        XCTAssertEqual(one.steps.minX, 378 - one.settings[0].maxX, accuracy: 0.5, "Centred across the strip")
+        let two = try await strip(width: 343, steps: 228, settings: [130])
+        XCTAssertEqual(two.size.height, 98, "Two 44-point lines 10 points apart")
+        XCTAssertEqual(two.steps.maxY + 10, two.settings[0].minY, accuracy: 0.5, "The steps above the settings")
+        XCTAssertEqual(two.steps.midX, 343 / 2, accuracy: 0.5)
+        XCTAssertEqual(two.settings[0].midX, 343 / 2, accuracy: 0.5)
+        let kept = try await strip(width: 378, steps: 44, settings: [130, 44, 44], keepsStepsLine: true)
+        XCTAssertEqual(kept.size.height, 98, "The 6×6 keeps both lines")
+        XCTAssertEqual(kept.settings[1].minX - kept.settings[0].maxX, 8, accuracy: 0.5)
+    }
+
+    /// Where `ControlStripLayout` puts a steps pill `steps` wide and settings of the given widths, each 44 points tall.
+    private func strip(width: CGFloat, steps: CGFloat, settings: [CGFloat], keepsStepsLine: Bool = false)
+        async throws -> (steps: CGRect, settings: [CGRect], size: CGSize) {
+        let frames = StripFrames()
+        frames.settings = settings.map { _ in .zero }
+        let inStrip: @Sendable (GeometryProxy) -> CGRect = { $0.frame(in: .named("strip")) }
+        let view = ControlStripLayout(keepsStepsLine: keepsStepsLine) {
+            Color.clear.frame(width: steps, height: 44)
+                .onGeometryChange(for: CGRect.self, of: inStrip) { frames.steps = $0 }
+                .controlStripLine(.steps)
+            ForEach(Array(settings.enumerated()), id: \.offset) { index, width in
+                Color.clear.frame(width: width, height: 44)
+                    .onGeometryChange(for: CGRect.self, of: inStrip) { frames.settings[index] = $0 }
+                    .controlStripLine(.settings)
+            }
+        }
+        .coordinateSpace(name: "strip")
+        .onGeometryChange(for: CGSize.self, of: { $0.size }) { frames.size = $0 }
+        .frame(width: width)
+        let scene = try await hostWindowScene()
+        let window = UIWindow(windowScene: scene)
+        window.rootViewController = UIHostingController(rootView: view)
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        try await Task.sleep(for: .milliseconds(300))
+        return (frames.steps, frames.settings, frames.size)
+    }
+
+    private final class StripFrames { var steps = CGRect.zero, settings: [CGRect] = [], size = CGSize.zero }
+
+    // MARK: The shooting screen
+
+    /// On every Camera with controls the strip is under the Viewfinder area on this simulator's iPhone, centred in the room
+    /// that ends 8 points above the shutter bar, read from the bar's own frame, so the room is the same on every Camera,
+    /// with the area where it is, and both are the same in every hold. On an iPhone at least 390 points wide, as every one
+    /// but the iPhone SE and the mini is, the room holds every strip, the 6×6's two lines included. The Instant has no
+    /// strip, and the 16mm has one only where the iPhone offers Zoom Steps.
+    func testEveryCameraPutsItsStripUnderTheViewfinderAreaInEveryHold() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        for camera in Self.cameras {
+            let film = try makeFilm(camera, model)
+            for steps in [true, false] {
+                var upright: (viewfinder: CGRect, strip: CGRect?)?
+                for held in [CaptureFrameOrientation.portrait, .landscapeLeft, .landscapeRight] {
+                    let probe = try await showScreen(model, film: film, lenses: steps ? Self.threeLenses : nil, held: held).probe
+                    let name = "\(camera.id.rawValue), \(steps ? "with" : "without") Zoom Steps, \(held)"
+                    let hasStrip = camera.id != CameraCatalog.instant1970s.id
+                        && (steps || camera.id != CameraCatalog.cinema16mm.id)
+                    XCTAssertEqual(probe.strip != nil, hasStrip, "Whether the strip shows, \(name)")
+                    XCTAssertEqual(probe.viewfinder.width, probe.room.width, accuracy: 0.5, name)
+                    XCTAssertEqual(probe.viewfinder.height, probe.room.width * 4 / 3, accuracy: 0.5, name)
+                    XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
+                    let room = roomBottom(probe, name)
+                    if let strip = probe.strip {
+                        let under = room - probe.viewfinder.maxY
+                        if probe.room.width >= 390 {
+                            XCTAssertGreaterThanOrEqual(under, strip.height, "The room holds the strip, \(name)")
+                        }
+                        if under >= strip.height {
+                            XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY - 0.5, "Under the area, \(name)")
+                            XCTAssertEqual(strip.minY - probe.viewfinder.maxY, room - strip.maxY, accuracy: 0.5,
+                                           "Centred between the area and the room's end above the shutter bar, \(name)")
+                        }
+                        XCTAssertEqual(strip.width, probe.room.width, accuracy: 0.5, "Across the screen, \(name)")
+                    }
+                    if steps { checkStepsKeepClearOfTheSwitch(probe, name) }
+                    if let upright {
+                        XCTAssertEqual(probe.viewfinder, upright.viewfinder, "The area keeps its place, \(name)")
+                        XCTAssertEqual(probe.strip, upright.strip, "The strip keeps its place, \(name)")
+                    } else {
+                        upright = (probe.viewfinder, probe.strip)
+                    }
+                }
+            }
+        }
+    }
+
+    /// On the iPhone SE (3rd generation), whose 667-point screen leaves no room under the Viewfinder area, the strip sits
+    /// over the area's bottom edge, as the iPhone Camera app's controls do there, and the area keeps its size and place.
+    /// The iPhone SE has one rear lens, so no Zoom Steps.
+    func testOnTheIPhoneSETheStripSitsOverTheAreasBottomEdge() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        // The iPhone SE's screen less its 20-point status bar, with no home indicator.
+        let iPhoneSE = CGSize(width: 375, height: 647)
+        for camera in [CameraCatalog.disposable1990s, CameraCatalog.mediumFormat6x6, CameraCatalog.super8HomeMovie] {
+            let film = try makeFilm(camera, model)
+            for held in [CaptureFrameOrientation.portrait, .landscapeLeft, .landscapeRight] {
+                let probe = try await showScreen(model, film: film, lenses: nil, held: held, size: iPhoneSE).probe
+                let name = "\(camera.id.rawValue), \(held)"
+                XCTAssertEqual(probe.viewfinder.size.width, 375, accuracy: 0.5, name)
+                XCTAssertEqual(probe.viewfinder.size.height, 500, accuracy: 0.5, name)
+                XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(name)")
+                let strip = try XCTUnwrap(probe.strip, name)
+                // The few points under the area hold no strip, so it sits over the area's bottom edge.
+                XCTAssertLessThan(roomBottom(probe, name) - probe.viewfinder.maxY, strip.height, name)
+                XCTAssertEqual(strip.maxY, probe.viewfinder.maxY, accuracy: 0.5, "Over the area's bottom edge, \(name)")
+                XCTAssertGreaterThan(strip.minY, probe.viewfinder.midY, "Low over the area, \(name)")
+            }
+        }
+    }
+
+    /// On an iPhone whose rear camera offers Zoom Steps, the 6×6's strip is as tall and in the same place whether its steps
+    /// show or not, as on its front camera or before a lens reports them, at the default text size, the largest short of
+    /// the accessibility sizes and the first of those: its empty steps line is as tall as the steps the iPhone's camera
+    /// list gives, so its switch and buttons never move as the steps come and go.
+    func testTheSixBySixStripKeepsItsHeightWithoutItsZoomSteps() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let film = try makeFilm(CameraCatalog.mediumFormat6x6, model)
+        for size in [DynamicTypeSize.large, .xxxLarge, .accessibility1] {
+            let shown = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, textSize: size).probe
+            let hidden = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, showsSteps: false,
+                                              textSize: size).probe
+            let name = "\(size)"
+            XCTAssertNotNil(shown.zoomSteps, "The steps show, \(name)")
+            XCTAssertNil(hidden.zoomSteps, "No steps show, \(name)")
+            let strip = try XCTUnwrap(shown.strip, name)
+            XCTAssertEqual(try XCTUnwrap(hidden.strip, name), strip, "The strip keeps its size and place, \(name)")
+            XCTAssertEqual(hidden.focusSwitch, shown.focusSwitch, "The focus switch keeps its place, \(name)")
+        }
+    }
+
+    /// The 6×6's Focus and Exposure buttons each open their slider in the strip, in the Zoom Steps' place, and the strip
+    /// keeps its size and place for it in every hold, so nothing else moves.
+    func testTheSixBySixOpensEachSliderInTheStrip() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        var film = try makeFilm(CameraCatalog.mediumFormat6x6, model)
+        film = try model.setFocusSetting(.manual, filmID: film.id)
+        for held in [CaptureFrameOrientation.portrait, .landscapeLeft, .landscapeRight] {
+            let closed = try await showScreen(model, film: film, held: held).probe
+            let steps = try XCTUnwrap(closed.zoomSteps, "\(held)")
+            XCTAssertNil(closed.slider, "No slider is open at first, \(held)")
+            for slider in [StripSlider.focus, .exposure] {
+                let open = try await showScreen(model, film: film, held: held, slider: slider).probe
+                let name = "\(slider), \(held)"
+                let strip = try XCTUnwrap(open.strip, name)
+                let panel = try XCTUnwrap(open.slider, name)
+                XCTAssertEqual(strip, closed.strip, "The strip keeps its size and place, \(name)")
+                XCTAssertEqual(open.viewfinder, closed.viewfinder, name)
+                XCTAssertTrue(panel.insetBy(dx: -0.5, dy: -0.5).contains(steps), "The slider takes the steps' place, \(name)")
+                XCTAssertTrue(strip.insetBy(dx: -0.5, dy: -0.5).contains(panel), "Inside the strip, \(name)")
+            }
+        }
+    }
+
+    /// With the iPhone 17 Pro's five Zoom Steps, at the largest size short of the accessibility sizes and at every larger
+    /// one, no strip control covers a Camera's picture on an iPhone at least 390 points wide, every one but the iPhone SE and
+    /// the mini. On the iPhone 17 Pro and every wider iPhone, the ones with five steps, the Super 8's Zoom Steps and
+    /// Auto / Fixed share one line 12 points apart, their words a size or two smaller where they would not otherwise (the
+    /// captain, 2026-10-30); the 6×6's stay 10 points above its switch.
+    func testFiveZoomStepsLeaveThePictureClearAtTheLargestTextSizes() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        for camera in [CameraCatalog.mediumFormat6x6, CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm] {
+            let film = try makeFilm(camera, model)
+            let aspect = CaptureBehavior.for(camera.id, focusSetting: film.effectiveFocusSetting).viewfinder.aspectRatio
+            for size in DynamicTypeSize.allCases where size >= .xxxLarge {
+                let probe = try await showScreen(model, film: film, lenses: Self.iPhone17ProLenses, textSize: size).probe
+                let name = "\(camera.id.rawValue), \(size)"
+                let steps = try XCTUnwrap(probe.zoomSteps, name)
+                let strip = try XCTUnwrap(probe.strip, name)
+                let picture = CaptureAreaGeometry.cameraFrame(aspectRatio: CGFloat(aspect), in: probe.viewfinder.size)
+                    .offsetBy(dx: probe.viewfinder.minX, dy: probe.viewfinder.minY)
+                if probe.room.width >= 390 {
+                    XCTAssertGreaterThanOrEqual(strip.minY, picture.maxY - 0.5, "No strip control covers the picture, \(name)")
+                }
+                if camera.id == CameraCatalog.super8HomeMovie.id && probe.room.width >= 402 {
+                    let focusSwitch = try XCTUnwrap(probe.focusSwitch, name)
+                    XCTAssertEqual(steps.midY, focusSwitch.midY, accuracy: 0.5, "The Zoom Steps share Auto / Fixed's line, \(name)")
+                }
+                checkStepsKeepClearOfTheSwitch(probe, name)
+            }
+        }
+    }
+
     /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
-    /// largest, kept as screenshots. The viewfinder is a black box that keeps its size and place, which the live picture
-    /// fills in every hold. The 6×6's zoom pill, sliders and the Disposable's cue are raised from what a lens would report,
-    /// since the simulator has no lens.
+    /// largest, kept for the captain's approval with a three-lens rear camera running and nothing over the viewfinder, and
+    /// the 6×6 with each of its sliders open. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
+    func testTheShootingScreensForApproval() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let device = try await approvalDevice()
+        for camera in Self.cameras {
+            let film = try makeFilm(camera, model)
+            for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
+                for (held, name) in Self.holds {
+                    let (probe, screenshot) = try await showScreen(model, film: film,
+                                                                   lenses: device != "SE" ? Self.threeLenses : nil, held: held,
+                                                                   textSize: size)
+                    keep(screenshot, "Approval-\(device)-\(camera.id.rawValue)-\(sizeName)-\(name)")
+                    let shot = "\(camera.id.rawValue), \(sizeName), \(name)"
+                    XCTAssertEqual(probe.shutter.midX, probe.room.midX, accuracy: 0.5, "The shutter is centred, \(shot)")
+                    checkStepsKeepClearOfTheSwitch(probe, shot)
+                    // Where the room under the area holds a strip with room to spare it is there with a gap above it, and
+                    // on the largest iPhone it holds every strip, the 6×6's two lines at the largest size included.
+                    if let strip = probe.strip {
+                        let under = roomBottom(probe, shot) - probe.viewfinder.maxY
+                        if device == "Largest" {
+                            XCTAssertGreaterThanOrEqual(under, strip.height, "The room holds the strip, \(shot)")
+                        }
+                        if under >= strip.height + 8 {
+                            XCTAssertGreaterThanOrEqual(strip.minY, probe.viewfinder.maxY + 4, "A gap under the area, \(shot)")
+                        }
+                    }
+                }
+            }
+        }
+        var film = try makeFilm(CameraCatalog.mediumFormat6x6, model)
+        film = try model.setFocusSetting(.manual, filmID: film.id)
+        for slider in [StripSlider.focus, .exposure] {
+            for (held, name) in Self.holds {
+                let screenshot = try await showScreen(model, film: film, lenses: device != "SE" ? Self.threeLenses : nil,
+                                                      held: held, slider: slider).screenshot
+                keep(screenshot, "Approval-\(device)-mediumFormat6x6-\(slider)-open-\(name)")
+            }
+        }
+    }
+
+    /// The top bar held sideways in each state longer than a count, the count's corner showing it one whole word to a line
+    /// (the captain, 2026-10-30, "Smaller words, same wording"), both ways, at the default text size and the largest, kept
+    /// for the captain's approval. Run on the iPhone SE (3rd generation) and the largest supported iPhone.
+    func testTheTopBarsStatesHeldSidewaysForApproval() async throws {
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let device = try await approvalDevice()
+        for (state, film) in try filmsShowingEachState(model) {
+            for (size, sizeName) in [(DynamicTypeSize.large, "default"), (.accessibility5, "largest")] {
+                for (held, name) in Self.holds where held != .portrait {
+                    let screenshot = try await showScreen(model, film: film,
+                                                          lenses: device != "SE" ? Self.threeLenses : nil, held: held,
+                                                          textSize: size).screenshot
+                    keep(screenshot, "Approval-\(device)-\(state)-\(sizeName)-\(name)")
+                }
+            }
+        }
+    }
+
+    /// The Super 8 upright with the iPhone 17 Pro's five Zoom Steps, which share Auto / Fixed's line in smaller words where
+    /// they would not otherwise (the captain, 2026-10-30), at the largest size short of the accessibility sizes and the
+    /// first of those, kept for the captain's approval. Run on the iPhone 17 Pro and the largest supported iPhone; the
+    /// iPhone SE has one rear lens.
+    func testTheSuper8sFiveZoomStepsForApproval() async throws {
+        let device = try await approvalDevice()
+        if device == "SE" { throw XCTSkip("The iPhone SE has one rear lens, so no Zoom Steps") }
+        let (root, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let super8 = try makeFilm(CameraCatalog.super8HomeMovie, model)
+        for size in [DynamicTypeSize.xxxLarge, .accessibility1] {
+            let screenshot = try await showScreen(model, film: super8, lenses: Self.iPhone17ProLenses, textSize: size).screenshot
+            keep(screenshot, "Approval-\(device)-super8HomeMovie-five-steps-\(size)")
+        }
+    }
+
+    /// What the approval screenshots call this simulator's iPhone: "SE", "Largest" or its width in points.
+    private func approvalDevice() async throws -> String {
+        let width = try await hostWindowScene().screen.bounds.width
+        return width < 390 ? "SE" : width >= 440 ? "Largest" : "\(Int(width))-point"
+    }
+
+    /// A Film whose top bar shows each state longer than a count: a save still finishing, a full Disposable roll, a full
+    /// Instant pack and a roll ended early.
+    private func filmsShowingEachState(_ model: JournalModel) throws -> [(state: String, film: Film)] {
+        let saving = try makeFilm(CameraCatalog.disposable1990s, model)
+        // A save's staged record, which the screen reads as a save still finishing until it commits.
+        let staging = try model.repository.captureStagingDirectory(filmID: saving.id)
+        try FileManager.default.createDirectory(at: staging, withIntermediateDirectories: true)
+        try Data("{}".utf8).write(to: staging.appendingPathComponent("pending.json"))
+        let roll = try makeFilm(CameraCatalog.disposable1990s, model)
+        for _ in 0..<27 { try model.repository.savePhotoCapture(filmID: roll.id, sourceData: syntheticPhoto()) }
+        let pack = try makeFilm(CameraCatalog.instant1970s, model)
+        for _ in 0..<10 { try model.repository.savePhotoCapture(filmID: pack.id, sourceData: syntheticPhoto()) }
+        let early = try makeFilm(CameraCatalog.disposable1990s, model)
+        try model.repository.savePhotoCapture(filmID: early.id, sourceData: syntheticPhoto())
+        try model.repository.completeEarly(filmID: early.id)
+        model.refresh()
+        let films = [("Finishing save", saving), ("Film complete", roll), ("Pack complete", pack), ("Ended early", early)]
+        for (state, film) in films {
+            let current = try XCTUnwrap(model.film(film.id), state)
+            XCTAssertEqual(CaptureHeaderStatus.make(for: current, finishingSave: model.hasPendingSave(film.id),
+                                                    recordedFor: 0).visible, state)
+        }
+        return films.map { (state: $0.0.lowercased().replacingOccurrences(of: " ", with: "-"), film: $0.1) }
+    }
+
+    /// Where the room the screen leaves the column ends, read from the shutter bar's own frame: 8 points above the bar,
+    /// which the screen's room is held to on every Camera.
+    private func roomBottom(_ probe: CaptureLayoutProbe, _ name: String) -> CGFloat {
+        let bottom = probe.shutterBar.minY - 8
+        XCTAssertEqual(probe.room.maxY, bottom, accuracy: 0.5, "The room ends 8 points above the shutter bar, \(name)")
+        return bottom
+    }
+
+    /// The Zoom Steps keep clearly apart from the focus switch (the captain, 2026-10-29: "please allow extra spacing
+    /// between zoom buttons and auto/manual buttons"): 10 points above it on a line of their own, as on the 6×6, and 12
+    /// points beside it on a shared line, as on the Super 8.
+    private func checkStepsKeepClearOfTheSwitch(_ probe: CaptureLayoutProbe, _ name: String) {
+        guard let steps = probe.zoomSteps, let focusSwitch = probe.focusSwitch else { return }
+        if steps.maxY <= focusSwitch.minY {
+            XCTAssertEqual(focusSwitch.minY - steps.maxY, 10, accuracy: 0.5, "10 points between the lines, \(name)")
+        } else {
+            XCTAssertEqual(focusSwitch.minX - steps.maxX, 12, accuracy: 0.5, "12 points between the two, \(name)")
+        }
+    }
+
+    private static let cameras = [CameraCatalog.disposable1990s, CameraCatalog.instant1970s, CameraCatalog.mediumFormat6x6,
+                                  CameraCatalog.super8HomeMovie, CameraCatalog.cinema16mm]
+    private static let holds: [(CaptureFrameOrientation, String)] = [(.portrait, "portrait"), (.landscapeLeft, "left"),
+                                                                     (.landscapeRight, "right")]
+
+    private func keep(_ screenshot: UIImage, _ name: String) {
+        let attachment = XCTAttachment(image: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func makeFilm(_ camera: CameraPackage, _ model: JournalModel) throws -> Film {
+        let film = try model.repository.createFilm(
+            camera: camera, title: "Synthetic \(camera.id.rawValue) \(UUID().uuidString.prefix(4))",
+            movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock,
+            access: .subscription)
+        model.refresh()
+        return film
+    }
+
+    /// Each Camera's shooting screen held upright, on its left side and on its right side, at the default text size and the
+    /// largest, kept as screenshots in the tallest case, the message and Resume Camera over the viewfinder, clear of the
+    /// strip. The viewfinder is a black box that keeps its size and place, which the live picture fills in every hold. The
+    /// Zoom Steps, the 6×6's sliders and the Disposable's cue are raised from what a lens would report, since the
+    /// simulator has no lens.
     func testCaptureScreensHeldSidewaysKeepTheLayoutAndTurnTheText() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
-        var controls = NativeCameraControls()
-        controls.flash = true
-        controls.fixedExposure = true
-        controls.manualFocus = true
-        controls.minimumExposureBias = -2
-        controls.maximumExposureBias = 2
-        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
-                                                  .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
-                                                  .init(.telephoto, displayFactor: 3)]).zoomSteps
-        controls.zoomSteps = steps
-        controls.zoomStep = steps[1]
-        let cases: [(CameraPackage, Bool, [DynamicTypeSize])] = [
-            (CameraCatalog.mediumFormat6x6, false, [.large, .accessibility5]),
-            (CameraCatalog.disposable1990s, true, [.large]),
-            (CameraCatalog.instant1970s, false, [.large]),
-            (CameraCatalog.super8HomeMovie, false, [.large]),
-        ]
-        for (camera, cue, sizes) in cases {
-            let film = try model.repository.createFilm(
-                camera: camera, title: "Synthetic \(camera.id.rawValue)",
-                movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)
-            model.refresh()
-            for size in sizes {
-                for (held, name) in [(CaptureFrameOrientation.portrait, "portrait"), (.landscapeLeft, "left"), (.landscapeRight, "right")] {
-                    let scene = try await hostWindowScene()
-                    let window = UIWindow(windowScene: scene)
-                    model.capture.hold(forTesting: held)
-                    window.rootViewController = UIHostingController(
-                        rootView: CaptureView(filmID: film.id).environment(model).dynamicTypeSize(size))
-                    window.makeKeyAndVisible()
-                    // Closing the last screen pauses its camera and clears the reading, so set what a lens
-                    // would report once the screen has settled.
-                    try await Task.sleep(for: .seconds(1))
-                    model.capture.setForTesting(controls: controls, sceneEV100: cue ? 4 : FixedExposure.referenceEV100)
-                    // The tallest case: the message and Resume Camera over the viewfinder, in every hold.
-                    model.capture.message = "Camera paused. Saved captures are unchanged."
-                    try await Task.sleep(for: .milliseconds(500))
-                    let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
-                        _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
-                    }
-                    // Closing the screen turns the window to how the iPhone is held, which would turn every later test's
-                    // window too, so the screen is closed with the iPhone upright.
-                    model.capture.hold(forTesting: .portrait)
-                    window.isHidden = true
-                    window.rootViewController = nil
-                    // SwiftUI reports the screen gone a moment later, and the next screen's hold must not be what it turns to.
-                    try await Task.sleep(for: .milliseconds(500))
-                    let attachment = XCTAttachment(image: screenshot)
-                    attachment.name = "Capture-\(camera.id.rawValue)-\(size == .large ? "default" : "largest")-\(name)"
-                    attachment.lifetime = .keepAlways
-                    add(attachment)
+        for camera in Self.cameras {
+            let film = try makeFilm(camera, model)
+            for size in [DynamicTypeSize.large, .accessibility5] {
+                for (held, name) in Self.holds {
+                    let screenshot = try await showScreen(
+                        model, film: film, held: held, textSize: size,
+                        sceneEV100: camera.id == CameraCatalog.disposable1990s.id ? 4 : nil,
+                        message: "Camera paused. Saved captures are unchanged.").screenshot
+                    keep(screenshot, "Capture-\(camera.id.rawValue)-\(size == .large ? "default" : "largest")-\(name)")
                 }
             }
         }
@@ -400,23 +797,17 @@ final class CaptureSidewaysTests: XCTestCase {
     func testTheZoomStepsInTheirEnabledState() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
-        let film = try model.repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Synthetic zoom",
-                                                   filmStock: .color, access: .subscription)
-        model.refresh()
+        let film = try makeFilm(CameraCatalog.mediumFormat6x6, model)
         for (selected, held, name) in [(1, CaptureFrameOrientation.portrait, "portrait"), (3, .landscapeLeft, "left")] {
             for (style, styleName) in [(UIUserInterfaceStyle.light, "light"), (.dark, "dark")] {
-                let screenshot = try await screenWithALiveLens(model, film: film, zoomStep: selected, held: held, style: style)
-                let attachment = XCTAttachment(image: screenshot)
-                attachment.name = "Zoom-enabled-\(name)-\(styleName)"
-                attachment.lifetime = .keepAlways
-                add(attachment)
+                let screenshot = try await showScreen(model, film: film, zoomStep: selected, held: held, style: style).screenshot
+                keep(screenshot, "Zoom-enabled-\(name)-\(styleName)")
             }
         }
     }
 
-    /// The focus switch where it sits with a lens running (FR-25), kept for the captain's approval of its placement: the
-    /// 6×6 on Auto and on Manual, with its Focus slider, the Super 8 with its zoom steps and the Disposable on Fixed,
-    /// upright and held on its side. The switch and the sliders stay across the Viewfinder area's bottom in every hold.
+    /// The focus switch where it sits with a lens running (FR-25): the 6×6 on Auto and on Manual, the Super 8 with its zoom
+    /// steps and the Disposable on Fixed, upright and held on its side, in the control strip under the Viewfinder area.
     func testTheFocusSwitchWithALiveLens() async throws {
         let (root, model) = try await makeModel()
         defer { try? FileManager.default.removeItem(at: root) }
@@ -427,55 +818,79 @@ final class CaptureSidewaysTests: XCTestCase {
             (CameraCatalog.disposable1990s, .fixed, "Disposable-Fixed")
         ]
         for (camera, setting, name) in cases {
-            var film = try model.repository.createFilm(
-                camera: camera, title: "Synthetic \(name)", movieOrientation: camera.medium == .movie ? .portrait : nil,
-                filmStock: camera.defaultFilmStock, access: .subscription)
-            model.refresh()
+            var film = try makeFilm(camera, model)
             film = try model.setFocusSetting(setting, filmID: film.id)
             for (held, holdName) in [(CaptureFrameOrientation.portrait, "portrait"), (.landscapeLeft, "left")] {
-                let screenshot = try await screenWithALiveLens(model, film: film, zoomStep: 1, held: held, style: .light)
-                let attachment = XCTAttachment(image: screenshot)
-                attachment.name = "Focus-\(name)-\(holdName)"
-                attachment.lifetime = .keepAlways
-                add(attachment)
+                keep(try await showScreen(model, film: film, held: held).screenshot, "Focus-\(name)-\(holdName)")
             }
         }
     }
 
-    /// The shooting screen of `film` as it shows with a three-lens rear camera running, `zoomStep` selected, held as
-    /// `held`, drawn from its window.
-    private func screenWithALiveLens(_ model: JournalModel, film: Film, zoomStep: Int, held: CaptureFrameOrientation,
-                                     style: UIUserInterfaceStyle) async throws -> UIImage {
+    /// A three-lens rear camera: 0.5x, 1x, its wide lens's 2x crop and 3x.
+    private static let threeLenses = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                                   .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                                   .init(.telephoto, displayFactor: 3)])
+    /// The iPhone 17 Pro's rear camera, whose Camera app offers five Zoom Steps: 0.5x, 1x, its wide lens's 2x crop, 4x and
+    /// its telephoto lens's 8x crop.
+    private static let iPhone17ProLenses = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
+                                                                         .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
+                                                                         .init(.telephoto, displayFactor: 4, nativeCropFactors: [2])])
+
+    /// The shooting screen of `film` as it shows with a lens running, by default `threeLenses` with its 1x step selected
+    /// (`lenses` nil gives no Zoom Steps), held as `held`, with any `slider` open and `message` over the viewfinder, in a
+    /// window or, given a `size`, in a box that size in the middle of it, which no safe area reaches. The iPhone's camera
+    /// list gives `lenses` for its rear camera; `showsSteps` false leaves the running lens's report without them, as on the
+    /// front camera or before a lens reports them. It returns where the screen put its parts and the window drawn.
+    private func showScreen(
+        _ model: JournalModel, film: Film, lenses: RearLensCapabilities? = CaptureSidewaysTests.threeLenses, zoomStep: Int = 1,
+        showsSteps: Bool = true, held: CaptureFrameOrientation = .portrait, slider: StripSlider? = nil, size: CGSize? = nil,
+        textSize: DynamicTypeSize = .large, style: UIUserInterfaceStyle = .light, sceneEV100: Double? = nil,
+        message: String? = nil
+    ) async throws -> (probe: CaptureLayoutProbe, screenshot: UIImage) {
         var controls = NativeCameraControls()
+        controls.flash = true
+        controls.fixedExposure = true
         controls.manualFocus = true
         controls.minimumExposureBias = -2
         controls.maximumExposureBias = 2
-        let steps = RearLensCapabilities(lenses: [.init(.ultraWide, displayFactor: 0.5),
-                                                  .init(.wide, displayFactor: 1, nativeCropFactors: [2]),
-                                                  .init(.telephoto, displayFactor: 3)]).zoomSteps
-        controls.zoomSteps = steps
-        controls.zoomStep = steps[zoomStep]
+        if let steps = lenses?.zoomSteps, showsSteps {
+            controls.zoomSteps = steps
+            controls.zoomStep = steps[zoomStep]
+        }
         let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
         window.overrideUserInterfaceStyle = style
+        // The controller outlives each screen, so the last screen's lens report goes before this one shows.
+        model.capture.setForTesting(controls: NativeCameraControls())
         model.capture.hold(forTesting: held)
+        let probe = CaptureLayoutProbe()
         var screen = CaptureView(filmID: film.id)
         screen.opensCamera = false
-        window.rootViewController = UIHostingController(rootView: screen.environment(model))
+        screen.initialSlider = slider
+        screen.probe = probe
+        let root = screen.environment(model).dynamicTypeSize(textSize)
+        window.rootViewController = UIHostingController(
+            rootView: size.map { AnyView(root.frame(width: $0.width, height: $0.height)) } ?? AnyView(root))
         window.makeKeyAndVisible()
+        // Closing the last screen pauses its camera and clears the reading, so set what a lens would report once the
+        // screen has settled.
         try await Task.sleep(for: .seconds(1))
-        model.capture.setForTesting(controls: controls)
+        model.capture.setForTesting(controls: controls, sceneEV100: sceneEV100 ?? FixedExposure.referenceEV100)
+        model.capture.setForTesting(rearZoomSteps: lenses?.zoomSteps ?? [])
         model.capture.setForTesting(phase: .idle)
-        model.capture.message = nil
+        model.capture.message = message
         try await Task.sleep(for: .milliseconds(500))
         let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
             _ = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
         }
+        // Closing the screen turns the window to how the iPhone is held, which would turn every later test's window too,
+        // so the screen is closed with the iPhone upright.
         model.capture.hold(forTesting: .portrait)
         window.isHidden = true
         window.rootViewController = nil
+        // SwiftUI reports the screen gone a moment later, and the next screen's hold must not be what it turns to.
         try await Task.sleep(for: .milliseconds(500))
-        return screenshot
+        return (probe, screenshot)
     }
 
     private func makeModel() async throws -> (URL, JournalModel) {
@@ -484,6 +899,20 @@ final class CaptureSidewaysTests: XCTestCase {
                                      cameraAuthorizer: SyntheticCamera(granted: true))
         await model.recoverAtLaunch()
         return (root, model)
+    }
+}
+
+/// How the text views under a view were laid out, for the test of the count's corner: for each, how many characters
+/// each of its lines holds (a line break is none of them), whether it was cut short and how long its longest line is.
+private final class TextLayoutProbe {
+    var texts: [(lines: [Int], truncated: Bool, longest: CGFloat)] = []
+
+    func read(_ layouts: Text.LayoutKey.Value) {
+        texts = layouts.map { anchored in
+            let layout = anchored.layout
+            return (layout.map { line in Set(line.flatMap(\.characterIndices)).count }, layout.isTruncated,
+                    layout.map(\.typographicBounds.width).max() ?? 0)
+        }
     }
 }
 
@@ -523,7 +952,7 @@ private struct SessionProbe: View {
 private struct ScrollProbeView: View {
     let probe: ScrollProbe
     var body: some View {
-        TurnedBlock(length: 128, reservesLength: true) {
+        TurnedBlock(length: 128) {
             VStack(spacing: 0) {
                 Color.clear.frame(height: 44).onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe.firstLine = $0 }
                 Color.clear.frame(height: 900)

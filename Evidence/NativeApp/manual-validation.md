@@ -2702,3 +2702,89 @@ An earlier print changed, an edge or the dial cannot be set with VoiceOver, or a
 
 **Write down.**
 The screenshots of steps 1 and 2 side by side, and what VoiceOver said for one edge and the dial, word for word.
+
+## The Control Strip and the Sideways Top Bar on a Real iPhone
+
+On 2026-10-29 the captain asked for the shooting screen's zoom options, focus switch and exposure to come down below the viewfinder ("4A"), and for Done and the title to be fixed when the iPhone is held sideways ("5A").
+The build puts the Zoom Steps, the focus switch and the 6×6's Focus and Exposure buttons in one control strip under the Viewfinder area, where the iPhone Camera app has its PHOTO / VIDEO row; on the 6×6 each button opens its slider in the strip, and a close button brings the Zoom Steps back.
+Held sideways, the top bar stays above the Viewfinder area: Done and the count (such as "27" or "3:20") turn in place in its corners, and the Camera's name is hidden while VoiceOver still reads it with the whole count; in every hold Done keeps a little space between it and the Viewfinder area ([081](shooting-strip-081.md), FR-39 and FR-40 of the 2026-10-29 amendment).
+For a build holding this change these supersede H01's and H02's statements that the focus switch, the 6×6's rows and the Zoom Steps float over the bottom of the Viewfinder area and that the turned header runs down the area's side or scrolls across the screen, and P01's that Develop at once's notice runs down the area's side with it (U03 has the notice held sideways).
+The simulator measures the strip under the area on every Camera, over the area's bottom edge on the iPhone SE (3rd generation) and the same in every hold, and the top bar in both sideways holds (`CaptureSidewaysTests`, `CaptureSidewaysUITests`); only a phone shows how the strip sits under a thumb, how the 6×6's slider swap feels with a lens running, and how the turned pieces read in the hand.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start), **Portrait Orientation Lock** off in Control Center, and one test Film of each of the five Cameras.
+Each scenario reads **UNTESTED: physical execution deferred**.
+
+### U01 - The strip's reach with a thumb on each Camera
+
+**Steps.**
+
+1. Open the camera of each Camera upright, holding the iPhone in one hand as you would to take a photo.
+2. With the thumb of that hand, change the focus switch (Disposable, Super 8, 6×6) and back, and take each Zoom Step (6×6, Super 8, 16mm), then press the shutter.
+3. Turn the iPhone onto its side, its top to your left, hold it in both hands, and do step 2 again; then with its top to your right.
+4. On the Instant, look for a strip.
+
+**Expect.**
+
+- The strip sits between the Viewfinder area and the shutter bar, with nothing of it over the picture on this iPhone, and the Viewfinder area is where it was before the change.
+- The 6×6 shows the Zoom Steps above **Auto** / **Manual**, its Exposure button and, in **Manual** only, its Focus button; the Super 8 shows its Zoom Steps beside **Auto** / **Fixed**; the 16mm its Zoom Steps; the Disposable **Auto** / **Fixed**; the Instant no strip.
+- The Zoom Steps read clearly apart from the focus switch (10 points above it on the 6×6, 12 beside it on the Super 8), and a thumb meant for one does not catch the other.
+- Held sideways the strip stays where it is and its words and icons read upright; every control in it can be reached and tapped in each hold.
+
+**It fails if.**
+A control in the strip cannot be reached or tapped, the strip covers the picture, it moves or changes size as the iPhone turns, or the Viewfinder area moved.
+
+**What is a finding and not a failure.**
+Whether the strip is where a thumb expects it, and how high it sits against the shutter, is the captain's to judge.
+
+**Write down.**
+A screenshot of each Camera upright and on each side, and the captain's words on the reach.
+
+### U02 - The 6×6's slider swap
+
+**Steps.**
+
+1. On the 6×6 with the rear camera running, tap the Exposure button (±).
+2. Drag the Exposure slider, take a photo, and tap the close button (×).
+3. Set the focus switch to **Manual**, tap the Focus button, drag the Focus slider, and close it; then choose **Auto** and look for the Focus button.
+4. Do steps 1 and 2 held on each side.
+5. Switch to the front camera and open the Exposure slider.
+6. Set **Settings > Accessibility > Display & Text Size > Larger Text** to the largest size short of the accessibility sizes, open the 6×6's camera again, and switch to the front camera and back, watching **Auto** / **Manual** and the buttons.
+
+**Expect.**
+
+- The slider, with its caption and its value ("Exposure 0.0 EV"), fills the strip in the Zoom Steps' place; the strip and the Viewfinder area do not move; the close button brings back the Zoom Steps and the switch.
+- At the default and the largest text size, the strip, its switch and its buttons stay where they are as the camera opens and as it switches between the cameras, whether the Zoom Steps show or not.
+- The bias set stays after closing the slider and on the photo taken; the Focus button shows only in **Manual**, and goes when **Auto** is chosen.
+- Where the lens cannot do one, the slider's place says "Manual focus unavailable on this lens" or "Exposure unavailable on this lens".
+- Held sideways, the slider's caption reads upright beside it.
+
+**It fails if.**
+A slider opens anywhere but the strip, the strip or the area moves, the close button does not bring the Zoom Steps back, or the bias is lost on closing.
+
+**Write down.**
+Screenshots with each slider open, upright and on one side, and the captain's words on the extra tap.
+
+### U03 - The sideways top bar in both holds
+
+**Steps.**
+
+1. On each Camera, open the camera upright, then turn the iPhone onto its side, its top to your left, and then its top to your right.
+2. On the Super 8, record a clip held sideways and watch the count.
+3. With VoiceOver on, held sideways, move to the count and to **Done**.
+4. Held sideways, take a test Disposable's last exposure, or the Instant's last print, and read the count's corner once it saves (on the Instant, once its print and question close); on a Film with exposures left, read it while an exposure saves.
+5. Tap **Done** held sideways.
+
+**Expect.**
+
+- The top bar stays above the Viewfinder area in both holds, with a little space between **Done** and the area as upright: **Done**, a round button, turned in place in its corner, and the count ("27", "10", "12", "3:20", "2:47") turned to read upright in the other corner; the Camera's name is hidden; nothing of the bar is over the picture.
+- While a clip records, the count counts down, in red, turned to read upright.
+- In the count's place, "Pack complete" or "Film complete", and "Finishing save" while a save finishes, read whole, one word to a line, in smaller letters than the count, never cut short or broken inside a word.
+- VoiceOver reads the Camera's full name and the whole count ("Super 8, 3 minutes 20 seconds left") and "Done".
+- With **Develop at once** on in a Debug build, its hammer sits turned beside **Done**, and VoiceOver reads it whole.
+- **Done** closes the camera, and the Film screen turns with the iPhone.
+
+**It fails if.**
+Anything of the top bar reads sideways for the way the iPhone is held, runs over the Viewfinder area or under the status bar, a word in the count's corner is cut short or broken, **Done** cannot be tapped, or VoiceOver misses the name or the count.
+
+**Write down.**
+A screenshot of each Camera in each sideways hold and what VoiceOver said, word for word.
