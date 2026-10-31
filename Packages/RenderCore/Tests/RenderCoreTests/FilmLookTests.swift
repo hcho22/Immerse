@@ -281,17 +281,22 @@ final class FilmLookTests: XCTestCase {
     }
 
     /// Version 5 differs from version 4 in the Instant's flash alone (the captain, 2026-10-30, "add harsh flash look for
-    /// instant too"): the Disposable's harsh direct flash. Every other Camera and Film Stock is the same table.
-    func testVersionFiveAddsTheDisposablesFlashToTheInstantAndChangesNothingElse() {
+    /// instant too", then "real flash - brighter subject"): a flash snapshot's light. Every other Camera and Film Stock
+    /// is the same table, the Disposable's flash included.
+    func testVersionFiveAddsAFlashLightToTheInstantAndChangesNothingElse() throws {
         for camera in CameraID.allCases {
             for filmStock in [nil, FilmStock.color, .blackAndWhite] {
                 let four = FilmLook.treatment(version: .four, camera: camera, filmStock: filmStock)
                 let five = FilmLook.treatment(version: .five, camera: camera, filmStock: filmStock)
                 if camera == .instant1970s {
                     XCTAssertNil(four.flash)
-                    XCTAssertEqual(five.flash, FilmLook.disposable.flash)
+                    XCTAssertNil(four.flashLight)
+                    XCTAssertNil(five.flash, "Not the Disposable's flash pass")
+                    let light = try XCTUnwrap(five.flashLight)
+                    XCTAssertGreaterThan(light.subject, 0, "The subject is lit brighter")
+                    XCTAssertLessThan(light.background, 0, "The background falls away dark")
                     var withoutFlash = five
-                    withoutFlash.flash = nil
+                    withoutFlash.flashLight = nil
                     XCTAssertEqual(withoutFlash, four, "Only the flash differs")
                 } else {
                     XCTAssertEqual(five, four, "\(camera) \(String(describing: filmStock))")
@@ -299,10 +304,12 @@ final class FilmLookTests: XCTestCase {
             }
         }
         XCTAssertNil(FilmLook.instantVersion3.flash)
+        XCTAssertNil(FilmLook.disposable.flashLight)
     }
 
-    /// An Instant exposure the flash lit develops in version 5 with a hot center falling away to the corners, as the
-    /// Disposable's does; in every earlier version, and without flash in any, it develops exactly as unlit.
+    /// An Instant exposure the flash lit develops in version 5 with the subject in the middle lit clearly brighter and
+    /// the corners darker, as a flash snapshot; in every earlier version, and without flash in any, it develops exactly
+    /// as unlit.
     func testTheInstantsFlashLookArrivesWithVersionFiveAndOnlyForAFlashLitExposure() throws {
         let scene = CIImage(color: CIColor(red: 0.45, green: 0.4, blue: 0.35, colorSpace: Self.linear)!)
             .cropped(to: CGRect(x: 0, y: 0, width: 400, height: 400))
@@ -320,8 +327,24 @@ final class FilmLookTests: XCTestCase {
         let plainFalloff = plain.meanLuminance(x: center.x, y: center.y) - plain.meanLuminance(x: corner.x, y: corner.y)
         let flashFalloff = flashed.meanLuminance(x: center.x, y: center.y) - flashed.meanLuminance(x: corner.x, y: corner.y)
         XCTAssertGreaterThan(flashFalloff, plainFalloff + 20, "Flash falls away toward the corners (\(flashFalloff) vs \(plainFalloff))")
-        XCTAssertGreaterThan(flashed.meanLuminance(x: center.x, y: center.y), plain.meanLuminance(x: center.x, y: center.y),
-                             "Flash lights the center brighter")
+        XCTAssertGreaterThan(flashed.meanLuminance(x: center.x, y: center.y), plain.meanLuminance(x: center.x, y: center.y) + 25,
+                             "Flash lights the subject clearly brighter")
+        XCTAssertLessThan(flashed.meanLuminance(x: corner.x, y: corner.y), plain.meanLuminance(x: corner.x, y: corner.y) - 15,
+                          "The background falls away darker")
+    }
+
+    /// The Instant's flash light leaves the Disposable as it was: its flash-lit and unlit renders are the same in versions
+    /// 4 and 5, byte for byte, and the same as its version 4 table developed directly.
+    func testTheDisposableDevelopsAsBeforeInVersionFive() throws {
+        let scene = CIImage(color: CIColor(red: 0.45, green: 0.4, blue: 0.35, colorSpace: Self.linear)!)
+            .cropped(to: CGRect(x: 0, y: 0, width: 600, height: 400))
+        for flashFired in [true, false] {
+            let five = try render(scene, camera: .disposable1990s, filmStock: nil, version: "film-look-5", flashFired: flashFired)
+            XCTAssertEqual(five.bytes, try render(scene, camera: .disposable1990s, filmStock: nil, version: "film-look-4",
+                                                  flashFired: flashFired).bytes, "flash \(flashFired)")
+            let table = FilmLook.treatment(version: .four, camera: .disposable1990s, filmStock: nil)
+            XCTAssertEqual(five.bytes, try pixels(DevelopedTreatment(table, seed: 7, flashFired: flashFired).apply(to: scene)).bytes)
+        }
     }
 
     /// The Disposable reads its flash from the capture's Exif Flash value, whose lowest bit records that it fired.

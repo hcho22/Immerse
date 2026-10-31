@@ -14,9 +14,9 @@ enum TreatmentVersion: String, CaseIterable {
     /// Version 3 with the Instant's contrast as the captain chose it after the study of preserved 1970s prints
     /// (`FilmLook`). Every other Camera and Film Stock develops exactly as in version 3.
     case four = "film-look-4"
-    /// Version 4 with harsh direct flash on an Instant exposure the flash lit, as the Disposable's develops (the captain,
-    /// 2026-10-30). Every other Camera and Film Stock, and every Instant exposure without flash, develops exactly as in
-    /// version 4.
+    /// Version 4 with a flash snapshot's light on an Instant exposure the flash lit (`FlashLight`, the captain,
+    /// 2026-10-30). Every other Camera and Film Stock, the Disposable's flash included, and every Instant exposure
+    /// without flash, develops exactly as in version 4.
     case five = "film-look-5"
 }
 
@@ -96,9 +96,11 @@ enum FilmLook {
     /// were, its prints sit closer to them in black, white, the spread of their tones and the strength of their color,
     /// and short of them in each. The scans cannot give the film's curve itself, only its ends and its spread.
     ///
-    /// An exposure the flash lit develops with harsh direct flash (the captain, 2026-10-30, "add harsh flash look for
-    /// instant too"): the Disposable's hot center that falls away toward the corners and its extra print contrast, on
-    /// the picture alone, since the card is mounted after the treatment. It is the one difference from version 4.
+    /// An exposure the flash lit develops with the light of a flash snapshot (the captain, 2026-10-30, "add harsh flash
+    /// look for instant too", then "real flash - brighter subject"): a hot, bright subject in the middle and a
+    /// background that falls away dark (`FlashLight`), on the picture alone, since the card is mounted after the
+    /// treatment. It is the one difference from version 4. Its values are provisional until the captain picks one of
+    /// the strengths he was shown.
     static let instant = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
@@ -108,7 +110,7 @@ enum FilmLook {
             grain: Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
         )),
         lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
-        flash: Flash(falloff: 0.9, contrast: 0.1),
+        flashLight: FlashLight(subject: 1.3, background: -2, spread: 0.05, contrast: 0.1),
         printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
     )
 
@@ -290,6 +292,8 @@ extension FilmLook {
         var lens: Lens
         /// How direct flash develops, on an exposure the flash lit.
         var flash: Flash?
+        /// The Instant's flash: the flash's own light on the scene, on an exposure the flash lit.
+        var flashLight: FlashLight?
         /// How much one print differs from the next, chosen once per print from its seed.
         var printVariation: PrintVariation?
         /// A Movie Camera's frame-to-frame imperfections.
@@ -298,12 +302,13 @@ extension FilmLook {
         /// through these alone: its `halation`, `lens` and `gate`, which work on display tones, stay empty.
         var scene: ScenePasses?
 
-        init(emulsion: Emulsion, halation: Halation? = nil, lens: Lens, flash: Flash? = nil,
+        init(emulsion: Emulsion, halation: Halation? = nil, lens: Lens, flash: Flash? = nil, flashLight: FlashLight? = nil,
              printVariation: PrintVariation? = nil, gate: Gate? = nil, scene: ScenePasses? = nil) {
             self.emulsion = emulsion
             self.halation = halation
             self.lens = lens
             self.flash = flash
+            self.flashLight = flashLight
             self.printVariation = printVariation
             self.gate = gate
             self.scene = scene
@@ -491,6 +496,24 @@ extension FilmLook {
         /// How much darker the corners are than the center on an exposure the flash lit, in stops: the flash's narrow
         /// spread and its falloff with distance.
         var falloff: Double
+        /// Extra print contrast on an exposure the flash lit.
+        var contrast: Double
+    }
+
+    /// A flash snapshot's light, which the Instant's flash-lit exposures develop with (the captain, 2026-10-30, "real
+    /// flash - brighter subject"): the flash's light added to the scene before the film and its print, strongest on the
+    /// near subject in the middle and falling away toward the corners, so the subject is lit hot, close to blowing out,
+    /// and the background goes dark. Added before the print curve, the Instant's faded curve cannot flatten it, as it
+    /// flattens the Disposable's `Flash` (2026-10-30 renders, `Evidence/NativeApp/instant-flash-082.md`).
+    struct FlashLight: Equatable {
+        /// Exposure added in the middle of the picture, in stops: the flash on a near subject.
+        var subject: Double
+        /// Exposure at the picture's corners, in stops, negative where they print darker than without flash: the
+        /// flash's falloff with distance and the background the exposure leaves underexposed.
+        var background: Double
+        /// How far from the middle the flash holds its full strength before it falls away, as a fraction of the half
+        /// diagonal.
+        var spread: Double
         /// Extra print contrast on an exposure the flash lit.
         var contrast: Double
     }

@@ -149,7 +149,7 @@ final class TreatmentVersionDevelopmentTests: XCTestCase {
                                                               treatmentVersion: "film-look-5"))
     }
 
-    /// The captain, 2026-10-30: an Instant exposure the flash lit develops with harsh direct flash from version 5. A pack
+    /// The captain, 2026-10-30: an Instant exposure the flash lit develops with a flash snapshot's light from version 5. A pack
     /// loaded under version 4 keeps that version, so its flash-lit prints develop as the phone's flash lit them, exactly
     /// as the same picture without flash would; a pack loaded today develops them with the flash look, and the same
     /// picture without flash exactly as version 4 does.
