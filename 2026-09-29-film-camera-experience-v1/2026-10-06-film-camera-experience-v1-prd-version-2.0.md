@@ -108,6 +108,17 @@ Neither original rewinds its film at the end: a 6×6 winds its roll film onto a 
 The new name sits beside the Movie Cameras' "Stop & Develop Early", which is unchanged, and the early-finish rule is unchanged: the rest of the roll is still wasted after the explicit warning, with no preview shortcut.
 The name is amended in place, in Journey 1's step 7 and in FR-06, each with a short note marked "2026-10-28"; the decision is recorded under DEC-01 in section 15 and in the tracker's decisions table, and no FR, DEC or section number changes.
 
+**Decision of 2026-10-30 (amended in place, no version change).**
+The captain asked for flash on the Instant: "please add flash option for instant camera. the flash option is locked at off. instant cameras have flash option also."
+Until then only the Disposable offered flash, and the Instant's shooting screen showed a greyed-out crossed bolt that could not be turned on.
+The Instant now offers the same optional flash as the Disposable, with the same switch in the same place right of the shutter: it fires the iPhone's flash on the exposure only where the active lens has one, it is hidden with the note "Flash unavailable on this lens" where the lens has none (the front camera), and a lens switch turns it back off.
+The same day he asked for the Disposable's developed flash too: "add harsh flash look for instant too".
+An Instant exposure the flash lit develops with harsh direct flash, a hot center that falls away toward the corners and extra print contrast, as the Disposable's does, on the picture only, never on the white card; an exposure without flash develops exactly as before.
+It is a new treatment version, 5, which differs from version 4 only in that look: a Film loaded with the build that adds it records version 5, and an Instant Film loaded before keeps the version it recorded, so its flash fires and lights the scene but its prints develop with no flash look.
+The look starts from the Disposable's own values and is the captain's to approve on renders of flash-lit and unlit prints before it ships.
+**Firstmate's stated defaults**: every open Instant Film gets the switch, those loaded before the build that adds it included, since flash is one of the capture controls that Load Film does not freeze (section 6); the person's choice stays as set while the camera stops and starts again around each print; and the Instant keeps the phone's automatic exposure, so its viewfinder shows no low-light cue.
+The Instant's capture character and developed look in section 6.1 and FR-04 are amended in place, each with a short note marked "2026-10-30"; the decision is recorded in the tracker's decisions table, and no FR, DEC or section number changes.
+
 **Decisions of 2026-10-16 (amended in version 2.1, no version change).**
 After trying the build on his iPhone, the captain made three decisions, recorded in [ADR 0017](adr/0017-the-shooting-screen-never-turns-and-the-6x6-has-a-normal-viewfinder-and-native-zoom.md) and in the tracker's decisions table:
 
@@ -481,12 +492,14 @@ Deleting a Trial Film that has captured never restores eligibility (FR-18, FR-21
 | Camera | Capacity | Capture character | Developed look | Reveal |
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | 27 exposures | Fixed focus, fixed exposure, optional flash; a live low-light cue in the viewfinder | Borderless 3:2 picture with no date stamp. Warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges. No light leaks, red-eye, or dust and scratches | Roll-level Development |
-| 1970s Instant | 10 exposures | Individual instant-print experience | Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print. No uneven-chemistry or spread flaws | Each exposure develops individually |
+| 1970s Instant | 10 exposures | Individual instant-print experience; optional flash | Square picture on a white card that is always part of the print. Brilliant, warm, saturated color and soft detail, with a slight variation in color and density from print to print; harsh direct flash on an exposure the flash lit. No uneven-chemistry or spread flaws | Each exposure develops individually |
 | 6×6 Medium Format | 12 exposures | Square framing; a normal viewfinder; zoom in the steps of the iPhone's own lenses on the rear camera; deliberate focus/exposure; Film Stock chosen at Load Film | Borderless square picture. Color: natural, warm color, flattering skin tones, very fine grain, and gentle contrast. Black-and-white: high contrast with distinct grain. Focus is optical only, with no synthesized background blur | Roll-level Development |
 
 The 6×6 experience is inspired by the Hasselblad 500-series concept discussed, replacing the earlier point-and-shoot proposal. Product-facing names are descriptive historical formats, not licensed manufacturer names or exact hardware replicas. The 6×6 Medium Format and the 16mm Cinema carry no decade, because their color reference films are present-day ones (version 2.0).
 
 > **2026-10-26:** The Cameras are now named Disposable, Instant, 6×6, Super 8 and 16mm, with no decade on any of them, and the Disposable focuses on Auto or Fixed and the 6×6 on Auto or Manual ([PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md), FR-24 and FR-25).
+
+> **2026-10-30:** The Instant's capture character was "Individual instant-print experience", and its developed look had no flash, until the captain gave it the Disposable's optional flash and harsh flash look that day; an Instant Film loaded before develops with no flash look (see "Decision of 2026-10-30" in the document guide).
 
 ### 6.2 Movie Cameras
 
@@ -581,7 +594,7 @@ A step is taken only between exposures, like a lens switch.
 The 6×6's focus, exposure and square framing remain at every step, and where a lens cannot focus by hand the note "Manual focus unavailable on this lens" applies.
 Zoom belongs to the 6×6 and its rear camera alone: the front camera and every other Camera keep their single lens.
 
-The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects. Its viewfinder shows a live low-light cue advising flash; the cue is exposure guidance and never previews the developed result. The 6×6 Medium Format's viewfinder shows the scene the normal way, not reversed, and the front viewfinder keeps its mirrored behavior; no developed exposure is ever reversed or mirrored. Its focus is optical only: Development never synthesizes background blur, so depth of field is whatever the phone lens produced at capture. The 1960s Super 8 Home Movie has a fixed-focus lens and sets exposure automatically.
+The 1990s Disposable has fixed exposure: scene brightness and flash use decide how an exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects. Its viewfinder shows a live low-light cue advising flash; the cue is exposure guidance and never previews the developed result. The 1970s Instant offers the same optional flash where the active lens has one, and sets exposure automatically, so its viewfinder shows no low-light cue; an exposure the flash lit develops with the Disposable's harsh direct flash on the picture, never on the white card, except on an Instant Film loaded before that look, which keeps the treatment version it recorded. The 6×6 Medium Format's viewfinder shows the scene the normal way, not reversed, and the front viewfinder keeps its mirrored behavior; no developed exposure is ever reversed or mirrored. Its focus is optical only: Development never synthesizes background blur, so depth of field is whatever the phone lens produced at capture. The 1960s Super 8 Home Movie has a fixed-focus lens and sets exposure automatically.
 
 Personal capture works offline once entitled and needs no server. Starting the Trial Film never needs connectivity (DEC-15). Failed unsaved captures consume no capacity. Safely saved captures remain sealed as required. Authentic imperfections may vary by capture, but random development effects must not completely ruin an otherwise valid image. Real darkness, motion, obstruction, and manual exposure errors may yield poor results.
 
@@ -591,6 +604,8 @@ Personal capture works offline once entitled and needs no server. Starting the T
 
 > **2026-10-29:** Superseded in this FR: the 6×6's "Focus and Exposure rows are there whatever the lens" (they now open from buttons in one control strip under the Viewfinder area, FR-39), and, for the shooting screen's header, its words turning as one line (the top bar stays above the Viewfinder area and only its pieces turn in place, with the Camera's name hidden while sideways, FR-40); see the [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md).
 > "No pinch or digital zoom" stands for capture; Print Zoom is only for looking at a developed print (FR-36, FR-38).
+
+> **2026-10-30:** The sentence on the 1970s Instant's optional flash was added that day, when the captain gave the Instant the Disposable's flash and its harsh flash look (see "Decision of 2026-10-30" in the document guide).
 
 ### FR-05 — Movie recording, orientation, and audio
 

@@ -14,12 +14,16 @@ enum TreatmentVersion: String, CaseIterable {
     /// Version 3 with the Instant's contrast as the captain chose it after the study of preserved 1970s prints
     /// (`FilmLook`). Every other Camera and Film Stock develops exactly as in version 3.
     case four = "film-look-4"
+    /// Version 4 with harsh direct flash on an Instant exposure the flash lit, as the Disposable's develops (the captain,
+    /// 2026-10-30). Every other Camera and Film Stock, and every Instant exposure without flash, develops exactly as in
+    /// version 4.
+    case five = "film-look-5"
 }
 
-/// Treatment versions 3 and 4: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections
-/// 6.1 to 6.3; ADRs 0013 to 0016). The two versions differ in the Instant alone: version 3 keeps the contrast it had
-/// before the study of preserved 1970s prints (`instantVersion3`), so a Film loaded under it still develops as it
-/// would have.
+/// Treatment versions 3 to 5: every Camera's and Film Stock's Developed Treatment, in one place (PRD 2.1 sections
+/// 6.1 to 6.3; ADRs 0013 to 0016). The three versions differ in the Instant alone: version 3 keeps the contrast it had
+/// before the study of preserved 1970s prints (`instantVersion3`), and version 4 has no flash look (`instantVersion4`),
+/// so a Film loaded under either still develops as it would have.
 ///
 /// Each look reproduces its Format Reference as it performed when new: nothing fades, yellows, shifts in dye or wears,
 /// and every imperfection is one the format made at capture or processing (ADR 0013). The exceptions are the looks
@@ -52,7 +56,8 @@ enum FilmLook {
         case (.instant1970s, _):
             switch version {
             case .one, .two, .three: instantVersion3
-            case .four: instant
+            case .four: instantVersion4
+            case .five: instant
             }
         case (.mediumFormat6x6, .blackAndWhite): mediumFormatBlackAndWhite
         case (.mediumFormat6x6, _): mediumFormatColor
@@ -90,7 +95,26 @@ enum FilmLook {
     /// and into white, where the look he approved on 2026-10-10 held the middle tones flat. Measured as the scans
     /// were, its prints sit closer to them in black, white, the spread of their tones and the strength of their color,
     /// and short of them in each. The scans cannot give the film's curve itself, only its ends and its spread.
+    ///
+    /// An exposure the flash lit develops with harsh direct flash (the captain, 2026-10-30, "add harsh flash look for
+    /// instant too"): the Disposable's hot center that falls away toward the corners and its extra print contrast, on
+    /// the picture alone, since the card is mounted after the treatment. It is the one difference from version 4.
     static let instant = Treatment(
+        emulsion: .color(ColorEmulsion(
+            warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
+            saturation: 0.85,
+            tone: ToneCurve(contrast: 1.3, midtones: 0.9, black: 0.11, white: 0.9),
+            shadows: RGB(0, 0.008, 0.03), highlights: RGB(0.012, 0.004, -0.03),
+            grain: Grain(amplitude: 4.5, size: 0.0014, chroma: 0.3)
+        )),
+        lens: Lens(softness: 0.0011, edgeSoftness: 0.001, edgeDarkening: 0.4),
+        flash: Flash(falloff: 0.9, contrast: 0.1),
+        printVariation: PrintVariation(density: 0.12, warmth: 0.025, tint: 0.01)
+    )
+
+    /// The Instant as treatment version 4 develops it: today's look with no flash look, so an exposure the flash lit
+    /// develops as the phone's flash lit it. Frozen: a Film loaded under version 4 keeps it.
+    static let instantVersion4 = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
             saturation: 0.85,

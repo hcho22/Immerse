@@ -94,9 +94,10 @@ extension CameraPackage {
 
 public enum CameraCatalog {
     /// The treatment version today's packages carry: each Camera's and Film Stock's own look (PRD 2.1 section 6,
-    /// slice 4), with the Instant's contrast as chosen after the study of preserved 1970s prints. Rendering it, and
+    /// slice 4), with the Instant's contrast as chosen after the study of preserved 1970s prints and its harsh flash look
+    /// (2026-10-30). Rendering it, and
     /// every earlier version a Film can still need, is `RenderCore`'s.
-    public static let treatmentVersion = "film-look-4"
+    public static let treatmentVersion = "film-look-5"
 
     public static let disposable1990s = CameraPackage(
         id: .disposable1990s,

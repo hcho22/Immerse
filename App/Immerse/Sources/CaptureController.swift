@@ -13,7 +13,11 @@ final class CaptureController {
     private var sessionRequest = 0
     private(set) var filmID: UUID?
     private(set) var preview: CapturePreviewSource?
-    private(set) var position = CapturePosition.rear
+    /// The running lens's side. Another lens has its own flash, so the person's flash choice ends with the lens it was
+    /// made on.
+    private(set) var position = CapturePosition.rear {
+        didSet { if position != oldValue { flash = false } }
+    }
     private(set) var phase = CapturePhase.interrupted
     private(set) var busy = false
     private(set) var controls = NativeCameraControls()
@@ -36,6 +40,8 @@ final class CaptureController {
     /// question close, and the wait lasts until that restart's `open` ends. The app going inactive meanwhile (a
     /// permission prompt, Control Center) keeps it; any other stop (`suspend`, a real interruption, a failed save) ends it.
     private var resumesAfterReveal = false
+    /// The person's flash choice for the running lens, on the Cameras that offer flash. It lasts while the lens does,
+    /// including the Instant's stop and restart around each print, and ends with a lens switch or another Film.
     var flash = false
     var focus: Double = 0.8
     var exposure: Double = 0
@@ -64,6 +70,12 @@ final class CaptureController {
     /// The Disposable's viewfinder advises flash in low light, only when flash is available and still off:
     /// a cue for a control the active lens lacks would advise something it cannot do.
     var showsLowLightCue: Bool { isLowLight && controls.flash && !flash }
+
+    /// Whether an exposure of `film` fires the iPhone's flash: only where its Camera offers flash, the running lens has
+    /// one and the person turned it on.
+    func firesFlash(for film: Film) -> Bool {
+        flash && controls.flash && CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting).offersFlash
+    }
 
     /// The session a Film's Camera asks for: its capture behavior and the Focus control's position travel with the
     /// plan to the backend.
@@ -114,6 +126,7 @@ final class CaptureController {
             eventsTask?.cancel()
             backend = next
             filmID = film.id
+            flash = false
             #if DEBUG
             model.developedPreviews.cameraAttached(to: film)
             #endif
@@ -188,7 +201,7 @@ final class CaptureController {
         if phase == .recordingMovie {
             await backend.stopMovie()
         } else if film.camera.medium == .photo {
-            try await backend.capturePhoto(orientation: orientation, flash: flash && controls.flash)
+            try await backend.capturePhoto(orientation: orientation, flash: firesFlash(for: film))
         } else {
             if film.camera.recordsLiveSound == true {
                 microphoneUnavailable = authorizer.microphoneAuthorizationStatus() != .authorized
@@ -205,7 +218,6 @@ final class CaptureController {
         let next: CapturePosition = position == .rear ? .front : .rear
         try await backend.switchLens(to: next)
         position = next
-        flash = false
         if request == sessionRequest {
             watchSceneLight(behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting))
         }
@@ -405,6 +417,9 @@ extension CaptureController {
             isLowLight = lowLightCue.isShowing
         }
     }
+
+    /// Hosted tests cannot switch lenses, so they set the side a switch would leave running.
+    func setForTesting(position: CapturePosition) { self.position = position }
 
     /// Hosted tests have no camera list, so they set the Zoom Steps an iPhone's rear camera would offer.
     func setForTesting(rearZoomSteps: [ZoomStep]) { self.rearZoomSteps = rearZoomSteps }

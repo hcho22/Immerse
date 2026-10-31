@@ -155,15 +155,15 @@ final class FilmStockRenderTests: XCTestCase {
         }
     }
 
-    /// Version 4 is assigned from now on, and a capture assigned version 1, 2 or 3 before the update still renders, so
+    /// Version 5 is assigned from now on, and a capture assigned version 1, 2, 3 or 4 before the update still renders, so
     /// a Film that was developing finishes. An unknown version does not.
     func testEarlierTreatmentVersionStillRenders() throws {
-        XCTAssertEqual(NativePhotoRenderer.treatmentVersion, "film-look-4")
+        XCTAssertEqual(NativePhotoRenderer.treatmentVersion, "film-look-5")
         let film = try Film(camera: CameraCatalog.mediumFormat6x6, title: "Roll", filmStock: .blackAndWhite)
         let run = DevelopmentRun(film: film)
-        XCTAssertEqual(run.treatmentVersion, "film-look-4")
+        XCTAssertEqual(run.treatmentVersion, "film-look-5")
         XCTAssertTrue(run.rendersAssignedTreatment(TreatmentAssignment(sequenceNumber: 1, seed: 1)))
-        for earlier in ["film-look-1-provisional", "film-look-2-provisional", "film-look-3"] {
+        for earlier in ["film-look-1-provisional", "film-look-2-provisional", "film-look-3", "film-look-4"] {
             XCTAssertTrue(run.rendersAssignedTreatment(TreatmentAssignment(sequenceNumber: 1, seed: 1, treatmentVersion: earlier)))
         }
         XCTAssertFalse(run.rendersAssignedTreatment(TreatmentAssignment(sequenceNumber: 1, seed: 1, treatmentVersion: "film-look-0-earlier")))

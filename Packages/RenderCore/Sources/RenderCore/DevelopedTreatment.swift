@@ -30,7 +30,7 @@ struct DevelopedTreatment {
         case .one, .two:
             self.init(look: .legacy(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
                       sceneWhiteBalance: nil)
-        case .three, .four:
+        case .three, .four, .five:
             self.init(FilmLook.treatment(version: version, camera: camera, filmStock: filmStock), seed: seed,
                       flashFired: flashFired, sceneWhiteBalance: sceneWhiteBalance)
         }

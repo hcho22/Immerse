@@ -1,0 +1,73 @@
+# The Instant's Flash (082)
+
+On 2026-10-30 the captain asked for flash on the Instant: "please add flash option for instant camera. the flash option is locked at off. instant cameras have flash option also."
+Until then only the Disposable offered flash (`CaptureBehavior.offersFlash`), and the Instant's shooting screen showed a greyed-out crossed bolt (`bolt.slash`) right of the shutter that could not be turned on.
+The Instant now has the Disposable's flash switch in that place, with the same symbol, accessibility label and Large Content Viewer, and by the same rules: an exposure fires the iPhone's flash only where the switch is on and the active lens has a flash; where the lens has none (the front camera) the switch is not offered, the greyed-out bolt stays and the note "Flash unavailable on this lens" shows over the viewfinder; and a lens switch turns it off.
+The same day he asked for the Disposable's developed flash too: "immerse - add harsh flash look for instant too".
+An Instant exposure the flash lit now develops with harsh direct flash, a hot center that falls away toward the corners and extra print contrast, on the picture only; the white card is mounted after the treatment and is the same white on every print.
+It starts from the Disposable's own values, `Flash(falloff: 0.9, contrast: 0.1)`, and went to the captain on renders of flash-lit and unlit prints before validation (see "The captain's approval").
+It is a new treatment version, 5 (`film-look-5`), which differs from version 4 in that alone: a Film loaded with this build records version 5, and an Instant Film loaded before keeps the version it recorded, so its flash fires and lights the scene but its prints develop with no flash look.
+
+Firstmate's stated defaults, checked against the code and the PRD:
+
+- Every open Instant Film gets the switch, those loaded before this build included.
+  `CaptureBehavior` derives flash from the Camera, never from the stored `CameraPackage`, and PRD 2.1 section 6 keeps flash among the capture controls that Load Film does not freeze, so no stored data changes.
+- The choice stays as set while the camera stops and starts again around each Instant print.
+  It did already: the restart is `open` on the same Film, which keeps `flash`, and only a lens switch cleared it.
+  This build keeps it so and holds it in a test.
+- No low-light cue: the cue is for the Disposable's fixed exposure, and the Instant keeps the phone's automatic exposure (`showsLowLightCue` stays false, so the controller never meters for it).
+- The first default, that the Instant's Developed Treatment and treatment version would not change, was superseded the same day by the captain's ask for the flash look.
+  Development already read whether the flash fired from the capture's Exif, and a treatment with a flash look already used it (the Disposable's), so the look needed only the Instant's values and a version to hold them.
+
+Manual steps are E01 to E03 in [manual-validation.md](manual-validation.md#the-instants-flash-on-a-real-iphone).
+
+## What changed
+
+- `Packages/NativeAdapters/Sources/NativeAdapters/CaptureBehavior.swift`: the Instant's behavior offers flash.
+- `App/Immerse/Sources/CaptureController.swift`:
+  - `firesFlash(for:)` is what an exposure asks of the backend: the switch on, a lens with flash, and a Camera that offers it. Before, the shutter sent the switch and the lens's flash without asking whether the Camera offered flash.
+  - The flash turns off whenever the running lens changes side (`position`'s `didSet`), which covers Switch Camera, as before, and an `open` that falls back to the rear camera because the one in use is gone.
+  - It also turns off when another Film's camera attaches.
+    Before this, the controller, which outlives each shooting screen, kept the flash from one Film to the next: a Disposable's flash left on would have fired on the next Instant exposure with no switch to show it, and with the switch it would show as on in a Film where the person never set it.
+    The same Film's camera, reopened, keeps it, as the Disposable's always did.
+- `Packages/RenderCore/Sources/RenderCore/FilmLook.swift`: `TreatmentVersion.five`, "film-look-5"; `FilmLook.instant` gains the Disposable's `Flash(falloff: 0.9, contrast: 0.1)`, and version 4's Instant is frozen as `instantVersion4`, the same table without it. Every other Camera and Film Stock is the same table in versions 4 and 5. `DevelopedTreatment` renders version 5 as it renders 3 and 4.
+- `Packages/FilmDomain/Sources/FilmDomain/CameraPackage.swift`: `CameraCatalog.treatmentVersion` is "film-look-5", so every Film loaded from this build records it. On every Camera but the Instant it develops exactly as version 4, and on the Instant it differs only for an exposure the flash lit.
+- `App/Immerse/Sources/CaptureView.swift`: the choice of what sits right of the shutter (`flashPlace`) and the lens notes (`lensNotes`) are static functions of the Camera's behavior and the lens's report, so tests read them directly; what they show is unchanged.
+- Tests:
+  - `CaptureBehaviorTests`: the Instant's behavior is the square viewfinder and automatic exposure with flash, in every focus setting with no low-light cue, and only the Disposable and the Instant offer flash.
+  - `CaptureControllerIntegrationTests` (hosted): `testInstantFlashFiresOnlyWhenOnAndAvailableAndLastsAcrossAPrint` takes an Instant Film through its switch off and on, a lens without flash, a Movie Camera, a print's stop and restart (the switch still on), a dim scene (no cue), a lens switch and another Film (the switch off after each); `testTheShutterBarOffersTheFlashSwitchWhereTheCameraAndTheLensHaveFlash` checks, for every Camera, the switch where the Camera and the lens have flash, the greyed-out bolt or empty room elsewhere, and the note exactly on the Disposable and the Instant on a lens without flash; the Instant joins the capture-screen screenshots.
+  - `FilmLookTests`: today's version is 5 and versions 1 to 5 render (`testDevelopmentAssignsTheTreatmentVersionTheFilmsPackageRecorded`); version 5's tables equal version 4's for every Camera and Film Stock but the Instant, whose differ only in the Disposable's flash (`testVersionFiveAddsTheDisposablesFlashToTheInstantAndChangesNothingElse`); a flash-lit Instant render falls away to the corners in version 5 and is byte for byte the unlit one in versions 1 to 4, and an unlit one is the same in versions 4 and 5 (`testTheInstantsFlashLookArrivesWithVersionFiveAndOnlyForAFlashLitExposure`, compared within one run); version 4's Instant table is now `instantVersion4`.
+  - `InstantVersionTests.testTheInstantsFlashLookLeavesTheCardWhite`: a developed print whose capture's Exif says the flash fired is darker at the picture's corner than the unlit one, while its card, sampled 16 pixels clear of the picture on every side, is white and the same pixel for pixel; the fixture, taken without flash, develops alike in versions 4 and 5.
+  - `TreatmentVersionDevelopmentTests.testOnlyAnInstantPackLoadedTodayDevelopsAFlashLitPrintWithTheFlashLook`, through the production processor: an Instant pack locked under version 4 develops a flash-lit exposure byte for byte as the unlit one; a pack loaded today records version 5 and develops it with the flash look; unlit exposures are the same under both. The tests that named version 4 as today's now name version 5.
+  - `FilmStockRenderTests`: version 4 joins the earlier versions a capture can still be assigned.
+- Requirements: PRD 2.1 (its document guide's "Decision of 2026-10-30", section 6.1's Instant row and FR-04, each with a note marked "2026-10-30"), the tracker (CAM-03, a Captain decisions row and the change log), the evidence map's CAM-03 row, and the manual plan's E section with its note on the common steps. The glossary (`sources/CONTEXT.md`) never said the Instant had no flash, so it is unchanged; PRD 1.5 stays as history.
+
+## What it leaves alone
+
+The Disposable's flash, its flash look, its low-light cue and their tests; the 6×6 and the Movie Cameras, which offer no flash and develop as before; the Instant's automatic exposure and its look on an exposure without flash; every earlier treatment version; every stored Film and Camera package; and the front camera's note.
+No persistence, entitlement or migration code changed.
+
+Reverting: before a build with version 5 reaches a phone that keeps its data, a revert restores everything, the greyed-out bolt included.
+After one has, Instant Films loaded with it record "film-look-5", and a build that no longer knows that version refuses to develop them rather than develop them with another look, as with version 4 (`instant-study-and-toning-061.md`).
+So once version 5 has shipped, a wrong flash look is put right by a version 6 with version 5 kept renderable, and taking the switch away means keeping version 5 in `RenderCore`.
+
+## The captain's approval
+
+The flash look's two values are a starting point, the Disposable's, until the captain approves them.
+Six of the look boards' scenes (`Evidence/AssetReview/looks/SOURCES.md`: two lit by on-camera flash, two portraits, a night street and a bright beach) were developed through `NativePhotoRenderer.develop` three ways: as Instant prints with the flash fired under version 5, as the same prints without flash (the same seed, so the same print-to-print variation), and through the Disposable's flash.
+The renders were made outside the repository and are not kept in it.
+With the same values the Instant's flash reads milder than the Disposable's: the Instant's lifted blacks, softened whites and lower contrast soften both the falloff and the added contrast.
+His answer: pending.
+
+## Outcomes
+
+Run on 2026-10-30 on this Intel Mac with Xcode 26.5, the hosted tests on a new iPhone 17 Pro simulator on iOS 26.2, quieted with `Scripts/quiet-simulator.sh`:
+
+- `swift test --package-path Packages/NativeAdapters --filter CaptureBehaviorTests`: 14 tests pass.
+- `swift test --package-path Packages/RenderCore`, `FilmLookTests`, `InstantVersionTests`, `FilmStockRenderTests` and `LegacyLookTests`: 38 tests pass after `testVersionThreeKeepsTheInstantAsItWasBeforeTheStudy` was moved from `FilmLook.instant` to `instantVersion4` (it compared version 4 with today's table, which now has the flash). The card test first asked that the flash brighten the middle of the picture; on the fixture the hot center and the added contrast nearly cancel there (about 1 level), so it now asks for the corner's falloff, which `FilmLookTests` also holds on a flat scene. Byte comparisons inside one run hold on any Mac; only CI's arm64 runner proves the rest of the render suite there.
+- `swift test --package-path Packages/FilmRuntime --filter TreatmentVersionDevelopmentTests`: 5 tests pass.
+- `CaptureControllerIntegrationTests`: all 22 tests pass, the two new ones among them.
+- `CaptureSidewaysTests`: all 33 tests pass, before the version 5 change, which touches no screen; its Instant screenshots show the flash switch right of the shutter, where they showed the greyed-out bolt.
+
+The simulator has no camera, so nothing here fires a flash or lights a print: the switch's state and what the exposure asks of the backend are all a simulator shows.
+Whether the iPhone's flash fires, how the flash look reads on real flash-lit prints, and the switch on the front camera of a real iPhone are E01 to E03.

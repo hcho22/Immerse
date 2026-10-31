@@ -538,7 +538,7 @@ The names in bold are the words on the screen.
    Every Camera's focus switch, where it has one, starts on **Auto**; leave it there unless a scenario says otherwise.
    The big round button takes a photo; on a Movie Camera it starts a clip and the same button stops it.
    The button to its left switches between the rear and front lens, between captures only.
-   On the Disposable the button to its right turns the flash on and off.
+   On the Disposable, and on the Instant in a build holding its flash ([E01](#e01---the-instants-flash-on-the-rear-camera)), the button to its right turns the flash on and off.
    Tap **Done** to leave the camera.
    On the Instant each print develops by itself and opens over the camera as **Photo** and its number.
    Tap **Done** on the print to close it.
@@ -2788,3 +2788,85 @@ Anything of the top bar reads sideways for the way the iPhone is held, runs over
 
 **Write down.**
 A screenshot of each Camera in each sideways hold and what VoiceOver said, word for word.
+
+## The Instant's Flash on a Real iPhone
+
+On 2026-10-30 the captain asked for flash on the Instant ("please add flash option for instant camera. the flash option is locked at off. instant cameras have flash option also."), whose shooting screen showed a greyed-out crossed bolt that could not be turned on.
+The build gives the Instant the Disposable's flash switch right of the shutter, by the same rules: it fires the iPhone's flash on the exposure only where the active lens has one, it is hidden with "Flash unavailable on this lens" where the lens has none, and a lens switch turns it off ([082](instant-flash-082.md), PRD 2.1 section 6.1 and FR-04).
+The choice stays as set while the camera stops and starts again around each print, and the Instant shows no low-light cue.
+The same day he asked for the Disposable's developed flash on the Instant too ("add harsh flash look for instant too"): on an Instant Film loaded with this build, a print the flash lit develops with a hot center falling away to the corners and harsher contrast on the picture, the white card unchanged; an Instant Film loaded before keeps its treatment version and develops its flash-lit prints with no flash look.
+For a build holding this change, the common steps' and H01's "on the Disposable" for the flash read "on the Disposable and the Instant".
+The simulator holds the switch's place and the note on lenses with and without flash, that an exposure asks for flash only when the switch is on and the lens has it, that the choice outlasts a print's stop and restart and ends with a lens switch or another Film, and that a print whose capture records the flash fired develops with the flash look in version 5, with the card unchanged, and with none in version 4 (`CaptureControllerIntegrationTests`, `CaptureBehaviorTests`, `FilmLookTests`, `InstantVersionTests`, `TreatmentVersionDevelopmentTests`); the simulator has no camera, so only a phone shows the flash firing and the print it lights.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold it: run these only on the re-pin that follows its merge (The Candidate, above).
+Run by hand on HC_iPhone13 with the [Debug testing unlock](#debug-testing-unlock) on, with the common steps of [Looks on a Real iPhone](#before-you-start), on a test Instant Film loaded with the candidate, with at least four exposures left, in a room dim enough that a flash shows.
+Each scenario reads **UNTESTED: physical execution deferred**.
+
+### E01 - The Instant's flash on the rear camera
+
+**Steps.**
+
+1. Open the Instant's camera on the rear camera and look right of the shutter.
+2. Tap the flash button, and take an exposure of an object within arm's reach or two with a wall several meters behind it.
+3. When the print shows, close it, and look at the flash button before touching anything.
+4. Take a second exposure of the same scene with the flash still on, then turn it off and take a third.
+5. With VoiceOver on, move to the flash button and turn it on and off; then, with VoiceOver off and the largest text size short of the accessibility sizes, touch and hold the button.
+6. Turn the iPhone onto its side and look at the button.
+
+**Expect.**
+
+- Right of the shutter is the flash button, the crossed bolt while it is off and the filled bolt while it is on, in white, where the Disposable has it, with no greyed-out bolt.
+- The iPhone's flash fires on the first and second exposures and not on the third; the viewfinder shows no **Low light - use flash** cue at any time.
+- After each print closes and the viewfinder comes back, the flash button is as it was before the exposure: on after the first and second, off after the third.
+- The first two prints show the flash's light on the near object and the flash look: a hot center falling away to darker corners and harsher contrast, the wall darker behind; the third has neither; all three keep the Instant's look, and the white card is the same clean white on all three.
+- VoiceOver reads "Flash" with its state, and the Large Content Viewer shows the bolt.
+- Held sideways, the bolt turns in place to read upright, and the button stays where it was.
+
+**It fails if.**
+The Instant shows the greyed-out bolt on the rear camera, the flash does not fire with the button on or fires with it off, the button turns itself off when a print closes, or a low-light cue appears.
+
+**What is a finding and not a failure.**
+How strong the flash look reads on real prints, against the Disposable's, is the captain's to judge; he judged it on renders before it shipped, not on real captures.
+An Instant Film loaded before this build develops its flash-lit prints with no flash look, by design, and is not a failure.
+
+**Write down.**
+The three prints side by side, a screenshot of the shutter bar with the flash off and on, and what VoiceOver said, word for word.
+
+### E02 - The front camera and a lens switch
+
+**Steps.**
+
+1. On the Instant's rear camera, turn the flash on.
+2. Tap Switch Camera to change to the front camera, and look right of the shutter and over the viewfinder.
+3. Take an exposure on the front camera and close its print.
+4. Switch back to the rear camera and look at the flash button.
+
+**Expect.**
+
+- On the front camera, right of the shutter, is the greyed-out crossed bolt, which does nothing when tapped, and the viewfinder says "Flash unavailable on this lens"; the front exposure is taken without flash, the screen not lighting up for it either (the front camera has no flash of its own, and the app does not use the screen as one).
+- Back on the rear camera, the flash button is there and off, though it was on before the switch.
+
+**It fails if.**
+The front camera shows a flash switch that cannot fire, shows no note where the bolt is greyed out, or the rear camera comes back with the flash on.
+
+**Write down.**
+A screenshot of the front camera's shutter bar and note, and the flash button's state after switching back.
+
+### E03 - The choice across a print and a pack's end
+
+**Steps.**
+
+1. On the rear camera, turn the flash on and take an exposure; while its print shows, pull down Control Center and put it away, then close the print.
+2. Take an exposure, close the print, tap **Done** at once, and open the camera again from the Film screen.
+3. On a test Disposable Film, turn its flash on, tap **Done**, and open the Instant Film's camera.
+
+**Expect.**
+
+- After step 1 the viewfinder comes back by itself with the flash still on.
+- After step 2 the flash is as it was when the camera closed: the switch keeps the choice while the same Film's camera is reopened.
+- After step 3 the Instant's camera opens with the flash off: another Film starts with it off.
+
+**It fails if.**
+The flash turns off by itself when a print closes, or the Instant's camera opens with the flash on after another Film's.
+
+**Write down.**
+The flash button's state after each step.

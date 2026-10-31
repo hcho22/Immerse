@@ -37,7 +37,7 @@ final class CaptureBehaviorTests: XCTestCase {
 
     func testCamerasOtherThanThoseThatChangedKeepTheirCaptureConfiguration() {
         XCTAssertEqual(CaptureBehavior.for(.instant1970s),
-                       CaptureBehavior(focus: .deviceDefault, exposure: .automatic, viewfinder: .square))
+                       CaptureBehavior(focus: .deviceDefault, exposure: .automatic, viewfinder: .square, offersFlash: true))
         XCTAssertEqual(CaptureBehavior.for(.cinema16mm), CaptureBehavior(offersZoomSteps: true))
         for camera in CameraID.allCases where camera != .disposable1990s {
             XCTAssertNotEqual(CaptureBehavior.for(camera).exposure, .fixed, "\(camera)")
@@ -48,6 +48,20 @@ final class CaptureBehaviorTests: XCTestCase {
         }
         for camera in CameraID.allCases where camera != .mediumFormat6x6 {
             XCTAssertFalse(CaptureBehavior.for(camera).offersManualFocus, "\(camera)")
+        }
+    }
+
+    /// The captain, 2026-10-30: the Instant offers flash as the Disposable does, and keeps the phone's automatic exposure,
+    /// so it gets no low-light cue. No Movie Camera and not the 6×6 offers flash.
+    func testTheDisposableAndTheInstantOfferFlashAndOnlyTheDisposableAdvisesIt() {
+        for setting in FilmFocusSetting.allCases {
+            let instant = CaptureBehavior.for(.instant1970s, focusSetting: setting)
+            XCTAssertTrue(instant.offersFlash, "\(setting)")
+            XCTAssertFalse(instant.showsLowLightCue, "\(setting)")
+            XCTAssertEqual(instant.exposure, .automatic, "\(setting)")
+        }
+        for camera in CameraID.allCases {
+            XCTAssertEqual(CaptureBehavior.for(camera).offersFlash, [.disposable1990s, .instant1970s].contains(camera), "\(camera)")
         }
     }
 

@@ -102,6 +102,7 @@ not a newly approved DEC-03.
 The captain decided the Darkroom's ranges, the export sizes and formats, the Instant's question about each print's original and that a soundtrack can be changed later on 2026-10-13 (`Evidence/NativeApp/darkroom-export-decisions-060.md`).
 His phone feedback of 2026-10-26 (`2026-09-29-film-camera-experience-v1/2026-10-26-film-camera-experience-v1-prd-phone-feedback.md`) moved that question to once after the Instant pack's last print, gave new Super 8 and 16mm Films recorded sound, and changed the Darkroom: Dodge/Burn removed, Crop renamed Adjust with quarter turns and straightening, and Saturation and Vignette added within new limits.
 The same day, after a study of preserved 1970s prints, he chose the Instant's contrast, which a Film loaded since develops with as treatment version 4 (`film-look-4`), its print-to-print variation unchanged, and each toner's range, from the untoned print to a strength of 1 (`Evidence/NativeApp/instant-study-and-toning-061.md`).
+On 2026-10-30 he gave the Instant the Disposable's flash switch and harsh flash look, which a Film loaded since develops with as treatment version 5 (`film-look-5`) (`Evidence/NativeApp/instant-flash-082.md`).
 His own sample shots, instrumental licenses, support/privacy wording, measured budgets and launch approval remain open.
 `Sources/Resources/MediaCatalog.json` configures rights-verified bundled Camera
 samples and instrumentals. It is empty until he supplies his shots and a license
