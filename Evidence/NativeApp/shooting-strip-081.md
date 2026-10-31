@@ -137,6 +137,7 @@ On the code this record is committed with (after `3f1c8b0`), each class run with
 The approval screenshots, on the iPhone SE (3rd generation) and the iPhone 17 Pro Max simulators, iOS 26.5, are kept with the task's records, outside this repository.
 The set he approved showed the plain counts only and three lenses' four Zoom Steps; `testTheTopBarsStatesHeldSidewaysForApproval` now keeps each of the four state words held sideways in both holds at the default and the largest text size, and `testTheSuper8sFiveZoomStepsForApproval`, but on the iPhone SE, the Super 8 upright with the 17 Pro's five Zoom Steps at the largest size short of the accessibility sizes and the first of those, run on the iPhone 17 Pro too for that; each is a test of its own beside `testTheShootingScreensForApproval`, so none of the three comes near the hosted run's 120 seconds a test on CI (Runs, above).
 Those screenshots have not yet been before the captain.
+Afterwards, on 2026-10-30, he chose the state words held sideways from smaller words in the regular font with the same wording, shorter sideways words, or symbols ("Smaller words, same wording"), and approved the final set, with the sideways state words, the Super 8 with the iPhone 17 Pro's five Zoom Steps on one line, the 6×6's strip two points higher and no strip jump ("Approve").
 
 ## Not Proven Without a Phone
 

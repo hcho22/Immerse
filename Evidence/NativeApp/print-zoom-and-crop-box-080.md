@@ -128,4 +128,4 @@ So the limit is now 110 minutes, the same 1.44 times the slowest part with this 
 ## What only a phone can show
 
 How the zoom, the handles, the pinch under the box and the dial feel by hand beside the Photos app, how sharp the furthest zoom is, how fast the sharper picture comes on the oldest supported iPhone, and what VoiceOver says: Z01 to Z08.
-The candidate pinned on 2026-10-29, `25fdec1`, does not hold this change; they wait for the re-pin that takes it.
+The candidate pinned on 2026-10-29, `25fdec1`, does not hold this change; the candidate pinned on 2026-10-30, `4410d45`, holds it.
