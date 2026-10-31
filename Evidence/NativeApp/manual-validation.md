@@ -138,7 +138,7 @@ This is the execution companion to the [163-task evidence map](../../2026-09-29-
 [136 acceptance clauses and nine invariants](../../2026-09-29-film-camera-experience-v1/2026-09-29-film-camera-experience-v1-acceptance-evidence.md),
 and [QA-14 handoff](launch-readiness.md). It does not replace those IDs, change
 original ADRs, include deferred Groups/Accounts, or check any tracker box.
-The counts are the ones `Scripts/verify-requirement-map.sh` checks since this re-pin (163 intake IDs since the 2026-10-29 amendment's tasks, and 136 clauses since FR-36 to FR-41 gained theirs on 2026-10-30); 137 intake IDs were the count after CAP-15, the warning below 2 GB free, was added on 2026-10-13, and 154 after the 2026-10-26 amendment; the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 the count before CAP-15.
+The counts are the ones `Scripts/verify-requirement-map.sh` checks since this re-pin (163 intake IDs since the 2026-10-29 amendment's tasks, and 136 clauses since FR-36 to FR-41 gained theirs on 2026-10-30); 137 intake IDs were the count after CAP-15, the warning below 2 GB free, was added on 2026-10-13, and 154 after the 2026-10-26 amendment; the 122 tasks and 72 clauses this plan cited before were the counts before PRD 2.0 added fourteen tasks and two clauses (FR-01 A11 and FR-07 A05), and 136 intake IDs the count before CAP-15.
 
 ### What changed between `25fdec1` and this pin
 
