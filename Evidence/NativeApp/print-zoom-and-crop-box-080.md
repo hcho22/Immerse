@@ -124,6 +124,7 @@ In main's and pull requests' last eight green runs the parts took 50 to 68 minut
 When the parts began the slowest took 52 minutes and the limit was 23 minutes, about 1.44 times, over it, as one runner differed from the next by up to a third (`dropped-touch-059.md`).
 No part has room for the harness's new tests, and a fifth part would take a fifth macOS runner of the five the account runs at once, leaving a second run none.
 So the limit is now 110 minutes, the same 1.44 times the slowest part with this change, 76 minutes; it is there to stop a stuck part, and each test still has its own 3-minute allowance.
+The captain chose the 110-minute limit on 2026-10-30: "immerse limit 1" (the task tracker's decisions table).
 
 ## What only a phone can show
 

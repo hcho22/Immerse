@@ -61,6 +61,7 @@ The shutter bar's Switch Camera and flash symbols also grew with the text size, 
 The focus switch's words reserve their turned length, which makes it the strip's tallest control; grown to the first accessibility size it made the 6×6's strip 142 points tall, more than the 133 the iPhone 17 Pro Max then left under the area, so the strip sat over the top of its square picture's black bar.
 At the largest size on the 17 Pro Max the strip is now under the area with a gap above it, and the Zoom Steps' labels keep the 8 points at each side they have at the default size.
 On the iPhone 17 Pro, at the largest size short of the accessibility sizes and above, the 6×6's strip (138 points) is still taller than the 114 points under the area, so it sits down to the room's end, 8 points above the shutter bar, and 24 points over the top of the 67-point black bar under its square picture, none of it over the picture.
+That departs from FR-39, whose first acceptance clause has no strip control over the Viewfinder area on any iPhone but the iPhone SE, and no captain's word covers it: it is open (FR-39 A01 and CAP-20 in the requirement package).
 
 **Five Zoom Steps.**
 The iPhone 17 Pro's Camera app offers five Zoom Steps (0.5x, 1x, 2x, 4x and 8x), where the screenshots had three lenses' four.
