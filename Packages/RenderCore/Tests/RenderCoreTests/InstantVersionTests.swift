@@ -1,13 +1,14 @@
 import CoreGraphics
 import FilmDomain
 import Foundation
+import ImageIO
 @testable import RenderCore
 import RenderFixtures
 import XCTest
 
-/// The Instant across treatment versions 3 and 4. Version 4 gave it the contrast the captain chose on 2026-10-13
-/// after the study of preserved 1970s prints; version 3 is frozen, so an Instant Film loaded under it develops as the
-/// version 3 build developed it (ADR 0013, CAM-01, RK-11).
+/// The Instant across treatment versions 3 to 5. Version 4 gave it the contrast the captain chose on 2026-10-13
+/// after the study of preserved 1970s prints, and version 5 its harsh flash look on a flash-lit exposure; version 3 is
+/// frozen, so an Instant Film loaded under it develops as the version 3 build developed it (ADR 0013, CAM-01, RK-11).
 ///
 /// The expected values are the mean red, green and blue of an 8 x 8 grid over each developed print, card and all,
 /// recorded from the version 3 build (5c3a217) with the same fixture and seeds, as `LegacyLookTests` records versions
@@ -47,8 +48,11 @@ final class InstantVersionTests: XCTestCase {
         let camera = CameraCatalog.instant1970s
         let earlier = try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42, treatmentVersion: "film-look-3"))
         let today = try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42))
-        XCTAssertEqual(try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42,
-                                                                     treatmentVersion: "film-look-4")).bytes, today.bytes)
+        // The fixture was taken without flash, which versions 4 and 5 develop alike.
+        for version in ["film-look-4", "film-look-5"] {
+            XCTAssertEqual(try DecodedPixels(NativePhotoRenderer.develop(source: photo, camera: camera, seed: 42,
+                                                                         treatmentVersion: version)).bytes, today.bytes, version)
+        }
         let card = InstantPrintCard.self
         let picture = (x: card.sideBorder..<(card.sideBorder + card.pictureSide), y: card.sideBorder..<(card.sideBorder + card.pictureSide))
         func spread(_ print: DecodedPixels) -> Double {
@@ -65,6 +69,51 @@ final class InstantVersionTests: XCTestCase {
         let below = (card.sideBorder + card.pictureSide + 40)..<(card.height - 40)
         XCTAssertGreaterThan(today.meanLuminance(x: 40..<(card.width - 40), y: below), 252)
         XCTAssertGreaterThan(earlier.meanLuminance(x: 40..<(card.width - 40), y: below), 252)
+    }
+
+    /// The Instant's flash look (version 5, the captain, 2026-10-30) reaches the picture only: a print of the fixture
+    /// with its Exif recording the flash fired differs from the unlit one inside the picture, and its card is the same
+    /// clean white, pixel for pixel away from the picture's edge.
+    func testTheInstantsFlashLookLeavesTheCardWhite() throws {
+        let camera = CameraCatalog.instant1970s
+        func print(flashFired: Bool) throws -> DecodedPixels {
+            let source = try XCTUnwrap(CGImageSourceCreateWithURL(photo as CFURL, nil))
+            let image = try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+            let url = root.appendingPathComponent("flash-\(flashFired).jpg")
+            let destination = try XCTUnwrap(CGImageDestinationCreateWithURL(url as CFURL, "public.jpeg" as CFString, 1, nil))
+            CGImageDestinationAddImage(destination, image, [
+                kCGImagePropertyExifDictionary as String: [kCGImagePropertyExifFlash as String: flashFired ? 1 : 16]
+            ] as CFDictionary)
+            XCTAssertTrue(CGImageDestinationFinalize(destination))
+            return try DecodedPixels(NativePhotoRenderer.develop(source: url, camera: camera, seed: 42))
+        }
+        let lit = try print(flashFired: true), unlit = try print(flashFired: false)
+        XCTAssertEqual("\(lit.width)x\(lit.height)", "\(unlit.width)x\(unlit.height)")
+        let card = InstantPrintCard.self
+        let picture = card.sideBorder..<(card.sideBorder + card.pictureSide)
+        // The flash falls away toward the picture's corners (how it lights the center is `FilmLookTests`').
+        let corner = picture.lowerBound..<(picture.lowerBound + 200)
+        XCTAssertLessThan(lit.meanLuminance(x: corner, y: corner), unlit.meanLuminance(x: corner, y: corner) - 5,
+                          "The flash look darkens the picture's corner")
+        // The card: the bottom, the top and the sides, 16 pixels clear of the picture.
+        let margin = 16
+        let regions: [(Range<Int>, Range<Int>)] = [
+            (0..<card.width, (picture.upperBound + margin)..<card.height),
+            (0..<card.width, 0..<(picture.lowerBound - margin)),
+            (0..<(picture.lowerBound - margin), 0..<card.height),
+            ((picture.upperBound + margin)..<card.width, 0..<card.height)
+        ]
+        for (x, y) in regions {
+            XCTAssertGreaterThan(lit.meanLuminance(x: x, y: y), 252)
+            for row in stride(from: y.lowerBound, to: y.upperBound, by: 7) {
+                for column in stride(from: x.lowerBound, to: x.upperBound, by: 7) {
+                    let index = (row * lit.width + column) * 4
+                    guard lit.bytes[index..<(index + 3)] == unlit.bytes[index..<(index + 3)] else {
+                        return XCTFail("The card differs at \(column), \(row)")
+                    }
+                }
+            }
+        }
     }
 
     /// `DecodedPixels.blockMeans()`, the measure the values were recorded with, summed in whole numbers through a

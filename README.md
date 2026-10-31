@@ -17,7 +17,7 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | Camera | Medium | Capacity | Reveal | Controls and look on the Load Film screen |
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
-| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; warm, faded color, soft contrast and soft detail |
+| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Optional flash; square picture on a white card; warm, faded color, soft contrast and soft detail |
 | 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a normal viewfinder, the zoom steps of the iPhone's own lenses on the rear camera, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair |
 | 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |
@@ -29,9 +29,10 @@ Films loaded before a package changes keep the package they locked, so a 16mm Fi
 The 6×6 Medium Format and the 16mm Cinema load on a color or black-and-white Film Stock (ADR 0014), chosen at Load Film and fixed for the Film; Films loaded before Film Stock existed have none and develop in color.
 A black-and-white Film develops as its own monochrome treatment, prints and Developed Movie alike, and its prints take chemical toning in the Darkroom ([`Evidence/NativeApp/prd-2-slice-3-film-stock.md`](Evidence/NativeApp/prd-2-slice-3-film-stock.md)).
 
-Each Camera and Film Stock develops with a look of its own, with that Camera's imperfections (treatment version `film-look-4`, [`Evidence/NativeApp/prd-2-slice-4-looks.md`](Evidence/NativeApp/prd-2-slice-4-looks.md)).
+Each Camera and Film Stock develops with a look of its own, with that Camera's imperfections (treatment version `film-look-5`, [`Evidence/NativeApp/prd-2-slice-4-looks.md`](Evidence/NativeApp/prd-2-slice-4-looks.md)).
 The captain approved every Camera's look on a side-by-side review board.
 After a study of preserved 1970s prints he chose the Instant's contrast, which is what version 4 changes, and kept its print-to-print variation as it was ([`Evidence/NativeApp/instant-study-and-toning-061.md`](Evidence/NativeApp/instant-study-and-toning-061.md)).
+On 2026-10-30 he gave the Instant the Disposable's flash switch and, on an exposure the flash lit, a flash snapshot's brighter subject and dark background, which is what version 5 changes ([`Evidence/NativeApp/instant-flash-082.md`](Evidence/NativeApp/instant-flash-082.md)).
 A Film loaded before those looks keeps developing with the earlier treatment version it started with.
 
 Gap: this table is the build, and it differs from the text of PRD version 2.1 where the captain chose otherwise on a review board ([ADR 0016](2026-09-29-film-camera-experience-v1/adr/0016-the-captains-exceptions-to-fresh-not-aged.md)).

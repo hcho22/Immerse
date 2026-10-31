@@ -21,7 +21,7 @@ final class FilmStockUITests: ScreenTestCase {
         openCameraCatalog(app)
         let expectedControls = [
             "disposable1990s": "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue",
-            "instant1970s": "Auto focus with tap to focus; square picture on a white card",
+            "instant1970s": "Auto focus with tap to focus; optional flash; square picture on a white card",
             "super8HomeMovie": "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second",
         ]
         let expectedSound = "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."

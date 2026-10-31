@@ -30,7 +30,7 @@ struct DevelopedTreatment {
         case .one, .two:
             self.init(look: .legacy(camera: camera, filmStock: filmStock), seed: seed, flashFired: flashFired,
                       sceneWhiteBalance: nil)
-        case .three, .four:
+        case .three, .four, .five:
             self.init(FilmLook.treatment(version: version, camera: camera, filmStock: filmStock), seed: seed,
                       flashFired: flashFired, sceneWhiteBalance: sceneWhiteBalance)
         }
@@ -38,8 +38,8 @@ struct DevelopedTreatment {
 
     /// A per-Camera treatment as it stands, which tests use to look at one effect at a time.
     init(_ treatment: FilmLook.Treatment, seed: UInt64, flashFired: Bool = false, sceneWhiteBalance: SceneWhiteBalance? = nil) {
-        let flash = flashFired ? treatment.flash : nil
-        self.init(look: .perCamera(treatment, cube: Self.cube(treatment.emulsion, extraContrast: flash?.contrast ?? 0)),
+        let extraContrast = flashFired ? treatment.flash?.contrast ?? treatment.flashLight?.contrast ?? 0 : 0
+        self.init(look: .perCamera(treatment, cube: Self.cube(treatment.emulsion, extraContrast: extraContrast)),
                   seed: seed, flashFired: flashFired, sceneWhiteBalance: sceneWhiteBalance)
     }
 
@@ -61,7 +61,7 @@ struct DevelopedTreatment {
         }
     }
 
-    // MARK: - Versions 3 and 4
+    // MARK: - Versions 3 to 5
 
     private func render(_ source: CIImage, treatment: FilmLook.Treatment, cube: Data, frame: Int, frameRate: Int) throws -> CIImage {
         // A negative emulsion develops from the scene's light, through passes of its own (`SceneDevelopment.swift`).
@@ -87,6 +87,17 @@ struct DevelopedTreatment {
         if lens.edgeDarkening > 0 {
             image = Self.multiply(image, by: Self.radialMask(extent, inner: 0.3, centerLevel: 1,
                                                              edgeLevel: pow(2, -lens.edgeDarkening)))
+        }
+        // The Instant's flash: its light on the scene, full on the subject in the middle and falling away to the corners.
+        // A gradient's levels stop at 1, so the mask only darkens, from 1 in the middle, and the exposure then raises the
+        // whole picture by the subject's stops, which nothing caps. The mask goes on twice, each time half the way in
+        // stops, so the light falls away as the square of the distance from the plateau, faster than a straight line,
+        // as a flash's light falls with distance.
+        if flashFired, let light = treatment.flashLight {
+            let falloff = Self.radialMask(extent, inner: light.spread, centerLevel: 1,
+                                          edgeLevel: pow(2, (light.background - light.subject) / 2))
+            image = Self.multiply(Self.multiply(image, by: falloff), by: falloff)
+                .applyingFilter("CIExposureAdjust", parameters: [kCIInputEVKey: light.subject])
         }
         // Direct flash: a hot center that falls away toward the corners.
         if flashFired, let flash = treatment.flash {

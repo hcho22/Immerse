@@ -102,7 +102,7 @@ struct CaptureView: View {
             #if DEBUG
             openSlider = initialSlider
             #endif
-            capture.beginShootingSession()
+            capture.beginShootingSession(filmID: filmID)
             lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
             #if DEBUG
             if !opensCamera { return }
@@ -244,7 +244,7 @@ struct CaptureView: View {
             .noticeButtonStyle(onDark: onDark)
         }
         if film.completionState == .open {
-            ForEach(lensNotes(behavior: behavior, controller: capture), id: \.self) {
+            ForEach(Self.lensNotes(behavior: behavior, lensIsLive: capture.lensIsLive, controls: capture.controls), id: \.self) {
                 WholeWords($0).font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
             }
         }
@@ -256,7 +256,7 @@ struct CaptureView: View {
         return error != nil || cameraDenied || (capture.message.map { $0 != "Saved" || savedShowing } ?? false)
             || capture.microphoneUnavailable
             || capture.offersResume(for: film, showingError: error != nil)
-            || (film.completionState == .open && !lensNotes(behavior: behavior, controller: capture).isEmpty)
+            || (film.completionState == .open && !Self.lensNotes(behavior: behavior, lensIsLive: capture.lensIsLive, controls: capture.controls).isEmpty)
     }
 
     /// A full-width 4:3 area with the Camera's portrait picture centered inside it. Only that picture frame receives the
@@ -553,17 +553,26 @@ struct CaptureView: View {
 
     /// What the running lens cannot do that this Camera asks of it, apart from the controls whose rows say so. Nothing is
     /// said while no lens is running, since then there is none to say it of.
-    private func lensNotes(behavior: CaptureBehavior, controller capture: CaptureController) -> [String] {
-        guard capture.lensIsLive else { return [] }
+    static func lensNotes(behavior: CaptureBehavior, lensIsLive: Bool, controls: NativeCameraControls) -> [String] {
+        guard lensIsLive else { return [] }
         var notes: [String] = []
-        if behavior.focus == .deviceDefault && !capture.controls.supportsFocusPoint {
+        if behavior.focus == .deviceDefault && !controls.supportsFocusPoint {
             notes.append("Tap to focus unavailable on this lens")
-        } else if behavior.focus == .fixed && !capture.controls.fixedFocus {
+        } else if behavior.focus == .fixed && !controls.fixedFocus {
             notes.append("Fixed focus unavailable on this lens")
         }
-        if behavior.offersFlash && !capture.controls.flash { notes.append("Flash unavailable on this lens") }
-        if behavior.exposure == .fixed && !capture.controls.fixedExposure { notes.append("Fixed exposure unavailable on this lens") }
+        if behavior.offersFlash && !controls.flash { notes.append("Flash unavailable on this lens") }
+        if behavior.exposure == .fixed && !controls.fixedExposure { notes.append("Fixed exposure unavailable on this lens") }
         return notes
+    }
+
+    /// What the shutter bar shows right of the shutter: the flash switch where the Camera offers flash and the running
+    /// lens has one, a greyed-out crossed bolt on any other photo Camera or lens, and room alone on a Movie Camera.
+    enum FlashPlace: Equatable { case flashSwitch, noFlash, empty }
+
+    static func flashPlace(behavior: CaptureBehavior, controls: NativeCameraControls, medium: CameraMedium) -> FlashPlace {
+        if behavior.offersFlash && controls.flash { return .flashSwitch }
+        return medium == .photo ? .noFlash : .empty
     }
 
     /// Switch Camera, the shutter and flash. The icons turn in place; the shutter is a circle and stays as it is, on the
@@ -599,14 +608,16 @@ struct CaptureView: View {
                 .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.shutter = $0 }
                 #endif
                 Group {
-                    if CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting).offersFlash && capture.controls.flash {
+                    switch Self.flashPlace(behavior: .for(film.camera.id, focusSetting: film.effectiveFocusSetting),
+                                           controls: capture.controls, medium: film.camera.medium) {
+                    case .flashSwitch:
                         Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
                             .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
                             .turnedWithTheHold().disabled(capture.phase != .idle)
                             .accessibilityShowsLargeContentViewer()
-                    } else if film.camera.medium == .photo {
+                    case .noFlash:
                         Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
-                    } else {
+                    case .empty:
                         Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
                     }
                 }

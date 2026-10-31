@@ -17,7 +17,7 @@ Naming Cameras by identifier (`cinema16mm`, `mediumFormat6x6` and so on) develop
 
 `scenes.json` lists photo scenes and Movie scenes with paths relative to the file.
 Each photo is developed by every Photo Camera and Film Stock with `NativePhotoRenderer.develop`, and by both Movie Cameras as a two-second still clip from which one frame is kept; each Movie scene is developed with `NativeMovieRenderer.developClip`.
-A scene may set `"flash": true`, which writes the Exif flash record the Disposable reads, or `"light": "3200,0"`, which writes the clip's recorded white balance for the 16mm color Film Stock's fixed daylight balance.
+A scene may set `"flash": true`, which writes the Exif flash record the Disposable and the Instant read, or `"light": "3200,0"`, which writes the clip's recorded white balance for the 16mm color Film Stock's fixed daylight balance.
 A scene with `"boards": ["16mm"]` is shown only on those boards.
 The output holds the developed pictures, the same scenes with treatment version 2, full-size center crops, extra Instant prints, the clips and a `manifest.json`.
 `scenes.json` may also name two further kinds of render:

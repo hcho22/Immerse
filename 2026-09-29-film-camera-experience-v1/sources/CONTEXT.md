@@ -71,6 +71,10 @@
 > He chose that **Adjust** crops as the phone's Photos app does, so its entry, which read "The **Darkroom** tool that crops a print, turns it a quarter turn left or right, and straightens it; on an Instant print it offers only the quarter turns, which turn the whole print, card included.", now names its crop shapes, its straighten dial and the 6×6's square crop, and a Relationships rule was added for the crop's shapes; the 6×6's crop staying square is the rule of 2026-10-13, unchanged.
 > He chose that the Camera's lens, focus and exposure controls sit in one strip directly under the **Viewfinder** and that the shooting screen's top bar stays above it whichever way the phone is held (ADR 0024), so the **Viewfinder** entry gained the strip, and the shooting-screen rule, which read "The shooting screen keeps its portrait layout in every hold, so a **Viewfinder** keeps its size and place; held on its side the phone shows a landscape picture in it, and only the screen's words and icons turn to read upright.", gained the top bar.
 > A Relationships rule after the photo view's says where **Print Zoom** works and that the view swipes to another print only while the print shows whole, and a Flagged ambiguity on "zoom" was added.
+>
+> **2026-10-30 note (the PRD's "Decision of 2026-10-30").**
+> The captain gave the Instant the Disposable's optional flash ("please add flash option for instant camera") and a flash look of its own ("add harsh flash look for instant too", then "real flash - brighter subject").
+> The Instant's catalog entry, which read "a 1970s instant camera; a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.", gained them, and a Relationships rule after the Disposable's says how the Instant's flash develops.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -709,6 +713,7 @@ _Avoid_: Draft, incomplete album
 - A **Developed Treatment** shows its **Historical Format** as freshly processed in its era, not as surviving prints or reels look decades later; fading, yellowing, dye shift, and wear from storage or repeated projection are not **Authentic Imperfections** ([ADR 0013](../adr/0013-developed-treatments-show-the-medium-fresh-not-aged.md)).
 - Severe failures may result from authentic capture conditions such as darkness, motion, an obstructed lens, or incorrect manual exposure.
 - The Disposable has fixed exposure: scene brightness and flash use decide how an Exposure develops, so a dim scene without flash develops dark and grainy, and flash lights only nearby subjects.
+- The Instant offers the same optional flash and sets exposure automatically, so its **Viewfinder** shows no low-light cue; an Exposure the flash lit develops with a flash snapshot's light, the subject in the middle lit clearly brighter and the background falling away dark, on the picture and never on the white card, except on an Instant Film loaded before that look, whose flash fires but whose prints develop without it.
 - The Disposable's **Developed Treatment** adds no light leaks, red-eye, or dust and scratches.
 - The Super 8's **Authentic Imperfections** are an unsteady frame, brightness flicker, and dust and hair in the gate, each present from capture or first showing rather than from age.
 - The 16mm's **Authentic Imperfections** are visible grain, minor jitter and weave, and soft focus with vignetting toward the edges; it has no brightness flicker and no dust or hair in the gate.
@@ -850,7 +855,7 @@ _Avoid_: Retouch brush, object removal
 ### Photo Cameras
 
 - **Disposable**: a 1990s single-use camera; 27 borderless 3:2 Exposures with no date stamp, showing warm, saturated color, heavy film grain, harsh direct flash with flat shadows, and soft edges; Auto or Fixed focus, fixed exposure, optional flash, and roll-level Development.
-- **Instant**: a 1970s instant camera; a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.
+- **Instant**: a 1970s instant camera; a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and a brighter subject and dark background on a picture the flash lit; automatic exposure, optional flash, and individual Exposure Development.
 - **6×6**: a medium-format camera, spoken "6 by 6", whose color film is a present-day one, so its description names no decade; 12 borderless square Exposures, in color or black-and-white according to the **Film Stock** chosen at Load Film: natural, warm color with flattering skin tones, very fine grain, and gentle contrast, or high-contrast black-and-white with distinct grain; a normal **Viewfinder**, **Zoom Steps** on the rear camera, Auto or Manual focus, deliberate exposure controls, and roll-level Development.
 
 ### Movie Cameras

@@ -39,8 +39,10 @@ public struct CaptureBehavior: Equatable, Sendable {
     public let viewfinder: ViewfinderShape
     /// The rear camera offers the iPhone's reported lens steps on the 6×6, Super 8 and 16mm, never digital steps between them.
     public let offersZoomSteps: Bool
+    /// The shutter bar offers the iPhone's flash, on a lens that has one: the Disposable and the Instant.
     public let offersFlash: Bool
-    /// The viewfinder shows a cue advising flash when the scene is too dim for the fixed exposure.
+    /// The viewfinder shows a cue advising flash when the scene is too dim for the fixed exposure: the Disposable only,
+    /// since the Instant keeps the phone's automatic exposure.
     public let showsLowLightCue: Bool
 
     public var offersManualFocus: Bool { focus == .manual }
@@ -72,7 +74,7 @@ public struct CaptureBehavior: Equatable, Sendable {
             CaptureBehavior(focus: focus, exposure: .fixed, viewfinder: .threeByTwo,
                             offersFlash: true, showsLowLightCue: true)
         case .instant1970s:
-            CaptureBehavior(focus: focus, viewfinder: .square)
+            CaptureBehavior(focus: focus, viewfinder: .square, offersFlash: true)
         case .mediumFormat6x6:
             CaptureBehavior(focus: focus, exposure: .manualBias, viewfinder: .square, offersZoomSteps: true)
         case .super8HomeMovie:

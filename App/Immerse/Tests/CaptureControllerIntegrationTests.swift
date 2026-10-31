@@ -324,8 +324,9 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         defer { for _ in 0..<others { UIDevice.current.beginGeneratingDeviceOrientationNotifications() } }
         XCTAssertFalse(UIDevice.current.isGeneratingDeviceOrientationNotifications)
         let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
-        capture.beginShootingSession()
-        capture.beginShootingSession()
+        let filmID = UUID()
+        capture.beginShootingSession(filmID: filmID)
+        capture.beginShootingSession(filmID: filmID)
         XCTAssertTrue(capture.presented)
         XCTAssertTrue(capture.shootingSessionActive)
         XCTAssertTrue(UIDevice.current.isGeneratingDeviceOrientationNotifications)
@@ -471,6 +472,104 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         XCTAssertFalse(capture.showsLowLightCue, "The scene is bright again")
     }
 
+    /// The captain, 2026-10-30: the Instant offers flash as the Disposable does. An exposure fires it only where the person
+    /// turned it on and the running lens has it; the choice lasts across the camera's stop and restart around a print and
+    /// ends with a lens switch or another Film.
+    func testInstantFlashFiresOnlyWhenOnAndAvailableAndLastsAcrossAPrint() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let instant = try model.repository.createFilm(camera: CameraCatalog.instant1970s,
+                                                      title: "Synthetic Instant pack", access: .subscription)
+        let disposable = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                         title: "Synthetic roll", access: .subscription)
+        let super8 = try model.repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel",
+                                                     movieOrientation: .portrait, access: .subscription)
+        let capture = model.capture
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        try await openWithoutSimulatorCamera(instant, model)
+        capture.presented = true
+        capture.setForTesting(controls: withFlash)
+        XCTAssertFalse(capture.firesFlash(for: instant), "Flash starts off")
+        capture.flash = true
+        XCTAssertTrue(capture.firesFlash(for: instant))
+        capture.setForTesting(controls: NativeCameraControls())
+        XCTAssertFalse(capture.firesFlash(for: instant), "A lens without flash cannot fire it")
+        capture.setForTesting(controls: withFlash)
+        XCTAssertFalse(capture.firesFlash(for: super8), "A Movie Camera never fires the flash")
+
+        // The camera stops for a print and starts again by itself; the person's choice is still theirs.
+        try await pauseForReveal(model)
+        XCTAssertTrue(capture.printsClosed(allowingRestart: true))
+        try await openWithoutSimulatorCamera(instant, model)
+        XCTAssertTrue(capture.flash, "The print's stop and restart keep the flash as set")
+        XCTAssertTrue(capture.firesFlash(for: instant))
+
+        // The Instant keeps the phone's automatic exposure, so a dim scene shows no cue.
+        let (sceneLight, lens) = AsyncStream.makeStream(of: Double.self, bufferingPolicy: .bufferingNewest(1))
+        capture.attachForTesting(sceneLight: sceneLight)
+        capture.flash = false
+        capture.startForTesting(behavior: .for(.instant1970s))
+        lens.yield(FixedExposure.referenceEV100 - 8)
+        try await Task.sleep(for: .milliseconds(200))
+        XCTAssertFalse(capture.showsLowLightCue, "Only the Disposable shows the cue")
+
+        // Another lens or another Film starts with the flash off.
+        capture.flash = true
+        capture.setForTesting(position: .front)
+        XCTAssertFalse(capture.flash, "A lens switch turns the flash off")
+        capture.setForTesting(position: .rear)
+        capture.flash = true
+        try await openWithoutSimulatorCamera(disposable, model)
+        XCTAssertFalse(capture.flash, "Another Film starts with the flash off")
+    }
+
+    /// The controller outlives each shooting screen, so another Film's screen turns the flash off as it starts, before its
+    /// camera opens (or is denied), and never shows the last Film's choice; the same Film's screen, opened again, keeps it.
+    func testAnotherFilmsShootingScreenStartsWithTheFlashOffBeforeItsCameraOpens() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let disposable = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                         title: "Synthetic roll", access: .subscription)
+        let instant = try model.repository.createFilm(camera: CameraCatalog.instant1970s,
+                                                      title: "Synthetic Instant pack", access: .subscription)
+        let capture = model.capture
+        try await openWithoutSimulatorCamera(disposable, model)
+        capture.flash = true
+
+        capture.beginShootingSession(filmID: disposable.id)
+        XCTAssertTrue(capture.flash, "The same Film's screen keeps the flash as set")
+        capture.endShootingSession()
+
+        capture.beginShootingSession(filmID: instant.id)
+        XCTAssertFalse(capture.flash, "Another Film's screen starts with the flash off before its camera opens")
+        XCTAssertEqual(capture.filmID, disposable.id, "Nothing opened the Instant's camera")
+        capture.endShootingSession()
+    }
+
+    /// Right of the shutter: the flash switch on the Disposable and the Instant where the lens has flash; elsewhere on a
+    /// photo Camera the greyed-out crossed bolt, which on those two Cameras comes with the lens note, as on the front camera.
+    func testTheShutterBarOffersTheFlashSwitchWhereTheCameraAndTheLensHaveFlash() {
+        var withFlash = NativeCameraControls()
+        withFlash.flash = true
+        withFlash.supportsFocusPoint = true
+        var noFlash = withFlash
+        noFlash.flash = false
+        for camera in CameraCatalog.all {
+            let behavior = CaptureBehavior.for(camera.id)
+            let flashCamera = [CameraID.disposable1990s, .instant1970s].contains(camera.id)
+            let elsewhere: CaptureView.FlashPlace = camera.medium == .photo ? .noFlash : .empty
+            XCTAssertEqual(CaptureView.flashPlace(behavior: behavior, controls: withFlash, medium: camera.medium),
+                           flashCamera ? .flashSwitch : elsewhere, camera.id.rawValue)
+            XCTAssertEqual(CaptureView.flashPlace(behavior: behavior, controls: noFlash, medium: camera.medium),
+                           elsewhere, camera.id.rawValue)
+            let notes = CaptureView.lensNotes(behavior: behavior, lensIsLive: true, controls: noFlash)
+            XCTAssertEqual(notes.contains("Flash unavailable on this lens"), flashCamera, camera.id.rawValue)
+            XCTAssertFalse(CaptureView.lensNotes(behavior: behavior, lensIsLive: true, controls: withFlash)
+                .contains("Flash unavailable on this lens"), camera.id.rawValue)
+        }
+    }
+
     /// A backend's scene light is one stream for its whole life, so closing the viewfinder must not end it. The
     /// simulator has no lens, so the test feeds that stream and stands in for each session start.
     func testLowLightCueKeepsReadingTheSceneAfterTheViewfinderClosesAndOpensAgain() async throws {
@@ -511,8 +610,8 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         var withFlash = NativeCameraControls()
         withFlash.flash = true
         withFlash.fixedExposure = true
-        for (camera, cue) in [(CameraCatalog.disposable1990s, true), (CameraCatalog.mediumFormat6x6, false),
-                              (CameraCatalog.super8HomeMovie, false)] {
+        for (camera, cue) in [(CameraCatalog.disposable1990s, true), (CameraCatalog.instant1970s, false),
+                              (CameraCatalog.mediumFormat6x6, false), (CameraCatalog.super8HomeMovie, false)] {
             let film = try model.repository.createFilm(
                 camera: camera, title: "Synthetic \(camera.id.rawValue)",
                 movieOrientation: camera.medium == .movie ? .portrait : nil, filmStock: camera.defaultFilmStock, access: .subscription)

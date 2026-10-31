@@ -55,7 +55,7 @@ extension CameraPackage {
     var controlsLabel: String {
         switch id {
         case .disposable1990s: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"
-        case .instant1970s: "Auto focus with tap to focus; square picture on a white card"
+        case .instant1970s: "Auto focus with tap to focus; optional flash; square picture on a white card"
         case .mediumFormat6x6: "Square framing; Focus switch: Auto / Manual; tap to focus in Auto; Focus slider in Manual; deliberate exposure; optical focus only"
         case .super8HomeMovie: "Handheld; Focus switch: Auto / Fixed; tap to focus in Auto; automatic exposure, 18 frames per second"
         case .cinema16mm: "Auto focus with tap to focus; deliberate framing, 24 frames per second"
