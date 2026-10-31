@@ -2825,7 +2825,7 @@ Each scenario reads **UNTESTED: physical execution deferred**.
 The Instant shows the greyed-out bolt on the rear camera, the flash does not fire with the button on or fires with it off, the button turns itself off when a print closes, or a low-light cue appears.
 
 **What is a finding and not a failure.**
-How strong the flash look reads on real prints, against the Disposable's, is the captain's to judge; he judged it on renders before it shipped, not on real captures.
+How strong the flash look reads on real prints, against the Disposable's, is the captain's to judge; he chose its strength, "C", on renders on 2026-10-30, not on real captures.
 An Instant Film loaded before this build develops its flash-lit prints with no flash look, by design, and is not a failure.
 
 **Write down.**

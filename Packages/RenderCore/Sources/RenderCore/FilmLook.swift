@@ -99,8 +99,8 @@ enum FilmLook {
     /// An exposure the flash lit develops with the light of a flash snapshot (the captain, 2026-10-30, "add harsh flash
     /// look for instant too", then "real flash - brighter subject"): a hot, bright subject in the middle and a
     /// background that falls away dark (`FlashLight`), on the picture alone, since the card is mounted after the
-    /// treatment. It is the one difference from version 4. Its values are provisional until the captain picks one of
-    /// the strengths he was shown.
+    /// treatment. It is the one difference from version 4. Its strength is the one the captain chose on 2026-10-30,
+    /// "C", of the two he was shown on renders (`Evidence/NativeApp/instant-flash-082.md`).
     static let instant = Treatment(
         emulsion: .color(ColorEmulsion(
             warmth: 0.09, tint: -0.005, layers: Layers(redFromGreen: 0.12, greenFromBlue: 0.15, blueFromGreen: 0.15),
