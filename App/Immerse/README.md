@@ -26,8 +26,9 @@ command also runs the native UI and local StoreKit tests on dedicated simulators
 Do not use a physical-device identifier. Tests never require Apple credentials,
 real purchases, services, or a connected phone. XcodeGen is required only after
 changing project configuration; the generated project is committed for CI.
-The gate also verifies coverage of every intake task ID, 98 acceptance clauses
-and nine invariants. Coverage is not acceptance. UI audits include the largest
+The gate also checks that every intake task ID has an evidence-map row and that
+the acceptance companion's clause records and invariants are all present.
+Coverage is not acceptance. UI audits include the largest
 Dynamic Type size and scroll to the title and Load Film command, and every Camera's
 Load screen at the smallest size, where the hit-region check once flagged the Film
 title field as too small to tap. `ContentSizeTests` asserts that field's frame is at

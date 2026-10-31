@@ -143,6 +143,7 @@ The captain's own stuck Film is kept on his iPhone; R03 is that Film.
 ## Follow-ups not built
 
 - Development carrying on in the background, with a background task or a processing task, so a lock does not stop it at all.
+  The captain chose on 2026-10-30 not to build it: "immerse lock 1", keep pause and resume (the task tracker's decisions table).
 - Development resuming by itself when Immerse returns to the screen, in place of Resume Development.
 - A Movie's rebuild after a discard runs inside the processor's own call and is not stopped by `suspendProcessing`, so it runs on until iOS takes its encoder; its failure while Immerse is away reads as the stop, with Rebuild Movie.
 - The Journal's launch failure ("Your Films have not been removed. Free space in iPhone Settings and try again.") still names storage for any cause; it is not a Development message and was left alone.
