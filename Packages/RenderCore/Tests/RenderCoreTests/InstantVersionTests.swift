@@ -7,8 +7,8 @@ import RenderFixtures
 import XCTest
 
 /// The Instant across treatment versions 3 to 5. Version 4 gave it the contrast the captain chose on 2026-10-13
-/// after the study of preserved 1970s prints, and version 5 its harsh flash look on a flash-lit exposure; version 3 is frozen, so an Instant Film loaded under it develops as the
-/// version 3 build developed it (ADR 0013, CAM-01, RK-11).
+/// after the study of preserved 1970s prints, and version 5 its harsh flash look on a flash-lit exposure; version 3 is
+/// frozen, so an Instant Film loaded under it develops as the version 3 build developed it (ADR 0013, CAM-01, RK-11).
 ///
 /// The expected values are the mean red, green and blue of an 8 x 8 grid over each developed print, card and all,
 /// recorded from the version 3 build (5c3a217) with the same fixture and seeds, as `LegacyLookTests` records versions

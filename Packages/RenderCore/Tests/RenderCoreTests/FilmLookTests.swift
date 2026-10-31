@@ -9,10 +9,11 @@ import RenderFixtures
 import UniformTypeIdentifiers
 import XCTest
 
-/// Treatment versions 3 and 4: each Camera and Film Stock develops with its own fresh look and the imperfections PRD
+/// Treatment versions 3 to 5: each Camera and Film Stock develops with its own fresh look and the imperfections PRD
 /// 2.1 section 6 gives it (ADRs 0013 to 0015). The captain approved every Camera's look on its review board (DEC-04,
-/// QA-16), and the Instant's contrast after the study of preserved 1970s prints, which is what version 4 changes.
-/// These tests hold each look's character and bounds, not its numbers.
+/// QA-16), the Instant's contrast after the study of preserved 1970s prints, which is what version 4 changes, and the
+/// Instant's flash look on renders, which is what version 5 changes. These tests hold each look's character and bounds,
+/// not its numbers.
 final class FilmLookTests: XCTestCase {
     private static let linear = CGColorSpace(name: CGColorSpace.linearSRGB)!
     private static let sRGB = CGColorSpace(name: CGColorSpace.sRGB)!
