@@ -17,7 +17,7 @@ The catalog is fixed in code in [`Packages/FilmDomain/Sources/FilmDomain/CameraP
 | Camera | Medium | Capacity | Reveal | Controls and look on the Load Film screen |
 | --- | --- | --- | --- | --- |
 | 1990s Disposable | Photo | 27 exposures | Sealed until the whole Film is developed | Fixed focus, fixed exposure, optional flash and a live low-light cue; borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges |
-| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Square picture on a white card; warm, faded color, soft contrast and soft detail |
+| 1970s Instant | Photo | 10 exposures | One print revealed after each exposure | Optional flash; square picture on a white card; warm, faded color, soft contrast and soft detail |
 | 6×6 Medium Format | Photo | 12 exposures | Sealed until the whole Film is developed | Square framing, a normal viewfinder, the zoom steps of the iPhone's own lenses on the rear camera, deliberate focus and exposure with optical-only focus; Film Stock chosen at Load Film; borderless square picture; color: natural, warm color, very fine grain and gentle contrast; black and white: high contrast and distinct grain |
 | 1960s Super 8 Home Movie | Movie | 3:20 (200 seconds) | One silent Movie after Development | Handheld, fixed focus, automatic exposure, 18 frames per second; muted color, a warm glow, fine grain, an unsteady frame, flicker, dust and hair |
 | 16mm Cinema | Movie | 2:47 (167 seconds) | One silent Movie after Development | Deliberate framing, 24 frames per second; Film Stock chosen at Load Film; visible grain, a highlight glow (red on color, neutral on black and white), minor jitter and weave, soft dark edges |

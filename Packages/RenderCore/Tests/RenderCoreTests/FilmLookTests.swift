@@ -348,7 +348,8 @@ final class FilmLookTests: XCTestCase {
         }
     }
 
-    /// The Disposable reads its flash from the capture's Exif Flash value, whose lowest bit records that it fired.
+    /// The Disposable and the Instant read their flash from the capture's Exif Flash value, whose lowest bit records
+    /// that it fired.
     func testTheFlashIsReadFromTheCapturesExif() {
         XCTAssertTrue(NativePhotoRenderer.flashFired([kCGImagePropertyExifDictionary as String: [kCGImagePropertyExifFlash as String: 1]]))
         XCTAssertTrue(NativePhotoRenderer.flashFired([kCGImagePropertyExifDictionary as String: [kCGImagePropertyExifFlash as String: 25]]))

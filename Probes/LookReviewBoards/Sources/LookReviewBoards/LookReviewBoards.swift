@@ -20,7 +20,8 @@ import UniformTypeIdentifiers
         struct Photo: Decodable {
             let id: String
             let file: String
-            /// Whether the scene was lit by on-camera flash, which the Disposable's flash look reads from Exif.
+            /// Whether the scene was lit by on-camera flash, which the Disposable's and the Instant's flash looks
+            /// read from Exif.
             let flash: Bool?
             /// The light the scene was lit by, as a clip's `SceneWhiteBalance` metadata value ("3200,0"), written into
             /// the Movie Cameras' clips of the scene so a fixed-balance Film Stock develops against it.
@@ -100,7 +101,8 @@ import UniformTypeIdentifiers
         for scene in scenes.photos {
             var source = base.appendingPathComponent(scene.file)
             if scene.flash == true {
-                // The capture as the Disposable would record it: the same pixels with Exif saying the flash fired.
+                // The capture as the Disposable or the Instant would record it: the same pixels with Exif saying the
+                // flash fired.
                 let tagged = work.appendingPathComponent("\(scene.id)-flash.jpg")
                 try tagFlash(source, to: tagged)
                 source = tagged
