@@ -931,7 +931,7 @@ private struct SessionProbe: View {
             .onAppear {
                 guard !started else { return }
                 started = true
-                capture.beginShootingSession()
+                capture.beginShootingSession(filmID: UUID())
             }
             .onDisappear {
                 guard !showing.print else { return }

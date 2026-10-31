@@ -324,8 +324,9 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         defer { for _ in 0..<others { UIDevice.current.beginGeneratingDeviceOrientationNotifications() } }
         XCTAssertFalse(UIDevice.current.isGeneratingDeviceOrientationNotifications)
         let capture = CaptureController(authorizer: SyntheticCamera(granted: true))
-        capture.beginShootingSession()
-        capture.beginShootingSession()
+        let filmID = UUID()
+        capture.beginShootingSession(filmID: filmID)
+        capture.beginShootingSession(filmID: filmID)
         XCTAssertTrue(capture.presented)
         XCTAssertTrue(capture.shootingSessionActive)
         XCTAssertTrue(UIDevice.current.isGeneratingDeviceOrientationNotifications)
@@ -521,6 +522,29 @@ final class CaptureControllerIntegrationTests: XCTestCase {
         capture.flash = true
         try await openWithoutSimulatorCamera(disposable, model)
         XCTAssertFalse(capture.flash, "Another Film starts with the flash off")
+    }
+
+    /// The controller outlives each shooting screen, so another Film's screen turns the flash off as it starts, before its
+    /// camera opens (or is denied), and never shows the last Film's choice; the same Film's screen, opened again, keeps it.
+    func testAnotherFilmsShootingScreenStartsWithTheFlashOffBeforeItsCameraOpens() async throws {
+        let (root, _, model) = try await makeModel()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let disposable = try model.repository.createFilm(camera: CameraCatalog.disposable1990s,
+                                                         title: "Synthetic roll", access: .subscription)
+        let instant = try model.repository.createFilm(camera: CameraCatalog.instant1970s,
+                                                      title: "Synthetic Instant pack", access: .subscription)
+        let capture = model.capture
+        try await openWithoutSimulatorCamera(disposable, model)
+        capture.flash = true
+
+        capture.beginShootingSession(filmID: disposable.id)
+        XCTAssertTrue(capture.flash, "The same Film's screen keeps the flash as set")
+        capture.endShootingSession()
+
+        capture.beginShootingSession(filmID: instant.id)
+        XCTAssertFalse(capture.flash, "Another Film's screen starts with the flash off before its camera opens")
+        XCTAssertEqual(capture.filmID, disposable.id, "Nothing opened the Instant's camera")
+        capture.endShootingSession()
     }
 
     /// Right of the shutter: the flash switch on the Disposable and the Instant where the lens has flash; elsewhere on a

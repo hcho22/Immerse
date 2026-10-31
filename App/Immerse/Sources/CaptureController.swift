@@ -276,11 +276,13 @@ final class CaptureController {
     /// Whether a shooting screen's session is under way: between `beginShootingSession` and `endShootingSession`.
     private(set) var shootingSessionActive = false
 
-    /// Starts a shooting screen's session: the iPhone's hold is read and followed, and the window held portrait. Only
-    /// once, however often the screen appears behind the prints and questions it shows.
-    func beginShootingSession() {
+    /// Starts a shooting screen's session for `filmID`: the iPhone's hold is read and followed, and the window held
+    /// portrait. Another Film's screen starts with the flash off here, before its camera opens, so it never shows the last
+    /// Film's choice. Only once, however often the screen appears behind the prints and questions it shows.
+    func beginShootingSession(filmID: UUID) {
         guard !shootingSessionActive else { return }
         shootingSessionActive = true
+        if filmID != self.filmID { flash = false }
         rearZoomSteps = AVFoundationCaptureDeviceDiscoverer().capabilities().rearLenses.zoomSteps
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
         updateOrientation()

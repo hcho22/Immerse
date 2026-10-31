@@ -102,7 +102,7 @@ struct CaptureView: View {
             #if DEBUG
             openSlider = initialSlider
             #endif
-            capture.beginShootingSession()
+            capture.beginShootingSession(filmID: filmID)
             lastRevealedSequence = model.film(filmID)?.captures.last(where: { $0.revealState == .revealed })?.sequenceNumber
             #if DEBUG
             if !opensCamera { return }
