@@ -1,0 +1,82 @@
+# iPhone 17 Pro (iOS 26.0 simulator, 402 x 874 pt) - CaptureSidewaysTests hosted measurement at 9394351b
+# CaptureView rendered by the app's test host with an injected rear-lens report (the simulator has no camera).
+# underArea = room under the Viewfinder area ending 8 pt above the shutter bar; overArea = how far the strip's top rides over the area;
+# blackBar = the black bar under the Camera's picture inside the area; clearOfPicture = strip top minus picture bottom (negative would cover the picture).
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=xSmall stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=small stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=medium stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=large stripHeight=108.0 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=70.0
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=xLarge stripHeight=118.3 underArea=114.0 overArea=4.3 blackBar=67.0 clearOfPicture=62.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=xxLarge stripHeight=128.0 underArea=114.0 overArea=14.0 blackBar=67.0 clearOfPicture=53.0
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=xxxLarge stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=accessibility1 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=accessibility2 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=accessibility3 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=accessibility4 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=five-steps size=accessibility5 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=xSmall stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=small stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=medium stripHeight=104.7 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=71.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=large stripHeight=108.0 underArea=114.0 overArea=0.0 blackBar=67.0 clearOfPicture=70.0
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=xLarge stripHeight=118.3 underArea=114.0 overArea=4.3 blackBar=67.0 clearOfPicture=62.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=xxLarge stripHeight=128.0 underArea=114.0 overArea=14.0 blackBar=67.0 clearOfPicture=53.0
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=xxxLarge stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=accessibility1 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=accessibility2 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=accessibility3 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=accessibility4 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=mediumFormat6x6 lenses=three-lenses size=accessibility5 stripHeight=138.3 underArea=114.0 overArea=24.3 blackBar=67.0 clearOfPicture=42.7
+device=402-point camera=super8HomeMovie lenses=five-steps size=xSmall stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=five-steps size=small stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=five-steps size=medium stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=five-steps size=large stripHeight=44.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=34.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=xLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=xxLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=xxxLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=accessibility1 stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=accessibility2 stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=accessibility3 stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=accessibility4 stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=five-steps size=accessibility5 stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=three-lenses size=xSmall stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=small stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=medium stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=large stripHeight=44.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=34.8
+device=402-point camera=super8HomeMovie lenses=three-lenses size=xLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=super8HomeMovie lenses=three-lenses size=xxLarge stripHeight=52.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=31.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=xxxLarge stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=accessibility1 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=accessibility2 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=accessibility3 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=accessibility4 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=super8HomeMovie lenses=three-lenses size=accessibility5 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=xSmall stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=five-steps size=small stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=five-steps size=medium stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=five-steps size=large stripHeight=44.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=34.8
+device=402-point camera=cinema16mm lenses=five-steps size=xLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=cinema16mm lenses=five-steps size=xxLarge stripHeight=52.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=31.0
+device=402-point camera=cinema16mm lenses=five-steps size=xxxLarge stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=accessibility1 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=accessibility2 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=accessibility3 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=accessibility4 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=five-steps size=accessibility5 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=xSmall stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=three-lenses size=small stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=three-lenses size=medium stripHeight=44.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=35.0
+device=402-point camera=cinema16mm lenses=three-lenses size=large stripHeight=44.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=34.8
+device=402-point camera=cinema16mm lenses=three-lenses size=xLarge stripHeight=48.3 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=32.8
+device=402-point camera=cinema16mm lenses=three-lenses size=xxLarge stripHeight=52.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=31.0
+device=402-point camera=cinema16mm lenses=three-lenses size=xxxLarge stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=accessibility1 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=accessibility2 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=accessibility3 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=accessibility4 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+device=402-point camera=cinema16mm lenses=three-lenses size=accessibility5 stripHeight=56.0 underArea=114.0 overArea=0.0 blackBar=0.0 clearOfPicture=29.0
+
+NM-measure.log:Test Case '-[ImmerseTests.CaptureSidewaysTests testZZNoMistakesMeasureTheAcceptedSixBySixStrip]' passed (151.496 seconds).
+NM-hosted.log:Test Case '-[ImmerseTests.CaptureSidewaysTests testFiveZoomStepsLeaveThePictureClearAtTheLargestTextSizes]' passed (38.111 seconds).
+NM-hosted.log:Test Case '-[ImmerseTests.CaptureSidewaysTests testTheShootingScreensForApproval]' passed (76.992 seconds).
+NM-hosted.log:Test Case '-[ImmerseTests.CaptureSidewaysTests testTheSixBySixStripKeepsItsHeightWithoutItsZoomSteps]' passed (12.654 seconds).
+NM-hosted.log:Test Case '-[ImmerseTests.CaptureSidewaysTests testZZNoMistakesMeasureTheAcceptedSixBySixStrip]' passed (12.828 seconds).
