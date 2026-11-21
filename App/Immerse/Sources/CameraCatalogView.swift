@@ -51,7 +51,7 @@ struct CameraCatalogView: View {
         NavigationLink {
             LoadFilmView(camera: chosen, loaded: loaded)
         } label: {
-            Text(SpokenText.shown("Choose \(chosen.shortName)"))
+            Text("Choose")
         }
         .primaryAction()
         .accessibilityIdentifier("choose-camera")
@@ -286,11 +286,7 @@ private struct LoadFilmView: View {
         Group {
             if camera.medium == .movie {
                 // The Movie's time grows with the text size, and its circle with it.
-                VStack(spacing: 4) {
-                    Text(Self.amount(camera)).font(.orbit(size: 26, weight: .extraBold, relativeTo: .title2))
-                    Text("OF FILM").font(.orbit(size: 9, weight: .bold, relativeTo: .caption2)).tracking(0.54)
-                        .foregroundStyle(Orbit.label)
-                }
+                Text(Self.amount(camera)).font(.orbit(size: 26, weight: .extraBold, relativeTo: .title2))
                 .foregroundStyle(.white)
                 .modifier(CircleFit(minimum: 104))
                 .background(Orbit.surface, in: Circle())
@@ -301,10 +297,7 @@ private struct LoadFilmView: View {
                     .background(Orbit.surface, in: Circle())
                     .overlay(Circle().strokeBorder(Orbit.pressed, lineWidth: 1))
                     .overlay(alignment: .bottomTrailing) {
-                        VStack(spacing: 2) {
-                            Text(Self.amount(camera)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
-                            Text("EXPOSURES").font(.orbit(size: 8, weight: .bold, relativeTo: .caption2)).tracking(0.48)
-                        }
+                        Text(Self.amount(camera)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
                         .foregroundStyle(.black)
                         // The badge grows with its words at larger text sizes.
                         .modifier(CircleFit(minimum: 66))
@@ -465,6 +458,7 @@ private struct LoadFilmView: View {
         }
         .buttonStyle(OrbitRoundMainActionStyle(diameter: 104))
         .disabled(loading)
+        .accessibilityLabel("Load Film")
         .accessibilityIdentifier("load-film")
         // Room for the circle and its ring around the button's words, at every text size.
         .modifier(CircleRoom(minimum: 104))

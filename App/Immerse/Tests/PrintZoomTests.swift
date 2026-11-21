@@ -266,7 +266,7 @@ final class PrintZoomTests: XCTestCase {
         try await Task.sleep(for: .milliseconds(300))
 
         // The photo view's Darkroom and the Darkroom's Cancel and Save are Orbit's buttons, which a hosted test, without
-        // SwiftUI's accessibility tree, presses through the probe.
+        // SwiftUI's accessibility tree, presses through the probe, which runs each button's own action.
         for leaving in ["Cancel", "Save"] {
             photo.zoomScale = 3
             probe.darkroomPresses += 1

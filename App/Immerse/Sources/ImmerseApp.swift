@@ -98,9 +98,13 @@ private struct JournalUnavailableView: View {
                 }
                 .multilineTextAlignment(.center).frame(maxWidth: 320)
                 Button(action: tryAgain) {
-                    if opening { ProgressView().tint(.black) } else { Text("Try Again") }
+                    ZStack {
+                        Text("Try Again").opacity(opening ? 0 : 1)
+                        if opening { ProgressView().tint(.black) }
+                    }
                 }
                 .buttonStyle(OrbitMainActionStyle())
+                .accessibilityLabel("Try Again")
                 .frame(maxWidth: 220)
                 .disabled(opening)
                 .padding(.top, 20)

@@ -104,7 +104,6 @@ struct FilmDetailView: View {
                 .accessibilityAddTraits(.isHeader)
             DotLine {
                 if let stock = film.filmStock { Text("\(stock.label) Film Stock") }
-                if film.developmentState == .developed, let summary = Self.summary(film) { Text(SpokenText.shown(summary)) }
                 if let range = film.captureDateRange {
                     Text("\(range.lowerBound.formatted(date: .abbreviated, time: .omitted)) - \(range.upperBound.formatted(date: .abbreviated, time: .omitted))")
                 }
@@ -117,14 +116,6 @@ struct FilmDetailView: View {
     private static func exposures(_ film: Film) -> Int? {
         if case let .exposures(count) = film.camera.capacity { return count }
         return nil
-    }
-
-    /// "5 prints, 1 discarded" or "7 clips".
-    private static func summary(_ film: Film) -> String? {
-        let kept = film.captures.filter { !$0.isDiscarded }.count
-        let discarded = film.captures.count - kept
-        let noun = film.camera.medium == .photo ? (kept == 1 ? "print" : "prints") : (kept == 1 ? "clip" : "clips")
-        return discarded > 0 ? "\(kept) \(noun), \(discarded) discarded" : "\(kept) \(noun)"
     }
 
     // MARK: Status
@@ -168,17 +159,16 @@ struct FilmDetailView: View {
         film.remainingText.orbitFont(.footnote).foregroundStyle(Orbit.label)
     }
 
-    /// The big ring: what is used, with what is left in its middle while the Film is open; full and white, with the sealed
-    /// count, once it is ready to develop.
+    /// The big ring: what is used, with what is left in its middle, or what was wasted on a Film completed early; full
+    /// and white once it is ready to develop.
     private func ringOfCapacity(_ film: Film) -> some View {
         let open = film.completionState == .open
         let amount = film.remainingAmountLabel(recordedFor: 0)
-        let sealed = film.captures.filter { $0.revealState == .sealed && !$0.isDiscarded }.count
         let label = film.remainingLabel
         let words = label.hasPrefix(amount + " ") ? String(label.dropFirst(amount.count + 1)) : label
         return FilmRing(progress: film.progress, white: !open) {
-            Text(open ? amount : String(sealed)).orbitFont(.numeral).lineLimit(1)
-            Text(open ? words : film.camera.medium == .photo ? "sealed exposures" : "sealed clips")
+            Text(amount).orbitFont(.numeral).lineLimit(1)
+            Text(words)
                 .font(.orbit(.footnote, weight: open ? nil : .semibold))
                 .foregroundStyle(open ? Orbit.label : Orbit.onWhiteSecondary)
         }
@@ -214,17 +204,8 @@ struct FilmDetailView: View {
 
     /// The screen's actions on the home area: the one cream main action, and any other as a pill beside it.
     @ViewBuilder private func mainActions(_ film: Film) -> some View {
-        if model.hiddenFilms.contains(filmID) {
+        if model.hiddenFilms.contains(filmID) || model.busyFilms.contains(filmID) {
             EmptyView()
-        } else if model.busyFilms.contains(filmID) {
-            HStack(spacing: 12) {
-                Circle().fill(Color.white).frame(width: 10, height: 10).accessibilityHidden(true)
-                Text("Keep Immerse open until it finishes.").orbitFont(.callout).foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(.horizontal, 22).padding(.vertical, 14)
-            .background(Orbit.surface, in: Capsule())
-            .padding(.horizontal, Orbit.gutter).padding(.bottom, 8)
         } else if model.hasPendingSave(filmID) {
             Button("Resume Save", systemImage: "arrow.clockwise") {
                 model.perform { try await model.recoverCapture(filmID) }
@@ -334,10 +315,10 @@ struct FilmDetailView: View {
                 DevelopedMovieView(filmID: filmID).id(model.mediaRevision)
             }
             if !film.captures.isEmpty {
-                OrbitSectionLabel("Clips").padding(.top, 4)
                 VStack(spacing: 8) {
                     ForEach(film.captures) { capture in clipRow(capture) }
                 }
+                .padding(.top, 4)
             }
         }
     }
@@ -510,8 +491,8 @@ private struct ProcessingRing: View {
     }
 }
 
-/// A Film's sealed exposures (C01): a dot for each one taken, grey, and an empty one for each still to take, under a
-/// label that says how many are sealed.
+/// A Film's sealed exposures (C01): a dot for each one taken, grey, and, while the Film can still be shot, an empty one
+/// for each still to take.
 private struct SealedDots: View {
     let sealed: Int
     let capacity: Int
@@ -520,13 +501,13 @@ private struct SealedDots: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                OrbitSectionLabel("\(sealed) sealed until Development")
+                OrbitSectionLabel("Sealed")
                 Spacer()
                 Image(systemName: "lock").font(.system(size: 12, weight: .semibold)).foregroundStyle(Orbit.label)
                     .accessibilityHidden(true)
             }
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 9), spacing: 12) {
-                ForEach(0..<max(capacity, sealed), id: \.self) { index in
+                ForEach(0..<(open ? max(capacity, sealed) : sealed), id: \.self) { index in
                     Group {
                         if index < sealed { Circle().fill(Orbit.disabledMark) }
                         else { Circle().strokeBorder(Orbit.hairline, lineWidth: 1) }

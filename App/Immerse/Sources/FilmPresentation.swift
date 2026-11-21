@@ -174,11 +174,15 @@ extension Film {
         return String(format: "%.3f unused seconds", remainingMovieSeconds ?? 0)
     }
 
-    var progress: Double {
+    var progress: Double { progress(recordedFor: 0) }
+
+    /// The share of the Film used while a clip has been recording for `elapsed` seconds, so a ring of what is used moves
+    /// with the count beside it.
+    func progress(recordedFor elapsed: TimeInterval) -> Double {
         if completionState != .open { return 1 }
         switch camera.capacity {
         case let .exposures(total): return Double(savedCaptureCount) / Double(total)
-        case let .seconds(total): return consumedMovieSeconds / Double(total)
+        case let .seconds(total): return min(1, (consumedMovieSeconds + elapsed) / Double(total))
         }
     }
 }

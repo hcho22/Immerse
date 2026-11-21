@@ -281,13 +281,26 @@ enum DisplayPhoto {
 
 #if DEBUG
 /// For hosted tests, which cannot read SwiftUI's accessibility tree: presses the photo view's Darkroom, and the Darkroom's
-/// Cancel or Save once it can be pressed, as a person would.
+/// Cancel or Save once it can be pressed, through each button's own action, as a person would.
 @MainActor @Observable final class PhotoViewProbe {
     var darkroomPresses = 0
     var cancelPresses = 0
     var savePresses = 0
     /// Whether the open Darkroom's Save can be pressed.
     var saveEnabled = false
+}
+
+/// A button drawn in `style` that a `PhotoViewProbe` count presses through the button's own action each time it changes,
+/// as a tap would, and only while the button is enabled.
+private struct ProbedButtonStyle<Style: ButtonStyle>: PrimitiveButtonStyle {
+    let style: Style
+    let presses: Int?
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        Button(configuration).buttonStyle(style)
+            .onChange(of: presses) { if isEnabled { configuration.trigger() } }
+    }
 }
 
 private struct PhotoViewProbeKey: EnvironmentKey {
@@ -364,7 +377,12 @@ struct PhotoView: View {
                 // Darkroom, white, and Discard, as labelled round actions (H03).
                 HStack(spacing: 48) {
                     Button("Darkroom", systemImage: "slider.horizontal.3") { editing = true }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitLabelledActionStyle(emphasized: true),
+                                                       presses: probe?.darkroomPresses))
+                        #else
                         .buttonStyle(OrbitLabelledActionStyle(emphasized: true))
+                        #endif
                         .disabled(model.hiddenFilms.contains(filmID))
                     Button("Discard", systemImage: "trash") { discarding = true }
                         .buttonStyle(OrbitLabelledActionStyle())
@@ -379,15 +397,8 @@ struct PhotoView: View {
             .navigationTitle("Photo \(shownSequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    VStack(spacing: 0) {
-                        Text("Photo \(shownSequence)").orbitFont(.headline).foregroundStyle(.white)
-                        if !navigation.developed.isEmpty, let index = navigation.developed.firstIndex(of: shownSequence) {
-                            Text("\(index + 1) of \(navigation.developed.count)").orbitFont(.footnote).foregroundStyle(Orbit.label)
-                        }
-                    }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("Photo \(shownSequence)")
-                    .accessibilityAddTraits(.isHeader)
+                    Text("Photo \(shownSequence)").orbitFont(.headline).foregroundStyle(.white)
+                        .accessibilityAddTraits(.isHeader)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     // At the camera's reveal Done is white, since it goes back to the camera (F01).
@@ -398,9 +409,6 @@ struct PhotoView: View {
             }
             .toolbarBackground(.hidden, for: .navigationBar)
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
-            #if DEBUG
-            .onChange(of: probe?.darkroomPresses) { editing = true }
-            #endif
             .onChange(of: editing) { _, editing in if !editing { darkroomClosings += 1 } }
             .orbitConfirmation(isPresented: $discarding, symbol: "photo", title: "Discard photo \(shownSequence)?",
                                message: PrivacyCopy.discard, confirm: "Discard", identifier: "confirm-discard-photo") {
@@ -538,21 +546,28 @@ struct DarkroomView: View {
             .orbitSheetGround(screen: true)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { cancel() }.buttonStyle(OrbitPillStyle(inBar: true))
+                    Button("Cancel") { cancel() }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitPillStyle(inBar: true), presses: probe?.cancelPresses))
+                        #else
+                        .buttonStyle(OrbitPillStyle(inBar: true))
+                        #endif
                 }
                 .sharedBackgroundVisibility(.hidden)
                 ToolbarItem(placement: .confirmationAction) {
                     // The Darkroom's main action, in cream (I01).
                     Button("Save") { save() }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitSaveStyle(), presses: probe?.savePresses))
+                        #else
                         .buttonStyle(OrbitSaveStyle())
+                        #endif
                         .disabled(!canSave)
                 }
                 .sharedBackgroundVisibility(.hidden)
             }
             #if DEBUG
             .onChange(of: canSave, initial: true) { probe?.saveEnabled = canSave }
-            .onChange(of: probe?.cancelPresses) { cancel() }
-            .onChange(of: probe?.savePresses) { if canSave { save() } }
             #endif
             .holdsPortraitOrientationPreservingCurrent()
             .orbitSheet(screen: true)
@@ -635,10 +650,10 @@ struct DarkroomView: View {
                         .frame(width: 44, height: 44)
                         .background(tool == choice ? Color.white : Orbit.button, in: Circle())
                     // The button's label says its name; the word under it is what it shows.
-                    Text(choice == .toning ? "Toning" : choice.rawValue)
+                    Text(choice.rawValue)
                         .font(.orbit(size: 11, weight: .semibold, relativeTo: .caption2))
                         .foregroundStyle(tool == choice ? Color.white : Orbit.label)
-                        .lineLimit(1).minimumScaleFactor(0.8)
+                        .lineLimit(1).minimumScaleFactor(0.7)
                         .accessibilityHidden(true)
                 }
                 .frame(maxWidth: .infinity)
@@ -911,8 +926,7 @@ private struct DialValue: View {
     var body: some View {
         let parts = text.split(separator: " ", maxSplits: 1).map(String.init)
         let value = parts.first ?? text
-        let signed = (Double(value) ?? 0) > 0 && !value.hasPrefix("+") ? "+" + value : value
-        let number = Text(signed).font(.orbit(.title)).tracking(OrbitType.title.tracking)
+        let number = Text(value).font(.orbit(.title)).tracking(OrbitType.title.tracking)
         let unit = Text(parts.count > 1 ? " " + parts[1] : "").font(.orbit(.footnote)).foregroundStyle(Orbit.label)
         Text("\(number)\(unit)")
             .foregroundStyle(.white)

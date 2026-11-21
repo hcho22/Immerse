@@ -10,7 +10,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let app = launch(arguments: ["-KeyboardAutocorrection", "NO"])
         openFilm(app)
         XCTAssertEqual(app.buttons.matching(identifier: "Open photo 1").count, 0)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label ENDSWITH %@", "sealed until Development")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
         app.buttons["Film actions"].tap()
         app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "25 exposures")).firstMatch.exists)
@@ -241,7 +241,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
     func testFilmPhotoViewDoesNotSwipeToASealedInstantFrame() throws {
         let app = launch(arguments: ["--instant-mixed"])
         openFilm(app)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label ENDSWITH %@", "sealed until Development")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
         tapWhole(app, app.buttons["Open photo 1"])
         let photo = app.descendants(matching: .any)["photo-view-image"]
         XCTAssertTrue(photo.waitForExistence(timeout: 10))

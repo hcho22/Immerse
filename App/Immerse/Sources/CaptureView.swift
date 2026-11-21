@@ -187,7 +187,7 @@ struct CaptureView: View {
                     let status = CaptureHeaderStatus.make(for: film,
                                                           finishingSave: model.hasPendingSave(filmID),
                                                           recordedFor: elapsed)
-                    CaptureHeaderLabel(film: film, status: status,
+                    CaptureHeaderLabel(film: film, status: status, progress: film.progress(recordedFor: elapsed),
                                        recording: capture.recordingStarted != nil)
                 }
                 .layoutPriority(1)
@@ -655,7 +655,7 @@ struct CaptureView: View {
             // The Film is complete (E01): a full ring where the shutter was.
             ZStack {
                 OrbitRing(progress: 1, lineWidth: 3)
-                Text(Self.capacityAmount(film)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
+                Text(Self.usedAmount(film)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
                     .foregroundStyle(.white)
             }
             .frame(width: 76, height: 76)
@@ -667,11 +667,11 @@ struct CaptureView: View {
         }
     }
 
-    /// The Film's whole capacity, "27" or "3:20", for the ring of a complete Film.
-    private static func capacityAmount(_ film: Film) -> String {
+    /// What the Film used, "27" or "3:20", for the ring of a complete Film.
+    private static func usedAmount(_ film: Film) -> String {
         switch film.camera.capacity {
-        case let .exposures(count): String(count)
-        case let .seconds(seconds): MovieDurationText.clock(seconds)
+        case .exposures: String(film.savedCaptureCount)
+        case .seconds: MovieDurationText.clock(MovieDurationText.wholeSeconds(film.consumedMovieSeconds))
         }
     }
 
@@ -890,6 +890,8 @@ struct CaptureHeaderLabel: View {
     @Environment(\.heldTurn) private var turn
     let film: Film
     let status: CaptureHeaderStatus
+    /// What is used, counting the clip that is recording, as the count does.
+    let progress: Double
     let recording: Bool
 
     var body: some View {
@@ -904,7 +906,7 @@ struct CaptureHeaderLabel: View {
                     // A count in its ring, as tall as Done, the number turned in place inside it (D06).
                     TurnedInPlace { count(status.visible).lineLimit(1).minimumScaleFactor(0.5) }
                         .frame(width: CaptureDoneRow.height, height: CaptureDoneRow.height)
-                        .background { OrbitRing(progress: film.progress, lineWidth: 3) }
+                        .background { OrbitRing(progress: progress, lineWidth: 3) }
                 } else {
                     TurnedBlock(length: CaptureDoneRow.height) {
                         count(words.joined(separator: "\n"))
@@ -928,7 +930,7 @@ struct CaptureHeaderLabel: View {
                         count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
                             .padding(4)
                             .frame(minWidth: CaptureDoneRow.height, minHeight: CaptureDoneRow.height)
-                            .background { OrbitRing(progress: film.progress, lineWidth: 3) }
+                            .background { OrbitRing(progress: progress, lineWidth: 3) }
                     }
                 }
             }

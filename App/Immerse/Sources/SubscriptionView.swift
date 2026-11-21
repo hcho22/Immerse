@@ -66,8 +66,6 @@ struct SubscriptionView: View {
         } else if model.billing.access == .expired {
             Text("Subscription expired. Your existing Films remain usable.").orbitFont(.body).foregroundStyle(Orbit.body)
                 .multilineTextAlignment(.center)
-        } else if case .consumed = model.trialState {
-            chip("This iPhone's Trial is used", symbol: "ticket")
         }
     }
 

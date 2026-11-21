@@ -59,7 +59,7 @@ import XCTest
         openFilm(app)
         XCTAssertTrue(app.buttons["Open photo 1"].exists)
         XCTAssertFalse(app.buttons["Open photo 2"].exists)
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label ENDSWITH %@", "sealed until Development")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
         XCTAssertTrue(app.buttons["Open Camera"].exists)
         snapshot(app, "Instant-first-revealed-second-sealed")
         app.buttons["Resume Development"].tap()

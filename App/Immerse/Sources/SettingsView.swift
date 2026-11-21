@@ -21,8 +21,8 @@ struct SettingsView: View {
                     OrbitSectionLabel("Privacy").padding(.leading, 4).padding(.top, 8)
                     privacy
                     OrbitSectionLabel("Films").padding(.leading, 4).padding(.top, 8)
-                    SettingsDetailRow(title: "Trial", summary: "One complete Film per iPhone") {
-                        if let error = model.trialError { Text("Trial status unavailable: \(error)").foregroundStyle(.white) }
+                    if let error = model.trialError { OrbitNote(.error, "Trial status unavailable: \(error)") }
+                    SettingsDetailRow(title: "Trial") {
                         Text("One complete Film per iPhone, with any Camera. The first successfully saved capture consumes it. Deleting a used Film or the app does not restore the Trial.")
                         Text("The Trial record stays on this iPhone. Films restored to another iPhone keep their remaining capture rights and do not use that iPhone's Trial.")
                     }
@@ -36,8 +36,8 @@ struct SettingsView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    SettingsDetailRow(title: "Storage and backup", summary: "iOS device backups") { Text(PrivacyCopy.backup) }
-                    SettingsDetailRow(title: "Saving to Photos", summary: "Only what you choose") {
+                    SettingsDetailRow(title: "Storage and backup") { Text(PrivacyCopy.backup) }
+                    SettingsDetailRow(title: "Saving to Photos") {
                         Text("Exports are optional. Photos receives only the revealed media you choose. A developed export is a flattened result, not a restorable Film or edit history.")
                     }
                     if let error = model.catalogError { OrbitNote(.error, error) }
@@ -122,10 +122,9 @@ private struct PermissionCircle: View {
     }
 }
 
-/// A Films row (A04): its title and a short summary, opening in place to its full words.
+/// A Films row (A04): its title, opening in place to its full words.
 private struct SettingsDetailRow<Detail: View>: View {
     let title: String
-    let summary: String
     @ViewBuilder let detail: Detail
     @State private var open = false
 
@@ -135,7 +134,6 @@ private struct SettingsDetailRow<Detail: View>: View {
                 HStack(spacing: 12) {
                     Text(title).orbitFont(.body, weight: .semibold).foregroundStyle(.white)
                     Spacer(minLength: 8)
-                    Text(summary).orbitFont(.footnote).foregroundStyle(Orbit.label).multilineTextAlignment(.trailing)
                     Image(systemName: "chevron.down").font(.system(size: 13, weight: .bold)).foregroundStyle(Orbit.label)
                         .rotationEffect(.degrees(open ? 180 : 0))
                 }
@@ -144,7 +142,6 @@ private struct SettingsDetailRow<Detail: View>: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(title)
-            .accessibilityValue(summary)
             .accessibilityHint(open ? "Hides the details" : "Shows the details")
             .accessibilityAddTraits(.isButton)
             .accessibilityIdentifier("settings-\(title)")

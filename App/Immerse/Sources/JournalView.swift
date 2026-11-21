@@ -54,7 +54,7 @@ struct JournalView: View {
     }
 
     /// Start a Film (A01): the round cream main action on the home area's top edge, 112 points across with its ring.
-    /// Like a bar item, it keeps one size, its words follow the text size only up to Extra Extra Large, and larger sizes
+    /// Like a bar item, it keeps one size, its words follow the text size only up to the default Large, and larger sizes
     /// get the Large Content Viewer.
     private var startFilm: some View {
         Button { setup = true } label: {
@@ -167,18 +167,18 @@ private struct FilmBubble: View {
         let white = state == "Ready to develop" || state == "Pack complete"
         let onTheRoll = state == "On the roll"
         let saving = model.hasPendingSave(film.id)
-        let caption = saving ? "Finishing save"
-            : onTheRoll ? "\(film.camera.shortName) · \(film.remainingAmountLabel(recordedFor: 0)) left"
-            : film.camera.shortName
         return VStack(spacing: 2) {
             OrbitSectionLabel(state, color: white ? .black : Orbit.label)
             film.titleText
                 .font(onTheRoll ? .orbit(.heading) : .orbit(.headline))
                 .tracking(onTheRoll ? OrbitType.heading.tracking : 0)
                 .lineLimit(3)
-            Text(SpokenText.shown(caption))
-                .font(white ? .orbit(.footnote, weight: .semibold) : .orbit(.footnote))
-                .foregroundStyle(white ? Orbit.onWhiteSecondary : Orbit.body)
+            Group {
+                film.cameraAndLoadedDate
+                saving ? Text("Finishing save") : film.remainingText
+            }
+            .font(white ? .orbit(.footnote, weight: .semibold) : .orbit(.footnote))
+            .foregroundStyle(white ? Orbit.onWhiteSecondary : Orbit.body)
         }
         .multilineTextAlignment(.center)
         .foregroundStyle(white ? Color.black : Color.white)
@@ -192,13 +192,7 @@ private struct FilmBubble: View {
         }
         .contentShape(Circle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(spoken(film, state: state, saving: saving))
-    }
-
-    private func spoken(_ film: Film, state: String, saving: Bool) -> String {
-        let detail = saving ? "Finishing save" : state == "On the roll" ? film.remainingSpokenLabel : nil
-        return [state, SpokenText.of(film.title), SpokenText.of(film.camera.shortName), detail].compactMap { $0 }
-            .joined(separator: ", ")
+        .accessibilityLabel(film.journalSpokenLabel(saving: saving))
     }
 }
 
@@ -212,19 +206,23 @@ private struct DevelopedFilmItem: View {
     }
 
     private func item(_ film: Film) -> some View {
-        let caption = model.hasPendingSave(film.id) ? "Finishing save" : Self.caption(film)
+        let saving = model.hasPendingSave(film.id)
         return VStack(alignment: .leading, spacing: 2) {
             thumbnail(film)
                 .frame(width: 112, height: 112)
                 .clipShape(Circle())
                 .padding(.bottom, 8)
             film.titleText.orbitFont(.body, weight: .bold).foregroundStyle(.white).lineLimit(3)
-            Text(SpokenText.shown(caption)).orbitFont(.footnote).foregroundStyle(Orbit.label)
+            Group {
+                film.cameraAndLoadedDate
+                saving ? Text("Finishing save") : film.remainingText
+            }
+            .orbitFont(.footnote).foregroundStyle(Orbit.label)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .multilineTextAlignment(.leading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Developed, \(SpokenText.of(film.title)), \(SpokenText.of(caption))")
+        .accessibilityLabel(film.journalSpokenLabel(saving: saving))
     }
 
     @ViewBuilder private func thumbnail(_ film: Film) -> some View {
@@ -241,13 +239,20 @@ private struct DevelopedFilmItem: View {
         }
     }
 
-    /// "Disposable · 5 prints" or "Super 8 · 0:42 Movie".
-    static func caption(_ film: Film) -> String {
-        if film.camera.medium == .movie {
-            return "\(film.camera.shortName) · \(MovieDurationText.clock(MovieDurationText.wholeSeconds(film.consumedMovieSeconds))) Movie"
-        }
-        let prints = film.captures.filter { $0.revealState == .revealed && !$0.isDiscarded }.count
-        return "\(film.camera.shortName) · \(prints) \(prints == 1 ? "print" : "prints")"
+}
+
+private extension Film {
+    /// The Film's Camera and the day it was loaded, "Disposable · Nov 20".
+    var cameraAndLoadedDate: Text {
+        Text("\(camera.shortNameText) · \(Text(loadedAt, format: .dateTime.month(.abbreviated).day()))")
+    }
+
+    /// What VoiceOver reads for a Film in the Journal: its state, title, Camera and loaded date, then what is left or
+    /// wasted and how much of the Film is used, or that its save is finishing.
+    func journalSpokenLabel(saving: Bool) -> String {
+        let detail = saving ? ["Finishing save"] : [remainingSpokenLabel, "Film used, \(Int(progress * 100)) percent"]
+        return ([journalState, SpokenText.of(title), SpokenText.of(camera.shortName),
+                 loadedAt.formatted(.dateTime.month(.abbreviated).day())] + detail).joined(separator: ", ")
     }
 }
 

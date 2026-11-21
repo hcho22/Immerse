@@ -194,8 +194,8 @@ final class ContentSizeTests: ScreenTestCase {
 
     private static let settingsBottom: [Target] = [
         Target(name: "Films header", type: .staticText, label: "Films", header: true),
-        Target(name: "Trial row", type: .button, identifier: "settings-Trial"),
         Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", optional: true),
+        Target(name: "Trial row", type: .button, identifier: "settings-Trial"),
         Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone, with any Camera"),
         Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
         Target(name: "Settings Subscription", type: .button, label: "Subscription"),
