@@ -300,7 +300,8 @@ new queue entrant at each step, real deletion and injected-memory receipts only.
 It leaves the original 035 request-before-release limitation and hardware gates
 intact; no new public queue-observation API or production source change.
 
-- DEC-01: final app name/copy, app icon, screenshots and metadata are not approved.
+- DEC-01: final app name/copy, screenshots and metadata are not approved; the app icon
+  was decided on 2026-11-21 ([083](app-icon-083.md)).
 - DEC-04/11: provisional render presets and controls require actual Camera-quality
   review. Do not label them authenticated simulations or silently approve ranges.
 - DEC-05: no production sample photos/movies or instrumental audio is cleared.
