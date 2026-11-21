@@ -120,8 +120,9 @@ struct FilmDetailView: View {
 
     // MARK: Status
 
-    /// The Film's ring (C01, G01, G03): what is left on a Film on the roll, its sealed exposures once it is ready to
-    /// develop, and Development while it runs. A developed Film shows its prints or Movie instead.
+    /// The Film's status (C01, G01, G03, F03): the big ring with what is left, or what was wasted on a Film completed
+    /// early, white once it is ready to develop; an Instant's small ring of its pack beside what is left; Development as a
+    /// turning ring while it runs; and on a developed Film what was left or wasted, in words.
     @ViewBuilder private func status(_ film: Film) -> some View {
         if model.busyFilms.contains(filmID) {
             ProcessingRing()
@@ -492,7 +493,7 @@ private struct ProcessingRing: View {
 }
 
 /// A Film's sealed exposures (C01): a dot for each one taken, grey, and, while the Film can still be shot, an empty one
-/// for each still to take.
+/// for each still to take. VoiceOver reads it as one element, "Sealed", with the count of sealed exposures.
 private struct SealedDots: View {
     let sealed: Int
     let capacity: Int
@@ -504,7 +505,6 @@ private struct SealedDots: View {
                 OrbitSectionLabel("Sealed")
                 Spacer()
                 Image(systemName: "lock").font(.system(size: 12, weight: .semibold)).foregroundStyle(Orbit.label)
-                    .accessibilityHidden(true)
             }
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 9), spacing: 12) {
                 ForEach(0..<(open ? max(capacity, sealed) : sealed), id: \.self) { index in
@@ -515,8 +515,11 @@ private struct SealedDots: View {
                     .frame(width: 22, height: 22)
                 }
             }
-            .accessibilityHidden(true)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Sealed")
+        .accessibilityValue("\(sealed) \(sealed == 1 ? "exposure" : "exposures")")
+        .accessibilityAddTraits([.isHeader, .isStaticText])
     }
 }
 

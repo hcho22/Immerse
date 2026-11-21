@@ -10,7 +10,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let app = launch(arguments: ["-KeyboardAutocorrection", "NO"])
         openFilm(app)
         XCTAssertEqual(app.buttons.matching(identifier: "Open photo 1").count, 0)
-        XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
+        XCTAssertEqual(app.staticTexts["Sealed"].firstMatch.value as? String, "2 exposures", "VoiceOver hears how many are sealed")
         app.buttons["Film actions"].tap()
         app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "25 exposures")).firstMatch.exists)
