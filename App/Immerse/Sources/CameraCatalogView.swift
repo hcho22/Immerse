@@ -11,12 +11,19 @@ struct CameraCatalogView: View {
     var loaded: (Film) -> Void
     @State private var chosen = CameraCatalog.all.first { $0.medium == .photo } ?? CameraCatalog.all[0]
     @State private var width: CGFloat = 0
+    /// Whether a finger is dragging the screen. A drag is never a choice: on CI's iOS 26.5 simulator a drag that began
+    /// beside the 16mm row, moved the screen with the finger and lifted at rest chose the 16mm after the Super 8 was
+    /// chosen (run 44932061664, Evidence/NativeApp/orbit-083.md), so the Cameras take no press until it ends.
+    @State private var dragging = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    if dynamicTypeSize >= .xxLarge { column } else { CameraDial(chosen: $chosen).padding(.top, 8) }
+                    Group {
+                        if dynamicTypeSize >= .xxLarge { column } else { CameraDial(chosen: $chosen).padding(.top, 8) }
+                    }
+                    .disabled(dragging)
                     VStack(spacing: 8) {
                         ForEach(chosen.lookLines(filmStock: nil), id: \.self) { line in
                             Text(SpokenText.shown(line)).orbitFont(.body).foregroundStyle(Orbit.body)
@@ -32,6 +39,8 @@ struct CameraCatalogView: View {
                 .padding(.bottom, 16)
             }
             .scrollBounceBehavior(.basedOnSize)
+            // Only while the finger moves the screen: a tap begins as tracking and must still choose.
+            .onScrollPhaseChange { _, phase in dragging = phase == .interacting }
             .safeAreaBar(edge: .bottom, spacing: 8) { if dynamicTypeSize < .xxLarge { choose } }
             .orbitSheetGround(screen: true)
             .navigationTitle(Self.title)
@@ -89,7 +98,7 @@ struct CameraCatalogView: View {
                         .background(camera == chosen ? Color.white : Orbit.button, in: RoundedRectangle(cornerRadius: 28))
                         .contentShape(RoundedRectangle(cornerRadius: 28))
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(CameraOptionPressStyle())
                     .accessibilityLabel(camera.shortNameText)
                     .accessibilityValue(camera.capacitySpokenLabel)
                     .accessibilityAddTraits(camera == chosen ? .isSelected : [])
@@ -98,6 +107,16 @@ struct CameraCatalogView: View {
             }
         }
         .padding(.horizontal, Orbit.gutter)
+    }
+}
+
+/// A Camera pressed: 96 percent of its size, as a bubble is (K00). It draws a Camera the same while the catalog is being
+/// dragged, when the Cameras are disabled, where the plain style would grey them.
+private struct CameraOptionPressStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
 }
 
@@ -152,7 +171,7 @@ private struct CameraDial: View {
             .modifier(InscribedCircle(minimum: Self.option, fill: selected ? .white : Orbit.button,
                                       ring: selected ? .white : nil, ringGap: 5, margin: 2, clearance: 4))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(CameraOptionPressStyle())
         .accessibilityLabel(camera.shortNameText)
         .accessibilityValue(camera.capacitySpokenLabel)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)

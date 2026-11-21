@@ -12,6 +12,12 @@ struct AuditException: Equatable {
     let label: String
 
     static let accepted: [AuditException] = [
+        // Contrast at Choose a Camera's audit at the largest text size. On CI (run 44932061664) the check, run in one pass
+        // with the clipped-text check, which swaps the Cameras' column for the dial and back, flagged the 6×6 and Super 8
+        // rows' names; at rest their white words on Orbit's #1A1A1A are 17.4:1, in the one appearance Orbit has
+        // (Evidence/NativeApp/orbit-083.md).
+        AuditException(audit: "Catalog-accessibility-largest", type: .contrast, label: "6×6"),
+        AuditException(audit: "Catalog-accessibility-largest", type: .contrast, label: "Super 8"),
         // Contrast at the 16mm title audit at the largest text size. On a 390-point iPhone the test's held drags stop
         // with the Movie Orientation's Landscape option half under the navigation bar's scroll-edge blur; at rest its
         // white word on Orbit's #1A1A1A circle is 17.4:1, in the one appearance Orbit has (Evidence/NativeApp/orbit-083.md).

@@ -89,7 +89,10 @@ final class JournalFlowTests: ScreenTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
-        try app.performAccessibilityAudit(for: Self.auditTypes)
+        // Through `audit`, which runs the clipped-text check after the others: it shrinks the text in place, which swaps
+        // the Cameras' column for the dial and back, and the contrast check run in the same pass on CI flagged the column
+        // mid-swap (run 44932061664, Evidence/NativeApp/orbit-083.md).
+        try audit(app, name: "Catalog-accessibility-largest", for: Self.auditTypes)
         retainScreenshot(name: "Catalog-accessibility-largest")
         let camera = app.buttons["camera-cinema16mm"]
         chooseCamera("cinema16mm", app)
