@@ -232,7 +232,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        tapWhole(app, camera)
+        chooseCamera(id, app)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // Loads with the title Load Film suggests, so no keyboard covers the screen on a small iPhone.
         let field = app.textFields["film-title"]

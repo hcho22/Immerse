@@ -571,8 +571,8 @@ struct StraightenDial: View {
         VStack(spacing: 2) {
             // The angle stops growing at the largest ordinary text size, as Adjust's other controls do, so the dial is in
             // view under the shapes when Adjust opens at every size; the Large Content Viewer shows it larger.
-            Text(Self.shown(degrees)).font(.caption).monospacedDigit()
-                .foregroundStyle(degrees == 0 ? Color.secondary : Color.accentColor)
+            Text(Self.shown(degrees)).font(.orbit(size: 13, weight: .bold, relativeTo: .caption))
+                .foregroundStyle(degrees == 0 ? Orbit.label : Color.white)
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             Canvas { context, size in
                 let middle = size.width / 2
@@ -582,10 +582,10 @@ struct StraightenDial: View {
                     let length: CGFloat = tick % 15 == 0 ? 18 : tick % 5 == 0 ? 12 : 7
                     let top = (size.height - length) / 2
                     context.fill(Path(CGRect(x: x - 0.5, y: top, width: 1, height: length)),
-                                 with: .color(tick == 0 ? .primary : .secondary))
+                                 with: .color(tick == 0 ? Color.white : Orbit.disabledMark))
                 }
                 context.fill(Path(roundedRect: CGRect(x: middle - 1, y: 0, width: 2, height: size.height), cornerRadius: 1),
-                             with: .color(.accentColor))
+                             with: .color(Color.white))
             }
             .frame(height: 30)
             .mask {

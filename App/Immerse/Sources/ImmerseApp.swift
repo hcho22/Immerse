@@ -12,21 +12,12 @@ struct ImmerseApp: App {
                 if let model = launcher.model {
                     JournalView().environment(model)
                 } else if let failure = launcher.failure {
-                    ContentUnavailableView {
-                        Label("Journal unavailable", systemImage: "externaldrive.badge.exclamationmark")
-                    } description: {
-                        Text(failure)
-                    } actions: {
-                        Button("Try Again", systemImage: "arrow.clockwise") { Task { await launcher.open() } }
-                            .disabled(launcher.opening)
-                        if launcher.opening { ProgressView() }
-                    }
+                    JournalUnavailableView(failure: failure, detail: launcher.failureDetail, opening: launcher.opening) { Task { await launcher.open() } }
                 } else {
                     ProgressView().task { await launcher.open() }
                 }
             }
-            // A concrete color: inside iOS 26 bottom toolbars `Color.accentColor` resolves to system blue.
-            .tint(Color("AccentColor"))
+            .orbitRoot()
             .onChange(of: scenePhase) { _, phase in launcher.model?.sceneChanged(to: phase) }
         }
     }
@@ -37,6 +28,8 @@ struct ImmerseApp: App {
 final class JournalLauncher {
     private(set) var model: JournalModel?
     private(set) var failure: String?
+    /// The system's own words for what stopped the Journal opening, where it has any.
+    private(set) var failureDetail: String?
     private(set) var opening = false
     private let makeModel: @MainActor () throws -> JournalModel
 
@@ -54,8 +47,8 @@ final class JournalLauncher {
             model = opened
             failure = nil
         } catch {
-            failure = ["Your Films have not been removed. Free space in iPhone Settings and try again.",
-                       FailureCopy.systemDetail(for: error)].compactMap { $0 }.joined(separator: " ")
+            failure = JournalUnavailableView.message
+            failureDetail = FailureCopy.systemDetail(for: error)
         }
     }
 
@@ -73,5 +66,51 @@ final class JournalLauncher {
         let model = try JournalModel(root: root)
         #endif
         return model
+    }
+}
+
+/// The Journal could not open (A06): what happened, that the Films are still there, the system's own words where it has
+/// any, and Try Again.
+private struct JournalUnavailableView: View {
+    static let message = "Your Films have not been removed. Free space in iPhone Settings and try again."
+    let failure: String
+    let detail: String?
+    let opening: Bool
+    let tryAgain: () -> Void
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                ZStack {
+                    OrbitRing(progress: 0, lineWidth: 6)
+                    OrbitDashedRing(lineWidth: 6, dash: [2, 18]).padding(1)
+                    Image(systemName: "exclamationmark.triangle").font(.system(size: 34, weight: .light))
+                        .foregroundStyle(.white)
+                        .frame(width: 96, height: 96).background(Orbit.surface, in: Circle())
+                }
+                .frame(width: 200, height: 200)
+                .accessibilityHidden(true)
+                Text("Journal unavailable").orbitFont(.title).multilineTextAlignment(.center)
+                    .accessibilityAddTraits(.isHeader)
+                VStack(spacing: 20) {
+                    Text(failure).orbitFont(.body).foregroundStyle(Orbit.body)
+                    if let detail { Text(detail).orbitFont(.footnote).foregroundStyle(Orbit.smallest) }
+                }
+                .multilineTextAlignment(.center).frame(maxWidth: 320)
+                Button(action: tryAgain) {
+                    if opening { ProgressView().tint(.black) } else { Text("Try Again") }
+                }
+                .buttonStyle(OrbitMainActionStyle())
+                .frame(maxWidth: 220)
+                .disabled(opening)
+                .padding(.top, 20)
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity)
+            .containerRelativeFrame(.vertical, alignment: .center) { length, _ in length }
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .orbitGround()
     }
 }

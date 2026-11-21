@@ -20,12 +20,13 @@ struct CameraSamplesView: View {
                     }
                 }.padding()
             }
+            .orbitSheetGround(screen: true)
             .navigationTitle(SpokenText.title(camera.shortName))
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    // iOS 26 fills an icon-only confirmation with the tint.
-                    Button("Done", systemImage: "checkmark") { dismiss() }.labelStyle(.iconOnly).tint(.primaryAction)
+                    Button("Done", systemImage: "checkmark") { dismiss() }.buttonStyle(OrbitCircleButtonStyle(selected: true))
                 }
+                .sharedBackgroundVisibility(.hidden)
             }
         }
     }
@@ -48,8 +49,8 @@ private struct CatalogSampleView: View {
                 else if failed { ContentUnavailableView("Sample unavailable", systemImage: "photo.badge.exclamationmark") }
                 else { ProgressView().frame(height: 180) }
             }
-            Text(sample.title).font(.headline)
-            if !sample.rights.attribution.isEmpty { Text(sample.rights.attribution).font(.caption) }
+            Text(sample.title).orbitFont(.headline).foregroundStyle(.white)
+            if !sample.rights.attribution.isEmpty { Text(sample.rights.attribution).orbitFont(.footnote).foregroundStyle(Orbit.label) }
         }
         .task(id: sample.id) {
             do {

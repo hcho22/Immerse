@@ -548,12 +548,8 @@ struct DevelopedPreviewSection: View {
     @Bindable var previews: DevelopedPreviews
 
     var body: some View {
-        Section {
-            Toggle(DevelopedPreviews.label, isOn: $previews.enabled)
-                .accessibilityIdentifier("developed-preview-switch")
-        } footer: {
-            Text("While on, each capture on every Camera but the Instant shows developed on the camera right away. The Film stays sealed and still develops when it is finished.")
-        }
+        OrbitSwitchRow(title: DevelopedPreviews.label, isOn: $previews.enabled, identifier: "developed-preview-switch",
+                       note: "While on, each capture on every Camera but the Instant shows developed on the camera right away. The Film stays sealed and still develops when it is finished.")
     }
 }
 #endif

@@ -16,28 +16,46 @@ struct SoundtrackView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Current sound") {
-                    Text(currentTitle)
-                    if let credit = current?.asset?.rights.attribution, !credit.isEmpty { Text(credit).font(.caption) }
-                }
-                if let film = model.film(filmID) {
-                    Section("Movie sound") {
-                        Picker("Sound", selection: $selected) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 14) {
+                    OrbitSectionLabel("Current sound")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(currentTitle).orbitFont(.headline).foregroundStyle(.white)
+                        if let credit = current?.asset?.rights.attribution, !credit.isEmpty {
+                            Text(credit).orbitFont(.footnote).foregroundStyle(Orbit.label)
+                        }
+                    }
+                    .padding(.leading, 4)
+                    if let film = model.film(filmID) {
+                        OrbitSectionLabel("Movie sound").padding(.top, 8)
+                        VStack(spacing: 10) {
                             if film.camera.recordsLiveSound == true {
-                                Text("Recorded sound").tag(MovieSoundChoice.recordedSound.rawValue)
+                                OrbitRadioRow(title: "Recorded sound", selected: selected == MovieSoundChoice.recordedSound.rawValue) {
+                                    selected = MovieSoundChoice.recordedSound.rawValue
+                                }
                             }
                             if let catalog = model.mediaCatalog {
                                 ForEach(catalog.assets(for: film.camera.id, purpose: .instrumental)) { asset in
-                                    Text(asset.title).tag("soundtrack:\(asset.id)")
+                                    OrbitRadioRow(title: asset.title, selected: selected == "soundtrack:\(asset.id)") {
+                                        selected = "soundtrack:\(asset.id)"
+                                    }
                                 }
                             }
-                            Text("Silent").tag(MovieSoundChoice.silent.rawValue)
+                            OrbitRadioRow(title: "Silent", selected: selected == MovieSoundChoice.silent.rawValue) {
+                                selected = MovieSoundChoice.silent.rawValue
+                            }
                         }
-                        // The section names it; shown, an inline picker's label is a row that reads as one more choice.
-                        .pickerStyle(.inline).labelsHidden()
+                        .accessibilityElement(children: .contain)
+                        .accessibilityLabel("Sound")
                     }
-                    Button("Apply sound choice", systemImage: "checkmark") {
+                    if working { ProgressView("Preparing Movie").tint(.white).frame(maxWidth: .infinity) }
+                    if let error { OrbitNote(.error, error) }
+                }
+                .padding(.horizontal, 20).padding(.top, 8).padding(.bottom, 24)
+            }
+            .safeAreaBar(edge: .bottom, spacing: 8) {
+                if model.film(filmID) != nil {
+                    Button("Apply sound choice") {
                         working = true
                         Task {
                             defer { working = false }
@@ -48,16 +66,22 @@ struct SoundtrackView: View {
                             }
                             catch { self.error = FailureCopy.message(for: error) }
                         }
-                    }.disabled(!loaded || working || selectionIsUnchanged)
+                    }
+                    .primaryAction()
+                    .disabled(!loaded || working || selectionIsUnchanged)
+                    .padding(.horizontal, 20).padding(.bottom, 8)
                 }
-                if working { ProgressView("Preparing Movie") }
-                if let error { Text(error).foregroundStyle(.red) }
             }
+            .orbitSheetGround()
             .navigationTitle("Movie sound")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done", systemImage: "checkmark") { dismiss() }.labelStyle(.iconOnly).disabled(working)
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done", systemImage: "checkmark") { dismiss() }
+                        .buttonStyle(OrbitCircleButtonStyle())
+                        .disabled(working)
                 }
+                .sharedBackgroundVisibility(.hidden)
             }
             .task {
                 do {
@@ -73,6 +97,7 @@ struct SoundtrackView: View {
             }
             .interactiveDismissDisabled(working)
         }
+        .orbitSheet()
     }
 
     private var selectedChoice: MovieSoundChoice? {

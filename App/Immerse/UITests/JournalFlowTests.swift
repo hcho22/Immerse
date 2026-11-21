@@ -24,7 +24,7 @@ final class JournalFlowTests: ScreenTestCase {
             }
         }
         let camera = app.buttons["camera-super8HomeMovie"]
-        camera.tap()
+        chooseCamera("super8HomeMovie", app)
         // Audit only once the outgoing camera row has left the tree, after the push (Evidence/NativeApp/push-audit-055.md).
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // Assert the load screen's own capacity element; a bare capacity query also matched the
@@ -57,7 +57,7 @@ final class JournalFlowTests: ScreenTestCase {
         XCTAssertTrue(app.buttons["start-film"].waitForExistence(timeout: 10))
         openCameraCatalog(app)
         let camera = app.buttons["camera-cinema16mm"]
-        tapWhole(app, camera)
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = app.staticTexts["film-title-heading"]
         scrollUpUntilWhole(app, title)
@@ -89,7 +89,7 @@ final class JournalFlowTests: ScreenTestCase {
         app.launch()
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        tapWhole(app, camera)
+        chooseCamera(id, app)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.navigationBars[name].exists)
         let field = app.textFields["film-title"]
@@ -112,7 +112,7 @@ final class JournalFlowTests: ScreenTestCase {
         try app.performAccessibilityAudit(for: Self.auditTypes)
         retainScreenshot(name: "Catalog-accessibility-largest")
         let camera = app.buttons["camera-cinema16mm"]
-        tapWhole(app, camera)
+        chooseCamera("cinema16mm", app)
         // The tap can return before the push ends, or even starts, while the outgoing camera rows are still in the tree
         // with sliding or zero-size frames. An audit that began then reported four "Hit area is too small" findings
         // without elements, so the audit waits until the camera row has left the tree (Evidence/NativeApp/push-audit-055.md).
@@ -167,7 +167,7 @@ final class JournalFlowTests: ScreenTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5))
-        app.buttons["camera-disposable1990s"].tap()
+        chooseCamera("disposable1990s", app)
         let load = app.buttons["load-film"]
         scrollUpUntilWhole(app, load)
 

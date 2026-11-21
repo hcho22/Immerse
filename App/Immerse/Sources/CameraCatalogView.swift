@@ -2,39 +2,185 @@ import EntitlementCore
 import FilmDomain
 import SwiftUI
 
+/// Choose a Camera (B01): the five Cameras on a dial, the Photo Cameras on its upper arc and the Movie Cameras on its
+/// lower one, with the chosen Camera in its middle and its look beneath, and Choose to go on to Load Film. At the larger
+/// text sizes, where the dial cannot hold the Cameras' names, they stand in a column instead.
 struct CameraCatalogView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var loaded: (Film) -> Void
+    @State private var chosen = CameraCatalog.all.first { $0.medium == .photo } ?? CameraCatalog.all[0]
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach([CameraMedium.photo, .movie], id: \.rawValue) { medium in
-                    Section(medium == .photo ? "Photo" : "Movie") {
-                        ForEach(CameraCatalog.all.filter { $0.medium == medium }) { camera in
-                            NavigationLink {
-                                LoadFilmView(camera: camera, loaded: loaded)
-                            } label: {
-                                HStack(spacing: 16) {
-                                    Image(systemName: camera.symbol).font(.system(size: 24)).frame(width: 36)
-                                        .accessibilityHidden(true)
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        camera.shortNameText.font(.system(.title3, design: .serif))
-                                        camera.capacityText.font(.caption).foregroundStyle(.secondary)
-                                    }.padding(.vertical, 8)
-                                }
-                            }.accessibilityIdentifier("camera-\(camera.id.rawValue)")
+            ScrollView {
+                VStack(spacing: 24) {
+                    if dynamicTypeSize >= .xxLarge { column } else { CameraDial(chosen: $chosen).padding(.top, 8) }
+                    VStack(spacing: 8) {
+                        ForEach(chosen.lookLines(filmStock: nil), id: \.self) { line in
+                            Text(SpokenText.shown(line)).orbitFont(.body).foregroundStyle(Orbit.body)
                         }
+                        Text(chosen.revealLabel).orbitFont(.footnote).foregroundStyle(Orbit.label)
                     }
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 24)
                 }
+                .padding(.bottom, 16)
             }
+            .scrollBounceBehavior(.basedOnSize)
+            .safeAreaBar(edge: .bottom, spacing: 8) {
+                NavigationLink {
+                    LoadFilmView(camera: chosen, loaded: loaded)
+                } label: {
+                    Text(SpokenText.shown("Choose \(chosen.shortName)"))
+                }
+                .primaryAction()
+                .accessibilityIdentifier("choose-camera")
+                .padding(.horizontal, 24).padding(.bottom, 8)
+            }
+            .orbitSheetGround(screen: true)
             .navigationTitle("Choose a Camera")
+            .toolbarTitleDisplayMode(.inlineLarge)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Cancel", systemImage: "xmark") { dismiss() }.buttonStyle(OrbitCircleButtonStyle())
+                }
+                .sharedBackgroundVisibility(.hidden)
+            }
+        }
+        .orbitSheet(screen: true)
+    }
+
+    /// The Cameras in a column under their Photo and Movie headings, for the larger text sizes.
+    private var column: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach([CameraMedium.photo, .movie], id: \.rawValue) { medium in
+                OrbitSectionLabel(medium == .photo ? "Photo" : "Movie").padding(.top, 8).padding(.leading, 4)
+                ForEach(CameraCatalog.all.filter { $0.medium == medium }) { camera in
+                    Button { chosen = camera } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            camera.shortNameText.orbitFont(.headline)
+                            camera.capacityText.orbitFont(.footnote)
+                                .foregroundStyle(camera == chosen ? Orbit.onWhiteSecondary : Orbit.label)
+                        }
+                        .foregroundStyle(camera == chosen ? Color.black : Color.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 22).padding(.vertical, 12)
+                        .background(camera == chosen ? Color.white : Orbit.button, in: RoundedRectangle(cornerRadius: 28))
+                        .contentShape(RoundedRectangle(cornerRadius: 28))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(camera == chosen ? .isSelected : [])
+                    .accessibilityIdentifier("camera-\(camera.id.rawValue)")
                 }
             }
         }
+        .padding(.horizontal, Orbit.gutter)
+    }
+}
+
+/// The dial (B01): a dashed orbit 300 points across with the Photo Cameras on its upper arc and the Movie Cameras on its
+/// lower one, each an 84-point circle, white with a white ring when chosen, and the chosen Camera in its middle.
+private struct CameraDial: View {
+    @Binding var chosen: CameraPackage
+    /// Where each Camera sits on the orbit, in degrees from the top, clockwise.
+    private static let angles: [CameraID: Double] = [
+        .disposable1990s: -60, .instant1970s: 0, .mediumFormat6x6: 60, .cinema16mm: -135, .super8HomeMovie: 135,
+    ]
+    private static let radius: CGFloat = 150
+    private static let option: CGFloat = 84
+
+    var body: some View {
+        let photo = CameraCatalog.all.filter { $0.medium == .photo }
+        let movie = CameraCatalog.all.filter { $0.medium == .movie }
+        VStack(spacing: 0) {
+            OrbitSectionLabel("Photo").frame(height: 14)
+            // The orbit's middle sits 200 points down, which leaves room above the chosen Camera's ring at the top and
+            // below the Movie Cameras at the bottom.
+            ZStack {
+                OrbitDashedRing(lineWidth: 1, dash: [2, 6], color: Orbit.hairline)
+                    .frame(width: Self.radius * 2, height: Self.radius * 2)
+                ForEach(photo) { option($0) }
+                summary
+                ForEach(movie) { option($0) }
+            }
+            .offset(y: 22)
+            .frame(width: 390, height: 356)
+            .padding(.top, 16)
+            OrbitSectionLabel("Movie").frame(height: 14)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func option(_ camera: CameraPackage) -> some View {
+        let angle = (Self.angles[camera.id] ?? 0) * .pi / 180
+        let selected = camera == chosen
+        return Button { chosen = camera } label: {
+            VStack(spacing: 1) {
+                camera.shortNameText.font(.orbit(size: camera.shortName.count > 8 ? 12 : 14, weight: .bold, relativeTo: .subheadline))
+                Text(Self.amount(camera)).font(.orbit(size: 11, weight: .semibold, relativeTo: .caption))
+                    .foregroundStyle(selected ? Orbit.onWhiteSecondary : Orbit.label)
+            }
+            .lineLimit(1)
+            .foregroundStyle(selected ? Color.black : Color.white)
+            .padding(.horizontal, 6)
+            .frame(minWidth: Self.option, minHeight: Self.option)
+            .background { OrbitCircleBackground(selected: selected) }
+            .background { if selected { Circle().strokeBorder(Color.white, lineWidth: 2).padding(-7) } }
+            .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(camera.shortNameText)
+        .accessibilityValue(camera.capacitySpokenLabel)
+        .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityIdentifier("camera-\(camera.id.rawValue)")
+        .offset(x: Self.radius * sin(angle), y: -Self.radius * cos(angle))
+    }
+
+    /// "27" or "3:20": the capacity on a dial option.
+    private static func amount(_ camera: CameraPackage) -> String {
+        switch camera.capacity {
+        case let .exposures(count): String(count)
+        case let .seconds(seconds): MovieDurationText.clock(seconds)
+        }
+    }
+
+    /// The chosen Camera in the dial's middle: its picture shape, its name and capacity.
+    private var summary: some View {
+        VStack(spacing: 6) {
+            CameraShapeMark(camera: chosen, scale: 0.5)
+            chosen.shortNameText.orbitFont(.heading, weight: .extraBold).foregroundStyle(.white)
+            chosen.capacityText.orbitFont(.footnote).foregroundStyle(Orbit.label)
+        }
+        .frame(width: 180, height: 180)
+        .background(Orbit.surface, in: Circle())
+        .overlay(Circle().strokeBorder(Orbit.hairline, lineWidth: 1))
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// A Camera's picture shape in grey (B01, B02): the Instant's white card, the Disposable's upright 3:2, the 6×6's
+/// square, and a 4:3 frame for a Movie Camera.
+struct CameraShapeMark: View {
+    let camera: CameraPackage
+    var scale: CGFloat = 1
+
+    var body: some View {
+        Group {
+            switch camera.id {
+            case .instant1970s:
+                VStack { Rectangle().fill(Orbit.disabledMark).frame(width: 82 * scale, height: 82 * scale) }
+                    .padding(.top, 8 * scale)
+                    .frame(width: 98 * scale, height: 119 * scale, alignment: .top)
+                    .background(Color(hex: 0xF2F2F2))
+            case .disposable1990s: Rectangle().fill(Color(hex: 0x3A3A3A)).frame(width: 66 * scale, height: 99 * scale)
+            case .mediumFormat6x6: Rectangle().fill(Color(hex: 0x4A4A4A)).frame(width: 84 * scale, height: 84 * scale)
+            case .super8HomeMovie, .cinema16mm:
+                Rectangle().fill(Color(hex: 0x3A3A3A)).frame(width: 96 * scale, height: 72 * scale)
+            }
+        }
+        .accessibilityHidden(true)
     }
 }
 
@@ -57,118 +203,259 @@ private struct LoadFilmView: View {
     }
 
     var body: some View {
-        Group {
-            #if DEBUG
-            if model.testingUnlock.enabled {
-                form {
-                    TestingUnlockNotice()
-                    Text(LoadCopy.fixed(camera: camera))
-                        .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
+        GeometryReader { screen in
+            ScrollView {
+                VStack(spacing: 14) {
+                    if let warning = model.storage.warning(for: .capture) { LowStorageNotice(text: warning) }
+                    identity
+                    choices
+                    titleField
+                    access
+                    if let error { OrbitNote(.error, error) }
+                    Spacer(minLength: 12)
+                    loadButton
                 }
-            } else {
-                form { entitlement }
+                .padding(.horizontal, Orbit.gutter)
+                .padding(.bottom, 12)
+                .frame(minHeight: screen.size.height)
             }
-            #else
-            form { entitlement }
-            #endif
+            .scrollBounceBehavior(.basedOnSize)
         }
+        .orbitSheetGround(screen: true)
         .navigationTitle(SpokenText.title(camera.shortName))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // The bar names the step (B02); the Camera's name is the screen's own heading.
+            ToolbarItem(placement: .principal) {
+                Text("Load Film").orbitFont(.label).foregroundStyle(Orbit.label).accessibilityHidden(true)
+            }
+        }
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
         .task { if title.isEmpty { title = suggestedTitle } }
         .task { await model.storage.refresh() }
         .interactiveDismissDisabled(loading)
     }
 
-    /// The Load Film form around its access rows. The testing unlock chooses a whole form, not conditional
-    /// rows: inside a conditional, the entitlement line drew a clipped-text audit finding
-    /// (Evidence/NativeApp/testing-unlock-debug.md).
-    private func form(@ViewBuilder access: () -> some View) -> some View {
-        Form {
-            if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
-                Section {
-                    Button("Camera samples", systemImage: "photo.on.rectangle") { samples = true }
+    /// The Camera's disc with its capacity, its name, what it does and how it develops (B02, B04).
+    @ViewBuilder private var identity: some View {
+        let capacity = capacityDisc
+        if camera.medium == .movie {
+            HStack(spacing: 16) {
+                capacity
+                VStack(alignment: .leading, spacing: 4) {
+                    name
+                    looks(alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            Section {
-                LabeledContent("Capacity") { camera.capacityText }
-                Text(camera.revealLabel)
-                if let sound = camera.loadSoundLabel {
-                    Text(sound).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("load-film-sound")
+            .padding(.horizontal, 4)
+            chips
+        } else {
+            capacity
+            name
+            chips
+            looks(alignment: .center)
+        }
+        if let catalog = model.mediaCatalog, !catalog.assets(for: camera.id, purpose: .cameraSample).isEmpty {
+            Button("Camera samples", systemImage: "photo.on.rectangle") { samples = true }
+                .buttonStyle(OrbitPillStyle())
+        }
+    }
+
+    private var name: some View {
+        camera.shortNameText.orbitFont(.display).foregroundStyle(.white)
+            .accessibilityAddTraits(.isHeader)
+    }
+
+    /// The disc: a Photo Camera's shape with its exposures on a white badge, or a Movie Camera's time.
+    @ViewBuilder private var capacityDisc: some View {
+        Group {
+            if camera.medium == .movie {
+                VStack(spacing: 4) {
+                    Text(Self.amount(camera)).font(.orbit(size: 26, weight: .extraBold, relativeTo: .title2))
+                    Text("OF FILM").font(.orbit(size: 9, weight: .bold, relativeTo: .caption2)).tracking(0.54)
+                        .foregroundStyle(Orbit.label)
                 }
-                Text(camera.controlsLabel).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                // The choice comes before the look lines, which on the 6×6 say what each Film Stock develops like.
-                if !camera.filmStocks.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Film Stock").fixedSize(horizontal: false, vertical: true)
-                        SegmentedChoice(label: "Film Stock", options: camera.filmStocks.map { ($0, $0.label) }, selection: $filmStock)
-                    }
-                }
-                ForEach(camera.lookLines(filmStock: camera.filmStocks.isEmpty ? nil : filmStock), id: \.self) { line in
-                    Text(line).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-                }
-                if camera.medium == .movie {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Movie Orientation").fixedSize(horizontal: false, vertical: true)
-                        SegmentedChoice(label: "Movie Orientation",
-                                        options: [(MovieOrientation.portrait, "Portrait"), (.landscape, "Landscape")],
-                                        selection: $orientation)
-                    }
-                }
-            }
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Film title").font(.headline).foregroundStyle(Color.primary)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("film-title-heading")
-                        .accessibilityAddTraits(.isHeader)
-                    FilmTitleField(placeholder: "Title", text: $title)
-                        .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
-                }
-            }
-            Section { access() }
-            Section { NavigationLink("Subscription") { SubscriptionView() } }
-            if let warning = model.storage.warning(for: .capture) { Section { LowStorageNotice(text: warning) } }
-            if let error { Section { Text(error).foregroundStyle(.red) } }
-            Section {
-                Button {
-                    loading = true
-                    Task {
-                        defer { loading = false }
-                        do {
-                            let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
-                            let film = try await model.load(camera: camera, title: name.isEmpty ? suggestedTitle : name,
-                                                            orientation: orientation,
-                                                            filmStock: camera.filmStocks.isEmpty ? nil : filmStock)
-                            loaded(film)
-                        } catch {
-                            switch error {
-                            case JournalError.cameraDenied: self.error = "Camera access is off. No Film was loaded. Allow Camera in iPhone Settings."
-                            case JournalError.trialInProgress: self.error = "A Trial Film is already waiting in your Journal. Open it or delete that empty Film first."
-                            case JournalError.subscriptionUnavailable: self.error = "This iPhone's Trial is used. Subscriptions are not available in this build. Existing Films remain usable."
-                            case JournalError.subscriptionRequired: self.error = "This iPhone's Trial is used. Subscribe or restore a current subscription to load another Film. Existing Films remain usable."
-                            default: self.error = FailureCopy.message(for: error)
-                            }
+                .foregroundStyle(.white)
+                .frame(width: 104, height: 104)
+                .background(Orbit.surface, in: Circle())
+                .overlay(Circle().strokeBorder(Orbit.pressed, lineWidth: 1))
+            } else {
+                CameraShapeMark(camera: camera)
+                    .frame(width: 170, height: 170)
+                    .background(Orbit.surface, in: Circle())
+                    .overlay(Circle().strokeBorder(Orbit.pressed, lineWidth: 1))
+                    .overlay(alignment: .bottomTrailing) {
+                        VStack(spacing: 2) {
+                            Text(Self.amount(camera)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
+                            Text("EXPOSURES").font(.orbit(size: 8, weight: .bold, relativeTo: .caption2)).tracking(0.48)
                         }
+                        .foregroundStyle(.black)
+                        .frame(width: 66, height: 66)
+                        .background(Color.white, in: Circle())
+                        .background(Circle().fill(Color.black).padding(-4))
+                        .offset(x: 10, y: -4)
                     }
-                } label: {
-                    HStack { Text("Load Film"); Spacer(); if loading { ProgressView() } else { Image(systemName: "camera") } }
-                }.disabled(loading).accessibilityIdentifier("load-film")
             }
         }
-        .contentMargins(.bottom, 34, for: .scrollContent)
+        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Capacity, ") + Text(camera.capacitySpokenLabel))
+        .accessibilityAddTraits(.isStaticText)
+    }
+
+    private static func amount(_ camera: CameraPackage) -> String {
+        switch camera.capacity {
+        case let .exposures(count): String(count)
+        case let .seconds(seconds): MovieDurationText.clock(seconds)
+        }
+    }
+
+    /// What the Camera does, as chips (B02): when it reveals, then each of its controls. VoiceOver reads the controls as
+    /// the one sentence they are.
+    private var chips: some View {
+        ChipFlow {
+            OrbitChip(camera.revealLabel)
+            ForEach(Self.chipWords(camera.controlsLabel), id: \.self) { OrbitChip($0).accessibilityHidden(true) }
+        }
+        .overlay {
+            Color.clear
+                .accessibilityElement()
+                .accessibilityLabel(SpokenText.of(camera.controlsLabel))
+                .accessibilityAddTraits(.isStaticText)
+        }
+    }
+
+    /// The controls line in its parts, each begun with a capital.
+    private static func chipWords(_ line: String) -> [String] {
+        line.components(separatedBy: "; ").map { $0.prefix(1).uppercased() + $0.dropFirst() }
+    }
+
+    private func looks(alignment: TextAlignment) -> some View {
+        VStack(alignment: alignment == .center ? .center : .leading, spacing: 4) {
+            ForEach(camera.lookLines(filmStock: camera.filmStocks.isEmpty ? nil : filmStock), id: \.self) { line in
+                Text(SpokenText.shown(line))
+            }
+        }
+        .orbitFont(.footnote).foregroundStyle(Orbit.label)
+        .multilineTextAlignment(alignment)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    /// The Film Stock and Movie Orientation, as round options (B03, B04), and the Movie's sound line.
+    @ViewBuilder private var choices: some View {
+        if !camera.filmStocks.isEmpty {
+            RoundChoice(title: "Film Stock", options: camera.filmStocks.map {
+                (value: $0, title: $0.label, symbol: $0 == .color ? "circle.hexagongrid" : "circle.lefthalf.filled")
+            }, selection: $filmStock)
+        }
+        if camera.medium == .movie {
+            RoundChoice(title: "Movie Orientation", options: [
+                (value: MovieOrientation.portrait, title: "Portrait", symbol: "rectangle.portrait"),
+                (value: .landscape, title: "Landscape", symbol: "rectangle"),
+            ], selection: $orientation, diameter: 88)
+        }
+        if let sound = camera.loadSoundLabel {
+            Text(sound).orbitFont(.footnote).foregroundStyle(Orbit.label).multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("load-film-sound")
+        }
+    }
+
+    /// The Film title (B02): its label, and a round field on the sunken ground.
+    private var titleField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Film title").orbitFont(.label).foregroundStyle(Orbit.label)
+                .padding(.leading, 20)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("film-title-heading")
+                .accessibilityAddTraits(.isHeader)
+            FilmTitleField(placeholder: "Title", text: $title)
+                .accessibilityLabel("Film title").accessibilityIdentifier("film-title")
+                .padding(.horizontal, 22).padding(.vertical, 6)
+                .frame(minHeight: 56)
+                .background(Orbit.sunken, in: RoundedRectangle(cornerRadius: 28))
+                .overlay(RoundedRectangle(cornerRadius: 28).strokeBorder(Orbit.hairline, lineWidth: 1))
+        }
+        .padding(.top, 4)
+    }
+
+    /// What loading uses and what stays fixed, with the way to the Subscription (B02). The testing unlock chooses a whole
+    /// block, not conditional rows: inside a conditional, the entitlement line drew a clipped-text audit finding
+    /// (Evidence/NativeApp/testing-unlock-debug.md).
+    @ViewBuilder private var access: some View {
+        #if DEBUG
+        if model.testingUnlock.enabled {
+            OrbitNote(kind: .custom("hammer", outlined: false)) {
+                TestingUnlockNotice()
+                Text(LoadCopy.fixed(camera: camera)).foregroundStyle(Orbit.label)
+                subscriptionLink
+            }
+        } else {
+            entitlement
+        }
+        #else
+        entitlement
+        #endif
+    }
+
+    private var entitlement: some View {
+        OrbitNote(kind: .custom(model.billing.access == .active ? "checkmark.circle" : "ticket", outlined: false)) {
+            Text(entitlementLabel).orbitFont(.body, weight: .bold).foregroundStyle(.white)
+                .accessibilityIdentifier("load-entitlement")
+            Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, camera: camera,
+                               subscriptionsAvailable: model.billing.configured))
+                .orbitFont(.footnote).foregroundStyle(Orbit.label)
+                .accessibilityIdentifier("load-note")
+            subscriptionLink
+        }
+    }
+
+    private var subscriptionLink: some View {
+        NavigationLink { SubscriptionView() } label: {
+            Text("Subscription").orbitFont(.footnote, weight: .bold).underline().foregroundStyle(.white)
+                .padding(.vertical, 13)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Load Film (B02): the round cream main action, 104 points across with its ring.
+    private var loadButton: some View {
+        Button {
+            loading = true
+            Task {
+                defer { loading = false }
+                do {
+                    let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let film = try await model.load(camera: camera, title: name.isEmpty ? suggestedTitle : name,
+                                                    orientation: orientation,
+                                                    filmStock: camera.filmStocks.isEmpty ? nil : filmStock)
+                    loaded(film)
+                } catch {
+                    switch error {
+                    case JournalError.cameraDenied: self.error = "Camera access is off. No Film was loaded. Allow Camera in iPhone Settings."
+                    case JournalError.trialInProgress: self.error = "A Trial Film is already waiting in your Journal. Open it or delete that empty Film first."
+                    case JournalError.subscriptionUnavailable: self.error = "This iPhone's Trial is used. Subscriptions are not available in this build. Existing Films remain usable."
+                    case JournalError.subscriptionRequired: self.error = "This iPhone's Trial is used. Subscribe or restore a current subscription to load another Film. Existing Films remain usable."
+                    default: self.error = FailureCopy.message(for: error)
+                    }
+                }
+            }
+        } label: {
+            ZStack {
+                Text("Load Film").font(.orbit(size: 17, weight: .extraBold, relativeTo: .headline)).opacity(loading ? 0 : 1)
+                if loading { ProgressView().tint(.black) }
+            }
+        }
+        .buttonStyle(OrbitRoundMainActionStyle(diameter: 104))
+        .disabled(loading)
+        .accessibilityIdentifier("load-film")
+        .padding(.bottom, 12)
     }
 
     private var suggestedTitle: String {
         camera.suggestedTitle(roll: model.films.filter { $0.camera.id == camera.id }.count + 1)
-    }
-
-    @ViewBuilder private var entitlement: some View {
-        Label(entitlementLabel, systemImage: "ticket").accessibilityIdentifier("load-entitlement")
-        Text(LoadCopy.note(access: model.billing.access, trial: model.trialState, camera: camera,
-                           subscriptionsAvailable: model.billing.configured))
-            .font(.footnote).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-            .accessibilityIdentifier("load-note")
     }
 
     private var entitlementLabel: String {
@@ -178,6 +465,73 @@ private struct LoadFilmView: View {
         case .emptyFilmInProgress: return "Trial Film already loaded"
         case .consumed: return "This iPhone's Trial is used"
         case nil: return model.trialError == nil ? "Checking Trial status" : "Trial status unavailable"
+        }
+    }
+}
+
+/// A choice made once at Load Film, as round options under its heading (B03, B04). VoiceOver reads the heading and each
+/// option, the chosen one selected.
+private struct RoundChoice<Value: Hashable>: View {
+    let title: String
+    let options: [(value: Value, title: String, symbol: String)]
+    @Binding var selection: Value
+    var diameter: CGFloat = 96
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(title).orbitFont(.label).foregroundStyle(Orbit.label).accessibilityLabel(title)
+                .accessibilityAddTraits(.isHeader)
+            HStack(spacing: 20) {
+                ForEach(options, id: \.value) { option in
+                    Button { selection = option.value } label: {
+                        Label { Text(option.title) } icon: { Image(systemName: option.symbol).font(.system(size: 24, weight: .light)) }
+                    }
+                    .buttonStyle(OrbitRoundOptionStyle(selected: selection == option.value, diameter: diameter))
+                    .accessibilityAddTraits(selection == option.value ? .isSelected : [])
+                }
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(title)
+        }
+        .padding(.top, 6)
+    }
+}
+
+/// Chips across the width, centered, wrapping to more lines as needed.
+private struct ChipFlow: Layout {
+    var spacing: CGFloat = 8
+
+    private func lines(width: CGFloat, subviews: Subviews) -> [[(LayoutSubview, CGSize)]] {
+        var lines: [[(LayoutSubview, CGSize)]] = [[]]
+        var x: CGFloat = 0
+        for subview in subviews {
+            var size = subview.sizeThatFits(.unspecified)
+            if size.width > width { size = subview.sizeThatFits(ProposedViewSize(width: width, height: nil)) }
+            if x > 0, x + size.width > width { lines.append([]); x = 0 }
+            lines[lines.count - 1].append((subview, size))
+            x += size.width + spacing
+        }
+        return lines
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? 358
+        let lines = lines(width: width, subviews: subviews)
+        let height = lines.map { $0.map(\.1.height).max() ?? 0 }.reduce(0, +) + spacing * CGFloat(max(lines.count - 1, 0))
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var y = bounds.minY
+        for line in lines(width: bounds.width, subviews: subviews) {
+            let length = line.map(\.1.width).reduce(0, +) + spacing * CGFloat(max(line.count - 1, 0))
+            let height = line.map(\.1.height).max() ?? 0
+            var x = bounds.midX - length / 2
+            for (subview, size) in line {
+                subview.place(at: CGPoint(x: x, y: y + height / 2), anchor: .leading, proposal: ProposedViewSize(size))
+                x += size.width + spacing
+            }
+            y += height + spacing
         }
     }
 }
@@ -212,89 +566,6 @@ enum LoadCopy {
         case (false, .photo): "Your Camera and Film Stock cannot change after loading."
         case (false, .movie): "Your Camera, Film Stock and Movie Orientation cannot change after loading."
         }
-    }
-}
-
-/// Segmented-style choice whose text follows Dynamic Type; `UISegmentedControl` titles stay at one size.
-/// Its height follows the text, matching the native control's 32 points at the default size.
-private struct SegmentedChoice<Value: Hashable>: View {
-    let label: String
-    let options: [(value: Value, title: String)]
-    @Binding var selection: Value
-
-    var body: some View {
-        // One layout keeps every option's identity across text sizes. `ViewThatFits` swapped in a
-        // separate copy of the buttons when the text grew, which Xcode's Dynamic Type audit reports as
-        // text that cannot change size, and it kept the side-by-side copy while "Landscape" broke mid-word.
-        SegmentLayout(spacing: 2) {
-            ForEach(options, id: \.value) { option($0.value, $0.title) }
-        }
-        .padding(2)
-        .background(Color(uiColor: .tertiarySystemFill), in: RoundedRectangle(cornerRadius: 10))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(label)
-    }
-
-    private func option(_ value: Value, _ title: String) -> some View {
-        Button { selection = value } label: {
-            // A title that wraps at the larger sizes stays centered in its segment, as a single line is.
-            Text(title).fixedSize(horizontal: false, vertical: true).multilineTextAlignment(.center)
-                .padding(.vertical, 4).frame(maxWidth: .infinity).padding(.horizontal, 8)
-                .background(selection == value ? segmentSelectedFill : .clear, in: RoundedRectangle(cornerRadius: 8))
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(selection == value ? .isSelected : [])
-    }
-}
-
-/// The selected segment's fill, as the native segmented control draws it in light and dark.
-private let segmentSelectedFill = Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? .systemGray3 : .systemBackground })
-
-/// Places its subviews side by side in equal widths when each fits on its own unwrapped width, and
-/// stacks them at full width otherwise.
-private struct SegmentLayout: Layout {
-    var spacing: CGFloat
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let width = proposal.width ?? idealWidth(subviews)
-        if fitsSideBySide(width, subviews) {
-            let height = subviews.map { $0.sizeThatFits(ProposedViewSize(width: segment(width, subviews), height: nil)).height }.max() ?? 0
-            return CGSize(width: width, height: height)
-        }
-        let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
-        return CGSize(width: width, height: heights.reduce(0, +) + spacing * CGFloat(max(subviews.count - 1, 0)))
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        if fitsSideBySide(bounds.width, subviews) {
-            let width = segment(bounds.width, subviews)
-            for (index, subview) in subviews.enumerated() {
-                let x = bounds.minX + CGFloat(index) * (width + spacing)
-                subview.place(at: CGPoint(x: x, y: bounds.minY), proposal: ProposedViewSize(width: width, height: bounds.height))
-            }
-            return
-        }
-        var y = bounds.minY
-        for subview in subviews {
-            let height = subview.sizeThatFits(ProposedViewSize(width: bounds.width, height: nil)).height
-            subview.place(at: CGPoint(x: bounds.minX, y: y), proposal: ProposedViewSize(width: bounds.width, height: height))
-            y += height + spacing
-        }
-    }
-
-    private func fitsSideBySide(_ width: CGFloat, _ subviews: Subviews) -> Bool {
-        idealWidth(subviews) <= width
-    }
-
-    /// The width that shows every subview at its widest unwrapped size in equal segments.
-    private func idealWidth(_ subviews: Subviews) -> CGFloat {
-        let widest = subviews.map { $0.sizeThatFits(.unspecified).width }.max() ?? 0
-        return widest * CGFloat(subviews.count) + spacing * CGFloat(max(subviews.count - 1, 0))
-    }
-
-    private func segment(_ width: CGFloat, _ subviews: Subviews) -> CGFloat {
-        (width - spacing * CGFloat(max(subviews.count - 1, 0))) / CGFloat(max(subviews.count, 1))
     }
 }
 
@@ -340,7 +611,7 @@ private struct FilmTitleTextView: UIViewRepresentable {
         let view = InsetTextView()
         view.delegate = context.coordinator
         view.placeholderLabel.text = placeholder
-        view.tintColor = UIColor(named: "AccentColor")
+        view.tintColor = .white
         return view
     }
 
@@ -382,12 +653,12 @@ private struct FilmTitleTextView: UIViewRepresentable {
             isScrollEnabled = false
             textContainer.lineFragmentPadding = 0
             textContainerInset = .zero
-            font = .preferredFont(forTextStyle: .body)
+            font = OrbitFonts.uiFont(.semibold, size: 17, relativeTo: .body)
             adjustsFontForContentSizeCategory = true
-            textColor = .label
+            textColor = .white
             placeholderLabel.font = font
             placeholderLabel.adjustsFontForContentSizeCategory = true
-            placeholderLabel.textColor = .placeholderText
+            placeholderLabel.textColor = UIColor(white: 0x8A / 255, alpha: 1)
             placeholderLabel.numberOfLines = 0
             placeholderLabel.isAccessibilityElement = false
             addSubview(placeholderLabel)

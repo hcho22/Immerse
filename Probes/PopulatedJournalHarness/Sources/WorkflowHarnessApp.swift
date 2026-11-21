@@ -18,7 +18,7 @@ struct WorkflowHarnessApp: App {
                 }
                 else if let failure { Text(failure).accessibilityIdentifier("fixture-failed") }
                 else { ProgressView("Preparing private fixtures").task { await prepare() } }
-            }.tint(Color("AccentColor")) // Matches ImmerseApp's root tint.
+            }.orbitRoot() // Matches ImmerseApp's root look.
             // As ImmerseApp does: Development stops when the harness leaves the screen.
             .onChange(of: scenePhase) { _, phase in scenario?.model.sceneChanged(to: phase) }
         }

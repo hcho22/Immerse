@@ -224,6 +224,17 @@ extension XCTestCase {
         XCTFail("The Camera catalog did not open within 30 seconds of the tap on Start a Film")
     }
 
+    /// Chooses the Camera `id` on the catalog's dial and goes on to its Load Film screen with Choose, the catalog's one
+    /// main action (B01).
+    func chooseCamera(_ id: String, _ app: XCUIApplication) {
+        let camera = app.buttons["camera-\(id)"]
+        XCTAssertTrue(camera.exists(within: 10), "The \(id) Camera is on the catalog")
+        camera.tap()
+        let choose = app.buttons["choose-camera"]
+        XCTAssertTrue(choose.exists(within: 5))
+        tapWhole(app, choose)
+    }
+
     /// Replaces the Load screen's suggested Film title with `title`, failing the test and returning false if the typed
     /// title does not land in the field.
     @discardableResult func enterFilmTitle(_ title: String, _ app: XCUIApplication) -> Bool {
@@ -295,7 +306,7 @@ extension XCTestCase {
         XCTAssertTrue(app.buttons["Film actions"].exists(within: 5))
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
-        let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        let confirm = app.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(confirm.exists(within: 5))
         confirm.tap()
         XCTAssertTrue(app.buttons["Film actions"].isGone(within: 10), "The Film was removed")

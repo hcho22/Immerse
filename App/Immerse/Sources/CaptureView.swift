@@ -13,7 +13,7 @@ struct CaptureView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// The screen's ground, under the top bar and the shutter bar alike, which hides a column scrolled beneath the bar.
-    private static let ground = Color(uiColor: .secondarySystemBackground)
+    private static let ground = Orbit.ground
     /// How long the notices over the viewfinder read when the iPhone is on its side, at most.
     @ScaledMetric(relativeTo: .callout) private var noticeLength: CGFloat = 220
     /// The person's text size, from which the notices step down only where they do not fit their room (`notices`).
@@ -203,11 +203,12 @@ struct CaptureView: View {
 
     private func doneRow(_ capture: CaptureController) -> CaptureDoneRow {
         let done: @MainActor () -> Void = { capture.suspend(); dismiss() }
+        let complete = model.film(filmID).map { $0.completionState != .open } ?? false
         #if DEBUG
-        return CaptureDoneRow(done: done,
+        return CaptureDoneRow(done: done, complete: complete,
                               developsAtOnce: model.film(filmID).map { model.developedPreviews.applies(to: $0) } ?? false)
         #else
-        return CaptureDoneRow(done: done)
+        return CaptureDoneRow(done: done, complete: complete)
         #endif
     }
 
@@ -216,14 +217,20 @@ struct CaptureView: View {
     /// a dark ground; at the largest text sizes they are part of the header, on the screen's own.
     @ViewBuilder private func statusLines(_ film: Film, controller capture: CaptureController, onDark: Bool) -> some View {
         let behavior = CaptureBehavior.for(film.camera.id, focusSetting: film.effectiveFocusSetting)
-        let secondary: Color = onDark ? .white.opacity(0.85) : .secondary
-        if let error { WholeWords(error).foregroundStyle(.red).font(.callout).multilineTextAlignment(.center) }
+        let secondary: Color = onDark ? Orbit.body : .secondary
+        // An error is white, never red, which is the shutter's alone (K00); the block it sits in gets a white outline.
+        if let error {
+            WholeWords(error).foregroundStyle(.white).font(.orbit(size: 15, weight: .semibold, relativeTo: .callout))
+                .multilineTextAlignment(.center)
+        }
         if let message = capture.message, message != "Saved" || savedShowing {
-            WholeWords(message).font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
+            WholeWords(message).font(.orbit(size: 15, weight: .semibold, relativeTo: .callout)).foregroundStyle(secondary)
+                .multilineTextAlignment(.center)
         }
         if capture.microphoneUnavailable {
             WholeWords("Microphone access is off. Movie clips will be silent.")
-                .font(.callout).foregroundStyle(secondary).multilineTextAlignment(.center)
+                .font(.orbit(size: 15, weight: .semibold, relativeTo: .callout)).foregroundStyle(secondary)
+                .multilineTextAlignment(.center)
                 .accessibilityIdentifier("microphone-permission-note")
         }
         if cameraDenied {
@@ -245,7 +252,7 @@ struct CaptureView: View {
         }
         if film.completionState == .open {
             ForEach(Self.lensNotes(behavior: behavior, lensIsLive: capture.lensIsLive, controls: capture.controls), id: \.self) {
-                WholeWords($0).font(.caption).foregroundStyle(secondary).multilineTextAlignment(.center)
+                WholeWords($0).font(.orbit(.footnote)).foregroundStyle(secondary).multilineTextAlignment(.center)
             }
         }
     }
@@ -278,7 +285,8 @@ struct CaptureView: View {
                         }
                     } else if !showsStatus && !showsDevelopedPreview {
                         // Without a picture the Camera icon is inside the Camera's shape, never in its bars.
-                        Image(systemName: "camera").font(.largeTitle).foregroundStyle(.white).turnedWithTheHold()
+                        Image(systemName: "camera").font(.system(size: 34, weight: .light)).foregroundStyle(Orbit.disabledMark)
+                            .turnedWithTheHold()
                     }
             }
             .overlay(alignment: .top) {
@@ -333,9 +341,13 @@ struct CaptureView: View {
                 VStack(spacing: 6) {
                     if showsLowLightCue { LowLightCueView() }
                     if showsStatus {
-                        VStack(spacing: 6) { statusLines(film, controller: capture, onDark: true) }
-                            .padding(10).frame(maxWidth: .infinity)
-                            .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
+                        // Orbit's notice over the picture (E02, E03): a dark round box, outlined in white for an error.
+                        VStack(spacing: 12) { statusLines(film, controller: capture, onDark: true) }
+                            .padding(16).frame(maxWidth: .infinity)
+                            .background(.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 28))
+                            .overlay {
+                                if error != nil { RoundedRectangle(cornerRadius: 28).strokeBorder(Color.white, lineWidth: 1) }
+                            }
                     }
                     #if DEBUG
                     if showsPreview {
@@ -457,14 +469,15 @@ struct CaptureView: View {
                     model.perform { try await capture.selectZoomStep(step) } failure: { error = $0 }
                 } label: {
                     TurnedInPlace {
-                        Text(step.label).font(.footnote.weight(.semibold).monospacedDigit()).lineLimit(1)
+                        Text(step.label).font(.orbit(size: 12, weight: selected ? .extraBold : .bold, relativeTo: .footnote))
+                            .lineLimit(1)
                     }
                     // 8 points around a label in every hold, as "0.5x" has at its sides in its 44 points at the
                     // default size: upright at its sides, turned at its ends.
                     .padding(8)
-                    .foregroundStyle(selected ? Color.black : Color.white)
+                    .foregroundStyle(selected ? Color.black : Orbit.body)
                     .frame(minWidth: 44, minHeight: 44)
-                    .background { if selected { Circle().fill(Color.white).padding(3) } }
+                    .background { if selected { Capsule().fill(Color.white).padding(4) } }
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -476,7 +489,7 @@ struct CaptureView: View {
             }
         }
         .padding(.horizontal, 4)
-        .background(.black.opacity(0.6), in: Capsule())
+        .background(Orbit.button, in: Capsule())
     }
 
     /// The 6×6's Focus or Exposure button, which opens its slider in the strip. With no lens running there is no slider
@@ -484,11 +497,11 @@ struct CaptureView: View {
     private func sliderButton(_ slider: StripSlider, controller capture: CaptureController) -> some View {
         Button { openSlider = slider } label: {
             Image(systemName: slider.symbol)
-                .font(.body.weight(.semibold))
+                .font(.system(size: 18, weight: .regular))
                 .foregroundStyle(.white)
                 .turnedWithTheHold()
                 .frame(width: 44, height: 44)
-                .background(Color.black.opacity(0.6), in: Circle())
+                .background(Orbit.button, in: Circle())
         }
         .buttonStyle(.plain)
         .disabled(!capture.lensIsLive)
@@ -514,7 +527,7 @@ struct CaptureView: View {
             switch slider {
             case .focus:
                 CaptionedSlider(
-                    caption: Text("Focus").font(.caption),
+                    caption: Text("Focus").font(.orbit(size: 13, weight: .bold, relativeTo: .caption)),
                     unavailable: "Manual focus unavailable on this lens", lensIsLive: capture.lensIsLive,
                     slider: capture.controls.manualFocus
                         ? Slider(value: $capture.focus, in: 0...1, onEditingChanged: { editing in
@@ -525,7 +538,7 @@ struct CaptureView: View {
             case .exposure:
                 CaptionedSlider(
                     caption: (bias == nil ? Text("Exposure") : Text("Exposure \(capture.exposure, specifier: "%.1f") EV"))
-                        .font(.caption.monospaced()),
+                        .font(.orbit(size: 13, weight: .bold, relativeTo: .caption)),
                     unavailable: "Exposure unavailable on this lens", lensIsLive: capture.lensIsLive,
                     slider: bias.map { range in
                         Slider(value: $capture.exposure, in: range, onEditingChanged: { editing in
@@ -535,17 +548,18 @@ struct CaptureView: View {
                 )
             }
             Button { openSlider = nil } label: {
-                Image(systemName: "xmark").font(.body.weight(.semibold)).foregroundStyle(.white)
+                Image(systemName: "xmark").font(.system(size: 16, weight: .semibold)).foregroundStyle(.white)
                     .frame(width: 44, height: 44)
+                    .background(Orbit.pressed, in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Close \(slider.name)")
             .accessibilityShowsLargeContentViewer { Label("Close \(slider.name)", systemImage: "xmark") }
             .accessibilityIdentifier("strip-close-slider")
         }
-        .padding(.leading, 14).padding(.vertical, 4)
+        .padding(.leading, 16).padding(.trailing, 8).padding(.vertical, 4)
         .frame(maxHeight: .infinity)
-        .background(.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 14))
+        .background(Orbit.surface, in: RoundedRectangle(cornerRadius: 32))
         #if DEBUG
         .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { if openSlider != nil { probe?.slider = $0 } }
         #endif
@@ -584,23 +598,21 @@ struct CaptureView: View {
             HStack(spacing: 32) {
                 Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
                     model.perform { try await capture.switchLens(film: film) } failure: { error = $0 }
-                }.labelStyle(.iconOnly).font(.title2)
-                    .frame(minWidth: 44, minHeight: 44).turnedWithTheHold()
-                    .disabled(capture.phase != .idle || capture.busy)
-                    .accessibilityShowsLargeContentViewer()
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .buttonStyle(ShootingButtonStyle())
+                .turnedWithTheHold()
+                .disabled(capture.phase != .idle || capture.busy)
+                .accessibilityShowsLargeContentViewer()
+                .frame(maxWidth: .infinity, alignment: .trailing)
                 Button {
                     Task {
                         do { try await capture.shutter(film: film) }
                         catch { self.error = FailureCopy.message(for: error) }
                     }
                 } label: {
-                    ZStack {
-                        Circle().stroke(.primary, lineWidth: 3).frame(width: 74, height: 74)
-                        if capture.phase == .recordingMovie { RoundedRectangle(cornerRadius: 4).fill(.red).frame(width: 32, height: 32) }
-                        else { Circle().fill(film.camera.medium == .movie ? Color.red : Color.primary).frame(width: 62, height: 62) }
-                    }.frame(width: 76, height: 76)
+                    Color.clear.frame(width: 76, height: 76)
                 }
+                .buttonStyle(ShutterStyle(recording: capture.phase == .recordingMovie))
                 .disabled(capture.busy || (capture.phase != .idle && capture.phase != .recordingMovie) || model.busyFilms.contains(filmID))
                 .accessibilityLabel(capture.phase == .recordingMovie ? "Stop recording" : film.camera.medium == .movie ? "Record clip" : "Take photo")
                 .accessibilityIdentifier("capture-shutter")
@@ -612,11 +624,15 @@ struct CaptureView: View {
                                            controls: capture.controls, medium: film.camera.medium) {
                     case .flashSwitch:
                         Toggle(isOn: $capture.flash) { Label("Flash", systemImage: capture.flash ? "bolt.fill" : "bolt.slash") }
-                            .toggleStyle(.button).labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
+                            .toggleStyle(ShootingToggleStyle())
                             .turnedWithTheHold().disabled(capture.phase != .idle)
                             .accessibilityShowsLargeContentViewer()
                     case .noFlash:
-                        Image(systemName: "bolt.slash").foregroundStyle(.secondary).frame(width: 44).turnedWithTheHold()
+                        Image(systemName: "bolt.slash").font(.system(size: 20, weight: .regular))
+                            .foregroundStyle(Orbit.disabledMark)
+                            .frame(width: ShootingButtonStyle.diameter, height: ShootingButtonStyle.diameter)
+                            .background { OrbitCircleBackground(enabled: false) }
+                            .turnedWithTheHold()
                     case .empty:
                         Color.clear.frame(width: 44, height: 44).accessibilityHidden(true)
                     }
@@ -624,15 +640,38 @@ struct CaptureView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             // As short as the shutter, which leaves the 6×6's two-line control strip room under the Viewfinder area, with
-            // room under it only where no home indicator's area gives it some, as on the iPhone SE. Its symbols, like the
-            // top bar's, grow no further than the largest size short of the accessibility sizes, where they are still
-            // shorter than the shutter, and show in the Large Content Viewer.
+            // room under it only where no home indicator's area gives it some, as on the iPhone SE. The shutter's ring
+            // reaches a few points past the bar, over the ground. Its symbols, like the top bar's, grow no further than
+            // the largest size short of the accessibility sizes, where they are still shorter than the shutter, and show
+            // in the Large Content Viewer.
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .padding(.horizontal, 30)
             .padding(.bottom, bottomInset > 0 ? 0 : 8)
             .frame(maxWidth: .infinity).background(Self.ground)
             #if DEBUG
             .onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { probe?.shutterBar = $0 }
             #endif
+        } else if let film = model.film(filmID) {
+            // The Film is complete (E01): a full ring where the shutter was.
+            ZStack {
+                OrbitRing(progress: 1, lineWidth: 3)
+                Text(Self.capacityAmount(film)).font(.orbit(size: 22, weight: .extraBold, relativeTo: .title3))
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 76, height: 76)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, bottomInset > 0 ? 0 : 8)
+            .background(Self.ground)
+            .accessibilityHidden(true)
+        }
+    }
+
+    /// The Film's whole capacity, "27" or "3:20", for the ring of a complete Film.
+    private static func capacityAmount(_ film: Film) -> String {
+        switch film.camera.capacity {
+        case let .exposures(count): String(count)
+        case let .seconds(seconds): MovieDurationText.clock(seconds)
         }
     }
 
@@ -710,21 +749,26 @@ struct FocusModeSwitch: View {
         HStack(spacing: 0) {
             ForEach(settings, id: \.self) { setting in
                 Button { select(setting) } label: {
-                    TurnedInPlace { Text(setting.title).font(.footnote.weight(.semibold)).lineLimit(1) }
+                    TurnedInPlace {
+                        Text(setting.title)
+                            .font(.orbit(size: 14, weight: setting == selected ? .bold : .semibold, relativeTo: .footnote))
+                            .lineLimit(1)
+                    }
                         // Room at each end of a turned word, which "Manual" at this size needs.
                         .padding(.horizontal, 14).padding(.vertical, 4)
                         .frame(minWidth: 44, minHeight: 44)
                         .frame(maxHeight: .infinity)
-                        .background { if setting == selected { Capsule().fill(Color.white.opacity(0.24)).padding(3) } }
+                        .foregroundStyle(setting == selected ? Color.black : Orbit.body)
+                        .background { if setting == selected { Capsule().fill(Color.white).padding(4) } }
                         .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(.white.opacity(isEnabled ? 1 : 0.45))
             }
         }
         // Every segment as tall as the tallest, so the selected one's capsule is the same whichever is selected.
         .fixedSize()
-        .background(Color.black.opacity(0.6), in: Capsule())
+        .background(Orbit.button, in: Capsule())
+        .opacity(isEnabled ? 1 : 0.5)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Focus")
         .accessibilityValue(selected.title)
@@ -758,15 +802,16 @@ struct CameraShapeArea<Content: View>: View {
     var body: some View {
         GeometryReader { area in
             let shape = CaptureAreaGeometry.cameraFrame(aspectRatio: aspectRatio, in: area.size)
+            // The picture's shape has Orbit's 20-point corners (D01); the area around it is the sunken ground.
             ZStack {
-                Color.black
+                Orbit.surface
                 content
             }
             .frame(width: shape.width, height: shape.height)
-            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: 20))
             .position(x: shape.midX, y: shape.midY)
         }
-        .background(Color.black)
+        .background(Orbit.sunken)
     }
 }
 
@@ -775,6 +820,8 @@ struct CameraShapeArea<Content: View>: View {
 struct CaptureDoneRow: View {
     @Environment(\.heldTurn) private var turn
     let done: @MainActor () -> Void
+    /// Whether the Film is complete, when Done turns white, since Develop is next (E01).
+    var complete = false
     #if DEBUG
     /// Whether Develop at once is on for the Camera (`DevelopedPreviews.applies(to:)`).
     var developsAtOnce = false
@@ -786,12 +833,12 @@ struct CaptureDoneRow: View {
             // word reads upright inside it, so no part of it runs over the Viewfinder area.
             HStack(spacing: 8) {
                 Button(action: done) {
-                    TurnedInPlace { Text("Done").font(.footnote.weight(.semibold)) }
+                    TurnedInPlace { Text("Done").font(.orbit(size: 13, weight: .semibold, relativeTo: .footnote)) }
+                        .foregroundStyle(complete ? Color.black : Color.white)
                         .frame(width: Self.height, height: Self.height)
+                        .background(complete ? Color.white : Orbit.button, in: Circle())
                 }
                 .buttonStyle(.plain)
-                // A glass circle, against the bar's edge where the upright button starts.
-                .glassEffect(.regular.interactive(), in: Circle())
                 .contentShape(Self.tapArea)
                 .accessibilityLabel("Done")
                 .accessibilityShowsLargeContentViewer()
@@ -812,9 +859,15 @@ struct CaptureDoneRow: View {
     private static var tapArea: some Shape { Rectangle().inset(by: -3) }
 
     @ViewBuilder private var uprightRow: some View {
-        // The glass adds 7 points above and below its label.
-        let button = Button(action: done) { Text("Done").frame(minHeight: Self.height - 14) }.buttonStyle(.glass)
-            .contentShape(Self.tapArea)
+        let button = Button(action: done) {
+            Text("Done").font(.orbit(size: 14, weight: complete ? .bold : .semibold, relativeTo: .callout))
+                .foregroundStyle(complete ? Color.black : Color.white)
+                .padding(.horizontal, 16)
+                .frame(minHeight: Self.height)
+                .background(complete ? Color.white : Orbit.button, in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .contentShape(Self.tapArea)
             .accessibilityShowsLargeContentViewer()
         #if DEBUG
         DoneRowLayout {
@@ -843,21 +896,33 @@ struct CaptureHeaderLabel: View {
         Group {
             if turn.isSideways {
                 // Lines as long as Done is tall, which turned keeps the count level with it, one whole word to a line: a
-                // count ("27", "3:20") in SF Mono, and a state ("Film complete", "Finishing save") in the system font (the
+                // count ("27", "3:20") in its ring, and a state ("Film complete", "Finishing save") in Manrope (the
                 // captain, 2026-10-30, "Smaller words, same wording"). A word broken or cut short would take a line more
                 // than the text has words, so the text shrinks instead, as far as its longest word needs.
                 let words = status.visible.split(separator: " ")
                 TurnedBlock(length: CaptureDoneRow.height) {
-                    count(words.joined(separator: "\n"), monospaced: words.count == 1)
+                    count(words.joined(separator: "\n"))
                         .multilineTextAlignment(.center).lineLimit(words.count).minimumScaleFactor(0.1)
                         .frame(width: CaptureDoneRow.height)
                 }
+                .background { if words.count == 1 { OrbitRing(progress: film.progress, lineWidth: 3) } }
             } else {
-                HStack(spacing: 6) {
+                HStack(spacing: 10) {
                     Text(SpokenText.shown(film.camera.shortName))
-                        .font(.system(.title3, design: .serif))
+                        .font(.orbit(size: 15, weight: .bold, relativeTo: .body))
                         .lineLimit(1).minimumScaleFactor(0.6)
-                    count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
+                    if status.visible.contains(" ") {
+                        // A state (E01): its words in an outlined capsule.
+                        count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
+                            .padding(.horizontal, 12).frame(minHeight: 32)
+                            .overlay(Capsule().strokeBorder(Color.white, lineWidth: 1.5))
+                    } else {
+                        // A count (D01): what is left, in a ring of what is used.
+                        count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
+                            .padding(4)
+                            .frame(minWidth: 40, minHeight: 40)
+                            .background { OrbitRing(progress: film.progress, lineWidth: 3) }
+                    }
                 }
             }
         }
@@ -871,10 +936,11 @@ struct CaptureHeaderLabel: View {
         .accessibilityIdentifier("capture-header-status")
     }
 
-    private func count(_ text: String, monospaced: Bool = true) -> some View {
+    /// The count stays white while a clip records: red is the record button's alone (K00).
+    private func count(_ text: String) -> some View {
         Text(text)
-            .font(monospaced ? .body.monospaced() : .body)
-            .foregroundStyle(recording ? .red : .primary)
+            .font(.orbit(size: text.contains(" ") || text.contains("\n") ? 13 : 14, weight: .extraBold, relativeTo: .body))
+            .foregroundStyle(.white)
     }
 }
 
@@ -886,11 +952,11 @@ private struct LowLightCueView: View {
     static let spokenText = "Low light. Turn the flash on."
     var body: some View {
         Label("Low light - use flash", systemImage: "bolt.fill")
-            .font(.callout.weight(.semibold))
+            .font(.orbit(size: 14, weight: .bold, relativeTo: .callout))
             .foregroundStyle(.white)
             .multilineTextAlignment(.center)
-            .padding(.horizontal, 12).padding(.vertical, 8)
-            .background(.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 16).padding(.vertical, 10)
+            .background(.black.opacity(0.72), in: RoundedRectangle(cornerRadius: 20))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Self.spokenText)
     }
@@ -917,7 +983,7 @@ struct CaptionedSlider<Control: View>: View {
             TurnedBlock(length: captionLength) { lines(caption) }
             ZStack {
                 if let slider { slider } else { Slider(value: .constant(0)).hidden().accessibilityHidden(true) }
-                TurnedBlock(length: captionLength) { lines(Text(unavailable).font(.caption).foregroundStyle(.secondary)) }
+                TurnedBlock(length: captionLength) { lines(Text(unavailable).font(.orbit(size: 13, weight: .medium, relativeTo: .caption)).foregroundStyle(Orbit.label)) }
                 .opacity(slider == nil ? 1 : 0).accessibilityHidden(slider != nil)
             }
         }
@@ -1004,15 +1070,16 @@ final class PreviewSurface: UIView {
     }
 }
 
-/// A yellow square at the point a tap focused, which settles and then fades, as in the iPhone's Camera app. It draws on
+/// A white square at the point a tap focused (D01): focus squares stay white, since red is the shutter's alone. It, which settles and then fades, as in the iPhone's Camera app. It draws on
 /// the picture only and takes no touches; VoiceOver users focus with continuous autofocus, which a tap only adds to.
 final class FocusMark: UIView {
-    private static let side: CGFloat = 72
+    private static let side: CGFloat = 64
 
     init() {
         super.init(frame: CGRect(x: 0, y: 0, width: Self.side, height: Self.side))
-        layer.borderColor = UIColor.systemYellow.cgColor
+        layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 1.5
+        layer.cornerRadius = 6
         isUserInteractionEnabled = false
         isAccessibilityElement = false
         alpha = 0
@@ -1073,6 +1140,90 @@ private struct WholeWordsLayout: Layout {
 private extension View {
     /// A button in a notice: white on the dark ground it sits on over the viewfinder, the app's own tint elsewhere.
     @ViewBuilder func noticeButtonStyle(onDark: Bool) -> some View {
-        if onDark { buttonStyle(.bordered).tint(.white).foregroundStyle(.white) } else { self }
+        if onDark { buttonStyle(OrbitNoticeActionStyle()) } else { self }
+    }
+}
+
+/// A round shooting button (K00): 60 points, grey at rest, outlined with a grey mark when it cannot be used.
+private struct ShootingButtonStyle: ButtonStyle {
+    static let diameter: CGFloat = 60
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(.iconOnly)
+            .font(.system(size: 22, weight: .regular))
+            .foregroundStyle(isEnabled ? Color.white : Orbit.disabledMark)
+            .frame(width: Self.diameter, height: Self.diameter)
+            .background { OrbitCircleBackground(pressed: configuration.isPressed, enabled: isEnabled) }
+            .contentShape(Circle())
+            .scaleEffect(configuration.isPressed ? 0.94 : 1)
+    }
+}
+
+/// The flash switch (K00): a round shooting button, white with a black bolt while the flash is on.
+private struct ShootingToggleStyle: ToggleStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        Button { configuration.isOn.toggle() } label: { configuration.label }
+            .buttonStyle(FlashButtonStyle(on: configuration.isOn))
+            .accessibilityAddTraits(configuration.isOn ? .isSelected : [])
+            .accessibilityValue(configuration.isOn ? "On" : "Off")
+    }
+
+    private struct FlashButtonStyle: ButtonStyle {
+        let on: Bool
+        @Environment(\.isEnabled) private var isEnabled
+
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .labelStyle(.iconOnly)
+                .font(.system(size: 22, weight: .regular))
+                .foregroundStyle(!isEnabled ? Orbit.disabledMark : on ? Color.black : Color.white)
+                .frame(width: ShootingButtonStyle.diameter, height: ShootingButtonStyle.diameter)
+                .background { OrbitCircleBackground(selected: on, pressed: configuration.isPressed, enabled: isEnabled) }
+                .contentShape(Circle())
+                .scaleEffect(configuration.isPressed ? 0.94 : 1)
+        }
+    }
+}
+
+/// The shutter (K00): a red circle in a white ring 5 points out; Stop recording is a red square in the ring; a shutter
+/// that cannot be used is grey in a grey ring, with no red.
+private struct ShutterStyle: ButtonStyle {
+    let recording: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack {
+            Circle().strokeBorder(isEnabled || recording ? Color.white : Orbit.hairline, lineWidth: 2).padding(-7)
+            if recording {
+                RoundedRectangle(cornerRadius: 7).fill(Orbit.shutter).frame(width: 32, height: 32)
+            } else {
+                Circle().fill(!isEnabled ? Orbit.surface : configuration.isPressed ? Orbit.shutterPressed : Orbit.shutter)
+                    .scaleEffect(configuration.isPressed ? 0.92 : 1)
+            }
+        }
+        .overlay { configuration.label }
+        .frame(width: 76, height: 76)
+        .contentShape(Circle())
+    }
+}
+
+/// A button in a notice over the picture (E02): the cream main action as a 44-point pill.
+private struct OrbitNoticeActionStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(.titleOnly)
+            .font(.orbit(size: 15, weight: .bold, relativeTo: .callout))
+            .foregroundStyle(isEnabled ? Color.black : Orbit.smallest)
+            .padding(.horizontal, 18)
+            .frame(minHeight: 44)
+            .background(isEnabled ? (configuration.isPressed ? Orbit.creamPressed : Orbit.cream) : Orbit.creamDisabled,
+                        in: Capsule())
+            .contentShape(Capsule())
     }
 }

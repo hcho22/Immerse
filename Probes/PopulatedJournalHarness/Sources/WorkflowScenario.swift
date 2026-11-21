@@ -104,6 +104,15 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                                 revealRule: .movieDevelopment, supportsBuiltInSoundtrack: true)
                 : catalogCamera
             let model = scenario.model
+            // `--showcase` seeds a Journal with a Film in each state the Journal sorts by, for screenshots of the whole
+            // Journal; it takes the place of the one Film every other mode seeds.
+            if arguments.contains("--showcase") {
+                let first = try await Self.seedShowcase(model: model, fixtures: directory.appendingPathComponent("Fixtures"))
+                try persist(Seed(mode: "showcase", filmID: first), to: seedURL)
+                scenario.model.refresh()
+                try await scenario.inspect(reason: "seeded")
+                return scenario
+            }
             // `--black-and-white` loads the 6×6 or 16mm Film on the black-and-white Film Stock; otherwise a Camera with a
             // Film Stock gets Load Film's default, color.
             let filmStock = arguments.contains("--black-and-white") ? FilmStock.blackAndWhite : camera.defaultFilmStock
@@ -271,6 +280,44 @@ private struct FixtureTrialStore: DeviceTrialStoring {
 }
 
 extension WorkflowScenario {
+    /// The `--showcase` Journal: a Disposable on the roll, a 6×6 ready to develop, a developed Disposable and a developed
+    /// Super 8 Movie, each with its own subscription rights. Returns the first Film's identifier.
+    static func seedShowcase(model: JournalModel, fixtures: URL) async throws -> UUID {
+        var settings = RenderFixtureSettings.defaultExperimental
+        settings.photoWidth = 320; settings.photoHeight = 240
+        settings.movieWidth = 160; settings.movieHeight = 120; settings.movieDurationSeconds = 0.16
+        let manifest = try await RenderFixtureGenerator.writeFixtures(outputDirectory: fixtures, settings: settings)
+        let photo = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-photo.jpg"))
+        let clip = try Data(contentsOf: fixtures.appendingPathComponent("synthetic-developed-movie.mov"))
+        let repository = model.repository
+
+        let onTheRoll = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Saturday market",
+            movieOrientation: nil, filmStock: nil, access: .subscription)
+        for _ in 0..<14 { try repository.savePhotoCapture(filmID: onTheRoll.id, sourceData: photo) }
+
+        let ready = try repository.createFilm(camera: CameraCatalog.mediumFormat6x6, title: "Lake house weekend",
+            movieOrientation: nil, filmStock: .blackAndWhite, access: .subscription)
+        for _ in 0..<12 { try repository.savePhotoCapture(filmID: ready.id, sourceData: photo) }
+
+        let walk = try repository.createFilm(camera: CameraCatalog.disposable1990s, title: "Spring walk",
+            movieOrientation: nil, filmStock: nil, access: .subscription)
+        for _ in 0..<5 { try repository.savePhotoCapture(filmID: walk.id, sourceData: photo) }
+        try repository.completeEarly(filmID: walk.id)
+
+        let beach = try repository.createFilm(camera: CameraCatalog.super8HomeMovie, title: "Beach run",
+            movieOrientation: .landscape, filmStock: nil, access: .subscription)
+        for _ in 0..<2 {
+            try repository.saveMovieClip(filmID: beach.id, sourceData: clip, durationSeconds: manifest.movie.durationSeconds,
+                                         orientation: .landscape)
+        }
+        try repository.completeEarly(filmID: beach.id)
+
+        model.refresh()
+        try await model.develop(walk.id)
+        try await model.develop(beach.id)
+        return onTheRoll.id
+    }
+
     /// A clip as a movie Camera writes one with the microphone allowed: a 320 by 240 H.264 picture at 30 frames a second
     /// that brightens as it plays, with a stereo 440 Hz tone in AAC at 48 kHz beside it.
     static func writeClipWithSound(to url: URL, seconds: Double) async throws {

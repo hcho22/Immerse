@@ -42,7 +42,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         save.tap()
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
         app.buttons["Discard"].tap()
-        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let discardConfirmation = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
         discardConfirmation.tap()
         // The photo view shows the next print once one is discarded (FR-22 item 7); Done returns to the Film.
@@ -86,7 +86,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Renamed synthetic Film"].waitForExistence(timeout: 10))
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
-        let deleteConfirmation = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        let deleteConfirmation = app.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(deleteConfirmation.waitForExistence(timeout: 5))
         deleteConfirmation.tap()
         XCTAssertTrue(app.staticTexts["No archived Films"].waitForExistence(timeout: 10))
@@ -270,7 +270,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
     private func discardShownPrint(_ app: XCUIApplication) {
         XCTAssertTrue(waitUntilStill(app))
         app.buttons["Discard"].tap()
-        let confirm = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let confirm = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
     }
@@ -496,7 +496,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.buttons["Open Camera"].tap()
         let revealed = printRevealedAtTheCamera(2, app: app)
         app.buttons["Discard"].tap()
-        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let discardConfirmation = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
         discardConfirmation.tap()
         XCTAssertTrue(revealed.waitForNonExistence(timeout: 20), "The discarded print closes")

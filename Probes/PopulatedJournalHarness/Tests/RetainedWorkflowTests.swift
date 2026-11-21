@@ -8,12 +8,12 @@ import XCTest
         app.buttons["Film actions"].tap()
         XCTAssertFalse(app.buttons["Finish & Develop Early"].isEnabled)
         app.buttons["Delete Film"].tap()
-        XCTAssertTrue(app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons.matching(identifier: "confirm-delete-film").firstMatch.waitForExistence(timeout: 5))
         cancelConfirmation(app)
         inspect(app, "empty-delete-cancelled")
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
-        app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch.tap()
+        app.buttons.matching(identifier: "confirm-delete-film").firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Your Journal begins here"].waitForExistence(timeout: 10))
         inspect(app, "empty-deleted")
     }
@@ -297,14 +297,12 @@ import XCTest
         XCTAssertTrue(app.buttons["Complete Film"].waitForExistence(timeout: 5))
     }
 
+    /// Cancels an Orbit confirmation, which rises from the bottom with its own Cancel, and waits for it to go.
     private func cancelConfirmation(_ app: XCUIApplication) {
-        if app.buttons["Cancel"].exists { app.buttons["Cancel"].tap() }
-        else {
-            let dismissRegion = app.otherElements["PopoverDismissRegion"]
-            XCTAssertTrue(dismissRegion.waitForExistence(timeout: 5))
-            dismissRegion.tap()
-        }
-        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: app.sheets.firstMatch)
+        let cancel = app.buttons["Cancel"]
+        XCTAssertTrue(cancel.waitForExistence(timeout: 5))
+        cancel.tap()
+        expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: cancel)
         waitForExpectations(timeout: 5)
     }
 
