@@ -2914,3 +2914,39 @@ The flash turns off by itself when a print closes, or the Instant's camera opens
 
 **Write down.**
 The flash button's state after each step.
+
+## The App Icon on a Real iPhone
+
+On 2026-11-21 the captain chose the app icon, "Tilted Spread": an open journal seen from above whose two pages are two frames on one film strip, tilted and running off every edge, in the paper palette ("lets go with tilted spread. i like this color vs orbits cream"), and asked for it now, ahead of the public name ("yes replace it, add it now").
+The build gives Immerse that icon, where it had none, in its default, dark and tinted appearances, with no lettering ([083](app-icon-083.md)).
+The simulator shows the icon on the home screen in the Default, Dark and Tinted styles ([083](app-icon-083.md), "What the simulator showed"); only a phone shows how it reads on a real display, at arm's length, and in the Clear style, which iOS makes from the default icon.
+No candidate pinned so far holds this change; run A01 once the candidate holds it (The Candidate, above).
+Run by hand on HC_iPhone13 with the candidate installed.
+The scenario reads **UNTESTED: physical execution deferred**.
+
+### A01 - The app icon in every home-screen style
+
+**Steps.**
+
+1. With the iPhone in Light mode, find Immerse on the home screen and look at its icon, then search for Immerse and look at the icon in the results, in Settings → Apps and in the app switcher.
+2. Touch and hold the home screen, tap **Edit** and then **Customize**, and choose **Dark**; look at the icon on the home screen.
+3. In the same panel choose **Tinted**, try two tint colors, and look at the icon each time.
+4. In the same panel choose **Clear**, in light and in dark, and look at the icon.
+5. Choose **Default** again, and switch the iPhone to Dark mode with the panel's style left on Default.
+
+**Expect.**
+
+- Default: the journal lying open on a dark film strip, cream pages with a light gray gutter and four lines on the left page, the sprocket holes above and below the pages, no letters, and no sprocket hole cut by the rounded corners; the same drawing in search, Settings and the app switcher.
+- Dark: the same drawing, the pages slightly dimmer, on the system's dark background where the film strip was; the holes and pages still read as a film strip and a journal.
+- Tinted: the pages and holes in the chosen tint, the lines a softer tint, and the film dark, in each color.
+- Clear: the journal and the strip still recognizable through the glass.
+- Every style is sharp at home-screen size, with no visible edge, halo or square corner around the drawing.
+
+**It fails if.**
+Any style shows the blank system icon, an older icon, letters, a square or cropped edge, or a drawing that no longer reads as an open journal on a film strip.
+
+**What is a finding and not a failure.**
+How the dark and tinted adaptations look, and how Clear renders the icon, are the captain's to judge.
+
+**Write down.**
+A screenshot of the home screen in each style, and, for Tinted, each color tried.
