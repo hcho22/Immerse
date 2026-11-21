@@ -132,6 +132,8 @@ private struct CameraDial: View {
                     .foregroundStyle(selected ? Orbit.onWhiteSecondary : Orbit.label)
             }
             .lineLimit(1)
+            // Each line whole: the circle measures its words at their own width, never cut short at its inner width.
+            .fixedSize()
             .foregroundStyle(selected ? Color.black : Color.white)
             // A circle 84 points across, or as wide as its words need, with a white ring 5 points out when chosen.
             .modifier(InscribedCircle(minimum: Self.option, fill: selected ? .white : Orbit.button,

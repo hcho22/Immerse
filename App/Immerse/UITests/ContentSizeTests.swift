@@ -1,4 +1,6 @@
 import XCTest
+import class Vision.VNImageRequestHandler
+import class Vision.VNRecognizeTextRequest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
 /// light or dark appearance: the empty Journal, the Camera catalog, the Super 8, 16mm and 6×6 Load Film screens (the 16mm
@@ -423,9 +425,39 @@ final class ContentSizeTests: ScreenTestCase {
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5), "Catalog \(category)")
         // Let the sheet finish rising, so the first rows are measured where they rest.
         Thread.sleep(forTimeInterval: 1)
+        if Self.sizes.firstIndex(of: category)! < Self.sizes.firstIndex(of: "XXL")! { checkDialWords(app, category) }
         rows += record(measure(app, Self.catalog, category, below: "Choose a Camera"))
         app.terminate()
         finish(category, rows, Self.journal + Self.catalog)
+    }
+
+    /// The dial's capacity lines (B01, the sizes below XXL) read whole as drawn, never cut short with an ellipsis: their
+    /// accessibility labels and ink stay whole either way, so the text drawn on the screen is read back.
+    private func checkDialWords(_ app: XCUIApplication, _ category: String) {
+        let shown = ["27 exposures": "27 exposures", "10 exposures": "10 exposures", "12 exposures": "12 exposures",
+                     "3 minutes 20 seconds of film": "3:20 of film", "2 minutes 47 seconds of film": "2:47 of film"]
+        let shot = XCUIScreen.main.uprightScreenshot()
+        attach(shot, "\(category) \(Self.appearance) dial")
+        for (label, words) in shown {
+            let line = app.staticTexts[label].firstMatch
+            XCTAssertTrue(line.exists, "\(words) \(category) is on the dial")
+            XCTAssertEqual(readText(in: shot, line.frame.insetBy(dx: -6, dy: -3), window: app.frame), words,
+                           "\(words) \(category) reads whole on the dial")
+        }
+    }
+
+    /// The text Vision reads in an area of a screenshot, its lines joined by spaces.
+    private func readText(in screenshot: UIImage, _ frame: CGRect, window: CGRect) -> String {
+        guard let full = screenshot.cgImage else { return "" }
+        let scale = CGFloat(full.width) / window.width
+        let crop = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale,
+                          height: frame.height * scale).integral
+        guard let image = full.cropping(to: crop) else { return "" }
+        let request = VNRecognizeTextRequest()
+        request.recognitionLevel = .accurate
+        request.usesLanguageCorrection = false
+        try? VNImageRequestHandler(cgImage: image).perform([request])
+        return (request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ")
     }
 
     /// Settings in landscape, where the audit checks it at the largest size. Some paragraphs are taller than the
