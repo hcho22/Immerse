@@ -444,8 +444,8 @@ final class ContentSizeTests: ScreenTestCase {
         for (label, words) in shown {
             let line = app.staticTexts[label].firstMatch
             XCTAssertTrue(line.exists, "\(words) \(category) is on the dial")
-            XCTAssertEqual(readText(in: shot, line.frame.insetBy(dx: -6, dy: -3), window: app.frame), words,
-                           "\(words) \(category) reads whole on the dial")
+            let read = readText(in: shot, line.frame.insetBy(dx: -6, dy: -3), window: app.frame)
+            XCTAssertTrue(readsWhole(read, words), "\(words) \(category) reads whole on the dial, read as \"\(read)\"")
         }
     }
 
@@ -460,6 +460,14 @@ final class ContentSizeTests: ScreenTestCase {
         XCTAssertTrue(label.exists, "\(title) \(category) is in its bar")
         XCTAssertEqual(readText(in: shot, label.frame.insetBy(dx: -8, dy: -4), window: app.frame), title,
                        "\(title) \(category) reads whole in its bar")
+    }
+
+    /// Whether text read back from the screen is `words` drawn whole: as many words, the last one entire and no ellipsis.
+    /// Vision can misread a small digit (CI read the dial's "27 exposures" at XS as "21 exposures"), which says nothing
+    /// about whether the line was cut short, so the digits are not compared.
+    private func readsWhole(_ read: String, _ words: String) -> Bool {
+        let shown = read.split(separator: " "), expected = words.split(separator: " ")
+        return !read.contains("…") && !read.contains("...") && shown.count == expected.count && shown.last == expected.last
     }
 
     /// The text Vision reads in an area of a screenshot, its lines joined by spaces.

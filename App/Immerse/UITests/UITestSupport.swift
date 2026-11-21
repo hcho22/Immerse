@@ -232,7 +232,11 @@ extension XCTestCase {
         let choose = app.buttons["choose-camera"]
         XCTAssertTrue(choose.exists(within: 5))
         // At the larger text sizes the Cameras stand in a column that scrolls under Choose, which stays on the home area,
-        // so the row is brought whole above it before the tap.
+        // so the row is brought whole above it before the tap. Back from a Load screen the column is still scrolled to
+        // Choose at its end, with the Camera above the screen, where drags up the list cannot reach it (16 of them took
+        // 55 s on CI), so it is brought back down first.
+        let bar = app.navigationBars.firstMatch
+        scrollUp(app, by: -300) { camera.frame.minY >= bar.frame.maxY }
         scrollUpUntilWhole(app, camera)
         scrollUp(app, by: 100) { !choose.isHittable || camera.frame.maxY <= choose.frame.minY - 4 }
         camera.tap()
