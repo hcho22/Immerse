@@ -10,7 +10,8 @@ import class Vision.VNRecognizeTextRequest
 /// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
 /// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
 /// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
-/// its frame or the screen. Navigation titles are system text and are not included.
+/// its frame or the screen. Navigation titles are not measured; the Film Journal's and Choose a Camera's, and the dial's
+/// capacity lines below XXL, are read back from a screenshot to check they draw whole.
 @MainActor
 final class ContentSizeTests: ScreenTestCase {
     /// A text element to measure, found in an accessibility snapshot by type and identifier, exact label or label prefix.
