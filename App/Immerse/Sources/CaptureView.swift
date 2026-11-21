@@ -900,12 +900,18 @@ struct CaptureHeaderLabel: View {
                 // captain, 2026-10-30, "Smaller words, same wording"). A word broken or cut short would take a line more
                 // than the text has words, so the text shrinks instead, as far as its longest word needs.
                 let words = status.visible.split(separator: " ")
-                TurnedBlock(length: CaptureDoneRow.height) {
-                    count(words.joined(separator: "\n"))
-                        .multilineTextAlignment(.center).lineLimit(words.count).minimumScaleFactor(0.1)
-                        .frame(width: CaptureDoneRow.height)
+                if words.count == 1 {
+                    // A count in its ring, as tall as Done, the number turned in place inside it (D06).
+                    TurnedInPlace { count(status.visible).lineLimit(1).minimumScaleFactor(0.5) }
+                        .frame(width: CaptureDoneRow.height, height: CaptureDoneRow.height)
+                        .background { OrbitRing(progress: film.progress, lineWidth: 3) }
+                } else {
+                    TurnedBlock(length: CaptureDoneRow.height) {
+                        count(words.joined(separator: "\n"))
+                            .multilineTextAlignment(.center).lineLimit(words.count).minimumScaleFactor(0.1)
+                            .frame(width: CaptureDoneRow.height)
+                    }
                 }
-                .background { if words.count == 1 { OrbitRing(progress: film.progress, lineWidth: 3) } }
             } else {
                 HStack(spacing: 10) {
                     Text(SpokenText.shown(film.camera.shortName))
@@ -918,9 +924,10 @@ struct CaptureHeaderLabel: View {
                             .overlay(Capsule().strokeBorder(Color.white, lineWidth: 1.5))
                     } else {
                         // A count (D01): what is left, in a ring of what is used.
+                        // As tall as Done, which keeps the captain's 6 points above the Viewfinder area.
                         count(status.visible).lineLimit(1).minimumScaleFactor(0.6)
                             .padding(4)
-                            .frame(minWidth: 40, minHeight: 40)
+                            .frame(minWidth: CaptureDoneRow.height, minHeight: CaptureDoneRow.height)
                             .background { OrbitRing(progress: film.progress, lineWidth: 3) }
                     }
                 }

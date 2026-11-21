@@ -71,7 +71,8 @@ private struct OrbitConfirmation: View {
                 Text(message).orbitFont(.body).foregroundStyle(Orbit.body).multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                 VStack(spacing: 10) {
-                    Button(confirm) { dismiss(); action() }
+                    // The action first, while what it acts on is still chosen: dismissing clears the choice.
+                    Button(confirm) { action(); dismiss() }
                         .buttonStyle(OrbitPillStyle(kind: .white, minHeight: 56, fullWidth: true))
                         .accessibilityIdentifier(identifier ?? confirm)
                     Button("Cancel") { dismiss() }

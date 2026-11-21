@@ -26,6 +26,22 @@ final class LowStorageUITests: ScreenTestCase {
         try audit(app, name: "Load-low-storage", for: JournalFlowTests.auditTypes)
     }
 
+    /// The contrast exception stays narrow against the real auditor: at the same low-storage pose, with its one entry
+    /// withheld, the audit fails on exactly that element. The pose puts it under the navigation bar in every run; if the
+    /// auditor stops flagging it, re-examine that entry.
+    func testAuditStillReportsContrastFindingsOutsideItsExceptions() throws {
+        let app = launch(freeSpace: "1999999999")
+        openDisposableLoadScreen(app)
+        scrollUpUntilWhole(app, app.buttons["load-film"])
+        let withheld = AuditException.accepted.filter { $0.label != "Sealed until Development" }
+        XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
+        var reported: [String] = []
+        XCTExpectFailure("A finding outside the exceptions must fail the audit") {
+            reported = (try? audit(app, name: "Load-low-storage", for: .contrast, exceptions: withheld)) ?? []
+        }
+        XCTAssertEqual(reported, ["Sealed until Development"])
+    }
+
     func testLoadFilmShowsNoWarningAtExactlyTwoGigabytes() throws { assertNoWarningOnLoadFilm(freeSpace: "2000000000") }
     func testLoadFilmShowsNoWarningJustOverTwoGigabytes() throws { assertNoWarningOnLoadFilm(freeSpace: "2000000001") }
     func testLoadFilmShowsNoWarningWhenTheReadingFails() throws { assertNoWarningOnLoadFilm(freeSpace: "unreadable") }

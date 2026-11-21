@@ -229,9 +229,14 @@ extension XCTestCase {
     func chooseCamera(_ id: String, _ app: XCUIApplication) {
         let camera = app.buttons["camera-\(id)"]
         XCTAssertTrue(camera.exists(within: 10), "The \(id) Camera is on the catalog")
-        camera.tap()
         let choose = app.buttons["choose-camera"]
         XCTAssertTrue(choose.exists(within: 5))
+        // At the larger text sizes the Cameras stand in a column that scrolls under Choose, which stays on the home area,
+        // so the row is brought whole above it before the tap.
+        scrollUp(app, until: camera)
+        scrollUp(app, by: 100) { camera.frame.maxY <= choose.frame.minY - 4 }
+        camera.tap()
+        XCTAssertTrue(camera.isSelected, "The \(id) Camera is chosen")
         tapWhole(app, choose)
     }
 

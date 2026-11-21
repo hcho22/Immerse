@@ -154,9 +154,9 @@ final class ContentSizeTests: ScreenTestCase {
         Target(name: "Low storage warning", type: .staticText, identifier: "low-storage-warning"),
     ]
 
-    /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
+    /// The empty state's line, under its orbit drawing (A02).
     private static let journal: [Target] = [
-        Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here", symbol: ("camera", .above)),
+        Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here"),
     ]
 
     private static let catalog: [Target] = [
@@ -175,35 +175,35 @@ final class ContentSizeTests: ScreenTestCase {
     ]
 
     /// Settings as a Debug build shows it with the testing unlock off, including the testing section, in two halves:
-    /// at the largest sizes the whole screen takes longer to scroll through than one test may run.
+    /// at the largest sizes the whole screen takes longer to scroll through than one test may run. The top half is the
+    /// testing switches and Privacy (A04); the bottom half is the Films rows, opened to their full words, and the
+    /// version.
     private static let settingsTop: [Target] = [
         Target(name: "Debug testing header", type: .staticText, label: "Debug testing", header: true),
         Target(name: "Testing unlock", type: .staticText, label: "Testing unlock - Debug build"),
         Target(name: "Testing unlock note", type: .staticText, labelPrefix: "Debug builds only."),
         Target(name: "Develop at once", type: .staticText, label: "Develop at once - Debug build"),
         Target(name: "Develop at once note", type: .staticText, labelPrefix: "While on, each capture"),
-        Target(name: "Storage header", type: .staticText, label: "Storage and backup", header: true),
-        Target(name: "Backup", type: .staticText, labelPrefix: "Films, sealed captures"),
-        Target(name: "Trial header", type: .staticText, label: "Trial", header: true),
-        Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", tinted: true, optional: true),
-        Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone"),
-        Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
-    ]
-
-    private static let settingsBottom: [Target] = [
-        Target(name: "Photos header", type: .staticText, label: "Saving to Photos", header: true),
-        Target(name: "Photos exports", type: .staticText, labelPrefix: "Exports are optional."),
         Target(name: "Privacy header", type: .staticText, label: "Privacy", header: true),
         Target(name: "Camera permission", type: .staticText, labelPrefix: "Camera, "),
         Target(name: "Photos permission", type: .staticText, labelPrefix: "Photos (add only), "),
         Target(name: "Microphone", type: .staticText, labelPrefix: "Microphone, "),
         Target(name: "No accounts", type: .staticText, labelPrefix: "No Accounts, sign-in"),
-        Target(name: "Open iPhone Settings", type: .button, label: "Open iPhone Settings", tinted: true,
-               symbol: ("gearshape", .leading)),
-        Target(name: "Subscription header", type: .staticText, label: "Subscription", header: true),
+        Target(name: "Open iPhone Settings", type: .button, label: "Open iPhone Settings"),
+    ]
+
+    private static let settingsBottom: [Target] = [
+        Target(name: "Films header", type: .staticText, label: "Films", header: true),
+        Target(name: "Trial row", type: .button, identifier: "settings-Trial"),
+        Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", optional: true),
+        Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone, with any Camera"),
+        Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
         Target(name: "Settings Subscription", type: .button, label: "Subscription"),
-        Target(name: "About header", type: .staticText, label: "About", header: true),
-        Target(name: "Version", type: .staticText, labelPrefix: "Immerse, "),
+        Target(name: "Storage row", type: .button, identifier: "settings-Storage and backup"),
+        Target(name: "Backup", type: .staticText, labelPrefix: "Films, sealed captures"),
+        Target(name: "Photos row", type: .button, identifier: "settings-Saving to Photos"),
+        Target(name: "Photos exports", type: .staticText, labelPrefix: "Exports are optional."),
+        Target(name: "Version", type: .staticText, label: "Immerse 1.0"),
     ]
 
     private static let sizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL",
@@ -337,8 +337,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-super8HomeMovie"]
-        tapWhole(app, row)
+        chooseCamera("super8HomeMovie", app)
         XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -355,8 +354,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-super8HomeMovie"]
-        tapWhole(app, row)
+        chooseCamera("super8HomeMovie", app)
         XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, targets, category, below: "Super 8"))
@@ -368,8 +366,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-cinema16mm"]
-        tapWhole(app, row)
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, Self.sixteenMillimeter, category, below: "16mm"))
@@ -383,16 +380,14 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-mediumFormat6x6"]
-        tapWhole(app, row)
+        chooseCamera("mediumFormat6x6", app)
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, Self.sixBySix, category, below: "6×6"))
         goBack(app, from: "6×6", to: "Choose a Camera")
 
-        let reel = app.buttons["camera-cinema16mm"]
-        tapWhole(app, reel)
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         let blackAndWhite = app.buttons["Black and white"]
@@ -411,8 +406,7 @@ final class ContentSizeTests: ScreenTestCase {
     private func checkLowStorageWarning(_ category: String) {
         let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
         openCameraCatalog(app)
-        let row = app.buttons["camera-disposable1990s"]
-        tapWhole(app, row)
+        chooseCamera("disposable1990s", app)
         XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
         // Let the push finish, so the rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -443,7 +437,7 @@ final class ContentSizeTests: ScreenTestCase {
         let app = launch(category)
         defer { XCUIDevice.shared.orientation = .portrait }
         openCameraCatalog(app)
-        app.buttons["camera-disposable1990s"].tap()
+        chooseCamera("disposable1990s", app)
         waitForTrialStatus(app)
         goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
@@ -455,13 +449,23 @@ final class ContentSizeTests: ScreenTestCase {
         Thread.sleep(forTimeInterval: 1)
         if fromEnd {
             // Flicks that coast reach the end quickly; `swipeUp()` did not scroll this list in landscape.
-            let version = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Immerse, ")).firstMatch
-            for _ in 0..<20 {
-                if version.exists && version.frame.maxY <= app.frame.maxY - 34 { break }
-                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.8))
-                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
-                            withVelocity: .fast, thenHoldForDuration: 0)
+            let version = app.staticTexts["Immerse 1.0"]
+            func toTheEnd() {
+                for _ in 0..<20 {
+                    if version.exists && version.frame.maxY <= app.frame.maxY - 34 { break }
+                    let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.8))
+                    start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+                                withVelocity: .fast, thenHoldForDuration: 0)
+                }
             }
+            // The Films rows open in place to their full words (A04), which are measured with the rows.
+            toTheEnd()
+            for row in ["settings-Saving to Photos", "settings-Storage and backup", "settings-Trial"] {
+                let button = app.buttons[row]
+                for _ in 0..<12 where !button.isHittable { drag(app, by: 200, landscape: true) }
+                button.tap()
+            }
+            toTheEnd()
         }
         let rows = record(measure(app, targets, category, below: "Settings", upward: fromEnd))
         app.terminate()

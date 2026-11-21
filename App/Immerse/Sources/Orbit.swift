@@ -179,12 +179,12 @@ extension Font {
 }
 
 extension View {
-    /// Sets an Orbit text style: its font, letter spacing and line height, and a label's upper case.
+    /// Sets an Orbit text style: its font, letter spacing and line height. A label's capitals are its words' own
+    /// (`OrbitSectionLabel`), so VoiceOver reads them as written.
     func orbitFont(_ type: OrbitType, weight: OrbitFonts.Weight? = nil) -> some View {
         font(.orbit(type, weight: weight))
             .tracking(type.tracking)
             .lineSpacing(type.lineSpacing)
-            .textCase(type == .label ? .uppercase : nil)
     }
 
     /// The whole app's look: always dark, on the black ground, with white as the tint. The tint is a concrete color, since
@@ -218,7 +218,6 @@ enum OrbitAppearance {
         let buttons = UIBarButtonItemAppearance()
         buttons.normal.titleTextAttributes = [.font: OrbitFonts.uiFont(.semibold, size: 15, relativeTo: .body)]
         bar.buttonAppearance = buttons
-        bar.doneButtonAppearance = buttons
         UINavigationBar.appearance().standardAppearance = bar
         UINavigationBar.appearance().scrollEdgeAppearance = bar
         UINavigationBar.appearance().compactAppearance = bar
@@ -240,6 +239,7 @@ struct OrbitMainActionStyle: ButtonStyle {
             .orbitFont(.headline)
             .labelStyle(OrbitMainActionLabelStyle())
             .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundStyle(isEnabled ? Color.black : Orbit.smallest)
             .padding(.horizontal, 24).padding(.vertical, 8)
             .frame(maxWidth: .infinity, minHeight: 60)
@@ -255,7 +255,7 @@ private struct OrbitMainActionLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(spacing: 10) {
             configuration.icon.accessibilityHidden(true)
-            configuration.title
+            configuration.title.fixedSize(horizontal: false, vertical: true)
         }
     }
 }
@@ -273,10 +273,7 @@ struct OrbitRoundMainActionStyle: ButtonStyle {
             .font(.orbit(size: 15, weight: .extraBold, relativeTo: .headline))
             .multilineTextAlignment(.center)
             .foregroundStyle(isEnabled ? Color.black : Orbit.smallest)
-            .modifier(CircleFit(minimum: diameter))
-            .background { Circle().fill(fill) }
-            .background { Circle().strokeBorder(fill, lineWidth: 2).padding(-8) }
-            .contentShape(Circle())
+            .modifier(InscribedCircle(minimum: diameter, fill: fill, ring: fill, ringGap: 6))
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
@@ -324,6 +321,58 @@ private struct CircleFitLayout: Layout {
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         subviews.first?.place(at: CGPoint(x: bounds.midX, y: bounds.midY), anchor: .center,
                               proposal: ProposedViewSize(width: max(inner, bounds.width * 0.84 - 8), height: nil))
+    }
+}
+
+/// A round control whose frame, the area VoiceOver and the layout see, is its content's own, at least 44 points each
+/// way, with the circle (and its ring, if any) drawn around it: at least `minimum` across, and as wide as the frame's
+/// diagonal, so the frame always lies inside the circle. The circle grows to hold its words at larger text sizes, takes
+/// taps all the way to its edge, and reaches past the frame, which the layout around it leaves room for.
+struct InscribedCircle: ViewModifier {
+    let minimum: CGFloat
+    let fill: Color
+    var ring: Color?
+    var ringGap: CGFloat = 6
+
+    func body(content: Content) -> some View {
+        InscribedFrameLayout(minimum: minimum) { content }
+            .background {
+                GeometryReader { frame in
+                    let diameter = max(minimum, (frame.size.width * frame.size.width + frame.size.height * frame.size.height).squareRoot())
+                    ZStack {
+                        if let ring {
+                            Circle().strokeBorder(ring, lineWidth: 2)
+                                .frame(width: diameter + ringGap * 2 + 4, height: diameter + ringGap * 2 + 4)
+                        }
+                        Circle().fill(fill).frame(width: diameter, height: diameter)
+                    }
+                    .position(x: frame.size.width / 2, y: frame.size.height / 2)
+                }
+                .accessibilityHidden(true)
+            }
+            // Taps reach the circle's edge; VoiceOver and the audits see the words' own frame, inside the circle.
+            .contentShape(.interaction, Circle().inset(by: -minimum / 4))
+            .contentShape(.accessibility, Rectangle())
+    }
+}
+
+private struct InscribedFrameLayout: Layout {
+    let minimum: CGFloat
+
+    private func size(_ subviews: Subviews, proposal: ProposedViewSize) -> CGSize {
+        guard let content = subviews.first else { return CGSize(width: 44, height: 44) }
+        let limit = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? .infinity
+        let measured = content.sizeThatFits(ProposedViewSize(width: min(minimum * 0.84, limit), height: nil))
+        return CGSize(width: min(max(44, measured.width + 4), max(44, limit)), height: max(44, measured.height + 4))
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        size(subviews, proposal: proposal)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        subviews.first?.place(at: CGPoint(x: bounds.midX, y: bounds.midY), anchor: .center,
+                              proposal: ProposedViewSize(width: bounds.width - 4, height: nil))
     }
 }
 
@@ -541,8 +590,8 @@ struct OrbitSectionLabel: View {
     }
 
     var body: some View {
-        // Read as written, not in the capitals it shows in.
-        Text(SpokenText.shown(text)).orbitFont(.label).foregroundStyle(color)
+        // Shown in capitals, read as written.
+        Text(SpokenText.shown(text.uppercased())).orbitFont(.label).foregroundStyle(color)
             .accessibilityLabel(Text(SpokenText.shown(text)))
             .accessibilityAddTraits(.isHeader)
     }
@@ -579,10 +628,10 @@ struct OrbitRoundOptionStyle: ButtonStyle {
             .font(.orbit(size: 13, weight: .bold, relativeTo: .footnote))
             .multilineTextAlignment(.center)
             .foregroundStyle(selected ? Color.black : Color.white)
-            .modifier(CircleFit(minimum: diameter))
-            .background { OrbitCircleBackground(selected: selected, pressed: configuration.isPressed) }
-            .background { if selected { Circle().strokeBorder(Color.white, lineWidth: 2).padding(-7) } }
-            .contentShape(Circle())
+            .modifier(InscribedCircle(minimum: diameter,
+                                      fill: selected ? (configuration.isPressed ? Orbit.body : .white)
+                                          : configuration.isPressed ? Orbit.pressed : Orbit.button,
+                                      ring: selected ? .white : nil, ringGap: 5))
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }

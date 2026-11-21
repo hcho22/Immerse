@@ -25,20 +25,13 @@ struct CameraCatalogView: View {
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 24)
+                    // In the column, Choose follows the Cameras, so none sits under it.
+                    if dynamicTypeSize >= .xxLarge { choose }
                 }
                 .padding(.bottom, 16)
             }
             .scrollBounceBehavior(.basedOnSize)
-            .safeAreaBar(edge: .bottom, spacing: 8) {
-                NavigationLink {
-                    LoadFilmView(camera: chosen, loaded: loaded)
-                } label: {
-                    Text(SpokenText.shown("Choose \(chosen.shortName)"))
-                }
-                .primaryAction()
-                .accessibilityIdentifier("choose-camera")
-                .padding(.horizontal, 24).padding(.bottom, 8)
-            }
+            .safeAreaBar(edge: .bottom, spacing: 8) { if dynamicTypeSize < .xxLarge { choose } }
             .orbitSheetGround(screen: true)
             .navigationTitle("Choose a Camera")
             .toolbarTitleDisplayMode(.inlineLarge)
@@ -50,6 +43,18 @@ struct CameraCatalogView: View {
             }
         }
         .orbitSheet(screen: true)
+    }
+
+    /// Choose (B01): the catalog's one main action, which goes on to the chosen Camera's Load Film.
+    private var choose: some View {
+        NavigationLink {
+            LoadFilmView(camera: chosen, loaded: loaded)
+        } label: {
+            Text(SpokenText.shown("Choose \(chosen.shortName)"))
+        }
+        .primaryAction()
+        .accessibilityIdentifier("choose-camera")
+        .padding(.horizontal, 24).padding(.bottom, 8)
     }
 
     /// The Cameras in a column under their Photo and Movie headings, for the larger text sizes.
@@ -71,6 +76,8 @@ struct CameraCatalogView: View {
                         .contentShape(RoundedRectangle(cornerRadius: 28))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(camera.shortNameText)
+                    .accessibilityValue(camera.capacitySpokenLabel)
                     .accessibilityAddTraits(camera == chosen ? .isSelected : [])
                     .accessibilityIdentifier("camera-\(camera.id.rawValue)")
                 }
@@ -117,9 +124,9 @@ private struct CameraDial: View {
         let angle = (Self.angles[camera.id] ?? 0) * .pi / 180
         let selected = camera == chosen
         return Button { chosen = camera } label: {
-            VStack(spacing: 1) {
+            VStack(spacing: 3) {
                 camera.shortNameText.font(.orbit(size: camera.shortName.count > 8 ? 12 : 14, weight: .bold, relativeTo: .subheadline))
-                Text(Self.amount(camera)).font(.orbit(size: 11, weight: .semibold, relativeTo: .caption))
+                camera.capacityText.font(.orbit(size: 11, weight: .semibold, relativeTo: .caption))
                     .foregroundStyle(selected ? Orbit.onWhiteSecondary : Orbit.label)
             }
             .lineLimit(1)
@@ -186,6 +193,7 @@ struct CameraShapeMark: View {
 
 private struct LoadFilmView: View {
     @Environment(JournalModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let camera: CameraPackage
     var loaded: (Film) -> Void
     @State private var title = ""
@@ -206,13 +214,14 @@ private struct LoadFilmView: View {
         GeometryReader { screen in
             ScrollView {
                 VStack(spacing: 14) {
-                    if let warning = model.storage.warning(for: .capture) { LowStorageNotice(text: warning) }
                     identity
                     choices
                     titleField
                     access
                     if let error { OrbitNote(.error, error) }
                     Spacer(minLength: 12)
+                    // The low-storage warning comes just before the step it warns about (DEC-12).
+                    if let warning = model.storage.warning(for: .capture) { LowStorageNotice(text: warning) }
                     loadButton
                 }
                 .padding(.horizontal, Orbit.gutter)
@@ -227,7 +236,7 @@ private struct LoadFilmView: View {
         .toolbar {
             // The bar names the step (B02); the Camera's name is the screen's own heading.
             ToolbarItem(placement: .principal) {
-                Text("Load Film").orbitFont(.label).foregroundStyle(Orbit.label).accessibilityHidden(true)
+                OrbitSectionLabel("Load Film")
             }
         }
         .sheet(isPresented: $samples) { CameraSamplesView(camera: camera) }
@@ -239,7 +248,7 @@ private struct LoadFilmView: View {
     /// The Camera's disc with its capacity, its name, what it does and how it develops (B02, B04).
     @ViewBuilder private var identity: some View {
         let capacity = capacityDisc
-        if camera.medium == .movie {
+        if camera.medium == .movie && dynamicTypeSize < .xxLarge {
             HStack(spacing: 16) {
                 capacity
                 VStack(alignment: .leading, spacing: 4) {
@@ -271,13 +280,14 @@ private struct LoadFilmView: View {
     @ViewBuilder private var capacityDisc: some View {
         Group {
             if camera.medium == .movie {
+                // The Movie's time grows with the text size, and its circle with it.
                 VStack(spacing: 4) {
                     Text(Self.amount(camera)).font(.orbit(size: 26, weight: .extraBold, relativeTo: .title2))
                     Text("OF FILM").font(.orbit(size: 9, weight: .bold, relativeTo: .caption2)).tracking(0.54)
                         .foregroundStyle(Orbit.label)
                 }
                 .foregroundStyle(.white)
-                .frame(width: 104, height: 104)
+                .modifier(CircleFit(minimum: 104))
                 .background(Orbit.surface, in: Circle())
                 .overlay(Circle().strokeBorder(Orbit.pressed, lineWidth: 1))
             } else {
@@ -291,16 +301,16 @@ private struct LoadFilmView: View {
                             Text("EXPOSURES").font(.orbit(size: 8, weight: .bold, relativeTo: .caption2)).tracking(0.48)
                         }
                         .foregroundStyle(.black)
-                        .frame(width: 66, height: 66)
+                        // The badge grows with its words at larger text sizes.
+                        .modifier(CircleFit(minimum: 66))
                         .background(Color.white, in: Circle())
                         .background(Circle().fill(Color.black).padding(-4))
                         .offset(x: 10, y: -4)
                     }
             }
         }
-        .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Capacity, ") + Text(camera.capacitySpokenLabel))
+        .accessibilityLabel("Capacity, \(camera.capacitySpokenLabel)")
         .accessibilityAddTraits(.isStaticText)
     }
 
@@ -314,15 +324,14 @@ private struct LoadFilmView: View {
     /// What the Camera does, as chips (B02): when it reveals, then each of its controls. VoiceOver reads the controls as
     /// the one sentence they are.
     private var chips: some View {
-        ChipFlow {
+        VStack(spacing: 8) {
             OrbitChip(camera.revealLabel)
-            ForEach(Self.chipWords(camera.controlsLabel), id: \.self) { OrbitChip($0).accessibilityHidden(true) }
-        }
-        .overlay {
-            Color.clear
-                .accessibilityElement()
-                .accessibilityLabel(SpokenText.of(camera.controlsLabel))
-                .accessibilityAddTraits(.isStaticText)
+            ChipFlow {
+                ForEach(Self.chipWords(camera.controlsLabel), id: \.self) { OrbitChip($0) }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(SpokenText.of(camera.controlsLabel))
+            .accessibilityAddTraits(.isStaticText)
         }
     }
 
@@ -365,7 +374,8 @@ private struct LoadFilmView: View {
     /// The Film title (B02): its label, and a round field on the sunken ground.
     private var titleField: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Film title").orbitFont(.label).foregroundStyle(Orbit.label)
+            Text("FILM TITLE").orbitFont(.label).foregroundStyle(Orbit.label)
+                .accessibilityLabel("Film title")
                 .padding(.leading, 20)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("film-title-heading")
@@ -451,7 +461,8 @@ private struct LoadFilmView: View {
         .buttonStyle(OrbitRoundMainActionStyle(diameter: 104))
         .disabled(loading)
         .accessibilityIdentifier("load-film")
-        .padding(.bottom, 12)
+        // Room for the circle and its ring around the button's words.
+        .padding(.vertical, 38)
     }
 
     private var suggestedTitle: String {
@@ -479,17 +490,21 @@ private struct RoundChoice<Value: Hashable>: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            Text(title).orbitFont(.label).foregroundStyle(Orbit.label).accessibilityLabel(title)
-                .accessibilityAddTraits(.isHeader)
-            HStack(spacing: 20) {
+            OrbitSectionLabel(title)
+            // Room between the options and around them for each circle and its ring, which reach past the words.
+            HStack(spacing: 58) {
                 ForEach(options, id: \.value) { option in
                     Button { selection = option.value } label: {
-                        Label { Text(option.title) } icon: { Image(systemName: option.symbol).font(.system(size: 24, weight: .light)) }
+                        // The icon grows with the words, so the option grows as one at larger text sizes.
+                        Label { Text(option.title) } icon: {
+                            Image(systemName: option.symbol).font(.orbit(size: 24, weight: .regular, relativeTo: .footnote))
+                        }
                     }
                     .buttonStyle(OrbitRoundOptionStyle(selected: selection == option.value, diameter: diameter))
                     .accessibilityAddTraits(selection == option.value ? .isSelected : [])
                 }
             }
+            .padding(.vertical, 24)
             .accessibilityElement(children: .contain)
             .accessibilityLabel(title)
         }

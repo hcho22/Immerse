@@ -21,11 +21,10 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     @ViewBuilder let controls: Controls
     @ViewBuilder let reset: Reset
 
-    /// The band's height: what the tallest tool needs at the default text size, Filtration with its three sliders beside
-    /// their captions under its heading (249 points with the 16 pt top margin, the 44 pt tool row, the gaps between them
-    /// and the bottom margin), held whole on an iPhone SE by `PopulatedWorkflowTests`. Adjust, with the straighten dial
-    /// and the crop box's shapes, needs 243. It was 330 while Adjust had five rows of crop and straightening sliders.
-    private static var controlBandHeight: CGFloat { 270 }
+    /// The band's height: what the tallest tool needs at the default text size, with Orbit's tool row of round buttons
+    /// named under them (I01), held whole on an iPhone SE by `PopulatedWorkflowTests`. It was 250 with a row of icons alone,
+    /// and 330 while Adjust had five rows of crop and straightening sliders.
+    private static var controlBandHeight: CGFloat { 280 }
     /// The space between the band's rows.
     private static var spacing: CGFloat { 12 }
     private static var bottomMargin: CGFloat { 12 }
@@ -54,9 +53,13 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                 .padding(.horizontal, Orbit.gutter)
             }
         }
+        // Reset to Original stays under the band (I01) at one height, as a bar's button does: its words grow no further
+        // than the default text size, and larger sizes get the Large Content Viewer, so the print's area never changes.
         .safeAreaBar(edge: .bottom) {
             reset
                 .buttonStyle(DarkroomResetStyle())
+                .dynamicTypeSize(...DynamicTypeSize.large)
+                .accessibilityShowsLargeContentViewer()
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
         }
@@ -585,10 +588,12 @@ struct DarkroomView: View {
                         .foregroundStyle(tool == choice ? Color.black : Color.white)
                         .frame(width: 44, height: 44)
                         .background(tool == choice ? Color.white : Orbit.button, in: Circle())
+                    // The button's label says its name; the word under it is what it shows.
                     Text(choice == .toning ? "Toning" : choice.rawValue)
                         .font(.orbit(size: 11, weight: .semibold, relativeTo: .caption2))
                         .foregroundStyle(tool == choice ? Color.white : Orbit.label)
                         .lineLimit(1).minimumScaleFactor(0.8)
+                        .accessibilityHidden(true)
                 }
                 .frame(maxWidth: .infinity)
                 .contentShape(Rectangle())
@@ -859,10 +864,11 @@ private struct DialValue: View {
 
     var body: some View {
         let parts = text.split(separator: " ", maxSplits: 1).map(String.init)
-        let number = parts.first ?? text
-        let signed = (Double(number) ?? 0) > 0 && !number.hasPrefix("+") ? "+" + number : number
-        (Text(signed).font(.orbit(.title)).tracking(OrbitType.title.tracking)
-            + Text(parts.count > 1 ? " " + parts[1] : "").font(.orbit(.footnote)).foregroundStyle(Orbit.label))
+        let value = parts.first ?? text
+        let signed = (Double(value) ?? 0) > 0 && !value.hasPrefix("+") ? "+" + value : value
+        let number = Text(signed).font(.orbit(.title)).tracking(OrbitType.title.tracking)
+        let unit = Text(parts.count > 1 ? " " + parts[1] : "").font(.orbit(.footnote)).foregroundStyle(Orbit.label)
+        Text("\(number)\(unit)")
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .accessibilityLabel(text)

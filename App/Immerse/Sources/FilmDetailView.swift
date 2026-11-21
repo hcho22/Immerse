@@ -6,6 +6,7 @@ import SwiftUI
 struct FilmDetailView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let filmID: UUID
     @State private var capturing = false
     @State private var renaming = false
@@ -30,13 +31,14 @@ struct FilmDetailView: View {
                         } else {
                             status(film)
                             notices(film)
+                            if !pinsActions { mainActions(film).padding(.horizontal, -Orbit.gutter) }
                             media(film)
                         }
                     }
                     .padding(.horizontal, Orbit.gutter)
                     .padding(.bottom, 24)
                 }
-                .safeAreaBar(edge: .bottom, spacing: 8) { mainActions(film) }
+                .safeAreaBar(edge: .bottom, spacing: 8) { if pinsActions { mainActions(film) } }
                 .navigationTitle(SpokenText.title(film.title)).navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     // The title is the screen's own heading (C01), so the bar shows only its buttons.
@@ -57,11 +59,8 @@ struct FilmDetailView: View {
         .sheet(isPresented: $originals) { OriginalChoiceView(filmID: filmID, startsDevelopment: false) }
         .sheet(isPresented: $soundtrack) { SoundtrackView(filmID: filmID) }
         .fullScreenCover(item: $selectedPhoto) { capture in PhotoView(filmID: filmID, sequence: capture.sequenceNumber) }
-        .alert("Rename Film", isPresented: $renaming) {
-            TextField("Film title", text: $title)
-            Button("Cancel", role: .cancel) {}
-            Button("Save") { model.perform { try model.repository.rename(filmID: filmID, title: title) } }
-                .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        .sheet(isPresented: $renaming) {
+            RenameFilm(title: $title) { model.perform { try model.repository.rename(filmID: filmID, title: title) } }
         }
         .orbitConfirmation(isPresented: $deleting, symbol: "trash", emphasized: true, title: "Delete Film?",
                            message: PrivacyCopy.deleteFilm, confirm: "Delete Film", identifier: "confirm-delete-film") {
@@ -85,6 +84,11 @@ struct FilmDetailView: View {
             }
         }
     }
+
+    /// Whether the actions stay on the home area (C01). At the accessibility text sizes they, and a low-storage warning
+    /// with them, could be taller than the screen, which a bar cannot scroll, so they come in the screen's own scrolling
+    /// content instead, before the prints.
+    private var pinsActions: Bool { !dynamicTypeSize.isAccessibilitySize }
 
     // MARK: Header
 
@@ -173,8 +177,7 @@ struct FilmDetailView: View {
         let label = film.remainingLabel
         let words = label.hasPrefix(amount + " ") ? String(label.dropFirst(amount.count + 1)) : label
         return FilmRing(progress: film.progress, white: !open) {
-            Text(open ? amount : String(sealed)).orbitFont(.numeral)
-                .minimumScaleFactor(0.5).lineLimit(1)
+            Text(open ? amount : String(sealed)).orbitFont(.numeral).lineLimit(1)
             Text(open ? words : film.camera.medium == .photo ? "sealed exposures" : "sealed clips")
                 .font(.orbit(.footnote, weight: open ? nil : .semibold))
                 .foregroundStyle(open ? Orbit.label : Orbit.onWhiteSecondary)
@@ -188,10 +191,6 @@ struct FilmDetailView: View {
     // MARK: Notices and actions
 
     @ViewBuilder private func notices(_ film: Film) -> some View {
-        if !model.busyFilms.contains(filmID), !model.hasPendingSave(filmID),
-           let step = film.stepNeedingSpace, let warning = model.storage.warning(for: step) {
-            LowStorageNotice(text: warning)
-        }
         if film.canPlaybackDevelopedMovie && offersSoundChoice(film) && !model.busyFilms.contains(filmID) {
             Button { soundtrack = true } label: {
                 HStack(spacing: 12) {
@@ -237,6 +236,11 @@ struct FilmDetailView: View {
             let actions = Self.actions(film)
             if !actions.isEmpty {
                 VStack(spacing: 10) {
+                    // The low-storage warning comes just before the step it warns about, Open Camera or Develop Film
+                    // (DEC-12), and the bar holds both (G01).
+                    if let step = film.stepNeedingSpace, let warning = model.storage.warning(for: step) {
+                        LowStorageNotice(text: warning).padding(.horizontal, -8)
+                    }
                     ForEach(Array(actions.enumerated()), id: \.element) { index, action in
                         actionButton(action, film: film, main: index == 0)
                     }
@@ -314,7 +318,7 @@ struct FilmDetailView: View {
         if film.camera.medium == .photo {
             let sealed = film.captures.filter { $0.revealState == .sealed && !$0.isDiscarded }
             let shown = film.captures.filter { $0.revealState == .revealed || $0.isDiscarded }
-            if !sealed.isEmpty, film.camera.revealRule != .instantPerExposure || shown.isEmpty {
+            if !sealed.isEmpty {
                 SealedDots(sealed: sealed.count, capacity: Self.exposures(film) ?? sealed.count,
                            open: film.completionState == .open)
                     .padding(.top, 8)
@@ -415,6 +419,50 @@ struct FilmDetailView: View {
     }
 }
 
+/// Rename Film (C03): the Film title in a round field, with Cancel and Save, which stays off while the title is blank.
+private struct RenameFilm: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var title: String
+    let save: () -> Void
+    @FocusState private var focused: Bool
+    @State private var height: CGFloat = 300
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                Text("Rename Film").orbitFont(.heading).foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("FILM TITLE").orbitFont(.label).foregroundStyle(Orbit.label).padding(.leading, 20)
+                        .accessibilityHidden(true)
+                    TextField("Film title", text: $title)
+                        .font(.orbit(size: 17, weight: .semibold, relativeTo: .body))
+                        .foregroundStyle(.white)
+                        .focused($focused)
+                        .submitLabel(.done)
+                        .padding(.horizontal, 22).padding(.vertical, 8)
+                        .frame(minHeight: 56)
+                        .background(Orbit.sunken, in: RoundedRectangle(cornerRadius: 28))
+                        .overlay(RoundedRectangle(cornerRadius: 28).strokeBorder(focused ? Color.white : Orbit.hairline, lineWidth: 1))
+                        .accessibilityLabel("Film title")
+                }
+                HStack(spacing: 12) {
+                    Button("Cancel") { dismiss() }.buttonStyle(OrbitDialogCancelStyle())
+                    Button("Save") { dismiss(); save() }
+                        .buttonStyle(OrbitMainActionStyle())
+                        .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .padding(24)
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { height = $0 }
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .presentationDetents([.height(height)])
+        .presentationDragIndicator(.visible)
+        .orbitSheet()
+        .onAppear { focused = true }
+    }
+}
+
 /// The Film's big ring (C01): 240 points with a 12-point ring and the count on the surface in its middle, or white once
 /// the Film is ready to develop (G01).
 private struct FilmRing<Content: View>: View {
@@ -423,17 +471,15 @@ private struct FilmRing<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {
-        ZStack {
-            OrbitRing(progress: white ? 1 : progress, lineWidth: 12)
-            VStack(spacing: 2) { content }
-                .foregroundStyle(white ? Color.black : Color.white)
-                .multilineTextAlignment(.center)
-                .padding(12)
-                .frame(width: 168, height: 168)
-                .background(white ? Color.white : Orbit.surface, in: Circle())
-        }
-        .frame(width: 240, height: 240)
-        .frame(maxWidth: .infinity)
+        // The middle holds its words at every text size, and the ring stays 24 points out from it.
+        VStack(spacing: 2) { content }
+            .foregroundStyle(white ? Color.black : Color.white)
+            .multilineTextAlignment(.center)
+            .modifier(CircleFit(minimum: 168))
+            .background(white ? Color.white : Orbit.surface, in: Circle())
+            .padding(36)
+            .background(OrbitRing(progress: white ? 1 : progress, lineWidth: 12))
+            .frame(maxWidth: .infinity)
     }
 }
 
@@ -585,7 +631,7 @@ struct DotLine<Content: View>: View {
     var body: some View {
         DotLineLayout { Group(subviews: content) { subviews in
             ForEach(Array(subviews.enumerated()), id: \.element.id) { index, subview in
-                if index > 0 { Text("·").accessibilityHidden(true) }
+                if index > 0 { Circle().frame(width: 3, height: 3).opacity(0.8).accessibilityHidden(true) }
                 subview
             }
         } }
@@ -593,7 +639,7 @@ struct DotLine<Content: View>: View {
 }
 
 private struct DotLineLayout: Layout {
-    var spacing: CGFloat = 5
+    var spacing: CGFloat = 6
     var lineSpacing: CGFloat = 2
 
     private func frames(width: CGFloat, subviews: Subviews) -> [CGRect] {

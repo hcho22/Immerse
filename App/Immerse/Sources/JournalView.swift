@@ -65,6 +65,8 @@ struct JournalView: View {
         .accessibilityShowsLargeContentViewer()
         .accessibilityIdentifier("start-film")
         .disabled(model.initialRecoveryPending)
+        // Room for the circle and its ring around the button's words, with the circle's foot on the home area (A01).
+        .padding(.top, 38).padding(.bottom, 30)
     }
 }
 

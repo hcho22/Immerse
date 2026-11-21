@@ -54,7 +54,7 @@ struct SubscriptionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Subscription").orbitFont(.label).foregroundStyle(Orbit.label).accessibilityHidden(true)
+                OrbitSectionLabel("Subscription")
             }
         }
         .task { await model.billing.loadProducts() }
@@ -93,8 +93,7 @@ struct SubscriptionView: View {
                     let yearly = product.subscription?.subscriptionPeriod.unit == .year
                     Button { Task { await model.billing.purchase(product) } } label: {
                         VStack(spacing: 4) {
-                            Text(yearly ? "Yearly" : "Monthly").orbitFont(.label)
-                                .foregroundStyle(yearly ? Color.black : Orbit.label)
+                            OrbitSectionLabel(yearly ? "Yearly" : "Monthly", color: yearly ? .black : Orbit.label)
                             Text(product.displayPrice).orbitFont(.heading, weight: .extraBold)
                         }
                     }

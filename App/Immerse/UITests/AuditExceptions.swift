@@ -12,16 +12,11 @@ struct AuditException: Equatable {
     let label: String
 
     static let accepted: [AuditException] = [
-        // Contrast at the 16mm title audit at the largest text size. The test's held drags stop with this
-        // look line's first lines under the navigation bar's scroll-edge blur in every run; at rest it measured
-        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
-        AuditException(audit: "16mm-title-accessibility-largest", type: .contrast, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
-        // Contrast at the Disposable Load screen's low-storage audit, at the end of the Form, where the warning and
-        // Load Film are on screen together. The Form stops there in every run with the end of the Camera's controls
-        // line and the start of its look line under the navigation bar's scroll-edge blur; at rest each measured
-        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/low-storage-warning-062.md).
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"),
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"),
+        // Contrast at the Disposable Load screen's low-storage audit, at the end of the screen, where the warning and
+        // Load Film are on screen together. The screen stops there in every run with the Camera's reveal chip under the
+        // navigation bar's scroll-edge blur; at rest its #D4D4D4 words on Orbit's #1A1A1A chip are 11.7:1, in the one
+        // appearance Orbit has (Evidence/NativeApp/orbit-083.md).
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "Sealed until Development"),
     ]
 
     /// Whether `exceptions` accept a finding; a finding without an element label is never accepted.

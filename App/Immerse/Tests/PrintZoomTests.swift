@@ -386,7 +386,8 @@ final class PrintZoomTests: XCTestCase {
 
     private func views(in view: UIView) -> [UIView] { [view] + view.subviews.flatMap { views(in: $0) } }
 
-    /// Presses the toolbar button titled `title` on the screen `root` shows, or on one it presents, once it is enabled.
+    /// Presses the button titled `title` on the screen `root` shows, or on one it presents, once it is enabled: a toolbar
+    /// item, or a SwiftUI button found by its accessibility label, which Orbit's bar pills and labelled actions are.
     private func press(_ title: String, in root: UIViewController) async throws {
         func controllers(_ controller: UIViewController) -> [UIViewController] {
             [controller] + controller.children.flatMap(controllers)
@@ -398,13 +399,34 @@ final class PrintZoomTests: XCTestCase {
             return groups.flatMap(\.barButtonItems) + (navigation.leftBarButtonItems ?? [])
                 + (navigation.rightBarButtonItems ?? []) + (controller.toolbarItems ?? [])
         }
-        func button() -> UIBarButtonItem? {
+        func item() -> UIBarButtonItem? {
             controllers(root).flatMap(items).first { $0.title == title && $0.isEnabled }
         }
-        try await waitUntil("\(title) can be pressed") { button() != nil }
-        let item = try XCTUnwrap(button())
-        let action = try XCTUnwrap(item.action, "\(title) has an action")
-        _ = item.target?.perform(action, with: item)
+        /// Every accessibility element under `object`, the hosting views' SwiftUI elements included.
+        func elements(_ object: NSObject) -> [NSObject] {
+            var found: [NSObject] = [object]
+            if let view = object as? UIView { found += view.subviews.flatMap(elements) }
+            let count = object.accessibilityElementCount()
+            if count != NSNotFound, count > 0 {
+                for index in 0..<count {
+                    if let element = object.accessibilityElement(at: index) as? NSObject { found += elements(element) }
+                }
+            }
+            return found
+        }
+        func element() -> NSObject? {
+            controllers(root).compactMap(\.viewIfLoaded).flatMap(elements).first {
+                $0.accessibilityLabel == title && $0.accessibilityTraits.contains(.button)
+                    && !$0.accessibilityTraits.contains(.notEnabled)
+            }
+        }
+        try await waitUntil("\(title) can be pressed") { item() != nil || element() != nil }
+        if let item = item() {
+            let action = try XCTUnwrap(item.action, "\(title) has an action")
+            _ = item.target?.perform(action, with: item)
+        } else {
+            XCTAssertTrue(try XCTUnwrap(element()).accessibilityActivate(), "\(title) was pressed")
+        }
     }
 
     private func waitUntil(_ what: String, _ condition: () -> Bool) async throws {
