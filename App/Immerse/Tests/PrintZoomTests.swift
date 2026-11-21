@@ -274,7 +274,12 @@ final class PrintZoomTests: XCTestCase {
             if leaving == "Cancel" {
                 probe.cancelPresses += 1
             } else {
-                try await waitUntil("Save can be pressed") { probe.saveEnabled }
+                // The probe can still read Save as the last Darkroom left it, and Save is enabled until this Darkroom's
+                // print starts, so a press then can land while the print disables it. The print shows as it ends.
+                try await waitUntil("Save can be pressed once the Darkroom's print shows") {
+                    self.views(in: host.presentedViewController?.view ?? UIView()).contains { $0 is PrintZoomScrollView }
+                        && probe.saveEnabled
+                }
                 probe.savePresses += 1
             }
             try await waitUntil("the Darkroom closes after \(leaving)") { host.presentedViewController == nil }

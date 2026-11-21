@@ -67,12 +67,13 @@ enum OrbitFonts {
 
     static func register() { _ = registered }
 
-    /// A Manrope font for UIKit, scaled with Dynamic Type as `style` is, at the app's text size or at `traits`'.
-    static func uiFont(_ weight: Weight, size: CGFloat, relativeTo style: UIFont.TextStyle,
+    /// A Manrope font for UIKit, scaled with Dynamic Type as `style` is, at the app's text size or at `traits`', and no
+    /// larger than `largest` points where one is given.
+    static func uiFont(_ weight: Weight, size: CGFloat, relativeTo style: UIFont.TextStyle, largest: CGFloat = 0,
                        compatibleWith traits: UITraitCollection? = nil) -> UIFont {
         register()
         let base = UIFont(name: weight.rawValue, size: size) ?? .systemFont(ofSize: size)
-        return UIFontMetrics(forTextStyle: style).scaledFont(for: base, compatibleWith: traits)
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: base, maximumPointSize: largest, compatibleWith: traits)
     }
 }
 
@@ -230,8 +231,12 @@ enum OrbitAppearance {
         return ceil((title as NSString).size(withAttributes: largeTitleAttributes(traits)).width)
     }
 
+    /// A large title grows with Dynamic Type up to 40 points, from the first accessibility size on, where Choose a
+    /// Camera, the longest one, draws 334 points wide: it reads whole between the 16-point margins of the narrowest
+    /// iPhone (the 375-point iPhone SE) rather than cut short at the larger sizes.
     private static func largeTitleAttributes(_ traits: UITraitCollection?) -> [NSAttributedString.Key: Any] {
-        [.font: OrbitFonts.uiFont(.extraBold, size: 32, relativeTo: .largeTitle, compatibleWith: traits), .kern: -0.64]
+        [.font: OrbitFonts.uiFont(.extraBold, size: 32, relativeTo: .largeTitle, largest: 40, compatibleWith: traits),
+         .kern: -0.64]
     }
 }
 

@@ -21,6 +21,7 @@ No real iPhone has run the restyled build; the manual iPhone test plan is re-pin
 - `App/Immerse/Sources/OrbitSheets.swift`, new: sheets on Orbit's surface, the bottom confirmation (C04, C05, H05, J04) and the radio row (G02, H06, J03).
 - `App/Immerse/Sources/Resources/Fonts/`: Manrope Regular, Medium, SemiBold, Bold and ExtraBold, instanced from the Google Fonts variable font (wght axis), with its SIL Open Font License (`OFL.txt`), which declares no Reserved Font Name.
 - `OrbitAppearance` sets the navigation bars' titles in Manrope; the app is always dark (`orbitRoot`), the tint white and `PrimaryAction` cream.
+  A large title grows with the text size up to 40 points, from the first accessibility size on, where Choose a Camera, the longest, still reads whole across the iPhone SE.
 - Screens, each to its artboard:
   - The Film Journal (A01, A02, A03): Films on their way as bubbles in the Journal's order (on the roll with its ring, ready to develop and pack complete in white, developing in a dashed ring), each developed Film as its own round thumbnail with its title, each with the row's words (the Camera, the loaded date, and what is left or, on a Film completed early, wasted; VoiceOver adds "Film used, N percent"), and the round cream Start a Film.
   - Choose a Camera (B01): the dial, the Photo Cameras on its upper arc and the Movie Cameras on its lower one, the chosen Camera in its middle, its look and reveal lines, and Choose to go on; at Extra Extra Large text and above the Cameras stand in a column.
