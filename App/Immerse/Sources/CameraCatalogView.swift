@@ -10,6 +10,7 @@ struct CameraCatalogView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var loaded: (Film) -> Void
     @State private var chosen = CameraCatalog.all.first { $0.medium == .photo } ?? CameraCatalog.all[0]
+    @State private var width: CGFloat = 0
 
     var body: some View {
         NavigationStack {
@@ -33,9 +34,10 @@ struct CameraCatalogView: View {
             .scrollBounceBehavior(.basedOnSize)
             .safeAreaBar(edge: .bottom, spacing: 8) { if dynamicTypeSize < .xxLarge { choose } }
             .orbitSheetGround(screen: true)
-            .navigationTitle("Choose a Camera")
-            // Beside the bar's button at ordinary sizes (B01); on its own line, where it has room, at the accessibility sizes.
-            .toolbarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .large : .inlineLarge)
+            .navigationTitle(Self.title)
+            // Beside the bar's button where it fits there whole (B01); on its own line, where it has room, where it does
+            // not, as on the iPhone SE from XL up, and at the accessibility sizes.
+            .toolbarTitleDisplayMode(titleFitsBesideCancel ? .inlineLarge : .large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Cancel", systemImage: "xmark") { dismiss() }.buttonStyle(OrbitCircleButtonStyle())
@@ -43,7 +45,18 @@ struct CameraCatalogView: View {
                 .sharedBackgroundVisibility(.hidden)
             }
         }
+        // The sheet's width, which the bar spans; the scroll view is as wide as the 390-point dial in it.
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { width = $0 }
         .orbitSheet(screen: true)
+    }
+
+    private static let title = "Choose a Camera"
+
+    /// Whether the title fits whole between the bar's leading margin and Cancel: the bar keeps 16 points before the
+    /// title, 16 between it and the 44-point Cancel and 20 after Cancel.
+    private var titleFitsBesideCancel: Bool {
+        !dynamicTypeSize.isAccessibilitySize
+            && OrbitAppearance.largeTitleWidth(Self.title, at: dynamicTypeSize) <= width - 16 - 16 - 44 - 20
     }
 
     /// Choose (B01): the catalog's one main action, which goes on to the chosen Camera's Load Film.

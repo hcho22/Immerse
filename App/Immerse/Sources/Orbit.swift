@@ -67,11 +67,12 @@ enum OrbitFonts {
 
     static func register() { _ = registered }
 
-    /// A Manrope font for UIKit, scaled with Dynamic Type as `style` is.
-    static func uiFont(_ weight: Weight, size: CGFloat, relativeTo style: UIFont.TextStyle) -> UIFont {
+    /// A Manrope font for UIKit, scaled with Dynamic Type as `style` is, at the app's text size or at `traits`'.
+    static func uiFont(_ weight: Weight, size: CGFloat, relativeTo style: UIFont.TextStyle,
+                       compatibleWith traits: UITraitCollection? = nil) -> UIFont {
         register()
         let base = UIFont(name: weight.rawValue, size: size) ?? .systemFont(ofSize: size)
-        return UIFontMetrics(forTextStyle: style).scaledFont(for: base)
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: base, compatibleWith: traits)
     }
 }
 
@@ -210,11 +211,7 @@ enum OrbitAppearance {
             .font: OrbitFonts.uiFont(.bold, size: 17, relativeTo: .headline),
             .foregroundColor: UIColor.white,
         ]
-        bar.largeTitleTextAttributes = [
-            .font: OrbitFonts.uiFont(.extraBold, size: 32, relativeTo: .largeTitle),
-            .foregroundColor: UIColor.white,
-            .kern: -0.64,
-        ]
+        bar.largeTitleTextAttributes = largeTitleAttributes(nil).merging([.foregroundColor: UIColor.white]) { $1 }
         let buttons = UIBarButtonItemAppearance()
         buttons.normal.titleTextAttributes = [.font: OrbitFonts.uiFont(.semibold, size: 15, relativeTo: .body)]
         bar.buttonAppearance = buttons
@@ -225,6 +222,16 @@ enum OrbitAppearance {
         toolbar.configureWithTransparentBackground()
         UIToolbar.appearance().standardAppearance = toolbar
         UIToolbar.appearance().scrollEdgeAppearance = toolbar
+    }
+
+    /// How wide a screen's large title draws at a text size.
+    static func largeTitleWidth(_ title: String, at size: DynamicTypeSize) -> CGFloat {
+        let traits = UITraitCollection(preferredContentSizeCategory: UIContentSizeCategory(size))
+        return ceil((title as NSString).size(withAttributes: largeTitleAttributes(traits)).width)
+    }
+
+    private static func largeTitleAttributes(_ traits: UITraitCollection?) -> [NSAttributedString.Key: Any] {
+        [.font: OrbitFonts.uiFont(.extraBold, size: 32, relativeTo: .largeTitle, compatibleWith: traits), .kern: -0.64]
     }
 }
 

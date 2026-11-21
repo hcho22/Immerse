@@ -420,11 +420,13 @@ final class ContentSizeTests: ScreenTestCase {
     private func checkJournalAndCatalog(_ category: String) {
         var rows: [String] = []
         let app = launch(category, onEmptyJournal: true)
+        checkTitleWords("Film Journal", app, category)
         rows += record(measure(app, Self.journal, category, below: "Film Journal"))
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5), "Catalog \(category)")
         // Let the sheet finish rising, so the first rows are measured where they rest.
         Thread.sleep(forTimeInterval: 1)
+        checkTitleWords("Choose a Camera", app, category)
         if Self.sizes.firstIndex(of: category)! < Self.sizes.firstIndex(of: "XXL")! { checkDialWords(app, category) }
         rows += record(measure(app, Self.catalog, category, below: "Choose a Camera"))
         app.terminate()
@@ -444,6 +446,19 @@ final class ContentSizeTests: ScreenTestCase {
             XCTAssertEqual(readText(in: shot, line.frame.insetBy(dx: -6, dy: -3), window: app.frame), words,
                            "\(words) \(category) reads whole on the dial")
         }
+    }
+
+    /// A screen's title reads whole as drawn in its navigation bar, never cut short with an ellipsis beside the bar's
+    /// buttons: its accessibility label stays whole either way, so the text drawn on the screen is read back.
+    private func checkTitleWords(_ title: String, _ app: XCUIApplication, _ category: String) {
+        let bar = app.navigationBars[title]
+        XCTAssertTrue(bar.waitForExistence(timeout: 5), "\(title) \(category) has its bar")
+        let shot = XCUIScreen.main.uprightScreenshot()
+        attach(shot, "\(category) \(Self.appearance) \(title) title")
+        let label = bar.staticTexts[title].firstMatch
+        XCTAssertTrue(label.exists, "\(title) \(category) is in its bar")
+        XCTAssertEqual(readText(in: shot, label.frame.insetBy(dx: -8, dy: -4), window: app.frame), title,
+                       "\(title) \(category) reads whole in its bar")
     }
 
     /// The text Vision reads in an area of a screenshot, its lines joined by spaces.
