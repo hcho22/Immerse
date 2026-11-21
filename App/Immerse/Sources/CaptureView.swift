@@ -1079,8 +1079,9 @@ final class PreviewSurface: UIView {
     }
 }
 
-/// A white square at the point a tap focused (D01): focus squares stay white, since red is the shutter's alone. It, which settles and then fades, as in the iPhone's Camera app. It draws on
-/// the picture only and takes no touches; VoiceOver users focus with continuous autofocus, which a tap only adds to.
+/// A white square at the point a tap focused (D01), which settles and then fades, as in the iPhone's Camera app; focus
+/// squares stay white, since red is the shutter's alone. It draws on the picture only and takes no touches; VoiceOver
+/// users focus with continuous autofocus, which a tap only adds to.
 final class FocusMark: UIView {
     private static let side: CGFloat = 64
 
@@ -1147,7 +1148,7 @@ private struct WholeWordsLayout: Layout {
 }
 
 private extension View {
-    /// A button in a notice: white on the dark ground it sits on over the viewfinder, the app's own tint elsewhere.
+    /// A button in a notice: Orbit's cream on the dark ground it sits on over the viewfinder, the app's own tint elsewhere.
     @ViewBuilder func noticeButtonStyle(onDark: Bool) -> some View {
         if onDark { buttonStyle(OrbitNoticeActionStyle()) } else { self }
     }

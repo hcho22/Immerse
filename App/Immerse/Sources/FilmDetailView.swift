@@ -113,11 +113,6 @@ struct FilmDetailView: View {
         .padding(.top, 4)
     }
 
-    private static func exposures(_ film: Film) -> Int? {
-        if case let .exposures(count) = film.camera.capacity { return count }
-        return nil
-    }
-
     // MARK: Status
 
     /// The Film's status (C01, G01, G03, F03): the big ring with what is left, or what was wasted on a Film completed
@@ -301,8 +296,8 @@ struct FilmDetailView: View {
             let sealed = film.captures.filter { $0.revealState == .sealed && !$0.isDiscarded }
             let shown = film.captures.filter { $0.revealState == .revealed || $0.isDiscarded }
             if !sealed.isEmpty {
-                SealedDots(sealed: sealed.count, capacity: Self.exposures(film) ?? sealed.count,
-                           open: film.completionState == .open)
+                SealedDots(sealed: sealed.count,
+                           toTake: film.completionState == .open ? film.remainingExposures ?? 0 : 0)
                     .padding(.top, 8)
             }
             if !shown.isEmpty {
@@ -492,12 +487,11 @@ private struct ProcessingRing: View {
     }
 }
 
-/// A Film's sealed exposures (C01): a dot for each one taken, grey, and, while the Film can still be shot, an empty one
-/// for each still to take. VoiceOver reads it as one element, "Sealed", with the count of sealed exposures.
+/// A Film's sealed exposures (C01): a dot for each one taken, grey, and an empty one for each the Film can still take.
+/// VoiceOver reads it as one element, "Sealed", with the count of sealed exposures.
 private struct SealedDots: View {
     let sealed: Int
-    let capacity: Int
-    let open: Bool
+    let toTake: Int
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -507,7 +501,7 @@ private struct SealedDots: View {
                 Image(systemName: "lock").font(.system(size: 12, weight: .semibold)).foregroundStyle(Orbit.label)
             }
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 9), spacing: 12) {
-                ForEach(0..<(open ? max(capacity, sealed) : sealed), id: \.self) { index in
+                ForEach(0..<(sealed + toTake), id: \.self) { index in
                     Group {
                         if index < sealed { Circle().fill(Orbit.disabledMark) }
                         else { Circle().strokeBorder(Orbit.hairline, lineWidth: 1) }

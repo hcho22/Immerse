@@ -179,14 +179,6 @@ private struct CameraDial: View {
         .offset(x: Self.radius * sin(angle), y: -Self.radius * cos(angle))
     }
 
-    /// "27" or "3:20": the capacity on a dial option.
-    private static func amount(_ camera: CameraPackage) -> String {
-        switch camera.capacity {
-        case let .exposures(count): String(count)
-        case let .seconds(seconds): MovieDurationText.clock(seconds)
-        }
-    }
-
     /// The chosen Camera in the dial's middle: its picture shape, its name and capacity.
     private var summary: some View {
         VStack(spacing: 6) {
