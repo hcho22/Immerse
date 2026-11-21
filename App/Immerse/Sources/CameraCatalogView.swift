@@ -34,7 +34,8 @@ struct CameraCatalogView: View {
             .safeAreaBar(edge: .bottom, spacing: 8) { if dynamicTypeSize < .xxLarge { choose } }
             .orbitSheetGround(screen: true)
             .navigationTitle("Choose a Camera")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            // Beside the bar's button at ordinary sizes (B01); on its own line, where it has room, at the accessibility sizes.
+            .toolbarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .large : .inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Cancel", systemImage: "xmark") { dismiss() }.buttonStyle(OrbitCircleButtonStyle())
@@ -124,18 +125,17 @@ private struct CameraDial: View {
         let angle = (Self.angles[camera.id] ?? 0) * .pi / 180
         let selected = camera == chosen
         return Button { chosen = camera } label: {
-            VStack(spacing: 3) {
-                camera.shortNameText.font(.orbit(size: camera.shortName.count > 8 ? 12 : 14, weight: .bold, relativeTo: .subheadline))
+            VStack(spacing: 1) {
+                camera.shortNameText
+                    .font(.orbit(size: camera.shortName.count > 8 ? 12 : 14, weight: .bold, relativeTo: .subheadline))
                 camera.capacityText.font(.orbit(size: 11, weight: .semibold, relativeTo: .caption))
                     .foregroundStyle(selected ? Orbit.onWhiteSecondary : Orbit.label)
             }
             .lineLimit(1)
             .foregroundStyle(selected ? Color.black : Color.white)
-            .padding(.horizontal, 6)
-            .frame(minWidth: Self.option, minHeight: Self.option)
-            .background { OrbitCircleBackground(selected: selected) }
-            .background { if selected { Circle().strokeBorder(Color.white, lineWidth: 2).padding(-7) } }
-            .contentShape(Circle())
+            // A circle 84 points across, or as wide as its words need, with a white ring 5 points out when chosen.
+            .modifier(InscribedCircle(minimum: Self.option, fill: selected ? .white : Orbit.button,
+                                      ring: selected ? .white : nil, ringGap: 5, margin: 2, clearance: 4))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(camera.shortNameText)
@@ -194,6 +194,8 @@ struct CameraShapeMark: View {
 private struct LoadFilmView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// Between the chips, growing with their words.
+    @ScaledMetric(relativeTo: .footnote) private var chipSpacing: CGFloat = 8
     let camera: CameraPackage
     var loaded: (Film) -> Void
     @State private var title = ""
@@ -249,15 +251,18 @@ private struct LoadFilmView: View {
     @ViewBuilder private var identity: some View {
         let capacity = capacityDisc
         if camera.medium == .movie && dynamicTypeSize < .xxLarge {
+            // The disc beside the name (B04); the look lines below keep the screen's width at every text size.
             HStack(spacing: 16) {
                 capacity
-                VStack(alignment: .leading, spacing: 4) {
-                    name
-                    looks(alignment: .leading)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                name.frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.horizontal, 4)
+            looks(alignment: .center)
+            chips
+        } else if camera.medium == .movie {
+            capacity
+            name
+            looks(alignment: .center)
             chips
         } else {
             capacity
@@ -324,9 +329,9 @@ private struct LoadFilmView: View {
     /// What the Camera does, as chips (B02): when it reveals, then each of its controls. VoiceOver reads the controls as
     /// the one sentence they are.
     private var chips: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: chipSpacing) {
             OrbitChip(camera.revealLabel)
-            ChipFlow {
+            ChipFlow(spacing: chipSpacing) {
                 ForEach(Self.chipWords(camera.controlsLabel), id: \.self) { OrbitChip($0) }
             }
             .accessibilityElement(children: .ignore)
@@ -454,15 +459,16 @@ private struct LoadFilmView: View {
             }
         } label: {
             ZStack {
-                Text("Load Film").font(.orbit(size: 17, weight: .extraBold, relativeTo: .headline)).opacity(loading ? 0 : 1)
+                WholeWords("Load Film").font(.orbit(size: 17, weight: .extraBold, relativeTo: .headline)).opacity(loading ? 0 : 1)
                 if loading { ProgressView().tint(.black) }
             }
         }
         .buttonStyle(OrbitRoundMainActionStyle(diameter: 104))
         .disabled(loading)
         .accessibilityIdentifier("load-film")
-        // Room for the circle and its ring around the button's words.
-        .padding(.vertical, 38)
+        // Room for the circle and its ring around the button's words, at every text size.
+        .modifier(CircleRoom(minimum: 104))
+        .padding(.vertical, 8)
     }
 
     private var suggestedTitle: String {
@@ -491,12 +497,12 @@ private struct RoundChoice<Value: Hashable>: View {
     var body: some View {
         VStack(spacing: 12) {
             OrbitSectionLabel(title)
-            // Room between the options and around them for each circle and its ring, which reach past the words.
-            HStack(spacing: 58) {
+            OrbitCircleRow(minimum: diameter) {
                 ForEach(options, id: \.value) { option in
                     Button { selection = option.value } label: {
-                        // The icon grows with the words, so the option grows as one at larger text sizes.
-                        Label { Text(option.title) } icon: {
+                        // The icon grows with the words, so the option grows as one at larger text sizes, and a word
+                        // never breaks.
+                        Label { WholeWords(option.title) } icon: {
                             Image(systemName: option.symbol).font(.orbit(size: 24, weight: .regular, relativeTo: .footnote))
                         }
                     }
@@ -504,7 +510,6 @@ private struct RoundChoice<Value: Hashable>: View {
                     .accessibilityAddTraits(selection == option.value ? .isSelected : [])
                 }
             }
-            .padding(.vertical, 24)
             .accessibilityElement(children: .contain)
             .accessibilityLabel(title)
         }
@@ -514,7 +519,7 @@ private struct RoundChoice<Value: Hashable>: View {
 
 /// Chips across the width, centered, wrapping to more lines as needed.
 private struct ChipFlow: Layout {
-    var spacing: CGFloat = 8
+    var spacing: CGFloat
 
     private func lines(width: CGFloat, subviews: Subviews) -> [[(LayoutSubview, CGSize)]] {
         var lines: [[(LayoutSubview, CGSize)]] = [[]]
@@ -731,5 +736,14 @@ private struct FilmTitleTextView: UIViewRepresentable {
             let size = placeholderLabel.sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))
             placeholderLabel.frame = CGRect(x: 0, y: top, width: bounds.width, height: size.height)
         }
+    }
+}
+
+/// Gives one round control the room its circle and ring take (`OrbitCircleRow`).
+private struct CircleRoom: ViewModifier {
+    let minimum: CGFloat
+
+    func body(content: Content) -> some View {
+        OrbitCircleRow(minimum: minimum) { content }
     }
 }

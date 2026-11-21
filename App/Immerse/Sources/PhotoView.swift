@@ -279,9 +279,35 @@ enum DisplayPhoto {
     }
 }
 
+#if DEBUG
+/// For hosted tests, which cannot read SwiftUI's accessibility tree: presses the photo view's Darkroom, and the Darkroom's
+/// Cancel or Save once it can be pressed, as a person would.
+@MainActor @Observable final class PhotoViewProbe {
+    var darkroomPresses = 0
+    var cancelPresses = 0
+    var savePresses = 0
+    /// Whether the open Darkroom's Save can be pressed.
+    var saveEnabled = false
+}
+
+private struct PhotoViewProbeKey: EnvironmentKey {
+    static let defaultValue: PhotoViewProbe? = nil
+}
+
+extension EnvironmentValues {
+    var photoViewProbe: PhotoViewProbe? {
+        get { self[PhotoViewProbeKey.self] }
+        set { self[PhotoViewProbeKey.self] = newValue }
+    }
+}
+#endif
+
 struct PhotoView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    #if DEBUG
+    @Environment(\.photoViewProbe) private var probe
+    #endif
     let filmID: UUID
     let sequence: Int
     let isInstantReveal: Bool
@@ -372,6 +398,9 @@ struct PhotoView: View {
             }
             .toolbarBackground(.hidden, for: .navigationBar)
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
+            #if DEBUG
+            .onChange(of: probe?.darkroomPresses) { editing = true }
+            #endif
             .onChange(of: editing) { _, editing in if !editing { darkroomClosings += 1 } }
             .orbitConfirmation(isPresented: $discarding, symbol: "photo", title: "Discard photo \(shownSequence)?",
                                message: PrivacyCopy.discard, confirm: "Discard", identifier: "confirm-discard-photo") {
@@ -433,6 +462,9 @@ struct PhotoNavigation: Equatable {
 struct DarkroomView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    #if DEBUG
+    @Environment(\.photoViewProbe) private var probe
+    #endif
     let filmID: UUID
     let sequence: Int
     @State private var recipe = DarkroomRecipe.original
@@ -506,24 +538,22 @@ struct DarkroomView: View {
             .orbitSheetGround(screen: true)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { renderTask?.cancel(); dismiss() }.buttonStyle(OrbitPillStyle(inBar: true))
+                    Button("Cancel") { cancel() }.buttonStyle(OrbitPillStyle(inBar: true))
                 }
                 .sharedBackgroundVisibility(.hidden)
                 ToolbarItem(placement: .confirmationAction) {
                     // The Darkroom's main action, in cream (I01).
-                    Button("Save") {
-                        error = nil
-                        model.perform {
-                            _ = try await model.processor.saveRecipe(filmID: filmID, sequence: sequence, recipe: recipe)
-                            model.mediaRevision = UUID()
-                            dismiss()
-                        } failure: { error = $0 }
-                    }
-                    .buttonStyle(OrbitSaveStyle())
-                    .disabled(rendering || model.hiddenFilms.contains(filmID))
+                    Button("Save") { save() }
+                        .buttonStyle(OrbitSaveStyle())
+                        .disabled(!canSave)
                 }
                 .sharedBackgroundVisibility(.hidden)
             }
+            #if DEBUG
+            .onChange(of: canSave, initial: true) { probe?.saveEnabled = canSave }
+            .onChange(of: probe?.cancelPresses) { cancel() }
+            .onChange(of: probe?.savePresses) { if canSave { save() } }
+            #endif
             .holdsPortraitOrientationPreservingCurrent()
             .orbitSheet(screen: true)
             .task {
@@ -541,6 +571,22 @@ struct DarkroomView: View {
             }
             .onDisappear { renderTask?.cancel(); picture.clear(); uncropped = nil }
         }
+    }
+
+    private var canSave: Bool { !rendering && !model.hiddenFilms.contains(filmID) }
+
+    private func cancel() {
+        renderTask?.cancel()
+        dismiss()
+    }
+
+    private func save() {
+        error = nil
+        model.perform {
+            _ = try await model.processor.saveRecipe(filmID: filmID, sequence: sequence, recipe: recipe)
+            model.mediaRevision = UUID()
+            dismiss()
+        } failure: { error = $0 }
     }
 
     /// The print in its one region: in Adjust the crop box over the print (an Instant only turns, so it shows its print),

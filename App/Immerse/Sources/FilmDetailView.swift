@@ -642,20 +642,24 @@ private struct DotLineLayout: Layout {
     var spacing: CGFloat = 6
     var lineSpacing: CGFloat = 2
 
+    /// Each fact on its line, wrapping where the next does not fit, and centered in its line's height, so a dot sits at
+    /// the middle of the words beside it.
     private func frames(width: CGFloat, subviews: Subviews) -> [CGRect] {
-        var frames: [CGRect] = []
-        var x: CGFloat = 0, y: CGFloat = 0, lineHeight: CGFloat = 0
+        var lines: [[CGRect]] = [[]]
+        var x: CGFloat = 0
         for subview in subviews {
             var size = subview.sizeThatFits(.unspecified)
             if size.width > width { size = subview.sizeThatFits(ProposedViewSize(width: width, height: nil)) }
-            if x > 0, x + size.width > width {
-                x = 0; y += lineHeight + lineSpacing; lineHeight = 0
-            }
-            frames.append(CGRect(origin: CGPoint(x: x, y: y), size: size))
+            if x > 0, x + size.width > width { lines.append([]); x = 0 }
+            lines[lines.count - 1].append(CGRect(origin: CGPoint(x: x, y: 0), size: size))
             x += size.width + spacing
-            lineHeight = max(lineHeight, size.height)
         }
-        return frames
+        var y: CGFloat = 0
+        return lines.flatMap { line -> [CGRect] in
+            let height = line.map(\.height).max() ?? 0
+            defer { y += height + lineSpacing }
+            return line.map { $0.offsetBy(dx: 0, dy: y + (height - $0.height) / 2) }
+        }
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {

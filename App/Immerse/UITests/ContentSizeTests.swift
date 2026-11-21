@@ -460,9 +460,14 @@ final class ContentSizeTests: ScreenTestCase {
             }
             // The Films rows open in place to their full words (A04), which are measured with the rows.
             toTheEnd()
+            // Each row is tapped once it is whole below the navigation bar, where a tap opens it.
+            let bar = app.navigationBars["Settings"]
             for row in ["settings-Saving to Photos", "settings-Storage and backup", "settings-Trial"] {
                 let button = app.buttons[row]
-                for _ in 0..<12 where !button.isHittable { drag(app, by: 200, landscape: true) }
+                for _ in 0..<16 where !(button.isHittable && button.frame.minY >= bar.frame.maxY + 4
+                                         && button.frame.maxY <= app.frame.maxY - 34) {
+                    drag(app, by: button.exists && button.frame.minY > app.frame.midY ? -120 : 120, landscape: true)
+                }
                 button.tap()
             }
             toTheEnd()

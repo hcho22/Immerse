@@ -46,7 +46,23 @@ Each of these keeps what the app does, or a decision the captain made before, ov
 
 ## Tests
 
-TBD.
+Run on this Mac on 2026-11-21, on iPhone 17 Pro simulators (iOS 26.5, CI's device), apart from the harness, run on an iPhone 17e simulator:
+
+- `ImmerseTests`, hosted: 134 of 134 passed, `StoreKitSubscriptionTests` aside, which fail on iOS 26.5 with the fixture error `storekit-ios26.5-failure.txt` records, as before this change.
+- `ImmerseUITests` but `ContentSizeTests`: 38 passed and the one expected failure (`testAuditStillReportsContrastFindingsOutsideItsExceptions`), and in dark the audit suites 20 passed and the same one.
+- `ContentSizeTests`: all 98 at every size passed across the runs that measured the final code (96 in the last full run, and the Journal and catalog group of 12 again after its two fixes).
+- `PopulatedJournalHarnessTests`: 79 of 79.
+- `Scripts/verify-release-excludes-testing-unlock.sh`: Release holds none of the Debug-only code, the new `PhotoViewProbe` included.
+
+What the tests had to learn:
+
+- The shooting screen's Switch Camera and count are round now, so whether they turn held sideways is read from what they show, not from their frames' shape: `CaptureSidewaysUITests` holds each turned picture to its upright one turned a quarter (`showsTurned`).
+- Choose a Camera takes a tap on the Camera and then Choose (`chooseCamera` in `UITestSupport.swift`), which brings a Camera's row whole above Choose first at the larger sizes, where the Cameras stand in a column.
+- Orbit's confirmations are sheets of the app's own, so tests find their buttons among the app's buttons rather than in a system action sheet; Rename Film is a card with its own field.
+- The audit exceptions were measured again for Orbit's screens: the 16mm description and the Disposable rows are no longer under the bar at their poses, and the elements that are (the Landscape option, the reveal chip and the Camera's name) are listed with their contrast at rest. The test that keeps them narrow moved to the low-storage pose, which holds an exception on every iPhone.
+- A hosted test cannot read SwiftUI's accessibility tree, so `PrintZoomTests` presses the photo view's Darkroom and the Darkroom's Cancel and Save through a Debug-only `PhotoViewProbe`.
+- `ContentSizeTests` measures Orbit's rows and its Settings, which open in place to their paragraphs. A round control's accessibility frame is its words' own, inside its circle (`InscribedCircle`), since a frame reaching past the circle read the black outside it as text.
+- Manrope scaled from `.body`, `.subheadline` or `.title2` grows only about 5 percent from Extra Large to Extra Extra Large, less than the 4 percent the test asks once rounded to whole pixels, where `.footnote`'s scale grows at least 6 percent at every step; the pills and the empty Journal's line take `.footnote`'s scale.
 
 ## Screenshots
 

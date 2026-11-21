@@ -60,9 +60,7 @@ struct LowStorageNotice: View {
     let text: String
 
     var body: some View {
-        OrbitNote(.custom("externaldrive.badge.exclamationmark", outlined: true), text)
-            .accessibilityElement(children: .combine)
-            .accessibilityIdentifier("low-storage-warning")
+        OrbitNote(.custom("externaldrive.badge.exclamationmark", outlined: true), text, identifier: "low-storage-warning")
     }
 }
 

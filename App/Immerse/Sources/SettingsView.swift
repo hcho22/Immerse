@@ -5,10 +5,12 @@ import SwiftUI
 /// Films rows, Trial, Subscription, Storage and backup and Saving to Photos, each opening in place to its full words.
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(JournalModel.self) private var model
 
     var body: some View {
         NavigationStack {
+            GeometryReader { screen in
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     #if DEBUG
@@ -43,10 +45,15 @@ struct SettingsView: View {
                         .frame(maxWidth: .infinity).padding(.top, 20)
                 }
                 .padding(.horizontal, Orbit.gutter).padding(.bottom, 24)
+                .padding(.leading, screen.safeAreaInsets.leading).padding(.trailing, screen.safeAreaInsets.trailing)
             }
+            }
+            // The scroll view reaches the screen's edges in landscape, as a list does, with its content inside the safe
+            // area, so a drag beside the Dynamic Island scrolls it.
+            .ignoresSafeArea(.container, edges: .horizontal)
             .orbitSheetGround(screen: true)
             .navigationTitle("Settings")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .large : .inlineLarge)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }.buttonStyle(OrbitPillStyle(kind: .white, inBar: true))
@@ -89,7 +96,7 @@ private struct PermissionCircle: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Image(systemName: state == "Off" || state == "Restricted" ? symbol + ".slash" : symbol)
+            Image(systemName: symbol)
                 .font(.system(size: 24, weight: .regular))
                 .foregroundStyle(state == "Allowed" ? Color.black : state == "Not asked yet" ? Color.white : Orbit.smallest)
                 .frame(width: 72, height: 72)

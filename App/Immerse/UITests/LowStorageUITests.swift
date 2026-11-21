@@ -26,20 +26,21 @@ final class LowStorageUITests: ScreenTestCase {
         try audit(app, name: "Load-low-storage", for: JournalFlowTests.auditTypes)
     }
 
-    /// The contrast exception stays narrow against the real auditor: at the same low-storage pose, with its one entry
-    /// withheld, the audit fails on exactly that element. The pose puts it under the navigation bar in every run; if the
-    /// auditor stops flagging it, re-examine that entry.
+    /// The contrast exceptions stay narrow against the real auditor: at the same low-storage pose, with that audit's
+    /// entries withheld, the audit fails, reporting the reveal chip under the navigation bar and nothing but the withheld
+    /// entries. If the auditor stops flagging the chip, re-examine the entries.
     func testAuditStillReportsContrastFindingsOutsideItsExceptions() throws {
         let app = launch(freeSpace: "1999999999")
         openDisposableLoadScreen(app)
         scrollUpUntilWhole(app, app.buttons["load-film"])
-        let withheld = AuditException.accepted.filter { $0.label != "Sealed until Development" }
-        XCTAssertEqual(withheld.count, AuditException.accepted.count - 1)
+        let withheld = AuditException.accepted.filter { $0.audit != "Load-low-storage" }
+        let entries = Set(AuditException.accepted.filter { $0.audit == "Load-low-storage" }.map(\.label))
         var reported: [String] = []
         XCTExpectFailure("A finding outside the exceptions must fail the audit") {
             reported = (try? audit(app, name: "Load-low-storage", for: .contrast, exceptions: withheld)) ?? []
         }
-        XCTAssertEqual(reported, ["Sealed until Development"])
+        XCTAssertTrue(reported.contains("Sealed until Development"), "\(reported)")
+        XCTAssertTrue(Set(reported).isSubset(of: entries), "Only the withheld entries are reported: \(reported)")
     }
 
     func testLoadFilmShowsNoWarningAtExactlyTwoGigabytes() throws { assertNoWarningOnLoadFilm(freeSpace: "2000000000") }

@@ -333,12 +333,16 @@ struct InscribedCircle: ViewModifier {
     let fill: Color
     var ring: Color?
     var ringGap: CGFloat = 6
+    /// The room around the content inside its frame, for a symbol that draws a little past its own bounds.
+    var margin: CGFloat = 6
+    /// How far the circle reaches past the frame's diagonal, which keeps the frame's corners inside it.
+    var clearance: CGFloat = 10
 
     func body(content: Content) -> some View {
-        InscribedFrameLayout(minimum: minimum) { content }
+        InscribedFrameLayout(minimum: minimum, margin: margin) { content }
             .background {
                 GeometryReader { frame in
-                    let diameter = max(minimum, (frame.size.width * frame.size.width + frame.size.height * frame.size.height).squareRoot())
+                    let diameter = max(minimum, (frame.size.width * frame.size.width + frame.size.height * frame.size.height).squareRoot() + clearance)
                     ZStack {
                         if let ring {
                             Circle().strokeBorder(ring, lineWidth: 2)
@@ -358,12 +362,13 @@ struct InscribedCircle: ViewModifier {
 
 private struct InscribedFrameLayout: Layout {
     let minimum: CGFloat
+    let margin: CGFloat
 
     private func size(_ subviews: Subviews, proposal: ProposedViewSize) -> CGSize {
         guard let content = subviews.first else { return CGSize(width: 44, height: 44) }
         let limit = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? .infinity
         let measured = content.sizeThatFits(ProposedViewSize(width: min(minimum * 0.84, limit), height: nil))
-        return CGSize(width: min(max(44, measured.width + 4), max(44, limit)), height: max(44, measured.height + 4))
+        return CGSize(width: min(max(44, measured.width + margin * 2), max(44, limit)), height: max(44, measured.height + margin * 2))
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
@@ -371,8 +376,55 @@ private struct InscribedFrameLayout: Layout {
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        // At the width it was measured at, so its words break where they did when the frame was sized.
         subviews.first?.place(at: CGPoint(x: bounds.midX, y: bounds.midY), anchor: .center,
-                              proposal: ProposedViewSize(width: bounds.width - 4, height: nil))
+                              proposal: ProposedViewSize(width: min(minimum * 0.84, bounds.width), height: nil))
+    }
+}
+
+/// Round controls side by side, or one above the other where a row does not fit, each given the room its circle and ring
+/// take (`InscribedCircle`), which reach past the controls' own frames.
+struct OrbitCircleRow: Layout {
+    let minimum: CGFloat
+    /// The ring and its gap, on both sides together.
+    var ring: CGFloat = 16
+    var spacing: CGFloat = 20
+
+    private func circles(_ subviews: Subviews, width: CGFloat) -> [(size: CGSize, circle: CGFloat)] {
+        subviews.map { subview in
+            let size = subview.sizeThatFits(ProposedViewSize(width: width, height: nil))
+            return (size, max(minimum, (size.width * size.width + size.height * size.height).squareRoot() + 10) + ring)
+        }
+    }
+
+    private func fitsInARow(_ items: [(size: CGSize, circle: CGFloat)], width: CGFloat) -> Bool {
+        items.map(\.circle).reduce(0, +) + spacing * CGFloat(max(items.count - 1, 0)) <= width
+    }
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width.flatMap { $0.isFinite ? $0 : nil } ?? 358
+        let items = circles(subviews, width: width)
+        let gaps = spacing * CGFloat(max(items.count - 1, 0))
+        let height = fitsInARow(items, width: width) ? items.map(\.circle).max() ?? 0 : items.map(\.circle).reduce(0, +) + gaps
+        return CGSize(width: width, height: height)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let items = circles(subviews, width: bounds.width)
+        if fitsInARow(items, width: bounds.width) {
+            var x = bounds.midX - (items.map(\.circle).reduce(0, +) + spacing * CGFloat(max(items.count - 1, 0))) / 2
+            for (subview, item) in zip(subviews, items) {
+                subview.place(at: CGPoint(x: x + item.circle / 2, y: bounds.midY), anchor: .center,
+                              proposal: ProposedViewSize(item.size))
+                x += item.circle + spacing
+            }
+        } else {
+            var y = bounds.minY
+            for (subview, item) in zip(subviews, items) {
+                subview.place(at: CGPoint(x: bounds.midX, y: y + item.circle / 2), anchor: .center, proposal: ProposedViewSize(item.size))
+                y += item.circle + spacing
+            }
+        }
     }
 }
 
@@ -392,7 +444,8 @@ struct OrbitPillStyle: ButtonStyle {
         let foreground: Color = !isEnabled ? Orbit.disabledMark : kind == .white ? .black : .white
         return configuration.label
             .font(inBar ? .orbit(.callout, weight: kind == .white ? .bold : .semibold)
-                : .orbit(size: minHeight > 44 ? 17 : 15, weight: .bold, relativeTo: minHeight > 44 ? .headline : .body))
+                // Footnote's scale, which grows the words by at least 6 percent at every step of the text size.
+                : .orbit(size: minHeight > 44 ? 17 : 15, weight: .bold, relativeTo: .footnote))
             .multilineTextAlignment(.center)
             .foregroundStyle(foreground)
             .padding(.horizontal, 18).padding(.vertical, 6)
@@ -503,10 +556,28 @@ struct OrbitNote<Content: View>: View {
         case custom(String, outlined: Bool)
     }
     let kind: Kind
+    /// Where the note is one element for VoiceOver, its identifier; the element is the mark and words, inside the note's
+    /// outline, so the outline is not taken for its text.
+    var identifier: String?
     @ViewBuilder let content: Content
     @ScaledMetric(relativeTo: .callout) private var markSize: CGFloat = 18
 
     var body: some View {
+        noteContent
+            .padding(.horizontal, 18).padding(.vertical, 14)
+            .background(Orbit.surface, in: RoundedRectangle(cornerRadius: 24))
+            .overlay { if outlined { RoundedRectangle(cornerRadius: 24).strokeBorder(Color.white, lineWidth: 1) } }
+    }
+
+    @ViewBuilder private var noteContent: some View {
+        if let identifier {
+            line.accessibilityElement(children: .combine).accessibilityIdentifier(identifier)
+        } else {
+            line
+        }
+    }
+
+    private var line: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Image(systemName: symbol)
                 .font(.system(size: min(markSize, 26), weight: .medium))
@@ -518,9 +589,6 @@ struct OrbitNote<Content: View>: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.horizontal, 18).padding(.vertical, 14)
-        .background(Orbit.surface, in: RoundedRectangle(cornerRadius: 24))
-        .overlay { if outlined { RoundedRectangle(cornerRadius: 24).strokeBorder(Color.white, lineWidth: 1) } }
     }
 
     private var symbol: String {
@@ -541,8 +609,8 @@ struct OrbitNote<Content: View>: View {
 }
 
 extension OrbitNote where Content == Text {
-    init(_ kind: Kind, _ text: String) {
-        self.init(kind: kind) { Text(text) }
+    init(_ kind: Kind, _ text: String, identifier: String? = nil) {
+        self.init(kind: kind, identifier: identifier) { Text(text) }
     }
 }
 
@@ -601,6 +669,8 @@ struct OrbitSectionLabel: View {
 /// becomes a rounded box around them.
 struct OrbitChip: View {
     let text: String
+    /// The room around the words, which grows with them, so a row of chips grows as its words do.
+    @ScaledMetric(relativeTo: .footnote) private var padding: CGFloat = 7
 
     init(_ text: String) { self.text = text }
 
@@ -610,8 +680,7 @@ struct OrbitChip: View {
             .foregroundStyle(Orbit.body)
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal, 14).padding(.vertical, 7)
-            .frame(minHeight: 32)
+            .padding(.horizontal, padding * 2).padding(.vertical, padding)
             .background(Orbit.button, in: RoundedRectangle(cornerRadius: 16))
     }
 }

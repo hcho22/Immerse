@@ -8,6 +8,7 @@ private enum JournalRoute: Hashable {
 
 struct JournalView: View {
     @Environment(JournalModel.self) private var model
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var setup = false
     @State private var settings = false
     @State private var path: [JournalRoute] = []
@@ -18,7 +19,8 @@ struct JournalView: View {
             FilmList(archived: false)
                 .safeAreaBar(edge: .bottom, spacing: 10) { startFilm }
                 .navigationTitle("Film Journal")
-                .toolbarTitleDisplayMode(.inlineLarge)
+                // Beside the bar's buttons at ordinary sizes (A01); on its own line at the accessibility sizes.
+                .toolbarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .large : .inlineLarge)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         NavigationLink(value: JournalRoute.archive) {
@@ -78,11 +80,13 @@ private struct FilmList: View {
     private let states = ["On the roll", "Ready to develop", "Developing", "Pack complete"]
 
     var body: some View {
+        GeometryReader { screen in
         ScrollView {
             if films.isEmpty {
+                // At least most of the screen tall, centred in it, and taller where its words need it.
                 EmptyJournal(text: archived ? "No archived Films" : "Your Journal begins here",
                              symbol: archived ? "archivebox" : "camera")
-                    .containerRelativeFrame(.vertical, alignment: .center) { length, _ in length * 0.8 }
+                    .frame(minHeight: screen.size.height * 0.8)
             } else {
                 VStack(alignment: .leading, spacing: 24) {
                     let unfinished = states.flatMap { state in films.filter { $0.journalState == state } }
@@ -112,6 +116,7 @@ private struct FilmList: View {
                 .padding(.top, 16).padding(.bottom, 24)
             }
         }
+        }
         .orbitGround()
         .refreshable { model.refresh() }
     }
@@ -136,7 +141,11 @@ private struct EmptyJournal: View {
             }
             .frame(width: 240, height: 240)
             .accessibilityHidden(true)
-            Text(text).orbitFont(.heading).multilineTextAlignment(.center).foregroundStyle(.white)
+            // The heading's size on footnote's scale, which grows its words by at least 6 percent at every text size.
+            Text(text).font(.orbit(size: OrbitType.heading.size, weight: .bold, relativeTo: .footnote))
+                .tracking(OrbitType.heading.tracking)
+                .multilineTextAlignment(.center).foregroundStyle(.white)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, Orbit.gutter)
         }
         .frame(maxWidth: .infinity)
