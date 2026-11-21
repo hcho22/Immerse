@@ -125,7 +125,8 @@ icon sizing, command icon labels, wrapping/header styles, accessibility-size
 orientation menu, and higher-contrast adaptive accent. Audit assertions remain
 unchanged. Run 2 failed compilation because adding an asset catalog made XcodeGen
 assume an AppIcon existed; the project now explicitly leaves the unapproved app
-icon unconfigured. It is a launch gap, not fabricated production artwork.
+icon unconfigured. It is a launch gap, not fabricated production artwork. (Since
+2026-11-21 the target names the approved AppIcon set; see [083](app-icon-083.md).)
 
 ```sh
 xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse -destination 'platform=iOS Simulator,id=AA6AD12A-9D0E-4948-ABD2-760AA97B6A60' -only-testing:ImmerseUITests -derivedDataPath DerivedData/Immerse -resultBundlePath DerivedData/Immerse-Accessibility-3.xcresult -test-timeouts-enabled YES -maximum-test-execution-time-allowance 120 CODE_SIGNING_ALLOWED=NO test
