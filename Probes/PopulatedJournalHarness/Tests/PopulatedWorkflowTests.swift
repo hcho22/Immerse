@@ -10,7 +10,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let app = launch(arguments: ["-KeyboardAutocorrection", "NO"])
         openFilm(app)
         XCTAssertEqual(app.buttons.matching(identifier: "Open photo 1").count, 0)
-        XCTAssertTrue(app.staticTexts["Sealed"].firstMatch.exists)
+        XCTAssertEqual(app.staticTexts["Sealed"].firstMatch.value as? String, "2 exposures", "VoiceOver hears how many are sealed")
         app.buttons["Film actions"].tap()
         app.buttons["Finish & Develop Early"].tap()
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "25 exposures")).firstMatch.exists)
@@ -42,7 +42,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         save.tap()
         XCTAssertTrue(app.navigationBars["Photo 1"].waitForExistence(timeout: 10))
         app.buttons["Discard"].tap()
-        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let discardConfirmation = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
         discardConfirmation.tap()
         // The photo view shows the next print once one is discarded (FR-22 item 7); Done returns to the Film.
@@ -53,7 +53,10 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.buttons["Open photo 2"].exists)
         app.buttons["Film actions"].tap()
         app.buttons["Rename"].tap()
-        let title = app.alerts.textFields.firstMatch
+        // Rename Film is Orbit's card (C03), with the title in its one field.
+        let title = app.textFields["Film title"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        XCTAssertTrue(waitUntilStill(app), "The Rename card has come to rest before its field is tapped")
         // A tap on an already focused field moves the cursor to the nearest word boundary, so place it past the end of the title.
         title.coordinate(withNormalizedOffset: CGVector(dx: 0.97, dy: 0.5)).tap()
         title.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (title.value as? String)?.count ?? 100))
@@ -62,7 +65,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(waitForValue(title, in: ["", title.placeholderValue ?? ""], timeout: 10), "The Rename field is empty before typing")
         title.typeText("Renamed synthetic Film")
         XCTAssertTrue(waitForValue(title, in: ["Renamed synthetic Film"], timeout: 10), "The Rename field holds the new title before saving")
-        app.alerts.buttons["Save"].tap()
+        app.buttons["Save"].tap()
         XCTAssertTrue(app.navigationBars["Renamed synthetic Film"].waitForExistence(timeout: 10))
         app.buttons["Film actions"].tap()
         app.buttons["Archive"].tap()
@@ -86,7 +89,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertTrue(app.navigationBars["Renamed synthetic Film"].waitForExistence(timeout: 10))
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
-        let deleteConfirmation = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        let deleteConfirmation = app.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(deleteConfirmation.waitForExistence(timeout: 5))
         deleteConfirmation.tap()
         XCTAssertTrue(app.staticTexts["No archived Films"].waitForExistence(timeout: 10))
@@ -270,7 +273,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
     private func discardShownPrint(_ app: XCUIApplication) {
         XCTAssertTrue(waitUntilStill(app))
         app.buttons["Discard"].tap()
-        let confirm = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let confirm = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
     }
@@ -496,7 +499,7 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         app.buttons["Open Camera"].tap()
         let revealed = printRevealedAtTheCamera(2, app: app)
         app.buttons["Discard"].tap()
-        let discardConfirmation = app.sheets.buttons.matching(identifier: "confirm-discard-photo").firstMatch
+        let discardConfirmation = app.buttons.matching(identifier: "confirm-discard-photo").firstMatch
         XCTAssertTrue(discardConfirmation.waitForExistence(timeout: 5))
         discardConfirmation.tap()
         XCTAssertTrue(revealed.waitForNonExistence(timeout: 20), "The discarded print closes")
@@ -647,10 +650,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         XCTAssertFalse(app.buttons["Dodge / Burn"].exists)
         XCTAssertFalse(app.buttons["Filtration"].exists, "Filtration is for color prints")
         app.buttons["Chemical toning"].tap()
-        let toner = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Chemical toning,")).firstMatch
-        for _ in 0..<3 where !toner.exists { app.swipeUp() }
-        XCTAssertTrue(toner.waitForExistence(timeout: 5), "The toner picker")
-        toner.tap()
+        // The toners are pills in the band (I05): None, Sepia and Selenium.
+        XCTAssertTrue(app.buttons["None"].waitForExistence(timeout: 5), "The toners")
         let sepia = app.buttons["Sepia"]
         XCTAssertTrue(sepia.waitForExistence(timeout: 5))
         sepia.tap()
@@ -1035,7 +1036,8 @@ final class PopulatedWorkflowTests: HarnessTestCase {
         let discard = app.buttons["discard-clip-\(sequence)"]
         for _ in 0..<6 where !discard.isHittable { app.swipeUp() }
         XCTAssertTrue(discard.isHittable)
-        discard.tap()
+        // The clips can sit low on the Film screen, and a tap on a sliver over the home indicator does nothing.
+        tapWhole(app, discard)
         let confirm = app.buttons["Discard #\(sequence)"]
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()

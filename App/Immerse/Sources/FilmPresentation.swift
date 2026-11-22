@@ -174,11 +174,15 @@ extension Film {
         return String(format: "%.3f unused seconds", remainingMovieSeconds ?? 0)
     }
 
-    var progress: Double {
+    var progress: Double { progress(recordedFor: 0) }
+
+    /// The share of the Film used while a clip has been recording for `elapsed` seconds, so a ring of what is used moves
+    /// with the count beside it.
+    func progress(recordedFor elapsed: TimeInterval) -> Double {
         if completionState != .open { return 1 }
         switch camera.capacity {
         case let .exposures(total): return Double(savedCaptureCount) / Double(total)
-        case let .seconds(total): return consumedMovieSeconds / Double(total)
+        case let .seconds(total): return min(1, (consumedMovieSeconds + elapsed) / Double(total))
         }
     }
 }
@@ -254,33 +258,13 @@ enum StopsText {
 }
 
 extension Color {
-    /// Fill for filled actions. The dark-mode accent is too light under a white label, so filled
-    /// actions use a deeper green that keeps both the label and the fill's edge readable.
+    /// Fill for the main action, Orbit's cream (K00), one per screen.
     static let primaryAction = Color("PrimaryAction")
-
-    /// A symbol on a `primaryAction` glass circle, as the iOS 26 bottom toolbar drew it: the fill with white added,
-    /// 66% in light mode and 59% in dark.
-    static let primaryActionSymbol = Color("PrimaryActionSymbol")
-
-    /// Secondary text on a card. On the white light-mode card the system secondary label is 3.44:1, under the
-    /// 4.5:1 bar, so light mode raises its opacity to at least 71% (4.58:1); dark mode keeps the system color.
-    static let cardSecondaryText = secondaryText(lightOpacity: 0.71)
-
-    /// Secondary text on the gray ground of a sealed or discarded frame, which is darker than a card: there the
-    /// system secondary label is 3.29:1 in light mode, so its opacity is at least 75% (4.82:1).
-    static let frameSecondaryText = secondaryText(lightOpacity: 0.75)
-
-    private static func secondaryText(lightOpacity: CGFloat) -> Color {
-        Color(uiColor: UIColor { traits in
-            let system = UIColor.secondaryLabel.resolvedColor(with: traits)
-            guard traits.userInterfaceStyle != .dark else { return system }
-            return system.withAlphaComponent(max(system.cgColor.alpha, lightOpacity))
-        })
-    }
 }
 
 extension View {
-    func primaryAction() -> some View { buttonStyle(.borderedProminent).tint(.primaryAction) }
+    /// The screen's one main action, in Orbit's cream pill.
+    func primaryAction() -> some View { buttonStyle(OrbitMainActionStyle()) }
 }
 
 enum PrivacyCopy {

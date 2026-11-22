@@ -224,6 +224,26 @@ extension XCTestCase {
         XCTFail("The Camera catalog did not open within 30 seconds of the tap on Start a Film")
     }
 
+    /// Chooses the Camera `id` on the catalog's dial and goes on to its Load Film screen with Choose, the catalog's one
+    /// main action (B01).
+    func chooseCamera(_ id: String, _ app: XCUIApplication) {
+        let camera = app.buttons["camera-\(id)"]
+        XCTAssertTrue(camera.exists(within: 10), "The \(id) Camera is on the catalog")
+        let choose = app.buttons["choose-camera"]
+        XCTAssertTrue(choose.exists(within: 5))
+        // At the larger text sizes the Cameras stand in a column that scrolls under Choose, which stays on the home area,
+        // so the row is brought whole above it before the tap. Back from a Load screen the column is still scrolled to
+        // Choose at its end, with the Camera above the screen, where drags up the list cannot reach it (16 of them took
+        // 55 s on CI), so it is brought back down first.
+        let bar = app.navigationBars.firstMatch
+        scrollUp(app, by: -300) { camera.frame.minY >= bar.frame.maxY }
+        scrollUpUntilWhole(app, camera)
+        scrollUp(app, by: 100) { !choose.isHittable || camera.frame.maxY <= choose.frame.minY - 4 }
+        camera.tap()
+        XCTAssertTrue(camera.isSelected, "The \(id) Camera is chosen")
+        tapWhole(app, choose)
+    }
+
     /// Replaces the Load screen's suggested Film title with `title`, failing the test and returning false if the typed
     /// title does not land in the field.
     @discardableResult func enterFilmTitle(_ title: String, _ app: XCUIApplication) -> Bool {
@@ -295,7 +315,7 @@ extension XCTestCase {
         XCTAssertTrue(app.buttons["Film actions"].exists(within: 5))
         app.buttons["Film actions"].tap()
         app.buttons["Delete Film"].tap()
-        let confirm = app.sheets.buttons.matching(identifier: "confirm-delete-film").firstMatch
+        let confirm = app.buttons.matching(identifier: "confirm-delete-film").firstMatch
         XCTAssertTrue(confirm.exists(within: 5))
         confirm.tap()
         XCTAssertTrue(app.buttons["Film actions"].isGone(within: 10), "The Film was removed")

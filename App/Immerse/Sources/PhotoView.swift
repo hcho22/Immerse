@@ -21,11 +21,10 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
     @ViewBuilder let controls: Controls
     @ViewBuilder let reset: Reset
 
-    /// The band's height: what the tallest tool needs at the default text size, Filtration with its three sliders beside
-    /// their captions under its heading (249 points with the 16 pt top margin, the 44 pt tool row, the gaps between them
-    /// and the bottom margin), held whole on an iPhone SE by `PopulatedWorkflowTests`. Adjust, with the straighten dial
-    /// and the crop box's shapes, needs 243. It was 330 while Adjust had five rows of crop and straightening sliders.
-    private static var controlBandHeight: CGFloat { 250 }
+    /// The band's height: what the tallest tool needs at the default text size, with Orbit's tool row of round buttons
+    /// named under them (I01), held whole on an iPhone SE by `PopulatedWorkflowTests`. It was 250 with a row of icons alone,
+    /// and 330 while Adjust had five rows of crop and straightening sliders.
+    private static var controlBandHeight: CGFloat { 280 }
     /// The space between the band's rows.
     private static var spacing: CGFloat { 12 }
     private static var bottomMargin: CGFloat { 12 }
@@ -36,26 +35,38 @@ struct DarkroomLayout<Preview: View, Tools: View, Controls: View, Reset: View>: 
                 preview.frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topTrailing) { progress }
                     .accessibilityIdentifier("darkroom-print-area")
+                // The band on its own darker ground with 28-point corners (I01).
                 BandScrollView {
                     VStack(alignment: .leading, spacing: Self.spacing) {
-                        if let error { Text(error).foregroundStyle(.red) }
-                        HStack { tools }
+                        if let error { OrbitNote(.error, error) }
+                        HStack(alignment: .top, spacing: 0) { tools }
                         controls
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding([.horizontal, .top])
+                    .padding(.horizontal, 12).padding(.top, 16)
                     .padding(.bottom, Self.bottomMargin)
                 }
                 .accessibilityIdentifier("darkroom-control-band")
                 .frame(height: min(Self.controlBandHeight, geometry.size.height))
                 .mask { fade }
+                .background(Color(hex: 0x0F0F0F), in: RoundedRectangle(cornerRadius: 28))
+                .padding(.horizontal, Orbit.gutter)
             }
         }
-        .toolbar { ToolbarItem(placement: .bottomBar) { reset } }
+        // Reset to Original stays under the band (I01) at one height, as a bar's button does: its words grow no further
+        // than the default text size, and larger sizes get the Large Content Viewer, so the print's area never changes.
+        .safeAreaBar(edge: .bottom) {
+            reset
+                .buttonStyle(DarkroomResetStyle())
+                .dynamicTypeSize(...DynamicTypeSize.large)
+                .accessibilityShowsLargeContentViewer()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+        }
     }
 
     @ViewBuilder private var progress: some View {
-        if rendering { ProgressView().accessibilityLabel("Rendering print") }
+        if rendering { ProgressView().tint(.white).padding(12).accessibilityLabel("Rendering print") }
     }
 
     /// The scroll area, with its last `bottomMargin` fading out.
@@ -116,8 +127,15 @@ struct RevealedPhoto: View {
     /// Whether the decoded picture stays while the view is out of sight: only the Film screen's grid, which the photo
     /// view covers and which then reloads it in place. Every other print lets its picture go as it leaves the screen.
     var keepsPictureOutOfSight = false
+    /// Whether the picture fills its frame, cropped, as in the Journal's round thumbnail, rather than fitting inside it.
+    var fills = false
+    /// Whether the view takes the print's own shape, upright or sideways, as in the Film screen's loose grid; until the
+    /// print is decoded it takes its Camera's usual shape.
+    var takesItsShape = false
     @State private var image: UIImage?
     @State private var failed = false
+    /// The decoded print's width over its height, kept while the picture itself is let go out of sight.
+    @State private var aspect: CGFloat?
 
     /// The longest side the print is decoded to, in pixels.
     private static let maximumPixels = 600
@@ -129,13 +147,34 @@ struct RevealedPhoto: View {
     }
 
     var body: some View {
+        if takesItsShape {
+            picture.aspectRatio(aspect ?? defaultAspect, contentMode: .fit)
+        } else {
+            picture
+        }
+    }
+
+    /// The Camera's usual shape: the Instant's card, square for the 6×6 and a sideways 3:2 for the Disposable.
+    private var defaultAspect: CGFloat {
+        switch model.film(filmID)?.camera.id {
+        case .instant1970s: CGFloat(InstantPrintCard.width) / CGFloat(InstantPrintCard.height)
+        case .mediumFormat6x6: 1
+        default: 1.5
+        }
+    }
+
+    private var picture: some View {
         ZStack {
-            Rectangle().fill(Color(uiColor: .secondarySystemBackground))
+            Rectangle().fill(Orbit.surface)
             if !model.hiddenFilms.contains(filmID), !failed, let image {
-                Image(uiImage: image).resizable().scaledToFit()
-                    .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s))
-            } else if failed { Image(systemName: "exclamationmark.triangle") }
-            else { ProgressView() }
+                if fills || takesItsShape {
+                    Color.clear.overlay { Image(uiImage: image).resizable().scaledToFill() }.clipped()
+                } else {
+                    Image(uiImage: image).resizable().scaledToFit()
+                        .modifier(PrintCardEdge(isInstant: model.film(filmID)?.camera.id == .instant1970s))
+                }
+            } else if failed { Image(systemName: "exclamationmark.triangle").foregroundStyle(Orbit.label) }
+            else { ProgressView().tint(.white) }
         }
         .task(id: Load(revision: model.mediaRevision, sequence: sequence)) {
             failed = false
@@ -149,6 +188,7 @@ struct RevealedPhoto: View {
                 }.value
                 guard !Task.isCancelled else { return }
                 image = decoded
+                if let decoded, decoded.size.height > 0 { aspect = decoded.size.width / decoded.size.height }
                 failed = decoded == nil
             } catch { failed = true }
         }
@@ -187,7 +227,6 @@ private struct ZoomablePrint: View {
     var body: some View {
         let load = Load(revision: model.mediaRevision, sequence: sequence)
         ZStack {
-            Color.black
             if !model.hiddenFilms.contains(filmID), !failed, let image = picture.shown {
                 PrintZoom(image: image, printSize: picture.printSize,
                           cardEdge: model.film(filmID)?.camera.id == .instant1970s,
@@ -196,8 +235,8 @@ private struct ZoomablePrint: View {
                     reading = $0
                     picture.follow($0)
                 })
-            } else if failed { Image(systemName: "exclamationmark.triangle") }
-            else { ProgressView() }
+            } else if failed { Image(systemName: "exclamationmark.triangle").foregroundStyle(Orbit.label) }
+            else { ProgressView().tint(.white) }
         }
         .task(id: load) {
             // The picture shown stays until the next one is decoded, so a swipe to another print does not flash a spinner.
@@ -240,9 +279,48 @@ enum DisplayPhoto {
     }
 }
 
+#if DEBUG
+/// For hosted tests, which cannot read SwiftUI's accessibility tree: presses the photo view's Darkroom, and the Darkroom's
+/// Cancel or Save once it can be pressed, through each button's own action, as a person would.
+@MainActor @Observable final class PhotoViewProbe {
+    var darkroomPresses = 0
+    var cancelPresses = 0
+    var savePresses = 0
+    /// Whether the open Darkroom's Save can be pressed.
+    var saveEnabled = false
+}
+
+/// A button drawn in `style` that a `PhotoViewProbe` count presses through the button's own action each time it changes,
+/// as a tap would, and only while the button is enabled.
+private struct ProbedButtonStyle<Style: ButtonStyle>: PrimitiveButtonStyle {
+    let style: Style
+    let presses: Int?
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        Button(configuration).buttonStyle(style)
+            .onChange(of: presses) { if isEnabled { configuration.trigger() } }
+    }
+}
+
+private struct PhotoViewProbeKey: EnvironmentKey {
+    static let defaultValue: PhotoViewProbe? = nil
+}
+
+extension EnvironmentValues {
+    var photoViewProbe: PhotoViewProbe? {
+        get { self[PhotoViewProbeKey.self] }
+        set { self[PhotoViewProbeKey.self] = newValue }
+    }
+}
+#endif
+
 struct PhotoView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    #if DEBUG
+    @Environment(\.photoViewProbe) private var probe
+    #endif
     let filmID: UUID
     let sequence: Int
     let isInstantReveal: Bool
@@ -270,13 +348,14 @@ struct PhotoView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo") }
+                if model.hiddenFilms.contains(filmID) { ProgressView("Removing photo").tint(.white).frame(maxHeight: .infinity) }
                 else {
                     // Print Zoom (FR-22 with the 2026-10-29 amendment): swiping to the previous or next print only at the
                     // whole print, as in the Photos app, and never at the camera's reveal.
                     ZoomablePrint(filmID: filmID, sequence: shownSequence, darkroomClosings: darkroomClosings,
                                   swipe: isInstantReveal ? nil : { move(by: $0) }, reading: $zoom)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background { if isInstantReveal { packRing } }
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(navigation.label)
                         .accessibilityValue(zoom.isZoomed ? "Zoomed in" : "")
@@ -292,42 +371,65 @@ struct PhotoView: View {
                             }
                         }
                 }
-                if let error { Text(error).foregroundStyle(.red).padding() }
+                if let error { OrbitNote(.error, error).padding(.horizontal, Orbit.gutter).padding(.top, 8) }
+            }
+            .safeAreaBar(edge: .bottom) {
+                // Darkroom, white, and Discard, as labelled round actions (H03).
+                HStack(spacing: 48) {
+                    Button("Darkroom", systemImage: "slider.horizontal.3") { editing = true }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitLabelledActionStyle(emphasized: true),
+                                                       presses: probe?.darkroomPresses))
+                        #else
+                        .buttonStyle(OrbitLabelledActionStyle(emphasized: true))
+                        #endif
+                        .disabled(model.hiddenFilms.contains(filmID))
+                    Button("Discard", systemImage: "trash") { discarding = true }
+                        .buttonStyle(OrbitLabelledActionStyle())
+                        .disabled(model.hiddenFilms.contains(filmID))
+                }
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                .padding(.top, 8)
             }
             .background(Color.black.ignoresSafeArea())
-            // The photo view is black as the Photos app is, in light and dark: its progress and errors draw for that.
+            // The photo view is black as the Photos app is: its progress and errors draw for that.
             .environment(\.colorScheme, .dark)
             .navigationTitle("Photo \(shownSequence)").navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Button("Darkroom", systemImage: "slider.horizontal.3") { editing = true }
-                        .disabled(model.hiddenFilms.contains(filmID))
-                    Spacer()
-                    Button("Discard", systemImage: "trash", role: .destructive) { discarding = true }
-                        .disabled(model.hiddenFilms.contains(filmID))
+                ToolbarItem(placement: .principal) {
+                    Text("Photo \(shownSequence)").orbitFont(.headline).foregroundStyle(.white)
+                        .accessibilityAddTraits(.isHeader)
                 }
+                ToolbarItem(placement: .cancellationAction) {
+                    // At the camera's reveal Done is white, since it goes back to the camera (F01).
+                    Button("Done") { dismiss() }
+                        .buttonStyle(OrbitPillStyle(kind: isInstantReveal ? .white : .standard, inBar: true))
+                }
+                .sharedBackgroundVisibility(.hidden)
             }
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbarBackground(.black, for: .navigationBar)
-            .toolbarBackground(.black, for: .bottomBar)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .sheet(isPresented: $editing) { DarkroomView(filmID: filmID, sequence: shownSequence) }
             .onChange(of: editing) { _, editing in if !editing { darkroomClosings += 1 } }
-            .confirmationDialog("Discard photo \(shownSequence)?", isPresented: $discarding, titleVisibility: .visible) {
-                Button("Discard", role: .destructive) {
-                    error = nil
-                    let discardedSequence = shownSequence
-                    model.perform {
-                        try await model.remove(filmID, sequence: discardedSequence)
-                        let remaining = PhotoNavigation.developed(in: model.film(filmID))
-                        if !isInstantReveal,
-                           let nearest = PhotoNavigation.afterDiscarding(discardedSequence, remaining: remaining) {
-                            shownSequence = nearest
-                        } else { dismiss() }
-                    } failure: { error = $0 }
-                }.accessibilityIdentifier("confirm-discard-photo")
-            } message: { Text(PrivacyCopy.discard) }
+            .orbitConfirmation(isPresented: $discarding, symbol: "photo", title: "Discard photo \(shownSequence)?",
+                               message: PrivacyCopy.discard, confirm: "Discard", identifier: "confirm-discard-photo") {
+                error = nil
+                let discardedSequence = shownSequence
+                model.perform {
+                    try await model.remove(filmID, sequence: discardedSequence)
+                    let remaining = PhotoNavigation.developed(in: model.film(filmID))
+                    if !isInstantReveal,
+                       let nearest = PhotoNavigation.afterDiscarding(discardedSequence, remaining: remaining) {
+                        shownSequence = nearest
+                    } else { dismiss() }
+                } failure: { error = $0 }
+            }
         }
+    }
+
+    /// The thin ring around a print revealed at the camera (F01): how much of the pack is used.
+    private var packRing: some View {
+        OrbitRing(progress: model.film(filmID)?.progress ?? 0, lineWidth: 3)
+            .frame(width: 340, height: 340)
     }
 
     private func move(by offset: Int) {
@@ -368,6 +470,9 @@ struct PhotoNavigation: Equatable {
 struct DarkroomView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    #if DEBUG
+    @Environment(\.photoViewProbe) private var probe
+    #endif
     let filmID: UUID
     let sequence: Int
     @State private var recipe = DarkroomRecipe.original
@@ -424,7 +529,7 @@ struct DarkroomView: View {
             } controls: {
                 if !recipe.dodgeBurnMasks.isEmpty {
                     Text("This print keeps its earlier Dodge/Burn strokes until Reset to Original.")
-                        .font(.footnote)
+                        .orbitFont(.footnote).foregroundStyle(Orbit.body)
                         .accessibilityIdentifier("darkroom-legacy-strokes-note")
                 }
                 heading
@@ -438,20 +543,34 @@ struct DarkroomView: View {
                 }
             }
             .navigationTitle("Darkroom").navigationBarTitleDisplayMode(.inline)
+            .orbitSheetGround(screen: true)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { renderTask?.cancel(); dismiss() } }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        error = nil
-                        model.perform {
-                            _ = try await model.processor.saveRecipe(filmID: filmID, sequence: sequence, recipe: recipe)
-                            model.mediaRevision = UUID()
-                            dismiss()
-                        } failure: { error = $0 }
-                    }.disabled(rendering || model.hiddenFilms.contains(filmID))
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { cancel() }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitPillStyle(inBar: true), presses: probe?.cancelPresses))
+                        #else
+                        .buttonStyle(OrbitPillStyle(inBar: true))
+                        #endif
                 }
+                .sharedBackgroundVisibility(.hidden)
+                ToolbarItem(placement: .confirmationAction) {
+                    // The Darkroom's main action, in cream (I01).
+                    Button("Save") { save() }
+                        #if DEBUG
+                        .buttonStyle(ProbedButtonStyle(style: OrbitSaveStyle(), presses: probe?.savePresses))
+                        #else
+                        .buttonStyle(OrbitSaveStyle())
+                        #endif
+                        .disabled(!canSave)
+                }
+                .sharedBackgroundVisibility(.hidden)
             }
+            #if DEBUG
+            .onChange(of: canSave, initial: true) { probe?.saveEnabled = canSave }
+            #endif
             .holdsPortraitOrientationPreservingCurrent()
+            .orbitSheet(screen: true)
             .task {
                 do {
                     process = try model.repository.photoPrintProcess(filmID: filmID)
@@ -467,6 +586,22 @@ struct DarkroomView: View {
             }
             .onDisappear { renderTask?.cancel(); picture.clear(); uncropped = nil }
         }
+    }
+
+    private var canSave: Bool { !rendering && !model.hiddenFilms.contains(filmID) }
+
+    private func cancel() {
+        renderTask?.cancel()
+        dismiss()
+    }
+
+    private func save() {
+        error = nil
+        model.perform {
+            _ = try await model.processor.saveRecipe(filmID: filmID, sequence: sequence, recipe: recipe)
+            model.mediaRevision = UUID()
+            dismiss()
+        } failure: { error = $0 }
     }
 
     /// The print in its one region: in Adjust the crop box over the print (an Instant only turns, so it shows its print),
@@ -507,19 +642,34 @@ struct DarkroomView: View {
             choice != .toning || process.supportsChemicalToning
         }.filter { choice in choice != .filtration || process == .color }
             .filter { choice in choice != .saturation || process == .color }) { choice in
+            // A round tool button with its name under it (I01), white when chosen.
             Button { tool = choice } label: {
-                Image(systemName: choice.symbol).frame(maxWidth: .infinity, minHeight: 44)
-                    .background(tool == choice ? Color.accentColor.opacity(0.12) : Color.clear, in: RoundedRectangle(cornerRadius: 6))
-            }.accessibilityLabel(choice.rawValue).help(choice.rawValue)
-                .accessibilityAddTraits(tool == choice ? .isSelected : [])
-        }.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+                VStack(spacing: 6) {
+                    Image(systemName: choice.symbol).font(.system(size: 17, weight: .regular)).accessibilityHidden(true)
+                        .foregroundStyle(tool == choice ? Color.black : Color.white)
+                        .frame(width: 44, height: 44)
+                        .background(tool == choice ? Color.white : Orbit.button, in: Circle())
+                    // The button's label says its name; the word under it is what it shows.
+                    Text(choice.rawValue)
+                        .font(.orbit(size: 11, weight: .semibold, relativeTo: .caption2))
+                        .foregroundStyle(tool == choice ? Color.white : Orbit.label)
+                        .lineLimit(1).minimumScaleFactor(0.7)
+                        .accessibilityHidden(true)
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(choice.rawValue).help(choice.rawValue)
+            .accessibilityAddTraits(tool == choice ? [.isButton, .isSelected] : .isButton)
+        }.dynamicTypeSize(...DynamicTypeSize.xLarge)
     }
 
     /// The selected tool's name, and on Adjust its two quarter-turn buttons beside it, which every print offers, the
     /// Instant's included.
     private var heading: some View {
         HStack {
-            Text(tool.rawValue).font(.headline)
+            Text(tool.rawValue).font(.orbit(size: 13, weight: .bold, relativeTo: .footnote)).foregroundStyle(.white)
             if tool == .adjust {
                 Spacer()
                 Button { turn(left: true) } label: { turnLabel("Rotate left", systemImage: "rotate.left") }
@@ -528,7 +678,7 @@ struct DarkroomView: View {
                     .accessibilityIdentifier("darkroom-rotate-right")
             }
         }
-        .buttonStyle(.bordered).buttonBorderShape(.circle)
+        .buttonStyle(OrbitCircleButtonStyle())
         .frame(minHeight: 44)
     }
 
@@ -542,7 +692,7 @@ struct DarkroomView: View {
     /// tool row's icons it stops growing with the text size at the largest ordinary size, where it still fits its circle,
     /// and the Large Content Viewer shows it larger.
     private static func roundSymbol(_ title: String, systemImage: String) -> some View {
-        Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 30, height: 30)
+        Label(title, systemImage: systemImage).labelStyle(.iconOnly).frame(width: 44, height: 44)
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             .accessibilityShowsLargeContentViewer()
     }
@@ -550,17 +700,14 @@ struct DarkroomView: View {
     @ViewBuilder private var controls: some View {
         switch tool {
         case .exposure:
-            Text(StopsText.shown(recipe.printExposureStops)).monospacedDigit()
+            DialValue(text: StopsText.shown(recipe.printExposureStops))
             Slider(value: Binding(get: { recipe.printExposureStops }, set: {
                 recipe.printExposureStops = StopsText.tenths($0, in: DarkroomLimits.printExposureStops)
             }), in: DarkroomLimits.printExposureStops, step: DarkroomLimits.exposureStep, onEditingChanged: { if !$0 { render() } })
                 .accessibilityLabel("Print exposure")
                 .accessibilityValue(StopsText.spoken(recipe.printExposureStops))
         case .contrast:
-            Picker("Contrast grade", selection: Binding(get: { recipe.contrastGrade ?? -1 }, set: { recipe.contrastGrade = $0 < 0 ? nil : $0; render() })) {
-                Text("Original").tag(-1)
-                ForEach(DarkroomLimits.contrastGrades, id: \.self) { Text("Grade \($0)").tag($0) }
-            }.pickerStyle(.menu)
+            ContrastGrades(grade: Binding(get: { recipe.contrastGrade }, set: { recipe.contrastGrade = $0; render() }))
         case .filtration:
             captionedSliders {
                 filtrationSlider("Cyan", path: \.cyan)
@@ -568,7 +715,7 @@ struct DarkroomView: View {
                 filtrationSlider("Yellow", path: \.yellow)
             }
         case .saturation:
-            Text("\(recipe.saturation ?? 0)").monospacedDigit()
+            DialValue(text: "\(recipe.saturation ?? 0)")
             Slider(value: Binding(get: { Double(recipe.saturation ?? 0) }, set: {
                 let value = Int($0.rounded())
                 recipe.saturation = value == 0 ? nil : value
@@ -578,7 +725,7 @@ struct DarkroomView: View {
                 .accessibilityLabel("Saturation")
                 .accessibilityValue("\(recipe.saturation ?? 0)")
         case .vignette:
-            Text(StopsText.shown(recipe.vignetteStops ?? 0)).monospacedDigit()
+            DialValue(text: StopsText.shown(recipe.vignetteStops ?? 0))
             Slider(value: Binding(get: { recipe.vignetteStops ?? 0 }, set: {
                 let value = StopsText.tenths($0, in: DarkroomLimits.vignetteStops)
                 recipe.vignetteStops = value == 0 ? nil : value
@@ -587,14 +734,9 @@ struct DarkroomView: View {
                 .accessibilityLabel("Vignette")
                 .accessibilityValue(StopsText.spoken(recipe.vignetteStops ?? 0))
         case .toning:
-            Picker("Chemical toning", selection: Binding(get: { recipe.chemicalToning?.chemistry }, set: {
+            ToningChoice(chemistry: Binding(get: { recipe.chemicalToning?.chemistry }, set: {
                 recipe.chemicalToning = $0.map { ChemicalToning(chemistry: $0, amount: 0.5) }; render()
-            })) {
-                Text("None").tag(Optional<ChemicalToning.Chemistry>.none)
-                ForEach(ChemicalToning.Chemistry.allCases, id: \.self) { chemistry in
-                    Text(chemistry.rawValue.capitalized).tag(Optional(chemistry))
-                }
-            }.pickerStyle(.menu)
+            }))
             if recipe.chemicalToning != nil {
                 Slider(value: Binding(get: { recipe.chemicalToning?.amount ?? 0 }, set: {
                     recipe.chemicalToning?.amount = $0
@@ -626,15 +768,14 @@ struct DarkroomView: View {
                     HStack(spacing: 5) {
                         ForEach(CropShape.allCases, id: \.self) { choice in
                             Button { choose(choice) } label: {
-                                Text(choice.rawValue).font(.footnote).lineLimit(1)
-                                    .padding(.horizontal, 8).frame(minHeight: 32)
-                                    .background(shape == choice ? Color.accentColor.opacity(0.18) : Color(uiColor: .tertiarySystemFill),
-                                                in: Capsule())
+                                Text(choice.rawValue).font(.orbit(size: 13, weight: .bold, relativeTo: .footnote)).lineLimit(1)
+                                    .padding(.horizontal, 12).frame(minHeight: 34)
+                                    .background(shape == choice ? Color.white : Orbit.button, in: Capsule())
                                     .frame(minHeight: 44)
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .foregroundStyle(shape == choice ? Color.accentColor : Color.primary)
+                            .foregroundStyle(shape == choice ? Color.black : Color.white)
                             .accessibilityLabel(Self.spoken(choice))
                             .accessibilityAddTraits(shape == choice ? .isSelected : [])
                             .accessibilityIdentifier("darkroom-crop-shape-\(choice.rawValue)")
@@ -659,7 +800,7 @@ struct DarkroomView: View {
             } label: {
                 Self.roundSymbol("Crop orientation", systemImage: upright ? "rectangle.portrait" : "rectangle")
             }
-            .buttonStyle(.bordered).buttonBorderShape(.circle)
+            .buttonStyle(OrbitCircleButtonStyle())
             .disabled(!shape.turns)
             .accessibilityValue(upright ? "Upright" : "Sideways")
             .accessibilityIdentifier("darkroom-crop-orientation")
@@ -751,7 +892,7 @@ struct DarkroomView: View {
     }
 
     private func filtrationSlider(_ name: String, path: WritableKeyPath<ColorFiltration, Double>) -> some View {
-        captioned(Text(name).font(.caption), Slider(value: Binding(get: { (recipe.colorFiltration ?? ColorFiltration())[keyPath: path] }, set: {
+        captioned(Text(name).font(.orbit(size: 13, weight: .semibold, relativeTo: .caption)).foregroundStyle(Orbit.body), Slider(value: Binding(get: { (recipe.colorFiltration ?? ColorFiltration())[keyPath: path] }, set: {
             var filtration = recipe.colorFiltration ?? ColorFiltration()
             filtration[keyPath: path] = $0
             recipe.colorFiltration = filtration
@@ -775,5 +916,120 @@ struct DarkroomView: View {
             } catch { if !Task.isCancelled { self.error = FailureCopy.message(for: error) } }
             if renderID == id { rendering = false }
         }
+    }
+}
+
+/// A Darkroom value as its dial shows it (I01): the number large, its unit small, one text for VoiceOver.
+private struct DialValue: View {
+    let text: String
+
+    var body: some View {
+        let parts = text.split(separator: " ", maxSplits: 1).map(String.init)
+        let value = parts.first ?? text
+        let number = Text(value).font(.orbit(.title)).tracking(OrbitType.title.tracking)
+        let unit = Text(parts.count > 1 ? " " + parts[1] : "").font(.orbit(.footnote)).foregroundStyle(Orbit.label)
+        Text("\(number)\(unit)")
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .accessibilityLabel(text)
+    }
+}
+
+/// The contrast grades (I02): Original, then the grades as round buttons, the chosen one white with a ring.
+private struct ContrastGrades: View {
+    @Binding var grade: Int?
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Button("Original") { grade = nil }
+                .buttonStyle(GradeStyle(selected: grade == nil, round: false))
+                .accessibilityLabel("Contrast grade, Original")
+                .accessibilityAddTraits(grade == nil ? .isSelected : [])
+            HStack(spacing: 8) {
+                ForEach(DarkroomLimits.contrastGrades, id: \.self) { value in
+                    Button(String(value)) { grade = value }
+                        .buttonStyle(GradeStyle(selected: grade == value, round: true))
+                        .accessibilityLabel("Contrast grade, Grade \(value)")
+                        .accessibilityAddTraits(grade == value ? .isSelected : [])
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+    }
+
+    private struct GradeStyle: ButtonStyle {
+        let selected: Bool
+        let round: Bool
+
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .font(.orbit(size: round ? 15 : 14, weight: .bold, relativeTo: .callout))
+                .foregroundStyle(selected ? Color.black : Color.white)
+                .padding(.horizontal, round ? 0 : 18)
+                .frame(minWidth: 44, minHeight: round ? 44 : 40)
+                .background(selected ? Color.white : configuration.isPressed ? Orbit.pressed : Orbit.button, in: Capsule())
+                .background { if selected { Capsule().strokeBorder(Color.white, lineWidth: 2).padding(-6) } }
+                .frame(minHeight: 44)
+                .contentShape(Capsule())
+        }
+    }
+}
+
+/// Chemical toning (I05): None and each chemistry as pills, the chosen one white.
+private struct ToningChoice: View {
+    @Binding var chemistry: ChemicalToning.Chemistry?
+
+    var body: some View {
+        HStack(spacing: 8) {
+            option("None", nil)
+            ForEach(ChemicalToning.Chemistry.allCases, id: \.self) { option($0.rawValue.capitalized, $0) }
+        }
+        .frame(maxWidth: .infinity)
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Chemical toning")
+    }
+
+    private func option(_ title: String, _ value: ChemicalToning.Chemistry?) -> some View {
+        Button { chemistry = value } label: {
+            Text(title).font(.orbit(size: 14, weight: .bold, relativeTo: .callout))
+                .foregroundStyle(chemistry == value ? Color.black : Color.white)
+                .padding(.horizontal, 16).frame(minHeight: 40)
+                .background(chemistry == value ? Color.white : Orbit.button, in: Capsule())
+                .frame(minHeight: 44)
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(chemistry == value ? .isSelected : [])
+    }
+}
+
+/// The Darkroom's Save (I01): the cream main action as a bar pill.
+private struct OrbitSaveStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.orbit(size: 14, weight: .bold, relativeTo: .callout))
+            .foregroundStyle(isEnabled ? Color.black : Orbit.smallest)
+            .padding(.horizontal, 20).frame(minHeight: 44)
+            .background(isEnabled ? (configuration.isPressed ? Orbit.creamPressed : Orbit.cream) : Orbit.creamDisabled,
+                        in: Capsule())
+            .contentShape(Capsule())
+            .fixedSize()
+    }
+}
+
+/// Reset to Original (I01): plain words under the band.
+private struct DarkroomResetStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .labelStyle(.titleOnly)
+            .font(.orbit(size: 15, weight: .semibold, relativeTo: .body))
+            .foregroundStyle(configuration.isPressed ? Orbit.label : Orbit.body)
+            .padding(.horizontal, 16)
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
     }
 }

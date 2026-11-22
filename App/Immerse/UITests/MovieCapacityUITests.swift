@@ -42,9 +42,10 @@ final class MovieCapacityUITests: ScreenTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-cinema16mm"]
-        scrollUpUntilWhole(app, camera)
-        XCTAssertTrue(camera.label.contains("2 minutes 47 seconds of film"), camera.label)
-        tapWhole(app, camera)
+        XCTAssertTrue(camera.exists(within: 10))
+        // The dial names the Camera and gives its capacity as the button's value.
+        XCTAssertEqual(camera.value as? String, "2 minutes 47 seconds of film")
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.staticTexts["Capacity, 2 minutes 47 seconds of film"].waitForExistence(timeout: 5))
         let title = "Capacity check \(UUID().uuidString.prefix(4))"
         guard enterFilmTitle(title, app) else { return }

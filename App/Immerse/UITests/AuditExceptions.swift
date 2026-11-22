@@ -12,16 +12,22 @@ struct AuditException: Equatable {
     let label: String
 
     static let accepted: [AuditException] = [
-        // Contrast at the 16mm title audit at the largest text size. The test's held drags stop with this
-        // look line's first lines under the navigation bar's scroll-edge blur in every run; at rest it measured
-        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/prd-2-slice-1-names-card-copy.md).
-        AuditException(audit: "16mm-title-accessibility-largest", type: .contrast, label: "Visible grain, a red highlight glow, minor jitter and weave, soft dark edges"),
-        // Contrast at the Disposable Load screen's low-storage audit, at the end of the Form, where the warning and
-        // Load Film are on screen together. The Form stops there in every run with the end of the Camera's controls
-        // line and the start of its look line under the navigation bar's scroll-edge blur; at rest each measured
-        // 21.00:1 light and 13.94:1 dark (Evidence/NativeApp/low-storage-warning-062.md).
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "Focus switch: Auto / Fixed; tap to focus in Auto; fixed exposure, optional flash and low-light cue"),
-        AuditException(audit: "Load-low-storage", type: .contrast, label: "1990s disposable camera: borderless 3:2 picture, warm, saturated color, heavy grain, harsh flash and soft edges"),
+        // Contrast at Choose a Camera's audit at the largest text size. On CI (run 44932061664) the check, run in one pass
+        // with the clipped-text check, which swaps the Cameras' column for the dial and back, flagged the 6×6 and Super 8
+        // rows' names; at rest their white words on Orbit's #1A1A1A are 17.4:1, in the one appearance Orbit has
+        // (Evidence/NativeApp/orbit-083.md).
+        AuditException(audit: "Catalog-accessibility-largest", type: .contrast, label: "6×6"),
+        AuditException(audit: "Catalog-accessibility-largest", type: .contrast, label: "Super 8"),
+        // Contrast at the 16mm title audit at the largest text size. On a 390-point iPhone the test's held drags stop
+        // with the Movie Orientation's Landscape option half under the navigation bar's scroll-edge blur; at rest its
+        // white word on Orbit's #1A1A1A circle is 17.4:1, in the one appearance Orbit has (Evidence/NativeApp/orbit-083.md).
+        AuditException(audit: "16mm-title-accessibility-largest", type: .contrast, label: "Landscape"),
+        // Contrast at the Disposable Load screen's low-storage audit, at the end of the screen, where the warning and
+        // Load Film are on screen together. The screen stops there with the Camera's reveal chip, and on a 390-point
+        // iPhone its name too, under the navigation bar's scroll-edge blur; at rest the chip's #D4D4D4 words on Orbit's
+        // #1A1A1A are 11.7:1 and the white name on black 21:1 (Evidence/NativeApp/orbit-083.md).
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "Sealed until Development"),
+        AuditException(audit: "Load-low-storage", type: .contrast, label: "Disposable"),
     ]
 
     /// Whether `exceptions` accept a finding; a finding without an element label is never accepted.

@@ -111,7 +111,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         var done: CGRect
         var remaining: CGRect
         var shutter: CGRect
-        /// The Switch Camera icon in the shutter bar, which is wider than it is tall.
+        /// Switch Camera's round button in the shutter bar.
         var switchCamera: CGRect
         /// Develop at once's notice, where it shows.
         var notice: CGRect?
@@ -136,13 +136,17 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         checkNoticeShowsWhole(upright, app, "upright at the largest text size")
         retainFrames(upright, name: "6×6-largest", hold: "portrait")
         retainScreenshot(name: "6×6-largest-capture-portrait")
+        let uprightCount = picture(CGRect(x: upright.remaining.maxX - 38, y: upright.remaining.midY - 19, width: 38, height: 38),
+                                   in: XCUIScreen.main.uprightScreenshot())
         // Each side twice, so the header turns straight from one side to the other both ways.
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right"), (.landscapeLeft, "left again")] {
             XCUIDevice.shared.orientation = orientation
             // Turned straight from one side to the other the count stays turned, so the reads that agree are taken after
             // the turn has ended.
-            let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
+            let turned = try wait(app) { $0.remaining.width < upright.remaining.width }
             retainScreenshot(name: "6×6-largest-capture-\(side)")
+            XCTAssertTrue(showsTurned(uprightCount, picture(turned.remaining, in: XCUIScreen.main.uprightScreenshot())),
+                          "The count turns to read upright, held on its \(side) at the largest text size")
             retainFrames(turned, name: "6×6-largest", hold: side)
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
@@ -187,7 +191,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         // Held on its side the notice is its hammer alone, turned in place beside Done in the top bar.
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right")] {
             XCUIDevice.shared.orientation = orientation
-            let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
+            let turned = try wait(app) { $0.remaining.width < on.remaining.width }
             retainScreenshot(name: "Disposable-develop-at-once-on-\(side)")
             checkNotice(turned, shows: true, "held on its \(side)")
             checkTopBar(turned, upright: on, "held on its \(side) with Develop at once on")
@@ -232,7 +236,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        tapWhole(app, camera)
+        chooseCamera(id, app)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         // Loads with the title Load Film suggests, so no keyboard covers the screen on a small iPhone.
         let field = app.textFields["film-title"]
@@ -318,8 +322,13 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         XCTAssertEqual(headerStatus.label, expectedSpokenHeader(for: id), "VoiceOver gets the Camera name and full count")
         XCTAssertFalse(headerStatus.label.contains(oldName), "The shooting screen does not speak the stored package name")
         XCTAssertLessThan(upright.window.width, upright.window.height, "The shooting screen is portrait")
-        XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the count reads across")
-        XCTAssertGreaterThan(upright.switchCamera.width, upright.switchCamera.height, "Upright, Switch Camera reads across")
+        XCTAssertGreaterThan(upright.remaining.width, upright.remaining.height, "Upright, the Camera name and count read across")
+        // Switch Camera and the count are round (K00), so whether their marks turn is read from what they show: held
+        // sideways each shows its upright picture turned a quarter.
+        let uprightScreen = XCUIScreen.main.uprightScreenshot()
+        let uprightSwitch = picture(upright.switchCamera, in: uprightScreen)
+        let uprightCount = picture(CGRect(x: upright.remaining.maxX - 38, y: upright.remaining.midY - 19, width: 38, height: 38),
+                                   in: uprightScreen)
         try checkFits(upright, app, "upright")
         checkNotice(upright, shows: showsNotice, "upright")
         checkFocusSwitch(upright, app, "upright")
@@ -337,8 +346,13 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         for (orientation, side) in [(UIDeviceOrientation.landscapeLeft, "left"), (.landscapeRight, "right")] {
             XCUIDevice.shared.orientation = orientation
             // The words turn with an animation, and the screen must not turn at all.
-            let turned = try wait(app) { $0.remaining.height > $0.remaining.width }
+            let turned = try wait(app) { $0.remaining.width < upright.remaining.width }
             retainScreenshot(name: "\(screenshotName)-capture-\(side)")
+            let turnedScreen = XCUIScreen.main.uprightScreenshot()
+            XCTAssertTrue(showsTurned(uprightCount, picture(turned.remaining, in: turnedScreen)),
+                          "The count turns to read upright, held on its \(side)")
+            XCTAssertTrue(showsTurned(uprightSwitch, picture(turned.switchCamera, in: turnedScreen)),
+                          "Switch Camera, in the shutter bar, turns to read upright held on its \(side)")
             XCTAssertEqual(turned.window, upright.window, "The screen stays portrait held on its \(side)")
             XCTAssertEqual(turned.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place held on its \(side)")
             XCTAssertEqual(turned.shutter, upright.shutter, "The shutter keeps its place held on its \(side)")
@@ -349,8 +363,6 @@ final class CaptureSidewaysUITests: ScreenTestCase {
                            "VoiceOver still gets the Camera name and full count held on its \(side)")
             checkTopBar(turned, upright: upright, "held on its \(side)")
             XCTAssertEqual(turned.focusSwitch, upright.focusSwitch, "The focus switch keeps its place held on its \(side)")
-            XCTAssertGreaterThan(turned.switchCamera.height, turned.switchCamera.width,
-                                 "Switch Camera, in the shutter bar, turns to read upright held on its \(side)")
             XCTAssertTrue(done.isHittable, "Done can be tapped held on its \(side)")
             checkFocusSwitch(turned, app, "held on its \(side)")
             checkNoticeShowsWhole(turned, app, "held on its \(side)")
@@ -446,7 +458,6 @@ final class CaptureSidewaysUITests: ScreenTestCase {
     /// in its corner, and the count turned to read upright in the other, without the Camera's name, and nothing of the
     /// bar over the area (the captain, 2026-10-29, "5A").
     private func checkTopBar(_ turned: Layout, upright: Layout, _ hold: String) {
-        XCTAssertGreaterThan(turned.remaining.height, turned.remaining.width, "The count turns to read upright, \(hold)")
         XCTAssertGreaterThanOrEqual(turned.done.width, 38, "Done is as wide as it is tall turned, \(hold)")
         checkGapAboveTheArea(turned, hold)
         for (label, frame) in [("Done", turned.done), ("The count", turned.remaining)] + (turned.notice.map { [("The notice", $0)] } ?? []) {
@@ -496,7 +507,7 @@ final class CaptureSidewaysUITests: ScreenTestCase {
         for (orientation, side) in [(UIDeviceOrientation.portrait, "portrait"), (.landscapeLeft, "left"), (.landscapeRight, "right")] {
             XCUIDevice.shared.orientation = orientation
             let layout = try wait(app) {
-                orientation == .portrait ? $0.remaining.width > $0.remaining.height : $0.remaining.height > $0.remaining.width
+                orientation == .portrait ? $0.remaining.width > $0.remaining.height : $0.remaining.width < upright.remaining.width
             }
             retainScreenshot(name: "\(name)-capture-\(side)")
             XCTAssertEqual(layout.viewfinder, upright.viewfinder, "The viewfinder keeps its size and place, \(side)")
@@ -559,6 +570,35 @@ final class CaptureSidewaysUITests: ScreenTestCase {
             latest = next
         }
         return latest
+    }
+
+    /// What `frame` shows on `screen`, as a 16 by 16 grey picture, for comparing a control between holds.
+    private func picture(_ frame: CGRect, in screen: UIImage) -> [[Double]] {
+        let side = 16
+        guard let image = screen.cgImage,
+              let crop = image.cropping(to: CGRect(x: frame.minX * screen.scale, y: frame.minY * screen.scale,
+                                                   width: frame.width * screen.scale, height: frame.height * screen.scale).integral),
+              let context = CGContext(data: nil, width: side, height: side, bitsPerComponent: 8, bytesPerRow: side,
+                                      space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)
+        else { return [] }
+        context.interpolationQuality = .high
+        context.draw(crop, in: CGRect(x: 0, y: 0, width: side, height: side))
+        guard let data = context.data else { return [] }
+        let bytes = data.bindMemory(to: UInt8.self, capacity: side * side)
+        return (0..<side).map { row in (0..<side).map { column in Double(bytes[row * side + column]) / 255 } }
+    }
+
+    /// Whether `turned` shows `upright` turned a quarter, either way: it matches the upright picture turned more closely
+    /// than the upright picture as it was.
+    private func showsTurned(_ upright: [[Double]], _ turned: [[Double]]) -> Bool {
+        guard !upright.isEmpty, upright.count == turned.count else { return false }
+        let side = upright.count
+        func difference(_ a: [[Double]], _ b: [[Double]]) -> Double {
+            zip(a, b).map { zip($0, $1).map { abs($0 - $1) }.reduce(0, +) }.reduce(0, +)
+        }
+        let quarter = (0..<side).map { row in (0..<side).map { column in upright[side - 1 - column][row] } }
+        let other = (0..<side).map { row in (0..<side).map { column in upright[column][side - 1 - row] } }
+        return min(difference(quarter, turned), difference(other, turned)) < 0.7 * difference(upright, turned)
     }
 
     /// Taps 2 points below Done's glass, in the gap above the Viewfinder area, which Done's 44-point tap area covers.

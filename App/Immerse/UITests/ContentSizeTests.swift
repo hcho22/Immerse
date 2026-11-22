@@ -1,4 +1,6 @@
 import XCTest
+import class Vision.VNImageRequestHandler
+import class Vision.VNRecognizeTextRequest
 
 /// Measures that every text element the accessibility audits show follows the person's text size, in the simulator's
 /// light or dark appearance: the empty Journal, the Camera catalog, the Super 8, 16mm and 6×6 Load Film screens (the 16mm
@@ -8,7 +10,8 @@ import XCTest
 /// Dynamic Type audit, which grows the text in place and flagged correctly resizing text from run to run
 /// (Evidence/NativeApp/qa13-audit-exceptions-052.md and Evidence/NativeApp/scroll-indicator-drag-053.md). Each element's
 /// text must grow by at least 4 percent at every step from L to AX XXXL, never shrink below L, and never be clipped by
-/// its frame or the screen. Navigation titles are system text and are not included.
+/// its frame or the screen. Navigation titles are not measured; the Film Journal's and Choose a Camera's, and the dial's
+/// capacity lines below XXL, are read back from a screenshot to check they draw whole.
 @MainActor
 final class ContentSizeTests: ScreenTestCase {
     /// A text element to measure, found in an accessibility snapshot by type and identifier, exact label or label prefix.
@@ -154,9 +157,9 @@ final class ContentSizeTests: ScreenTestCase {
         Target(name: "Low storage warning", type: .staticText, identifier: "low-storage-warning"),
     ]
 
-    /// The empty state's element spans its camera symbol and title; the title is measured below the symbol.
+    /// The empty state's line, under its orbit drawing (A02).
     private static let journal: [Target] = [
-        Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here", symbol: ("camera", .above)),
+        Target(name: "Empty Journal", type: .staticText, label: "Your Journal begins here"),
     ]
 
     private static let catalog: [Target] = [
@@ -175,35 +178,35 @@ final class ContentSizeTests: ScreenTestCase {
     ]
 
     /// Settings as a Debug build shows it with the testing unlock off, including the testing section, in two halves:
-    /// at the largest sizes the whole screen takes longer to scroll through than one test may run.
+    /// at the largest sizes the whole screen takes longer to scroll through than one test may run. The top half is the
+    /// testing switches and Privacy (A04); the bottom half is the Films rows, opened to their full words, and the
+    /// version.
     private static let settingsTop: [Target] = [
         Target(name: "Debug testing header", type: .staticText, label: "Debug testing", header: true),
         Target(name: "Testing unlock", type: .staticText, label: "Testing unlock - Debug build"),
         Target(name: "Testing unlock note", type: .staticText, labelPrefix: "Debug builds only."),
         Target(name: "Develop at once", type: .staticText, label: "Develop at once - Debug build"),
         Target(name: "Develop at once note", type: .staticText, labelPrefix: "While on, each capture"),
-        Target(name: "Storage header", type: .staticText, label: "Storage and backup", header: true),
-        Target(name: "Backup", type: .staticText, labelPrefix: "Films, sealed captures"),
-        Target(name: "Trial header", type: .staticText, label: "Trial", header: true),
-        Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", tinted: true, optional: true),
-        Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone"),
-        Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
-    ]
-
-    private static let settingsBottom: [Target] = [
-        Target(name: "Photos header", type: .staticText, label: "Saving to Photos", header: true),
-        Target(name: "Photos exports", type: .staticText, labelPrefix: "Exports are optional."),
         Target(name: "Privacy header", type: .staticText, label: "Privacy", header: true),
         Target(name: "Camera permission", type: .staticText, labelPrefix: "Camera, "),
         Target(name: "Photos permission", type: .staticText, labelPrefix: "Photos (add only), "),
         Target(name: "Microphone", type: .staticText, labelPrefix: "Microphone, "),
         Target(name: "No accounts", type: .staticText, labelPrefix: "No Accounts, sign-in"),
-        Target(name: "Open iPhone Settings", type: .button, label: "Open iPhone Settings", tinted: true,
-               symbol: ("gearshape", .leading)),
-        Target(name: "Subscription header", type: .staticText, label: "Subscription", header: true),
+        Target(name: "Open iPhone Settings", type: .button, label: "Open iPhone Settings"),
+    ]
+
+    private static let settingsBottom: [Target] = [
+        Target(name: "Films header", type: .staticText, label: "Films", header: true),
+        Target(name: "Trial error", type: .staticText, labelPrefix: "Trial status unavailable:", optional: true),
+        Target(name: "Trial row", type: .button, identifier: "settings-Trial"),
+        Target(name: "Trial rule", type: .staticText, labelPrefix: "One complete Film per iPhone, with any Camera"),
+        Target(name: "Trial record", type: .staticText, labelPrefix: "The Trial record stays"),
         Target(name: "Settings Subscription", type: .button, label: "Subscription"),
-        Target(name: "About header", type: .staticText, label: "About", header: true),
-        Target(name: "Version", type: .staticText, labelPrefix: "Immerse, "),
+        Target(name: "Storage row", type: .button, identifier: "settings-Storage and backup"),
+        Target(name: "Backup", type: .staticText, labelPrefix: "Films, sealed captures"),
+        Target(name: "Photos row", type: .button, identifier: "settings-Saving to Photos"),
+        Target(name: "Photos exports", type: .staticText, labelPrefix: "Exports are optional."),
+        Target(name: "Version", type: .staticText, label: "Immerse 1.0"),
     ]
 
     private static let sizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL",
@@ -337,8 +340,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-super8HomeMovie"]
-        tapWhole(app, row)
+        chooseCamera("super8HomeMovie", app)
         XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -355,8 +357,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-super8HomeMovie"]
-        tapWhole(app, row)
+        chooseCamera("super8HomeMovie", app)
         XCTAssertTrue(app.navigationBars["Super 8"].waitForExistence(timeout: 5), "Super 8 \(category)")
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, targets, category, below: "Super 8"))
@@ -368,8 +369,7 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-cinema16mm"]
-        tapWhole(app, row)
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, Self.sixteenMillimeter, category, below: "16mm"))
@@ -383,16 +383,14 @@ final class ContentSizeTests: ScreenTestCase {
         var rows: [String] = []
         let app = launch(category)
         openCameraCatalog(app)
-        let row = app.buttons["camera-mediumFormat6x6"]
-        tapWhole(app, row)
+        chooseCamera("mediumFormat6x6", app)
         XCTAssertTrue(app.navigationBars["6×6"].waitForExistence(timeout: 5), "6×6 \(category)")
         // Let the push finish, so the first rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
         rows += record(measure(app, Self.sixBySix, category, below: "6×6"))
         goBack(app, from: "6×6", to: "Choose a Camera")
 
-        let reel = app.buttons["camera-cinema16mm"]
-        tapWhole(app, reel)
+        chooseCamera("cinema16mm", app)
         XCTAssertTrue(app.navigationBars["16mm"].waitForExistence(timeout: 5), "16mm \(category)")
         Thread.sleep(forTimeInterval: 1)
         let blackAndWhite = app.buttons["Black and white"]
@@ -411,8 +409,7 @@ final class ContentSizeTests: ScreenTestCase {
     private func checkLowStorageWarning(_ category: String) {
         let app = launch(category, arguments: ["-ImmerseDebugFreeSpace", "1999999999"])
         openCameraCatalog(app)
-        let row = app.buttons["camera-disposable1990s"]
-        tapWhole(app, row)
+        chooseCamera("disposable1990s", app)
         XCTAssertTrue(app.navigationBars["Disposable"].waitForExistence(timeout: 5), "Disposable \(category)")
         // Let the push finish, so the rows are measured where they rest rather than mid-transition.
         Thread.sleep(forTimeInterval: 1)
@@ -424,14 +421,67 @@ final class ContentSizeTests: ScreenTestCase {
     private func checkJournalAndCatalog(_ category: String) {
         var rows: [String] = []
         let app = launch(category, onEmptyJournal: true)
+        checkTitleWords("Film Journal", app, category)
         rows += record(measure(app, Self.journal, category, below: "Film Journal"))
         openCameraCatalog(app)
         XCTAssertTrue(app.navigationBars["Choose a Camera"].waitForExistence(timeout: 5), "Catalog \(category)")
         // Let the sheet finish rising, so the first rows are measured where they rest.
         Thread.sleep(forTimeInterval: 1)
+        checkTitleWords("Choose a Camera", app, category)
+        if Self.sizes.firstIndex(of: category)! < Self.sizes.firstIndex(of: "XXL")! { checkDialWords(app, category) }
         rows += record(measure(app, Self.catalog, category, below: "Choose a Camera"))
         app.terminate()
         finish(category, rows, Self.journal + Self.catalog)
+    }
+
+    /// The dial's capacity lines (B01, the sizes below XXL) read whole as drawn, never cut short with an ellipsis: their
+    /// accessibility labels and ink stay whole either way, so the text drawn on the screen is read back.
+    private func checkDialWords(_ app: XCUIApplication, _ category: String) {
+        let shown = ["27 exposures": "27 exposures", "10 exposures": "10 exposures", "12 exposures": "12 exposures",
+                     "3 minutes 20 seconds of film": "3:20 of film", "2 minutes 47 seconds of film": "2:47 of film"]
+        let shot = XCUIScreen.main.uprightScreenshot()
+        attach(shot, "\(category) \(Self.appearance) dial")
+        for (label, words) in shown {
+            let line = app.staticTexts[label].firstMatch
+            XCTAssertTrue(line.exists, "\(words) \(category) is on the dial")
+            let read = readText(in: shot, line.frame.insetBy(dx: -6, dy: -3), window: app.frame)
+            XCTAssertTrue(readsWhole(read, words), "\(words) \(category) reads whole on the dial, read as \"\(read)\"")
+        }
+    }
+
+    /// A screen's title reads whole as drawn in its navigation bar, never cut short with an ellipsis beside the bar's
+    /// buttons: its accessibility label stays whole either way, so the text drawn on the screen is read back.
+    private func checkTitleWords(_ title: String, _ app: XCUIApplication, _ category: String) {
+        let bar = app.navigationBars[title]
+        XCTAssertTrue(bar.waitForExistence(timeout: 5), "\(title) \(category) has its bar")
+        let shot = XCUIScreen.main.uprightScreenshot()
+        attach(shot, "\(category) \(Self.appearance) \(title) title")
+        let label = bar.staticTexts[title].firstMatch
+        XCTAssertTrue(label.exists, "\(title) \(category) is in its bar")
+        XCTAssertEqual(readText(in: shot, label.frame.insetBy(dx: -8, dy: -4), window: app.frame), title,
+                       "\(title) \(category) reads whole in its bar")
+    }
+
+    /// Whether text read back from the screen is `words` drawn whole: as many words, the last one entire and no ellipsis.
+    /// Vision can misread a small digit (CI read the dial's "27 exposures" at XS as "21 exposures"), which says nothing
+    /// about whether the line was cut short, so the digits are not compared.
+    private func readsWhole(_ read: String, _ words: String) -> Bool {
+        let shown = read.split(separator: " "), expected = words.split(separator: " ")
+        return !read.contains("…") && !read.contains("...") && shown.count == expected.count && shown.last == expected.last
+    }
+
+    /// The text Vision reads in an area of a screenshot, its lines joined by spaces.
+    private func readText(in screenshot: UIImage, _ frame: CGRect, window: CGRect) -> String {
+        guard let full = screenshot.cgImage else { return "" }
+        let scale = CGFloat(full.width) / window.width
+        let crop = CGRect(x: frame.minX * scale, y: frame.minY * scale, width: frame.width * scale,
+                          height: frame.height * scale).integral
+        guard let image = full.cropping(to: crop) else { return "" }
+        let request = VNRecognizeTextRequest()
+        request.recognitionLevel = .accurate
+        request.usesLanguageCorrection = false
+        try? VNImageRequestHandler(cgImage: image).perform([request])
+        return (request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ")
     }
 
     /// Settings in landscape, where the audit checks it at the largest size. Some paragraphs are taller than the
@@ -443,7 +493,7 @@ final class ContentSizeTests: ScreenTestCase {
         let app = launch(category)
         defer { XCUIDevice.shared.orientation = .portrait }
         openCameraCatalog(app)
-        app.buttons["camera-disposable1990s"].tap()
+        chooseCamera("disposable1990s", app)
         waitForTrialStatus(app)
         goBack(app, from: "Disposable", to: "Choose a Camera")
         app.buttons["Cancel"].tap()
@@ -455,13 +505,28 @@ final class ContentSizeTests: ScreenTestCase {
         Thread.sleep(forTimeInterval: 1)
         if fromEnd {
             // Flicks that coast reach the end quickly; `swipeUp()` did not scroll this list in landscape.
-            let version = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Immerse, ")).firstMatch
-            for _ in 0..<20 {
-                if version.exists && version.frame.maxY <= app.frame.maxY - 34 { break }
-                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.8))
-                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
-                            withVelocity: .fast, thenHoldForDuration: 0)
+            let version = app.staticTexts["Immerse 1.0"]
+            func toTheEnd() {
+                for _ in 0..<20 {
+                    if version.exists && version.frame.maxY <= app.frame.maxY - 34 { break }
+                    let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.8))
+                    start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -300)),
+                                withVelocity: .fast, thenHoldForDuration: 0)
+                }
             }
+            // The Films rows open in place to their full words (A04), which are measured with the rows.
+            toTheEnd()
+            // Each row is tapped once it is whole below the navigation bar, where a tap opens it.
+            let bar = app.navigationBars["Settings"]
+            for row in ["settings-Saving to Photos", "settings-Storage and backup", "settings-Trial"] {
+                let button = app.buttons[row]
+                for _ in 0..<16 where !(button.isHittable && button.frame.minY >= bar.frame.maxY + 4
+                                         && button.frame.maxY <= app.frame.maxY - 34) {
+                    drag(app, by: button.exists && button.frame.minY > app.frame.midY ? -120 : 120, landscape: true)
+                }
+                button.tap()
+            }
+            toTheEnd()
         }
         let rows = record(measure(app, targets, category, below: "Settings", upward: fromEnd))
         app.terminate()

@@ -52,7 +52,7 @@ final class TestingUnlockUITests: ScreenTestCase {
     private func assertLoadAndPlans(_ app: XCUIApplication, unlocked: Bool) {
         app.launch()
         openCameraCatalog(app)
-        app.buttons["camera-disposable1990s"].tap()
+        chooseCamera("disposable1990s", app)
         let load = app.buttons["load-film"]
         scrollUpUntilWhole(app, load)
         XCTAssertTrue(load.isHittable)

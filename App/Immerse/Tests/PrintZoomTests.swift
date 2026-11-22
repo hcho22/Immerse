@@ -255,7 +255,9 @@ final class PrintZoomTests: XCTestCase {
 
         let scene = try await hostWindowScene()
         let window = UIWindow(windowScene: scene)
-        let host = UIHostingController(rootView: PhotoView(filmID: film.id, sequence: 1).environment(model))
+        let probe = PhotoViewProbe()
+        let host = UIHostingController(rootView: PhotoView(filmID: film.id, sequence: 1).environment(model)
+            .environment(\.photoViewProbe, probe))
         window.rootViewController = host
         window.makeKeyAndVisible()
         defer { window.isHidden = true; window.rootViewController = nil }
@@ -263,11 +265,23 @@ final class PrintZoomTests: XCTestCase {
         let photo = try XCTUnwrap(views(in: window).compactMap { $0 as? PrintZoomScrollView }.first)
         try await Task.sleep(for: .milliseconds(300))
 
+        // The photo view's Darkroom and the Darkroom's Cancel and Save are Orbit's buttons, which a hosted test, without
+        // SwiftUI's accessibility tree, presses through the probe, which runs each button's own action.
         for leaving in ["Cancel", "Save"] {
             photo.zoomScale = 3
-            try await press("Darkroom", in: host)
+            probe.darkroomPresses += 1
             try await waitUntil("the Darkroom opens") { host.presentedViewController != nil }
-            try await press(leaving, in: host)
+            if leaving == "Cancel" {
+                probe.cancelPresses += 1
+            } else {
+                // The probe can still read Save as the last Darkroom left it, and Save is enabled until this Darkroom's
+                // print starts, so a press then can land while the print disables it. The print shows as it ends.
+                try await waitUntil("Save can be pressed once the Darkroom's print shows") {
+                    self.views(in: host.presentedViewController?.view ?? UIView()).contains { $0 is PrintZoomScrollView }
+                        && probe.saveEnabled
+                }
+                probe.savePresses += 1
+            }
             try await waitUntil("the Darkroom closes after \(leaving)") { host.presentedViewController == nil }
             try await waitUntil("\(leaving) shows the print whole") { photo.zoomScale <= 1.001 }
         }
@@ -385,27 +399,6 @@ final class PrintZoomTests: XCTestCase {
     }
 
     private func views(in view: UIView) -> [UIView] { [view] + view.subviews.flatMap { views(in: $0) } }
-
-    /// Presses the toolbar button titled `title` on the screen `root` shows, or on one it presents, once it is enabled.
-    private func press(_ title: String, in root: UIViewController) async throws {
-        func controllers(_ controller: UIViewController) -> [UIViewController] {
-            [controller] + controller.children.flatMap(controllers)
-                + (controller.presentedViewController.map(controllers) ?? [])
-        }
-        func items(_ controller: UIViewController) -> [UIBarButtonItem] {
-            let navigation = controller.navigationItem
-            let groups = navigation.leadingItemGroups + navigation.trailingItemGroups
-            return groups.flatMap(\.barButtonItems) + (navigation.leftBarButtonItems ?? [])
-                + (navigation.rightBarButtonItems ?? []) + (controller.toolbarItems ?? [])
-        }
-        func button() -> UIBarButtonItem? {
-            controllers(root).flatMap(items).first { $0.title == title && $0.isEnabled }
-        }
-        try await waitUntil("\(title) can be pressed") { button() != nil }
-        let item = try XCTUnwrap(button())
-        let action = try XCTUnwrap(item.action, "\(title) has an action")
-        _ = item.target?.perform(action, with: item)
-    }
 
     private func waitUntil(_ what: String, _ condition: () -> Bool) async throws {
         for _ in 0..<200 where !condition() { try await Task.sleep(for: .milliseconds(50)) }

@@ -7,7 +7,8 @@
 # The same search holds the Debug-only free-space reading that screen tests set
 # (`DebugFreeSpace` in App/Immerse/Sources/LowStorage.swift) and the Debug-only preview of each
 # saved capture (`DevelopedPreviews` in App/Immerse/Sources/DevelopedPreviews.swift, with its renderer
-# `PreviewDevelopment` in Packages/FilmRuntime and the shooting screen's notice that it is on) to Debug.
+# `PreviewDevelopment` in Packages/FilmRuntime and the shooting screen's notice that it is on) and the
+# photo view's hosted-test probe (`PhotoViewProbe` in App/Immerse/Sources/PhotoView.swift) to Debug.
 set -eu
 cd "$(dirname "$0")/.."
 for configuration in Debug Release; do
@@ -21,7 +22,7 @@ for configuration in Debug Release; do
     fi
     for marker in TestingUnlock ImmerseDebugTestingUnlock "Testing unlock" DebugFreeSpace ImmerseDebugFreeSpace \
         DevelopedPreviews PreviewDevelopment ImmerseDebugDevelopedPreview "Develop at once" "Debug preview" \
-        develop-at-once-notice; do
+        develop-at-once-notice PhotoViewProbe; do
         if grep -rqaF "$marker" "$bundle"; then found=yes; else found=no; fi
         case "$configuration:$found" in
             Debug:no) echo "Debug bundle lacks \"$marker\"; the Release check cannot be trusted" >&2; exit 1 ;;

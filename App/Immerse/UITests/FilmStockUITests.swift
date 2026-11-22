@@ -27,7 +27,7 @@ final class FilmStockUITests: ScreenTestCase {
         let expectedSound = "Sound: Recorded while filming when microphone access is allowed. The first request appears when you open the Camera."
         for (id, name) in [("disposable1990s", "Disposable"), ("instant1970s", "Instant"), ("super8HomeMovie", "Super 8")] {
             let camera = app.buttons["camera-\(id)"]
-            tapWhole(app, camera)
+            chooseCamera(id, app)
             XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
             let load = app.buttons["load-film"]
             let controls = try XCTUnwrap(expectedControls[id])
@@ -64,7 +64,7 @@ final class FilmStockUITests: ScreenTestCase {
         launchWithEmptyJournal(app)
         openCameraCatalog(app)
         let camera = app.buttons["camera-\(id)"]
-        tapWhole(app, camera)
+        chooseCamera(id, app)
         XCTAssertTrue(camera.waitForNonExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts[capacity].exists)
         if id == "cinema16mm" {

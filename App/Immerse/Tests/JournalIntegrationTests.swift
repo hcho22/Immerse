@@ -215,6 +215,19 @@ final class JournalIntegrationTests: XCTestCase {
         XCTAssertEqual(reel.remainingAmountLabel(recordedFor: 0.6), "3:16")
     }
 
+    func testRecordingProgressCountsTheClipBeingRecorded() throws {
+        var reel = try Film(camera: CameraCatalog.super8HomeMovie, title: "Synthetic reel", movieOrientation: .landscape)
+        XCTAssertEqual(reel.progress(recordedFor: 0), reel.progress)
+        XCTAssertEqual(reel.progress(recordedFor: 50), 0.25, accuracy: 0.0001)
+        XCTAssertEqual(reel.progress(recordedFor: 300), 1, "A clip never shows more than the whole Film used")
+        _ = try reel.recordSavedMovieClip(durationSeconds: MovieFrames.seconds(1500), orientation: .landscape)
+        XCTAssertEqual(reel.progress(recordedFor: 50), (50 + 50) / 200, accuracy: 0.0001)
+        try reel.completeEarly()
+        XCTAssertEqual(reel.progress(recordedFor: 50), 1, "A Film completed early is used whole")
+        let roll = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
+        XCTAssertEqual(roll.progress(recordedFor: 30), 0, "A photo Film counts only saved exposures")
+    }
+
     func testCaptureHeaderKeepsCompactCountsAndFullSpokenStates() throws {
         let disposable = try Film(camera: CameraCatalog.disposable1990s, title: "Synthetic roll")
         XCTAssertEqual(CaptureHeaderStatus.make(for: disposable, finishingSave: false, recordedFor: 0),

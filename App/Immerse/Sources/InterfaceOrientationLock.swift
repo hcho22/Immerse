@@ -7,6 +7,14 @@ import UIKit
 final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
     @MainActor static var supportedOrientations = UIInterfaceOrientationMask.allButUpsideDown
 
+    /// Orbit's navigation bars and other UIKit parts take their look before the first window draws.
+    func application(
+        _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        MainActor.assumeIsolated { OrbitAppearance.apply() }
+        return true
+    }
+
     func application(
         _ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?
     ) -> UIInterfaceOrientationMask {

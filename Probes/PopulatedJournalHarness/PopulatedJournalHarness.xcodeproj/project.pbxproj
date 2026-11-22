@@ -13,13 +13,16 @@
 		0CE35ED846B9F215A059FD8C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */; };
 		0D3A143D2C068D14C86A7A1E /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAB2B694752974D58F54C7B /* FilmPresentation.swift */; };
 		1008D5C0A3495A394D5B701B /* RetainedWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */; };
+		1702689FE07CCDE505BA75A1 /* Orbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27F64167FBBB70172B8B3E3 /* Orbit.swift */; };
 		25D62F3E5042D51A9BF7F575 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = CFAF2E53F1A8F533DF0DC3DE /* FilmDomain */; };
 		2ACAFBE266942FBD7B3DCA63 /* CameraSamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B34F2940DAEFDE2A09B4462 /* CameraSamplesView.swift */; };
+		34B25B53BAD138CA60E85140 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EFFCDA08D7E56EC34CCFACB5 /* Manrope-Regular.ttf */; };
 		37A4E3B86BA535C0A7F6B955 /* HarnessTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8161A4FC3A56BE5A9719BF6F /* HarnessTestSupport.swift */; };
 		3C252AA2E53787F521A71D60 /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0353E472543323E10BB6D087 /* CaptureView.swift */; };
 		3E2A41A4D33819C4550FE228 /* WorkflowScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180EA8C32123473E8CAC95A0 /* WorkflowScenario.swift */; };
 		43C42CCDE4B42C45BCB57C9F /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E41D46942323019637CC91E2 /* SubscriptionView.swift */; };
 		497F17D0D8217BCF9BDD878E /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 3B6476416256E9ABC968E179 /* FilmRuntime */; };
+		4E16E81B14833448CC7E3E8B /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 414985E5E71950F46BE4CAF1 /* Manrope-Bold.ttf */; };
 		5B497E079395875101B1D61E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */; };
 		659C053BB2A6A00BE88D24C5 /* PopulatedWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */; };
 		677AA7A2EC025BC195C10628 /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BF3192B0F536068A133B6A /* CaptureColumn.swift */; };
@@ -29,6 +32,8 @@
 		7E10CBB3EF15C17916C9FCA3 /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 2FFCE9E01DB928F875296A0E /* MediaCatalog.json */; };
 		8132825A6E8823A102FF1D84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00B81FCC70A05084325DA5A1 /* Assets.xcassets */; };
 		8C5839A650D154CC75BBF6A5 /* CameraPermissionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */; };
+		92271D4F69A3FF9E59FA62DD /* OrbitSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760C1B7175CDD3C7BC80264C /* OrbitSheets.swift */; };
+		9A6F99DAA482F5E7237530F8 /* Manrope-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 184F3EAB66A2DE067A06224C /* Manrope-ExtraBold.ttf */; };
 		9B2DB15E2A9CA3A3CA0B0B85 /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 6CDA3AAB98F34F05A92E201E /* FilmPersistence */; };
 		A32284BF32746C94A6862C07 /* HeldTurn.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAEB21EE5FE36EB4A2838392 /* HeldTurn.swift */; };
 		A8745D718F6267AE8FF68268 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 12F2D9D75387D3F28C80CD90 /* MediaCatalog */; };
@@ -36,6 +41,7 @@
 		B5EA37B2EB0AEC7AABB8CE8E /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D94448032AFF48A1178FC9E /* RenderCore */; };
 		C6556A96E3F0E291328DB321 /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D73EB8EC912C8421A93511 /* InterfaceOrientationLock.swift */; };
 		C8033A34AC916AF7899B0A98 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7174548584A2CC7E0017F828 /* EntitlementCore */; };
+		C96781489842B2A83AE3C3A8 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0332F53A63CDEC14E3B7A8E6 /* Manrope-Medium.ttf */; };
 		CB961F2737A4730613BA5774 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 28283260002FB1D79AAC7C9D /* NativeAdapters */; };
 		CEC0D82590BBF96DC2C822CE /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */; };
 		CECCEBA019C00D8C6D4C6325 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACA806F51C52F191067D24F /* SubscriptionController.swift */; };
@@ -43,6 +49,7 @@
 		E2994E6DF472F8183D88B4B1 /* DevelopmentStopWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28AEE062EE58334D0B5D8AE /* DevelopmentStopWorkflowTests.swift */; };
 		E356F161029518C4A53542B1 /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8681BF5B8F679782806990D9 /* JournalModel.swift */; };
 		E93C59AF5D9CDE8530C632B0 /* LowStorageWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */; };
+		F060D2849F9DAF3275D5E6B6 /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE12BA2F3118BFF0D9639EA0 /* Manrope-SemiBold.ttf */; };
 		F1712FD6166F62ECC9ACC8F0 /* RenderFixtures in Frameworks */ = {isa = PBXBuildFile; productRef = 27B793DD093A09187B9C988B /* RenderFixtures */; };
 		F2BB2E934519F5EDDFDD26F2 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */; };
 		F695F91CFCA23E101A79E450 /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */; };
@@ -50,6 +57,7 @@
 		F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3000C80787BFE05052237403 /* JournalView.swift */; };
 		FB1EC98DDBE88D13838E1468 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */; };
 		FC3EFC07422A02B8671E1A1E /* CropEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C65B072C83AFC8A3C38535 /* CropEditor.swift */; };
+		FD865258A3D002433BFE13EC /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 95C860200015FE1137D2E001 /* OFL.txt */; };
 		FF8B8E375E5DDF29A604A63B /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A568BFAFE67C9502B9D0F /* DevelopedPreviews.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,10 +73,12 @@
 
 /* Begin PBXFileReference section */
 		00B81FCC70A05084325DA5A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0332F53A63CDEC14E3B7A8E6 /* Manrope-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Medium.ttf"; sourceTree = "<group>"; };
 		0353E472543323E10BB6D087 /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		0FC09FB626E081F54F6995DD /* CameraCatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCatalogView.swift; sourceTree = "<group>"; };
 		14E158D7C807FF4BAA60A83F /* PrintZoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintZoom.swift; sourceTree = "<group>"; };
 		180EA8C32123473E8CAC95A0 /* WorkflowScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowScenario.swift; sourceTree = "<group>"; };
+		184F3EAB66A2DE067A06224C /* Manrope-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-ExtraBold.ttf"; sourceTree = "<group>"; };
 		20F8529C612A024EE989E6A3 /* FilmPersistence */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmPersistence; path = ../../Packages/FilmPersistence; sourceTree = SOURCE_ROOT; };
 		24247B3F4D8AAEF0AA7AD432 /* FilmRuntime */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmRuntime; path = ../../Packages/FilmRuntime; sourceTree = SOURCE_ROOT; };
 		2699FF56CFEB7EB021A8EF35 /* CaptureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
@@ -81,10 +91,12 @@
 		3D13586D120BB350A6F935DF /* FinishEarlyWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishEarlyWorkflowTests.swift; sourceTree = "<group>"; };
 		3E4FDA7DCC58F323080C0061 /* PopulatedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopulatedWorkflowTests.swift; sourceTree = "<group>"; };
 		40B39F0441AAE776E240DAF6 /* SoundtrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundtrackView.swift; sourceTree = "<group>"; };
+		414985E5E71950F46BE4CAF1 /* Manrope-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Bold.ttf"; sourceTree = "<group>"; };
 		55C65B072C83AFC8A3C38535 /* CropEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditor.swift; sourceTree = "<group>"; };
 		5B0D3B06003BEBE581782FEC /* PhotosPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		6AC11A292537AB06C773DD8D /* LowStorageWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowStorageWorkflowTests.swift; sourceTree = "<group>"; };
 		7400BB1444CBFD7AF92EA764 /* RenderFixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderFixtures; path = ../../Packages/RenderFixtures; sourceTree = SOURCE_ROOT; };
+		760C1B7175CDD3C7BC80264C /* OrbitSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitSheets.swift; sourceTree = "<group>"; };
 		786A297DE02FD3E071CC282A /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
 		7A0B1A1A7D76AF576541CD9B /* MediaCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MediaCatalog; path = ../../Packages/MediaCatalog; sourceTree = SOURCE_ROOT; };
 		8161A4FC3A56BE5A9719BF6F /* HarnessTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarnessTestSupport.swift; sourceTree = "<group>"; };
@@ -93,13 +105,16 @@
 		91B2165214E7F34A73A68995 /* NativeAdapters */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NativeAdapters; path = ../../Packages/NativeAdapters; sourceTree = SOURCE_ROOT; };
 		9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetainedWorkflowTests.swift; sourceTree = "<group>"; };
+		95C860200015FE1137D2E001 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		9B34F2940DAEFDE2A09B4462 /* CameraSamplesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSamplesView.swift; sourceTree = "<group>"; };
 		9C07737AFFDECE551D6E1CF8 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
 		A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlock.swift; sourceTree = "<group>"; };
 		BACA806F51C52F191067D24F /* SubscriptionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionController.swift; sourceTree = "<group>"; };
+		C27F64167FBBB70172B8B3E3 /* Orbit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orbit.swift; sourceTree = "<group>"; };
 		C28AEE062EE58334D0B5D8AE /* DevelopmentStopWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentStopWorkflowTests.swift; sourceTree = "<group>"; };
 		C4BF3192B0F536068A133B6A /* CaptureColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureColumn.swift; sourceTree = "<group>"; };
 		C98F98988E7D41895751822D /* PopulatedJournalHarnessTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PopulatedJournalHarnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE12BA2F3118BFF0D9639EA0 /* Manrope-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-SemiBold.ttf"; sourceTree = "<group>"; };
 		D1C097FF52FC8220B01E1FA9 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
 		D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		D8A4DBEB964964D36603BE05 /* PopulatedJournalHarness.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PopulatedJournalHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +123,7 @@
 		E07EEC7FE0CD8C34A72D0FDF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E171BDE7596CBEAA8375F111 /* CameraPermissionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissionWorkflowTests.swift; sourceTree = "<group>"; };
 		E41D46942323019637CC91E2 /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
+		EFFCDA08D7E56EC34CCFACB5 /* Manrope-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Regular.ttf"; sourceTree = "<group>"; };
 		F60D343CB78757F59AC84A1B /* PrintZoomWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintZoomWorkflowTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -162,6 +178,19 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		5D527DE25042947A22DDC343 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				414985E5E71950F46BE4CAF1 /* Manrope-Bold.ttf */,
+				184F3EAB66A2DE067A06224C /* Manrope-ExtraBold.ttf */,
+				0332F53A63CDEC14E3B7A8E6 /* Manrope-Medium.ttf */,
+				EFFCDA08D7E56EC34CCFACB5 /* Manrope-Regular.ttf */,
+				CE12BA2F3118BFF0D9639EA0 /* Manrope-SemiBold.ttf */,
+				95C860200015FE1137D2E001 /* OFL.txt */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		83860CC0C3AB665D118A157C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				2FFCE9E01DB928F875296A0E /* MediaCatalog.json */,
+				5D527DE25042947A22DDC343 /* Fonts */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -224,6 +254,8 @@
 				8681BF5B8F679782806990D9 /* JournalModel.swift */,
 				3000C80787BFE05052237403 /* JournalView.swift */,
 				9086F51CA1E7770D35C16DE2 /* LowStorage.swift */,
+				C27F64167FBBB70172B8B3E3 /* Orbit.swift */,
+				760C1B7175CDD3C7BC80264C /* OrbitSheets.swift */,
 				D5530D7D3370ECEA6D6A5909 /* PhotoView.swift */,
 				14E158D7C807FF4BAA60A83F /* PrintZoom.swift */,
 				9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */,
@@ -338,7 +370,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8132825A6E8823A102FF1D84 /* Assets.xcassets in Resources */,
+				4E16E81B14833448CC7E3E8B /* Manrope-Bold.ttf in Resources */,
+				9A6F99DAA482F5E7237530F8 /* Manrope-ExtraBold.ttf in Resources */,
+				C96781489842B2A83AE3C3A8 /* Manrope-Medium.ttf in Resources */,
+				34B25B53BAD138CA60E85140 /* Manrope-Regular.ttf in Resources */,
+				F060D2849F9DAF3275D5E6B6 /* Manrope-SemiBold.ttf in Resources */,
 				7E10CBB3EF15C17916C9FCA3 /* MediaCatalog.json in Resources */,
+				FD865258A3D002433BFE13EC /* OFL.txt in Resources */,
 				5B497E079395875101B1D61E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -364,6 +402,8 @@
 				E356F161029518C4A53542B1 /* JournalModel.swift in Sources */,
 				F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */,
 				ADC5301961A81CA4038CEB73 /* LowStorage.swift in Sources */,
+				1702689FE07CCDE505BA75A1 /* Orbit.swift in Sources */,
+				92271D4F69A3FF9E59FA62DD /* OrbitSheets.swift in Sources */,
 				FB1EC98DDBE88D13838E1468 /* PhotoView.swift in Sources */,
 				F754B040EF8A2FF9BA038AE4 /* PrintZoom.swift in Sources */,
 				0CE35ED846B9F215A059FD8C /* SettingsView.swift in Sources */,

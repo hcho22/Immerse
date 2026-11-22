@@ -38,14 +38,10 @@ final class TestingUnlock {
 /// never mistaken for a real subscription.
 struct TestingUnlockNotice: View {
     var body: some View {
-        Label {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(TestingUnlock.label)
-                Text("Every Camera loads without a subscription or this iPhone's Trial. Turn off Testing unlock in Settings to test the Trial and plans.")
-                    .font(.footnote).fixedSize(horizontal: false, vertical: true)
-            }
-        } icon: {
-            Image(systemName: "hammer")
+        VStack(alignment: .leading, spacing: 4) {
+            Text(TestingUnlock.label).orbitFont(.body, weight: .bold).foregroundStyle(.white)
+            Text("Every Camera loads without a subscription or this iPhone's Trial. Turn off Testing unlock in Settings to test the Trial and plans.")
+                .orbitFont(.footnote).foregroundStyle(Orbit.label).fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("testing-unlock-notice")
@@ -57,14 +53,8 @@ struct TestingUnlockSection: View {
     @Bindable var unlock: TestingUnlock
 
     var body: some View {
-        Section {
-            Toggle(TestingUnlock.label, isOn: $unlock.enabled)
-                .accessibilityIdentifier("testing-unlock-switch")
-        } header: {
-            Text("Debug testing")
-        } footer: {
-            Text("Debug builds only. While on, every Camera loads as a subscription Film and this iPhone's Trial is not used. Turn off to test the Trial, locked and plan screens. Films loaded while on stay usable.")
-        }
+        OrbitSwitchRow(title: TestingUnlock.label, isOn: $unlock.enabled, identifier: "testing-unlock-switch",
+                       note: "Debug builds only. While on, every Camera loads as a subscription Film and this iPhone's Trial is not used. Turn off to test the Trial, locked and plan screens. Films loaded while on stay usable.")
     }
 }
 #endif

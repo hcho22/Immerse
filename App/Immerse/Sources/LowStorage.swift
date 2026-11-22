@@ -54,23 +54,13 @@ extension Film {
     }
 }
 
-/// The warning as every screen shows it: one element that VoiceOver reads whole, with text that wraps at any size
-/// and its symbol beside the first line. A `Label` would center the symbol on the paragraph in a list and color it
-/// as text outside one. The symbol grows with the text only as far as body text is at Extra Extra Extra Large,
-/// 23 points: at the accessibility sizes a larger one left the words a column two or three words wide. Its size is
-/// set in points because a list row did not apply a `dynamicTypeSize` limit to it.
+/// The warning as every screen shows it: Orbit's outlined note with the drive mark (B04, G01), one element that VoiceOver
+/// reads whole, with text that wraps at any size and its mark beside the first line.
 struct LowStorageNotice: View {
     let text: String
-    @ScaledMetric(relativeTo: .body) private var symbolSize: CGFloat = 17
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Image(systemName: "externaldrive.badge.exclamationmark").font(.system(size: min(symbolSize, 23)))
-                .foregroundStyle(.tint).accessibilityHidden(true)
-            Text(text).foregroundStyle(.primary).fixedSize(horizontal: false, vertical: true)
-        }
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("low-storage-warning")
+        OrbitNote(.custom("externaldrive.badge.exclamationmark", outlined: true), text, identifier: "low-storage-warning")
     }
 }
 

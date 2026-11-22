@@ -226,7 +226,7 @@ final class CaptureSidewaysTests: XCTestCase {
                         let probe = TextLayoutProbe()
                         let bar = HStack(spacing: 8) {
                             Spacer(minLength: 0)
-                            CaptureHeaderLabel(film: film, status: status, recording: false)
+                            CaptureHeaderLabel(film: film, status: status, progress: film.progress, recording: false)
                         }
                         .frame(height: CaptureDoneRow.height)
                         .padding(.horizontal, 16)
