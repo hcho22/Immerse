@@ -20,6 +20,7 @@ import {
   randomId,
   refusalCode,
   signedIn,
+  readAddresses,
 } from "./support/convex";
 
 let clerk: Awaited<ReturnType<typeof startClerkDouble>>;
@@ -111,12 +112,15 @@ describe("Delete Account", () => {
     expect(ledger).toHaveLength(1);
     expect(ledger[0]).toMatchObject({ kind: "purchase", appleTransactionId: "2000000000000002" });
     expect(ledger[0]!.accountId).toBeUndefined();
-    // Her pictures leave numbered gaps; Jo's picture and Ana's stay.
+    // Her pictures leave numbered gaps, keeping only their number and place in capture order; Jo's picture stays.
     const pictures = rows.filter((r) => r.table === "pictures").map((r) => r.row);
     const removed = pictures.filter((p) => p.state === "removed");
     expect(removed.map((p) => p.exposureNumber).sort()).toEqual([1, 1, 1, 2, 2]);
     for (const picture of removed) {
-      expect(Object.keys(picture).sort()).toEqual(["_creationTime", "_id", "eventId", "exposureNumber", "membershipId", "removedAt", "requestedAt", "state"].sort());
+      expect(Object.keys(picture).sort()).toEqual(
+        ["_creationTime", "_id", "captureTime", "eventId", "everStored", "exposureNumber", "membershipId", "removedAt", "removedBy", "requestedAt", "state"].sort(),
+      );
+      expect(picture.removedBy).toBe("deletion");
     }
     expect(pictures.filter((p) => p.state === "stored")).toHaveLength(1);
     // Her media is gone from storage.
@@ -137,7 +141,7 @@ describe("Delete Account", () => {
     await maya.action(api.deletion.deleteAccount, {});
     await store(t, t, mayasEvent, 2, jo.token);
     await t.mutation(internal.proofs.revealProofEvent, { eventId: mayasEvent });
-    const album = await t.action(api.reads.readAddresses, { eventId: mayasEvent, guestToken: jo.token });
+    const album = await readAddresses(t, { eventId: mayasEvent, guestToken: jo.token });
     expect(album.map((p) => [p.shooterName, p.exposureNumber])).toEqual([
       ["Jo", 1],
       ["Jo", 2],
@@ -205,7 +209,7 @@ describe("Delete Account", () => {
       const account = await ctx.db.query("accounts").withIndex("by_clerk_user", (q) => q.eq("clerkUserId", "user_maya")).unique();
       await ctx.db.patch(account!._id, { deletionRequestedAt: Date.now() });
     });
-    expect(await refusalCode(maya.action(api.reads.readAddresses, { eventId: mayasEvent }))).toBe("accountDeleted");
+    expect(await refusalCode(readAddresses(maya, { eventId: mayasEvent }))).toBe("accountDeleted");
     expect(await refusalCode(maya.mutation(api.accounts.setDisplayName, { displayName: "X" }))).toBe("accountDeleted");
   });
 

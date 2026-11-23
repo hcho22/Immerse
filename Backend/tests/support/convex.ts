@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 import { api, internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import schema from "../../convex/schema";
+import type { AlbumPicture } from "../../convex/reads";
 import { sha256Base64 } from "../../convex/lib/crypto";
 
 export const modules = import.meta.glob("../../convex/**/*.*s");
@@ -67,6 +68,15 @@ export async function pictureFile(size = 4 * 1024 * 1024) {
 // The upload address's request, sent as the app sends it with URLSession.
 export function put(address: { url: string; headers: Record<string, string> }, body: Uint8Array, headers?: Record<string, string>) {
   return fetch(address.url, { method: "PUT", headers: headers ?? address.headers, body: body as Uint8Array<ArrayBuffer> });
+}
+
+// The stored pictures of a revealed album, with their read addresses: the album without its gaps.
+export async function readAddresses(
+  runner: { action: Backend["action"] },
+  args: { eventId: Id<"events">; guestToken?: string },
+): Promise<AlbumPicture[]> {
+  const album = await runner.action(api.reads.album, args);
+  return album.entries.filter((entry): entry is AlbumPicture => !entry.removed);
 }
 
 // Runs every queued storage deletion now.

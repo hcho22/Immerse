@@ -2,7 +2,7 @@
 // request without a valid Clerk session, and no Account exists without the age 13-or-over confirmation.
 import { describe, expect, test } from "vitest";
 import { api } from "../convex/_generated/api";
-import { newBackend, newEvent, newHost, refusalCode, signedIn } from "./support/convex";
+import { newBackend, newEvent, newHost, readAddresses, refusalCode, signedIn } from "./support/convex";
 
 describe("Accounts", () => {
   test("a signed-out person is told so, and a signed-in person with no Account is asked to make one", async () => {
@@ -97,7 +97,7 @@ describe("Accounts", () => {
         }),
       ),
       refusalCode(t.action(api.pictures.confirmUpload, { eventId, exposureNumber: 1 })),
-      refusalCode(t.action(api.reads.readAddresses, { eventId })),
+      refusalCode(readAddresses(t, { eventId })),
     ]);
     expect(refusals).toEqual(Array(refusals.length).fill("unauthenticated"));
   });
@@ -108,6 +108,6 @@ describe("Accounts", () => {
     const eventId = await newEvent(t, "user_host");
     const person = signedIn(t, "user_new");
     expect(await refusalCode(person.mutation(api.accounts.setDisplayName, { displayName: "X" }))).toBe("noAccount");
-    expect(await refusalCode(person.action(api.reads.readAddresses, { eventId }))).toBe("noAccount");
+    expect(await refusalCode(readAddresses(person, { eventId }))).toBe("noAccount");
   });
 });

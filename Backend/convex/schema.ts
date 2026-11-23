@@ -1,19 +1,39 @@
-// What the backend holds: v2 PRD section 8, for what Stage 1 needs.
+// What the backend holds: v2 PRD section 8.
 //
-// Stage 1 builds Accounts, the guest identity of section 9.2, picture upload records, push tokens and the
-// account-scoped records Delete Account must remove (the Roll ledger and the subscription link). Events and
-// memberships are sketched only as far as the upload path and the read grants need them; Stage 2 (Load Film,
-// joining, Rolls, the reveal) completes them. Nothing here ever holds a personal Film, an original capture, a
-// location, a contact list, an advertising identifier or anything for analytics.
+// Stage 1 built Accounts, the guest identity of section 9.2, picture upload records, push tokens and the
+// account-scoped records Delete Account must remove. Stage 2 adds Group Films with their Join Codes, memberships with
+// their Rolls, the viewing copies, reports and the Roll ledger's free credits and set-asides. Purchases and the
+// subscription link are Stage 4's. Nothing here ever holds a personal Film, an original capture, a location, a contact
+// list, an advertising identifier or anything for analytics.
 //
 // Removal markers (section 8) are kept in place rather than in a table of their own: a withdrawn or removed
-// picture keeps its row with only its event, shooter and exposure number (`pictureState`), and a removed or
-// deleted shooter keeps its membership row with that status, so a late or repeated upload cannot bring either
-// back (section 9.8).
+// picture keeps its row with only its event, shooter, exposure number and place in capture order (`pictureState`), a
+// removed or deleted shooter keeps its membership row with that status, and Withdraw Before Reveal records the last
+// exposure it took (`withdrawnThrough`), so a late or repeated upload cannot bring any of them back (section 9.8).
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const cameraValidator = v.union(v.literal("disposable"), v.literal("6x6"), v.literal("instant"));
+export const filmStockValidator = v.union(v.literal("color"), v.literal("blackAndWhite"));
+
+// Section 6.1's states as stored. Ending and the web album's switch are read from the times and the event's fields.
+export const eventState = v.union(
+  v.literal("scheduled"),
+  v.literal("open"),
+  v.literal("ended"),
+  v.literal("revealed"),
+  v.literal("gone"),
+  v.literal("deleted"),
+);
+
+// The reasons a member can give when reporting a picture (V2-FR-54). The list is this build's default wording.
+export const reportReasonValidator = v.union(
+  v.literal("sexual"),
+  v.literal("violence"),
+  v.literal("harassment"),
+  v.literal("privacy"),
+  v.literal("other"),
+);
 
 // How the age 13-or-over confirmation was made (open check OC-9): Apple's Declared Age Range, where iOS says the
 // person is in a region whose law requires it, or the person's own birth month and year, which the app checks and
@@ -71,9 +91,14 @@ export default defineSchema({
     rolls: v.number(),
     appleTransactionId: v.optional(v.string()),
     eventId: v.optional(v.id("events")),
+    // Which once-ever free amount a free row is (V2-FR-62): everyone's, or a subscriber's (Stage 4).
+    freeGrant: v.optional(v.union(v.literal("everyone"), v.literal("subscriber"))),
+    // The app's request id for adding Rolls, so a repeated request sets aside once (V2-FR-81).
+    requestId: v.optional(v.string()),
     at: v.number(),
   })
     .index("by_account", ["accountId"])
+    .index("by_account_and_request", ["accountId", "requestId"])
     .index("by_transaction", ["appleTransactionId"]),
 
   // Apple's original transaction id for a confirmed subscription, linked to one Account (Stage 4).
@@ -85,7 +110,8 @@ export default defineSchema({
     .index("by_account", ["accountId"])
     .index("by_original_transaction", ["originalTransactionId"]),
 
-  // The device token for the alert, per signed-in or joined installation of the full app.
+  // The device token for the alert, per signed-in or joined installation of the full app. One installation has one
+  // row, which can carry both the Account signed in on it and the phone's guest identity (V2-FR-70).
   pushTokens: defineTable({
     // A random id the app makes once per installation, so a new token replaces the old one.
     installationId: v.string(),
@@ -122,30 +148,71 @@ export default defineSchema({
     .index("by_guest_identity", ["guestIdentityId"])
     .index("by_event", ["eventId"]),
 
-  // Sketch for Stage 1: what the upload path and the read grants read. Stage 2 adds the Film Stock, the package
-  // and treatment versions, the Start Time, the Reveal Delay, Rolls, the joining state, the Join Code verifier and
-  // the web album switch.
+    // A Group Film: title, Host, Camera, Film Stock, the Host's treatment version at Load Film, Rolls set aside and taken,
+  // Start Time if any, End Time, Reveal Delay, joining state, the Join Code's generation (the code itself is derived and
+  // stored only as a verifier, in `joinCodes`), the web album switch, the reveal time and the state (section 6.1).
   events: defineTable({
     title: v.string(),
     // Absent once the Host deleted their Account (V2-FR-06): the event runs on with no Host.
     hostAccountId: v.optional(v.id("accounts")),
     hostLeftAt: v.optional(v.number()),
     camera: cameraValidator,
+    // Required on the 6×6 and refused elsewhere (V2-FR-10, ADR 0014).
+    filmStock: v.optional(filmStockValidator),
+    // The Developed Treatment version current on the Host's phone at Load Film (section 8); each phone develops with
+    // its own (V2-FR-33).
+    treatmentVersion: v.string(),
     exposuresPerRoll: v.number(),
+    // Every Roll ever set aside for the event, taken or not; at most 200 (V2-FR-26).
+    rollsSetAside: v.number(),
+    rollsTaken: v.number(),
+    // A later Start Time, when the Host set one (V2-FR-12); the event is Scheduled until it.
+    startsAt: v.optional(v.number()),
     endsAt: v.number(),
+    revealDelayMs: v.number(),
+    // End Time plus Reveal Delay, or the moment the Host ended early (V2-FR-40).
     revealsAt: v.number(),
-    state: v.union(
-      v.literal("open"),
-      v.literal("ended"),
-      v.literal("revealed"),
-      v.literal("gone"),
-      v.literal("deleted"),
-    ),
+    joiningPaused: v.boolean(),
+    joinCodeGeneration: v.number(),
+    // The view-only web album (V2-FR-47) is Stage 3's; it stays off until then.
+    webAlbumOn: v.boolean(),
+    // The stored state; `lib/phase.ts` derives the current one from the times, so nothing waits on the scheduler.
+    state: eventState,
+    revealedAt: v.optional(v.number()),
+    // Twelve months after the reveal (V2-FR-48).
+    albumEndsAt: v.optional(v.number()),
+    // When unclaimed Rolls returned to the Host's balance or lapsed (V2-FR-28, V2-FR-06).
+    rollsSettledAt: v.optional(v.number()),
+    alertSentAt: v.optional(v.number()),
+    deletedAt: v.optional(v.number()),
+    // The app's request id for Load Film, so a repeated Load Film makes one event (V2-FR-81).
+    createRequestId: v.optional(v.string()),
+    // The scheduled steps of section 9.5, cancelled and made again when the times change.
+    jobs: v.object({
+      open: v.optional(v.id("_scheduled_functions")),
+      end: v.optional(v.id("_scheduled_functions")),
+      reveal: v.optional(v.id("_scheduled_functions")),
+      gone: v.optional(v.id("_scheduled_functions")),
+    }),
     createdAt: v.number(),
-  }).index("by_host", ["hostAccountId"]),
+  })
+    .index("by_host", ["hostAccountId"])
+    .index("by_host_and_request", ["hostAccountId", "createRequestId"]),
+
+  // Every Join Code an event has had, as a verifier (SHA-256 of the code), so a replaced code is told apart from one
+  // that never existed (V2-FR-17, V2-FR-18). The current code is the event's `joinCodeGeneration`.
+  joinCodes: defineTable({
+    eventId: v.id("events"),
+    verifier: v.string(),
+    generation: v.number(),
+    retiredAt: v.optional(v.number()),
+  })
+    .index("by_verifier", ["verifier"])
+    .index("by_event", ["eventId"]),
 
   // Which guest identity or Account holds which Roll in which event, the Guest Name, exposures used, left or
-  // removed. Exactly one of accountId and guestIdentityId is set.
+  // removed. Exactly one of accountId and guestIdentityId is set while the place has a person; a deleted shooter's
+  // row keeps neither, as the marker that their exposures are gone.
   memberships: defineTable({
     eventId: v.id("events"),
     accountId: v.optional(v.id("accounts")),
@@ -154,6 +221,11 @@ export default defineSchema({
     exposuresUsed: v.number(),
     status: v.union(v.literal("joined"), v.literal("left"), v.literal("removed"), v.literal("deleted")),
     joinedAt: v.number(),
+    leftAt: v.optional(v.number()),
+    removedAt: v.optional(v.number()),
+    // Withdraw Before Reveal (V2-FR-50): every exposure up to this number is gone for good, so a picture of it that
+    // arrives later is refused.
+    withdrawnThrough: v.optional(v.number()),
   })
     .index("by_event", ["eventId"])
     .index("by_event_and_account", ["eventId", "accountId"])
@@ -161,8 +233,9 @@ export default defineSchema({
     .index("by_account", ["accountId"])
     .index("by_guest_identity", ["guestIdentityId"]),
 
-  // Event, shooter, exposure number, capture time, upload and seal state, size, checksum, storage key. The picture
-  // itself is in Cloudflare R2. A removed picture keeps only its number.
+  // Event, shooter, exposure number, capture time, upload and seal state, size, checksum, storage key, and the smaller
+  // viewing copy the phone makes (section 9.4). The pictures themselves are in Cloudflare R2. A removed picture keeps
+  // only its number and its place in capture order, for the album's numbered gap.
   pictures: defineTable({
     eventId: v.id("events"),
     membershipId: v.id("memberships"),
@@ -174,13 +247,51 @@ export default defineSchema({
     // SHA-256 of the file, base64, as the phone computed it and as the upload address requires.
     sha256: v.optional(v.string()),
     storageKey: v.optional(v.string()),
+    // The viewing copy, a smaller JPEG the phone made from the developed picture.
+    viewSize: v.optional(v.number()),
+    viewSha256: v.optional(v.string()),
+    viewStorageKey: v.optional(v.string()),
     requestedAt: v.number(),
     storedAt: v.optional(v.number()),
     removedAt: v.optional(v.number()),
+    // Whether it was ever stored: only those take a place in the album, and leave a numbered gap when removed.
+    everStored: v.optional(v.boolean()),
+    // Who removed it, for the record support keeps: its shooter, the Host, support, or a deletion.
+    removedBy: v.optional(
+      v.union(
+        v.literal("shooter"),
+        v.literal("host"),
+        v.literal("support"),
+        v.literal("withdrawal"),
+        v.literal("guestRemoved"),
+        v.literal("deletion"),
+      ),
+    ),
   })
     .index("by_shooter_and_exposure", ["membershipId", "exposureNumber"])
     .index("by_event", ["eventId"])
+    .index("by_event_and_state", ["eventId", "state"])
     .index("by_storage_key", ["storageKey"]),
+
+  // A report of a picture (V2-FR-54): the picture, the reason, when, and which member reported, never shown to the
+  // Host. It reaches the Host in the app and the support address through the operator's relay.
+  reports: defineTable({
+    eventId: v.id("events"),
+    pictureId: v.id("pictures"),
+    reporterMembershipId: v.id("memberships"),
+    reason: reportReasonValidator,
+    at: v.number(),
+    deliveredAt: v.optional(v.number()),
+    deliveryAttempts: v.number(),
+    resolvedAt: v.optional(v.number()),
+    resolution: v.optional(v.union(v.literal("removed"), v.literal("kept"))),
+    // Ninety days after it is resolved, or the event's end if sooner (section 8).
+    expiresAt: v.optional(v.number()),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_picture_and_reporter", ["pictureId", "reporterMembershipId"])
+    .index("by_delivery", ["deliveredAt"])
+    .index("by_resolution", ["resolvedAt"]),
 
   // R2 objects to delete. Deletion writes the marker (the picture's state) first and queues the object here, so a
   // failed storage call is retried and never forgotten.

@@ -24,7 +24,33 @@ export type RefusalCode =
   // A different picture is already stored for this exposure.
   | "exposureTaken"
   // This picture was withdrawn or removed and can never come back (section 9.8).
-  | "pictureRemoved";
+  | "pictureRemoved"
+  // Only the event's Host may do this (V2-FR-11, section 4.2), and a deleted Host's event has none (V2-FR-06).
+  | "notTheHost"
+  // No event has this Join Code (V2-FR-15).
+  | "unknownCode"
+  // The Join Code was replaced; its link no longer works (V2-FR-17).
+  | "codeReplaced"
+  // The event opens at its Start Time; nobody can join or shoot before it (V2-FR-12).
+  | "notYetOpen"
+  // Joining is paused (V2-FR-16).
+  | "joiningPaused"
+  // Every Roll has been taken (V2-FR-24).
+  | "rollsTaken"
+  // The End Time has passed: nobody joins, and the Host changes no setup (V2-FR-12, V2-FR-24, V2-FR-27).
+  | "shootingEnded"
+  // The Host removed this person from this event; they can never take part in it again (V2-FR-24, V2-FR-53).
+  | "removedFromEvent"
+  // More than 200 Rolls in the event's life (V2-FR-26).
+  | "rollLimit"
+  // The Host's balance holds fewer Rolls than this needs (V2-FR-60, section 7).
+  | "balanceTooLow"
+  // This needs the reveal first: removing a picture, reporting one, or seeing the album (V2-FR-51 to V2-FR-54).
+  | "notRevealed"
+  // The event has revealed: Withdraw Before Reveal is over (V2-FR-50).
+  | "alreadyRevealed"
+  // The guest identity was claimed into another Account (V2-FR-04).
+  | "identityClaimed";
 
 export function refuse(code: RefusalCode, message?: string): never {
   throw new ConvexError({ code, message: message ?? code });

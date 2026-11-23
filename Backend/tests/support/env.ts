@@ -8,3 +8,5 @@ process.env.R2_BUCKET = storage.bucket;
 process.env.R2_ACCESS_KEY_ID = storage.accessKeyId;
 process.env.R2_SECRET_ACCESS_KEY = storage.secretAccessKey;
 process.env.R2_REGION = storage.region;
+// Join Codes are derived under a deployment secret (convex/lib/joinCode.ts); the tests use a fresh one per run.
+process.env.JOIN_CODE_SECRET = `test-${crypto.randomUUID()}-${crypto.randomUUID()}`;

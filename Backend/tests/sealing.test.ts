@@ -17,6 +17,7 @@ import {
   put,
   refusalCode,
   signedIn,
+  readAddresses,
 } from "./support/convex";
 
 // An event with one stored picture by a guest and one by the Host, sealed.
@@ -68,15 +69,15 @@ describe("before the reveal, no one can read a sealed picture", () => {
   test("the server issues no read address to the Host, the shooter or another guest", async () => {
     const { t, host, eventId, guest } = await sealedEvent();
     const other: Guest = await newGuest(t, eventId, "Sam");
-    expect(await refusalCode(host.action(api.reads.readAddresses, { eventId }))).toBe("sealed");
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId, guestToken: guest.token }))).toBe("sealed");
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId, guestToken: other.token }))).toBe("sealed");
+    expect(await refusalCode(readAddresses(host, { eventId }))).toBe("sealed");
+    expect(await refusalCode(readAddresses(t, { eventId, guestToken: guest.token }))).toBe("sealed");
+    expect(await refusalCode(readAddresses(t, { eventId, guestToken: other.token }))).toBe("sealed");
   });
 
   test("after shooting ends but before the reveal, the pictures stay sealed", async () => {
     const { t, host, eventId } = await sealedEvent();
     await t.mutation(internal.proofs.endProofEvent, { eventId });
-    expect(await refusalCode(host.action(api.reads.readAddresses, { eventId }))).toBe("sealed");
+    expect(await refusalCode(readAddresses(host, { eventId }))).toBe("sealed");
   });
 
   test("the storage key alone reads nothing: the bucket is private", async () => {
@@ -131,7 +132,7 @@ describe("before the reveal, no one can read a sealed picture", () => {
     const otherEvent = await newEvent(t, "user_host");
     const stranger = await newGuest(t, otherEvent, "Lee");
     await t.mutation(internal.proofs.revealProofEvent, { eventId });
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId, guestToken: stranger.token }))).toBe(
+    expect(await refusalCode(readAddresses(t, { eventId, guestToken: stranger.token }))).toBe(
       "guestTokenRefused",
     );
   });
@@ -141,8 +142,8 @@ describe("before the reveal, no one can read a sealed picture", () => {
     await t.mutation(internal.proofs.revealProofEvent, { eventId });
     await newHost(t, "user_stranger", "Stranger");
     const stranger = signedIn(t, "user_stranger");
-    expect(await refusalCode(stranger.action(api.reads.readAddresses, { eventId }))).toBe("notAMember");
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId }))).toBe("unauthenticated");
+    expect(await refusalCode(readAddresses(stranger, { eventId }))).toBe("notAMember");
+    expect(await refusalCode(readAddresses(t, { eventId }))).toBe("unauthenticated");
   });
 });
 
@@ -154,7 +155,7 @@ describe("after the reveal, members get short-lived read addresses", () => {
       await ctx.db.patch(membership!._id, { status: "left" });
     });
     await t.mutation(internal.proofs.revealProofEvent, { eventId });
-    for (const reader of [host.action(api.reads.readAddresses, { eventId }), t.action(api.reads.readAddresses, { eventId, guestToken: guest.token })]) {
+    for (const reader of [readAddresses(host, { eventId }), readAddresses(t, { eventId, guestToken: guest.token })]) {
       const addresses = await reader;
       expect(addresses).toHaveLength(2);
       for (const address of addresses) {
@@ -179,18 +180,18 @@ describe("after the reveal, members get short-lived read addresses", () => {
   test("a read address reused after its picture was removed reads nothing", async () => {
     const { t, host, eventId, guest } = await sealedEvent();
     await t.mutation(internal.proofs.revealProofEvent, { eventId });
-    const addresses = await host.action(api.reads.readAddresses, { eventId });
+    const addresses = await readAddresses(host, { eventId });
     const guestAddress = addresses.find((address) => address.shooterName === "Jo")!;
     expect((await fetch(guestAddress.url)).status).toBe(200);
     await t.mutation(internal.proofs.removeProofGuest, { eventId, publicId: guest.publicId });
     await drainStorageDeletions(t);
     expect((await fetch(guestAddress.url)).status).toBe(404);
     // The removed guest's own token reads nothing more.
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId, guestToken: guest.token }))).toBe(
+    expect(await refusalCode(readAddresses(t, { eventId, guestToken: guest.token }))).toBe(
       "guestTokenRefused",
     );
     // And the album lists only what is left.
-    expect((await host.action(api.reads.readAddresses, { eventId })).map((a) => a.shooterName)).toEqual(["Maya"]);
+    expect((await readAddresses(host, { eventId })).map((a) => a.shooterName)).toEqual(["Maya"]);
   });
 
   test("a removed guest cannot get back in with their secret", async () => {
@@ -208,19 +209,19 @@ describe("after the reveal, members get short-lived read addresses", () => {
     await t.run(async (ctx) => {
       for (const session of await ctx.db.query("guestSessions").collect()) await ctx.db.patch(session._id, { expiresAt: Date.now() - 1 });
     });
-    expect(await refusalCode(t.action(api.reads.readAddresses, { eventId, guestToken: guest.token }))).toBe(
+    expect(await refusalCode(readAddresses(t, { eventId, guestToken: guest.token }))).toBe(
       "guestTokenRefused",
     );
     // With the secret, the guest gets a new one.
     const { token } = await t.mutation(api.guests.startSession, { publicId: guest.publicId, secret: guest.secret, eventId });
-    expect(await t.action(api.reads.readAddresses, { eventId, guestToken: token })).toHaveLength(2);
+    expect(await readAddresses(t, { eventId, guestToken: token })).toHaveLength(2);
   });
 
   test("a gone or deleted event gives no addresses", async () => {
     const { t, host, eventId } = await sealedEvent();
     await t.mutation(internal.proofs.revealProofEvent, { eventId });
     await t.run((ctx) => ctx.db.patch(eventId, { state: "deleted" }));
-    expect(await refusalCode(host.action(api.reads.readAddresses, { eventId }))).toBe("eventGone");
+    expect(await refusalCode(readAddresses(host, { eventId }))).toBe("eventGone");
   });
 
   test("the guest secret is never stored, only its verifier", async () => {

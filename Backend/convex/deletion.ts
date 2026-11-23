@@ -17,22 +17,29 @@ import { refuse } from "./lib/errors";
 // Rows each batch handles per kind of record, well inside Convex's limits on one mutation.
 const BATCH = 64;
 
-// Removes a picture's media and keeps its number: the row keeps its event, shooter and exposure number, so the
-// album shows a numbered gap and a late or repeated upload of the same exposure is refused (section 9.8).
-export async function removePicture(ctx: MutationCtx, picture: Doc<"pictures">, now: number) {
+export type RemovedBy = NonNullable<Doc<"pictures">["removedBy"]>;
+
+// Removes a picture's media and keeps its number: the row keeps its event, shooter, exposure number and capture time,
+// so the album shows a numbered gap in its place and a late or repeated upload of the same exposure is refused
+// (section 9.8). The marker is written before the media's deletion is queued.
+export async function removePicture(ctx: MutationCtx, picture: Doc<"pictures">, now: number, removedBy: RemovedBy) {
   if (picture.state === "removed") return;
-  const storageKey = picture.storageKey;
+  const keys = [picture.storageKey, picture.viewStorageKey].filter((key): key is string => key !== undefined);
   await ctx.db.patch(picture._id, {
     state: "removed",
     removedAt: now,
-    captureTime: undefined,
+    removedBy,
+    everStored: picture.state === "stored" || picture.everStored === true,
     contentType: undefined,
     size: undefined,
     sha256: undefined,
     storageKey: undefined,
+    viewSize: undefined,
+    viewSha256: undefined,
+    viewStorageKey: undefined,
     storedAt: undefined,
   });
-  if (storageKey !== undefined) await queueStorageDeletion(ctx, storageKey, now);
+  for (const key of keys) await queueStorageDeletion(ctx, key, now);
 }
 
 export async function queueStorageDeletion(ctx: MutationCtx, storageKey: string, now: number) {
@@ -53,13 +60,13 @@ export async function queueStorageDeletion(ctx: MutationCtx, storageKey: string,
 
 // Removes a shooter's pictures and their name, keeping the membership row with no person on it as the marker that
 // their exposures are gone. Returns false when it stopped at the batch limit.
-async function removeShooter(ctx: MutationCtx, membership: Doc<"memberships">, now: number): Promise<boolean> {
+export async function removeShooter(ctx: MutationCtx, membership: Doc<"memberships">, now: number): Promise<boolean> {
   const pictures = await ctx.db
     .query("pictures")
     .withIndex("by_shooter_and_exposure", (q) => q.eq("membershipId", membership._id))
     .filter((q) => q.neq(q.field("state"), "removed"))
     .take(BATCH);
-  for (const picture of pictures) await removePicture(ctx, picture, now);
+  for (const picture of pictures) await removePicture(ctx, picture, now, "deletion");
   if (pictures.length === BATCH) return false;
   await ctx.db.patch(membership._id, {
     status: "deleted",
@@ -151,7 +158,13 @@ export const deleteAccountBatch = internalMutation({
               .query("pushTokens")
               .withIndex("by_guest_identity", (q) => q.eq("guestIdentityId", owner.guestIdentityId))
               .take(BATCH);
-      for (const token of tokens) await ctx.db.delete(token._id);
+      for (const token of tokens) {
+        // An installation's row can also carry the phone's own guest identity, which was never claimed into this
+        // Account; that part stays.
+        const unclaimedGuest = token.guestIdentityId !== undefined && !claimed.some((identity) => identity._id === token.guestIdentityId);
+        if ("accountId" in owner && unclaimedGuest) await ctx.db.patch(token._id, { accountId: undefined });
+        else await ctx.db.delete(token._id);
+      }
       if (tokens.length === BATCH) return { done: false };
     }
 
