@@ -327,7 +327,7 @@ Acceptance criteria:
 
 - Delete Account is reachable from Settings in two taps or fewer for a signed-in person, as App Store guideline 5.1.1(v) requires.
 - Within one minute of confirming, none of the person's pictures can be seen or downloaded by anyone, in the app or the web album, and each leaves a numbered gap.
-- The person's pictures still waiting on their phone are deleted there and never upload.
+- The person's pictures still waiting on their phone are deleted there and never upload, and the phone also deletes the Instant prints it keeps (V2-FR-32).
 - Clerk's user and every server record that names the person are deleted, apart from the purchase records section 8 says are kept for accounting, which no longer name them.
 - Signing in again with the same method creates a new, empty Account.
 
@@ -891,7 +891,7 @@ Acceptance criteria:
 While the event is open or revealed, the Host can remove a guest after a confirmation.
 A removed guest can no longer shoot or see the event or its album; pictures they took before the removal still upload.
 **Carried from the parked design:** removal is permanent for that guest identity in that event, and the Host cannot undo it.
-**Carried from the parked design:** removing a guest does not remove their pictures; the Host removes pictures one at a time after the reveal (V2-FR-52), and a removed guest keeps their right to withdraw their own pictures (open question OQ-6 asks whether removal should also remove them).
+**Carried from the parked design:** removing a guest does not remove their pictures; the Host removes pictures one at a time after the reveal (V2-FR-52), and a removed guest keeps their right to withdraw their own pictures (open question OQ-6 asks whether removal should also remove them, and what the removed guest's phone does with the Instant prints it keeps until the reveal).
 
 Acceptance criteria:
 
@@ -915,12 +915,12 @@ Acceptance criteria:
 #### V2-FR-55 - The Host deletes the whole event
 
 The Host can delete the whole event, at any time before the album ends, after a warning that every picture is removed for everyone, for good, and that copies already saved cannot be recalled.
-Deleting it removes every picture and the web album from the server, makes the link show "This event is no longer available", removes the event from every Film Library, deletes pictures still waiting on guests' phones when those phones next come online, and returns unclaimed Rolls to the balance (V2-FR-28).
+Deleting it removes every picture and the web album from the server, makes the link show "This event is no longer available", removes the event from every Film Library, deletes pictures still waiting on guests' phones, and the Instant prints those phones keep, when those phones next come online, and returns unclaimed Rolls to the balance (V2-FR-28).
 
 Acceptance criteria:
 
 - Within one minute of deletion no picture of the event can be seen or downloaded anywhere.
-- A guest's phone that comes online later deletes its waiting pictures for that event and uploads none.
+- A guest's phone that comes online later deletes its waiting pictures and the Instant prints it keeps for that event, and uploads none.
 
 #### V2-FR-56 - A guest can leave
 
@@ -938,7 +938,7 @@ Acceptance criteria:
 
 Acceptance criteria:
 
-- After Delete Guest Identity, none of that identity's pictures can be seen anywhere, each leaving a numbered gap, and its waiting pictures never upload.
+- After Delete Guest Identity, none of that identity's pictures can be seen anywhere, each leaving a numbered gap, its waiting pictures never upload, and the phone deletes the Instant prints it keeps.
 
 ### 5.10 Paying
 
@@ -1195,7 +1195,7 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | A refunded purchase's refund is reversed | The Rolls are added back. | V2-FR-65 |
 | A subscriber's subscription lapses or is refunded | No further subscriber free Rolls; open question OQ-10 asks about Rolls already credited. | V2-FR-63 |
 | The same subscription is presented by a second Account | No subscriber free Rolls for it; the app says the subscription is linked elsewhere. | V2-FR-63 |
-| The Host deletes the event while guests are offline and shooting | Their phones delete the event's waiting pictures when they come online, and say the event was deleted. | V2-FR-55 |
+| The Host deletes the event while guests are offline and shooting | Their phones delete the event's waiting pictures and the Instant prints they keep when they come online, and say the event was deleted. | V2-FR-55 |
 | A guest withdraws before the reveal while offline | The phone deletes its waiting pictures at once and tells the server when online; nothing that was waiting ever uploads. | V2-FR-50 |
 | A picture is reported | It reaches the Host and support; nothing is removed until one of them removes it. | V2-FR-54 |
 | Someone opens the link on Android, a computer or iOS before 26 | The join page explains, and shows the web album when the Host has it on. | V2-FR-18 |
@@ -1515,7 +1515,7 @@ None blocks this PRD from being coherent; each needs the captain's answer before
 | OQ-3 | Does an event open when the Host loads it, or can the Host set a later start, so a code can be printed weeks ahead while shooting still lasts at most 7 days? | V2-FR-12, 6.1 | None. | Stage 2 |
 | OQ-4 | When the Host ends early, does the chosen Reveal Delay still apply, or does the album reveal at once? | V2-FR-40 | Reading: the delay still applies. | Stage 2 |
 | OQ-5 | Are late pictures accepted until the album ends, or until a cut-off after the reveal? | V2-FR-41 | Reading: until the album ends. | Stage 2 |
-| OQ-6 | When the Host removes a guest, do that guest's pictures stay (the parked rule: the Host removes them one by one after the reveal) or go with them? | V2-FR-53 | Parked rule: they stay. | Stage 2 |
+| OQ-6 | When the Host removes a guest, do that guest's pictures stay (the parked rule: the Host removes them one by one after the reveal) or go with them? And does a removed Instant guest's phone keep showing them the Instant prints it keeps until the reveal, or delete them at the removal? | V2-FR-53 | Parked rule: they stay. | Stage 2 |
 | OQ-7 | Is the Host also emailed before the album ends, beside the in-app and on-page notices, given "one alert only"? | V2-FR-48 | Reading: no email; notices only. | Stage 2 |
 | OQ-8 | Does the web album show Guest Names in each picture's details, to anyone with the link, or hide them on the web? | V2-FR-47 | Reading: shown, as in the app. | Stage 3 |
 | OQ-9 | Does a guest who left see the album after the reveal ("everyone who joined sees every picture"), and may they rejoin while the event is open (the parked rule)? | V2-FR-43, V2-FR-56 | Parked rule: leaving ends album access; rejoining is allowed while open. The plan's words suggest everyone who joined sees it. | Stage 2 |
