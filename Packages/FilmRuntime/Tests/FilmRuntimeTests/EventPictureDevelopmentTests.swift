@@ -110,6 +110,30 @@ final class EventPictureDevelopmentTests: XCTestCase {
         XCTAssertNil(try repository.mediaAsset(filmID: roll.id, sequenceNumber: 2, kind: .source))
     }
 
+    func testARollMadeAgainContinuesAfterTheExposuresTheServerCountsAsUsed() throws {
+        let repository = try FilmRepository(rootURL: root)
+        let roll = try repository.createEventRoll(eventID: "event-1", camera: CameraCatalog.disposable1990s, title: "Ana & Leo",
+                                                  filmStock: nil, exposuresUsed: 10)
+        XCTAssertEqual(try repository.filmAccess(filmID: roll.id), .groupRoll(eventID: "event-1"))
+        XCTAssertEqual(try repository.film(id: roll.id).remainingExposures, 17)
+        let next = try repository.savePhotoCapture(filmID: roll.id, sourceData: photo)
+        XCTAssertEqual(next.captures.last?.sequenceNumber, 11, "The next picture takes the Roll's next exposure, never one the server holds")
+        let film = try repository.film(id: roll.id)
+        XCTAssertEqual(film.captures.map(\.revealState), Array(repeating: .discardedPlaceholder, count: 10) + [.sealed])
+        XCTAssertEqual(film.remainingExposures, 16)
+
+        let fresh = try repository.createEventRoll(eventID: "event-2", camera: CameraCatalog.instant1970s, title: "Fresh",
+                                                   filmStock: nil, exposuresUsed: 0)
+        XCTAssertEqual(fresh.captures, [])
+        XCTAssertEqual(fresh.completionState, .open)
+
+        let spent = try repository.createEventRoll(eventID: "event-3", camera: CameraCatalog.instant1970s, title: "Spent",
+                                                   filmStock: nil, exposuresUsed: 99)
+        XCTAssertEqual(spent.captures.count, 10)
+        XCTAssertEqual(spent.completionState, .capacityFull)
+        XCTAssertThrowsError(try repository.savePhotoCapture(filmID: spent.id, sourceData: photo))
+    }
+
     func testTheViewingCopyIsSmallAndCarriesNoMetadata() throws {
         let developed = try photo
         let copy = try EventPictureDevelopment.viewingCopy(of: developed, longestSide: 320)

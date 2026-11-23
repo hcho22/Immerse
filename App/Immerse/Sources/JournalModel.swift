@@ -326,9 +326,10 @@ final class JournalModel {
     /// Makes the local Film of a Roll taken in a Group Film (v2 PRD V2-FR-25, V2-FR-31): the event's Camera and Film
     /// Stock with the Camera package current on this iPhone, so the guest can shoot offline. Its right to shoot is the
     /// server's, so it never asks the subscription or the Trial (V2-FR-07); only the Group Films' Journal, whose store is
-    /// apart from personal Films, calls it.
-    func loadEventRoll(eventID: String, camera: CameraPackage, title: String, filmStock: FilmStock?) throws -> Film {
-        let film = try repository.createFilm(camera: camera, title: title, filmStock: filmStock, access: .groupRoll(eventID: eventID))
+    /// apart from personal Films, calls it. The exposures the server already counts as used stay used.
+    func loadEventRoll(eventID: String, camera: CameraPackage, title: String, filmStock: FilmStock?, exposuresUsed: Int) throws -> Film {
+        let film = try repository.createEventRoll(eventID: eventID, camera: camera, title: title, filmStock: filmStock,
+                                                  exposuresUsed: exposuresUsed)
         refresh()
         return film
     }

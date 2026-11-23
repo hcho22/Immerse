@@ -301,7 +301,8 @@ final class GroupFilms {
             place.asGuest = caller != .account
             if place.rollFilmID == nil || rolls.film(place.rollFilmID!) == nil {
                 let film = try rolls.loadEventRoll(eventID: eventID, camera: Self.package(for: joined.event.camera),
-                                                   title: joined.event.title, filmStock: Self.filmStock(joined.event.filmStock))
+                                                   title: joined.event.title, filmStock: Self.filmStock(joined.event.filmStock),
+                                                   exposuresUsed: max(joined.exposuresUsed, joined.withdrawnThrough))
                 place.rollFilmID = film.id
             }
             places.removeAll { $0.eventID == eventID }
@@ -511,7 +512,8 @@ final class GroupFilms {
         // A Roll joined on another iPhone, or before this phone kept its Film, gets its local Film to shoot on.
         if self.place(eventID)?.rollFilmID == nil, view.status == .joined, view.event.phase == .open || view.event.phase == .scheduled {
             if let film = try? rolls.loadEventRoll(eventID: eventID, camera: Self.package(for: view.event.camera),
-                                                   title: view.event.title, filmStock: Self.filmStock(view.event.filmStock)) {
+                                                   title: view.event.title, filmStock: Self.filmStock(view.event.filmStock),
+                                                   exposuresUsed: max(view.exposuresUsed, view.withdrawnThrough)) {
                 update(eventID) { $0.rollFilmID = film.id }
             }
         }
@@ -592,7 +594,7 @@ final class GroupFilms {
             guard let filmID = place.rollFilmID, let film = rolls.film(filmID), place.place != .removed else { continue }
             let instant = film.camera.revealRule == .instantPerExposure
             for capture in film.captures where !capture.isDiscarded {
-                guard active, !Task.isCancelled else { return }
+                guard active, !rolls.capture.presented, !Task.isCancelled else { return }
                 let key = "\(place.eventID)-\(capture.sequenceNumber)"
                 guard (developmentFailures[key] ?? 0) < 3,
                       await !queue.contains(eventID: place.eventID, exposureNumber: capture.sequenceNumber),

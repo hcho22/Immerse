@@ -8,6 +8,26 @@ extension FilmRepository {
         guard try filmAccess(filmID: filmID).isGroupRoll else { throw PersistenceError.notAnEventRoll }
     }
 
+    /// Makes the local Film of a Roll taken in a Group Film, with the exposures the server already counts as used (a Roll
+    /// shot on another iPhone, or before this phone kept its Film) marked used, so its numbering continues where the Roll
+    /// is and never reuses an exposure (V2-FR-04, V2-FR-31, V2-FR-56).
+    public func createEventRoll(
+        eventID: String,
+        camera: CameraPackage,
+        title: String,
+        filmStock: FilmStock?,
+        exposuresUsed: Int,
+        loadedAt: Date = Date()
+    ) throws -> Film {
+        var film = try Film(camera: camera, title: title, loadedAt: loadedAt, filmStock: filmStock)
+        try film.recordUsedEventExposures(exposuresUsed, at: loadedAt)
+        try database.withTransaction {
+            try save(film)
+            try database.setValue(filmID: film.id, key: "access", data: encoder.encode(FilmAccess.groupRoll(eventID: eventID)))
+        }
+        return film
+    }
+
     /// Deletes a capture's original once Immerse's server has confirmed its developed picture whole (V2-FR-36). The
     /// capture keeps its place and, on the Instant, its developed print, which its shooter keeps seeing until the reveal
     /// (V2-FR-32). Repeating it does nothing.
