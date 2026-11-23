@@ -4,6 +4,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
+import { queueStorageDeletion } from "../convex/deletion";
 import { readObject, storageConfig } from "../convex/lib/storage";
 import { startClerkDouble } from "./support/clerk-double";
 import {
@@ -234,5 +235,43 @@ describe("Delete Account", () => {
     expect(JSON.stringify(rows).includes(accountId)).toBe(false);
     expect(rows.filter((r) => r.table === "pictures" && r.row.state !== "removed")).toHaveLength(0);
     expect(rows.filter((r) => r.table === "storageDeletions")).toHaveLength(140);
+  });
+});
+
+describe("The storage deletion queue", () => {
+  async function pendingDrains(t: Backend) {
+    const scheduled = await t.run((ctx) => ctx.db.system.query("_scheduled_functions").collect());
+    return scheduled.filter((f) => f.name.includes("drain") && f.state.kind === "pending");
+  }
+
+  test("queueing many keys in one mutation starts one drain, and drains at once never take the same row", async () => {
+    const t = newBackend();
+    await t.run(async (ctx) => {
+      for (let index = 0; index < 64; index += 1) await queueStorageDeletion(ctx, `pictures/many/${index}`, Date.now());
+    });
+    expect(await pendingDrains(t)).toHaveLength(1);
+    const [first, second] = await Promise.all([
+      t.mutation(internal.storageQueue.claim, {}),
+      t.mutation(internal.storageQueue.claim, {}),
+    ]);
+    const claimed = [...first, ...second].map((row) => row.storageKey);
+    expect(claimed).toHaveLength(64);
+    expect(new Set(claimed).size).toBe(64);
+    expect(await t.mutation(internal.storageQueue.claim, {})).toEqual([]);
+  });
+
+  test("keys still backing off after failures do not hold newer keys back", async () => {
+    const t = newBackend();
+    const later = Date.now() + 3_600_000;
+    await t.run(async (ctx) => {
+      for (let index = 0; index < 50; index += 1) {
+        await ctx.db.insert("storageDeletions", { storageKey: `pictures/failing/${index}`, queuedAt: 1, attempts: 3, nextAttemptAt: later });
+      }
+      await queueStorageDeletion(ctx, "pictures/newer/1", Date.now());
+    });
+    await drainStorageDeletions(t);
+    const left = await t.run((ctx) => ctx.db.query("storageDeletions").collect());
+    expect(left).toHaveLength(50);
+    expect(left.every((row) => row.storageKey.startsWith("pictures/failing/") && row.attempts === 3)).toBe(true);
   });
 });

@@ -40,8 +40,15 @@ export async function queueStorageDeletion(ctx: MutationCtx, storageKey: string,
     .query("storageDeletions")
     .withIndex("by_storage_key", (q) => q.eq("storageKey", storageKey))
     .unique();
-  if (queued === null) await ctx.db.insert("storageDeletions", { storageKey, queuedAt: now, attempts: 0 });
-  await ctx.scheduler.runAfter(0, internal.storageQueue.drain, {});
+  if (queued !== null) return;
+  // A row already waiting has a drain on its way, which takes this one too, so a mutation that queues many keys
+  // starts one drain.
+  const waiting = await ctx.db
+    .query("storageDeletions")
+    .withIndex("by_next_attempt", (q) => q.lte("nextAttemptAt", now))
+    .first();
+  await ctx.db.insert("storageDeletions", { storageKey, queuedAt: now, attempts: 0, nextAttemptAt: now });
+  if (waiting === null) await ctx.scheduler.runAfter(0, internal.storageQueue.drain, {});
 }
 
 // Removes a shooter's pictures and their name, keeping the membership row with no person on it as the marker that

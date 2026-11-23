@@ -1,15 +1,36 @@
 // Deletes queued R2 objects (deletion.ts queues them after writing each removal's marker). A failure stays queued
 // and is retried with a growing delay, so no removed picture's media is forgotten in storage.
+//
+// Each drain claims the rows it deletes, so drains running at once never take the same row, a row counts one
+// attempt per try, and rows still backing off after a failure never stand in front of newer ones.
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { internalAction, internalMutation, internalQuery } from "./_generated/server";
+import { internalAction, internalMutation } from "./_generated/server";
 import { deleteObject, storageConfig } from "./lib/storage";
 
 const DRAIN_BATCH = 50;
+// How long a drain holds the rows it claimed: longer than an action may run, so a held row is never taken twice.
+// Should the drain stop without settling, the rows wait this long and are drained again.
+const CLAIM_MS = 15 * 60_000;
 
-export const queued = internalQuery({
+function retryDelay(attempts: number) {
+  return Math.min(60_000 * 2 ** (attempts - 1), 6 * 3_600_000);
+}
+
+export const claim = internalMutation({
   args: {},
-  handler: (ctx) => ctx.db.query("storageDeletions").take(DRAIN_BATCH),
+  handler: async (ctx) => {
+    const now = Date.now();
+    const rows = await ctx.db
+      .query("storageDeletions")
+      .withIndex("by_next_attempt", (q) => q.lte("nextAttemptAt", now))
+      .take(DRAIN_BATCH);
+    if (rows.length === 0) return [];
+    for (const row of rows) await ctx.db.patch(row._id, { nextAttemptAt: now + CLAIM_MS });
+    await ctx.scheduler.runAfter(CLAIM_MS, internal.storageQueue.drain, {});
+    if (rows.length === DRAIN_BATCH) await ctx.scheduler.runAfter(0, internal.storageQueue.drain, {});
+    return rows.map((row) => ({ id: row._id, storageKey: row.storageKey }));
+  },
 });
 
 export const settle = internalMutation({
@@ -18,24 +39,24 @@ export const settle = internalMutation({
     for (const id of deleted) {
       if ((await ctx.db.get(id)) !== null) await ctx.db.delete(id);
     }
-    let longestAttempts = 0;
+    const now = Date.now();
+    const retries = new Set<number>();
     for (const id of failed) {
       const row = await ctx.db.get(id);
       if (row === null) continue;
-      await ctx.db.patch(id, { attempts: row.attempts + 1 });
-      longestAttempts = Math.max(longestAttempts, row.attempts + 1);
+      const attempts = row.attempts + 1;
+      const nextAttemptAt = now + retryDelay(attempts);
+      await ctx.db.patch(id, { attempts, nextAttemptAt });
+      retries.add(nextAttemptAt);
     }
-    if (failed.length > 0) {
-      const delay = Math.min(60_000 * 2 ** (longestAttempts - 1), 6 * 3_600_000);
-      await ctx.scheduler.runAfter(delay, internal.storageQueue.drain, {});
-    }
+    for (const at of retries) await ctx.scheduler.runAt(at, internal.storageQueue.drain, {});
   },
 });
 
 export const drain = internalAction({
   args: {},
   handler: async (ctx) => {
-    const rows = await ctx.runQuery(internal.storageQueue.queued, {});
+    const rows = await ctx.runMutation(internal.storageQueue.claim, {});
     if (rows.length === 0) return;
     const config = storageConfig();
     const deleted = [];
@@ -43,13 +64,12 @@ export const drain = internalAction({
     for (const row of rows) {
       try {
         await deleteObject(config, row.storageKey);
-        deleted.push(row._id);
+        deleted.push(row.id);
       } catch (error) {
         console.error(`Storage deletion failed: ${String(error)}`);
-        failed.push(row._id);
+        failed.push(row.id);
       }
     }
     await ctx.runMutation(internal.storageQueue.settle, { deleted, failed });
-    if (rows.length === DRAIN_BATCH && failed.length === 0) await ctx.scheduler.runAfter(0, internal.storageQueue.drain, {});
   },
 });

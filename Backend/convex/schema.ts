@@ -188,5 +188,9 @@ export default defineSchema({
     storageKey: v.string(),
     queuedAt: v.number(),
     attempts: v.number(),
-  }).index("by_storage_key", ["storageKey"]),
+    // When a drain may next take the row: when it is queued, while a drain holds it, and after a failure's backoff.
+    nextAttemptAt: v.number(),
+  })
+    .index("by_storage_key", ["storageKey"])
+    .index("by_next_attempt", ["nextAttemptAt"]),
 });
