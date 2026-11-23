@@ -20,11 +20,23 @@ final class GroupFilmsTests: XCTestCase {
         let server: DebugHostingServer
         let offline = Mutex(false)
         let paths = Mutex<[String]>([])
+        /// The exposures the server counts as used, as the real server's `reserveUpload` counts them (the stand-in
+        /// leaves its count at 0), so a join reply carries where the Roll stands.
+        let stored = Mutex(0)
         init(_ server: DebugHostingServer) { self.server = server }
         func call(_ kind: FunctionKind, _ path: String, _ args: [String: JSONValue]) async throws(ServerError) -> JSONValue {
             if offline.withLock({ $0 }) { throw .unreachable }
             paths.withLock { $0.append(path) }
-            return try await server.call(kind, path, args)
+            let reply = try await server.call(kind, path, args)
+            if path == "pictures:requestUpload" {
+                let number = Int(args["exposureNumber"]?.number ?? 0)
+                stored.withLock { $0 = max($0, number) }
+            }
+            if path == "joining:join" || path == "joining:memberView", case var .object(fields) = reply {
+                fields["exposuresUsed"] = .number(Double(stored.withLock { $0 }))
+                return .object(fields)
+            }
+            return reply
         }
     }
 
@@ -32,10 +44,13 @@ final class GroupFilmsTests: XCTestCase {
     private var network: Network!
     private var backend: DebugEventBackend!
     private var groupFilms: GroupFilms!
+    private var identities: MemoryGuestIdentityStore!
+    private var server: DebugHostingServer!
 
     override func setUp() async throws {
         base = FileManager.default.temporaryDirectory.appending(path: "GroupFilmsTests-\(UUID().uuidString)")
-        let server = DebugHostingServer(accountName: nil)
+        server = DebugHostingServer(accountName: nil)
+        identities = MemoryGuestIdentityStore()
         backend = DebugEventBackend()
         backend.seedOpenEvent(code: DebugGroupFilms.openCode)
         server.events = backend
@@ -43,7 +58,7 @@ final class GroupFilmsTests: XCTestCase {
         let signIn = DebugHostSignIn(server: server, signedIn: false)
         let hosting = HostingSession(signIn: signIn, functions: network,
                                      defaults: UserDefaults(suiteName: "GroupFilmsTests-\(UUID().uuidString)")!)
-        groupFilms = try GroupFilmsSetup.make(hosting: hosting, base: base, identities: MemoryGuestIdentityStore(),
+        groupFilms = try GroupFilmsSetup.make(hosting: hosting, base: base, identities: identities,
                                               joinHost: DebugGroupFilms.joinHost, supportAddress: nil)
     }
 
@@ -141,5 +156,62 @@ final class GroupFilmsTests: XCTestCase {
         XCTAssertEqual(groupFilms.rolls.packEndOriginalQuestion(filmID), [], "Event originals have no question")
         let trialState = try await groupFilms.rolls.trial.state()
         XCTAssertEqual(trialState, .unused)
+    }
+
+    /// Review round 1, "roll-numbering-restarts": a guest who reinstalls the app keeps their guest identity (Keychain) but
+    /// not the Roll's local Film, so joining again makes the Film anew. It must continue after the exposures the server
+    /// already holds, never restart at exposure 1 (which the server refuses as taken, losing the picture).
+    func testARollMadeAgainAfterAReinstallContinuesWhereTheServerHasIt() async throws {
+        let (eventID, filmID) = try await joined()
+        for _ in 0..<3 { try await shoot(filmID) }
+        await groupFilms.developPending()
+        await groupFilms.uploadPass()
+        XCTAssertEqual(groupFilms.sent[eventID], 3)
+
+        // The reinstall: a new store, the same guest identity and server.
+        let freshBase = FileManager.default.temporaryDirectory.appending(path: "GroupFilmsTests-reinstall-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: freshBase) }
+        let hosting = HostingSession(signIn: DebugHostSignIn(server: server, signedIn: false), functions: network,
+                                     defaults: UserDefaults(suiteName: "GroupFilmsTests-\(UUID().uuidString)")!)
+        let reinstalled = try GroupFilmsSetup.make(hosting: hosting, base: freshBase, identities: identities,
+                                                   joinHost: DebugGroupFilms.joinHost, supportAddress: nil)
+        let ok = await reinstalled.join(code: DebugGroupFilms.openCode, guestName: "Jo")
+        XCTAssertTrue(ok, reinstalled.notice ?? "")
+        let newFilmID = try XCTUnwrap(reinstalled.place(eventID)?.rollFilmID)
+        XCTAssertNotEqual(newFilmID, filmID, "The reinstalled phone made the Roll's Film anew")
+        let film = try XCTUnwrap(reinstalled.rolls.film(newFilmID))
+        XCTAssertEqual(film.remainingExposures, 24, "The three exposures the server holds stay used")
+
+        let receiver = try await reinstalled.rolls.trial.receiver(filmID: newFilmID)
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 1200, height: 900)).image { context in
+            UIColor.orange.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 1200, height: 900))
+        }
+        let source = FileManager.default.temporaryDirectory.appending(path: "capture-\(UUID().uuidString).jpg")
+        try XCTUnwrap(image.jpegData(compressionQuality: 0.9)).write(to: source)
+        try await receiver.commit(.photoSaved(source))
+        reinstalled.rolls.refresh()
+        XCTAssertEqual(reinstalled.rolls.film(newFilmID)?.captures.last?.sequenceNumber, 4,
+                       "The next picture takes exposure 4, not exposure 1 the server already holds")
+        await reinstalled.developPending()
+        await reinstalled.uploadPass()
+        let uploads = network.paths.withLock { $0.filter { $0 == "pictures:requestUpload" }.count }
+        XCTAssertEqual(uploads, 4)
+        XCTAssertEqual(network.stored.withLock { $0 }, 4, "The fourth picture reached the server as exposure 4")
+    }
+
+    /// Review round 1, "develop-continues-with-camera-open": Development stops between pictures while the shooting screen
+    /// is up (RK-V2-12) and picks up again when it closes.
+    func testDevelopmentWaitsWhileTheCameraIsOpenAndResumesWhenItCloses() async throws {
+        let (eventID, filmID) = try await joined()
+        network.offline.withLock { $0 = true }
+        try await shoot(filmID)
+        try await shoot(filmID)
+        groupFilms.rolls.capture.presented = true
+        await groupFilms.developPending()
+        XCTAssertEqual(groupFilms.waiting[eventID] ?? 0, 0, "Nothing develops while the camera is open")
+        groupFilms.rolls.capture.presented = false
+        await groupFilms.developPending()
+        XCTAssertEqual(groupFilms.waiting[eventID], 2, "Both develop once the camera closes")
     }
 }
