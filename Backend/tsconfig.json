@@ -1,0 +1,15 @@
+{
+  /* The tests and the local-backend run; convex/tsconfig.json covers the functions. */
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": ["ES2023", "dom"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "types": ["node", "vite/client"]
+  },
+  "include": ["tests/**/*", "local-backend/**/*", "vitest.config.ts", "vitest.local-backend.config.ts"]
+}
