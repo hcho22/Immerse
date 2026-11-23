@@ -20,6 +20,13 @@ packages:
     path: ../../Packages/EntitlementCore
   MediaCatalog:
     path: ../../Packages/MediaCatalog
+  ImmerseServer:
+    path: ../../Packages/ImmerseServer
+  # Clerk's iOS SDK for Hosts' sign-in (v2 PRD V2-FR-01). Only its core, ClerkKit, which has no dependencies; it is
+  # started only where the app has a server configuration (Config/Server.xcconfig).
+  Clerk:
+    url: https://github.com/clerk/clerk-ios
+    exactVersion: 1.7.3
 targets:
   Immerse:
     type: application
@@ -34,9 +41,18 @@ targets:
       - package: NativeAdapters
       - package: EntitlementCore
       - package: MediaCatalog
+      - package: ImmerseServer
+      - package: Clerk
+        product: ClerkKit
+    configFiles:
+      Debug: Config/Server.xcconfig
+      Release: Config/Server.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal
+        # The server's address and Clerk's publishable key, empty unless Config/Server.local.xcconfig sets them.
+        INFOPLIST_FILE: Config/Info.plist
+        CODE_SIGN_ENTITLEMENTS: $(IMMERSE_V2_ENTITLEMENTS)
         DEVELOPMENT_TEAM: QH9S83CX4Y
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
@@ -67,6 +83,7 @@ targets:
       - target: Immerse
       - package: EntitlementCore
       - package: FilmDomain
+      - package: ImmerseServer
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.Tests

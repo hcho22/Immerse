@@ -58,6 +58,10 @@ jobs:
             *)
               echo "IMMERSE_SIMULATOR_UDID=$(create 'Immerse CI' iOS-26-5)" >> "$GITHUB_ENV" ;;
           esac
+      # The v2 backend's tests (packages part) store pictures in MinIO, the local stand-in for Cloudflare R2.
+      - name: Install the R2 stand-in
+        if: matrix.part == 'packages'
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install minio
       - name: Validate
         run: sh Scripts/validate-local.sh
       # A packages part that failed keeps what the machine recorded about a media read that did not finish: the video

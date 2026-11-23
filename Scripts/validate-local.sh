@@ -83,6 +83,12 @@ if runs packages; then
         swift build --package-path "Probes/$probe"
     done
     sh Scripts/verify-document-package.sh
+    # The v2 backend's tests run against local stand-ins only (MinIO for R2, doubles for Clerk and Apple's push
+    # service, Convex's open-source local backend); nothing reaches a real service.
+    npm ci --prefix "$backend" --no-audit --no-fund
+    npm run --prefix "$backend" typecheck
+    npm test --prefix "$backend"
+    npm run --prefix "$backend" test:local-backend
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \
         -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData/ValidationSimulator \
         CODE_SIGNING_ALLOWED=NO build

@@ -20,6 +20,12 @@ packages:
     path: ../../Packages/EntitlementCore
   MediaCatalog:
     path: ../../Packages/MediaCatalog
+  # The app's sources import these for v2 hosting; the harness never configures a server, so neither runs here.
+  ImmerseServer:
+    path: ../../Packages/ImmerseServer
+  Clerk:
+    url: https://github.com/clerk/clerk-ios
+    exactVersion: 1.7.3
 targets:
   PopulatedJournalHarness:
     type: application
@@ -37,6 +43,9 @@ targets:
       - package: NativeAdapters
       - package: EntitlementCore
       - package: MediaCatalog
+      - package: ImmerseServer
+      - package: Clerk
+        product: ClerkKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.PopulatedJournalHarness

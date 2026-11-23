@@ -74,5 +74,7 @@ for suite in $text_size_suites $dark_suites; do
 done
 [ -n "$flow_suites" ] || fail "every suite of $app_screen_test_target is a text-size suite, so ui-flows would run nothing"
 
+[ -f "$backend/package.json" ] || fail "backend names $backend, which has no package.json"
+
 [ "$failed" = 0 ] || exit 1
 echo "Validation parts: packages runs $(echo "$mac_packages" | wc -w | tr -d ' ') packages, $(echo "$mac_probes" | wc -w | tr -d ' ') probes and $app_unit_test_target; harness runs $harness_test_targets; ui-text runs $text_size_suites; ui-flows runs$flow_suites and, in dark, $dark_suites."

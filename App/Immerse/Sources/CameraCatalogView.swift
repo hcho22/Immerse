@@ -8,6 +8,7 @@ import SwiftUI
 struct CameraCatalogView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.hosting) private var hosting
     var loaded: (Film) -> Void
     @State private var chosen = CameraCatalog.all.first { $0.medium == .photo } ?? CameraCatalog.all[0]
     @State private var width: CGFloat = 0
@@ -35,6 +36,8 @@ struct CameraCatalogView: View {
                     .padding(.horizontal, 24)
                     // In the column, Choose follows the Cameras, so none sits under it.
                     if dynamicTypeSize >= .xxLarge { choose }
+                    // Group Film, only where the app has a server (v2 Stage 1): Personal stays the default (V2-FR-10).
+                    if hosting != nil { GroupFilmEntry().padding(.horizontal, 24) }
                 }
                 .padding(.bottom, 16)
             }

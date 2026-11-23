@@ -25,6 +25,7 @@ class VerifyValidationPartsTests(unittest.TestCase):
                 self.write(os.path.join(name, "Package.swift"))
             for project in glob.glob(os.path.join(probe, "*.xcodeproj")):
                 os.makedirs(os.path.join(self.tree, os.path.relpath(project, ROOT)))
+        self.write("Backend/package.json", "{}")
         self.copy("App/Immerse/project.yml")
         self.copy("Probes/PopulatedJournalHarness/project.yml")
         for source in glob.glob(os.path.join(ROOT, "App/Immerse/UITests/*.swift")):
@@ -116,6 +117,11 @@ class VerifyValidationPartsTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertRegex(result.stdout, r"ui-flows runs.* ArchiveFlowTests")
         self.assertNotIn("ScreenTestCase", result.stdout)
+
+
+    def test_the_backend_must_be_where_validation_runs_it(self):
+        os.remove(os.path.join(self.tree, "Backend", "package.json"))
+        self.assertRefuses("backend names Backend, which has no package.json")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,10 @@
+// Immerse's server for v2 (Backend/SETUP.md). Every value is empty here, so a build made from the repository alone,
+// and every v1 build, has no server: it shows nothing of Group Films, never starts Clerk and never reaches a network
+// service. A Mac that builds against the real or a local server copies Server.local.xcconfig.example to
+// Server.local.xcconfig (ignored by git) and fills it in.
+IMMERSE_CONVEX_URL =
+IMMERSE_CLERK_PUBLISHABLE_KEY =
+// The entitlements a v2 build needs: Sign in with Apple, push and Declared Age Range. Empty here, so a v1 build signs
+// with none of them and needs no change to the App ID.
+IMMERSE_V2_ENTITLEMENTS =
+#include? "Server.local.xcconfig"
