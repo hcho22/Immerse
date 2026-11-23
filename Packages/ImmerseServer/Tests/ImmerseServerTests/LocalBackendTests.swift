@@ -57,4 +57,43 @@ final class LocalBackendTests: XCTestCase {
             XCTAssertEqual(error, .refused(.unauthenticated))
         }
     }
+
+    /// A guest with no Account, on the phone's own client: joins through the Join Code the Host's view gives, sends a
+    /// picture and its viewing copy with its guest token, and is refused the album before the reveal.
+    func testAGuestJoinsWithItsIdentityAndSendsAPictureWithItsViewingCopy() async throws {
+        let stand = try stand()
+        let token = stand.sessionToken
+        let host = EventServer(functions: ConvexHTTPClient(deploymentURL: stand.convexURL) { token })
+        let hostView = try await host.hostView(eventID: stand.eventID)
+        let code = try XCTUnwrap(hostView.joinCode)
+
+        let anonymous = ConvexHTTPClient(deploymentURL: stand.convexURL) { nil }
+        let guests = EventServer(functions: anonymous)
+        let identity = GuestIdentity.make()
+        let preview = try await guests.preview(code: code, as: .guest(identity))
+        XCTAssertEqual(preview.status, .open)
+        let place = try await guests.join(code: code, guestName: "Jo", as: .guest(identity))
+        XCTAssertEqual(place.event.eventId, stand.eventID)
+
+        let directory = FileManager.default.temporaryDirectory.appending(path: "local-backend-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let picture = directory.appending(path: "developed.jpg")
+        let view = directory.appending(path: "view.jpg")
+        try Data((0..<(512 << 10)).map { UInt8(truncatingIfNeeded: $0 &* 31) }).write(to: picture)
+        try Data((0..<(32 << 10)).map { UInt8(truncatingIfNeeded: $0 &* 7) }).write(to: view)
+        let guestToken = try await guests.guestToken(eventID: stand.eventID, as: .guest(identity))
+        let outcome = try await PictureUploader(functions: anonymous).send(
+            PictureToSend(eventID: stand.eventID, exposureNumber: 1, captureTime: .now, fileURL: picture, viewFileURL: view,
+                          guestToken: guestToken))
+        XCTAssertEqual(outcome, .stored)
+        let mine = try await guests.memberView(eventID: stand.eventID, as: .guest(identity))
+        XCTAssertEqual(mine.storedExposures, [1])
+        do {
+            _ = try await guests.album(eventID: stand.eventID, as: .guest(identity))
+            XCTFail("A sealed album was given to a guest")
+        } catch {
+            XCTAssertEqual(error, .refused(.sealed))
+        }
+    }
 }

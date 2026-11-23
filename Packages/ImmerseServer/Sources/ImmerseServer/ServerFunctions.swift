@@ -9,23 +9,24 @@ public enum FunctionKind: String, Sendable {
 public enum RefusalCode: Equatable, Sendable {
     case unauthenticated, noAccount, accountDeleted, invalid, guestTokenRefused, notAMember, eventGone, afterEndTime
     case sealed, exposureTaken, pictureRemoved
+    // Group Films (Stage 2).
+    case notTheHost, unknownCode, codeReplaced, notYetOpen, joiningPaused, rollsTaken, shootingEnded, removedFromEvent
+    case rollLimit, balanceTooLow, notRevealed, alreadyRevealed, identityClaimed
     case other(String)
 
+    private static let named: [String: RefusalCode] = [
+        "unauthenticated": .unauthenticated, "noAccount": .noAccount, "accountDeleted": .accountDeleted,
+        "invalid": .invalid, "guestTokenRefused": .guestTokenRefused, "notAMember": .notAMember,
+        "eventGone": .eventGone, "afterEndTime": .afterEndTime, "sealed": .sealed, "exposureTaken": .exposureTaken,
+        "pictureRemoved": .pictureRemoved, "notTheHost": .notTheHost, "unknownCode": .unknownCode,
+        "codeReplaced": .codeReplaced, "notYetOpen": .notYetOpen, "joiningPaused": .joiningPaused,
+        "rollsTaken": .rollsTaken, "shootingEnded": .shootingEnded, "removedFromEvent": .removedFromEvent,
+        "rollLimit": .rollLimit, "balanceTooLow": .balanceTooLow, "notRevealed": .notRevealed,
+        "alreadyRevealed": .alreadyRevealed, "identityClaimed": .identityClaimed,
+    ]
+
     init(_ code: String) {
-        switch code {
-        case "unauthenticated": self = .unauthenticated
-        case "noAccount": self = .noAccount
-        case "accountDeleted": self = .accountDeleted
-        case "invalid": self = .invalid
-        case "guestTokenRefused": self = .guestTokenRefused
-        case "notAMember": self = .notAMember
-        case "eventGone": self = .eventGone
-        case "afterEndTime": self = .afterEndTime
-        case "sealed": self = .sealed
-        case "exposureTaken": self = .exposureTaken
-        case "pictureRemoved": self = .pictureRemoved
-        default: self = .other(code)
-        }
+        self = Self.named[code] ?? .other(code)
     }
 }
 
@@ -43,4 +44,15 @@ public enum ServerError: Error, Equatable, Sendable {
 /// with live subscriptions, such as Convex's Swift client, can stand behind it later without changing its callers.
 public protocol ServerFunctions: Sendable {
     func call(_ kind: FunctionKind, _ path: String, _ args: [String: JSONValue]) async throws(ServerError) -> JSONValue
+}
+
+extension JSONValue {
+    /// Decodes a reply into a model, through its JSON encoding.
+    func decoded<T: Decodable>(as type: T.Type = T.self) throws(ServerError) -> T {
+        do {
+            return try JSONDecoder().decode(T.self, from: JSONEncoder().encode(self))
+        } catch {
+            throw .failed("The server's reply could not be read")
+        }
+    }
 }

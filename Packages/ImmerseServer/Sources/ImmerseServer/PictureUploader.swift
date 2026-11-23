@@ -8,16 +8,19 @@ public struct PictureToSend: Sendable {
     public let captureTime: Date
     public let contentType: String
     public let fileURL: URL
+    /// The smaller viewing copy the phone made of the developed picture (v2 PRD section 9.4), a JPEG, if any.
+    public let viewFileURL: URL?
     /// The guest's token for this event; nil when the shooter is signed in.
     public let guestToken: String?
 
     public init(eventID: String, exposureNumber: Int, captureTime: Date, contentType: String = "image/jpeg", fileURL: URL,
-                guestToken: String? = nil) {
+                viewFileURL: URL? = nil, guestToken: String? = nil) {
         self.eventID = eventID
         self.exposureNumber = exposureNumber
         self.captureTime = captureTime
         self.contentType = contentType
         self.fileURL = fileURL
+        self.viewFileURL = viewFileURL
         self.guestToken = guestToken
     }
 }
@@ -69,7 +72,11 @@ public struct PictureUploader: Sendable {
 
     public func send(_ picture: PictureToSend) async throws(UploadError) -> SendOutcome {
         let fingerprint: (size: Int, sha256: String)
-        do { fingerprint = try Self.fingerprint(of: picture.fileURL) } catch { throw .unreadableFile }
+        let viewFingerprint: (size: Int, sha256: String)?
+        do {
+            fingerprint = try Self.fingerprint(of: picture.fileURL)
+            viewFingerprint = try picture.viewFileURL.map(Self.fingerprint(of:))
+        } catch { throw .unreadableFile }
         var base: [String: JSONValue] = [
             "eventId": .string(picture.eventID),
             "exposureNumber": .number(Double(picture.exposureNumber)),
@@ -80,6 +87,9 @@ public struct PictureUploader: Sendable {
         request["contentType"] = .string(picture.contentType)
         request["size"] = .number(Double(fingerprint.size))
         request["sha256"] = .string(fingerprint.sha256)
+        if let viewFingerprint {
+            request["view"] = ["size": .number(Double(viewFingerprint.size)), "sha256": .string(viewFingerprint.sha256)]
+        }
 
         for _ in 0..<attempts {
             let address: JSONValue
@@ -90,21 +100,13 @@ public struct PictureUploader: Sendable {
                 throw .server(error)
             }
             if address["status"]?.string == "stored" { return .stored }
-            guard let urlText = address["url"]?.string, let url = URL(string: urlText) else {
+            guard let main = Self.request(address), let view = Self.viewRequest(address, expected: picture.viewFileURL != nil) else {
                 throw .server(.failed("The upload address could not be read"))
             }
-            var put = URLRequest(url: url)
-            put.httpMethod = "PUT"
-            if case .object(let headers) = address["headers"] ?? .null {
-                for (name, value) in headers { if let value = value.string { put.setValue(value, forHTTPHeaderField: name) } }
-            }
-            do {
-                let (_, response) = try await session.upload(for: put, fromFile: picture.fileURL)
-                let status = (response as? HTTPURLResponse)?.statusCode ?? 0
-                // Turned away (an address that ran out, a body storage refused): ask for a fresh address.
-                if !(200..<300).contains(status) { continue }
-            } catch {
-                throw .server(.unreachable)
+            // Turned away (an address that ran out, a body storage refused): ask for fresh addresses.
+            guard try await put(main, from: picture.fileURL) else { continue }
+            if let viewRequest = view, let viewFile = picture.viewFileURL {
+                guard try await put(viewRequest, from: viewFile) else { continue }
             }
             let confirmation: JSONValue
             do {
@@ -119,11 +121,41 @@ public struct PictureUploader: Sendable {
         throw .notConfirmed
     }
 
-    /// The refusals after which the server will never take the picture.
-    private static func finalRefusal(_ error: ServerError) -> RefusalCode? {
+    /// The PUT an upload address describes.
+    private static func request(_ address: JSONValue) -> URLRequest? {
+        guard let urlText = address["url"]?.string, let url = URL(string: urlText) else { return nil }
+        var put = URLRequest(url: url)
+        put.httpMethod = "PUT"
+        if case .object(let headers) = address["headers"] ?? .null {
+            for (name, value) in headers { if let value = value.string { put.setValue(value, forHTTPHeaderField: name) } }
+        }
+        return put
+    }
+
+    /// The viewing copy's PUT, when the picture has one: `.some(nil)` when it has none, nil when one was expected and
+    /// the reply lacks it.
+    private static func viewRequest(_ address: JSONValue, expected: Bool) -> URLRequest?? {
+        guard expected else { return .some(nil) }
+        guard let view = address["view"], let request = request(view) else { return nil }
+        return .some(request)
+    }
+
+    /// Sends a file to an upload address. False when storage turned it away.
+    private func put(_ request: URLRequest, from file: URL) async throws(UploadError) -> Bool {
+        do {
+            let (_, response) = try await session.upload(for: request, fromFile: file)
+            return (200..<300).contains((response as? HTTPURLResponse)?.statusCode ?? 0)
+        } catch {
+            throw .server(.unreachable)
+        }
+    }
+
+    /// The refusals after which the server will never take the picture: withdrawn or removed, its shooter removed, taken
+    /// after the End Time, or the event gone (V2-FR-34).
+    static func finalRefusal(_ error: ServerError) -> RefusalCode? {
         guard case .refused(let code) = error else { return nil }
         switch code {
-        case .pictureRemoved, .afterEndTime, .eventGone, .notAMember, .exposureTaken: return code
+        case .pictureRemoved, .afterEndTime, .eventGone, .notAMember, .exposureTaken, .removedFromEvent: return code
         default: return nil
         }
     }

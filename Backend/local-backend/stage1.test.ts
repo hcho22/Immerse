@@ -117,7 +117,11 @@ describe("Stage 1 on Convex's local backend", () => {
     expect((await api.admin.mutation("proofs:revealProofEvent", { eventId })).ok).toBe(true);
     const grant = await maya.action("reads:album", { eventId });
     expect(grant.ok).toBe(true);
-    const addresses = (grant as { value: { entries: Array<{ url: string; sha256: string; exposureNumber: number }> } }).value.entries;
+    const entries = (grant as { value: { entries: Array<{ url: string; sha256: string; exposureNumber: number; shooterName: string }> } })
+      .value.entries;
+    // Maya's two pictures, and the one the Swift client's guest sent.
+    expect(entries.map((a) => a.shooterName).sort()).toEqual(["Jo", "Maya", "Maya"]);
+    const addresses = entries.filter((a) => a.shooterName === "Maya");
     expect(addresses.map((a) => a.exposureNumber).sort()).toEqual([1, 2]);
     const address = addresses.find((a) => a.exposureNumber === 1);
     const bytes = Buffer.from(await (await fetch(address!.url)).arrayBuffer());
