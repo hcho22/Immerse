@@ -763,7 +763,7 @@ Acceptance criteria:
 
 #### V2-FR-39 - The Reveal Delay
 
-The Host chooses the Reveal Delay at creation, from none to 24 hours after the End Time, and may change it while the event is open.
+The Host chooses the Reveal Delay at creation, from none to 24 hours after the End Time, and may change it until the End Time, while the event is scheduled or open (V2-FR-12).
 A delay gives late uploads time to arrive before the reveal.
 Ending early skips it (V2-FR-40).
 
@@ -795,7 +795,7 @@ Acceptance criteria:
 
 #### V2-FR-42 - What the reveal does not do
 
-**Carried from the parked design:** running out of Rolls, every guest finishing, or pausing joining never reveals anything; only the scheduled reveal does.
+**Carried from the parked design:** running out of Rolls, every guest finishing, or pausing joining never reveals anything; only the scheduled reveal, or ending early (V2-FR-40), does.
 The reveal never shows a picture a guest withdrew, a picture the Host or support removed, or a picture of a deleted Account.
 
 Acceptance criteria:
@@ -1144,7 +1144,7 @@ The server holds every state below except a picture's states on the phone, which
 | Open, joining paused | As Open, but no one new can join. | The Host pauses joining, or the Start Time of an event paused while Scheduled. | The Host resumes (to Open), or as Open. |
 | Open, every Roll taken | As Open, but no one new can join until the Host adds Rolls. | The last free Roll is taken. | The Host adds Rolls (to Open), or as Open. |
 | Ended | Shooting has stopped; uploads continue; unclaimed Rolls have returned; nobody sees any picture. | The End Time. | End Time plus Reveal Delay (to Revealed), or deletion (to Deleted). With no delay, or when the Host ended early, Ended lasts no time. |
-| Revealed | Every member sees every picture; late arrivals join; the web album can be on. | The scheduled reveal. | Eleven months after the reveal (to Ending), or deletion. |
+| Revealed | Every member sees every picture; late arrivals join; the web album can be on. | The scheduled reveal, or the Host ends early (V2-FR-40). | Eleven months after the reveal (to Ending), or deletion. |
 | Revealed, web album on | As Revealed, and anyone with the link sees and saves the pictures on the join page. | The Host switches it on. | The Host switches it off, or as Revealed. |
 | Ending | As Revealed, with the album's end notices shown. | One month before the album ends. | Twelve months after the reveal (to Gone), or deletion. |
 | Gone | The pictures and the web album are removed; the link says the event is no longer available; the server keeps only the records section 8 keeps for accounting. | Twelve months after the reveal. | Never. |
