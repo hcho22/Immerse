@@ -1,6 +1,6 @@
 # Film Camera Experience - v2 Product Requirements Document: Group Films, Accounts and the backend
 
-**Document date:** November 22, 2026 · **Version:** 1.1, a draft for the captain's approval (version 1.0 with the captain's answers to its open questions) · **Release:** v2\
+**Document date:** November 22, 2026 · **Version:** 1.2 (version 1.1 with the captain's answer to OQ-12, the last open question) · **Release:** v2\
 **Platform:** iOS 26, iPhone only, for shooting; a web join page and a view-only web album for viewing\
 **Status:** Planning document; nothing in it is built until the captain approves it.\
 **Scope:** photo events modeled on the Once app, sign-in for Hosts, and the backend those need.\
@@ -11,7 +11,9 @@
 
 This PRD states the v2 plan the captain settled question by question on 2026-11-21 and 2026-11-22.
 It starts from the parked v2 design in PRD 2.1 section 8, challenges each rule against Once, and keeps a parked rule only where the plan does not overturn it.
-Version 1.1 adds the captain's answers, given on 2026-11-22 after he read version 1.0, to its open questions: section 1's last rows list them, the requirements state them as decided, and section 16 keeps the one question still open and records each answer.
+Version 1.1 adds the captain's answers, given on 2026-11-22 after he read version 1.0, to its open questions: section 1's last rows list them, the requirements state them as decided, and section 16 records each answer.
+Version 1.2 adds his answer of 2026-11-23 to OQ-12, the one question version 1.1 left open: reports go to a configurable support address, and Immerse's operator answers support within 48 hours.
+No open question remains.
 "v2" here is the product release after v1, with Group Films and Accounts.
 "Version 1.0" is the version of this document.
 v1 documents call their own release "v1" and their document set "version 2.1"; neither changes.
@@ -92,7 +94,7 @@ Section 2 onward is the detail.
 | Answers to version 1.0's open questions | A guest who leaves on their own still sees the album after the reveal and may rejoin while the event is open. Only guests the Host removed lose access. | V2-FR-43, V2-FR-56 |
 | Answers to version 1.0's open questions | When the Host ends early, the album reveals at once; the chosen reveal delay does not apply. | V2-FR-40 |
 | Answers to version 1.0's open questions | The PRD's other readings stand as written: late pictures are accepted until the album ends; no email before the album ends, only notices in the app and on the page; the web album shows guest names in picture details; subscriber rolls already credited stay if the subscription lapses; a guest who signs in to an account already in the same event keeps both places; moving a subscription to another account goes through support; a refund after rolls were used can take the balance below zero. | V2-FR-41, V2-FR-48, V2-FR-47, V2-FR-63, V2-FR-04, V2-FR-65, 16.2 |
-| Answers to version 1.0's open questions | Who answers the support address, and how fast, is decided before stage 2 and stays open. | V2-FR-54, OQ-12 |
+| Answers to version 1.0's open questions | Who answers the support address, and how fast, is decided before stage 2 (answered on 2026-11-23: reports go to a configurable support address, and Immerse's operator answers support within 48 hours). | V2-FR-54, M-7, OQ-12 |
 
 ## 2. Problem, goals and non-goals
 
@@ -928,13 +930,15 @@ Acceptance criteria:
 After the reveal, any guest can report a picture they think is inappropriate or unsafe.
 The report reaches the Host, in the app, and Immerse's support address, with the event, the picture and the reporter's chosen reason, and never the reporter's name to the Host.
 A report removes nothing by itself.
-Support can remove a reported picture, for everyone, where the Host has not, including in an event whose Host deleted their Account (V2-FR-06), and answers reports within a set time (open question OQ-12).
+Support can remove a reported picture, for everyone, where the Host has not, including in an event whose Host deleted their Account (V2-FR-06).
+The support address is configuration, set where the server and the app are deployed, and Immerse's operator, the app's owner, answers every report sent to it within 48 hours (OQ-12, answered 2026-11-23).
 The support address is published in the app, on the join page and in the App Store listing (App Store guideline 1.2; section 11).
 
 Acceptance criteria:
 
 - A report reaches the Host in the app and the support address within five minutes.
 - Support can remove a picture from any event.
+- Support answers each report within 48 hours of its arrival at the support address.
 - The reporter's identity is not shown to the Host.
 
 #### V2-FR-55 - The Host deletes the whole event
@@ -1423,7 +1427,7 @@ Guideline 1.2 requires an app with user-generated content to include "A method f
 | Requirement | v2 |
 | --- | --- |
 | Filtering | Pictures are seen only by the event's members, and nothing is public unless the Host switches on the web album; the Host removes any picture and support removes reported ones. Whether App Review accepts this as filtering, or wants automatic screening before the reveal, is risk RK-V2-06; any automatic screening would have to keep V2-FR-73's no-tracking promise. |
-| Reporting and timely responses | Report a picture to the Host and support (V2-FR-54), with a response time set by open question OQ-12. |
+| Reporting and timely responses | Report a picture to the Host and support (V2-FR-54); Immerse's operator answers within 48 hours (OQ-12). |
 | Blocking abusive users | The Host removes a guest, permanently for that event and with every picture they took in it (V2-FR-53). |
 | Published contact information | The support address in the app, on the join page and in the App Store listing (V2-FR-54). |
 
@@ -1501,7 +1505,7 @@ These measures come from the server's own aggregate counts, App Store Connect, A
 | M-4 | Hosts asked to sign in again while an event they host is open or awaiting its reveal | None |
 | M-5 | Unclaimed Rolls returned to the Host's balance at the End Time | All |
 | M-6 | Crash-free sessions in the mini-app and the full app | At least 99.5 percent |
-| M-7 | Reports answered by support within the time open question OQ-12 sets | All |
+| M-7 | Reports answered by support within 48 hours (OQ-12) | All |
 | M-8 | Storage and download cost per event | Within section 10's estimate once measured |
 | M-9 | Events with more than the free Rolls, and Hosts who host a second event | Learned from App Store Connect and the server's counts, with targets set at the pricing decision |
 | M-10 | App Review | v2, its App Clip and its purchases accepted without a rejection for the features this PRD specifies |
@@ -1546,12 +1550,8 @@ None is settled by this document.
 ### 16.1 Open questions
 
 Version 1.0 listed fourteen open questions.
-The captain answered every one but OQ-12 on 2026-11-22; section 16.3 records each answer and where this PRD now states it.
-The question below is still open and needs his answer before the stage it names.
-
-| ID | Question | Where it matters | Parked rule or reading, if any | Needed before |
-| --- | --- | --- | --- | --- |
-| OQ-12 | Who answers the support address, and within what time must a report be answered? | V2-FR-54, M-7 | DEC-13 left support and reports "beyond Host moderation" open. | Stage 2 |
+The captain answered every one but OQ-12 on 2026-11-22, and OQ-12 on 2026-11-23; section 16.3 records each answer and where this PRD now states it.
+No open question remains.
 
 ### 16.2 Readings this PRD makes
 
@@ -1573,7 +1573,7 @@ Version 1.1 makes these readings, each needed to state an answer of 2026-11-22 i
 
 ### 16.3 Answers to version 1.0's open questions
 
-The captain gave these answers on 2026-11-22.
+The captain gave these answers on 2026-11-22, and the answer to OQ-12 on 2026-11-23.
 
 | ID | Question | Answer | Stated in |
 | --- | --- | --- | --- |
@@ -1588,6 +1588,7 @@ The captain gave these answers on 2026-11-22.
 | OQ-9 | Does a guest who left see the album after the reveal, and may they rejoin while the event is open? | Yes to both, reversing the parked rule that leaving ends album access; only guests the Host removed lose access. | V2-FR-43, V2-FR-56 |
 | OQ-10 | When a subscription lapses or is refunded, do subscriber free Rolls already credited stay? | Yes, they stay in the balance. | V2-FR-63 |
 | OQ-11 | What happens when a guest claims their identity into an Account that already holds a place in the same event? | Both places stay as they were, as version 1.0 read. | V2-FR-04 |
+| OQ-12 | Who answers the support address, and within what time must a report be answered? | Reports go to a configurable support address, and Immerse's operator, the app's owner, answers support himself within 48 hours (answered 2026-11-23, when he asked for Stage 2: "support 48hrs"). DEC-13 had left support "beyond Host moderation" open. | V2-FR-54, M-7, 11.4 |
 | OQ-13 | Can a subscription's link be moved from one Account to another, and how? | Only through support, as version 1.0 read. | V2-FR-63 |
 | OQ-14 | May a refund after the Rolls were used take the balance below zero? | Yes, as V2-FR-65 proposed. | V2-FR-65 |
 

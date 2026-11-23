@@ -2979,7 +2979,7 @@ Each scenario reads **UNTESTED: physical execution deferred, no real service pro
 **Expect.**
 
 - Step 2 shows "You can't sign in yet"; Clerk's dashboard shows no new user and Convex's `accounts` table no new row; step 3 shows the same screen.
-- Each method ends at "Signed in as" the person's name, with one Clerk user and one `accounts` row whose `ageConfirmation` is `birthMonthAndYear` (or `declaredAgeRange` where iOS asked for an age range) and whose `ageConfirmedAt` is the moment of sign-up.
+- Each method ends at Load a Group Film (Stage 2; Settings shows "Signed in as" the person's name), with one Clerk user and one `accounts` row whose `ageConfirmation` is `birthMonthAndYear` (or `declaredAgeRange` where iOS asked for an age range) and whose `ageConfirmedAt` is the moment of sign-up.
 - Sign in with Apple is offered above Google.
 - Step 6 reaches the same Clerk user and the same `accounts` row (Clerk's automatic account linking).
 
@@ -2997,7 +2997,7 @@ Screenshots of the age screen, the decline, the sign-in screen and the signed-in
 2. Open Settings on both.
 
 **Expect.**
-The second iPhone reaches "Signed in as" the same name without making a second `accounts` row; Settings on both shows the Account, **Sign Out** and **Delete Account**.
+The second iPhone reaches Load a Group Film, with Settings showing "Signed in as" the same name, without making a second `accounts` row; Settings on both shows the Account, **Sign Out** and **Delete Account**.
 
 **It fails if.**
 A second Account is made, or either iPhone is signed out by the other.
@@ -3007,7 +3007,7 @@ A second Account is made, or either iPhone is signed out by the other.
 **Steps.**
 
 1. Note the Clerk instance's plan and its native session lifetime.
-2. On HC_iPhone13, sign in, open **Host a Group Film** to see "Signed in as", then leave the app closed and the iPhone in normal use for eight full days.
+2. On HC_iPhone13, sign in, open **Host a Group Film** to see Load a Group Film, then leave the app closed and the iPhone in normal use for eight full days.
 3. On day nine, turn on Airplane Mode, open the app and open **Host a Group Film** and Settings.
 4. Turn Airplane Mode off, open them again, then open **Server checks** and send a picture (V04 step 2), which needs a session the server accepts.
 
@@ -3015,7 +3015,7 @@ A second Account is made, or either iPhone is signed out by the other.
 
 - On Clerk's free plan, which the captain chose on 2026-11-23 (seven days fixed): step 4 asks for sign-in again, signing in returns to the same Account, and nothing about the Host's event changed. That is the known gap 084 states (V2-FR-08 and M-4 not met for events past seven days), not a failure of this check.
 - With a native session lifetime set past eight days (Clerk Pro, or a development instance): no sign-in prompt at any step, and the server accepts the request in step 4.
-- Airplane Mode never signs anyone out (step 3 still shows "Signed in as").
+- Airplane Mode never signs anyone out (step 3 still shows Load a Group Film, and Settings "Signed in as").
 
 **It fails if.**
 A Host is asked to sign in before the session lifetime the instance is set to, signing in again reaches a different Account, or losing the network signs them out.
@@ -3111,3 +3111,194 @@ iOS's age range sheet (or no sheet, where sharing is automatic) answers instead 
 
 **What is a finding and not a failure.**
 Without such an Apple Account the check cannot run; write that down, and the birth month and year path of V01 stands.
+
+## v2 Stage 2: Group Films on Real iPhones and the Real Services
+
+These are the proofs the v2 PRD's Stage 2 ends with (section 12): a whole event on real iPhones, with a Host and several guests, some shooting offline, one joining late and one coming online two days after the reveal, in which every picture taken reaches the album (M-1), the reveal happens on time with every phone off (M-3) and nobody sees a picture before it; every case of section 7 that needs neither the mini-app nor purchases; and the measured cost of an event against section 10 (OC-2).
+They are v2's, not v1's: the v1 candidate above needs none of them.
+The software and what it showed against local stand-ins are in [085](v2-stage2-events-085.md); compile-only or simulator evidence is not a pass, so **Stage 2 is not proved until S01 to S12 pass**.
+Each scenario reads **UNTESTED: physical execution deferred, no real service provisioned**.
+
+**Before you start.**
+
+1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), Stage 2's steps included: the join host and its association file (step 4), `JOIN_CODE_SECRET` and the support relay (steps 5 and 5a).
+2. Fill in `App/Immerse/Config/Server.local.xcconfig` with the join host and the support address too (step 7), and build the **Debug** configuration of a commit that holds this change to at least four iPhones on iOS 26: the Host's (HC_iPhone13) and three guests' (G1, G2, G3; G3 may be the Host's second iPhone).
+   None of the guests signs in unless a scenario says so.
+3. Keep the Convex dashboard (Data, Logs, Usage and Schedules), Cloudflare's R2 bucket view and metrics, and the support address's inbox open on the Mac.
+4. Write down, for each scenario, the date, the build's commit, each iPhone's model and iOS version, the event's id, and what each dashboard showed.
+
+### S01 - Load Film with a later Start Time, and its link opening the app
+
+**Steps.**
+
+1. On HC_iPhone13, signed in, tap **Start a Film**, **Host a Group Film**, and load a Disposable Group Film of 4 Rolls with a Start Time 30 minutes ahead, an End Time 2 hours after it and a Reveal Delay of 1 hour.
+2. Print or photograph the QR code, and send the link to G1 in Messages.
+3. Before the Start Time, scan the code with G1's Camera app, and tap the link in Messages on G2.
+4. Wait for the Start Time with every phone locked, then scan again on G1.
+
+**Expect.**
+Load Film's confirmation names every setting and that the Camera cannot change; the QR code and link show at once; the link previews in Messages with no picture; scanning and tapping open Immerse at the Join Confirmation, which before the Start Time says when the event opens and offers no Take a Roll; at the Start Time the same code offers Take a Roll without the Host doing anything; the Convex dashboard's `events` row shows `scheduled` then `open`, and its Schedules show the opening, end and reveal at their exact times.
+
+**It fails if.**
+The link opens Safari instead of Immerse while the app is installed, anyone joins before the Start Time, or the event does not open on time by itself.
+
+### S02 - Joining with a name and one tap, never asked to sign in
+
+**Steps.**
+
+1. On G1, G2 and G3 open the link, type a name and tap **Take a Roll**.
+2. On HC_iPhone13 tap **Shoot Too: Take a Roll**.
+3. With every Roll now taken, open the link on a fifth iPhone or a second guest identity; then on HC_iPhone13 add 1 Roll and try again.
+4. With 1 Roll free, tap **Take a Roll** on two iPhones at the same moment.
+
+**Expect.**
+Each guest goes from the link to the event's page with only a name and one tap, with no sign-in screen, email or account; the Join Confirmation shows the title, "Hosted by" the Host's name, the Camera and its exposures, when shooting ends, when the album reveals and the sharing rule; the Host's page counts each Roll taken and each guest's name; a full event says every Roll has been taken until the Host adds one, which admits the next person within a minute; of the two at once exactly one gets the Roll and the other is told every Roll has been taken; the iPhone's Trial is unchanged (Settings and a personal Film as before).
+
+**It fails if.**
+Anyone is asked to sign in to join, a Roll is taken twice, or the Trial changes.
+
+### S03 - Shooting offline, developed on the phone, and nobody sees a picture before the reveal
+
+**Steps.**
+
+1. On G1, after joining, turn on Airplane Mode and shoot 10 pictures.
+2. Make G2's event an Instant event instead (load a second Instant Group Film for this scenario), join it on G2, go offline and shoot 3 prints.
+3. On HC_iPhone13 open the event's page; in the Convex dashboard, try `reads:album` for the event with the Host's session; copy a picture's `storageKey` from the `pictures` table and request it from the R2 S3 endpoint without a signature.
+
+**Expect.**
+G1 keeps every picture offline, shows none of them (its own included), and counts down its exposures; G2 sees each Instant print a moment after taking it, offline, and the prints stay only on G2; the Host's page counts pictures arrived and shows no picture; `reads:album` refuses with `sealed`; the unsigned request returns 403.
+
+**It fails if.**
+Any picture, thumbnail or address reaches anyone before the reveal, or a picture taken offline is lost.
+
+### S04 - The upload queue
+
+**Steps.**
+
+1. Turn G1's Airplane Mode off with the event's page open and watch "waiting to send".
+2. On G3, shoot 5 pictures offline, go online, and kill the app (swipe it away) while "waiting" is above zero; reopen it.
+3. After all are sent, compare G1's storage for Immerse (iPhone Settings, General, iPhone Storage) before and after, and count the `pictures` rows for G1 in the dashboard.
+
+**Expect.**
+"Waiting" falls to zero without the guest doing anything; G3's pictures all arrive after reopening, none twice; each picture is `stored` with its size and checksum; the originals and queued copies are gone from G1 once the server has them (V2-FR-36).
+
+**It fails if.**
+A picture is lost, stored twice, or deleted from a phone before the server confirms it.
+
+### S05 - The End Time stops shooting
+
+**Steps.**
+
+1. With G1 online, the Host moves the End Time 5 minutes ahead; leave G1's shooting screen open.
+2. With G2 offline since before step 1, keep shooting past the new End Time; then bring G2 online.
+3. Set G3's clock an hour ahead (Date & Time, off Automatic), go online once, and shoot until the End Time.
+
+**Expect.**
+At the moved End Time G1's shooting screen says shooting has ended and takes no more; G2's pictures taken after the server's End Time are refused when they arrive and G2 says so, while those before it arrive; G3 stops at the server's End Time as last learned online, and pictures stamped after it are refused.
+
+**It fails if.**
+A phone that has been online keeps shooting past the server's End Time, or a refused picture is kept silently.
+
+### S06 - A whole event: the reveal on time with every phone off, the alert, and late arrivals (M-1, M-3)
+
+**Steps.**
+
+1. Run S01 to S05's event to its End Time with the Host and three guests, one of whom (G3) joins late, ten minutes before the End Time.
+2. Leave G2 offline with pictures waiting, and switch every iPhone off before the End Time.
+3. At the End Time plus the Reveal Delay, run `npx convex run measures:eventMeasures '{"eventId": "<id>"}'`.
+4. Switch the Host's, G1's and G3's iPhones on; tap the alert on G1.
+5. Two days later, switch G2 on, open Immerse with a connection and wait.
+
+**Expect.**
+`revealLateByMs` is under 60,000 and the event is `revealed` with every phone off; "Your Film is ready" with the Film Title arrives on every member's iPhone that allowed notifications (the Host's included), once; tapping it opens the album after the ritual; the Rolls nobody took return to the Host's balance at the End Time; two days later G2's pictures appear in everyone's album in their places by capture time, not at the end; the count of pictures in the album equals the count taken on every phone (M-1).
+
+**It fails if.**
+The reveal waits for anyone or runs more than a minute late, a picture taken is missing, the alert reaches a removed guest or arrives twice, or anyone saw a picture before the reveal.
+
+### S07 - The album and saving
+
+**Steps.**
+
+1. On each member's iPhone open the album; open one picture's details.
+2. Save one picture, then **Save the Whole Album**; turn on Airplane Mode halfway, then turn it off and save the remaining ones.
+3. In Photos, look at a saved picture's details and Info.
+
+**Expect.**
+Every member sees the same pictures in capture order with numbered gaps; details show the Guest Name, the capture time and the Camera; the note that a saved copy cannot be recalled shows once before the first save; the whole-album save resumes without duplicates and reports how many it saved; Photos holds each developed picture whole, with no name in its pixels or metadata.
+
+**It fails if.**
+The order or the set differs between members, a save duplicates or misses a picture, or a name shows in a saved file.
+
+### S08 - Withdraw Before Reveal, removals, and removing a guest
+
+**Steps.**
+
+1. Before the reveal, on G1 offline with pictures waiting, tap **Withdraw Before Reveal** and confirm; bring G1 online.
+2. After the reveal, on G3 remove one of G3's own pictures.
+3. On HC_iPhone13 remove another guest's picture.
+4. With G2 offline and pictures waiting, the Host removes G2; bring G2 online.
+
+**Expect.**
+G1's waiting pictures are deleted at once offline and never reach the server; its sent ones are removed when online; the album reveals with numbered gaps in their place and G1's count does not go back up; removals leave the album for everyone within a minute and their R2 objects are gone; G2's phone deletes its waiting pictures when online, says G2 can no longer take part and shows no picture; the link, current or replaced, refuses G2; G2's Roll stays used.
+
+**It fails if.**
+A withdrawn or removed picture is seen, comes back by a late upload, or a removed guest sees the album.
+
+### S09 - Reporting, support and a deleted Host's event
+
+**Steps.**
+
+1. After the reveal, on G3 report a picture with a reason.
+2. Note when the report arrives in the support inbox; run `npx convex run support:openReports`, then `support:removePictureForSupport` for it.
+3. In a second event, delete the Host's Account (V06) before its End Time; join and shoot on G1 until the End Time; report a picture after its reveal.
+
+**Expect.**
+The report shows on the Host's page without the reporter's name and reaches the support address within five minutes (V2-FR-54); support's removal takes the picture out of every album; the deleted Host's event accepts joins and pictures until its End Time, reveals on schedule, shows "The Host has left Immerse", has no Host controls, its unclaimed Rolls lapse, and its report reaches support alone; support answers within 48 hours (OQ-12, M-7).
+
+**It fails if.**
+The Host learns who reported, a report does not reach the support address, or a deleted Host's event stops or can be changed.
+
+### S10 - Pausing, replacing the code, leaving and rejoining, and deleting the event
+
+**Steps.**
+
+1. The Host pauses joining; open the link on a new guest; resume and try again.
+2. The Host replaces the code behind its warning; open the old link and the old QR code.
+3. On G1 tap **Leave**; reopen the event's link while the event is open, and again after the End Time.
+4. With G2 offline and shooting, the Host deletes the event behind its warning; bring G2 online.
+
+**Expect.**
+A paused event admits nobody new and tells them joining is paused, and resuming admits the next person with the same code; the old link and code admit nobody and say the link no longer works, while every joined guest keeps shooting; G1 rejoins to their own Roll with its remaining exposures while open, and after the reveal still sees the album; after deletion no picture of the event can be seen anywhere within a minute, the link says the event is no longer available, G2's phone deletes what it kept for the event and says it was deleted, and the Rolls nobody took return to the Host's balance.
+
+**It fails if.**
+A paused or replaced code admits anyone, a guest who left loses the album, or a deleted event's picture stays readable.
+
+### S11 - Signing in later, Delete Guest Identity, Delete Account, and the album's end
+
+**Steps.**
+
+1. On G1, sign in (Settings or Host a Group Film), then tap **Keep My Place with My Account** on the event's page; sign in on a second iPhone with the same Account.
+2. Have G3's Account join an event in which G3's unsigned guest identity already holds a place, then claim.
+3. On G2, tap **Delete Guest Identity** in Settings with pictures sent and waiting.
+4. On G1, delete the Account (V06) with pictures sent and waiting.
+5. For a short test event, edit its `revealsAt` in the Convex dashboard to eleven months ago, open the event, then to twelve months less six days ago, then run `npx convex run schedule:goneEvent '{"eventId": "<id>"}'` after editing it to twelve months ago.
+
+**Expect.**
+The place, remaining exposures and pictures move to the Account with nothing uploaded twice, and the second iPhone shows the event; where the Account already had a place both stay, each with its own Roll, and the app explains; Delete Guest Identity and Delete Account remove every picture of theirs everywhere within a minute, leaving numbered gaps, and their waiting pictures never upload; the album's end notices show one month and one week before the end in the app, with no push alert or email, and at the end the event leaves every Film Library and its link says it is no longer available.
+
+**It fails if.**
+A claim duplicates or merges places, a deleted identity's or Account's picture stays visible, or a notice arrives as a push.
+
+### S12 - The cost of an event, measured (OC-2)
+
+**Steps.**
+
+1. Run one event of at least 10 Rolls on the Disposable to the reveal, with every member browsing the album and saving it once.
+2. Read Convex's Usage (function calls, database bandwidth, action compute) and Cloudflare's R2 metrics (storage, Class A and Class B operations) for the event's days, and `measures:eventMeasures` for its stored bytes.
+3. Note the developed picture and viewing-copy sizes of each Camera from the `pictures` table.
+
+**Expect.**
+The measured counts per picture match 085's model (2 Class A and 2 Class B a picture, plus 1 Class B a picture for each member's browse and save; about 5 Convex function calls a picture), and the cost scaled to section 10's event sizes stays near its estimate; write down every difference and recompute the table in 085 with the real sizes.
+
+**It fails if.**
+An operation the model does not count appears at scale, or the real cost of a 200-Roll event is far above section 10's estimate; either goes to the captain with the price plans (OC-5).

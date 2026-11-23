@@ -1,19 +1,19 @@
 # Immerse's server (v2)
 
 This folder is the backend of v2's Group Films, as the [v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md) section 9 proposes it: Convex for the data and the server logic, Cloudflare R2 for the pictures, Clerk for the Hosts' sign-in, and Apple's push notification service for the one alert.
-It holds what Stage 1, "The backend and sign-in", builds (PRD section 12).
+It holds what Stage 1, "The backend and sign-in", and Stage 2, "Events in the full app, with free Rolls only", build (PRD section 12).
 v1 has no server, and nothing here is reached by personal Films, the Trial or the subscription.
 
 Nothing here is provisioned.
 Every test runs against local stand-ins, and no account, deployment, bucket or key exists for it yet.
-[SETUP.md](SETUP.md) lists what the captain creates, in order, before Stage 1 can be proved on iPhones and the real services.
-Stage 1 is not proved until the checks in section V of [the manual validation plan](../Evidence/NativeApp/manual-validation.md) pass.
+[SETUP.md](SETUP.md) lists what the captain creates, in order, before Stages 1 and 2 can be proved on iPhones and the real services.
+Stage 1 is not proved until the checks in section V of [the manual validation plan](../Evidence/NativeApp/manual-validation.md) pass, and **Stage 2 is not proved until its section S passes**.
 
 ## What is here
 
 | Path | What it holds |
 | --- | --- |
-| `convex/schema.ts` | The records of PRD section 8 that Stage 1 needs: Accounts, the guest identity and its tokens, picture upload records, push tokens, and the Roll ledger and subscription link that Delete Account must remove. Events and memberships are sketched only as far as the upload path and the read grants need them. |
+| `convex/schema.ts` | The records of PRD section 8: Accounts, the guest identity and its tokens, Group Films and their Join Code verifiers, memberships, pictures with their viewing copies, reports, push tokens, and the Roll ledger and subscription link. |
 | `convex/auth.config.ts` | Clerk's sign-in, linked to Convex: Convex verifies each Clerk session token against the instance's issuer and the `convex` audience. |
 | `convex/lib/callers.ts` | Who is asking, resolved on the server for every public function: a verified Clerk session, or a guest token for one event. |
 | `convex/accounts.ts` | The Account: `me`, `createAccount` behind the age 13-or-over confirmation, `setDisplayName`. |
@@ -21,9 +21,18 @@ Stage 1 is not proved until the checks in section V of [the manual validation pl
 | `convex/http.ts` | Clerk's `user.deleted` webhook, verified with Svix's signature. |
 | `convex/guests.ts` | The guest identity's secret exchanged for a short-lived token in one event (section 9.2). |
 | `convex/pictures.ts`, `convex/lib/storage.ts` | The upload path (section 9.3): a one-time presigned R2 PUT, then confirmation by size and SHA-256. |
-| `convex/reads.ts` | Read grants (section 9.4): no address before the reveal, one-minute presigned GETs after it. |
+| `convex/reads.ts` | The album and its read grants (section 9.4): no address before the reveal, then every picture in capture order with numbered gaps and one-minute presigned GETs for each picture and its viewing copy. |
 | `convex/pushTokens.ts`, `convex/push.ts`, `convex/lib/apns.ts` | Push tokens, and the Convex-to-Apple push test over HTTP/2 from a Node action (section 9.6). |
-| `convex/proofs.ts` | Internal fixtures for Stage 1's proofs (a proof event, a guest, a removal, the reveal), callable only with the deployment's key. Stage 2 replaces them with Load Film, joining and the timed reveal. |
+| `convex/hosting.ts` | The Host's side: Load Film (`create`), the Host's view of counts and guests, never pictures, the times, pausing, replacing the Join Code, adding Rolls, ending early, renaming, deleting the event, removing a guest or a picture. |
+| `convex/joining.ts` | A guest's side: what the link shows (`preview`), joining and rejoining, where a phone stands after being offline (`standing`), the member's view, leaving, the Guest Name, Withdraw Before Reveal, removing one's own picture. |
+| `convex/schedule.ts`, `convex/lib/phase.ts` | The timed opening, end, reveal and 12-month end, and the purge of a gone or deleted event; every rule reads the state from the times, so a late step never lets anyone in after the End Time or keeps the album sealed. |
+| `convex/rolls.ts` | The balance and its ledger: everyone's free Rolls once ever, set-asides, and unclaimed Rolls returned or lapsed. |
+| `convex/lib/joinCode.ts` | The 128-bit Join Code, derived under `JOIN_CODE_SECRET` and stored only as a verifier. |
+| `convex/identities.ts` | Claim Guest Identity and Delete Guest Identity. |
+| `convex/reports.ts`, `convex/support.ts`, `convex/crons.ts` | Reports to the Host and through the signed support relay, support's own functions, and the expiry of resolved reports. |
+| `convex/alerts.ts` | "Your Film is ready" at the reveal, once per event, to every member with the full app. |
+| `convex/measures.ts` | The server's own counts for success measures M-1, M-3 and M-8 and open check OC-2. |
+| `convex/proofs.ts` | Internal fixtures for the proofs and tests (a proof event, a guest, a removal, ending and revealing now), callable only with the deployment's key. |
 | `tests/` | The functions' tests on `convex-test`, an in-memory Convex, with MinIO standing in for R2 and local doubles for Clerk's Backend API and Apple's push service. |
 | `local-backend/` | The same functions end to end on Convex's own open-source backend, through the HTTP API the app uses, including the app's Swift client (`Packages/ImmerseServer`). |
 
@@ -59,9 +68,17 @@ Each is a proposed engineering approach of PRD section 9, which can change witho
 - **Push runs in a Convex Node action over `node:http2` (open check OC-7).** No relay is built; Cloudflare's relay stays the fallback if the real check fails.
 - **The server deletes the Clerk user itself, through Clerk's Backend API, during Delete Account.** Deletion then completes even if the app closes halfway, repeats safely, and `user.deleted` from Clerk covers a deletion made anywhere else.
 
+- **The Join Code is derived, not kept (Stage 2).** Section 8 stores the code as a verifier; the Host still needs the current code on any iPhone, so it is an HMAC of the event and the code's generation under a deployment secret. A database leak gives no code; the secret must never change once events exist.
+- **Every rule reads the event's state from its times (Stage 2).** The scheduled steps only do what comes with a change (returning Rolls, the alert, the purge), so a step that runs late, as when the server was unreachable, never lets anyone join after the End Time or holds the reveal back.
+- **The phone uploads a viewing copy beside each picture (Stage 2, section 9.4),** a JPEG of at most 1,600 pixels on its longest side with no metadata, so browsing the album downloads far less than every full picture; saving downloads the full one.
+- **Reports reach the support address through a signed relay the operator runs (Stage 2, OQ-12).** The server has no mail service of its own; it posts each report, signed, until the relay accepts it, and support works from `support:openReports`.
+- **Per-address rate limits on the Join Code are left to Stage 3's Worker.** The app calls Convex directly, whose functions do not see a caller's address; the code's 128 bits make guessing infeasible meanwhile.
+
 ## What the stand-ins cannot show
 
 - **R2 itself.** MinIO checks presigned SigV4 addresses, their expiry, their signed content type and `x-amz-checksum-sha256` as S3 does. Whether R2 refuses a body that does not match the signed checksum, and how R2 answers a GET with an address signed for a PUT, are checked only on the real bucket (manual check V04).
 - **Clerk.** The Clerk stand-in issues RS256 session tokens Convex verifies through OpenID discovery, as it verifies Clerk's. Clerk's own sign-in with Apple, Google and email, its account linking, its session lifetime and its deletion are checked only on a real instance (V01 to V03, V06).
 - **Apple's push service.** The stand-in is an HTTP/2-only server over TLS that checks the provider token's ES256 signature. Whether Convex's hosted Node runtime reaches Apple's service over HTTP/2 is checked only on a real deployment (V05).
 - **Convex's hosted deployment.** The open-source backend runs the same functions, scheduler and Node actions; limits, cold starts and the hosted Node runtime's network are checked only on Convex's cloud.
+- **Convex's own meters and Cloudflare's.** The Stage 2 end-to-end run counts the calls the clients make and the storage operations a proxy sees; Convex's billed function calls, database bandwidth and Cloudflare's billed operations are read only from their dashboards (`Evidence/NativeApp/v2-stage2-events-085.md`).
+- **A scheduled step months ahead.** The tests check the album's end is scheduled 12 months after the reveal and that the step does what it should when run; that Convex's cloud runs a step a year later is not something a test can wait for.

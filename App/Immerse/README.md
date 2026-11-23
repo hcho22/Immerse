@@ -51,12 +51,13 @@ argument or `XCUIDevice.shared.appearance`; neither changed the observed pixels.
 
 ## Server Configuration (v2)
 
-v2 Stage 1 adds Hosts' sign-in through Clerk, Immerse's server on Convex and the picture upload path (`Backend/README.md`).
+v2 Stage 1 adds Hosts' sign-in through Clerk, Immerse's server on Convex and the picture upload path (`Backend/README.md`), and Stage 2 adds Group Films: hosting, joining by link or QR code, shooting the event's Camera offline, Development on the phone, the upload queue and the album (`Sources/GroupFilms.swift` and the `Group*` views; `Evidence/NativeApp/v2-stage2-events-085.md`).
 All of it is off unless the Mac that builds has `Config/Server.local.xcconfig`, which git ignores; `Config/Server.xcconfig` includes it and leaves every value empty otherwise.
-Copy `Config/Server.local.xcconfig.example` and fill it in from `Backend/SETUP.md`: the Convex deployment's address, Clerk's publishable key and the v2 entitlements (Sign in with Apple, push and Declared Age Range).
-With it, Start a Film offers **Host a Group Film**, Settings shows the Account with **Sign Out** and **Delete Account** once signed in, and a Debug build's Settings shows **Server checks** for Stage 1's iPhone proofs (`Evidence/NativeApp/manual-validation.md`, section V).
+Copy `Config/Server.local.xcconfig.example` and fill it in from `Backend/SETUP.md`: the Convex deployment's address, Clerk's publishable key, the join host of a Group Film's link, the support address, and the v2 entitlements (Sign in with Apple, push, Declared Age Range and Associated Domains).
+With it, Start a Film offers **Host a Group Film**, the Journal lists the Group Films this iPhone takes part in, a Group Film's link opens the app at its Join Confirmation, Settings shows the Account with **Sign Out** and **Delete Account** once signed in, and a Debug build's Settings shows **Server checks** for Stage 1's iPhone proofs (`Evidence/NativeApp/manual-validation.md`, section V).
 Without it, the app is the v1 app: no Group Film, no Clerk, no request to any server.
-Screen tests open the hosting screens with a stand-in server and sign-in, a Debug build launched with `-ImmerseDebugHosting signedOut` or `signedIn` (`Sources/DebugHosting.swift`); the Release check holds it and Server checks out of Release.
+Screen tests open the hosting screens with a stand-in server and sign-in, a Debug build launched with `-ImmerseDebugHosting signedOut` or `signedIn` (`Sources/DebugHosting.swift`), and Group Films with a stand-in for the event functions, `-ImmerseDebugGroupFilm open` or `revealed`, opening a link with `-ImmerseDebugJoinLink <url>` (`Sources/DebugGroupFilms.swift`); the Release check holds them and Server checks out of Release.
+An event Roll is a Film in the Group Films' own store under `Application Support/GroupFilms`, apart from personal Films, whose Trial store refuses every use, so a Roll never touches the Trial.
 
 ## Product Configuration
 
