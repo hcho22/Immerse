@@ -390,7 +390,7 @@ The automatic moment, at the **End Time** plus the **Reveal Delay**, when every 
 _Avoid_: Release, Private Review, Host approval
 
 **Sealed**:
-The state of a **Group Film** picture before the **Reveal**, when nobody can see it, its shooter included, except an Instant guest's own prints on their own phone.
+The state of a **Group Film** picture before the **Reveal**, when the server shows it to nobody, its shooter included; the one exception is on the phone: an Instant guest's own prints, whose developed copies stay on their phone after upload, seen there by that guest until the Reveal.
 _Avoid_: Blurred preview, hidden from Host only
 
 **Event Album**:
@@ -580,8 +580,8 @@ _Avoid_: Draft, incomplete album
 - A Guest can shoot with no connection after joining; shooting stops at the End Time.
 - Each picture is developed on the phone that took it, by the same **Development** as a personal Film; there is no server-side Development.
 - Only the finished, developed picture is uploaded, and it stays **Sealed** until the **Reveal**; the original never leaves the phone, and there is no **Save Originals to Photos** for Group Film pictures.
-- A picture stays on its phone until the server confirms it has it whole.
-- A Disposable or 6×6 picture is Sealed even from its shooter; an Instant print develops for its shooter at once, as in a personal **Instant Film**, and others see it at the Reveal.
+- A picture stays on its phone until the server confirms it has it whole; an Instant print's developed copy stays on its shooter's phone until the Reveal, while its original is deleted on confirmation like any other.
+- A Disposable or 6×6 picture is Sealed even from its shooter; an Instant print develops for its shooter at once, as in a personal **Instant Film**, stays viewable on the shooter's phone until the Reveal, and others see it at the Reveal; the server returns nothing to anyone before the Reveal.
 - At the **End Time** plus the **Reveal Delay** the Group Film reveals itself automatically: nobody, the Host included, sees a picture before it, and nobody starts or holds it back.
 - The Host may **End Early**, which makes now the End Time.
 - Running out of Rolls or every Guest finishing never reveals anything; only the scheduled Reveal does.

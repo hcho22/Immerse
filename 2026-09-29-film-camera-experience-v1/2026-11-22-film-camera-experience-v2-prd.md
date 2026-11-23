@@ -655,10 +655,12 @@ Acceptance criteria:
 
 On the Instant, each print develops on the shooter's phone right after capture and the shooter sees it at once, as in a personal Instant Film.
 Nobody else, the Host included, sees it until the reveal.
+The developed print stays on the shooter's phone after the server confirms it, so the shooter can keep viewing it there until the reveal; at the reveal the phone deletes its copy and the shooter sees the print in the album like everyone else (V2-FR-34, V2-FR-37).
 
 Acceptance criteria:
 
 - An Instant guest sees each print a moment after taking it, offline included.
+- An Instant guest still sees each of their prints on their own phone after it has uploaded, until the reveal.
 - No other member sees it before the reveal.
 
 #### V2-FR-33 - Pictures are developed on the phone that took them
@@ -678,12 +680,13 @@ Acceptance criteria:
 A picture is never lost between the phone and the album.
 Its original stays on the phone until its developed picture is developed, and its developed picture stays on the phone until the server confirms it has received and stored it whole.
 Only then does the phone delete its copy (V2-FR-36).
+The one exception is an Instant print, whose developed copy stays on its shooter's phone until the reveal (V2-FR-32); its original is deleted on confirmation like any other.
 A crash, a closed app, a restart, a full phone or a lost connection never loses a saved picture.
 
 Acceptance criteria:
 
 - Killing the app at any moment during capture, Development or upload loses no saved picture; each finishes on the next launch.
-- A picture the server has not confirmed is never deleted from the phone, except by Withdraw Before Reveal, Delete Account or Delete Guest Identity.
+- A picture the server has not confirmed is never deleted from the phone, except by Withdraw Before Reveal, Delete Account, Delete Guest Identity, the Host's Delete Event, or its refusal by the server (a capture time after the server's End Time, or the event gone; V2-FR-31).
 - The server confirms a picture only after checking its size and checksum against what the phone sent.
 
 #### V2-FR-35 - The upload queue
@@ -710,11 +713,12 @@ There is no Save Originals to Photos for event pictures (the seven-day originals
 Acceptance criteria:
 
 - No network request ever carries an original capture.
-- After the server confirms a picture, its original is gone from the phone's storage.
+- After the server confirms a picture, its original is gone from the phone's storage, on the Instant too.
 
 #### V2-FR-37 - Pictures are sealed on the server until the reveal
 
-Every uploaded picture is sealed until the event's reveal: nobody can see or download it, not the Host, not the guest who took it (an Instant guest sees their own prints on their own phone, from the phone), not a web-album viewer, through the app, the join page or any server address.
+Every uploaded picture is sealed until the event's reveal: nobody can see or download it, not the Host, not the guest who took it, not a web-album viewer, through the app, the join page or any server address.
+The one exception is on the phone, not the server: an Instant guest sees their own prints from the developed copies their phone keeps until the reveal (V2-FR-32, V2-FR-34); the server returns nothing to anyone, that guest included.
 How sealing is enforced is open check OC-4.
 
 Acceptance criteria:
@@ -851,7 +855,7 @@ Acceptance criteria:
 #### V2-FR-50 - Withdraw Before Reveal: a guest pulls all their pictures in one step
 
 Before the reveal, a guest can remove all their own pictures from the event in one step, **Withdraw Before Reveal**, after a warning that the removal is for good, unseen, and returns no exposures.
-It removes pictures waiting on their phone (which never upload) and pictures already on the server, and nothing can bring them back: not the Host, not support, not a late upload.
+It removes pictures waiting on their phone (which never upload), the Instant prints their phone keeps, and pictures already on the server, and nothing can bring them back: not the Host, not support, not a late upload.
 It offers no preview and no choice of pictures (**carried from the parked design**, ADR 0008).
 The guest can keep shooting afterwards with what is left of their Roll, until the End Time.
 
@@ -1133,7 +1137,7 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | Developing | Phone | The phone is developing it (paused while the app is in the background). | Developed. |
 | Developed, waiting | Phone | The developed picture is in the upload queue; an Instant shooter can see their own print; nobody else can. | Uploading, or Withdrawn (Withdraw Before Reveal, Delete Account, Delete Guest Identity, or the event deleted). |
 | Uploading | Phone and server | It is being sent; the phone keeps its copy. | Sealed (the server confirms it whole), or back to Developed, waiting (failed; retried). |
-| Sealed | Server | Stored, unseen by anyone; the phone deletes its original and developed copy. | Revealed (at the reveal), Withdrawn, or Removed by deletion. |
+| Sealed | Server | Stored, unseen by anyone through the server; the phone deletes its original and developed copy, except that an Instant print's developed copy stays on its shooter's phone, seen only by its shooter, until the reveal. | Revealed (at the reveal), Withdrawn, or Removed by deletion. |
 | Revealed | Server | Every member sees it, and web-album viewers while the web album is on. | Removed by its shooter, the Host or support, Removed by deletion, or Gone at the album's end. |
 | Arrived late | Server | Reached the server after the reveal; becomes Revealed on arrival. | As Revealed. |
 | Refused | Phone | Its capture time is after the server's End Time, or the event is gone; the phone deletes it and tells the guest. | Never. |
