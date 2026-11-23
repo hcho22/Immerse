@@ -9,12 +9,15 @@ protocol HostSignIn: AnyObject, Sendable {
     /// Whether Clerk holds a session on this iPhone. It stays true without a network: losing the network never signs
     /// anyone out (V2-FR-08).
     var hasSession: Bool { get }
+    /// Whether `hasSession` is Clerk's answer yet. Until Clerk has read its Keychain or reached its server, no session
+    /// does not mean signed out, so nothing the iPhone remembers is cleared for it.
+    var sessionIsKnown: Bool { get }
     /// A name to start the Host's display name from: the name Apple, Google or the person gave Clerk, or nil.
     var suggestedDisplayName: String? { get }
     /// The current session token for Convex, refreshed by Clerk's SDK, or nil when signed out or unreachable.
     func sessionToken() async -> String?
-    /// Signs in with the identity token of a Sign in with Apple authorization.
-    func signInWithApple(identityToken: String) async throws
+    /// Signs in, or up, with the identity token of a Sign in with Apple authorization and the name Apple gives once.
+    func signInWithApple(identityToken: String, givenName: String?, familyName: String?) async throws
     func signInWithGoogle() async throws
     /// Sends a code to the address, for signing in or, for a new address, signing up.
     func sendEmailCode(to address: String) async throws
@@ -55,8 +58,12 @@ final class HostingSession {
         self.accounts = AccountServer(functions: functions)
         self.defaults = defaults
         // The last Account this iPhone saw, so the Host stays signed in without a network (V2-FR-08).
+        let remembered = defaults.string(forKey: Self.displayNameKey)
         if signIn.hasSession {
-            phase = defaults.string(forKey: Self.displayNameKey).map { .signedIn(displayName: $0) } ?? .needsAccount
+            phase = remembered.map { .signedIn(displayName: $0) } ?? .needsAccount
+        } else if !signIn.sessionIsKnown, let remembered {
+            // Clerk has not answered yet: the Host stays signed in as last seen until it does.
+            phase = .signedIn(displayName: remembered)
         } else {
             phase = .signedOut
         }
@@ -76,7 +83,10 @@ final class HostingSession {
 
     /// Reads the Account from the server. Without a network it keeps what it knew.
     func refresh() async {
-        guard signIn.hasSession else { return settle(.signedOut) }
+        guard signIn.hasSession else {
+            if signIn.sessionIsKnown { settle(.signedOut) }
+            return
+        }
         do {
             switch try await accounts.state() {
             case .signedIn(let account): settle(.signedIn(displayName: account.displayName))
@@ -102,8 +112,11 @@ final class HostingSession {
         }
     }
 
-    func signInWithApple(identityToken: String, confirmedBy method: AgeConfirmationMethod) async {
-        await run { try await self.signIn.signInWithApple(identityToken: identityToken) }
+    func signInWithApple(identityToken: String, givenName: String?, familyName: String?,
+                         confirmedBy method: AgeConfirmationMethod) async {
+        await run {
+            try await self.signIn.signInWithApple(identityToken: identityToken, givenName: givenName, familyName: familyName)
+        }
         await finishSignIn(confirmedBy: method)
     }
 
@@ -122,7 +135,11 @@ final class HostingSession {
     }
 
     private func finishSignIn(confirmedBy method: AgeConfirmationMethod) async {
-        guard signIn.hasSession else { return }
+        guard signIn.hasSession else {
+            // A method that ended with no session and no error, such as a sign-up Clerk wants more for.
+            if problem == nil { problem = "Sign-in did not finish. Try again." }
+            return
+        }
         await refresh()
         if phase == .needsAccount { await createAccount(confirmedBy: method) }
     }

@@ -145,9 +145,10 @@ describe("Stage 1 on Convex's local backend", () => {
     expect(await maya.action("deletion:deleteAccount")).toMatchObject({ ok: true, value: { deleted: true } });
     expect(clerk.deletions).toEqual(["user_maya"]);
     expect(await maya.query("accounts:me")).toMatchObject({ ok: true, value: { state: "noAccount" } });
-    // Repeated, it changes nothing and asks Clerk nothing more.
+    // Repeated, it changes nothing further; Clerk may be asked again for the same user.
     expect(await maya.action("deletion:deleteAccount")).toMatchObject({ ok: true, value: { deleted: true } });
-    expect(clerk.deletions).toEqual(["user_maya"]);
+    expect(new Set(clerk.deletions)).toEqual(new Set(["user_maya"]));
+    expect(await maya.query("accounts:me")).toMatchObject({ ok: true, value: { state: "noAccount" } });
     // Within a minute, the picture's media is gone from storage.
     let status = 0;
     for (let attempt = 0; attempt < 600 && status !== 404; attempt += 1) {

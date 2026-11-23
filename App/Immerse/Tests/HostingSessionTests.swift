@@ -86,6 +86,34 @@ final class HostingSessionTests: XCTestCase {
         XCTAssertEqual(server.calls.first?.args["installationId"]?.string, HostingSession.installationID(defaults: defaults))
     }
 
+    func testAHostIsNotSignedOutBeforeClerkHasAnswered() async {
+        let server = ScriptedServer()
+        let signIn = StubSignIn(session: false)
+        signIn.sessionIsKnown = false
+        defaults.set("Maya", forKey: "ImmerseHostDisplayName")
+        let session = HostingSession(signIn: signIn, functions: server, defaults: defaults)
+        XCTAssertEqual(session.phase, .signedIn(displayName: "Maya"))
+        await session.refresh()
+        XCTAssertEqual(session.phase, .signedIn(displayName: "Maya"), "Nothing is cleared before Clerk answers")
+        XCTAssertEqual(defaults.string(forKey: "ImmerseHostDisplayName"), "Maya")
+        // Once Clerk answers that there is no session, the iPhone is signed out.
+        signIn.sessionIsKnown = true
+        await session.refresh()
+        XCTAssertEqual(session.phase, .signedOut)
+        XCTAssertNil(defaults.string(forKey: "ImmerseHostDisplayName"))
+    }
+
+    func testAMethodThatEndsWithNoSessionSaysSo() async {
+        let server = ScriptedServer()
+        let signIn = StubSignIn(session: false)
+        signIn.endsWithoutSession = true
+        let session = HostingSession(signIn: signIn, functions: server, defaults: defaults)
+        await session.signInWithGoogle(confirmedBy: .birthMonthAndYear)
+        XCTAssertEqual(session.phase, .signedOut)
+        XCTAssertEqual(session.problem, "Sign-in did not finish. Try again.")
+        XCTAssertTrue(server.calls.isEmpty, "No Account is made without a session")
+    }
+
     func testAgeDeclinesLastADay() {
         let now = Date()
         XCTAssertFalse(AgeDecline.isRecent(defaults: defaults, now: now))
@@ -104,12 +132,14 @@ final class HostingSessionTests: XCTestCase {
 @MainActor
 private final class StubSignIn: HostSignIn {
     var hasSession: Bool
+    var sessionIsKnown = true
     var signOuts = 0
     init(session: Bool) { hasSession = session }
     var suggestedDisplayName: String? { "Maya" }
     func sessionToken() async -> String? { hasSession ? "t" : nil }
-    func signInWithApple(identityToken: String) async throws { hasSession = true }
-    func signInWithGoogle() async throws { hasSession = true }
+    func signInWithApple(identityToken: String, givenName: String?, familyName: String?) async throws { hasSession = true }
+    var endsWithoutSession = false
+    func signInWithGoogle() async throws { hasSession = !endsWithoutSession }
     func sendEmailCode(to address: String) async throws {}
     func verifyEmailCode(_ code: String) async throws { hasSession = true }
     func signOut() async throws {

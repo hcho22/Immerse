@@ -143,13 +143,22 @@ describe("Delete Account", () => {
     ]);
   });
 
-  test("repeating it changes nothing further and asks Clerk nothing more", async () => {
+  test("repeating it changes nothing further", async () => {
     const { t, maya } = await mayaWithEverything();
     await maya.action(api.deletion.deleteAccount, {});
     const after = await everyRow(t);
     expect(await maya.action(api.deletion.deleteAccount, {})).toEqual({ deleted: true });
     expect(await everyRow(t)).toEqual(after);
-    expect(clerk.requests).toHaveLength(1);
+    // Clerk may be asked again for the same user, which it answers as done.
+    expect(new Set(clerk.requests.map((request) => request.path))).toEqual(new Set(["/v1/users/user_maya"]));
+  });
+
+  test("a person signed in with no Account yet still has their Clerk user deleted", async () => {
+    const t = newBackend();
+    const person = signedIn(t, "user_new");
+    expect(await person.action(api.deletion.deleteAccount, {})).toEqual({ deleted: true });
+    expect(clerk.requests).toEqual([{ method: "DELETE", path: "/v1/users/user_new", authorization: `Bearer ${clerk.secretKey}` }]);
+    expect(await t.run((ctx) => ctx.db.query("clerkDeletions").collect())).toHaveLength(0);
   });
 
   test("when Clerk cannot be reached, the server's removal still completes, and Clerk is retried", async () => {

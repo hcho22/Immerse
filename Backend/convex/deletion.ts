@@ -63,6 +63,17 @@ async function removeShooter(ctx: MutationCtx, membership: Doc<"memberships">, n
   return true;
 }
 
+export const requestClerkDeletion = internalMutation({
+  args: { clerkUserId: v.string() },
+  handler: async (ctx, { clerkUserId }) => {
+    const pending = await ctx.db
+      .query("clerkDeletions")
+      .withIndex("by_clerk_user", (q) => q.eq("clerkUserId", clerkUserId))
+      .unique();
+    if (pending === null) await ctx.db.insert("clerkDeletions", { clerkUserId, requestedAt: Date.now(), attempts: 0 });
+  },
+});
+
 // One batch of an Account's removal. Returns `done` once nothing that names the person is left.
 export const deleteAccountBatch = internalMutation({
   args: { clerkUserId: v.string() },
@@ -190,6 +201,8 @@ export const deleteAccount = action({
   handler: async (ctx): Promise<{ deleted: true }> => {
     const identity = await ctx.auth.getUserIdentity();
     if (identity === null) refuse("unauthenticated");
+    // The sign-in goes too, even for a person signed in with no Account yet (V2-FR-05).
+    await ctx.runMutation(internal.deletion.requestClerkDeletion, { clerkUserId: identity.subject });
     await removeEverything(ctx, identity.subject);
     const clerk = await ctx.runAction(internal.clerk.deleteUser, { clerkUserId: identity.subject });
     if (!clerk.deleted) throw new Error("Clerk could not delete the user yet; the server will keep trying");

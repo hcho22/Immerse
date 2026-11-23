@@ -31,9 +31,10 @@ final class DebugHostSignIn: HostSignIn {
         server.setSession(signedIn)
     }
 
+    var sessionIsKnown: Bool { true }
     var suggestedDisplayName: String? { "Maya" }
     func sessionToken() async -> String? { hasSession ? "debug-session" : nil }
-    func signInWithApple(identityToken: String) async throws { start() }
+    func signInWithApple(identityToken: String, givenName: String?, familyName: String?) async throws { start() }
     func signInWithGoogle() async throws { start() }
     func sendEmailCode(to address: String) async throws {}
     func verifyEmailCode(_ code: String) async throws { start() }

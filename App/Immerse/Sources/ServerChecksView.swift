@@ -1,5 +1,6 @@
 #if DEBUG
 import CryptoKit
+import Security
 import ImmerseServer
 import SwiftUI
 import UserNotifications
@@ -54,8 +55,9 @@ struct ServerChecksView: View {
     /// A 4 MB file of random bytes, the size of a developed Disposable picture, as exposure 1.
     private func sendPicture() async throws {
         let file = FileManager.default.temporaryDirectory.appending(path: "server-check-\(UUID().uuidString).jpg")
-        var generator = SystemRandomNumberGenerator()
-        try Data((0..<(4 << 20)).map { _ in UInt8.random(in: 0...255, using: &generator) }).write(to: file)
+        var bytes = [UInt8](repeating: 0, count: 4 << 20)
+        guard SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes) == errSecSuccess else { throw CocoaError(.fileWriteUnknown) }
+        try Data(bytes).write(to: file)
         defer { try? FileManager.default.removeItem(at: file) }
         let fingerprint = try PictureUploader.fingerprint(of: file)
         let started = Date.now

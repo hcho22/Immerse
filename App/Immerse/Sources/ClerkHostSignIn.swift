@@ -19,6 +19,8 @@ final class ClerkHostSignIn: HostSignIn {
 
     var hasSession: Bool { Clerk.shared.session != nil }
 
+    var sessionIsKnown: Bool { Clerk.shared.session != nil || Clerk.shared.isLoaded }
+
     var suggestedDisplayName: String? {
         guard let user = Clerk.shared.user else { return nil }
         if let first = user.firstName, !first.isEmpty { return first }
@@ -29,8 +31,14 @@ final class ClerkHostSignIn: HostSignIn {
         try? await Clerk.shared.session?.getToken()
     }
 
-    func signInWithApple(identityToken: String) async throws {
-        try await Clerk.shared.auth.signInWithIdToken(identityToken, provider: .apple)
+    /// Signs up first, as Clerk's own Apple flow does, so the name Apple gives only on the first authorization is kept;
+    /// an Apple ID that already has a user is transferred to sign-in.
+    func signInWithApple(identityToken: String, givenName: String?, familyName: String?) async throws {
+        do {
+            try await Clerk.shared.auth.signUpWithIdToken(identityToken, provider: .apple, firstName: givenName, lastName: familyName)
+        } catch is ClerkAPIError {
+            try await Clerk.shared.auth.signInWithIdToken(identityToken, provider: .apple)
+        }
     }
 
     func signInWithGoogle() async throws {

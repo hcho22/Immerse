@@ -2960,7 +2960,7 @@ Each scenario reads **UNTESTED: physical execution deferred, no real service pro
 
 **Before you start.**
 
-1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), on a Clerk development instance or on Clerk Pro (V03 needs the native session lifetime set).
+1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), on Clerk's free plan as the captain chose.
 2. On the Mac, fill in `App/Immerse/Config/Server.local.xcconfig` (SETUP.md step 7) and build the **Debug** configuration of a commit that holds this change to two iPhones on iOS 26: HC_iPhone13 and a second iPhone.
 3. Keep the Convex dashboard (Data and Logs), Clerk's dashboard (Users) and Cloudflare's R2 bucket view open on the Mac.
 4. Write down, for each scenario, the date, the build's commit, each iPhone's model and iOS version, and what each dashboard showed.
@@ -3013,12 +3013,12 @@ A second Account is made, or either iPhone is signed out by the other.
 
 **Expect.**
 
-- With the native session lifetime set past eight days: no sign-in prompt at any step, and the server accepts the request in step 4.
-- With Clerk's Hobby plan in production (seven days fixed): step 4 asks for sign-in again; that result confirms the reading in 084 and that Pro's lifetime is needed.
+- On Clerk's free plan, which the captain chose on 2026-11-23 (seven days fixed): step 4 asks for sign-in again, signing in returns to the same Account, and nothing about the Host's event changed. That is the known gap 084 states (V2-FR-08 and M-4 not met for events past seven days), not a failure of this check.
+- With a native session lifetime set past eight days (Clerk Pro, or a development instance): no sign-in prompt at any step, and the server accepts the request in step 4.
 - Airplane Mode never signs anyone out (step 3 still shows "Signed in as").
 
 **It fails if.**
-A Host is asked to sign in before the session lifetime the instance is set to, or losing the network signs them out.
+A Host is asked to sign in before the session lifetime the instance is set to, signing in again reaches a different Account, or losing the network signs them out.
 
 **Write down.**
 The plan and lifetime, the sign-in and check times, and screenshots of day nine.

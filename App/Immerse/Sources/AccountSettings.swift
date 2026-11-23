@@ -34,6 +34,7 @@ struct AccountSettingsSection: View {
             }
         }
         .disabled(hosting.busy)
+        .task { await hosting.refresh() }
         .orbitConfirmation(isPresented: $confirmDelete, symbol: "person.crop.circle.badge.xmark", title: "Delete Account?",
                            message: Self.deleteMessage, confirm: "Delete Account", identifier: "confirm-delete-account") {
             Task { await hosting.deleteAccount() }

@@ -8,14 +8,15 @@ Every value below goes into the Convex deployment's environment or the untracked
 Each step names the values it produces and where they go.
 Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page linked in the step is the authority.
 
-## Before you start: two decisions
+## Before you start
 
-1. **Clerk's plan (open check OC-8).**
-   Clerk's free Hobby plan fixes a session's maximum lifetime at seven days "regardless of activity", and its iOS SDK cannot extend that by refreshing; an event of seven days plus a 24-hour reveal delay outlasts it (V2-FR-08).
-   Only a paid plan sets a longer maximum lifetime for native sessions ("between 5 minutes and 10 years in production").
-   The recommendation is Clerk Pro ($25 a month, or $20 billed yearly, as read on 2026-11-22) with a native session lifetime of 30 days, so a Host who signs in when making an event is never asked again before its reveal.
-   Development instances get every option free, so Stage 1 can be proved on a development instance before paying.
-   The app works with either: it never assumes the lifetime, and the eight-day check (manual check V03) shows which one holds.
+1. **Clerk's plan: the free Hobby plan (open check OC-8, the captain's decision of 2026-11-23).**
+   Clerk's Hobby plan fixes a session's maximum lifetime at seven days "regardless of activity", and its iOS SDK cannot extend that by refreshing.
+   **On the free plan, a Host can be asked to sign in again during an event that runs past seven days from their sign-in** (an event of seven days plus a 24-hour reveal delay always does), so V2-FR-08 and success measure M-4 are not met for such events.
+   The PRD's requirements are unchanged; this is a known gap of the chosen plan.
+   The lifetime is a setting of the Clerk instance, not of the app or the server: the app never assumes it, and Clerk's SDK keeps refreshing the session while the app is in use.
+   Moving to Clerk Pro later ($25 a month, or $20 billed yearly, as read on 2026-11-22), which sets a native session lifetime from 5 minutes to 10 years, is a change in Clerk's dashboard alone, with no code change; a lifetime of 30 days would cover every event.
+   Manual check V03 shows the free plan's behavior at eight days.
 2. **The App ID's capabilities.**
    The v2 build adds three capabilities to the existing App ID `com.immerse.FilmJournal`: Sign in with Apple, Push Notifications and Declared Age Range.
    A build without the local configuration file signs with none of them, so v1 builds are unaffected until the configuration file is added on a Mac.
@@ -41,14 +42,14 @@ Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page lin
 
 ## 3. Clerk: the application, its sign-in methods and the link to Convex
 
-1. Create a Clerk account and an application for Immerse (https://clerk.com), on the plan chosen above.
+1. Create a Clerk account and an application for Immerse (https://clerk.com), on the free Hobby plan.
 2. Under sign-in options, turn on **Email** with **Email verification code**, **Apple** and **Google**, and nothing else.
    Leave passwords off: the app signs in with codes only.
    Keep Clerk's automatic account linking on, so Apple and then Google with the same verified email reach the same Account (V2-FR-01).
 3. Under Native applications, enable the Native API and register the iOS app with the Team ID and the bundle identifier `com.immerse.FilmJournal`, then add `com.immerse.FilmJournal://callback` to the allowlist for mobile SSO redirects, which Google's sign-in returns to ([Clerk's iOS quickstart](https://clerk.com/docs/ios/getting-started/quickstart)).
 4. For Apple, follow [Clerk's Sign in with Apple guide for iOS](https://clerk.com/docs/ios/guides/configure/auth-strategies/sign-in-with-apple): the app sends Apple's identity token to Clerk, so the native flow needs the bundle identifier registered for Apple in Clerk.
 5. For Google, create an OAuth client for the iOS app in Google Cloud and give its credentials to Clerk's Google connection, as Clerk's dashboard asks.
-6. Under Sessions, set the native maximum session lifetime (step 1 of "Before you start").
+6. Under Sessions, leave the maximum session lifetime at the free plan's seven days ("Before you start", step 1); on Clerk Pro, this is where a longer native lifetime would be set.
 7. Activate Clerk's **Convex integration** ([Convex's Clerk page](https://docs.convex.dev/auth/clerk)), which puts the `convex` audience on session tokens.
    It produces the issuer, the Frontend API URL such as `https://<instance>.clerk.accounts.dev`, which is `CLERK_JWT_ISSUER_DOMAIN`.
 8. Copy the **publishable key** (`pk_test_...` or `pk_live_...`), which the app needs as `IMMERSE_CLERK_PUBLISHABLE_KEY`, and the **secret key** (`sk_...`), which is `CLERK_SECRET_KEY`.

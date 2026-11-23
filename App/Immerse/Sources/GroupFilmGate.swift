@@ -48,6 +48,7 @@ struct GroupFilmGate: View {
         .navigationTitle("Group Film")
         .toolbarTitleDisplayMode(.inline)
         .onAppear { tooYoung = hosting.map { AgeDecline.isRecent(defaults: $0.defaults) } ?? false }
+        .task { await hosting?.refresh() }
     }
 
     private func decline() {
@@ -263,7 +264,10 @@ struct SignInMethodsView: View {
                                   let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
                                   let token = credential.identityToken.flatMap({ String(data: $0, encoding: .utf8) })
                             else { return }
-                            Task { await hosting.signInWithApple(identityToken: token, confirmedBy: confirmation) }
+                            Task {
+                                await hosting.signInWithApple(identityToken: token, givenName: credential.fullName?.givenName,
+                                                              familyName: credential.fullName?.familyName, confirmedBy: confirmation)
+                            }
                         }
                         .signInWithAppleButtonStyle(.white)
                         .frame(height: 56).clipShape(Capsule())
