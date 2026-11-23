@@ -15,6 +15,15 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
 
+    /// The device token for the push test (open check OC-7); asked for only from the Debug build's server checks.
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        MainActor.assumeIsolated { PushRegistration.shared.registered(deviceToken) }
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        MainActor.assumeIsolated { PushRegistration.shared.failed(error) }
+    }
+
     func application(
         _ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?
     ) -> UIInterfaceOrientationMask {

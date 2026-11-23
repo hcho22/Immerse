@@ -268,6 +268,10 @@ extension View {
 }
 
 enum PrivacyCopy {
+    static let settingsV1 = "No Accounts, sign-in, analytics or Immerse server. Your Films stay under your control. The microphone records only sound with Super 8 and 16mm movie clips; clips stay in their Film on this iPhone."
+    /// The same paragraph where the app has a server (V2-FR-74): personal Films stay on the iPhone, and only Group Film
+    /// pictures and the details a Group Film needs reach Immerse's server.
+    static let settingsWithServer = "Your personal Films stay on this iPhone and never reach Immerse's server. Only Group Film pictures, Guest Names and the Account of a Host go to it. No analytics, advertising or tracking. The microphone records only sound with Super 8 and 16mm movie clips; clips stay in their Film on this iPhone."
     static let deleteFilm = "Remove this Film and its captures from Immerse? Photos exports remain. Used Trial eligibility is not restored. Restoring an older iOS backup can bring the whole Film back."
     static let discard = "Remove this capture and its app-controlled copies? No exposures or time are refunded. Photos exports remain, and an older iOS backup can bring discarded media back."
     static let sources = "This choice cannot be changed. Originals are removed from Immerse only after a usable developed result is verified, and, if selected, after saving to Photos succeeds. Older iOS backups can restore removed originals."

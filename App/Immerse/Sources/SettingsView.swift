@@ -7,6 +7,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(JournalModel.self) private var model
+    @Environment(\.hosting) private var hosting
 
     var body: some View {
         NavigationStack {
@@ -17,7 +18,21 @@ struct SettingsView: View {
                     OrbitSectionLabel("Debug testing").padding(.leading, 4).padding(.top, 8)
                     TestingUnlockSection(unlock: model.testingUnlock)
                     DevelopedPreviewSection(previews: model.developedPreviews)
+                    if let hosting, hosting.phase != .signedOut {
+                        NavigationLink { ServerChecksView(hosting: hosting) } label: {
+                            HStack {
+                                Text("Server checks").orbitFont(.body, weight: .semibold).foregroundStyle(.white)
+                                Spacer()
+                                Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(Orbit.label)
+                            }
+                            .orbitRow()
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("server-checks")
+                    }
                     #endif
+                    if let hosting { AccountSettingsSection(hosting: hosting) }
                     OrbitSectionLabel("Privacy").padding(.leading, 4).padding(.top, 8)
                     privacy
                     OrbitSectionLabel("Films").padding(.leading, 4).padding(.top, 8)
@@ -74,7 +89,7 @@ struct SettingsView: View {
                                  state: PermissionCopy.label(AVFoundationCaptureAuthorizer().microphoneAuthorizationStatus()),
                                  detail: "Movie clips only · ")
             }
-            Text("No Accounts, sign-in, analytics or Immerse server. Your Films stay under your control. The microphone records only sound with Super 8 and 16mm movie clips; clips stay in their Film on this iPhone.")
+            Text(hosting == nil ? PrivacyCopy.settingsV1 : PrivacyCopy.settingsWithServer)
                 .orbitFont(.footnote).foregroundStyle(Orbit.label).padding(.horizontal, 4)
                 .fixedSize(horizontal: false, vertical: true)
             Button {

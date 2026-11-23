@@ -25,10 +25,15 @@ MAC = [
     "swift test --package-path Packages/NativeAdapters",
     "swift test --package-path Packages/EntitlementCore",
     "swift test --package-path Packages/FilmRuntime",
+    "swift test --package-path Packages/ImmerseServer",
     "swift test --package-path Probes/TrialCommitStudy",
     "swift test --package-path Probes/DevelopmentProcessExit",
     "swift build --package-path Probes/AssetReviewGenerator",
     "verify-document-package.sh",
+    "npm ci --prefix Backend --no-audit --no-fund",
+    "npm run --prefix Backend typecheck",
+    "npm test --prefix Backend",
+    "npm run --prefix Backend test:local-backend",
     "xcodebuild " + APP + " -destination generic/platform=iOS Simulator -derivedDataPath DerivedData/ValidationSimulator"
     " CODE_SIGNING_ALLOWED=NO build",
     "xcodebuild " + APP + " -destination generic/platform=iOS -derivedDataPath DerivedData/ValidationDevice"
@@ -62,7 +67,8 @@ OTHER_SUITES = "-only-testing:ImmerseUITests -skip-testing:ImmerseUITests/Conten
 DARK = [
     "xcodebuild " + SCREEN + " -resultBundlePath DerivedData/ValidationDark-<time>.xcresult"
     " -only-testing:ImmerseUITests/JournalFlowTests -only-testing:ImmerseUITests/MovieCapacityUITests"
-    " -only-testing:ImmerseUITests/FilmStockUITests -only-testing:ImmerseUITests/LowStorageUITests "
+    " -only-testing:ImmerseUITests/FilmStockUITests -only-testing:ImmerseUITests/LowStorageUITests"
+    " -only-testing:ImmerseUITests/HostingUITests "
     + ALLOWANCE + " test-without-building",
 ]
 # The billing simulator boots before the Mac tests, so its first-boot work is over when its tests run last.

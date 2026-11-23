@@ -10,3 +10,6 @@ xcuserdata/
 
 # Python bytecode from the scripts' tests
 __pycache__/
+
+# The server configuration a Mac builds v2 against (App/Immerse/Config/Server.xcconfig, Backend/SETUP.md)
+App/Immerse/Config/Server.local.xcconfig

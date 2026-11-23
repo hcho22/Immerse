@@ -2,8 +2,10 @@
 
 Open `Immerse.xcodeproj` in Xcode 26.5. It is generated from `project.yml` with
 `xcodegen generate --spec App/Immerse/project.yml` from the repository root.
-All production dependencies are local Swift packages. No browser prototype code,
-sample-library fixtures, review controls, imports or network backend are included.
+Production dependencies are local Swift packages and, for v2's Host sign-in, Clerk's
+iOS SDK (`ClerkKit` 1.7.3, from Swift Package Manager). No browser prototype code,
+sample-library fixtures, review controls or imports are included, and a build without
+the server configuration below never reaches a network service.
 
 The [physical validation handoff](../../Evidence/NativeApp/manual-validation.md)
 pins the current candidate and provides future Xcode build/run steps for
@@ -46,6 +48,15 @@ other dark coverage, including `ContentSizeTests`, set
 `xcrun simctl ui <task-owned-uuid> appearance dark` before the UI run, then restore
 its appearance. Do not infer dark coverage from an `AppleInterfaceStyle` launch
 argument or `XCUIDevice.shared.appearance`; neither changed the observed pixels.
+
+## Server Configuration (v2)
+
+v2 Stage 1 adds Hosts' sign-in through Clerk, Immerse's server on Convex and the picture upload path (`Backend/README.md`).
+All of it is off unless the Mac that builds has `Config/Server.local.xcconfig`, which git ignores; `Config/Server.xcconfig` includes it and leaves every value empty otherwise.
+Copy `Config/Server.local.xcconfig.example` and fill it in from `Backend/SETUP.md`: the Convex deployment's address, Clerk's publishable key and the v2 entitlements (Sign in with Apple, push and Declared Age Range).
+With it, Start a Film offers **Host a Group Film**, Settings shows the Account with **Sign Out** and **Delete Account** once signed in, and a Debug build's Settings shows **Server checks** for Stage 1's iPhone proofs (`Evidence/NativeApp/manual-validation.md`, section V).
+Without it, the app is the v1 app: no Group Film, no Clerk, no request to any server.
+Screen tests open the hosting screens with a stand-in server and sign-in, a Debug build launched with `-ImmerseDebugHosting signedOut` or `signedIn` (`Sources/DebugHosting.swift`); the Release check holds it and Server checks out of Release.
 
 ## Product Configuration
 

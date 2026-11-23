@@ -2950,3 +2950,164 @@ How the dark and tinted adaptations look, and how Clear renders the icon, are th
 
 **Write down.**
 A screenshot of the home screen in each style, and, for Tinted, each color tried.
+
+## v2 Stage 1: the Backend and Sign-in on Real iPhones and the Real Services
+
+These are the proofs the [v2 PRD](../../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md)'s Stage 1 ends with (section 12): sign-up, a second iPhone, eight days signed in, Delete Account, a picture-sized upload that cannot be read without a grant, a push from Convex, and every v1 personal Film action with the network off.
+They are v2's, not v1's: the v1 candidate above needs none of them, and a build without the server configuration file is exactly the v1 app.
+The software and what it showed against local stand-ins are in [084](v2-stage1-backend-084.md); compile-only or simulator evidence is not a pass, so **Stage 1 is not proved until V01 to V08 pass**.
+Each scenario reads **UNTESTED: physical execution deferred, no real service provisioned**.
+
+**Before you start.**
+
+1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), on Clerk's free plan as the captain chose.
+2. On the Mac, fill in `App/Immerse/Config/Server.local.xcconfig` (SETUP.md step 7) and build the **Debug** configuration of a commit that holds this change to two iPhones on iOS 26: HC_iPhone13 and a second iPhone.
+3. Keep the Convex dashboard (Data and Logs), Clerk's dashboard (Users) and Cloudflare's R2 bucket view open on the Mac.
+4. Write down, for each scenario, the date, the build's commit, each iPhone's model and iOS version, and what each dashboard showed.
+
+### V01 - Signing up behind the age confirmation, with each method
+
+**Steps.**
+
+1. On HC_iPhone13, tap **Start a Film**, then **Host a Group Film**.
+2. On "Hosting needs an Account", check that nothing is chosen, enter a birth month and a year that make you under 13, and tap **Continue**.
+3. Go back and tap **Host a Group Film** again.
+4. Delete and reinstall the app (or wait a day), then confirm a birth month and year of 13 or over.
+5. Sign in with Apple; then delete that Account (V06) and repeat steps 4 and 5 with Google, and then with email and the code Clerk sends.
+6. Sign in with Apple, sign out, then sign in with Google using the same verified email address.
+
+**Expect.**
+
+- Step 2 shows "You can't sign in yet"; Clerk's dashboard shows no new user and Convex's `accounts` table no new row; step 3 shows the same screen.
+- Each method ends at "Signed in as" the person's name, with one Clerk user and one `accounts` row whose `ageConfirmation` is `birthMonthAndYear` (or `declaredAgeRange` where iOS asked for an age range) and whose `ageConfirmedAt` is the moment of sign-up.
+- Sign in with Apple is offered above Google.
+- Step 6 reaches the same Clerk user and the same `accounts` row (Clerk's automatic account linking).
+
+**It fails if.**
+A Clerk user or an `accounts` row exists without the confirmation, a declined person is signed in, a method does not finish, or step 6 makes a second Account.
+
+**Write down.**
+Screenshots of the age screen, the decline, the sign-in screen and the signed-in screen; the Clerk user ids; the `accounts` rows.
+
+### V02 - The same Account on a second iPhone
+
+**Steps.**
+
+1. With the Account from V01 signed in on HC_iPhone13, sign in on the second iPhone with the same method.
+2. Open Settings on both.
+
+**Expect.**
+The second iPhone reaches "Signed in as" the same name without making a second `accounts` row; Settings on both shows the Account, **Sign Out** and **Delete Account**.
+
+**It fails if.**
+A second Account is made, or either iPhone is signed out by the other.
+
+### V03 - Eight days signed in without a prompt (open check OC-8)
+
+**Steps.**
+
+1. Note the Clerk instance's plan and its native session lifetime.
+2. On HC_iPhone13, sign in, open **Host a Group Film** to see "Signed in as", then leave the app closed and the iPhone in normal use for eight full days.
+3. On day nine, turn on Airplane Mode, open the app and open **Host a Group Film** and Settings.
+4. Turn Airplane Mode off, open them again, then open **Server checks** and send a picture (V04 step 2), which needs a session the server accepts.
+
+**Expect.**
+
+- On Clerk's free plan, which the captain chose on 2026-11-23 (seven days fixed): step 4 asks for sign-in again, signing in returns to the same Account, and nothing about the Host's event changed. That is the known gap 084 states (V2-FR-08 and M-4 not met for events past seven days), not a failure of this check.
+- With a native session lifetime set past eight days (Clerk Pro, or a development instance): no sign-in prompt at any step, and the server accepts the request in step 4.
+- Airplane Mode never signs anyone out (step 3 still shows "Signed in as").
+
+**It fails if.**
+A Host is asked to sign in before the session lifetime the instance is set to, signing in again reaches a different Account, or losing the network signs them out.
+
+**Write down.**
+The plan and lifetime, the sign-in and check times, and screenshots of day nine.
+
+### V04 - A picture-sized file to R2, confirmed, and unreadable without a grant (open checks OC-3 and OC-4)
+
+**Steps.**
+
+1. With the Host signed in, run `npx convex run proofs:createProofEvent '{"clerkUserId": "<the Host's Clerk user id>"}'` and copy the event id.
+2. On HC_iPhone13, open Settings > Debug testing > **Server checks**, paste the event id and tap **Send a picture-sized file**.
+3. Repeat step 2 on a poor connection (Settings > Developer > Network Link Conditioner, "Very Bad Network"), and once more with the app swiped away while it is sending, then reopened and sent again.
+4. Tap **Read the event's pictures**.
+5. In R2's bucket view, copy the object's key; from the Mac, request `https://<account id>.r2.cloudflarestorage.com/immerse-pictures/<key>` with no signature, and try the bucket's public address if the dashboard offers one.
+6. Run `npx convex run proofs:revealProofEvent '{"eventId": "<the event id>"}'`, then tap **Read the event's pictures** again.
+7. Wait two minutes and request one of step 6's read addresses again from the Mac.
+
+**Expect.**
+
+- Step 2 says `stored` with the time taken and the file's SHA-256; Convex's `pictures` row is `stored` with that size and checksum, and R2 holds one object of that size.
+- Step 3 ends `stored` each time, with still one object and one row for exposure 1 (a repeat answers `stored` without sending).
+- Step 4 says `refused(sealed)`; step 5 is refused (no public access).
+- Step 6 reads the picture whole with "checksum matches", and its unsigned read is refused.
+- Step 7 is refused (the address lasted one minute).
+
+**It fails if.**
+Any read before step 6 returns the picture, a send ends confirmed while R2 holds a different object, or a repeat makes a second object or row.
+
+**Write down.**
+Each step's Server checks lines, the `pictures` row, the R2 object's size, and the HTTP statuses of steps 5 and 7.
+
+### V05 - A push from Convex reaches the iPhone (open check OC-7)
+
+**Steps.**
+
+1. On HC_iPhone13, in **Server checks**, tap **Register for the push test** and allow notifications.
+2. Run `npx convex run proofs:accountIdForClerkUser '{"clerkUserId": "<id>"}'`, then `npx convex run push:sendTestAlert '{"accountId": "<account id>"}'`, with the app in the background.
+3. Delete the app, then run step 2's send again.
+
+**Expect.**
+
+- Step 1 says the token is registered (`sandbox`); Convex's `pushTokens` table has one row for this installation.
+- Step 2 returns status 200, and the iPhone shows "Push test" with "Your Film is ready", text only.
+- Step 3 returns 410 (or 400 `BadDeviceToken`), and the row is deleted.
+
+**It fails if.**
+The send cannot reach Apple's service from Convex (a connection or protocol error in Convex's logs), or the alert does not arrive.
+If Convex's Node runtime cannot open the HTTP/2 connection, the PRD's fallback is the smallest Cloudflare relay that can; record the error for that decision.
+
+### V06 - Delete Account removes everything section 8 says
+
+**Steps.**
+
+1. With the Host from V04 and V05 signed in, holding a stored picture in the proof event and a push token, note the Account's rows in Convex (`accounts`, `memberships`, `pictures`, `pushTokens`) and the R2 object.
+2. On HC_iPhone13, open Settings and tap **Delete Account**, read the confirmation, and tap **Delete Account**.
+3. Within one minute, look at Clerk's Users, Convex's tables and the R2 bucket, and request the picture's last read address.
+4. Check that Settings no longer shows **Delete Account**, then sign in again with the same method.
+5. Check that every personal Film on the iPhone is unchanged.
+
+**Expect.**
+
+- The confirmation says what is removed, that Rolls are lost, that saved copies cannot be recalled, that an Apple subscription bills until cancelled, and that personal Films stay.
+- Within a minute: the Clerk user is gone; no `accounts` row and no row naming the Account remain; the picture's row keeps only its exposure number (`removed`); the push token is gone; the R2 object is gone and its address answers 404; the proof event has no Host and is otherwise unchanged.
+- Step 4 makes a new, empty Account.
+
+**It fails if.**
+Any record naming the person survives, the object can still be read, or a personal Film changed.
+
+### V07 - Every v1 personal Film action with the network off
+
+**Steps.**
+
+1. On HC_iPhone13, with the v2 Debug build installed and the Host signed in, turn on Airplane Mode and turn off Wi-Fi.
+2. Run the ordinary scenarios of [Ordinary App Scenarios](#ordinary-app-scenarios) that load, shoot, develop, open the Darkroom and export a personal Film on each Camera, and the Trial and Subscription screens.
+3. Sign out (with the network still off), then repeat a load and a capture.
+
+**Expect.**
+Every personal Film action works as in v1, with no sign-in prompt, no waiting on a network and no error about a server; signing out leaves every Film unchanged.
+
+**It fails if.**
+Any personal Film action waits, fails or asks for sign-in with the network off.
+
+### V08 - The age signal where iOS gives one
+
+**Steps.**
+
+1. If an Apple Account in a region where iOS requires age checks is available (iOS 26.2 or later), sign in to it on the second iPhone and open **Host a Group Film**.
+
+**Expect.**
+iOS's age range sheet (or no sheet, where sharing is automatic) answers instead of the birth month and year; 13 or over continues to sign-in with `ageConfirmation` `declaredAgeRange`, under 13 shows "You can't sign in yet".
+
+**What is a finding and not a failure.**
+Without such an Apple Account the check cannot run; write that down, and the birth month and year path of V01 stands.

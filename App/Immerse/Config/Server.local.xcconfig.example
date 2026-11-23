@@ -1,0 +1,9 @@
+// Copy to Server.local.xcconfig (ignored by git) and fill in from Backend/SETUP.md. Never commit the filled-in file.
+//
+// xcconfig treats "//" as the start of a comment, so write a URL's "//" as "/$()/".
+IMMERSE_CONVEX_URL = https:/$()/your-deployment.convex.cloud
+// The Clerk instance's publishable key (pk_test_... or pk_live_...). It is public by design, but stays out of the
+// repository with the rest of the configuration.
+IMMERSE_CLERK_PUBLISHABLE_KEY = pk_test_REPLACE_ME
+// Sign in with Apple, push notifications and Declared Age Range, which the App ID must have enabled first.
+IMMERSE_V2_ENTITLEMENTS = Config/ImmerseV2.entitlements

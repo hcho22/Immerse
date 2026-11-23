@@ -4,6 +4,8 @@ import SwiftUI
 struct ImmerseApp: App {
     @UIApplicationDelegateAdaptor(ImmerseAppDelegate.self) private var appDelegate
     @State private var launcher = JournalLauncher()
+    /// Signing in to host, only where the app has a server (v2 Stage 1); nil in every build without one.
+    @State private var hosting = HostingSetup.make()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -18,6 +20,9 @@ struct ImmerseApp: App {
                 }
             }
             .orbitRoot()
+            .environment(\.hosting, hosting)
+            // Reads the Host's Account in the background; nothing waits on it, and without a network it keeps what it knew.
+            .task { await hosting?.refresh() }
             .onChange(of: scenePhase) { _, phase in launcher.model?.sceneChanged(to: phase) }
         }
     }

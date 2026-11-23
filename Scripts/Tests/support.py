@@ -79,7 +79,7 @@ class Sandbox:
         self.tools = os.path.join(self.tree, "tools")
         os.makedirs(self.state)
         os.makedirs(self.tools)
-        for name, text in (("xcrun", TOOL), ("log", TOOL), ("xcodebuild", XCODEBUILD), ("swift", RECORDER)):
+        for name, text in (("xcrun", TOOL), ("log", TOOL), ("xcodebuild", XCODEBUILD), ("swift", RECORDER), ("npm", RECORDER)):
             self.install(os.path.join(self.tools, name), text)
 
     def install(self, path, text):
