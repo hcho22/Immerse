@@ -3,7 +3,10 @@
 // confirmation by size and checksum, sealing until the reveal, the push to an HTTP/2 stand-in for Apple's service
 // from a Node action, and Delete Account. The convex-test suites (tests/) hold every case; this run shows the same
 // functions work on the real runtime, with real token verification and real network calls.
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { createHash, randomBytes } from "node:crypto";
+import { resolve } from "node:path";
 import { afterAll, beforeAll, describe, expect, inject, test } from "vitest";
 import { startApnsDouble } from "../tests/support/apns-double";
 import { deployFunctions, httpApi, type LocalBackend, startClerkIssuer, startConvexBackend } from "./support/stack";
@@ -79,13 +82,43 @@ describe("Stage 1 on Convex's local backend", () => {
     expect(await maya.action("pictures:requestUpload", args)).toMatchObject({ ok: true, value: { status: "stored" } });
   });
 
+  test("the iPhone's own Swift client sends a picture-sized file with URLSession, and is refused a sealed read", async () => {
+    // The ImmerseServer package's LocalBackendTests, pointed at these stand-ins; a session token that outlasts the
+    // Swift build is minted for it.
+    // Asynchronously: the Clerk issuer stand-in answers Convex's key requests from this process's event loop.
+    let output: string;
+    try {
+      output = (await runSwift()).stdout;
+    } catch (error) {
+      const failed = error as { stdout?: string; stderr?: string };
+      throw new Error(`The Swift client's test failed:\n${failed.stdout ?? ""}\n${failed.stderr ?? ""}`.slice(-6000));
+    }
+    expect(output).toMatch(/LocalBackendTests.*passed/);
+    expect(output).not.toMatch(/skipped/);
+  }, 900_000);
+
+  function runSwift() {
+    return promisify(execFile)("swift", ["test", "--package-path", resolve(import.meta.dirname, "../../Packages/ImmerseServer"), "--filter", "LocalBackendTests"], {
+      env: {
+        ...process.env,
+        IMMERSE_LOCAL_CONVEX_URL: backend.url,
+        IMMERSE_LOCAL_SESSION_TOKEN: clerk.sessionToken("user_maya", 30 * 60),
+        IMMERSE_LOCAL_EVENT_ID: eventId,
+      },
+      encoding: "utf8",
+      maxBuffer: 16 * 1024 * 1024,
+    });
+  }
+
   test("it cannot be read without a grant, and a grant is given only after the reveal", async () => {
     const maya = api.as(clerk.sessionToken("user_maya"));
     expect(await maya.action("reads:readAddresses", { eventId })).toMatchObject({ ok: false, code: "sealed" });
     expect((await api.admin.mutation("proofs:revealProofEvent", { eventId })).ok).toBe(true);
     const grant = await maya.action("reads:readAddresses", { eventId });
     expect(grant.ok).toBe(true);
-    const [address] = (grant as { value: Array<{ url: string; sha256: string }> }).value;
+    const addresses = (grant as { value: Array<{ url: string; sha256: string; exposureNumber: number }> }).value;
+    expect(addresses.map((a) => a.exposureNumber).sort()).toEqual([1, 2]);
+    const address = addresses.find((a) => a.exposureNumber === 1);
     const bytes = Buffer.from(await (await fetch(address!.url)).arrayBuffer());
     expect(createHash("sha256").update(bytes).digest("base64")).toBe(pictureSha256);
     // The same object without the signature reads nothing.
