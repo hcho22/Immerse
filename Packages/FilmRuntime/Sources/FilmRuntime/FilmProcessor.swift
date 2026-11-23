@@ -217,8 +217,9 @@ public actor FilmProcessor {
 }
 
 /// One capture developed from its source, as Development renders it: the Film's Camera, Film Stock and Movie orientation,
-/// and the capture's assigned seed in its treatment version. Development is its one caller in Release; a Debug build's
-/// preview of a saved capture calls it too (`PreviewDevelopment`), so the preview is what Development will make.
+/// and the capture's assigned seed in its treatment version. Development and an event Roll's per-picture Development
+/// (`EventPictureDevelopment`, v2) are its callers in Release; a Debug build's preview of a saved capture calls it too
+/// (`PreviewDevelopment`), so both the event picture and the preview are what Development makes.
 enum CaptureDevelopment {
     static func master(source: URL, film: Film, treatment: TreatmentAssignment, run: DevelopmentRun) throws -> Data {
         try NativePhotoRenderer.develop(source: source, camera: film.camera, seed: treatment.seed, filmStock: film.filmStock,

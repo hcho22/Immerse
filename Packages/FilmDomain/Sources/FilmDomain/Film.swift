@@ -395,6 +395,16 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         }
     }
 
+    /// Retires a capture of an event Roll, sealed or revealed, to a numbered placeholder (v2 PRD V2-FR-34, V2-FR-50): its
+    /// exposure stays used, and nothing of it is shown again. Only an event Roll's store calls it
+    /// (`FilmRepository.retireEventCapture`); a personal Film discards only revealed captures.
+    public mutating func retireEventCapture(sequenceNumber: Int) throws {
+        guard let index = captures.firstIndex(where: { $0.sequenceNumber == sequenceNumber }) else {
+            throw FilmDomainError.captureNotFound
+        }
+        captures[index].revealState = .discardedPlaceholder
+    }
+
     private func ensureCaptureOpen() throws {
         guard completionState == .open else {
             throw FilmDomainError.captureAlreadyComplete
