@@ -175,7 +175,7 @@ A web-album viewer is not a member.
 | Action | Host | Guest (mini-app or full app) | Web-album viewer |
 | --- | --- | --- | --- |
 | Create a Group Film, choose its Camera, Film Stock, Start Time, End Time, Reveal Delay and rolls | Yes | No | No |
-| Add rolls while the event is open | Yes | No | No |
+| Add rolls from Load Film until the End Time, before the Start Time included | Yes | No | No |
 | Pause or resume joining, replace the Join Code | Yes | No | No |
 | End early | Yes | No | No |
 | Join and take a roll | Yes, one roll from the event, like any guest | Yes, one roll | No |
@@ -423,12 +423,12 @@ Acceptance criteria:
 - The app refuses a Start Time in the past, an End Time in the past or more than 7 days after the event opens, and a Reveal Delay above 24 hours.
 - An event with a Start Time admits nobody before it, and opens at it without anyone doing anything.
 - A QR code printed weeks before the Start Time opens the event's page at once and lets guests join from the Start Time.
-- The reveal happens at End Time plus Reveal Delay, to the minute, without anyone opening the app (V2-FR-38).
+- The reveal happens at End Time plus Reveal Delay to the minute, or at once when the Host ends early (V2-FR-40), without anyone opening the app (V2-FR-38).
 - A guest's phone with a wrong clock still stops shooting at the server's End Time once it has been online after joining (V2-FR-31).
 
 #### V2-FR-13 - Load Film fixes the event and issues its Join Code
 
-The Host's Load Film confirmation shows the title, Camera, Film Stock where there is one, rolls, End Time, Reveal Delay, and the sharing rule (sealed until the reveal, then seen by every member), and fixes the Camera and Film Stock for good (**Camera Lock**).
+The Host's Load Film confirmation shows the title, Camera, Film Stock where there is one, rolls, Start Time where one is set, End Time, Reveal Delay, and the sharing rule (sealed until the reveal, then seen by every member), and fixes the Camera and Film Stock for good (**Camera Lock**).
 Load Film issues the event's Join Code, link and QR code at once, also for an event that opens later at its Start Time (V2-FR-12).
 Load Film needs a connection, because the event exists on the server.
 
@@ -466,7 +466,8 @@ Acceptance criteria:
 
 #### V2-FR-16 - The Host can pause and resume joining
 
-The Host can pause joining at any time while the event is open, and resume it.
+The Host can pause joining at any time while the event is scheduled or open, and resume it.
+A pause made before the Start Time holds when the event opens.
 While joining is paused, the link and QR code still work but admit nobody new; a person who opens them is told joining is paused for now.
 Pausing changes nothing for guests who have joined: they keep shooting.
 
@@ -474,10 +475,11 @@ Acceptance criteria:
 
 - A join attempt during a pause is refused on the server, whatever the app shows.
 - Resuming admits the next person with the same printed code.
+- An event paused before its Start Time admits nobody at the Start Time until the Host resumes.
 
 #### V2-FR-17 - The Host can replace the code, behind a warning
 
-The Host can replace the Join Code while the event is open.
+The Host can replace the Join Code while the event is scheduled or open.
 Before it is replaced the app warns that the old link and QR code, including every printed copy, stop working at once and for good, and the Host confirms.
 Replacing the code removes nobody and changes nothing for guests who have joined.
 Members keep reaching the event through the app; the old link shows a page saying it no longer works.
@@ -610,15 +612,16 @@ Acceptance criteria:
 
 - Setting aside or adding Rolls beyond 200 is refused, with a message that names the limit.
 
-#### V2-FR-27 - The Host can add Rolls while the event is open
+#### V2-FR-27 - The Host can add Rolls while the event is scheduled or open
 
-While the event is open, the Host can add Rolls from their balance, up to the limit of 200.
+While the event is scheduled or open, the Host can add Rolls from their balance, up to the limit of 200.
 Adding Rolls admits new guests at once, including when every Roll had been taken.
 Rolls cannot be added after the End Time.
 
 Acceptance criteria:
 
 - An event with every Roll taken admits a new guest within a minute of the Host adding Rolls.
+- Rolls added before the Start Time are free to take when the event opens.
 - Adding Rolls offline says a connection is needed.
 
 #### V2-FR-28 - A Roll is used only when a guest takes it; unclaimed Rolls return
@@ -754,7 +757,7 @@ Each member's app shows the reveal ritual the first time they open the revealed 
 
 Acceptance criteria:
 
-- With every phone switched off, the event reveals at End Time plus Reveal Delay, within a minute.
+- With every phone switched off, the event reveals at End Time plus Reveal Delay, or at once when the Host ends early (V2-FR-40), within a minute.
 - The Host has no control that holds back or releases the reveal.
 - Before the reveal, the event's page counts down to it.
 
@@ -1136,9 +1139,9 @@ The server holds every state below except a picture's states on the phone, which
 | State | Means | Entered when | Left when |
 | --- | --- | --- | --- |
 | Setting up | The Host is choosing title, Camera, Film Stock, rolls and times. Nothing exists on the server yet. | The Host chooses Group Film. | Load Film succeeds (to Open, or to Scheduled when the Host set a later Start Time), or the Host cancels (nothing kept). |
-| Scheduled | The event exists and its link and QR code work, showing when it opens; nobody can join or shoot. | Load Film with a later Start Time. | The Start Time (to Open), or the Host deletes the event (to Deleted). |
+| Scheduled | The event exists and its link and QR code work, showing when it opens; nobody can join or shoot. The Host can add Rolls (V2-FR-27), pause and resume joining (V2-FR-16), replace the code behind its warning (V2-FR-17) and move the times (V2-FR-12). | Load Film with a later Start Time. | The Start Time (to Open, or to Open, joining paused when the Host paused joining), or the Host deletes the event (to Deleted). |
 | Open | Guests can join while Rolls are free and joining is not paused; guests shoot. | Load Film, or the Start Time when the Host set one. | The End Time passes or the Host ends early (to Ended), or the Host deletes the event (to Deleted). |
-| Open, joining paused | As Open, but no one new can join. | The Host pauses joining. | The Host resumes (to Open), or as Open. |
+| Open, joining paused | As Open, but no one new can join. | The Host pauses joining, or the Start Time of an event paused while Scheduled. | The Host resumes (to Open), or as Open. |
 | Open, every Roll taken | As Open, but no one new can join until the Host adds Rolls. | The last free Roll is taken. | The Host adds Rolls (to Open), or as Open. |
 | Ended | Shooting has stopped; uploads continue; unclaimed Rolls have returned; nobody sees any picture. | The End Time. | End Time plus Reveal Delay (to Revealed), or deletion (to Deleted). With no delay, or when the Host ended early, Ended lasts no time. |
 | Revealed | Every member sees every picture; late arrivals join; the web album can be on. | The scheduled reveal. | Eleven months after the reveal (to Ending), or deletion. |
@@ -1557,7 +1560,7 @@ Version 1.0 stated these as readings of the plan's words, and the captain confir
 - A deleted Host's event keeps accepting joins and pictures until its End Time, because it "still runs to its reveal" (V2-FR-06).
 - Deleting an event before its End Time returns its unclaimed Rolls, as the End Time does (V2-FR-28).
 - The album's end warning is shown in the app and on the event's page, not as a push alert or an email, because there is one alert only (V2-FR-48).
-- "Pay once per event" means the Host pays for an event's Rolls up front, from the balance, rather than per picture or per guest afterwards; adding Rolls while the event is open is part of the same payment model (V2-FR-60).
+- "Pay once per event" means the Host pays for an event's Rolls up front, from the balance, rather than per picture or per guest afterwards; adding Rolls while the event is scheduled or open is part of the same payment model (V2-FR-60).
 - Without the Private Prints, event pictures have no Darkroom in v2 (section 2.2).
 
 Version 1.0's reading that ending early keeps the Reveal Delay did not stand: ending early reveals at once (V2-FR-40).
@@ -1587,6 +1590,8 @@ The captain gave these answers on 2026-11-22.
 | OQ-11 | What happens when a guest claims their identity into an Account that already holds a place in the same event? | Both places stay as they were, as version 1.0 read. | V2-FR-04 |
 | OQ-13 | Can a subscription's link be moved from one Account to another, and how? | Only through support, as version 1.0 read. | V2-FR-63 |
 | OQ-14 | May a refund after the Rolls were used take the balance below zero? | Yes, as V2-FR-65 proposed. | V2-FR-65 |
+
+The captain also settled, on 2026-11-22, that between Load Film and the Start Time (the Scheduled state) the Host can add Rolls, pause and resume joining, and replace the code behind the same warning as later (V2-FR-16, V2-FR-17, V2-FR-27, 6.1).
 
 ## 17. Sources
 

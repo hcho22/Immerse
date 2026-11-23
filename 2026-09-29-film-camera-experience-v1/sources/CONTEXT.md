@@ -90,7 +90,7 @@
 > **Remove Guest** now removes every picture the Guest took in the Group Film, and its entry, which read "The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good, without removing their pictures or their right to withdraw them.", was rewritten.
 > **Leave Film**, which read "The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used and their pictures and their right to withdraw them remain.", now says a Guest who left still sees the **Event Album** after the **Reveal** and may rejoin while the Group Film is open.
 > **End Early** now reveals at once, without the **Reveal Delay**, and **Reveal**, **Reveal Delay**, **End Time**, **Host**, **Member**, **Roll** and **Free Rolls** were edited to match; **Free Rolls** are given once ever per Account.
-> New term: **Start Time**.
+> New term: **Start Time**; before it the Host may already add Rolls, **Pause Joining** and **Replace Join Code**.
 > The "Group Films (v2)" rules were edited to match, and two Flagged ambiguities were added.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
@@ -581,6 +581,7 @@ _Avoid_: Draft, incomplete album
 - The Host must give a Group Film a **Film Title** before **Load Film** and may change it until the **Event Album** ends.
 - The Host's **Load Film** confirmation performs the **Camera Lock** and issues the **Join Code** at once; nobody can join before it.
 - The Host may set a later **Start Time**, before which nobody can join or shoot; shooting lasts at most 7 days from the opening, at Load Film or the Start Time.
+- Before the Start Time the Host may already add Rolls, **Pause Joining** and resume it, and **Replace Join Code** behind the same warning; a pause made then holds when the Group Film opens.
 - Each Group Film camera behaves, looks and develops as it does in a personal Film, with the Camera package and Developed Treatment version current at Load Film.
 - A **Join Code** lasts the event's whole life; the Host may **Pause Joining** and resume it, and may **Replace Join Code** only behind a warning that printed copies stop working.
 - Joining needs an iPhone on iOS 26 or later, in the **Mini-app** or the full app; nobody shoots in a browser, on Android or anywhere else, and anyone who cannot join is told why on the **Join Page**.
@@ -588,7 +589,7 @@ _Avoid_: Draft, incomplete album
 - A Guest's place, Roll and pictures belong to a **Guest Identity** on their phone; a Guest may **Claim Guest Identity** by signing in in the full app, which keeps both places where the Account already has one in the same Group Film, and an unsigned Guest who loses or replaces their phone loses their place with no recovery.
 - Each Guest takes exactly one **Roll**: the event Camera's normal **Exposure Limit**, 27 on the Disposable, 12 on the 6×6 and 10 on the Instant; a Guest's exposures are theirs alone, with no shared pool.
 - The Host may shoot in their own Group Film by taking one of its Rolls, like any Guest.
-- A Group Film has at most 200 Rolls; the Host sets Rolls aside from the **Roll Balance** and can add more while the event is open.
+- A Group Film has at most 200 Rolls; the Host sets Rolls aside from the **Roll Balance** and can add more until the End Time, before the Start Time included.
 - A Roll is used only when a Guest takes it; at the **End Time** every Roll no Guest took returns to the Host's Roll Balance, and a Roll a Guest took stays used however many exposures they shoot.
 - Joining or shooting in a Group Film never starts, uses or blocks the iPhone's **Trial Film**.
 - Every Group Film picture is newly captured in the Mini-app or the full app with the event's Camera; nothing is imported.
@@ -597,9 +598,9 @@ _Avoid_: Draft, incomplete album
 - Only the finished, developed picture is uploaded, and it stays **Sealed** until the **Reveal**; the original never leaves the phone, and there is no **Save Originals to Photos** for Group Film pictures.
 - A picture stays on its phone until the server confirms it has it whole; an Instant print's developed copy stays on its shooter's phone until the Reveal, while its original is deleted on confirmation like any other.
 - A Disposable or 6×6 picture is Sealed even from its shooter; an Instant print develops for its shooter at once, as in a personal **Instant Film**, stays viewable on the shooter's phone until the Reveal, and others see it at the Reveal; the server returns nothing to anyone before the Reveal.
-- At the **End Time** plus the **Reveal Delay** the Group Film reveals itself automatically: nobody, the Host included, sees a picture before it, and nobody starts or holds it back.
+- At the **End Time** plus the **Reveal Delay**, or at once on **End Early**, the Group Film reveals itself automatically: nobody, the Host included, sees a picture before it, and nobody starts or holds it back.
 - The Host may **End Early**, which makes now the End Time and reveals the Group Film at once, without the Reveal Delay.
-- Running out of Rolls or every Guest finishing never reveals anything; only the scheduled Reveal does.
+- Running out of Rolls or every Guest finishing never reveals anything; only the scheduled Reveal, or End Early, does.
 - A picture taken before the End Time that reaches the server after the Reveal joins the **Event Album** when it arrives, until the Event Album ends, in its place by capture time.
 - After the Reveal every **Member** sees every picture, a Guest who used **Leave Film** included; this is one fixed rule.
 - Any Member may save any picture, or the whole Event Album, to Photos with no Account; saved copies are outside Immerse's control.
