@@ -155,4 +155,3 @@ private struct JournalUnavailableView: View {
         .orbitGround()
     }
 }
-
