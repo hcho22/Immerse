@@ -60,7 +60,7 @@ All of it ran on this Mac against local stand-ins on 2026-11-23: MinIO (RELEASE.
 
 | Suite | Result | Covers |
 | --- | --- | --- |
-| `Backend/tests` (convex-test) | 62 passed | Accounts and the age confirmation, Delete Account, the upload path, sealing and read grants, guest tokens, push, the webhook |
+| `Backend/tests` (convex-test) | 64 passed (rerun on 2026-11-23 after the storage-deletion queue's fix) | Accounts and the age confirmation, Delete Account, the storage-deletion queue (one drain per mutation, each row claimed by one drain, keys still backing off never holding newer keys back), the upload path, sealing and read grants, guest tokens, push, the webhook |
 | `Backend/local-backend` (Convex's own backend) | 7 passed | The same path end to end through the HTTP API, including the iPhone's Swift client |
 | `Packages/ImmerseServer` | 24 passed, 1 skipped on its own (run by the end-to-end suite) | The HTTP client, Accounts, the uploader, the age rule, the configuration |
 | `ImmerseTests/HostingSessionTests` | 9 passed | Staying signed in without a network and before Clerk has answered, the Account made after sign-in, a sign-in that ends with no session, Delete Account signing out only once the server confirms |
