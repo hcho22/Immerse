@@ -84,6 +84,14 @@
 > Retired with the parked design, and kept verbatim in the section "Superseded by the v2 PRD - the parked Group design": **Member Limit**, **Camera Load Limit**, **Host Load**, **Subscriber Load**, **Add Shared Exposures**, **Group Exposure Pool**, **Group Duration Pool**, **Recording Turn**, **Capacity Pause**, **Close Group Film**, **Closure Warning**, **Develop Without Missing Captures**, **Private Review**, **Release**, **Release Notification**, **Private Print**, **Original Export Window**, **Deletion Pending**, and the old definitions of **Participant**, **Withdraw Unreleased Captures** and **Remove Participant**.
 > The Relationships rules about Groups were replaced by the "Group Films (v2)" rules, with the parked rules moved verbatim to the same superseded section, and the personal rules that mentioned Groups were edited only where a Group clause no longer held; the Flagged ambiguities written before this date that speak of Groups describe the parked design.
 > The Trial stays one personal Film per iPhone in v2 ([ADR 0012](../adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md)), so the "Deferred to v2 - Account rules" section's Account-scoped Trial does not return, and Dodge/Burn stays parked beyond v2.
+>
+> **2026-11-22 note, later (the v2 PRD's version 1.1; ADR 0034).**
+> The captain answered the v2 PRD's open questions, all but who answers the support address and how fast.
+> **Remove Guest** now removes every picture the Guest took in the Group Film, and its entry, which read "The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good, without removing their pictures or their right to withdraw them.", was rewritten.
+> **Leave Film**, which read "The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used and their pictures and their right to withdraw them remain.", now says a Guest who left still sees the **Event Album** after the **Reveal** and may rejoin while the Group Film is open.
+> **End Early** now reveals at once, without the **Reveal Delay**, and **Reveal**, **Reveal Delay**, **End Time**, **Host**, **Member**, **Roll** and **Free Rolls** were edited to match; **Free Rolls** are given once ever per Account.
+> New term: **Start Time**.
+> The "Group Films (v2)" rules were edited to match, and two Flagged ambiguities were added.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -298,8 +306,8 @@ The optional action of signing in that attaches a **Guest Identity**, its place 
 _Avoid_: Required signup, new participation
 
 **Remove Guest**:
-The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good, without removing their pictures or their right to withdraw them.
-_Avoid_: Remove Participant (the parked name), Discard their pictures, app-wide ban, Replace Join Code, Leave Film
+The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good and removes every picture they took in it, for everyone.
+_Avoid_: Remove Participant (the parked name), Discard (one picture), app-wide ban, Replace Join Code, Leave Film
 
 **Discarded Frame**:
 An empty numbered placeholder that preserves a Film's chronology after the underlying capture media has been permanently removed.
@@ -314,7 +322,7 @@ The everyday word for a **Group Film** and the occasion it is made for; the two 
 _Avoid_: Separate event object, calendar event
 
 **Host**:
-The one signed-in person, 13 or over, who creates a **Group Film**, pays for its **Rolls**, and alone holds its hosting authority for its whole life, with no co-host or handover.
+The one signed-in person, 13 or over, who creates a **Group Film**, pays for its **Rolls**, and alone holds its hosting authority for its whole life, with no co-host or handover; the Host may shoot in it by taking one of its Rolls, like any **Guest**.
 _Avoid_: Owner, admin, organizer, co-host
 
 **Guest**:
@@ -322,7 +330,7 @@ A person who joins a **Group Film** by its **Join Code**, gives a **Guest Name**
 _Avoid_: Participant (the parked name), Guest Photographer, account member
 
 **Member**:
-The **Host** and every **Guest** who has joined a **Group Film** and has not been removed.
+The **Host** and every **Guest** who has joined a **Group Film** and has not been removed, a Guest who used **Leave Film** included.
 _Avoid_: Web-album viewer, follower
 
 **Guest Name**:
@@ -330,7 +338,7 @@ The name a **Guest** chooses when joining, shown with their pictures only in eac
 _Avoid_: Watermark, username, Account name
 
 **Roll**:
-One **Guest**'s set of **Exposures** in a **Group Film**: the normal **Exposure Limit** of the event's **Camera**, and the unit a **Host** pays for, one per guest; a Roll is used only when a guest takes it.
+One **Guest**'s set of **Exposures** in a **Group Film**: the normal **Exposure Limit** of the event's **Camera**, and the unit a **Host** pays for, one per guest; a Roll is used only when a guest takes it, and a Host who shoots in their own Group Film takes one too.
 _Avoid_: Shared pool, load, Roll Film (a personal Film), shot bundle
 
 **Roll Balance**:
@@ -338,7 +346,7 @@ The **Rolls** a **Host**'s **Account** holds, bought through in-app purchase, cr
 _Avoid_: Wallet of exposures, subscription credit, per-event purchase receipt
 
 **Free Rolls**:
-**Rolls** credited to a **Roll Balance** at no charge: a very small number for every **Account**, and a clearly larger number for an Account linked to a **Subscription** once the server has confirmed it with Apple.
+**Rolls** credited to a **Roll Balance** at no charge, once ever: a very small number for every **Account**, and a clearly larger number, also once, for an Account linked to a **Subscription** once the server has confirmed it with Apple.
 _Avoid_: Trial Film, Host Load, free subscription
 
 **Join Code**:
@@ -370,23 +378,27 @@ The **Host**'s action, behind a warning, that issues a new **Join Code** and mak
 _Avoid_: Pause Joining, Remove Guest
 
 **Leave Film**:
-The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used and their pictures and their right to withdraw them remain.
+The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used, their pictures and their right to withdraw them remain, and they still see the **Event Album** after the **Reveal**; they may rejoin while the Group Film is open.
 _Avoid_: Archive Film, Withdraw, Remove Guest, End Early
 
+**Start Time**:
+The later time a **Host** may set at which a **Group Film** opens for joining and shooting, so its **Join Code** can be printed and shared ahead; without one, the Group Film opens at **Load Film**.
+_Avoid_: Load Film, event date, Pause Joining
+
 **End Time**:
-The time the **Host** sets at which shooting in a **Group Film** stops for everyone, at most 7 days after the event opens.
+The time the **Host** sets at which shooting in a **Group Film** stops for everyone, at most 7 days after the event opens at **Load Film** or at its **Start Time**.
 _Avoid_: Closing Time, manual closure, upload deadline
 
 **Reveal Delay**:
-The wait the **Host** chooses, from none to 24 hours, between a **Group Film**'s **End Time** and its **Reveal**.
+The wait the **Host** chooses, from none to 24 hours, between a **Group Film**'s **End Time** and its **Reveal**; **End Early** skips it.
 _Avoid_: Private Review, review period
 
 **End Early**:
-The **Host**'s confirmed action that makes now a **Group Film**'s **End Time**.
+The **Host**'s confirmed action that makes now a **Group Film**'s **End Time** and reveals it at once, without the **Reveal Delay**.
 _Avoid_: Close Group Film, Delete Event, Pause Joining
 
 **Reveal**:
-The automatic moment, at the **End Time** plus the **Reveal Delay**, when every picture of a **Group Film** becomes visible to every **Member** at once; nobody starts or holds it back.
+The automatic moment, at the **End Time** plus the **Reveal Delay**, or at once on **End Early**, when every picture of a **Group Film** becomes visible to every **Member** at once; nobody starts or holds it back.
 _Avoid_: Release, Private Review, Host approval
 
 **Sealed**:
@@ -563,16 +575,19 @@ _Avoid_: Draft, incomplete album
 - A **Group Film** has exactly one **Host**, the **Account** that created it, for its whole life, with no co-host, handover or replacement, even after the Host deletes their Account.
 - Only hosting needs an **Account**; joining, shooting, saving and every personal Film action never ask anyone to sign in, and an Account is for people 13 or over.
 - Hosting needs no **Subscription**; the Host pays for the event's **Rolls** from their **Roll Balance**.
+- **Free Rolls** are given once ever per **Account**, both the small amount for everyone and a Subscription's larger amount; Subscription Rolls already credited stay if the Subscription lapses.
 - Start a Film offers Personal or Group, with Personal selected by default.
 - The Host picks one **Camera** for a Group Film from the Disposable, the 6×6 and the Instant, and on the 6×6 the **Film Stock**, for everyone; the Super 8 and the 16mm are not offered, and no Group Film records video.
 - The Host must give a Group Film a **Film Title** before **Load Film** and may change it until the **Event Album** ends.
 - The Host's **Load Film** confirmation performs the **Camera Lock** and issues the **Join Code** at once; nobody can join before it.
+- The Host may set a later **Start Time**, before which nobody can join or shoot; shooting lasts at most 7 days from the opening, at Load Film or the Start Time.
 - Each Group Film camera behaves, looks and develops as it does in a personal Film, with the Camera package and Developed Treatment version current at Load Film.
 - A **Join Code** lasts the event's whole life; the Host may **Pause Joining** and resume it, and may **Replace Join Code** only behind a warning that printed copies stop working.
 - Joining needs an iPhone on iOS 26 or later, in the **Mini-app** or the full app; nobody shoots in a browser, on Android or anywhere else, and anyone who cannot join is told why on the **Join Page**.
 - Opening a Join Code joins nobody: the **Guest** confirms the **Join Confirmation**, gives a **Guest Name** and takes one **Roll**, with no Host approval and no sign-in.
-- A Guest's place, Roll and pictures belong to a **Guest Identity** on their phone; a Guest may **Claim Guest Identity** by signing in in the full app, and an unsigned Guest who loses or replaces their phone loses their place with no recovery.
+- A Guest's place, Roll and pictures belong to a **Guest Identity** on their phone; a Guest may **Claim Guest Identity** by signing in in the full app, which keeps both places where the Account already has one in the same Group Film, and an unsigned Guest who loses or replaces their phone loses their place with no recovery.
 - Each Guest takes exactly one **Roll**: the event Camera's normal **Exposure Limit**, 27 on the Disposable, 12 on the 6×6 and 10 on the Instant; a Guest's exposures are theirs alone, with no shared pool.
+- The Host may shoot in their own Group Film by taking one of its Rolls, like any Guest.
 - A Group Film has at most 200 Rolls; the Host sets Rolls aside from the **Roll Balance** and can add more while the event is open.
 - A Roll is used only when a Guest takes it; at the **End Time** every Roll no Guest took returns to the Host's Roll Balance, and a Roll a Guest took stays used however many exposures they shoot.
 - Joining or shooting in a Group Film never starts, uses or blocks the iPhone's **Trial Film**.
@@ -583,10 +598,10 @@ _Avoid_: Draft, incomplete album
 - A picture stays on its phone until the server confirms it has it whole; an Instant print's developed copy stays on its shooter's phone until the Reveal, while its original is deleted on confirmation like any other.
 - A Disposable or 6×6 picture is Sealed even from its shooter; an Instant print develops for its shooter at once, as in a personal **Instant Film**, stays viewable on the shooter's phone until the Reveal, and others see it at the Reveal; the server returns nothing to anyone before the Reveal.
 - At the **End Time** plus the **Reveal Delay** the Group Film reveals itself automatically: nobody, the Host included, sees a picture before it, and nobody starts or holds it back.
-- The Host may **End Early**, which makes now the End Time.
+- The Host may **End Early**, which makes now the End Time and reveals the Group Film at once, without the Reveal Delay.
 - Running out of Rolls or every Guest finishing never reveals anything; only the scheduled Reveal does.
-- A picture taken before the End Time that reaches the server after the Reveal joins the **Event Album** when it arrives, in its place by capture time.
-- After the Reveal every **Member** sees every picture; this is one fixed rule.
+- A picture taken before the End Time that reaches the server after the Reveal joins the **Event Album** when it arrives, until the Event Album ends, in its place by capture time.
+- After the Reveal every **Member** sees every picture, a Guest who used **Leave Film** included; this is one fixed rule.
 - Any Member may save any picture, or the whole Event Album, to Photos with no Account; saved copies are outside Immerse's control.
 - A Group Film picture has no **Darkroom** and no **Basic Edits** in v2.
 - Each picture carries its shooter's **Guest Name** as **Contributor Attribution**, shown only in its details and never printed on the image.
@@ -596,7 +611,8 @@ _Avoid_: Draft, incomplete album
 - Before the Reveal a Guest may **Withdraw Before Reveal**, removing all their own pictures in one step, unseen, for good, with no exposure returned; pictures still waiting on their phone never upload.
 - After the Reveal a Guest may **Withdraw** any of their own pictures, one at a time, for everyone, with no exposure returned.
 - After the Reveal the Host may **Discard** any picture for everyone; the Host can never edit, crop, caption or reorder another person's picture.
-- The Host may **Remove Guest**, which ends that Guest's shooting and access to the Group Film for good without removing their pictures or their right to withdraw them.
+- The Host may **Remove Guest**, which ends that Guest's shooting and access to the Group Film for good and removes every picture they took in it, for everyone, including pictures still waiting on their phone and the Instant prints it keeps.
+- A Guest may **Leave Film**, which ends their shooting while their Roll stays used and their pictures stay; they still see the Event Album after the Reveal and may rejoin while the Group Film is open.
 - After the Reveal a Guest may **Report Capture**; the report reaches the Host and Immerse's support address and removes nothing by itself.
 - The Host may **Delete Event** after a warning, removing the whole Group Film and every picture in it for everyone.
 - **Delete Account** removes that person's own pictures from every Group Film; a deleted Host's Group Films still run to their Reveal and stay available to their Guests for the 12 months, with nobody able to change their settings.
@@ -1124,3 +1140,5 @@ No Camera's name carries a decade; the Disposable's, the Instant's and the Super
 - "Participant" and "guest" named the same person - resolved (2026-11-22): **Guest** is the term, matching the plan and Once's usage; **Participant** is the parked name.
 - "Release" and "reveal" could both name when a Group Film's pictures appear - resolved (2026-11-22): there is no Release by hand; the **Reveal** is automatic at the **End Time** plus the **Reveal Delay**.
 - "Album link" was to be avoided as a name for the **Join Code**, yet the **Web Album** is reached by the event's link - resolved (2026-11-22): the Web Album lives on the **Join Page** that the Join Code's link opens, so there is still one link and no separate album link.
+- **Leave Film** and **Remove Guest** both end a Guest's shooting, and in the parked design both kept the Guest's pictures - resolved (2026-11-22, ADR 0034): a Guest who leaves keeps their pictures, the Event Album and the right to rejoin while the Group Film is open, while a removed Guest loses all three.
+- "The event opens" could mean **Load Film** or the time guests can start - resolved (2026-11-22, ADR 0034): the Join Code exists from Load Film, and the Group Film opens for joining and shooting at Load Film or at the **Start Time** the Host set.

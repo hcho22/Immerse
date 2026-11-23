@@ -1,8 +1,8 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 2.1 (ADRs 0025 to 0033 and their reconciliation notes added November 22, 2026 with the v2 PRD; ADR 0024 and its reconciliation note added October 29, 2026; ADRs 0018 to 0023 and their reconciliation notes added October 26, 2026; ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 2.1 (ADRs 0025 to 0033 and their reconciliation notes added November 22, 2026 with the v2 PRD, and ADR 0034 and its reconciliation note the same day with its version 1.1; ADR 0024 and its reconciliation note added October 29, 2026; ADRs 0018 to 0023 and their reconciliation notes added October 26, 2026; ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
-**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) · [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) · [v2 PRD, version 1.0](2026-11-22-film-camera-experience-v2-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) · [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) · [v2 PRD, version 1.1](2026-11-22-film-camera-experience-v2-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
 ## Reading this collection
 
@@ -41,6 +41,10 @@ They record the v2 plan the captain settled question by question on 2026-11-21 a
 They supersede ADRs 0004, 0005 and 0011 in full and parts of ADRs 0001, 0003, 0006, 0007, 0009 and 0010, whose text stays as written; the index and the reconciliation notes say which.
 Nothing is built from them until the captain approves the v2 PRD.
 
+ADR 0034 was added later on 2026-11-22 with version 1.1 of the v2 PRD.
+It records the captain's answers to that PRD's open questions where they change a record: the Host may shoot in their own event, taking one Roll; free Rolls are given once per Account; the Host can set a later Start Time; a removed guest's pictures go with them; a guest who leaves keeps the album; and ending early reveals at once.
+It narrows ADRs 0026 and 0029 and supersedes the parked rules on removing a guest and on leaving, whose text stays as written; ADR 0025 stands.
+
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
 The PRD supplies the later detailed rules and explicitly labels open engineering choices. The short ADRs do not independently specify all edge cases. Reconciliation notes here are collection commentary, not edits to the original records.
@@ -71,15 +75,16 @@ The PRD supplies the later detailed rules and explicitly labels open engineering
 - [ADR 0022 - Saturation is a stated exception to the Darkroom's physical-technique test](adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md) - applies to v1; added on 2026-10-26
 - [ADR 0023 - Dodge and Burn are deferred to v2](adr/0023-dodge-and-burn-are-deferred-to-v2.md) - applies to v1; added on 2026-10-26; dodge and Burn stays parked beyond the v2 PRD of 2026-11-22.
 - [ADR 0024 - The shooting screen's controls sit in one strip under the Viewfinder, and its top bar stays put when the iPhone is held sideways](adr/0024-the-shooting-screens-controls-sit-in-one-strip-under-the-viewfinder-and-its-top-bar-stays-put.md) - applies to v1; added on 2026-10-29
-- [ADR 0025 - Group Films are photo events in which each guest takes one Roll of the Host's Camera](adr/0025-group-films-are-photo-events-in-which-each-guest-takes-one-roll.md) - applies to v2; added on 2026-11-22
-- [ADR 0026 - Anyone can host, paying once per event in Rolls](adr/0026-anyone-can-host-paying-once-per-event-in-rolls.md) - applies to v2; added on 2026-11-22
+- [ADR 0025 - Group Films are photo events in which each guest takes one Roll of the Host's Camera](adr/0025-group-films-are-photo-events-in-which-each-guest-takes-one-roll.md) - applies to v2; added on 2026-11-22; ADR 0034 adds that a Host who shoots takes one Roll like any guest.
+- [ADR 0026 - Anyone can host, paying once per event in Rolls](adr/0026-anyone-can-host-paying-once-per-event-in-rolls.md) - applies to v2; added on 2026-11-22; narrowed by ADR 0034 (free Rolls are given once per Account).
 - [ADR 0027 - Guests join by one lasting link or QR code, in a no-install mini-app or the app](adr/0027-guests-join-by-one-lasting-link-in-a-no-install-mini-app-or-the-app.md) - applies to v2; added on 2026-11-22
 - [ADR 0028 - Hosts sign in with Apple, Google or email through Clerk; guests, personal Films and the Trial need no Account](adr/0028-hosts-sign-in-with-apple-google-or-email-through-clerk.md) - applies to v2; added on 2026-11-22
-- [ADR 0029 - The reveal is automatic at the End Time, with no Private Review or release by hand](adr/0029-the-reveal-is-automatic-with-no-private-review-or-release-by-hand.md) - applies to v2; added on 2026-11-22
+- [ADR 0029 - The reveal is automatic at the End Time, with no Private Review or release by hand](adr/0029-the-reveal-is-automatic-with-no-private-review-or-release-by-hand.md) - applies to v2; added on 2026-11-22; narrowed by ADR 0034 (a later Start Time, ending early reveals at once, a removed guest's pictures go with them).
 - [ADR 0030 - Pictures are developed on the phone that took them and reach the server sealed](adr/0030-pictures-develop-on-the-phone-that-took-them-and-reach-the-server-sealed.md) - applies to v2; added on 2026-11-22
 - [ADR 0031 - The Host can delete a whole event, and a deleted Host's events still reveal](adr/0031-the-host-can-delete-an-event-and-a-deleted-hosts-events-still-reveal.md) - applies to v2; added on 2026-11-22
 - [ADR 0032 - The album is kept 12 months after the reveal, members save with no account, and the Host may open a view-only web album](adr/0032-the-album-is-kept-12-months-and-the-host-may-open-a-view-only-web-album.md) - applies to v2; added on 2026-11-22
 - [ADR 0033 - Convex, Cloudflare, Clerk and Apple's push service are the v2 backend](adr/0033-convex-cloudflare-clerk-and-apples-push-service-are-the-v2-backend.md) - applies to v2; added on 2026-11-22
+- [ADR 0034 - The Host may shoot, free Rolls come once, events may start later, a removed guest's pictures go with them, and ending early reveals at once](adr/0034-the-host-may-shoot-free-rolls-come-once-and-a-removed-guests-pictures-go-with-them.md) - applies to v2; added on 2026-11-22 with the v2 PRD's version 1.1
 
 ## Reconciliation with later requirements
 
@@ -117,6 +122,11 @@ ADR 0025 supersedes ADR 0004 and the Group part of ADR 0007; ADR 0026 supersedes
 Every Group statement in the notes below written before this date describes the parked design that the v2 PRD overtakes.
 No v1 ADR's decision for personal Films changes.
 
+**2026-11-22 status, after the v2 PRD's open questions were answered.**
+The captain answered all but one of the v2 PRD's open questions, which its version 1.1 states and ADR 0034 records where they change a record.
+ADR 0034 narrows ADR 0026 (free Rolls once per Account) and ADR 0029 (a later Start Time, ending early reveals at once, a removed guest's pictures go with them), and supersedes the parked rules that a removed guest's pictures stay and that leaving ends album access.
+Who answers the support address, and how fast, stays open in the v2 PRD.
+
 | ADR | Applicability after PRD version 1.2 |
 | --- | --- |
 | 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. Its Group reveal is superseded on 2026-11-22 by ADR 0029: the reveal is automatic at the End Time plus the chosen delay, and an Instant print still shows to its shooter at once by this ADR's Reveal Rule. |
@@ -143,15 +153,16 @@ No v1 ADR's decision for personal Films changes.
 | 0022 | Applies to v1 personal Films: a Saturation slider on color prints, -50 to +50, as the second stated exception to the physical-technique test. Added on 2026-10-26. |
 | 0023 | Applies to v1 by removing Dodge/Burn from it, and to v2 as the place it now waits; saved strokes keep printing as saved. Added on 2026-10-26. On 2026-11-22 the v2 PRD leaves Dodge/Burn out: it stays parked beyond v2. |
 | 0024 | Applies to v1 personal Films and every Camera's shooting screen: the Zoom Steps, the focus switch and the 6×6's Focus and Exposure sit in one control strip under the Viewfinder area, over its bottom edge only on the iPhone SE, and held sideways the top bar stays above the area with Done and the count turned in place and the Camera's name hidden. Supersedes parts of ADRs 0017, 0019 and 0020. Added on 2026-10-29. |
-| 0025 | Applies to v2: Group Films are photo events with the Disposable, the 6×6 or the Instant, each guest taking one Roll, at most 200 Rolls and 7 days, capture only. Supersedes ADR 0004 and ADR 0007's Group part. Added on 2026-11-22. |
-| 0026 | Applies to v2: anyone signed in can host, paying once per event in Rolls bought through in-app purchase, a Roll used only when a guest takes it, free Rolls for everyone and more for subscribers. Supersedes ADR 0005 and parts of ADR 0006. Added on 2026-11-22. |
+| 0025 | Applies to v2: Group Films are photo events with the Disposable, the 6×6 or the Instant, each guest taking one Roll, at most 200 Rolls and 7 days, capture only. Supersedes ADR 0004 and ADR 0007's Group part. Added on 2026-11-22. A Host who shoots takes one Roll like any guest (ADR 0034). |
+| 0026 | Applies to v2: anyone signed in can host, paying once per event in Rolls bought through in-app purchase, a Roll used only when a guest takes it, free Rolls for everyone and more for subscribers. Supersedes ADR 0005 and parts of ADR 0006. Added on 2026-11-22. Narrowed by ADR 0034: free Rolls, both amounts, are given once per Account. |
 | 0027 | Applies to v2: guests join by one lasting link or QR code in a no-install mini-app or the full app; the Host pauses or replaces the code; iOS 26 stays. Supersedes the installed-app rule. Added on 2026-11-22. |
 | 0028 | Applies to v2: only the Host signs in, with Apple, Google or email through Clerk, at 13 or over; guests may sign in later; personal Films and the per-iPhone Trial need no Account. Supersedes part of ADR 0003. Added on 2026-11-22. |
-| 0029 | Applies to v2: the reveal is automatic at the End Time or up to 24 hours after, with no Private Review or release by hand; everyone who joined sees every picture; guests withdraw their own; one alert. Supersedes parts of ADRs 0001, 0006 and 0010 and the parked closure and Release rules. Added on 2026-11-22. |
+| 0029 | Applies to v2: the reveal is automatic at the End Time or up to 24 hours after, with no Private Review or release by hand; everyone who joined sees every picture; guests withdraw their own; one alert. Supersedes parts of ADRs 0001, 0006 and 0010 and the parked closure and Release rules. Added on 2026-11-22. Narrowed by ADR 0034: the 7 days count from a later Start Time where set, ending early reveals at once, and a removed guest's pictures go with them. |
 | 0030 | Applies to v2: pictures develop on the phone that took them, only finished pictures upload, sealed until the reveal, originals never leave the phone, no render worker. Added on 2026-11-22. |
 | 0031 | Applies to v2: the Host may delete a whole event after a warning; deleting an Account removes the person's pictures everywhere; a deleted Host's events still reveal. Supersedes ADR 0009's Group part and ADR 0011. Added on 2026-11-22. |
 | 0032 | Applies to v2: albums kept 12 months after the reveal with a warning, saving with no account, a view-only web album the Host switches on; no Private Prints or originals window. Added on 2026-11-22. |
 | 0033 | Applies to v2: Convex for data, logic and the timed reveal; Cloudflare for pictures, the join page and the web album; Clerk for sign-in; Apple's push service from Convex. Added on 2026-11-22. |
+| 0034 | Applies to v2: the Host may shoot, taking one Roll; free Rolls come once per Account; a later Start Time; a removed guest's pictures go with them; a guest who leaves keeps the album and may rejoin while the event is open; ending early reveals at once. Narrows ADRs 0026 and 0029 and supersedes the parked removal and leaving rules. Added on 2026-11-22. |
 
 The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
@@ -171,6 +182,7 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0025 to 0033 (v2, 2026-11-22):** They record the plan that the v2 PRD, version 1.0, states; PRD 2.1 sections 8 and 8.13 and the tracker's Deferred to v2 section keep the parked design unchanged, with short notes pointing to the v2 PRD. Every earlier note here about Groups, Hosts, Participants, Join Codes, loads, closure, Private Review, Release, Private Prints, the originals window, Account deletion or Deletion Pending describes that parked design.
   ADRs 0002, 0008 and 0012 stand in v2 as decided; ADR 0010's single fixed Host stands.
   The domain model's v2 terms (Group Film, Host, guest, Roll, reveal, Join Code and others) were rewritten to match, and the retired parked terms are kept in its section on the superseded Group design.
+- **0034 (v2, 2026-11-22):** It records the answers to the v2 PRD's open questions that version 1.1 states; that version's section 16.3 lists every answer, including those that confirmed version 1.0's readings and needed no record. The domain model's Remove Guest, Leave Film, Free Rolls, End Early and Reveal entries and its new Start Time entry were updated to match.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -893,7 +905,7 @@ Decided by the captain on 2026-11-21 and 2026-11-22 (v2 PRD, version 1.0).
 
 Interpret the ADR with the v2 PRD, V2-FR-10, V2-FR-25 to V2-FR-28 and V2-FR-30.
 The parked Movie Group requirements (PRD FR-12) and the tasks GMV-01 to GMV-07 and POL-01 to POL-10 stay in the PRD and the tracker as history.
-Whether the Host can take a Roll in their own event is the v2 PRD's open question OQ-1.
+The Host can take a Roll in their own event, like any guest (ADR 0034; the v2 PRD's answer to its open question OQ-1).
 
 ---
 
@@ -939,7 +951,7 @@ Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
 ### Reconciliation note for ADR 0026
 
 Interpret the ADR with the v2 PRD, V2-FR-60 to V2-FR-65.
-How often free Rolls are given and what happens to a subscriber's credited Rolls when the subscription lapses are its open questions OQ-2 and OQ-10; the numbers are its open check OC-5.
+Free Rolls, both amounts, are given once per Account (ADR 0034), and a subscriber's credited Rolls stay when the subscription lapses (the v2 PRD's answers to its open questions OQ-2 and OQ-10); the numbers are its open check OC-5.
 
 ---
 
@@ -1078,7 +1090,7 @@ Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
 
 Interpret the ADR with the v2 PRD, V2-FR-38 to V2-FR-43 and V2-FR-50 to V2-FR-54.
 The parked tasks CLS-01 to CLS-07 and REL-01 to REL-08 stay in the tracker as history.
-Whether ending early keeps the Reveal Delay and how long late pictures are accepted are its open questions OQ-4 and OQ-5.
+Ending early reveals at once, without the Reveal Delay, the 7 days count from a later Start Time where the Host set one, and a removed guest's pictures go with them (ADR 0034); late pictures are accepted until the album ends (the v2 PRD's answers to its open questions OQ-3 to OQ-6).
 
 ---
 
@@ -1239,3 +1251,60 @@ Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
 
 Interpret the ADR with the v2 PRD, V2-FR-80, V2-FR-81 and sections 9 and 10, which give the prices read on 2026-11-22 and an estimate per event.
 DEC-03 stays open for v1's native stack.
+
+---
+
+### ADR 0034
+
+Standalone source: [0034-the-host-may-shoot-free-rolls-come-once-and-a-removed-guests-pictures-go-with-them.md](adr/0034-the-host-may-shoot-free-rolls-come-once-and-a-removed-guests-pictures-go-with-them.md)
+
+# The Host may shoot, free Rolls come once, events may start later, a removed guest's pictures go with them, and ending early reveals at once
+
+Version 1.0 of the v2 PRD left fourteen product questions open in its section 16.
+On 2026-11-22, after reading it, the captain answered all but one; who answers the support address, and how fast, stays open until before stage 2.
+Six answers change what ADRs 0025, 0026 and 0029 and the parked Group rules say, and this record holds them.
+
+**The Host may shoot in their own event.**
+The Host can shoot in their own event, taking one Roll from the event like any guest.
+That Roll counts within the event's 200, and the Host's pictures follow every rule a guest's do.
+
+**Free Rolls are given once ever.**
+The small free event is given once per Account, and a subscriber's larger free amount is also given once, not monthly.
+Neither comes again when an Account hosts another event or when a subscription renews.
+
+**The Host can set a later Start Time.**
+The Host can set a Start Time after Load Film, so the event's code can be printed weeks ahead.
+Shooting still lasts at most 7 days, counted from the start.
+
+**A removed guest's pictures go with them.**
+When the Host removes a guest, every picture that guest took in the event goes with them, for everyone, for good, including pictures still waiting on their phone and the Instant prints it keeps until the reveal.
+
+**A guest who leaves keeps the album.**
+A guest who leaves on their own still sees the album after the reveal, and may rejoin while the event is open.
+Only guests the Host removed lose access.
+
+**Ending early reveals at once.**
+When the Host ends early, the album reveals at once; the chosen Reveal Delay does not apply.
+
+**The PRD's other readings stand.**
+The captain confirmed the rest of version 1.0's readings as written: late pictures are accepted until the album ends; nobody is emailed before the album ends; the web album shows Guest Names in picture details; subscriber Rolls already credited stay if the subscription lapses; a guest who signs in to an Account already in the same event keeps both places; moving a subscription to another Account goes through support; and a refund after Rolls were used can take the balance below zero.
+
+**What this supersedes.**
+The parked rule that removing a guest leaves their pictures in the Group Film, and that a removed guest keeps their right to withdraw them, is superseded.
+The parked rule that leaving ends a guest's general album access is superseded; leaving still ends their shooting, keeps their Roll used and keeps their pictures, and rejoining while the event is open stands.
+ADR 0026's free event for everyone and larger free size for subscribers now read as given once per Account.
+ADR 0029's "at most 7 days after the event opens" now counts from the Start Time where the Host set one, and its "The Host may end early" now reveals at once.
+ADR 0025's one Roll per guest stands and covers the Host when they shoot.
+
+The alternatives considered were version 1.0's readings: no Host Roll stated, free Rolls with no stated frequency, events opening at Load Film, a removed guest's pictures staying, leaving ending album access, and ending early keeping the Reveal Delay.
+The accepted costs are that a Host who removes a guest after the reveal also takes away pictures others may have wanted, though not copies already saved; that a Host who wants more free Rolls must buy them; and that ending early leaves no time for late uploads before the reveal, so they arrive after it.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.1).
+
+---
+
+### Reconciliation note for ADR 0034
+
+Interpret the ADR with the v2 PRD, version 1.1: V2-FR-12, V2-FR-25, V2-FR-26, V2-FR-40, V2-FR-43, V2-FR-53, V2-FR-56, V2-FR-62 and V2-FR-63, and its section 16.
+The parked rules it supersedes stay in the domain model's section on the superseded Group design and in PRD 2.1 section 8 as history.
+The open question it leaves open, OQ-12, is the v2 PRD's.

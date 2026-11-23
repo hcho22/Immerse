@@ -1,6 +1,6 @@
 # Film Camera Experience - v2 Product Requirements Document: Group Films, Accounts and the backend
 
-**Document date:** November 22, 2026 · **Version:** 1.0, a draft for the captain's approval · **Release:** v2\
+**Document date:** November 22, 2026 · **Version:** 1.1, a draft for the captain's approval (version 1.0 with the captain's answers to its open questions) · **Release:** v2\
 **Platform:** iOS 26, iPhone only, for shooting; a web join page and a view-only web album for viewing\
 **Status:** Planning document; nothing in it is built until the captain approves it.\
 **Scope:** photo events modeled on the Once app, sign-in for Hosts, and the backend those need.\
@@ -11,6 +11,7 @@
 
 This PRD states the v2 plan the captain settled question by question on 2026-11-21 and 2026-11-22.
 It starts from the parked v2 design in PRD 2.1 section 8, challenges each rule against Once, and keeps a parked rule only where the plan does not overturn it.
+Version 1.1 adds the captain's answers, given on 2026-11-22 after he read version 1.0, to its open questions: section 1's last rows list them, the requirements state them as decided, and section 16 keeps the one question still open and records each answer.
 "v2" here is the product release after v1, with Group Films and Accounts.
 "Version 1.0" is the version of this document.
 v1 documents call their own release "v1" and their document set "version 2.1"; neither changes.
@@ -34,7 +35,7 @@ Sections, requirement IDs and open item IDs stay stable once this document is ap
 Related documents:
 
 - [Domain model](sources/CONTEXT.md): the glossary, updated with this PRD for Group Film, Host, guest, Roll, reveal and the other v2 terms.
-- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): ADRs 0025 to 0033 record the decisions this PRD states, and the collection says which earlier records they supersede.
+- [Collected ADRs](2026-09-29-film-camera-experience-v1-adrs.md): ADRs 0025 to 0034 record the decisions this PRD states, and the collection says which earlier records they supersede.
 - [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md): its Deferred to v2 section keeps the parked tasks as history; v2 work is broken into tasks only after this PRD is approved, by the four stages in section 12.
 - [Architecture baseline](2026-09-29-film-camera-experience-v1-architecture.md): the approved v1 shape, an on-phone app with no server; section 9 below is v2's proposed shape and does not change v1's.
 
@@ -84,6 +85,14 @@ Section 2 onward is the detail.
 | Backend | Convex for the data, server logic and the timed reveal. Cloudflare for picture storage, the join page and the web album. Clerk for sign-in, linked to Convex. Apple's service for the alert, sent from Convex. | V2-FR-80, section 9 |
 | Order of building | Four stages: the backend and sign-in; events in the full app with free rolls only; the no-install mini-app and join page; then buying rolls and the subscriber benefit. | Section 12 |
 | Order of building | v2 work starts only after v1 is on the App Store. | Section 12 |
+| Answers to version 1.0's open questions | The Host can shoot in their own event, taking one roll from the event like any guest. | V2-FR-25, V2-FR-26, 4.2 |
+| Answers to version 1.0's open questions | Free rolls are once-ever for everyone: the small free event is given once per account, and a subscriber's larger free amount is also given once, not monthly. | V2-FR-62 |
+| Answers to version 1.0's open questions | The Host can set a later start time, so the code can be printed weeks ahead, while shooting still lasts at most 7 days from the start. | V2-FR-12, V2-FR-13, V2-FR-18, 6.1 |
+| Answers to version 1.0's open questions | When the Host removes a guest, that guest's pictures go with them. | V2-FR-53 |
+| Answers to version 1.0's open questions | A guest who leaves on their own still sees the album after the reveal and may rejoin while the event is open. Only guests the Host removed lose access. | V2-FR-43, V2-FR-56 |
+| Answers to version 1.0's open questions | When the Host ends early, the album reveals at once; the chosen reveal delay does not apply. | V2-FR-40 |
+| Answers to version 1.0's open questions | The PRD's other readings stand as written: late pictures are accepted until the album ends; no email before the album ends, only notices in the app and on the page; the web album shows guest names in picture details; subscriber rolls already credited stay if the subscription lapses; a guest who signs in to an account already in the same event keeps both places; moving a subscription to another account goes through support; a refund after rolls were used can take the balance below zero. | V2-FR-41, V2-FR-48, V2-FR-47, V2-FR-63, V2-FR-04, V2-FR-65, 16.2 |
+| Answers to version 1.0's open questions | Who answers the support address, and how fast, is decided before stage 2 and stays open. | V2-FR-54, OQ-12 |
 
 ## 2. Problem, goals and non-goals
 
@@ -128,14 +137,14 @@ Immerse's v2 is not a copy of Once: it keeps Immerse's own Cameras, Developed Tr
 
 | Once | v2 choice | Sharpened requirement |
 | --- | --- | --- |
-| A host creates a "film", sets shots per guest and an end time, and gets a QR code and link that "stays the same for the life of the film, so it is safe to print weeks ahead". | One Join Code with its link and QR for the event's whole life; the Host can pause joining or replace the code behind a warning. | V2-FR-15 to V2-FR-17 |
+| A host creates a "film", sets shots per guest and an end time, and gets a QR code and link that "stays the same for the life of the film, so it is safe to print weeks ahead". | One Join Code with its link and QR for the event's whole life; the Host can set a later Start Time so the code can be printed ahead, and can pause joining or replace the code behind a warning. | V2-FR-12, V2-FR-15 to V2-FR-17 |
 | Guests join by QR or link into an App Clip, the app or the browser, give a name, and shoot with no account. | Guests join in the mini-app or the full app with a name only; no browser shooting. | V2-FR-19 to V2-FR-22 |
 | Android guests shoot in the browser. | No Android shooting; Android guests and others see the pictures in a web album the Host switches on. | V2-FR-18, V2-FR-47 |
-| The host pays by guest count; "the host uses one of those places if they take photos too"; an "Unlimited Shots" add-on. | The Host pays by rolls, one per guest, each the Camera's normal roll; no unlimited shots. | V2-FR-25 to V2-FR-28; open question OQ-1 for the Host's own roll |
+| The host pays by guest count; "the host uses one of those places if they take photos too"; an "Unlimited Shots" add-on. | The Host pays by rolls, one per guest, each the Camera's normal roll; no unlimited shots; a Host who shoots takes one roll from the event, as Once's host uses one place. | V2-FR-25 to V2-FR-28 |
 | Complaint: "As a host you pay for a camera roll and photos upfront- but that moneys wasted if your guests don't use all the photos" (4 stars, 2026-09-14). | A roll is used only when a guest takes it, and unclaimed rolls return to the Host's balance. A roll a guest takes but does not finish is still used, as a disposable handed out is. | V2-FR-28 |
 | Complaint: "it lost over half the photos from bachelorette" (1 star, 2026-08-20); Once's release notes fixed upload reliability and "photo recoverability" repeatedly. | Every picture is kept on the phone until the server confirms it, uploads retry for the album's whole life, late arrivals join the album after the reveal, and the guest sees what is still waiting to upload. | V2-FR-34, V2-FR-35, V2-FR-41, success measure M-1 |
 | Complaint: "Good luck opening it in less than 15 seconds, good luck staying logged in" (1 star, 2026-07-30); "it kept making me resign up when I wanted to just snap a pic" (2 stars, 2026-07-27). | Guests never sign in to shoot; a Host stays signed in through any event they host; the mini-app and the shooting screen open within a set time. | V2-FR-08, V2-FR-21, success measure M-2, open check OC-8 |
-| Complaint: "I wish there was no time frame to which guests can upload their pictures" (4 stars, 2026-10-05). | Shooting ends at the End Time, but uploads do not: a picture taken before the end arrives whenever its phone is back online, until the album ends. | V2-FR-41; open question OQ-5 |
+| Complaint: "I wish there was no time frame to which guests can upload their pictures" (4 stars, 2026-10-05). | Shooting ends at the End Time, but uploads do not: a picture taken before the end arrives whenever its phone is back online, until the album ends. | V2-FR-41 |
 | Once added camera-roll uploads in version 1.8.5 (2026-11-21), each using a shot. | Capture only. | V2-FR-30 |
 | Until the reveal every photo stays blurred, including a guest's own; the reveal is automatic at a host-chosen time, from the end to 24 hours after. | Every picture stays sealed, a Disposable or 6×6 guest's own included; the reveal is automatic at the End Time or up to 24 hours after; an Instant print shows to its shooter at once, as an Instant camera does. | V2-FR-32, V2-FR-38, V2-FR-39 |
 | The host chooses who sees the album: host only, everyone, or each guest their own. | One rule: after the reveal everyone who joined sees every picture. | V2-FR-43 |
@@ -158,22 +167,22 @@ Immerse's v2 is not a copy of Once: it keeps Immerse's own Cameras, Developed Tr
 | **Web-album viewer** | Anyone with the event's link once the Host has switched the web album on: Android guests, people who did not shoot, guests on a computer. | No. | Any current web browser. |
 | **Support** | Immerse's operator, who receives reports at the support address and handles requests the app cannot. | Not applicable. | Not applicable. |
 
-**Member** means the Host and every guest who has joined and not been removed (open question OQ-9 asks about guests who left).
+**Member** means the Host and every guest who has joined and not been removed, a guest who left on their own included (V2-FR-56).
 A web-album viewer is not a member.
 
 ### 4.2 Permission summary
 
 | Action | Host | Guest (mini-app or full app) | Web-album viewer |
 | --- | --- | --- | --- |
-| Create a Group Film, choose its Camera, Film Stock, End Time, Reveal Delay and rolls | Yes | No | No |
+| Create a Group Film, choose its Camera, Film Stock, Start Time, End Time, Reveal Delay and rolls | Yes | No | No |
 | Add rolls while the event is open | Yes | No | No |
 | Pause or resume joining, replace the Join Code | Yes | No | No |
 | End early | Yes | No | No |
-| Join and take a roll | Open question OQ-1 | Yes, one roll | No |
-| Shoot | Open question OQ-1 | Yes, until the End Time, within their roll | No |
+| Join and take a roll | Yes, one roll from the event, like any guest | Yes, one roll | No |
+| Shoot | If they take a roll, until the End Time, within it | Yes, until the End Time, within their roll | No |
 | See their own Instant prints before the reveal | If they shoot | Yes | No |
 | See any other picture before the reveal | No | No | No |
-| See every picture after the reveal | Yes | Yes | Yes, while the web album is on |
+| See every picture after the reveal | Yes | Yes, a guest who left included; not a removed guest | Yes, while the web album is on |
 | Save any picture or the whole album to Photos | Yes | Yes | Yes, while the web album is on |
 | Pull all their own pictures before the reveal | If they shoot | Yes | No |
 | Remove one of their own pictures after the reveal | If they shoot | Yes | No |
@@ -183,7 +192,7 @@ A web-album viewer is not a member.
 | Report a picture to the Host and support | Not needed | Yes | No (support address on the page) |
 | Switch the web album on or off | Yes | No | No |
 | Delete the whole event | Yes, after a warning | No | No |
-| Leave the event | No | Yes (carried from the parked design) | No |
+| Leave the event, and rejoin while it is open | No | Yes | No |
 
 ### 4.3 Journeys
 
@@ -313,7 +322,7 @@ Acceptance criteria:
 - A guest who signs in keeps every picture, their remaining exposures and their name; nothing is uploaded twice.
 - After signing in on a second iPhone, the guest sees the event, their remaining exposures and, after the reveal, the album.
 - A guest who deletes the mini-app and the full app without signing in cannot get their place back on any phone, and the app says so before they leave an event unsigned (V2-FR-23).
-- Claiming never moves a guest from one event to another or merges two guests in one event; if the Account already has a place in that event (open question OQ-11), the app explains and keeps both as they were.
+- Claiming never moves a guest from one event to another or merges two guests in one event; if the Account already has a place in that event, the app explains and keeps both as they were, each with its own Roll and pictures.
 
 #### V2-FR-05 - Delete Account
 
@@ -334,8 +343,8 @@ Acceptance criteria:
 #### V2-FR-06 - A deleted Host's events run on to their reveal
 
 When a Host deletes their Account, each event they host carries on without them.
-It keeps its settings as they were: its Camera, its rolls already set aside, its End Time, its Reveal Delay, its joining state and its web album setting.
-Guests can still join and shoot until the End Time (**Reading**: "still run to their reveal" includes joining and shooting), it reveals automatically, and its album stays available to its guests for 12 months after the reveal.
+It keeps its settings as they were: its Camera, its rolls already set aside, its Start Time, its End Time, its Reveal Delay, its joining state and its web album setting.
+Guests can still join and shoot until the End Time, because "still run to their reveal" includes joining and shooting; an event not yet open still opens at its Start Time; it reveals automatically, and its album stays available to its guests for 12 months after the reveal.
 Nobody can change its settings, end it early, add rolls, remove pictures or guests, or delete it; reports about it go to support alone, and support can remove a picture (V2-FR-54).
 Unclaimed rolls have no balance to return to and lapse at the End Time.
 The Host's own pictures are removed, as V2-FR-05 says.
@@ -399,28 +408,33 @@ Acceptance criteria:
 - No operation on the server can add a second Host or move the Host role.
 - A guest's app shows nothing of the Host's beyond the event's title and the Host's display name.
 
-#### V2-FR-12 - End Time, Reveal Delay and the seven-day limit
+#### V2-FR-12 - Start Time, End Time, Reveal Delay and the seven-day limit
 
 The Host sets the event's **End Time**, when shooting stops, and its **Reveal Delay**, from none up to 24 hours after the End Time.
-An event lasts at most 7 days: the End Time is at most 7 days after the event opens (open question OQ-3 asks whether an event opens when it is created or at a start time the Host sets).
-The Host can move the End Time and change the Reveal Delay while the event is open, within the same limits; moving the End Time to now is ending early (V2-FR-40).
+The event opens at Load Film, or at a later **Start Time** the Host sets, so its code can be printed and shared weeks ahead.
+The plan sets no limit on how far ahead the Start Time can be.
+Shooting lasts at most 7 days: the End Time is at most 7 days after the event opens, at Load Film or at the Start Time.
+Before the Start Time the link and the QR code work and show the event and when it opens, but nobody can join or shoot, the Host included (**Reading**).
+The Host can move the Start Time until the event opens (**Reading**), and can move the End Time and change the Reveal Delay until the End Time, within the same limits; moving the End Time to now while the event is open is ending early (V2-FR-40).
 Times are kept on the server and shown in each person's own time zone.
 
 Acceptance criteria:
 
-- The app refuses an End Time in the past or more than 7 days after the event opens, and a Reveal Delay above 24 hours.
+- The app refuses a Start Time in the past, an End Time in the past or more than 7 days after the event opens, and a Reveal Delay above 24 hours.
+- An event with a Start Time admits nobody before it, and opens at it without anyone doing anything.
+- A QR code printed weeks before the Start Time opens the event's page at once and lets guests join from the Start Time.
 - The reveal happens at End Time plus Reveal Delay, to the minute, without anyone opening the app (V2-FR-38).
 - A guest's phone with a wrong clock still stops shooting at the server's End Time once it has been online after joining (V2-FR-31).
 
 #### V2-FR-13 - Load Film fixes the event and issues its Join Code
 
 The Host's Load Film confirmation shows the title, Camera, Film Stock where there is one, rolls, End Time, Reveal Delay, and the sharing rule (sealed until the reveal, then seen by every member), and fixes the Camera and Film Stock for good (**Camera Lock**).
-Load Film issues the event's Join Code, link and QR code at once.
+Load Film issues the event's Join Code, link and QR code at once, also for an event that opens later at its Start Time (V2-FR-12).
 Load Film needs a connection, because the event exists on the server.
 
 Acceptance criteria:
 
-- No guest can join before Load Film.
+- No guest can join before Load Film, or before the Start Time when the Host set one.
 - The Camera and Film Stock cannot change after Load Film.
 - Load Film offline says a connection is needed and keeps the Host's choices.
 
@@ -484,6 +498,7 @@ Anyone who opens the link where they cannot join sees why on the join page, in p
 | --- | --- |
 | An iPhone on an iOS version before 26 | Shooting needs iOS 26 or later; update the iPhone to join. |
 | An Android phone, a computer or another device | Shooting needs an iPhone on iOS 26; the pictures will be on this page after the reveal if the Host shares them. |
+| Anyone before the Start Time | This event opens at its Start Time, shown in their own time zone; come back then. |
 | Anyone while joining is paused | Joining is paused for now. |
 | Anyone when every roll is taken | Every roll has been taken; the Host can add more. |
 | Anyone after the End Time | Shooting has ended, with the reveal time, or the album or web album when they can see it. |
@@ -560,9 +575,9 @@ Acceptance criteria:
 
 #### V2-FR-24 - When joining is refused
 
-Joining is refused, with V2-FR-18's message, when joining is paused, every roll is taken, the End Time has passed, the event is deleted, the code was replaced, or the person was removed from this event.
+Joining is refused, with V2-FR-18's message, before the Start Time, when joining is paused, every roll is taken, the End Time has passed, the event is deleted, the code was replaced, or the person was removed from this event.
 **Carried from the parked design:** a removed guest's identity cannot rejoin the same event, even with a current or replaced code; the same person on another phone with a new, unlinked identity may not be recognized.
-A guest who has already joined cannot take a second roll in the same event.
+A guest who has already joined cannot take a second roll in the same event; a guest who left on their own rejoins to their own Roll (V2-FR-56).
 
 Acceptance criteria:
 
@@ -575,6 +590,7 @@ Acceptance criteria:
 
 A **Roll** is one guest's set of exposures in a Group Film: the normal roll of the event's Camera, 27 exposures on the Disposable, 12 on the 6×6 and 10 on the Instant.
 Each guest who joins takes exactly one Roll.
+The Host can shoot in their own event: they take one Roll from the event, like any guest, and shoot it under the same rules.
 Rolls are what a Host pays for, one per guest, and how many there are sets how many guests can join.
 A guest's exposures are theirs alone: no pool, no sharing, no adding exposures to a Roll.
 
@@ -583,11 +599,12 @@ Acceptance criteria:
 - A guest's count starts at the Camera's normal roll and goes down by one for each saved picture.
 - When a guest's count reaches zero, their shooting screen says their roll is finished.
 - No guest can use another guest's exposures.
+- A Host who shoots in their own event takes one of its Rolls, and the event has one Roll fewer to give.
 
 #### V2-FR-26 - At most 200 Rolls per event
 
 An event has at most 200 Rolls in its whole life.
-Rolls returned at the end (V2-FR-28) and the Host's own Roll (open question OQ-1) count within the 200 while they are set aside.
+Rolls returned at the end (V2-FR-28) count within the 200 while they are set aside, and the Host's own Roll, if they take one (V2-FR-25), counts within the 200 like any guest's.
 
 Acceptance criteria:
 
@@ -609,7 +626,7 @@ Acceptance criteria:
 Setting Rolls aside for an event takes them from the Host's balance, but a Roll is used only when a guest takes it at joining.
 At the End Time, every Roll no guest took returns to the Host's balance, for any future event.
 A Roll a guest took is used, however many of its exposures they shoot, and no shot is returned, whether the guest left, was removed, or withdrew their pictures (as a disposable handed out is used).
-When the Host deletes the event before its End Time (V2-FR-55), its unclaimed Rolls return to the balance (**Reading**).
+When the Host deletes the event before its End Time (V2-FR-55), its unclaimed Rolls return to the balance.
 
 Acceptance criteria:
 
@@ -730,7 +747,7 @@ Acceptance criteria:
 
 #### V2-FR-38 - Development and reveal are automatic
 
-At the End Time shooting stops, and at the End Time plus the Reveal Delay the event reveals itself: every picture on the server becomes visible to every member at once.
+At the End Time shooting stops, and at the End Time plus the Reveal Delay, or at once when the Host ends early (V2-FR-40), the event reveals itself: every picture on the server becomes visible to every member at once.
 Nobody acts to start it: there is no Private Review, no release by hand, and no step where the Host sees pictures first.
 The reveal is timed on the server and happens whether or not anyone has the app open.
 Each member's app shows the reveal ritual the first time they open the revealed album.
@@ -745,6 +762,7 @@ Acceptance criteria:
 
 The Host chooses the Reveal Delay at creation, from none to 24 hours after the End Time, and may change it while the event is open.
 A delay gives late uploads time to arrive before the reveal.
+Ending early skips it (V2-FR-40).
 
 Acceptance criteria:
 
@@ -752,18 +770,19 @@ Acceptance criteria:
 
 #### V2-FR-40 - The Host can end early
 
-While the event is open, the Host can end it early, after a confirmation that says shooting stops for everyone at once and that unclaimed Rolls return to the balance.
-Ending early makes now the End Time; the reveal follows after the chosen Reveal Delay (**Reading**; open question OQ-4).
+While the event is open, the Host can end it early, after a confirmation that says shooting stops for everyone at once, that the album reveals at once, and that unclaimed Rolls return to the balance.
+Ending early makes now the End Time and reveals the album at once: the chosen Reveal Delay does not apply.
+Pictures still waiting on guests' phones join the album when they arrive (V2-FR-41).
 
 Acceptance criteria:
 
 - Ending early stops shooting on every online phone within a minute and refuses later pictures as V2-FR-31 says.
-- The reveal happens at the new End Time plus the Reveal Delay.
+- The album reveals within a minute of ending early, whatever Reveal Delay was chosen.
 
 #### V2-FR-41 - Late arrivals appear after the reveal
 
 A picture taken before the End Time that reaches the server after the reveal joins the revealed album when it arrives, in its place by capture time.
-Late pictures are accepted until the album ends (open question OQ-5).
+Late pictures are accepted until the album ends.
 The album does not announce each late arrival; members see the new pictures the next time they look.
 
 Acceptance criteria:
@@ -786,12 +805,13 @@ Acceptance criteria:
 
 After the reveal, every member sees every picture in the event, in the app and, for a mini-app guest, in the mini-app.
 This is one fixed rule; the Host cannot narrow it.
-**Carried from the parked design:** a guest the Host removed does not see the album (open question OQ-9 asks about a guest who left).
+A guest the Host removed does not see the album; a guest who left on their own still does, because everyone who joined sees every picture (V2-FR-56).
 
 Acceptance criteria:
 
 - After the reveal, every member sees the same set of pictures.
 - A removed guest's app shows that they can no longer take part, and no picture.
+- A guest who left before the reveal sees every picture after it.
 
 #### V2-FR-44 - Saving to Photos, with no account
 
@@ -841,7 +861,7 @@ Acceptance criteria:
 
 The album, every picture in it and the web album are kept for 12 months after the reveal, then removed from the server for good.
 One month before the end, and again one week before, every member sees a notice in the app and on the event's page that the album ends on a date, with a prompt to save what they want; the web album shows the same notice.
-These notices are not push alerts: "Your Film is ready" stays the one alert (V2-FR-70); open question OQ-7 asks whether the Host is also emailed.
+These notices are not push alerts: "Your Film is ready" stays the one alert (V2-FR-70), and nobody, the Host included, is emailed before the album ends.
 After removal, the link shows "This event is no longer available" and the event leaves every Film Library.
 
 Acceptance criteria:
@@ -888,14 +908,16 @@ Acceptance criteria:
 
 #### V2-FR-53 - The Host removes a guest
 
-While the event is open or revealed, the Host can remove a guest after a confirmation.
-A removed guest can no longer shoot or see the event or its album; pictures they took before the removal still upload.
+While the event is open or revealed, the Host can remove a guest after a confirmation that says every picture the guest took in the event goes with them, for everyone, for good, and that copies members already saved cannot be recalled.
+A removed guest can no longer shoot or see the event or its album.
+Their pictures go with them: pictures on the server are deleted, each leaving a numbered gap; pictures still waiting on their phone are deleted there when it next comes online and never upload; and the phone deletes the Instant prints it keeps for that event until the reveal.
 **Carried from the parked design:** removal is permanent for that guest identity in that event, and the Host cannot undo it.
-**Carried from the parked design:** removing a guest does not remove their pictures; the Host removes pictures one at a time after the reveal (V2-FR-52), and a removed guest keeps their right to withdraw their own pictures (open question OQ-6 asks whether removal should also remove them, and what the removed guest's phone does with the Instant prints it keeps until the reveal).
 
 Acceptance criteria:
 
-- A removed guest's next attempt to join, shoot or open the album is refused on the server, and a picture with a capture time after the removal is refused.
+- A removed guest's next attempt to join, shoot or open the album is refused on the server, and any picture of theirs that arrives later is refused.
+- Within one minute of the removal none of the guest's pictures in the event can be seen or downloaded, in the app or the web album, and each leaves a numbered gap.
+- A removed guest's phone deletes its waiting pictures and the Instant prints it keeps for that event when it next comes online, and uploads none.
 - The removal does not return their Roll (V2-FR-28).
 
 #### V2-FR-54 - Reporting a picture
@@ -926,11 +948,15 @@ Acceptance criteria:
 
 **Carried from the parked design:** a guest can leave an event; they stop shooting and their Roll stays used.
 Their pictures stay in the event, and they keep the right to withdraw them.
-Whether a guest who left still sees the album after the reveal is open question OQ-9; a guest who left can rejoin while the event is open only if the parked rule is kept, which the same question covers.
+A guest who left is still a member: they see the album after the reveal, and get the alert, because everyone who joined sees every picture; only a guest the Host removed loses access (V2-FR-43, V2-FR-53).
+While the event is open, a guest who left can rejoin through the event's current link.
+Rejoining brings them back to their own Roll and its remaining exposures and takes no new Roll, so it works when every Roll is taken, but not while joining is paused (**Reading**).
 
 Acceptance criteria:
 
-- A guest who leaves can no longer shoot in the event.
+- A guest who leaves can no longer shoot in the event unless they rejoin.
+- A guest who left before the reveal sees every picture after it.
+- A guest who left and rejoins while the event is open continues their own Roll with the exposures they had left.
 
 #### V2-FR-57 - Delete Guest Identity
 
@@ -970,27 +996,30 @@ Acceptance criteria:
 
 #### V2-FR-62 - Free Rolls for everyone, and more for subscribers
 
-Every Account gets a very small number of free Rolls, about 3, enough for a small free event.
-An Account linked to a v1 subscriber gets a clearly larger number.
+Every Account gets a very small number of free Rolls, about 3, enough for a small free event, once ever.
+An Account linked to a v1 subscriber also gets a clearly larger number, once ever, when the server first confirms the subscription for it: not monthly, not yearly, and not again when the subscription renews.
 Free Rolls are credited to the balance and used like bought ones.
-How often free Rolls are given, once per Account, per event or per period, is open question OQ-2; their numbers are the open pricing decision (V2-FR-64).
+Their numbers are the open pricing decision (V2-FR-64).
 
 Acceptance criteria:
 
 - A new Account can host an event of its free Rolls without paying.
-- A subscriber's Account has the larger number credited once the subscription is confirmed (V2-FR-63).
+- An Account that has had its free Rolls is never credited them again, however many events it hosts.
+- A subscriber's Account has the larger number credited once, when the subscription is first confirmed (V2-FR-63), and a renewal credits no more.
 
 #### V2-FR-63 - A subscriber's free Rolls, confirmed with Apple, feed one Account
 
 A subscriber's free Rolls are credited to their balance only after the server has confirmed the subscription with Apple.
 The v1 subscription stays account-free for personal Films: the subscriber signs in only to host, and the app then sends the subscription's signed transaction to the server, which verifies it with Apple and links it to that Account.
-One subscription feeds one Account: once a subscription is linked, another Account cannot claim its free Rolls, and is told the subscription is already linked to another Account, without naming it (moving it is open question OQ-13).
+One subscription feeds one Account: once a subscription is linked, another Account cannot claim its free Rolls, and is told the subscription is already linked to another Account, without naming it.
+Moving a subscription's link to another Account goes through support, never through the app.
+Subscriber Rolls already credited stay in the balance if the subscription lapses or is refunded.
 
 Acceptance criteria:
 
 - No subscriber free Rolls are credited before Apple's confirmation.
 - A second Account presenting the same subscription receives no subscriber free Rolls.
-- A subscription that lapses or is refunded credits no further subscriber Rolls (open question OQ-10 asks about Rolls already credited).
+- A subscription that lapses or is refunded credits no further subscriber Rolls, and the subscriber Rolls already credited stay in the balance.
 
 #### V2-FR-64 - The structure is fixed; the numbers are open
 
@@ -1005,7 +1034,7 @@ Acceptance criteria:
 
 A purchase that fails or is cancelled adds nothing and changes nothing else.
 A purchase that is pending, such as one awaiting Ask to Buy approval, adds its Rolls only when Apple completes it.
-When Apple refunds a Roll purchase, the server learns of it from Apple's server notification and removes those Rolls from the balance (**Proposed**; open question OQ-14): Rolls already set aside or used in events stay as they are, and the balance may go below zero, in which case the Host cannot set aside new Rolls until it is above zero again.
+When Apple refunds a Roll purchase, the server learns of it from Apple's server notification and removes those Rolls from the balance: Rolls already set aside or used in events stay as they are, and the balance may go below zero, in which case the Host cannot set aside new Rolls until it is above zero again.
 A refund that Apple reverses adds the Rolls back.
 
 Acceptance criteria:
@@ -1106,11 +1135,12 @@ The server holds every state below except a picture's states on the phone, which
 
 | State | Means | Entered when | Left when |
 | --- | --- | --- | --- |
-| Setting up | The Host is choosing title, Camera, Film Stock, rolls and times. Nothing exists on the server yet. | The Host chooses Group Film. | Load Film succeeds (to Open), or the Host cancels (nothing kept). |
-| Open | Guests can join while Rolls are free and joining is not paused; guests shoot. | Load Film (or, if open question OQ-3 adds a start time, that time). | The End Time passes or the Host ends early (to Ended), or the Host deletes the event (to Deleted). |
+| Setting up | The Host is choosing title, Camera, Film Stock, rolls and times. Nothing exists on the server yet. | The Host chooses Group Film. | Load Film succeeds (to Open, or to Scheduled when the Host set a later Start Time), or the Host cancels (nothing kept). |
+| Scheduled | The event exists and its link and QR code work, showing when it opens; nobody can join or shoot. | Load Film with a later Start Time. | The Start Time (to Open), or the Host deletes the event (to Deleted). |
+| Open | Guests can join while Rolls are free and joining is not paused; guests shoot. | Load Film, or the Start Time when the Host set one. | The End Time passes or the Host ends early (to Ended), or the Host deletes the event (to Deleted). |
 | Open, joining paused | As Open, but no one new can join. | The Host pauses joining. | The Host resumes (to Open), or as Open. |
 | Open, every Roll taken | As Open, but no one new can join until the Host adds Rolls. | The last free Roll is taken. | The Host adds Rolls (to Open), or as Open. |
-| Ended | Shooting has stopped; uploads continue; unclaimed Rolls have returned; nobody sees any picture. | The End Time. | End Time plus Reveal Delay (to Revealed), or deletion (to Deleted). With no delay, Ended lasts no time. |
+| Ended | Shooting has stopped; uploads continue; unclaimed Rolls have returned; nobody sees any picture. | The End Time. | End Time plus Reveal Delay (to Revealed), or deletion (to Deleted). With no delay, or when the Host ended early, Ended lasts no time. |
 | Revealed | Every member sees every picture; late arrivals join; the web album can be on. | The scheduled reveal. | Eleven months after the reveal (to Ending), or deletion. |
 | Revealed, web album on | As Revealed, and anyone with the link sees and saves the pictures on the join page. | The Host switches it on. | The Host switches it off, or as Revealed. |
 | Ending | As Revealed, with the album's end notices shown. | One month before the album ends. | Twelve months after the reveal (to Gone), or deletion. |
@@ -1135,10 +1165,10 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | --- | --- | --- | --- |
 | Captured | Phone | The original is saved on the phone; an exposure is used. | Developing. |
 | Developing | Phone | The phone is developing it (paused while the app is in the background). | Developed. |
-| Developed, waiting | Phone | The developed picture is in the upload queue; an Instant shooter can see their own print; nobody else can. | Uploading, or Withdrawn (Withdraw Before Reveal, Delete Account, Delete Guest Identity, or the event deleted). |
+| Developed, waiting | Phone | The developed picture is in the upload queue; an Instant shooter can see their own print; nobody else can. | Uploading, or Withdrawn (Withdraw Before Reveal, the guest removed, Delete Account, Delete Guest Identity, or the event deleted). |
 | Uploading | Phone and server | It is being sent; the phone keeps its copy. | Sealed (the server confirms it whole), or back to Developed, waiting (failed; retried). |
-| Sealed | Server | Stored, unseen by anyone through the server; the phone deletes its original and developed copy, except that an Instant print's developed copy stays on its shooter's phone, seen only by its shooter, until the reveal. | Revealed (at the reveal), Withdrawn, or Removed by deletion. |
-| Revealed | Server | Every member sees it, and web-album viewers while the web album is on. | Removed by its shooter, the Host or support, Removed by deletion, or Gone at the album's end. |
+| Sealed | Server | Stored, unseen by anyone through the server; the phone deletes its original and developed copy, except that an Instant print's developed copy stays on its shooter's phone, seen only by its shooter, until the reveal. | Revealed (at the reveal), Withdrawn, or Removed (its guest removed, or deletion). |
+| Revealed | Server | Every member sees it, and web-album viewers while the web album is on. | Removed by its shooter, the Host or support, Removed with its guest, Removed by deletion, or Gone at the album's end. |
 | Arrived late | Server | Reached the server after the reveal; becomes Revealed on arrival. | As Revealed. |
 | Refused | Phone | Its capture time is after the server's End Time, or the event is gone; the phone deletes it and tells the guest. | Never. |
 | Withdrawn or Removed | Server and phone | Its media is deleted everywhere it was kept; a numbered gap remains in the album. | Never. |
@@ -1151,8 +1181,8 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | --- | --- | --- |
 | Joined, on this phone | Has a Roll and a guest identity bound to this phone. | Signed in (claims the identity), Left, Removed, Deleted, or Lost with the phone. |
 | Joined, signed in | The identity belongs to an Account; works on any iPhone signed in to it. | Left, Removed, or Deleted (Delete Account). |
-| Left | Stopped shooting; Roll used; pictures stay (V2-FR-56; open question OQ-9). | Rejoined only if open question OQ-9 keeps the parked rule. |
-| Removed | Cannot shoot, upload or see the event; pictures stay unless removed (V2-FR-53). | Never back in this event. |
+| Left | Stopped shooting; Roll used; pictures stay; still a member, who sees the album after the reveal (V2-FR-56). | Rejoined (back to Joined, on their own Roll) while the event is open, or Removed, or Deleted. |
+| Removed | Cannot shoot, upload or see the event; every picture of theirs in it is removed (V2-FR-53). | Never back in this event. |
 | Deleted | Delete Account or Delete Guest Identity removed every picture. | Never. |
 | Lost | An unsigned guest's phone was lost or replaced; uploaded pictures stay, nobody can act for them. | Never. |
 
@@ -1161,7 +1191,7 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | Thing | States |
 | --- | --- |
 | Account | Signed out (none) → Signed in (age confirmed) → Deletion requested → Deleted. A deleted Account's events follow V2-FR-06. |
-| Subscription link | Not linked → Linked to one Account (after Apple's confirmation) → Lapsed or Refunded (no further subscriber Rolls; open question OQ-10). |
+| Subscription link | Not linked → Linked to one Account (after Apple's confirmation; its free Rolls credited once) → Lapsed or Refunded (no further subscriber Rolls; those already credited stay). Support alone can move the link to another Account. |
 | Roll purchase | Started → Pending (Ask to Buy) → Completed and verified (Rolls added once) → possibly Refunded (Rolls removed) → possibly Refund reversed (Rolls added back); or Failed or Cancelled (nothing added). |
 
 ## 7. Failure and edge cases
@@ -1174,14 +1204,18 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | A picture arrives after the reveal | It joins the album in capture order. | V2-FR-41 |
 | A picture taken after the End Time on a phone that did not know the End Time moved earlier | The server refuses it and the guest is told. | V2-FR-31 |
 | A guest's phone clock is wrong | Shooting stops by the server's End Time once the phone has been online since joining; the capture time a phone reports is accepted as it is. | V2-FR-31, risk RK-V2-09 |
-| The Host removes a guest before the reveal | The guest stops shooting and loses access; their pictures stay and reveal unless the Host removes them after the reveal (open question OQ-6). | V2-FR-53 |
-| A removed guest's phone comes online with pictures waiting | Pictures taken before the removal still upload, because removal does not erase a guest's pictures (the parked rule); none taken after it exist, since shooting stopped. Open question OQ-6 covers whether removal should remove them. | V2-FR-53 |
+| The Host removes a guest before the reveal | The guest stops shooting and loses access, and every picture of theirs is removed, unseen; the album reveals with numbered gaps in their place. | V2-FR-53 |
+| The Host removes a guest after the reveal | Their pictures leave the album and the web album within a minute, leaving numbered gaps; copies members saved to Photos cannot be recalled. | V2-FR-53, V2-FR-44 |
+| A removed guest's phone comes online with pictures waiting | The phone deletes the waiting pictures and the Instant prints it keeps for that event, uploads none, and says the guest was removed. | V2-FR-53 |
 | A removed guest tries the link again, or a replaced code | Refused: their identity, or the Account it was claimed into, is blocked in that event. | V2-FR-24 |
-| A guest leaves and wants to come back | Open question OQ-9. | V2-FR-56 |
+| A guest leaves and wants to come back | While the event is open and joining is not paused, they rejoin through the current link and continue their own Roll; after the End Time they cannot shoot again, and they still see the album after the reveal. | V2-FR-56 |
+| A guest who left before the reveal | Sees every picture after the reveal, and gets the alert if they have the full app. | V2-FR-56, V2-FR-70 |
+| A guest signs in to an Account that already holds a place in the same event | Both places stay as they were, each with its own Roll and pictures; the app explains. | V2-FR-04 |
 | A guest deletes their Account | Every picture of theirs is removed everywhere, numbered gaps remain, waiting pictures never upload. | V2-FR-05 |
 | An unsigned guest loses or replaces their phone | Their place is lost with no recovery; uploaded pictures stay theirs in the album; nobody can withdraw them through the app, though support can remove one on request. | V2-FR-04, V2-FR-54 |
 | The Host deletes their Account before the reveal | The event runs on, reveals, and stays 12 months; no one can change it; reports go to support. | V2-FR-06 |
 | The Host deletes their Account after the reveal | The album stays for the rest of its 12 months without the Host's pictures. | V2-FR-06 |
+| Someone opens the link before the Start Time | The join page and the app show when the event opens; nobody can join. | V2-FR-12, V2-FR-18 |
 | Joining is paused | The link works but admits no one new; joined guests keep shooting. | V2-FR-16 |
 | The code is replaced | The old link and every printed copy stop working at once; joined guests are unaffected. | V2-FR-17 |
 | A printed code is replaced by mistake | It cannot be restored; the Host prints the new one. | V2-FR-17 |
@@ -1189,12 +1223,14 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | The event reaches 200 Rolls | No more can be added; the app says the limit is reached. | V2-FR-26 |
 | Two people take the last Roll together | One gets it; the other is told every Roll is taken. | V2-FR-24 |
 | The Host's balance is too small to set Rolls aside | The app offers to buy Rolls or set aside fewer. | V2-FR-60 |
+| A Host who has used their free Rolls hosts again | They buy Rolls; free Rolls are never given to the same Account again. | V2-FR-62 |
 | A purchase fails or is cancelled | Nothing is added; the Host can try again. | V2-FR-65 |
 | A purchase is pending (Ask to Buy) | Its Rolls are added when Apple completes it. | V2-FR-65 |
-| A purchase is refunded | The Rolls are removed from the balance, which may go below zero; events already running are untouched (open question OQ-14). | V2-FR-65 |
+| A purchase is refunded | The Rolls are removed from the balance, which may go below zero; events already running are untouched. | V2-FR-65 |
 | A refunded purchase's refund is reversed | The Rolls are added back. | V2-FR-65 |
-| A subscriber's subscription lapses or is refunded | No further subscriber free Rolls; open question OQ-10 asks about Rolls already credited. | V2-FR-63 |
+| A subscriber's subscription lapses or is refunded | No further subscriber free Rolls; those already credited stay in the balance. | V2-FR-63 |
 | The same subscription is presented by a second Account | No subscriber free Rolls for it; the app says the subscription is linked elsewhere. | V2-FR-63 |
+| A subscriber wants the subscription linked to another Account | Support moves the link on request; the app cannot. | V2-FR-63 |
 | The Host deletes the event while guests are offline and shooting | Their phones delete the event's waiting pictures and the Instant prints they keep when they come online, and say the event was deleted. | V2-FR-55 |
 | A guest withdraws before the reveal while offline | The phone deletes its waiting pictures at once and tells the server when online; nothing that was waiting ever uploads. | V2-FR-50 |
 | A picture is reported | It reaches the Host and support; nothing is removed until one of them removes it. | V2-FR-54 |
@@ -1205,6 +1241,7 @@ A Host's Account deletion does not change these states (V2-FR-06); it removes th
 | A member declines Photos access | Saving says how to allow it; nothing else is blocked. | V2-FR-44 |
 | The phone runs out of storage while shooting | The camera says so as v1's does; pictures already saved stay; the low-storage warning of v1 also shows on the event's page. | V2-FR-34 |
 | Development fails on a phone (for example a renderer without Metal for a color stock) | The picture stays waiting and Development retries; if it can never develop on that phone, the guest is told and the original stays on the phone; it never uploads undeveloped. | V2-FR-33, V2-FR-36 |
+| The Host ends early | Shooting stops and the album reveals at once; the Reveal Delay does not apply; pictures still waiting arrive late and join the album. | V2-FR-40, V2-FR-41 |
 | The server is unreachable at the End Time or the reveal | Shooting stops by each phone's known End Time; the reveal runs on the server when it is reachable again, and its delay is reported (success measure M-3). | V2-FR-38 |
 | The web album is switched off while someone is viewing it | Their next picture load fails and the page says the pictures are no longer shared. | V2-FR-47 |
 | Saving the whole album is interrupted | It resumes without duplicates. | V2-FR-44 |
@@ -1220,9 +1257,9 @@ It never holds a personal Film, an original capture, a location, a contact list,
 | Account | Clerk's user id, the confirmation of age 13 or over and when it was given, the display name the Host chose, the creation time. Clerk itself holds the sign-in method and email or Apple or Google identity. | Delete Account. |
 | Roll balance and ledger | Each purchase credit, free credit, set-aside, return, refund and reversal, with Apple's transaction id. | Delete Account, except purchase records needed for accounting and refunds, which are kept without the person's name or user id for as long as the law requires. |
 | Subscription link | Apple's original transaction id for a confirmed subscription, linked to one Account. | Delete Account. |
-| Push token | The device token for the alert, per signed-in or joined installation of the full app. | Sign-out, Delete Account, leaving or removal, or the token's rejection by Apple. |
+| Push token | The device token for the alert, per signed-in or joined installation of the full app. | Sign-out, Delete Account, removal, or the token's rejection by Apple. |
 | Guest identity | A random id and a secret's verifier, never a device identifier; the Account it was claimed into, if any. | Delete Guest Identity, Delete Account, or 12 months after the last album it took part in ends. |
-| Event | Title, Host, Camera, Film Stock, Camera package and treatment versions, Rolls set aside and taken, End Time, Reveal Delay, joining state, Join Code (stored as a verifier), web album switch, reveal time, state. | Twelve months after the reveal, or deletion; then a minimal record of its Rolls for the balance ledger. |
+| Event | Title, Host, Camera, Film Stock, Camera package and treatment versions, Rolls set aside and taken, Start Time if any, End Time, Reveal Delay, joining state, Join Code (stored as a verifier), web album switch, reveal time, state. | Twelve months after the reveal, or deletion; then a minimal record of its Rolls for the balance ledger. |
 | Membership | Which guest identity or Account holds which Roll in which event, the Guest Name, exposures used, left or removed. | The event's end, as above. |
 | Picture | Event, shooter, exposure number, capture time, upload and seal state, size, checksum, storage key, removed or withdrawn. The picture itself is in Cloudflare R2, with a smaller viewing copy (section 9.4). | Its removal, withdrawal, the shooter's deletion, or the event's end; a removed picture leaves only its number. |
 | Report | The picture, the reason, when, and which member reported (never shown to the Host). | Ninety days after it is resolved, or the event's end if sooner (**Proposed**). |
@@ -1283,7 +1320,7 @@ No official example of a presigned R2 upload from an iPhone app was found; the o
 
 ### 9.5 The timed reveal and the album's end
 
-- Load Film schedules the event's end and reveal with Convex's scheduler at their exact times; changing the End Time or the delay, ending early, or deleting the event cancels and reschedules them.
+- Load Film schedules the event's opening at its Start Time, if any, and its end and reveal with Convex's scheduler at their exact times; changing the Start Time, the End Time or the delay, ending early (which reveals at once), or deleting the event cancels and reschedules them.
 - Convex's documentation says a scheduled mutation runs exactly once and can be cancelled before it starts, and that functions can be scheduled months ahead, which also serves the 12-month removal and its notices.
 - Each scheduled step is safe to repeat and checks the event's current state first.
 
@@ -1384,7 +1421,7 @@ Guideline 1.2 requires an app with user-generated content to include "A method f
 | --- | --- |
 | Filtering | Pictures are seen only by the event's members, and nothing is public unless the Host switches on the web album; the Host removes any picture and support removes reported ones. Whether App Review accepts this as filtering, or wants automatic screening before the reveal, is risk RK-V2-06; any automatic screening would have to keep V2-FR-73's no-tracking promise. |
 | Reporting and timely responses | Report a picture to the Host and support (V2-FR-54), with a response time set by open question OQ-12. |
-| Blocking abusive users | The Host removes a guest, permanently for that event (V2-FR-53). |
+| Blocking abusive users | The Host removes a guest, permanently for that event and with every picture they took in it (V2-FR-53). |
 | Published contact information | The support address in the app, on the join page and in the App Store listing (V2-FR-54). |
 
 ### 11.5 Privacy
@@ -1416,7 +1453,7 @@ Proves:
 
 ### Stage 2 - Events in the full app, with free Rolls only
 
-Builds: creating a Group Film, the Join Code with its link and QR code opening the full app, joining, Rolls, shooting offline, Development on the phone, the upload queue, sealing, the timed reveal, the album, saving, Withdraw Before Reveal, removals, reporting, deleting the event, leaving, the alert, the 12-month end and its notices, and a deleted Host's events.
+Builds: creating a Group Film with an optional later Start Time, the Join Code with its link and QR code opening the full app, joining, Rolls, shooting offline, Development on the phone, the upload queue, sealing, the timed reveal, the album, saving, Withdraw Before Reveal, removals, removing a guest with their pictures, reporting, deleting the event, leaving and rejoining, ending early, the alert, the 12-month end and its notices, and a deleted Host's events.
 Guests install the full app; Rolls are free Rolls only.
 
 Proves:
@@ -1479,7 +1516,7 @@ These measures come from the server's own aggregate counts, App Store Connect, A
 | RK-V2-07 | Sealing leaks: a read address or a cached copy shows a picture before the reveal. | The product's central promise broken. | No read address before the reveal, a private bucket, tests that try direct reads (OC-4), and encryption if the check says so. |
 | RK-V2-08 | Apple's push service needs HTTP/2, which a Convex action may not offer. | No "Your Film is ready". | Open check OC-7; a small relay if needed. |
 | RK-V2-09 | A guest's phone clock is wrong, so pictures carry wrong times or a guest shoots past the End Time while offline. | Odd order in the album; a few pictures after the end. | The server's End Time is applied whenever the phone has been online; pictures stamped after it are refused; the remaining error is accepted. |
-| RK-V2-10 | Fraud or abuse: guessed codes, spam joins, refunded purchases used for large events. | Unwanted guests or unpaid Rolls. | Unguessable codes and rate limits, pause and replace, removal, refunds removing Rolls (V2-FR-65). |
+| RK-V2-10 | Fraud or abuse: guessed codes, spam joins, refunded purchases used for large events, new Accounts made for their free Rolls. | Unwanted guests or unpaid Rolls. | Unguessable codes and rate limits, pause and replace, removal, refunds removing Rolls (V2-FR-65), free Rolls once per Account (V2-FR-62). |
 | RK-V2-11 | A vendor changes its prices or limits. | Costs or limits move. | Prices recorded with their date (section 10); data and pictures kept in portable formats. |
 | RK-V2-12 | Developing every picture on phones heats or slows older iPhones during an event. | A slow camera or battery drain at the event. | Develop while the app is open and the camera idle; measure on the oldest supported iPhone in stage 2. |
 
@@ -1505,36 +1542,51 @@ None is settled by this document.
 
 ### 16.1 Open questions
 
-The plan is silent on each of these, or answers it two ways.
-None blocks this PRD from being coherent; each needs the captain's answer before the stage it names.
+Version 1.0 listed fourteen open questions.
+The captain answered every one but OQ-12 on 2026-11-22; section 16.3 records each answer and where this PRD now states it.
+The question below is still open and needs his answer before the stage it names.
 
 | ID | Question | Where it matters | Parked rule or reading, if any | Needed before |
 | --- | --- | --- | --- | --- |
-| OQ-1 | Can the Host shoot in their own event, and if so does the Host take a Roll from the event like a guest (as at Once, where "the host uses one of those places")? | V2-FR-25, V2-FR-26, 4.2 | The parked design gave the Host the first load; the plan's "one roll per guest" does not say. | Stage 2 |
-| OQ-2 | How often are free Rolls given: once per Account, once per event, or every period (such as each month), and the same for a subscriber's larger amount? | V2-FR-62 | None. | Stage 2 for everyone's, stage 4 for subscribers' |
-| OQ-3 | Does an event open when the Host loads it, or can the Host set a later start, so a code can be printed weeks ahead while shooting still lasts at most 7 days? | V2-FR-12, 6.1 | None. | Stage 2 |
-| OQ-4 | When the Host ends early, does the chosen Reveal Delay still apply, or does the album reveal at once? | V2-FR-40 | Reading: the delay still applies. | Stage 2 |
-| OQ-5 | Are late pictures accepted until the album ends, or until a cut-off after the reveal? | V2-FR-41 | Reading: until the album ends. | Stage 2 |
-| OQ-6 | When the Host removes a guest, do that guest's pictures stay (the parked rule: the Host removes them one by one after the reveal) or go with them? And does a removed Instant guest's phone keep showing them the Instant prints it keeps until the reveal, or delete them at the removal? | V2-FR-53 | Parked rule: they stay. | Stage 2 |
-| OQ-7 | Is the Host also emailed before the album ends, beside the in-app and on-page notices, given "one alert only"? | V2-FR-48 | Reading: no email; notices only. | Stage 2 |
-| OQ-8 | Does the web album show Guest Names in each picture's details, to anyone with the link, or hide them on the web? | V2-FR-47 | Reading: shown, as in the app. | Stage 3 |
-| OQ-9 | Does a guest who left see the album after the reveal ("everyone who joined sees every picture"), and may they rejoin while the event is open (the parked rule)? | V2-FR-43, V2-FR-56 | Parked rule: leaving ends album access; rejoining is allowed while open. The plan's words suggest everyone who joined sees it. | Stage 2 |
-| OQ-10 | When a subscription lapses or is refunded, do subscriber free Rolls already credited stay in the balance? | V2-FR-63 | None. | Stage 4 |
-| OQ-11 | What happens when a guest claims their identity into an Account that already holds a place in the same event (two Rolls for one person)? | V2-FR-04 | Reading: both places stay as they were. | Stage 2 |
 | OQ-12 | Who answers the support address, and within what time must a report be answered? | V2-FR-54, M-7 | DEC-13 left support and reports "beyond Host moderation" open. | Stage 2 |
-| OQ-13 | Can a subscription's link be moved from one Account to another, and how? | V2-FR-63 | Reading: only through support. | Stage 4 |
-| OQ-14 | When a Roll purchase is refunded after its Rolls were used, may the balance go below zero (blocking new set-asides until it is positive), as V2-FR-65 proposes? | V2-FR-65 | Proposed in V2-FR-65. | Stage 4 |
 
 ### 16.2 Readings this PRD makes
 
-These are stated in the requirements as readings of the plan's words; each can be corrected without changing anything else.
+Version 1.0 stated these as readings of the plan's words, and the captain confirmed on 2026-11-22 that they stand as written; the requirements now state them as decided:
 
 - A deleted Host's event keeps accepting joins and pictures until its End Time, because it "still runs to its reveal" (V2-FR-06).
 - Deleting an event before its End Time returns its unclaimed Rolls, as the End Time does (V2-FR-28).
-- Ending early keeps the chosen Reveal Delay (V2-FR-40; OQ-4).
-- The album's end warning is shown in the app and on the event's page, not as a push alert, because there is one alert only (V2-FR-48; OQ-7).
+- The album's end warning is shown in the app and on the event's page, not as a push alert or an email, because there is one alert only (V2-FR-48).
 - "Pay once per event" means the Host pays for an event's Rolls up front, from the balance, rather than per picture or per guest afterwards; adding Rolls while the event is open is part of the same payment model (V2-FR-60).
 - Without the Private Prints, event pictures have no Darkroom in v2 (section 2.2).
+
+Version 1.0's reading that ending early keeps the Reveal Delay did not stand: ending early reveals at once (V2-FR-40).
+
+Version 1.1 makes these readings, each needed to state an answer of 2026-11-22 in full; each can be corrected without changing anything else:
+
+- Before the Start Time the link and the QR code show the event and when it opens, but nobody can join or shoot, the Host included (V2-FR-12).
+- The Host can move the Start Time until the event opens (V2-FR-12).
+- A guest who left and rejoins comes back to their own Roll and its remaining exposures and takes no new Roll, so rejoining works when every Roll is taken, but not while joining is paused (V2-FR-56).
+
+### 16.3 Answers to version 1.0's open questions
+
+The captain gave these answers on 2026-11-22.
+
+| ID | Question | Answer | Stated in |
+| --- | --- | --- | --- |
+| OQ-1 | Can the Host shoot in their own event, and does the Host take a Roll from the event like a guest? | Yes: the Host can shoot, taking one Roll from the event like any guest. | V2-FR-25, V2-FR-26, 4.2 |
+| OQ-2 | How often are free Rolls given, and the same for a subscriber's larger amount? | Once ever for everyone: the small free amount once per Account, and a subscriber's larger amount also once, not monthly. | V2-FR-62 |
+| OQ-3 | Does an event open when the Host loads it, or can the Host set a later start? | The Host can set a later Start Time, so the code can be printed weeks ahead, while shooting still lasts at most 7 days from the start. | V2-FR-12, V2-FR-13, V2-FR-18, 6.1 |
+| OQ-4 | When the Host ends early, does the chosen Reveal Delay still apply? | No: the album reveals at once (version 1.0 read the opposite). | V2-FR-40 |
+| OQ-5 | Are late pictures accepted until the album ends, or until a cut-off? | Until the album ends, as version 1.0 read. | V2-FR-41 |
+| OQ-6 | When the Host removes a guest, do that guest's pictures stay or go? | They go with the guest, reversing the parked rule; so the guest's phone deletes the pictures still waiting on it and the Instant prints it keeps, and uploads none. | V2-FR-53 |
+| OQ-7 | Is the Host also emailed before the album ends? | No: notices in the app and on the page only, as version 1.0 read. | V2-FR-48 |
+| OQ-8 | Does the web album show Guest Names in each picture's details? | Yes, as version 1.0 read. | V2-FR-47 |
+| OQ-9 | Does a guest who left see the album after the reveal, and may they rejoin while the event is open? | Yes to both, reversing the parked rule that leaving ends album access; only guests the Host removed lose access. | V2-FR-43, V2-FR-56 |
+| OQ-10 | When a subscription lapses or is refunded, do subscriber free Rolls already credited stay? | Yes, they stay in the balance. | V2-FR-63 |
+| OQ-11 | What happens when a guest claims their identity into an Account that already holds a place in the same event? | Both places stay as they were, as version 1.0 read. | V2-FR-04 |
+| OQ-13 | Can a subscription's link be moved from one Account to another, and how? | Only through support, as version 1.0 read. | V2-FR-63 |
+| OQ-14 | May a refund after the Rolls were used take the balance below zero? | Yes, as V2-FR-65 proposed. | V2-FR-65 |
 
 ## 17. Sources
 

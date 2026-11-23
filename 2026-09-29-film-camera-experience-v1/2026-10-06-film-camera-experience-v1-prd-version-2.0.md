@@ -687,7 +687,7 @@ Present the original-export choice at personal Development. If a personal user c
 > Version 1.2 (2026-09-30) also moves the Account-only material here (section 8.13), because v1 has no Account, sign-in, server or Account deletion (ADR 0012).
 > In the preserved text below, statements such as "v1 keeps ..." describe version 1.1; version 1.2 defers the remaining Account parts too.
 >
-> **Overtaken on 2026-11-22.** The [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md), version 1.0, now states v2's Group Film and Account requirements, from the plan the captain settled on 2026-11-21 and 2026-11-22 (ADRs 0025 to 0033).
+> **Overtaken on 2026-11-22.** The [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md), now at version 1.1, states v2's Group Film and Account requirements, from the plan the captain settled on 2026-11-21 and 2026-11-22 (ADRs 0025 to 0034).
 > This section stays unchanged as the parked design it started from; where the two differ, the v2 PRD applies.
 
 Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to FR-15; 8.4 FR-16 Group parts; 8.5 FR-17; 8.6 Group parts of FR-18 to FR-21; 8.7 state model; 8.8 engineering approach; 8.9 verification; 8.10 delivery milestones; 8.11 open decisions; 8.12 other Group clauses removed from v1 sections; 8.13 Account-only material moved from v1 in version 1.2.
