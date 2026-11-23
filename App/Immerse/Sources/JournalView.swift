@@ -4,10 +4,13 @@ import SwiftUI
 private enum JournalRoute: Hashable {
     case archive
     case film(UUID)
+    /// A Group Film's page (v2).
+    case event(String)
 }
 
 struct JournalView: View {
     @Environment(JournalModel.self) private var model
+    @Environment(\.groupFilms) private var groupFilms
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var setup = false
     @State private var settings = false
@@ -41,6 +44,7 @@ struct JournalView: View {
                     case .archive:
                         FilmList(archived: true).navigationTitle("Archive").navigationBarTitleDisplayMode(.large)
                     case .film(let id): FilmDetailView(filmID: id)
+                    case .event(let id): GroupFilmEventView(eventID: id)
                     }
                 }
         }
@@ -48,6 +52,20 @@ struct JournalView: View {
             CameraCatalogView { film in setup = false; path.append(.film(film.id)) }
         }
         .sheet(isPresented: $settings) { SettingsView() }
+        // A Join Code's link opened in the app (v2 V2-FR-19), and the event to show after Load Film, joining or the alert.
+        .sheet(item: Binding(get: { groupFilms?.joinRequest }, set: { groupFilms?.joinRequest = $0 })) { request in
+            JoinConfirmationView(code: request.code)
+        }
+        .onChange(of: groupFilms?.openEvent) { _, eventID in
+            guard let eventID else { return }
+            setup = false
+            settings = false
+            groupFilms?.openEvent = nil
+            path = [.event(eventID)]
+        }
+        .alert(item: Binding(get: { groupFilms?.ending }, set: { groupFilms?.ending = $0 })) { ending in
+            Alert(title: Text(ending.title), message: Text(ending.message), dismissButton: .default(Text("OK")))
+        }
         .alert(item: $model.alert) { alert in
             Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
         }
@@ -74,6 +92,7 @@ struct JournalView: View {
 
 private struct FilmList: View {
     @Environment(JournalModel.self) private var model
+    @Environment(\.groupFilms) private var groupFilms
     let archived: Bool
     private var films: [Film] { model.films.filter { $0.isArchived == archived } }
     /// The Journal's order (A01): the Films still on their way as bubbles, then the developed Films beneath.
@@ -82,6 +101,11 @@ private struct FilmList: View {
     var body: some View {
         GeometryReader { screen in
         ScrollView {
+            // Group Films this iPhone takes part in (v2), only where the app has a server and there are some.
+            if !archived, let groupFilms, !groupFilms.visiblePlaces.isEmpty {
+                GroupFilmsList(groupFilms: groupFilms)
+                    .padding(.horizontal, Orbit.gutter).padding(.top, 16)
+            }
             if films.isEmpty {
                 // At least most of the screen tall, centred in it, and taller where its words need it.
                 EmptyJournal(text: archived ? "No archived Films" : "Your Journal begins here",
@@ -343,6 +367,44 @@ struct LooseColumns: Layout {
         for (subview, frame) in zip(subviews, frames(width: bounds.width, subviews: subviews)) {
             subview.place(at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY), anchor: .topLeading,
                           proposal: ProposedViewSize(width: frame.width, height: frame.height))
+        }
+    }
+}
+
+/// The Group Films this iPhone takes part in, at the top of the Journal (v2 PRD V2-FR-04, V2-FR-48).
+private struct GroupFilmsList: View {
+    let groupFilms: GroupFilms
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            OrbitSectionLabel("Group Films").padding(.leading, 4)
+            ForEach(groupFilms.visiblePlaces) { place in
+                NavigationLink(value: JournalRoute.event(place.eventID)) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(place.summary.title).orbitFont(.headline).foregroundStyle(.white)
+                            Text(line(place)).orbitFont(.footnote).foregroundStyle(Orbit.label)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(Orbit.label)
+                    }
+                    .orbitRow()
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("journal-group-film")
+            }
+        }
+    }
+
+    private func line(_ place: LocalPlace) -> String {
+        let role = place.isHost ? "Hosting" : place.place == .removed ? "Removed" : "Guest"
+        switch place.summary.phase {
+        case .scheduled: return "\(role) · opens \(GroupFilmsCopy.time(place.summary.opensAt))"
+        case .open: return "\(role) · shooting until \(GroupFilmsCopy.time(place.summary.endsAt))"
+        case .ended: return "\(role) · reveals \(GroupFilmsCopy.time(place.summary.revealsAt))"
+        case .revealed: return "\(role) · revealed"
+        case .gone, .deleted: return role
         }
     }
 }

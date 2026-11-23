@@ -237,7 +237,8 @@ public enum AlbumEntry: Decodable, Equatable, Sendable, Identifiable {
 }
 
 /// A picture in the revealed album, with one-minute read addresses for its viewing copy and the full picture.
-public struct AlbumPicture: Decodable, Equatable, Sendable {
+public struct AlbumPicture: Decodable, Equatable, Sendable, Identifiable {
+    public var id: String { pictureId }
     public let number: Int
     public let pictureId: String
     public let exposureNumber: Int

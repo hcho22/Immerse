@@ -48,7 +48,7 @@ public protocol ServerFunctions: Sendable {
 
 extension JSONValue {
     /// Decodes a reply into a model, through its JSON encoding.
-    func decoded<T: Decodable>(as type: T.Type = T.self) throws(ServerError) -> T {
+    public func decoded<T: Decodable>(as type: T.Type = T.self) throws(ServerError) -> T {
         do {
             return try JSONDecoder().decode(T.self, from: JSONEncoder().encode(self))
         } catch {

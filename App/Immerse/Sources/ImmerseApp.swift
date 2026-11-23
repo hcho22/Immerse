@@ -5,8 +5,18 @@ struct ImmerseApp: App {
     @UIApplicationDelegateAdaptor(ImmerseAppDelegate.self) private var appDelegate
     @State private var launcher = JournalLauncher()
     /// Signing in to host, only where the app has a server (v2 Stage 1); nil in every build without one.
-    @State private var hosting = HostingSetup.make()
+    @State private var hosting: HostingSession?
+    /// Group Films, only where the app has a server (v2 Stage 2); nil in every build without one.
+    @State private var groupFilms: GroupFilms?
     @Environment(\.scenePhase) private var scenePhase
+
+    init() {
+        let hosting = HostingSetup.make()
+        _hosting = State(initialValue: hosting)
+        let groupFilms = GroupFilmsSetup.make(hosting: hosting)
+        _groupFilms = State(initialValue: groupFilms)
+        GroupFilmAlertRouter.shared.groupFilms = groupFilms
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -21,9 +31,31 @@ struct ImmerseApp: App {
             }
             .orbitRoot()
             .environment(\.hosting, hosting)
+            .environment(\.groupFilms, groupFilms)
             // Reads the Host's Account in the background; nothing waits on it, and without a network it keeps what it knew.
             .task { await hosting?.refresh() }
-            .onChange(of: scenePhase) { _, phase in launcher.model?.sceneChanged(to: phase) }
+            // A Join Code's link opens the app at the event's Join Confirmation (V2-FR-19), as a universal link or a URL.
+            .onOpenURL { url in _ = groupFilms?.handle(url: url) }
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+                if let url = activity.webpageURL { _ = groupFilms?.handle(url: url) }
+            }
+            .onChange(of: scenePhase) { _, phase in
+                launcher.model?.sceneChanged(to: phase)
+                // The Group Films' own Journal stops and carries on as the personal one does.
+                groupFilms?.rolls.sceneChanged(to: phase)
+                switch phase {
+                case .active: groupFilms?.becameActive()
+                case .background: groupFilms?.enteredBackground()
+                default: break
+                }
+            }
+            #if DEBUG
+            .task {
+                if let link = DebugGroupFilms.launchLink(arguments: ProcessInfo.processInfo.arguments) {
+                    _ = groupFilms?.handle(url: link)
+                }
+            }
+            #endif
         }
     }
 }
@@ -123,3 +155,4 @@ private struct JournalUnavailableView: View {
         .orbitGround()
     }
 }
+

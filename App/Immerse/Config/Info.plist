@@ -4,6 +4,10 @@
 <dict>
 	<key>ImmerseClerkPublishableKey</key>
 	<string>$(IMMERSE_CLERK_PUBLISHABLE_KEY)</string>
+	<key>ImmerseJoinHost</key>
+	<string>$(IMMERSE_JOIN_HOST)</string>
+	<key>ImmerseSupportAddress</key>
+	<string>$(IMMERSE_SUPPORT_ADDRESS)</string>
 	<key>ImmerseConvexURL</key>
 	<string>$(IMMERSE_CONVEX_URL)</string>
 </dict>

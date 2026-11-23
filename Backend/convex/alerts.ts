@@ -23,7 +23,7 @@ export const sendFilmReady = internalAction({
     }
     const claim: AlertClaim = await ctx.runMutation(internal.pushTokens.claimFilmReadyAlert, { eventId });
     if (claim === null) return [];
-    const payload = filmReadyPayload(claim.title);
+    const payload = filmReadyPayload(claim.title, eventId);
     const results: DeliveryResult[] = [];
     for (const environment of ["sandbox", "production"] as const) {
       const tokens = claim.tokens.filter((row) => row.environment === environment).map((row) => row.token);

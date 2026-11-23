@@ -192,10 +192,16 @@ struct CaptureHeaderStatus: Equatable {
     let visible: String
     let spoken: String
 
-    static func make(for film: Film, finishingSave: Bool, recordedFor elapsed: TimeInterval) -> Self {
+    /// - Parameter event: the Group Film whose Roll this is (v2), whose End Time stops shooting and whose finished Roll
+    ///   the screen calls a Roll (V2-FR-25, V2-FR-31); nil for a personal Film.
+    static func make(for film: Film, finishingSave: Bool, recordedFor elapsed: TimeInterval,
+                     event: EventShooting? = nil, now: Date = .now) -> Self {
         let name = SpokenText.of(film.camera.shortName)
         if finishingSave {
             return Self(visible: "Finishing save", spoken: "\(name), Finishing save")
+        }
+        if let event, film.completionState == .open, now >= event.endsAt {
+            return Self(visible: "Shooting ended", spoken: "\(name), Shooting has ended")
         }
 
         switch film.completionState {
@@ -203,7 +209,8 @@ struct CaptureHeaderStatus: Equatable {
             return Self(visible: film.remainingAmountLabel(recordedFor: elapsed),
                         spoken: "\(name), \(film.remainingSpokenLabel(recordedFor: elapsed))")
         case .capacityFull:
-            let complete = film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete"
+            let complete = event != nil ? "Roll finished"
+                : film.camera.revealRule == .instantPerExposure ? "Pack complete" : "Film complete"
             return Self(visible: complete, spoken: "\(name), \(complete)")
         case .completedEarly:
             return Self(visible: "Ended early", spoken: "\(name), Ended early, \(film.remainingLabel)")

@@ -71,9 +71,11 @@ export function providerToken(config: ApnsConfig, nowSeconds = Math.floor(Date.n
   return token;
 }
 
-// The one alert v2 sends: the Film Title and "Your Film is ready", as text only (V2-FR-70).
-export function filmReadyPayload(filmTitle: string) {
-  return { aps: { alert: { title: filmTitle, body: "Your Film is ready" }, sound: "default" } };
+// The one alert v2 sends: the Film Title and "Your Film is ready", as text only (V2-FR-70). The event's id rides along,
+// unseen, so a tap opens that event once the app has checked the person may still see it.
+export function filmReadyPayload(filmTitle: string, eventId?: string) {
+  const payload = { aps: { alert: { title: filmTitle, body: "Your Film is ready" }, sound: "default" } };
+  return eventId === undefined ? payload : { ...payload, eventId };
 }
 
 export type DeliveryResult = { token: string; status: number; reason?: string; apnsId?: string };

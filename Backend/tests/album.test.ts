@@ -123,7 +123,10 @@ describe("Your Film is ready (V2-FR-70)", () => {
     const sentTo = apns.requests.map((request) => request.path.split("/").pop()).sort();
     expect(sentTo).toEqual([tokens.host, tokens.jo, tokens.sam].sort());
     for (const request of apns.requests) {
-      expect(JSON.parse(request.body)).toEqual({ aps: { alert: { title: "Ana & Leo", body: "Your Film is ready" }, sound: "default" } });
+      expect(JSON.parse(request.body)).toEqual({
+        aps: { alert: { title: "Ana & Leo", body: "Your Film is ready" }, sound: "default" },
+        eventId,
+      });
     }
     // Once per event: the step run again sends nothing.
     await t.action(internal.alerts.sendFilmReady, { eventId });

@@ -18,6 +18,10 @@ struct CaptureView: View {
     @ScaledMetric(relativeTo: .callout) private var noticeLength: CGFloat = 220
     /// The person's text size, from which the notices step down only where they do not fit their room (`notices`).
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    /// The Group Film this Roll belongs to (v2), whose End Time stops shooting (V2-FR-31); nil for a personal Film.
+    @Environment(\.eventShooting) private var eventShooting
+    /// Whether the event's End Time has passed while this screen is open.
+    @State private var shootingEnded = false
     let filmID: UUID
     @State private var error: String?
     @State private var cameraDenied = false
@@ -117,6 +121,15 @@ struct CaptureView: View {
             capture.endShootingSession()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in capture.updateOrientation() }
+        // An event Roll stops shooting at the event's End Time, as this phone last learned it (V2-FR-31).
+        .task(id: eventShooting?.endsAt) {
+            guard let endsAt = eventShooting?.endsAt else { return }
+            let wait = endsAt.timeIntervalSinceNow
+            if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+            guard !Task.isCancelled, Date.now >= endsAt else { return }
+            shootingEnded = true
+            capture.suspend()
+        }
         .onChange(of: model.film(filmID)?.captures) { _, captures in
             guard model.film(filmID)?.camera.revealRule == .instantPerExposure,
                   let revealed = captures?.filter({ $0.revealState == .revealed && $0.sequenceNumber > lastRevealedSequence ?? 0 }),
@@ -186,7 +199,8 @@ struct CaptureView: View {
                     let elapsed = capture.recordingStarted.map { context.date.timeIntervalSince($0) } ?? 0
                     let status = CaptureHeaderStatus.make(for: film,
                                                           finishingSave: model.hasPendingSave(filmID),
-                                                          recordedFor: elapsed)
+                                                          recordedFor: elapsed, event: eventShooting,
+                                                          now: context.date)
                     CaptureHeaderLabel(film: film, status: status, progress: film.progress(recordedFor: elapsed),
                                        recording: capture.recordingStarted != nil)
                 }
@@ -594,7 +608,7 @@ struct CaptureView: View {
     /// the same width, Switch Camera against the shutter on its left and the flash on its right.
     @ViewBuilder private func shutterBar(_ controller: CaptureController) -> some View {
         @Bindable var capture = controller
-        if let film = model.film(filmID), film.completionState == .open {
+        if let film = model.film(filmID), film.completionState == .open, !shootingEnded {
             HStack(spacing: 32) {
                 Button("Switch Camera", systemImage: "arrow.triangle.2.circlepath.camera") {
                     model.perform { try await capture.switchLens(film: film) } failure: { error = $0 }
