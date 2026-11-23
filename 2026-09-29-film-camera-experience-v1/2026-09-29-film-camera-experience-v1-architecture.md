@@ -55,6 +55,10 @@ Source: PRD 1.2 notes, sections 3 and 12; ADR 0012; FR-08; FR-20; pack section 1
 
 In the diagram, SQLite is default D4 and the device id is default D2 (section 7).
 
+**Note of 2026-11-22.** The [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md) proposes v2's shape for the deferred parts listed in the diagram: Convex for the data, server logic and timed reveal, Cloudflare for picture storage, the join page and the web album, Clerk for sign-in with Apple, Google or email, and Apple's push service sent from Convex (ADR 0033).
+The render worker is withdrawn: v2 develops every picture on the phone that took it (ADR 0030).
+v1's shape above is unchanged.
+
 ### 2.1 Trust boundaries
 
 | # | Boundary | Trusted | Not trusted | Enforced by | Source |

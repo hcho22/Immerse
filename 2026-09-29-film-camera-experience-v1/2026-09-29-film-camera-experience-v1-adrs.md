@@ -1,8 +1,8 @@
 # Film Camera Experience — V1 Architecture Decision Records
 
-**Collection date:** September 29, 2026 · **Version:** 2.1 (ADR 0024 and its reconciliation note added October 29, 2026; ADRs 0018 to 0023 and their reconciliation notes added October 26, 2026; ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
+**Collection date:** September 29, 2026 · **Version:** 2.1 (ADRs 0025 to 0033 and their reconciliation notes added November 22, 2026 with the v2 PRD; ADR 0024 and its reconciliation note added October 29, 2026; ADRs 0018 to 0023 and their reconciliation notes added October 26, 2026; ADR 0017 and its reconciliation note added October 16, 2026; ADR 0016 and its reconciliation note added October 10, 2026 and extended through October 13, 2026; version 2.0 added ADRs 0013 to 0015 and their reconciliation notes on October 6, 2026; version 1.2 added ADR 0012 on September 30, 2026)\
 **Status:** Existing recorded decisions, collected for local download.  
-**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) · [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
+**Companion:** [Detailed PRD, version 2.1](2026-10-06-film-camera-experience-v1-prd-version-2.0.md) · [PRD amendment of 2026-10-26](2026-10-26-film-camera-experience-v1-prd-phone-feedback.md) · [PRD amendment of 2026-10-29](2026-10-29-film-camera-experience-v1-prd-phone-feedback.md) · [v2 PRD, version 1.0](2026-11-22-film-camera-experience-v2-prd.md) · [Task tracker](2026-09-29-film-camera-experience-v1-task-tracker.md)
 
 ## Reading this collection
 
@@ -36,24 +36,29 @@ It supersedes parts of ADRs 0017, 0019 and 0020, whose text stays as written; th
 His other decisions of that day (Print Zoom, Adjust's crop box, the 16mm Development fix, the 6×6's square crop and the build plan) need no ADR of their own; the amendment's section 1 says why for each.
 Print Zoom narrows ADR 0021's swipe between prints to a print zoomed all the way out, which ADR 0021's reconciliation note records.
 
+ADRs 0025 to 0033 were added on 2026-11-22 with the [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md), version 1.0.
+They record the v2 plan the captain settled question by question on 2026-11-21 and 2026-11-22: Group Films are photo events in which each guest takes one Roll of the Host's Camera (0025); anyone can host, paying once per event in Rolls (0026); guests join by one lasting link or QR code in a no-install mini-app or the app (0027); Hosts sign in with Apple, Google or email through Clerk, while guests, personal Films and the Trial need no Account (0028); the reveal is automatic, with no Private Review or release by hand (0029); pictures are developed on the phone that took them and reach the server sealed (0030); the Host can delete an event, and a deleted Host's events still reveal (0031); the album is kept 12 months and the Host may open a view-only web album (0032); and Convex, Cloudflare, Clerk and Apple's push service are the v2 backend (0033).
+They supersede ADRs 0004, 0005 and 0011 in full and parts of ADRs 0001, 0003, 0006, 0007, 0009 and 0010, whose text stays as written; the index and the reconciliation notes say which.
+Nothing is built from them until the captain approves the v2 PRD.
+
 PRD version 1.1 (2026-09-30) defers all Group functionality to v2, so v1 ships personal Films only. The original records below are unchanged; the applicability notes in the index and in the reconciliation section say which ADRs now apply only to v2 Groups and which apply partly to v1 personal Films. PRD version 1.2 (2026-09-30) also removes Accounts from v1 (ADR 0012), which adds v2-only notes for ADR 0003 and ADR 0011 and updates the personal-Film notes for ADR 0009.
 
 The PRD supplies the later detailed rules and explicitly labels open engineering choices. The short ADRs do not independently specify all edge cases. Reconciliation notes here are collection commentary, not edits to the original records.
 
 ## Index
 
-- [ADR 0001 — Camera authenticity determines reveal behavior](adr/0001-camera-authenticity-over-universal-reveal.md) - applies to v1 personal Films; its Group reveal reconciliation applies only to v2 Groups
-- [ADR 0002 — Join Film replaces same-device handoff](adr/0002-join-film-replaces-device-handoff.md) - v2 Groups only
-- [ADR 0003 — Hosts authenticate; Participants may join account-free](adr/0003-host-accounts-and-accountless-participants.md) - v2 Groups only
-- [ADR 0004 — Photo Group Film capacity is pooled Camera loads](adr/0004-photo-group-capacity-is-pooled-camera-loads.md) - v2 Groups only
-- [ADR 0005 — Group Film hosting requires a subscription](adr/0005-group-film-hosting-requires-subscription.md) - v2 Groups only
-- [ADR 0006 — Subscription expiration never locks existing Films](adr/0006-subscription-expiration-never-locks-existing-films.md) - applies partly to v1 (personal Films); Group hosting, Subscriber Load, Private Review and Release parts are v2
-- [ADR 0007 — Movie withdrawal rebuilds without repeating Development](adr/0007-movie-withdrawal-rebuilds-without-redevelopment.md) - Group withdrawal is v2; the rebuild-without-redevelopment principle applies partly to v1 personal Movie Discard
-- [ADR 0008 — Unreleased Group captures have a bulk privacy exit](adr/0008-unreleased-group-captures-have-a-bulk-privacy-exit.md) - v2 Groups only
-- [ADR 0009 — Whole-Film deletion is personal-only](adr/0009-whole-film-deletion-is-personal-only.md) - applies partly to v1 (personal Delete Film, qualified by DEC-17's older-backup limitation); the no-whole-Group-deletion part is v2
-- [ADR 0010 — Group Film Host is fixed in v1](adr/0010-group-film-host-is-fixed-in-v1.md) - v2 Groups only (the title's "v1" is the version 1.0 baseline)
-- [ADR 0011 — Host Account deletion preserves shared privacy](adr/0011-host-account-deletion-preserves-shared-privacy.md) - v2 only; v1 has no Account deletion
-- [ADR 0012 — V1 Trial is one Film per iPhone, held on the device, with no app Accounts](adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md) - applies to v1; added in version 1.2
+- [ADR 0001 — Camera authenticity determines reveal behavior](adr/0001-camera-authenticity-over-universal-reveal.md) - applies to v1 personal Films; its Group reveal reconciliation applies only to v2 Groups; its Group reveal reconciliation is superseded on 2026-11-22 by ADR 0029.
+- [ADR 0002 — Join Film replaces same-device handoff](adr/0002-join-film-replaces-device-handoff.md) - v2 Groups only; its rule that joining requires the installed app (in the reconciliation note, not the ADR text) is superseded on 2026-11-22 by ADR 0027; its own decision stands.
+- [ADR 0003 — Hosts authenticate; Participants may join account-free](adr/0003-host-accounts-and-accountless-participants.md) - v2 Groups only; superseded in part on 2026-11-22 by ADR 0028 (sign-in methods and the Release reason).
+- [ADR 0004 — Photo Group Film capacity is pooled Camera loads](adr/0004-photo-group-capacity-is-pooled-camera-loads.md) - v2 Groups only; **superseded on 2026-11-22 by ADR 0025.**
+- [ADR 0005 — Group Film hosting requires a subscription](adr/0005-group-film-hosting-requires-subscription.md) - v2 Groups only; **superseded on 2026-11-22 by ADR 0026.**
+- [ADR 0006 — Subscription expiration never locks existing Films](adr/0006-subscription-expiration-never-locks-existing-films.md) - applies partly to v1 (personal Films); Group hosting, Subscriber Load, Private Review and Release parts are v2; its Group hosting, Subscriber Load, Private Review and Release parts are superseded on 2026-11-22 by ADRs 0026 and 0029.
+- [ADR 0007 — Movie withdrawal rebuilds without repeating Development](adr/0007-movie-withdrawal-rebuilds-without-redevelopment.md) - Group withdrawal is v2; the rebuild-without-redevelopment principle applies partly to v1 personal Movie Discard; its Group withdrawal part no longer applies on 2026-11-22: v2 has no Group Movies (ADR 0025).
+- [ADR 0008 — Unreleased Group captures have a bulk privacy exit](adr/0008-unreleased-group-captures-have-a-bulk-privacy-exit.md) - v2 Groups only; carried into v2 by ADR 0029, read as "before the reveal".
+- [ADR 0009 — Whole-Film deletion is personal-only](adr/0009-whole-film-deletion-is-personal-only.md) - applies partly to v1 (personal Delete Film, qualified by DEC-17's older-backup limitation); the no-whole-Group-deletion part is v2; its no-whole-Group-deletion part is superseded on 2026-11-22 by ADR 0031.
+- [ADR 0010 — Group Film Host is fixed in v1](adr/0010-group-film-host-is-fixed-in-v1.md) - v2 Groups only (the title's "v1" is the version 1.0 baseline); superseded in part on 2026-11-22 by ADR 0029 (what happens when the Host loses access); its single fixed Host stands (ADR 0028).
+- [ADR 0011 — Host Account deletion preserves shared privacy](adr/0011-host-account-deletion-preserves-shared-privacy.md) - v2 only; v1 has no Account deletion; **superseded on 2026-11-22 by ADR 0031**, except the removal of the Host's own contributions.
+- [ADR 0012 — V1 Trial is one Film per iPhone, held on the device, with no app Accounts](adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md) - applies to v1; added in version 1.2; continues in v2 (ADR 0028).
 - [ADR 0013 - Developed Treatments show the medium as freshly processed, not aged](adr/0013-developed-treatments-show-the-medium-fresh-not-aged.md) - applies to v1; added in version 2.0
 - [ADR 0014 - Two Cameras offer a color or black-and-white Film Stock at Load Film](adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md) - applies to v1; added in version 2.0
 - [ADR 0015 - Each Camera is judged against one named Format Reference](adr/0015-each-camera-is-judged-against-one-named-format-reference.md) - applies to v1; added in version 2.0
@@ -64,8 +69,17 @@ The PRD supplies the later detailed rules and explicitly labels open engineering
 - [ADR 0020 - The movie Cameras zoom in the iPhone's own steps, and every Camera starts on autofocus](adr/0020-the-movie-cameras-zoom-in-the-iphones-own-steps-and-every-camera-starts-on-autofocus.md) - applies to v1; added on 2026-10-26
 - [ADR 0021 - The Darkroom never turns, its print keeps one size, and a photo view comes before it](adr/0021-the-darkroom-never-turns-and-its-print-keeps-one-size.md) - applies to v1; added on 2026-10-26
 - [ADR 0022 - Saturation is a stated exception to the Darkroom's physical-technique test](adr/0022-saturation-is-a-stated-exception-to-the-darkrooms-physical-technique-test.md) - applies to v1; added on 2026-10-26
-- [ADR 0023 - Dodge and Burn are deferred to v2](adr/0023-dodge-and-burn-are-deferred-to-v2.md) - applies to v1; added on 2026-10-26
+- [ADR 0023 - Dodge and Burn are deferred to v2](adr/0023-dodge-and-burn-are-deferred-to-v2.md) - applies to v1; added on 2026-10-26; dodge and Burn stays parked beyond the v2 PRD of 2026-11-22.
 - [ADR 0024 - The shooting screen's controls sit in one strip under the Viewfinder, and its top bar stays put when the iPhone is held sideways](adr/0024-the-shooting-screens-controls-sit-in-one-strip-under-the-viewfinder-and-its-top-bar-stays-put.md) - applies to v1; added on 2026-10-29
+- [ADR 0025 - Group Films are photo events in which each guest takes one Roll of the Host's Camera](adr/0025-group-films-are-photo-events-in-which-each-guest-takes-one-roll.md) - applies to v2; added on 2026-11-22
+- [ADR 0026 - Anyone can host, paying once per event in Rolls](adr/0026-anyone-can-host-paying-once-per-event-in-rolls.md) - applies to v2; added on 2026-11-22
+- [ADR 0027 - Guests join by one lasting link or QR code, in a no-install mini-app or the app](adr/0027-guests-join-by-one-lasting-link-in-a-no-install-mini-app-or-the-app.md) - applies to v2; added on 2026-11-22
+- [ADR 0028 - Hosts sign in with Apple, Google or email through Clerk; guests, personal Films and the Trial need no Account](adr/0028-hosts-sign-in-with-apple-google-or-email-through-clerk.md) - applies to v2; added on 2026-11-22
+- [ADR 0029 - The reveal is automatic at the End Time, with no Private Review or release by hand](adr/0029-the-reveal-is-automatic-with-no-private-review-or-release-by-hand.md) - applies to v2; added on 2026-11-22
+- [ADR 0030 - Pictures are developed on the phone that took them and reach the server sealed](adr/0030-pictures-develop-on-the-phone-that-took-them-and-reach-the-server-sealed.md) - applies to v2; added on 2026-11-22
+- [ADR 0031 - The Host can delete a whole event, and a deleted Host's events still reveal](adr/0031-the-host-can-delete-an-event-and-a-deleted-hosts-events-still-reveal.md) - applies to v2; added on 2026-11-22
+- [ADR 0032 - The album is kept 12 months after the reveal, members save with no account, and the Host may open a view-only web album](adr/0032-the-album-is-kept-12-months-and-the-host-may-open-a-view-only-web-album.md) - applies to v2; added on 2026-11-22
+- [ADR 0033 - Convex, Cloudflare, Clerk and Apple's push service are the v2 backend](adr/0033-convex-cloudflare-clerk-and-apples-push-service-are-the-v2-backend.md) - applies to v2; added on 2026-11-22
 
 ## Reconciliation with later requirements
 
@@ -97,20 +111,26 @@ Print Zoom narrows ADR 0021's swipe in the photo view: a swipe moves to another 
 Print Zoom and Adjust's crop box take gestures on the Darkroom's print, which ADR 0023's commentary said nothing did; ADR 0023's decision stands.
 No other ADR is superseded, narrowed or contradicted.
 
+**2026-11-22 status.**
+The captain settled the v2 plan, which the [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md), version 1.0, states and ADRs 0025 to 0033 record.
+ADR 0025 supersedes ADR 0004 and the Group part of ADR 0007; ADR 0026 supersedes ADR 0005 and ADR 0006's Group hosting and Subscriber Load parts; ADR 0027 supersedes the rule that joining requires the installed app; ADR 0028 supersedes part of ADR 0003 and keeps ADR 0012's Trial in v2; ADR 0029 supersedes the parked closure, Private Review and Release rules, the Group reveal noted for ADR 0001, part of ADR 0010 and ADR 0006's Private Review and Release parts, and carries ADR 0008 into v2; ADR 0031 supersedes ADR 0009's Group part and ADR 0011; ADR 0030, ADR 0032 and ADR 0033 add decisions no earlier ADR made.
+Every Group statement in the notes below written before this date describes the parked design that the v2 PRD overtakes.
+No v1 ADR's decision for personal Films changes.
+
 | ADR | Applicability after PRD version 1.2 |
 | --- | --- |
-| 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. |
-| 0002 | v2 Groups only. Join Film does not exist in v1. |
-| 0003 | v2 Groups only. v1 has no Host, Participant, Guest Identity or Account (ADR 0012). |
-| 0004 | v2 Groups only. |
-| 0005 | v2 Groups only. |
-| 0006 | Applies partly to v1: an expired subscription blocks new personal Films and never locks existing personal Films (capture completion, Development, Darkroom, export). The Group hosting, Subscriber Load, Private Review and Release parts are v2 only. |
-| 0007 | Group Withdraw is v2 only. The rule that each Developed Clip is preserved so a Movie can be rebuilt without repeating Development, retiring stale app-controlled versions, also applies in v1 to a personal Movie Discard. |
-| 0008 | v2 Groups only. |
-| 0009 | Applies partly to v1: Delete Film removes a personal Film from current app-controlled storage after a warning and confirmation. Under DEC-17, that warning discloses that restoring an iOS backup made before deletion can bring the Film back. The statement that no Host or Participant may delete a Group Film is v2 only; v1 has no Group Films. |
-| 0010 | v2 Groups only. |
-| 0011 | v2 only. Host deletion behavior is Group design, and v1 has no Account deletion (ADR 0012), so the personal-Film survival note also applies only once Accounts return in v2. |
-| 0012 | Applies to v1. The Trial is one Film per iPhone held on the device, and v1 has no app Accounts, sign-in, server or Account deletion flow. It reverses the domain model's Account-scoped Trial; Accounts return in v2 with Groups. Added in version 1.2. |
+| 0001 | Applies to v1 personal Films: each Camera owns its Reveal Rule, roll and Movie Cameras withhold captures until Development, Instant develops each exposure. Its Group reveal reconciliation (Host closure, Private Review, Release) applies only to v2 Groups. Its Group reveal is superseded on 2026-11-22 by ADR 0029: the reveal is automatic at the End Time plus the chosen delay, and an Instant print still shows to its shooter at once by this ADR's Reveal Rule. |
+| 0002 | v2 Groups only. Join Film does not exist in v1. On 2026-11-22 ADR 0027 supersedes the installed-app requirement noted for it; guests still join on their own phones. |
+| 0003 | v2 Groups only. v1 has no Host, Participant, Guest Identity or Account (ADR 0012). Superseded in part on 2026-11-22 by ADR 0028: Hosts sign in with Apple, Google or email through Clerk, and there is no Release; account-free guests stand. |
+| 0004 | v2 Groups only. Superseded on 2026-11-22 by ADR 0025: each guest takes one Roll, with no pool or loads. |
+| 0005 | v2 Groups only. Superseded on 2026-11-22 by ADR 0026: anyone can host, paying in Rolls. |
+| 0006 | Applies partly to v1: an expired subscription blocks new personal Films and never locks existing personal Films (capture completion, Development, Darkroom, export). The Group hosting, Subscriber Load, Private Review and Release parts are v2 only. On 2026-11-22 its Group hosting and Subscriber Load parts are superseded by ADR 0026 and its Private Review and Release parts by ADR 0029; never locking existing Films stands. |
+| 0007 | Group Withdraw is v2 only. The rule that each Developed Clip is preserved so a Movie can be rebuilt without repeating Development, retiring stale app-controlled versions, also applies in v1 to a personal Movie Discard. On 2026-11-22 its Group part stops applying, because v2 has no Group Movies (ADR 0025). |
+| 0008 | v2 Groups only. Carried into v2 on 2026-11-22 by ADR 0029 as Withdraw Before Reveal. |
+| 0009 | Applies partly to v1: Delete Film removes a personal Film from current app-controlled storage after a warning and confirmation. Under DEC-17, that warning discloses that restoring an iOS backup made before deletion can bring the Film back. The statement that no Host or Participant may delete a Group Film is v2 only; v1 has no Group Films. On 2026-11-22 its Group part is superseded by ADR 0031: the Host may delete a whole event after a warning. |
+| 0010 | v2 Groups only. Superseded in part on 2026-11-22 by ADR 0029: the reveal is automatic, so a Host who loses access leaves nothing sealed; one fixed Host stands. |
+| 0011 | v2 only. Host deletion behavior is Group design, and v1 has no Account deletion (ADR 0012), so the personal-Film survival note also applies only once Accounts return in v2. Superseded on 2026-11-22 by ADR 0031, except the removal of the Host's own contributions: a deleted Host's events run to their reveal. |
+| 0012 | Applies to v1. The Trial is one Film per iPhone held on the device, and v1 has no app Accounts, sign-in, server or Account deletion flow. It reverses the domain model's Account-scoped Trial; Accounts return in v2 with Groups. Added in version 1.2. ADR 0028 keeps this per-iPhone Trial in v2; the Account-scoped Trial kept in PRD 2.1 section 8.13 does not return. |
 | 0013 | Applies to v1 personal Films and to every Camera except where ADR 0016 records the captain's exceptions (the 1970s Instant, the 1960s Super 8 Home Movie and the color Film Stocks of the 16mm Cinema and the 6×6 Medium Format). Developed Treatments show each format as freshly processed, never aged. Added in version 2.0. |
 | 0014 | Applies to v1 personal Films: the 6×6 Medium Format and the 16mm Cinema offer a Film Stock at Load Film. It says nothing about who chooses a Group Film's Film Stock, which stays a v2 question. Added in version 2.0. |
 | 0015 | Applies to v1 personal Films and to every Camera. The Format Reference names are internal and never reach the product. Added in version 2.0. |
@@ -121,8 +141,17 @@ No other ADR is superseded, narrowed or contradicted.
 | 0020 | Applies to v1 personal Films: the Super 8 and the 16mm offer the iPhone's own Zoom Steps, and every Camera focuses on Auto unless its Film is set to Fixed (Disposable, Super 8) or Manual (6×6). Supersedes ADR 0017's 6×6-only zoom and the Super 8's fixed focus. Added on 2026-10-26. The switch's place is superseded on 2026-10-29 by ADR 0024. |
 | 0021 | Applies to v1 personal Films: a full-screen photo view swipes between a Film's developed prints, the Darkroom keeps its portrait layout in every hold and its print one size. Supersedes ADR 0017's turning Darkroom and the captain's decisions of 2026-10-14. Added on 2026-10-26. |
 | 0022 | Applies to v1 personal Films: a Saturation slider on color prints, -50 to +50, as the second stated exception to the physical-technique test. Added on 2026-10-26. |
-| 0023 | Applies to v1 by removing Dodge/Burn from it, and to v2 as the place it now waits; saved strokes keep printing as saved. Added on 2026-10-26. |
+| 0023 | Applies to v1 by removing Dodge/Burn from it, and to v2 as the place it now waits; saved strokes keep printing as saved. Added on 2026-10-26. On 2026-11-22 the v2 PRD leaves Dodge/Burn out: it stays parked beyond v2. |
 | 0024 | Applies to v1 personal Films and every Camera's shooting screen: the Zoom Steps, the focus switch and the 6×6's Focus and Exposure sit in one control strip under the Viewfinder area, over its bottom edge only on the iPhone SE, and held sideways the top bar stays above the area with Done and the count turned in place and the Camera's name hidden. Supersedes parts of ADRs 0017, 0019 and 0020. Added on 2026-10-29. |
+| 0025 | Applies to v2: Group Films are photo events with the Disposable, the 6×6 or the Instant, each guest taking one Roll, at most 200 Rolls and 7 days, capture only. Supersedes ADR 0004 and ADR 0007's Group part. Added on 2026-11-22. |
+| 0026 | Applies to v2: anyone signed in can host, paying once per event in Rolls bought through in-app purchase, a Roll used only when a guest takes it, free Rolls for everyone and more for subscribers. Supersedes ADR 0005 and parts of ADR 0006. Added on 2026-11-22. |
+| 0027 | Applies to v2: guests join by one lasting link or QR code in a no-install mini-app or the full app; the Host pauses or replaces the code; iOS 26 stays. Supersedes the installed-app rule. Added on 2026-11-22. |
+| 0028 | Applies to v2: only the Host signs in, with Apple, Google or email through Clerk, at 13 or over; guests may sign in later; personal Films and the per-iPhone Trial need no Account. Supersedes part of ADR 0003. Added on 2026-11-22. |
+| 0029 | Applies to v2: the reveal is automatic at the End Time or up to 24 hours after, with no Private Review or release by hand; everyone who joined sees every picture; guests withdraw their own; one alert. Supersedes parts of ADRs 0001, 0006 and 0010 and the parked closure and Release rules. Added on 2026-11-22. |
+| 0030 | Applies to v2: pictures develop on the phone that took them, only finished pictures upload, sealed until the reveal, originals never leave the phone, no render worker. Added on 2026-11-22. |
+| 0031 | Applies to v2: the Host may delete a whole event after a warning; deleting an Account removes the person's pictures everywhere; a deleted Host's events still reveal. Supersedes ADR 0009's Group part and ADR 0011. Added on 2026-11-22. |
+| 0032 | Applies to v2: albums kept 12 months after the reveal with a warning, saving with no account, a view-only web album the Host switches on; no Private Prints or originals window. Added on 2026-11-22. |
+| 0033 | Applies to v2: Convex for data, logic and the timed reveal; Cloudflare for pictures, the join page and the web album; Clerk for sign-in; Apple's push service from Convex. Added on 2026-11-22. |
 
 The per-ADR notes below reconcile later PRD scope and requirements; the original ADR text remains unchanged.
 
@@ -139,6 +168,9 @@ The per-ADR notes below reconcile later PRD scope and requirements; the original
 - **0017 (v1; reverses part of PRD 2.0 FR-04):** PRD version 2.0 gave the 6×6 Medium Format "a waist-level viewfinder that shows the scene reversed left to right" (section 6.1, FR-03 and FR-04). The captain withdrew it on 2026-10-16: the 6×6's rear viewfinder is the normal one, the front viewfinder stays mirrored for every Camera, and developed pictures were never reversed. The PRD's three sentences were amended in the same file, FR-03's by its removal, with the original wording kept in the note of that date ("Decisions of 2026-10-16"). The same day he chose that the shooting screen holds the portrait layout whichever way the iPhone is held, with its words and icons turning to read upright, and that the 6×6 zooms in the steps of the iPhone's own lenses; PRD FR-04 now says both. No ADR 0001 to 0016 is superseded, and Movie orientation (FR-05) is unchanged: a clip still keeps the orientation it started in, and the Movie Orientation fixed at Load Film is untouched.
 - **0018 to 0023 (v1, 2026-10-26):** They amend PRD version 2.1 through the PRD amendment of 2026-10-26, whose section 2 names every superseded sentence; PRD 2.1 carries short notes at each, and its text is otherwise unchanged. ADR 0017's text stays as written: its 6×6-only zoom and the Super 8's fixed focus are superseded by ADR 0020, its viewfinder sizing and taller header by ADR 0019, and the Darkroom's turning by ADR 0021; its rule that the shooting screen never turns stands, and so does its "Instant - 1" rule for what opens from the camera, which the captain kept when he answered DEC-20 ("1A"). ADR 0015's Format References are unchanged, and the Super 8's sound and Zoom Steps are recorded departures from its reference camera, as the 16mm's red glow is from its film.
 - **0024 (v1, 2026-10-29):** It amends PRD version 2.1 and the PRD amendment of 2026-10-26 through the PRD amendment of 2026-10-29, whose section 2 names every superseded sentence; both earlier files carry short notes at each. ADR 0017's rule that the shooting screen never turns stands, and so does ADR 0019's Viewfinder area, which keeps its size and place.
+- **0025 to 0033 (v2, 2026-11-22):** They record the plan that the v2 PRD, version 1.0, states; PRD 2.1 sections 8 and 8.13 and the tracker's Deferred to v2 section keep the parked design unchanged, with short notes pointing to the v2 PRD. Every earlier note here about Groups, Hosts, Participants, Join Codes, loads, closure, Private Review, Release, Private Prints, the originals window, Account deletion or Deletion Pending describes that parked design.
+  ADRs 0002, 0008 and 0012 stand in v2 as decided; ADR 0010's single fixed Host stands.
+  The domain model's v2 terms (Group Film, Host, guest, Roll, reveal, Join Code and others) were rewritten to match, and the retired parked terms are kept in its section on the superseded Group design.
 - **0010–0011 (v2 only):** Accepted Host Account deletion stops joins/capture and invalidates codes, but does not delete others' media or reveal sealed content. Account/Guest deletion uses immediate access blocking plus Deletion Pending until permanent removal is confirmed. Eligible device-local personal Films survive separately, with captured versus unused Trial behavior described in the PRD (section 8.13); that survival rule is v2 only because v1 has no Account deletion.
 
 ## Original decision records
@@ -816,3 +848,394 @@ Interpret the ADR with the PRD amendment of 2026-10-29, FR-39 and FR-40.
 It supersedes ADR 0019's controls floating over the bottom of the Viewfinder area and its one-line header in a sideways hold, the switch's place that ADR 0020 left for the captain and that he approved on 2026-10-28, and ADR 0017's turned header line and the 6×6's rows it always has.
 ADR 0017's rule that the shooting screen never turns, ADR 0019's Viewfinder area in the same place on every Camera and iPhone, and the upright one-line header stand.
 The screenshots of every Camera, upright and sideways, on the smallest and the largest supported iPhone, go to the captain before the change that builds it ships.
+
+---
+
+### ADR 0025
+
+Standalone source: [0025-group-films-are-photo-events-in-which-each-guest-takes-one-roll.md](adr/0025-group-films-are-photo-events-in-which-each-guest-takes-one-roll.md)
+
+# Group Films are photo events in which each guest takes one Roll of the Host's Camera
+
+On 2026-11-21 the captain asked to start planning v2 with Group Films modeled on Once, an event camera app: "research Once - disposable camera event. i want to implement similar feature."
+The parked v2 design (PRD 2.1 section 8) had Photo and Movie Group Films for up to ten people, one shared Group Exposure Pool filled by the Host's load and up to nine Subscriber Loads, and no Instant.
+He settled the shape of a Group Film question by question on 2026-11-21 and 2026-11-22.
+
+**Group photo only.**
+He answered "group photo only. no group films", and confirmed that shared video is out of v2 entirely, neither built nor specified, and that "Group Film" names the shared photo roll.
+There are no Group Movies, Recording Turns or Group Duration Pools in v2.
+
+**The Host picks one Camera from the Disposable, the 6×6 and the Instant.**
+He first answered "all film type", then confirmed the photo Cameras: the Host picks one Camera for the event from the Disposable, the 6×6 and the Instant, and on the 6×6 the Host picks the Film Stock for everyone.
+An Instant picture develops for its shooter at once, as an Instant camera does, and the others see it at the reveal.
+
+**Each guest takes one Roll.**
+He answered "each guest a set number per film type": each guest's set is the Camera's normal roll, 27 exposures on the Disposable, 12 on the 6×6 and 10 on the Instant, called a Roll.
+A guest's exposures are theirs alone; there is no shared pool and nobody adds exposures to someone else.
+An event has at most 200 Rolls and lasts at most 7 days.
+
+**Capture only.**
+Every picture is taken in Immerse with the event's Camera; nothing is imported from the camera roll, although Once added such imports after its users asked.
+
+**What this supersedes.**
+ADR 0004 (one Host Load, Subscriber Loads, ten lifetime loads and one first-come Group Exposure Pool) is superseded in full.
+ADR 0007's Group part, the withdrawal of a Recorded Clip from a Movie Group Film, no longer applies, because v2 has no Group Movies; its rule for personal Movie Discard stands.
+The parked rules that Instant Cameras cannot be selected for a Group Film, that a Group Film has a Member Limit of ten people, and every Movie Group rule (PRD FR-12) are superseded.
+
+The alternatives considered were the parked pooled loads, a Disposable-only first release, and a shared count of exposures for the whole event.
+The accepted costs are that one enthusiastic guest cannot shoot more than their Roll, that an Instant guest sees their own prints before anyone else sees anything, and that events have no video.
+
+Decided by the captain on 2026-11-21 and 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0025
+
+Interpret the ADR with the v2 PRD, V2-FR-10, V2-FR-25 to V2-FR-28 and V2-FR-30.
+The parked Movie Group requirements (PRD FR-12) and the tasks GMV-01 to GMV-07 and POL-01 to POL-10 stay in the PRD and the tracker as history.
+Whether the Host can take a Roll in their own event is the v2 PRD's open question OQ-1.
+
+---
+
+### ADR 0026
+
+Standalone source: [0026-anyone-can-host-paying-once-per-event-in-rolls.md](adr/0026-anyone-can-host-paying-once-per-event-in-rolls.md)
+
+# Anyone can host, paying once per event in Rolls
+
+Under ADR 0005 only a subscriber could create a Group Film, and the Host's subscription supplied the first load with no free event capacity.
+On 2026-11-22 the captain answered: "anyone can host, paying once per event by exposure count. free size for users with subscription."
+
+**Anyone can host, and pays by exposure count, in Rolls.**
+Hosting needs an Account (ADR 0028) but no subscription.
+An event is paid for once, by exposure count, sold in Rolls: one Roll per guest.
+The Host can add Rolls while the event is open.
+
+**A Roll is used only when a guest takes it.**
+Rolls set aside for an event come from the Host's balance, but a Roll is used only when a guest takes it at joining, and Rolls unclaimed at the event's end return to the Host's balance for a future event.
+This answers the complaint of one of Once's reviewers, that a host pays upfront for photos guests never take.
+
+**A free event for everyone, and more for subscribers.**
+Everyone gets a very small free event, about 3 Rolls, and subscribers get a clearly larger free size.
+
+**Rolls are bought through Apple's in-app purchase into the Host's signed-in balance.**
+A subscriber's free Rolls are credited to that balance once the server has confirmed the subscription with Apple, and one subscription feeds one Account.
+The v1 subscription itself stays account-free for personal Films.
+
+**Numbers are left open.**
+The structure is fixed; prices, pack sizes and free amounts are left to the pricing decision still open for the v1 subscription (DEC-02).
+
+**What this supersedes.**
+ADR 0005 is superseded in full.
+ADR 0006's statement that an expired subscription blocks Group Film hosting and new Subscriber Load contributions no longer applies, because hosting needs no subscription and there are no Subscriber Loads; its rule that expiry never locks existing Films stands.
+
+The alternatives considered were the parked subscription-only hosting, pricing by guest count as Once does, and a subscription tier for hosting.
+The accepted costs are that a Host must sign in to hold a balance, that the server must verify purchases and subscriptions with Apple, and that a guest who takes a Roll and shoots little still uses it, as a disposable handed out is used.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0026
+
+Interpret the ADR with the v2 PRD, V2-FR-60 to V2-FR-65.
+How often free Rolls are given and what happens to a subscriber's credited Rolls when the subscription lapses are its open questions OQ-2 and OQ-10; the numbers are its open check OC-5.
+
+---
+
+### ADR 0027
+
+Standalone source: [0027-guests-join-by-one-lasting-link-in-a-no-install-mini-app-or-the-app.md](adr/0027-guests-join-by-one-lasting-link-in-a-no-install-mini-app-or-the-app.md)
+
+# Guests join by one lasting link or QR code, in a no-install mini-app or the app
+
+The parked design let Participants join only in the installed iOS app ("account-free, not install-free"), by a short Join Code or its QR code, with browser, Android and App Clip capture out of scope, and let the Host revoke and replace a code at will.
+Once, like its competitors, lets guests join by scanning a QR code or tapping a link, with no install.
+On 2026-11-22 the captain chose the following.
+
+**A no-install mini-app, or the full app.**
+Guests join by QR code or link into a no-install mini-app, Apple's App Clip, or into the full app when it is installed.
+There is no shooting in a browser, and no Android app.
+Whether the mini-app fits Apple's size cap with the Cameras inside is checked before it is promised; if it does not, guests install the full app.
+
+**One code and link for the event's whole life.**
+One Join Code, with its link and QR code, lasts the event's whole life, so it can be printed.
+The Host can pause joining, and can replace the code only behind a warning that printed copies stop working.
+
+**The iOS 26 floor stays.**
+Guests who cannot join, on an older iPhone, on Android or on a computer, see a clear message, and the Cameras are not reworked for older systems.
+
+**What this supersedes.**
+The rule that joining requires the installed iOS app, and that App Clip capture is out of scope, is superseded; it was stated in the domain model, PRD FR-09 and the reconciliation note for ADRs 0002 and 0003, not in either ADR's text.
+The rules that a Join Code expires when the Host closes the Group Film and that the Host may revoke and replace it freely are superseded by one lasting code that the Host pauses, or replaces behind a warning.
+ADR 0002's decision, that guests join on their own phones instead of a handed-around device, stands.
+
+The alternatives considered were the parked installed-app-only joining, and shooting in a browser as Once's Android guests do.
+The accepted costs are that the mini-app must fit Apple's limit or the no-install join is lost, that Android guests can only view, and that a replaced code makes printed copies useless.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0027
+
+Interpret the ADR with the v2 PRD, V2-FR-15 to V2-FR-24.
+Whether the mini-app fits Apple's size cap is its open check OC-1; when it was written, Apple's size table listed 15 MB uncompressed for an App Clip that QR codes can open (25 MB on iOS 27.3 and later), and 100 MB only for one opened from links alone or through the App Store Connect demo link.
+
+---
+
+### ADR 0028
+
+Standalone source: [0028-hosts-sign-in-with-apple-google-or-email-through-clerk.md](adr/0028-hosts-sign-in-with-apple-google-or-email-through-clerk.md)
+
+# Hosts sign in with Apple, Google or email through Clerk; guests, personal Films and the Trial need no Account
+
+ADR 0003 had Hosts authenticate with Apple or Google and let Participants join with a device-bound Guest Identity.
+ADR 0012 removed Accounts from v1 and kept the Trial on the iPhone, saying Accounts return in v2 when Groups need them.
+On 2026-11-21 the captain asked for "accounts - sign-in via apple, google, email via clerk", and on 2026-11-22 he settled who signs in.
+
+**Only the Host signs in.**
+Only the Host signs in, with Apple, Google or email, through Clerk.
+Guests give a name and may sign in later, which keeps their place across phones.
+A guest who loses or replaces their phone without having signed in loses their place, with no recovery.
+Each picture carries the guest's chosen name, shown only in its details and never printed on the image.
+
+**Exactly one Host.**
+Each event has exactly one Host, with no co-host and no handover, as ADR 0010 already said.
+
+**Age 13 or over.**
+Hosting and signing in require age 13 or over.
+
+**Personal Films and the Trial stay as in v1.**
+Personal Films stay sign-in free.
+The Trial stays one personal Film per iPhone, held on the device (ADR 0012), and joining an event never uses it.
+
+**What this supersedes.**
+ADR 0003's "Hosts must authenticate with Apple or Google" now reads: Hosts sign in with Apple, Google or email through Clerk; its reason, that Hosts own "Release", no longer holds (ADR 0029); its account-free guests stand.
+The Account-scoped Trial kept for v2 in PRD 2.1 section 8.13 and the tracker (Trial Activation as a server reservation, Cancel Unused Trial and their tasks) does not return: ADR 0012's per-iPhone Trial continues in v2.
+The parked Subscriber Load's need for an Account is gone with the loads (ADR 0025).
+
+The alternatives considered were signing in every guest, and Apple and Google only.
+The accepted costs are that an unsigned guest's place is bound to one phone, and that Immerse depends on Clerk for sign-in.
+
+Decided by the captain on 2026-11-21 and 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0028
+
+Interpret the ADR with the v2 PRD, V2-FR-01 to V2-FR-08.
+The tasks IDN-01 to IDN-05 and TRI-05 to TRI-10 stay in the tracker's Deferred to v2 section as history; the Account-scoped Trial does not return.
+
+---
+
+### ADR 0029
+
+Standalone source: [0029-the-reveal-is-automatic-with-no-private-review-or-release-by-hand.md](adr/0029-the-reveal-is-automatic-with-no-private-review-or-release-by-hand.md)
+
+# The reveal is automatic at the End Time, with no Private Review or release by hand
+
+The parked design had the Host close a Group Film by hand, start Development once uploads resolved, review the developed Film alone in Private Review, and then Release it; nothing else revealed media, a Host who lost access left the Film sealed for good, and the Host had no deadline.
+Once reveals automatically at a time the host chooses.
+On 2026-11-22 the captain chose the following.
+
+**The Host sets an End Time.**
+Shooting stops at the End Time, at most 7 days after the event opens.
+Development and the reveal are automatic then, or after a delay the Host chose, up to 24 hours.
+The Host may end early.
+
+**No Private Review and no release by hand.**
+Nobody, the Host included, sees the pictures before the reveal, and nobody starts or holds back the reveal.
+
+**After the reveal everyone who joined sees every picture.**
+One fixed rule, not a Host setting.
+Guests can shoot offline after joining, uploads follow later, and late arrivals appear after the reveal.
+
+**Guests keep control of their own pictures.**
+A guest can pull all their own pictures before the reveal in one step, and remove any of their own after it; no shots are returned.
+The Host can remove any picture or guest, but never edit or reorder other people's pictures.
+Guests can report a picture to the Host and to a support address.
+
+**One alert.**
+"Your Film is ready" at the reveal is the only alert, for people with the full app; mini-app guests come back through the same link and are invited to install.
+
+**What this supersedes.**
+The parked Close Group Film, Closure Warning, Develop Without Missing Captures, Host-only Development, Private Review and Release rules (PRD FR-13 and FR-14) are superseded.
+ADR 0010's "If that Host permanently loses Account access, no other Participant may close, Develop, or Release an unreleased Film" no longer applies, because the reveal needs no one; its single fixed Host stands.
+The reconciliation note's Group reveal for ADR 0001 (Host closure, Development, Private Review and Release) now reads: the reveal is automatic at the End Time plus the chosen delay; ADR 0001's Camera Reveal Rules stand, which is why an Instant print shows to its shooter at once.
+ADR 0006's mention of Private Review and Release no longer applies.
+ADR 0008's bulk exit stands, with "before Group Film Release" read as "before the reveal".
+The Release Notification becomes the alert at the reveal.
+
+The alternatives considered were the parked manual close, review and release, and Once's choice of who sees the album.
+The accepted costs are that a Host cannot remove an unwanted picture before others see it, and that the reveal may come before a guest's last offline pictures arrive.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0029
+
+Interpret the ADR with the v2 PRD, V2-FR-38 to V2-FR-43 and V2-FR-50 to V2-FR-54.
+The parked tasks CLS-01 to CLS-07 and REL-01 to REL-08 stay in the tracker as history.
+Whether ending early keeps the Reveal Delay and how long late pictures are accepted are its open questions OQ-4 and OQ-5.
+
+---
+
+### ADR 0030
+
+Standalone source: [0030-pictures-develop-on-the-phone-that-took-them-and-reach-the-server-sealed.md](adr/0030-pictures-develop-on-the-phone-that-took-them-and-reach-the-server-sealed.md)
+
+# Pictures are developed on the phone that took them and reach the server sealed
+
+The parked requirements never said where a Group Film is developed, and the v1 architecture's list of parts deferred to v2 named a "render worker".
+v1's Developed Treatments run through Core Image and Metal on the iPhone, and the color stocks of the 6×6 and the 16mm need a Metal kernel made at run time.
+The captain left this question open on 2026-11-22, asked for the alternatives, and then chose the following the same day.
+
+**Developed on the phone that took it.**
+Each picture is developed on the phone that took it, by the same Development as a personal Film.
+Only the finished picture is uploaded, and it is kept sealed on the server until the reveal.
+Originals never leave the phone.
+The render worker leaves v2.
+
+**What follows.**
+Event pictures look exactly as personal pictures of the same Camera do, with no second renderer to keep identical.
+The server stores and serves finished files only, so it needs no image processing.
+With originals never leaving the phone, the parked seven-day window for saving one's own originals is left out of v2.
+
+**What this supersedes.**
+The "render worker" among the v1 architecture's deferred parts is withdrawn.
+The parked Original Export Window (PRD FR-15) is left out.
+The parked rule that Development waits until the Host starts it after closure is superseded, here and by ADR 0029.
+
+The alternatives weighed were Development on a server by a render worker, which would have to reproduce the iPhone's Core Image looks exactly, and Development on one phone such as the Host's after the event, which would need every original uploaded.
+The accepted costs are that a phone that cannot develop a picture holds it until it can, that developing uses the guest's battery during the event, and that nobody can save an event picture's original.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0030
+
+Interpret the ADR with the v2 PRD, V2-FR-33 to V2-FR-37 and section 9.
+The v1 architecture's line of parts deferred to v2 carries a note that the render worker is withdrawn.
+
+---
+
+### ADR 0031
+
+Standalone source: [0031-the-host-can-delete-an-event-and-a-deleted-hosts-events-still-reveal.md](adr/0031-the-host-can-delete-an-event-and-a-deleted-hosts-events-still-reveal.md)
+
+# The Host can delete a whole event, and a deleted Host's events still reveal
+
+Under ADR 0009 nobody could delete a whole Group Film for everyone, the Host included, because hosting does not grant ownership of others' pictures.
+Under ADR 0011 deleting a Host's Account stopped joins and captures in their Group Films and left others' unreleased media sealed for good, with no reveal.
+On 2026-11-22 the captain chose the following.
+
+**The Host can delete the whole event.**
+The Host can delete the whole event early, for everyone, after a clear warning.
+
+**Deleting an account removes that person's own pictures everywhere.**
+Deleting an Account removes that person's own pictures from every event, before and after the reveal.
+
+**A deleted Host's events run on.**
+A deleted Host's events still run to their reveal and stay available to guests for the 12 months the album is kept.
+
+**What this supersedes.**
+ADR 0009's "Neither the Host nor another Participant may delete a whole Group Film for everyone" is superseded: the Host may, after a warning; its personal Delete Film stands.
+ADR 0011 is superseded except its removal of the Host's own contributions: a deleted Host's events keep running and reveal on schedule instead of staying sealed.
+
+The alternatives considered were the parked rules, and Once's practice of leaving a deleted person's photos in others' films with the name anonymized.
+The accepted costs are that one person can delete everyone's pictures of an event, and that a deleted Host's events run with nobody to moderate them but support.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0031
+
+Interpret the ADR with the v2 PRD, V2-FR-05, V2-FR-06 and V2-FR-55.
+Its reading that a deleted Host's event keeps accepting joins until its End Time is listed in the PRD's section 16.2.
+
+---
+
+### ADR 0032
+
+Standalone source: [0032-the-album-is-kept-12-months-and-the-host-may-open-a-view-only-web-album.md](adr/0032-the-album-is-kept-12-months-and-the-host-may-open-a-view-only-web-album.md)
+
+# The album is kept 12 months after the reveal, members save with no account, and the Host may open a view-only web album
+
+The parked design kept Group media with no defined end (DEC-06), let each member save developed pictures, limited originals to one's own within seven days, gave each contributor Private Prints of their own pictures, and had no web view.
+Once keeps photos with no end, and lets guests download only after creating an account.
+On 2026-11-22 the captain chose the following.
+
+**Kept 12 months.**
+The album is kept 12 months after the reveal, with a warning before it ends, and then removed.
+
+**Saving needs no account.**
+Any member can save any picture or the whole album to Photos with no account.
+Private Prints and the seven-day originals window are left out of v2.
+
+**A view-only web album, off unless the Host turns it on.**
+After the reveal the Host can switch on a view-only web album, on the event's join page, so Android guests and people who did not shoot can see and save the pictures.
+It is off unless the Host turns it on, and the Host can switch it off.
+
+**What this supersedes.**
+DEC-06's open retention question is answered for v2 by the 12 months.
+The parked Private Prints (Darkroom on one's own Group pictures) and the Original Export Window are left out.
+The domain model's avoidance of an "album link" for the Join Code stays: the web album is reached through the event's join page, not a separate link.
+
+The alternatives considered were keeping albums with no end, as Once says it does, and no web view.
+The accepted costs are that albums end, that anyone with the link can see a web album while it is on, and that event pictures cannot be edited in Immerse.
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0032
+
+Interpret the ADR with the v2 PRD, V2-FR-43 to V2-FR-48.
+The parked tasks EXP-02 to EXP-06 and DRK-07 stay in the tracker as history.
+
+---
+
+### ADR 0033
+
+Standalone source: [0033-convex-cloudflare-clerk-and-apples-push-service-are-the-v2-backend.md](adr/0033-convex-cloudflare-clerk-and-apples-push-service-are-the-v2-backend.md)
+
+# Convex, Cloudflare, Clerk and Apple's push service are the v2 backend
+
+v1 has no server (ADR 0012), and the v1 architecture listed the parts deferred to v2 as a backend API and database, Accounts, Sign in with Apple, Account deletion, a media bucket, a render worker, push and a join page, naming no vendor.
+On 2026-11-21 the captain asked for "the backend - API and database, media storage, the render worker, push notifications and the join page".
+On 2026-11-22 he chose Convex for the database, asked how far Convex should reach, and accepted the suggestion.
+
+**The services.**
+Convex holds the data, the server logic and the timed reveal.
+Cloudflare holds picture storage, the join page and the web album.
+Clerk handles sign-in, linked to Convex.
+Apple's push notification service carries the one alert, sent from Convex.
+There is no render worker (ADR 0030).
+
+**Privacy.**
+Personal Films never leave the iPhone.
+Event pictures are stored on Immerse's server.
+There is no advertising or tracking.
+
+**What is still checked.**
+Convex's price for downloads and file storage against Cloudflare's, the iPhone upload path through a one-time upload address from Convex straight to Cloudflare, and how a guest with no account is identified to both are open checks of the v2 PRD, not settled facts.
+
+**What this supersedes.**
+For v2 this answers the backend, media storage, authentication and push parts of DEC-03's original wording; DEC-03's v1 question, the native stack, is untouched.
+v1's architecture, an on-phone app with no Immerse server, is unchanged for v1.
+
+The alternatives considered were Cloudflare for the data as well, and Convex for picture storage too, whose download price the v2 PRD compares.
+The accepted costs are dependence on three vendors and a split between where data lives (Convex) and where pictures live (Cloudflare).
+
+Decided by the captain on 2026-11-22 (v2 PRD, version 1.0).
+
+---
+
+### Reconciliation note for ADR 0033
+
+Interpret the ADR with the v2 PRD, V2-FR-80, V2-FR-81 and sections 9 and 10, which give the prices read on 2026-11-22 and an estimate per event.
+DEC-03 stays open for v1's native stack.
