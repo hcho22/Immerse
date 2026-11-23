@@ -43,7 +43,7 @@ final class LocalBackendTests: XCTestCase {
 
         // Sealed: no read address before the reveal.
         do {
-            _ = try await functions.call(.action, "reads:readAddresses", ["eventId": .string(stand.eventID)])
+            _ = try await functions.call(.action, "reads:album", ["eventId": .string(stand.eventID)])
             XCTFail("A sealed event gave read addresses")
         } catch {
             XCTAssertEqual(error, .refused(.sealed))

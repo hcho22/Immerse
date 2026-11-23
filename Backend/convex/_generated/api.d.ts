@@ -28,6 +28,7 @@ import type * as lib_joinCode from "../lib/joinCode.js";
 import type * as lib_phase from "../lib/phase.js";
 import type * as lib_storage from "../lib/storage.js";
 import type * as lib_versions from "../lib/versions.js";
+import type * as measures from "../measures.js";
 import type * as pictures from "../pictures.js";
 import type * as proofs from "../proofs.js";
 import type * as push from "../push.js";
@@ -66,6 +67,7 @@ declare const fullApi: ApiFromModules<{
   "lib/phase": typeof lib_phase;
   "lib/storage": typeof lib_storage;
   "lib/versions": typeof lib_versions;
+  measures: typeof measures;
   pictures: typeof pictures;
   proofs: typeof proofs;
   push: typeof push;
