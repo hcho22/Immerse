@@ -578,7 +578,8 @@ final class GroupFilms {
     /// Develops every saved picture not yet queued, one at a time, while the app is on the screen (V2-FR-33): a Disposable
     /// or 6×6 picture unseen, an Instant print from the one developed at the camera.
     func startDevelopment() {
-        guard developing == nil, active else { return }
+        // Not while the camera is open: developing heats an older iPhone and slows its camera (RK-V2-12).
+        guard developing == nil, active, !rolls.capture.presented else { return }
         developing = Task { [weak self] in
             await self?.developPending()
             self?.developing = nil
@@ -699,7 +700,8 @@ final class GroupFilms {
         timer = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(30))
-                guard let self, self.active else { continue }
+                guard let self else { return }
+                guard self.active else { continue }
                 if self.waiting.values.contains(where: { $0 > 0 }) { self.startUploads() }
                 self.startDevelopment()
             }
