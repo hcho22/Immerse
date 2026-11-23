@@ -107,7 +107,7 @@ These are reversible engineering defaults in the code, not approved decisions:
 - Personal Films only.
 - No server, Accounts, sign-in or analytics.
   Permissions are Camera and Photos add-only; the app never requests the microphone, location or photo-library reading.
-- Groups and Accounts are deferred to v2 and kept in PRD sections 8 and 8.13 and the tracker's Deferred to v2 section.
+- Groups and Accounts are deferred to v2, which the [v2 PRD](2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md) states; PRD sections 8 and 8.13 and the tracker's Deferred to v2 section keep the parked design as history.
 
 ## Getting started
 
